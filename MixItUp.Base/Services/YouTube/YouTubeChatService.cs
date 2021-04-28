@@ -26,7 +26,7 @@ namespace MixItUp.Base.Services.YouTube
         public List<string> searchTerms { get; set; } = new List<string>();
         public List<string> shortcuts { get; set; } = new List<string>();
 
-        private YouTubeChatEmoteImageModel image;
+        private YouTubeChatEmoteImageModel image = null;
 
         public string ImageURL { get { return this.image?.thumbnails?.FirstOrDefault(); } }
     }

@@ -602,7 +602,7 @@ namespace MixItUp.Base.Services
                     settings.CommandServiceLockType = CommandServiceLockTypeEnum.None;
                 }
 
-                await ChannelSession.Services.Settings.Save(settings);
+                await ServiceManager.Get<SettingsService>().Save(settings);
             }
         }
 

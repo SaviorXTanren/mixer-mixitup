@@ -380,7 +380,7 @@ namespace MixItUp.Base.Model.Overlay
                         UserViewModel current = updatedList.First().GetUser();
                         if (previous != null && current != null && !previous.ID.Equals(current.ID))
                         {
-                            await ChannelSession.Services.Command.Queue(this.LeaderChangedCommand, new CommandParametersModel(current, new string[] { previous.Username }) { TargetUser = previous });
+                            await ServiceManager.Get<CommandService>().Queue(this.LeaderChangedCommand, new CommandParametersModel(current, new string[] { previous.Username }) { TargetUser = previous });
                         }
                     }
                 }

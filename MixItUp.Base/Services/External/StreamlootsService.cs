@@ -274,11 +274,11 @@ namespace MixItUp.Base.Services.External
 
                 if (giftee != null)
                 {
-                    await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Gifted {1} Pack(s) to {2}", user.DisplayName, purchase.data.Quantity, giftee.Username), ChannelSession.Settings.AlertStreamlootsColor));
+                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Gifted {1} Pack(s) to {2}", user.DisplayName, purchase.data.Quantity, giftee.Username), ChannelSession.Settings.AlertStreamlootsColor));
                 }
                 else
                 {
-                    await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Purchases {1} Pack(s)", user.DisplayName, purchase.data.Quantity), ChannelSession.Settings.AlertStreamlootsColor));
+                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Purchases {1} Pack(s)", user.DisplayName, purchase.data.Quantity), ChannelSession.Settings.AlertStreamlootsColor));
                 }
             }
         }
@@ -314,16 +314,16 @@ namespace MixItUp.Base.Services.External
                 EventTrigger trigger = new EventTrigger(EventTypeEnum.StreamlootsCardRedeemed, user);
                 trigger.Arguments = arguments;
                 trigger.SpecialIdentifiers = eventCommandSpecialIdentifiers;
-                await ChannelSession.Services.Events.PerformEvent(trigger);
+                await ServiceManager.Get<EventService>().PerformEvent(trigger);
 
                 StreamlootsCardCommandModel command = ChannelSession.StreamlootsCardCommands.FirstOrDefault(c => string.Equals(c.Name, card.data.cardName, StringComparison.CurrentCultureIgnoreCase));
                 if (command != null)
                 {
                     Dictionary<string, string> cardsCommandSpecialIdentifiers = new Dictionary<string, string>(eventCommandSpecialIdentifiers);
-                    await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(user, platform: user.Platform, arguments: arguments, specialIdentifiers: cardsCommandSpecialIdentifiers));
+                    await ServiceManager.Get<CommandService>().Queue(command, new CommandParametersModel(user, platform: user.Platform, arguments: arguments, specialIdentifiers: cardsCommandSpecialIdentifiers));
                 }
 
-                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Redeemed {1} Card", user.DisplayName, card.data.cardName), ChannelSession.Settings.AlertStreamlootsColor));
+                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Redeemed {1} Card", user.DisplayName, card.data.cardName), ChannelSession.Settings.AlertStreamlootsColor));
             }
         }
 

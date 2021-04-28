@@ -152,7 +152,7 @@ namespace MixItUp.Base.Services
                     timerCommandIndexes[groupName] = 0;
                 }
 
-                await ChannelSession.Services.Command.Queue(this.timerCommandGroups[groupName].ElementAt(timerCommandIndexes[groupName]));
+                await ServiceManager.Get<CommandService>().Queue(this.timerCommandGroups[groupName].ElementAt(timerCommandIndexes[groupName]));
 
                 timerCommandIndexes[groupName]++;
             }

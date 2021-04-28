@@ -611,7 +611,7 @@ namespace MixItUp.Base.Model.Settings
                 {
                     if (!string.IsNullOrEmpty(userData.MixerUsername))
                     {
-                        this.UsernameLookups[StreamingPlatformTypeEnum.Mixer][userData.MixerUsername.ToLowerInvariant()] = userData.ID;
+                        this.PlatformUsernameLookups[StreamingPlatformTypeEnum.Mixer][userData.MixerUsername.ToLowerInvariant()] = userData.ID;
                     }
                 }
 #pragma warning restore CS0612 // Type or member is obsolete

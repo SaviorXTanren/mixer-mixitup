@@ -95,7 +95,7 @@ namespace MixItUp.Base.Services
             Task.Run(async () => { await this.GiveawayTimerBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-            await ChannelSession.Services.Command.Queue(ChannelSession.Settings.GiveawayStartedReminderCommandID, new CommandParametersModel(this.GetSpecialIdentifiers()));
+            await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayStartedReminderCommandID, new CommandParametersModel(this.GetSpecialIdentifiers()));
 
             return null;
         }
@@ -139,7 +139,7 @@ namespace MixItUp.Base.Services
 
                     if (reminderTime > 0 && this.TimeLeft > 0 && (totalTime - this.TimeLeft) % reminderTime == 0)
                     {
-                        await ChannelSession.Services.Command.Queue(ChannelSession.Settings.GiveawayStartedReminderCommandID, new CommandParametersModel(this.GetSpecialIdentifiers()));
+                        await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayStartedReminderCommandID, new CommandParametersModel(this.GetSpecialIdentifiers()));
                     }
 
                     if (this.backgroundThreadCancellationTokenSource.Token.IsCancellationRequested)
@@ -178,7 +178,7 @@ namespace MixItUp.Base.Services
 
                         if (!ChannelSession.Settings.GiveawayRequireClaim)
                         {
-                            await ChannelSession.Services.Command.Queue(ChannelSession.Settings.GiveawayWinnerSelectedCommandID, new CommandParametersModel(this.Winner, this.GetSpecialIdentifiers()));
+                            await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayWinnerSelectedCommandID, new CommandParametersModel(this.Winner, this.GetSpecialIdentifiers()));
                             await this.End();
                             return;
                         }
@@ -306,7 +306,7 @@ namespace MixItUp.Base.Services
                             specialIdentifiers["usergiveawayentries"] = entries.ToString();
                             specialIdentifiers["usergiveawaytotalentries"] = giveawayUser.Entries.ToString();
 
-                            await ChannelSession.Services.Command.Queue(ChannelSession.Settings.GiveawayUserJoinedCommandID, new CommandParametersModel(message.User, arguments, specialIdentifiers));
+                            await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayUserJoinedCommandID, new CommandParametersModel(message.User, arguments, specialIdentifiers));
 
                             GlobalEvents.GiveawaysChangedOccurred(usersUpdated: true);
                         }
@@ -314,7 +314,7 @@ namespace MixItUp.Base.Services
                 }
                 else if (this.Winner != null && this.Winner.Equals(message.User) && message.PlainTextMessage.Equals("!claim", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    await ChannelSession.Services.Command.Queue(ChannelSession.Settings.GiveawayWinnerSelectedCommandID, new CommandParametersModel(this.Winner, this.GetSpecialIdentifiers()));
+                    await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayWinnerSelectedCommandID, new CommandParametersModel(this.Winner, this.GetSpecialIdentifiers()));
                     await this.End();
                 }
             }

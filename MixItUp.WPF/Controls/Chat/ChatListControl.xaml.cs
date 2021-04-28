@@ -357,7 +357,7 @@ namespace MixItUp.WPF.Controls.Chat
                         if (menuItem.DataContext != null && menuItem.DataContext is CommandModelBase)
                         {
                             CommandModelBase command = (CommandModelBase)menuItem.DataContext;
-                            await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(platform: message.Platform, arguments: new List<string>() { message.User.Username }) { TargetUser = message.User });
+                            await ServiceManager.Get<CommandService>().Queue(command, new CommandParametersModel(platform: message.Platform, arguments: new List<string>() { message.User.Username }) { TargetUser = message.User });
                         }
                     }
                 }

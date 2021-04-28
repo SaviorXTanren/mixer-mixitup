@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -84,7 +85,7 @@ namespace MixItUp.Base.Services
 
         private async void SignalRConnection_Connected(object sender, EventArgs e)
         {
-            var twitchUserOAuthToken = ChannelSession.TwitchUserConnection.Connection.GetOAuthTokenCopy();
+            var twitchUserOAuthToken = ServiceManager.Get<TwitchSessionService>().UserConnection.Connection.GetOAuthTokenCopy();
             await this.Authenticate(twitchUserOAuthToken?.accessToken);
         }
 
@@ -121,7 +122,7 @@ namespace MixItUp.Base.Services
 
         private async Task TwitchFollowEvent(string followerId, string followerUsername, string followerDisplayName)
         {
-            UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(followerId);
+            UserViewModel user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, followerId);
             if (user == null)
             {
                 user = new UserViewModel(followerDisplayName);
@@ -133,7 +134,7 @@ namespace MixItUp.Base.Services
             }
 
             EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelFollowed, user);
-            if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+            if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
             {
                 user.FollowDate = DateTimeOffset.Now;
 
@@ -152,29 +153,29 @@ namespace MixItUp.Base.Services
                     }
                 }
 
-                await ChannelSession.Services.Events.PerformEvent(trigger);
+                await ServiceManager.Get<EventService>().PerformEvent(trigger);
 
                 GlobalEvents.FollowOccurred(user);
 
-                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Followed", user.DisplayName), ChannelSession.Settings.AlertFollowColor));
+                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Followed", user.DisplayName), ChannelSession.Settings.AlertFollowColor));
             }
         }
 
         private async Task TwitchStreamStartedEvent()
         {
             EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelStreamStart, ChannelSession.GetCurrentUser());
-            if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+            if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
             {
-                await ChannelSession.Services.Events.PerformEvent(trigger);
+                await ServiceManager.Get<EventService>().PerformEvent(trigger);
             }
         }
 
         private async Task TwitchStreamStoppedEvent()
         {
             EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelStreamStop, ChannelSession.GetCurrentUser());
-            if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+            if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
             {
-                await ChannelSession.Services.Events.PerformEvent(trigger);
+                await ServiceManager.Get<EventService>().PerformEvent(trigger);
             }
         }
 
@@ -186,9 +187,9 @@ namespace MixItUp.Base.Services
             eventCommandSpecialIdentifiers["hypetrainlevelgoal"] = levelGoal.ToString();
 
             EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelHypeTrainBegin, ChannelSession.GetCurrentUser(), eventCommandSpecialIdentifiers);
-            if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+            if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
             {
-                await ChannelSession.Services.Events.PerformEvent(trigger);
+                await ServiceManager.Get<EventService>().PerformEvent(trigger);
             }
         }
 
@@ -201,9 +202,9 @@ namespace MixItUp.Base.Services
             eventCommandSpecialIdentifiers["hypetrainlevelgoal"] = levelGoal.ToString();
 
             EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelHypeTrainProgress, ChannelSession.GetCurrentUser(), eventCommandSpecialIdentifiers);
-            if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+            if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
             {
-                await ChannelSession.Services.Events.PerformEvent(trigger);
+                await ServiceManager.Get<EventService>().PerformEvent(trigger);
             }
         }
 
@@ -214,9 +215,9 @@ namespace MixItUp.Base.Services
             eventCommandSpecialIdentifiers["hypetraintotalpoints"] = totalPoints.ToString();
 
             EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelHypeTrainEnd, ChannelSession.GetCurrentUser(), eventCommandSpecialIdentifiers);
-            if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+            if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
             {
-                await ChannelSession.Services.Events.PerformEvent(trigger);
+                await ServiceManager.Get<EventService>().PerformEvent(trigger);
             }
         }
     }

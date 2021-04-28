@@ -140,11 +140,11 @@ namespace MixItUp.Base.Model.Actions
                     CommandInstanceModel commandInstance = new CommandInstanceModel(command, copyParameters);
                     if (this.WaitForCommandToFinish)
                     {
-                        await ChannelSession.Services.Command.RunDirectly(commandInstance);
+                        await ServiceManager.Get<CommandService>().RunDirectly(commandInstance);
                     }
                     else
                     {
-                        await ChannelSession.Services.Command.Queue(commandInstance);
+                        await ServiceManager.Get<CommandService>().Queue(commandInstance);
                     }
                 }
             }

@@ -118,7 +118,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             List<EventCommandItemViewModel> commands = new List<EventCommandItemViewModel>();
 
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStart));
-            if (ChannelSession.Services.WebhookService.IsConnected && ChannelSession.Services.WebhookService.IsAllowed)
+            if (ServiceManager.Get<WebhookService>().IsConnected && ServiceManager.Get<WebhookService>().IsAllowed)
             {
                 commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStop));
             }
@@ -128,7 +128,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHosted));
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelRaided));
 
-            if (ChannelSession.Services.WebhookService.IsConnected && ChannelSession.Services.WebhookService.IsAllowed)
+            if (ServiceManager.Get<WebhookService>().IsConnected && ServiceManager.Get<WebhookService>().IsAllowed)
             {
                 commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainBegin));
                 commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainProgress));

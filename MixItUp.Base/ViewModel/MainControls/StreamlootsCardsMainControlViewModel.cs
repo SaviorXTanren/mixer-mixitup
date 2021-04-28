@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +19,9 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.StreamlootsManageCollectionCommand = this.CreateCommand((parameters) =>
             {
-                if (ChannelSession.TwitchUserConnection != null)
+                if (ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
-                    ProcessHelper.LaunchLink($"https://www.streamloots.com/{ChannelSession.TwitchUserNewAPI.login}/manage/cards");
+                    ProcessHelper.LaunchLink($"https://www.streamloots.com/{ServiceManager.Get<TwitchSessionService>().UserNewAPI.login}/manage/cards");
                 }
             });
         }

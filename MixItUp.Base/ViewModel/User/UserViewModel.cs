@@ -1014,15 +1014,15 @@ namespace MixItUp.Base.ViewModel.User
             this.Data.ModerationStrikes++;
             if (this.Data.ModerationStrikes == 1)
             {
-                await ChannelSession.Services.Command.Queue(ChannelSession.Settings.ModerationStrike1CommandID, new CommandParametersModel(this, extraSpecialIdentifiers));
+                await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.ModerationStrike1CommandID, new CommandParametersModel(this, extraSpecialIdentifiers));
             }
             else if (this.Data.ModerationStrikes == 2)
             {
-                await ChannelSession.Services.Command.Queue(ChannelSession.Settings.ModerationStrike2CommandID, new CommandParametersModel(this, extraSpecialIdentifiers));
+                await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.ModerationStrike2CommandID, new CommandParametersModel(this, extraSpecialIdentifiers));
             }
             else if (this.Data.ModerationStrikes >= 3)
             {
-                await ChannelSession.Services.Command.Queue(ChannelSession.Settings.ModerationStrike3CommandID, new CommandParametersModel(this, extraSpecialIdentifiers));
+                await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.ModerationStrike3CommandID, new CommandParametersModel(this, extraSpecialIdentifiers));
             }
         }
 

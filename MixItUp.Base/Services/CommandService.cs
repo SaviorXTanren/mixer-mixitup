@@ -95,7 +95,7 @@ namespace MixItUp.Base.Services
                     {
                         if (!string.IsNullOrEmpty(validationResult.Message) && validationResult.DisplayMessage)
                         {
-                            await ChannelSession.Services.Chat.SendMessage(validationResult.Message);
+                            await ServiceManager.Get<ChatService>().SendMessage(validationResult.Message, commandInstance.Parameters.Platform);
                         }
                     }
                 }
@@ -338,18 +338,18 @@ namespace MixItUp.Base.Services
                     }
 
                     ActionModelBase action = actions[i];
-                    if (action is OverlayActionModel && ChannelSession.Services.Overlay.IsConnected)
+                    if (action is OverlayActionModel && ServiceManager.Get<OverlayService>().IsConnected)
                     {
-                        ChannelSession.Services.Overlay.StartBatching();
+                        ServiceManager.Get<OverlayService>().StartBatching();
                     }
 
                     await action.Perform(parameters);
 
-                    if (action is OverlayActionModel && ChannelSession.Services.Overlay.IsConnected)
+                    if (action is OverlayActionModel && ServiceManager.Get<OverlayService>().IsConnected)
                     {
                         if (i == (actions.Count - 1) || !(actions[i + 1] is OverlayActionModel))
                         {
-                            await ChannelSession.Services.Overlay.EndBatching();
+                            await ServiceManager.Get<OverlayService>().EndBatching();
                         }
                     }
                 }

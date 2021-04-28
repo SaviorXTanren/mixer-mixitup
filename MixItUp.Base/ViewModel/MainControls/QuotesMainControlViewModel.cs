@@ -55,11 +55,11 @@ namespace MixItUp.Base.ViewModel.MainControls
         public QuotesMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
-            this.AddQuoteCommand = this.CreateCommand(() =>
+            this.AddQuoteCommand = this.CreateCommand(async () =>
             {
                 if (!string.IsNullOrEmpty(this.AddQuoteText))
                 {
-                    ChannelSession.Settings.Quotes.Add(new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), this.AddQuoteText, DateTimeOffset.Now, await GamePreMadeChatCommandModel.GetCurrentGame()));
+                    ChannelSession.Settings.Quotes.Add(new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), this.AddQuoteText, DateTimeOffset.Now, await GamePreMadeChatCommandModel.GetCurrentGameName()));
                     this.Refresh();
 
                     this.AddQuoteText = string.Empty;

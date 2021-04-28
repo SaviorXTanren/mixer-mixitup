@@ -1,5 +1,8 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Dialogs;
@@ -40,13 +43,13 @@ namespace MixItUp.WPF.Controls.Chat
                             await ServiceManager.Get<ChatService>().UnbanUser(user);
                             break;
                         case UserDialogResult.Follow:
-                            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+                            if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
                             {
                                 await ServiceManager.Get<TwitchSessionService>().UserConnection.FollowUser(ServiceManager.Get<TwitchSessionService>().UserNewAPI, user.GetTwitchNewAPIUserModel());
                             }
                             break;
                         case UserDialogResult.Unfollow:
-                            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+                            if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
                             {
                                 await ServiceManager.Get<TwitchSessionService>().UserConnection.UnfollowUser(ServiceManager.Get<TwitchSessionService>().UserNewAPI, user.GetTwitchNewAPIUserModel());
                             }

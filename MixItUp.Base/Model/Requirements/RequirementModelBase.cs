@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -30,7 +31,7 @@ namespace MixItUp.Base.Model.Requirements
             {
                 message = $"@{user.Username}: {message}";
             }
-            await ChannelSession.Services.Chat.SendMessage(message);
+            await ServiceManager.Get<ChatService>().SendMessage(message, user.Platform);
         }
 
         protected DateTimeOffset individualErrorCooldown = DateTimeOffset.MinValue;

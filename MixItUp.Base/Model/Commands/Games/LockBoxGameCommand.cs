@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -157,12 +158,12 @@ namespace MixItUp.Base.Model.Commands.Games
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandLockBoxNotNumber);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandLockBoxNotNumber, parameters.Platform);
                 }
             }
             else
             {
-                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCommandLockBoxIncorrectLength, this.CombinationLength));
+                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCommandLockBoxIncorrectLength, this.CombinationLength), parameters.Platform);
             }
             await this.Requirements.Refund(parameters);
         }

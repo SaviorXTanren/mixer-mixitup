@@ -21,7 +21,7 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public static string OpenCommandFileBrowser()
         {
-            return ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Command (*{0})|*{0};*{1}|All files (*.*)|*.*", MixItUpCommandFileExtension, MixItUpOldCommandFileExtension));
+            return ServiceManager.Get<IFileService>().ShowOpenFileDialog(string.Format("Mix It Up Command (*{0})|*{0};*{1}|All files (*.*)|*.*", MixItUpCommandFileExtension, MixItUpOldCommandFileExtension));
         }
 
         public static async Task<CommandModelBase> ImportCommandFromFile(string filePath)
@@ -146,7 +146,7 @@ namespace MixItUp.Base.ViewModel.Commands
                     IEnumerable<ActionModelBase> actions = await this.GetActions();
                     if (actions != null)
                     {
-                        await ChannelSession.Services.Command.Queue(new CommandInstanceModel(actions, CommandParametersModel.GetTestParameters(this.GetTestSpecialIdentifiers())));
+                        await ServiceManager.Get<CommandService>().Queue(new CommandInstanceModel(actions, CommandParametersModel.GetTestParameters(this.GetTestSpecialIdentifiers())));
                     }
                 }
             });

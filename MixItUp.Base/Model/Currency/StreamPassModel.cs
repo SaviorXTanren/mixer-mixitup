@@ -205,7 +205,7 @@ namespace MixItUp.Base.Model.Currency
                             {
                                 userViewModel = new UserViewModel(user);
                             }
-                            AsyncRunner.RunAsyncBackground((cancellationToken) => ChannelSession.Services.Command.Queue(command, new CommandParametersModel(userViewModel, specialIdentifiers: specialIdentifiers)), new CancellationToken());
+                            AsyncRunner.RunAsyncBackground((cancellationToken) => ServiceManager.Get<CommandService>().Queue(command, new CommandParametersModel(userViewModel, specialIdentifiers: specialIdentifiers)), new CancellationToken());
                         }
                     }
                 }

@@ -47,7 +47,7 @@ namespace MixItUp.Base.Services
         {
             using (AdvancedHttpClient client = new AdvancedHttpClient())
             {
-                client.DefaultRequestHeaders.Add(UserAuthHeader, ChannelSession.Services.Secrets.Encrypt(ChannelSession.Settings.ID.ToString()));
+                client.DefaultRequestHeaders.Add(UserAuthHeader, ServiceManager.Get<SecretsService>().Encrypt(ChannelSession.Settings.ID.ToString()));
                 HttpResponseMessage response = await client.PostAsync("https://localhost:44309/api/community/commands", AdvancedHttpClient.CreateContentFromObject(command));
             }
         }

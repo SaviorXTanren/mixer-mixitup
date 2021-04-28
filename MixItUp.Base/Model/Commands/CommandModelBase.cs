@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Requirements;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
@@ -154,7 +155,7 @@ namespace MixItUp.Base.Model.Commands
 
         public virtual Dictionary<string, string> GetTestSpecialIdentifiers() { return CommandModelBase.GetGeneralTestSpecialIdentifiers(); }
 
-        public virtual void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type); }
+        public virtual void TrackTelemetry() { ServiceManager.Get<ITelemetryService>().TrackCommand(this.Type); }
 
         public virtual HashSet<ActionTypeEnum> GetActionTypesInCommand(HashSet<Guid> commandIDs = null)
         {

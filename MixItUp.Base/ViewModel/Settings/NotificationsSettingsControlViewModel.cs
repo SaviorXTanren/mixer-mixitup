@@ -122,16 +122,16 @@ namespace MixItUp.Base.ViewModel.Settings
 
         public NotificationsSettingsControlViewModel()
         {
-            string defaultAudioOption = ChannelSession.Services.AudioService.DefaultAudioDevice;
+            string defaultAudioOption = ServiceManager.Get<IAudioService>().DefaultAudioDevice;
             if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationsAudioOutput))
             {
                 defaultAudioOption = ChannelSession.Settings.NotificationsAudioOutput;
             }
 
             this.NotificationsAudioOutput = new GenericComboBoxSettingsOptionControlViewModel<string>(MixItUp.Base.Resources.NotificationsAudioOutput,
-                ChannelSession.Services.AudioService.GetSelectableAudioDevices(), defaultAudioOption, (value) =>
+                ServiceManager.Get<IAudioService>().GetSelectableAudioDevices(), defaultAudioOption, (value) =>
                 {
-                    if (value.Equals(ChannelSession.Services.AudioService.DefaultAudioDevice))
+                    if (value.Equals(ServiceManager.Get<IAudioService>().DefaultAudioDevice))
                     {
                         ChannelSession.Settings.NotificationsAudioOutput = null;
                     }

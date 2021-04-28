@@ -144,8 +144,8 @@ namespace MixItUp.WPF
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Changelog, new ChangelogControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.About, new AboutControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
 
-            ChannelSession.Services.Streamloots.OnStreamlootsConnectionChanged += StreamlootsService_OnStreamlootsConnectionChanged;
-            if (!ChannelSession.Services.Streamloots.IsConnected)
+            ServiceManager.Get<StreamlootsService>().OnStreamlootsConnectionChanged += StreamlootsService_OnStreamlootsConnectionChanged;
+            if (!ServiceManager.Get<StreamlootsService>().IsConnected)
             {
                 this.MainMenu.HideMenuItem(this.streamlootsCardsMainMenuItem);
             }
@@ -231,7 +231,7 @@ namespace MixItUp.WPF
 
         private void StreamlootsService_OnStreamlootsConnectionChanged(object sender, EventArgs e)
         {
-            if (ChannelSession.Services.Streamloots.IsConnected)
+            if (ServiceManager.Get<StreamlootsService>().IsConnected)
             {
                 this.MainMenu.ShowMenuItem(this.streamlootsCardsMainMenuItem);
             }

@@ -141,7 +141,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             if (await DialogHelper.ShowConfirmation(Resources.DeleteUserDataPrompt))
             {
                 ChannelSession.Settings.UserData.Remove(user.ID);
-                await ChannelSession.Services.User.RemoveUserByID(user.ID);
+                await ServiceManager.Get<UserService>().RemoveUserByID(user.ID);
             }
             this.RefreshUsers();
         }

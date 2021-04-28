@@ -445,7 +445,7 @@ namespace MixItUp.Base.Services
                             this.userEntranceCommands.Add(message.User.ID);
                             if (ChannelSession.Settings.GetCommand(message.User.Data.EntranceCommandID) != null)
                             {
-                                await ChannelSession.Services.Command.Queue(message.User.Data.EntranceCommandID, new CommandParametersModel(message.User, message.Platform, message.ToArguments()));
+                                await ServiceManager.Get<CommandService>().Queue(message.User.Data.EntranceCommandID, new CommandParametersModel(message.User, message.Platform, message.ToArguments()));
                             }
                         }
 
@@ -709,7 +709,7 @@ namespace MixItUp.Base.Services
         private async Task RunChatCommand(ChatMessageViewModel message, CommandModelBase command, IEnumerable<string> arguments)
         {
             Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
-            await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(message.User, message.Platform, arguments));
+            await ServiceManager.Get<CommandService>().Queue(command, new CommandParametersModel(message.User, message.Platform, arguments));
 
             SettingsRequirementModel settings = command.Requirements.Settings;
             if (settings != null)

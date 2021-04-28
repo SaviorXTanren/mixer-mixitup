@@ -503,7 +503,7 @@ namespace MixItUp.Base.Model.Currency
                                 specialIdentifiers["itemname"] = item.Name;
                                 specialIdentifiers["itemcost"] = totalcost.ToString();
                                 specialIdentifiers["currencyname"] = currency.Name;
-                                await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(user, arguments: arguments, specialIdentifiers: specialIdentifiers));
+                                await ServiceManager.Get<CommandService>().Queue(command, new CommandParametersModel(user, arguments: arguments, specialIdentifiers: specialIdentifiers));
                             }
                             return;
                         }
@@ -697,7 +697,7 @@ namespace MixItUp.Base.Model.Currency
                             specialIdentifiers["itemname"] = this.tradeSender.Item.Name;
                             specialIdentifiers["targetitemtotal"] = this.tradeReceiver.Amount.ToString();
                             specialIdentifiers["targetitemname"] = this.tradeReceiver.Item.Name;
-                            await ChannelSession.Services.Command.Queue(this.ItemsTradedCommand, new CommandParametersModel(user, arguments: new string[] { this.tradeReceiver.User.Username }, specialIdentifiers: specialIdentifiers));
+                            await ServiceManager.Get<CommandService>().Queue(this.ItemsTradedCommand, new CommandParametersModel(user, arguments: new string[] { this.tradeReceiver.User.Username }, specialIdentifiers: specialIdentifiers));
                         }
 
                         this.tradeSender = null;

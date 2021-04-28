@@ -192,6 +192,6 @@ namespace MixItUp.Base.Model.Commands
             return false;
         }
 
-        public override void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type, this.EventType.ToString()); }
+        public override void TrackTelemetry() { ServiceManager.Get<ITelemetryService>().TrackCommand(this.Type, this.EventType.ToString()); }
     }
 }

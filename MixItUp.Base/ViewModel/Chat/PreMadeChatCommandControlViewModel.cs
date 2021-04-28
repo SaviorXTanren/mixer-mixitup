@@ -70,7 +70,7 @@ namespace MixItUp.Base.ViewModel.Chat
             this.TestCommand = this.CreateCommand(async () =>
             {
                 UserViewModel currentUser = ChannelSession.GetCurrentUser();
-                await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(currentUser, arguments: new List<string>() { "@" + currentUser.Username }));
+                await ServiceManager.Get<CommandService>().Queue(command, new CommandParametersModel(currentUser, arguments: new List<string>() { "@" + currentUser.Username }));
             });
         }
 

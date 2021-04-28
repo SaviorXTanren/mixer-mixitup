@@ -64,6 +64,7 @@ namespace MixItUp.WPF
                 ServiceManager.Add<ITelemetryService>(new WindowsTelemetryService());
 
                 ServiceManager.Add(new StreamlabsService(new WindowsSocketIOConnection()));
+                ServiceManager.Add(new StreamElementsService(new WindowsSocketIOConnection()));
                 ServiceManager.Add(new TipeeeStreamService(new WindowsSocketIOConnection()));
                 ServiceManager.Add(new TreatStreamService(new WindowsSocketIOConnection()));
                 ServiceManager.Add<IOvrStreamService>(new WindowsOvrStreamService());
@@ -153,9 +154,6 @@ namespace MixItUp.WPF
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            WindowsServicesManager servicesManager = new WindowsServicesManager();
-            servicesManager.Initialize();
-
             ActivationProtocolHandler.Initialize();
 
             RegistryHelpers.RegisterFileAssociation();

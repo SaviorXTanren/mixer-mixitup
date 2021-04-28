@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
@@ -123,7 +124,7 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     if (this.TimerFinishedCommand != null)
                     {
-                        await ChannelSession.Services.Command.Queue(this.TimerFinishedCommand);
+                        await ServiceManager.Get<CommandService>().Queue(this.TimerFinishedCommand);
                     }
                     await this.Disable();
                 }

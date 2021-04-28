@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -129,7 +130,7 @@ namespace MixItUp.Base.Model.Actions
 
             if (finalResult)
             {
-                await ChannelSession.Services.Command.RunDirectly(new CommandInstanceModel(this.Actions, parameters));
+                await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(this.Actions, parameters));
             }
         }
 

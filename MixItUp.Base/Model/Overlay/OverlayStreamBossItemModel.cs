@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Twitch;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -305,7 +306,7 @@ namespace MixItUp.Base.Model.Overlay
 
                     if (this.StreamBossChangedCommand != null)
                     {
-                        await ChannelSession.Services.Command.Queue(this.StreamBossChangedCommand);
+                        await ServiceManager.Get<CommandService>().Queue(this.StreamBossChangedCommand);
                     }
                 }
 

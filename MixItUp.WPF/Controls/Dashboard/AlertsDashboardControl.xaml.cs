@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Dashboard;
@@ -119,7 +120,7 @@ namespace MixItUp.WPF.Controls.Dashboard
                         if (menuItem.DataContext != null && menuItem.DataContext is ChatCommandModel)
                         {
                             ChatCommandModel command = (ChatCommandModel)menuItem.DataContext;
-                            await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(platform: message.Platform, arguments: new List<string>() { message.User.Username }) { TargetUser = message.User });
+                            await ServiceManager.Get<CommandService>().Queue(command, new CommandParametersModel(platform: message.Platform, arguments: new List<string>() { message.User.Username }) { TargetUser = message.User });
                         }
                     }
                 }

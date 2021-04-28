@@ -175,7 +175,7 @@ namespace MixItUp.Base.Model.Commands
     {
         public GamePreMadeChatCommandModel() : base(MixItUp.Base.Resources.Game, "game", 5, UserRoleEnum.User) { }
 
-        public static async Task<string> GetCurrentGame()
+        public static async Task<string> GetCurrentGameName()
         {
             string gameName = null;
             if (ServiceManager.Get<TwitchSessionService>().IsConnected)
@@ -193,7 +193,7 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
-            string gameName = await GamePreMadeChatCommandModel.GetCurrentGame();
+            string gameName = await GamePreMadeChatCommandModel.GetCurrentGameName();
             if (!string.IsNullOrEmpty(gameName))
             {
                 GameInformation details = await XboxGamePreMadeChatCommandModel.GetXboxGameInfo(gameName);
@@ -410,7 +410,7 @@ namespace MixItUp.Base.Model.Commands
                     string quoteText = quoteBuilder.ToString();
                     quoteText = quoteText.Trim(new char[] { ' ', '\'', '\"' });
 
-                    UserQuoteModel quote = new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), quoteText, DateTimeOffset.Now, await GamePreMadeChatCommandModel.GetCurrentGame());
+                    UserQuoteModel quote = new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), quoteText, DateTimeOffset.Now, await GamePreMadeChatCommandModel.GetCurrentGameName());
                     ChannelSession.Settings.Quotes.Add(quote);
                     await ChannelSession.SaveSettings();
 
@@ -537,7 +537,7 @@ namespace MixItUp.Base.Model.Commands
             }
             else
             {
-                gameName = await GamePreMadeChatCommandModel.GetCurrentGame();
+                gameName = await GamePreMadeChatCommandModel.GetCurrentGameName();
             }
 
             GameInformation details = await XboxGamePreMadeChatCommandModel.GetXboxGameInfo(gameName);
@@ -634,7 +634,7 @@ namespace MixItUp.Base.Model.Commands
             }
             else
             {
-                gameName = await GamePreMadeChatCommandModel.GetCurrentGame();
+                gameName = await GamePreMadeChatCommandModel.GetCurrentGameName();
             }
 
             GameInformation details = await SteamGamePreMadeChatCommandModel.GetSteamGameInfo(gameName);

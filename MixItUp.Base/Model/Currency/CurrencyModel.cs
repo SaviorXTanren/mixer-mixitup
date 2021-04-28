@@ -291,11 +291,11 @@ namespace MixItUp.Base.Model.Currency
 
             if (newRank.Amount > prevRank.Amount && this.RankChangedCommand != null)
             {
-                AsyncRunner.RunAsyncBackground((cancellationToken) => ChannelSession.Services.Command.Queue(this.RankChangedCommand, new CommandParametersModel(userViewModel)), new CancellationToken());
+                AsyncRunner.RunAsyncBackground((cancellationToken) => ServiceManager.Get<CommandService>().Queue(this.RankChangedCommand, new CommandParametersModel(userViewModel)), new CancellationToken());
             }
             else if (newRank.Amount < prevRank.Amount && this.RankDownCommand != null)
             {
-                AsyncRunner.RunAsyncBackground((cancellationToken) => ChannelSession.Services.Command.Queue(this.RankDownCommand, new CommandParametersModel(userViewModel)), new CancellationToken());
+                AsyncRunner.RunAsyncBackground((cancellationToken) => ServiceManager.Get<CommandService>().Queue(this.RankDownCommand, new CommandParametersModel(userViewModel)), new CancellationToken());
             }
         }
 
