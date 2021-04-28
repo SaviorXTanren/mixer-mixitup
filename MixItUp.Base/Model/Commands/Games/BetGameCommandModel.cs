@@ -129,6 +129,8 @@ namespace MixItUp.Base.Model.Commands.Games
 
                             await this.PerformCooldown(this.runParameters);
                             this.ClearData();
+
+                            return new Result(success: false);
                         }
                         else
                         {
