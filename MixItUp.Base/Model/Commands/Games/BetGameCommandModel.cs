@@ -143,12 +143,8 @@ namespace MixItUp.Base.Model.Commands.Games
                         return new Result(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole));
                     }
                 }
-                else
+                else if (parameters.Arguments.Count == 0 || !int.TryParse(parameters.Arguments[0], out int choice) || choice <= 0 || choice > this.BetOptions.Count)
                 {
-                    if (parameters.Arguments.Count > 0 && int.TryParse(parameters.Arguments[0], out int choice) && choice > 0 && choice <= this.BetOptions.Count)
-                    {
-                        return new Result();
-                    }
                     return new Result(string.Format(MixItUp.Base.Resources.GameCommandBetInvalidSelection, parameters.User.Username));
                 }
             }
