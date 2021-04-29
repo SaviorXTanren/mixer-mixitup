@@ -1232,6 +1232,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel All Commands.
+        /// </summary>
+        public static string CancelAllCommands {
+            get {
+                return ResourceManager.GetString("CancelAllCommands", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel Giveaway.
         /// </summary>
         public static string CancelGiveaway {

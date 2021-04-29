@@ -5525,4 +5525,7 @@ folder path correctly and that the folder path is accessible to Mix It Up.</valu
   <data name="NameInvalidAlphaNumericOnly" xml:space="preserve">
     <value>Name can only contain alpha-numeric characters</value>
   </data>
+  <data name="CancelAllCommands" xml:space="preserve">
+    <value>Cancel All Commands</value>
+  </data>
 </root>

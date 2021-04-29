@@ -114,6 +114,8 @@ namespace MixItUp.Base.Model.Commands.Games
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
+            await this.RefundCooldown(parameters);
+
             if (!this.runUsers.ContainsKey(parameters.User))
             {
                 string betType = parameters.Arguments[0].ToLower();

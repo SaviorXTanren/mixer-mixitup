@@ -30,7 +30,7 @@ namespace MixItUp.Base.Services.External
         {
             get
             {
-                var field = this.fields.FirstOrDefault(f => f.name.Equals("giftee"));
+                var field = this.fields.FirstOrDefault(f => f.name.Equals("giftee", StringComparison.OrdinalIgnoreCase));
                 return (field != null) ? field.value : string.Empty;
             }
         }
@@ -39,7 +39,7 @@ namespace MixItUp.Base.Services.External
         {
             get
             {
-                var field = this.fields.FirstOrDefault(f => f.name.Equals("quantity"));
+                var field = this.fields.FirstOrDefault(f => f.name.Equals("quantity", StringComparison.OrdinalIgnoreCase));
                 return (field != null) ? int.Parse(field.value) : 0;
             }
         }
@@ -49,7 +49,7 @@ namespace MixItUp.Base.Services.External
         {
             get
             {
-                var field = this.fields.FirstOrDefault(f => f.name.Equals("username"));
+                var field = this.fields.FirstOrDefault(f => f.name.Equals("username", StringComparison.OrdinalIgnoreCase));
                 return (field != null) ? field.value : string.Empty;
             }
         }
@@ -73,7 +73,7 @@ namespace MixItUp.Base.Services.External
         {
             get
             {
-                StreamlootsDataFieldModel field = this.fields.FirstOrDefault(f => f.name.Equals("message"));
+                StreamlootsDataFieldModel field = this.fields.FirstOrDefault(f => f.name.Equals("message", StringComparison.OrdinalIgnoreCase));
                 return (field != null) ? field.value : string.Empty;
             }
         }
@@ -82,7 +82,7 @@ namespace MixItUp.Base.Services.External
         {
             get
             {
-                StreamlootsDataFieldModel field = this.fields.FirstOrDefault(f => f.name.Equals("longMessage"));
+                StreamlootsDataFieldModel field = this.fields.FirstOrDefault(f => f.name.Equals("longmessage", StringComparison.OrdinalIgnoreCase));
                 return (field != null) ? field.value : string.Empty;
             }
         }
@@ -91,7 +91,7 @@ namespace MixItUp.Base.Services.External
         {
             get
             {
-                StreamlootsDataFieldModel field = this.fields.FirstOrDefault(f => f.name.Equals("username"));
+                StreamlootsDataFieldModel field = this.fields.FirstOrDefault(f => f.name.Equals("username", StringComparison.OrdinalIgnoreCase));
                 return (field != null) ? field.value : string.Empty;
             }
         }
