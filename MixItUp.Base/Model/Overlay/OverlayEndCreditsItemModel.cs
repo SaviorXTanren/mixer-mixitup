@@ -122,6 +122,9 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         private Dictionary<Guid, uint> bits = new Dictionary<Guid, uint>();
 
+        [JsonIgnore]
+        private HashSet<OverlayEndCreditsSectionTypeEnum> testDataFilled = new HashSet<OverlayEndCreditsSectionTypeEnum>();
+
         public OverlayEndCreditsItemModel() : base() { }
 
         public OverlayEndCreditsItemModel(string titleTemplate, Dictionary<OverlayEndCreditsSectionTypeEnum, OverlayEndCreditsSectionModel> sectionTemplates, string backgroundColor,
@@ -146,6 +149,52 @@ namespace MixItUp.Base.Model.Overlay
 
         public override Task LoadTestData()
         {
+            this.testDataFilled.Clear();
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Chatters) && this.viewers.Count == 0)
+            {
+                this.testDataFilled.Add(OverlayEndCreditsSectionTypeEnum.Chatters);
+            }
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Subscribers) && this.subs.Count == 0)
+            {
+                this.testDataFilled.Add(OverlayEndCreditsSectionTypeEnum.Subscribers);
+            }
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Moderators) && this.mods.Count == 0)
+            {
+                this.testDataFilled.Add(OverlayEndCreditsSectionTypeEnum.Moderators);
+            }
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Followers) && this.follows.Count == 0)
+            {
+                this.testDataFilled.Add(OverlayEndCreditsSectionTypeEnum.Followers);
+            }
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Hosts) && this.hosts.Count == 0)
+            {
+                this.testDataFilled.Add(OverlayEndCreditsSectionTypeEnum.Hosts);
+            }
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Raids) && this.raids.Count == 0)
+            {
+                this.testDataFilled.Add(OverlayEndCreditsSectionTypeEnum.Raids);
+            }
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.NewSubscribers) && this.newSubs.Count == 0)
+            {
+                this.testDataFilled.Add(OverlayEndCreditsSectionTypeEnum.NewSubscribers);
+            }
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Resubscribers) && this.resubs.Count == 0)
+            {
+                this.testDataFilled.Add(OverlayEndCreditsSectionTypeEnum.Resubscribers);
+            }
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.GiftedSubs) && this.giftedSubs.Count == 0)
+            {
+                this.testDataFilled.Add(OverlayEndCreditsSectionTypeEnum.GiftedSubs);
+            }
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Donations) && this.donations.Count == 0)
+            {
+                this.testDataFilled.Add(OverlayEndCreditsSectionTypeEnum.Donations);
+            }
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Bits) && this.bits.Count == 0)
+            {
+                this.testDataFilled.Add(OverlayEndCreditsSectionTypeEnum.Bits);
+            }
+
             UserViewModel user = ChannelSession.GetCurrentUser();
             List<Guid> userIDs = new List<Guid>(ChannelSession.Settings.UserData.Keys.Take(20));
             for (int i = userIDs.Count; i < 20; i++)
@@ -155,47 +204,47 @@ namespace MixItUp.Base.Model.Overlay
 
             foreach (Guid userID in userIDs)
             {
-                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Chatters))
+                if (this.testDataFilled.Contains(OverlayEndCreditsSectionTypeEnum.Chatters))
                 {
                     this.viewers.Add(userID);
                 }
-                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Subscribers))
+                if (this.testDataFilled.Contains(OverlayEndCreditsSectionTypeEnum.Subscribers))
                 {
                     this.subs.Add(userID);
                 }
-                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Moderators))
+                if (this.testDataFilled.Contains(OverlayEndCreditsSectionTypeEnum.Moderators))
                 {
                     this.mods.Add(userID);
                 }
-                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Followers))
+                if (this.testDataFilled.Contains(OverlayEndCreditsSectionTypeEnum.Followers))
                 {
                     this.follows.Add(userID);
                 }
-                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Hosts))
+                if (this.testDataFilled.Contains(OverlayEndCreditsSectionTypeEnum.Hosts))
                 {
                     this.hosts.Add(userID);
                 }
-                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Raids))
+                if (this.testDataFilled.Contains(OverlayEndCreditsSectionTypeEnum.Raids))
                 {
                     this.raids[userID] = 10;
                 }
-                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.NewSubscribers))
+                if (this.testDataFilled.Contains(OverlayEndCreditsSectionTypeEnum.NewSubscribers))
                 {
                     this.newSubs.Add(userID);
                 }
-                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Resubscribers))
+                if (this.testDataFilled.Contains(OverlayEndCreditsSectionTypeEnum.Resubscribers))
                 {
                     this.resubs[userID] = 5;
                 }
-                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.GiftedSubs))
+                if (this.testDataFilled.Contains(OverlayEndCreditsSectionTypeEnum.GiftedSubs))
                 {
                     this.giftedSubs[userID] = 5;
                 }
-                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Donations))
+                if (this.testDataFilled.Contains(OverlayEndCreditsSectionTypeEnum.Donations))
                 {
                     this.donations[userID] = 12.34;
                 }
-                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Bits))
+                if (this.testDataFilled.Contains(OverlayEndCreditsSectionTypeEnum.Bits))
                 {
                     this.bits[userID] = 123;
                 }
@@ -261,18 +310,50 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Reset()
         {
-            this.viewers.Clear();
-            this.subs.Clear();
-            this.mods.Clear();
-            this.follows.Clear();
-            this.hosts.Clear();
-            this.raids.Clear();
-            this.newSubs.Clear();
-            this.resubs.Clear();
-            this.giftedSubs.Clear();
-            this.donations.Clear();
-            this.bits.Clear();
-
+            if (this.testDataFilled.Contains(OverlayEndCreditsSectionTypeEnum.Chatters))
+            {
+                this.viewers.Clear();
+            }
+            if (this.testDataFilled.Contains(OverlayEndCreditsSectionTypeEnum.Subscribers))
+            {
+                this.subs.Clear();
+            }
+            if (this.testDataFilled.Contains(OverlayEndCreditsSectionTypeEnum.Moderators))
+            {
+                this.mods.Clear();
+            }
+            if (this.testDataFilled.Contains(OverlayEndCreditsSectionTypeEnum.Followers))
+            {
+                this.follows.Clear();
+            }
+            if (this.testDataFilled.Contains(OverlayEndCreditsSectionTypeEnum.Hosts))
+            {
+                this.hosts.Clear();
+            }
+            if (this.testDataFilled.Contains(OverlayEndCreditsSectionTypeEnum.Raids))
+            {
+                this.raids.Clear();
+            }
+            if (this.testDataFilled.Contains(OverlayEndCreditsSectionTypeEnum.NewSubscribers))
+            {
+                this.newSubs.Clear();
+            }
+            if (this.testDataFilled.Contains(OverlayEndCreditsSectionTypeEnum.Resubscribers))
+            {
+                this.resubs.Clear();
+            }
+            if (this.testDataFilled.Contains(OverlayEndCreditsSectionTypeEnum.GiftedSubs))
+            {
+                this.giftedSubs.Clear();
+            }
+            if (this.testDataFilled.Contains(OverlayEndCreditsSectionTypeEnum.Donations))
+            {
+                this.donations.Clear();
+            }
+            if (this.testDataFilled.Contains(OverlayEndCreditsSectionTypeEnum.Bits))
+            {
+                this.bits.Clear();
+            }
             await base.Reset();
         }
 
