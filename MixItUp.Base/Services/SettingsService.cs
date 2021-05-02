@@ -153,10 +153,7 @@ namespace MixItUp.Base.Services
                     // Adding delay to ensure the above files are actually deleted
                     await Task.Delay(2000);
 
-                    using (ZipArchive zipFile = ZipFile.Open(ChannelSession.AppSettings.BackupSettingsFilePath, ZipArchiveMode.Read))
-                    {
-                        zipFile.ExtractToDirectory(SettingsV3Model.SettingsDirectoryName);
-                    }
+                    await ChannelSession.Services.FileService.UnzipFiles(ChannelSession.AppSettings.BackupSettingsFilePath, SettingsV3Model.SettingsDirectoryName);
 
                     ChannelSession.AppSettings.BackupSettingsFilePath = null;
                     ChannelSession.AppSettings.BackupSettingsToReplace = Guid.Empty;
