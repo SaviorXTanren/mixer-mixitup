@@ -3093,6 +3093,16 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Diagnostic Logging is currently enabled and could impact performance &amp; hard drive space. Please
+        ///ensure this option is disabled after any testing you are doing is done by heading to Settings -&gt; Advanced..
+        /// </summary>
+        public static string DiagnosticLoggingEnabledWarningTooltip {
+            get {
+                return ResourceManager.GetString("DiagnosticLoggingEnabledWarningTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Diagnostic Logging helps to diagnose specific issues by logging out additional information of what is being done while Mix It Up is running. These logs will typically be huge in comparision to regular logs, so this should only be done when specifically advised by a Mix It Up developer and should be disabled immediately after the problem is solved..
         /// </summary>
         public static string DiagnosticLoggingToolip {
