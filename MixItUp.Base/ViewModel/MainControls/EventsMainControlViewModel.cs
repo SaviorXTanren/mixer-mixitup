@@ -116,7 +116,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             if (ChannelSession.Services.WebhookService.IsConnected && ChannelSession.Services.WebhookService.IsAllowed)
             {
                 commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainBegin));
-                commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainProgress));
+                //commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainProgress));
                 commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainEnd));
             }
 

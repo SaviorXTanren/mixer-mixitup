@@ -57,10 +57,10 @@ namespace MixItUp.Base.Services
                 var _ = this.TwitchChannelHypeTrainBegin(totalPoints, levelPoints, levelGoal);
             });
 
-            this.signalRConnection.Listen("TwitchChannelHypeTrainProgress", (int level, int totalPoints, int levelPoints, int levelGoal) =>
-            {
-                var _ = this.TwitchChannelHypeTrainProgress(level, totalPoints, levelPoints, levelGoal);
-            });
+            //this.signalRConnection.Listen("TwitchChannelHypeTrainProgress", (int level, int totalPoints, int levelPoints, int levelGoal) =>
+            //{
+            //    var _ = this.TwitchChannelHypeTrainProgress(level, totalPoints, levelPoints, levelGoal);
+            //});
 
             this.signalRConnection.Listen("TwitchChannelHypeTrainEnd", (int level, int totalPoints) =>
             {
@@ -192,20 +192,20 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private async Task TwitchChannelHypeTrainProgress(int level, int totalPoints, int levelPoints, int levelGoal)
-        {
-            Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
-            eventCommandSpecialIdentifiers["hypetraintotallevel"] = level.ToString();
-            eventCommandSpecialIdentifiers["hypetraintotalpoints"] = totalPoints.ToString();
-            eventCommandSpecialIdentifiers["hypetrainlevelpoints"] = levelPoints.ToString();
-            eventCommandSpecialIdentifiers["hypetrainlevelgoal"] = levelGoal.ToString();
+        //private async Task TwitchChannelHypeTrainProgress(int level, int totalPoints, int levelPoints, int levelGoal)
+        //{
+        //    Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
+        //    eventCommandSpecialIdentifiers["hypetraintotallevel"] = level.ToString();
+        //    eventCommandSpecialIdentifiers["hypetraintotalpoints"] = totalPoints.ToString();
+        //    eventCommandSpecialIdentifiers["hypetrainlevelpoints"] = levelPoints.ToString();
+        //    eventCommandSpecialIdentifiers["hypetrainlevelgoal"] = levelGoal.ToString();
 
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelHypeTrainProgress, ChannelSession.GetCurrentUser(), eventCommandSpecialIdentifiers);
-            if (ChannelSession.Services.Events.CanPerformEvent(trigger))
-            {
-                await ChannelSession.Services.Events.PerformEvent(trigger);
-            }
-        }
+        //    EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelHypeTrainProgress, ChannelSession.GetCurrentUser(), eventCommandSpecialIdentifiers);
+        //    if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+        //    {
+        //        await ChannelSession.Services.Events.PerformEvent(trigger);
+        //    }
+        //}
 
         private async Task TwitchChannelHypeTrainEnd(int level, int totalPoints)
         {
