@@ -5528,4 +5528,11 @@ folder path correctly and that the folder path is accessible to Mix It Up.</valu
   <data name="CancelAllCommands" xml:space="preserve">
     <value>Cancel All Commands</value>
   </data>
+  <data name="DiagnosticLoggingEnabledWarningTooltip" xml:space="preserve">
+    <value>Diagnostic Logging is currently enabled and could impact performance &amp; hard drive space. Please
+ensure this option is disabled after any testing you are doing is done by heading to Settings -&gt; Advanced.</value>
+  </data>
+  <data name="Anonymous" xml:space="preserve">
+    <value>Anonymous</value>
+  </data>
 </root>

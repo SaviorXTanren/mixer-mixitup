@@ -78,7 +78,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged();
             }
         }
-        private string value1;
+        private string value1 = string.Empty;
 
         public string Value2
         {
@@ -89,7 +89,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged();
             }
         }
-        private string value2;
+        private string value2 = string.Empty;
 
         public string Value3
         {
@@ -100,7 +100,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged();
             }
         }
-        private string value3;
+        private string value3 = string.Empty;
 
         public bool Validate()
         {
@@ -114,7 +114,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else
             {
-                return !(string.IsNullOrEmpty(this.Value1) && string.IsNullOrEmpty(this.Value2));
+                return (!string.IsNullOrEmpty(this.Value1)) || (!string.IsNullOrEmpty(this.Value2));
             }
         }
 

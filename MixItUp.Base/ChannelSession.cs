@@ -187,7 +187,6 @@ namespace MixItUp.Base
                 }
                 else
                 {
-                    ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = new StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum.Twitch);
                     userResult = await ChannelSession.ConnectTwitchUser();
                 }
             }
@@ -243,7 +242,7 @@ namespace MixItUp.Base
                 }
                 else
                 {
-                    ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = null;
+                    ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = null;
                     return userResult;
                 }
             }
@@ -362,15 +361,6 @@ namespace MixItUp.Base
                         ChannelSession.TwitchStreamNewAPI = await ChannelSession.TwitchUserConnection.GetStream(ChannelSession.TwitchUserNewAPI);
                         ChannelSession.TwitchStreamV5 = await ChannelSession.TwitchUserConnection.GetV5LiveStream(ChannelSession.TwitchChannelV5);
 
-                        IEnumerable<TwitchV5API.Users.UserModel> channelEditors = await ChannelSession.TwitchUserConnection.GetV5APIChannelEditors(ChannelSession.TwitchChannelV5);
-                        if (channelEditors != null)
-                        {
-                            foreach (TwitchV5API.Users.UserModel channelEditor in channelEditors)
-                            {
-                                ChannelSession.TwitchChannelEditorsV5.Add(channelEditor.id);
-                            }
-                        }
-
                         if (ChannelSession.Settings == null)
                         {
                             IEnumerable<SettingsV3Model> currentSettings = await ChannelSession.Services.Settings.GetAllSettings();
@@ -383,17 +373,17 @@ namespace MixItUp.Base
 
                             ChannelSession.Settings = await ChannelSession.Services.Settings.Create(twitchChannelNew.display_name);
                         }
-                        await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
-
-                        if (!string.IsNullOrEmpty(ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID) && !string.Equals(ChannelSession.TwitchUserNewAPI.id, ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID))
+                        else if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch) &&
+                            !string.IsNullOrEmpty(ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID) &&
+                            !string.Equals(ChannelSession.TwitchUserNewAPI.id, ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID))
                         {
                             Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {ChannelSession.TwitchUserNewAPI.login} - {ChannelSession.TwitchUserNewAPI.id} - {ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID}");
                             GlobalEvents.ShowMessageBox(Resources.TwitchAccountMismatch);
-                            ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.accessToken = string.Empty;
-                            ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.refreshToken = string.Empty;
-                            ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.expiresIn = 0;
+                            ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = null;
                             return false;
                         }
+
+                        await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
 
                         ChannelSession.Settings.Name = ChannelSession.TwitchUserNewAPI.display_name;
 
@@ -603,6 +593,15 @@ namespace MixItUp.Base
 
                         await ChannelSession.Services.Timers.Initialize();
                         await ChannelSession.Services.Moderation.Initialize();
+
+                        IEnumerable<TwitchV5API.Users.UserModel> channelEditors = await ChannelSession.TwitchUserConnection.GetV5APIChannelEditors(ChannelSession.TwitchChannelV5);
+                        if (channelEditors != null)
+                        {
+                            foreach (TwitchV5API.Users.UserModel channelEditor in channelEditors)
+                            {
+                                ChannelSession.TwitchChannelEditorsV5.Add(channelEditor.id);
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {

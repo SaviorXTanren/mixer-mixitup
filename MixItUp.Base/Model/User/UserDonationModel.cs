@@ -32,8 +32,22 @@ namespace MixItUp.Base.Model.User
         public string ID { get; set; }
         [DataMember]
         public StreamingPlatformTypeEnum Platform { get; set; } = StreamingPlatformTypeEnum.All;
+
+        public string Username
+        {
+            get { return this.username; }
+            set
+            {
+                this.username = value;
+                if (string.IsNullOrWhiteSpace(this.username))
+                {
+                    this.username = MixItUp.Base.Resources.Anonymous;
+                }
+            }
+        }
         [DataMember]
-        public string Username { get; set; }
+        private string username { get; set; }
+
         [DataMember]
         public string Type { get; set; }
         [DataMember]
