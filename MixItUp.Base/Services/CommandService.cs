@@ -204,19 +204,23 @@ namespace MixItUp.Base.Services
                     return;
                 }
 
-                Logger.Log(LogLevel.Debug, $"Starting command performing: {this}");
+                CommandModelBase command = commandInstance.Command;
+                if (command != null)
+                {
+                    if (!command.IsEnabled || !command.HasWork)
+                    {
+                        commandInstance.State = CommandInstanceStateEnum.Canceled;
+                        return;
+                    }
+
+                    commandInstance.Parameters.SpecialIdentifiers[CommandModelBase.CommandNameSpecialIdentifier] = command.Name;
+
+                    command.TrackTelemetry();
+                }
 
                 if (commandInstance.RunnerParameters.Count == 0)
                 {
                     commandInstance.RunnerParameters = new List<CommandParametersModel>() { commandInstance.Parameters };
-                }
-
-                CommandModelBase command = commandInstance.Command;
-                if (command != null)
-                {
-                    commandInstance.Parameters.SpecialIdentifiers[CommandModelBase.CommandNameSpecialIdentifier] = command.Name;
-
-                    command.TrackTelemetry();
                 }
 
                 Logger.Log(LogLevel.Debug, $"Starting command performing: {this}");
