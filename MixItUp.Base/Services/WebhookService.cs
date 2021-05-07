@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -124,7 +125,14 @@ namespace MixItUp.Base.Services
             UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(followerId);
             if (user == null)
             {
-                user = new UserViewModel(followerDisplayName);
+                user = new UserViewModel(new TwitchWebhookFollowModel()
+                {
+                    StreamerID = ChannelSession.TwitchUserNewAPI.id,
+
+                    UserID = followerId,
+                    Username = followerUsername,
+                    UserDisplayName = followerDisplayName
+                });
             }
 
             if (user.UserRoles.Contains(UserRoleEnum.Banned))

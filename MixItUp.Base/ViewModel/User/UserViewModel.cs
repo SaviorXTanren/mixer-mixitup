@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Twitch;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Twitch;
@@ -166,6 +167,17 @@ namespace MixItUp.Base.ViewModel.User
 
             this.TwitchID = follow.from_id;
             this.TwitchDisplayName = this.TwitchUsername = follow.from_name;
+
+            this.SetTwitchRoles();
+        }
+
+        public UserViewModel(TwitchWebhookFollowModel follow)
+        {
+            this.SetUserData(twitchID: follow.UserID);
+
+            this.TwitchID = follow.UserID;
+            this.TwitchUsername = follow.Username;
+            this.TwitchDisplayName = follow.UserDisplayName;
 
             this.SetTwitchRoles();
         }
