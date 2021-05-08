@@ -146,6 +146,8 @@ namespace MixItUp.Base.Services.Twitch
 
     public interface ITwitchEventService
     {
+        HashSet<string> FollowCache { get; }
+
         bool IsConnected { get; }
 
         Task<Result> Connect();
@@ -196,11 +198,11 @@ namespace MixItUp.Base.Services.Twitch
             PubSubTopicsEnum.ChannelPointsRedeemed
         };
 
+        public HashSet<string> FollowCache { get; private set; } = new HashSet<string>();
+
         private PubSubClient pubSub;
 
         private CancellationTokenSource cancellationTokenSource;
-
-        private HashSet<string> follows = new HashSet<string>();
 
         private DateTimeOffset streamStartCheckTime = DateTimeOffset.Now;
 
@@ -419,13 +421,13 @@ namespace MixItUp.Base.Services.Twitch
                 }
 
                 IEnumerable<UserFollowModel> followers = await ChannelSession.TwitchUserConnection.GetNewAPIFollowers(ChannelSession.TwitchUserNewAPI, maxResult: 100);
-                if (this.follows.Count() > 0)
+                if (this.FollowCache.Count() > 0)
                 {
                     foreach (UserFollowModel follow in followers)
                     {
-                        if (!this.follows.Contains(follow.from_id))
+                        if (!this.FollowCache.Contains(follow.from_id))
                         {
-                            this.follows.Add(follow.from_id);
+                            this.FollowCache.Add(follow.from_id);
 
                             UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(follow.from_id);
                             if (user == null)
@@ -471,7 +473,7 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     foreach (UserFollowModel follow in followers)
                     {
-                        this.follows.Add(follow.from_id);
+                        this.FollowCache.Add(follow.from_id);
                     }
                 }
             }

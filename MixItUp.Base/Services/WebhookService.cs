@@ -135,6 +135,8 @@ namespace MixItUp.Base.Services
                 });
             }
 
+            ChannelSession.Services.Events.TwitchEventService.FollowCache.Add(user.TwitchID);
+
             if (user.UserRoles.Contains(UserRoleEnum.Banned))
             {
                 return;
