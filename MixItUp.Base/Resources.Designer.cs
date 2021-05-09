@@ -4050,6 +4050,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to export command.
+        /// </summary>
+        public static string FailedToExportCommand {
+            get {
+                return ResourceManager.GetString("FailedToExportCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to finalize initialization. If this continues, please visit the Mix It Up Discord for assistance..
         /// </summary>
         public static string FailedToFinalizeInitialization {

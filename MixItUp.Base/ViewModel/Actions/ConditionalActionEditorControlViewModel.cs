@@ -154,6 +154,7 @@ namespace MixItUp.Base.ViewModel.Actions
         public ThreadSafeObservableCollection<ConditionalClauseViewModel> Clauses { get; private set; } = new ThreadSafeObservableCollection<ConditionalClauseViewModel>();
 
         public ICommand ImportActionsCommand { get; private set; }
+        public ICommand ExportActionsCommand { get; private set; }
 
         public ActionEditorListControlViewModel ActionEditorList { get; set; } = new ActionEditorListControlViewModel();
 
@@ -195,7 +196,34 @@ namespace MixItUp.Base.ViewModel.Actions
                 catch (Exception ex)
                 {
                     Logger.Log(ex);
-                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.FailedToImportCommand);
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.FailedToImportCommand + ": " + ex.ToString());
+                }
+            });
+
+            this.ExportActionsCommand = this.CreateCommand(async () =>
+            {
+                try
+                {
+                    IEnumerable<Result> results = await this.ActionEditorList.ValidateActions();
+                    if (results.Any(r => !r.Success))
+                    {
+                        await DialogHelper.ShowFailedResults(results.Where(r => !r.Success));
+                        return;
+                    }
+
+                    CustomCommandModel command = new CustomCommandModel(this.Name);
+                    command.Actions.AddRange(await this.ActionEditorList.GetActions());
+
+                    string fileName = ChannelSession.Services.FileService.ShowSaveFileDialog(this.Name + CommandEditorWindowViewModelBase.MixItUpCommandFileExtension);
+                    if (!string.IsNullOrEmpty(fileName))
+                    {
+                        await FileSerializerHelper.SerializeToFile(fileName, command);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.FailedToExportCommand + ": " + ex.ToString());
                 }
             });
 
