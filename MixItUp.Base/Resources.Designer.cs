@@ -601,6 +601,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Anonymous.
+        /// </summary>
+        public static string Anonymous {
+            get {
+                return ResourceManager.GetString("Anonymous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Answer.
         /// </summary>
         public static string Answer {
@@ -1228,6 +1237,15 @@ namespace MixItUp.Base {
         public static string Cancel {
             get {
                 return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel All Commands.
+        /// </summary>
+        public static string CancelAllCommands {
+            get {
+                return ResourceManager.GetString("CancelAllCommands", resourceCulture);
             }
         }
         
@@ -3080,6 +3098,16 @@ namespace MixItUp.Base {
         public static string DiagnosticLogging {
             get {
                 return ResourceManager.GetString("DiagnosticLogging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Diagnostic Logging is currently enabled and could impact performance &amp; hard drive space. Please
+        ///ensure this option is disabled after any testing you are doing is done by heading to Settings -&gt; Advanced..
+        /// </summary>
+        public static string DiagnosticLoggingEnabledWarningTooltip {
+            get {
+                return ResourceManager.GetString("DiagnosticLoggingEnabledWarningTooltip", resourceCulture);
             }
         }
         

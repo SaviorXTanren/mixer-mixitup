@@ -3,9 +3,34 @@
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
     </head>
     <body>
-        <p style="font-size: large; color: red"><b><u>WARNING: The 0.5.9.0 update is a very large update that will upgrade your settings to a newer format and will take some time. Due to this, we encourage users to NOT take this update prior to streaming and instead during your free time. If you encounter any issues, please visit our discord server for support: http://mixitupapp.com/discord</u></b></p>
-
         <h1 style="color: #5e9ca0;">Changelog</h1>
+
+        <h2 style="color: #2e6c80;">v0.5.10.0:</h2>
+        <ul>
+            <li>Command System Improvements:</li>
+            <ul>
+                <li>Adding new Command History page that shows the most recent triggered commands, what their progress is, and the ability to cancel &amp; retry them</li>
+                <li>Adding Command Lock System option to select what types of commands are locked under Settings -> Commands</li>
+                <li>Adding Requirement Errors Cooldown Type option to determine how requirement error messages should be cooled down under Settings -> Commands </li>
+                <li>Exported *.miucommand command files will now show Mix It Up icon in Windows Explorer and can be opened to import data into a new or existing command</li>
+                <li>Exported *.miucommand command files can now be drag &amp; dropped into a command editor window to import the actions from it</li>
+                <li>Adding Cancel All Commands option to Command Action</li>
+            </ul>
+            <li>Twitch Channel Point Reward Commands:</li>
+            <ul>
+                <li>Twitch Channel Point Rewards can now be created directly from the Channel Points page of the app. This will create a basic reward with the name specified and additional details for the reward must then be configured up on Twitch's website</li>
+                <li>Twitch Channel Point Rewards that are <b>created through Mix It Up</b> can now have their properties dynamically updated using the Twitch action</li>
+            </ul>
+            <li>Adding Streamloots Cards page for creating dedicated commands that are triggered when specific Streamloots cards are redeemed. <b>Only shown when Streamloots service is connected.</b></li>
+            <li>Twitch Mass Subscriptions Gifted event command now includes all users that received a gifted sub as arguments to the command. <b>Requires the Twitch Mass Subscriptions Gifted Filter option enabled under Settings -> Commands</b></li>
+            <li>Chat Message Received event command now includes the full message as arguments to the command</li>
+            <li>The StreamElements donation event command can now be triggered in real-time and is no longer delayed by up to 1 minute</li>
+            <li>Adding settings menu for Counters to allow for viewing, editing, &amp; deletion</li>
+            <li>Adding event command for StreamElements Merch Purchase</li>
+            <li>Using the Test button for the End Credits Overlay Widget will now only fill in test data if the given category doesn't already have users set for it and will only clear out data for those categories</li>
+            <li>Adding uninstaller and registering in Windows add/remove programs</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
 
         <h2 style="color: #2e6c80;">v0.5.9.7:</h2>
         <ul>

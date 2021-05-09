@@ -184,11 +184,11 @@ namespace MixItUp.Base.Services.Twitch
             PubSubTopicsEnum.ChannelPointsRedeemed
         };
 
+        public HashSet<string> FollowCache { get; private set; } = new HashSet<string>();
+
         private PubSubClient pubSub;
 
         private CancellationTokenSource cancellationTokenSource;
-
-        private HashSet<string> follows = new HashSet<string>();
 
         private DateTimeOffset streamStartCheckTime = DateTimeOffset.Now;
 
@@ -407,13 +407,13 @@ namespace MixItUp.Base.Services.Twitch
                 }
 
                 IEnumerable<UserFollowModel> followers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIFollowers(ServiceManager.Get<TwitchSessionService>().UserNewAPI, maxResult: 100);
-                if (this.follows.Count() > 0)
+                if (this.FollowCache.Count() > 0)
                 {
                     foreach (UserFollowModel follow in followers)
                     {
-                        if (!this.follows.Contains(follow.from_id))
+                        if (!this.FollowCache.Contains(follow.from_id))
                         {
-                            this.follows.Add(follow.from_id);
+                            this.FollowCache.Add(follow.from_id);
 
                             UserViewModel user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, follow.from_id);
                             if (user == null)
@@ -459,7 +459,7 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     foreach (UserFollowModel follow in followers)
                     {
-                        this.follows.Add(follow.from_id);
+                        this.FollowCache.Add(follow.from_id);
                     }
                 }
             }

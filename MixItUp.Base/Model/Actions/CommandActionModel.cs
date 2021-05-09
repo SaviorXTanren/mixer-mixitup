@@ -16,6 +16,7 @@ namespace MixItUp.Base.Model.Actions
         EnableCommand,
         DisableCommandGroup,
         EnableCommandGroup,
+        CancelAllCommands,
     }
 
     [DataContract]
@@ -38,9 +39,8 @@ namespace MixItUp.Base.Model.Actions
         public string CommandGroupName { get; set; }
 
         public CommandActionModel(CommandActionTypeEnum commandActionType, CommandModelBase command, string commandArguments, bool waitForCommandToFinish)
-            : base(ActionTypeEnum.Command)
+            : this(commandActionType)
         {
-            this.ActionType = commandActionType;
             if (command is PreMadeChatCommandModelBase)
             {
                 this.PreMadeType = command.GetType();
@@ -56,10 +56,15 @@ namespace MixItUp.Base.Model.Actions
         }
 
         public CommandActionModel(CommandActionTypeEnum commandActionType, string groupName)
+            : this(commandActionType)
+        {
+            this.CommandGroupName = groupName;
+        }
+
+        public CommandActionModel(CommandActionTypeEnum commandActionType)
             : base(ActionTypeEnum.Command)
         {
             this.ActionType = commandActionType;
-            this.CommandGroupName = groupName;
         }
 
 #pragma warning disable CS0612 // Type or member is obsolete
@@ -140,7 +145,7 @@ namespace MixItUp.Base.Model.Actions
                     CommandInstanceModel commandInstance = new CommandInstanceModel(command, copyParameters);
                     if (this.WaitForCommandToFinish)
                     {
-                        await ServiceManager.Get<CommandService>().RunDirectly(commandInstance);
+                        await ServiceManager.Get<CommandService>().RunDirectlyWithValidation(commandInstance);
                     }
                     else
                     {
@@ -167,6 +172,13 @@ namespace MixItUp.Base.Model.Actions
                         ChannelSession.Settings.Commands.ManualValueChanged(cmd.ID);
                     }
                     ServiceManager.Get<ChatService>().RebuildCommandTriggers();
+                }
+            }
+            else if (this.ActionType == CommandActionTypeEnum.CancelAllCommands)
+            {
+                foreach (CommandInstanceModel commandInstance in ServiceManager.Get<CommandService>().CommandInstances.Where(c => c.State == CommandInstanceStateEnum.Pending || c.State == CommandInstanceStateEnum.Running))
+                {
+                    ServiceManager.Get<CommandService>().Cancel(commandInstance);
                 }
             }
         }

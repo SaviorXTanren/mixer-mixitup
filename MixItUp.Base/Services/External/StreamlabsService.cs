@@ -106,7 +106,9 @@ namespace MixItUp.Base.Services.External
 
         public override async Task Disconnect()
         {
+            this.socket.OnDisconnected -= Socket_OnDisconnected;
             await this.socket.Disconnect();
+
             this.token = null;
         }
 
@@ -147,6 +149,8 @@ namespace MixItUp.Base.Services.External
             {
                 string socketToken = jobj["socket_token"].ToString();
 
+                this.socket.OnDisconnected += Socket_OnDisconnected;
+
                 this.socket.Listen("event", async (data) =>
                 {
                     if (data != null)
@@ -176,6 +180,23 @@ namespace MixItUp.Base.Services.External
                 return new Result();
             }
             return new Result(Resources.StreamlabsWebSocketTokenFailed);
+        }
+
+        private async void Socket_OnDisconnected(object sender, EventArgs e)
+        {
+            ChannelSession.DisconnectionOccurred("Streamlabs");
+
+            Result result;
+            await this.Disconnect();
+            do
+            {
+                await Task.Delay(2500);
+
+                result = await this.Connect();
+            }
+            while (!result.Success);
+
+            ChannelSession.ReconnectionOccurred("Streamlabs");
         }
     }
 }

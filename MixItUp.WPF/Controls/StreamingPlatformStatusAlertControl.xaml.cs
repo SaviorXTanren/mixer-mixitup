@@ -15,7 +15,7 @@ namespace MixItUp.WPF.Controls
 {
     public class StreamingPlatformStatusAlertViewModel : UIViewModelBase
     {
-        public bool Show { get { return this.incidents.Count > 0; } }
+        public bool Show { get { return !string.IsNullOrWhiteSpace(this.ToolTipText); } }
 
         public string ToolTipText
         {
@@ -80,6 +80,15 @@ namespace MixItUp.WPF.Controls
                         {
                             this.ToolTipText = string.Empty;
                         }
+
+                        if (ChannelSession.AppSettings.DiagnosticLogging)
+                        {
+                            if (!string.IsNullOrWhiteSpace(this.ToolTipText))
+                            {
+                                this.ToolTipText += Environment.NewLine + Environment.NewLine;
+                            }
+                            this.ToolTipText += MixItUp.Base.Resources.DiagnosticLoggingEnabledWarningTooltip;
+                        }
                     }
                     catch (Exception ex) { Logger.Log(ex); }
 
@@ -87,6 +96,11 @@ namespace MixItUp.WPF.Controls
                 }
             });
             return Task.FromResult(0);
+        }
+
+        private void GlobalEvents_OnRefreshWarningUI(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 

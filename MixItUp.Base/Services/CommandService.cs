@@ -80,46 +80,7 @@ namespace MixItUp.Base.Services
                     return;
                 }
 
-                Result validationResult = await command.CustomValidation(commandInstance.Parameters);
-                if (validationResult.Success)
-                {
-                    validationResult = await command.ValidateRequirements(commandInstance.Parameters);
-                    if (!validationResult.Success && ChannelSession.Settings.RequirementErrorsCooldownType != RequirementErrorCooldownTypeEnum.PerCommand)
-                    {
-                        command.CommandErrorCooldown = RequirementModelBase.UpdateErrorCooldown();
-                    }
-                }
-                else
-                {
-                    if (ChannelSession.Settings.RequirementErrorsCooldownType != RequirementErrorCooldownTypeEnum.None)
-                    {
-                        if (!string.IsNullOrEmpty(validationResult.Message) && validationResult.DisplayMessage)
-                        {
-                            await ServiceManager.Get<ChatService>().SendMessage(validationResult.Message, commandInstance.Parameters.Platform);
-                        }
-                    }
-                }
-
-                if (validationResult.Success)
-                {
-                    if (command.Requirements != null)
-                    {
-                        await command.PerformRequirements(commandInstance.Parameters);
-                        commandInstance.RunnerParameters = new List<CommandParametersModel>(command.GetPerformingUsers(commandInstance.Parameters));
-                    }
-                }
-                else
-                {
-                    if (!string.IsNullOrEmpty(validationResult.Message))
-                    {
-                        commandInstance.ErrorMessage = validationResult.Message;
-                        commandInstance.State = CommandInstanceStateEnum.Failed;
-                    }
-                    else
-                    {
-                        commandInstance.State = CommandInstanceStateEnum.Completed;
-                    }
-                }
+                await this.ValidateCommand(commandInstance);
             }
 
             lock (CommandInstances)
@@ -195,28 +156,38 @@ namespace MixItUp.Base.Services
             this.OnCommandInstanceAdded(this, commandInstance);
         }
 
+        public async Task RunDirectlyWithValidation(CommandInstanceModel commandInstance)
+        {
+            await this.ValidateCommand(commandInstance);
+            await this.RunDirectly(commandInstance);
+        }
+
         public async Task RunDirectly(CommandInstanceModel commandInstance)
         {
             try
             {
-                if (commandInstance.State == CommandInstanceStateEnum.Canceled)
+                if (commandInstance.State == CommandInstanceStateEnum.Canceled || commandInstance.State == CommandInstanceStateEnum.Completed)
                 {
                     return;
-                }
-
-                Logger.Log(LogLevel.Debug, $"Starting command performing: {this}");
-
-                if (commandInstance.RunnerParameters.Count == 0)
-                {
-                    commandInstance.RunnerParameters = new List<CommandParametersModel>() { commandInstance.Parameters };
                 }
 
                 CommandModelBase command = commandInstance.Command;
                 if (command != null)
                 {
+                    if (!command.IsEnabled || !command.HasWork)
+                    {
+                        commandInstance.State = CommandInstanceStateEnum.Canceled;
+                        return;
+                    }
+
                     commandInstance.Parameters.SpecialIdentifiers[CommandModelBase.CommandNameSpecialIdentifier] = command.Name;
 
                     command.TrackTelemetry();
+                }
+
+                if (commandInstance.RunnerParameters.Count == 0)
+                {
+                    commandInstance.RunnerParameters = new List<CommandParametersModel>() { commandInstance.Parameters };
                 }
 
                 Logger.Log(LogLevel.Debug, $"Starting command performing: {this}");
@@ -251,6 +222,56 @@ namespace MixItUp.Base.Services
         public async Task Replay(CommandInstanceModel commandInstance)
         {
             await this.Queue(commandInstance.Duplicate());
+        }
+
+        private async Task<Result> ValidateCommand(CommandInstanceModel commandInstance)
+        {
+            Result validationResult = new Result();
+            CommandModelBase command = commandInstance.Command;
+            if (command != null)
+            {
+                validationResult = await command.CustomValidation(commandInstance.Parameters);
+                if (validationResult.Success)
+                {
+                    validationResult = await command.ValidateRequirements(commandInstance.Parameters);
+                    if (!validationResult.Success && ChannelSession.Settings.RequirementErrorsCooldownType != RequirementErrorCooldownTypeEnum.PerCommand)
+                    {
+                        command.CommandErrorCooldown = RequirementModelBase.UpdateErrorCooldown();
+                    }
+                }
+                else
+                {
+                    if (ChannelSession.Settings.RequirementErrorsCooldownType != RequirementErrorCooldownTypeEnum.None)
+                    {
+                        if (!string.IsNullOrEmpty(validationResult.Message) && validationResult.DisplayMessage)
+                        {
+                            await ServiceManager.Get<ChatService>().SendMessage(validationResult.Message, commandInstance.Parameters.Platform);
+                        }
+                    }
+                }
+
+                if (validationResult.Success)
+                {
+                    if (command.Requirements != null)
+                    {
+                        await command.PerformRequirements(commandInstance.Parameters);
+                        commandInstance.RunnerParameters = new List<CommandParametersModel>(command.GetPerformingUsers(commandInstance.Parameters));
+                    }
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(validationResult.Message))
+                    {
+                        commandInstance.ErrorMessage = validationResult.Message;
+                        commandInstance.State = CommandInstanceStateEnum.Failed;
+                    }
+                    else
+                    {
+                        commandInstance.State = CommandInstanceStateEnum.Completed;
+                    }
+                }
+            }
+            return validationResult;
         }
 
         private async Task BackgroundCommandTypeRunner(CommandTypeEnum type)

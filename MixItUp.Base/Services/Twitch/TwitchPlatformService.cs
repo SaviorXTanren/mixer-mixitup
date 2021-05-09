@@ -72,10 +72,13 @@ namespace MixItUp.Base.Services.Twitch
         {
             try
             {
-                TwitchConnection connection = await TwitchConnection.ConnectViaOAuthToken(token);
-                if (connection != null)
+                if (token != null)
                 {
-                    return new Result<TwitchPlatformService>(new TwitchPlatformService(connection));
+                    TwitchConnection connection = await TwitchConnection.ConnectViaOAuthToken(token);
+                    if (connection != null)
+                    {
+                        return new Result<TwitchPlatformService>(new TwitchPlatformService(connection));
+                    }
                 }
             }
             catch (Exception ex)

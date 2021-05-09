@@ -67,6 +67,13 @@ namespace MixItUp.Base.Model.Actions
             string textToRead = string.Empty;
             List<string> lines = new List<string>();
 
+            if (this.ActionType == FileActionTypeEnum.ReadFromFile ||
+                this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
+                this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile)
+            {
+                parameters.SpecialIdentifiers.Remove(this.TransferText);
+            }
+
             if (this.ActionType == FileActionTypeEnum.SaveToFile || this.ActionType == FileActionTypeEnum.AppendToFile ||
                 this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine || this.ActionType == FileActionTypeEnum.InsertInFileAtRandomLine)
             {
@@ -140,8 +147,10 @@ namespace MixItUp.Base.Model.Actions
                 this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
                 this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile)
             {
-                parameters.SpecialIdentifiers.Remove(this.TransferText);
-                parameters.SpecialIdentifiers[this.TransferText] = textToRead;
+                if (!string.IsNullOrEmpty(textToRead))
+                {
+                    parameters.SpecialIdentifiers[this.TransferText] = textToRead;
+                }
             }
 
             if (this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile ||

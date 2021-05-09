@@ -170,7 +170,10 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 return Task.FromResult<ActionModelBase>(new CommandActionModel(this.SelectedActionType, this.SelectedCommandGroup));
             }
-            return Task.FromResult<ActionModelBase>(null);
+            else
+            {
+                return Task.FromResult<ActionModelBase>(new CommandActionModel(this.SelectedActionType));
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Twitch;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -58,10 +59,10 @@ namespace MixItUp.Base.Services
                 var _ = this.TwitchChannelHypeTrainBegin(totalPoints, levelPoints, levelGoal);
             });
 
-            this.signalRConnection.Listen("TwitchChannelHypeTrainProgress", (int level, int totalPoints, int levelPoints, int levelGoal) =>
-            {
-                var _ = this.TwitchChannelHypeTrainProgress(level, totalPoints, levelPoints, levelGoal);
-            });
+            //this.signalRConnection.Listen("TwitchChannelHypeTrainProgress", (int level, int totalPoints, int levelPoints, int levelGoal) =>
+            //{
+            //    var _ = this.TwitchChannelHypeTrainProgress(level, totalPoints, levelPoints, levelGoal);
+            //});
 
             this.signalRConnection.Listen("TwitchChannelHypeTrainEnd", (int level, int totalPoints) =>
             {
@@ -125,8 +126,17 @@ namespace MixItUp.Base.Services
             UserViewModel user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, followerId);
             if (user == null)
             {
-                user = new UserViewModel(followerDisplayName);
+                user = new UserViewModel(new TwitchWebhookFollowModel()
+                {
+                    StreamerID = ServiceManager.Get<TwitchSessionService>().UserNewAPI.id,
+
+                    UserID = followerId,
+                    Username = followerUsername,
+                    UserDisplayName = followerDisplayName
+                });
             }
+
+            ServiceManager.Get<TwitchEventService>().FollowCache.Add(user.TwitchID);
 
             if (user.UserRoles.Contains(UserRoleEnum.Banned))
             {
@@ -193,20 +203,20 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private async Task TwitchChannelHypeTrainProgress(int level, int totalPoints, int levelPoints, int levelGoal)
-        {
-            Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
-            eventCommandSpecialIdentifiers["hypetraintotallevel"] = level.ToString();
-            eventCommandSpecialIdentifiers["hypetraintotalpoints"] = totalPoints.ToString();
-            eventCommandSpecialIdentifiers["hypetrainlevelpoints"] = levelPoints.ToString();
-            eventCommandSpecialIdentifiers["hypetrainlevelgoal"] = levelGoal.ToString();
+        //private async Task TwitchChannelHypeTrainProgress(int level, int totalPoints, int levelPoints, int levelGoal)
+        //{
+        //    Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
+        //    eventCommandSpecialIdentifiers["hypetraintotallevel"] = level.ToString();
+        //    eventCommandSpecialIdentifiers["hypetraintotalpoints"] = totalPoints.ToString();
+        //    eventCommandSpecialIdentifiers["hypetrainlevelpoints"] = levelPoints.ToString();
+        //    eventCommandSpecialIdentifiers["hypetrainlevelgoal"] = levelGoal.ToString();
 
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelHypeTrainProgress, ChannelSession.GetCurrentUser(), eventCommandSpecialIdentifiers);
-            if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
-            {
-                await ServiceManager.Get<EventService>().PerformEvent(trigger);
-            }
-        }
+        //    EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelHypeTrainProgress, ChannelSession.GetCurrentUser(), eventCommandSpecialIdentifiers);
+        //    if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
+        //    {
+        //        await ServiceManager.Get<EventService>().PerformEvent(trigger);
+        //    }
+        //}
 
         private async Task TwitchChannelHypeTrainEnd(int level, int totalPoints)
         {
