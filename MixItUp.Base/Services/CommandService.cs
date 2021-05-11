@@ -17,7 +17,7 @@ namespace MixItUp.Base.Services
         PerActionType,
         VisualAudioActions,
         Singular,
-        CommandInstances
+        None
     }
 
     public class CommandService
