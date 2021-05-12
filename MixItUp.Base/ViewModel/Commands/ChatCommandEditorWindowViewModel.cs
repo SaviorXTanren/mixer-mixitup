@@ -123,7 +123,7 @@ namespace MixItUp.Base.ViewModel.Commands
                 triggers = new HashSet<string>(triggers.Select(t => "!" + t));
             }
 
-            foreach (ChatCommandModel command in ChannelSession.AllEnabledChatAccessibleCommands)
+            foreach (ChatCommandModel command in ChannelSession.Services.Command.AllEnabledChatAccessibleCommands)
             {
                 if (this.existingCommand != command)
                 {
@@ -156,8 +156,8 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public override Task SaveCommandToSettings(CommandModelBase command)
         {
-            ChannelSession.ChatCommands.Remove((ChatCommandModel)this.existingCommand);
-            ChannelSession.ChatCommands.Add((ChatCommandModel)command);
+            ChannelSession.Services.Command.ChatCommands.Remove((ChatCommandModel)this.existingCommand);
+            ChannelSession.Services.Command.ChatCommands.Add((ChatCommandModel)command);
             ChannelSession.Services.Chat.RebuildCommandTriggers();
             return Task.FromResult(0);
         }

@@ -54,51 +54,6 @@ namespace MixItUp.Base
 
         public static bool IsElevated { get; set; }
 
-        public static List<PreMadeChatCommandModelBase> PreMadeChatCommands { get; private set; } = new List<PreMadeChatCommandModelBase>();
-
-        public static List<ChatCommandModel> ChatCommands { get; set; } = new List<ChatCommandModel>();
-
-        public static List<EventCommandModel> EventCommands { get; set; } = new List<EventCommandModel>();
-
-        public static List<TimerCommandModel> TimerCommands { get; set; } = new List<TimerCommandModel>();
-
-        public static List<ActionGroupCommandModel> ActionGroupCommands { get; set; } = new List<ActionGroupCommandModel>();
-
-        public static List<GameCommandModelBase> GameCommands { get; set; } = new List<GameCommandModelBase>();
-
-        public static List<TwitchChannelPointsCommandModel> TwitchChannelPointsCommands { get; set; } = new List<TwitchChannelPointsCommandModel>();
-
-        public static List<StreamlootsCardCommandModel> StreamlootsCardCommands { get; set; } = new List<StreamlootsCardCommandModel>();
-
-        public static IEnumerable<CommandModelBase> AllEnabledChatAccessibleCommands
-        {
-            get
-            {
-                List<CommandModelBase> commands = new List<CommandModelBase>();
-                commands.AddRange(ChannelSession.PreMadeChatCommands.Where(c => c.IsEnabled));
-                commands.AddRange(ChannelSession.ChatCommands.Where(c => c.IsEnabled));
-                commands.AddRange(ChannelSession.GameCommands.Where(c => c.IsEnabled));
-                return commands;
-            }
-        }
-
-        public static IEnumerable<CommandModelBase> AllCommands
-        {
-            get
-            {
-                List<CommandModelBase> commands = new List<CommandModelBase>();
-                commands.AddRange(ChannelSession.PreMadeChatCommands);
-                commands.AddRange(ChannelSession.ChatCommands);
-                commands.AddRange(ChannelSession.GameCommands);
-                commands.AddRange(ChannelSession.EventCommands);
-                commands.AddRange(ChannelSession.TimerCommands);
-                commands.AddRange(ChannelSession.ActionGroupCommands);
-                commands.AddRange(ChannelSession.TwitchChannelPointsCommands);
-                commands.AddRange(ChannelSession.StreamlootsCardCommands);
-                return commands;
-            }
-        }
-
         public static async Task Initialize(ServicesManagerBase serviceHandler)
         {
             ChannelSession.Services = serviceHandler;
@@ -575,22 +530,7 @@ namespace MixItUp.Base
                             }
                         }
 
-                        ChannelSession.PreMadeChatCommands.Clear();
-                        foreach (PreMadeChatCommandModelBase command in ReflectionHelper.CreateInstancesOfImplementingType<PreMadeChatCommandModelBase>())
-                        {
-                            ChannelSession.PreMadeChatCommands.Add(command);
-                        }
-
-                        foreach (PreMadeChatCommandSettingsModel commandSetting in ChannelSession.Settings.PreMadeChatCommandSettings)
-                        {
-                            PreMadeChatCommandModelBase command = ChannelSession.PreMadeChatCommands.FirstOrDefault(c => c.Name.Equals(commandSetting.Name));
-                            if (command != null)
-                            {
-                                command.UpdateFromSettings(commandSetting);
-                            }
-                        }
-                        ChannelSession.Services.Chat.RebuildCommandTriggers();
-
+                        await ChannelSession.Services.Command.Initialize();
                         await ChannelSession.Services.Timers.Initialize();
                         await ChannelSession.Services.Moderation.Initialize();
 

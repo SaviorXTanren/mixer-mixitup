@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
@@ -26,6 +27,44 @@ namespace MixItUp.Base.Services
 
         public event EventHandler<CommandInstanceModel> OnCommandInstanceAdded = delegate { };
 
+        public List<PreMadeChatCommandModelBase> PreMadeChatCommands { get; private set; } = new List<PreMadeChatCommandModelBase>();
+        public List<ChatCommandModel> ChatCommands { get; set; } = new List<ChatCommandModel>();
+        public List<EventCommandModel> EventCommands { get; set; } = new List<EventCommandModel>();
+        public List<TimerCommandModel> TimerCommands { get; set; } = new List<TimerCommandModel>();
+        public List<ActionGroupCommandModel> ActionGroupCommands { get; set; } = new List<ActionGroupCommandModel>();
+        public List<GameCommandModelBase> GameCommands { get; set; } = new List<GameCommandModelBase>();
+        public List<TwitchChannelPointsCommandModel> TwitchChannelPointsCommands { get; set; } = new List<TwitchChannelPointsCommandModel>();
+        public List<StreamlootsCardCommandModel> StreamlootsCardCommands { get; set; } = new List<StreamlootsCardCommandModel>();
+
+        public IEnumerable<CommandModelBase> AllEnabledChatAccessibleCommands
+        {
+            get
+            {
+                List<CommandModelBase> commands = new List<CommandModelBase>();
+                commands.AddRange(this.PreMadeChatCommands.Where(c => c.IsEnabled));
+                commands.AddRange(this.ChatCommands.Where(c => c.IsEnabled));
+                commands.AddRange(this.GameCommands.Where(c => c.IsEnabled));
+                return commands;
+            }
+        }
+
+        public IEnumerable<CommandModelBase> AllCommands
+        {
+            get
+            {
+                List<CommandModelBase> commands = new List<CommandModelBase>();
+                commands.AddRange(this.PreMadeChatCommands);
+                commands.AddRange(this.ChatCommands);
+                commands.AddRange(this.GameCommands);
+                commands.AddRange(this.EventCommands);
+                commands.AddRange(this.TimerCommands);
+                commands.AddRange(this.ActionGroupCommands);
+                commands.AddRange(this.TwitchChannelPointsCommands);
+                commands.AddRange(this.StreamlootsCardCommands);
+                return commands;
+            }
+        }
+
         public IEnumerable<CommandInstanceModel> CommandInstances { get { return this.commandInstances.ToList(); } }
         private List<CommandInstanceModel> commandInstances = new List<CommandInstanceModel>();
 
@@ -48,6 +87,50 @@ namespace MixItUp.Base.Services
                 perCommandTypeTasks[type] = null;
                 perCommandTypeInstances[type] = new List<CommandInstanceModel>();
             }
+
+            foreach (PreMadeChatCommandModelBase command in ReflectionHelper.CreateInstancesOfImplementingType<PreMadeChatCommandModelBase>())
+            {
+                this.PreMadeChatCommands.Add(command);
+            }
+        }
+
+        public Task Initialize()
+        {
+            this.ChatCommands.Clear();
+            this.EventCommands.Clear();
+            this.TimerCommands.Clear();
+            this.ActionGroupCommands.Clear();
+            this.GameCommands.Clear();
+            this.TwitchChannelPointsCommands.Clear();
+            this.StreamlootsCardCommands.Clear();
+
+            foreach (CommandModelBase command in ChannelSession.Settings.Commands.Values.ToList())
+            {
+                if (command is ChatCommandModel)
+                {
+                    if (command is GameCommandModelBase) { this.GameCommands.Add((GameCommandModelBase)command); }
+                    else if (command is UserOnlyChatCommandModel) { }
+                    else { this.ChatCommands.Add((ChatCommandModel)command); }
+                }
+                else if (command is EventCommandModel) { this.EventCommands.Add((EventCommandModel)command); }
+                else if (command is TimerCommandModel) { this.TimerCommands.Add((TimerCommandModel)command); }
+                else if (command is ActionGroupCommandModel) { this.ActionGroupCommands.Add((ActionGroupCommandModel)command); }
+                else if (command is TwitchChannelPointsCommandModel) { this.TwitchChannelPointsCommands.Add((TwitchChannelPointsCommandModel)command); }
+                else if (command is StreamlootsCardCommandModel) { this.StreamlootsCardCommands.Add((StreamlootsCardCommandModel)command); }
+            }
+
+            foreach (PreMadeChatCommandSettingsModel commandSetting in ChannelSession.Settings.PreMadeChatCommandSettings)
+            {
+                PreMadeChatCommandModelBase command = this.PreMadeChatCommands.FirstOrDefault(c => c.Name.Equals(commandSetting.Name));
+                if (command != null)
+                {
+                    command.UpdateFromSettings(commandSetting);
+                }
+            }
+
+            ChannelSession.Services.Chat.RebuildCommandTriggers();
+
+            return Task.FromResult(0);
         }
 
         public async Task Queue(Guid commandID) { await this.Queue(ChannelSession.Settings.GetCommand(commandID)); }

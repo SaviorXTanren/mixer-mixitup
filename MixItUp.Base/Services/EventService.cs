@@ -9,6 +9,7 @@ using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -251,7 +252,7 @@ namespace MixItUp.Base.Services
 
         public EventCommandModel GetEventCommand(EventTypeEnum type)
         {
-            foreach (EventCommandModel command in ChannelSession.EventCommands)
+            foreach (EventCommandModel command in ChannelSession.Services.Command.EventCommands.ToList())
             {
                 if (command.EventType == type)
                 {

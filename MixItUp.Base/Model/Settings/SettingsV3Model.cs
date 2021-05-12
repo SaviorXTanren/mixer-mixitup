@@ -643,29 +643,6 @@ namespace MixItUp.Base.Model.Settings
             });
             this.Commands.ClearTracking();
 
-            ChannelSession.ChatCommands.Clear();
-            ChannelSession.EventCommands.Clear();
-            ChannelSession.TimerCommands.Clear();
-            ChannelSession.ActionGroupCommands.Clear();
-            ChannelSession.GameCommands.Clear();
-            ChannelSession.TwitchChannelPointsCommands.Clear();
-            ChannelSession.StreamlootsCardCommands.Clear();
-
-            foreach (CommandModelBase command in this.Commands.Values.ToList())
-            {
-                if (command is ChatCommandModel)
-                {
-                    if (command is GameCommandModelBase) { ChannelSession.GameCommands.Add((GameCommandModelBase)command); }
-                    else if (command is UserOnlyChatCommandModel) { }
-                    else { ChannelSession.ChatCommands.Add((ChatCommandModel)command); }
-                }
-                else if (command is EventCommandModel) { ChannelSession.EventCommands.Add((EventCommandModel)command); }
-                else if (command is TimerCommandModel) { ChannelSession.TimerCommands.Add((TimerCommandModel)command); }
-                else if (command is ActionGroupCommandModel) { ChannelSession.ActionGroupCommands.Add((ActionGroupCommandModel)command); }
-                else if (command is TwitchChannelPointsCommandModel) { ChannelSession.TwitchChannelPointsCommands.Add((TwitchChannelPointsCommandModel)command); }
-                else if (command is StreamlootsCardCommandModel) { ChannelSession.StreamlootsCardCommands.Add((StreamlootsCardCommandModel)command); }
-            }
-
             foreach (CounterModel counter in this.Counters.Values.ToList())
             {
                 if (counter.ResetOnLoad)

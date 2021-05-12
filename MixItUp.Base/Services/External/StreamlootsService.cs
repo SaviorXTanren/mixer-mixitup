@@ -321,7 +321,7 @@ namespace MixItUp.Base.Services.External
                 trigger.SpecialIdentifiers = eventCommandSpecialIdentifiers;
                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
-                StreamlootsCardCommandModel command = ChannelSession.StreamlootsCardCommands.FirstOrDefault(c => string.Equals(c.Name, card.data.cardName, StringComparison.CurrentCultureIgnoreCase));
+                StreamlootsCardCommandModel command = ChannelSession.Services.Command.StreamlootsCardCommands.FirstOrDefault(c => string.Equals(c.Name, card.data.cardName, StringComparison.CurrentCultureIgnoreCase));
                 if (command != null)
                 {
                     Dictionary<string, string> cardsCommandSpecialIdentifiers = new Dictionary<string, string>(eventCommandSpecialIdentifiers);

@@ -18,7 +18,7 @@ namespace MixItUp.Base.ViewModel.Dialogs
                 this.selectedCommandType = value;
                 this.NotifyPropertyChanged();
 
-                this.Commands.ClearAndAddRange(ChannelSession.AllCommands.Where(c => c.Type == this.SelectedCommandType).OrderBy(c => c.Name));
+                this.Commands.ClearAndAddRange(ChannelSession.Services.Command.AllCommands.Where(c => c.Type == this.SelectedCommandType).OrderBy(c => c.Name));
             }
         }
         private CommandTypeEnum selectedCommandType;
