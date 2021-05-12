@@ -5535,4 +5535,7 @@ ensure this option is disabled after any testing you are doing is done by headin
   <data name="Anonymous" xml:space="preserve">
     <value>Anonymous</value>
   </data>
+  <data name="FailedToExportCommand" xml:space="preserve">
+    <value>Failed to export command</value>
+  </data>
 </root>

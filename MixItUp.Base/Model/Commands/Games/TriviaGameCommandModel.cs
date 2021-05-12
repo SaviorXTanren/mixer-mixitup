@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -147,6 +148,15 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
+        public override async Task<Result> CustomValidation(CommandParametersModel parameters)
+        {
+            if (this.runParameters != null)
+            {
+                return new Result(MixItUp.Base.Resources.GameCommandAlreadyUnderway);
+            }
+            return await base.CustomValidation(parameters);
+        }
+
         public override async Task CustomRun(CommandParametersModel parameters)
         {
             this.runParameters = parameters;
@@ -215,38 +225,43 @@ namespace MixItUp.Base.Model.Commands.Games
             this.runParameters.SpecialIdentifiers[TriviaGameCommandModel.GameTriviaAnswersSpecialIdentifier] = string.Join(", ", this.numbersToAnswers.OrderBy(a => a.Key).Select(a => $"{a.Key}) {a.Value}"));
             this.runParameters.SpecialIdentifiers[TriviaGameCommandModel.GameTriviaCorrectAnswerSpecialIdentifier] = this.question.CorrectAnswer;
 
-            GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+            {
+                GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
+
+                await this.DelayNoThrow(this.TimeLimit * 1000, cancellationToken);
+
+                GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
+
+                List<CommandParametersModel> winners = new List<CommandParametersModel>();
+                foreach (var kvp in this.runUserSelections.ToList())
+                {
+                    CommandParametersModel participant = this.runUsers[kvp.Key];
+                    if (kvp.Value == correctAnswerNumber)
+                    {
+                        winners.Add(participant);
+                        this.PerformPrimarySetPayout(participant.User, this.WinAmount);
+                        participant.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.WinAmount.ToString();
+                        await this.RunSubCommand(this.UserSuccessCommand, participant);
+                    }
+                    else
+                    {
+                        await this.RunSubCommand(this.UserFailureCommand, participant);
+                    }
+                }
+
+                this.SetGameWinners(this.runParameters, winners);
+                this.runParameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.WinAmount.ToString();
+                this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameAllPayoutSpecialIdentifier] = (this.WinAmount * winners.Count).ToString();
+                await this.RunSubCommand(this.CorrectAnswerCommand, this.runParameters);
+
+                await this.PerformCooldown(this.runParameters);
+                this.ClearData();
+            }, new CancellationToken());
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
             await this.RunSubCommand(this.StartedCommand, this.runParameters);
-
-            await Task.Delay(this.TimeLimit * 1000);
-
-            GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
-
-            List<CommandParametersModel> winners = new List<CommandParametersModel>();
-            foreach (var kvp in this.runUserSelections.ToList())
-            {
-                CommandParametersModel participant = this.runUsers[kvp.Key];
-                if (kvp.Value == correctAnswerNumber)
-                {
-                    winners.Add(participant);
-                    this.PerformPrimarySetPayout(participant.User, this.WinAmount);
-                    participant.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.WinAmount.ToString();
-                    await this.RunSubCommand(this.UserSuccessCommand, participant);
-                }
-                else
-                {
-                    await this.RunSubCommand(this.UserFailureCommand, participant);
-                }
-            }
-
-            this.SetGameWinners(this.runParameters, winners);
-            this.runParameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.WinAmount.ToString();
-            this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameAllPayoutSpecialIdentifier] = (this.WinAmount * winners.Count).ToString();
-            await this.RunSubCommand(this.CorrectAnswerCommand, this.runParameters);
-
-            await this.PerformCooldown(this.runParameters);
-            this.ClearData();
         }
 
         private async void GlobalEvents_OnChatMessageReceived(object sender, ViewModel.Chat.ChatMessageViewModel message)

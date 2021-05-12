@@ -2,6 +2,7 @@
 using MixItUp.Base.Services;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Actions
@@ -14,6 +15,8 @@ namespace MixItUp.Base.ViewModel.Actions
 
     public class InputActionEditorControlViewModel : ActionEditorControlViewModelBase
     {
+        private static IEnumerable<InputKeyEnum> keyboardKeys = EnumHelper.GetEnumList<InputKeyEnum>().OrderBy(k => EnumHelper.GetEnumName(k));
+
         public override ActionTypeEnum Type { get { return ActionTypeEnum.Input; } }
 
         public IEnumerable<InputActionDeviceTypeEnum> DeviceTypes { get { return EnumHelper.GetEnumList<InputActionDeviceTypeEnum>(); } }
@@ -31,7 +34,7 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private InputActionDeviceTypeEnum selectedDeviceType;
 
-        public IEnumerable<InputKeyEnum> KeyboardKeys { get { return EnumHelper.GetEnumList<InputKeyEnum>(); } }
+        public IEnumerable<InputKeyEnum> KeyboardKeys { get { return keyboardKeys; } }
 
         public InputKeyEnum SelectedKeyboardKey
         {

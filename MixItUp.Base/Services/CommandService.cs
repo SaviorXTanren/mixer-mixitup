@@ -83,7 +83,7 @@ namespace MixItUp.Base.Services
                 await this.ValidateCommand(commandInstance);
             }
 
-            lock (CommandInstances)
+            lock (this.commandInstances)
             {
                 this.commandInstances.Insert(0, commandInstance);
                 while (this.commandInstances.Count > MaxCommandInstancesTracked)
