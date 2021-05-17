@@ -25,7 +25,7 @@ namespace MixItUp.Base.Model.Settings
     [DataContract]
     public class SettingsV3Model
     {
-        public const int LatestVersion = 2;
+        public const int LatestVersion = 3;
 
         public const string SettingsDirectoryName = "Settings";
         public const string DefaultAutomaticBackupSettingsDirectoryName = "AutomaticBackups";
@@ -737,16 +737,16 @@ namespace MixItUp.Base.Model.Settings
             IEnumerable<Guid> removedUsers = this.UserData.GetRemovedValues();
             await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ToString() } }));
 
-                IEnumerable<UserDataModel> changedUsers = this.UserData.GetChangedValues();
-                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath,
-                    "REPLACE INTO Users(ID, TwitchID, TwitchUsername, YouTubeID, YouTubeUsername, FacebookID, FacebookUsername, TrovoID, TrovoUsername, GlimeshID, GlimeshUsername, Data) " +
-                    "VALUES(@ID, @TwitchID, @TwitchUsername, @YouTubeID, @YouTubeUsername, @FacebookID, @FacebookUsername, @TrovoID, @TrovoUsername, @GlimeshID, @GlimeshUsername, @Data)",
-                    changedUsers.Select(u => new Dictionary<string, object>()
-                    {
-                        { "@ID", u.ID.ToString() }, { "TwitchID", u.TwitchID }, { "TwitchUsername", u.TwitchUsername }, { "YouTubeID", null }, { "YouTubeUsername", null },
-                        { "FacebookID", null }, { "FacebookUsername", null }, { "TrovoID", null }, { "TrovoUsername", null }, { "GlimeshID", null }, { "GlimeshUsername", null },
-                        { "@Data", JSONSerializerHelper.SerializeToString(u) }
-                    }));
+            IEnumerable<UserDataModel> changedUsers = this.UserData.GetChangedValues();
+            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath,
+                "REPLACE INTO Users(ID, TwitchID, TwitchUsername, YouTubeID, YouTubeUsername, FacebookID, FacebookUsername, TrovoID, TrovoUsername, GlimeshID, GlimeshUsername, Data) " +
+                "VALUES(@ID, @TwitchID, @TwitchUsername, @YouTubeID, @YouTubeUsername, @FacebookID, @FacebookUsername, @TrovoID, @TrovoUsername, @GlimeshID, @GlimeshUsername, @Data)",
+                changedUsers.Select(u => new Dictionary<string, object>()
+                {
+                    { "@ID", u.ID.ToString() }, { "TwitchID", u.TwitchID }, { "TwitchUsername", u.TwitchUsername }, { "YouTubeID", null }, { "YouTubeUsername", null },
+                    { "FacebookID", null }, { "FacebookUsername", null }, { "TrovoID", null }, { "TrovoUsername", null }, { "GlimeshID", null }, { "GlimeshUsername", null },
+                    { "@Data", JSONSerializerHelper.SerializeToString(u) }
+                }));
 
             List<Guid> removedCommands = new List<Guid>();
             await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Commands WHERE ID = @ID",
