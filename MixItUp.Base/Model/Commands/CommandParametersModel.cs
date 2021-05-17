@@ -11,24 +11,6 @@ namespace MixItUp.Base.Model.Commands
     [DataContract]
     public class CommandParametersModel
     {
-        public static async Task<UserViewModel> SearchForUser(string username, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
-        {
-            username = username.Replace("@", "");
-            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username, platform);
-            if (user == null)
-            {
-                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ChannelSession.TwitchUserConnection != null)
-                {
-                    Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(username);
-                    if (twitchUser != null)
-                    {
-                        user = new UserViewModel(twitchUser);
-                    }
-                }
-            }
-            return user;
-        }
-
         public static CommandParametersModel GetTestParameters(Dictionary<string, string> specialIdentifiers)
         {
             UserViewModel currentUser = ChannelSession.GetCurrentUser();
@@ -107,7 +89,7 @@ namespace MixItUp.Base.Model.Commands
             {
                 if (this.Arguments.Count > 0)
                 {
-                    this.TargetUser = await CommandParametersModel.SearchForUser(this.Arguments.First(), this.Platform);
+                    this.TargetUser = await ChannelSession.Services.User.GetUserFullSearch(this.Platform, userID: null, this.Arguments.First());
                 }
 
                 if (this.TargetUser == null || !this.Arguments.ElementAt(0).Replace("@", "").Equals(this.TargetUser.Username, StringComparison.InvariantCultureIgnoreCase))

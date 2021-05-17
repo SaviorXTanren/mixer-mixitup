@@ -104,6 +104,13 @@ namespace MixItUp.Base.Util
             this.removedValues.Clear();
         }
 
+        public void ClearTracking(K id)
+        {
+            this.addedValues.Remove(id);
+            this.changedValues.Remove(id);
+            this.removedValues.Remove(id);
+        }
+
         private Dictionary<K, V> GetKeyValues(HashSet<K> keys)
         {
             lock (valuesUpdateLock)

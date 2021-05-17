@@ -682,7 +682,7 @@ namespace MixItUp.Base.Model.Commands
                     username = username.Substring(1);
                 }
 
-                UserViewModel targetUser = ChannelSession.Services.User.GetUserByUsername(username, parameters.Platform);
+                UserViewModel targetUser = ChannelSession.Services.User.GetActiveUserByUsername(username, parameters.Platform);
                 if (targetUser != null)
                 {
                     targetUser.Title = string.Join(" ", parameters.Arguments.Skip(1));
@@ -887,17 +887,18 @@ namespace MixItUp.Base.Model.Commands
         {
             if (parameters.Arguments != null && parameters.Arguments.Count() == 1)
             {
-                string mixerUsername = parameters.Arguments.First().Replace("@", "");
-#pragma warning disable CS0612 // Type or member is obsolete
-                UserDataModel mixerUserData = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.Mixer, mixerUsername);
-#pragma warning restore CS0612 // Type or member is obsolete
-                if (mixerUserData != null)
-                {
-                    LinkedAccounts[parameters.User.ID] = mixerUserData.ID;
-                    await ChannelSession.Services.Chat.SendMessage($"@{parameters.User.Username} is attempting to link the Mixer account {mixerUserData.MixerUsername} to their {parameters.User.Platform} account. Mods can type \"!approvemixeraccount @<TWITCH USERNAME>\" in chat to approve this linking.");
-                    return;
-                }
-                await ChannelSession.Services.Chat.SendMessage("There is no Mixer user data for that username");
+                // TODO
+//                string mixerUsername = parameters.Arguments.First().Replace("@", "");
+//#pragma warning disable CS0612 // Type or member is obsolete
+//                UserDataModel mixerUserData = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.Mixer, mixerUsername);
+//#pragma warning restore CS0612 // Type or member is obsolete
+//                if (mixerUserData != null)
+//                {
+//                    LinkedAccounts[parameters.User.ID] = mixerUserData.ID;
+//                    await ChannelSession.Services.Chat.SendMessage($"@{parameters.User.Username} is attempting to link the Mixer account {mixerUserData.MixerUsername} to their {parameters.User.Platform} account. Mods can type \"!approvemixeraccount @<TWITCH USERNAME>\" in chat to approve this linking.");
+//                    return;
+//                }
+//                await ChannelSession.Services.Chat.SendMessage("There is no Mixer user data for that username");
             }
             else
             {
@@ -914,7 +915,7 @@ namespace MixItUp.Base.Model.Commands
         {
             if (parameters.Arguments != null && parameters.Arguments.Count() == 1)
             {
-                UserViewModel targetUser = ChannelSession.Services.User.GetUserByUsername(parameters.Arguments.First().Replace("@", ""), parameters.User.Platform);
+                UserViewModel targetUser = ChannelSession.Services.User.GetActiveUserByUsername(parameters.Arguments.First().Replace("@", ""), parameters.User.Platform);
                 if (targetUser != null && LinkMixerAccountPreMadeChatCommandModel.LinkedAccounts.ContainsKey(targetUser.ID))
                 {
                     UserDataModel mixerUserData = ChannelSession.Settings.GetUserData(LinkMixerAccountPreMadeChatCommandModel.LinkedAccounts[targetUser.ID]);

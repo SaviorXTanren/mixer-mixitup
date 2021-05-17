@@ -518,9 +518,9 @@ namespace MixItUp.Base.Services.Twitch
             {
                 for (int i = 0; i < userJoinLeaveEventsTotalToProcess && i < this.userJoinEvents.Count(); i++)
                 {
-                    string chatUser = this.userJoinEvents.First();
-                    joinsToProcess.Add(chatUser);
-                    this.userJoinEvents.Remove(chatUser);
+                    string username = this.userJoinEvents.First();
+                    joinsToProcess.Add(username);
+                    this.userJoinEvents.Remove(username);
                 }
                 return Task.FromResult(0);
             });
@@ -528,16 +528,13 @@ namespace MixItUp.Base.Services.Twitch
             if (joinsToProcess.Count > 0)
             {
                 List<UserViewModel> processedUsers = new List<UserViewModel>();
-                foreach (string chatUser in joinsToProcess)
+                foreach (string username in joinsToProcess)
                 {
-                    TwitchNewAPI.Users.UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(chatUser);
-                    if (twitchUser != null)
+                    UserViewModel user = await ChannelSession.Services.User.GetUserFullSearch(StreamingPlatformTypeEnum.Twitch, userID: null, username);
+                    if (user != null)
                     {
-                        UserViewModel user = await ChannelSession.Services.User.AddOrUpdateUser(twitchUser);
-                        if (user != null)
-                        {
-                            processedUsers.Add(user);
-                        }
+                        await ChannelSession.Services.User.AddOrUpdateActiveUser(user);
+                        processedUsers.Add(user);
                     }
                 }
                 this.OnUsersJoinOccurred(this, processedUsers);
@@ -548,9 +545,9 @@ namespace MixItUp.Base.Services.Twitch
             {
                 for (int i = 0; i < userJoinLeaveEventsTotalToProcess && i < this.userLeaveEvents.Count(); i++)
                 {
-                    string chatUser = this.userLeaveEvents.First();
-                    leavesToProcess.Add(chatUser);
-                    this.userLeaveEvents.Remove(chatUser);
+                    string username = this.userLeaveEvents.First();
+                    leavesToProcess.Add(username);
+                    this.userLeaveEvents.Remove(username);
                 }
                 return Task.FromResult(0);
             });
@@ -558,11 +555,11 @@ namespace MixItUp.Base.Services.Twitch
             if (leavesToProcess.Count > 0)
             {
                 List<UserViewModel> processedUsers = new List<UserViewModel>();
-                foreach (string chatUser in leavesToProcess)
+                foreach (string username in leavesToProcess)
                 {
-                    if (!string.IsNullOrEmpty(chatUser))
+                    if (!string.IsNullOrEmpty(username))
                     {
-                        UserViewModel user = await ChannelSession.Services.User.RemoveUserByTwitchLogin(chatUser);
+                        UserViewModel user = await ChannelSession.Services.User.RemoveActiveUserByUsername(StreamingPlatformTypeEnum.Twitch, username);
                         if (user != null)
                         {
                             processedUsers.Add(user);
@@ -713,7 +710,7 @@ namespace MixItUp.Base.Services.Twitch
 
         private void UserClient_OnUserStateReceived(object sender, ChatUserStatePacketModel userState)
         {
-            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(userState.UserDisplayName, StreamingPlatformTypeEnum.Twitch);
+            UserViewModel user = ChannelSession.Services.User.GetActiveUserByUsername(userState.UserDisplayName, StreamingPlatformTypeEnum.Twitch);
             if (user != null)
             {
                 user.SetTwitchChatDetails(userState);
@@ -726,10 +723,10 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (RaidUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
                 {
-                    UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(userNotice.UserID.ToString());
+                    UserViewModel user = ChannelSession.Services.User.GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, userNotice.UserID.ToString());
                     if (user == null)
                     {
-                        user = new UserViewModel(userNotice);
+                        user = await UserViewModel.Create(userNotice);
                     }
                     user.SetTwitchChatDetails(userNotice);
 
@@ -765,14 +762,27 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     if (ChannelSession.Services.Events.TwitchEventService != null)
                     {
-                        await ChannelSession.Services.Events.TwitchEventService.AddMassGiftedSub(new TwitchMassGiftedSubEventModel(userNotice));
+                        UserViewModel gifter = UserViewModel.Create("An Anonymous Gifter");
+                        if (!TwitchMassGiftedSubEventModel.IsAnonymousGifter(userNotice))
+                        {
+                            gifter = await ChannelSession.Services.User.GetUserFullSearch(StreamingPlatformTypeEnum.Twitch, userNotice.UserID.ToString(), userNotice.Login);
+                            gifter.SetTwitchChatDetails(userNotice);
+                        }
+                        await ChannelSession.Services.Events.TwitchEventService.AddMassGiftedSub(new TwitchMassGiftedSubEventModel(userNotice, gifter));
                     }
                 }
                 else if (SubGiftPaidUpgradeUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
                 {
                     if (ChannelSession.Services.Events.TwitchEventService != null)
                     {
-                        await ChannelSession.Services.Events.TwitchEventService.AddSub(new TwitchSubEventModel(userNotice));
+                        UserViewModel user = ChannelSession.Services.User.GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, userNotice.UserID.ToString());
+                        if (user == null)
+                        {
+                            user = await UserViewModel.Create(userNotice);
+                        }
+                        user.SetTwitchChatDetails(userNotice);
+
+                        await ChannelSession.Services.Events.TwitchEventService.AddSub(new TwitchSubEventModel(user, userNotice));
                     }
                 }
             }
@@ -786,10 +796,10 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void UserClient_OnChatClearReceived(object sender, ChatClearChatPacketModel chatClear)
         {
-            UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(chatClear.UserID);
+            UserViewModel user = ChannelSession.Services.User.GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, chatClear.UserID);
             if (user == null)
             {
-                user = new UserViewModel(chatClear);
+                user = await UserViewModel.Create(chatClear);
             }
 
             if (chatClear.IsClear)
@@ -815,7 +825,7 @@ namespace MixItUp.Base.Services.Twitch
 
                 await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Banned", user.DisplayName), ChannelSession.Settings.AlertModerationColor));
 
-                await ChannelSession.Services.User.RemoveUserByTwitchLogin(user.Data.TwitchUsername);
+                await ChannelSession.Services.User.RemoveActiveUserByID(user.ID);
             }
         }
 
@@ -829,19 +839,12 @@ namespace MixItUp.Base.Services.Twitch
                     {
                         Logger.Log(LogLevel.Debug, JSONSerializerHelper.SerializeToString(message));
 
-                        string hoster = message.Message.Substring(0, message.Message.IndexOf(' '));
-                        UserViewModel user = ChannelSession.Services.User.GetUserByUsername(hoster, StreamingPlatformTypeEnum.Twitch);
-                        if (user == null)
-                        {
-                            UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(hoster);
-                            if (twitchUser != null)
-                            {
-                                user = await ChannelSession.Services.User.AddOrUpdateUser(twitchUser);
-                            }
-                        }
-
+                        string hosterUsername = message.Message.Substring(0, message.Message.IndexOf(' '));
+                        UserViewModel user = await ChannelSession.Services.User.GetUserFullSearch(StreamingPlatformTypeEnum.Twitch, userID: null, hosterUsername);
                         if (user != null)
                         {
+                            await ChannelSession.Services.User.AddOrUpdateActiveUser(user);
+
                             EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelHosted, user);
                             if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                             {
@@ -861,15 +864,7 @@ namespace MixItUp.Base.Services.Twitch
                 }
                 else
                 {
-                    UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(message.UserID);
-                    if (user == null)
-                    {
-                        UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(message.UserLogin);
-                        if (twitchUser != null)
-                        {
-                            user = await ChannelSession.Services.User.AddOrUpdateUser(twitchUser);
-                        }
-                    }
+                    UserViewModel user = await ChannelSession.Services.User.GetUserFullSearch(StreamingPlatformTypeEnum.Twitch, message.UserID, message.UserLogin);
                     this.OnMessageOccurred(this, new TwitchChatMessageViewModel(message, user));
                 }
             }

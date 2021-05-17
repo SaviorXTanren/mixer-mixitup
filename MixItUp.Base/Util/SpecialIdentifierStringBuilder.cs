@@ -232,24 +232,6 @@ namespace MixItUp.Base.Util
             return text;
         }
 
-        public static async Task<UserViewModel> GetUserFromArgument(string argument, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
-        {
-            string username = argument.Replace("@", "");
-            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username, platform);
-            if (user == null)
-            {
-                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ChannelSession.TwitchUserConnection != null)
-                {
-                    Twitch.Base.Models.NewAPI.Users.UserModel argUserModel = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(username);
-                    if (argUserModel != null)
-                    {
-                        user = new UserViewModel(argUserModel);
-                    }
-                }
-            }
-            return user;
-        }
-
         public static IEnumerable<UserDataModel> GetUserOrderedCurrencyList(CurrencyModel currency)
         {
             IEnumerable<UserDataModel> applicableUsers = SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
@@ -384,7 +366,7 @@ namespace MixItUp.Base.Util
                 {
                     IEnumerable<UserDataModel> applicableUsers = SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
                     UserDataModel topUserData = applicableUsers.Top(u => u.ViewingMinutes);
-                    UserViewModel topUser = ChannelSession.Services.User.GetUserByID(topUserData.ID);
+                    UserViewModel topUser = ChannelSession.Services.User.GetActiveUserByID(topUserData.ID);
                     if (topUser == null)
                     {
                         topUser = new UserViewModel(topUserData);
@@ -419,7 +401,7 @@ namespace MixItUp.Base.Util
                     {
                         IEnumerable<UserDataModel> applicableUsers = SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
                         UserDataModel topUserData = applicableUsers.Top(u => currency.GetAmount(u));
-                        UserViewModel topUser = ChannelSession.Services.User.GetUserByID(topUserData.ID);
+                        UserViewModel topUser = ChannelSession.Services.User.GetActiveUserByID(topUserData.ID);
                         if (topUser == null)
                         {
                             topUser = new UserViewModel(topUserData);
@@ -551,7 +533,7 @@ namespace MixItUp.Base.Util
                     string currentArgumentSpecialIdentifierHeader = ArgSpecialIdentifierHeader + (i + 1);
                     if (this.ContainsSpecialIdentifier(currentArgumentSpecialIdentifierHeader))
                     {
-                        UserViewModel argUser = await SpecialIdentifierStringBuilder.GetUserFromArgument(parameters.Arguments.ElementAt(i), parameters.Platform);
+                        UserViewModel argUser = await ChannelSession.Services.User.GetUserFullSearch(parameters.Platform, userID: null, parameters.Arguments.ElementAt(i));
                         if (argUser != null)
                         {
                             await this.HandleUserSpecialIdentifiers(argUser, currentArgumentSpecialIdentifierHeader);
@@ -904,22 +886,14 @@ namespace MixItUp.Base.Util
 
                     this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredSpecialIdentifier + period.ToString().ToLower() + "amount", bitsUser.score.ToString());
 
-                    UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(bitsUser.user_id);
+                    UserViewModel user = ChannelSession.Services.User.GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, bitsUser.user_id);
                     if (user == null)
                     {
-                        UserDataModel userData = ChannelSession.Settings.GetUserDataByTwitchID(bitsUser.user_id);
-                        if (userData == null)
+                        user = await UserViewModel.Create(new Twitch.Base.Models.NewAPI.Users.UserModel()
                         {
-                            user = new UserViewModel(new Twitch.Base.Models.NewAPI.Users.UserModel()
-                            {
-                                id = bitsUser.user_id,
-                                login = bitsUser.user_name
-                            });
-                        }
-                        else
-                        {
-                            user = new UserViewModel(userData);
-                        }
+                            id = bitsUser.user_id,
+                            login = bitsUser.user_name
+                        });
                     }
                     await this.HandleUserSpecialIdentifiers(user, SpecialIdentifierStringBuilder.TopBitsCheeredSpecialIdentifier + period.ToString().ToLower());
                 }

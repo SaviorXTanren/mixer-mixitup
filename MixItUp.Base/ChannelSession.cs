@@ -279,10 +279,11 @@ namespace MixItUp.Base
 
             if (ChannelSession.TwitchUserNewAPI != null)
             {
-                user = ChannelSession.Services.User.GetUserByTwitchID(ChannelSession.TwitchUserNewAPI.id);
+                user = ChannelSession.Services.User.GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, ChannelSession.TwitchUserNewAPI.id);
                 if (user == null)
                 {
-                    user = new UserViewModel(ChannelSession.TwitchUserNewAPI);
+                    user = UserViewModel.Create(ChannelSession.TwitchUserNewAPI).Result;
+                    ChannelSession.Services.User.AddOrUpdateActiveUser(user).Wait();
                 }
             }
 

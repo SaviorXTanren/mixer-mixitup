@@ -166,7 +166,7 @@ namespace MixItUp.Base.Services
 
         public async Task Whisper(StreamingPlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false)
         {
-            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username, platform);
+            UserViewModel user = ChannelSession.Services.User.GetActiveUserByUsername(username, platform);
             if (user != null)
             {
                 await this.Whisper(user, message, sendAsStreamer);
@@ -301,15 +301,6 @@ namespace MixItUp.Base.Services
                 {
                     if (message.User != null)
                     {
-                        if (message.Platform == StreamingPlatformTypeEnum.Twitch)
-                        {
-                            UserViewModel activeUser = ChannelSession.Services.User.GetUserByTwitchID(message.User.TwitchID);
-                            if (activeUser != null)
-                            {
-                                message.User = activeUser;
-                            }
-                        }
-
                         message.User.UpdateLastActivity();
                         if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot && message.User.WhispererNumber == 0)
                         {
@@ -324,6 +315,11 @@ namespace MixItUp.Base.Services
                             });
                         }
                     }
+                }
+
+                if (message.User != null)
+                {
+                    await ChannelSession.Services.User.AddOrUpdateActiveUser(message.User);
                 }
 
                 // Add message to chat list
@@ -420,7 +416,7 @@ namespace MixItUp.Base.Services
                         string primaryTaggedUsername = message.PrimaryTaggedUsername;
                         if (!string.IsNullOrEmpty(primaryTaggedUsername))
                         {
-                            UserViewModel primaryTaggedUser = ChannelSession.Services.User.GetUserByUsername(primaryTaggedUsername, message.Platform);
+                            UserViewModel primaryTaggedUser = ChannelSession.Services.User.GetActiveUserByUsername(primaryTaggedUsername, message.Platform);
                             if (primaryTaggedUser != null)
                             {
                                 primaryTaggedUser.Data.TotalTimesTagged++;

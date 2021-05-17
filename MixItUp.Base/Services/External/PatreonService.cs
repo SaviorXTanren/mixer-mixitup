@@ -700,14 +700,14 @@ namespace MixItUp.Base.Services.External
                         {
                             EventTrigger trigger = new EventTrigger(EventTypeEnum.PatreonSubscribed);
 
-                            trigger.User = ChannelSession.Services.User.GetUserFullSearch(member.User.Platform, member.User.PlatformUserID, member.User.PlatformUsername);
+                            trigger.User = await ChannelSession.Services.User.GetUserFullSearch(member.User.Platform, member.User.PlatformUserID, member.User.PlatformUsername);
                             if (trigger.User != null)
                             {
                                 trigger.User.Data.PatreonUserID = member.UserID;
                             }
                             else
                             {
-                                trigger.User = new UserViewModel(member.User.PlatformUsername);
+                                trigger.User = UserViewModel.Create(member.User.PlatformUsername);
                             }
 
                             trigger.SpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierNameSpecialIdentifier] = tier.Title;

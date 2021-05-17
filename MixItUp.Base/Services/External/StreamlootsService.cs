@@ -334,10 +334,10 @@ namespace MixItUp.Base.Services.External
 
         private UserViewModel GetUser(string username)
         {
-            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username);
+            UserViewModel user = ChannelSession.Services.User.GetActiveUserByUsername(username);
             if (user == null)
             {
-                user = new UserViewModel(username);
+                user = UserViewModel.Create(username);
             }
             return user;
         }

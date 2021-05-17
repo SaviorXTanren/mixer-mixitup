@@ -218,55 +218,58 @@ namespace MixItUp.Base.ViewModel.User
                                 UserDataModel user = null;
                                 if (twitchID > 0)
                                 {
-                                    user = ChannelSession.Settings.GetUserDataByTwitchID(twitchID.ToString());
-                                    if (user != null)
-                                    {
-                                        newUser = false;
-                                    }
-                                    else
-                                    {
-                                        Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(twitchID.ToString());
-                                        if (twitchUser != null)
-                                        {
-                                            UserViewModel userViewModel = new UserViewModel(twitchUser);
-                                            user = userViewModel.Data;
-                                        }
-                                    }
+                                    // TODO
+                                    //user = ChannelSession.Settings.GetUserDataByTwitchID(twitchID.ToString());
+                                    //if (user != null)
+                                    //{
+                                    //    newUser = false;
+                                    //}
+                                    //else
+                                    //{
+                                    //    Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(twitchID.ToString());
+                                    //    if (twitchUser != null)
+                                    //    {
+                                    //        UserViewModel userViewModel = new UserViewModel(twitchUser);
+                                    //        user = userViewModel.Data;
+                                    //    }
+                                    //}
                                 }
                                 else if (!string.IsNullOrEmpty(twitchUsername))
                                 {
-                                    Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(twitchUsername);
-                                    if (twitchUser != null)
-                                    {
-                                        user = ChannelSession.Settings.GetUserDataByTwitchID(twitchUser.id);
-                                        if (user != null)
-                                        {
-                                            newUser = false;
-                                        }
-                                        else
-                                        {
-                                            UserViewModel userViewModel = new UserViewModel(twitchUser);
-                                            user = userViewModel.Data;
-                                        }
-                                    }
+                                    // TODO
+                                    //Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(twitchUsername);
+                                    //if (twitchUser != null)
+                                    //{
+                                    //    user = ChannelSession.Settings.GetUserDataByTwitchID(twitchUser.id);
+                                    //    if (user != null)
+                                    //    {
+                                    //        newUser = false;
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        UserViewModel userViewModel = new UserViewModel(twitchUser);
+                                    //        user = userViewModel.Data;
+                                    //    }
+                                    //}
                                 }
                                 else if (!string.IsNullOrEmpty(mixerUsername))
                                 {
-#pragma warning disable CS0612 // Type or member is obsolete
-                                    UserDataModel mixerUserData = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.Mixer, mixerUsername);
-#pragma warning restore CS0612 // Type or member is obsolete
-                                    if (mixerUserData != null)
-                                    {
-                                        newUser = false;
-                                    }
-                                    else
-                                    {
-                                        user = new UserDataModel()
-                                        {
-                                            MixerID = uint.MaxValue,
-                                            MixerUsername = mixerUsername
-                                        };
-                                    }
+                                    // TODO
+//#pragma warning disable CS0612 // Type or member is obsolete
+//                                    UserDataModel mixerUserData = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.Mixer, mixerUsername);
+//#pragma warning restore CS0612 // Type or member is obsolete
+//                                    if (mixerUserData != null)
+//                                    {
+//                                        newUser = false;
+//                                    }
+//                                    else
+//                                    {
+//                                        user = new UserDataModel()
+//                                        {
+//                                            MixerID = uint.MaxValue,
+//                                            MixerUsername = mixerUsername
+//                                        };
+//                                    }
                                 }
 
                                 if (user != null)

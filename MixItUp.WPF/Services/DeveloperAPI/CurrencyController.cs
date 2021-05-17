@@ -11,6 +11,7 @@ using System.Net.Http.Formatting;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model;
+using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Services.DeveloperAPI
 {
@@ -89,7 +90,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
         [Route("{currencyID:guid}/give")]
         [HttpPost]
-        public IEnumerable<User> BulkGive(Guid currencyID, [FromBody] IEnumerable<GiveUserCurrency> giveDatas)
+        public async Task<IEnumerable<User>> BulkGive(Guid currencyID, [FromBody] IEnumerable<GiveUserCurrency> giveDatas)
         {
             if (!ChannelSession.Settings.Currency.ContainsKey(currencyID))
             {
@@ -116,19 +117,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             List<User> users = new List<User>();
             foreach (var giveData in giveDatas)
             {
-                UserDataModel user = null;
-                if (!string.IsNullOrEmpty(giveData.UsernameOrID))
-                {
-                    if (Guid.TryParse(giveData.UsernameOrID, out Guid userId))
-                    {
-                        user = ChannelSession.Settings.GetUserData(userId);
-                    }
-                    else
-                    {
-                        user = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.All, giveData.UsernameOrID);
-                    }
-                }
-
+                UserDataModel user = await UserController.GetUserData(giveData.UsernameOrID);
                 if (user != null && giveData.Amount > 0)
                 {
                     currency.AddAmount(user, giveData.Amount);

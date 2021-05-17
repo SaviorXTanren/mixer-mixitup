@@ -277,7 +277,11 @@ namespace MixItUp.Base.Services
             if (this.CanPerformEvent(trigger))
             {
                 UserViewModel user = trigger.User;
-                if (user == null)
+                if (user != null)
+                {
+                    await ChannelSession.Services.User.AddOrUpdateActiveUser(user);
+                }
+                else
                 {
                     user = ChannelSession.GetCurrentUser();
                 }

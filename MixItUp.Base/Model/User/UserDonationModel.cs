@@ -73,7 +73,7 @@ namespace MixItUp.Base.Model.User
                 {
                     if (this.user == null)
                     {
-                        this.user = ChannelSession.Services.User.GetUserFullSearch(this.Platform, null, this.Username);
+                        this.user = ChannelSession.Services.User.GetActiveUserByUsername(this.Username, this.Platform);
                     }
                 }
                 return this.user;
