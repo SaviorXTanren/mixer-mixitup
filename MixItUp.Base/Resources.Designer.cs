@@ -15702,6 +15702,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Webhook service already connected.
+        /// </summary>
+        public static string WebhookServiceAlreadyConnected {
+            get {
+                return ResourceManager.GetString("WebhookServiceAlreadyConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Web Hooks Page.
         /// </summary>
         public static string WebHooksPage {

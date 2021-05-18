@@ -336,13 +336,13 @@ namespace MixItUp.Base
 
         public static void DisconnectionOccurred(string serviceName)
         {
-            Logger.Log(serviceName + " Service disconnection occurred");
+            Logger.Log(LogLevel.Error, serviceName + " Service disconnection occurred");
             GlobalEvents.ServiceDisconnect(serviceName);
         }
 
         public static void ReconnectionOccurred(string serviceName)
         {
-            Logger.Log(serviceName + " Service reconnection successful");
+            Logger.Log(LogLevel.Error, serviceName + " Service reconnection successful");
             GlobalEvents.ServiceReconnect(serviceName);
         }
 
@@ -553,7 +553,7 @@ namespace MixItUp.Base
 
                     try
                     {
-                        await ChannelSession.Services.WebhookService.InitializeConnection();
+                        await ChannelSession.Services.WebhookService.Connect();
 
                         foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                         {
