@@ -104,25 +104,15 @@ namespace MixItUp.Base.Services
 
         private async void SignalRConnection_Connected(object sender, EventArgs e)
         {
+            ChannelSession.ReconnectionOccurred("Webhook Events");
+
             var twitchUserOAuthToken = ChannelSession.TwitchUserConnection.Connection.GetOAuthTokenCopy();
             await this.Authenticate(twitchUserOAuthToken?.accessToken);
         }
 
-        private async void SignalRConnection_Disconnected(object sender, Exception e)
+        private void SignalRConnection_Disconnected(object sender, Exception e)
         {
             ChannelSession.DisconnectionOccurred("Webhook Events");
-
-            Result result;
-            await this.Disconnect();
-            do
-            {
-                await Task.Delay(2500);
-
-                result = await this.Connect();
-            }
-            while (!result.Success);
-
-            ChannelSession.ReconnectionOccurred("Webhook Events");
         }
 
         public async Task Authenticate(string twitchAccessToken)
