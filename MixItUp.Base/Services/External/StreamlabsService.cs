@@ -153,6 +153,31 @@ namespace MixItUp.Base.Services.External
 
         protected override async Task<Result> InitializeInternal()
         {
+            if (await this.ConnectSocket())
+            {
+                this.TrackServiceTelemetry("Streamlabs");
+                return new Result();
+            }
+            return new Result(Resources.StreamlabsWebSocketTokenFailed);
+        }
+
+        private async void Socket_OnDisconnected(object sender, EventArgs e)
+        {
+            ChannelSession.DisconnectionOccurred("Streamlabs");
+
+            do
+            {
+                await Task.Delay(2500);
+            }
+            while (!await this.ConnectSocket());
+
+            ChannelSession.ReconnectionOccurred("Streamlabs");
+        }
+
+        private async Task<bool> ConnectSocket()
+        {
+            await this.socket.Disconnect();
+
             JObject jobj = await this.GetJObjectAsync("socket/token?access_token=" + this.token.accessToken);
             if (jobj != null && jobj.ContainsKey("socket_token"))
             {
@@ -185,27 +210,9 @@ namespace MixItUp.Base.Services.External
 
                 await this.socket.Connect($"https://sockets.streamlabs.com?token={socketToken}");
 
-                this.TrackServiceTelemetry("Streamlabs");
-                return new Result();
+                return true;
             }
-            return new Result(Resources.StreamlabsWebSocketTokenFailed);
-        }
-
-        private async void Socket_OnDisconnected(object sender, EventArgs e)
-        {
-            ChannelSession.DisconnectionOccurred("Streamlabs");
-
-            Result result;
-            await this.Disconnect();
-            do
-            {
-                await Task.Delay(2500);
-
-                result = await this.Connect();
-            }
-            while (!result.Success);
-
-            ChannelSession.ReconnectionOccurred("Streamlabs");
+            return false;
         }
     }
 }
