@@ -84,10 +84,10 @@ namespace MixItUp.Base.Services
         {
             if (!this.IsConnected)
             {
-                await this.signalRConnection.Connect();
-
                 this.signalRConnection.Connected += SignalRConnection_Connected;
                 this.signalRConnection.Disconnected += SignalRConnection_Disconnected;
+
+                await this.signalRConnection.Connect();
 
                 return new Result(this.IsConnected);
             }
