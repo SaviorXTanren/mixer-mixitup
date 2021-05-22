@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model;
+﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
@@ -42,6 +41,7 @@ namespace MixItUp.Base.Util
         public const string RandomNumberRegexSpecialIdentifier = RandomSpecialIdentifierHeader + "number";
         public const string RandomFollowerSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "follower";
         public const string RandomSubscriberSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "subscriber";
+        public const string RandomRegularSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "regular";
 
         public const string StreamBossSpecialIdentifierHeader = "streamboss";
 
@@ -647,6 +647,15 @@ namespace MixItUp.Base.Util
                     if (users != null && users.Count() > 0)
                     {
                         await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomSubscriberSpecialIdentifierHeader);
+                    }
+                }
+
+                if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.RandomRegularSpecialIdentifierHeader))
+                {
+                    IEnumerable<UserViewModel> users = workableUsers.Where(u => u.IsRegular);
+                    if (users != null && users.Count() > 0)
+                    {
+                        await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomRegularSpecialIdentifierHeader);
                     }
                 }
             }
