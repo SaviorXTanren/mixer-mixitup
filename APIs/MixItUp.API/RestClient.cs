@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using StreamingClient.Base.Web;
 using System;
 using System.Net.Http;
 using System.Text;
@@ -12,7 +13,7 @@ namespace MixItUp.API
 
         public static async Task<T> GetAsync<T>(string path)
         {
-            HttpClient client = new HttpClient
+            AdvancedHttpClient client = new AdvancedHttpClient
             {
                 BaseAddress = new Uri(BaseUri)
             };
@@ -28,7 +29,7 @@ namespace MixItUp.API
 
         public static async Task PostAsync(string path, object body)
         {
-            HttpClient client = new HttpClient
+            AdvancedHttpClient client = new AdvancedHttpClient
             {
                 BaseAddress = new Uri(BaseUri)
             };
@@ -40,7 +41,7 @@ namespace MixItUp.API
 
         public static async Task<T> PostAsync<T>(string path, object body)
         {
-            HttpClient client = new HttpClient
+            AdvancedHttpClient client = new AdvancedHttpClient
             {
                 BaseAddress = new Uri(BaseUri)
             };
@@ -59,7 +60,7 @@ namespace MixItUp.API
 
         public static async Task<T> PutAsync<T>(string path, object body)
         {
-            HttpClient client = new HttpClient
+            AdvancedHttpClient client = new AdvancedHttpClient
             {
                 BaseAddress = new Uri(BaseUri)
             };
@@ -78,7 +79,7 @@ namespace MixItUp.API
 
         public static async Task DeleteAsync(string path)
         {
-            HttpClient client = new HttpClient
+            AdvancedHttpClient client = new AdvancedHttpClient
             {
                 BaseAddress = new Uri(BaseUri)
             };
