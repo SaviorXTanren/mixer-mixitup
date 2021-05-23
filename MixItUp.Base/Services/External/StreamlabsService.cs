@@ -176,41 +176,48 @@ namespace MixItUp.Base.Services.External
 
         private async Task<bool> ConnectSocket()
         {
-            await this.socket.Disconnect();
-
-            JObject jobj = await this.GetJObjectAsync("socket/token?access_token=" + this.token.accessToken);
-            if (jobj != null && jobj.ContainsKey("socket_token"))
+            try
             {
-                string socketToken = jobj["socket_token"].ToString();
+                await this.socket.Disconnect();
 
-                this.socket.OnDisconnected += Socket_OnDisconnected;
-
-                this.socket.Listen("event", async (data) =>
+                JObject jobj = await this.GetJObjectAsync("socket/token?access_token=" + this.token.accessToken);
+                if (jobj != null && jobj.ContainsKey("socket_token"))
                 {
-                    if (data != null)
+                    string socketToken = jobj["socket_token"].ToString();
+
+                    this.socket.OnDisconnected += Socket_OnDisconnected;
+
+                    this.socket.Listen("event", async (data) =>
                     {
-                        JObject eventJObj = JObject.Parse(data.ToString());
-                        if (eventJObj.ContainsKey("type"))
+                        if (data != null)
                         {
-                            if (eventJObj["type"].Value<string>().Equals("donation", StringComparison.InvariantCultureIgnoreCase))
+                            JObject eventJObj = JObject.Parse(data.ToString());
+                            if (eventJObj.ContainsKey("type"))
                             {
-                                var messages = eventJObj["message"] as JArray;
-                                if (messages != null)
+                                if (eventJObj["type"].Value<string>().Equals("donation", StringComparison.InvariantCultureIgnoreCase))
                                 {
-                                    foreach (var message in messages)
+                                    var messages = eventJObj["message"] as JArray;
+                                    if (messages != null)
                                     {
-                                        StreamlabsDonation slDonation = message.ToObject<StreamlabsDonation>();
-                                        await EventService.ProcessDonationEvent(EventTypeEnum.StreamlabsDonation, slDonation.ToGenericDonation());
+                                        foreach (var message in messages)
+                                        {
+                                            StreamlabsDonation slDonation = message.ToObject<StreamlabsDonation>();
+                                            await EventService.ProcessDonationEvent(EventTypeEnum.StreamlabsDonation, slDonation.ToGenericDonation());
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                });
+                    });
 
-                await this.socket.Connect($"https://sockets.streamlabs.com?token={socketToken}");
+                    await this.socket.Connect($"https://sockets.streamlabs.com?token={socketToken}");
 
-                return true;
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
             return false;
         }
