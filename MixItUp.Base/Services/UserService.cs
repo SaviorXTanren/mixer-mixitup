@@ -77,6 +77,8 @@ namespace MixItUp.Base.Services
         {
             if (!user.IsAnonymous)
             {
+                bool newUser = !this.activeUsers.ContainsKey(user.ID);
+
                 this.activeUsers[user.ID] = user;
 
                 if (!string.IsNullOrEmpty(user.TwitchID) && !string.IsNullOrEmpty(user.TwitchUsername))
@@ -100,16 +102,20 @@ namespace MixItUp.Base.Services
                 else
                 {
                     user.IgnoreForQueries = false;
-                    if (user.Data.ViewingMinutes == 0)
-                    {
-                        await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserFirstJoin, user));
-                    }
 
-                    if (ChannelSession.Services.Events.CanPerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user)))
+                    if (newUser)
                     {
-                        user.LastSeen = DateTimeOffset.Now;
-                        user.Data.TotalStreamsWatched++;
-                        await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user));
+                        if (user.Data.ViewingMinutes == 0)
+                        {
+                            await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserFirstJoin, user));
+                        }
+
+                        if (ChannelSession.Services.Events.CanPerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user)))
+                        {
+                            user.LastSeen = DateTimeOffset.Now;
+                            user.Data.TotalStreamsWatched++;
+                            await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user));
+                        }
                     }
                 }
             }

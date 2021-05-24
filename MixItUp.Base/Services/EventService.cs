@@ -277,11 +277,7 @@ namespace MixItUp.Base.Services
             if (this.CanPerformEvent(trigger))
             {
                 UserViewModel user = trigger.User;
-                if (user != null)
-                {
-                    await ChannelSession.Services.User.AddOrUpdateActiveUser(user);
-                }
-                else
+                if (user == null)
                 {
                     user = ChannelSession.GetCurrentUser();
                 }
@@ -293,6 +289,8 @@ namespace MixItUp.Base.Services
                         this.userEventTracking[trigger.Type].Add(user.ID);
                     }
                 }
+
+                await ChannelSession.Services.User.AddOrUpdateActiveUser(user);
 
                 EventCommandModel command = this.GetEventCommand(trigger.Type);
                 if (command != null)
