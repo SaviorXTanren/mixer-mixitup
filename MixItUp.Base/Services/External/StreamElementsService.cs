@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
@@ -230,8 +229,6 @@ namespace MixItUp.Base.Services.External
                 if (await this.ConnectSocket())
                 {
                     this.TrackServiceTelemetry("StreamElements");
-
-                    ChannelSession.ReconnectionOccurred("StreamElements");
                     return new Result();
                 }
                 return new Result(Resources.StreamElementsSocketFailed);
@@ -255,7 +252,7 @@ namespace MixItUp.Base.Services.External
 
             do
             {
-                await Task.Delay(2500);
+                await Task.Delay(5000);
             } while (!await this.ConnectSocket());
 
             ChannelSession.ReconnectionOccurred("StreamElements");
@@ -265,6 +262,7 @@ namespace MixItUp.Base.Services.External
         {
             try
             {
+                this.WebSocketConnected = false;
                 this.socket.OnDisconnected -= Socket_OnDisconnected;
                 await this.socket.Disconnect();
 

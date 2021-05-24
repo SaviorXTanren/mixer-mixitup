@@ -22,6 +22,7 @@ namespace MixItUp.WPF.Services
             this.connectionURL = connectionURL;
             await this.socket.ConnectAsync(new Uri(this.connectionURL));
 
+            this.socket.Disconnected -= Socket_Disconnected;
             this.socket.Disconnected += Socket_Disconnected;
         }
 
@@ -31,6 +32,7 @@ namespace MixItUp.WPF.Services
             {
                 if (this.socket != null)
                 {
+                    this.socket.Disconnected -= Socket_Disconnected;
                     this.socket.DisconnectAsync();
                 }
             }
@@ -80,6 +82,10 @@ namespace MixItUp.WPF.Services
             catch (Exception ex) { Logger.Log(ex); }
         }
 
-        private void Socket_Disconnected(object sender, H.WebSockets.Args.WebSocketCloseEventArgs e) { this.OnDisconnected(this, new EventArgs()); }
+        private void Socket_Disconnected(object sender, H.WebSockets.Args.WebSocketCloseEventArgs e)
+        {
+            this.socket.Disconnected -= Socket_Disconnected;
+            this.OnDisconnected(this, new EventArgs());
+        }
     }
 }
