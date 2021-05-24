@@ -178,14 +178,14 @@ namespace MixItUp.Base.Services.External
         {
             try
             {
+                this.socket.OnDisconnected -= Socket_OnDisconnected;
+
                 await this.socket.Disconnect();
 
                 JObject jobj = await this.GetJObjectAsync("socket/token?access_token=" + this.token.accessToken);
                 if (jobj != null && jobj.ContainsKey("socket_token"))
                 {
                     string socketToken = jobj["socket_token"].ToString();
-
-                    this.socket.OnDisconnected += Socket_OnDisconnected;
 
                     this.socket.Listen("event", async (data) =>
                     {
@@ -209,6 +209,8 @@ namespace MixItUp.Base.Services.External
                             }
                         }
                     });
+
+                    this.socket.OnDisconnected += Socket_OnDisconnected;
 
                     await this.socket.Connect($"https://sockets.streamlabs.com?token={socketToken}");
 

@@ -265,6 +265,7 @@ namespace MixItUp.Base.Services.External
         {
             try
             {
+                this.socket.OnDisconnected -= Socket_OnDisconnected;
                 await this.socket.Disconnect();
 
                 this.socket.Listen("disconnect", (data) =>
