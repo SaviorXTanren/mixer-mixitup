@@ -144,9 +144,6 @@ namespace MixItUp.Base.Services.External
 
         public bool WebSocketConnected { get; private set; }
 
-        public event EventHandler OnWebSocketConnectedOccurred = delegate { };
-        public event EventHandler OnWebSocketDisconnectedOccurred = delegate { };
-
         private StreamElementsChannel channel;
 
         private ISocketIOConnection socket;
@@ -208,18 +205,6 @@ namespace MixItUp.Base.Services.External
             return await this.GetAsync<StreamElementsChannel>("channels/me");
         }
 
-        public void WebSocketConnectedOccurred()
-        {
-            ChannelSession.ReconnectionOccurred("StreamElements");
-            this.OnWebSocketConnectedOccurred(this, new EventArgs());
-        }
-
-        public void WebSocketDisconnectedOccurred()
-        {
-            ChannelSession.DisconnectionOccurred("StreamElements");
-            this.OnWebSocketDisconnectedOccurred(this, new EventArgs());
-        }
-
         protected override async Task RefreshOAuthToken()
         {
             if (this.token != null)
@@ -242,9 +227,50 @@ namespace MixItUp.Base.Services.External
             this.channel = await this.GetCurrentChannel();
             if (this.channel != null)
             {
+                if (await this.ConnectSocket())
+                {
+                    this.TrackServiceTelemetry("StreamElements");
+
+                    ChannelSession.ReconnectionOccurred("StreamElements");
+                    return new Result();
+                }
+                return new Result(Resources.StreamElementsSocketFailed);
+            }
+            return new Result(Resources.StreamElementsUserDataFailed);
+        }
+
+        protected override async Task<AdvancedHttpClient> GetHttpClient(bool autoRefreshToken = true)
+        {
+            AdvancedHttpClient client = await base.GetHttpClient(autoRefreshToken);
+            if (this.token != null)
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("OAuth", this.token.accessToken);
+            }
+            return client;
+        }
+
+        private async void Socket_OnDisconnected(object sender, EventArgs e)
+        {
+            ChannelSession.DisconnectionOccurred("StreamElements");
+
+            do
+            {
+                await Task.Delay(2500);
+            } while (!await this.ConnectSocket());
+
+            ChannelSession.ReconnectionOccurred("StreamElements");
+        }
+
+        private async Task<bool> ConnectSocket()
+        {
+            try
+            {
+                this.socket.OnDisconnected -= Socket_OnDisconnected;
+                await this.socket.Disconnect();
+
                 this.socket.Listen("disconnect", (data) =>
                 {
-                    this.WebSocketDisconnectedOccurred();
+                    this.Socket_OnDisconnected(null, new EventArgs());
                 });
 
                 this.socket.Listen("authenticated", (data) =>
@@ -299,7 +325,6 @@ namespace MixItUp.Base.Services.External
                 });
 
                 await this.socket.Connect($"wss://realtime.streamelements.com");
-                this.socket.OnDisconnected += Socket_OnDisconnected;
 
                 JObject packet = new JObject();
                 packet["method"] = "oauth2";
@@ -311,31 +336,17 @@ namespace MixItUp.Base.Services.External
                     await Task.Delay(1000);
                 }
 
-                this.TrackServiceTelemetry("Streamlabs");
-
                 if (this.WebSocketConnected)
                 {
-                    this.WebSocketConnectedOccurred();
-                    return new Result();
+                    this.socket.OnDisconnected += Socket_OnDisconnected;
                 }
-                return new Result(Resources.StreamElementsSocketFailed);
             }
-            return new Result(Resources.StreamElementsUserDataFailed);
-        }
-
-        protected override async Task<AdvancedHttpClient> GetHttpClient(bool autoRefreshToken = true)
-        {
-            AdvancedHttpClient client = await base.GetHttpClient(autoRefreshToken);
-            if (this.token != null)
+            catch (Exception ex)
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("OAuth", this.token.accessToken);
+                Logger.Log(ex);
             }
-            return client;
-        }
 
-        private void Socket_OnDisconnected(object sender, EventArgs e)
-        {
-            this.WebSocketDisconnectedOccurred();
+            return this.WebSocketConnected;
         }
     }
 }

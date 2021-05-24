@@ -36,6 +36,7 @@ namespace MixItUp.WPF.Services
 
             await this.OBSCommandTimeoutWrapper((cancellationToken) =>
             {
+                this.OBSWebsocket.Disconnected -= OBSWebsocket_Disconnected;
                 this.OBSWebsocket.Connect(ChannelSession.Settings.OBSStudioServerIP, ChannelSession.Settings.OBSStudioServerPassword);
                 if (this.OBSWebsocket.IsConnected)
                 {
