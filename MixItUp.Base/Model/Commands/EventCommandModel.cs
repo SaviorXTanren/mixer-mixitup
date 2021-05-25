@@ -130,7 +130,7 @@ namespace MixItUp.Base.Model.Commands
         [DataMember]
         public EventTypeEnum EventType { get; set; }
 
-        public EventCommandModel(EventTypeEnum eventType) : base(eventType.ToString(), CommandTypeEnum.Event) { this.EventType = eventType; }
+        public EventCommandModel(EventTypeEnum eventType) : base(EnumLocalizationHelper.GetLocalizedName(eventType), CommandTypeEnum.Event) { this.EventType = eventType; }
 
 #pragma warning disable CS0612 // Type or member is obsolete
         internal EventCommandModel(MixItUp.Base.Commands.EventCommand command)
