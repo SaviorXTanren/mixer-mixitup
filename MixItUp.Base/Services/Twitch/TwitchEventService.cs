@@ -536,11 +536,12 @@ namespace MixItUp.Base.Services.Twitch
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheeredUserData] = user.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheeredAmountData] = bitsCheered.Amount;
 
-            if (string.IsNullOrEmpty(await ChannelSession.Services.Moderation.ShouldTextBeModerated(user, bitsCheered.Message)))
+            if (string.IsNullOrEmpty(await ChannelSession.Services.Moderation.ShouldTextBeModerated(user, bitsCheered.Message.PlainTextMessage)))
             {
                 EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelBitsCheered, user);
                 trigger.SpecialIdentifiers["bitsamount"] = bitsCheered.Amount.ToString();
-                trigger.SpecialIdentifiers["message"] = bitsCheered.Message;
+                trigger.SpecialIdentifiers["messagenocheermotes"] = bitsCheered.Message.PlainTextMessageNoCheermotes;
+                trigger.SpecialIdentifiers["message"] = bitsCheered.Message.PlainTextMessage;
                 await ChannelSession.Services.Events.PerformEvent(trigger);
             }
             await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Cheered {1} Bits", user.DisplayName, bitsCheered.Amount), ChannelSession.Settings.AlertBitsCheeredColor));
