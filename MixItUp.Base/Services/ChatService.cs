@@ -668,7 +668,10 @@ namespace MixItUp.Base.Services
         private async Task RunChatCommand(ChatMessageViewModel message, CommandModelBase command, IEnumerable<string> arguments)
         {
             Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
-            await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(message.User, message.Platform, arguments));
+
+            CommandParametersModel parameters = new CommandParametersModel(message.User, message.Platform, arguments);
+            parameters.SpecialIdentifiers["message"] = message.PlainTextMessage;
+            await ChannelSession.Services.Command.Queue(command, parameters);
 
             SettingsRequirementModel settings = command.Requirements.Settings;
             if (settings != null)
