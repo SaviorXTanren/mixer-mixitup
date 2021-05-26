@@ -8716,6 +8716,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Must Be Present.
+        /// </summary>
+        public static string MustBePresent {
+            get {
+                return ResourceManager.GetString("MustBePresent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mute.
         /// </summary>
         public static string Mute {

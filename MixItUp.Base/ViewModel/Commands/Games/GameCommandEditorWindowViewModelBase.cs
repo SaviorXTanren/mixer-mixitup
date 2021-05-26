@@ -314,7 +314,7 @@ namespace MixItUp.Base.ViewModel.Games
         {
             CustomCommandModel command = this.CreateBasicCommand();
             command.Actions.Add(new ChatActionModel(message, sendAsStreamer: false, isWhisper: whisper));
-            command.Actions.Add(new ConsumablesActionModel(currency, ConsumablesActionTypeEnum.AddToUser, amount));
+            command.Actions.Add(new ConsumablesActionModel(currency, ConsumablesActionTypeEnum.AddToUser, usersMustBePresent: true, amount));
             return command;
         }
 
