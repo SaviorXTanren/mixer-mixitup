@@ -167,7 +167,7 @@ namespace MixItUp.Base.Services.External
 
             do
             {
-                await Task.Delay(2500);
+                await Task.Delay(5000);
             }
             while (!await this.ConnectSocket());
 
@@ -179,7 +179,6 @@ namespace MixItUp.Base.Services.External
             try
             {
                 this.socket.OnDisconnected -= Socket_OnDisconnected;
-
                 await this.socket.Disconnect();
 
                 JObject jobj = await this.GetJObjectAsync("socket/token?access_token=" + this.token.accessToken);
@@ -211,7 +210,6 @@ namespace MixItUp.Base.Services.External
                     });
 
                     this.socket.OnDisconnected += Socket_OnDisconnected;
-
                     await this.socket.Connect($"https://sockets.streamlabs.com?token={socketToken}");
 
                     return true;
