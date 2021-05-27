@@ -5544,4 +5544,10 @@ ensure this option is disabled after any testing you are doing is done by headin
   <data name="MustBePresent" xml:space="preserve">
     <value>Must Be Present</value>
   </data>
+  <data name="RoleRequirementAtLeastOneRoleMustBeSelected" xml:space="preserve">
+    <value>Role Requirement: At least one role must be selected</value>
+  </data>
+  <data name="Multiple" xml:space="preserve">
+    <value>Multiple</value>
+  </data>
 </root>

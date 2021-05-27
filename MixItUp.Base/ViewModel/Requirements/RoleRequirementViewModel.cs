@@ -1,14 +1,67 @@
 ﻿using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Util;
+using MixItUp.Base.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Requirements
 {
+    public class UserRoleViewModel : UIViewModelBase, IComparable<UserRoleViewModel>
+    {
+        public UserRoleEnum Role
+        {
+            get { return this.role; }
+            set
+            {
+                this.role = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private UserRoleEnum role;
+
+        public ICommand DeleteAdvancedRoleCommand { get; private set; }
+
+        private RoleRequirementViewModel viewModel;
+
+        public UserRoleViewModel(RoleRequirementViewModel viewModel, UserRoleEnum role)
+        {
+            this.viewModel = viewModel;
+            this.Role = role;
+
+            this.DeleteAdvancedRoleCommand = this.CreateCommand(() =>
+            {
+                this.viewModel.SelectedAdvancedRoles.Remove(this);
+            });
+        }
+
+        public string Name { get { return EnumLocalizationHelper.GetLocalizedName(this.Role); } }
+
+        public int CompareTo(UserRoleViewModel other) { return this.Role.CompareTo(other.Role); }
+    }
+
     public class RoleRequirementViewModel : RequirementViewModelBase
     {
         private static PatreonBenefit NonePatreonBenefit = new PatreonBenefit() { ID = string.Empty, Title = "None" };
+
+        public bool IsAdvancedRolesSelected
+        {
+            get { return this.isAdvancedRolesSelected; }
+            set
+            {
+                this.isAdvancedRolesSelected = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("ShowSimpleRoles");
+                this.NotifyPropertyChanged("IsSubscriberRole");
+            }
+        }
+        private bool isAdvancedRolesSelected = false;
+
+        public bool ShowSimpleRoles { get { return !this.IsAdvancedRolesSelected; } }
 
         public IEnumerable<UserRoleEnum> Roles { get { return UserDataModel.GetSelectableUserRoles(); } }
 
@@ -24,7 +77,44 @@ namespace MixItUp.Base.ViewModel.Requirements
         }
         private UserRoleEnum selectedRole = UserRoleEnum.User;
 
-        public bool IsSubscriberRole { get { return this.SelectedRole == UserRoleEnum.Subscriber; } }
+        public IEnumerable<UserRoleEnum> AdvancedRoles
+        {
+            get
+            {
+                List<UserRoleEnum> roles = new List<UserRoleEnum>(UserDataModel.GetSelectableUserRoles());
+                roles.Remove(UserRoleEnum.VIPExclusive);
+                return roles;
+            }
+        }
+
+        public UserRoleEnum SelectedAdvancedRole
+        {
+            get { return this.selectedAdvancedRole; }
+            set
+            {
+                this.selectedAdvancedRole = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("IsSubscriberRole");
+            }
+        }
+        private UserRoleEnum selectedAdvancedRole = UserRoleEnum.User;
+
+        public SortableObservableCollection<UserRoleViewModel> SelectedAdvancedRoles { get; set; } = new SortableObservableCollection<UserRoleViewModel>();
+
+        public bool IsSubscriberRole
+        {
+            get
+            {
+                if (this.IsAdvancedRolesSelected)
+                {
+                    return this.SelectedAdvancedRoles.Any(r => r.Role == UserRoleEnum.Subscriber);
+                }
+                else
+                {
+                    return this.SelectedRole == UserRoleEnum.Subscriber;
+                }
+            }
+        }
 
         public IEnumerable<int> SubscriberTiers { get { return new List<int>() { 1, 2, 3 }; } }
         public int SubscriberTier
@@ -65,11 +155,34 @@ namespace MixItUp.Base.ViewModel.Requirements
         }
         private PatreonBenefit selectedPatreonBenefit = RoleRequirementViewModel.NonePatreonBenefit;
 
-        public RoleRequirementViewModel() { }
+        public ICommand AddAdvancedRoleCommand { get; set; }
+
+        public RoleRequirementViewModel()
+        {
+            this.AddAdvancedRoleCommand = this.CreateCommand(() =>
+            {
+                if (!this.SelectedAdvancedRoles.Any(r => r.Role == this.SelectedAdvancedRole))
+                {
+                    this.SelectedAdvancedRoles.Add(new UserRoleViewModel(this, this.SelectedAdvancedRole));
+                }
+            });
+        }
 
         public RoleRequirementViewModel(RoleRequirementModel requirement)
+            : this()
         {
-            this.SelectedRole = requirement.Role;
+            if (requirement.RoleList.Count > 0)
+            {
+                this.IsAdvancedRolesSelected = true;
+                foreach (UserRoleEnum role in requirement.RoleList)
+                {
+                    this.SelectedAdvancedRoles.Add(new UserRoleViewModel(this, role));
+                }
+            }
+            else
+            {
+                this.SelectedRole = requirement.Role;
+            }
             this.SubscriberTier = requirement.SubscriberTier;
             if (this.IsPatreonConnected && !string.IsNullOrEmpty(requirement.PatreonBenefitID))
             {
@@ -81,9 +194,28 @@ namespace MixItUp.Base.ViewModel.Requirements
             }
         }
 
+        public override async Task<Result> Validate()
+        {
+            if (this.IsAdvancedRolesSelected)
+            {
+                if (this.SelectedAdvancedRoles.Count == 0)
+                {
+                    return new Result(MixItUp.Base.Resources.RoleRequirementAtLeastOneRoleMustBeSelected);
+                }
+            }
+            return await base.Validate();
+        }
+
         public override RequirementModelBase GetRequirement()
         {
-            return new RoleRequirementModel(this.SelectedRole, this.SubscriberTier, this.selectedPatreonBenefit?.ID);
+            if (this.IsAdvancedRolesSelected)
+            {
+                return new RoleRequirementModel(this.SelectedAdvancedRoles.Select(r => r.Role), this.SubscriberTier, this.selectedPatreonBenefit?.ID);
+            }
+            else
+            {
+                return new RoleRequirementModel(this.SelectedRole, this.SubscriberTier, this.selectedPatreonBenefit?.ID);
+            }
         }
     }
 }

@@ -8716,6 +8716,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Multiple.
+        /// </summary>
+        public static string Multiple {
+            get {
+                return ResourceManager.GetString("Multiple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Must Be Present.
         /// </summary>
         public static string MustBePresent {
@@ -11308,6 +11317,15 @@ namespace MixItUp.Base {
         public static string RoleErrorInsufficientRole {
             get {
                 return ResourceManager.GetString("RoleErrorInsufficientRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Role Requirement: At least one role must be selected.
+        /// </summary>
+        public static string RoleRequirementAtLeastOneRoleMustBeSelected {
+            get {
+                return ResourceManager.GetString("RoleRequirementAtLeastOneRoleMustBeSelected", resourceCulture);
             }
         }
         
