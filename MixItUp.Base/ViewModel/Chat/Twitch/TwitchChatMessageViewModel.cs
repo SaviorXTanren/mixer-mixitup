@@ -103,19 +103,6 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             this.ProcessMessageContents(message);
         }
 
-        protected internal override void AddStringMessagePart(string str)
-        {
-            this.AddStringMessagePart(str);
-            if (string.IsNullOrEmpty(this.PlainTextMessage))
-            {
-                this.PlainTextMessage = str;
-            }
-            else
-            {
-                this.PlainTextMessage += " " + str;
-            }
-        }
-
         private void ProcessMessageContents(string message)
         {
             List<string> messageNoCheermotes = new List<string>();
