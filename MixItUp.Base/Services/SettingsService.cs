@@ -619,6 +619,12 @@ namespace MixItUp.Base.Services
             {
                 SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
                 await settings.Initialize();
+
+                if (settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch))
+                {
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = null;
+                }
+
                 await settings.LoadAllUserData();
 
                 await ChannelSession.Services.Database.Write(settings.DatabaseFilePath, "ALTER TABLE Users ADD COLUMN TwitchUsername TEXT DEFAULT NULL");
