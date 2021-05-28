@@ -273,5 +273,13 @@ namespace MixItUp.Base.Services.Twitch
         public async Task<IEnumerable<NewAPI.ChannelPoints.CustomChannelPointRewardModel>> GetCustomChannelPointRewards(NewAPI.Users.UserModel broadcaster) { return await this.RunAsync(this.Connection.NewAPI.ChannelPoints.GetCustomRewards(broadcaster)); }
 
         public async Task<NewAPI.ChannelPoints.CustomChannelPointRewardModel> UpdateCustomChannelPointReward(NewAPI.Users.UserModel broadcaster, Guid id, JObject jobj) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.ChannelPoints.UpdateCustomReward(broadcaster, id, jobj)); }
+
+        public async Task<NewAPI.Polls.PollModel> CreatePoll(NewAPI.Polls.CreatePollModel poll) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Polls.CreatePoll(poll)); }
+
+        public async Task<NewAPI.Polls.PollModel> GetPoll(NewAPI.Users.UserModel broadcaster, string pollID) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Polls.GetPoll(broadcaster, pollID)); }
+
+        public async Task<NewAPI.Predictions.PredictionModel> CreatePrediction(NewAPI.Predictions.CreatePredictionModel prediction) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Predictions.CreatePrediction(prediction)); }
+
+        public async Task<NewAPI.Predictions.PredictionModel> GetPrediction(NewAPI.Users.UserModel broadcaster, string predictionID) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Predictions.GetPrediction(broadcaster, predictionID)); }
     }
 }

@@ -3930,8 +3930,8 @@ that this could cause some unforeseen issues, so please use with caution.</value
   <data name="StreamMarkerCreatedMessage" xml:space="preserve">
     <value>Stream Marker Created: {0}</value>
   </data>
-  <data name="StreamMarkerDescriptionMustBe140CharactersOrLess" xml:space="preserve">
-    <value>Stream Marker description must be 140 characters or less</value>
+  <data name="TwitchActionStreamMarkerDescriptionMustBe140CharactersOrLess" xml:space="preserve">
+    <value>Twitch Action: Stream Marker description must be 140 characters or less</value>
   </data>
   <data name="RandomizeTimers" xml:space="preserve">
     <value>Randomize Timers</value>
@@ -5377,8 +5377,8 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="UpdateChannelPointReward" xml:space="preserve">
     <value>Update Channel Point Reward</value>
   </data>
-  <data name="ChannelPointRewardMissing" xml:space="preserve">
-    <value>Missing Channel Point Reward</value>
+  <data name="TwitchActionChannelPointRewardMissing" xml:space="preserve">
+    <value>Twitch Action: Missing Channel Point Reward</value>
   </data>
   <data name="ChannelPointsRewardGlobalCooldown" xml:space="preserve">
     <value>Global Cooldown (Mins)</value>
@@ -5549,5 +5549,65 @@ ensure this option is disabled after any testing you are doing is done by headin
   </data>
   <data name="Multiple" xml:space="preserve">
     <value>Multiple</value>
+  </data>
+  <data name="BitsCostOptional" xml:space="preserve">
+    <value>Bits Cost (Optional)</value>
+  </data>
+  <data name="ChannelPointRewardMissing" xml:space="preserve">
+    <value>Missing Channel Point Reward</value>
+  </data>
+  <data name="ChannelPointsCostOptional" xml:space="preserve">
+    <value>Channel Points Cost (Optional)</value>
+  </data>
+  <data name="Choice1" xml:space="preserve">
+    <value>Choice 1</value>
+  </data>
+  <data name="Choice2" xml:space="preserve">
+    <value>Choice 2</value>
+  </data>
+  <data name="Choice3" xml:space="preserve">
+    <value>Choice 3</value>
+  </data>
+  <data name="Choice4" xml:space="preserve">
+    <value>Choice 4</value>
+  </data>
+  <data name="CreatePoll" xml:space="preserve">
+    <value>Create Poll</value>
+  </data>
+  <data name="CreatePrediction" xml:space="preserve">
+    <value>Create Prediction</value>
+  </data>
+  <data name="Outcome1" xml:space="preserve">
+    <value>Outcome 1</value>
+  </data>
+  <data name="Outcome2" xml:space="preserve">
+    <value>Outcome 2</value>
+  </data>
+  <data name="TwitchActionCreatePollInvalidDuration" xml:space="preserve">
+    <value>Twitch Action: Polls must have a duration greater than 0</value>
+  </data>
+  <data name="TwitchActionCreatePollMissingTitle" xml:space="preserve">
+    <value>Twitch Action: Missing Poll title</value>
+  </data>
+  <data name="TwitchActionCreatePollTwoOrMoreChoices" xml:space="preserve">
+    <value>Twitch Action: Polls must have at least 2 choices</value>
+  </data>
+  <data name="TwitchActionCreatePredictionInvalidDuration" xml:space="preserve">
+    <value>Twitch Action: Predictions must have a duration greater than 0</value>
+  </data>
+  <data name="TwitchActionCreatePredictionMissingTitle" xml:space="preserve">
+    <value>Twitch Action: Missing Prediction title</value>
+  </data>
+  <data name="TwitchActionCreatePredictionTwoChoices" xml:space="preserve">
+    <value>Twitch Action: Predictions must have 2 valid outcomes</value>
+  </data>
+  <data name="TwitchPollFailedToCreate" xml:space="preserve">
+    <value>ERROR: Failed to create poll, please try again later. If this issue persists, please visit the Mix It Up support Discord server.</value>
+  </data>
+  <data name="TwitchPollFailedToGetResults" xml:space="preserve">
+    <value>ERROR: Failed to get &amp; process poll results. If this issue persists, please visit the Mix It Up support Discord server.</value>
+  </data>
+  <data name="TwitchPredictionFailedToCreate" xml:space="preserve">
+    <value>ERROR: Failed to create prediction, please try again later. If this issue persists, please visit the Mix It Up support Discord server.</value>
   </data>
 </root>

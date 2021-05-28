@@ -5,10 +5,13 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Ads;
 using Twitch.Base.Models.NewAPI.ChannelPoints;
 using Twitch.Base.Models.NewAPI.Clips;
+using Twitch.Base.Models.NewAPI.Polls;
+using Twitch.Base.Models.NewAPI.Predictions;
 using Twitch.Base.Models.NewAPI.Streams;
 
 namespace MixItUp.Base.Model.Actions
@@ -23,6 +26,8 @@ namespace MixItUp.Base.Model.Actions
         Clip,
         StreamMarker,
         UpdateChannelPointReward,
+        CreatePoll,
+        CreatePrediction
     }
 
     [DataContract]
@@ -80,6 +85,26 @@ namespace MixItUp.Base.Model.Actions
             return action;
         }
 
+        public static TwitchActionModel CreatePollAction(string title, int duration, int channelPointCost, int bitCost, IEnumerable<string> choices)
+        {
+            TwitchActionModel action = new TwitchActionModel(TwitchActionType.CreatePoll);
+            action.PollTitle = title;
+            action.PollDurationSeconds = duration;
+            action.PollChannelPointsCost = channelPointCost;
+            action.PollBitsCost = bitCost;
+            action.PollChoices = new List<string>(choices);
+            return action;
+        }
+
+        public static TwitchActionModel CreatePredictionAction(string title, int duration, IEnumerable<string> outcomes)
+        {
+            TwitchActionModel action = new TwitchActionModel(TwitchActionType.CreatePrediction);
+            action.PredictionTitle = title;
+            action.PredictionDurationSeconds = duration;
+            action.PredictionOutcomes = new List<string>(outcomes);
+            return action;
+        }
+
         [DataMember]
         public TwitchActionType ActionType { get; set; }
         [DataMember]
@@ -111,6 +136,24 @@ namespace MixItUp.Base.Model.Actions
         public int ChannelPointRewardMaxPerUser { get; set; }
         [DataMember]
         public int ChannelPointRewardGlobalCooldown { get; set; }
+
+        [DataMember]
+        public string PollTitle { get; set; }
+        [DataMember]
+        public int PollDurationSeconds { get; set; }
+        [DataMember]
+        public int PollChannelPointsCost { get; set; }
+        [DataMember]
+        public int PollBitsCost { get; set; }
+        [DataMember]
+        public List<string> PollChoices { get; set; } = new List<string>();
+
+        [DataMember]
+        public string PredictionTitle { get; set; }
+        [DataMember]
+        public int PredictionDurationSeconds { get; set; }
+        [DataMember]
+        public List<string> PredictionOutcomes { get; set; } = new List<string>();
 
         private TwitchActionModel(TwitchActionType type)
             : base(ActionTypeEnum.Twitch)
@@ -244,8 +287,7 @@ namespace MixItUp.Base.Model.Actions
                 string description = await this.ReplaceStringWithSpecialModifiers(this.StreamMarkerDescription, parameters);
                 if (!string.IsNullOrEmpty(description) && description.Length > TwitchActionModel.StreamMarkerMaxDescriptionLength)
                 {
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.StreamMarkerDescriptionMustBe140CharactersOrLess);
-                    return;
+                    description = description.Substring(0, TwitchActionModel.StreamMarkerMaxDescriptionLength);
                 }
 
                 CreatedStreamMarkerModel streamMarker = await ChannelSession.TwitchUserConnection.CreateStreamMarker(ChannelSession.TwitchUserNewAPI, description);
@@ -325,6 +367,110 @@ namespace MixItUp.Base.Model.Actions
                 {
                     await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.TwitchActionChannelPointRewardCouldNotBeUpdated);
                 }
+            }
+            else if (this.ActionType == TwitchActionType.CreatePoll)
+            {
+                List<CreatePollChoiceModel> choices = new List<CreatePollChoiceModel>();
+                foreach (string choice in this.PollChoices)
+                {
+                    choices.Add(new CreatePollChoiceModel()
+                    {
+                        title = await this.ReplaceStringWithSpecialModifiers(choice, parameters)
+                    });
+                }
+
+                PollModel poll = await ChannelSession.TwitchUserConnection.CreatePoll(new CreatePollModel()
+                {
+                    broadcaster_id = ChannelSession.TwitchUserNewAPI.id,
+                    title = await this.ReplaceStringWithSpecialModifiers(this.PollTitle, parameters),
+                    duration = this.PollDurationSeconds,
+                    channel_points_voting_enabled = this.PollChannelPointsCost > 0,
+                    channel_points_per_vote = this.PollChannelPointsCost,
+                    bits_voting_enabled = this.PollBitsCost > 0,
+                    bits_per_vote = this.PollBitsCost,
+                    choices = choices
+                });
+
+                if (poll == null)
+                {
+                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.TwitchPollFailedToCreate);
+                    return;
+                }
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                {
+                    await Task.Delay(1000 * (this.PollDurationSeconds + 2));
+
+                    for (int i = 0; i < 5; i++)
+                    {
+                        PollModel results = await ChannelSession.TwitchUserConnection.GetPoll(ChannelSession.TwitchUserNewAPI, poll.id);
+                        if (results != null)
+                        {
+                            if (string.Equals(results.status, "COMPLETED", StringComparison.OrdinalIgnoreCase))
+                            {
+                                return;
+                            }
+                            else if (!string.Equals(results.status, "ACTIVE", StringComparison.OrdinalIgnoreCase))
+                            {
+                                return;
+                            }
+                        }
+                    }
+
+                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.TwitchPollFailedToGetResults);
+                }, new CancellationToken());
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            }
+            else if (this.ActionType == TwitchActionType.CreatePrediction)
+            {
+                List<CreatePredictionOutcomeModel> outcomes = new List<CreatePredictionOutcomeModel>();
+                foreach (string outcome in this.PredictionOutcomes)
+                {
+                    outcomes.Add(new CreatePredictionOutcomeModel()
+                    {
+                        title = await this.ReplaceStringWithSpecialModifiers(outcome, parameters)
+                    });
+                }
+
+                PredictionModel prediction = await ChannelSession.TwitchUserConnection.CreatePrediction(new CreatePredictionModel()
+                {
+                    broadcaster_id = ChannelSession.TwitchUserNewAPI.id,
+                    title = await this.ReplaceStringWithSpecialModifiers(this.PredictionTitle, parameters),
+                    prediction_window = this.PredictionDurationSeconds,
+                    outcomes = outcomes
+                });
+
+                if (prediction == null)
+                {
+                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.TwitchPredictionFailedToCreate);
+                    return;
+                }
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                {
+                    await Task.Delay(1000 * this.PredictionDurationSeconds);
+
+                    while (true)
+                    {
+                        await Task.Delay(10000);
+
+                        PredictionModel results = await ChannelSession.TwitchUserConnection.GetPrediction(ChannelSession.TwitchUserNewAPI, prediction.id);
+                        if (results != null)
+                        {
+                            if (string.Equals(results.status, "RESOLVED", StringComparison.OrdinalIgnoreCase))
+                            {
+                                return;
+                            }
+                            else if (string.Equals(results.status, "CANCELED", StringComparison.OrdinalIgnoreCase))
+                            {
+                                return;
+                            }
+                        }
+                    }
+                }, new CancellationToken());
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
         }
     }

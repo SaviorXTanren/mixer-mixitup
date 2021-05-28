@@ -1007,6 +1007,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bits Cost (Optional).
+        /// </summary>
+        public static string BitsCostOptional {
+            get {
+                return ResourceManager.GetString("BitsCostOptional", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bits:.
         /// </summary>
         public static string BitsHeader {
@@ -1367,6 +1376,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Channel Points Cost (Optional).
+        /// </summary>
+        public static string ChannelPointsCostOptional {
+            get {
+                return ResourceManager.GetString("ChannelPointsCostOptional", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Channel Points Editor.
         /// </summary>
         public static string ChannelPointsEditor {
@@ -1633,6 +1651,42 @@ namespace MixItUp.Base {
         public static string ChatWhisperSound {
             get {
                 return ResourceManager.GetString("ChatWhisperSound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choice 1.
+        /// </summary>
+        public static string Choice1 {
+            get {
+                return ResourceManager.GetString("Choice1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choice 2.
+        /// </summary>
+        public static string Choice2 {
+            get {
+                return ResourceManager.GetString("Choice2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choice 3.
+        /// </summary>
+        public static string Choice3 {
+            get {
+                return ResourceManager.GetString("Choice3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choice 4.
+        /// </summary>
+        public static string Choice4 {
+            get {
+                return ResourceManager.GetString("Choice4", resourceCulture);
             }
         }
         
@@ -2297,6 +2351,24 @@ namespace MixItUp.Base {
         public static string CreateNewCommand {
             get {
                 return ResourceManager.GetString("CreateNewCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create Poll.
+        /// </summary>
+        public static string CreatePoll {
+            get {
+                return ResourceManager.GetString("CreatePoll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create Prediction.
+        /// </summary>
+        public static string CreatePrediction {
+            get {
+                return ResourceManager.GetString("CreatePrediction", resourceCulture);
             }
         }
         
@@ -9400,6 +9472,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Outcome 1.
+        /// </summary>
+        public static string Outcome1 {
+            get {
+                return ResourceManager.GetString("Outcome1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Outcome 2.
+        /// </summary>
+        public static string Outcome2 {
+            get {
+                return ResourceManager.GetString("Outcome2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Outcomes.
         /// </summary>
         public static string Outcomes {
@@ -13328,15 +13418,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Stream Marker description must be 140 characters or less.
-        /// </summary>
-        public static string StreamMarkerDescriptionMustBe140CharactersOrLess {
-            get {
-                return ResourceManager.GetString("StreamMarkerDescriptionMustBe140CharactersOrLess", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Stream Pass.
         /// </summary>
         public static string StreamPass {
@@ -14453,12 +14534,84 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twitch Action: Missing Channel Point Reward.
+        /// </summary>
+        public static string TwitchActionChannelPointRewardMissing {
+            get {
+                return ResourceManager.GetString("TwitchActionChannelPointRewardMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Channel Point Rewards must be created through Mix It Up to allow the app to be able to update them.
         ///This can be done by clicking on Create Channel Point Reward on the Channel Points page in Mix It Up..
         /// </summary>
         public static string TwitchActionChannelPointRewardMustBeCreatedInMixItUp {
             get {
                 return ResourceManager.GetString("TwitchActionChannelPointRewardMustBeCreatedInMixItUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Action: Polls must have a duration greater than 0.
+        /// </summary>
+        public static string TwitchActionCreatePollInvalidDuration {
+            get {
+                return ResourceManager.GetString("TwitchActionCreatePollInvalidDuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Action: Missing Poll title.
+        /// </summary>
+        public static string TwitchActionCreatePollMissingTitle {
+            get {
+                return ResourceManager.GetString("TwitchActionCreatePollMissingTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Action: Polls must have at least 2 choices.
+        /// </summary>
+        public static string TwitchActionCreatePollTwoOrMoreChoices {
+            get {
+                return ResourceManager.GetString("TwitchActionCreatePollTwoOrMoreChoices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Action: Predictions must have a duration greater than 0.
+        /// </summary>
+        public static string TwitchActionCreatePredictionInvalidDuration {
+            get {
+                return ResourceManager.GetString("TwitchActionCreatePredictionInvalidDuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Action: Missing Prediction title.
+        /// </summary>
+        public static string TwitchActionCreatePredictionMissingTitle {
+            get {
+                return ResourceManager.GetString("TwitchActionCreatePredictionMissingTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Action: Predictions must have 2 valid outcomes.
+        /// </summary>
+        public static string TwitchActionCreatePredictionTwoChoices {
+            get {
+                return ResourceManager.GetString("TwitchActionCreatePredictionTwoChoices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Action: Stream Marker description must be 140 characters or less.
+        /// </summary>
+        public static string TwitchActionStreamMarkerDescriptionMustBe140CharactersOrLess {
+            get {
+                return ResourceManager.GetString("TwitchActionStreamMarkerDescriptionMustBe140CharactersOrLess", resourceCulture);
             }
         }
         
@@ -14668,6 +14821,33 @@ namespace MixItUp.Base {
         public static string TwitchMassGiftedSubsFilterAmountTooltip {
             get {
                 return ResourceManager.GetString("TwitchMassGiftedSubsFilterAmountTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ERROR: Failed to create poll, please try again later. If this issue persists, please visit the Mix It Up support Discord server..
+        /// </summary>
+        public static string TwitchPollFailedToCreate {
+            get {
+                return ResourceManager.GetString("TwitchPollFailedToCreate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ERROR: Failed to get &amp; process poll results. If this issue persists, please visit the Mix It Up support Discord server..
+        /// </summary>
+        public static string TwitchPollFailedToGetResults {
+            get {
+                return ResourceManager.GetString("TwitchPollFailedToGetResults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ERROR: Failed to create prediction, please try again later. If this issue persists, please visit the Mix It Up support Discord server..
+        /// </summary>
+        public static string TwitchPredictionFailedToCreate {
+            get {
+                return ResourceManager.GetString("TwitchPredictionFailedToCreate", resourceCulture);
             }
         }
         

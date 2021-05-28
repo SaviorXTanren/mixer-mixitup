@@ -28,6 +28,8 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged("ShowClipsGrid");
                 this.NotifyPropertyChanged("ShowStreamMarkerGrid");
                 this.NotifyPropertyChanged("ShowUpdateChannelPointRewardGrid");
+                this.NotifyPropertyChanged("ShowPollGrid");
+                this.NotifyPropertyChanged("ShowPredictionGrid");
             }
         }
         private TwitchActionType selectedActionType;
@@ -233,6 +235,156 @@ namespace MixItUp.Base.ViewModel.Actions
 
         private Guid existingChannelPointRewardID;
 
+        public bool ShowPollGrid { get { return this.SelectedActionType == TwitchActionType.CreatePoll; } }
+
+        public string PollTitle
+        {
+            get { return this.pollTitle; }
+            set
+            {
+                this.pollTitle = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string pollTitle;
+
+        public int PollDurationSeconds
+        {
+            get { return this.pollDurationSeconds; }
+            set
+            {
+                this.pollDurationSeconds = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int pollDurationSeconds = 60;
+
+        public string PollChannelPointsCost
+        {
+            get { return (this.pollChannelPointsCost > 0) ? this.pollChannelPointsCost.ToString() : string.Empty; }
+            set
+            {
+                if (int.TryParse(value, out int cost) && cost > 0)
+                {
+                    this.pollChannelPointsCost = cost;
+                }
+                else
+                {
+                    this.pollChannelPointsCost = 0;
+                }
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int pollChannelPointsCost = 0;
+
+        public string PollBitsCost
+        {
+            get { return (this.pollBitsCost > 0) ? this.pollBitsCost.ToString() : string.Empty; }
+            set
+            {
+                if (int.TryParse(value, out int cost) && cost > 0)
+                {
+                    this.pollBitsCost = cost;
+                }
+                else
+                {
+                    this.pollBitsCost = 0;
+                }
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int pollBitsCost = 0;
+
+        public string PollChoice1
+        {
+            get { return this.pollChoice1; }
+            set
+            {
+                this.pollChoice1 = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string pollChoice1;
+
+        public string PollChoice2
+        {
+            get { return this.pollChoice2; }
+            set
+            {
+                this.pollChoice2 = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string pollChoice2;
+
+        public string PollChoice3
+        {
+            get { return this.pollChoice3; }
+            set
+            {
+                this.pollChoice3 = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string pollChoice3;
+
+        public string PollChoice4
+        {
+            get { return this.pollChoice4; }
+            set
+            {
+                this.pollChoice4 = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string pollChoice4;
+
+        public bool ShowPredictionGrid { get { return this.SelectedActionType == TwitchActionType.CreatePrediction; } }
+
+        public string PredictionTitle
+        {
+            get { return this.predictionTitle; }
+            set
+            {
+                this.predictionTitle = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string predictionTitle;
+
+        public int PredictionDurationSeconds
+        {
+            get { return this.predictionDurationSeconds; }
+            set
+            {
+                this.predictionDurationSeconds = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int predictionDurationSeconds = 60;
+
+        public string PredictionOutcome1
+        {
+            get { return this.predictionOutcome1; }
+            set
+            {
+                this.predictionOutcome1 = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string predictionOutcome1;
+
+        public string PredictionOutcome2
+        {
+            get { return this.predictionOutcome2; }
+            set
+            {
+                this.predictionOutcome2 = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string predictionOutcome2;
+
         public TwitchActionEditorControlViewModel(TwitchActionModel action)
             : base(action)
         {
@@ -265,6 +417,36 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.channelPointRewardMaxPerUser = action.ChannelPointRewardMaxPerUser;
                 this.channelPointRewardGlobalCooldown = action.ChannelPointRewardGlobalCooldown;
             }
+            else if (this.ShowPollGrid)
+            {
+                this.PollTitle = action.PollTitle;
+                this.PollDurationSeconds = action.PollDurationSeconds;
+                this.pollChannelPointsCost = action.PollChannelPointsCost;
+                this.pollBitsCost = action.PollBitsCost;
+                if (action.PollChoices.Count > 0)
+                {
+                    this.PollChoice1 = action.PollChoices[0];
+                }
+                if (action.PollChoices.Count > 1)
+                {
+                    this.PollChoice2 = action.PollChoices[1];
+                }
+                if (action.PollChoices.Count > 2)
+                {
+                    this.PollChoice3 = action.PollChoices[2];
+                }
+                if (action.PollChoices.Count > 3)
+                {
+                    this.PollChoice4 = action.PollChoices[3];
+                }
+            }
+            else if (this.ShowPredictionGrid)
+            {
+                this.PredictionTitle = action.PredictionTitle;
+                this.PredictionDurationSeconds = action.PredictionDurationSeconds;
+                this.PredictionOutcome1 = action.PredictionOutcomes[0];
+                this.PredictionOutcome2 = action.PredictionOutcomes[1];
+            }
         }
 
         public TwitchActionEditorControlViewModel() : base() { }
@@ -275,14 +457,48 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 if (!string.IsNullOrEmpty(this.StreamMarkerDescription) && this.StreamMarkerDescription.Length > TwitchActionModel.StreamMarkerMaxDescriptionLength)
                 {
-                    return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.StreamMarkerDescriptionMustBe140CharactersOrLess));
+                    return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.TwitchActionStreamMarkerDescriptionMustBe140CharactersOrLess));
                 }
             }
             else if (this.ShowUpdateChannelPointRewardGrid)
             {
                 if (this.ChannelPointReward == null)
                 {
-                    return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.ChannelPointRewardMissing));
+                    return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.TwitchActionChannelPointRewardMissing));
+                }
+            }
+            else if (this.ShowPollGrid)
+            {
+                if (string.IsNullOrEmpty(this.PollTitle))
+                {
+                    return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.TwitchActionCreatePollMissingTitle));
+                }
+
+                if (this.PollDurationSeconds <= 0)
+                {
+                    return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.TwitchActionCreatePollInvalidDuration));
+                }
+
+                if (string.IsNullOrEmpty(this.PollChoice1) || string.IsNullOrEmpty(this.PollChoice2))
+                {
+                    return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.TwitchActionCreatePollTwoOrMoreChoices));
+                }
+            }
+            else if (this.ShowPredictionGrid)
+            {
+                if (string.IsNullOrEmpty(this.PredictionTitle))
+                {
+                    return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.TwitchActionCreatePredictionMissingTitle));
+                }
+
+                if (this.PredictionDurationSeconds <= 0)
+                {
+                    return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.TwitchActionCreatePredictionInvalidDuration));
+                }
+
+                if (string.IsNullOrEmpty(this.PredictionOutcome1) || string.IsNullOrEmpty(this.PredictionOutcome2))
+                {
+                    return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.TwitchActionCreatePredictionTwoChoices));
                 }
             }
             return Task.FromResult(new Result());
@@ -325,6 +541,19 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 return Task.FromResult<ActionModelBase>(TwitchActionModel.CreateUpdateChannelPointReward(this.ChannelPointReward.id, this.ChannelPointRewardState, this.channelPointRewardCost,
                     this.ChannelPointRewardUpdateCooldownsAndLimits, this.channelPointRewardMaxPerStream, this.channelPointRewardMaxPerUser, this.channelPointRewardGlobalCooldown));
+            }
+            else if (this.ShowPollGrid)
+            {
+                List<string> choices = new List<string>();
+                if (!string.IsNullOrEmpty(this.PollChoice1)) { choices.Add(this.PollChoice1); }
+                if (!string.IsNullOrEmpty(this.PollChoice2)) { choices.Add(this.PollChoice2); }
+                if (!string.IsNullOrEmpty(this.PollChoice3)) { choices.Add(this.PollChoice3); }
+                if (!string.IsNullOrEmpty(this.PollChoice4)) { choices.Add(this.PollChoice4); }
+                return Task.FromResult<ActionModelBase>(TwitchActionModel.CreatePollAction(this.PollTitle, this.PollDurationSeconds, this.pollChannelPointsCost, this.pollBitsCost, choices));
+            }
+            else if (this.ShowPredictionGrid)
+            {
+                return Task.FromResult<ActionModelBase>(TwitchActionModel.CreatePredictionAction(this.PredictionTitle, this.PredictionDurationSeconds, new List<string>() { this.PredictionOutcome1, this.PredictionOutcome2 }));
             }
             return Task.FromResult<ActionModelBase>(null);
         }
