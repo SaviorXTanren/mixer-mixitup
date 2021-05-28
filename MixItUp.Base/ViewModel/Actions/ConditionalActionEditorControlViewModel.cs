@@ -1,10 +1,7 @@
 ﻿using MixItUp.Base.Model.Actions;
-using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Commands;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -121,7 +118,7 @@ namespace MixItUp.Base.ViewModel.Actions
         public ConditionalClauseModel GetModel() { return new ConditionalClauseModel(this.ComparisionType, this.Value1, this.Value2, this.Value3); }
     }
 
-    public class ConditionalActionEditorControlViewModel : ActionEditorControlViewModelBase
+    public class ConditionalActionEditorControlViewModel : SubActionContainerControlViewModel
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.Conditional; } }
 
@@ -153,25 +150,13 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public ThreadSafeObservableCollection<ConditionalClauseViewModel> Clauses { get; private set; } = new ThreadSafeObservableCollection<ConditionalClauseViewModel>();
 
-        public ICommand ImportActionsCommand { get; private set; }
-        public ICommand ExportActionsCommand { get; private set; }
-
-        public ActionEditorListControlViewModel ActionEditorList { get; set; } = new ActionEditorListControlViewModel();
-
-        private List<ActionModelBase> subActions = new List<ActionModelBase>();
-
         public ConditionalActionEditorControlViewModel(ConditionalActionModel action)
-            : base(action)
+            : base(action, action.Actions)
         {
             this.CaseSensitive = action.CaseSensitive;
             this.SelectedOperatorType = action.Operator;
 
             this.Clauses.AddRange(action.Clauses.Select(c => new ConditionalClauseViewModel(c, this)));
-
-            foreach (ActionModelBase subAction in action.Actions)
-            {
-                subActions.Add(subAction);
-            }
         }
 
         public ConditionalActionEditorControlViewModel()
@@ -187,52 +172,6 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.Clauses.Add(new ConditionalClauseViewModel(this));
             });
 
-            this.ImportActionsCommand = this.CreateCommand(async () =>
-            {
-                try
-                {
-                    await this.ImportActionsFromCommand(await CommandEditorWindowViewModelBase.ImportCommandFromFile(CommandEditorWindowViewModelBase.OpenCommandFileBrowser()));
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
-                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.FailedToImportCommand + ": " + ex.ToString());
-                }
-            });
-
-            this.ExportActionsCommand = this.CreateCommand(async () =>
-            {
-                try
-                {
-                    IEnumerable<Result> results = await this.ActionEditorList.ValidateActions();
-                    if (results.Any(r => !r.Success))
-                    {
-                        await DialogHelper.ShowFailedResults(results.Where(r => !r.Success));
-                        return;
-                    }
-
-                    CustomCommandModel command = new CustomCommandModel(this.Name);
-                    command.Actions.AddRange(await this.ActionEditorList.GetActions());
-
-                    string fileName = ChannelSession.Services.FileService.ShowSaveFileDialog(this.Name + CommandEditorWindowViewModelBase.MixItUpCommandFileExtension);
-                    if (!string.IsNullOrEmpty(fileName))
-                    {
-                        await FileSerializerHelper.SerializeToFile(fileName, command);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
-                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.FailedToExportCommand + ": " + ex.ToString());
-                }
-            });
-
-            foreach (ActionModelBase subAction in subActions)
-            {
-                await this.ActionEditorList.AddAction(subAction);
-            }
-            subActions.Clear();
-
             await base.OnLoadedInternal();
         }
 
@@ -245,24 +184,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     return new Result(MixItUp.Base.Resources.ConditionalActionClauseMissingValue);
                 }
             }
-
-            IEnumerable<Result> results = await this.ActionEditorList.ValidateActions();
-            if (results.Any(r => !r.Success))
-            {
-                return new Result(results.Where(r => !r.Success));
-            }
-            return new Result();
-        }
-
-        public async Task ImportActionsFromCommand(CommandModelBase command)
-        {
-            if (command != null)
-            {
-                foreach (ActionModelBase action in command.Actions)
-                {
-                    await this.ActionEditorList.AddAction(action);
-                }
-            }
+            return await base.Validate();
         }
 
         protected override async Task<ActionModelBase> GetActionInternal()

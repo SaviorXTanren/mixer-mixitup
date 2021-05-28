@@ -456,6 +456,9 @@
     <Compile Include="Controls\Actions\StreamlabsActionEditorControl.xaml.cs">
       <DependentUpon>StreamlabsActionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\SubActionContainerControl.xaml.cs">
+      <DependentUpon>SubActionContainerControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\TextToSpeechActionEditorControl.xaml.cs">
       <DependentUpon>TextToSpeechActionEditorControl.xaml</DependentUpon>
     </Compile>
@@ -1090,6 +1093,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\StreamlabsActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\SubActionContainerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
