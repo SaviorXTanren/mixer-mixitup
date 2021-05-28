@@ -108,7 +108,7 @@ namespace MixItUp.Base.Model.Overlay
                         item.TemplateReplacements.Add("USERNAME", user.DisplayName);
                         item.TemplateReplacements.Add("USER_IMAGE", user.AvatarLink);
                         item.TemplateReplacements.Add("USER_COLOR", user.Color);
-                        item.TemplateReplacements.Add("SUB_IMAGE", string.Empty);
+                        item.TemplateReplacements.Add("USER_SUB_IMAGE", user.SubscriberBadgeLink);
                         item.TemplateReplacements.Add("TEXT_SIZE", this.Height.ToString());
                     }
 
