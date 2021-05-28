@@ -34,6 +34,7 @@ namespace MixItUp.Base.Util
 
         public const string UserSpecialIdentifierHeader = "user";
         public const string ArgSpecialIdentifierHeader = "arg";
+        public const string ArgDelimitedSpecialIdentifierHeader = ArgSpecialIdentifierHeader + "delimited";
         public const string StreamerSpecialIdentifierHeader = "streamer";
         public const string TargetSpecialIdentifierHeader = "target";
 
@@ -543,8 +544,25 @@ namespace MixItUp.Base.Util
                     }
                 }
 
-                this.ReplaceSpecialIdentifier("allargs", string.Join(" ", parameters.Arguments));
+                string allArgs = string.Join(" ", parameters.Arguments);
+                this.ReplaceSpecialIdentifier("allargs", allArgs);
                 this.ReplaceSpecialIdentifier("argcount", parameters.Arguments.Count().ToString());
+
+                if (!string.IsNullOrEmpty(allArgs))
+                {
+                    if (this.ContainsSpecialIdentifier(ArgDelimitedSpecialIdentifierHeader) || this.ContainsSpecialIdentifier(ArgDelimitedSpecialIdentifierHeader + "count"))
+                    {
+                        List<string> delimitedArgs = new List<string>(allArgs.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
+
+                        for (int i = 0; i < delimitedArgs.Count(); i++)
+                        {
+                            string currentArgumentSpecialIdentifierHeader = ArgDelimitedSpecialIdentifierHeader + (i + 1);
+                            this.ReplaceSpecialIdentifier(currentArgumentSpecialIdentifierHeader + "text", delimitedArgs[i].Trim());
+                        }
+
+                        this.ReplaceSpecialIdentifier(ArgDelimitedSpecialIdentifierHeader + "count", delimitedArgs.Count.ToString());
+                    }
+                }
 
                 await this.ReplaceNumberRangeBasedRegexSpecialIdentifier(ArgSpecialIdentifierHeader + SpecialIdentifierNumberRangeRegexPattern + "text", (min, max) =>
                 {
