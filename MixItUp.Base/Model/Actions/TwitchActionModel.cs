@@ -4,6 +4,7 @@ using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,6 +36,8 @@ namespace MixItUp.Base.Model.Actions
     {
         public const string ClipURLSpecialIdentifier = "clipurl";
         public const string StreamMarkerURLSpecialIdentifier = "streammarkerurl";
+        public const string PollChoiceSpecialIdentifier = "pollchoice";
+        public const string PredictionOutcomeSpecialIdentifier = "predictionoutcome";
 
         public const int StreamMarkerMaxDescriptionLength = 140;
 
@@ -85,7 +88,7 @@ namespace MixItUp.Base.Model.Actions
             return action;
         }
 
-        public static TwitchActionModel CreatePollAction(string title, int duration, int channelPointCost, int bitCost, IEnumerable<string> choices)
+        public static TwitchActionModel CreatePollAction(string title, int duration, int channelPointCost, int bitCost, IEnumerable<string> choices, IEnumerable<ActionModelBase> actions)
         {
             TwitchActionModel action = new TwitchActionModel(TwitchActionType.CreatePoll);
             action.PollTitle = title;
@@ -93,15 +96,17 @@ namespace MixItUp.Base.Model.Actions
             action.PollChannelPointsCost = channelPointCost;
             action.PollBitsCost = bitCost;
             action.PollChoices = new List<string>(choices);
+            action.Actions = new List<ActionModelBase>(actions);
             return action;
         }
 
-        public static TwitchActionModel CreatePredictionAction(string title, int duration, IEnumerable<string> outcomes)
+        public static TwitchActionModel CreatePredictionAction(string title, int duration, IEnumerable<string> outcomes, IEnumerable<ActionModelBase> actions)
         {
             TwitchActionModel action = new TwitchActionModel(TwitchActionType.CreatePrediction);
             action.PredictionTitle = title;
             action.PredictionDurationSeconds = duration;
             action.PredictionOutcomes = new List<string>(outcomes);
+            action.Actions = new List<ActionModelBase>(actions);
             return action;
         }
 
@@ -154,6 +159,9 @@ namespace MixItUp.Base.Model.Actions
         public int PredictionDurationSeconds { get; set; }
         [DataMember]
         public List<string> PredictionOutcomes { get; set; } = new List<string>();
+
+        [DataMember]
+        public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
 
         private TwitchActionModel(TwitchActionType type)
             : base(ActionTypeEnum.Twitch)
@@ -397,30 +405,38 @@ namespace MixItUp.Base.Model.Actions
                     return;
                 }
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                if (this.Actions.Count > 0)
                 {
-                    await Task.Delay(1000 * (this.PollDurationSeconds + 2));
-
-                    for (int i = 0; i < 5; i++)
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
                     {
-                        PollModel results = await ChannelSession.TwitchUserConnection.GetPoll(ChannelSession.TwitchUserNewAPI, poll.id);
-                        if (results != null)
+                        await Task.Delay(1000 * (this.PollDurationSeconds + 2));
+
+                        for (int i = 0; i < 5; i++)
                         {
-                            if (string.Equals(results.status, "COMPLETED", StringComparison.OrdinalIgnoreCase))
+                            PollModel results = await ChannelSession.TwitchUserConnection.GetPoll(ChannelSession.TwitchUserNewAPI, poll.id);
+                            if (results != null)
                             {
-                                return;
-                            }
-                            else if (!string.Equals(results.status, "ACTIVE", StringComparison.OrdinalIgnoreCase))
-                            {
-                                return;
+                                if (string.Equals(results.status, "COMPLETED", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    PollChoiceModel winningChoice = results.choices.OrderBy(c => c.votes).Last();
+
+                                    parameters.SpecialIdentifiers[PollChoiceSpecialIdentifier] = winningChoice.title;
+
+                                    await ChannelSession.Services.Command.RunDirectly(new CommandInstanceModel(this.Actions, parameters));
+                                    return;
+                                }
+                                else if (!string.Equals(results.status, "ACTIVE", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    return;
+                                }
                             }
                         }
-                    }
 
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.TwitchPollFailedToGetResults);
-                }, new CancellationToken());
+                        await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.TwitchPollFailedToGetResults);
+                    }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                }
             }
             else if (this.ActionType == TwitchActionType.CreatePrediction)
             {
@@ -447,30 +463,38 @@ namespace MixItUp.Base.Model.Actions
                     return;
                 }
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                if (this.Actions.Count > 0)
                 {
-                    await Task.Delay(1000 * this.PredictionDurationSeconds);
-
-                    while (true)
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
                     {
-                        await Task.Delay(10000);
+                        await Task.Delay(1000 * this.PredictionDurationSeconds);
 
-                        PredictionModel results = await ChannelSession.TwitchUserConnection.GetPrediction(ChannelSession.TwitchUserNewAPI, prediction.id);
-                        if (results != null)
+                        while (true)
                         {
-                            if (string.Equals(results.status, "RESOLVED", StringComparison.OrdinalIgnoreCase))
+                            await Task.Delay(10000);
+
+                            PredictionModel results = await ChannelSession.TwitchUserConnection.GetPrediction(ChannelSession.TwitchUserNewAPI, prediction.id);
+                            if (results != null)
                             {
-                                return;
-                            }
-                            else if (string.Equals(results.status, "CANCELED", StringComparison.OrdinalIgnoreCase))
-                            {
-                                return;
+                                if (string.Equals(results.status, "RESOLVED", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    PredictionOutcomeModel outcome = results.outcomes.FirstOrDefault(o => string.Equals(o.id, results.winning_outcome_id));
+
+                                    parameters.SpecialIdentifiers[PredictionOutcomeSpecialIdentifier] = outcome?.title;
+
+                                    await ChannelSession.Services.Command.RunDirectly(new CommandInstanceModel(this.Actions, parameters));
+                                    return;
+                                }
+                                else if (string.Equals(results.status, "CANCELED", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    return;
+                                }
                             }
                         }
-                    }
-                }, new CancellationToken());
+                    }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                }
             }
         }
     }

@@ -10,7 +10,7 @@ using Twitch.Base.Models.NewAPI.ChannelPoints;
 
 namespace MixItUp.Base.ViewModel.Actions
 {
-    public class TwitchActionEditorControlViewModel : ActionEditorControlViewModelBase
+    public class TwitchActionEditorControlViewModel : SubActionContainerControlViewModel
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.Twitch; } }
 
@@ -30,9 +30,12 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged("ShowUpdateChannelPointRewardGrid");
                 this.NotifyPropertyChanged("ShowPollGrid");
                 this.NotifyPropertyChanged("ShowPredictionGrid");
+                this.NotifyPropertyChanged("ShowSubActions");
             }
         }
         private TwitchActionType selectedActionType;
+
+        public bool ShowSubActions { get { return this.SelectedActionType == TwitchActionType.CreatePoll || this.SelectedActionType == TwitchActionType.CreatePrediction; } }
 
         public bool ShowInfoInChat
         {
@@ -386,7 +389,7 @@ namespace MixItUp.Base.ViewModel.Actions
         private string predictionOutcome2;
 
         public TwitchActionEditorControlViewModel(TwitchActionModel action)
-            : base(action)
+            : base(action, action.Actions)
         {
             this.SelectedActionType = action.ActionType;
             if (this.ShowUsernameGrid)
@@ -451,57 +454,57 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public TwitchActionEditorControlViewModel() : base() { }
 
-        public override Task<Result> Validate()
+        public override async Task<Result> Validate()
         {
             if (this.ShowStreamMarkerGrid)
             {
                 if (!string.IsNullOrEmpty(this.StreamMarkerDescription) && this.StreamMarkerDescription.Length > TwitchActionModel.StreamMarkerMaxDescriptionLength)
                 {
-                    return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.TwitchActionStreamMarkerDescriptionMustBe140CharactersOrLess));
+                    return new Result(MixItUp.Base.Resources.TwitchActionStreamMarkerDescriptionMustBe140CharactersOrLess);
                 }
             }
             else if (this.ShowUpdateChannelPointRewardGrid)
             {
                 if (this.ChannelPointReward == null)
                 {
-                    return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.TwitchActionChannelPointRewardMissing));
+                    return new Result(MixItUp.Base.Resources.TwitchActionChannelPointRewardMissing);
                 }
             }
             else if (this.ShowPollGrid)
             {
                 if (string.IsNullOrEmpty(this.PollTitle))
                 {
-                    return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.TwitchActionCreatePollMissingTitle));
+                    return new Result(MixItUp.Base.Resources.TwitchActionCreatePollMissingTitle);
                 }
 
                 if (this.PollDurationSeconds <= 0)
                 {
-                    return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.TwitchActionCreatePollInvalidDuration));
+                    return new Result(MixItUp.Base.Resources.TwitchActionCreatePollInvalidDuration);
                 }
 
                 if (string.IsNullOrEmpty(this.PollChoice1) || string.IsNullOrEmpty(this.PollChoice2))
                 {
-                    return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.TwitchActionCreatePollTwoOrMoreChoices));
+                    return new Result(MixItUp.Base.Resources.TwitchActionCreatePollTwoOrMoreChoices);
                 }
             }
             else if (this.ShowPredictionGrid)
             {
                 if (string.IsNullOrEmpty(this.PredictionTitle))
                 {
-                    return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.TwitchActionCreatePredictionMissingTitle));
+                    return new Result(MixItUp.Base.Resources.TwitchActionCreatePredictionMissingTitle);
                 }
 
                 if (this.PredictionDurationSeconds <= 0)
                 {
-                    return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.TwitchActionCreatePredictionInvalidDuration));
+                    return new Result(MixItUp.Base.Resources.TwitchActionCreatePredictionInvalidDuration);
                 }
 
                 if (string.IsNullOrEmpty(this.PredictionOutcome1) || string.IsNullOrEmpty(this.PredictionOutcome2))
                 {
-                    return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.TwitchActionCreatePredictionTwoChoices));
+                    return new Result(MixItUp.Base.Resources.TwitchActionCreatePredictionTwoChoices);
                 }
             }
-            return Task.FromResult(new Result());
+            return await base.Validate();
         }
 
         protected override async Task OnLoadedInternal()
@@ -519,28 +522,28 @@ namespace MixItUp.Base.ViewModel.Actions
             await base.OnLoadedInternal();
         }
 
-        protected override Task<ActionModelBase> GetActionInternal()
+        protected override async Task<ActionModelBase> GetActionInternal()
         {
             if (this.ShowUsernameGrid)
             {
-                return Task.FromResult<ActionModelBase>(TwitchActionModel.CreateUserAction(this.SelectedActionType, this.Username));
+                return TwitchActionModel.CreateUserAction(this.SelectedActionType, this.Username);
             }
             else if (this.ShowAdGrid)
             {
-                return Task.FromResult<ActionModelBase>(TwitchActionModel.CreateAdAction(this.SelectedAdLength));
+                return TwitchActionModel.CreateAdAction(this.SelectedAdLength);
             }
             else if (this.ShowClipsGrid)
             {
-                return Task.FromResult<ActionModelBase>(TwitchActionModel.CreateClipAction(this.ClipIncludeDelay, this.ShowInfoInChat));
+                return TwitchActionModel.CreateClipAction(this.ClipIncludeDelay, this.ShowInfoInChat);
             }
             else if (this.ShowStreamMarkerGrid)
             {
-                return Task.FromResult<ActionModelBase>(TwitchActionModel.CreateStreamMarkerAction(this.StreamMarkerDescription, this.ShowInfoInChat));
+                return TwitchActionModel.CreateStreamMarkerAction(this.StreamMarkerDescription, this.ShowInfoInChat);
             }
             else if (this.ShowUpdateChannelPointRewardGrid)
             {
-                return Task.FromResult<ActionModelBase>(TwitchActionModel.CreateUpdateChannelPointReward(this.ChannelPointReward.id, this.ChannelPointRewardState, this.channelPointRewardCost,
-                    this.ChannelPointRewardUpdateCooldownsAndLimits, this.channelPointRewardMaxPerStream, this.channelPointRewardMaxPerUser, this.channelPointRewardGlobalCooldown));
+                return TwitchActionModel.CreateUpdateChannelPointReward(this.ChannelPointReward.id, this.ChannelPointRewardState, this.channelPointRewardCost,
+                    this.ChannelPointRewardUpdateCooldownsAndLimits, this.channelPointRewardMaxPerStream, this.channelPointRewardMaxPerUser, this.channelPointRewardGlobalCooldown);
             }
             else if (this.ShowPollGrid)
             {
@@ -549,13 +552,13 @@ namespace MixItUp.Base.ViewModel.Actions
                 if (!string.IsNullOrEmpty(this.PollChoice2)) { choices.Add(this.PollChoice2); }
                 if (!string.IsNullOrEmpty(this.PollChoice3)) { choices.Add(this.PollChoice3); }
                 if (!string.IsNullOrEmpty(this.PollChoice4)) { choices.Add(this.PollChoice4); }
-                return Task.FromResult<ActionModelBase>(TwitchActionModel.CreatePollAction(this.PollTitle, this.PollDurationSeconds, this.pollChannelPointsCost, this.pollBitsCost, choices));
+                return TwitchActionModel.CreatePollAction(this.PollTitle, this.PollDurationSeconds, this.pollChannelPointsCost, this.pollBitsCost, choices, await this.ActionEditorList.GetActions());
             }
             else if (this.ShowPredictionGrid)
             {
-                return Task.FromResult<ActionModelBase>(TwitchActionModel.CreatePredictionAction(this.PredictionTitle, this.PredictionDurationSeconds, new List<string>() { this.PredictionOutcome1, this.PredictionOutcome2 }));
+                return TwitchActionModel.CreatePredictionAction(this.PredictionTitle, this.PredictionDurationSeconds, new List<string>() { this.PredictionOutcome1, this.PredictionOutcome2 }, await this.ActionEditorList.GetActions());
             }
-            return Task.FromResult<ActionModelBase>(null);
+            return null;
         }
     }
 }

@@ -8,6 +8,7 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:ActionControls="clr-namespace:MixItUp.WPF.Controls.Actions"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <local:ActionEditorControlBase.Resources>
@@ -19,6 +20,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
@@ -217,5 +219,7 @@
                 <TextBox Grid.Column="2" Text="{Binding PredictionOutcome2}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Outcome2}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             </Grid>
         </Grid>
+
+        <ActionControls:SubActionContainerControl Grid.Row="3" Visibility="{Binding ShowSubActions, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,20,0,0" />
     </Grid>
 </local:ActionEditorControlBase>
