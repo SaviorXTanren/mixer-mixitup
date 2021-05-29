@@ -431,6 +431,8 @@ namespace MixItUp.Base.Model.Actions
                                     return;
                                 }
                             }
+
+                            await Task.Delay(2000);
                         }
 
                         await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.TwitchPollFailedToGetResults);
