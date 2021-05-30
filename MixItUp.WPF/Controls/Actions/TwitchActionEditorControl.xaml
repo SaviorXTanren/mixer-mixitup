@@ -126,11 +126,11 @@
                 <TextBlock Grid.Column="0" Margin="0,10,0,0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ChannelPointRewardUpdateCooldownAndLimits}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                 <ToggleButton Grid.Column="2" Margin="0,10,0,0" VerticalAlignment="Center" IsChecked="{Binding ChannelPointRewardUpdateCooldownsAndLimits}" />
 
-                <TextBox Grid.Column="4" Text="{Binding ChannelPointRewardMaxPerStream}" IsEnabled="{Binding ChannelPointRewardCooldownsAndLimits}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ChannelPointsRewardMaxPerStream}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+                <TextBox Grid.Column="4" Text="{Binding ChannelPointRewardMaxPerStream}" IsEnabled="{Binding ChannelPointRewardUpdateCooldownsAndLimits}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ChannelPointsRewardMaxPerStream}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
 
-                <TextBox Grid.Column="6" Text="{Binding ChannelPointRewardMaxPerUser}" IsEnabled="{Binding ChannelPointRewardCooldownsAndLimits}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ChannelPointsRewardMaxPerUser}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+                <TextBox Grid.Column="6" Text="{Binding ChannelPointRewardMaxPerUser}" IsEnabled="{Binding ChannelPointRewardUpdateCooldownsAndLimits}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ChannelPointsRewardMaxPerUser}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
 
-                <TextBox Grid.Column="8" Text="{Binding ChannelPointRewardGlobalCooldown}" IsEnabled="{Binding ChannelPointRewardCooldownsAndLimits}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ChannelPointsRewardGlobalCooldown}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="160" />
+                <TextBox Grid.Column="8" Text="{Binding ChannelPointRewardGlobalCooldown}" IsEnabled="{Binding ChannelPointRewardUpdateCooldownsAndLimits}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ChannelPointsRewardGlobalCooldown}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="160" />
             </Grid>
         </Grid>
 

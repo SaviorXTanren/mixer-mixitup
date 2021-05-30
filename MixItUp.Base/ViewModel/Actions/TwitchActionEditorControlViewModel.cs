@@ -148,21 +148,14 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public string ChannelPointRewardCost
         {
-            get { return (this.channelPointRewardCost > 0) ? this.channelPointRewardCost.ToString() : string.Empty; }
+            get { return this.channelPointRewardCost; }
             set
             {
-                if (int.TryParse(value, out int cost) && cost > 0)
-                {
-                    this.channelPointRewardCost = cost;
-                }
-                else
-                {
-                    this.channelPointRewardCost = 0;
-                }
+                this.channelPointRewardCost = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private int channelPointRewardCost = 0;
+        private string channelPointRewardCost;
 
         public bool ChannelPointRewardUpdateCooldownsAndLimits
         {
@@ -184,57 +177,36 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public string ChannelPointRewardMaxPerStream
         {
-            get { return (this.channelPointRewardMaxPerStream > 0) ? this.channelPointRewardMaxPerStream.ToString() : string.Empty; }
+            get { return this.channelPointRewardMaxPerStream; }
             set
             {
-                if (int.TryParse(value, out int cost) && cost > 0)
-                {
-                    this.channelPointRewardMaxPerStream = cost;
-                }
-                else
-                {
-                    this.channelPointRewardMaxPerStream = 0;
-                }
+                this.channelPointRewardMaxPerStream = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private int channelPointRewardMaxPerStream = 0;
+        private string channelPointRewardMaxPerStream;
 
         public string ChannelPointRewardMaxPerUser
         {
-            get { return (this.channelPointRewardMaxPerUser > 0) ? this.channelPointRewardMaxPerUser.ToString() : string.Empty; }
+            get { return this.channelPointRewardMaxPerUser; }
             set
             {
-                if (int.TryParse(value, out int cost) && cost > 0)
-                {
-                    this.channelPointRewardMaxPerUser = cost;
-                }
-                else
-                {
-                    this.channelPointRewardMaxPerUser = 0;
-                }
+                this.channelPointRewardMaxPerUser = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private int channelPointRewardMaxPerUser = 0;
+        private string channelPointRewardMaxPerUser;
 
         public string ChannelPointRewardGlobalCooldown
         {
-            get { return (this.channelPointRewardGlobalCooldown > 0) ? this.channelPointRewardGlobalCooldown.ToString() : string.Empty; }
+            get { return this.channelPointRewardGlobalCooldown; }
             set
             {
-                if (int.TryParse(value, out int cost) && cost > 0)
-                {
-                    this.channelPointRewardGlobalCooldown = cost;
-                }
-                else
-                {
-                    this.channelPointRewardGlobalCooldown = 0;
-                }
+                this.channelPointRewardGlobalCooldown = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private int channelPointRewardGlobalCooldown = 0;
+        private string channelPointRewardGlobalCooldown;
 
         private Guid existingChannelPointRewardID;
 
@@ -412,13 +384,28 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowUpdateChannelPointRewardGrid)
             {
+#pragma warning disable CS0612 // Type or member is obsolete
+                if (action.ChannelPointRewardCost >= 0)
+                {
+                    action.ChannelPointRewardCostString = action.ChannelPointRewardCost.ToString();
+                    action.ChannelPointRewardMaxPerStreamString = action.ChannelPointRewardMaxPerStream.ToString();
+                    action.ChannelPointRewardMaxPerUserString = action.ChannelPointRewardMaxPerUser.ToString();
+                    action.ChannelPointRewardGlobalCooldownString = action.ChannelPointRewardGlobalCooldown.ToString();
+
+                    action.ChannelPointRewardCost = -1;
+                    action.ChannelPointRewardMaxPerStream = -1;
+                    action.ChannelPointRewardMaxPerUser = -1;
+                    action.ChannelPointRewardGlobalCooldown = -1;
+                }
+#pragma warning restore CS0612 // Type or member is obsolete
+
                 this.existingChannelPointRewardID = action.ChannelPointRewardID;
                 this.ChannelPointRewardState = action.ChannelPointRewardState;
-                this.channelPointRewardCost = action.ChannelPointRewardCost;
+                this.ChannelPointRewardCost = action.ChannelPointRewardCostString;
                 this.ChannelPointRewardUpdateCooldownsAndLimits = action.ChannelPointRewardUpdateCooldownsAndLimits;
-                this.channelPointRewardMaxPerStream = action.ChannelPointRewardMaxPerStream;
-                this.channelPointRewardMaxPerUser = action.ChannelPointRewardMaxPerUser;
-                this.channelPointRewardGlobalCooldown = action.ChannelPointRewardGlobalCooldown;
+                this.ChannelPointRewardMaxPerStream = action.ChannelPointRewardMaxPerStreamString;
+                this.ChannelPointRewardMaxPerUser = action.ChannelPointRewardMaxPerUserString;
+                this.ChannelPointRewardGlobalCooldown = action.ChannelPointRewardGlobalCooldownString;
             }
             else if (this.ShowPollGrid)
             {
@@ -542,8 +529,8 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowUpdateChannelPointRewardGrid)
             {
-                return TwitchActionModel.CreateUpdateChannelPointReward(this.ChannelPointReward.id, this.ChannelPointRewardState, this.channelPointRewardCost,
-                    this.ChannelPointRewardUpdateCooldownsAndLimits, this.channelPointRewardMaxPerStream, this.channelPointRewardMaxPerUser, this.channelPointRewardGlobalCooldown);
+                return TwitchActionModel.CreateUpdateChannelPointReward(this.ChannelPointReward.id, this.ChannelPointRewardState, this.ChannelPointRewardCost,
+                    this.ChannelPointRewardUpdateCooldownsAndLimits, this.ChannelPointRewardMaxPerStream, this.ChannelPointRewardMaxPerUser, this.ChannelPointRewardGlobalCooldown);
             }
             else if (this.ShowPollGrid)
             {

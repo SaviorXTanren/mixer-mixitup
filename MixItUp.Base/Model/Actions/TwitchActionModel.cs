@@ -75,16 +75,16 @@ namespace MixItUp.Base.Model.Actions
             return actionModel;
         }
 
-        public static TwitchActionModel CreateUpdateChannelPointReward(Guid id, bool state, int cost, bool updateCooldownsAndLimits, int maxPerStream, int maxPerUser, int globalCooldown)
+        public static TwitchActionModel CreateUpdateChannelPointReward(Guid id, bool state, string cost, bool updateCooldownsAndLimits, string maxPerStream, string maxPerUser, string globalCooldown)
         {
             TwitchActionModel action = new TwitchActionModel(TwitchActionType.UpdateChannelPointReward);
             action.ChannelPointRewardID = id;
             action.ChannelPointRewardState = state;
-            action.ChannelPointRewardCost = cost;
+            action.ChannelPointRewardCostString = cost;
             action.ChannelPointRewardUpdateCooldownsAndLimits = updateCooldownsAndLimits;
-            action.ChannelPointRewardMaxPerStream = maxPerStream;
-            action.ChannelPointRewardMaxPerUser = maxPerUser;
-            action.ChannelPointRewardGlobalCooldown = globalCooldown;
+            action.ChannelPointRewardMaxPerStreamString = maxPerStream;
+            action.ChannelPointRewardMaxPerUserString = maxPerUser;
+            action.ChannelPointRewardGlobalCooldownString = globalCooldown;
             return action;
         }
 
@@ -132,15 +132,27 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public bool ChannelPointRewardState { get; set; }
         [DataMember]
-        public int ChannelPointRewardCost { get; set; }
+        public string ChannelPointRewardCostString { get; set; }
         [DataMember]
         public bool ChannelPointRewardUpdateCooldownsAndLimits { get; set; }
         [DataMember]
-        public int ChannelPointRewardMaxPerStream { get; set; }
+        public string ChannelPointRewardMaxPerStreamString { get; set; }
         [DataMember]
-        public int ChannelPointRewardMaxPerUser { get; set; }
+        public string ChannelPointRewardMaxPerUserString { get; set; }
         [DataMember]
-        public int ChannelPointRewardGlobalCooldown { get; set; }
+        public string ChannelPointRewardGlobalCooldownString { get; set; }
+        [Obsolete]
+        [DataMember]
+        public int ChannelPointRewardCost { get; set; } = -1;
+        [Obsolete]
+        [DataMember]
+        public int ChannelPointRewardMaxPerStream { get; set; } = -1;
+        [Obsolete]
+        [DataMember]
+        public int ChannelPointRewardMaxPerUser { get; set; } = -1;
+        [Obsolete]
+        [DataMember]
+        public int ChannelPointRewardGlobalCooldown { get; set; } = -1;
 
         [DataMember]
         public string PollTitle { get; set; }
@@ -317,16 +329,33 @@ namespace MixItUp.Base.Model.Actions
                     { "is_enabled", this.ChannelPointRewardState },
                 };
 
-                if (this.ChannelPointRewardCost > 0) { jobj["cost"] = this.ChannelPointRewardCost; }
+#pragma warning disable CS0612 // Type or member is obsolete
+                if (this.ChannelPointRewardCost >= 0)
+                {
+                    this.ChannelPointRewardCostString = this.ChannelPointRewardCost.ToString();
+                    this.ChannelPointRewardMaxPerStreamString = this.ChannelPointRewardMaxPerStream.ToString();
+                    this.ChannelPointRewardMaxPerUserString = this.ChannelPointRewardMaxPerUser.ToString();
+                    this.ChannelPointRewardGlobalCooldownString = this.ChannelPointRewardGlobalCooldown.ToString();
+
+                    this.ChannelPointRewardCost = -1;
+                    this.ChannelPointRewardMaxPerStream = -1;
+                    this.ChannelPointRewardMaxPerUser = -1;
+                    this.ChannelPointRewardGlobalCooldown = -1;
+                }
+#pragma warning restore CS0612 // Type or member is obsolete
+
+                int.TryParse(await this.ReplaceStringWithSpecialModifiers(this.ChannelPointRewardCostString, parameters), out int cost);
+                if (cost > 0) { jobj["cost"] = cost; }
 
                 if (this.ChannelPointRewardUpdateCooldownsAndLimits)
                 {
-                    if (this.ChannelPointRewardMaxPerStream > 0)
+                    int.TryParse(await this.ReplaceStringWithSpecialModifiers(this.ChannelPointRewardMaxPerStreamString, parameters), out int maxPerStream);
+                    if (maxPerStream > 0)
                     {
                         jobj["max_per_stream_setting"] = new JObject()
                         {
                             { "is_enabled", true },
-                            { "max_per_stream", this.ChannelPointRewardMaxPerStream }
+                            { "max_per_stream", maxPerStream}
                         };
                     }
                     else
@@ -337,12 +366,13 @@ namespace MixItUp.Base.Model.Actions
                         };
                     }
 
-                    if (this.ChannelPointRewardMaxPerUser > 0)
+                    int.TryParse(await this.ReplaceStringWithSpecialModifiers(this.ChannelPointRewardMaxPerUserString, parameters), out int maxPerUser);
+                    if (maxPerUser > 0)
                     {
                         jobj["max_per_user_per_stream_setting"] = new JObject()
                         {
                             { "is_enabled", true },
-                            { "max_per_user_per_stream", this.ChannelPointRewardMaxPerUser }
+                            { "max_per_user_per_stream", maxPerUser }
                         };
                     }
                     else
@@ -353,12 +383,13 @@ namespace MixItUp.Base.Model.Actions
                         };
                     }
 
-                    if (this.ChannelPointRewardGlobalCooldown > 0)
+                    int.TryParse(await this.ReplaceStringWithSpecialModifiers(this.ChannelPointRewardGlobalCooldownString, parameters), out int globalCooldown);
+                    if (globalCooldown > 0)
                     {
                         jobj["global_cooldown_setting"] = new JObject()
                         {
                             { "is_enabled", true },
-                            { "global_cooldown_seconds", this.ChannelPointRewardGlobalCooldown * 60 }
+                            { "global_cooldown_seconds", globalCooldown * 60 }
                         };
                     }
                     else
