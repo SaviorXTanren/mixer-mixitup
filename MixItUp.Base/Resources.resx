@@ -5610,4 +5610,22 @@ ensure this option is disabled after any testing you are doing is done by headin
   <data name="TwitchPredictionFailedToCreate" xml:space="preserve">
     <value>ERROR: Failed to create prediction, please try again later. If this issue persists, please visit the Mix It Up support Discord server.</value>
   </data>
+  <data name="Arguments" xml:space="preserve">
+    <value>Arguments</value>
+  </data>
+  <data name="ArgumentsRequirement" xml:space="preserve">
+    <value>Arguments Requirement</value>
+  </data>
+  <data name="ArgumentsRequirementValidName" xml:space="preserve">
+    <value>Arguments Requirement: A valid name must be specified</value>
+  </data>
+  <data name="Decimal" xml:space="preserve">
+    <value>Decimal</value>
+  </data>
+  <data name="Number" xml:space="preserve">
+    <value>Number</value>
+  </data>
+  <data name="Optional" xml:space="preserve">
+    <value>Optional</value>
+  </data>
 </root>

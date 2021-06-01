@@ -78,6 +78,8 @@ namespace MixItUp.Base.Model.Requirements
 
         public ThresholdRequirementModel Threshold { get { return (ThresholdRequirementModel)this.Requirements.FirstOrDefault(r => r is ThresholdRequirementModel); } }
 
+        public ArgumentsRequirementModel Arguments { get { return (ArgumentsRequirementModel)this.Requirements.FirstOrDefault(r => r is ArgumentsRequirementModel); } }
+
         public SettingsRequirementModel Settings { get { return (SettingsRequirementModel)this.Requirements.FirstOrDefault(r => r is SettingsRequirementModel); } }
 
         public void SetIndividualErrorCooldown(DateTimeOffset datetime)
@@ -173,6 +175,7 @@ namespace MixItUp.Base.Model.Requirements
             this.Requirements.Add(new RoleRequirementModel());
             this.Requirements.Add(new CooldownRequirementModel());
             this.Requirements.Add(new ThresholdRequirementModel());
+            this.Requirements.Add(new ArgumentsRequirementModel());
             this.Requirements.Add(new SettingsRequirementModel());
         }
     }

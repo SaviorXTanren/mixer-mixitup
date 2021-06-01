@@ -6,6 +6,17 @@ namespace MixItUp.Base.Util
 {
     public static class ListExtensions
     {
+        public static bool TryGetValue<T>(this IList<T> list, int index, out T value)
+        {
+            value = default(T);
+            if (list != null && list.Count > index)
+            {
+                value = list[index];
+                return true;
+            }
+            return false;
+        }
+
         public static void MoveUp<T>(this IList<T> list, T item)
         {
             int index = list.IndexOf(item) - 1;
