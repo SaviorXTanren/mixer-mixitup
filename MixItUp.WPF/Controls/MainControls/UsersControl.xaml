@@ -55,11 +55,6 @@
                                     <MaterialDesign:PackIcon Kind="AccountKey" Height="24" Width="24" />
                                 </Grid>
                             </DataGridTextColumn.Header>
-                            <DataGridTextColumn.CellStyle>
-                                <Style TargetType="DataGridCell" BasedOn="{StaticResource StandardDataGridCell}">
-                                    <Setter Property="ToolTip" Value="{x:Static resx:Resources.Role}" />
-                                </Style>
-                            </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
                         <DataGridTextColumn Binding="{Binding ViewingMinutes}" IsReadOnly="True" Width="80">
                             <DataGridTextColumn.Header>
@@ -67,11 +62,6 @@
                                     <MaterialDesign:PackIcon Kind="Clock" Height="24" Width="24" />
                                 </Grid>
                             </DataGridTextColumn.Header>
-                            <DataGridTextColumn.CellStyle>
-                                <Style TargetType="DataGridCell" BasedOn="{StaticResource StandardDataGridCell}">
-                                    <Setter Property="ToolTip" Value="{x:Static resx:Resources.WatchTime}" />
-                                </Style>
-                            </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
                         <DataGridTextColumn Binding="{Binding PrimaryCurrency}" IsReadOnly="True" Width="80">
                             <DataGridTextColumn.Header>
@@ -79,11 +69,6 @@
                                     <MaterialDesign:PackIcon Kind="Coin" Height="24" Width="24" />
                                 </Grid>
                             </DataGridTextColumn.Header>
-                            <DataGridTextColumn.CellStyle>
-                                <Style TargetType="DataGridCell" BasedOn="{StaticResource StandardDataGridCell}">
-                                    <Setter Property="ToolTip" Value="{x:Static resx:Resources.PrimaryCurrency}" />
-                                </Style>
-                            </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
                         <DataGridTextColumn Binding="{Binding PrimaryRankPoints}" IsReadOnly="True" Width="80">
                             <DataGridTextColumn.Header>
@@ -91,11 +76,6 @@
                                     <MaterialDesign:PackIcon Kind="ShieldStar" Height="24" Width="24" />
                                 </Grid>
                             </DataGridTextColumn.Header>
-                            <DataGridTextColumn.CellStyle>
-                                <Style TargetType="DataGridCell" BasedOn="{StaticResource StandardDataGridCell}">
-                                    <Setter Property="ToolTip" Value="{x:Static resx:Resources.PrimaryRank}" />
-                                </Style>
-                            </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
                         <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="120">
                             <DataGridTemplateColumn.CellTemplate>
