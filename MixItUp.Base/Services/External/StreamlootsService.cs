@@ -211,6 +211,8 @@ namespace MixItUp.Base.Services.External
                                             textBuffer = string.Empty;
                                             if (jobj.Value<JObject>("data").ContainsKey("data") && jobj.Value<JObject>("data").Value<JObject>("data").ContainsKey("type"))
                                             {
+                                                Logger.Log(LogLevel.Debug, "Streamloots Full Packet Received: " + textBuffer);
+
                                                 var type = jobj.Value<JObject>("data").Value<JObject>("data").Value<string>("type");
                                                 switch (type.ToLower())
                                                 {
