@@ -31,19 +31,19 @@ namespace MixItUp.Base.Model.Commands
 
         public CommandParametersModel() : this(ChannelSession.GetCurrentUser()) { }
 
-        public CommandParametersModel(UserViewModel user) : this(user, StreamingPlatformTypeEnum.None) { }
+        public CommandParametersModel(UserViewModel user) : this(user, StreamingPlatformTypeEnum.All) { }
 
         public CommandParametersModel(Dictionary<string, string> specialIdentifiers) : this(ChannelSession.GetCurrentUser(), specialIdentifiers) { }
 
         public CommandParametersModel(UserViewModel user, StreamingPlatformTypeEnum platform) : this(user, platform, null) { }
 
-        public CommandParametersModel(UserViewModel user, IEnumerable<string> arguments) : this(user, StreamingPlatformTypeEnum.None, arguments, null) { }
+        public CommandParametersModel(UserViewModel user, IEnumerable<string> arguments) : this(user, StreamingPlatformTypeEnum.All, arguments, null) { }
 
         public CommandParametersModel(UserViewModel user, Dictionary<string, string> specialIdentifiers) : this(user, null, specialIdentifiers) { }
 
         public CommandParametersModel(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments) : this(user, platform, arguments, null) { }
 
-        public CommandParametersModel(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers) : this(user, StreamingPlatformTypeEnum.None, arguments, specialIdentifiers) { }
+        public CommandParametersModel(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers) : this(user, StreamingPlatformTypeEnum.All, arguments, specialIdentifiers) { }
 
         public CommandParametersModel(ChatMessageViewModel message) : this(message.User, message.Platform, message.ToArguments()) { }
 
@@ -64,7 +64,7 @@ namespace MixItUp.Base.Model.Commands
                 this.SpecialIdentifiers = new Dictionary<string, string>(specialIdentifiers);
             }
 
-            if (platform != StreamingPlatformTypeEnum.None)
+            if (platform != StreamingPlatformTypeEnum.All)
             {
                 this.Platform = platform;
             }

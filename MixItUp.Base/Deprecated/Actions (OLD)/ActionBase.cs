@@ -86,7 +86,7 @@ namespace MixItUp.Base.Actions
         public string Label { get; set; }
 
         [JsonIgnore]
-        protected StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None;
+        protected StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All;
 
         [JsonIgnore]
         protected Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();

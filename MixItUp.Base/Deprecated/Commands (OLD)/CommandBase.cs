@@ -120,7 +120,7 @@ namespace MixItUp.Base.Commands
         public bool IsRandomized { get; set; }
 
         [JsonIgnore]
-        protected StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None;
+        protected StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All;
 
         [JsonIgnore]
         private Task currentTaskRun;
@@ -164,12 +164,12 @@ namespace MixItUp.Base.Commands
 
         public override string ToString() { return string.Format("{0} - {1}", this.ID, this.Name); }
 
-        public async Task Perform(StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
+        public async Task Perform(StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
             await this.Perform(ChannelSession.GetCurrentUser(), platform, arguments, extraSpecialIdentifiers: extraSpecialIdentifiers);
         }
 
-        public Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
+        public Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
             if (this.IsEnabled)
             {
@@ -185,7 +185,7 @@ namespace MixItUp.Base.Commands
                     extraSpecialIdentifiers = new Dictionary<string, string>();
                 }
 
-                if (this.platform == StreamingPlatformTypeEnum.None && user != null)
+                if (this.platform == StreamingPlatformTypeEnum.All && user != null)
                 {
                     this.platform = user.Platform;
                 }
@@ -247,7 +247,7 @@ namespace MixItUp.Base.Commands
             return Task.FromResult(0);
         }
 
-        public async Task PerformAndWait(UserViewModel user, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
+        public async Task PerformAndWait(UserViewModel user, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
             try
             {

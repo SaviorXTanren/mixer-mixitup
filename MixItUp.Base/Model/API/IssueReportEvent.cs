@@ -7,7 +7,7 @@ namespace MixItUp.Base.Model.API
     public class IssueReportModel
     {
         [DataMember]
-        public StreamingPlatformTypeEnum Platform { get; set; } = StreamingPlatformTypeEnum.None;
+        public StreamingPlatformTypeEnum Platform { get; set; } = StreamingPlatformTypeEnum.All;
         [DataMember]
         public string UserID { get; set; }
         [DataMember]

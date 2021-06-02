@@ -582,7 +582,7 @@ namespace MixItUp.Base.Model.Overlay
         public double Duration { get; set; }
 
         [DataMember]
-        public StreamingPlatformTypeEnum Platform { get; set; } = StreamingPlatformTypeEnum.None;
+        public StreamingPlatformTypeEnum Platform { get; set; } = StreamingPlatformTypeEnum.All;
 
         private Twitch.Base.Models.NewAPI.Clips.ClipModel lastTwitchClip = null;
         private string lastClipURL = null;
@@ -654,7 +654,7 @@ namespace MixItUp.Base.Model.Overlay
                 jobj = await base.GetProcessedItem(parameters);
             }
 
-            this.Platform = StreamingPlatformTypeEnum.None;
+            this.Platform = StreamingPlatformTypeEnum.All;
             this.lastClipURL = null;
 
             return jobj;
