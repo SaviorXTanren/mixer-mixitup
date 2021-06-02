@@ -135,7 +135,7 @@ namespace MixItUp.Base.Services
     public class EventTrigger
     {
         public EventTypeEnum Type { get; set; }
-        public StreamingPlatformTypeEnum Platform { get; set; } = StreamingPlatformTypeEnum.All;
+        public StreamingPlatformTypeEnum Platform { get; set; } = StreamingPlatformTypeEnum.None;
         public UserViewModel User { get; set; }
         public List<string> Arguments { get; set; } = new List<string>();
         public Dictionary<string, string> SpecialIdentifiers { get; set; } = new Dictionary<string, string>();

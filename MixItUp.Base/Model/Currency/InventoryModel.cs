@@ -379,7 +379,7 @@ namespace MixItUp.Base.Model.Currency
             await ChannelSession.SaveSettings();
         }
 
-        public async Task PerformShopCommand(UserViewModel user, IEnumerable<string> arguments = null, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
+        public async Task PerformShopCommand(UserViewModel user, IEnumerable<string> arguments = null, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None)
         {
             try
             {
@@ -554,7 +554,7 @@ namespace MixItUp.Base.Model.Currency
             catch (Exception ex) { Logger.Log(ex); }
         }
 
-        public async Task PerformTradeCommand(UserViewModel user, IEnumerable<string> arguments = null, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
+        public async Task PerformTradeCommand(UserViewModel user, IEnumerable<string> arguments = null, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None)
         {
             try
             {

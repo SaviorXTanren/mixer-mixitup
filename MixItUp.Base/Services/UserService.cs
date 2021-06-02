@@ -21,7 +21,7 @@ namespace MixItUp.Base.Services
 
         public UserService()
         {
-            foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
+            foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
             {
                 this.platformUserIDLookups[platform] = new LockedDictionary<string, Guid>();
                 this.platformUsernameLookups[platform] = new LockedDictionary<string, Guid>();
@@ -37,13 +37,13 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        public UserViewModel GetActiveUserByUsername(string username, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
+        public UserViewModel GetActiveUserByUsername(string username, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None)
         {
             if (!string.IsNullOrEmpty(username))
             {
-                if (platform == StreamingPlatformTypeEnum.All)
+                if (platform == StreamingPlatformTypeEnum.None)
                 {
-                    foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.SupportedPlatforms)
+                    foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.Platforms)
                     {
                         UserViewModel user = this.GetActiveUserByUsername(username, p);
                         if (user == null)

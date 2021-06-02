@@ -586,7 +586,7 @@ namespace MixItUp.Base.Model.Settings
                     await ChannelSession.Services.FileService.CopyFile(SettingsV2Model.SettingsTemplateDatabaseFileName, this.DatabaseFilePath);
                 }
 
-                foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
+                foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
                 {
                     this.UsernameLookups[platform] = new Dictionary<string, Guid>();
                 }
@@ -882,7 +882,7 @@ namespace MixItUp.Base.Model.Settings
             {
                 if (platform == StreamingPlatformTypeEnum.All)
                 {
-                    foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.SupportedPlatforms)
+                    foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.Platforms)
                     {
                         UserDataModel userData = this.GetUserDataByUsername(p, username);
                         if (userData != null)

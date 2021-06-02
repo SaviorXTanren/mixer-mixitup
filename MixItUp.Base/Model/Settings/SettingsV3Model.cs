@@ -869,7 +869,7 @@ namespace MixItUp.Base.Model.Settings
 
         private void InitializeMissingData()
         {
-            foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
+            foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
             {
                 if (!this.StreamingPlatformAuthentications.ContainsKey(platform))
                 {

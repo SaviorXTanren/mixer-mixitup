@@ -193,7 +193,7 @@ namespace MixItUp.Base.Model.User
         {
             get
             {
-                StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All;
+                StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None;
 
 #pragma warning disable CS0612 // Type or member is obsolete
                 if (this.MixerID > 0) { platform = platform | StreamingPlatformTypeEnum.Mixer; }
