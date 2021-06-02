@@ -16,6 +16,8 @@ namespace MixItUp.WPF.Controls.Currency
         private InventoryModel inventory;
         private InventoryItemModel item;
 
+        private StreamPassModel streamPass;
+
         public UserCurrencyIndividualEditorControl(UserDataModel user, CurrencyModel currency)
             : this(user)
         {
@@ -27,6 +29,12 @@ namespace MixItUp.WPF.Controls.Currency
         {
             this.inventory = inventory;
             this.item = item;
+        }
+
+        public UserCurrencyIndividualEditorControl(UserDataModel user, StreamPassModel streamPass)
+            : this(user)
+        {
+            this.streamPass = streamPass;
         }
 
         private UserCurrencyIndividualEditorControl(UserDataModel user)
@@ -50,6 +58,11 @@ namespace MixItUp.WPF.Controls.Currency
                 this.NameTextBlock.Text = this.item.Name;
                 this.AmountTextBox.Text = this.inventory.GetAmount(this.user, this.item).ToString();
             }
+            else if (this.streamPass != null)
+            {
+                this.NameTextBlock.Text = this.streamPass.Name;
+                this.AmountTextBox.Text = this.streamPass.GetAmount(this.user).ToString();
+            }
         }
 
         private void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -63,6 +76,10 @@ namespace MixItUp.WPF.Controls.Currency
                 else if (this.inventory != null && this.item != null)
                 {
                     this.inventory.SetAmount(this.user, this.item, amount);
+                }
+                else if (this.streamPass != null)
+                {
+                    this.streamPass.SetAmount(this.user, amount);
                 }
             }
         }
