@@ -131,7 +131,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
                 try
                 {
-                    if (!string.IsNullOrEmpty(this.UsernameFilter) || this.columnsSorted)
+                    if (!string.IsNullOrEmpty(this.UsernameFilter) || this.SelectedPlatform != StreamingPlatformTypeEnum.All || this.columnsSorted)
                     {
                         if (!this.allUserDataLoaded)
                         {
