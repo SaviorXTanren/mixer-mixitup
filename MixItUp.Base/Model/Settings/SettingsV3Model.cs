@@ -838,9 +838,15 @@ namespace MixItUp.Base.Model.Settings
             this.UserData.ManualValueChanged(user.ID);
         }
 
-        public async Task LoadAllUserData()
+        public async Task LoadUserData(int amount = 0)
         {
-            await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
+            string query = "SELECT * FROM Users";
+            if (amount > 0)
+            {
+                query += " LIMIT " + amount;
+            }
+
+            await ChannelSession.Services.Database.Read(this.DatabaseFilePath, query, (Dictionary<string, object> data) =>
             {
                 UserDataModel userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString());
                 if (!this.UserData.ContainsKey(userData.ID))
