@@ -12743,6 +12743,27 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Specialty Excluded.
+        /// </summary>
+        public static string SpecialtyExcluded {
+            get {
+                return ResourceManager.GetString("SpecialtyExcluded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specialty Excluded users are ignored for various interactions and features through the app.
+        ///This includes things such as Currency/Rank requirements, random user selection, and
+        ///leaderboards. This option is recommended to be enabled on users such as bot accounts or
+        ///special users that you want to allow more control to such as a Moderator..
+        /// </summary>
+        public static string SpecialtyExcludedTooltip {
+            get {
+                return ResourceManager.GetString("SpecialtyExcludedTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Speech Message.
         /// </summary>
         public static string SpeechMessage {

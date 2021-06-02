@@ -5631,4 +5631,13 @@ ensure this option is disabled after any testing you are doing is done by headin
   <data name="UsersPageMaxUsersDisplayed" xml:space="preserve">
     <value>Display limit reached, please refine search options for better results</value>
   </data>
+  <data name="SpecialtyExcluded" xml:space="preserve">
+    <value>Specialty Excluded</value>
+  </data>
+  <data name="SpecialtyExcludedTooltip" xml:space="preserve">
+    <value>Specialty Excluded users are ignored for various interactions and features through the app.
+This includes things such as Currency/Rank requirements, random user selection, and
+leaderboards. This option is recommended to be enabled on users such as bot accounts or
+special users that you want to allow more control to such as a Moderator.</value>
+  </data>
 </root>
