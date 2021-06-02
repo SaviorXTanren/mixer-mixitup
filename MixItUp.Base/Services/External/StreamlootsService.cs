@@ -208,11 +208,11 @@ namespace MixItUp.Base.Services.External
                                         JObject jobj = JObject.Parse("{ " + textBuffer + " }");
                                         if (jobj != null && jobj.ContainsKey("data"))
                                         {
+                                            Logger.Log(LogLevel.Debug, "Streamloots Full Packet Received: " + textBuffer);
+
                                             textBuffer = string.Empty;
                                             if (jobj.Value<JObject>("data").ContainsKey("data") && jobj.Value<JObject>("data").Value<JObject>("data").ContainsKey("type"))
                                             {
-                                                Logger.Log(LogLevel.Debug, "Streamloots Full Packet Received: " + textBuffer);
-
                                                 var type = jobj.Value<JObject>("data").Value<JObject>("data").Value<string>("type");
                                                 switch (type.ToLower())
                                                 {
@@ -294,7 +294,7 @@ namespace MixItUp.Base.Services.External
         {
             string cardData = string.Empty;
             StreamlootsCardModel card = jobj["data"].ToObject<StreamlootsCardModel>();
-            if (card != null)
+            if (card != null && !string.IsNullOrEmpty(card.data?.cardName))
             {
                 UserViewModel user = this.GetUser(card.data.Username);
 
