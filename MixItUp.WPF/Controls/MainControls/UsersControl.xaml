@@ -24,6 +24,7 @@
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="*" />
             <RowDefinition Height="10" />
@@ -37,7 +38,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" ItemsSource="{Binding Platforms}" SelectedItem="{Binding SelectedPlatform}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Platform}">
+            <ComboBox Grid.Column="0" ItemsSource="{Binding Platforms}" SelectedItem="{Binding SelectedPlatform}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Platform}" Width="100" Margin="0,3,0,0">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -49,7 +50,9 @@
 
         </Grid>
 
-        <Grid Grid.Row="2" Margin="10,0">
+        <TextBlock Grid.Row="1" Margin="0,5" Text="{x:Static resx:Resources.UsersPageMaxUsersDisplayed}" Visibility="{Binding IsUsersListCapped, Converter={StaticResource BooleanToVisibilityConverter}}" TextDecorations="Underline" FontWeight="Bold" HorizontalAlignment="Center" />
+
+        <Grid Grid.Row="3" Margin="10,0">
             <Border Style="{StaticResource DefaultBorder}">
                 <Controls:SortedDataGrid x:Name="UserDataGridView" Grid.Row="1" ItemsSource="{Binding Users}" EnableRowVirtualization="True" Sorted="UserDataGridView_Sorted" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
                     <Controls:SortedDataGrid.Columns>
@@ -109,11 +112,11 @@
             </Border>
         </Grid>
 
-        <Grid Grid.Row="2" Margin="10,0" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Grid Grid.Row="3" Margin="10,0" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
             <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12 12 12 12"/>
         </Grid>
 
-        <Grid Grid.Row="4" HorizontalAlignment="Center">
+        <Grid Grid.Row="5" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />

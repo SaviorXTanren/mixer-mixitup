@@ -5628,4 +5628,7 @@ ensure this option is disabled after any testing you are doing is done by headin
   <data name="Optional" xml:space="preserve">
     <value>Optional</value>
   </data>
+  <data name="UsersPageMaxUsersDisplayed" xml:space="preserve">
+    <value>Display limit reached, please refine search options for better results</value>
+  </data>
 </root>

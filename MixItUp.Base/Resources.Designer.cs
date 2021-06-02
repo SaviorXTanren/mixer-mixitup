@@ -15486,6 +15486,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Display limit reached, please refine search options for better results.
+        /// </summary>
+        public static string UsersPageMaxUsersDisplayed {
+            get {
+                return ResourceManager.GetString("UsersPageMaxUsersDisplayed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Users To Apply To.
         /// </summary>
         public static string UsersToApplyTo {
