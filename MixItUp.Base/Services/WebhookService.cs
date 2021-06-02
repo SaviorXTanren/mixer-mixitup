@@ -179,7 +179,7 @@ namespace MixItUp.Base.Services
 
                 GlobalEvents.FollowOccurred(user);
 
-                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Followed", user.DisplayName), ChannelSession.Settings.AlertFollowColor));
+                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Followed", user.FullDisplayName), ChannelSession.Settings.AlertFollowColor));
             }
         }
 

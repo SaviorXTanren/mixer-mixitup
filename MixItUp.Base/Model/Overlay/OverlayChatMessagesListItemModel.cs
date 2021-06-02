@@ -105,7 +105,7 @@ namespace MixItUp.Base.Model.Overlay
                     {
                         item.TemplateReplacements.Add("MESSAGE", OverlayChatMessagesListItemModel.TextMessageHTMLTemplate);
                         item.TemplateReplacements.Add("TEXT", string.Join(" ", textParts));
-                        item.TemplateReplacements.Add("USERNAME", user.DisplayName);
+                        item.TemplateReplacements.Add("USERNAME", user.FullDisplayName);
                         item.TemplateReplacements.Add("USER_IMAGE", user.AvatarLink);
                         item.TemplateReplacements.Add("USER_COLOR", user.Color);
                         item.TemplateReplacements.Add("SUB_IMAGE", user.SubscriberBadgeLink);

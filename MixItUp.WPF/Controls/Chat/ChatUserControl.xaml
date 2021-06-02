@@ -34,7 +34,7 @@
 
         <Image x:Name="SpecialtyBadgeImage" Source="{Binding TwitchSpecialtyBadgeLink}" Visibility="{Binding HasTwitchSpecialtyBadge, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}" Margin="3,0,0,0" Grid.Column="4" VerticalAlignment="Center" />
 
-        <TextBlock x:Name="UsernameTextBlock" Grid.Column="6" Text="{Binding DisplayName}" Foreground="{Binding Color, Converter={StaticResource ColorBrushConverter}}" VerticalAlignment="Center" />
+        <TextBlock x:Name="UsernameTextBlock" Grid.Column="6" Text="{Binding FullDisplayName}" Foreground="{Binding Color, Converter={StaticResource ColorBrushConverter}}" VerticalAlignment="Center" />
 
     </Grid>
 </UserControl>

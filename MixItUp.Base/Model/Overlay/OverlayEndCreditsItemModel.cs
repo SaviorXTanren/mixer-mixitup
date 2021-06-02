@@ -619,13 +619,13 @@ namespace MixItUp.Base.Model.Overlay
                 sectionHTML = await this.ReplaceStringWithSpecialModifiers(sectionHTML, parameters);
 
                 List<string> userHTMLs = new List<string>();
-                foreach (var kvp in replacers.OrderBy(kvp => kvp.Key.DisplayName))
+                foreach (var kvp in replacers.OrderBy(kvp => kvp.Key.FullDisplayName))
                 {
-                    if (!string.IsNullOrEmpty(kvp.Key.DisplayName))
+                    if (!string.IsNullOrEmpty(kvp.Key.FullDisplayName))
                     {
                         string userHTML = this.PerformTemplateReplacements(sectionTemplate.UserHTML, new Dictionary<string, string>()
                         {
-                            { "NAME", kvp.Key.DisplayName },
+                            { "NAME", kvp.Key.FullDisplayName },
                             { "DETAILS", kvp.Value },
                             { "TEXT_FONT", this.ItemTextFont },
                             { "TEXT_SIZE", this.ItemTextSize.ToString() },

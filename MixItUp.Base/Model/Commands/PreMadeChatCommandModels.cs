@@ -242,7 +242,7 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
-            await ChannelSession.Services.Chat.SendMessage(parameters.User.DisplayName + "'s Follow Age: " + parameters.User.FollowAgeString);
+            await ChannelSession.Services.Chat.SendMessage(parameters.User.FullDisplayName + "'s Follow Age: " + parameters.User.FollowAgeString);
         }
     }
 
@@ -252,7 +252,7 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
-            await ChannelSession.Services.Chat.SendMessage(parameters.User.DisplayName + "'s Subscribe Age: " + parameters.User.SubscribeAgeString);
+            await ChannelSession.Services.Chat.SendMessage(parameters.User.FullDisplayName + "'s Subscribe Age: " + parameters.User.SubscribeAgeString);
         }
     }
 
@@ -262,7 +262,7 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
-            await ChannelSession.Services.Chat.SendMessage(parameters.User.DisplayName + "'s Streamer Age: " + parameters.User.AccountAgeString);
+            await ChannelSession.Services.Chat.SendMessage(parameters.User.FullDisplayName + "'s Streamer Age: " + parameters.User.AccountAgeString);
         }
     }
 

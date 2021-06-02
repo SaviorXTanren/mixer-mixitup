@@ -279,11 +279,11 @@ namespace MixItUp.Base.Services.External
 
                 if (giftee != null)
                 {
-                    await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Gifted {1} Pack(s) to {2}", user.DisplayName, purchase.data.Quantity, giftee.Username), ChannelSession.Settings.AlertStreamlootsColor));
+                    await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Gifted {1} Pack(s) to {2}", user.FullDisplayName, purchase.data.Quantity, giftee.Username), ChannelSession.Settings.AlertStreamlootsColor));
                 }
                 else
                 {
-                    await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Purchases {1} Pack(s)", user.DisplayName, purchase.data.Quantity), ChannelSession.Settings.AlertStreamlootsColor));
+                    await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Purchases {1} Pack(s)", user.FullDisplayName, purchase.data.Quantity), ChannelSession.Settings.AlertStreamlootsColor));
                 }
             }
         }
@@ -328,7 +328,7 @@ namespace MixItUp.Base.Services.External
                     await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(user, platform: user.Platform, arguments: arguments, specialIdentifiers: cardsCommandSpecialIdentifiers));
                 }
 
-                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Redeemed {1} Card", user.DisplayName, card.data.cardName), ChannelSession.Settings.AlertStreamlootsColor));
+                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Redeemed {1} Card", user.FullDisplayName, card.data.cardName), ChannelSession.Settings.AlertStreamlootsColor));
             }
         }
 

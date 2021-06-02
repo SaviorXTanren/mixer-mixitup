@@ -53,7 +53,7 @@ namespace MixItUp.Base.Model.Overlay
             public string Hash { get; set; }
 
             public OverlayLeaderboardItem(UserViewModel user, string hash)
-                : this(user.DisplayName, hash)
+                : this(user.FullDisplayName, hash)
             {
                 this.User = user;
             }
