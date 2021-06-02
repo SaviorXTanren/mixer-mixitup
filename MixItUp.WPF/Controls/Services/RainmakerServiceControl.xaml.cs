@@ -4,15 +4,15 @@ using System.Threading.Tasks;
 namespace MixItUp.WPF.Controls.Services
 {
     /// <summary>
-    /// Interaction logic for StreamJarServiceControl.xaml
+    /// Interaction logic for RainmakerServiceControl.xaml
     /// </summary>
-    public partial class StreamJarServiceControl : ServiceControlBase
+    public partial class RainmakerServiceControl : ServiceControlBase
     {
-        private StreamJarServiceControlViewModel viewModel;
+        private RainmakerServiceControlViewModel viewModel;
 
-        public StreamJarServiceControl()
+        public RainmakerServiceControl()
         {
-            this.DataContext = this.ViewModel = this.viewModel = new StreamJarServiceControlViewModel();
+            this.DataContext = this.ViewModel = this.viewModel = new RainmakerServiceControlViewModel();
 
             InitializeComponent();
         }

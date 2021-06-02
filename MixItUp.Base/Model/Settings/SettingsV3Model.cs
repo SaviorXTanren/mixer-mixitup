@@ -76,8 +76,6 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public OAuthTokenModel TreatStreamOAuthToken { get; set; }
         [DataMember]
-        public OAuthTokenModel StreamJarOAuthToken { get; set; }
-        [DataMember]
         public OAuthTokenModel PatreonOAuthToken { get; set; }
         [DataMember]
         public OAuthTokenModel IFTTTOAuthToken { get; set; }
@@ -85,6 +83,8 @@ namespace MixItUp.Base.Model.Settings
         public OAuthTokenModel StreamlootsOAuthToken { get; set; }
         [DataMember]
         public OAuthTokenModel JustGivingOAuthToken { get; set; }
+        [DataMember]
+        public OAuthTokenModel RainMakerOAuthToken { get; set; }
 
         #endregion Authentication
 
@@ -690,9 +690,9 @@ namespace MixItUp.Base.Model.Settings
             {
                 this.StreamElementsOAuthToken = ChannelSession.Services.StreamElements.GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.StreamJar.IsConnected)
+            if (ChannelSession.Services.Rainmaker.IsConnected)
             {
-                this.StreamJarOAuthToken = ChannelSession.Services.StreamJar.GetOAuthTokenCopy();
+                this.RainMakerOAuthToken = ChannelSession.Services.Rainmaker.GetOAuthTokenCopy();
             }
             if (ChannelSession.Services.TipeeeStream.IsConnected)
             {

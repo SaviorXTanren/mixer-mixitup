@@ -68,7 +68,7 @@ namespace MixItUp.Base.Model.Commands
                 case EventTypeEnum.ExtraLifeDonation:
                 case EventTypeEnum.TipeeeStreamDonation:
                 case EventTypeEnum.TreatStreamDonation:
-                case EventTypeEnum.StreamJarDonation:
+                case EventTypeEnum.RainmakerDonation:
                 case EventTypeEnum.JustGivingDonation:
                 case EventTypeEnum.StreamElementsDonation:
                 case EventTypeEnum.StreamElementsMerchPurchase:
@@ -86,7 +86,7 @@ namespace MixItUp.Base.Model.Commands
                         case EventTypeEnum.ExtraLifeDonation: donation.Source = UserDonationSourceEnum.ExtraLife; break;
                         case EventTypeEnum.TipeeeStreamDonation: donation.Source = UserDonationSourceEnum.TipeeeStream; break;
                         case EventTypeEnum.TreatStreamDonation: donation.Source = UserDonationSourceEnum.TreatStream; break;
-                        case EventTypeEnum.StreamJarDonation: donation.Source = UserDonationSourceEnum.StreamJar; break;
+                        case EventTypeEnum.RainmakerDonation: donation.Source = UserDonationSourceEnum.Rainmaker; break;
                         case EventTypeEnum.JustGivingDonation: donation.Source = UserDonationSourceEnum.JustGiving; break;
                         case EventTypeEnum.StreamElementsDonation: donation.Source = UserDonationSourceEnum.StreamElements; break;
                     }

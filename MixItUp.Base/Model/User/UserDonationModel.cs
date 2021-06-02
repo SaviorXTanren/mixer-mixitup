@@ -17,7 +17,7 @@ namespace MixItUp.Base.Model.User
         ExtraLife,
         TipeeeStream,
         TreatStream,
-        StreamJar,
+        Rainmaker,
         JustGiving,
         StreamElements,
     }

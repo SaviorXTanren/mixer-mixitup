@@ -2085,7 +2085,7 @@
   <data name="StreamElementsDonation" xml:space="preserve">
     <value>StreamElements Donation</value>
   </data>
-  <data name="StreamJarDonation" xml:space="preserve">
+  <data name="RainmakerDonation" xml:space="preserve">
     <value>StreamJar Donation</value>
   </data>
   <data name="StreamlabsDonation" xml:space="preserve">
@@ -4586,11 +4586,11 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="StreamingSoftwareSourceName" xml:space="preserve">
     <value>Streaming Software Source Name</value>
   </data>
-  <data name="StreamJar" xml:space="preserve">
-    <value>StreamJar</value>
+  <data name="Rainmaker" xml:space="preserve">
+    <value>Rainmaker</value>
   </data>
-  <data name="StreamJarInfo1" xml:space="preserve">
-    <value>StreamJar service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to StreamJar and approve Mix It Up to access your information.</value>
+  <data name="RainmakerInfo1" xml:space="preserve">
+    <value>Rainmaker service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to Rainmaker and approve Mix It Up to access your information.</value>
   </data>
   <data name="StreamlabsInfo1" xml:space="preserve">
     <value>Streamlabs service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to Streamlabs and approve Mix It Up to access your information.</value>
@@ -5221,7 +5221,7 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="StreamElementsUserDataFailed" xml:space="preserve">
     <value>Failed to get user information</value>
   </data>
-  <data name="StreamJarChannelDataFailed" xml:space="preserve">
+  <data name="RainmakerChannelDataFailed" xml:space="preserve">
     <value>Failed to get channel data</value>
   </data>
   <data name="StreamlabsOBSAdminMaybe" xml:space="preserve">
@@ -5639,5 +5639,11 @@ ensure this option is disabled after any testing you are doing is done by headin
 This includes things such as Currency/Rank requirements, random user selection, and
 leaderboards. This option is recommended to be enabled on users such as bot accounts or
 special users that you want to allow more control to such as a Moderator.</value>
+  </data>
+  <data name="RainmakerSocketFailed" xml:space="preserve">
+    <value>Failed to connect to socket</value>
+  </data>
+  <data name="RainmakerUserDataFailed" xml:space="preserve">
+    <value>Failed to get user information</value>
   </data>
 </root>

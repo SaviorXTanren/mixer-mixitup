@@ -3,17 +3,17 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Services
 {
-    public class StreamJarServiceControlViewModel : ServiceControlViewModelBase
+    public class RainmakerServiceControlViewModel : ServiceControlViewModelBase
     {
         public ICommand LogInCommand { get; set; }
         public ICommand LogOutCommand { get; set; }
 
-        public StreamJarServiceControlViewModel()
-            : base(Resources.StreamJar)
+        public RainmakerServiceControlViewModel()
+            : base(Resources.Rainmaker)
         {
             this.LogInCommand = this.CreateCommand(async () =>
             {
-                Result result = await ChannelSession.Services.StreamJar.Connect();
+                Result result = await ChannelSession.Services.Rainmaker.Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;
@@ -26,14 +26,14 @@ namespace MixItUp.Base.ViewModel.Services
 
             this.LogOutCommand = this.CreateCommand(async () =>
             {
-                await ChannelSession.Services.StreamJar.Disconnect();
+                await ChannelSession.Services.Rainmaker.Disconnect();
 
-                ChannelSession.Settings.StreamJarOAuthToken = null;
+                ChannelSession.Settings.RainMakerOAuthToken = null;
 
                 this.IsConnected = false;
             });
 
-            this.IsConnected = ChannelSession.Services.StreamJar.IsConnected;
+            this.IsConnected = ChannelSession.Services.Rainmaker.IsConnected;
         }
     }
 }

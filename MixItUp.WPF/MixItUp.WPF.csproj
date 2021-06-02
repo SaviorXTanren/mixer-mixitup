@@ -821,8 +821,8 @@
     <Compile Include="Controls\Services\StreamElementsServiceControl.xaml.cs">
       <DependentUpon>StreamElementsServiceControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Services\StreamJarServiceControl.xaml.cs">
-      <DependentUpon>StreamJarServiceControl.xaml</DependentUpon>
+    <Compile Include="Controls\Services\RainmakerServiceControl.xaml.cs">
+      <DependentUpon>RainmakerServiceControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Services\StreamlabsOBSServiceControl.xaml.cs">
       <DependentUpon>StreamlabsOBSServiceControl.xaml</DependentUpon>
@@ -1579,7 +1579,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Services\StreamJarServiceControl.xaml">
+    <Page Include="Controls\Services\RainmakerServiceControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -123,7 +123,7 @@ namespace MixItUp.Base.Services
         TipeeeStreamDonation = 1040,
         TreatStreamDonation = 1050,
         PatreonSubscribed = 1060,
-        StreamJarDonation = 1070,
+        RainmakerDonation = 1070,
         JustGivingDonation = 1080,
         StreamlootsCardRedeemed = 1090,
         StreamlootsPackPurchased = 1091,

@@ -40,7 +40,7 @@ namespace MixItUp.WPF.Services
 
             this.Streamlabs = new StreamlabsService(new WindowsSocketIOConnection());
             this.StreamElements = new StreamElementsService(new WindowsSocketIOConnection());
-            this.StreamJar = new StreamJarService();
+            this.Rainmaker = new RainmakerService(new WindowsSocketIOConnection());
             this.TipeeeStream = new TipeeeStreamService(new WindowsSocketIOConnection());
             this.TreatStream = new TreatStreamService(new WindowsSocketIOConnection());
             this.Streamloots = new StreamlootsService();

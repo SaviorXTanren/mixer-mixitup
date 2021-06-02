@@ -10714,6 +10714,60 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rainmaker.
+        /// </summary>
+        public static string Rainmaker {
+            get {
+                return ResourceManager.GetString("Rainmaker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to get channel data.
+        /// </summary>
+        public static string RainmakerChannelDataFailed {
+            get {
+                return ResourceManager.GetString("RainmakerChannelDataFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to StreamJar Donation.
+        /// </summary>
+        public static string RainmakerDonation {
+            get {
+                return ResourceManager.GetString("RainmakerDonation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rainmaker service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to Rainmaker and approve Mix It Up to access your information..
+        /// </summary>
+        public static string RainmakerInfo1 {
+            get {
+                return ResourceManager.GetString("RainmakerInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to connect to socket.
+        /// </summary>
+        public static string RainmakerSocketFailed {
+            get {
+                return ResourceManager.GetString("RainmakerSocketFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to get user information.
+        /// </summary>
+        public static string RainmakerUserDataFailed {
+            get {
+                return ResourceManager.GetString("RainmakerUserDataFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Random.
         /// </summary>
         public static string Random {
@@ -13210,42 +13264,6 @@ namespace MixItUp.Base {
         public static string StreamingSoftwareSourceName {
             get {
                 return ResourceManager.GetString("StreamingSoftwareSourceName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to StreamJar.
-        /// </summary>
-        public static string StreamJar {
-            get {
-                return ResourceManager.GetString("StreamJar", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Failed to get channel data.
-        /// </summary>
-        public static string StreamJarChannelDataFailed {
-            get {
-                return ResourceManager.GetString("StreamJarChannelDataFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to StreamJar Donation.
-        /// </summary>
-        public static string StreamJarDonation {
-            get {
-                return ResourceManager.GetString("StreamJarDonation", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to StreamJar service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to StreamJar and approve Mix It Up to access your information..
-        /// </summary>
-        public static string StreamJarInfo1 {
-            get {
-                return ResourceManager.GetString("StreamJarInfo1", resourceCulture);
             }
         }
         

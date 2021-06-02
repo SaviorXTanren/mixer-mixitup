@@ -46,9 +46,9 @@ namespace MixItUp.Base.ViewModel.MainControls
                 {
                     return Resources.TreatStream;
                 }
-                else if (this.EventType == EventTypeEnum.StreamJarDonation)
+                else if (this.EventType == EventTypeEnum.RainmakerDonation)
                 {
-                    return Resources.StreamJar;
+                    return Resources.Rainmaker;
                 }
                 else if (this.EventType == EventTypeEnum.PatreonSubscribed)
                 {
@@ -156,7 +156,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             commands.Add(this.GetEventCommand(EventTypeEnum.StreamElementsMerchPurchase));
             commands.Add(this.GetEventCommand(EventTypeEnum.TipeeeStreamDonation));
             commands.Add(this.GetEventCommand(EventTypeEnum.TreatStreamDonation));
-            commands.Add(this.GetEventCommand(EventTypeEnum.StreamJarDonation));
+            commands.Add(this.GetEventCommand(EventTypeEnum.RainmakerDonation));
             commands.Add(this.GetEventCommand(EventTypeEnum.TiltifyDonation));
             commands.Add(this.GetEventCommand(EventTypeEnum.ExtraLifeDonation));
             commands.Add(this.GetEventCommand(EventTypeEnum.JustGivingDonation));

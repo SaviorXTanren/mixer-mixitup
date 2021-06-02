@@ -45,7 +45,7 @@ namespace MixItUp.Base.Services
         public ITelemetryService Telemetry { get; protected set; }
         public ITipeeeStreamService TipeeeStream { get; protected set; }
         public ITreatStreamService TreatStream { get; protected set; }
-        public IStreamJarService StreamJar { get; protected set; }
+        public RainmakerService Rainmaker { get; protected set; }
         public IPatreonService Patreon { get; protected set; }
         public IOvrStreamService OvrStream { get; protected set; }
         public IIFTTTService IFTTT { get; protected set; }
