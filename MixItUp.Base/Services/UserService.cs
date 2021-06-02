@@ -21,7 +21,7 @@ namespace MixItUp.Base.Services
 
         public UserService()
         {
-            foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
+            foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
             {
                 this.platformUserIDLookups[platform] = new LockedDictionary<string, Guid>();
                 this.platformUsernameLookups[platform] = new LockedDictionary<string, Guid>();
@@ -43,7 +43,7 @@ namespace MixItUp.Base.Services
             {
                 if (platform == StreamingPlatformTypeEnum.None)
                 {
-                    foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.Platforms)
+                    foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.SupportedPlatforms)
                     {
                         UserViewModel user = this.GetActiveUserByUsername(username, p);
                         if (user == null)

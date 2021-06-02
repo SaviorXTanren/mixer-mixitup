@@ -18,11 +18,15 @@ namespace MixItUp.Base.Model
 
     public static class StreamingPlatforms
     {
-        public static IEnumerable<StreamingPlatformTypeEnum> Platforms { get; private set; } = new List<StreamingPlatformTypeEnum>()
+        public static IEnumerable<StreamingPlatformTypeEnum> SupportedPlatforms { get; private set; } = new List<StreamingPlatformTypeEnum>()
         {
-#pragma warning disable CS0612 // Type or member is obsolete
-            StreamingPlatformTypeEnum.Mixer, StreamingPlatformTypeEnum.Twitch, StreamingPlatformTypeEnum.YouTube
-#pragma warning restore CS0612 // Type or member is obsolete
+            StreamingPlatformTypeEnum.Twitch
+        };
+
+        public static IEnumerable<StreamingPlatformTypeEnum> SelectablePlatforms { get; private set; } = new List<StreamingPlatformTypeEnum>()
+        {
+            StreamingPlatformTypeEnum.All,
+            StreamingPlatformTypeEnum.Twitch
         };
     }
 }
