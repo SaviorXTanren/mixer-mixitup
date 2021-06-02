@@ -61,12 +61,14 @@ namespace MixItUp.Base.Services.External
         public string imageUrl { get; set; }
         public string videoUrl { get; set; }
         public string soundUrl { get; set; }
+        public string message { get; set; }
         public StreamlootsCardDataModel data { get; set; }
     }
 
     public class StreamlootsCardDataModel
     {
         public string cardName { get; set; }
+        public string description { get; set; }
         public List<StreamlootsDataFieldModel> fields { get; set; }
 
         public string Message
@@ -209,7 +211,6 @@ namespace MixItUp.Base.Services.External
                                         if (jobj != null && jobj.ContainsKey("data"))
                                         {
                                             Logger.Log(LogLevel.Debug, "Streamloots Full Packet Received: " + textBuffer);
-
                                             textBuffer = string.Empty;
                                             if (jobj.Value<JObject>("data").ContainsKey("data") && jobj.Value<JObject>("data").Value<JObject>("data").ContainsKey("type"))
                                             {
@@ -300,10 +301,12 @@ namespace MixItUp.Base.Services.External
 
                 Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
                 eventCommandSpecialIdentifiers["streamlootscardname"] = card.data.cardName;
+                eventCommandSpecialIdentifiers["streamlootscarddescription"] = card.data.description;
                 eventCommandSpecialIdentifiers["streamlootscardimage"] = card.imageUrl;
                 eventCommandSpecialIdentifiers["streamlootscardhasvideo"] = (!string.IsNullOrEmpty(card.videoUrl)).ToString();
                 eventCommandSpecialIdentifiers["streamlootscardvideo"] = card.videoUrl;
                 eventCommandSpecialIdentifiers["streamlootscardsound"] = card.soundUrl;
+                eventCommandSpecialIdentifiers["streamlootscardalertmessage"] = card.message;
 
                 string message = card.data.Message;
                 if (string.IsNullOrEmpty(message))
