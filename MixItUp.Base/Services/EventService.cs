@@ -291,6 +291,7 @@ namespace MixItUp.Base.Services
                 }
 
                 await ChannelSession.Services.User.AddOrUpdateActiveUser(user);
+                user.UpdateLastActivity();
 
                 EventCommandModel command = this.GetEventCommand(trigger.Type);
                 if (command != null)

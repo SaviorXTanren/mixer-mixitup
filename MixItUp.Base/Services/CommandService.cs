@@ -155,6 +155,11 @@ namespace MixItUp.Base.Services
 
         public async Task Queue(CommandInstanceModel commandInstance)
         {
+            if (commandInstance.Parameters.User != null)
+            {
+                commandInstance.Parameters.User.UpdateLastActivity();
+            }
+
             CommandModelBase command = commandInstance.Command;
             if (command != null)
             {
