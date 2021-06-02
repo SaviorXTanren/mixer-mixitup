@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
@@ -12,6 +13,19 @@ namespace MixItUp.Base.ViewModel.MainControls
 {
     public class UsersMainControlViewModel : WindowControlViewModelBase
     {
+        public IEnumerable<StreamingPlatformTypeEnum> Platforms { get { return StreamingPlatforms.SelectablePlatforms; } }
+
+        public StreamingPlatformTypeEnum SelectedPlatform
+        {
+            get { return this.selectedPlatform; }
+            set
+            {
+                this.selectedPlatform = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private StreamingPlatformTypeEnum selectedPlatform;
+
         public string UsernameFilter
         {
             get { return this.usernameFilter; }
@@ -38,6 +52,8 @@ namespace MixItUp.Base.ViewModel.MainControls
         private ListSortDirection sortDirection = ListSortDirection.Ascending;
 
         public ICommand ExportDataCommand { get; private set; }
+
+        private bool allUserDataLoaded = false;
 
         public UsersMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
@@ -104,6 +120,11 @@ namespace MixItUp.Base.ViewModel.MainControls
 
                 try
                 {
+                    //if (!this.allUserDataLoaded)
+                    //{
+                    //    await ChannelSession.Settings.LoadUserData();
+                    //}
+
                     string filter = null;
 
                     if (!string.IsNullOrEmpty(this.UsernameFilter))
@@ -145,10 +166,12 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.RefreshUsers();
         }
 
-        protected override Task OnLoadedInternal()
+        protected override async Task OnLoadedInternal()
         {
+            await ChannelSession.Settings.LoadUserData(200);
+
             this.RefreshUsers();
-            return base.OnVisibleInternal();
+            await base.OnVisibleInternal();
         }
 
         protected override Task OnVisibleInternal()
