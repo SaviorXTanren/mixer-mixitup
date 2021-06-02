@@ -49,8 +49,31 @@
                     <Controls:SortedDataGrid.Columns>
                         <DataGridTextColumn Header="{x:Static resx:Resources.Username}" Binding="{Binding Username}" IsReadOnly="True" Width="*" />
                         <DataGridTextColumn Header="{x:Static resx:Resources.Platform}" Binding="{Binding Platform, Converter={StaticResource LocalizationConverter}}" IsReadOnly="True" Width="100" />
-                        <DataGridTextColumn Header="{x:Static resx:Resources.Minutes}" Binding="{Binding ViewingMinutes}" IsReadOnly="True" Width="100" />
-                        <DataGridTextColumn Binding="{Binding PrimaryCurrency}" IsReadOnly="True" Width="100">
+                        <DataGridTextColumn Binding="{Binding PrimaryRole, Converter={StaticResource LocalizationConverter}}" IsReadOnly="True" Width="100">
+                            <DataGridTextColumn.Header>
+                                <Grid HorizontalAlignment="Center" Margin="0,0,0,0">
+                                    <MaterialDesign:PackIcon Kind="AccountKey" Height="24" Width="24" />
+                                </Grid>
+                            </DataGridTextColumn.Header>
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell" BasedOn="{StaticResource StandardDataGridCell}">
+                                    <Setter Property="ToolTip" Value="{x:Static resx:Resources.Role}" />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding ViewingMinutes}" IsReadOnly="True" Width="80">
+                            <DataGridTextColumn.Header>
+                                <Grid HorizontalAlignment="Center" Margin="0,0,0,0">
+                                    <MaterialDesign:PackIcon Kind="Clock" Height="24" Width="24" />
+                                </Grid>
+                            </DataGridTextColumn.Header>
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell" BasedOn="{StaticResource StandardDataGridCell}">
+                                    <Setter Property="ToolTip" Value="{x:Static resx:Resources.WatchTime}" />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding PrimaryCurrency}" IsReadOnly="True" Width="80">
                             <DataGridTextColumn.Header>
                                 <Grid HorizontalAlignment="Center" Margin="0,0,0,0">
                                     <MaterialDesign:PackIcon Kind="Coin" Height="24" Width="24" />
@@ -62,7 +85,7 @@
                                 </Style>
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding PrimaryRankPoints}" IsReadOnly="True" Width="100">
+                        <DataGridTextColumn Binding="{Binding PrimaryRankPoints}" IsReadOnly="True" Width="80">
                             <DataGridTextColumn.Header>
                                 <Grid HorizontalAlignment="Center" Margin="0,0,0,0">
                                     <MaterialDesign:PackIcon Kind="ShieldStar" Height="24" Width="24" />

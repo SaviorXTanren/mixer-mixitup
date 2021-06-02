@@ -228,6 +228,9 @@ namespace MixItUp.Base.Model.User
         }
 
         [JsonIgnore]
+        public UserRoleEnum PrimaryRole { get { return (this.UserRoles.Count() > 0) ? this.UserRoles.ToList().Max() : UserRoleEnum.User; } }
+
+        [JsonIgnore]
         public string ViewingHoursString { get { return (this.ViewingMinutes / 60).ToString(); } }
 
         [JsonIgnore]
