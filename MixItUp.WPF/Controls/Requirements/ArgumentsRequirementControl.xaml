@@ -20,7 +20,7 @@
         <Util:LocalizationConverter x:Key="LocalizationConverter"/>
     </UserControl.Resources>
 
-    <Grid MinWidth="300" MinHeight="100">
+    <Grid Width="400">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
@@ -37,17 +37,17 @@
                     <Grid Margin="0,5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="20" />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="20" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="5" />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="20" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBox Grid.Column="0" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Grid.Column="0" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" Width="125" />
 
                         <ComboBox Grid.Column="2" ItemsSource="{Binding ArgumentTypes}" SelectedItem="{Binding SelectedArgumentType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Width="80" VerticalAlignment="Bottom" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                             <ComboBox.ItemTemplate>
@@ -58,7 +58,7 @@
                         </ComboBox>
 
                         <TextBlock Grid.Column="4" Text="{Binding Source={x:Static resx:Resources.Optional}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" Margin="0,10,0,0" />
-                        <ToggleButton Grid.Column="6" IsChecked="{Binding Optional}" Margin="0,10,0,0" />
+                        <CheckBox Grid.Column="6" IsChecked="{Binding Optional}" Margin="0,10,0,0" />
 
                         <Button Grid.Column="8" Command="{Binding DeleteCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}" Style="{StaticResource MaterialDesignRaisedButton}">
                             <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
