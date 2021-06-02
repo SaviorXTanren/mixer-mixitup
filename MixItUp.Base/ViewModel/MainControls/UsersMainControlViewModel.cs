@@ -74,8 +74,12 @@ namespace MixItUp.Base.ViewModel.MainControls
                 {
                     List<List<string>> contents = new List<List<string>>();
 
-                    List<string> columns = new List<string>() { "MixItUpID", "TwitchID", "MixerID", "Username", "PrimaryRole", "ViewingMinutes", "OfflineViewingMinutes", "CustomTitle" };
+                    List<string> columns = new List<string>() { "MixItUpID", "TwitchID", "Username", "PrimaryRole", "ViewingMinutes", "OfflineViewingMinutes", "CustomTitle" };
                     foreach (var kvp in ChannelSession.Settings.Currency)
+                    {
+                        columns.Add(kvp.Value.Name.Replace(" ", ""));
+                    }
+                    foreach (var kvp in ChannelSession.Settings.StreamPass)
                     {
                         columns.Add(kvp.Value.Name.Replace(" ", ""));
                     }
@@ -85,9 +89,13 @@ namespace MixItUp.Base.ViewModel.MainControls
 
                     foreach (UserDataModel user in ChannelSession.Settings.UserData.Values.ToList())
                     {
-                        List<string> data = new List<string>() { user.ID.ToString(), user.TwitchID, user.MixerID.ToString(), user.Username, user.UserRoles.Max().ToString(),
+                        List<string> data = new List<string>() { user.ID.ToString(), user.TwitchID, user.Username, user.PrimaryRole.ToString(),
                             user.ViewingMinutes.ToString(), user.OfflineViewingMinutes.ToString(), user.CustomTitle };
                         foreach (var kvp in ChannelSession.Settings.Currency)
+                        {
+                            data.Add(kvp.Value.GetAmount(user).ToString());
+                        }
+                        foreach (var kvp in ChannelSession.Settings.StreamPass)
                         {
                             data.Add(kvp.Value.GetAmount(user).ToString());
                         }
