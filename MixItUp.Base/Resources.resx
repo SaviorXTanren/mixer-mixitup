@@ -5628,9 +5628,6 @@ ensure this option is disabled after any testing you are doing is done by headin
   <data name="Optional" xml:space="preserve">
     <value>Optional</value>
   </data>
-  <data name="UsersPageMaxUsersDisplayed" xml:space="preserve">
-    <value>Display limit reached, please refine search options for better results</value>
-  </data>
   <data name="SpecialtyExcluded" xml:space="preserve">
     <value>Specialty Excluded</value>
   </data>
@@ -5645,5 +5642,8 @@ special users that you want to allow more control to such as a Moderator.</value
   </data>
   <data name="RainmakerUserDataFailed" xml:space="preserve">
     <value>Failed to get user information</value>
+  </data>
+  <data name="UsersLoadingData" xml:space="preserve">
+    <value>Loading User Data</value>
   </data>
 </root>

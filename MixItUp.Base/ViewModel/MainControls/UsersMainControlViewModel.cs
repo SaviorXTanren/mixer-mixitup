@@ -13,8 +13,6 @@ namespace MixItUp.Base.ViewModel.MainControls
 {
     public class UsersMainControlViewModel : WindowControlViewModelBase
     {
-        public const int MaxUsersToDisplay = 200;
-
         public IEnumerable<StreamingPlatformTypeEnum> Platforms { get { return StreamingPlatforms.SelectablePlatforms; } }
 
         public StreamingPlatformTypeEnum SelectedPlatform
@@ -43,8 +41,6 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public ThreadSafeObservableCollection<UserDataModel> Users { get; private set; } = new ThreadSafeObservableCollection<UserDataModel>();
 
-        public bool IsUsersListCapped { get { return this.Users.Count >= MaxUsersToDisplay; } }
-
         public int SortColumnIndex
         {
             get { return this.sortColumnIndex; }
@@ -61,7 +57,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public ICommand ExportDataCommand { get; private set; }
 
-        private bool columnsSorted = false;
+        private bool firstVisibleOccurred = false;
         private bool allUserDataLoaded = false;
 
         public UsersMainControlViewModel(MainWindowViewModel windowViewModel)
@@ -114,8 +110,6 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.sortColumnIndex = index;
             this.sortDirection = direction;
 
-            this.columnsSorted = true;
-
             this.NotifyPropertyChanged("SortColumnIndex");
             this.NotifyPropertyChanged("SortDirection");
 
@@ -139,13 +133,10 @@ namespace MixItUp.Base.ViewModel.MainControls
 
                 try
                 {
-                    if (!string.IsNullOrEmpty(this.UsernameFilter) || this.SelectedPlatform != StreamingPlatformTypeEnum.All || this.columnsSorted)
+                    if (!this.allUserDataLoaded)
                     {
-                        if (!this.allUserDataLoaded)
-                        {
-                            await ChannelSession.Settings.LoadUserData();
-                            this.allUserDataLoaded = true;
-                        }
+                        this.allUserDataLoaded = true;
+                        await ChannelSession.Settings.LoadUserData();
                     }
 
                     IEnumerable<UserDataModel> data = ChannelSession.Settings.UserData.Values.ToList();
@@ -169,9 +160,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                     else if (this.SortColumnIndex == 4) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryCurrency) : data.OrderBy(u => u.PrimaryCurrency); }
                     else if (this.SortColumnIndex == 5) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryRankPoints) : data.OrderBy(u => u.PrimaryRankPoints); }
 
-                    this.Users.ClearAndAddRange(data.Take(MaxUsersToDisplay));
-
-                    this.NotifyPropertyChanged("IsUsersListCapped");
+                    this.Users.ClearAndAddRange(data);
                 }
                 catch (Exception ex) { Logger.Log(ex); }
 
@@ -193,17 +182,13 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.RefreshUsers();
         }
 
-        protected override async Task OnLoadedInternal()
-        {
-            await ChannelSession.Settings.LoadUserData(MaxUsersToDisplay);
-
-            this.RefreshUsers();
-            await base.OnVisibleInternal();
-        }
-
         protected override Task OnVisibleInternal()
         {
-            this.RefreshUsers();
+            if (this.firstVisibleOccurred)
+            {
+                this.RefreshUsers();
+            }
+            this.firstVisibleOccurred = true;
             return base.OnVisibleInternal();
         }
     }
