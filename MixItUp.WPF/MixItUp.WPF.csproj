@@ -83,14 +83,14 @@
     <Reference Include="GongSolutions.WPF.DragDrop, Version=2.0.0.0, Culture=neutral, PublicKeyToken=91f1945125b7a587, processorArchitecture=MSIL">
       <HintPath>..\packages\gong-wpf-dragdrop.2.2.0\lib\net46\GongSolutions.WPF.DragDrop.dll</HintPath>
     </Reference>
-    <Reference Include="H.Engine.IO, Version=1.1.7.0, Culture=neutral, PublicKeyToken=56a250a977deb371, processorArchitecture=MSIL">
-      <HintPath>..\packages\H.Engine.IO.1.1.7\lib\net45\H.Engine.IO.dll</HintPath>
+    <Reference Include="H.Engine.IO, Version=1.1.7.1, Culture=neutral, PublicKeyToken=56a250a977deb371, processorArchitecture=MSIL">
+      <HintPath>..\packages\H.Engine.IO.1.1.7.1\lib\net45\H.Engine.IO.dll</HintPath>
     </Reference>
     <Reference Include="H.Socket.IO, Version=1.1.7.0, Culture=neutral, PublicKeyToken=56a250a977deb371, processorArchitecture=MSIL">
       <HintPath>..\packages\H.Socket.IO.1.1.7\lib\net45\H.Socket.IO.dll</HintPath>
     </Reference>
-    <Reference Include="H.WebSockets, Version=1.1.7.0, Culture=neutral, PublicKeyToken=56a250a977deb371, processorArchitecture=MSIL">
-      <HintPath>..\packages\H.WebSockets.1.1.7\lib\net45\H.WebSockets.dll</HintPath>
+    <Reference Include="H.WebSockets, Version=1.1.7.1, Culture=neutral, PublicKeyToken=56a250a977deb371, processorArchitecture=MSIL">
+      <HintPath>..\packages\H.WebSockets.1.1.7.1\lib\net45\H.WebSockets.dll</HintPath>
     </Reference>
     <Reference Include="Jace, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Jace.1.0.0\lib\netstandard1.6\Jace.dll</HintPath>

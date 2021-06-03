@@ -43,9 +43,6 @@ namespace MixItUp.Base.Services.External
         [JsonProperty("amount")]
         public double Amount { get; set; }
 
-        [JsonProperty("avatar")]
-        public string Avatar { get; set; }
-
         [JsonProperty("currency")]
         public string Currency { get; set; }
 
@@ -216,30 +213,14 @@ namespace MixItUp.Base.Services.External
             try
             {
                 this.WebSocketConnected = false;
+                this.socket.OnConnected -= Socket_OnConnected;
                 this.socket.OnDisconnected -= Socket_OnDisconnected;
                 await this.socket.Disconnect();
 
-                this.socket.Listen("disconnect", (data) =>
+                this.socket.OnConnected += Socket_OnConnected;
+
+                this.socket.Listen("authenticated", () =>
                 {
-                    this.Socket_OnDisconnected(null, new EventArgs());
-                });
-
-                this.socket.Listen("error", (data) =>
-                {
-                    this.Socket_OnDisconnected(null, new EventArgs());
-                });
-
-                this.socket.Listen("connect", (data) =>
-                {
-                    this.socket.Send("subscribe", "{ event: '" + $"channel:{this.channel.ID}:tip" + "' }");
-
-                    this.WebSocketConnected = true;
-                });
-
-                this.socket.Listen("authenticate", (data) =>
-                {
-                    this.socket.Send("subscribe", "{ event: '" + $"channel:{this.channel.ID}:tip" + "' }");
-
                     this.WebSocketConnected = true;
                 });
 
@@ -264,8 +245,6 @@ namespace MixItUp.Base.Services.External
 
                 await this.socket.Connect("wss://rainmaker.gg");
 
-                this.socket.Send("authenticate", "{ oauth: '" + this.token.accessToken + "' }");
-
                 for (int i = 0; i < 10 && !this.WebSocketConnected; i++)
                 {
                     await Task.Delay(1000);
@@ -282,6 +261,19 @@ namespace MixItUp.Base.Services.External
             }
 
             return this.WebSocketConnected;
+        }
+
+        private void Socket_OnConnected(object sender, EventArgs e)
+        {
+            JObject authenticateJObj = new JObject();
+            authenticateJObj["oauth"] = this.token.accessToken;
+            this.socket.Send("authenticate", authenticateJObj);
+
+            JObject subscribeJObj = new JObject();
+            subscribeJObj["event"] = $"channel:{this.channel.ID}:tip";
+            this.socket.Send("subscribe", subscribeJObj);
+
+            this.WebSocketConnected = true;
         }
     }
 }
