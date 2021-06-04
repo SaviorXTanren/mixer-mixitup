@@ -65,40 +65,34 @@ namespace MixItUp.Base.Model.Store
     public class CommunityCommandDetailsModel : CommunityCommandModel
     {
         [DataMember]
-        public string Data
-        {
-            get
-            {
-                try
-                {
-                    return JSONSerializerHelper.SerializeToString(this.Command);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
-                }
-                return null;
-            }
-            set
-            {
-                try
-                {
-                    if (!string.IsNullOrEmpty(value))
-                    {
-                        this.Command = JSONSerializerHelper.DeserializeFromString<CommandModelBase>(value);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
-                }
-            }
-        }
-
-        [JsonIgnore]
-        public CommandModelBase Command { get; set; }
+        public string Data { get; set; }
 
         [DataMember]
         public List<CommunityCommandReviewModel> Reviews { get; set; } = new List<CommunityCommandReviewModel>();
+
+        public CommandModelBase GetCommand()
+        {
+            try
+            {
+                return JSONSerializerHelper.DeserializeFromString<CommandModelBase>(this.Data);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            return null;
+        }
+
+        public void SetCommand(CommandModelBase command)
+        {
+            try
+            {
+                this.Data = JSONSerializerHelper.SerializeToString(command);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
     }
 }
