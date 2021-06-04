@@ -8,7 +8,7 @@ using System.Runtime.Serialization;
 namespace MixItUp.Base.Model.Store
 {
     [DataContract]
-    public class StoreCommandModel
+    public class CommunityCommandModel
     {
         [DataMember]
         public Guid ID { get; set; }
@@ -18,6 +18,9 @@ namespace MixItUp.Base.Model.Store
 
         [DataMember]
         public string Description { get; set; }
+
+        [DataMember]
+        public string ImageURL { get; set; }
 
         [DataMember]
         public HashSet<string> Tags { get; set; } = new HashSet<string>();
@@ -59,29 +62,43 @@ namespace MixItUp.Base.Model.Store
     }
 
     [DataContract]
-    public class StoreCommandDetailsModel : StoreCommandModel
+    public class CommunityCommandDetailsModel : CommunityCommandModel
     {
         [DataMember]
         public string Data
         {
-            get { return JSONSerializerHelper.SerializeToString(this.Command); }
+            get
+            {
+                try
+                {
+                    return JSONSerializerHelper.SerializeToString(this.Command);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+                return null;
+            }
             set
             {
-                if (!string.IsNullOrEmpty(value))
+                try
                 {
-                    this.Command = JSONSerializerHelper.DeserializeFromString<CommandModelBase>(value);
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        this.Command = JSONSerializerHelper.DeserializeFromString<CommandModelBase>(value);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
                 }
             }
         }
 
         [JsonIgnore]
         public CommandModelBase Command { get; set; }
-    }
 
-    [DataContract]
-    public class StoreCommandUploadModel : StoreCommandDetailsModel
-    {
         [DataMember]
-        public string MixItUpUserID { get; set; }
+        public List<CommunityCommandReviewModel> Reviews { get; set; } = new List<CommunityCommandReviewModel>();
     }
 }
