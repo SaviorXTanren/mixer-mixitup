@@ -5646,4 +5646,7 @@ special users that you want to allow more control to such as a Moderator.</value
   <data name="UsersLoadingData" xml:space="preserve">
     <value>Loading User Data</value>
   </data>
+  <data name="CommunityCommands" xml:space="preserve">
+    <value>Community Commands</value>
+  </data>
 </root>

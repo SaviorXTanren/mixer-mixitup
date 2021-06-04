@@ -2067,6 +2067,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Community Commands.
+        /// </summary>
+        public static string CommunityCommands {
+            get {
+                return ResourceManager.GetString("CommunityCommands", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Compare.
         /// </summary>
         public static string Compare {
