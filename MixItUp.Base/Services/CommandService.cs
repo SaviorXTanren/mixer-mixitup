@@ -23,8 +23,6 @@ namespace MixItUp.Base.Services
 
     public class CommandService
     {
-        private const int MaxCommandInstancesTracked = 200;
-
         public event EventHandler<CommandInstanceModel> OnCommandInstanceAdded = delegate { };
 
         public List<PreMadeChatCommandModelBase> PreMadeChatCommands { get; private set; } = new List<PreMadeChatCommandModelBase>();
@@ -174,10 +172,6 @@ namespace MixItUp.Base.Services
             lock (this.commandInstances)
             {
                 this.commandInstances.Insert(0, commandInstance);
-                while (this.commandInstances.Count > MaxCommandInstancesTracked)
-                {
-                    this.commandInstances.RemoveAt(this.commandInstances.Count - 1);
-                }
             }
 
             if (commandInstance.State == CommandInstanceStateEnum.Pending)
