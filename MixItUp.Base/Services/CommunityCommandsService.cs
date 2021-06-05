@@ -93,7 +93,7 @@ namespace MixItUp.Base.Services
                 existingCommand.Tags = command.Tags;
                 existingCommand.Username = command.Username;
                 existingCommand.UserAvatarURL = command.UserAvatarURL;
-                existingCommand.Command = command.Command;
+                existingCommand.Data = command.Data;
 
                 return existingCommand;
             }
@@ -105,10 +105,19 @@ namespace MixItUp.Base.Services
 
         public async Task DeleteCommand(Guid id)
         {
-            CommunityCommandDetailsModel existingCommand = this.commandCache.FirstOrDefault(c => c.ID.Equals(command.ID));
+            CommunityCommandDetailsModel existingCommand = this.commandCache.FirstOrDefault(c => c.ID.Equals(id));
             if (existingCommand != null)
             {
                 this.commandCache.Remove(existingCommand);
+            }
+        }
+
+        public async Task ReportCommand(Guid id, string report)
+        {
+            CommunityCommandDetailsModel existingCommand = this.commandCache.FirstOrDefault(c => c.ID.Equals(id));
+            if (existingCommand != null)
+            {
+                // File report
             }
         }
 
@@ -134,7 +143,7 @@ namespace MixItUp.Base.Services
 
         public async Task DownloadCommand(Guid id)
         {
-            CommunityCommandDetailsModel command = this.commandCache.FirstOrDefault(c => c.ID.Equals(review.CommandID));
+            CommunityCommandDetailsModel command = this.commandCache.FirstOrDefault(c => c.ID.Equals(id));
             if (command != null)
             {
                 command.Downloads++;
@@ -150,8 +159,8 @@ namespace MixItUp.Base.Services
                 Description = "Here's some description text",
                 ImageURL = "https://appsgeyser.com/img/store_icon.png",
                 Tags = new HashSet<string>() { name.ToLower() },
-                Username = ChannelSession.GetCurrentUser().Username,
-                UserAvatarURL = ChannelSession.GetCurrentUser().AvatarLink,
+                Username = "Joe Smoe",
+                UserAvatarURL = "https://static-cdn.jtvnw.net/jtv_user_pictures/45182012-95d6-4704-9863-82ff3fbaf48e-profile_image-70x70.png",
             };
 
             foreach (ActionTypeEnum actionType in EnumHelper.GetEnumList<ActionTypeEnum>().Shuffle().Take(5))
@@ -161,7 +170,7 @@ namespace MixItUp.Base.Services
 
             ChatCommandModel command = new ChatCommandModel(storeCommand.Name, new HashSet<string>() { "test" });
             command.Actions.Add(new ChatActionModel("Hello World!"));
-            storeCommand.Command = command;
+            storeCommand.SetCommand(command);
 
             return storeCommand;
         }
