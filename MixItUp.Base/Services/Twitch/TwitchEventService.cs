@@ -539,6 +539,7 @@ namespace MixItUp.Base.Services.Twitch
             if (string.IsNullOrEmpty(await ChannelSession.Services.Moderation.ShouldTextBeModerated(user, bitsCheered.Message.PlainTextMessage)))
             {
                 EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelBitsCheered, user);
+                trigger.Arguments = bitsCheered.Message.ToArguments().ToList();
                 trigger.SpecialIdentifiers["bitsamount"] = bitsCheered.Amount.ToString();
                 trigger.SpecialIdentifiers["messagenocheermotes"] = bitsCheered.Message.PlainTextMessageNoCheermotes;
                 trigger.SpecialIdentifiers["message"] = bitsCheered.Message.PlainTextMessage;
@@ -568,7 +569,9 @@ namespace MixItUp.Base.Services.Twitch
                 EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelResubscribed, user);
                 if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                 {
-                    trigger.SpecialIdentifiers["message"] = (packet.sub_message.ContainsKey("message")) ? packet.sub_message["message"].ToString() : string.Empty;
+                    string message = (packet.sub_message.ContainsKey("message") && packet.sub_message["message"] != null) ? packet.sub_message["message"].ToString() : string.Empty;
+                    trigger.Arguments = new List<string>(message.Split(new char[] { ' ' }));
+                    trigger.SpecialIdentifiers["message"] = message;
                     trigger.SpecialIdentifiers["usersubmonths"] = months.ToString();
                     trigger.SpecialIdentifiers["usersubplanname"] = !string.IsNullOrEmpty(packet.sub_plan_name) ? packet.sub_plan_name : TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
                     trigger.SpecialIdentifiers["usersubplan"] = planTier;
