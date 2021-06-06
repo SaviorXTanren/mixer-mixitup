@@ -5649,4 +5649,7 @@ special users that you want to allow more control to such as a Moderator.</value
   <data name="CommunityCommands" xml:space="preserve">
     <value>Community Commands</value>
   </data>
+  <data name="SearchText" xml:space="preserve">
+    <value>Search Text</value>
+  </data>
 </root>

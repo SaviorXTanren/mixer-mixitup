@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
-             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
                           
@@ -20,6 +19,132 @@
     </local:MainControlBase.Resources>
 
     <Grid>
-        
+        <Grid Visibility="{Binding ShowHome, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox Grid.Column="0" Text="{Binding SearchText}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SearchText}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="200" />
+                        <Button Grid.Column="2" Content="{x:Static resx:Resources.Search}" Margin="0,10,0,0" Command="{Binding SearchCommand}" />
+
+                    </Grid>
+
+                    <ItemsControl Grid.Row="2" ItemsSource="{Binding Categories}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="10" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Text="{Binding Name}" />
+
+                                    <ListView x:Name="CommandsList" Grid.Row="2" ItemsSource="{Binding Commands}" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Visible" SelectionMode="Single" SelectionChanged="CommandsList_SelectionChanged">
+                                        <ListView.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </ListView.ItemsPanel>
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="5" />
+                                                        <RowDefinition Height="Auto" />
+                                                    </Grid.RowDefinitions>
+
+                                                    <TextBlock Grid.Row="0" Text="{Binding Name}" Width="100" />
+
+                                                    <Image Grid.Row="2" Source="{Binding ImageURL}" Width="100" Height="100" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+
+        <Grid Visibility="{Binding ShowSearch, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Column="0" Text="{Binding SearchText}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SearchText}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="200" />
+                    <Button Grid.Column="2" Content="{x:Static resx:Resources.Search}" Margin="0,10,0,0" Command="{Binding SearchCommand}" />
+
+                </Grid>
+
+                <ListView x:Name="CommandsList" Grid.Row="2" ItemsSource="{Binding SearchResults}" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Single" SelectionChanged="CommandsList_SelectionChanged">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Image Grid.Column="0" Source="{Binding ImageURL}" Width="70" Height="70" />
+
+                                <Grid Grid.Column="2" Margin="0,5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="10" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Text="{Binding Name}" />
+
+                                    <TextBlock Grid.Row="2" Text="{Binding Description}" TextWrapping="Wrap"  />
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </Grid>
+
+        <Grid Visibility="{Binding ShowDetails, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid DataContext="{Binding CommandDetails}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="{Binding Name}" Width="100" />
+
+                <Image Grid.Row="2" Source="{Binding ImageURL}" Width="100" Height="100" />
+            </Grid>
+        </Grid>
+
     </Grid>
 </local:MainControlBase>
