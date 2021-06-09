@@ -25,6 +25,8 @@ namespace MixItUp.Base.Services
 
         public async Task<IEnumerable<CommunityCommandCategoryModel>> GetHomeCategories()
         {
+            await Task.Delay(1000);
+
             List<CommunityCommandCategoryModel> categories = new List<CommunityCommandCategoryModel>();
 
             categories.Add(new CommunityCommandCategoryModel()
@@ -67,16 +69,22 @@ namespace MixItUp.Base.Services
 
         public async Task<IEnumerable<CommunityCommandModel>> SearchCommands(string searchText)
         {
+            await Task.Delay(1000);
+
             return this.commandCache.Where(c => c.Name.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) || c.Description.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) || c.Tags.Contains(searchText.ToLower()));
         }
 
         public async Task<CommunityCommandDetailsModel> GetCommandDetails(Guid id)
         {
+            await Task.Delay(1000);
+
             return this.commandCache.FirstOrDefault(c => c.ID.Equals(id));
         }
 
         public async Task<CommunityCommandDetailsModel> AddCommand(CommunityCommandDetailsModel command)
         {
+            await Task.Delay(1000);
+
             command.ID = Guid.NewGuid();
             this.commandCache.Add(command);
             return command;
@@ -84,6 +92,8 @@ namespace MixItUp.Base.Services
 
         public async Task<CommunityCommandDetailsModel> UpdateCommand(CommunityCommandDetailsModel command)
         {
+            await Task.Delay(1000);
+
             CommunityCommandDetailsModel existingCommand = this.commandCache.FirstOrDefault(c => c.ID.Equals(command.ID));
             if (existingCommand != null)
             {
@@ -105,6 +115,8 @@ namespace MixItUp.Base.Services
 
         public async Task DeleteCommand(Guid id)
         {
+            await Task.Delay(1000);
+
             CommunityCommandDetailsModel existingCommand = this.commandCache.FirstOrDefault(c => c.ID.Equals(id));
             if (existingCommand != null)
             {
@@ -114,6 +126,8 @@ namespace MixItUp.Base.Services
 
         public async Task ReportCommand(Guid id, string report)
         {
+            await Task.Delay(1000);
+
             CommunityCommandDetailsModel existingCommand = this.commandCache.FirstOrDefault(c => c.ID.Equals(id));
             if (existingCommand != null)
             {
@@ -123,11 +137,15 @@ namespace MixItUp.Base.Services
 
         public async Task<IEnumerable<CommunityCommandDetailsModel>> GetMyCommands()
         {
+            await Task.Delay(1000);
+
             return this.commandCache.ToList();
         }
 
         public async Task<CommunityCommandReviewModel> AddReview(CommunityCommandReviewModel review)
         {
+            await Task.Delay(1000);
+
             CommunityCommandDetailsModel command = this.commandCache.FirstOrDefault(c => c.ID.Equals(review.CommandID));
             if (command != null)
             {
@@ -143,6 +161,8 @@ namespace MixItUp.Base.Services
 
         public async Task DownloadCommand(Guid id)
         {
+            await Task.Delay(1000);
+
             CommunityCommandDetailsModel command = this.commandCache.FirstOrDefault(c => c.ID.Equals(id));
             if (command != null)
             {
