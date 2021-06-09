@@ -89,6 +89,7 @@ namespace MixItUp.Base.Model.Commands
                         case EventTypeEnum.RainmakerDonation: donation.Source = UserDonationSourceEnum.Rainmaker; break;
                         case EventTypeEnum.JustGivingDonation: donation.Source = UserDonationSourceEnum.JustGiving; break;
                         case EventTypeEnum.StreamElementsDonation: donation.Source = UserDonationSourceEnum.StreamElements; break;
+                        case EventTypeEnum.StreamElementsMerchPurchase: donation.Source = UserDonationSourceEnum.StreamElements; break;
                     }
 
                     foreach (var kvp in donation.GetSpecialIdentifiers())
