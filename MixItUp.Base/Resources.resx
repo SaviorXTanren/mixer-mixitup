@@ -5652,4 +5652,7 @@ special users that you want to allow more control to such as a Moderator.</value
   <data name="SearchText" xml:space="preserve">
     <value>Search Text</value>
   </data>
+  <data name="Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
 </root>

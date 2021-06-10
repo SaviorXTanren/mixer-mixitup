@@ -10,6 +10,8 @@ namespace MixItUp.Base.ViewModel.MainControls
 {
     public class CommunityCommandsMainControlViewModel : WindowControlViewModelBase
     {
+        public ICommand BackCommand { get; set; }
+
         public bool ShowHome
         {
             get { return this.showHome; }
@@ -74,10 +76,31 @@ namespace MixItUp.Base.ViewModel.MainControls
         private CommunityCommandDetailsViewModel commandDetails;
 
         private bool firstLoadCompleted = false;
+        private DateTimeOffset lastCategoryRefresh = DateTimeOffset.MinValue;
 
         public CommunityCommandsMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
+            this.BackCommand = this.CreateCommand(async () =>
+            {
+                if (this.ShowSearch)
+                {
+                    await this.NavigateToCategories();
+                }
+                else if (this.ShowDetails)
+                {
+                    if (this.SearchResults.Count == 0)
+                    {
+                        await this.NavigateToCategories();
+                    }
+                    else
+                    {
+                        this.ClearAllShows();
+                        this.ShowSearch = true;
+                    }
+                }
+            });
+
             this.SearchCommand = this.CreateCommand(async () =>
             {
                 try
@@ -90,7 +113,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                             this.SearchResults.Add(new CommunityCommandViewModel(command));
                         }
 
-                        this.ShowHome = false;
+                        this.ClearAllShows();
                         this.ShowSearch = true;
                     }
                 }
@@ -109,8 +132,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                     {
                         this.CommandDetails = new CommunityCommandDetailsViewModel(commandDetails);
 
-                        this.ShowHome = false;
-                        this.ShowSearch = false;
+                        this.ClearAllShows();
                         this.ShowDetails = true;
                     }
                 }
@@ -127,22 +149,42 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 if (this.ShowHome)
                 {
-                    try
-                    {
-                        this.Categories.Clear();
-                        foreach (CommunityCommandCategoryModel category in await ChannelSession.Services.CommunityCommandsService.GetHomeCategories())
-                        {
-                            this.Categories.Add(new CommunityCommandCategoryViewModel(category));
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Log(ex);
-                    }
+                    await this.NavigateToCategories();
                 }
             }
             this.firstLoadCompleted = true;
             await base.OnVisibleInternal();
+        }
+
+        private async Task NavigateToCategories()
+        {
+            if (this.lastCategoryRefresh.TotalMinutesFromNow() > 1)
+            {
+                try
+                {
+                    this.Categories.Clear();
+                    foreach (CommunityCommandCategoryModel category in await ChannelSession.Services.CommunityCommandsService.GetHomeCategories())
+                    {
+                        this.Categories.Add(new CommunityCommandCategoryViewModel(category));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+
+                this.lastCategoryRefresh = DateTimeOffset.Now;
+            }
+
+            this.ClearAllShows();
+            this.ShowHome = true;
+        }
+
+        private void ClearAllShows()
+        {
+            this.ShowHome = false;
+            this.ShowSearch = false;
+            this.ShowDetails = false;
         }
     }
 }
