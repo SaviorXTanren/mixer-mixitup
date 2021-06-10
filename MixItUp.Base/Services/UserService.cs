@@ -41,12 +41,13 @@ namespace MixItUp.Base.Services
         {
             if (!string.IsNullOrEmpty(username))
             {
+                username = this.SanitizeUsername(username);
                 if (platform == StreamingPlatformTypeEnum.None)
                 {
                     foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.SupportedPlatforms)
                     {
                         UserViewModel user = this.GetActiveUserByUsername(username, p);
-                        if (user == null)
+                        if (user != null)
                         {
                             return user;
                         }
@@ -54,7 +55,6 @@ namespace MixItUp.Base.Services
                 }
                 else
                 {
-                    username = username.ToLower().Replace("@", "").Trim();
                     if (this.platformUsernameLookups[platform].ContainsKey(username))
                     {
                         return this.GetActiveUserByID(this.platformUsernameLookups[platform][username]);
@@ -125,7 +125,7 @@ namespace MixItUp.Base.Services
         {
             if (!string.IsNullOrEmpty(username))
             {
-                username = username.ToLower().Replace("@", "").Trim();
+                username = this.SanitizeUsername(username);
                 if (this.platformUsernameLookups[platform].ContainsKey(username))
                 {
                     UserViewModel user = this.GetActiveUserByID(this.platformUsernameLookups[platform][username]);
@@ -156,6 +156,8 @@ namespace MixItUp.Base.Services
                 await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserLeft, user));
             }
         }
+
+        public bool IsUserActive(Guid id) { return this.activeUsers.ContainsKey(id); }
 
         public IEnumerable<UserViewModel> GetAllActiveUsers() { return this.activeUsers.Values.ToList(); }
 
@@ -219,6 +221,7 @@ namespace MixItUp.Base.Services
 
             if (user == null && !string.IsNullOrEmpty(username))
             {
+                username = this.SanitizeUsername(username);
                 user = ChannelSession.Services.User.GetActiveUserByUsername(username);
                 if (user == null)
                 {
@@ -242,5 +245,7 @@ namespace MixItUp.Base.Services
         }
 
         public int Count() { return this.activeUsers.Count; }
+
+        private string SanitizeUsername(string username) { return username.ToLower().Replace("@", "").Trim(); }
     }
 }
