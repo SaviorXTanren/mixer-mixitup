@@ -28,20 +28,23 @@
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.CaseSensitive}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-            <ToggleButton Grid.Column="2" IsChecked="{Binding CaseSensitive}" />
+            <Button Grid.Column="0" Command="{Binding AddClauseCommand}" Content="{x:Static resx:Resources.AddClause}"/>
 
-            <ComboBox Grid.Column="4" ItemsSource="{Binding OperatorTypes}" SelectedItem="{Binding SelectedOperatorType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Operator}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80">
+            <ComboBox Grid.Column="2" ItemsSource="{Binding OperatorTypes}" SelectedItem="{Binding SelectedOperatorType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Operator}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -49,11 +52,15 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <Button Grid.Column="6" Command="{Binding AddClauseCommand}" Content="{x:Static resx:Resources.AddClause}"/>
+            <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.CaseSensitive}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <ToggleButton Grid.Column="6" IsChecked="{Binding CaseSensitive}" />
 
-            <TextBlock Grid.Column="8">
+            <TextBlock Grid.Column="8" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.RepeatWhileTrue}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <ToggleButton Grid.Column="10" IsChecked="{Binding RepeatWhileTrue}" />
+
+            <TextBlock Grid.Column="12" VerticalAlignment="Center">
                 <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">
-                    <TextBlock Text="{x:Static resx:Resources.SpecialIdentifiersReference}"/>
+                    <TextBlock Text="{x:Static resx:Resources.SpecialIdentifiers}"/>
                 </Hyperlink>
             </TextBlock>
         </Grid>
@@ -63,20 +70,18 @@
                 <DataTemplate>
                     <Grid Margin="0,5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="30" />
-                            <ColumnDefinition Width="20" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="30" />
                         </Grid.ColumnDefinitions>
 
-                        <Button Grid.Column="0" Visibility="{Binding CanBeRemoved, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Command="{Binding DeleteCommand}" />
+                        <TextBox Grid.Column="0" Text="{Binding Value1}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FirstValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                        <TextBox Grid.Column="2" Text="{Binding Value1}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FirstValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                        <ComboBox Grid.Column="4" ItemsSource="{Binding ComparisonTypes}" SelectedItem="{Binding ComparisionType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Compare}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80">
+                        <ComboBox Grid.Column="2" ItemsSource="{Binding ComparisonTypes}" SelectedItem="{Binding ComparisionType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Compare}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -84,9 +89,9 @@
                             </ComboBox.ItemTemplate>
                         </ComboBox>
 
-                        <TextBox Grid.Column="6" Text="{Binding Value2}" IsEnabled="{Binding IsValue2Definable}" Visibility="{Binding IsBetweenOperatorNotSelected, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SecondValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Grid.Column="4" Text="{Binding Value2}" IsEnabled="{Binding IsValue2Definable}" Visibility="{Binding IsBetweenOperatorNotSelected, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SecondValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                        <Grid Grid.Column="6" Visibility="{Binding IsBetweenOperatorSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Grid Grid.Column="4" Visibility="{Binding IsBetweenOperatorSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="10" />
@@ -96,6 +101,8 @@
                             <TextBox Grid.Column="0" Text="{Binding Value2}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                             <TextBox Grid.Column="2" Text="{Binding Value3}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         </Grid>
+
+                        <Button Grid.Column="6" Visibility="{Binding CanBeRemoved, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Command="{Binding DeleteCommand}" />
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

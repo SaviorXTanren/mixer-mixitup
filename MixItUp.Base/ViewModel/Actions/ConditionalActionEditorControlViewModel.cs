@@ -148,6 +148,17 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public ICommand AddClauseCommand { get; private set; }
 
+        public bool RepeatWhileTrue
+        {
+            get { return this.repeatWhileTrue; }
+            set
+            {
+                this.repeatWhileTrue = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool repeatWhileTrue;
+
         public ThreadSafeObservableCollection<ConditionalClauseViewModel> Clauses { get; private set; } = new ThreadSafeObservableCollection<ConditionalClauseViewModel>();
 
         public ConditionalActionEditorControlViewModel(ConditionalActionModel action)
@@ -155,6 +166,7 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             this.CaseSensitive = action.CaseSensitive;
             this.SelectedOperatorType = action.Operator;
+            this.RepeatWhileTrue = action.RepeatWhileTrue;
 
             this.Clauses.AddRange(action.Clauses.Select(c => new ConditionalClauseViewModel(c, this)));
         }
@@ -189,7 +201,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override async Task<ActionModelBase> GetActionInternal()
         {
-            return new ConditionalActionModel(this.CaseSensitive, this.SelectedOperatorType, this.Clauses.Select(c => c.GetModel()), await this.ActionEditorList.GetActions());
+            return new ConditionalActionModel(this.CaseSensitive, this.SelectedOperatorType, this.RepeatWhileTrue, this.Clauses.Select(c => c.GetModel()), await this.ActionEditorList.GetActions());
         }
     }
 }

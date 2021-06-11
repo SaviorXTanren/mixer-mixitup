@@ -11146,6 +11146,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Repeat While True.
+        /// </summary>
+        public static string RepeatWhileTrue {
+            get {
+                return ResourceManager.GetString("RepeatWhileTrue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Replaced.
         /// </summary>
         public static string Replaced {
