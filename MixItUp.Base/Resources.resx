@@ -5658,4 +5658,16 @@ special users that you want to allow more control to such as a Moderator.</value
   <data name="RepeatWhileTrue" xml:space="preserve">
     <value>Repeat While True</value>
   </data>
+  <data name="TagsHeader" xml:space="preserve">
+    <value>Tags:</value>
+  </data>
+  <data name="RatingsAndReviews" xml:space="preserve">
+    <value>Ratings &amp; Reviews</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="Review" xml:space="preserve">
+    <value>Review</value>
+  </data>
 </root>

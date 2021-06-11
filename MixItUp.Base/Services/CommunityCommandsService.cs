@@ -71,7 +71,9 @@ namespace MixItUp.Base.Services
         {
             await Task.Delay(1000);
 
-            return this.commandCache.Where(c => c.Name.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) || c.Description.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) || c.Tags.Contains(searchText.ToLower()));
+            return this.commandCache.Where(c => c.Name.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
+                c.Description.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
+                c.Tags.Any(t => string.Equals(EnumLocalizationHelper.GetLocalizedName(t), searchText, StringComparison.InvariantCultureIgnoreCase)));
         }
 
         public async Task<CommunityCommandDetailsModel> GetCommandDetails(Guid id)
@@ -150,6 +152,10 @@ namespace MixItUp.Base.Services
             if (command != null)
             {
                 review.ID = Guid.NewGuid();
+                review.Username = "Joe Smoe";
+                review.UserAvatarURL = "https://static-cdn.jtvnw.net/jtv_user_pictures/45182012-95d6-4704-9863-82ff3fbaf48e-profile_image-70x70.png";
+                review.DateTime = DateTimeOffset.Now;
+
                 command.Reviews.Add(review);
 
                 command.AverageRating = command.Reviews.Average(r => r.Rating);
@@ -176,17 +182,32 @@ namespace MixItUp.Base.Services
             {
                 ID = Guid.NewGuid(),
                 Name = name,
-                Description = "Here's some description text",
+                Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis viverra nibh cras pulvinar mattis. At elementum eu facilisis sed odio morbi quis commodo. Malesuada fames ac turpis egestas. In pellentesque massa placerat duis ultricies. Porttitor massa id neque aliquam vestibulum. Lorem ipsum dolor sit amet consectetur adipiscing elit. Arcu non odio euismod lacinia at quis. Nunc mattis enim ut tellus elementum sagittis. Feugiat in fermentum posuere urna nec tincidunt praesent semper feugiat.",
                 ImageURL = "https://appsgeyser.com/img/store_icon.png",
-                Tags = new HashSet<string>() { name.ToLower() },
                 Username = "Joe Smoe",
                 UserAvatarURL = "https://static-cdn.jtvnw.net/jtv_user_pictures/45182012-95d6-4704-9863-82ff3fbaf48e-profile_image-70x70.png",
+                Downloads = 1234,
             };
 
-            foreach (ActionTypeEnum actionType in EnumHelper.GetEnumList<ActionTypeEnum>().Shuffle().Take(5))
+            foreach (CommunityCommandTagEnum tag in EnumHelper.GetEnumList<CommunityCommandTagEnum>().Shuffle().Take(5))
             {
-                storeCommand.Tags.Add(actionType.ToString());
+                storeCommand.Tags.Add(tag);
             }
+
+            for (int i = 1; i <= 5; i++)
+            {
+                storeCommand.Reviews.Add(new CommunityCommandReviewModel()
+                {
+                    ID = Guid.NewGuid(),
+                    CommandID = storeCommand.ID,
+                    Username = "Joe Smoe",
+                    UserAvatarURL = "https://static-cdn.jtvnw.net/jtv_user_pictures/45182012-95d6-4704-9863-82ff3fbaf48e-profile_image-70x70.png",
+                    Rating = i,
+                    Review = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis viverra nibh cras pulvinar mattis. At elementum eu facilisis sed odio morbi quis commodo. Malesuada fames ac turpis egestas. In pellentesque massa placerat duis ultricies. Porttitor massa id neque aliquam vestibulum. Lorem ipsum dolor sit amet consectetur adipiscing elit. Arcu non odio euismod lacinia at quis. Nunc mattis enim ut tellus elementum sagittis. Feugiat in fermentum posuere urna nec tincidunt praesent semper feugiat.",
+                    DateTime = DateTimeOffset.Now
+                });
+            }
+            storeCommand.AverageRating = storeCommand.Reviews.Average(r => r.Rating);
 
             ChatCommandModel command = new ChatCommandModel(storeCommand.Name, new HashSet<string>() { "test" });
             command.Actions.Add(new ChatActionModel("Hello World!"));

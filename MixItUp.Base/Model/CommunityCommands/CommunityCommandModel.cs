@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Model.Commands;
-using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -7,6 +6,41 @@ using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Store
 {
+    public enum CommunityCommandTagEnum
+    {
+        [Name("ChatMessage")]
+        Chat,
+        [Name("ConsumablesCurrencyRankEtc")]
+        Consumables,
+        ExternalProgram,
+        [Name("InputKeyboardAndMouse")]
+        Input,
+        [Name("OverlayImagesAndVideos")]
+        Overlay,
+        Sound,
+        Wait,
+        [Name("CounterCreateAndUpdate")]
+        Counter,
+        GameQueue,
+        TextToSpeech,
+        WebRequest,
+        SpecialIdentifier,
+        [Name("FileReadAndWrite")]
+        File,
+        Discord,
+        Twitter,
+        Conditional,
+        [Name("StreamingSoftwareOBSSLOBS")]
+        StreamingSoftware,
+        Streamlabs,
+        Command,
+        Serial,
+        Moderation,
+        OvrStream,
+        IFTTT,
+        Twitch,
+    }
+
     [DataContract]
     public class CommunityCommandModel
     {
@@ -23,7 +57,7 @@ namespace MixItUp.Base.Model.Store
         public string ImageURL { get; set; }
 
         [DataMember]
-        public HashSet<string> Tags { get; set; } = new HashSet<string>();
+        public HashSet<CommunityCommandTagEnum> Tags { get; set; } = new HashSet<CommunityCommandTagEnum>();
 
         [DataMember]
         public string Username { get; set; }
@@ -39,26 +73,6 @@ namespace MixItUp.Base.Model.Store
 
         [DataMember]
         public DateTimeOffset LastUpdated { get; set; }
-
-        [JsonIgnore]
-        public string TagsString
-        {
-            get { return string.Join(",", this.Tags); }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    string[] splits = value.Split(',');
-                    if (splits != null && splits.Length > 0)
-                    {
-                        foreach (string split in splits)
-                        {
-                            this.Tags.Add(split);
-                        }
-                    }
-                }
-            }
-        }
     }
 
     [DataContract]

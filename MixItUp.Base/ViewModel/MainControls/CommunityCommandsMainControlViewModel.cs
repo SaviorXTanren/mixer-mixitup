@@ -75,6 +75,10 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private CommunityCommandDetailsViewModel commandDetails;
 
+        public ICommand DownloadCommand { get; set; }
+        public ICommand ReviewCommand { get; set; }
+        public ICommand ReportCommand { get; set; }
+
         private bool firstLoadCompleted = false;
         private DateTimeOffset lastCategoryRefresh = DateTimeOffset.MinValue;
 
@@ -140,6 +144,26 @@ namespace MixItUp.Base.ViewModel.MainControls
                 {
                     Logger.Log(ex);
                 }
+            });
+
+            this.DownloadCommand = this.CreateCommand(async () =>
+            {
+                await ChannelSession.Services.CommunityCommandsService.DownloadCommand(this.CommandDetails.ID);
+            });
+
+            this.ReviewCommand = this.CreateCommand(async () =>
+            {
+                await ChannelSession.Services.CommunityCommandsService.AddReview(new CommunityCommandReviewModel()
+                {
+                    CommandID = this.CommandDetails.ID,
+                    Rating = 5,
+                    Review = "Here's a brand new review!!",
+                });
+            });
+
+            this.ReportCommand = this.CreateCommand(async () =>
+            {
+                await ChannelSession.Services.CommunityCommandsService.ReportCommand(this.CommandDetails.ID, "This command has bad stuff in it!");
             });
         }
 

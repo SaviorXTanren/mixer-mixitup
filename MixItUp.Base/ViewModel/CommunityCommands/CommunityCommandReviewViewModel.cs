@@ -2,6 +2,7 @@
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
+using System.Collections.Generic;
 
 namespace MixItUp.Base.ViewModel.CommunityCommands
 {
@@ -12,6 +13,11 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
         public CommunityCommandReviewViewModel(CommunityCommandReviewModel model)
         {
             this.model = model;
+            
+            for (int i = 0; i < this.Rating; i++)
+            {
+                this.RatingItems.Add(true);
+            }
         }
 
         public Guid ID { get { return this.model.ID; } }
@@ -29,5 +35,7 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
         public DateTimeOffset DateTime { get { return this.model.DateTime; } }
 
         public string DateTimeString { get { return this.DateTime.ToFriendlyDateTimeString(); } }
+
+        public List<bool> RatingItems { get; set; } = new List<bool>();
     }
 }

@@ -3508,6 +3508,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Download.
+        /// </summary>
+        public static string Download {
+            get {
+                return ResourceManager.GetString("Download", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DTR.
         /// </summary>
         public static string DTR {
@@ -10894,6 +10903,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ratings &amp; Reviews.
+        /// </summary>
+        public static string RatingsAndReviews {
+            get {
+                return ResourceManager.GetString("RatingsAndReviews", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Read From File.
         /// </summary>
         public static string ReadFromFile {
@@ -11479,6 +11497,15 @@ namespace MixItUp.Base {
         public static string RetroactiveUnsupported {
             get {
                 return ResourceManager.GetString("RetroactiveUnsupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Review.
+        /// </summary>
+        public static string Review {
+            get {
+                return ResourceManager.GetString("Review", resourceCulture);
             }
         }
         
@@ -13894,6 +13921,15 @@ namespace MixItUp.Base {
         public static string TaggedInChat {
             get {
                 return ResourceManager.GetString("TaggedInChat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tags:.
+        /// </summary>
+        public static string TagsHeader {
+            get {
+                return ResourceManager.GetString("TagsHeader", resourceCulture);
             }
         }
         

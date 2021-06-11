@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MixItUp.Base.ViewModel.CommunityCommands
 {
@@ -24,7 +25,7 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
 
         public string ImageURL { get { return this.model.ImageURL; } }
 
-        public HashSet<string> Tags { get { return this.model.Tags; } }
+        public HashSet<CommunityCommandTagEnum> Tags { get { return this.model.Tags; } }
 
         public string Username { get { return this.model.Username; } }
 
@@ -37,6 +38,8 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
         public DateTimeOffset LastUpdated { get { return this.model.LastUpdated; } }
 
         public string LastUpdatedString { get { return this.LastUpdated.ToFriendlyDateTimeString(); } }
+
+        public string TagsDisplayString { get { return MixItUp.Base.Resources.TagsHeader + " " + string.Join(", ", this.Tags.Select(t => EnumLocalizationHelper.GetLocalizedName(t))); } }
     }
 
     public class CommunityCommandDetailsViewModel : CommunityCommandViewModel
@@ -50,7 +53,7 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
 
             this.Command = this.model.GetCommand();
 
-            foreach (CommunityCommandReviewModel review in this.model.Reviews)
+            foreach (CommunityCommandReviewModel review in this.model.Reviews.OrderByDescending(r => r.DateTime))
             {
                 this.Reviews.Add(new CommunityCommandReviewViewModel(review));
             }
