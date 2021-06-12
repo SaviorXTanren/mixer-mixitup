@@ -3,19 +3,36 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Store;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Services;
 using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace MixItUp.Base.Services
 {
-    public class CommunityCommandsService
+    public interface ICommunityCommandsService
+    {
+        Task<IEnumerable<CommunityCommandCategoryModel>> GetHomeCategories();
+        Task<IEnumerable<CommunityCommandModel>> SearchCommands(string searchText);
+        Task<CommunityCommandDetailsModel> GetCommandDetails(Guid id);
+        Task<CommunityCommandDetailsModel> AddOrUpdateCommand(CommunityCommandDetailsModel command);
+        Task DeleteCommand(Guid id);
+        Task ReportCommand(Guid id, string report);
+        Task<IEnumerable<CommunityCommandDetailsModel>> GetMyCommands();
+        Task<CommunityCommandReviewModel> AddReview(CommunityCommandReviewModel review);
+        Task DownloadCommand(Guid id);
+    }
+
+    public class MockCommunityCommandsService : ICommunityCommandsService
     {
         private List<CommunityCommandDetailsModel> commandCache = new List<CommunityCommandDetailsModel>();
 
-        public CommunityCommandsService()
+        public MockCommunityCommandsService()
         {
             foreach (string name in HitmanGameCommandModel.DefaultWords)
             {
@@ -83,16 +100,7 @@ namespace MixItUp.Base.Services
             return this.commandCache.FirstOrDefault(c => c.ID.Equals(id));
         }
 
-        public async Task<CommunityCommandDetailsModel> AddCommand(CommunityCommandDetailsModel command)
-        {
-            await Task.Delay(1000);
-
-            command.ID = Guid.NewGuid();
-            this.commandCache.Add(command);
-            return command;
-        }
-
-        public async Task<CommunityCommandDetailsModel> UpdateCommand(CommunityCommandDetailsModel command)
+        public async Task<CommunityCommandDetailsModel> AddOrUpdateCommand(CommunityCommandDetailsModel command)
         {
             await Task.Delay(1000);
 
@@ -111,7 +119,9 @@ namespace MixItUp.Base.Services
             }
             else
             {
-                return await this.AddCommand(command);
+                command.ID = Guid.NewGuid();
+                this.commandCache.Add(command);
+                return command;
             }
         }
 
@@ -214,6 +224,97 @@ namespace MixItUp.Base.Services
             storeCommand.SetCommand(command);
 
             return storeCommand;
+        }
+    }
+
+    public class CommunityCommandsService : OAuthRestServiceBase
+    {
+        private readonly string baseAddress;
+        private string accessToken = null;
+
+        public CommunityCommandsService(string baseAddress)
+        {
+            this.baseAddress = baseAddress;
+        }
+
+        public async Task<IEnumerable<CommunityCommandCategoryModel>> GetHomeCategories()
+        {
+            return await GetAsync<IEnumerable<CommunityCommandCategoryModel>>("community/commands/categories");
+        }
+
+        public async Task<IEnumerable<CommunityCommandModel>> SearchCommands(string searchText)
+        {
+            return await GetAsync<IEnumerable<CommunityCommandModel>>($"community/commands/command/search?query={HttpUtility.UrlEncode(searchText)}");
+        }
+
+        public async Task<CommunityCommandDetailsModel> GetCommandDetails(Guid id)
+        {
+            return await GetAsync<CommunityCommandDetailsModel>($"community/commands/command/{id}");
+        }
+
+        public async Task<CommunityCommandDetailsModel> AddOrUpdateCommand(CommunityCommandDetailsModel command)
+        {
+            await EnsureLogin();
+            return await PostAsync<CommunityCommandDetailsModel>("community/commands/command", AdvancedHttpClient.CreateContentFromObject(command));
+        }
+
+        public async Task DeleteCommand(Guid id)
+        {
+            await EnsureLogin();
+            await DeleteAsync<CommunityCommandDetailsModel>($"community/commands/command/{id}/delete");
+        }
+
+        public async Task ReportCommand(Guid id, string report)
+        {
+            await EnsureLogin();
+            var reportModel = new CommunityCommandReportModel
+            {
+                Report = report,
+            };
+
+            await PostAsync($"community/commands/command/{id}/report", AdvancedHttpClient.CreateContentFromObject(reportModel));
+        }
+
+        public async Task<IEnumerable<CommunityCommandDetailsModel>> GetMyCommands()
+        {
+            await EnsureLogin();
+            return await GetAsync<IEnumerable<CommunityCommandDetailsModel>>("community/commands/command/mine");
+        }
+
+        public async Task<CommunityCommandReviewModel> AddReview(CommunityCommandReviewModel review)
+        {
+            await EnsureLogin();
+            return await PostAsync<CommunityCommandReviewModel>($"community/commands/command/{review.CommandID}/review", AdvancedHttpClient.CreateContentFromObject(review));
+        }
+
+        public async Task DownloadCommand(Guid id)
+        {
+            await EnsureLogin();
+            await GetAsync<IEnumerable<CommunityCommandDetailsModel>>($"community/commands/command/{id}/download");
+            // TODO: Add more logic here
+        }
+
+        protected override Task<OAuthTokenModel> GetOAuthToken(bool autoRefreshToken = true)
+        {
+            return Task.FromResult(new OAuthTokenModel { accessToken = this.accessToken });
+        }
+
+        protected override string GetBaseAddress() => this.baseAddress;
+
+        private async Task EnsureLogin()
+        {
+            if (accessToken == null)
+            {
+                var twitchUserOAuthToken = ChannelSession.TwitchUserConnection.Connection.GetOAuthTokenCopy();
+                var login = new CommunityCommandLoginModel
+                {
+                    TwitchAccessToken = twitchUserOAuthToken?.accessToken,
+                };
+
+                var loginResponse = await PostAsync<CommunityCommandLoginResponseModel>("user/login", AdvancedHttpClient.CreateContentFromObject(login));
+                this.accessToken = loginResponse.AccessToken;
+            }
+
         }
     }
 }

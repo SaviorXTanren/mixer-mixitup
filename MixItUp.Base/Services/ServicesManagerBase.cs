@@ -29,7 +29,7 @@ namespace MixItUp.Base.Services
         public IGiveawayService GiveawayService { get; protected set; }
         public ISerialService SerialService { get; protected set; }
         public WebhookService WebhookService { get; protected set; }
-        public CommunityCommandsService CommunityCommandsService { get; protected set; }
+        public ICommunityCommandsService CommunityCommandsService { get; protected set; }
 
         public IOverlayService Overlay { get; protected set; }
         public IStreamingSoftwareService OBSStudio { get; protected set; }

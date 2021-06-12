@@ -36,7 +36,9 @@ namespace MixItUp.WPF.Services
             //this.WebhookService = new WebhookService("https://localhost:44309/api/", "https://localhost:44309/webhookhub");
             this.DeveloperAPI = new WindowsDeveloperAPIService();
             this.Telemetry = new WindowsTelemetryService();
-            this.CommunityCommandsService = new CommunityCommandsService();
+            //this.CommunityCommandsService = new CommunityCommandsService(MixItUp.Base.Services.MixItUpService.MixItUpAPIEndpoint);
+            //this.CommunityCommandsService = new CommunityCommandsService("https://localhost:44309/api/");
+            this.CommunityCommandsService = new MockCommunityCommandsService();
 
             this.Streamlabs = new StreamlabsService(new WindowsSocketIOConnection());
             this.StreamElements = new StreamElementsService(new WindowsSocketIOConnection());
