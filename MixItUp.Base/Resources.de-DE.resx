@@ -1833,7 +1833,7 @@
     <value>Streamloots-Karte eingelöst</value>
   </data>
   <data name="StreamlootsPackGifted" xml:space="preserve">
-    <value>Streamloots Pack begabt</value>
+    <value>Streamloots Pack verschenkt</value>
   </data>
   <data name="StreamlootsPackPurchased" xml:space="preserve">
     <value>Streamloots Pack gekauft</value>
@@ -1908,10 +1908,6 @@
     <value>Streamlabs OBS</value>
     <comment>Manual</comment>
   </data>
-  <data name="Streamlabs" xml:space="preserve">
-    <value>Streamlabs</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Streamloots" xml:space="preserve">
     <value>Streamloots</value>
     <comment>Manual</comment>
@@ -1935,5 +1931,11 @@
   <data name="XSplit" xml:space="preserve">
     <value>XSplit</value>
     <comment>Manual</comment>
+  </data>
+  <data name="TwitchChannelMassSubscriptionsGifted" xml:space="preserve">
+    <value>Twitch Channel Massenabonnements verschenkt</value>
+  </data>
+  <data name="TwitchChannelSubscriptionGifted" xml:space="preserve">
+    <value>Twitch Channel Abonnement verschenkt</value>
   </data>
 </root>

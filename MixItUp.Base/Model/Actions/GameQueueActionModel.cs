@@ -89,7 +89,7 @@ namespace MixItUp.Base.Model.Actions
                 if (!string.IsNullOrEmpty(this.TargetUsername))
                 {
                     string username = await this.ReplaceStringWithSpecialModifiers(this.TargetUsername, parameters);
-                    targetUser = ServiceManager.Get<UserService>().GetUserByUsername(username, parameters.Platform);
+                    targetUser = ServiceManager.Get<UserService>().GetActiveUserByUsername(username, parameters.Platform);
                     if (targetUser == null)
                     {
                         await ServiceManager.Get<ChatService>().SendMessage("The user could not be found", parameters.Platform);

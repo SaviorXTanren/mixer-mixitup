@@ -29,7 +29,7 @@ namespace MixItUp.WPF.Controls.Dialogs
                 if (command.AddCommand)
                 {
                     ChannelSession.Settings.SetCommand(command.Command);
-                    ChannelSession.ChatCommands.Add(command.Command);
+                    ChannelSession.Services.Command.ChatCommands.Add(command.Command);
                 }
             }
             ServiceManager.Get<ChatService>().RebuildCommandTriggers();

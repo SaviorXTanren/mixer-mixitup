@@ -57,17 +57,22 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
+                using (var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationTokenSource.Token))
                 {
-                    HttpResponseMessage response = await client.GetAsync(endpoint);
-                    if (response.StatusCode == HttpStatusCode.OK)
+                    tokenSource.CancelAfter(5000);
+
+                    using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
                     {
-                        string content = await response.Content.ReadAsStringAsync();
-                        return JSONSerializerHelper.DeserializeFromString<T>(content);
-                    }
-                    else
-                    {
-                        await this.ProcessResponseIfError(response);
+                        HttpResponseMessage response = await client.GetAsync(endpoint, tokenSource.Token);
+                        if (response.StatusCode == HttpStatusCode.OK)
+                        {
+                            string content = await response.Content.ReadAsStringAsync();
+                            return JSONSerializerHelper.DeserializeFromString<T>(content);
+                        }
+                        else
+                        {
+                            await this.ProcessResponseIfError(response);
+                        }
                     }
                 }
             }
@@ -79,11 +84,15 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
+                using (var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationTokenSource.Token))
                 {
-                    string content = JSONSerializerHelper.SerializeToString(data);
-                    HttpResponseMessage response = await client.PostAsync(endpoint, new StringContent(content, Encoding.UTF8, "application/json"));
-                    await this.ProcessResponseIfError(response);
+                    tokenSource.CancelAfter(5000);
+                    using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
+                    {
+                        string content = JSONSerializerHelper.SerializeToString(data);
+                        HttpResponseMessage response = await client.PostAsync(endpoint, new StringContent(content, Encoding.UTF8, "application/json"), tokenSource.Token);
+                        await this.ProcessResponseIfError(response);
+                    }
                 }
             }
             catch (Exception ex)

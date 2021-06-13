@@ -283,7 +283,7 @@ namespace MixItUp.Base.Model.Currency
 
             RankModel newRank = this.GetRank(user);
 
-            UserViewModel userViewModel = ServiceManager.Get<UserService>().GetUserByID(user.ID);
+            UserViewModel userViewModel = ChannelSession.Services.User.GetActiveUserByID(user.ID);
             if (userViewModel == null)
             {
                 userViewModel = new UserViewModel(user);

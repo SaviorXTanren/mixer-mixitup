@@ -146,7 +146,7 @@ namespace MixItUp.Base.Services
 
         public async Task Whisper(StreamingPlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false)
         {
-            UserViewModel user = ServiceManager.Get<UserService>().GetUserByUsername(username, platform);
+            UserViewModel user = ChannelSession.Services.User.GetActiveUserByUsername(username, platform);
             if (user != null)
             {
                 await this.Whisper(user, message, sendAsStreamer);
@@ -306,7 +306,7 @@ namespace MixItUp.Base.Services
                 this.longestTrigger = 0;
                 this.wildcardCommands.Clear();
                 this.chatMenuCommands.Clear();
-                foreach (ChatCommandModel command in ChannelSession.AllEnabledChatAccessibleCommands)
+                foreach (ChatCommandModel command in ChannelSession.Services.Command.AllEnabledChatAccessibleCommands)
                 {
                     if (command.Wildcards)
                     {
@@ -347,25 +347,27 @@ namespace MixItUp.Base.Services
 
                 if (message is UserChatMessageViewModel)
                 {
-                    if (message.User == null)
+                    if (message.User != null)
                     {
-                        Logger.Log(LogLevel.Error, string.Format("User Message Contains No User - {0} - {1}", message.ID.ToString(), message));
-                        return;
-                    }
-
-                    message.User.UpdateLastActivity();
-                    if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot && message.User.WhispererNumber == 0)
-                    {
-                        await this.whisperNumberLock.WaitAndRelease(() =>
+                        message.User.UpdateLastActivity();
+                        if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot && message.User.WhispererNumber == 0)
                         {
-                            if (!whisperMap.ContainsKey(message.User.ID))
+                            await this.whisperNumberLock.WaitAndRelease(() =>
                             {
-                                whisperMap[message.User.ID] = whisperMap.Count + 1;
-                            }
-                            message.User.WhispererNumber = whisperMap[message.User.ID];
-                            return Task.FromResult(0);
-                        });
+                                if (!whisperMap.ContainsKey(message.User.ID))
+                                {
+                                    whisperMap[message.User.ID] = whisperMap.Count + 1;
+                                }
+                                message.User.WhispererNumber = whisperMap[message.User.ID];
+                                return Task.FromResult(0);
+                            });
+                        }
                     }
+                }
+
+                if (message.User != null)
+                {
+                    await ChannelSession.Services.User.AddOrUpdateActiveUser(message.User);
                 }
 
                 // Add message to chat list
@@ -462,7 +464,7 @@ namespace MixItUp.Base.Services
                         string primaryTaggedUsername = message.PrimaryTaggedUsername;
                         if (!string.IsNullOrEmpty(primaryTaggedUsername))
                         {
-                            UserViewModel primaryTaggedUser = ServiceManager.Get<UserService>().GetUserByUsername(primaryTaggedUsername, message.Platform);
+                            UserViewModel primaryTaggedUser = ChannelSession.Services.User.GetActiveUserByUsername(primaryTaggedUsername, message.Platform);
                             if (primaryTaggedUser != null)
                             {
                                 primaryTaggedUser.Data.TotalTimesTagged++;
@@ -629,7 +631,7 @@ namespace MixItUp.Base.Services
 
                 if (users.Count() < 5)
                 {
-                    alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserJoinedChat, user.DisplayName), ChannelSession.Settings.AlertUserJoinLeaveColor));
+                    alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserJoinedChat, user.FullDisplayName), ChannelSession.Settings.AlertUserJoinLeaveColor));
                 }
             }
             this.DisplayUsersUpdated(this, new EventArgs());
@@ -662,7 +664,7 @@ namespace MixItUp.Base.Services
 
                     if (users.Count() < 5)
                     {
-                        alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserLeftChat, user.DisplayName), ChannelSession.Settings.AlertUserJoinLeaveColor));
+                        alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserLeftChat, user.FullDisplayName), ChannelSession.Settings.AlertUserJoinLeaveColor));
                     }
                 }
             }
@@ -709,7 +711,10 @@ namespace MixItUp.Base.Services
         private async Task RunChatCommand(ChatMessageViewModel message, CommandModelBase command, IEnumerable<string> arguments)
         {
             Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
-            await ServiceManager.Get<CommandService>().Queue(command, new CommandParametersModel(message.User, message.Platform, arguments));
+
+            CommandParametersModel parameters = new CommandParametersModel(message.User, message.Platform, arguments);
+            parameters.SpecialIdentifiers["message"] = message.PlainTextMessage;
+            await ChannelSession.Services.Command.Queue(command, parameters);
 
             SettingsRequirementModel settings = command.Requirements.Settings;
             if (settings != null)

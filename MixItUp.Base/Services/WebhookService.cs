@@ -18,6 +18,9 @@ namespace MixItUp.Base.Services
 {
     public interface IWebhookService
     {
+        Task<Result> Connect();
+        Task Disconnect();
+
         Task Authenticate(string twitchAccessToken);
     }
 
@@ -36,8 +39,6 @@ namespace MixItUp.Base.Services
         {
             this.apiAddress = apiAddress;
             this.signalRConnection = new SignalRConnection(webhookHubAddress);
-            this.signalRConnection.Connected += SignalRConnection_Connected;
-            this.signalRConnection.Disconnected += SignalRConnection_Disconnected;
 
             this.signalRConnection.Listen("TwitchFollowEvent", (string followerId, string followerUsername, string followerDisplayName) =>
             {
@@ -75,19 +76,44 @@ namespace MixItUp.Base.Services
                 if (!IsAllowed)
                 {
                     // Force disconnect is it doesn't retry
-                    var _ = this.signalRConnection.Disconnect();
+                    var _ = this.Disconnect();
                 }
             });
         }
 
-        private void SignalRConnection_Disconnected(object sender, Exception e)
+        public async Task<Result> Connect()
         {
+            if (!this.IsConnected)
+            {
+                this.signalRConnection.Connected += SignalRConnection_Connected;
+                this.signalRConnection.Disconnected += SignalRConnection_Disconnected;
+
+                await this.signalRConnection.Connect();
+
+                return new Result(this.IsConnected);
+            }
+            return new Result(MixItUp.Base.Resources.WebhookServiceAlreadyConnected);
+        }
+
+        public async Task Disconnect()
+        {
+            this.signalRConnection.Connected -= SignalRConnection_Connected;
+            this.signalRConnection.Disconnected -= SignalRConnection_Disconnected;
+
+            await this.signalRConnection.Disconnect();
         }
 
         private async void SignalRConnection_Connected(object sender, EventArgs e)
         {
-            var twitchUserOAuthToken = ServiceManager.Get<TwitchSessionService>().UserConnection.Connection.GetOAuthTokenCopy();
+            ChannelSession.ReconnectionOccurred("Webhook Events");
+
+            var twitchUserOAuthToken = ChannelSession.TwitchUserConnection.Connection.GetOAuthTokenCopy();
             await this.Authenticate(twitchUserOAuthToken?.accessToken);
+        }
+
+        private void SignalRConnection_Disconnected(object sender, Exception e)
+        {
+            ChannelSession.DisconnectionOccurred("Webhook Events");
         }
 
         public async Task Authenticate(string twitchAccessToken)
@@ -108,25 +134,12 @@ namespace MixItUp.Base.Services
             catch (Exception ex) { Logger.Log(ex); }
         }
 
-        public async Task Connect() { await this.signalRConnection.Connect(); }
-
-        public async Task<bool> InitializeConnection()
-        {
-            if (!this.IsConnected)
-            {
-                await this.Connect();
-
-                return this.IsConnected;
-            }
-            return true;
-        }
-
         private async Task TwitchFollowEvent(string followerId, string followerUsername, string followerDisplayName)
         {
-            UserViewModel user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, followerId);
+            UserViewModel user = ChannelSession.Services.User.GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, followerId);
             if (user == null)
             {
-                user = new UserViewModel(new TwitchWebhookFollowModel()
+                user = await UserViewModel.Create(new TwitchWebhookFollowModel()
                 {
                     StreamerID = ServiceManager.Get<TwitchSessionService>().UserNewAPI.id,
 
@@ -167,7 +180,7 @@ namespace MixItUp.Base.Services
 
                 GlobalEvents.FollowOccurred(user);
 
-                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Followed", user.DisplayName), ChannelSession.Settings.AlertFollowColor));
+                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Followed", user.FullDisplayName), ChannelSession.Settings.AlertFollowColor));
             }
         }
 

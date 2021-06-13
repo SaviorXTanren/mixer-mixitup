@@ -365,6 +365,8 @@ namespace MixItUp.Installer
 
             using (HttpClient client = new HttpClient())
             {
+                client.Timeout = new TimeSpan(0, 0, 5);
+
                 HttpResponseMessage response = await client.GetAsync(url);
                 if (response.IsSuccessStatusCode)
                 {

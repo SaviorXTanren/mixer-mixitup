@@ -119,7 +119,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserDataEditorWindowViewModel(UserDataModel user)
         {
-            this.User = ServiceManager.Get<UserService>().GetUserByID(user.ID);
+            this.User = ChannelSession.Services.User.GetActiveUserByID(user.ID);
             if (this.User == null)
             {
                 this.User = new UserViewModel(user);

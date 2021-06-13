@@ -28,7 +28,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         protected override IEnumerable<CommandModelBase> GetCommands()
         {
-            return ChannelSession.StreamlootsCardCommands.ToList();
+            return ChannelSession.Services.Command.StreamlootsCardCommands.ToList();
         }
 
         private void GroupedCommandsMainControlViewModelBase_OnCommandAddedEdited(object sender, CommandModelBase command)

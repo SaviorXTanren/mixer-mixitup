@@ -37,9 +37,15 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FilterByName}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <ComboBox Grid.Column="0" ItemsSource="{Binding Platforms}" SelectedItem="{Binding SelectedPlatform}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Platform}" Width="100" Margin="0,3,0,0">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-            <TextBox x:Name="UsernameFilterTextBox" Grid.Column="2" Width="150" TextChanged="UsernameFilterTextBox_TextChanged" />
+            <TextBox Grid.Column="2" x:Name="UsernameFilterTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Username}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" TextChanged="UsernameFilterTextBox_TextChanged" />
 
         </Grid>
 
@@ -49,30 +55,33 @@
                     <Controls:SortedDataGrid.Columns>
                         <DataGridTextColumn Header="{x:Static resx:Resources.Username}" Binding="{Binding Username}" IsReadOnly="True" Width="*" />
                         <DataGridTextColumn Header="{x:Static resx:Resources.Platform}" Binding="{Binding Platform, Converter={StaticResource LocalizationConverter}}" IsReadOnly="True" Width="100" />
-                        <DataGridTextColumn Header="{x:Static resx:Resources.Minutes}" Binding="{Binding ViewingMinutes}" IsReadOnly="True" Width="100" />
-                        <DataGridTextColumn Binding="{Binding PrimaryCurrency}" IsReadOnly="True" Width="100">
+                        <DataGridTextColumn Binding="{Binding PrimaryRole, Converter={StaticResource LocalizationConverter}}" IsReadOnly="True" Width="100">
+                            <DataGridTextColumn.Header>
+                                <Grid HorizontalAlignment="Center" Margin="0,0,0,0">
+                                    <MaterialDesign:PackIcon Kind="AccountKey" Height="24" Width="24" />
+                                </Grid>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding ViewingMinutes}" IsReadOnly="True" Width="80">
+                            <DataGridTextColumn.Header>
+                                <Grid HorizontalAlignment="Center" Margin="0,0,0,0">
+                                    <MaterialDesign:PackIcon Kind="Clock" Height="24" Width="24" />
+                                </Grid>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding PrimaryCurrency}" IsReadOnly="True" Width="80">
                             <DataGridTextColumn.Header>
                                 <Grid HorizontalAlignment="Center" Margin="0,0,0,0">
                                     <MaterialDesign:PackIcon Kind="Coin" Height="24" Width="24" />
                                 </Grid>
                             </DataGridTextColumn.Header>
-                            <DataGridTextColumn.CellStyle>
-                                <Style TargetType="DataGridCell" BasedOn="{StaticResource StandardDataGridCell}">
-                                    <Setter Property="ToolTip" Value="{x:Static resx:Resources.PrimaryCurrency}" />
-                                </Style>
-                            </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding PrimaryRankPoints}" IsReadOnly="True" Width="100">
+                        <DataGridTextColumn Binding="{Binding PrimaryRankPoints}" IsReadOnly="True" Width="80">
                             <DataGridTextColumn.Header>
                                 <Grid HorizontalAlignment="Center" Margin="0,0,0,0">
                                     <MaterialDesign:PackIcon Kind="ShieldStar" Height="24" Width="24" />
                                 </Grid>
                             </DataGridTextColumn.Header>
-                            <DataGridTextColumn.CellStyle>
-                                <Style TargetType="DataGridCell" BasedOn="{StaticResource StandardDataGridCell}">
-                                    <Setter Property="ToolTip" Value="{x:Static resx:Resources.PrimaryRank}" />
-                                </Style>
-                            </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
                         <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="120">
                             <DataGridTemplateColumn.CellTemplate>
@@ -100,8 +109,16 @@
             </Border>
         </Grid>
 
-        <Grid Grid.Row="2" Margin="10,0" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12 12 12 12"/>
+        <Grid Grid.Row="2" Margin="10,0" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            
+            <ProgressBar Grid.Row="0" Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" Margin="12 12 12 12"/>
+
+            <TextBlock Grid.Row="2" Text="{x:Static resx:Resources.UsersLoadingData}" />
         </Grid>
 
         <Grid Grid.Row="4" HorizontalAlignment="Center">

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace MixItUp.WPF.Services.DeveloperAPI
@@ -16,26 +17,31 @@ namespace MixItUp.WPF.Services.DeveloperAPI
     [RoutePrefix("api/users")]
     public class UserController : ApiController
     {
+        public static async Task<UserDataModel> GetUserData(string usernameOrID)
+        {
+            UserDataModel user = null;
+            if (!string.IsNullOrEmpty(usernameOrID))
+            {
+                if (Guid.TryParse(usernameOrID, out Guid userId))
+                {
+                    user = ChannelSession.Settings.GetUserData(userId);
+                }
+                else
+                {
+                    user = await ChannelSession.Settings.GetUserDataByPlatformUsername(StreamingPlatformTypeEnum.Twitch, usernameOrID);
+                }
+            }
+            return user;
+        }
+
         [Route]
         [HttpPost]
-        public IEnumerable<User> BulkGet([FromBody] IEnumerable<string> usernamesOrIDs)
+        public async Task<IEnumerable<User>> BulkGet([FromBody] IEnumerable<string> usernamesOrIDs)
         {
             List<User> users = new List<User>();
             foreach (var usernameOrID in usernamesOrIDs)
             {
-                UserDataModel user = null;
-                if (!string.IsNullOrEmpty(usernameOrID))
-                {
-                    if (Guid.TryParse(usernameOrID, out Guid userId))
-                    {
-                        user = ChannelSession.Settings.GetUserData(userId);
-                    }
-                    else
-                    {
-                        user = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.All, usernameOrID);
-                    }
-                }
-
+                UserDataModel user = await UserController.GetUserData(usernameOrID);
                 if (user != null)
                 {
                     users.Add(UserFromUserDataViewModel(user));
@@ -47,21 +53,9 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
         [Route("{usernameOrID}")]
         [HttpGet]
-        public User Get(string usernameOrID)
+        public async Task<User> Get(string usernameOrID)
         {
-            UserDataModel user = null;
-            if (!string.IsNullOrEmpty(usernameOrID))
-            {
-                if (Guid.TryParse(usernameOrID, out Guid userId))
-                {
-                    user = ChannelSession.Settings.GetUserData(userId);
-                }
-                else
-                {
-                    user = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.All, usernameOrID);
-                }
-            }
-
+            UserDataModel user = await UserController.GetUserData(usernameOrID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -77,15 +71,15 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
         [Route("twitch/{usernameOrID}")]
         [HttpGet]
-        public User GetTwitch(string usernameOrID)
+        public async Task<User> GetTwitch(string usernameOrID)
         {
             UserDataModel user = null;
             if (!string.IsNullOrEmpty(usernameOrID))
             {
-                user = ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, usernameOrID);
+                user = await ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, usernameOrID);
                 if (user == null)
                 {
-                    user = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.Twitch, usernameOrID);
+                    user = await ChannelSession.Settings.GetUserDataByPlatformUsername(StreamingPlatformTypeEnum.Twitch, usernameOrID);
                 }
             }
 
@@ -104,21 +98,9 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
         [Route("{usernameOrID}")]
         [HttpPut, HttpPatch]
-        public User Update(string usernameOrID, [FromBody] User updatedUserData)
+        public async Task<User> Update(string usernameOrID, [FromBody] User updatedUserData)
         {
-            UserDataModel user = null;
-            if (!string.IsNullOrEmpty(usernameOrID))
-            {
-                if (Guid.TryParse(usernameOrID, out Guid userId))
-                {
-                    user = ChannelSession.Settings.GetUserData(userId);
-                }
-                else
-                {
-                    user = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.All, usernameOrID);
-                }
-            }
-
+            UserDataModel user = await UserController.GetUserData(usernameOrID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -162,21 +144,9 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
         [Route("{usernameOrID}/currency/{currencyID:guid}/adjust")]
         [HttpPut, HttpPatch]
-        public User AdjustUserCurrency(string usernameOrID, Guid currencyID, [FromBody] AdjustCurrency currencyUpdate)
+        public async Task<User> AdjustUserCurrency(string usernameOrID, Guid currencyID, [FromBody] AdjustCurrency currencyUpdate)
         {
-            UserDataModel user = null;
-            if (!string.IsNullOrEmpty(usernameOrID))
-            {
-                if (Guid.TryParse(usernameOrID, out Guid userId))
-                {
-                    user = ChannelSession.Settings.GetUserData(userId);
-                }
-                else
-                {
-                    user = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.All, usernameOrID);
-                }
-            }
-
+            UserDataModel user = await UserController.GetUserData(usernameOrID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -192,21 +162,9 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
         [Route("{usernameOrID}/inventory/{inventoryID:guid}/adjust")]
         [HttpPut, HttpPatch]
-        public User AdjustUserInventory(string usernameOrID, Guid inventoryID, [FromBody]AdjustInventory inventoryUpdate)
+        public async Task<User> AdjustUserInventory(string usernameOrID, Guid inventoryID, [FromBody]AdjustInventory inventoryUpdate)
         {
-            UserDataModel user = null;
-            if (!string.IsNullOrEmpty(usernameOrID))
-            {
-                if (Guid.TryParse(usernameOrID, out Guid userId))
-                {
-                    user = ChannelSession.Settings.GetUserData(userId);
-                }
-                else
-                {
-                    user = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.All, usernameOrID);
-                }
-            }
-
+            UserDataModel user = await UserController.GetUserData(usernameOrID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)

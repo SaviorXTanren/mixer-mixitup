@@ -44,52 +44,7 @@ namespace MixItUp.Base
 
         public static bool IsElevated { get; set; }
 
-        public static List<PreMadeChatCommandModelBase> PreMadeChatCommands { get; private set; } = new List<PreMadeChatCommandModelBase>();
-
-        public static List<ChatCommandModel> ChatCommands { get; set; } = new List<ChatCommandModel>();
-
-        public static List<EventCommandModel> EventCommands { get; set; } = new List<EventCommandModel>();
-
-        public static List<TimerCommandModel> TimerCommands { get; set; } = new List<TimerCommandModel>();
-
-        public static List<ActionGroupCommandModel> ActionGroupCommands { get; set; } = new List<ActionGroupCommandModel>();
-
-        public static List<GameCommandModelBase> GameCommands { get; set; } = new List<GameCommandModelBase>();
-
-        public static List<TwitchChannelPointsCommandModel> TwitchChannelPointsCommands { get; set; } = new List<TwitchChannelPointsCommandModel>();
-
-        public static List<StreamlootsCardCommandModel> StreamlootsCardCommands { get; set; } = new List<StreamlootsCardCommandModel>();
-
-        public static IEnumerable<CommandModelBase> AllEnabledChatAccessibleCommands
-        {
-            get
-            {
-                List<CommandModelBase> commands = new List<CommandModelBase>();
-                commands.AddRange(ChannelSession.PreMadeChatCommands.Where(c => c.IsEnabled));
-                commands.AddRange(ChannelSession.ChatCommands.Where(c => c.IsEnabled));
-                commands.AddRange(ChannelSession.GameCommands.Where(c => c.IsEnabled));
-                return commands;
-            }
-        }
-
-        public static IEnumerable<CommandModelBase> AllCommands
-        {
-            get
-            {
-                List<CommandModelBase> commands = new List<CommandModelBase>();
-                commands.AddRange(ChannelSession.PreMadeChatCommands);
-                commands.AddRange(ChannelSession.ChatCommands);
-                commands.AddRange(ChannelSession.GameCommands);
-                commands.AddRange(ChannelSession.EventCommands);
-                commands.AddRange(ChannelSession.TimerCommands);
-                commands.AddRange(ChannelSession.ActionGroupCommands);
-                commands.AddRange(ChannelSession.TwitchChannelPointsCommands);
-                commands.AddRange(ChannelSession.StreamlootsCardCommands);
-                return commands;
-            }
-        }
-
-        public static async Task Initialize()
+        public static async Task Initialize(ServicesManagerBase serviceHandler)
         {
             ServiceManager.Add(new SecretsService());
 
@@ -426,41 +381,51 @@ namespace MixItUp.Base
                     }
                 }
 
-                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
-                {
-                    if (currency.ShouldBeReset())
+                    try
                     {
-                        await currency.Reset();
-                    }
-                }
+                        await ChannelSession.Services.WebhookService.Connect();
 
-                if (ChannelSession.Settings.ModerationResetStrikesOnLaunch)
-                {
-                    foreach (UserDataModel userData in ChannelSession.Settings.UserData.Values)
-                    {
-                        if (userData.ModerationStrikes > 0)
+                        foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                         {
-                            userData.ModerationStrikes = 0;
-                            ChannelSession.Settings.UserData.ManualValueChanged(userData.ID);
+                            if (currency.ShouldBeReset())
+                            {
+                                await currency.Reset();
+                            }
+                        }
+
+                        if (ChannelSession.Settings.ModerationResetStrikesOnLaunch)
+                        {
+                            foreach (UserDataModel userData in ChannelSession.Settings.UserData.Values)
+                            {
+                                if (userData.ModerationStrikes > 0)
+                                {
+                                    userData.ModerationStrikes = 0;
+                                    ChannelSession.Settings.UserData.ManualValueChanged(userData.ID);
+                                }
+                            }
+                        }
+
+                        await ChannelSession.Services.Command.Initialize();
+                        await ChannelSession.Services.Timers.Initialize();
+                        await ChannelSession.Services.Moderation.Initialize();
+
+                        IEnumerable<TwitchV5API.Users.UserModel> channelEditors = await ChannelSession.TwitchUserConnection.GetV5APIChannelEditors(ChannelSession.TwitchChannelV5);
+                        if (channelEditors != null)
+                        {
+                            foreach (TwitchV5API.Users.UserModel channelEditor in channelEditors)
+                            {
+                                ChannelSession.TwitchChannelEditorsV5.Add(channelEditor.id);
+                            }
                         }
                     }
-                }
-
-                ChannelSession.PreMadeChatCommands.Clear();
-                foreach (PreMadeChatCommandModelBase command in ReflectionHelper.CreateInstancesOfImplementingType<PreMadeChatCommandModelBase>())
-                {
-                    ChannelSession.PreMadeChatCommands.Add(command);
-                }
-
-                foreach (PreMadeChatCommandSettingsModel commandSetting in ChannelSession.Settings.PreMadeChatCommandSettings)
-                {
-                    PreMadeChatCommandModelBase command = ChannelSession.PreMadeChatCommands.FirstOrDefault(c => c.Name.Equals(commandSetting.Name));
-                    if (command != null)
+                    catch (Exception ex)
                     {
-                        command.UpdateFromSettings(commandSetting);
+                        Logger.Log(ex);
+                        Logger.Log(LogLevel.Error, "Streamer Services - " + JSONSerializerHelper.SerializeToString(ex));
+                        await DialogHelper.ShowMessage(Resources.FailedToInitializeStreamerBasedServices +
+                            Environment.NewLine + Environment.NewLine + Resources.ErrorDetailsHeader + " " + ex.Message);
+                        return false;
                     }
-                }
-                ServiceManager.Get<ChatService>().RebuildCommandTriggers();
 
                 await ServiceManager.Get<TimerService>().Initialize();
                 await ServiceManager.Get<ModerationService>().Initialize();
@@ -500,6 +465,18 @@ namespace MixItUp.Base
                 return new Result("Failed to get channel information. If this continues, please visit the Mix It Up Discord for assistance." +
                         Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
             }
+        }
+
+        public static void DisconnectionOccurred(string serviceName)
+        {
+            Logger.Log(LogLevel.Error, serviceName + " Service disconnection occurred");
+            GlobalEvents.ServiceDisconnect(serviceName);
+        }
+
+        public static void ReconnectionOccurred(string serviceName)
+        {
+            Logger.Log(LogLevel.Error, serviceName + " Service reconnection successful");
+            GlobalEvents.ServiceReconnect(serviceName);
         }
 
         private static async Task SessionBackgroundTask(CancellationToken cancellationToken)

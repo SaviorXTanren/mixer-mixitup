@@ -34,7 +34,7 @@ namespace MixItUp.WPF.Controls.Chat
                             await ServiceManager.Get<ChatService>().TimeoutUser(user, 300);
                             break;
                         case UserDialogResult.Ban:
-                            if (await DialogHelper.ShowConfirmation(string.Format(Resources.BanUserPrompt, user.DisplayName)))
+                            if (await DialogHelper.ShowConfirmation(string.Format(Resources.BanUserPrompt, user.FullDisplayName)))
                             {
                                 await ServiceManager.Get<ChatService>().BanUser(user);
                             }
@@ -55,13 +55,13 @@ namespace MixItUp.WPF.Controls.Chat
                             }
                             break;
                         case UserDialogResult.PromoteToMod:
-                            if (await DialogHelper.ShowConfirmation(string.Format(Resources.PromoteUserPrompt, user.DisplayName)))
+                            if (await DialogHelper.ShowConfirmation(string.Format(Resources.PromoteUserPrompt, user.FullDisplayName)))
                             {
                                 await ServiceManager.Get<ChatService>().ModUser(user);
                             }
                             break;
                         case UserDialogResult.DemoteFromMod:
-                            if (await DialogHelper.ShowConfirmation(string.Format(Resources.DemoteUserPrompt, user.DisplayName)))
+                            if (await DialogHelper.ShowConfirmation(string.Format(Resources.DemoteUserPrompt, user.FullDisplayName)))
                             {
                                 await ServiceManager.Get<ChatService>().UnmodUser(user);
                             }

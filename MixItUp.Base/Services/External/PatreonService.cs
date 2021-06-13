@@ -695,7 +695,7 @@ namespace MixItUp.Base.Services.External
                             }
                             else
                             {
-                                trigger.User = new UserViewModel(member.User.PlatformUsername);
+                                trigger.User = UserViewModel.Create(member.User.PlatformUsername);
                             }
 
                             trigger.SpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierNameSpecialIdentifier] = tier.Title;

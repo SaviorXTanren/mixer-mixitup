@@ -185,6 +185,11 @@ namespace MixItUp.Base.Services
                     JObject jobj = await item.GetProcessedItem(parameters);
                     if (jobj != null)
                     {
+                        if (item is OverlayImageItemModel || item is OverlayVideoItemModel || item is OverlaySoundItemModel)
+                        {
+                            this.SetLocalFile(jobj["FileID"].ToString(), jobj["FilePath"].ToString());
+                            jobj["FullLink"] = OverlayItemModelBase.GetFileFullLink(jobj["FileID"].ToString(), jobj["FileType"].ToString(), jobj["FilePath"].ToString());
+                        }
                         await this.SendPacket("Update", jobj);
                     }
                 }

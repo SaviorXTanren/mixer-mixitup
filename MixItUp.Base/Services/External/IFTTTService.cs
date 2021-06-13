@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -31,7 +32,7 @@ namespace MixItUp.Base.Services.External
         {
             try
             {
-                using (HttpClient client = new HttpClient())
+                using (AdvancedHttpClient client = new AdvancedHttpClient())
                 {
                     JObject jobj = new JObject();
                     foreach (var kvp in values)

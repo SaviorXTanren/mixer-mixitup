@@ -47,9 +47,9 @@ namespace MixItUp.Base.ViewModel.MainControls
                 {
                     return Resources.TreatStream;
                 }
-                else if (this.EventType == EventTypeEnum.StreamJarDonation)
+                else if (this.EventType == EventTypeEnum.RainmakerDonation)
                 {
-                    return Resources.StreamJar;
+                    return Resources.Rainmaker;
                 }
                 else if (this.EventType == EventTypeEnum.PatreonSubscribed)
                 {
@@ -120,7 +120,11 @@ namespace MixItUp.Base.ViewModel.MainControls
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStart));
             if (ServiceManager.Get<WebhookService>().IsConnected && ServiceManager.Get<WebhookService>().IsAllowed)
             {
-                commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStop));
+                EventCommandModel command = ChannelSession.Services.Events.GetEventCommand(EventTypeEnum.TwitchChannelStreamStop);
+                if (command != null)
+                {
+                    commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStop));
+                }
             }
 
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelFollowed));
@@ -130,9 +134,19 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             if (ServiceManager.Get<WebhookService>().IsConnected && ServiceManager.Get<WebhookService>().IsAllowed)
             {
-                commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainBegin));
+                EventCommandModel command = ChannelSession.Services.Events.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainBegin);
+                if (command != null)
+                {
+                    commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainBegin));
+                }
+
                 //commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainProgress));
-                commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainEnd));
+
+                command = ChannelSession.Services.Events.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainEnd);
+                if (command != null)
+                {
+                    commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainEnd));
+                }
             }
 
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelSubscribed));
@@ -168,7 +182,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             commands.Add(this.GetEventCommand(EventTypeEnum.StreamElementsMerchPurchase));
             commands.Add(this.GetEventCommand(EventTypeEnum.TipeeeStreamDonation));
             commands.Add(this.GetEventCommand(EventTypeEnum.TreatStreamDonation));
-            commands.Add(this.GetEventCommand(EventTypeEnum.StreamJarDonation));
+            commands.Add(this.GetEventCommand(EventTypeEnum.RainmakerDonation));
             commands.Add(this.GetEventCommand(EventTypeEnum.TiltifyDonation));
             commands.Add(this.GetEventCommand(EventTypeEnum.ExtraLifeDonation));
             commands.Add(this.GetEventCommand(EventTypeEnum.JustGivingDonation));

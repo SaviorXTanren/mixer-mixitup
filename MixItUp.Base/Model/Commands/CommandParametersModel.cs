@@ -16,51 +16,6 @@ namespace MixItUp.Base.Model.Commands
     [DataContract]
     public class CommandParametersModel
     {
-        public static async Task<UserViewModel> SearchForUser(string username, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
-        {
-            username = username.Replace("@", "");
-            UserViewModel user = ServiceManager.Get<UserService>().GetUserByUsername(username, platform);
-            if (user == null)
-            {
-                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceManager.Get<TwitchSessionService>().UserConnection != null)
-                {
-                    Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
-                    if (twitchUser != null)
-                    {
-                        return new UserViewModel(twitchUser);
-                    }
-                }
-
-                if (platform.HasFlag(StreamingPlatformTypeEnum.YouTube) && ServiceManager.Get<YouTubeSessionService>().UserConnection != null)
-                {
-                    Google.Apis.YouTube.v3.Data.Channel youtubeUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByUsername(username);
-                    if (youtubeUser != null)
-                    {
-                        return new UserViewModel(youtubeUser);
-                    }
-                }
-
-                if (platform.HasFlag(StreamingPlatformTypeEnum.Glimesh) && ServiceManager.Get<GlimeshSessionService>().UserConnection != null)
-                {
-                    Glimesh.Base.Models.Users.UserModel glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByName(username);
-                    if (glimeshUser != null)
-                    {
-                        return new UserViewModel(glimeshUser);
-                    }
-                }
-
-                if (platform.HasFlag(StreamingPlatformTypeEnum.Trovo) && ServiceManager.Get<TrovoSessionService>().UserConnection != null)
-                {
-                    Trovo.Base.Models.Users.UserModel trovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(username);
-                    if (trovoUser != null)
-                    {
-                        return new UserViewModel(trovoUser);
-                    }
-                }
-            }
-            return user;
-        }
-
         public static CommandParametersModel GetTestParameters(Dictionary<string, string> specialIdentifiers)
         {
             UserViewModel currentUser = ChannelSession.GetCurrentUser();
@@ -139,7 +94,7 @@ namespace MixItUp.Base.Model.Commands
             {
                 if (this.Arguments.Count > 0)
                 {
-                    this.TargetUser = await CommandParametersModel.SearchForUser(this.Arguments.First(), this.Platform);
+                    this.TargetUser = await ChannelSession.Services.User.GetUserFullSearch(this.Platform, userID: null, this.Arguments.First());
                 }
 
                 if (this.TargetUser == null || !this.Arguments.ElementAt(0).Replace("@", "").Equals(this.TargetUser.Username, StringComparison.InvariantCultureIgnoreCase))

@@ -2085,7 +2085,7 @@
   <data name="StreamElementsDonation" xml:space="preserve">
     <value>StreamElements Donation</value>
   </data>
-  <data name="StreamJarDonation" xml:space="preserve">
+  <data name="RainmakerDonation" xml:space="preserve">
     <value>StreamJar Donation</value>
   </data>
   <data name="StreamlabsDonation" xml:space="preserve">
@@ -3930,8 +3930,8 @@ that this could cause some unforeseen issues, so please use with caution.</value
   <data name="StreamMarkerCreatedMessage" xml:space="preserve">
     <value>Stream Marker Created: {0}</value>
   </data>
-  <data name="StreamMarkerDescriptionMustBe140CharactersOrLess" xml:space="preserve">
-    <value>Stream Marker description must be 140 characters or less</value>
+  <data name="TwitchActionStreamMarkerDescriptionMustBe140CharactersOrLess" xml:space="preserve">
+    <value>Twitch Action: Stream Marker description must be 140 characters or less</value>
   </data>
   <data name="RandomizeTimers" xml:space="preserve">
     <value>Randomize Timers</value>
@@ -4586,11 +4586,11 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="StreamingSoftwareSourceName" xml:space="preserve">
     <value>Streaming Software Source Name</value>
   </data>
-  <data name="StreamJar" xml:space="preserve">
-    <value>StreamJar</value>
+  <data name="Rainmaker" xml:space="preserve">
+    <value>Rainmaker</value>
   </data>
-  <data name="StreamJarInfo1" xml:space="preserve">
-    <value>StreamJar service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to StreamJar and approve Mix It Up to access your information.</value>
+  <data name="RainmakerInfo1" xml:space="preserve">
+    <value>Rainmaker service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to Rainmaker and approve Mix It Up to access your information.</value>
   </data>
   <data name="StreamlabsInfo1" xml:space="preserve">
     <value>Streamlabs service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to Streamlabs and approve Mix It Up to access your information.</value>
@@ -5221,7 +5221,7 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="StreamElementsUserDataFailed" xml:space="preserve">
     <value>Failed to get user information</value>
   </data>
-  <data name="StreamJarChannelDataFailed" xml:space="preserve">
+  <data name="RainmakerChannelDataFailed" xml:space="preserve">
     <value>Failed to get channel data</value>
   </data>
   <data name="StreamlabsOBSAdminMaybe" xml:space="preserve">
@@ -5377,8 +5377,8 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="UpdateChannelPointReward" xml:space="preserve">
     <value>Update Channel Point Reward</value>
   </data>
-  <data name="ChannelPointRewardMissing" xml:space="preserve">
-    <value>Missing Channel Point Reward</value>
+  <data name="TwitchActionChannelPointRewardMissing" xml:space="preserve">
+    <value>Twitch Action: Missing Channel Point Reward</value>
   </data>
   <data name="ChannelPointsRewardGlobalCooldown" xml:space="preserve">
     <value>Global Cooldown (Mins)</value>
@@ -5534,5 +5534,140 @@ ensure this option is disabled after any testing you are doing is done by headin
   </data>
   <data name="Anonymous" xml:space="preserve">
     <value>Anonymous</value>
+  </data>
+  <data name="FailedToExportCommand" xml:space="preserve">
+    <value>Failed to export command</value>
+  </data>
+  <data name="WebhookServiceAlreadyConnected" xml:space="preserve">
+    <value>Webhook service already connected</value>
+  </data>
+  <data name="MustBePresent" xml:space="preserve">
+    <value>Must Be Present</value>
+  </data>
+  <data name="RoleRequirementAtLeastOneRoleMustBeSelected" xml:space="preserve">
+    <value>Role Requirement: At least one role must be selected</value>
+  </data>
+  <data name="Multiple" xml:space="preserve">
+    <value>Multiple</value>
+  </data>
+  <data name="BitsCostOptional" xml:space="preserve">
+    <value>Bits Cost (Optional)</value>
+  </data>
+  <data name="ChannelPointRewardMissing" xml:space="preserve">
+    <value>Missing Channel Point Reward</value>
+  </data>
+  <data name="ChannelPointsCostOptional" xml:space="preserve">
+    <value>Channel Points Cost (Optional)</value>
+  </data>
+  <data name="Choice1" xml:space="preserve">
+    <value>Choice 1</value>
+  </data>
+  <data name="Choice2" xml:space="preserve">
+    <value>Choice 2</value>
+  </data>
+  <data name="Choice3" xml:space="preserve">
+    <value>Choice 3</value>
+  </data>
+  <data name="Choice4" xml:space="preserve">
+    <value>Choice 4</value>
+  </data>
+  <data name="CreatePoll" xml:space="preserve">
+    <value>Create Poll</value>
+  </data>
+  <data name="CreatePrediction" xml:space="preserve">
+    <value>Create Prediction</value>
+  </data>
+  <data name="Outcome1" xml:space="preserve">
+    <value>Outcome 1</value>
+  </data>
+  <data name="Outcome2" xml:space="preserve">
+    <value>Outcome 2</value>
+  </data>
+  <data name="TwitchActionCreatePollInvalidDuration" xml:space="preserve">
+    <value>Twitch Action: Polls must have a duration greater than 0</value>
+  </data>
+  <data name="TwitchActionCreatePollMissingTitle" xml:space="preserve">
+    <value>Twitch Action: Missing Poll title</value>
+  </data>
+  <data name="TwitchActionCreatePollTwoOrMoreChoices" xml:space="preserve">
+    <value>Twitch Action: Polls must have at least 2 choices</value>
+  </data>
+  <data name="TwitchActionCreatePredictionInvalidDuration" xml:space="preserve">
+    <value>Twitch Action: Predictions must have a duration greater than 0</value>
+  </data>
+  <data name="TwitchActionCreatePredictionMissingTitle" xml:space="preserve">
+    <value>Twitch Action: Missing Prediction title</value>
+  </data>
+  <data name="TwitchActionCreatePredictionTwoChoices" xml:space="preserve">
+    <value>Twitch Action: Predictions must have 2 valid outcomes</value>
+  </data>
+  <data name="TwitchPollFailedToCreate" xml:space="preserve">
+    <value>ERROR: Failed to create poll, please try again later. If this issue persists, please visit the Mix It Up support Discord server.</value>
+  </data>
+  <data name="TwitchPollFailedToGetResults" xml:space="preserve">
+    <value>ERROR: Failed to get &amp; process poll results. If this issue persists, please visit the Mix It Up support Discord server.</value>
+  </data>
+  <data name="TwitchPredictionFailedToCreate" xml:space="preserve">
+    <value>ERROR: Failed to create prediction, please try again later. If this issue persists, please visit the Mix It Up support Discord server.</value>
+  </data>
+  <data name="Arguments" xml:space="preserve">
+    <value>Arguments</value>
+  </data>
+  <data name="ArgumentsRequirement" xml:space="preserve">
+    <value>Arguments Requirement</value>
+  </data>
+  <data name="ArgumentsRequirementValidName" xml:space="preserve">
+    <value>Arguments Requirement: A valid name must be specified</value>
+  </data>
+  <data name="Decimal" xml:space="preserve">
+    <value>Decimal</value>
+  </data>
+  <data name="Number" xml:space="preserve">
+    <value>Number</value>
+  </data>
+  <data name="Optional" xml:space="preserve">
+    <value>Optional</value>
+  </data>
+  <data name="SpecialtyExcluded" xml:space="preserve">
+    <value>Specialty Excluded</value>
+  </data>
+  <data name="SpecialtyExcludedTooltip" xml:space="preserve">
+    <value>Specialty Excluded users are ignored for various interactions and features through the app.
+This includes things such as Currency/Rank requirements, random user selection, and
+leaderboards. This option is recommended to be enabled on users such as bot accounts or
+special users that you want to allow more control to such as a Moderator.</value>
+  </data>
+  <data name="RainmakerSocketFailed" xml:space="preserve">
+    <value>Failed to connect to socket</value>
+  </data>
+  <data name="RainmakerUserDataFailed" xml:space="preserve">
+    <value>Failed to get user information</value>
+  </data>
+  <data name="UsersLoadingData" xml:space="preserve">
+    <value>Loading User Data</value>
+  </data>
+  <data name="CommunityCommands" xml:space="preserve">
+    <value>Community Commands</value>
+  </data>
+  <data name="SearchText" xml:space="preserve">
+    <value>Search Text</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="RepeatWhileTrue" xml:space="preserve">
+    <value>Repeat While True</value>
+  </data>
+  <data name="TagsHeader" xml:space="preserve">
+    <value>Tags:</value>
+  </data>
+  <data name="RatingsAndReviews" xml:space="preserve">
+    <value>Ratings &amp; Reviews</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="Review" xml:space="preserve">
+    <value>Review</value>
   </data>
 </root>

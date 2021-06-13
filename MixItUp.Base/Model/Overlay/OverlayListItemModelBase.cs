@@ -54,7 +54,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.cachedUser == null && this.UserID != Guid.Empty)
             {
-                this.cachedUser = ServiceManager.Get<UserService>().GetUserByID(this.UserID);
+                this.cachedUser = ChannelSession.Services.User.GetActiveUserByID(this.UserID);
                 if (this.cachedUser == null)
                 {
                     UserDataModel userData = ChannelSession.Settings.GetUserData(this.UserID);

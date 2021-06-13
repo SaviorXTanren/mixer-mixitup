@@ -9,6 +9,7 @@ using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -150,7 +151,7 @@ namespace MixItUp.Base.Services
         TipeeeStreamDonation = 1040,
         TreatStreamDonation = 1050,
         PatreonSubscribed = 1060,
-        StreamJarDonation = 1070,
+        RainmakerDonation = 1070,
         JustGivingDonation = 1080,
         StreamlootsCardRedeemed = 1090,
         StreamlootsPackPurchased = 1091,
@@ -248,7 +249,7 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.All, trigger.User, string.Format("{0} Donated {1}", trigger.User.DisplayName, donation.AmountText), ChannelSession.Settings.AlertDonationColor));
+            await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.All, trigger.User, string.Format("{0} Donated {1}", trigger.User.FullDisplayName, donation.AmountText), ChannelSession.Settings.AlertDonationColor));
 
             try
             {
@@ -267,7 +268,7 @@ namespace MixItUp.Base.Services
 
         public EventCommandModel GetEventCommand(EventTypeEnum type)
         {
-            foreach (EventCommandModel command in ChannelSession.EventCommands)
+            foreach (EventCommandModel command in ChannelSession.Services.Command.EventCommands.ToList())
             {
                 if (command.EventType == type)
                 {
@@ -304,6 +305,9 @@ namespace MixItUp.Base.Services
                         this.userEventTracking[trigger.Type].Add(user.ID);
                     }
                 }
+
+                await ChannelSession.Services.User.AddOrUpdateActiveUser(user);
+                user.UpdateLastActivity();
 
                 EventCommandModel command = this.GetEventCommand(trigger.Type);
                 if (command != null)

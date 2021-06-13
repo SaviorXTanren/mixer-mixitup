@@ -2,8 +2,8 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -28,7 +28,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 MixItUpUpdateModel update = await ServiceManager.Get<MixItUpService>().GetLatestUpdate();
                 if (update != null)
                 {
-                    using (HttpClient client = new HttpClient())
+                    using (AdvancedHttpClient client = new AdvancedHttpClient())
                     {
                         string changelogHTML = await client.GetStringAsync(update.ChangelogLink);
                         this.ChangelogWebBrowser.NavigateToString(changelogHTML);

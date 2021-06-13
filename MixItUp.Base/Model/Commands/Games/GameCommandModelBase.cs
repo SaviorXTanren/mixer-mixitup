@@ -211,9 +211,17 @@ namespace MixItUp.Base.Model.Commands.Games
             if (selectionType.HasFlag(GamePlayerSelectionType.Targeted))
             {
                 await parameters.SetTargetUser();
-                if (parameters.IsTargetUserSelf)
+                if (parameters.TargetUser != null)
                 {
-                    parameters.TargetUser = null;
+                    if (parameters.IsTargetUserSelf)
+                    {
+                        parameters.TargetUser = null;
+                    }
+                    else if (!ChannelSession.Services.User.IsUserActive(parameters.TargetUser.ID))
+                    {
+                        parameters.TargetUser = null;
+                        return;
+                    }
                 }
             }
 

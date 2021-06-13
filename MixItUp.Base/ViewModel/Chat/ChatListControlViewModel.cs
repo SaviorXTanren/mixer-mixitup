@@ -127,7 +127,7 @@ namespace MixItUp.Base.ViewModel.Chat
                             string username = splits[1];
                             username = username.Trim();
                             username = username.Replace("@", "");
-                            UserViewModel user = ServiceManager.Get<UserService>().GetUserByUsername(username);
+                            UserViewModel user = ChannelSession.Services.User.GetActiveUserByUsername(username);
                             if (user != null)
                             {
                                 if (uint.TryParse(splits[2], out uint amount) && amount > 0)
@@ -153,7 +153,7 @@ namespace MixItUp.Base.ViewModel.Chat
                             string username = splits[1];
                             username = username.Trim();
                             username = username.Replace("@", "");
-                            UserViewModel user = ServiceManager.Get<UserService>().GetUserByUsername(username);
+                            UserViewModel user = ChannelSession.Services.User.GetActiveUserByUsername(username);
                             if (user != null)
                             {
                                 await ServiceManager.Get<ChatService>().BanUser(user);

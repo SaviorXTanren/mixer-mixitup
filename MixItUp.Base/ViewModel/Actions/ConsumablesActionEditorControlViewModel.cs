@@ -6,7 +6,6 @@ using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -78,6 +77,7 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.selectedActionType = value;
                 this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("ShowUsersMustBePresent");
                 this.NotifyPropertyChanged("ShowInventoryItems");
                 this.NotifyPropertyChanged("CanEnterAmount");
                 this.NotifyPropertyChanged("ShowExtraOptions");
@@ -87,6 +87,19 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private ConsumablesActionTypeEnum selectedActionType;
+
+        public bool ShowUsersMustBePresent { get { return this.SelectedActionType == ConsumablesActionTypeEnum.AddToSpecificUser || this.SelectedActionType == ConsumablesActionTypeEnum.SubtractFromSpecificUser; } }
+
+        public bool UsersMustBePresent
+        {
+            get { return this.usersMustBePresent; }
+            set
+            {
+                this.usersMustBePresent = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool usersMustBePresent = true;
 
         public bool ShowInventoryItems { get { return this.SelectedConsumable != null && this.SelectedConsumable.Inventory != null && this.CanEnterAmount; } }
 
@@ -194,6 +207,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.SelectedConsumable = this.Consumables.FirstOrDefault(c => c.ID.Equals(action.StreamPassID));
             }
             this.SelectedActionType = action.ActionType;
+            this.UsersMustBePresent = action.UsersMustBePresent;
             this.Amount = action.Amount;
 
             this.DeductFromUser = action.DeductFromUser;
@@ -233,17 +247,17 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             if (this.SelectedConsumable.Currency != null)
             {
-                return Task.FromResult<ActionModelBase>(new ConsumablesActionModel(this.SelectedConsumable.Currency, this.SelectedActionType, this.Amount, this.TargetUsername, this.SelectedUsersToApplyTo,
+                return Task.FromResult<ActionModelBase>(new ConsumablesActionModel(this.SelectedConsumable.Currency, this.SelectedActionType, this.UsersMustBePresent, this.Amount, this.TargetUsername, this.SelectedUsersToApplyTo,
                     this.DeductFromUser));
             }
             else if (this.SelectedConsumable.Inventory != null)
             {
-                return Task.FromResult<ActionModelBase>(new ConsumablesActionModel(this.SelectedConsumable.Inventory, this.SelectedActionType, this.InventoryItemName, this.Amount, this.TargetUsername,
+                return Task.FromResult<ActionModelBase>(new ConsumablesActionModel(this.SelectedConsumable.Inventory, this.InventoryItemName, this.SelectedActionType, this.UsersMustBePresent, this.Amount, this.TargetUsername,
                     this.SelectedUsersToApplyTo, this.DeductFromUser));
             }
             else if (this.SelectedConsumable.StreamPass != null)
             {
-                return Task.FromResult<ActionModelBase>(new ConsumablesActionModel(this.SelectedConsumable.StreamPass, this.SelectedActionType, this.Amount, this.TargetUsername, this.SelectedUsersToApplyTo,
+                return Task.FromResult<ActionModelBase>(new ConsumablesActionModel(this.SelectedConsumable.StreamPass, this.SelectedActionType, this.UsersMustBePresent, this.Amount, this.TargetUsername, this.SelectedUsersToApplyTo,
                     this.DeductFromUser));
             }
             return Task.FromResult<ActionModelBase>(null);

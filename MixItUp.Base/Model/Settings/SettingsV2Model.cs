@@ -588,7 +588,7 @@ namespace MixItUp.Base.Model.Settings
                     await ServiceManager.Get<IFileService>().CopyFile(SettingsV2Model.SettingsTemplateDatabaseFileName, this.DatabaseFilePath);
                 }
 
-                foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
+                foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
                 {
                     this.UsernameLookups[platform] = new Dictionary<string, Guid>();
                 }
@@ -745,9 +745,9 @@ namespace MixItUp.Base.Model.Settings
             {
                 this.StreamElementsOAuthToken = ServiceManager.Get<StreamElementsService>().GetOAuthTokenCopy();
             }
-            if (ServiceManager.Get<StreamJarService>().IsConnected)
+            if (ChannelSession.Services.Rainmaker.IsConnected)
             {
-                this.StreamJarOAuthToken = ServiceManager.Get<StreamJarService>().GetOAuthTokenCopy();
+                this.StreamJarOAuthToken = ChannelSession.Services.Rainmaker.GetOAuthTokenCopy();
             }
             if (ServiceManager.Get<TipeeeStreamService>().IsConnected)
             {
@@ -884,7 +884,7 @@ namespace MixItUp.Base.Model.Settings
             {
                 if (platform == StreamingPlatformTypeEnum.All)
                 {
-                    foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.Platforms)
+                    foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.SupportedPlatforms)
                     {
                         UserDataModel userData = this.GetUserDataByUsername(p, username);
                         if (userData != null)

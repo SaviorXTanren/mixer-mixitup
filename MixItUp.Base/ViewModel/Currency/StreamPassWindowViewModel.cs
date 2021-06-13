@@ -509,7 +509,7 @@ namespace MixItUp.Base.ViewModel.Currency
                 addCommand.Requirements.Role.Role = UserRoleEnum.Mod;
                 addCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                 addCommand.Requirements.Cooldown.IndividualAmount = 5;
-                addCommand.Actions.Add(new ConsumablesActionModel(this.StreamPass, ConsumablesActionTypeEnum.AddToSpecificUser, "$arg2text", username: "$targetusername"));
+                addCommand.Actions.Add(new ConsumablesActionModel(this.StreamPass, ConsumablesActionTypeEnum.AddToSpecificUser, usersMustBePresent:true, "$arg2text", username: "$targetusername"));
                 addCommand.Actions.Add(new ChatActionModel(string.Format("@$targetusername received $arg2text points for {0}!", this.StreamPass.Name)));
                 commandsToAdd.Add(new NewAutoChatCommandModel(string.Format("!{0} - {1}", addCommand.Triggers.First(), "Adds Amount To Specified User"), addCommand));
 
@@ -518,7 +518,7 @@ namespace MixItUp.Base.ViewModel.Currency
                 addAllCommand.Requirements.Role.Role = UserRoleEnum.Mod;
                 addAllCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                 addAllCommand.Requirements.Cooldown.IndividualAmount = 5;
-                addAllCommand.Actions.Add(new ConsumablesActionModel(this.StreamPass, ConsumablesActionTypeEnum.AddToAllChatUsers, "$arg1text"));
+                addAllCommand.Actions.Add(new ConsumablesActionModel(this.StreamPass, ConsumablesActionTypeEnum.AddToAllChatUsers, usersMustBePresent: true, "$arg1text"));
                 addAllCommand.Actions.Add(new ChatActionModel(string.Format("Everyone got $arg1text points for {0}!", this.StreamPass.Name)));
                 commandsToAdd.Add(new NewAutoChatCommandModel(string.Format("!{0} - {1}", addAllCommand.Triggers.First(), "Adds Amount To All Chat Users"), addAllCommand));
             }

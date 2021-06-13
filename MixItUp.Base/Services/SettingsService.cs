@@ -577,10 +577,51 @@ namespace MixItUp.Base.Services
             else if (currentVersion < SettingsV3Model.LatestVersion)
             {
                 await SettingsV3Upgrader.Version2Upgrade(currentVersion, filePath);
+                await SettingsV3Upgrader.Version3Upgrade(currentVersion, filePath);
             }
             SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
             settings.Version = SettingsV3Model.LatestVersion;
             return settings;
+        }
+
+        public static async Task Version3Upgrade(int version, string filePath)
+        {
+            if (version < 3)
+            {
+                SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
+                await settings.Initialize();
+
+                if (settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch))
+                {
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = null;
+                }
+
+                await settings.LoadUserData();
+
+                await ChannelSession.Services.Database.Write(settings.DatabaseFilePath, "ALTER TABLE Users ADD COLUMN TwitchUsername TEXT DEFAULT NULL");
+                await ChannelSession.Services.Database.Write(settings.DatabaseFilePath, "ALTER TABLE Users ADD COLUMN YouTubeUsername TEXT DEFAULT NULL");
+                await ChannelSession.Services.Database.Write(settings.DatabaseFilePath, "ALTER TABLE Users ADD COLUMN FacebookUsername TEXT DEFAULT NULL");
+                await ChannelSession.Services.Database.Write(settings.DatabaseFilePath, "ALTER TABLE Users ADD COLUMN TrovoUsername TEXT DEFAULT NULL");
+                await ChannelSession.Services.Database.Write(settings.DatabaseFilePath, "ALTER TABLE Users ADD COLUMN GlimeshUsername TEXT DEFAULT NULL");
+
+                Dictionary<Guid, string> userIDToUsername = new Dictionary<Guid, string>();
+                foreach (var kvp in settings.UserData)
+                {
+                    if (kvp.Value.Platform == StreamingPlatformTypeEnum.Twitch && !string.IsNullOrEmpty(kvp.Value.TwitchUsername))
+                    {
+                        userIDToUsername[kvp.Key] = kvp.Value.TwitchUsername;
+                    }
+                }
+
+                await ChannelSession.Services.Database.BulkWrite(settings.DatabaseFilePath,
+                    "UPDATE Users SET TwitchUsername = @TwitchUsername WHERE ID = @ID",
+                    userIDToUsername.Select(u => new Dictionary<string, object>()
+                    {
+                        { "@ID", u.Key.ToString() }, { "TwitchUsername", u.Value.ToString() }
+                    }));
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
         }
 
         public static async Task Version2Upgrade(int version, string filePath)

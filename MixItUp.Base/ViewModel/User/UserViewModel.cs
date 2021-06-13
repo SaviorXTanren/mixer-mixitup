@@ -51,139 +51,165 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserDataModel Data { get; private set; }
 
-        public UserViewModel(string username)
+        public static UserViewModel Create(string username)
         {
-            this.SetUserData(StreamingPlatformTypeEnum.None, null);
-
-            this.UnassociatedUsername = username;
+            UserViewModel user = new UserViewModel(new UserDataModel());
+            user.UnassociatedUsername = username;
+            return user;
         }
 
-        public UserViewModel(TwitchNewAPI.Users.UserModel twitchUser)
+        public static async Task<UserViewModel> Create(TwitchNewAPI.Users.UserModel twitchUser)
         {
-            this.SetUserData(StreamingPlatformTypeEnum.Twitch, twitchUser.id);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, twitchUser.id);
 
-            this.TwitchID = twitchUser.id;
-            this.TwitchUsername = twitchUser.login;
-            this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : this.TwitchUsername;
-            this.TwitchAvatarLink = twitchUser.profile_image_url;
+            user.TwitchID = twitchUser.id;
+            user.TwitchUsername = twitchUser.login;
+            user.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : user.TwitchUsername;
+            user.TwitchAvatarLink = twitchUser.profile_image_url;
 
-            this.SetTwitchRoles();
+            user.SetTwitchRoles();
+
+            return user;
         }
 
-        public UserViewModel(TwitchV5API.Users.UserModel twitchUser)
+        public static async Task<UserViewModel> Create(TwitchV5API.Users.UserModel twitchUser)
         {
-            this.SetUserData(StreamingPlatformTypeEnum.Twitch, twitchUser.id);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, twitchUser.id);
 
-            this.TwitchID = twitchUser.id;
-            this.TwitchUsername = twitchUser.name;
-            this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : this.TwitchUsername;
-            this.TwitchAvatarLink = twitchUser.logo;
+            user.TwitchID = twitchUser.id;
+            user.TwitchUsername = twitchUser.name;
+            user.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : user.TwitchUsername;
+            user.TwitchAvatarLink = twitchUser.logo;
 
-            this.SetTwitchRoles();
+            user.SetTwitchRoles();
+
+            return user;
         }
 
-        public UserViewModel(Twitch.Base.Models.Clients.Chat.ChatMessagePacketModel twitchMessage)
+        public static async Task<UserViewModel> Create(ChatMessagePacketModel twitchMessage)
         {
-            this.SetUserData(StreamingPlatformTypeEnum.Twitch, twitchMessage.UserID);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, twitchMessage.UserID);
 
-            this.TwitchID = twitchMessage.UserID;
-            this.TwitchUsername = twitchMessage.UserLogin;
-            this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchMessage.UserDisplayName)) ? twitchMessage.UserDisplayName : this.TwitchUsername;
+            user.TwitchID = twitchMessage.UserID;
+            user.TwitchUsername = twitchMessage.UserLogin;
+            user.TwitchDisplayName = (!string.IsNullOrEmpty(twitchMessage.UserDisplayName)) ? twitchMessage.UserDisplayName : user.TwitchUsername;
 
-            this.SetTwitchRoles();
+            user.SetTwitchRoles();
+
+            user.SetTwitchChatDetails(twitchMessage);
+
+            return user;
         }
 
-        public UserViewModel(Twitch.Base.Models.Clients.PubSub.Messages.PubSubWhisperEventModel whisper)
+        public static async Task<UserViewModel> Create(PubSubWhisperEventModel whisper)
         {
-            this.SetUserData(StreamingPlatformTypeEnum.Twitch, whisper.from_id.ToString());
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, whisper.from_id.ToString());
 
-            this.TwitchID = whisper.from_id.ToString();
-            this.TwitchUsername = whisper.tags.login;
-            this.TwitchDisplayName = (!string.IsNullOrEmpty(whisper.tags.display_name)) ? whisper.tags.display_name : this.TwitchUsername;
+            user.TwitchID = whisper.from_id.ToString();
+            user.TwitchUsername = whisper.tags.login;
+            user.TwitchDisplayName = (!string.IsNullOrEmpty(whisper.tags.display_name)) ? whisper.tags.display_name : user.TwitchUsername;
 
-            this.SetTwitchRoles();
+            user.SetTwitchRoles();
+
+            return user;
         }
 
-        public UserViewModel(Twitch.Base.Models.Clients.PubSub.Messages.PubSubWhisperEventRecipientModel whisperRecipient)
+        public static async Task<UserViewModel> Create(PubSubWhisperEventRecipientModel whisperRecipient)
         {
-            this.SetUserData(StreamingPlatformTypeEnum.Twitch, whisperRecipient.id.ToString());
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, whisperRecipient.id.ToString());
 
-            this.TwitchID = whisperRecipient.id.ToString();
-            this.TwitchUsername = whisperRecipient.username;
-            this.TwitchDisplayName = (!string.IsNullOrEmpty(whisperRecipient.display_name)) ? whisperRecipient.display_name : this.TwitchUsername;
-            this.TwitchAvatarLink = whisperRecipient.profile_image;
+            user.TwitchID = whisperRecipient.id.ToString();
+            user.TwitchUsername = whisperRecipient.username;
+            user.TwitchDisplayName = (!string.IsNullOrEmpty(whisperRecipient.display_name)) ? whisperRecipient.display_name : user.TwitchUsername;
+            user.TwitchAvatarLink = whisperRecipient.profile_image;
 
-            this.SetTwitchRoles();
+            user.SetTwitchRoles();
+
+            return user;
         }
 
-        public UserViewModel(Twitch.Base.Models.Clients.Chat.ChatUserNoticePacketModel packet)
+        public static async Task<UserViewModel> Create(ChatUserNoticePacketModel packet)
         {
-            this.SetUserData(StreamingPlatformTypeEnum.Twitch, packet.UserID.ToString());
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, packet.UserID.ToString());
 
-            this.TwitchID = packet.UserID.ToString();
-            this.TwitchUsername = !string.IsNullOrEmpty(packet.RaidUserLogin) ? packet.RaidUserLogin : packet.Login;
-            this.TwitchDisplayName = !string.IsNullOrEmpty(packet.RaidUserDisplayName) ? packet.RaidUserDisplayName : packet.DisplayName;
-            if (string.IsNullOrEmpty(this.TwitchDisplayName))
+            user.TwitchID = packet.UserID.ToString();
+            user.TwitchUsername = !string.IsNullOrEmpty(packet.RaidUserLogin) ? packet.RaidUserLogin : packet.Login;
+            user.TwitchDisplayName = !string.IsNullOrEmpty(packet.RaidUserDisplayName) ? packet.RaidUserDisplayName : packet.DisplayName;
+            if (string.IsNullOrEmpty(user.TwitchDisplayName))
             {
-                this.TwitchDisplayName = this.TwitchUsername;
+                user.TwitchDisplayName = user.TwitchUsername;
             }
 
-            this.SetTwitchRoles();
+            user.SetTwitchRoles();
+
+            user.SetTwitchChatDetails(packet);
+
+            return user;
         }
 
-        public UserViewModel(Twitch.Base.Models.Clients.Chat.ChatClearChatPacketModel packet)
+        public static async Task<UserViewModel> Create(ChatClearChatPacketModel packet)
         {
-            this.SetUserData(StreamingPlatformTypeEnum.Twitch, packet.UserID);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, packet.UserID);
 
-            this.TwitchID = packet.UserID;
-            this.TwitchUsername = packet.UserLogin;
+            user.TwitchID = packet.UserID;
+            user.TwitchUsername = packet.UserLogin;
 
-            this.SetTwitchRoles();
+            user.SetTwitchRoles();
+
+            return user;
         }
 
-        public UserViewModel(Twitch.Base.Models.Clients.PubSub.Messages.PubSubBitsEventV2Model packet)
+        public static async Task<UserViewModel> Create(PubSubBitsEventV2Model packet)
         {
-            this.SetUserData(StreamingPlatformTypeEnum.Twitch, packet.user_id);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, packet.user_id);
 
-            this.TwitchID = packet.user_id;
-            this.TwitchDisplayName = this.TwitchUsername = packet.user_name;
+            user.TwitchID = packet.user_id;
+            user.TwitchDisplayName = user.TwitchUsername = packet.user_name;
 
-            this.SetTwitchRoles();
+            user.SetTwitchRoles();
+
+            return user;
         }
 
-        public UserViewModel(Twitch.Base.Models.Clients.PubSub.Messages.PubSubSubscriptionsEventModel packet)
+        public static async Task<UserViewModel> Create(PubSubSubscriptionsEventModel packet)
         {
-            this.SetUserData(StreamingPlatformTypeEnum.Twitch, packet.user_id);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, packet.user_id);
 
-            this.TwitchID = packet.user_id;
-            this.TwitchUsername = packet.user_name;
-            this.TwitchDisplayName = (!string.IsNullOrEmpty(packet.display_name)) ? packet.display_name : this.TwitchUsername;
+            user.TwitchID = packet.user_id;
+            user.TwitchUsername = packet.user_name;
+            user.TwitchDisplayName = (!string.IsNullOrEmpty(packet.display_name)) ? packet.display_name : user.TwitchUsername;
 
-            this.SetTwitchRoles();
+            user.SetTwitchRoles();
+
+            return user;
         }
 
-        public UserViewModel(Twitch.Base.Models.NewAPI.Users.UserFollowModel follow)
+        public static async Task<UserViewModel> Create(UserFollowModel follow)
         {
-            this.SetUserData(StreamingPlatformTypeEnum.Twitch, follow.from_id);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, follow.from_id);
 
-            this.TwitchID = follow.from_id;
-            this.TwitchDisplayName = this.TwitchUsername = follow.from_name;
+            user.TwitchID = follow.from_id;
+            user.TwitchDisplayName = user.TwitchUsername = follow.from_name;
 
-            this.SetTwitchRoles();
+            user.SetTwitchRoles();
+
+            return user;
         }
 
-        public UserViewModel(TwitchWebhookFollowModel follow)
+        public static async Task<UserViewModel> Create(TwitchWebhookFollowModel follow)
         {
-            this.SetUserData(StreamingPlatformTypeEnum.Twitch, follow.UserID);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, follow.UserID);
 
-            this.TwitchID = follow.UserID;
-            this.TwitchUsername = follow.Username;
-            this.TwitchDisplayName = follow.UserDisplayName;
+            user.TwitchID = follow.UserID;
+            user.TwitchUsername = follow.Username;
+            user.TwitchDisplayName = follow.UserDisplayName;
 
-            this.SetTwitchRoles();
+            user.SetTwitchRoles();
+
+            return user;
         }
 
-        public UserViewModel(Glimesh.Base.Models.Users.UserModel user)
+        public static async Task<UserViewModel> Create((Glimesh.Base.Models.Users.UserModel user)
         {
             this.SetUserData(StreamingPlatformTypeEnum.Glimesh, user.id);
 
@@ -231,7 +257,7 @@ namespace MixItUp.Base.ViewModel.User
             this.SetTrovoChatDetails(message);
         }
 
-        public UserViewModel(Google.Apis.YouTube.v3.Data.Channel channel)
+        public static async Task<UserViewModel> Create((Google.Apis.YouTube.v3.Data.Channel channel)
         {
             this.SetUserData(StreamingPlatformTypeEnum.YouTube, channel.Id);
 
@@ -243,7 +269,7 @@ namespace MixItUp.Base.ViewModel.User
             this.SetYouTubeRoles();
         }
 
-        public UserViewModel(Google.Apis.YouTube.v3.Data.LiveChatMessage message)
+        public static async Task<UserViewModel> Create((Google.Apis.YouTube.v3.Data.LiveChatMessage message)
         {
             this.SetUserData(StreamingPlatformTypeEnum.YouTube, message.AuthorDetails?.ChannelId);
 
@@ -258,34 +284,26 @@ namespace MixItUp.Base.ViewModel.User
         [Obsolete]
         public UserViewModel() { }
 
-        private void SetUserData(StreamingPlatformTypeEnum platform, string userID)
+        private static async Task<UserViewModel> Create(StreamingPlatformTypeEnum platform, string platformID)
         {
-            if (platform != StreamingPlatformTypeEnum.None && !string.IsNullOrEmpty(userID))
+            UserDataModel data = new UserDataModel();
+            if (!string.IsNullOrEmpty(platformID))
             {
-                this.Data = ChannelSession.Settings.GetUserDataByPlatformID(platform, userID);
-                if (this.Data == null)
+                data = await ChannelSession.Settings.GetUserDataByPlatformID(platform, platformID);
+                if (data == null)
                 {
-                    if (platform == StreamingPlatformTypeEnum.Twitch)
+                    data = new UserDataModel();
+                    switch (platform)
                     {
-                        this.Data = new UserDataModel() { TwitchID = userID };
+                        case StreamingPlatformTypeEnum.Twitch: data.TwitchID = platformID; break;
+                        case StreamingPlatformTypeEnum.YouTube: data.YouTubeID = platformID; break;
+                        case StreamingPlatformTypeEnum.Trovo: data.TrovoID = platformID; break;
+                        case StreamingPlatformTypeEnum.Glimesh: data.GlimeshID = platformID; break;
                     }
-                    else if (platform == StreamingPlatformTypeEnum.YouTube)
-                    {
-                        this.Data = new UserDataModel() { YouTubeID = userID };
-                    }
-                    else if (platform == StreamingPlatformTypeEnum.Glimesh)
-                    {
-                        this.Data = new UserDataModel() { GlimeshID = userID };
-                    }
-                    else if (platform == StreamingPlatformTypeEnum.Trovo)
-                    {
-                        this.Data = new UserDataModel() { TrovoID = userID };
-                    }
-                    ChannelSession.Settings.AddUserData(this.Data);
+                    ChannelSession.Settings.AddUserData(data);
                 }
-                return;
             }
-            this.Data = new UserDataModel();
+            return new UserViewModel(data);
         }
 
         [JsonIgnore]
@@ -325,7 +343,27 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchDisplayName ?? this.TwitchUsername; }
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return !string.IsNullOrEmpty(this.TwitchDisplayName) ? this.TwitchDisplayName : this.TwitchUsername; }
+                return this.UnassociatedUsername;
+            }
+        }
+
+        [JsonIgnore]
+        public string FullDisplayName
+        {
+            get
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                {
+                    if (!string.IsNullOrEmpty(this.TwitchDisplayName) && !string.Equals(this.TwitchDisplayName, this.TwitchUsername, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return $"{this.TwitchDisplayName} ({this.TwitchUsername})";
+                    }
+                    else
+                    {
+                        return this.TwitchDisplayName;
+                    }
+                }
                 else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return this.YouTubeDisplayName ?? this.YouTubeUsername; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.GlimeshDisplayName ?? this.GlimeshUsername; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return this.TrovoDisplayName ?? this.TrovoUsername; }
@@ -652,7 +690,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public PatreonCampaignMember PatreonUser { get { return this.Data.PatreonUser; } set { this.Data.PatreonUser = value; } }
 
-        public UserRoleEnum PrimaryRole { get { return (this.UserRoles.Count() > 0) ? this.UserRoles.ToList().Max() : UserRoleEnum.User; } }
+        public UserRoleEnum PrimaryRole { get { return this.Data.PrimaryRole; } }
 
         public string PrimaryRoleString { get { return EnumLocalizationHelper.GetLocalizedName(this.PrimaryRole); } }
 

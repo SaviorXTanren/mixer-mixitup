@@ -4,8 +4,11 @@ using System.Runtime.Serialization;
 namespace MixItUp.Base.Model.Store
 {
     [DataContract]
-    public class StoreCommandReviewModel
+    public class CommunityCommandReviewModel
     {
+        [DataMember]
+        public Guid ID { get; set; }
+
         [DataMember]
         public Guid CommandID { get; set; }
 
@@ -23,12 +26,5 @@ namespace MixItUp.Base.Model.Store
 
         [DataMember]
         public DateTimeOffset DateTime { get; set; }
-    }
-
-    [DataContract]
-    public class StoreCommandReviewUploadModel : StoreCommandReviewModel
-    {
-        [DataMember]
-        public Guid MixItUpUserID { get; set; }
     }
 }

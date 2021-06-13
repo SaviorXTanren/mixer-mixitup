@@ -66,6 +66,8 @@ namespace MixItUp.Base.Model.Actions
         public bool CaseSensitive { get; set; }
         [DataMember]
         public ConditionalOperatorTypeEnum Operator { get; set; }
+        [DataMember]
+        public bool RepeatWhileTrue { get; set; }
 
         [DataMember]
         public List<ConditionalClauseModel> Clauses { get; set; } = new List<ConditionalClauseModel>();
@@ -76,11 +78,12 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
 
-        public ConditionalActionModel(bool caseSensitive, ConditionalOperatorTypeEnum op, IEnumerable<ConditionalClauseModel> clauses, IEnumerable<ActionModelBase> actions)
+        public ConditionalActionModel(bool caseSensitive, ConditionalOperatorTypeEnum op, bool repeatWhileTrue, IEnumerable<ConditionalClauseModel> clauses, IEnumerable<ActionModelBase> actions)
             : base(ActionTypeEnum.Conditional)
         {
             this.CaseSensitive = caseSensitive;
             this.Operator = op;
+            this.RepeatWhileTrue = repeatWhileTrue;
             this.Clauses = new List<ConditionalClauseModel>(clauses);
             this.Actions = new List<ActionModelBase>(actions);
         }
@@ -108,30 +111,34 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            List<bool> results = new List<bool>();
-            foreach (ConditionalClauseModel clause in this.Clauses)
-            {
-                results.Add(await this.Check(clause, parameters));
-            }
-
             bool finalResult = false;
-            if (this.Operator == ConditionalOperatorTypeEnum.And)
+            do
             {
-                finalResult = results.All(r => r);
-            }
-            else if (this.Operator == ConditionalOperatorTypeEnum.Or)
-            {
-                finalResult = results.Any(r => r);
-            }
-            else if (this.Operator == ConditionalOperatorTypeEnum.ExclusiveOr)
-            {
-                finalResult = results.Count(r => r) == 1;
-            }
+                List<bool> results = new List<bool>();
+                foreach (ConditionalClauseModel clause in this.Clauses)
+                {
+                    results.Add(await this.Check(clause, parameters));
+                }
 
-            if (finalResult)
-            {
-                await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(this.Actions, parameters));
-            }
+                finalResult = false;
+                if (this.Operator == ConditionalOperatorTypeEnum.And)
+                {
+                    finalResult = results.All(r => r);
+                }
+                else if (this.Operator == ConditionalOperatorTypeEnum.Or)
+                {
+                    finalResult = results.Any(r => r);
+                }
+                else if (this.Operator == ConditionalOperatorTypeEnum.ExclusiveOr)
+                {
+                    finalResult = results.Count(r => r) == 1;
+                }
+
+                if (finalResult)
+                {
+                    await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(this.Actions, parameters));
+                }
+            } while (this.RepeatWhileTrue && finalResult);
         }
 
         private async Task<bool> Check(ConditionalClauseModel clause, CommandParametersModel parameters)
