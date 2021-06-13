@@ -120,7 +120,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStart));
             if (ServiceManager.Get<WebhookService>().IsConnected && ServiceManager.Get<WebhookService>().IsAllowed)
             {
-                EventCommandModel command = ChannelSession.Services.Events.GetEventCommand(EventTypeEnum.TwitchChannelStreamStop);
+                EventCommandModel command = ServiceManager.Get<EventService>().GetEventCommand(EventTypeEnum.TwitchChannelStreamStop);
                 if (command != null)
                 {
                     commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStop));
@@ -134,7 +134,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             if (ServiceManager.Get<WebhookService>().IsConnected && ServiceManager.Get<WebhookService>().IsAllowed)
             {
-                EventCommandModel command = ChannelSession.Services.Events.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainBegin);
+                EventCommandModel command = ServiceManager.Get<EventService>().GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainBegin);
                 if (command != null)
                 {
                     commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainBegin));
@@ -142,7 +142,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
                 //commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainProgress));
 
-                command = ChannelSession.Services.Events.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainEnd);
+                command = ServiceManager.Get<EventService>().GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainEnd);
                 if (command != null)
                 {
                     commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainEnd));

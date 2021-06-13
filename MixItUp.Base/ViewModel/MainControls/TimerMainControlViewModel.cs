@@ -59,7 +59,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         protected override IEnumerable<CommandModelBase> GetCommands()
         {
-            return ChannelSession.Services.Command.TimerCommands.ToList();
+            return ServiceManager.Get<CommandService>().TimerCommands.ToList();
         }
 
         private void CheckIfMinMessagesAndIntervalAreBothZero()

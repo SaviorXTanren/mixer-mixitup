@@ -101,7 +101,7 @@ namespace MixItUp.Base.ViewModel.Dashboard
 
         public async Task<bool> CanSelectCommands()
         {
-            if (!ChannelSession.Services.Command.AllCommands.Any(c => !(c is PreMadeChatCommandModelBase)))
+            if (!ServiceManager.Get<CommandService>().AllCommands.Any(c => !(c is PreMadeChatCommandModelBase)))
             {
                 await DialogHelper.ShowMessage(MixItUp.Base.Resources.QuickCommandSelectFail);
                 return false;

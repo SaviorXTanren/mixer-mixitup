@@ -217,7 +217,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     {
                         parameters.TargetUser = null;
                     }
-                    else if (!ChannelSession.Services.User.IsUserActive(parameters.TargetUser.ID))
+                    else if (!ServiceManager.Get<UserService>().IsUserActive(parameters.TargetUser.ID))
                     {
                         parameters.TargetUser = null;
                         return;

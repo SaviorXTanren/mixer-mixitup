@@ -91,7 +91,7 @@ namespace MixItUp.Base.Model.Commands
         public override async Task CustomRun(CommandParametersModel parameters)
         {
             List<string> commandTriggers = new List<string>();
-            foreach (ChatCommandModel command in ChannelSession.Services.Command.AllEnabledChatAccessibleCommands)
+            foreach (ChatCommandModel command in ServiceManager.Get<CommandService>().AllEnabledChatAccessibleCommands)
             {
                 if (command.IsEnabled)
                 {
@@ -133,7 +133,7 @@ namespace MixItUp.Base.Model.Commands
         public override async Task CustomRun(CommandParametersModel parameters)
         {
             List<string> commandTriggers = new List<string>();
-            foreach (GameCommandModelBase command in ChannelSession.Services.Command.GameCommands)
+            foreach (GameCommandModelBase command in ServiceManager.Get<CommandService>().GameCommands)
             {
                 if (command.IsEnabled)
                 {
@@ -286,7 +286,7 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
-            await ChannelSession.Services.Chat.SendMessage(parameters.User.FullDisplayName + "'s Follow Age: " + parameters.User.FollowAgeString);
+            await ServiceManager.Get<ChatService>().SendMessage(parameters.User.FullDisplayName + "'s Follow Age: " + parameters.User.FollowAgeString);
         }
     }
 
@@ -296,7 +296,7 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
-            await ChannelSession.Services.Chat.SendMessage(parameters.User.FullDisplayName + "'s Subscribe Age: " + parameters.User.SubscribeAgeString);
+            await ServiceManager.Get<ChatService>().SendMessage(parameters.User.FullDisplayName + "'s Subscribe Age: " + parameters.User.SubscribeAgeString);
         }
     }
 
@@ -306,7 +306,7 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
-            await ChannelSession.Services.Chat.SendMessage(parameters.User.FullDisplayName + "'s Streamer Age: " + parameters.User.AccountAgeString);
+            await ServiceManager.Get<ChatService>().SendMessage(parameters.User.FullDisplayName + "'s Streamer Age: " + parameters.User.AccountAgeString);
         }
     }
 
@@ -723,7 +723,7 @@ namespace MixItUp.Base.Model.Commands
                     username = username.Substring(1);
                 }
 
-                UserViewModel targetUser = ChannelSession.Services.User.GetActiveUserByUsername(username, parameters.Platform);
+                UserViewModel targetUser = ServiceManager.Get<UserService>().GetActiveUserByUsername(username, parameters.Platform);
                 if (targetUser != null)
                 {
                     targetUser.Title = string.Join(" ", parameters.Arguments.Skip(1));
@@ -756,7 +756,7 @@ namespace MixItUp.Base.Model.Commands
                     return;
                 }
 
-                foreach (CommandModelBase command in ChannelSession.Services.Command.AllEnabledChatAccessibleCommands)
+                foreach (CommandModelBase command in ServiceManager.Get<CommandService>().AllEnabledChatAccessibleCommands)
                 {
                     if (command.IsEnabled)
                     {
@@ -790,7 +790,7 @@ namespace MixItUp.Base.Model.Commands
                 newCommand.Requirements.Cooldown.IndividualAmount = cooldown;
                 newCommand.Actions.Add(new ChatActionModel(commandText));
                 ChannelSession.Settings.SetCommand(newCommand);
-                ChannelSession.Services.Command.ChatCommands.Add(newCommand);
+                ServiceManager.Get<CommandService>().ChatCommands.Add(newCommand);
 
                 await ServiceManager.Get<ChatService>().SendMessage("Added New Command: !" + commandTrigger, parameters.Platform);
 
@@ -813,7 +813,7 @@ namespace MixItUp.Base.Model.Commands
             {
                 string commandTrigger = parameters.Arguments.ElementAt(0).ToLower();
 
-                CommandModelBase command = ChannelSession.Services.Command.AllEnabledChatAccessibleCommands.FirstOrDefault(c => c.Triggers.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
+                CommandModelBase command = ServiceManager.Get<CommandService>().AllEnabledChatAccessibleCommands.FirstOrDefault(c => c.Triggers.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
                 if (command == null)
                 {
                     await ServiceManager.Get<ChatService>().SendMessage("ERROR: Could not find any command with that trigger", parameters.Platform);
@@ -868,7 +868,7 @@ namespace MixItUp.Base.Model.Commands
             {
                 string commandTrigger = parameters.Arguments.ElementAt(0).ToLower();
 
-                CommandModelBase command = ChannelSession.Services.Command.AllEnabledChatAccessibleCommands.FirstOrDefault(c => c.Triggers.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
+                CommandModelBase command = ServiceManager.Get<CommandService>().AllEnabledChatAccessibleCommands.FirstOrDefault(c => c.Triggers.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
                 if (command == null)
                 {
                     await ServiceManager.Get<ChatService>().SendMessage("ERROR: Could not find any command with that trigger", parameters.Platform);
@@ -927,10 +927,10 @@ namespace MixItUp.Base.Model.Commands
 //                if (mixerUserData != null)
 //                {
 //                    LinkedAccounts[parameters.User.ID] = mixerUserData.ID;
-//                    await ChannelSession.Services.Chat.SendMessage($"@{parameters.User.Username} is attempting to link the Mixer account {mixerUserData.MixerUsername} to their {parameters.User.Platform} account. Mods can type \"!approvemixeraccount @<TWITCH USERNAME>\" in chat to approve this linking.");
+//                    await ServiceManager.Get<ChatService>().SendMessage($"@{parameters.User.Username} is attempting to link the Mixer account {mixerUserData.MixerUsername} to their {parameters.User.Platform} account. Mods can type \"!approvemixeraccount @<TWITCH USERNAME>\" in chat to approve this linking.");
 //                    return;
 //                }
-//                await ChannelSession.Services.Chat.SendMessage("There is no Mixer user data for that username");
+//                await ServiceManager.Get<ChatService>().SendMessage("There is no Mixer user data for that username");
             }
             else
             {
@@ -947,7 +947,7 @@ namespace MixItUp.Base.Model.Commands
         {
             if (parameters.Arguments != null && parameters.Arguments.Count() == 1)
             {
-                UserViewModel targetUser = ChannelSession.Services.User.GetActiveUserByUsername(parameters.Arguments.First().Replace("@", ""), parameters.User.Platform);
+                UserViewModel targetUser = ServiceManager.Get<UserService>().GetActiveUserByUsername(parameters.Arguments.First().Replace("@", ""), parameters.User.Platform);
                 if (targetUser != null && LinkMixerAccountPreMadeChatCommandModel.LinkedAccounts.ContainsKey(targetUser.ID))
                 {
                     UserDataModel mixerUserData = ChannelSession.Settings.GetUserData(LinkMixerAccountPreMadeChatCommandModel.LinkedAccounts[targetUser.ID]);

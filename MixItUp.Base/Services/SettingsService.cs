@@ -598,11 +598,11 @@ namespace MixItUp.Base.Services
 
                 await settings.LoadUserData();
 
-                await ChannelSession.Services.Database.Write(settings.DatabaseFilePath, "ALTER TABLE Users ADD COLUMN TwitchUsername TEXT DEFAULT NULL");
-                await ChannelSession.Services.Database.Write(settings.DatabaseFilePath, "ALTER TABLE Users ADD COLUMN YouTubeUsername TEXT DEFAULT NULL");
-                await ChannelSession.Services.Database.Write(settings.DatabaseFilePath, "ALTER TABLE Users ADD COLUMN FacebookUsername TEXT DEFAULT NULL");
-                await ChannelSession.Services.Database.Write(settings.DatabaseFilePath, "ALTER TABLE Users ADD COLUMN TrovoUsername TEXT DEFAULT NULL");
-                await ChannelSession.Services.Database.Write(settings.DatabaseFilePath, "ALTER TABLE Users ADD COLUMN GlimeshUsername TEXT DEFAULT NULL");
+                await ServiceManager.Get<IDatabaseService>().Write(settings.DatabaseFilePath, "ALTER TABLE Users ADD COLUMN TwitchUsername TEXT DEFAULT NULL");
+                await ServiceManager.Get<IDatabaseService>().Write(settings.DatabaseFilePath, "ALTER TABLE Users ADD COLUMN YouTubeUsername TEXT DEFAULT NULL");
+                await ServiceManager.Get<IDatabaseService>().Write(settings.DatabaseFilePath, "ALTER TABLE Users ADD COLUMN FacebookUsername TEXT DEFAULT NULL");
+                await ServiceManager.Get<IDatabaseService>().Write(settings.DatabaseFilePath, "ALTER TABLE Users ADD COLUMN TrovoUsername TEXT DEFAULT NULL");
+                await ServiceManager.Get<IDatabaseService>().Write(settings.DatabaseFilePath, "ALTER TABLE Users ADD COLUMN GlimeshUsername TEXT DEFAULT NULL");
 
                 Dictionary<Guid, string> userIDToUsername = new Dictionary<Guid, string>();
                 foreach (var kvp in settings.UserData)
@@ -613,14 +613,14 @@ namespace MixItUp.Base.Services
                     }
                 }
 
-                await ChannelSession.Services.Database.BulkWrite(settings.DatabaseFilePath,
+                await ServiceManager.Get<IDatabaseService>().BulkWrite(settings.DatabaseFilePath,
                     "UPDATE Users SET TwitchUsername = @TwitchUsername WHERE ID = @ID",
                     userIDToUsername.Select(u => new Dictionary<string, object>()
                     {
                         { "@ID", u.Key.ToString() }, { "TwitchUsername", u.Value.ToString() }
                     }));
 
-                await ChannelSession.Services.Settings.Save(settings);
+                await ServiceManager.Get<SettingsService>().Save(settings);
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
 using StreamingClient.Base.Util;
@@ -60,7 +61,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     CustomCommandModel command = new CustomCommandModel(this.Name);
                     command.Actions.AddRange(await this.ActionEditorList.GetActions());
 
-                    string fileName = ChannelSession.Services.FileService.ShowSaveFileDialog(this.Name + CommandEditorWindowViewModelBase.MixItUpCommandFileExtension);
+                    string fileName = ServiceManager.Get<IFileService>().ShowSaveFileDialog(this.Name + CommandEditorWindowViewModelBase.MixItUpCommandFileExtension);
                     if (!string.IsNullOrEmpty(fileName))
                     {
                         await FileSerializerHelper.SerializeToFile(fileName, command);

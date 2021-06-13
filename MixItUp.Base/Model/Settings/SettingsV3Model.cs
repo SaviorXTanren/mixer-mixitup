@@ -737,7 +737,7 @@ namespace MixItUp.Base.Model.Settings
             await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ToString() } }));
 
             IEnumerable<UserDataModel> changedUsers = this.UserData.GetChangedValues();
-            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath,
+            await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath,
                 "REPLACE INTO Users(ID, TwitchID, TwitchUsername, YouTubeID, YouTubeUsername, FacebookID, FacebookUsername, TrovoID, TrovoUsername, GlimeshID, GlimeshUsername, Data) " +
                 "VALUES(@ID, @TwitchID, @TwitchUsername, @YouTubeID, @YouTubeUsername, @FacebookID, @FacebookUsername, @TrovoID, @TrovoUsername, @GlimeshID, @GlimeshUsername, @Data)",
                 changedUsers.Select(u => new Dictionary<string, object>()
@@ -785,7 +785,7 @@ namespace MixItUp.Base.Model.Settings
 
             if (!string.IsNullOrEmpty(columnName))
             {
-                await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE " + columnName + " = @PlatformID",
+                await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE " + columnName + " = @PlatformID",
                     new Dictionary<string, object>() { { "PlatformID", platformID } },
                     (Dictionary<string, object> data) =>
                     {
@@ -814,7 +814,7 @@ namespace MixItUp.Base.Model.Settings
 
             if (!string.IsNullOrEmpty(columnName))
             {
-                await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE " + columnName + " = @PlatformUsername",
+                await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE " + columnName + " = @PlatformUsername",
                     new Dictionary<string, object>() { { "PlatformUsername", platformUsername } },
                     (Dictionary<string, object> data) =>
                     {
@@ -845,7 +845,7 @@ namespace MixItUp.Base.Model.Settings
                 query += " LIMIT " + amount;
             }
 
-            await ChannelSession.Services.Database.Read(this.DatabaseFilePath, query, (Dictionary<string, object> data) =>
+            await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, query, (Dictionary<string, object> data) =>
             {
                 UserDataModel userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString());
                 if (!this.UserData.ContainsKey(userData.ID))

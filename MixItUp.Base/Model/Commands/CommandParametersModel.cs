@@ -94,7 +94,7 @@ namespace MixItUp.Base.Model.Commands
             {
                 if (this.Arguments.Count > 0)
                 {
-                    this.TargetUser = await ChannelSession.Services.User.GetUserFullSearch(this.Platform, userID: null, this.Arguments.First());
+                    this.TargetUser = await ServiceManager.Get<UserService>().GetUserFullSearch(this.Platform, userID: null, this.Arguments.First());
                 }
 
                 if (this.TargetUser == null || !this.Arguments.ElementAt(0).Replace("@", "").Equals(this.TargetUser.Username, StringComparison.InvariantCultureIgnoreCase))

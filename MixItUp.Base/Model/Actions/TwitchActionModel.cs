@@ -233,28 +233,27 @@ namespace MixItUp.Base.Model.Actions
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (ServiceManager.Get<TwitchSessionService>().IsConnected)
-
             {
                 if (this.ActionType == TwitchActionType.Host)
                 {
                     string channelName = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
-                    await ChannelSession.Services.Chat.SendMessage("/host @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                    await ServiceManager.Get<ChatService>().SendMessage("/host @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
                 }
                 else if (this.ActionType == TwitchActionType.Raid)
                 {
                     string channelName = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
-                    await ChannelSession.Services.Chat.SendMessage("/raid @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                    await ServiceManager.Get<ChatService>().SendMessage("/raid @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
                 }
                 else if (this.ActionType == TwitchActionType.RunAd)
                 {
-                    AdResponseModel response = await ChannelSession.TwitchUserConnection.RunAd(ChannelSession.TwitchUserNewAPI, this.AdLength);
+                    AdResponseModel response = await ServiceManager.Get<TwitchSessionService>().UserConnection.RunAd(ServiceManager.Get<TwitchSessionService>().UserNewAPI, this.AdLength);
                     if (response == null)
                     {
-                        await ChannelSession.Services.Chat.SendMessage("ERROR: We were unable to run an ad, please try again later");
+                        await ServiceManager.Get<ChatService>().SendMessage("ERROR: We were unable to run an ad, please try again later");
                     }
                     else if (!string.IsNullOrEmpty(response.message) && !response.message.Contains(StartinCommercialBreakMessage, System.StringComparison.OrdinalIgnoreCase))
                     {
-                        await ChannelSession.Services.Chat.SendMessage("ERROR: " + response.message);
+                        await ServiceManager.Get<ChatService>().SendMessage("ERROR: " + response.message);
                     }
                 }
                 else if (this.ActionType == TwitchActionType.VIPUser || this.ActionType == TwitchActionType.UnVIPUser)
@@ -263,7 +262,7 @@ namespace MixItUp.Base.Model.Actions
                     if (!string.IsNullOrEmpty(this.Username))
                     {
                         string username = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
-                        targetUser = ChannelSession.Services.User.GetActiveUserByUsername(username, parameters.Platform);
+                        targetUser = ServiceManager.Get<UserService>().GetActiveUserByUsername(username, parameters.Platform);
                     }
                     else
                     {
@@ -305,14 +304,14 @@ namespace MixItUp.Base.Model.Actions
                             }
                         }
                     }
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.ClipCreationFailed);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ClipCreationFailed);
                 }
                 else if (this.ActionType == TwitchActionType.StreamMarker)
                 {
                     string description = await this.ReplaceStringWithSpecialModifiers(this.StreamMarkerDescription, parameters);
                     if (!string.IsNullOrEmpty(description) && description.Length > TwitchActionModel.StreamMarkerMaxDescriptionLength)
                     {
-                        await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.StreamMarkerDescriptionMustBe140CharactersOrLess);
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StreamMarkerDescriptionMustBe140CharactersOrLess);
                         return;
                     }
 
@@ -425,9 +424,9 @@ namespace MixItUp.Base.Model.Actions
                     });
                 }
 
-                PollModel poll = await ChannelSession.TwitchUserConnection.CreatePoll(new CreatePollModel()
+                PollModel poll = await ServiceManager.Get<TwitchSessionService>().UserConnection.CreatePoll(new CreatePollModel()
                 {
-                    broadcaster_id = ChannelSession.TwitchUserNewAPI.id,
+                    broadcaster_id = ServiceManager.Get<TwitchSessionService>().UserNewAPI.id,
                     title = await this.ReplaceStringWithSpecialModifiers(this.PollTitle, parameters),
                     duration = this.PollDurationSeconds,
                     channel_points_voting_enabled = this.PollChannelPointsCost > 0,
@@ -439,7 +438,7 @@ namespace MixItUp.Base.Model.Actions
 
                 if (poll == null)
                 {
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.TwitchPollFailedToCreate);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.TwitchPollFailedToCreate);
                     return;
                 }
 
@@ -452,7 +451,7 @@ namespace MixItUp.Base.Model.Actions
 
                         for (int i = 0; i < 5; i++)
                         {
-                            PollModel results = await ChannelSession.TwitchUserConnection.GetPoll(ChannelSession.TwitchUserNewAPI, poll.id);
+                            PollModel results = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetPoll(ServiceManager.Get<TwitchSessionService>().UserNewAPI, poll.id);
                             if (results != null)
                             {
                                 if (string.Equals(results.status, "COMPLETED", StringComparison.OrdinalIgnoreCase))
@@ -461,7 +460,7 @@ namespace MixItUp.Base.Model.Actions
 
                                     parameters.SpecialIdentifiers[PollChoiceSpecialIdentifier] = winningChoice.title;
 
-                                    await ChannelSession.Services.Command.RunDirectly(new CommandInstanceModel(this.Actions, parameters));
+                                    await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(this.Actions, parameters));
                                     return;
                                 }
                                 else if (!string.Equals(results.status, "ACTIVE", StringComparison.OrdinalIgnoreCase))
@@ -473,7 +472,7 @@ namespace MixItUp.Base.Model.Actions
                             await Task.Delay(2000);
                         }
 
-                        await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.TwitchPollFailedToGetResults);
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.TwitchPollFailedToGetResults);
                     }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
@@ -489,9 +488,9 @@ namespace MixItUp.Base.Model.Actions
                     });
                 }
 
-                PredictionModel prediction = await ChannelSession.TwitchUserConnection.CreatePrediction(new CreatePredictionModel()
+                PredictionModel prediction = await ServiceManager.Get<TwitchSessionService>().UserConnection.CreatePrediction(new CreatePredictionModel()
                 {
-                    broadcaster_id = ChannelSession.TwitchUserNewAPI.id,
+                    broadcaster_id = ServiceManager.Get<TwitchSessionService>().UserNewAPI.id,
                     title = await this.ReplaceStringWithSpecialModifiers(this.PredictionTitle, parameters),
                     prediction_window = this.PredictionDurationSeconds,
                     outcomes = outcomes
@@ -499,7 +498,7 @@ namespace MixItUp.Base.Model.Actions
 
                 if (prediction == null)
                 {
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.TwitchPredictionFailedToCreate);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.TwitchPredictionFailedToCreate);
                     return;
                 }
 
@@ -514,7 +513,7 @@ namespace MixItUp.Base.Model.Actions
                         {
                             await Task.Delay(10000);
 
-                            PredictionModel results = await ChannelSession.TwitchUserConnection.GetPrediction(ChannelSession.TwitchUserNewAPI, prediction.id);
+                            PredictionModel results = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetPrediction(ServiceManager.Get<TwitchSessionService>().UserNewAPI, prediction.id);
                             if (results != null)
                             {
                                 if (string.Equals(results.status, "RESOLVED", StringComparison.OrdinalIgnoreCase))
@@ -523,7 +522,7 @@ namespace MixItUp.Base.Model.Actions
 
                                     parameters.SpecialIdentifiers[PredictionOutcomeSpecialIdentifier] = outcome?.title;
 
-                                    await ChannelSession.Services.Command.RunDirectly(new CommandInstanceModel(this.Actions, parameters));
+                                    await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(this.Actions, parameters));
                                     return;
                                 }
                                 else if (string.Equals(results.status, "CANCELED", StringComparison.OrdinalIgnoreCase))
@@ -536,7 +535,6 @@ namespace MixItUp.Base.Model.Actions
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
             }
-        }
         }
     }
 }

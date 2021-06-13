@@ -29,7 +29,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public void Refresh()
         {
-            this.GameCommands.ClearAndAddRange(ChannelSession.Services.Command.GameCommands);
+            this.GameCommands.ClearAndAddRange(ServiceManager.Get<CommandService>().GameCommands);
             this.NotifyPropertyChanged("NoCurrenciesExist");
         }
 

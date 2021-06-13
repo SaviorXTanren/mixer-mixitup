@@ -44,7 +44,7 @@ namespace MixItUp.Base
 
         public static bool IsElevated { get; set; }
 
-        public static async Task Initialize(ServicesManagerBase serviceHandler)
+        public static async Task Initialize()
         {
             ServiceManager.Add(new SecretsService());
 
@@ -67,7 +67,6 @@ namespace MixItUp.Base
             ServiceManager.Add(new StreamlabsOBSService());
             ServiceManager.Add(new XSplitService("http://localhost:8211/"));
 
-            ServiceManager.Add(new StreamJarService());
             ServiceManager.Add(new StreamlootsService());
             ServiceManager.Add(new JustGivingService());
             ServiceManager.Add(new TiltifyService());
@@ -110,7 +109,7 @@ namespace MixItUp.Base
 
             if (ChannelSession.Settings != null)
             {
-                foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
+                foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
                 {
                     if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(platform) && ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().IsConnected)
                     {
@@ -134,56 +133,44 @@ namespace MixItUp.Base
 
             if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
-                user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, ServiceManager.Get<TwitchSessionService>().UserNewAPI.id);
+                user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, ServiceManager.Get<TwitchSessionService>().UserNewAPI.id);
                 if (user == null)
                 {
-                    user = new UserViewModel(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
+                    user = UserViewModel.Create(ServiceManager.Get<TwitchSessionService>().UserNewAPI).Result;
                 }
             }
             else if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
             {
-                user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.YouTube, ServiceManager.Get<YouTubeSessionService>().Channel.Id);
+                user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.YouTube, ServiceManager.Get<YouTubeSessionService>().Channel.Id);
                 if (user == null)
                 {
-                    user = new UserViewModel(ServiceManager.Get<YouTubeSessionService>().Channel);
+                    user = UserViewModel.Create(ServiceManager.Get<YouTubeSessionService>().Channel).Result;
                 }
             }
             else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
             {
-                user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, ServiceManager.Get<GlimeshSessionService>().User.id);
+                user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, ServiceManager.Get<GlimeshSessionService>().User.id);
                 if (user == null)
                 {
-                    user = new UserViewModel(ServiceManager.Get<GlimeshSessionService>().User);
+                    user = UserViewModel.Create(ServiceManager.Get<GlimeshSessionService>().User).Result;
                 }
             }
             else if (ServiceManager.Get<TrovoSessionService>().IsConnected)
             {
-                user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Trovo, ServiceManager.Get<TrovoSessionService>().User.userId);
+                user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Trovo, ServiceManager.Get<TrovoSessionService>().User.userId);
                 if (user == null)
                 {
-                    user = new UserViewModel(ServiceManager.Get<TrovoSessionService>().User);
+                    user = UserViewModel.Create(ServiceManager.Get<TrovoSessionService>().User).Result;
                 }
             }
 
             return user;
         }
 
-        public static void DisconnectionOccurred(string serviceName)
-        {
-            Logger.Log(serviceName + " Service disconnection occurred");
-            GlobalEvents.ServiceDisconnect(serviceName);
-        }
-
-        public static void ReconnectionOccurred(string serviceName)
-        {
-            Logger.Log(serviceName + " Service reconnection successful");
-            GlobalEvents.ServiceReconnect(serviceName);
-        }
-
         public static async Task<Result> Connect(SettingsV3Model settings)
         {
             Result result = new Result();
-            foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
+            foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
             {
                 if (settings.StreamingPlatformAuthentications.ContainsKey(platform) && settings.StreamingPlatformAuthentications[platform].IsEnabled)
                 {
@@ -235,7 +222,7 @@ namespace MixItUp.Base
                     }
                 }
 
-                foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
+                foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
                 {
                     if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(platform) && ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().IsConnected)
                     {
@@ -247,7 +234,7 @@ namespace MixItUp.Base
                 {
                     if (ChannelSession.Settings.ID != setting.ID)
                     {
-                        foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
+                        foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
                         {
                             if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(platform) && setting.StreamingPlatformAuthentications.ContainsKey(platform))
                             {
@@ -288,7 +275,7 @@ namespace MixItUp.Base
                 Dictionary<IExternalService, OAuthTokenModel> externalServiceToConnect = new Dictionary<IExternalService, OAuthTokenModel>();
                 if (ChannelSession.Settings.StreamlabsOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<StreamlabsService>()] = ChannelSession.Settings.StreamlabsOAuthToken; }
                 if (ChannelSession.Settings.StreamElementsOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<StreamElementsService>()] = ChannelSession.Settings.StreamElementsOAuthToken; }
-                if (ChannelSession.Settings.StreamJarOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<StreamJarService>()] = ChannelSession.Settings.StreamJarOAuthToken; }
+                if (ChannelSession.Settings.RainMakerOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<RainmakerService>()] = ChannelSession.Settings.RainMakerOAuthToken; }
                 if (ChannelSession.Settings.TipeeeStreamOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<TipeeeStreamService>()] = ChannelSession.Settings.TipeeeStreamOAuthToken; }
                 if (ChannelSession.Settings.TreatStreamOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<TreatStreamService>()] = ChannelSession.Settings.TreatStreamOAuthToken; }
                 if (ChannelSession.Settings.StreamlootsOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<StreamlootsService>()] = ChannelSession.Settings.StreamlootsOAuthToken; }
@@ -381,51 +368,54 @@ namespace MixItUp.Base
                     }
                 }
 
-                    try
+                try
+                {
+                    await ServiceManager.Get<WebhookService>().Connect();
+
+                    foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                     {
-                        await ChannelSession.Services.WebhookService.Connect();
-
-                        foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
+                        if (currency.ShouldBeReset())
                         {
-                            if (currency.ShouldBeReset())
+                            await currency.Reset();
+                        }
+                    }
+
+                    if (ChannelSession.Settings.ModerationResetStrikesOnLaunch)
+                    {
+                        foreach (UserDataModel userData in ChannelSession.Settings.UserData.Values)
+                        {
+                            if (userData.ModerationStrikes > 0)
                             {
-                                await currency.Reset();
+                                userData.ModerationStrikes = 0;
+                                ChannelSession.Settings.UserData.ManualValueChanged(userData.ID);
                             }
                         }
+                    }
 
-                        if (ChannelSession.Settings.ModerationResetStrikesOnLaunch)
-                        {
-                            foreach (UserDataModel userData in ChannelSession.Settings.UserData.Values)
-                            {
-                                if (userData.ModerationStrikes > 0)
-                                {
-                                    userData.ModerationStrikes = 0;
-                                    ChannelSession.Settings.UserData.ManualValueChanged(userData.ID);
-                                }
-                            }
-                        }
+                    await ServiceManager.Get<CommandService>().Initialize();
+                    await ServiceManager.Get<TimerService>().Initialize();
+                    await ServiceManager.Get<ModerationService>().Initialize();
 
-                        await ChannelSession.Services.Command.Initialize();
-                        await ChannelSession.Services.Timers.Initialize();
-                        await ChannelSession.Services.Moderation.Initialize();
-
-                        IEnumerable<TwitchV5API.Users.UserModel> channelEditors = await ChannelSession.TwitchUserConnection.GetV5APIChannelEditors(ChannelSession.TwitchChannelV5);
+                    if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+                    {
+                        IEnumerable<TwitchV5API.Users.UserModel> channelEditors = await ServiceManager.Get<TwitchPlatformService>().GetV5APIChannelEditors(ServiceManager.Get<TwitchSessionService>().ChannelV5);
                         if (channelEditors != null)
                         {
                             foreach (TwitchV5API.Users.UserModel channelEditor in channelEditors)
                             {
-                                ChannelSession.TwitchChannelEditorsV5.Add(channelEditor.id);
+                                ServiceManager.Get<TwitchSessionService>().ChannelEditorsV5.Add(channelEditor.id);
                             }
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        Logger.Log(ex);
-                        Logger.Log(LogLevel.Error, "Streamer Services - " + JSONSerializerHelper.SerializeToString(ex));
-                        await DialogHelper.ShowMessage(Resources.FailedToInitializeStreamerBasedServices +
-                            Environment.NewLine + Environment.NewLine + Resources.ErrorDetailsHeader + " " + ex.Message);
-                        return false;
-                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                    Logger.Log(LogLevel.Error, "Streamer Services - " + JSONSerializerHelper.SerializeToString(ex));
+                    await DialogHelper.ShowMessage(Resources.FailedToInitializeStreamerBasedServices +
+                        Environment.NewLine + Environment.NewLine + Resources.ErrorDetailsHeader + " " + ex.Message);
+                    return new Result(ex.Message);
+                }
 
                 await ServiceManager.Get<TimerService>().Initialize();
                 await ServiceManager.Get<ModerationService>().Initialize();
@@ -485,7 +475,7 @@ namespace MixItUp.Base
             {
                 sessionBackgroundTimer++;
 
-                foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
+                foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
                 {
                     if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(platform) && ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().IsConnected)
                     {

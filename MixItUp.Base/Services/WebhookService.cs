@@ -107,7 +107,7 @@ namespace MixItUp.Base.Services
         {
             ChannelSession.ReconnectionOccurred("Webhook Events");
 
-            var twitchUserOAuthToken = ChannelSession.TwitchUserConnection.Connection.GetOAuthTokenCopy();
+            var twitchUserOAuthToken = ServiceManager.Get<TwitchSessionService>().UserConnection.GetOAuthTokenCopy();
             await this.Authenticate(twitchUserOAuthToken?.accessToken);
         }
 
@@ -136,7 +136,7 @@ namespace MixItUp.Base.Services
 
         private async Task TwitchFollowEvent(string followerId, string followerUsername, string followerDisplayName)
         {
-            UserViewModel user = ChannelSession.Services.User.GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, followerId);
+            UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, followerId);
             if (user == null)
             {
                 user = await UserViewModel.Create(new TwitchWebhookFollowModel()
@@ -180,7 +180,7 @@ namespace MixItUp.Base.Services
 
                 GlobalEvents.FollowOccurred(user);
 
-                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Followed", user.FullDisplayName), ChannelSession.Settings.AlertFollowColor));
+                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Followed", user.FullDisplayName), ChannelSession.Settings.AlertFollowColor));
             }
         }
 

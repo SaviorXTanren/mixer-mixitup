@@ -95,7 +95,7 @@ namespace MixItUp.WPF.Controls.Settings
                     type = CommandTypeEnum.Chat;
                 }
 
-                IEnumerable<CommandModelBase> commands = ChannelSession.Services.Command.AllCommands.Where(c => c.Type == type).OrderBy(c => c.Name);
+                IEnumerable<CommandModelBase> commands = ServiceManager.Get<CommandService>().AllCommands.Where(c => c.Type == type).OrderBy(c => c.Name);
                 if (type == CommandTypeEnum.Chat)
                 {
                     if (typeString.Equals(PreMadeCommandType))

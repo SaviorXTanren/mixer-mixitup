@@ -55,7 +55,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 ActionGroupCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<ActionGroupCommandModel>();
                 if (command != null)
                 {
-                    ChannelSession.Services.Command.ActionGroupCommands.Remove(command);
+                    ServiceManager.Get<CommandService>().ActionGroupCommands.Remove(command);
                     ChannelSession.Settings.RemoveCommand(command);
                     this.viewModel.RemoveCommand(command);
                     await ChannelSession.SaveSettings();

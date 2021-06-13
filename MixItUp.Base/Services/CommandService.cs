@@ -126,7 +126,7 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            ChannelSession.Services.Chat.RebuildCommandTriggers();
+            ServiceManager.Get<ChatService>().RebuildCommandTriggers();
 
             return Task.FromResult(0);
         }

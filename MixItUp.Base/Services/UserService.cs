@@ -1,7 +1,10 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -130,14 +133,14 @@ namespace MixItUp.Base.Services
                     {
                         if (user.Data.ViewingMinutes == 0)
                         {
-                            await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserFirstJoin, user));
+                            await ServiceManager.Get<EventService>().PerformEvent(new EventTrigger(EventTypeEnum.ChatUserFirstJoin, user));
                         }
 
-                        if (ChannelSession.Services.Events.CanPerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user)))
+                        if (ServiceManager.Get<EventService>().CanPerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user)))
                         {
                             user.LastSeen = DateTimeOffset.Now;
                             user.Data.TotalStreamsWatched++;
-                            await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user));
+                            await ServiceManager.Get<EventService>().PerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user));
                         }
                     }
                 }
@@ -174,7 +177,7 @@ namespace MixItUp.Base.Services
         {
             if (user != null)
             {
-                this.usersByID.Remove(user.ID);
+                this.activeUsers.Remove(user.ID);
 
                 if (!string.IsNullOrEmpty(user.TwitchID) && !string.IsNullOrEmpty(user.TwitchUsername))
                 {
@@ -206,7 +209,7 @@ namespace MixItUp.Base.Services
 
         public void Clear()
         {
-            this.usersByID.Clear();
+            this.activeUsers.Clear();
 
             foreach (var kvp in this.platformUserIDLookups)
             {
@@ -255,7 +258,7 @@ namespace MixItUp.Base.Services
             {
                 if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && user == null)
                 {
-                    user = ChannelSession.Services.User.GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, userID);
+                    user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, userID);
                 }
 
                 if (user == null)
@@ -271,7 +274,7 @@ namespace MixItUp.Base.Services
                         }
                         else
                         {
-                            var twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(userID);
+                            var twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(userID);
                             if (twitchUser != null)
                             {
                                 user = await UserViewModel.Create(twitchUser);
@@ -284,7 +287,7 @@ namespace MixItUp.Base.Services
             if (user == null && !string.IsNullOrEmpty(username))
             {
                 username = this.SanitizeUsername(username);
-                user = ChannelSession.Services.User.GetActiveUserByUsername(username);
+                user = ServiceManager.Get<UserService>().GetActiveUserByUsername(username);
                 if (user == null)
                 {
                     if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceManager.Get<TwitchSessionService>().UserConnection != null)
@@ -292,7 +295,7 @@ namespace MixItUp.Base.Services
                         Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
                         if (twitchUser != null)
                         {
-                            return new UserViewModel.Create(twitchUser);
+                            return await UserViewModel.Create(twitchUser);
                         }
                     }
 
@@ -301,7 +304,7 @@ namespace MixItUp.Base.Services
                         Google.Apis.YouTube.v3.Data.Channel youtubeUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByUsername(username);
                         if (youtubeUser != null)
                         {
-                            return new UserViewModel.Create(youtubeUser);
+                            return await UserViewModel.Create(youtubeUser);
                         }
                     }
 
@@ -310,7 +313,7 @@ namespace MixItUp.Base.Services
                         Glimesh.Base.Models.Users.UserModel glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByName(username);
                         if (glimeshUser != null)
                         {
-                            return new UserViewModel.Create(glimeshUser);
+                            return await UserViewModel.Create(glimeshUser);
                         }
                     }
 
@@ -319,7 +322,7 @@ namespace MixItUp.Base.Services
                         Trovo.Base.Models.Users.UserModel trovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(username);
                         if (trovoUser != null)
                         {
-                            return new UserViewModel.Create(trovoUser);
+                            return await UserViewModel.Create(trovoUser);
                         }
                     }
 

@@ -44,8 +44,8 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public override Task SaveCommandToSettings(CommandModelBase command)
         {
-            ChannelSession.Services.Command.ActionGroupCommands.Remove((ActionGroupCommandModel)this.existingCommand);
-            ChannelSession.Services.Command.ActionGroupCommands.Add((ActionGroupCommandModel)command);
+            ServiceManager.Get<CommandService>().ActionGroupCommands.Remove((ActionGroupCommandModel)this.existingCommand);
+            ServiceManager.Get<CommandService>().ActionGroupCommands.Add((ActionGroupCommandModel)command);
             return Task.FromResult(0);
         }
     }

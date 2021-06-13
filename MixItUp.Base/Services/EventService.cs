@@ -249,7 +249,7 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.All, trigger.User, string.Format("{0} Donated {1}", trigger.User.FullDisplayName, donation.AmountText), ChannelSession.Settings.AlertDonationColor));
+            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.All, trigger.User, string.Format("{0} Donated {1}", trigger.User.FullDisplayName, donation.AmountText), ChannelSession.Settings.AlertDonationColor));
 
             try
             {
@@ -268,7 +268,7 @@ namespace MixItUp.Base.Services
 
         public EventCommandModel GetEventCommand(EventTypeEnum type)
         {
-            foreach (EventCommandModel command in ChannelSession.Services.Command.EventCommands.ToList())
+            foreach (EventCommandModel command in ServiceManager.Get<CommandService>().EventCommands.ToList())
             {
                 if (command.EventType == type)
                 {
@@ -306,7 +306,7 @@ namespace MixItUp.Base.Services
                     }
                 }
 
-                await ChannelSession.Services.User.AddOrUpdateActiveUser(user);
+                await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
                 user.UpdateLastActivity();
 
                 EventCommandModel command = this.GetEventCommand(trigger.Type);

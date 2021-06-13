@@ -15,6 +15,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Twitch.Base.Models.Clients.Chat;
+using Twitch.Base.Models.Clients.PubSub.Messages;
 using Twitch.Base.Models.NewAPI.Chat;
 using Twitch.Base.Models.NewAPI.Users;
 using TwitchNewAPI = Twitch.Base.Models.NewAPI;
@@ -209,71 +211,83 @@ namespace MixItUp.Base.ViewModel.User
             return user;
         }
 
-        public static async Task<UserViewModel> Create((Glimesh.Base.Models.Users.UserModel user)
+        public static async Task<UserViewModel> Create(Glimesh.Base.Models.Users.UserModel glimeshUser)
         {
-            this.SetUserData(StreamingPlatformTypeEnum.Glimesh, user.id);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Glimesh, glimeshUser.id);
 
-            this.GlimeshID = user.id;
-            this.GlimeshUsername = user.username;
-            this.GlimeshDisplayName = user.displayname;
-            this.GlimeshAvatarLink = user.avatarUrl;
-            this.AccountDate = GlimeshPlatformService.GetGlimeshDateTime(user.confirmedAt);
+            user.GlimeshID = glimeshUser.id;
+            user.GlimeshUsername = glimeshUser.username;
+            user.GlimeshDisplayName = glimeshUser.displayname;
+            user.GlimeshAvatarLink = glimeshUser.avatarUrl;
+            user.AccountDate = GlimeshPlatformService.GetGlimeshDateTime(glimeshUser.confirmedAt);
 
-            this.SetGlimeshRoles();
+            user.SetGlimeshRoles();
+
+            return user;
         }
 
-        public UserViewModel(Glimesh.Base.Models.Clients.Chat.ChatMessagePacketModel message) : this(message.User) { }
+        public static async Task<UserViewModel> Create(Glimesh.Base.Models.Clients.Chat.ChatMessagePacketModel message) { return await UserViewModel.Create(message.User); }
 
-        public UserViewModel(Trovo.Base.Models.Users.UserModel user)
+        public static async Task<UserViewModel> Create(Trovo.Base.Models.Users.UserModel trovoUser)
         {
-            this.SetUserData(StreamingPlatformTypeEnum.Trovo, user.user_id);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Trovo, trovoUser.user_id);
 
-            this.TrovoID = user.user_id;
-            this.TrovoUsername = user.username;
-            this.TrovoDisplayName = user.nickname;
+            user.TrovoID = trovoUser.user_id;
+            user.TrovoUsername = trovoUser.username;
+            user.TrovoDisplayName = trovoUser.nickname;
 
-            this.SetTrovoRoles();
+            user.SetTrovoRoles();
+
+            return user;
         }
 
-        public UserViewModel(Trovo.Base.Models.Users.PrivateUserModel user)
+        public static async Task<UserViewModel> Create(Trovo.Base.Models.Users.PrivateUserModel trovoUser)
         {
-            this.SetUserData(StreamingPlatformTypeEnum.Trovo, user.userId);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Trovo, trovoUser.userId);
 
-            this.TrovoID = user.userId;
-            this.TrovoUsername = user.userName;
-            this.TrovoDisplayName = user.nickName;
-            this.TrovoAvatarLink = user.profilePic;
+            user.TrovoID = trovoUser.userId;
+            user.TrovoUsername = trovoUser.userName;
+            user.TrovoDisplayName = trovoUser.nickName;
+            user.TrovoAvatarLink = trovoUser.profilePic;
 
-            this.SetTrovoRoles();
+            user.SetTrovoRoles();
+
+            return user;
         }
 
-        public UserViewModel(Trovo.Base.Models.Chat.ChatMessageModel message)
+        public static async Task<UserViewModel> Create(Trovo.Base.Models.Chat.ChatMessageModel message)
         {
-            this.SetUserData(StreamingPlatformTypeEnum.Trovo, message.sender_id);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Trovo, message.sender_id);
 
-            this.TrovoID = message.sender_id;
-            this.TrovoUsername = this.TrovoDisplayName = message.nick_name;
+            user.TrovoID = message.sender_id;
+            user.TrovoUsername = user.TrovoDisplayName = message.nick_name;
 
-            this.SetTrovoChatDetails(message);
+            user.SetTrovoChatDetails(message);
+
+            return user;
         }
 
-        public static async Task<UserViewModel> Create((Google.Apis.YouTube.v3.Data.Channel channel)
+        public static async Task<UserViewModel> Create(Google.Apis.YouTube.v3.Data.Channel channel)
         {
-            this.SetUserData(StreamingPlatformTypeEnum.YouTube, channel.Id);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.YouTube, channel.Id);
 
-            this.YouTubeID = channel.Id;
-            this.YouTubeUsername = this.YouTubeDisplayName = channel.Snippet.Title;
-            this.YouTubeAvatarLink = channel.Snippet.Thumbnails.Default__.Url;
-            this.YouTubeURL = "https://www.youtube.com/channel/" + channel.Id;
+            user.YouTubeID = channel.Id;
+            user.YouTubeUsername = user.YouTubeDisplayName = channel.Snippet.Title;
+            user.YouTubeAvatarLink = channel.Snippet.Thumbnails.Default__.Url;
+            user.YouTubeURL = "https://www.youtube.com/channel/" + channel.Id;
 
-            this.SetYouTubeRoles();
+            user.SetYouTubeRoles();
+
+            return user;
         }
 
-        public static async Task<UserViewModel> Create((Google.Apis.YouTube.v3.Data.LiveChatMessage message)
+        public static async Task<UserViewModel> Create(Google.Apis.YouTube.v3.Data.LiveChatMessage message)
         {
-            this.SetUserData(StreamingPlatformTypeEnum.YouTube, message.AuthorDetails?.ChannelId);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.YouTube, message.AuthorDetails?.ChannelId);
 
-            this.SetYouTubeChatDetails(message);
+            user.SetYouTubeChatDetails(message);
+
+            return user;
         }
 
         public UserViewModel(UserDataModel userData)

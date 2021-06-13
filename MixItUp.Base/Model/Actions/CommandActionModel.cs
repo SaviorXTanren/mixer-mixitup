@@ -104,11 +104,11 @@ namespace MixItUp.Base.Model.Actions
             {
                 if (this.PreMadeType != null)
                 {
-                    return ChannelSession.Services.Command.PreMadeChatCommands.FirstOrDefault(c => c.GetType().Equals(this.PreMadeType));
+                    return ServiceManager.Get<CommandService>().PreMadeChatCommands.FirstOrDefault(c => c.GetType().Equals(this.PreMadeType));
                 }
                 else
                 {
-                    return ChannelSession.Services.Command.AllCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID));
+                    return ServiceManager.Get<CommandService>().AllCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID));
                 }
             }
         }
@@ -117,7 +117,7 @@ namespace MixItUp.Base.Model.Actions
         {
             get
             {
-                return ChannelSession.Services.Command.AllCommands.Where(c => string.Equals(this.CommandGroupName, c.GroupName)).ToList();
+                return ServiceManager.Get<CommandService>().AllCommands.Where(c => string.Equals(this.CommandGroupName, c.GroupName)).ToList();
             }
         }
 

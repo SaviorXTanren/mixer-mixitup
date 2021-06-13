@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Store;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.CommunityCommands;
 using StreamingClient.Base.Util;
@@ -112,7 +113,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                     if (!string.IsNullOrWhiteSpace(this.SearchText))
                     {
                         this.SearchResults.Clear();
-                        foreach (CommunityCommandModel command in await ChannelSession.Services.CommunityCommandsService.SearchCommands(this.SearchText))
+                        foreach (CommunityCommandModel command in await ServiceManager.Get<CommunityCommandsService>().SearchCommands(this.SearchText))
                         {
                             this.SearchResults.Add(new CommunityCommandViewModel(command));
                         }
@@ -131,7 +132,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 try
                 {
-                    CommunityCommandDetailsModel commandDetails = await ChannelSession.Services.CommunityCommandsService.GetCommandDetails((Guid)id);
+                    CommunityCommandDetailsModel commandDetails = await ServiceManager.Get<CommunityCommandsService>().GetCommandDetails((Guid)id);
                     if (commandDetails != null)
                     {
                         this.CommandDetails = new CommunityCommandDetailsViewModel(commandDetails);
@@ -148,12 +149,12 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.DownloadCommand = this.CreateCommand(async () =>
             {
-                await ChannelSession.Services.CommunityCommandsService.DownloadCommand(this.CommandDetails.ID);
+                await ServiceManager.Get<CommunityCommandsService>().DownloadCommand(this.CommandDetails.ID);
             });
 
             this.ReviewCommand = this.CreateCommand(async () =>
             {
-                await ChannelSession.Services.CommunityCommandsService.AddReview(new CommunityCommandReviewModel()
+                await ServiceManager.Get<CommunityCommandsService>().AddReview(new CommunityCommandReviewModel()
                 {
                     CommandID = this.CommandDetails.ID,
                     Rating = 5,
@@ -163,7 +164,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.ReportCommand = this.CreateCommand(async () =>
             {
-                await ChannelSession.Services.CommunityCommandsService.ReportCommand(this.CommandDetails.ID, "This command has bad stuff in it!");
+                await ServiceManager.Get<CommunityCommandsService>().ReportCommand(this.CommandDetails.ID, "This command has bad stuff in it!");
             });
         }
 
@@ -187,7 +188,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 try
                 {
                     this.Categories.Clear();
-                    foreach (CommunityCommandCategoryModel category in await ChannelSession.Services.CommunityCommandsService.GetHomeCategories())
+                    foreach (CommunityCommandCategoryModel category in await ServiceManager.Get<CommunityCommandsService>().GetHomeCategories())
                     {
                         this.Categories.Add(new CommunityCommandCategoryViewModel(category));
                     }

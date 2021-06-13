@@ -55,7 +55,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 StreamlootsCardCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<StreamlootsCardCommandModel>();
                 if (command != null)
                 {
-                    ChannelSession.Services.Command.StreamlootsCardCommands.Remove(command);
+                    ServiceManager.Get<CommandService>().StreamlootsCardCommands.Remove(command);
                     ChannelSession.Settings.RemoveCommand(command);
                     this.viewModel.RemoveCommand(command);
                     await ChannelSession.SaveSettings();

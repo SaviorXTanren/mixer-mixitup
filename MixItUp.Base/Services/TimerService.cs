@@ -52,7 +52,7 @@ namespace MixItUp.Base.Services
                     this.timerCommandGroups[kvp.Key] = new List<TimerCommandModel>();
                 }
 
-                IEnumerable<TimerCommandModel> timerCommands = ChannelSession.Services.Command.TimerCommands.ToList();
+                IEnumerable<TimerCommandModel> timerCommands = ServiceManager.Get<CommandService>().TimerCommands.ToList();
                 if (ChannelSession.Settings.RandomizeTimers)
                 {
                     timerCommands = timerCommands.Shuffle();

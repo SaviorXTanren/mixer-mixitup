@@ -370,7 +370,7 @@ namespace MixItUp.Base.Util
                 {
                     IEnumerable<UserDataModel> applicableUsers = SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
                     UserDataModel topUserData = applicableUsers.Top(u => u.ViewingMinutes);
-                    UserViewModel topUser = ChannelSession.Services.User.GetActiveUserByID(topUserData.ID);
+                    UserViewModel topUser = ServiceManager.Get<UserService>().GetActiveUserByID(topUserData.ID);
                     if (topUser == null)
                     {
                         topUser = new UserViewModel(topUserData);
@@ -405,7 +405,7 @@ namespace MixItUp.Base.Util
                     {
                         IEnumerable<UserDataModel> applicableUsers = SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
                         UserDataModel topUserData = applicableUsers.Top(u => currency.GetAmount(u));
-                        UserViewModel topUser = ChannelSession.Services.User.GetActiveUserByID(topUserData.ID);
+                        UserViewModel topUser = ServiceManager.Get<UserService>().GetActiveUserByID(topUserData.ID);
                         if (topUser == null)
                         {
                             topUser = new UserViewModel(topUserData);
@@ -543,7 +543,7 @@ namespace MixItUp.Base.Util
                     string currentArgumentSpecialIdentifierHeader = ArgSpecialIdentifierHeader + (i + 1);
                     if (this.ContainsSpecialIdentifier(currentArgumentSpecialIdentifierHeader))
                     {
-                        UserViewModel argUser = await ChannelSession.Services.User.GetUserFullSearch(parameters.Platform, userID: null, parameters.Arguments.ElementAt(i));
+                        UserViewModel argUser = await ServiceManager.Get<UserService>().GetUserFullSearch(parameters.Platform, userID: null, parameters.Arguments.ElementAt(i));
                         if (argUser != null)
                         {
                             await this.HandleUserSpecialIdentifiers(argUser, currentArgumentSpecialIdentifierHeader);
@@ -932,7 +932,7 @@ namespace MixItUp.Base.Util
 
                     this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredSpecialIdentifier + period.ToString().ToLower() + "amount", bitsUser.score.ToString());
 
-                    UserViewModel user = ChannelSession.Services.User.GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, bitsUser.user_id);
+                    UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, bitsUser.user_id);
                     if (user == null)
                     {
                         user = await UserViewModel.Create(new Twitch.Base.Models.NewAPI.Users.UserModel()

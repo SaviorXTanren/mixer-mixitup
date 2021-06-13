@@ -252,9 +252,9 @@ namespace MixItUp.Base.ViewModel.Games
         public override Task SaveCommandToSettings(CommandModelBase command)
         {
             GameCommandModelBase c = (GameCommandModelBase)command;
-            ChannelSession.Services.Command.GameCommands.Remove(c);
-            ChannelSession.Services.Command.GameCommands.Add(c);
-            ChannelSession.Services.Chat.RebuildCommandTriggers();
+            ServiceManager.Get<CommandService>().GameCommands.Remove(c);
+            ServiceManager.Get<CommandService>().GameCommands.Add(c);
+            ServiceManager.Get<ChatService>().RebuildCommandTriggers();
             return Task.FromResult(0);
         }
 

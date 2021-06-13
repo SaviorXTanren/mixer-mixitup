@@ -101,7 +101,7 @@ namespace MixItUp.Base.Services
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
-        public async Task SendMessage(string message, StreamingPlatformTypeEnum platform, bool sendAsStreamer = false)
+        public async Task SendMessage(string message, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All, bool sendAsStreamer = false)
         {
             if (!string.IsNullOrEmpty(message))
             {
@@ -111,7 +111,7 @@ namespace MixItUp.Base.Services
 
                     if (sendAsStreamer || ServiceManager.Get<TwitchSessionService>().BotConnection == null)
                     {
-                        UserViewModel user = ChannelSession.GetCurrentUser();
+                        UserViewModel user = await ChannelSession.GetCurrentUser();
                         await this.AddMessage(new TwitchChatMessageViewModel(user, message));
                     }
                 }
@@ -146,7 +146,7 @@ namespace MixItUp.Base.Services
 
         public async Task Whisper(StreamingPlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false)
         {
-            UserViewModel user = ChannelSession.Services.User.GetActiveUserByUsername(username, platform);
+            UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByUsername(username, platform);
             if (user != null)
             {
                 await this.Whisper(user, message, sendAsStreamer);
@@ -306,7 +306,7 @@ namespace MixItUp.Base.Services
                 this.longestTrigger = 0;
                 this.wildcardCommands.Clear();
                 this.chatMenuCommands.Clear();
-                foreach (ChatCommandModel command in ChannelSession.Services.Command.AllEnabledChatAccessibleCommands)
+                foreach (ChatCommandModel command in ServiceManager.Get<CommandService>().AllEnabledChatAccessibleCommands)
                 {
                     if (command.Wildcards)
                     {
@@ -367,7 +367,7 @@ namespace MixItUp.Base.Services
 
                 if (message.User != null)
                 {
-                    await ChannelSession.Services.User.AddOrUpdateActiveUser(message.User);
+                    await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(message.User);
                 }
 
                 // Add message to chat list
@@ -464,7 +464,7 @@ namespace MixItUp.Base.Services
                         string primaryTaggedUsername = message.PrimaryTaggedUsername;
                         if (!string.IsNullOrEmpty(primaryTaggedUsername))
                         {
-                            UserViewModel primaryTaggedUser = ChannelSession.Services.User.GetActiveUserByUsername(primaryTaggedUsername, message.Platform);
+                            UserViewModel primaryTaggedUser = ServiceManager.Get<UserService>().GetActiveUserByUsername(primaryTaggedUsername, message.Platform);
                             if (primaryTaggedUser != null)
                             {
                                 primaryTaggedUser.Data.TotalTimesTagged++;
@@ -714,7 +714,7 @@ namespace MixItUp.Base.Services
 
             CommandParametersModel parameters = new CommandParametersModel(message.User, message.Platform, arguments);
             parameters.SpecialIdentifiers["message"] = message.PlainTextMessage;
-            await ChannelSession.Services.Command.Queue(command, parameters);
+            await ServiceManager.Get<CommandService>().Queue(command, parameters);
 
             SettingsRequirementModel settings = command.Requirements.Settings;
             if (settings != null)

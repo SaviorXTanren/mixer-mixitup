@@ -59,7 +59,7 @@ namespace MixItUp.Base.Model.Requirements
             {
                 if (!string.IsNullOrEmpty(argument))
                 {
-                    UserViewModel user = ChannelSession.Services.User.GetActiveUserByUsername(argument);
+                    UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByUsername(argument);
                     if (user != null)
                     {
                         return Task.FromResult<Result>(new Result());

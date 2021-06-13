@@ -64,6 +64,7 @@ namespace MixItUp.WPF
                 ServiceManager.Add<ITelemetryService>(new WindowsTelemetryService());
 
                 ServiceManager.Add(new StreamlabsService(new WindowsSocketIOConnection()));
+                ServiceManager.Add(new RainmakerService(new WindowsSocketIOConnection()));
                 ServiceManager.Add(new StreamElementsService(new WindowsSocketIOConnection()));
                 ServiceManager.Add(new TipeeeStreamService(new WindowsSocketIOConnection()));
                 ServiceManager.Add(new TreatStreamService(new WindowsSocketIOConnection()));

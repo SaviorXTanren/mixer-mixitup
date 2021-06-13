@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Store;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Services;
@@ -305,7 +306,7 @@ namespace MixItUp.Base.Services
         {
             if (accessToken == null)
             {
-                var twitchUserOAuthToken = ChannelSession.TwitchUserConnection.Connection.GetOAuthTokenCopy();
+                var twitchUserOAuthToken = ServiceManager.Get<TwitchSessionService>().UserConnection.GetOAuthTokenCopy();
                 var login = new CommunityCommandLoginModel
                 {
                     TwitchAccessToken = twitchUserOAuthToken?.accessToken,

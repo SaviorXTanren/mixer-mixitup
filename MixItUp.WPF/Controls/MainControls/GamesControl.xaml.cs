@@ -56,7 +56,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 GameCommandModelBase command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<GameCommandModelBase>();
                 if (command != null)
                 {
-                    ChannelSession.Services.Command.GameCommands.Remove(command);
+                    ServiceManager.Get<CommandService>().GameCommands.Remove(command);
                     ChannelSession.Settings.RemoveCommand(command);
                     ServiceManager.Get<ChatService>().RebuildCommandTriggers();
                     this.viewModel.Refresh();

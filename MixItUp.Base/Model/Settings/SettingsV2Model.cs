@@ -745,9 +745,9 @@ namespace MixItUp.Base.Model.Settings
             {
                 this.StreamElementsOAuthToken = ServiceManager.Get<StreamElementsService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.Rainmaker.IsConnected)
+            if (ServiceManager.Get<RainmakerService>().IsConnected)
             {
-                this.StreamJarOAuthToken = ChannelSession.Services.Rainmaker.GetOAuthTokenCopy();
+                this.StreamJarOAuthToken = ServiceManager.Get<RainmakerService>().GetOAuthTokenCopy();
             }
             if (ServiceManager.Get<TipeeeStreamService>().IsConnected)
             {

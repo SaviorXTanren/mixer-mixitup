@@ -28,8 +28,8 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public override Task SaveCommandToSettings(CommandModelBase command)
         {
-            ChannelSession.Services.Command.StreamlootsCardCommands.Remove((StreamlootsCardCommandModel)this.existingCommand);
-            ChannelSession.Services.Command.StreamlootsCardCommands.Add((StreamlootsCardCommandModel)command);
+            ServiceManager.Get<CommandService>().StreamlootsCardCommands.Remove((StreamlootsCardCommandModel)this.existingCommand);
+            ServiceManager.Get<CommandService>().StreamlootsCardCommands.Add((StreamlootsCardCommandModel)command);
             return Task.FromResult(0);
         }
     }
