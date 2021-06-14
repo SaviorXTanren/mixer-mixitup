@@ -268,7 +268,21 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<IEnumerable<NewAPI.Chat.ChatBadgeSetModel>> GetGlobalChatBadges() { return await this.RunAsync(this.Connection.NewAPI.Chat.GetGlobalChatBadges()); }
 
-        public async Task<NewAPI.ChannelPoints.CustomChannelPointRewardModel> CreateCustomChannelPointRewards(NewAPI.Users.UserModel broadcaster, NewAPI.ChannelPoints.UpdatableCustomChannelPointRewardModel reward) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.ChannelPoints.CreateCustomReward(broadcaster, reward)); }
+        public async Task<Result<NewAPI.ChannelPoints.CustomChannelPointRewardModel>> CreateCustomChannelPointRewards(NewAPI.Users.UserModel broadcaster, NewAPI.ChannelPoints.UpdatableCustomChannelPointRewardModel reward)
+        {
+            try
+            {
+                return new Result<NewAPI.ChannelPoints.CustomChannelPointRewardModel>(await this.Connection.NewAPI.ChannelPoints.CreateCustomReward(broadcaster, reward));
+            }
+            catch (HttpRestRequestException ex)
+            {
+                return new Result<NewAPI.ChannelPoints.CustomChannelPointRewardModel>(await ex.Response.Content.ReadAsStringAsync());
+            }
+            catch (Exception ex)
+            {
+                return new Result<NewAPI.ChannelPoints.CustomChannelPointRewardModel>(ex.Message);
+            }
+        }
 
         public async Task<IEnumerable<NewAPI.ChannelPoints.CustomChannelPointRewardModel>> GetCustomChannelPointRewards(NewAPI.Users.UserModel broadcaster) { return await this.RunAsync(this.Connection.NewAPI.ChannelPoints.GetCustomRewards(broadcaster)); }
 

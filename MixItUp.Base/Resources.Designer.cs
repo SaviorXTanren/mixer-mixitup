@@ -331,6 +331,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Command To Existing Reward.
+        /// </summary>
+        public static string AddCommandToExistingReward {
+            get {
+                return ResourceManager.GetString("AddCommandToExistingReward", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Currency/Rank.
         /// </summary>
         public static string AddCurrencyRank {
@@ -2364,16 +2373,9 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create Channel Point Reward.
-        /// </summary>
-        public static string CreateChannelPointReward {
-            get {
-                return ResourceManager.GetString("CreateChannelPointReward", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Channel Point Reward was not able to be created, please try again later. If this problem persists, please visit the Mix It Up Support Discord for assistance..
+        ///   Looks up a localized string similar to Channel Point Reward was not able to be created: {0}
+        ///
+        ///If this problem persists, please visit the Mix It Up Support Discord for assistance..
         /// </summary>
         public static string CreateChannelPointRewardFailure {
             get {
@@ -2387,6 +2389,15 @@ namespace MixItUp.Base {
         public static string CreateChannelPointRewardSuccess {
             get {
                 return ResourceManager.GetString("CreateChannelPointRewardSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create New Channel Point Reward.
+        /// </summary>
+        public static string CreateNewChannelPointReward {
+            get {
+                return ResourceManager.GetString("CreateNewChannelPointReward", resourceCulture);
             }
         }
         
@@ -14840,6 +14851,24 @@ namespace MixItUp.Base {
         public static string TwitchChannelMassSubscriptionsGifted {
             get {
                 return ResourceManager.GetString("TwitchChannelMassSubscriptionsGifted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A reward already exists with the same name.
+        /// </summary>
+        public static string TwitchChannelPointRewardCreationErrorRewardAlreadyExists {
+            get {
+                return ResourceManager.GetString("TwitchChannelPointRewardCreationErrorRewardAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have reached the maximum amount of rewards able to be created.
+        /// </summary>
+        public static string TwitchChannelPointRewardCreationErrorTooManyRewards {
+            get {
+                return ResourceManager.GetString("TwitchChannelPointRewardCreationErrorTooManyRewards", resourceCulture);
             }
         }
         
