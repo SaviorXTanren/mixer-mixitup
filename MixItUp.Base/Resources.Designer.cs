@@ -2094,6 +2094,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please describe why you wish to report this command. Please note that reporting commands should only be used if the command is deemed inappropriate or malicious. For everything else, please leave a Review of the command instead..
+        /// </summary>
+        public static string CommunityCommandsReportCommand {
+            get {
+                return ResourceManager.GetString("CommunityCommandsReportCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Compare.
         /// </summary>
         public static string Compare {

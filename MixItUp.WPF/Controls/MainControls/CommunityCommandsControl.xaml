@@ -198,9 +198,9 @@
 
                                     <Button Grid.Column="4" Content="{x:Static resx:Resources.Download}" Command="{Binding DownloadCommand}" VerticalAlignment="Center" />
 
-                                    <Button Grid.Column="6" Content="{x:Static resx:Resources.Review}" Command="{Binding ReviewCommand}" VerticalAlignment="Center" />
+                                    <Button Grid.Column="6" x:Name="ReviewCommandButton" Content="{x:Static resx:Resources.Review}" Click="ReviewCommandButton_Click" VerticalAlignment="Center" />
 
-                                    <Button Grid.Column="8" Content="{x:Static resx:Resources.Report}" Command="{Binding ReportCommand}" VerticalAlignment="Center" />
+                                    <Button Grid.Column="8" x:Name="ReportCommandButton" Content="{x:Static resx:Resources.Report}" Click="ReportCommandButton_Click" VerticalAlignment="Center" />
                                 </Grid>
 
                                 <Grid Grid.Row="2">

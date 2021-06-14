@@ -76,8 +76,6 @@ namespace MixItUp.Base.ViewModel.MainControls
         private CommunityCommandDetailsViewModel commandDetails;
 
         public ICommand DownloadCommand { get; set; }
-        public ICommand ReviewCommand { get; set; }
-        public ICommand ReportCommand { get; set; }
 
         private bool firstLoadCompleted = false;
         private DateTimeOffset lastCategoryRefresh = DateTimeOffset.MinValue;
@@ -150,21 +148,21 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 await ChannelSession.Services.CommunityCommandsService.DownloadCommand(this.CommandDetails.ID);
             });
+        }
 
-            this.ReviewCommand = this.CreateCommand(async () =>
+        public async Task ReviewCommand(int rating, string review)
+        {
+            await ChannelSession.Services.CommunityCommandsService.AddReview(new CommunityCommandReviewModel()
             {
-                await ChannelSession.Services.CommunityCommandsService.AddReview(new CommunityCommandReviewModel()
-                {
-                    CommandID = this.CommandDetails.ID,
-                    Rating = 5,
-                    Review = "Here's a brand new review!!",
-                });
+                CommandID = this.CommandDetails.ID,
+                Rating = rating,
+                Review = review,
             });
+        }
 
-            this.ReportCommand = this.CreateCommand(async () =>
-            {
-                await ChannelSession.Services.CommunityCommandsService.ReportCommand(this.CommandDetails.ID, "This command has bad stuff in it!");
-            });
+        public async Task ReportCommand(string report)
+        {
+            await ChannelSession.Services.CommunityCommandsService.ReportCommand(this.CommandDetails.ID, report);
         }
 
         protected override async Task OnVisibleInternal()

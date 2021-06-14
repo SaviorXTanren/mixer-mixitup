@@ -1,6 +1,8 @@
-﻿using MixItUp.Base.ViewModel;
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.CommunityCommands;
 using MixItUp.Base.ViewModel.MainControls;
+using MixItUp.WPF.Controls.Dialogs.CommunityCommands;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -49,6 +51,24 @@ namespace MixItUp.WPF.Controls.MainControls
             eventArg.Source = sender;
             var parent = ((Control)sender).Parent as UIElement;
             parent.RaiseEvent(eventArg);
+        }
+
+        private async void ReviewCommandButton_Click(object sender, RoutedEventArgs e)
+        {
+            CommunityCommandsReviewCommandDialogControl dialogControl = new CommunityCommandsReviewCommandDialogControl();
+            if (bool.Equals(await DialogHelper.ShowCustom(dialogControl), true) && !string.IsNullOrEmpty(dialogControl.Review))
+            {
+                await this.viewModel.ReviewCommand(dialogControl.Rating, dialogControl.Review);
+            }
+        }
+
+        private async void ReportCommandButton_Click(object sender, RoutedEventArgs e)
+        {
+            CommunityCommandsReportCommandDialogControl dialogControl = new CommunityCommandsReportCommandDialogControl();
+            if (bool.Equals(await DialogHelper.ShowCustom(dialogControl), true) && !string.IsNullOrEmpty(dialogControl.Report))
+            {
+                await this.viewModel.ReportCommand(dialogControl.Report);
+            }
         }
     }
 }

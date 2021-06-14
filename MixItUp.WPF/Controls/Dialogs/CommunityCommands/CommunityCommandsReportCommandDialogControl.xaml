@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="MixItUp.WPF.Controls.Dialogs.BasicTextEntryDialogControl"
+﻿<UserControl x:Class="MixItUp.WPF.Controls.Dialogs.CommunityCommands.CommunityCommandsReportCommandDialogControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -10,19 +10,20 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid Margin="16" MaxWidth="300">
+    <Grid Margin="16" MaxWidth="400">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" x:Name="DescriptionTextBlock" Width="200" TextWrapping="Wrap" Visibility="Collapsed" Margin="0,0,0,10" />
+        <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.CommunityCommandsReportCommand}" />
 
-        <TextBox Grid.Row="1" x:Name="TextEntryTextBox" Width="200" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{Binding}" />
+        <TextBox Grid.Row="2" x:Name="ReportTextBox" Width="400" Height="150" TextWrapping="Wrap" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Description}" />
 
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="10" />
