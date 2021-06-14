@@ -271,18 +271,19 @@ namespace MixItUp.Base.Services.Trovo
                 }
                 this.messagesProcessed.Add(message.message_id);
 
-                UserViewModel user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Trovo, messageContainer.chats.First().sender_id);
+                UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Trovo, messageContainer.chats.First().sender_id);
                 if (user == null)
                 {
                     UserModel trovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(messageContainer.chats.First().nick_name);
                     if (trovoUser != null)
                     {
-                        user = await ServiceManager.Get<UserService>().AddOrUpdateUser(trovoUser);
+                        user = await UserViewModel.Create(trovoUser);
                     }
                     else
                     {
-                        user = new UserViewModel(message);
+                        user = await UserViewModel.Create(message);
                     }
+                    await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
                 }
 
                 user.SetTrovoChatDetails(message);
@@ -380,7 +381,7 @@ namespace MixItUp.Base.Services.Trovo
                     if (splits.Length == 2)
                     {
                         string gifteeUsername = splits[1];
-                        UserViewModel giftee = ServiceManager.Get<UserService>().GetUserByUsername(gifteeUsername, StreamingPlatformTypeEnum.Trovo);
+                        UserViewModel giftee = ServiceManager.Get<UserService>().GetActiveUserByUsername(gifteeUsername, StreamingPlatformTypeEnum.Trovo);
                         if (giftee == null)
                         {
                             UserModel gifteeTrovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(gifteeUsername);
@@ -390,7 +391,7 @@ namespace MixItUp.Base.Services.Trovo
                             }
                             else
                             {
-                                giftee = new UserViewModel(gifteeTrovoUser);
+                                giftee = await UserViewModel.Create(gifteeTrovoUser);
                             }
                         }
 

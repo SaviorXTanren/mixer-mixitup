@@ -198,15 +198,19 @@ namespace MixItUp.Base.Services.YouTube
 
                     if (message.AuthorDetails?.ChannelId != null)
                     {
-                        UserViewModel user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.YouTube, message.AuthorDetails.ChannelId);
+                        UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.YouTube, message.AuthorDetails.ChannelId);
                         if (user == null)
                         {
                             Channel youtubeUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByID(message.AuthorDetails.ChannelId);
                             if (youtubeUser != null)
                             {
-                                user = await ServiceManager.Get<UserService>().AddOrUpdateUser(youtubeUser);
+                                user = await UserViewModel.Create(youtubeUser);
                             }
-                            user = new UserViewModel(message);
+                            else
+                            {
+                                user = await UserViewModel.Create(message);
+                            }
+                            await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
                         }
                         user.SetYouTubeChatDetails(message);
 

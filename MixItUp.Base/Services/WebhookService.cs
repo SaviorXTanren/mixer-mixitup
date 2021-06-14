@@ -107,7 +107,7 @@ namespace MixItUp.Base.Services
         {
             ChannelSession.ReconnectionOccurred("Webhook Events");
 
-            var twitchUserOAuthToken = ServiceManager.Get<TwitchSessionService>().UserConnection.GetOAuthTokenCopy();
+            var twitchUserOAuthToken = ServiceManager.Get<TwitchSessionService>().UserConnection.Connection.GetOAuthTokenCopy();
             await this.Authenticate(twitchUserOAuthToken?.accessToken);
         }
 

@@ -243,18 +243,19 @@ namespace MixItUp.Base.Services.Glimesh
         {
             if (message != null && !string.IsNullOrEmpty(message.Message))
             {
-                UserViewModel user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, message.User?.id);
+                UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, message.User?.id);
                 if (user == null)
                 {
                     UserModel glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByID(message.User?.id);
                     if (glimeshUser != null)
                     {
-                        user = await ServiceManager.Get<UserService>().AddOrUpdateUser(glimeshUser);
+                        user = await UserViewModel.Create(glimeshUser);
                     }
                     else
                     {
-                        user = new UserViewModel(message);
+                        user = await UserViewModel.Create(message);
                     }
+                    await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
                 }
 
                 user.SetGlimeshChatDetails(message);
@@ -294,10 +295,10 @@ namespace MixItUp.Base.Services.Glimesh
         {
             try
             {
-                UserViewModel user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, follow.Follow.user.id);
+                UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, follow.Follow.user.id);
                 if (user == null)
                 {
-                    user = new UserViewModel(follow.Follow.user);
+                    user = await UserViewModel.Create(follow.Follow.user);
                 }
 
                 EventTrigger trigger = new EventTrigger(EventTypeEnum.GlimeshChannelFollowed, user);

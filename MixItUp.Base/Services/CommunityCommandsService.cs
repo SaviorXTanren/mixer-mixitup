@@ -306,7 +306,7 @@ namespace MixItUp.Base.Services
         {
             if (accessToken == null)
             {
-                var twitchUserOAuthToken = ServiceManager.Get<TwitchSessionService>().UserConnection.GetOAuthTokenCopy();
+                var twitchUserOAuthToken = ServiceManager.Get<TwitchSessionService>().UserConnection.Connection.GetOAuthTokenCopy();
                 var login = new CommunityCommandLoginModel
                 {
                     TwitchAccessToken = twitchUserOAuthToken?.accessToken,

@@ -5670,4 +5670,7 @@ special users that you want to allow more control to such as a Moderator.</value
   <data name="Review" xml:space="preserve">
     <value>Review</value>
   </data>
+  <data name="StreamMarkerDescriptionMustBe140CharactersOrLess" xml:space="preserve">
+    <value>Stream Marker description must be 140 characters or less</value>
+  </data>
 </root>

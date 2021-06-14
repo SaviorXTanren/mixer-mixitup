@@ -123,7 +123,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             }
         }
 
-        public string WinnerUsername { get { return ChannelSession.Services.GiveawayService.Winner?.FullDisplayName ?? string.Empty; } }
+        public string WinnerUsername { get { return ServiceManager.Get<GiveawayService>().Winner?.FullDisplayName ?? string.Empty; } }
 
         public ThreadSafeObservableCollection<GiveawayUser> EnteredUsers { get; private set; } = new ThreadSafeObservableCollection<GiveawayUser>();
 

@@ -487,7 +487,7 @@ namespace MixItUp.Base.Services.Twitch
                         processedUsers.Add(user);
                     }
                 }
-                this.OnUsersJoinOccurred(this, processedUsers);
+                await ServiceManager.Get<ChatService>().UsersJoined(processedUsers);
             }
 
             List<string> leavesToProcess = new List<string>();
@@ -799,7 +799,7 @@ namespace MixItUp.Base.Services.Twitch
                 else
                 {
                     UserViewModel user = await ServiceManager.Get<UserService>().GetUserFullSearch(StreamingPlatformTypeEnum.Twitch, message.UserID, message.UserLogin);
-                    this.OnMessageOccurred(this, new TwitchChatMessageViewModel(message, user));
+                    await ServiceManager.Get<ChatService>().AddMessage(new TwitchChatMessageViewModel(message, user));
                 }
             }
         }

@@ -563,7 +563,7 @@ namespace MixItUp.Base.Model.Currency
                 {
                     if (this.tradeReceiver == null && arguments.Count() >= 2)
                     {
-                        UserViewModel targetUser = await ServiceManager.Get<UserService>().GetUserFullSearch(platform, userID: null, arguments.First());
+                        UserViewModel targetUser = await ServiceManager.Get<UserService>().GetUserFullSearch(user.Platform, userID: null, arguments.First());
                         if (targetUser == null)
                         {
                             await ServiceManager.Get<ChatService>().SendMessage("The specified user does not exist", user.Platform);

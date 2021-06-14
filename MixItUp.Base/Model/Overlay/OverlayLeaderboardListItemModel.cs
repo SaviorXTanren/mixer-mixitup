@@ -164,15 +164,17 @@ namespace MixItUp.Base.Model.Overlay
             {
                 this.userSubDates.Clear();
 
-                foreach (UserSubscriptionModel subscriber in subscribers)
-                {
-                    UserViewModel user = await UserViewModel.Create(subscriber.user);
-                    DateTimeOffset? subDate = TwitchPlatformService.GetTwitchDateTime(subscriber.created_at);
-                    if (subDate.HasValue && this.ShouldIncludeUser(user))
-                    {
-                        this.userSubDates[user.ID] = subDate.GetValueOrDefault();
-                    }
-                }
+                // TODO
+
+                //foreach (UserSubscriptionModel subscriber in subscribers)
+                //{
+                //    UserViewModel user = await UserViewModel.Create(subscriber.user);
+                //    DateTimeOffset? subDate = TwitchPlatformService.GetTwitchDateTime(subscriber.created_at);
+                //    if (subDate.HasValue && this.ShouldIncludeUser(user))
+                //    {
+                //        this.userSubDates[user.ID] = subDate.GetValueOrDefault();
+                //    }
+                //}
 
                 // TODO
 

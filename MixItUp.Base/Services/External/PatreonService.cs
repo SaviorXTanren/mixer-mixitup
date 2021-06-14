@@ -688,7 +688,7 @@ namespace MixItUp.Base.Services.External
                         {
                             EventTrigger trigger = new EventTrigger(EventTypeEnum.PatreonSubscribed);
 
-                            trigger.User = ServiceManager.Get<UserService>().GetUserFullSearch(member.User.Platform, member.User.PlatformUserID, member.User.PlatformUsername);
+                            trigger.User = await ServiceManager.Get<UserService>().GetUserFullSearch(member.User.Platform, member.User.PlatformUserID, member.User.PlatformUsername);
                             if (trigger.User != null)
                             {
                                 trigger.User.Data.PatreonUserID = member.UserID;

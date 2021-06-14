@@ -292,7 +292,7 @@ namespace MixItUp.Base.Services
                 {
                     if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceManager.Get<TwitchSessionService>().UserConnection != null)
                     {
-                        Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
+                        TwitchNewAPI.Users.UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
                         if (twitchUser != null)
                         {
                             return await UserViewModel.Create(twitchUser);
@@ -310,7 +310,7 @@ namespace MixItUp.Base.Services
 
                     if (platform.HasFlag(StreamingPlatformTypeEnum.Glimesh) && ServiceManager.Get<GlimeshSessionService>().UserConnection != null)
                     {
-                        Glimesh.Base.Models.Users.UserModel glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByName(username);
+                        GlimeshBase.Models.Users.UserModel glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByName(username);
                         if (glimeshUser != null)
                         {
                             return await UserViewModel.Create(glimeshUser);
@@ -319,7 +319,7 @@ namespace MixItUp.Base.Services
 
                     if (platform.HasFlag(StreamingPlatformTypeEnum.Trovo) && ServiceManager.Get<TrovoSessionService>().UserConnection != null)
                     {
-                        Trovo.Base.Models.Users.UserModel trovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(username);
+                        TrovoBase.Models.Users.UserModel trovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(username);
                         if (trovoUser != null)
                         {
                             return await UserViewModel.Create(trovoUser);
