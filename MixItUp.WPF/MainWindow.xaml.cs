@@ -255,39 +255,8 @@ namespace MixItUp.WPF
         {
             await DispatcherHelper.Dispatcher.InvokeAsync(async () =>
             {
-                CommandImporterDialogControl dialog = new CommandImporterDialogControl();
-                if (bool.Equals(await DialogHelper.ShowCustom(dialog), true))
-                {
-                    await Task.Delay(500);
-
-                    if (dialog.ViewModel.IsNewCommandSelected)
-                    {
-                        if (dialog.ViewModel.SelectedNewCommandType == command.Type)
-                        {
-                            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(command);
-                            window.CommandSaved += Window_CommandSaved;
-                            window.ForceShow();
-                        }
-                        else
-                        {
-                            CommandEditorWindow window = new CommandEditorWindow(dialog.ViewModel.SelectedNewCommandType, command.Name, command.Actions);
-                            window.CommandSaved += Window_CommandSaved;
-                            window.ForceShow();
-                        }
-                    }
-                    else if (dialog.ViewModel.IsExistingCommandSelected)
-                    {
-                        CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(dialog.ViewModel.SelectedExistingCommand, command.Actions);
-                        window.CommandSaved += Window_CommandSaved;
-                        window.ForceShow();
-                    }
-                }
+                await DialogHelper.ShowCustom(new CommandImporterDialogControl(command));
             });
-        }
-
-        private void Window_CommandSaved(object sender, CommandModelBase command)
-        {
-            GroupedCommandsMainControlViewModelBase.CommandAddedEdited(command);
         }
     }
 }

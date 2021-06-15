@@ -2,6 +2,7 @@
 using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.CommunityCommands;
 using MixItUp.Base.ViewModel.MainControls;
+using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Controls.Dialogs.CommunityCommands;
 using System.Threading.Tasks;
 using System.Windows;
@@ -55,7 +56,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void DownloadCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            await DialogHelper.ShowCustom(new CommunityCommandsDownloadCommandDialogControl(this.viewModel.CommandDetails));
+            await DialogHelper.ShowCustom(new CommandImporterDialogControl(this.viewModel.CommandDetails.PrimaryCommand));
         }
 
         private async void ReviewCommandButton_Click(object sender, RoutedEventArgs e)
