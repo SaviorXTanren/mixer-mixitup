@@ -3,6 +3,7 @@ using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Store;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.CommunityCommands;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace MixItUp.WPF.Windows.Commands
     public partial class CommunityCommandUploadWindow : LoadingWindowBase
     {
         private CommandModelBase command;
+        private CommunityCommandDetailsViewModel ccCommand;
 
         private CommunityCommandUploadModel uploadCommand;
 
@@ -30,53 +32,69 @@ namespace MixItUp.WPF.Windows.Commands
             this.Initialize(this.StatusBar);
         }
 
+        public CommunityCommandUploadWindow(CommunityCommandDetailsViewModel ccCommand)
+        {
+            InitializeComponent();
+
+            this.ccCommand = ccCommand;
+
+            this.Initialize(this.StatusBar);
+        }
+
         protected override async Task OnLoaded()
         {
             await base.OnLoaded();
 
             try
             {
-                this.uploadCommand = new CommunityCommandUploadModel()
+                if (this.command != null)
                 {
-                    ID = this.command.ID,
-                    Name = this.command.Name,
-                };
-
-                this.uploadCommand.SetCommands(new List<CommandModelBase>() { this.command });
-
-                CommunityCommandDetailsModel existingCommand = await ChannelSession.Services.CommunityCommandsService.GetCommandDetails(command.ID);
-                if (existingCommand != null)
-                {
-                    this.uploadCommand.ID = existingCommand.ID;
-                    this.uploadCommand.Description = existingCommand.Description;
-                }
-
-                HashSet<CommunityCommandTagEnum> tags = new HashSet<CommunityCommandTagEnum>();
-                foreach (ActionModelBase action in this.command.Actions)
-                {
-                    if (action is ConditionalActionModel)
+                    this.uploadCommand = new CommunityCommandUploadModel()
                     {
-                        foreach (ActionModelBase subAction in ((ConditionalActionModel)action).Actions)
-                        {
-                            tags.Add((CommunityCommandTagEnum)subAction.Type);
-                        }
-                    }
-                    tags.Add((CommunityCommandTagEnum)action.Type);
-                }
+                        ID = this.command.ID,
+                        Name = this.command.Name,
+                    };
 
-                this.uploadCommand.Tags.Clear();
-                foreach (CommunityCommandTagEnum tag in tags.Take(5))
+                    this.uploadCommand.SetCommands(new List<CommandModelBase>() { this.command });
+
+                    CommunityCommandDetailsModel existingCommand = await ChannelSession.Services.CommunityCommandsService.GetCommandDetails(command.ID);
+                    if (existingCommand != null)
+                    {
+                        this.uploadCommand.ID = existingCommand.ID;
+                        this.uploadCommand.Description = existingCommand.Description;
+                    }
+
+                    HashSet<CommunityCommandTagEnum> tags = new HashSet<CommunityCommandTagEnum>();
+                    foreach (ActionModelBase action in this.command.Actions)
+                    {
+                        if (action is ConditionalActionModel)
+                        {
+                            foreach (ActionModelBase subAction in ((ConditionalActionModel)action).Actions)
+                            {
+                                tags.Add((CommunityCommandTagEnum)subAction.Type);
+                            }
+                        }
+                        tags.Add((CommunityCommandTagEnum)action.Type);
+                    }
+
+                    this.uploadCommand.Tags.Clear();
+                    foreach (CommunityCommandTagEnum tag in tags.Take(5))
+                    {
+                        this.uploadCommand.Tags.Add(tag);
+                    }
+                }
+                else
                 {
-                    this.uploadCommand.Tags.Add(tag);
+                    this.uploadCommand = new CommunityCommandUploadModel()
+                    {
+                        ID = this.ccCommand.ID,
+                        Name = this.ccCommand.Name,
+                        Description = this.ccCommand.Description,
+                    };
                 }
 
                 this.NameTextBox.Text = this.uploadCommand.Name;
                 this.DescriptionTextBox.Text = this.uploadCommand.Description;
-
-                if (tags.Contains(CommunityCommandTagEnum.File) || tags.Contains(CommunityCommandTagEnum.Overlay) || tags.Contains(CommunityCommandTagEnum.Sound))
-                {
-                    this.ExternalAssetsDetectedTextBlock.Visibility = Visibility.Visible;
-                }
             }
             catch (Exception ex)
             {

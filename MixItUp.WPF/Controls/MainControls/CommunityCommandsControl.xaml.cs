@@ -104,7 +104,9 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void EditCommandButton_Click(object sender, RoutedEventArgs e)
         {
-
+            CommunityCommandUploadWindow window = new CommunityCommandUploadWindow(this.viewModel.CommandDetails);
+            window.Closed += (object s, System.EventArgs x) => { this.viewModel.EditMyCommandCommand.Execute(this.viewModel.CommandDetails.ID); };
+            window.Show();
         }
     }
 }

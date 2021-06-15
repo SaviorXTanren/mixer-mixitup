@@ -113,10 +113,19 @@ namespace MixItUp.Base.Services
 
             existingCommand.Name = command.Name;
             existingCommand.Description = command.Description;
-            existingCommand.ImageURL = command.ImageURL;
-            existingCommand.Tags = command.Tags;
-            //existingCommand.ImageURL = command.ImageFileData;
-            existingCommand.Data = command.Data;
+            if (command.Tags.Count > 0)
+            {
+                existingCommand.Tags = command.Tags;
+            }
+            if (command.ImageFileData != null && command.ImageFileData.Length > 0)
+            {
+                //existingCommand.ImageURL = command.ImageFileData;
+                existingCommand.ImageURL = command.ImageURL;
+            }
+            if (!string.IsNullOrEmpty(command.Data))
+            {
+                existingCommand.Data = command.Data;
+            }
 
             return existingCommand;
         }
