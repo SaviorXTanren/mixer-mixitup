@@ -196,7 +196,7 @@
                                     <Image Grid.Column="0" Source="{Binding CommandDetails.UserAvatarURL}" Width="30" Height="30" VerticalAlignment="Center" />
                                     <TextBlock Grid.Column="2" Text="{Binding CommandDetails.Username}" VerticalAlignment="Center" />
 
-                                    <Button Grid.Column="4" Content="{x:Static resx:Resources.Download}" Command="{Binding DownloadCommand}" VerticalAlignment="Center" />
+                                    <Button Grid.Column="4" x:Name="DownloadCommandButton" Content="{x:Static resx:Resources.Download}" Click="DownloadCommandButton_Click" VerticalAlignment="Center" />
 
                                     <Button Grid.Column="6" x:Name="ReviewCommandButton" Content="{x:Static resx:Resources.Review}" Click="ReviewCommandButton_Click" VerticalAlignment="Center" />
 

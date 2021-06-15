@@ -2094,6 +2094,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add the actions from this command to an existing command:.
+        /// </summary>
+        public static string CommunityCommandsAddToExistingCommand {
+            get {
+                return ResourceManager.GetString("CommunityCommandsAddToExistingCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Build a new command from this Community Command:.
+        /// </summary>
+        public static string CommunityCommandsBuildNewCommand {
+            get {
+                return ResourceManager.GetString("CommunityCommandsBuildNewCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download command to *.miucommand file:.
+        /// </summary>
+        public static string CommunityCommandsDownloadToFile {
+            get {
+                return ResourceManager.GetString("CommunityCommandsDownloadToFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please describe why you wish to report this command. Please note that reporting commands should only be used if the command is deemed inappropriate or malicious. For everything else, please leave a Review of the command instead..
         /// </summary>
         public static string CommunityCommandsReportCommand {

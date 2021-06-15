@@ -607,6 +607,9 @@
     <Compile Include="Controls\Dialogs\CommandSelectorDialogControl.xaml.cs">
       <DependentUpon>CommandSelectorDialogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Dialogs\CommunityCommands\CommunityCommandsDownloadCommandDialogControl.xaml.cs">
+      <DependentUpon>CommunityCommandsDownloadCommandDialogControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Dialogs\CommunityCommands\CommunityCommandsReportCommandDialogControl.xaml.cs">
       <DependentUpon>CommunityCommandsReportCommandDialogControl.xaml</DependentUpon>
     </Compile>
@@ -1301,6 +1304,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\CommandSelectorDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\CommunityCommands\CommunityCommandsDownloadCommandDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

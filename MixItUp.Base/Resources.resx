@@ -5681,6 +5681,15 @@ special users that you want to allow more control to such as a Moderator.</value
   <data name="TwitchChannelPointRewardCreationErrorTooManyRewards" xml:space="preserve">
     <value>You have reached the maximum amount of rewards able to be created</value>
   </data>
+  <data name="CommunityCommandsAddToExistingCommand" xml:space="preserve">
+    <value>Add the actions from this command to an existing command:</value>
+  </data>
+  <data name="CommunityCommandsBuildNewCommand" xml:space="preserve">
+    <value>Build a new command from this Community Command:</value>
+  </data>
+  <data name="CommunityCommandsDownloadToFile" xml:space="preserve">
+    <value>Download command to *.miucommand file:</value>
+  </data>
   <data name="CommunityCommandsReportCommand" xml:space="preserve">
     <value>Please describe why you wish to report this command. Please note that reporting commands should only be used if the command is deemed inappropriate or malicious. For everything else, please leave a Review of the command instead.</value>
   </data>

@@ -53,6 +53,11 @@ namespace MixItUp.WPF.Controls.MainControls
             parent.RaiseEvent(eventArg);
         }
 
+        private async void DownloadCommandButton_Click(object sender, RoutedEventArgs e)
+        {
+            await DialogHelper.ShowCustom(new CommunityCommandsDownloadCommandDialogControl(this.viewModel.CommandDetails));
+        }
+
         private async void ReviewCommandButton_Click(object sender, RoutedEventArgs e)
         {
             CommunityCommandsReviewCommandDialogControl dialogControl = new CommunityCommandsReviewCommandDialogControl();
