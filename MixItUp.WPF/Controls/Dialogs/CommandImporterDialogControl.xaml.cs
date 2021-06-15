@@ -31,6 +31,11 @@ namespace MixItUp.WPF.Controls.Dialogs
 
         private async void OkButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
+            if (this.ViewModel.IsExistingCommandSelected && this.ViewModel.SelectedExistingCommand == null)
+            {
+                return;
+            }
+
             MaterialDesignThemes.Wpf.DialogHost.CloseDialogCommand.Execute(true, this);
 
             await Task.Delay(500);

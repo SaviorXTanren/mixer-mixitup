@@ -3,6 +3,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.CommunityCommands;
 using StreamingClient.Base.Util;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -10,6 +11,8 @@ namespace MixItUp.Base.ViewModel.MainControls
 {
     public class CommunityCommandsMainControlViewModel : WindowControlViewModelBase
     {
+        public HashSet<Guid> DownloadedCommandsCache = new HashSet<Guid>();
+
         public ICommand BackCommand { get; set; }
 
         public bool ShowHome

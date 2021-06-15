@@ -5,6 +5,7 @@ using MixItUp.Base.ViewModel.CommunityCommands;
 using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Controls.Dialogs.CommunityCommands;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -66,9 +67,20 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void DownloadCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            await ChannelSession.Services.CommunityCommandsService.DownloadCommand(this.viewModel.CommandDetails.ID);
+            if (bool.Equals(await DialogHelper.ShowCustom(new CommandImporterDialogControl(this.viewModel.CommandDetails.PrimaryCommand)), true))
+            {
+                if (!this.viewModel.DownloadedCommandsCache.Contains(this.viewModel.CommandDetails.ID))
+                {
+                    this.viewModel.DownloadedCommandsCache.Add(this.viewModel.CommandDetails.ID);
 
-            await DialogHelper.ShowCustom(new CommandImporterDialogControl(this.viewModel.CommandDetails.PrimaryCommand));
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                    {
+                        await ChannelSession.Services.CommunityCommandsService.DownloadCommand(this.viewModel.CommandDetails.ID);
+                    }, new CancellationToken());
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                }
+            }
         }
 
         private async void ReviewCommandButton_Click(object sender, RoutedEventArgs e)
