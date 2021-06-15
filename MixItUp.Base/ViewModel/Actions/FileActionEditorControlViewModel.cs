@@ -119,7 +119,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowReadFromFileGrid)
             {
-                if (string.IsNullOrEmpty(this.TransferText))
+                if (string.IsNullOrEmpty(this.TransferText) || !SpecialIdentifierStringBuilder.IsValidSpecialIdentifier(this.TransferText))
                 {
                     return Task.FromResult(new Result(MixItUp.Base.Resources.FileActionInvalidSpecialIdentifier));
                 }
