@@ -51,7 +51,7 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
         {
             this.model = model;
 
-            this.Command = this.model.GetCommand();
+            this.Commands = this.model.GetCommands();
 
             foreach (CommunityCommandReviewModel review in this.model.Reviews.OrderByDescending(r => r.DateTime))
             {
@@ -59,8 +59,10 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
             }
         }
 
-        public CommandModelBase Command { get; set; }
+        public List<CommandModelBase> Commands { get; set; } = new List<CommandModelBase>();
 
         public List<CommunityCommandReviewViewModel> Reviews { get; } = new List<CommunityCommandReviewViewModel>();
+
+        public CommandModelBase PrimaryCommand { get { return this.Commands.FirstOrDefault(); } }
     }
 }

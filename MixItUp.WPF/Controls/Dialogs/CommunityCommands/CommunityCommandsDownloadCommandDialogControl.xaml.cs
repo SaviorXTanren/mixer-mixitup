@@ -21,7 +21,7 @@ namespace MixItUp.WPF.Controls.Dialogs.CommunityCommands
 
         private async void DownloadToFileButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (await CommandEditorWindowViewModelBase.ExportCommandToFile(command.Command))
+            if (await CommandEditorWindowViewModelBase.ExportCommandToFile(command.PrimaryCommand))
             {
                 DialogHelper.CloseCurrent();
             }

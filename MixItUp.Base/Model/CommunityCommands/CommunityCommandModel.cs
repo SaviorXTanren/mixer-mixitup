@@ -84,11 +84,11 @@ namespace MixItUp.Base.Model.Store
         [DataMember]
         public List<CommunityCommandReviewModel> Reviews { get; set; } = new List<CommunityCommandReviewModel>();
 
-        public CommandModelBase GetCommand()
+        public List<CommandModelBase> GetCommands()
         {
             try
             {
-                return JSONSerializerHelper.DeserializeFromString<CommandModelBase>(this.Data);
+                return JSONSerializerHelper.DeserializeFromString<List<CommandModelBase>>(this.Data);
             }
             catch (Exception ex)
             {
@@ -97,11 +97,11 @@ namespace MixItUp.Base.Model.Store
             return null;
         }
 
-        public void SetCommand(CommandModelBase command)
+        public void SetCommands(IEnumerable<CommandModelBase> commands)
         {
             try
             {
-                this.Data = JSONSerializerHelper.SerializeToString(command);
+                this.Data = JSONSerializerHelper.SerializeToString(commands);
             }
             catch (Exception ex)
             {

@@ -221,7 +221,7 @@ namespace MixItUp.Base.Services
 
             ChatCommandModel command = new ChatCommandModel(storeCommand.Name, new HashSet<string>() { "test" });
             command.Actions.Add(new ChatActionModel("Hello World!"));
-            storeCommand.SetCommand(command);
+            storeCommand.SetCommands(new List<CommandModelBase>() { command });
 
             return storeCommand;
         }
