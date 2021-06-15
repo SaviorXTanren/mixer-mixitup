@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.CommunityCommands;
 using MixItUp.Base.ViewModel.MainControls;
@@ -35,15 +36,6 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.viewModel.OnVisible();
         }
 
-        private void CommandsList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (e.AddedItems.Count > 0 && e.AddedItems[0] is CommunityCommandViewModel)
-            {
-                this.viewModel.DetailsCommand.Execute(((CommunityCommandViewModel)e.AddedItems[0]).ID);
-                ((ListView)sender).SelectedItem = null;
-            }
-        }
-
         private void CommandsList_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             e.Handled = true;
@@ -54,8 +46,28 @@ namespace MixItUp.WPF.Controls.MainControls
             parent.RaiseEvent(eventArg);
         }
 
+        private void CommandsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count > 0 && e.AddedItems[0] is CommunityCommandViewModel)
+            {
+                this.viewModel.DetailsCommand.Execute(((CommunityCommandViewModel)e.AddedItems[0]).ID);
+                ((ListView)sender).SelectedItem = null;
+            }
+        }
+
+        private void MyCommandsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count > 0 && e.AddedItems[0] is CommunityCommandViewModel)
+            {
+                this.viewModel.EditMyCommandCommand.Execute(((CommunityCommandViewModel)e.AddedItems[0]).ID);
+                ((ListView)sender).SelectedItem = null;
+            }
+        }
+
         private async void DownloadCommandButton_Click(object sender, RoutedEventArgs e)
         {
+            await ChannelSession.Services.CommunityCommandsService.DownloadCommand(this.viewModel.CommandDetails.ID);
+
             await DialogHelper.ShowCustom(new CommandImporterDialogControl(this.viewModel.CommandDetails.PrimaryCommand));
         }
 
@@ -74,6 +86,15 @@ namespace MixItUp.WPF.Controls.MainControls
             if (bool.Equals(await DialogHelper.ShowCustom(dialogControl), true) && !string.IsNullOrEmpty(dialogControl.Report))
             {
                 await this.viewModel.ReportCommand(dialogControl.Report);
+            }
+        }
+
+        private async void EditCommandButton_Click(object sender, RoutedEventArgs e)
+        {
+            CommunityCommandsReviewCommandDialogControl dialogControl = new CommunityCommandsReviewCommandDialogControl();
+            if (bool.Equals(await DialogHelper.ShowCustom(dialogControl), true) && !string.IsNullOrEmpty(dialogControl.Review))
+            {
+                await this.viewModel.ReviewCommand(dialogControl.Rating, dialogControl.Review);
             }
         }
     }

@@ -2112,11 +2112,47 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure you wish to delete this Community Command?.
+        /// </summary>
+        public static string CommunityCommandsDeleteMyCommandConfirmation {
+            get {
+                return ResourceManager.GetString("CommunityCommandsDeleteMyCommandConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}M+.
+        /// </summary>
+        public static string CommunityCommandsDownloadsMillionFormat {
+            get {
+                return ResourceManager.GetString("CommunityCommandsDownloadsMillionFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}K+.
+        /// </summary>
+        public static string CommunityCommandsDownloadsThousandsFormat {
+            get {
+                return ResourceManager.GetString("CommunityCommandsDownloadsThousandsFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Download command to *.miucommand file:.
         /// </summary>
         public static string CommunityCommandsDownloadToFile {
             get {
                 return ResourceManager.GetString("CommunityCommandsDownloadToFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My Commands.
+        /// </summary>
+        public static string CommunityCommandsMyCommands {
+            get {
+                return ResourceManager.GetString("CommunityCommandsMyCommands", resourceCulture);
             }
         }
         

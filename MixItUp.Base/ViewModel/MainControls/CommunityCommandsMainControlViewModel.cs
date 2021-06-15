@@ -75,7 +75,24 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private CommunityCommandDetailsViewModel commandDetails;
 
-        public ICommand DownloadCommand { get; set; }
+        public ICommand MyCommandsCommand { get; set; }
+
+        public bool ShowMyCommands
+        {
+            get { return this.showMyCommands; }
+            set
+            {
+                this.showMyCommands = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool showMyCommands;
+
+        public ThreadSafeObservableCollection<CommunityCommandViewModel> MyCommands { get; set; } = new ThreadSafeObservableCollection<CommunityCommandViewModel>();
+
+        public ICommand EditMyCommandCommand { get; set; }
+
+        public ICommand DeleteMyCommandCommand { get; set; }
 
         private bool firstLoadCompleted = false;
         private DateTimeOffset lastCategoryRefresh = DateTimeOffset.MinValue;
@@ -91,15 +108,24 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
                 else if (this.ShowDetails)
                 {
-                    if (this.SearchResults.Count == 0)
-                    {
-                        await this.NavigateToCategories();
-                    }
-                    else
+                    if (this.SearchResults.Count > 0)
                     {
                         this.ClearAllShows();
                         this.ShowSearch = true;
                     }
+                    else if (this.MyCommands.Count > 0)
+                    {
+                        this.ClearAllShows();
+                        this.ShowMyCommands = true;
+                    }
+                    else
+                    {
+                        await this.NavigateToCategories();
+                    }
+                }
+                else if (this.ShowMyCommands)
+                {
+                    await this.NavigateToCategories();
                 }
             });
 
@@ -144,9 +170,59 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
             });
 
-            this.DownloadCommand = this.CreateCommand(async () =>
+            this.MyCommandsCommand = this.CreateCommand(async () =>
             {
-                await ChannelSession.Services.CommunityCommandsService.DownloadCommand(this.CommandDetails.ID);
+                try
+                {
+                    this.MyCommands.Clear();
+                    foreach (CommunityCommandModel command in await ChannelSession.Services.CommunityCommandsService.GetMyCommands())
+                    {
+                        this.MyCommands.Add(new CommunityCommandViewModel(command));
+                    }
+
+                    this.ClearAllShows();
+                    this.ShowMyCommands = true;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+            });
+
+            this.EditMyCommandCommand = this.CreateCommand(async (id) =>
+            {
+                try
+                {
+                    CommunityCommandDetailsModel commandDetails = await ChannelSession.Services.CommunityCommandsService.GetCommandDetails((Guid)id);
+                    if (commandDetails != null)
+                    {
+                        this.CommandDetails = new MyCommunityCommandDetailsViewModel(commandDetails);
+
+                        this.ClearAllShows();
+                        this.ShowDetails = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+            });
+
+            this.DeleteMyCommandCommand = this.CreateCommand(async () =>
+            {
+                try
+                {
+                    if (this.CommandDetails.IsMyCommand && await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.CommunityCommandsDeleteMyCommandConfirmation))
+                    {
+                        await ChannelSession.Services.CommunityCommandsService.DeleteCommand(this.CommandDetails.ID);
+
+                        this.MyCommandsCommand.Execute(null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
             });
         }
 
@@ -207,6 +283,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.ShowHome = false;
             this.ShowSearch = false;
             this.ShowDetails = false;
+            this.ShowMyCommands = false;
         }
     }
 }

@@ -567,6 +567,12 @@
     <Compile Include="Controls\Commands\UnlockCommandControl.xaml.cs">
       <DependentUpon>UnlockCommandControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\CommunityCommands\CommunityCommandListingLargeControl.xaml.cs">
+      <DependentUpon>CommunityCommandListingLargeControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CommunityCommands\CommunityCommandListingSmallControl.xaml.cs">
+      <DependentUpon>CommunityCommandListingSmallControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Currency\UserCurrencyIndividualEditorControl.xaml.cs">
       <DependentUpon>UserCurrencyIndividualEditorControl.xaml</DependentUpon>
     </Compile>
@@ -1249,6 +1255,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Commands\UnlockCommandControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\CommunityCommands\CommunityCommandListingLargeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\CommunityCommands\CommunityCommandListingSmallControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

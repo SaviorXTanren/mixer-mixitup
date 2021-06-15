@@ -40,6 +40,25 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
         public string LastUpdatedString { get { return this.LastUpdated.ToFriendlyDateTimeString(); } }
 
         public string TagsDisplayString { get { return MixItUp.Base.Resources.TagsHeader + " " + string.Join(", ", this.Tags.Select(t => EnumLocalizationHelper.GetLocalizedName(t))); } }
+
+        public string DownloadsString
+        {
+            get
+            {
+                if (this.Downloads > 1000000)
+                {
+                    return string.Format(MixItUp.Base.Resources.CommunityCommandsDownloadsMillionFormat, (int)(this.Downloads / 1000000));
+                }
+                else if (this.Downloads > 1000)
+                {
+                    return string.Format(MixItUp.Base.Resources.CommunityCommandsDownloadsThousandsFormat, (int)(this.Downloads / 1000));
+                }
+                else
+                {
+                    return this.Downloads.ToString();
+                }
+            }
+        }
     }
 
     public class CommunityCommandDetailsViewModel : CommunityCommandViewModel
@@ -59,10 +78,27 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
             }
         }
 
+        public virtual bool IsMyCommand { get { return false; } }
+
+        public bool IsPublicCommand { get { return !this.IsMyCommand; } }
+
         public List<CommandModelBase> Commands { get; set; } = new List<CommandModelBase>();
 
         public List<CommunityCommandReviewViewModel> Reviews { get; } = new List<CommunityCommandReviewViewModel>();
 
         public CommandModelBase PrimaryCommand { get { return this.Commands.FirstOrDefault(); } }
+    }
+
+    public class MyCommunityCommandDetailsViewModel : CommunityCommandDetailsViewModel
+    {
+        private CommunityCommandDetailsModel model;
+
+        public MyCommunityCommandDetailsViewModel(CommunityCommandDetailsModel model)
+            : base(model)
+        {
+            this.model = model;
+        }
+
+        public override bool IsMyCommand { get { return true; } }
     }
 }

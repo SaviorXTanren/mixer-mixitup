@@ -5690,7 +5690,19 @@ special users that you want to allow more control to such as a Moderator.</value
   <data name="CommunityCommandsDownloadToFile" xml:space="preserve">
     <value>Download command to *.miucommand file:</value>
   </data>
+  <data name="CommunityCommandsMyCommands" xml:space="preserve">
+    <value>My Commands</value>
+  </data>
   <data name="CommunityCommandsReportCommand" xml:space="preserve">
     <value>Please describe why you wish to report this command. Please note that reporting commands should only be used if the command is deemed inappropriate or malicious. For everything else, please leave a Review of the command instead.</value>
+  </data>
+  <data name="CommunityCommandsDeleteMyCommandConfirmation" xml:space="preserve">
+    <value>Are you sure you wish to delete this Community Command?</value>
+  </data>
+  <data name="CommunityCommandsDownloadsMillionFormat" xml:space="preserve">
+    <value>{0}M+</value>
+  </data>
+  <data name="CommunityCommandsDownloadsThousandsFormat" xml:space="preserve">
+    <value>{0}K+</value>
   </data>
 </root>

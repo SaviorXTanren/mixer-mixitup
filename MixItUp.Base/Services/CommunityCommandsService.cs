@@ -151,7 +151,9 @@ namespace MixItUp.Base.Services
         {
             await Task.Delay(1000);
 
-            return this.commandCache.ToList();
+            var myCommands = this.commandCache.ToList();
+            myCommands.Reverse();
+            return myCommands.Take(10);
         }
 
         public async Task<CommunityCommandReviewModel> AddReview(CommunityCommandReviewModel review)
@@ -196,7 +198,7 @@ namespace MixItUp.Base.Services
                 ImageURL = "https://appsgeyser.com/img/store_icon.png",
                 Username = "Joe Smoe",
                 UserAvatarURL = "https://static-cdn.jtvnw.net/jtv_user_pictures/45182012-95d6-4704-9863-82ff3fbaf48e-profile_image-70x70.png",
-                Downloads = 1234,
+                Downloads = RandomHelper.GenerateRandomNumber(1, 999999999),
             };
 
             foreach (CommunityCommandTagEnum tag in EnumHelper.GetEnumList<CommunityCommandTagEnum>().Shuffle().Take(5))
@@ -212,7 +214,7 @@ namespace MixItUp.Base.Services
                     CommandID = storeCommand.ID,
                     Username = "Joe Smoe",
                     UserAvatarURL = "https://static-cdn.jtvnw.net/jtv_user_pictures/45182012-95d6-4704-9863-82ff3fbaf48e-profile_image-70x70.png",
-                    Rating = i,
+                    Rating = RandomHelper.GenerateRandomNumber(1, 5),
                     Review = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis viverra nibh cras pulvinar mattis. At elementum eu facilisis sed odio morbi quis commodo. Malesuada fames ac turpis egestas. In pellentesque massa placerat duis ultricies. Porttitor massa id neque aliquam vestibulum. Lorem ipsum dolor sit amet consectetur adipiscing elit. Arcu non odio euismod lacinia at quis. Nunc mattis enim ut tellus elementum sagittis. Feugiat in fermentum posuere urna nec tincidunt praesent semper feugiat.",
                     DateTime = DateTimeOffset.Now
                 });
