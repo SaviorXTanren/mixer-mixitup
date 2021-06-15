@@ -1,14 +1,16 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Store;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
 using MixItUp.WPF.Controls.Commands;
+using MixItUp.WPF.Controls.Dialogs.CommunityCommands;
 using StreamingClient.Base.Util;
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -274,6 +276,20 @@ namespace MixItUp.WPF.Windows.Commands
                 this.ActionsGrid.Visibility = Visibility.Visible;
                 this.ImportCommandVisualGrid.Visibility = Visibility.Hidden;
             }
+        }
+
+        private async void UploadCommunityCommandButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.ViewModel.StartLoadingOperation();
+
+            CommandModelBase command = await this.viewModel.ValidateAndBuildCommand();
+            if (command != null)
+            {
+                CommunityCommandUploadWindow window = new CommunityCommandUploadWindow(command);
+                window.Show();
+            }
+
+            this.ViewModel.EndLoadingOperation();
         }
     }
 }

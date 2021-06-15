@@ -5705,4 +5705,28 @@ special users that you want to allow more control to such as a Moderator.</value
   <data name="CommunityCommandsDownloadsThousandsFormat" xml:space="preserve">
     <value>{0}K+</value>
   </data>
+  <data name="CommunityCommandsUploadCommunityCommand" xml:space="preserve">
+    <value>Upload Command</value>
+  </data>
+  <data name="CommandEditor" xml:space="preserve">
+    <value>Command Editor</value>
+  </data>
+  <data name="CommunityCommandsExternalAssetActionsDetected" xml:space="preserve">
+    <value>The following command contains actions that may use external assets in some way (EX: Sound, Overlay, File). When this action is uploaded, it WILL NOT include these external assets, just the actions themselves. We encourage creators to explain what the intent of these actions are or to upload these assets somewhere online and either include the links to them in the actions themselves or a link for where to download them in your description.</value>
+  </data>
+  <data name="CommunityCommandsImageFilePath" xml:space="preserve">
+    <value>Image File Path (Optional)</value>
+  </data>
+  <data name="CommunityCommandsUploadInvalidDescription" xml:space="preserve">
+    <value>A valid description must be specified</value>
+  </data>
+  <data name="CommunityCommandsUploadInvalidImageFile" xml:space="preserve">
+    <value>A valid image file must be selected if used</value>
+  </data>
+  <data name="CommunityCommandsUploadInvalidName" xml:space="preserve">
+    <value>A valid name must be specified</value>
+  </data>
+  <data name="MissingTextHintWarning" xml:space="preserve">
+    <value>Missing Text</value>
+  </data>
 </root>

@@ -1,0 +1,71 @@
+﻿<Windows:LoadingWindowBase x:Class="MixItUp.WPF.Windows.Commands.CommunityCommandUploadWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+        xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
+        xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+        xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                           
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+                           
+        mc:Ignorable="d"
+        Title="{x:Static resx:Resources.CommunityCommandsUploadCommunityCommand}" Height="600" Width="600">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
+
+        <Grid Grid.Row="0" Margin="16,0" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBox Grid.Row="0" x:Name="NameTextBox" Width="600" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" />
+
+            <TextBox Grid.Row="2" x:Name="DescriptionTextBox" Width="600" Height="200" TextWrapping="Wrap" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Description}" />
+
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" x:Name="ImageFilePathTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommunityCommandsImageFilePath}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <Button Grid.Column="2" x:Name="BrowseImageFilePathButton" Content="{x:Static resx:Resources.Browse}" Click="BrowseImageFilePathButton_Click" />
+            </Grid>
+
+            <TextBlock Grid.Row="6" x:Name="ExternalAssetsDetectedTextBlock" Text="{x:Static resx:Resources.CommunityCommandsExternalAssetActionsDetected}" Visibility="Hidden" FontWeight="Bold" TextDecorations="Underline" TextWrapping="Wrap" Margin="0,20" />
+
+            <Grid Grid.Row="7" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" x:Name="UploadButton" Content="{x:Static resx:Resources.Upload}" Click="UploadButton_Click" />
+
+                <Button Grid.Column="2" x:Name="CancelButton" Content="{x:Static resx:Resources.Cancel}" Click="CancelButton_Click" />
+            </Grid>
+        </Grid>
+
+        <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />
+    </Grid>
+</Windows:LoadingWindowBase>

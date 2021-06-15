@@ -1974,6 +1974,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Command Editor.
+        /// </summary>
+        public static string CommandEditor {
+            get {
+                return ResourceManager.GetString("CommandEditor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Command Group.
         /// </summary>
         public static string CommandGroup {
@@ -2148,6 +2157,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The following command contains actions that may use external assets in some way (EX: Sound, Overlay, File). When this action is uploaded, it WILL NOT include these external assets, just the actions themselves. We encourage creators to explain what the intent of these actions are or to upload these assets somewhere online and either include the links to them in the actions themselves or a link for where to download them in your description..
+        /// </summary>
+        public static string CommunityCommandsExternalAssetActionsDetected {
+            get {
+                return ResourceManager.GetString("CommunityCommandsExternalAssetActionsDetected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Image File Path (Optional).
+        /// </summary>
+        public static string CommunityCommandsImageFilePath {
+            get {
+                return ResourceManager.GetString("CommunityCommandsImageFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to My Commands.
         /// </summary>
         public static string CommunityCommandsMyCommands {
@@ -2162,6 +2189,42 @@ namespace MixItUp.Base {
         public static string CommunityCommandsReportCommand {
             get {
                 return ResourceManager.GetString("CommunityCommandsReportCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload Command.
+        /// </summary>
+        public static string CommunityCommandsUploadCommunityCommand {
+            get {
+                return ResourceManager.GetString("CommunityCommandsUploadCommunityCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid description must be specified.
+        /// </summary>
+        public static string CommunityCommandsUploadInvalidDescription {
+            get {
+                return ResourceManager.GetString("CommunityCommandsUploadInvalidDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid image file must be selected if used.
+        /// </summary>
+        public static string CommunityCommandsUploadInvalidImageFile {
+            get {
+                return ResourceManager.GetString("CommunityCommandsUploadInvalidImageFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid name must be specified.
+        /// </summary>
+        public static string CommunityCommandsUploadInvalidName {
+            get {
+                return ResourceManager.GetString("CommunityCommandsUploadInvalidName", resourceCulture);
             }
         }
         
@@ -8633,6 +8696,15 @@ namespace MixItUp.Base {
         public static string MinValue {
             get {
                 return ResourceManager.GetString("MinValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing Text.
+        /// </summary>
+        public static string MissingTextHintWarning {
+            get {
+                return ResourceManager.GetString("MissingTextHintWarning", resourceCulture);
             }
         }
         

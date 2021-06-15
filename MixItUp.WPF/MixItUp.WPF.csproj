@@ -982,6 +982,9 @@
     <Compile Include="Windows\Commands\CommandEditorWindow.xaml.cs">
       <DependentUpon>CommandEditorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Commands\CommunityCommandUploadWindow.xaml.cs">
+      <DependentUpon>CommunityCommandUploadWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Commands\GameCommandEditorWindow.xaml.cs">
       <DependentUpon>GameCommandEditorWindow.xaml</DependentUpon>
     </Compile>
@@ -1829,6 +1832,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Commands\CommandEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Commands\CommunityCommandUploadWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

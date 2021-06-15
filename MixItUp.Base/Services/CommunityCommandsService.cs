@@ -20,7 +20,7 @@ namespace MixItUp.Base.Services
         Task<IEnumerable<CommunityCommandCategoryModel>> GetHomeCategories();
         Task<IEnumerable<CommunityCommandModel>> SearchCommands(string searchText);
         Task<CommunityCommandDetailsModel> GetCommandDetails(Guid id);
-        Task<CommunityCommandDetailsModel> AddOrUpdateCommand(CommunityCommandDetailsModel command);
+        Task<CommunityCommandDetailsModel> AddOrUpdateCommand(CommunityCommandUploadModel command);
         Task DeleteCommand(Guid id);
         Task ReportCommand(Guid id, string report);
         Task<IEnumerable<CommunityCommandDetailsModel>> GetMyCommands();
@@ -100,29 +100,25 @@ namespace MixItUp.Base.Services
             return this.commandCache.FirstOrDefault(c => c.ID.Equals(id));
         }
 
-        public async Task<CommunityCommandDetailsModel> AddOrUpdateCommand(CommunityCommandDetailsModel command)
+        public async Task<CommunityCommandDetailsModel> AddOrUpdateCommand(CommunityCommandUploadModel command)
         {
             await Task.Delay(1000);
 
             CommunityCommandDetailsModel existingCommand = this.commandCache.FirstOrDefault(c => c.ID.Equals(command.ID));
-            if (existingCommand != null)
+            if (existingCommand == null)
             {
-                existingCommand.Name = command.Name;
-                existingCommand.Description = command.Description;
-                existingCommand.ImageURL = command.ImageURL;
-                existingCommand.Tags = command.Tags;
-                existingCommand.Username = command.Username;
-                existingCommand.UserAvatarURL = command.UserAvatarURL;
-                existingCommand.Data = command.Data;
+                existingCommand = this.GenerateTestCommand(command.Name);
+                this.commandCache.Add(existingCommand);
+            }
 
-                return existingCommand;
-            }
-            else
-            {
-                command.ID = Guid.NewGuid();
-                this.commandCache.Add(command);
-                return command;
-            }
+            existingCommand.Name = command.Name;
+            existingCommand.Description = command.Description;
+            existingCommand.ImageURL = command.ImageURL;
+            existingCommand.Tags = command.Tags;
+            //existingCommand.ImageURL = command.ImageFileData;
+            existingCommand.Data = command.Data;
+
+            return existingCommand;
         }
 
         public async Task DeleteCommand(Guid id)
