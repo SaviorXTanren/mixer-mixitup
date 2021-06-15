@@ -2,6 +2,7 @@
 using MixItUp.Base.ViewModel.Dialogs;
 using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Windows.Commands;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -44,6 +45,7 @@ namespace MixItUp.WPF.Controls.Dialogs
             {
                 if (this.ViewModel.SelectedNewCommandType == this.command.Type)
                 {
+                    this.command.ID = Guid.NewGuid();
                     CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(this.command);
                     window.CommandSaved += Window_CommandSaved;
                     window.ForceShow();
