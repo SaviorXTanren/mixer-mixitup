@@ -81,20 +81,24 @@ namespace MixItUp.Base.Model.Commands.Games
                 if (parameters.User == this.runParameters.TargetUser)
                 {
                     this.targetParameters = parameters;
+                    this.targetParameters.Arguments = this.runParameters.Arguments;
 
                     this.gameActive = false;
 
                     this.runParameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.GetPrimaryBetAmount(this.runParameters).ToString();
-                    this.SetGameWinners(this.runParameters, new List<CommandParametersModel>() { this.runParameters });
 
                     if (this.GenerateProbability() <= this.SuccessfulOutcome.GetRoleProbabilityPayout(this.runParameters.User).Probability)
                     {
+                        this.SetGameWinners(this.runParameters, new List<CommandParametersModel>() { this.runParameters });
+
                         this.PerformPrimaryMultiplierPayout(this.runParameters, 2);
                         this.PerformPrimaryMultiplierPayout(this.targetParameters, -1);
                         await this.RunSubCommand(this.SuccessfulOutcome.Command, this.runParameters);
                     }
                     else
                     {
+                        this.SetGameWinners(this.runParameters, new List<CommandParametersModel>() { this.targetParameters });
+
                         this.PerformPrimaryMultiplierPayout(this.targetParameters, 1);
                         await this.RunSubCommand(this.FailedCommand, this.runParameters);
                     }
