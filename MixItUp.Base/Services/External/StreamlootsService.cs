@@ -269,14 +269,17 @@ namespace MixItUp.Base.Services.External
                 UserViewModel user = this.GetUser(purchase.data.Username);
                 UserViewModel giftee = (string.IsNullOrEmpty(purchase.data.Giftee)) ? null : this.GetUser(purchase.data.Giftee);
 
-                EventTrigger trigger = new EventTrigger(EventTypeEnum.StreamlootsPackPurchased, user);
-                trigger.SpecialIdentifiers["streamlootspurchasequantity"] = purchase.data.Quantity.ToString();
+                CommandParametersModel parameters = new CommandParametersModel(user);
+                parameters.SpecialIdentifiers["streamlootspurchasequantity"] = purchase.data.Quantity.ToString();
                 if (giftee != null)
                 {
-                    trigger.Type = EventTypeEnum.StreamlootsPackGifted;
-                    trigger.Arguments.Add(giftee.Username);
+                    parameters.Arguments.Add(giftee.Username);
+                    await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.StreamlootsPackGifted, parameters);
                 }
-                await ChannelSession.Services.Events.PerformEvent(trigger);
+                else
+                {
+                    await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.StreamlootsPackPurchased, parameters);
+                }
 
                 GlobalEvents.StreamlootsPurchaseOccurred(new Tuple<UserViewModel, int>(user, purchase.data.Quantity));
 
@@ -299,21 +302,21 @@ namespace MixItUp.Base.Services.External
             {
                 UserViewModel user = this.GetUser(card.data.Username);
 
-                Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
-                eventCommandSpecialIdentifiers["streamlootscardname"] = card.data.cardName;
-                eventCommandSpecialIdentifiers["streamlootscarddescription"] = card.data.description;
-                eventCommandSpecialIdentifiers["streamlootscardimage"] = card.imageUrl;
-                eventCommandSpecialIdentifiers["streamlootscardhasvideo"] = (!string.IsNullOrEmpty(card.videoUrl)).ToString();
-                eventCommandSpecialIdentifiers["streamlootscardvideo"] = card.videoUrl;
-                eventCommandSpecialIdentifiers["streamlootscardsound"] = card.soundUrl;
-                eventCommandSpecialIdentifiers["streamlootscardalertmessage"] = card.message;
+                Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+                specialIdentifiers["streamlootscardname"] = card.data.cardName;
+                specialIdentifiers["streamlootscarddescription"] = card.data.description;
+                specialIdentifiers["streamlootscardimage"] = card.imageUrl;
+                specialIdentifiers["streamlootscardhasvideo"] = (!string.IsNullOrEmpty(card.videoUrl)).ToString();
+                specialIdentifiers["streamlootscardvideo"] = card.videoUrl;
+                specialIdentifiers["streamlootscardsound"] = card.soundUrl;
+                specialIdentifiers["streamlootscardalertmessage"] = card.message;
 
                 string message = card.data.Message;
                 if (string.IsNullOrEmpty(message))
                 {
                     message = card.data.LongMessage;
                 }
-                eventCommandSpecialIdentifiers["streamlootsmessage"] = message;
+                specialIdentifiers["streamlootsmessage"] = message;
 
                 List<string> arguments = new List<string>();
                 if (!string.IsNullOrEmpty(message))
@@ -321,15 +324,12 @@ namespace MixItUp.Base.Services.External
                     arguments = new List<string>(message.Split(' '));
                 }
 
-                EventTrigger trigger = new EventTrigger(EventTypeEnum.StreamlootsCardRedeemed, user);
-                trigger.Arguments = arguments;
-                trigger.SpecialIdentifiers = eventCommandSpecialIdentifiers;
-                await ChannelSession.Services.Events.PerformEvent(trigger);
+                await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.StreamlootsCardRedeemed, new CommandParametersModel(user, arguments, specialIdentifiers));
 
                 StreamlootsCardCommandModel command = ChannelSession.Services.Command.StreamlootsCardCommands.FirstOrDefault(c => string.Equals(c.Name, card.data.cardName, StringComparison.CurrentCultureIgnoreCase));
                 if (command != null)
                 {
-                    Dictionary<string, string> cardsCommandSpecialIdentifiers = new Dictionary<string, string>(eventCommandSpecialIdentifiers);
+                    Dictionary<string, string> cardsCommandSpecialIdentifiers = new Dictionary<string, string>(specialIdentifiers);
                     await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(user, platform: user.Platform, arguments: arguments, specialIdentifiers: cardsCommandSpecialIdentifiers));
                 }
 

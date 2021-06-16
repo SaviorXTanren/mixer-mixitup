@@ -365,9 +365,7 @@ namespace MixItUp.Base.Services
 
                         if (!string.IsNullOrEmpty(message.PlainTextMessage))
                         {
-                            EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatWhisperReceived, message.User);
-                            trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
-                            await ChannelSession.Services.Events.PerformEvent(trigger);
+                            await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.ChatWhisperReceived, new CommandParametersModel(message));
                         }
 
                         // Don't send this if it's in response to another "You are whisperer #" message
@@ -405,10 +403,7 @@ namespace MixItUp.Base.Services
 
                         if (!string.IsNullOrEmpty(message.PlainTextMessage))
                         {
-                            EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatMessageReceived, message.User);
-                            trigger.Arguments = new List<string>(message.ToArguments());
-                            trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
-                            await ChannelSession.Services.Events.PerformEvent(trigger);
+                            await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.ChatMessageReceived, new CommandParametersModel(message));
                         }
 
                         message.User.Data.TotalChatMessageSent++;

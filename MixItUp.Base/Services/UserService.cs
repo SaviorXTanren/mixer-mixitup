@@ -107,14 +107,15 @@ namespace MixItUp.Base.Services
                     {
                         if (user.Data.ViewingMinutes == 0)
                         {
-                            await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserFirstJoin, user));
+                            await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.ChatUserFirstJoin, new CommandParametersModel(user));
                         }
 
-                        if (ChannelSession.Services.Events.CanPerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user)))
+                        CommandParametersModel parameters = new CommandParametersModel(user);
+                        if (ChannelSession.Services.Events.CanPerformEvent(EventTypeEnum.ChatUserJoined, parameters))
                         {
                             user.LastSeen = DateTimeOffset.Now;
                             user.Data.TotalStreamsWatched++;
-                            await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user));
+                            await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.ChatUserJoined, parameters);
                         }
                     }
                 }
@@ -153,7 +154,7 @@ namespace MixItUp.Base.Services
             {
                 this.activeUsers.Remove(user.ID);
 
-                await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserLeft, user));
+                await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.ChatUserLeft, new CommandParametersModel(user));
             }
         }
 

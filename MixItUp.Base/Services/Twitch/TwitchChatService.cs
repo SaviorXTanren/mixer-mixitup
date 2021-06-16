@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -21,7 +22,6 @@ using Twitch.Base.Models.NewAPI.Bits;
 using Twitch.Base.Models.NewAPI.Chat;
 using Twitch.Base.Models.NewAPI.Users;
 using Twitch.Base.Models.V5.Emotes;
-using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 
 namespace MixItUp.Base.Services.Twitch
 {
@@ -730,8 +730,8 @@ namespace MixItUp.Base.Services.Twitch
                     }
                     user.SetTwitchChatDetails(userNotice);
 
-                    EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelRaided, user);
-                    if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+                    CommandParametersModel parameters = new CommandParametersModel(user);
+                    if (ChannelSession.Services.Events.CanPerformEvent(EventTypeEnum.TwitchChannelRaided, parameters))
                     {
                         ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidUserData] = user.ID;
                         ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidViewerCountData] = userNotice.RaidViewerCount;
@@ -751,9 +751,9 @@ namespace MixItUp.Base.Services.Twitch
 
                         GlobalEvents.RaidOccurred(user, userNotice.RaidViewerCount);
 
-                        trigger.SpecialIdentifiers["hostviewercount"] = userNotice.RaidViewerCount.ToString();
-                        trigger.SpecialIdentifiers["raidviewercount"] = userNotice.RaidViewerCount.ToString();
-                        await ChannelSession.Services.Events.PerformEvent(trigger);
+                        parameters.SpecialIdentifiers["hostviewercount"] = userNotice.RaidViewerCount.ToString();
+                        parameters.SpecialIdentifiers["raidviewercount"] = userNotice.RaidViewerCount.ToString();
+                        await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.TwitchChannelRaided, parameters);
 
                         await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} raided with {1} viewers", user.FullDisplayName, userNotice.RaidViewerCount), ChannelSession.Settings.AlertRaidColor));
                     }
@@ -808,20 +808,20 @@ namespace MixItUp.Base.Services.Twitch
             }
             else if (chatClear.IsTimeout)
             {
-                EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatUserTimeout);
-                trigger.Arguments.Add("@" + user.Username);
-                trigger.TargetUser = user;
-                trigger.SpecialIdentifiers["timeoutlength"] = chatClear.BanDuration.ToString();
-                await ChannelSession.Services.Events.PerformEvent(trigger);
+                CommandParametersModel parameters = new CommandParametersModel();
+                parameters.Arguments.Add("@" + user.Username);
+                parameters.TargetUser = user;
+                parameters.SpecialIdentifiers["timeoutlength"] = chatClear.BanDuration.ToString();
+                await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.ChatUserTimeout, parameters);
 
                 await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Timed Out for {1} seconds", user.FullDisplayName, chatClear.BanDuration), ChannelSession.Settings.AlertModerationColor));
             }
             else if (chatClear.IsBan)
             {
-                EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatUserBan);
-                trigger.Arguments.Add("@" + user.Username);
-                trigger.TargetUser = user;
-                await ChannelSession.Services.Events.PerformEvent(trigger);
+                CommandParametersModel parameters = new CommandParametersModel();
+                parameters.Arguments.Add("@" + user.Username);
+                parameters.TargetUser = user;
+                await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.ChatUserBan, parameters);
 
                 await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Banned", user.FullDisplayName), ChannelSession.Settings.AlertModerationColor));
 
@@ -845,8 +845,8 @@ namespace MixItUp.Base.Services.Twitch
                         {
                             await ChannelSession.Services.User.AddOrUpdateActiveUser(user);
 
-                            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelHosted, user);
-                            if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+                            CommandParametersModel parameters = new CommandParametersModel(user);
+                            if (ChannelSession.Services.Events.CanPerformEvent(EventTypeEnum.TwitchChannelHosted, parameters))
                             {
                                 foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
                                 {
@@ -855,7 +855,7 @@ namespace MixItUp.Base.Services.Twitch
 
                                 GlobalEvents.HostOccurred(user);
 
-                                await ChannelSession.Services.Events.PerformEvent(trigger);
+                                await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.TwitchChannelHosted, parameters);
 
                                 await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} hosted the channel", user.FullDisplayName), ChannelSession.Settings.AlertHostColor));
                             }
