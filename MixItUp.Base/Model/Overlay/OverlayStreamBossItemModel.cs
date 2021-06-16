@@ -354,7 +354,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
         {
-            await this.ReduceHealth(e.Item2, this.SubscriberBonus);
+            await this.ReduceHealth(e.Item1, this.SubscriberBonus);
         }
 
         private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { await this.ReduceHealth(donation.User, (donation.Amount * this.DonationBonus)); }
