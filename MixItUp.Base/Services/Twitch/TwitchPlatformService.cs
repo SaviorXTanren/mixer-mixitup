@@ -179,8 +179,6 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<long> GetSubscriberCountV5(V5API.Channel.ChannelModel channel) { return await AsyncRunner.RunAsync(this.Connection.V5API.Channels.GetChannelSubscribersCount(channel)); }
 
-        public async Task<IEnumerable<V5API.Emotes.EmoteModel>> GetEmotesForUserV5(V5API.Users.UserModel user) { return await this.RunAsync(this.Connection.V5API.Users.GetUserEmotes(user)); }
-
         public async Task<V5API.Streams.StreamModel> GetV5LiveStream(V5API.Channel.ChannelModel channel) { return await AsyncRunner.RunAsync(this.Connection.V5API.Streams.GetChannelStream(channel)); }
 
         public async Task<IEnumerable<V5API.Streams.StreamModel>> GetV5ChannelStreams(IEnumerable<string> channelIDs, int maxResults) { return await this.RunAsync(this.Connection.V5API.Streams.GetStreams(channelIDs: channelIDs, streamType: StreamType.Live, maxResults: maxResults)); }
@@ -295,5 +293,9 @@ namespace MixItUp.Base.Services.Twitch
         public async Task<NewAPI.Predictions.PredictionModel> CreatePrediction(NewAPI.Predictions.CreatePredictionModel prediction) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Predictions.CreatePrediction(prediction)); }
 
         public async Task<NewAPI.Predictions.PredictionModel> GetPrediction(NewAPI.Users.UserModel broadcaster, string predictionID) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Predictions.GetPrediction(broadcaster, predictionID)); }
+
+        public async Task<IEnumerable<NewAPI.Chat.ChatEmoteModel>> GetGlobalEmotes() { return await this.RunAsync(this.Connection.NewAPI.Chat.GetGlobalEmotes()); }
+
+        public async Task<IEnumerable<NewAPI.Chat.ChatEmoteModel>> GetEmoteSets(IEnumerable<string> emoteSetIDs) { return await this.RunAsync(this.Connection.NewAPI.Chat.GetEmoteSets(emoteSetIDs)); }
     }
 }

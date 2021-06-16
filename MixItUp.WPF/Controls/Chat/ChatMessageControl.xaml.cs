@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using TwitchV5API = Twitch.Base.Models.V5.Emotes;
+using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -113,9 +113,9 @@ namespace MixItUp.WPF.Controls.Chat
                                 string messagePartString = (string)messagePart;
                                 this.AddStringMessage(messagePartString, isHighlighted: highlighted, isItalicized: italics);
                             }
-                            else if (messagePart is TwitchV5API.EmoteModel)
+                            else if (messagePart is TwitchNewAPI.Chat.ChatEmoteModel)
                             {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((TwitchV5API.EmoteModel)messagePart));
+                                this.MessageWrapPanel.Children.Add(new ChatImageControl((TwitchNewAPI.Chat.ChatEmoteModel)messagePart));
                             }
                             else if (messagePart is BetterTTVEmoteModel)
                             {

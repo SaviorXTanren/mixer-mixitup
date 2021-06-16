@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.Clients.PubSub.Messages;
-using Twitch.Base.Models.V5.Emotes;
+using Twitch.Base.Models.NewAPI.Chat;
 
 namespace MixItUp.Base.ViewModel.Chat.Twitch
 {
@@ -34,7 +34,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
         private const string MessageIDHighlightedMessage = "highlighted-message";
 
         private static HashSet<long> messageEmotesHashSet = new HashSet<long>();
-        private static Dictionary<string, EmoteModel> messageEmotesCache = new Dictionary<string, EmoteModel>();
+        private static Dictionary<string, ChatEmoteModel> messageEmotesCache = new Dictionary<string, ChatEmoteModel>();
 
         public bool IsSlashMe { get; set; }
 
@@ -63,10 +63,10 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                     if (0 <= instance.Item1 && instance.Item1 < message.Message.Length && 0 <= instance.Item2 && instance.Item2 < message.Message.Length)
                     {
                         string emoteCode = message.Message.Substring(instance.Item1, instance.Item2 - instance.Item1 + 1);
-                        messageEmotesCache[emoteCode] = new EmoteModel()
+                        messageEmotesCache[emoteCode] = new ChatEmoteModel()
                         {
-                            id = emoteID,
-                            code = emoteCode
+                            id = emoteID.ToString(),
+                            name = emoteCode
                         };
                         messageEmotesHashSet.Add(kvp.Key);
                     }

@@ -56,7 +56,7 @@ namespace MixItUp.Base.Services.Twitch
 
     public interface ITwitchChatService
     {
-        IDictionary<string, EmoteModel> Emotes { get; }
+        IDictionary<string, ChatEmoteModel> Emotes { get; }
         IDictionary<string, ChatBadgeSetModel> ChatBadges { get; }
         IDictionary<string, BetterTTVEmoteModel> BetterTTVEmotes { get; }
         IDictionary<string, FrankerFaceZEmoteModel> FrankerFaceZEmotes { get; }
@@ -111,8 +111,9 @@ namespace MixItUp.Base.Services.Twitch
         private const string SubMysteryGiftUserNoticeMessageTypeID = "submysterygift";
         private const string SubGiftPaidUpgradeUserNoticeMessageTypeID = "giftpaidupgrade";
 
-        public IDictionary<string, EmoteModel> Emotes { get { return this.emotes; } }
-        private Dictionary<string, EmoteModel> emotes = new Dictionary<string, EmoteModel>();
+        private IEnumerable<string> emoteSetIDs = null;
+        public IDictionary<string, ChatEmoteModel> Emotes { get { return this.emotes; } }
+        private Dictionary<string, ChatEmoteModel> emotes = new Dictionary<string, ChatEmoteModel>();
 
         public IDictionary<string, BetterTTVEmoteModel> BetterTTVEmotes { get { return this.betterTTVEmotes; } }
         private Dictionary<string, BetterTTVEmoteModel> betterTTVEmotes = new Dictionary<string, BetterTTVEmoteModel>();
@@ -178,18 +179,13 @@ namespace MixItUp.Base.Services.Twitch
                         this.userClient.OnUserJoinReceived += UserClient_OnUserJoinReceived;
                         this.userClient.OnUserLeaveReceived += UserClient_OnUserLeaveReceived;
                         this.userClient.OnUserStateReceived += UserClient_OnUserStateReceived;
+                        this.userClient.OnGlobalUserStateReceived += UserClient_OnGlobalUserStateReceived;
                         this.userClient.OnUserNoticeReceived += UserClient_OnUserNoticeReceived;
                         this.userClient.OnChatClearReceived += UserClient_OnChatClearReceived;
                         this.userClient.OnMessageReceived += UserClient_OnMessageReceived;
 
                         this.userClient.OnUserListReceived += UserClient_OnUserListReceived;
                         await this.userClient.Connect();
-
-                        await Task.Delay(1000);
-
-                        await this.userClient.AddCommandsCapability();
-                        await this.userClient.AddTagsCapability();
-                        await this.userClient.AddMembershipCapability();
 
                         await Task.Delay(1000);
 
@@ -272,12 +268,6 @@ namespace MixItUp.Base.Services.Twitch
 
                         await Task.Delay(1000);
 
-                        await this.botClient.AddCommandsCapability();
-                        await this.botClient.AddTagsCapability();
-                        await this.botClient.AddMembershipCapability();
-
-                        await Task.Delay(1000);
-
                         await this.botClient.Join((UserModel)ChannelSession.TwitchUserNewAPI);
 
                         await Task.Delay(3000);
@@ -323,11 +313,22 @@ namespace MixItUp.Base.Services.Twitch
 
             initializationTasks.Add(Task.Run(async() =>
             {
-                foreach (EmoteModel emote in await ChannelSession.TwitchUserConnection.GetEmotesForUserV5(ChannelSession.TwitchUserV5))
+                foreach (ChatEmoteModel emote in await ChannelSession.TwitchUserConnection.GetGlobalEmotes())
                 {
-                    this.emotes[emote.code] = emote;
+                    this.emotes[emote.name] = emote;
                 }
             }));
+
+            if (this.emoteSetIDs != null)
+            {
+                initializationTasks.Add(Task.Run(async () =>
+                {
+                    foreach (ChatEmoteModel emote in await ChannelSession.TwitchUserConnection.GetEmoteSets(this.emoteSetIDs))
+                    {
+                        this.emotes[emote.name] = emote;
+                    }
+                }));
+            }
 
             Task<IEnumerable<ChatBadgeSetModel>> globalChatBadgesTask = ChannelSession.TwitchUserConnection.GetGlobalChatBadges();
             initializationTasks.Add(globalChatBadgesTask);
@@ -722,6 +723,11 @@ namespace MixItUp.Base.Services.Twitch
             {
                 user.SetTwitchChatDetails(userState);
             }
+        }
+
+        private async void UserClient_OnGlobalUserStateReceived(object sender, ChatGlobalUserStatePacketModel userState)
+        {
+            this.emoteSetIDs = userState.EmoteSetsDictionary;
         }
 
         private async void UserClient_OnUserNoticeReceived(object sender, ChatUserNoticePacketModel userNotice)
