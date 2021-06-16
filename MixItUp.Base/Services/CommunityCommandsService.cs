@@ -234,7 +234,7 @@ namespace MixItUp.Base.Services
         }
     }
 
-    public class CommunityCommandsService : OAuthRestServiceBase
+    public class CommunityCommandsService : OAuthRestServiceBase, ICommunityCommandsService
     {
         private readonly string baseAddress;
         private string accessToken = null;
@@ -256,10 +256,17 @@ namespace MixItUp.Base.Services
 
         public async Task<CommunityCommandDetailsModel> GetCommandDetails(Guid id)
         {
-            return await GetAsync<CommunityCommandDetailsModel>($"community/commands/command/{id}");
+            try
+            {
+                return await GetAsync<CommunityCommandDetailsModel>($"community/commands/command/{id}");
+            }
+            catch (HttpRestRequestException ex) when (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
+            }
         }
 
-        public async Task<CommunityCommandDetailsModel> AddOrUpdateCommand(CommunityCommandDetailsModel command)
+        public async Task<CommunityCommandDetailsModel> AddOrUpdateCommand(CommunityCommandUploadModel command)
         {
             await EnsureLogin();
             return await PostAsync<CommunityCommandDetailsModel>("community/commands/command", AdvancedHttpClient.CreateContentFromObject(command));
@@ -296,9 +303,11 @@ namespace MixItUp.Base.Services
 
         public async Task DownloadCommand(Guid id)
         {
-            await EnsureLogin();
-            await GetAsync<IEnumerable<CommunityCommandDetailsModel>>($"community/commands/command/{id}/download");
-            // TODO: Add more logic here
+            try
+            {
+                await GetAsync<IEnumerable<CommunityCommandDetailsModel>>($"community/commands/command/{id}/download");
+            }
+            catch { }
         }
 
         protected override Task<OAuthTokenModel> GetOAuthToken(bool autoRefreshToken = true)
