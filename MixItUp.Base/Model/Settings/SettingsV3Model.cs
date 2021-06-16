@@ -180,6 +180,8 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public int TwitchMassGiftedSubsFilterAmount { get; set; } = 1;
+        [DataMember]
+        public bool TwitchReplyToCommandChatMessages { get; set; }
 
         [DataMember]
         public HashSet<ActionTypeEnum> ActionsToHide { get; set; } = new HashSet<ActionTypeEnum>();

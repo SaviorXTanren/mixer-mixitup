@@ -15190,6 +15190,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twitch Reply to Chat Message in Chat Command.
+        /// </summary>
+        public static string TwitchReplyToCommandChatMessages {
+            get {
+                return ResourceManager.GetString("TwitchReplyToCommandChatMessages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Twitter.
         /// </summary>
         public static string Twitter {

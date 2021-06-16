@@ -270,7 +270,7 @@ namespace MixItUp.Base.Model.Commands.Games
             {
                 if (!this.runUsers.ContainsKey(message.User) && !string.IsNullOrEmpty(message.PlainTextMessage) && int.TryParse(message.PlainTextMessage, out int choice) && this.numbersToAnswers.ContainsKey(choice))
                 {
-                    CommandParametersModel parameters = new CommandParametersModel(message.User, message.Platform, message.ToArguments());
+                    CommandParametersModel parameters = new CommandParametersModel(message);
                     this.runUsers[message.User] = parameters;
                     this.runUserSelections[message.User] = choice;
                     await this.RunSubCommand(this.UserJoinCommand, parameters);

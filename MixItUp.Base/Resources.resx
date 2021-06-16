@@ -5729,4 +5729,7 @@ special users that you want to allow more control to such as a Moderator.</value
   <data name="MissingTextHintWarning" xml:space="preserve">
     <value>Missing Text</value>
   </data>
+  <data name="TwitchReplyToCommandChatMessages" xml:space="preserve">
+    <value>Twitch Reply to Chat Message in Chat Command</value>
+  </data>
 </root>

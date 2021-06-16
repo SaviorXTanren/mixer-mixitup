@@ -45,6 +45,8 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
         public string WhisperThreadID { get; set; }
         public UserViewModel WhisperRecipient { get; set; }
 
+        public string ReplyThreadID { get; set; }
+
         public string PlainTextMessageNoCheermotes { get; set; }
 
         public TwitchChatMessageViewModel(ChatMessagePacketModel message, UserViewModel user)
@@ -97,9 +99,11 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             this.ProcessMessageContents(whisper.body);
         }
 
-        public TwitchChatMessageViewModel(UserViewModel user, string message)
+        public TwitchChatMessageViewModel(UserViewModel user, string message, string replyMessageID = null)
             : base(string.Empty, StreamingPlatformTypeEnum.Twitch, user)
         {
+            this.ReplyThreadID = replyMessageID;
+
             this.ProcessMessageContents(message);
         }
 

@@ -78,7 +78,7 @@ namespace MixItUp.Base.Services.Twitch
 
         Task Initialize();
 
-        Task SendMessage(string message, bool sendAsStreamer = false);
+        Task SendMessage(string message, bool sendAsStreamer = false, string replyMessageID = null);
 
         Task SendWhisperMessage(UserViewModel user, string message, bool sendAsStreamer = false);
 
@@ -381,7 +381,7 @@ namespace MixItUp.Base.Services.Twitch
             this.initialUserLogins.Clear();
         }
 
-        public async Task SendMessage(string message, bool sendAsStreamer = false)
+        public async Task SendMessage(string message, bool sendAsStreamer = false, string replyMessageID = null)
         {
             await this.messageSemaphore.WaitAndRelease(async () =>
             {
@@ -392,7 +392,14 @@ namespace MixItUp.Base.Services.Twitch
                     do
                     {
                         message = this.SplitLargeMessage(message, out subMessage);
-                        await client.SendMessage((UserModel)ChannelSession.TwitchUserNewAPI, message);
+                        if (!string.IsNullOrEmpty(replyMessageID))
+                        {
+                            await client.SendReplyMessage((UserModel)ChannelSession.TwitchUserNewAPI, message, replyMessageID);
+                        }
+                        else
+                        {
+                            await client.SendMessage((UserModel)ChannelSession.TwitchUserNewAPI, message);
+                        }
                         message = subMessage;
                         await Task.Delay(500);
                     }
