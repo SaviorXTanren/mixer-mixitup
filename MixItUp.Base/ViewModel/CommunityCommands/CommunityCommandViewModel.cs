@@ -37,7 +37,7 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
 
         public DateTimeOffset LastUpdated { get { return this.model.LastUpdated; } }
 
-        public string LastUpdatedString { get { return this.LastUpdated.ToFriendlyDateTimeString(); } }
+        public string LastUpdatedString { get { return this.LastUpdated.ToCorrectLocalTime().ToFriendlyDateTimeString(); } }
 
         public string TagsDisplayString { get { return MixItUp.Base.Resources.TagsHeader + " " + string.Join(", ", this.Tags.Select(t => EnumLocalizationHelper.GetLocalizedName(t))); } }
 
