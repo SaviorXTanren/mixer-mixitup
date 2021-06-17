@@ -2166,6 +2166,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to upload command: .
+        /// </summary>
+        public static string CommunityCommandsFailedToUploadCommand {
+            get {
+                return ResourceManager.GetString("CommunityCommandsFailedToUploadCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Image File Path (Optional).
         /// </summary>
         public static string CommunityCommandsImageFilePath {

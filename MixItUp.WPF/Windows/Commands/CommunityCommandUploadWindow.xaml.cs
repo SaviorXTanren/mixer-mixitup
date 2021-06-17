@@ -4,9 +4,12 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Store;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.CommunityCommands;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -113,50 +116,71 @@ namespace MixItUp.WPF.Windows.Commands
 
         private async void UploadButton_Click(object sender, RoutedEventArgs e)
         {
-            this.StartLoadingOperation();
-
-            try
+            await this.RunAsyncOperation(async () =>
             {
-                if (string.IsNullOrEmpty(this.NameTextBox.Text))
+                try
                 {
-                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.CommunityCommandsUploadInvalidName);
-                    return;
-                }
-
-                if (string.IsNullOrEmpty(this.DescriptionTextBox.Text))
-                {
-                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.CommunityCommandsUploadInvalidDescription);
-                    return;
-                }
-
-                if (!string.IsNullOrEmpty(this.ImageFilePathTextBox.Text))
-                {
-                    if (!ChannelSession.Services.FileService.FileExists(this.ImageFilePathTextBox.Text))
+                    if (string.IsNullOrEmpty(this.NameTextBox.Text))
                     {
-                        await DialogHelper.ShowMessage(MixItUp.Base.Resources.CommunityCommandsUploadInvalidImageFile);
+                        await DialogHelper.ShowMessage(MixItUp.Base.Resources.CommunityCommandsUploadInvalidName);
                         return;
                     }
-                    this.uploadCommand.ImageFileData = await ChannelSession.Services.FileService.ReadFileAsBytes(this.ImageFilePathTextBox.Text);
+
+                    if (string.IsNullOrEmpty(this.DescriptionTextBox.Text))
+                    {
+                        await DialogHelper.ShowMessage(MixItUp.Base.Resources.CommunityCommandsUploadInvalidDescription);
+                        return;
+                    }
+
+                    if (!string.IsNullOrEmpty(this.ImageFilePathTextBox.Text))
+                    {
+                        if (!ChannelSession.Services.FileService.FileExists(this.ImageFilePathTextBox.Text))
+                        {
+                            await DialogHelper.ShowMessage(MixItUp.Base.Resources.CommunityCommandsUploadInvalidImageFile);
+                            return;
+                        }
+                        this.uploadCommand.ImageFileData = await ChannelSession.Services.FileService.ReadFileAsBytes(this.ImageFilePathTextBox.Text);
+                    }
+
+                    this.uploadCommand.Name = this.NameTextBox.Text;
+                    this.uploadCommand.Description = this.DescriptionTextBox.Text;
+
+                    if (!string.IsNullOrEmpty(this.ImageFilePathTextBox.Text) && ChannelSession.Services.FileService.FileExists(this.ImageFilePathTextBox.Text))
+                    {
+                        string imageFilePath = this.ImageFilePathTextBox.Text;
+                        this.uploadCommand.ImageFileData = await Task.Run(() =>
+                        {
+                            try
+                            {
+                                using (var image = Image.Load(imageFilePath))
+                                {
+                                    image.Mutate(i => i.Resize(100, 100));
+                                    using (MemoryStream memoryStream = new MemoryStream())
+                                    {
+                                        image.SaveAsPng(memoryStream);
+                                        return memoryStream.ToArray();
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Log(ex);
+                            }
+                            return null;
+                        });
+                    }
+
+                    await ChannelSession.Services.CommunityCommandsService.AddOrUpdateCommand(this.uploadCommand);
+
+                    this.Close();
                 }
-
-                this.uploadCommand.Name = this.NameTextBox.Text;
-                this.uploadCommand.Description = this.DescriptionTextBox.Text;
-
-                if (!string.IsNullOrEmpty(this.ImageFilePathTextBox.Text) && ChannelSession.Services.FileService.FileExists(this.ImageFilePathTextBox.Text))
+                catch (Exception ex)
                 {
-                    this.uploadCommand.ImageFileData = await ChannelSession.Services.FileService.ReadFileAsBytes(this.ImageFilePathTextBox.Text);
+                    Logger.Log(ex);
+
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.CommunityCommandsFailedToUploadCommand + ex.Message);
                 }
-
-                await ChannelSession.Services.CommunityCommandsService.AddOrUpdateCommand(this.uploadCommand);
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-
-            this.EndLoadingOperation();
-
-            this.Close();
+            });
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
