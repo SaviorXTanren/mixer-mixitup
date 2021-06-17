@@ -725,7 +725,7 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
-        private async void UserClient_OnGlobalUserStateReceived(object sender, ChatGlobalUserStatePacketModel userState)
+        private void UserClient_OnGlobalUserStateReceived(object sender, ChatGlobalUserStatePacketModel userState)
         {
             this.emoteSetIDs = userState.EmoteSetsDictionary;
         }
