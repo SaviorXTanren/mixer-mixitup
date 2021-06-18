@@ -5735,4 +5735,49 @@ special users that you want to allow more control to such as a Moderator.</value
   <data name="CommunityCommandsFailedToUploadCommand" xml:space="preserve">
     <value>Failed to upload command: </value>
   </data>
+  <data name="AddStreamathonTime" xml:space="preserve">
+    <value>Add Streamathon Time</value>
+  </data>
+  <data name="PixelChat" xml:space="preserve">
+    <value>Pixel Chat</value>
+  </data>
+  <data name="PixelChatActionMissingTimeAmount" xml:space="preserve">
+    <value>Pixel Chat Action: Missing Time Amount</value>
+  </data>
+  <data name="PixelChatDeveloperToken" xml:space="preserve">
+    <value>Developer Token</value>
+  </data>
+  <data name="PixelChatDeveloperTokenPage" xml:space="preserve">
+    <value>Developer Tokens Page</value>
+  </data>
+  <data name="PixelChatFailedToGetUserData" xml:space="preserve">
+    <value>Failed to get user data, please try again later.</value>
+  </data>
+  <data name="PixelChatInfo1" xml:space="preserve">
+    <value>Pixel Chat service connectivity allows you to control various elements of your Pixel Chat Overlays and trigger specific functionality.</value>
+  </data>
+  <data name="PixelChatInfo2" xml:space="preserve">
+    <value>To connect to PixelChat, you will need to create a Developer Token. This can be found by going to the profile, click "View Tokens", and create a new Developer Token.</value>
+  </data>
+  <data name="PixelChatInvalidAPIKey" xml:space="preserve">
+    <value>Please enter a valid Pixel Chat API key.</value>
+  </data>
+  <data name="StartStreamathon" xml:space="preserve">
+    <value>Start Streamathon</value>
+  </data>
+  <data name="TriggerCountdown" xml:space="preserve">
+    <value>Trigger Count Down</value>
+  </data>
+  <data name="TriggerCountup" xml:space="preserve">
+    <value>Trigger Count Up</value>
+  </data>
+  <data name="TriggerCredits" xml:space="preserve">
+    <value>Trigger Credits</value>
+  </data>
+  <data name="TriggerGiveaway" xml:space="preserve">
+    <value>Trigger Giveaway</value>
+  </data>
+  <data name="TriggerShoutout" xml:space="preserve">
+    <value>Trigger Shoutout</value>
+  </data>
 </root>

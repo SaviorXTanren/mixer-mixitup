@@ -43,6 +43,7 @@ namespace MixItUp.Base.Model.Store
         OvrStream,
         IFTTT,
         Twitch,
+        PixelChat,
 
         // Extra Tags
         [Obsolete]

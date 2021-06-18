@@ -448,6 +448,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Streamathon Time.
+        /// </summary>
+        public static string AddStreamathonTime {
+            get {
+                return ResourceManager.GetString("AddStreamathonTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Stream Pass.
         /// </summary>
         public static string AddStreamPass {
@@ -10419,6 +10428,78 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pixel Chat.
+        /// </summary>
+        public static string PixelChat {
+            get {
+                return ResourceManager.GetString("PixelChat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pixel Chat Action: Missing Time Amount.
+        /// </summary>
+        public static string PixelChatActionMissingTimeAmount {
+            get {
+                return ResourceManager.GetString("PixelChatActionMissingTimeAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Developer Token.
+        /// </summary>
+        public static string PixelChatDeveloperToken {
+            get {
+                return ResourceManager.GetString("PixelChatDeveloperToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Developer Tokens Page.
+        /// </summary>
+        public static string PixelChatDeveloperTokenPage {
+            get {
+                return ResourceManager.GetString("PixelChatDeveloperTokenPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to get user data, please try again later..
+        /// </summary>
+        public static string PixelChatFailedToGetUserData {
+            get {
+                return ResourceManager.GetString("PixelChatFailedToGetUserData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pixel Chat service connectivity allows you to control various elements of your Pixel Chat Overlays and trigger specific functionality..
+        /// </summary>
+        public static string PixelChatInfo1 {
+            get {
+                return ResourceManager.GetString("PixelChatInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To connect to PixelChat, you will need to create a Developer Token. This can be found by going to the profile, click &quot;View Tokens&quot;, and create a new Developer Token..
+        /// </summary>
+        public static string PixelChatInfo2 {
+            get {
+                return ResourceManager.GetString("PixelChatInfo2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter a valid Pixel Chat API key..
+        /// </summary>
+        public static string PixelChatInvalidAPIKey {
+            get {
+                return ResourceManager.GetString("PixelChatInvalidAPIKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pixels.
         /// </summary>
         public static string Pixels {
@@ -13153,6 +13234,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Start Streamathon.
+        /// </summary>
+        public static string StartStreamathon {
+            get {
+                return ResourceManager.GetString("StartStreamathon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Start Time (Secs).
         /// </summary>
         public static string StartTime {
@@ -14796,6 +14886,51 @@ namespace MixItUp.Base {
         public static string TreatStreamSocketTokenFailed {
             get {
                 return ResourceManager.GetString("TreatStreamSocketTokenFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trigger Count Down.
+        /// </summary>
+        public static string TriggerCountdown {
+            get {
+                return ResourceManager.GetString("TriggerCountdown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trigger Count Up.
+        /// </summary>
+        public static string TriggerCountup {
+            get {
+                return ResourceManager.GetString("TriggerCountup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trigger Credits.
+        /// </summary>
+        public static string TriggerCredits {
+            get {
+                return ResourceManager.GetString("TriggerCredits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trigger Giveaway.
+        /// </summary>
+        public static string TriggerGiveaway {
+            get {
+                return ResourceManager.GetString("TriggerGiveaway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trigger Shoutout.
+        /// </summary>
+        public static string TriggerShoutout {
+            get {
+                return ResourceManager.GetString("TriggerShoutout", resourceCulture);
             }
         }
         

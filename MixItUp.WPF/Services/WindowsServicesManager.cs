@@ -53,6 +53,7 @@ namespace MixItUp.WPF.Services
             this.Patreon = new PatreonService();
             this.Discord = new DiscordService();
             this.Twitter = new TwitterService();
+            this.PixelChat = new PixelChatService();
             this.OvrStream = new WindowsOvrStreamService();
             this.Overlay = new OverlayService();
 

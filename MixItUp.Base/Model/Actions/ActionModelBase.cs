@@ -45,6 +45,7 @@ namespace MixItUp.Base.Model.Actions
         OvrStream,
         IFTTT,
         Twitch,
+        PixelChat
     }
 
     [DataContract]

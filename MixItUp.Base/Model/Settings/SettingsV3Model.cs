@@ -85,6 +85,8 @@ namespace MixItUp.Base.Model.Settings
         public OAuthTokenModel JustGivingOAuthToken { get; set; }
         [DataMember]
         public OAuthTokenModel RainMakerOAuthToken { get; set; }
+        [DataMember]
+        public OAuthTokenModel PixelChatOAuthToken { get; set; }
 
         #endregion Authentication
 
@@ -731,6 +733,10 @@ namespace MixItUp.Base.Model.Settings
             if (ChannelSession.Services.Twitter.IsConnected)
             {
                 this.TwitterOAuthToken = ChannelSession.Services.Twitter.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.PixelChat.IsConnected)
+            {
+                this.PixelChatOAuthToken = ChannelSession.Services.PixelChat.GetOAuthTokenCopy();
             }
         }
 
