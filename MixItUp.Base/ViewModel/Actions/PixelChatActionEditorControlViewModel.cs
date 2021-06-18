@@ -127,9 +127,14 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public override async Task<Result> Validate()
         {
+            if (this.SelectedOverlay == null)
+            {
+                return new Result(MixItUp.Base.Resources.PixelChatActionMissingOverlay);
+            }
+
             if (this.ShowTimeAmountGrid)
             {
-                if (!string.IsNullOrEmpty(this.TimeAmount))
+                if (string.IsNullOrEmpty(this.TimeAmount))
                 {
                     return new Result(MixItUp.Base.Resources.PixelChatActionMissingTimeAmount);
                 }

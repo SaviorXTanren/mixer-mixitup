@@ -5780,4 +5780,7 @@ special users that you want to allow more control to such as a Moderator.</value
   <data name="TriggerShoutout" xml:space="preserve">
     <value>Trigger Shoutout</value>
   </data>
+  <data name="PixelChatActionMissingOverlay" xml:space="preserve">
+    <value>Pixel Chat Action: Missing Overlay</value>
+  </data>
 </root>

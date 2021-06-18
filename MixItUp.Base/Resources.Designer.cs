@@ -10437,6 +10437,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pixel Chat Action: Missing Overlay.
+        /// </summary>
+        public static string PixelChatActionMissingOverlay {
+            get {
+                return ResourceManager.GetString("PixelChatActionMissingOverlay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pixel Chat Action: Missing Time Amount.
         /// </summary>
         public static string PixelChatActionMissingTimeAmount {
