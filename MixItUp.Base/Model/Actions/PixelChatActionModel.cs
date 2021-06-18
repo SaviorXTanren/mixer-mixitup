@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.ViewModel.User;
+using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -91,6 +92,11 @@ namespace MixItUp.Base.Model.Actions
                 {
                     sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString());
                 }
+
+                char[] characters = sendMessage.type.ToCharArray();
+                characters[0] = Char.ToLower(characters[0]);
+                sendMessage.type = new string(characters);
+
                 await ChannelSession.Services.PixelChat.SendMessageToOverlay(this.OverlayID, sendMessage);
             }
         }
