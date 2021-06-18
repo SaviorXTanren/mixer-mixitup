@@ -182,13 +182,8 @@ namespace MixItUp.Base.Services
             return results.Random();
         }
 
-        public async Task<UserViewModel> GetUserFullSearch(StreamingPlatformTypeEnum platform, string userID, string username)
+        public async Task<UserViewModel> GetUserFullSearch(StreamingPlatformTypeEnum platform, string userID = null, string username = null)
         {
-            if (string.IsNullOrEmpty(username))
-            {
-                throw new ArgumentException("Username must be supplied as part of user full search");
-            }
-
             UserViewModel user = null;
             if (!string.IsNullOrEmpty(userID))
             {
