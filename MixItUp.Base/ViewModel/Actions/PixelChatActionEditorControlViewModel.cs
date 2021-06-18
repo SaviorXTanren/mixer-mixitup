@@ -34,7 +34,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 {
                     this.Overlays.AddRange(this.allOverlays.Where(o => o.type.Equals(PixelChatOverlayModel.TimerOverlayType)));
                 }
-                else if (this.SelectedActionType == PixelChatActionTypeEnum.AddStreamathonTime || this.SelectedActionType == PixelChatActionTypeEnum.AddStreamathonTime)
+                else if (this.SelectedActionType == PixelChatActionTypeEnum.StartStreamathon || this.SelectedActionType == PixelChatActionTypeEnum.AddStreamathonTime)
                 {
                     this.Overlays.AddRange(this.allOverlays.Where(o => o.type.Equals(PixelChatOverlayModel.StreamathonOverlayType)));
                 }
