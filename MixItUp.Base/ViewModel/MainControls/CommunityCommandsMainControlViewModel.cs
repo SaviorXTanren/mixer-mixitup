@@ -237,11 +237,17 @@ namespace MixItUp.Base.ViewModel.MainControls
                 Rating = rating,
                 Review = review,
             });
+
+            this.DetailsCommand.Execute(this.CommandDetails.ID);
         }
 
         public async Task ReportCommand(string report)
         {
-            await ChannelSession.Services.CommunityCommandsService.ReportCommand(this.CommandDetails.ID, report);
+            await ChannelSession.Services.CommunityCommandsService.ReportCommand(new CommunityCommandReportModel()
+            {
+                CommandID = this.CommandDetails.ID,
+                Report = report
+            });
         }
 
         protected override async Task OnVisibleInternal()
@@ -279,6 +285,9 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.ClearAllShows();
             this.ShowHome = true;
+
+            this.SearchResults.Clear();
+            this.MyCommands.Clear();
         }
 
         private void ClearAllShows()

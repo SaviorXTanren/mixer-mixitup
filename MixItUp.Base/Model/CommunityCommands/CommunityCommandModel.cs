@@ -8,7 +8,7 @@ namespace MixItUp.Base.Model.Store
 {
     public enum CommunityCommandTagEnum
     {
-        // Actions
+        // Actions Tags
         Custom = 0,
         [Name("ChatMessage")]
         Chat,
@@ -45,9 +45,18 @@ namespace MixItUp.Base.Model.Store
         Twitch,
         PixelChat,
 
+        // Command Tags
+        ChatCommand = 1000,
+        EventCommand,
+        TimerCommand,
+        ActionGroupCommand,
+        StreamlootsCardCommand,
+        TwitchChannelPointsCommand,
+        GameCommand,
+
         // Extra Tags
         [Obsolete]
-        Stuff = 1000,
+        Stuff = 100000,
     }
 
     [DataContract]

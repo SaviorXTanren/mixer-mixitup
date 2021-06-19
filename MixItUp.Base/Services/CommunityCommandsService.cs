@@ -22,7 +22,8 @@ namespace MixItUp.Base.Services
         Task<CommunityCommandDetailsModel> GetCommandDetails(Guid id);
         Task<CommunityCommandDetailsModel> AddOrUpdateCommand(CommunityCommandUploadModel command);
         Task DeleteCommand(Guid id);
-        Task ReportCommand(Guid id, string report);
+        Task ReportCommand(CommunityCommandReportModel report);
+        Task<IEnumerable<CommunityCommandDetailsModel>> GetCommandsByUser(Guid userID);
         Task<IEnumerable<CommunityCommandDetailsModel>> GetMyCommands();
         Task<CommunityCommandReviewModel> AddReview(CommunityCommandReviewModel review);
         Task DownloadCommand(Guid id);
@@ -141,15 +142,22 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task ReportCommand(Guid id, string report)
+        public async Task ReportCommand(CommunityCommandReportModel report)
         {
             await Task.Delay(1000);
 
-            CommunityCommandDetailsModel existingCommand = this.commandCache.FirstOrDefault(c => c.ID.Equals(id));
+            CommunityCommandDetailsModel existingCommand = this.commandCache.FirstOrDefault(c => c.ID.Equals(report.CommandID));
             if (existingCommand != null)
             {
                 // File report
             }
+        }
+
+        public async Task<IEnumerable<CommunityCommandDetailsModel>> GetCommandsByUser(Guid userID)
+        {
+            await Task.Delay(1000);
+
+            return this.commandCache.Where(c => c.ID == userID).ToList();
         }
 
         public async Task<IEnumerable<CommunityCommandDetailsModel>> GetMyCommands()
@@ -278,15 +286,16 @@ namespace MixItUp.Base.Services
             await DeleteAsync<CommunityCommandDetailsModel>($"community/commands/command/{id}/delete");
         }
 
-        public async Task ReportCommand(Guid id, string report)
+        public async Task ReportCommand(CommunityCommandReportModel report)
         {
             await EnsureLogin();
-            var reportModel = new CommunityCommandReportModel
-            {
-                Report = report,
-            };
+            await PostAsync($"community/commands/command/{report.CommandID}/report", AdvancedHttpClient.CreateContentFromObject(report));
+        }
 
-            await PostAsync($"community/commands/command/{id}/report", AdvancedHttpClient.CreateContentFromObject(reportModel));
+        public async Task<IEnumerable<CommunityCommandDetailsModel>> GetCommandsByUser(Guid userID)
+        {
+            await EnsureLogin();
+            return await GetAsync<IEnumerable<CommunityCommandDetailsModel>>($"command/user/{userID}");
         }
 
         public async Task<IEnumerable<CommunityCommandDetailsModel>> GetMyCommands()
