@@ -46,7 +46,7 @@ namespace MixItUp.Base.Model.Store
         PixelChat,
 
         // Command Tags
-        ChatCommand,
+        ChatCommand = 1000,
         EventCommand,
         TimerCommand,
         ActionGroupCommand,
