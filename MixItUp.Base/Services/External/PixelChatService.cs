@@ -34,7 +34,7 @@ namespace MixItUp.Base.Services.External
 
         public string id { get; set; }
         public string type { get; set; }
-        public JObject settings { get; set; }
+        public JObject settings { get; set; } = new JObject();
 
         public string Name
         {
@@ -50,6 +50,31 @@ namespace MixItUp.Base.Services.External
                 return "Unknown";
             }
         }
+    }
+
+    public class PixelChatSceneModel
+    {
+        public string id { get; set; }
+        public JObject settings { get; set; } = new JObject();
+        public JObject components { get; set; } = new JObject();
+
+        public string Name
+        {
+            get
+            {
+                if (settings.TryGetValue("title", out JToken setting))
+                {
+                    return setting.ToString();
+                }
+                return "Unknown";
+            }
+        }
+    }
+
+    public class PixelChatSceneComponentModel
+    {
+        public string id { get; set; }
+        public bool hidden { get; set; }
     }
 
     public class PixelChatSendMessageModel
@@ -110,6 +135,27 @@ namespace MixItUp.Base.Services.External
                 Logger.Log(ex);
             }
             return null;
+        }
+
+        public async Task<IEnumerable<PixelChatSceneModel>> GetScenes()
+        {
+            List<PixelChatSceneModel> scenes = new List<PixelChatSceneModel>();
+            try
+            {
+                JObject dictionaryOverlays = await this.GetJObjectAsync("scenes");
+                if (dictionaryOverlays != null)
+                {
+                    foreach (var kvp in dictionaryOverlays)
+                    {
+                        scenes.Add(kvp.Value.ToObject<PixelChatSceneModel>());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            return scenes;
         }
 
         public async Task<IEnumerable<PixelChatOverlayModel>> GetOverlays()

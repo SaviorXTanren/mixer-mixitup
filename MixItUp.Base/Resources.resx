@@ -5783,4 +5783,13 @@ special users that you want to allow more control to such as a Moderator.</value
   <data name="PixelChatActionMissingOverlay" xml:space="preserve">
     <value>Pixel Chat Action: Missing Overlay</value>
   </data>
+  <data name="PixelChatActionMissingScene" xml:space="preserve">
+    <value>Pixel Chat Action: Missing Scene</value>
+  </data>
+  <data name="PixelChatActionMissingSceneComponent" xml:space="preserve">
+    <value>Pixel Chat Action: Missing Scene Component</value>
+  </data>
+  <data name="ShowHideSceneComponent" xml:space="preserve">
+    <value>Show/Hide Scene Component</value>
+  </data>
 </root>

@@ -10446,6 +10446,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pixel Chat Action: Missing Scene.
+        /// </summary>
+        public static string PixelChatActionMissingScene {
+            get {
+                return ResourceManager.GetString("PixelChatActionMissingScene", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pixel Chat Action: Missing Scene Component.
+        /// </summary>
+        public static string PixelChatActionMissingSceneComponent {
+            get {
+                return ResourceManager.GetString("PixelChatActionMissingSceneComponent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pixel Chat Action: Missing Time Amount.
         /// </summary>
         public static string PixelChatActionMissingTimeAmount {
@@ -12669,6 +12687,15 @@ namespace MixItUp.Base {
         public static string ShowGiftedSubs {
             get {
                 return ResourceManager.GetString("ShowGiftedSubs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show/Hide Scene Component.
+        /// </summary>
+        public static string ShowHideSceneComponent {
+            get {
+                return ResourceManager.GetString("ShowHideSceneComponent", resourceCulture);
             }
         }
         
