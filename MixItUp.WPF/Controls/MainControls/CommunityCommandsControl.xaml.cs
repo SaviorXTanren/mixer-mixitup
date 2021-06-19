@@ -6,6 +6,7 @@ using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Controls.Dialogs.CommunityCommands;
 using MixItUp.WPF.Windows.Commands;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -86,10 +87,13 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void ReviewCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            CommunityCommandsReviewCommandDialogControl dialogControl = new CommunityCommandsReviewCommandDialogControl();
-            if (bool.Equals(await DialogHelper.ShowCustom(dialogControl), true) && !string.IsNullOrEmpty(dialogControl.Review))
+            if (!this.viewModel.CommandDetails.Username.Equals(ChannelSession.GetCurrentUser().Username, StringComparison.CurrentCultureIgnoreCase))
             {
-                await this.viewModel.ReviewCommand(dialogControl.Rating, dialogControl.Review);
+                CommunityCommandsReviewCommandDialogControl dialogControl = new CommunityCommandsReviewCommandDialogControl();
+                if (bool.Equals(await DialogHelper.ShowCustom(dialogControl), true) && !string.IsNullOrEmpty(dialogControl.Review))
+                {
+                    await this.viewModel.ReviewCommand(dialogControl.Rating, dialogControl.Review);
+                }
             }
         }
 
