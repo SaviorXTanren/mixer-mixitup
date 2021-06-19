@@ -39,7 +39,12 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0" Text="{Binding SearchText}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SearchText}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="200" />
+                    <TextBox Grid.Column="0" Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SearchText}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="200">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding SearchCommand}"/>
+                            <KeyBinding Key="Return" Command="{Binding SearchCommand}"/>
+                        </TextBox.InputBindings>
+                    </TextBox>
                     <Button Grid.Column="2" Content="{x:Static resx:Resources.Search}" Margin="0,10,0,0" Command="{Binding SearchCommand}" />
                 </Grid>
 
@@ -98,7 +103,12 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBox Grid.Column="0" Text="{Binding SearchText}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SearchText}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="200" />
+                        <TextBox Grid.Column="0" Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SearchText}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="200">
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Enter" Command="{Binding SearchCommand}"/>
+                                <KeyBinding Key="Return" Command="{Binding SearchCommand}"/>
+                            </TextBox.InputBindings>
+                        </TextBox>
                         <Button Grid.Column="2" Content="{x:Static resx:Resources.Search}" Margin="0,10,0,0" Command="{Binding SearchCommand}" />
 
                     </Grid>
