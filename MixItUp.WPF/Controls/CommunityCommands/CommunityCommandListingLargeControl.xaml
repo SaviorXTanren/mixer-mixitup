@@ -25,36 +25,31 @@
 
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="250" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="150" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" />
 
-                <Grid Grid.Column="2" VerticalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="5" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+                <Image Grid.Column="2" Source="{Binding UserAvatarURL}" Width="20" Height="20" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="4" Text="{Binding Username}" VerticalAlignment="Center" />
 
-                    <MaterialDesign:PackIcon Grid.Column="0" Kind="Star" VerticalAlignment="Center" Margin="0,0,0,1" />
-                    <TextBlock Grid.Column="2" Text="{Binding AverageRating}" VerticalAlignment="Center" />
-                </Grid>
+                <MaterialDesign:PackIcon Grid.Column="6" Kind="Star" VerticalAlignment="Center" Margin="0,0,0,1" />
+                <TextBlock Grid.Column="8" Text="{Binding AverageRating}" VerticalAlignment="Center" />
 
-                <Grid Grid.Column="3" VerticalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="5" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <MaterialDesign:PackIcon Grid.Column="0" Kind="Download" VerticalAlignment="Center" />
-                    <TextBlock Grid.Column="2" Text="{Binding DownloadsString}" VerticalAlignment="Center" />
-                </Grid>
+                <MaterialDesign:PackIcon Grid.Column="10" Kind="Download" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="12" Text="{Binding DownloadsString}" VerticalAlignment="Center" />
             </Grid>
 
             <TextBlock Grid.Row="2" Text="{Binding Description}" TextWrapping="Wrap" Height="45" />
