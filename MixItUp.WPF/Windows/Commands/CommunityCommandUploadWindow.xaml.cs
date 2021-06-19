@@ -67,23 +67,28 @@ namespace MixItUp.WPF.Windows.Commands
                         this.uploadCommand.Description = existingCommand.Description;
                     }
 
-                    HashSet<CommunityCommandTagEnum> tags = new HashSet<CommunityCommandTagEnum>();
+                    this.uploadCommand.Tags.Clear();
                     foreach (ActionModelBase action in this.command.Actions)
                     {
                         if (action is ConditionalActionModel)
                         {
                             foreach (ActionModelBase subAction in ((ConditionalActionModel)action).Actions)
                             {
-                                tags.Add((CommunityCommandTagEnum)subAction.Type);
+                                this.uploadCommand.Tags.Add((CommunityCommandTagEnum)subAction.Type);
                             }
                         }
-                        tags.Add((CommunityCommandTagEnum)action.Type);
+                        this.uploadCommand.Tags.Add((CommunityCommandTagEnum)action.Type);
                     }
 
-                    this.uploadCommand.Tags.Clear();
-                    foreach (CommunityCommandTagEnum tag in tags.Take(5))
+                    switch (this.command.Type)
                     {
-                        this.uploadCommand.Tags.Add(tag);
+                        case CommandTypeEnum.Chat: this.uploadCommand.Tags.Add(CommunityCommandTagEnum.ChatCommand); break;
+                        case CommandTypeEnum.Event: this.uploadCommand.Tags.Add(CommunityCommandTagEnum.EventCommand); break;
+                        case CommandTypeEnum.ActionGroup: this.uploadCommand.Tags.Add(CommunityCommandTagEnum.ActionGroupCommand); break;
+                        case CommandTypeEnum.Timer: this.uploadCommand.Tags.Add(CommunityCommandTagEnum.TimerCommand); break;
+                        case CommandTypeEnum.Game: this.uploadCommand.Tags.Add(CommunityCommandTagEnum.GameCommand); break;
+                        case CommandTypeEnum.StreamlootsCard: this.uploadCommand.Tags.Add(CommunityCommandTagEnum.StreamlootsCardCommand); break;
+                        case CommandTypeEnum.TwitchChannelPoints: this.uploadCommand.Tags.Add(CommunityCommandTagEnum.TwitchChannelPointsCommand); break;
                     }
                 }
                 else
