@@ -69,6 +69,9 @@ namespace MixItUp.Base.Model.Store
         public HashSet<CommunityCommandTagEnum> Tags { get; set; } = new HashSet<CommunityCommandTagEnum>();
 
         [DataMember]
+        public Guid UserId { get; set; }
+
+        [DataMember]
         public string Username { get; set; }
 
         [DataMember]
