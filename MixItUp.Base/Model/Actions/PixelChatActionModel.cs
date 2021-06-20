@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -89,7 +90,7 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (ChannelSession.Services.PixelChat.IsConnected)
+            if (ServiceManager.Get<PixelChatService>().IsConnected)
             {
                 if (this.ActionType == PixelChatActionTypeEnum.ShowHideSceneComponent)
                 {
@@ -104,7 +105,7 @@ namespace MixItUp.Base.Model.Actions
                         if (!string.IsNullOrEmpty(this.TargetUsername))
                         {
                             string targetUsername = await this.ReplaceStringWithSpecialModifiers(this.TargetUsername, parameters);
-                            UserViewModel targetUser = await ChannelSession.Services.User.GetUserFullSearch(parameters.Platform, userID: null, targetUsername);
+                            UserViewModel targetUser = await ServiceManager.Get<UserService>().GetUserFullSearch(parameters.Platform, userID: null, targetUsername);
                             if (targetUser != null)
                             {
                                 user = targetUser;
@@ -127,7 +128,7 @@ namespace MixItUp.Base.Model.Actions
                     characters[0] = Char.ToLower(characters[0]);
                     sendMessage.type = new string(characters);
 
-                    await ChannelSession.Services.PixelChat.SendMessageToOverlay(this.OverlayID, sendMessage);
+                    await ServiceManager.Get<PixelChatService>().SendMessageToOverlay(this.OverlayID, sendMessage);
                 }
             }
         }

@@ -3,6 +3,7 @@ using Glimesh.Base.Models.Clients.Channel;
 using Glimesh.Base.Models.Clients.Chat;
 using Glimesh.Base.Models.Users;
 using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -270,18 +271,18 @@ namespace MixItUp.Base.Services.Glimesh
             {
                 if (!ServiceManager.Get<GlimeshSessionService>().Channel.IsLive && channel.Channel.IsLive)
                 {
-                    EventTrigger trigger = new EventTrigger(EventTypeEnum.GlimeshChannelStreamStart, ChannelSession.GetCurrentUser());
-                    if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
+                    CommandParametersModel parameters = new CommandParametersModel(ChannelSession.GetCurrentUser());
+                    if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.GlimeshChannelStreamStart, parameters))
                     {
-                        await ServiceManager.Get<EventService>().PerformEvent(trigger);
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.GlimeshChannelStreamStart, parameters);
                     }
                 }
                 else if (ServiceManager.Get<GlimeshSessionService>().Channel.IsLive && !channel.Channel.IsLive)
                 {
-                    EventTrigger trigger = new EventTrigger(EventTypeEnum.GlimeshChannelStreamStop, ChannelSession.GetCurrentUser());
-                    if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
+                    CommandParametersModel parameters = new CommandParametersModel(ChannelSession.GetCurrentUser());
+                    if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.GlimeshChannelStreamStop, parameters))
                     {
-                        await ServiceManager.Get<EventService>().PerformEvent(trigger);
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.GlimeshChannelStreamStop, parameters);
                     }
                 }
             }
@@ -301,8 +302,8 @@ namespace MixItUp.Base.Services.Glimesh
                     user = await UserViewModel.Create(follow.Follow.user);
                 }
 
-                EventTrigger trigger = new EventTrigger(EventTypeEnum.GlimeshChannelFollowed, user);
-                if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
+                CommandParametersModel parameters = new CommandParametersModel(user);
+                if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.GlimeshChannelFollowed, parameters))
                 {
                     user.FollowDate = DateTimeOffset.Now;
 
@@ -321,7 +322,7 @@ namespace MixItUp.Base.Services.Glimesh
                         }
                     }
 
-                    await ServiceManager.Get<EventService>().PerformEvent(trigger);
+                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.GlimeshChannelFollowed, parameters);
 
                     GlobalEvents.FollowOccurred(user);
 

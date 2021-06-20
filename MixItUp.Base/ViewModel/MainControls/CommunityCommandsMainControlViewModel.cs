@@ -203,7 +203,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 try
                 {
                     this.UserCommands.Clear();
-                    foreach (CommunityCommandModel command in await ChannelSession.Services.CommunityCommandsService.GetCommandsByUser(this.CommandDetails.UserID))
+                    foreach (CommunityCommandModel command in await ServiceManager.Get<CommunityCommandsService>().GetCommandsByUser(this.CommandDetails.UserID))
                     {
                         this.UserCommands.Add(new CommunityCommandViewModel(command));
                     }
@@ -222,7 +222,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 try
                 {
                     this.MyCommands.Clear();
-                    foreach (CommunityCommandModel command in await ChannelSession.Services.CommunityCommandsService.GetMyCommands())
+                    foreach (CommunityCommandModel command in await ServiceManager.Get<CommunityCommandsService>().GetMyCommands())
                     {
                         this.MyCommands.Add(new CommunityCommandViewModel(command));
                     }
@@ -240,7 +240,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 try
                 {
-                    CommunityCommandDetailsModel commandDetails = await ChannelSession.Services.CommunityCommandsService.GetCommandDetails((Guid)id);
+                    CommunityCommandDetailsModel commandDetails = await ServiceManager.Get<CommunityCommandsService>().GetCommandDetails((Guid)id);
                     if (commandDetails != null)
                     {
                         this.CommandDetails = new MyCommunityCommandDetailsViewModel(commandDetails);

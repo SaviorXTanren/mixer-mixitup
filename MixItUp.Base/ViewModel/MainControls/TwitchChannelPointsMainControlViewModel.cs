@@ -30,7 +30,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 string name = await DialogHelper.ShowTextEntry(MixItUp.Base.Resources.ChannelPointRewardName);
                 if (!string.IsNullOrEmpty(name))
                 {
-                    Result<CustomChannelPointRewardModel> reward = await ServiceManager.Get<TwitchSessionService>().UserConnection.CreateCustomChannelPointRewards(ChannelSession.TwitchUserNewAPI, new UpdatableCustomChannelPointRewardModel()
+                    Result<CustomChannelPointRewardModel> reward = await ServiceManager.Get<TwitchSessionService>().UserConnection.CreateCustomChannelPointRewards(ServiceManager.Get<TwitchSessionService>().UserNewAPI, new UpdatableCustomChannelPointRewardModel()
                     {
                         title = name,
                         cost = 1,

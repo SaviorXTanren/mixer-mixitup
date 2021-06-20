@@ -1,4 +1,6 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
+using MixItUp.Base.Util;
 using StreamingClient.Base.Model.OAuth;
 using System.Windows.Input;
 
@@ -31,7 +33,7 @@ namespace MixItUp.Base.ViewModel.Services
                 }
                 else
                 {
-                    Result result = await ChannelSession.Services.PixelChat.Connect(new OAuthTokenModel() { accessToken = this.APIKey });
+                    Result result = await ServiceManager.Get<PixelChatService>().Connect(new OAuthTokenModel() { accessToken = this.APIKey });
                     if (result.Success)
                     {
                         this.IsConnected = true;
@@ -45,14 +47,14 @@ namespace MixItUp.Base.ViewModel.Services
 
             this.LogOutCommand = this.CreateCommand(async () =>
             {
-                await ChannelSession.Services.PixelChat.Disconnect();
+                await ServiceManager.Get<PixelChatService>().Disconnect();
 
                 ChannelSession.Settings.PixelChatOAuthToken = null;
 
                 this.IsConnected = false;
             });
 
-            this.IsConnected = ChannelSession.Services.PixelChat.IsConnected;
+            this.IsConnected = ServiceManager.Get<PixelChatService>().IsConnected;
         }
     }
 }

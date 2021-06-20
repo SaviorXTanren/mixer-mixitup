@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Store;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.CommunityCommands;
 using SixLabors.ImageSharp;
@@ -60,7 +61,7 @@ namespace MixItUp.WPF.Windows.Commands
 
                     this.uploadCommand.SetCommands(new List<CommandModelBase>() { this.command });
 
-                    CommunityCommandDetailsModel existingCommand = await ChannelSession.Services.CommunityCommandsService.GetCommandDetails(command.ID);
+                    CommunityCommandDetailsModel existingCommand = await ServiceManager.Get<CommunityCommandsService>().GetCommandDetails(command.ID);
                     if (existingCommand != null)
                     {
                         this.uploadCommand.ID = existingCommand.ID;
@@ -112,7 +113,7 @@ namespace MixItUp.WPF.Windows.Commands
 
         private void BrowseImageFilePathButton_Click(object sender, RoutedEventArgs e)
         {
-            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.ImageFileFilter());
+            string filePath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(ServiceManager.Get<IFileService>().ImageFileFilter());
             if (!string.IsNullOrEmpty(filePath))
             {
                 this.ImageFilePathTextBox.Text = filePath;
@@ -139,18 +140,18 @@ namespace MixItUp.WPF.Windows.Commands
 
                     if (!string.IsNullOrEmpty(this.ImageFilePathTextBox.Text))
                     {
-                        if (!ChannelSession.Services.FileService.FileExists(this.ImageFilePathTextBox.Text))
+                        if (!ServiceManager.Get<IFileService>().FileExists(this.ImageFilePathTextBox.Text))
                         {
                             await DialogHelper.ShowMessage(MixItUp.Base.Resources.CommunityCommandsUploadInvalidImageFile);
                             return;
                         }
-                        this.uploadCommand.ImageFileData = await ChannelSession.Services.FileService.ReadFileAsBytes(this.ImageFilePathTextBox.Text);
+                        this.uploadCommand.ImageFileData = await ServiceManager.Get<IFileService>().ReadFileAsBytes(this.ImageFilePathTextBox.Text);
                     }
 
                     this.uploadCommand.Name = this.NameTextBox.Text;
                     this.uploadCommand.Description = this.DescriptionTextBox.Text;
 
-                    if (!string.IsNullOrEmpty(this.ImageFilePathTextBox.Text) && ChannelSession.Services.FileService.FileExists(this.ImageFilePathTextBox.Text))
+                    if (!string.IsNullOrEmpty(this.ImageFilePathTextBox.Text) && ServiceManager.Get<IFileService>().FileExists(this.ImageFilePathTextBox.Text))
                     {
                         string imageFilePath = this.ImageFilePathTextBox.Text;
                         this.uploadCommand.ImageFileData = await Task.Run(() =>
@@ -175,7 +176,7 @@ namespace MixItUp.WPF.Windows.Commands
                         });
                     }
 
-                    await ChannelSession.Services.CommunityCommandsService.AddOrUpdateCommand(this.uploadCommand);
+                    await ServiceManager.Get<CommunityCommandsService>().AddOrUpdateCommand(this.uploadCommand);
 
                     this.Close();
                 }

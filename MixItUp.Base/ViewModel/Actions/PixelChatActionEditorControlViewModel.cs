@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
@@ -221,14 +222,14 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override async Task OnLoadedInternal()
         {
-            if (ChannelSession.Services.PixelChat.IsConnected)
+            if (ServiceManager.Get<PixelChatService>().IsConnected)
             {
                 //foreach (PixelChatSceneModel scene in (await ChannelSession.Services.PixelChat.GetScenes()).OrderBy(o => o.Name))
                 //{
                 //    this.Scenes.Add(scene);
                 //}
 
-                foreach (PixelChatOverlayModel overlay in (await ChannelSession.Services.PixelChat.GetOverlays()).OrderBy(o => o.Name))
+                foreach (PixelChatOverlayModel overlay in (await ServiceManager.Get<PixelChatService>().GetOverlays()).OrderBy(o => o.Name))
                 {
                     this.allOverlays.Add(overlay);
                 }

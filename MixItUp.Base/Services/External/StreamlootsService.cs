@@ -269,7 +269,7 @@ namespace MixItUp.Base.Services.External
                 if (giftee != null)
                 {
                     parameters.Arguments.Add(giftee.Username);
-                    await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.StreamlootsPackGifted, parameters);
+                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.StreamlootsPackGifted, parameters);
                 }
                 else
                 {

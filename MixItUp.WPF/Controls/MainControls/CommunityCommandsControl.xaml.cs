@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.CommunityCommands;
@@ -87,7 +88,7 @@ namespace MixItUp.WPF.Controls.MainControls
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
                     {
-                        await ChannelSession.Services.CommunityCommandsService.DownloadCommand(this.viewModel.CommandDetails.ID);
+                        await ServiceManager.Get<CommunityCommandsService>().DownloadCommand(this.viewModel.CommandDetails.ID);
                     }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }

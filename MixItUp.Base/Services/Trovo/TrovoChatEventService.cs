@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -290,8 +291,8 @@ namespace MixItUp.Base.Services.Trovo
 
                 if (message.type == ChatMessageTypeEnum.FollowAlert)
                 {
-                    EventTrigger trigger = new EventTrigger(EventTypeEnum.TrovoChannelFollowed, user);
-                    if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
+                    CommandParametersModel parameters = new CommandParametersModel(user);
+                    if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TrovoChannelFollowed, parameters))
                     {
                         user.FollowDate = DateTimeOffset.Now;
 
@@ -310,7 +311,7 @@ namespace MixItUp.Base.Services.Trovo
                             }
                         }
 
-                        await ServiceManager.Get<EventService>().PerformEvent(trigger);
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelFollowed, parameters);
 
                         GlobalEvents.FollowOccurred(user);
 
@@ -319,10 +320,10 @@ namespace MixItUp.Base.Services.Trovo
                 }
                 else if (message.type == ChatMessageTypeEnum.SubscriptionAlert)
                 {
-                    EventTrigger trigger = new EventTrigger(EventTypeEnum.TrovoChannelSubscribed, user);
-                    if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
+                    CommandParametersModel parameters = new CommandParametersModel(user);
+                    if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TrovoChannelSubscribed, parameters))
                     {
-                        trigger.SpecialIdentifiers["message"] = message.content;
+                        parameters.SpecialIdentifiers["message"] = message.content;
                         //trigger.SpecialIdentifiers["usersubmonths"] = months.ToString();
                         //trigger.SpecialIdentifiers["usersubplanname"] = !string.IsNullOrEmpty(packet.sub_plan_name) ? packet.sub_plan_name : TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
                         //trigger.SpecialIdentifiers["usersubplan"] = planTier;
@@ -342,15 +343,15 @@ namespace MixItUp.Base.Services.Trovo
 
                         foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
                         {
-                            if (trigger.User.HasPermissionsTo(streamPass.Permission))
+                            if (parameters.User.HasPermissionsTo(streamPass.Permission))
                             {
                                 streamPass.AddAmount(user.Data, streamPass.SubscribeBonus);
                             }
                         }
 
-                        if (string.IsNullOrEmpty(await ServiceManager.Get<ModerationService>().ShouldTextBeModerated(user, trigger.SpecialIdentifiers["message"])))
+                        if (string.IsNullOrEmpty(await ServiceManager.Get<ModerationService>().ShouldTextBeModerated(user, message.content)))
                         {
-                            await ServiceManager.Get<EventService>().PerformEvent(trigger);
+                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelSubscribed, parameters);
                         }
                     }
 
@@ -366,12 +367,12 @@ namespace MixItUp.Base.Services.Trovo
 
                     if (ChannelSession.Settings.TwitchMassGiftedSubsFilterAmount == 0 || totalGifted > ChannelSession.Settings.TwitchMassGiftedSubsFilterAmount)
                     {
-                        EventTrigger trigger = new EventTrigger(EventTypeEnum.TrovoChannelMassSubscriptionsGifted, user);
-                        trigger.SpecialIdentifiers["subsgiftedamount"] = totalGifted.ToString();
+                        CommandParametersModel parameters = new CommandParametersModel(user);
+                        parameters.SpecialIdentifiers["subsgiftedamount"] = totalGifted.ToString();
                         //trigger.SpecialIdentifiers["subsgiftedlifetimeamount"] = massGiftedSubEvent.LifetimeGifted.ToString();
                         //trigger.SpecialIdentifiers["usersubplan"] = massGiftedSubEvent.PlanTier;
                         //trigger.SpecialIdentifiers["isanonymous"] = massGiftedSubEvent.IsAnonymous.ToString();
-                        await ServiceManager.Get<EventService>().PerformEvent(trigger);
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelMassSubscriptionsGifted, parameters);
                     }
                     await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Trovo, user, string.Format("{0} Gifted {1} Subs", user.DisplayName, totalGifted), ChannelSession.Settings.AlertMassGiftedSubColor));
                 }
@@ -420,10 +421,10 @@ namespace MixItUp.Base.Services.Trovo
                         this.userSubsGiftedInstanced.TryGetValue(user.ID, out int totalGifted);
                         if (ChannelSession.Settings.TwitchMassGiftedSubsFilterAmount == 0 || this.userSubsGiftedInstanced[user.ID] <= ChannelSession.Settings.TwitchMassGiftedSubsFilterAmount)
                         {
-                            EventTrigger trigger = new EventTrigger(EventTypeEnum.TrovoChannelSubscriptionGifted, user);
-                            trigger.Arguments.Add(giftee.Username);
-                            trigger.TargetUser = giftee;
-                            await ServiceManager.Get<EventService>().PerformEvent(trigger);
+                            CommandParametersModel parameters = new CommandParametersModel(user);
+                            parameters.Arguments.Add(giftee.Username);
+                            parameters.TargetUser = giftee;
+                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelSubscriptionGifted, parameters);
                         }
 
                         await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Trovo, user, string.Format("{0} Gifted A Subscription To {1}", user.DisplayName, giftee.DisplayName), ChannelSession.Settings.AlertGiftedSubColor));
@@ -439,8 +440,8 @@ namespace MixItUp.Base.Services.Trovo
                         int raidCount = 0;
                         int.TryParse(Regex.Replace(match.Value, OnlyDigitsRegexReplacementFormat, string.Empty), out raidCount);
 
-                        EventTrigger trigger = new EventTrigger(EventTypeEnum.TrovoChannelRaided, user);
-                        if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
+                        CommandParametersModel parameters = new CommandParametersModel(user);
+                        if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TrovoChannelRaided, parameters))
                         {
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidUserData] = user.ID;
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidViewerCountData] = raidCount.ToString();
@@ -460,8 +461,8 @@ namespace MixItUp.Base.Services.Trovo
 
                             GlobalEvents.RaidOccurred(user, raidCount);
 
-                            trigger.SpecialIdentifiers["raidviewercount"] = raidCount.ToString();
-                            await ServiceManager.Get<EventService>().PerformEvent(trigger);
+                            parameters.SpecialIdentifiers["raidviewercount"] = raidCount.ToString();
+                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelRaided, parameters);
 
                             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Trovo, user, string.Format("{0} raided with {1} viewers", user.DisplayName, raidCount), ChannelSession.Settings.AlertRaidColor));
                         }

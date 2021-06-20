@@ -164,7 +164,7 @@ namespace MixItUp.WPF.Controls.Chat
                     {
                         if (ServiceManager.Has<TwitchChatService>())
                         {
-                            this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, this.FindMatchingEmoticons<ChatEmoteModel>(tag.Substring(1, tag.Length - 1), ChannelSession.Services.Chat.TwitchChatService.Emotes));
+                            this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, this.FindMatchingEmoticons<ChatEmoteModel>(tag.Substring(1, tag.Length - 1), ServiceManager.Get<TwitchChatService>().Emotes));
                         }
                     }
                     else if (ChannelSession.Settings.ShowBetterTTVEmotes || ChannelSession.Settings.ShowFrankerFaceZEmotes)

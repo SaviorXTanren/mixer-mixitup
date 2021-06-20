@@ -177,9 +177,9 @@ namespace MixItUp.Base.Services
                     }
                 }
 
-                await ServiceManager.Get<EventService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Followed", user.FullDisplayName), ChannelSession.Settings.AlertFollowColor));
+                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Followed", user.FullDisplayName), ChannelSession.Settings.AlertFollowColor));
 
-                await ServiceManager.Get<AlertService>().PerformEvent(EventTypeEnum.TwitchChannelFollowed, parameters);
+                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelFollowed, parameters);
 
                 GlobalEvents.FollowOccurred(user);
             }

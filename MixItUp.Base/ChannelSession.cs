@@ -75,6 +75,7 @@ namespace MixItUp.Base
             ServiceManager.Add(new PatreonService());
             ServiceManager.Add(new DiscordService());
             ServiceManager.Add(new TwitterService());
+            ServiceManager.Add(new PixelChatService());
 
             ServiceManager.Add(new TwitchSessionService());
             ServiceManager.Add(new TwitchStatusService());
@@ -286,7 +287,7 @@ namespace MixItUp.Base
                 if (ChannelSession.Settings.PatreonOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<PatreonService>()] = ChannelSession.Settings.PatreonOAuthToken; }
                 if (ChannelSession.Settings.DiscordOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<DiscordService>()] = ChannelSession.Settings.DiscordOAuthToken; }
                 if (ChannelSession.Settings.TwitterOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<TwitterService>()] = ChannelSession.Settings.TwitterOAuthToken; }
-                if (ChannelSession.Settings.PixelChatOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.PixelChat] = ChannelSession.Settings.PixelChatOAuthToken; }
+                if (ChannelSession.Settings.PixelChatOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<PixelChatService>()] = ChannelSession.Settings.PixelChatOAuthToken; }
                 if (ServiceManager.Get<IOBSStudioService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<IOBSStudioService>()] = null; }
                 if (ServiceManager.Get<StreamlabsOBSService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<StreamlabsOBSService>()] = null; }
                 if (ServiceManager.Get<XSplitService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<XSplitService>()] = null; }

@@ -52,7 +52,7 @@ namespace MixItUp.Base.ViewModel.Commands
         {
             if (command != null)
             {
-                string fileName = ChannelSession.Services.FileService.ShowSaveFileDialog(command.Name + MixItUpCommandFileExtension);
+                string fileName = ServiceManager.Get<IFileService>().ShowSaveFileDialog(command.Name + MixItUpCommandFileExtension);
                 if (!string.IsNullOrEmpty(fileName))
                 {
                     await FileSerializerHelper.SerializeToFile(fileName, command);
