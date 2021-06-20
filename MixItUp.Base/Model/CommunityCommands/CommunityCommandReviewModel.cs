@@ -13,6 +13,9 @@ namespace MixItUp.Base.Model.Store
         public Guid CommandID { get; set; }
 
         [DataMember]
+        public string UserId { get; set; }
+
+        [DataMember]
         public string Username { get; set; }
 
         [DataMember]
