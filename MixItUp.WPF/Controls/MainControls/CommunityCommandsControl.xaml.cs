@@ -53,7 +53,16 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (e.AddedItems.Count > 0 && e.AddedItems[0] is CommunityCommandViewModel)
             {
-                this.viewModel.DetailsCommand.Execute(((CommunityCommandViewModel)e.AddedItems[0]).ID);
+                this.viewModel.GetCommandDetailsCommand.Execute(((CommunityCommandViewModel)e.AddedItems[0]).ID);
+                ((ListView)sender).SelectedItem = null;
+            }
+        }
+
+        private void UserCommandsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count > 0 && e.AddedItems[0] is CommunityCommandViewModel)
+            {
+                this.viewModel.GetCommandDetailsCommand.Execute(((CommunityCommandViewModel)e.AddedItems[0]).ID);
                 ((ListView)sender).SelectedItem = null;
             }
         }

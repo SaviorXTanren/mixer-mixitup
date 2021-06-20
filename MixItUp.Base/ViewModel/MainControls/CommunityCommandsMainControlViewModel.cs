@@ -54,18 +54,18 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public ThreadSafeObservableCollection<CommunityCommandViewModel> SearchResults { get; set; } = new ThreadSafeObservableCollection<CommunityCommandViewModel>();
 
-        public ICommand DetailsCommand { get; set; }
+        public ICommand GetCommandDetailsCommand { get; set; }
 
-        public bool ShowDetails
+        public bool ShowCommandDetails
         {
-            get { return this.showDetails; }
+            get { return this.showCommandDetails; }
             set
             {
-                this.showDetails = value;
+                this.showCommandDetails = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private bool showDetails;
+        private bool showCommandDetails;
 
         public CommunityCommandDetailsViewModel CommandDetails
         {
@@ -78,7 +78,22 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private CommunityCommandDetailsViewModel commandDetails;
 
-        public ICommand MyCommandsCommand { get; set; }
+        public ICommand GetUserCommandsCommand { get; set; }
+
+        public bool ShowUserCommands
+        {
+            get { return this.showUserCommands; }
+            set
+            {
+                this.showUserCommands = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool showUserCommands;
+
+        public ThreadSafeObservableCollection<CommunityCommandViewModel> UserCommands { get; set; } = new ThreadSafeObservableCollection<CommunityCommandViewModel>();
+
+        public ICommand GetMyCommandsCommand { get; set; }
 
         public bool ShowMyCommands
         {
@@ -105,30 +120,39 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             this.BackCommand = this.CreateCommand(async () =>
             {
-                if (this.ShowSearch)
+                if (this.ShowMyCommands)
                 {
                     await this.NavigateToCategories();
                 }
-                else if (this.ShowDetails)
+                else if (this.ShowUserCommands)
                 {
-                    if (this.SearchResults.Count > 0)
-                    {
-                        this.ClearAllShows();
-                        this.ShowSearch = true;
-                    }
-                    else if (this.MyCommands.Count > 0)
+                    await this.NavigateToCategories();
+                }
+                else if (this.ShowSearch)
+                {
+                    await this.NavigateToCategories();
+                }
+                else if (this.ShowCommandDetails)
+                {
+                    if (this.MyCommands.Count > 0)
                     {
                         this.ClearAllShows();
                         this.ShowMyCommands = true;
+                    }
+                    else if (this.UserCommands.Count > 0)
+                    {
+                        this.ClearAllShows();
+                        this.ShowUserCommands = true;
+                    }
+                    else if (this.SearchResults.Count > 0)
+                    {
+                        this.ClearAllShows();
+                        this.ShowSearch = true;
                     }
                     else
                     {
                         await this.NavigateToCategories();
                     }
-                }
-                else if (this.ShowMyCommands)
-                {
-                    await this.NavigateToCategories();
                 }
             });
 
@@ -154,7 +178,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
             });
 
-            this.DetailsCommand = this.CreateCommand(async (id) =>
+            this.GetCommandDetailsCommand = this.CreateCommand(async (id) =>
             {
                 try
                 {
@@ -164,7 +188,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                         this.CommandDetails = new CommunityCommandDetailsViewModel(commandDetails);
 
                         this.ClearAllShows();
-                        this.ShowDetails = true;
+                        this.ShowCommandDetails = true;
                     }
                 }
                 catch (Exception ex)
@@ -173,7 +197,26 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
             });
 
-            this.MyCommandsCommand = this.CreateCommand(async () =>
+            this.GetUserCommandsCommand = this.CreateCommand(async () =>
+            {
+                try
+                {
+                    this.UserCommands.Clear();
+                    foreach (CommunityCommandModel command in await ChannelSession.Services.CommunityCommandsService.GetCommandsByUser(this.CommandDetails.UserID))
+                    {
+                        this.UserCommands.Add(new CommunityCommandViewModel(command));
+                    }
+
+                    this.ClearAllShows();
+                    this.ShowUserCommands = true;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+            });
+
+            this.GetMyCommandsCommand = this.CreateCommand(async () =>
             {
                 try
                 {
@@ -202,7 +245,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                         this.CommandDetails = new MyCommunityCommandDetailsViewModel(commandDetails);
 
                         this.ClearAllShows();
-                        this.ShowDetails = true;
+                        this.ShowCommandDetails = true;
                     }
                 }
                 catch (Exception ex)
@@ -219,7 +262,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                     {
                         await ChannelSession.Services.CommunityCommandsService.DeleteCommand(this.CommandDetails.ID);
 
-                        this.MyCommandsCommand.Execute(null);
+                        this.GetMyCommandsCommand.Execute(null);
                     }
                 }
                 catch (Exception ex)
@@ -238,7 +281,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 Review = review,
             });
 
-            this.DetailsCommand.Execute(this.CommandDetails.ID);
+            this.GetCommandDetailsCommand.Execute(this.CommandDetails.ID);
         }
 
         public async Task ReportCommand(string report)
@@ -287,6 +330,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.ShowHome = true;
 
             this.SearchResults.Clear();
+            this.UserCommands.Clear();
             this.MyCommands.Clear();
         }
 
@@ -294,7 +338,8 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             this.ShowHome = false;
             this.ShowSearch = false;
-            this.ShowDetails = false;
+            this.ShowCommandDetails = false;
+            this.ShowUserCommands = false;
             this.ShowMyCommands = false;
         }
     }
