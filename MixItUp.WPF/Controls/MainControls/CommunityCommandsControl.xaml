@@ -49,19 +49,26 @@
                 </Grid>
 
                 <ScrollViewer x:Name="HomeScrollViewer" Grid.Row="2">
-                    <ItemsControl ItemsSource="{Binding Categories}" Margin="10,0">
+                    <ItemsControl ItemsSource="{Binding Categories}" AlternationCount="{Binding RelativeSource={RelativeSource Self}, Path=Items.Count}" Margin="10,0">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="10">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="15" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="2" />
+                                        <RowDefinition Height="Auto" />
                                         <RowDefinition Height="10" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
-                                    <TextBlock Grid.Row="0" Text="{Binding Name}" FontSize="24" TextDecorations="Underline" FontWeight="Bold" />
+                                    <Separator Grid.Row="0" x:Name="SeparatorDivider" />
 
-                                    <ListView x:Name="CommandsList" Grid.Row="2" ItemsSource="{Binding Commands}" SelectionChanged="CommandsList_SelectionChanged" PreviewMouseWheel="CommandsList_PreviewMouseWheel">
+                                    <TextBlock Grid.Row="2" Text="{Binding Name}" FontSize="24" TextDecorations="Underline" FontWeight="Bold" />
+                                    <TextBlock Grid.Row="4" Text="{Binding Description}" VerticalAlignment="Center" />
+
+                                    <ListView x:Name="CommandsList" Grid.Row="6" ItemsSource="{Binding Commands}" SelectionChanged="CommandsList_SelectionChanged" PreviewMouseWheel="CommandsList_PreviewMouseWheel">
                                         <ListView.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <StackPanel Orientation="Horizontal" />
@@ -74,6 +81,12 @@
                                         </ListView.ItemTemplate>
                                     </ListView>
                                 </Grid>
+
+                                <DataTemplate.Triggers>
+                                    <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                        <Setter Property="Visibility" TargetName="SeparatorDivider" Value="Collapsed" />
+                                    </Trigger>
+                                </DataTemplate.Triggers>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
