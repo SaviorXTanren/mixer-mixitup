@@ -297,7 +297,7 @@ namespace MixItUp.Base.Services
         public async Task<IEnumerable<CommunityCommandDetailsModel>> GetCommandsByUser(Guid userID)
         {
             await EnsureLogin();
-            return await GetAsync<IEnumerable<CommunityCommandDetailsModel>>($"command/user/{userID}");
+            return await GetAsync<IEnumerable<CommunityCommandDetailsModel>>($"community/commands/command/user/{userID}");
         }
 
         public async Task<IEnumerable<CommunityCommandDetailsModel>> GetMyCommands()
