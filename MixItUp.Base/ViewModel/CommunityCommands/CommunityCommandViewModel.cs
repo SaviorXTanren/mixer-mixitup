@@ -27,6 +27,8 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
 
         public HashSet<CommunityCommandTagEnum> Tags { get { return this.model.Tags; } }
 
+        public Guid UserID { get { return this.model.UserId; } }
+
         public string Username { get { return this.model.Username; } }
 
         public string UserAvatarURL { get { return this.model.UserAvatarURL; } }
@@ -37,9 +39,28 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
 
         public DateTimeOffset LastUpdated { get { return this.model.LastUpdated; } }
 
-        public string LastUpdatedString { get { return this.LastUpdated.ToFriendlyDateTimeString(); } }
+        public string LastUpdatedString { get { return this.LastUpdated.ToCorrectLocalTime().ToFriendlyDateTimeString(); } }
 
         public string TagsDisplayString { get { return MixItUp.Base.Resources.TagsHeader + " " + string.Join(", ", this.Tags.Select(t => EnumLocalizationHelper.GetLocalizedName(t))); } }
+
+        public string DownloadsString
+        {
+            get
+            {
+                if (this.Downloads > 1000000)
+                {
+                    return string.Format(MixItUp.Base.Resources.CommunityCommandsDownloadsMillionFormat, (int)(this.Downloads / 1000000));
+                }
+                else if (this.Downloads > 1000)
+                {
+                    return string.Format(MixItUp.Base.Resources.CommunityCommandsDownloadsThousandsFormat, (int)(this.Downloads / 1000));
+                }
+                else
+                {
+                    return this.Downloads.ToString();
+                }
+            }
+        }
     }
 
     public class CommunityCommandDetailsViewModel : CommunityCommandViewModel
@@ -51,7 +72,7 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
         {
             this.model = model;
 
-            this.Command = this.model.GetCommand();
+            this.Commands = this.model.GetCommands();
 
             foreach (CommunityCommandReviewModel review in this.model.Reviews.OrderByDescending(r => r.DateTime))
             {
@@ -59,8 +80,27 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
             }
         }
 
-        public CommandModelBase Command { get; set; }
+        public virtual bool IsMyCommand { get { return false; } }
+
+        public bool IsPublicCommand { get { return !this.IsMyCommand; } }
+
+        public List<CommandModelBase> Commands { get; set; } = new List<CommandModelBase>();
 
         public List<CommunityCommandReviewViewModel> Reviews { get; } = new List<CommunityCommandReviewViewModel>();
+
+        public CommandModelBase PrimaryCommand { get { return this.Commands.FirstOrDefault(); } }
+    }
+
+    public class MyCommunityCommandDetailsViewModel : CommunityCommandDetailsViewModel
+    {
+        private CommunityCommandDetailsModel model;
+
+        public MyCommunityCommandDetailsViewModel(CommunityCommandDetailsModel model)
+            : base(model)
+        {
+            this.model = model;
+        }
+
+        public override bool IsMyCommand { get { return true; } }
     }
 }

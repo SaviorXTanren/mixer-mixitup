@@ -25,7 +25,7 @@
         PreviewDragLeave="CommandEditorWindow_PreviewDragLeave"
 
         Icon="./../../Logo.ico"
-        Title="Command Editor" Height="600" Width="800">
+        Title="{x:Static resx:Resources.CommandEditor}" Height="600" Width="800">
     <Windows:LoadingWindowBase.Resources>
         <Util:LocalizationConverter x:Key="LocalizationConverter"/>
     </Windows:LoadingWindowBase.Resources>
@@ -82,6 +82,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="5" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <ComboBox Grid.Column="0" ItemsSource="{Binding ActionTypes}" SelectedItem="{Binding SelectedActionType}" Width="200" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Action}">
@@ -113,6 +114,8 @@
                 <Button Grid.Column="10" ToolTip="{x:Static resx:Resources.ImportActions}" Command="{Binding ImportCommand}">
                     <MaterialDesign:PackIcon Kind="Import" Height="24" Width="24" Margin="-7,-10" Foreground="{StaticResource WhiteColor}" />
                 </Button>
+
+                <Button Grid.Column="11" x:Name="UploadCommunityCommandButton" Margin="30,0,0,0" Visibility="{Binding IsExistingCommand, Converter={StaticResource BooleanToVisibilityConverter}}" Content="{x:Static resx:Resources.CommunityCommandsUploadCommunityCommand}" Click="UploadCommunityCommandButton_Click" />
 
             </Grid>
         </Grid>

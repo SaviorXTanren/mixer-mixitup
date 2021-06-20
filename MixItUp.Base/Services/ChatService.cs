@@ -101,18 +101,18 @@ namespace MixItUp.Base.Services
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
-        public async Task SendMessage(string message, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All, bool sendAsStreamer = false)
+        public async Task SendMessage(string message, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All, bool sendAsStreamer = false, string replyMessageID = null)
         {
             if (!string.IsNullOrEmpty(message))
             {
                 if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceManager.Has<TwitchChatService>())
                 {
-                    await ServiceManager.Get<TwitchChatService>().SendMessage(message, sendAsStreamer);
+                    await ServiceManager.Get<TwitchChatService>().SendMessage(message, sendAsStreamer, replyMessageID);
 
                     if (sendAsStreamer || ServiceManager.Get<TwitchSessionService>().BotConnection == null)
                     {
                         UserViewModel user = ChannelSession.GetCurrentUser();
-                        await this.AddMessage(new TwitchChatMessageViewModel(user, message));
+                        await this.AddMessage(new TwitchChatMessageViewModel(user, message, replyMessageID));
                     }
                 }
 
@@ -413,9 +413,7 @@ namespace MixItUp.Base.Services
 
                         if (!string.IsNullOrEmpty(message.PlainTextMessage))
                         {
-                            EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatWhisperReceived, message.User);
-                            trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
-                            await ServiceManager.Get<EventService>().PerformEvent(trigger);
+                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatWhisperReceived, new CommandParametersModel(message));
                         }
 
                         // Don't send this if it's in response to another "You are whisperer #" message
@@ -453,10 +451,7 @@ namespace MixItUp.Base.Services
 
                         if (!string.IsNullOrEmpty(message.PlainTextMessage))
                         {
-                            EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatMessageReceived, message.User);
-                            trigger.Arguments = new List<string>(message.ToArguments());
-                            trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
-                            await ServiceManager.Get<EventService>().PerformEvent(trigger);
+                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatMessageReceived, new CommandParametersModel(message));
                         }
 
                         message.User.Data.TotalChatMessageSent++;
@@ -712,7 +707,8 @@ namespace MixItUp.Base.Services
         {
             Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
 
-            CommandParametersModel parameters = new CommandParametersModel(message.User, message.Platform, arguments);
+            CommandParametersModel parameters = new CommandParametersModel(message);
+            parameters.Arguments = new List<string>(arguments);   // Overwrite arguments to account for variable argument length for commands
             parameters.SpecialIdentifiers["message"] = message.PlainTextMessage;
             await ServiceManager.Get<CommandService>().Queue(command, parameters);
 

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -21,7 +22,6 @@ using Twitch.Base.Models.NewAPI.Bits;
 using Twitch.Base.Models.NewAPI.Chat;
 using Twitch.Base.Models.NewAPI.Users;
 using Twitch.Base.Models.V5.Emotes;
-using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 
 namespace MixItUp.Base.Services.Twitch
 {
@@ -56,6 +56,53 @@ namespace MixItUp.Base.Services.Twitch
 
     public class TwitchChatService : StreamingPlatformServiceBase
     {
+        IDictionary<string, ChatEmoteModel> Emotes { get; }
+        IDictionary<string, ChatBadgeSetModel> ChatBadges { get; }
+        IDictionary<string, BetterTTVEmoteModel> BetterTTVEmotes { get; }
+        IDictionary<string, FrankerFaceZEmoteModel> FrankerFaceZEmotes { get; }
+        IEnumerable<TwitchBitsCheermoteViewModel> BitsCheermotes { get; }
+
+        event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred;
+        event EventHandler<IEnumerable<UserViewModel>> OnUsersLeaveOccurred;
+
+        event EventHandler<TwitchChatMessageViewModel> OnMessageOccurred;
+
+        bool IsUserConnected { get; }
+        bool IsBotConnected { get; }
+
+        Task<Result> ConnectUser();
+        Task DisconnectUser();
+
+        Task<Result> ConnectBot();
+        Task DisconnectBot();
+
+        Task Initialize();
+
+        Task SendMessage(string message, bool sendAsStreamer = false, string replyMessageID = null);
+
+        Task SendWhisperMessage(UserViewModel user, string message, bool sendAsStreamer = false);
+
+        Task DeleteMessage(ChatMessageViewModel message);
+
+        Task ClearMessages();
+
+        Task ModUser(UserViewModel user);
+
+        Task UnmodUser(UserViewModel user);
+
+        Task TimeoutUser(UserViewModel user, int lengthInSeconds);
+
+        Task BanUser(UserViewModel user);
+
+        Task UnbanUser(UserViewModel user);
+
+        Task RunCommercial(int lengthInSeconds);
+    }
+
+    public class TwitchChatService : StreamingPlatformServiceBase, ITwitchChatService
+    {
+        private const int MaxMessageLength = 400;
+
         private static List<string> ExcludedDiagnosticPacketLogging = new List<string>() { "PING", ChatMessagePacketModel.CommandID, ChatUserJoinPacketModel.CommandID, ChatUserLeavePacketModel.CommandID };
 
         private const string HostChatMessageRegexPattern = "^\\w+ is now hosting you.$";
@@ -68,6 +115,9 @@ namespace MixItUp.Base.Services.Twitch
 
         public IDictionary<string, EmoteModel> Emotes { get { return this.emotes; } }
         private Dictionary<string, EmoteModel> emotes = new Dictionary<string, EmoteModel>();
+        private IEnumerable<string> emoteSetIDs = null;
+        public IDictionary<string, ChatEmoteModel> Emotes { get { return this.emotes; } }
+        private Dictionary<string, ChatEmoteModel> emotes = new Dictionary<string, ChatEmoteModel>();
 
         public IDictionary<string, BetterTTVEmoteModel> BetterTTVEmotes { get { return this.betterTTVEmotes; } }
         private Dictionary<string, BetterTTVEmoteModel> betterTTVEmotes = new Dictionary<string, BetterTTVEmoteModel>();
@@ -128,6 +178,7 @@ namespace MixItUp.Base.Services.Twitch
                         this.userClient.OnUserJoinReceived += UserClient_OnUserJoinReceived;
                         this.userClient.OnUserLeaveReceived += UserClient_OnUserLeaveReceived;
                         this.userClient.OnUserStateReceived += UserClient_OnUserStateReceived;
+                        this.userClient.OnGlobalUserStateReceived += UserClient_OnGlobalUserStateReceived;
                         this.userClient.OnUserNoticeReceived += UserClient_OnUserNoticeReceived;
                         this.userClient.OnChatClearReceived += UserClient_OnChatClearReceived;
                         this.userClient.OnMessageReceived += UserClient_OnMessageReceived;
@@ -144,6 +195,7 @@ namespace MixItUp.Base.Services.Twitch
                         await Task.Delay(1000);
 
                         await this.userClient.Join(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
+                        await this.userClient.Join((UserModel)ChannelSession.TwitchUserNewAPI);
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         AsyncRunner.RunAsyncBackground(this.ChatterJoinLeaveBackground, this.cancellationTokenSource.Token, 2500);
@@ -229,6 +281,7 @@ namespace MixItUp.Base.Services.Twitch
                         await Task.Delay(1000);
 
                         await this.botClient.Join(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
+                        await this.botClient.Join((UserModel)ChannelSession.TwitchUserNewAPI);
 
                         await Task.Delay(3000);
 
@@ -274,12 +327,25 @@ namespace MixItUp.Base.Services.Twitch
             initializationTasks.Add(Task.Run(async() =>
             {
                 foreach (EmoteModel emote in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetEmotesForUserV5(ServiceManager.Get<TwitchSessionService>().UserV5))
+                foreach (ChatEmoteModel emote in await ChannelSession.TwitchUserConnection.GetGlobalEmotes())
                 {
-                    this.emotes[emote.code] = emote;
+                    this.emotes[emote.name] = emote;
                 }
             }));
 
             Task<IEnumerable<ChatBadgeSetModel>> globalChatBadgesTask = ServiceManager.Get<TwitchSessionService>().UserConnection.GetGlobalChatBadges();
+            if (this.emoteSetIDs != null)
+            {
+                initializationTasks.Add(Task.Run(async () =>
+                {
+                    foreach (ChatEmoteModel emote in await ChannelSession.TwitchUserConnection.GetEmoteSets(this.emoteSetIDs))
+                    {
+                        this.emotes[emote.name] = emote;
+                    }
+                }));
+            }
+
+            Task<IEnumerable<ChatBadgeSetModel>> globalChatBadgesTask = ChannelSession.TwitchUserConnection.GetGlobalChatBadges();
             initializationTasks.Add(globalChatBadgesTask);
             Task<IEnumerable<ChatBadgeSetModel>> channelChatBadgesTask = ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelChatBadges(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
             initializationTasks.Add(channelChatBadgesTask);
@@ -331,7 +397,7 @@ namespace MixItUp.Base.Services.Twitch
             this.initialUserLogins.Clear();
         }
 
-        public async Task SendMessage(string message, bool sendAsStreamer = false)
+        public async Task SendMessage(string message, bool sendAsStreamer = false, string replyMessageID = null)
         {
             await this.messageSemaphore.WaitAndRelease(async () =>
             {
@@ -343,6 +409,15 @@ namespace MixItUp.Base.Services.Twitch
                     {
                         message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
                         await client.SendMessage(ServiceManager.Get<TwitchSessionService>().UserNewAPI, message);
+                        message = this.SplitLargeMessage(message, out subMessage);
+                        if (!string.IsNullOrEmpty(replyMessageID))
+                        {
+                            await client.SendReplyMessage((UserModel)ChannelSession.TwitchUserNewAPI, message, replyMessageID);
+                        }
+                        else
+                        {
+                            await client.SendMessage((UserModel)ChannelSession.TwitchUserNewAPI, message);
+                        }
                         message = subMessage;
                         await Task.Delay(500);
                     }
@@ -651,6 +726,11 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
+        private void UserClient_OnGlobalUserStateReceived(object sender, ChatGlobalUserStatePacketModel userState)
+        {
+            this.emoteSetIDs = userState.EmoteSetsDictionary;
+        }
+
         private async void UserClient_OnUserNoticeReceived(object sender, ChatUserNoticePacketModel userNotice)
         {
             try
@@ -666,6 +746,8 @@ namespace MixItUp.Base.Services.Twitch
 
                     EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelRaided, user);
                     if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
+                    CommandParametersModel parameters = new CommandParametersModel(user);
+                    if (ChannelSession.Services.Events.CanPerformEvent(EventTypeEnum.TwitchChannelRaided, parameters))
                     {
                         ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidUserData] = user.ID;
                         ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidViewerCountData] = userNotice.RaidViewerCount;
@@ -688,6 +770,9 @@ namespace MixItUp.Base.Services.Twitch
                         trigger.SpecialIdentifiers["hostviewercount"] = userNotice.RaidViewerCount.ToString();
                         trigger.SpecialIdentifiers["raidviewercount"] = userNotice.RaidViewerCount.ToString();
                         await ServiceManager.Get<EventService>().PerformEvent(trigger);
+                        parameters.SpecialIdentifiers["hostviewercount"] = userNotice.RaidViewerCount.ToString();
+                        parameters.SpecialIdentifiers["raidviewercount"] = userNotice.RaidViewerCount.ToString();
+                        await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.TwitchChannelRaided, parameters);
 
                         await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} raided with {1} viewers", user.FullDisplayName, userNotice.RaidViewerCount), ChannelSession.Settings.AlertRaidColor));
                     }
@@ -747,6 +832,11 @@ namespace MixItUp.Base.Services.Twitch
                 trigger.TargetUser = user;
                 trigger.SpecialIdentifiers["timeoutlength"] = chatClear.BanDuration.ToString();
                 await ServiceManager.Get<EventService>().PerformEvent(trigger);
+                CommandParametersModel parameters = new CommandParametersModel();
+                parameters.Arguments.Add("@" + user.Username);
+                parameters.TargetUser = user;
+                parameters.SpecialIdentifiers["timeoutlength"] = chatClear.BanDuration.ToString();
+                await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.ChatUserTimeout, parameters);
 
                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Timed Out for {1} seconds", user.FullDisplayName, chatClear.BanDuration), ChannelSession.Settings.AlertModerationColor));
             }
@@ -756,6 +846,10 @@ namespace MixItUp.Base.Services.Twitch
                 trigger.Arguments.Add("@" + user.Username);
                 trigger.TargetUser = user;
                 await ServiceManager.Get<EventService>().PerformEvent(trigger);
+                CommandParametersModel parameters = new CommandParametersModel();
+                parameters.Arguments.Add("@" + user.Username);
+                parameters.TargetUser = user;
+                await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.ChatUserBan, parameters);
 
                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Banned", user.FullDisplayName), ChannelSession.Settings.AlertModerationColor));
 
@@ -781,6 +875,8 @@ namespace MixItUp.Base.Services.Twitch
 
                             EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelHosted, user);
                             if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
+                            CommandParametersModel parameters = new CommandParametersModel(user);
+                            if (ChannelSession.Services.Events.CanPerformEvent(EventTypeEnum.TwitchChannelHosted, parameters))
                             {
                                 foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
                                 {
@@ -790,6 +886,7 @@ namespace MixItUp.Base.Services.Twitch
                                 GlobalEvents.HostOccurred(user);
 
                                 await ServiceManager.Get<EventService>().PerformEvent(trigger);
+                                await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.TwitchChannelHosted, parameters);
 
                                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} hosted the channel", user.FullDisplayName), ChannelSession.Settings.AlertHostColor));
                             }

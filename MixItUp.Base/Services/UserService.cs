@@ -133,14 +133,15 @@ namespace MixItUp.Base.Services
                     {
                         if (user.Data.ViewingMinutes == 0)
                         {
-                            await ServiceManager.Get<EventService>().PerformEvent(new EventTrigger(EventTypeEnum.ChatUserFirstJoin, user));
+                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserFirstJoin, new CommandParametersModel(user));
                         }
 
-                        if (ServiceManager.Get<EventService>().CanPerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user)))
+                        CommandParametersModel parameters = new CommandParametersModel(user);
+                        if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.ChatUserJoined, parameters))
                         {
                             user.LastSeen = DateTimeOffset.Now;
                             user.Data.TotalStreamsWatched++;
-                            await ServiceManager.Get<EventService>().PerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user));
+                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserJoined, parameters);
                         }
                     }
                 }
@@ -203,7 +204,7 @@ namespace MixItUp.Base.Services
                     this.platformUsernameLookups[StreamingPlatformTypeEnum.Trovo].Remove(user.TrovoUsername);
                 }
 
-                await ServiceManager.Get<EventService>().PerformEvent(new EventTrigger(EventTypeEnum.ChatUserLeft, user));
+                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserLeft, new CommandParametersModel(user));
             }
         }
 
@@ -246,13 +247,8 @@ namespace MixItUp.Base.Services
             return results.Random();
         }
 
-        public async Task<UserViewModel> GetUserFullSearch(StreamingPlatformTypeEnum platform, string userID, string username)
+        public async Task<UserViewModel> GetUserFullSearch(StreamingPlatformTypeEnum platform, string userID = null, string username = null)
         {
-            if (string.IsNullOrEmpty(username))
-            {
-                throw new ArgumentException("Username must be supplied as part of user full search");
-            }
-
             UserViewModel user = null;
             if (!string.IsNullOrEmpty(userID))
             {

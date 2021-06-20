@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.CommunityCommands;
 using StreamingClient.Base.Util;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -11,6 +12,8 @@ namespace MixItUp.Base.ViewModel.MainControls
 {
     public class CommunityCommandsMainControlViewModel : WindowControlViewModelBase
     {
+        public HashSet<Guid> DownloadedCommandsCache = new HashSet<Guid>();
+
         public ICommand BackCommand { get; set; }
 
         public bool ShowHome
@@ -52,18 +55,18 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public ThreadSafeObservableCollection<CommunityCommandViewModel> SearchResults { get; set; } = new ThreadSafeObservableCollection<CommunityCommandViewModel>();
 
-        public ICommand DetailsCommand { get; set; }
+        public ICommand GetCommandDetailsCommand { get; set; }
 
-        public bool ShowDetails
+        public bool ShowCommandDetails
         {
-            get { return this.showDetails; }
+            get { return this.showCommandDetails; }
             set
             {
-                this.showDetails = value;
+                this.showCommandDetails = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private bool showDetails;
+        private bool showCommandDetails;
 
         public CommunityCommandDetailsViewModel CommandDetails
         {
@@ -76,9 +79,39 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private CommunityCommandDetailsViewModel commandDetails;
 
-        public ICommand DownloadCommand { get; set; }
-        public ICommand ReviewCommand { get; set; }
-        public ICommand ReportCommand { get; set; }
+        public ICommand GetUserCommandsCommand { get; set; }
+
+        public bool ShowUserCommands
+        {
+            get { return this.showUserCommands; }
+            set
+            {
+                this.showUserCommands = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool showUserCommands;
+
+        public ThreadSafeObservableCollection<CommunityCommandViewModel> UserCommands { get; set; } = new ThreadSafeObservableCollection<CommunityCommandViewModel>();
+
+        public ICommand GetMyCommandsCommand { get; set; }
+
+        public bool ShowMyCommands
+        {
+            get { return this.showMyCommands; }
+            set
+            {
+                this.showMyCommands = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool showMyCommands;
+
+        public ThreadSafeObservableCollection<CommunityCommandViewModel> MyCommands { get; set; } = new ThreadSafeObservableCollection<CommunityCommandViewModel>();
+
+        public ICommand EditMyCommandCommand { get; set; }
+
+        public ICommand DeleteMyCommandCommand { get; set; }
 
         private bool firstLoadCompleted = false;
         private DateTimeOffset lastCategoryRefresh = DateTimeOffset.MinValue;
@@ -88,20 +121,38 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             this.BackCommand = this.CreateCommand(async () =>
             {
-                if (this.ShowSearch)
+                if (this.ShowMyCommands)
                 {
                     await this.NavigateToCategories();
                 }
-                else if (this.ShowDetails)
+                else if (this.ShowUserCommands)
                 {
-                    if (this.SearchResults.Count == 0)
+                    await this.NavigateToCategories();
+                }
+                else if (this.ShowSearch)
+                {
+                    await this.NavigateToCategories();
+                }
+                else if (this.ShowCommandDetails)
+                {
+                    if (this.MyCommands.Count > 0)
                     {
-                        await this.NavigateToCategories();
+                        this.ClearAllShows();
+                        this.ShowMyCommands = true;
                     }
-                    else
+                    else if (this.UserCommands.Count > 0)
+                    {
+                        this.ClearAllShows();
+                        this.ShowUserCommands = true;
+                    }
+                    else if (this.SearchResults.Count > 0)
                     {
                         this.ClearAllShows();
                         this.ShowSearch = true;
+                    }
+                    else
+                    {
+                        await this.NavigateToCategories();
                     }
                 }
             });
@@ -128,7 +179,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
             });
 
-            this.DetailsCommand = this.CreateCommand(async (id) =>
+            this.GetCommandDetailsCommand = this.CreateCommand(async (id) =>
             {
                 try
                 {
@@ -138,7 +189,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                         this.CommandDetails = new CommunityCommandDetailsViewModel(commandDetails);
 
                         this.ClearAllShows();
-                        this.ShowDetails = true;
+                        this.ShowCommandDetails = true;
                     }
                 }
                 catch (Exception ex)
@@ -147,24 +198,99 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
             });
 
-            this.DownloadCommand = this.CreateCommand(async () =>
+            this.GetUserCommandsCommand = this.CreateCommand(async () =>
             {
-                await ServiceManager.Get<CommunityCommandsService>().DownloadCommand(this.CommandDetails.ID);
-            });
-
-            this.ReviewCommand = this.CreateCommand(async () =>
-            {
-                await ServiceManager.Get<CommunityCommandsService>().AddReview(new CommunityCommandReviewModel()
+                try
                 {
-                    CommandID = this.CommandDetails.ID,
-                    Rating = 5,
-                    Review = "Here's a brand new review!!",
-                });
+                    this.UserCommands.Clear();
+                    foreach (CommunityCommandModel command in await ChannelSession.Services.CommunityCommandsService.GetCommandsByUser(this.CommandDetails.UserID))
+                    {
+                        this.UserCommands.Add(new CommunityCommandViewModel(command));
+                    }
+
+                    this.ClearAllShows();
+                    this.ShowUserCommands = true;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
             });
 
-            this.ReportCommand = this.CreateCommand(async () =>
+            this.GetMyCommandsCommand = this.CreateCommand(async () =>
             {
-                await ServiceManager.Get<CommunityCommandsService>().ReportCommand(this.CommandDetails.ID, "This command has bad stuff in it!");
+                try
+                {
+                    this.MyCommands.Clear();
+                    foreach (CommunityCommandModel command in await ChannelSession.Services.CommunityCommandsService.GetMyCommands())
+                    {
+                        this.MyCommands.Add(new CommunityCommandViewModel(command));
+                    }
+
+                    this.ClearAllShows();
+                    this.ShowMyCommands = true;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+            });
+
+            this.EditMyCommandCommand = this.CreateCommand(async (id) =>
+            {
+                try
+                {
+                    CommunityCommandDetailsModel commandDetails = await ChannelSession.Services.CommunityCommandsService.GetCommandDetails((Guid)id);
+                    if (commandDetails != null)
+                    {
+                        this.CommandDetails = new MyCommunityCommandDetailsViewModel(commandDetails);
+
+                        this.ClearAllShows();
+                        this.ShowCommandDetails = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+            });
+
+            this.DeleteMyCommandCommand = this.CreateCommand(async () =>
+            {
+                try
+                {
+                    if (this.CommandDetails.IsMyCommand && await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.CommunityCommandsDeleteMyCommandConfirmation))
+                    {
+                        await ServiceManager.Get<CommunityCommandsService>().DeleteCommand(this.CommandDetails.ID);
+
+                        this.GetMyCommandsCommand.Execute(null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+            });
+        }
+
+        public async Task ReviewCommand(int rating, string review)
+        {
+            await ServiceManager.Get<CommunityCommandsService>().AddReview(new CommunityCommandReviewModel()
+            {
+                CommandID = this.CommandDetails.ID,
+                Rating = rating,
+                Review = review,
+            });
+
+            this.GetCommandDetailsCommand.Execute(this.CommandDetails.ID);
+        }
+
+        public async Task ReportCommand(string report)
+        {
+            await ServiceManager.Get<CommunityCommandsService>().ReportCommand(new CommunityCommandReportModel()
+            {
+                CommandID = this.CommandDetails.ID,
+                Report = report
             });
         }
 
@@ -203,13 +329,19 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.ClearAllShows();
             this.ShowHome = true;
+
+            this.SearchResults.Clear();
+            this.UserCommands.Clear();
+            this.MyCommands.Clear();
         }
 
         private void ClearAllShows()
         {
             this.ShowHome = false;
             this.ShowSearch = false;
-            this.ShowDetails = false;
+            this.ShowCommandDetails = false;
+            this.ShowUserCommands = false;
+            this.ShowMyCommands = false;
         }
     }
 }

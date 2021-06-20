@@ -22,6 +22,7 @@ namespace MixItUp.Base.ViewModel.Settings
         public GenericToggleSettingsOptionControlViewModel IncludeUsernameWithRequirementErrors { get; set; }
 
         public GenericToggleNumberSettingsOptionControlViewModel TwitchMassGiftedSubsFilterAmount { get; set; }
+        public GenericToggleSettingsOptionControlViewModel TwitchReplyToCommandChatMessages { get; set; }
 
         public ThreadSafeObservableCollection<GenericToggleSettingsOptionControlViewModel> HideActionsList { get; set; } = new ThreadSafeObservableCollection<GenericToggleSettingsOptionControlViewModel>();
 
@@ -45,6 +46,8 @@ namespace MixItUp.Base.ViewModel.Settings
 
             this.TwitchMassGiftedSubsFilterAmount = new GenericToggleNumberSettingsOptionControlViewModel(MixItUp.Base.Resources.TwitchMassGiftedSubsFilterAmount, ChannelSession.Settings.TwitchMassGiftedSubsFilterAmount,
                 (value) => { ChannelSession.Settings.TwitchMassGiftedSubsFilterAmount = value; }, MixItUp.Base.Resources.TwitchMassGiftedSubsFilterAmountTooltip);
+            this.TwitchReplyToCommandChatMessages = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.TwitchReplyToCommandChatMessages, ChannelSession.Settings.TwitchReplyToCommandChatMessages,
+                (value) => { ChannelSession.Settings.TwitchReplyToCommandChatMessages = value; });
 
             List<ActionTypeEnum> actions = new List<ActionTypeEnum>(EnumHelper.GetEnumList<ActionTypeEnum>());
             actions.Remove(ActionTypeEnum.Custom);

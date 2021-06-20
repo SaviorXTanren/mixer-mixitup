@@ -5392,14 +5392,16 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="ChannelPointRewardUpdateCooldownAndLimits" xml:space="preserve">
     <value>Update Cooldown &amp; Limits</value>
   </data>
-  <data name="CreateChannelPointReward" xml:space="preserve">
-    <value>Create Channel Point Reward</value>
+  <data name="CreateNewChannelPointReward" xml:space="preserve">
+    <value>Create New Channel Point Reward</value>
   </data>
   <data name="ChannelPointRewardName" xml:space="preserve">
     <value>Channel Point Reward Name</value>
   </data>
   <data name="CreateChannelPointRewardFailure" xml:space="preserve">
-    <value>Channel Point Reward was not able to be created, please try again later. If this problem persists, please visit the Mix It Up Support Discord for assistance.</value>
+    <value>Channel Point Reward was not able to be created: {0}
+
+If this problem persists, please visit the Mix It Up Support Discord for assistance.</value>
   </data>
   <data name="CreateChannelPointRewardSuccess" xml:space="preserve">
     <value>Channel Point Reward successfully created! You can now dynamically update this Channel Point Reward using the Twitch action inside of a command. Please use the link on the main Channel Points page to visit the editor on Twitch to customize your reward.</value>
@@ -5672,5 +5674,125 @@ special users that you want to allow more control to such as a Moderator.</value
   </data>
   <data name="StreamMarkerDescriptionMustBe140CharactersOrLess" xml:space="preserve">
     <value>Stream Marker description must be 140 characters or less</value>
+  </data>
+  <data name="AddCommandToExistingReward" xml:space="preserve">
+    <value>Add Command To Existing Reward</value>
+  </data>
+  <data name="TwitchChannelPointRewardCreationErrorRewardAlreadyExists" xml:space="preserve">
+    <value>A reward already exists with the same name</value>
+  </data>
+  <data name="TwitchChannelPointRewardCreationErrorTooManyRewards" xml:space="preserve">
+    <value>You have reached the maximum amount of rewards able to be created</value>
+  </data>
+  <data name="CommunityCommandsAddToExistingCommand" xml:space="preserve">
+    <value>Add the actions from this command to an existing command:</value>
+  </data>
+  <data name="CommunityCommandsBuildNewCommand" xml:space="preserve">
+    <value>Build a new command from this Community Command:</value>
+  </data>
+  <data name="CommunityCommandsDownloadToFile" xml:space="preserve">
+    <value>Download command to *.miucommand file:</value>
+  </data>
+  <data name="CommunityCommandsMyCommands" xml:space="preserve">
+    <value>My Commands</value>
+  </data>
+  <data name="CommunityCommandsReportCommand" xml:space="preserve">
+    <value>Please describe why you wish to report this command. Please note that reporting commands should only be used if the command is deemed inappropriate or malicious. For everything else, please leave a Review of the command instead.</value>
+  </data>
+  <data name="CommunityCommandsDeleteMyCommandConfirmation" xml:space="preserve">
+    <value>Are you sure you wish to delete this Community Command?</value>
+  </data>
+  <data name="CommunityCommandsDownloadsMillionFormat" xml:space="preserve">
+    <value>{0}M+</value>
+  </data>
+  <data name="CommunityCommandsDownloadsThousandsFormat" xml:space="preserve">
+    <value>{0}K+</value>
+  </data>
+  <data name="CommunityCommandsUploadCommunityCommand" xml:space="preserve">
+    <value>Upload Command</value>
+  </data>
+  <data name="CommandEditor" xml:space="preserve">
+    <value>Command Editor</value>
+  </data>
+  <data name="CommunityCommandsExternalAssetActionsDetected" xml:space="preserve">
+    <value>The following command contains actions that may use external assets in some way (EX: Sound, Overlay, File). When this action is uploaded, it WILL NOT include these external assets, just the actions themselves. We encourage creators to explain what the intent of these actions are or to upload these assets somewhere online and either include the links to them in the actions themselves or a link for where to download them in your description.</value>
+  </data>
+  <data name="CommunityCommandsImageFilePath" xml:space="preserve">
+    <value>Image File Path (Optional)</value>
+  </data>
+  <data name="CommunityCommandsUploadInvalidDescription" xml:space="preserve">
+    <value>A valid description must be specified</value>
+  </data>
+  <data name="CommunityCommandsUploadInvalidImageFile" xml:space="preserve">
+    <value>A valid image file must be selected if used</value>
+  </data>
+  <data name="CommunityCommandsUploadInvalidName" xml:space="preserve">
+    <value>A valid name must be specified</value>
+  </data>
+  <data name="MissingTextHintWarning" xml:space="preserve">
+    <value>Missing Text</value>
+  </data>
+  <data name="TwitchReplyToCommandChatMessages" xml:space="preserve">
+    <value>Twitch Reply to Chat Message in Chat Command</value>
+  </data>
+  <data name="CommunityCommandsFailedToUploadCommand" xml:space="preserve">
+    <value>Failed to upload command: </value>
+  </data>
+  <data name="AddStreamathonTime" xml:space="preserve">
+    <value>Add Streamathon Time</value>
+  </data>
+  <data name="PixelChat" xml:space="preserve">
+    <value>Pixel Chat</value>
+  </data>
+  <data name="PixelChatActionMissingTimeAmount" xml:space="preserve">
+    <value>Pixel Chat Action: Missing Time Amount</value>
+  </data>
+  <data name="PixelChatDeveloperToken" xml:space="preserve">
+    <value>Developer Token</value>
+  </data>
+  <data name="PixelChatDeveloperTokenPage" xml:space="preserve">
+    <value>Developer Tokens Page</value>
+  </data>
+  <data name="PixelChatFailedToGetUserData" xml:space="preserve">
+    <value>Failed to get user data, please try again later.</value>
+  </data>
+  <data name="PixelChatInfo1" xml:space="preserve">
+    <value>Pixel Chat service connectivity allows you to control various elements of your Pixel Chat Overlays and trigger specific functionality.</value>
+  </data>
+  <data name="PixelChatInfo2" xml:space="preserve">
+    <value>To connect to PixelChat, you will need to create a Developer Token. This can be found by going to the profile, click "View Tokens", and create a new Developer Token.</value>
+  </data>
+  <data name="PixelChatInvalidAPIKey" xml:space="preserve">
+    <value>Please enter a valid Pixel Chat API key.</value>
+  </data>
+  <data name="StartStreamathon" xml:space="preserve">
+    <value>Start Streamathon</value>
+  </data>
+  <data name="TriggerCountdown" xml:space="preserve">
+    <value>Trigger Count Down</value>
+  </data>
+  <data name="TriggerCountup" xml:space="preserve">
+    <value>Trigger Count Up</value>
+  </data>
+  <data name="TriggerCredits" xml:space="preserve">
+    <value>Trigger Credits</value>
+  </data>
+  <data name="TriggerGiveaway" xml:space="preserve">
+    <value>Trigger Giveaway</value>
+  </data>
+  <data name="TriggerShoutout" xml:space="preserve">
+    <value>Trigger Shoutout</value>
+  </data>
+  <data name="PixelChatActionMissingOverlay" xml:space="preserve">
+    <value>Pixel Chat Action: Missing Overlay</value>
+  </data>
+  <data name="PixelChatActionMissingScene" xml:space="preserve">
+    <value>Pixel Chat Action: Missing Scene</value>
+  </data>
+  <data name="PixelChatActionMissingSceneComponent" xml:space="preserve">
+    <value>Pixel Chat Action: Missing Scene Component</value>
+  </data>
+  <data name="ShowHideSceneComponent" xml:space="preserve">
+    <value>Show/Hide Scene Component</value>
   </data>
 </root>

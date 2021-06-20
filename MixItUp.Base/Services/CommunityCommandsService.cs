@@ -21,9 +21,10 @@ namespace MixItUp.Base.Services
         Task<IEnumerable<CommunityCommandCategoryModel>> GetHomeCategories();
         Task<IEnumerable<CommunityCommandModel>> SearchCommands(string searchText);
         Task<CommunityCommandDetailsModel> GetCommandDetails(Guid id);
-        Task<CommunityCommandDetailsModel> AddOrUpdateCommand(CommunityCommandDetailsModel command);
+        Task<CommunityCommandDetailsModel> AddOrUpdateCommand(CommunityCommandUploadModel command);
         Task DeleteCommand(Guid id);
-        Task ReportCommand(Guid id, string report);
+        Task ReportCommand(CommunityCommandReportModel report);
+        Task<IEnumerable<CommunityCommandDetailsModel>> GetCommandsByUser(Guid userID);
         Task<IEnumerable<CommunityCommandDetailsModel>> GetMyCommands();
         Task<CommunityCommandReviewModel> AddReview(CommunityCommandReviewModel review);
         Task DownloadCommand(Guid id);
@@ -101,29 +102,34 @@ namespace MixItUp.Base.Services
             return this.commandCache.FirstOrDefault(c => c.ID.Equals(id));
         }
 
-        public async Task<CommunityCommandDetailsModel> AddOrUpdateCommand(CommunityCommandDetailsModel command)
+        public async Task<CommunityCommandDetailsModel> AddOrUpdateCommand(CommunityCommandUploadModel command)
         {
             await Task.Delay(1000);
 
             CommunityCommandDetailsModel existingCommand = this.commandCache.FirstOrDefault(c => c.ID.Equals(command.ID));
-            if (existingCommand != null)
+            if (existingCommand == null)
             {
-                existingCommand.Name = command.Name;
-                existingCommand.Description = command.Description;
-                existingCommand.ImageURL = command.ImageURL;
-                existingCommand.Tags = command.Tags;
-                existingCommand.Username = command.Username;
-                existingCommand.UserAvatarURL = command.UserAvatarURL;
-                existingCommand.Data = command.Data;
+                existingCommand = this.GenerateTestCommand(command.Name);
+                this.commandCache.Add(existingCommand);
+            }
 
-                return existingCommand;
-            }
-            else
+            existingCommand.Name = command.Name;
+            existingCommand.Description = command.Description;
+            if (command.Tags.Count > 0)
             {
-                command.ID = Guid.NewGuid();
-                this.commandCache.Add(command);
-                return command;
+                existingCommand.Tags = command.Tags;
             }
+            if (command.ImageFileData != null && command.ImageFileData.Length > 0)
+            {
+                //existingCommand.ImageURL = command.ImageFileData;
+                existingCommand.ImageURL = command.ImageURL;
+            }
+            if (!string.IsNullOrEmpty(command.Data))
+            {
+                existingCommand.Data = command.Data;
+            }
+
+            return existingCommand;
         }
 
         public async Task DeleteCommand(Guid id)
@@ -137,22 +143,31 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task ReportCommand(Guid id, string report)
+        public async Task ReportCommand(CommunityCommandReportModel report)
         {
             await Task.Delay(1000);
 
-            CommunityCommandDetailsModel existingCommand = this.commandCache.FirstOrDefault(c => c.ID.Equals(id));
+            CommunityCommandDetailsModel existingCommand = this.commandCache.FirstOrDefault(c => c.ID.Equals(report.CommandID));
             if (existingCommand != null)
             {
                 // File report
             }
         }
 
+        public async Task<IEnumerable<CommunityCommandDetailsModel>> GetCommandsByUser(Guid userID)
+        {
+            await Task.Delay(1000);
+
+            return this.commandCache.Take(10).ToList();
+        }
+
         public async Task<IEnumerable<CommunityCommandDetailsModel>> GetMyCommands()
         {
             await Task.Delay(1000);
 
-            return this.commandCache.ToList();
+            var myCommands = this.commandCache.ToList();
+            myCommands.Reverse();
+            return myCommands.Take(10);
         }
 
         public async Task<CommunityCommandReviewModel> AddReview(CommunityCommandReviewModel review)
@@ -195,9 +210,11 @@ namespace MixItUp.Base.Services
                 Name = name,
                 Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis viverra nibh cras pulvinar mattis. At elementum eu facilisis sed odio morbi quis commodo. Malesuada fames ac turpis egestas. In pellentesque massa placerat duis ultricies. Porttitor massa id neque aliquam vestibulum. Lorem ipsum dolor sit amet consectetur adipiscing elit. Arcu non odio euismod lacinia at quis. Nunc mattis enim ut tellus elementum sagittis. Feugiat in fermentum posuere urna nec tincidunt praesent semper feugiat.",
                 ImageURL = "https://appsgeyser.com/img/store_icon.png",
+                UserId = Guid.NewGuid(),
                 Username = "Joe Smoe",
                 UserAvatarURL = "https://static-cdn.jtvnw.net/jtv_user_pictures/45182012-95d6-4704-9863-82ff3fbaf48e-profile_image-70x70.png",
-                Downloads = 1234,
+                Downloads = RandomHelper.GenerateRandomNumber(1, 999999999),
+                LastUpdated = DateTimeOffset.Now,
             };
 
             foreach (CommunityCommandTagEnum tag in EnumHelper.GetEnumList<CommunityCommandTagEnum>().Shuffle().Take(5))
@@ -213,7 +230,7 @@ namespace MixItUp.Base.Services
                     CommandID = storeCommand.ID,
                     Username = "Joe Smoe",
                     UserAvatarURL = "https://static-cdn.jtvnw.net/jtv_user_pictures/45182012-95d6-4704-9863-82ff3fbaf48e-profile_image-70x70.png",
-                    Rating = i,
+                    Rating = RandomHelper.GenerateRandomNumber(1, 5),
                     Review = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis viverra nibh cras pulvinar mattis. At elementum eu facilisis sed odio morbi quis commodo. Malesuada fames ac turpis egestas. In pellentesque massa placerat duis ultricies. Porttitor massa id neque aliquam vestibulum. Lorem ipsum dolor sit amet consectetur adipiscing elit. Arcu non odio euismod lacinia at quis. Nunc mattis enim ut tellus elementum sagittis. Feugiat in fermentum posuere urna nec tincidunt praesent semper feugiat.",
                     DateTime = DateTimeOffset.Now
                 });
@@ -222,13 +239,13 @@ namespace MixItUp.Base.Services
 
             ChatCommandModel command = new ChatCommandModel(storeCommand.Name, new HashSet<string>() { "test" });
             command.Actions.Add(new ChatActionModel("Hello World!"));
-            storeCommand.SetCommand(command);
+            storeCommand.SetCommands(new List<CommandModelBase>() { command });
 
             return storeCommand;
         }
     }
 
-    public class CommunityCommandsService : OAuthRestServiceBase
+    public class CommunityCommandsService : OAuthRestServiceBase, ICommunityCommandsService
     {
         private readonly string baseAddress;
         private string accessToken = null;
@@ -250,10 +267,17 @@ namespace MixItUp.Base.Services
 
         public async Task<CommunityCommandDetailsModel> GetCommandDetails(Guid id)
         {
-            return await GetAsync<CommunityCommandDetailsModel>($"community/commands/command/{id}");
+            try
+            {
+                return await GetAsync<CommunityCommandDetailsModel>($"community/commands/command/{id}");
+            }
+            catch (HttpRestRequestException ex) when (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
+            }
         }
 
-        public async Task<CommunityCommandDetailsModel> AddOrUpdateCommand(CommunityCommandDetailsModel command)
+        public async Task<CommunityCommandDetailsModel> AddOrUpdateCommand(CommunityCommandUploadModel command)
         {
             await EnsureLogin();
             return await PostAsync<CommunityCommandDetailsModel>("community/commands/command", AdvancedHttpClient.CreateContentFromObject(command));
@@ -265,15 +289,16 @@ namespace MixItUp.Base.Services
             await DeleteAsync<CommunityCommandDetailsModel>($"community/commands/command/{id}/delete");
         }
 
-        public async Task ReportCommand(Guid id, string report)
+        public async Task ReportCommand(CommunityCommandReportModel report)
         {
             await EnsureLogin();
-            var reportModel = new CommunityCommandReportModel
-            {
-                Report = report,
-            };
+            await PostAsync($"community/commands/command/{report.CommandID}/report", AdvancedHttpClient.CreateContentFromObject(report));
+        }
 
-            await PostAsync($"community/commands/command/{id}/report", AdvancedHttpClient.CreateContentFromObject(reportModel));
+        public async Task<IEnumerable<CommunityCommandDetailsModel>> GetCommandsByUser(Guid userID)
+        {
+            await EnsureLogin();
+            return await GetAsync<IEnumerable<CommunityCommandDetailsModel>>($"command/user/{userID}");
         }
 
         public async Task<IEnumerable<CommunityCommandDetailsModel>> GetMyCommands()
@@ -290,9 +315,11 @@ namespace MixItUp.Base.Services
 
         public async Task DownloadCommand(Guid id)
         {
-            await EnsureLogin();
-            await GetAsync<IEnumerable<CommunityCommandDetailsModel>>($"community/commands/command/{id}/download");
-            // TODO: Add more logic here
+            try
+            {
+                await GetAsync<IEnumerable<CommunityCommandDetailsModel>>($"community/commands/command/{id}/download");
+            }
+            catch { }
         }
 
         protected override Task<OAuthTokenModel> GetOAuthToken(bool autoRefreshToken = true)

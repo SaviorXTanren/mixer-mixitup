@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -686,22 +687,22 @@ namespace MixItUp.Base.Services.External
                         PatreonTier tier = this.Campaign.GetTier(member.TierID);
                         if (tier != null)
                         {
-                            EventTrigger trigger = new EventTrigger(EventTypeEnum.PatreonSubscribed);
+                            CommandParametersModel parameters = new CommandParametersModel();
 
-                            trigger.User = await ServiceManager.Get<UserService>().GetUserFullSearch(member.User.Platform, member.User.PlatformUserID, member.User.PlatformUsername);
-                            if (trigger.User != null)
+                            parameters.User = await ServiceManager.Get<UserService>().GetUserFullSearch(member.User.Platform, member.User.PlatformUserID, member.User.PlatformUsername);
+                            if (parameters.User != null)
                             {
-                                trigger.User.Data.PatreonUserID = member.UserID;
+                                parameters.User.Data.PatreonUserID = member.UserID;
                             }
                             else
                             {
-                                trigger.User = UserViewModel.Create(member.User.PlatformUsername);
+                                parameters.User = UserViewModel.Create(member.User.PlatformUsername);
                             }
 
-                            trigger.SpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierNameSpecialIdentifier] = tier.Title;
-                            trigger.SpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierAmountSpecialIdentifier] = tier.Amount.ToString();
-                            trigger.SpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierImageSpecialIdentifier] = tier.ImageUrl;
-                            await ServiceManager.Get<EventService>().PerformEvent(trigger);
+                            parameters.SpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierNameSpecialIdentifier] = tier.Title;
+                            parameters.SpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierAmountSpecialIdentifier] = tier.Amount.ToString();
+                            parameters.SpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierImageSpecialIdentifier] = tier.ImageUrl;
+                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.PatreonSubscribed, parameters);
                         }
                     }
                     this.currentMembersAndTiers[member.UserID] = member.TierID;

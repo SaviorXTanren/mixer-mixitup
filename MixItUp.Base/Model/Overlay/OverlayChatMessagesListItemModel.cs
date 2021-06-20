@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using Twitch.Base.Models.V5.Emotes;
+using Twitch.Base.Models.NewAPI.Chat;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -75,9 +75,9 @@ namespace MixItUp.Base.Model.Overlay
                         {
                             textParts.Add((string)messagePart);
                         }
-                        else if (messagePart is EmoteModel)
+                        else if (messagePart is ChatEmoteModel)
                         {
-                            imageURL = ((EmoteModel)messagePart).Size1URL;
+                            imageURL = ((ChatEmoteModel)messagePart).Size1URL;
                         }
                         else if (messagePart is BetterTTVEmoteModel)
                         {

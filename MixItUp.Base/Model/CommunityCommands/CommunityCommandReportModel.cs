@@ -7,6 +7,8 @@ namespace MixItUp.Base.Model.Store
     public class CommunityCommandReportModel
     {
         [DataMember]
+        public Guid CommandID { get; set; }
+        [DataMember]
         public string Report { get; set; }
     }
 }

@@ -114,34 +114,6 @@ namespace MixItUp.Base.Services
         TwitchChannelHypeTrainEnd = 282,
 
         // 300
-        // 300 = YouTube
-
-        // 400 = Trovo
-
-        [Name("Trovo Channel Raided")]
-        TrovoChannelRaided = 203,
-
-        [Name("Trovo Channel Followed")]
-        TrovoChannelFollowed = 210,
-
-        [Name("Trovo Channel Subscribed")]
-        TrovoChannelSubscribed = 220,
-        [Name("Trovo Channel Resubscribed")]
-        TrovoChannelResubscribed = 221,
-        [Name("Trovo Channel Subscription Gifted")]
-        TrovoChannelSubscriptionGifted = 222,
-        [Name("Trovo Channel Mass Subscriptions Gifted")]
-        TrovoChannelMassSubscriptionsGifted = 223,
-
-        // 500 = Glimesh
-
-        [Name("Glimesh Channel Stream Start")]
-        GlimeshChannelStreamStart = 500,
-        [Name("Glimesh Channel Stream Stop")]
-        GlimeshChannelStreamStop = 501,
-
-        [Name("Glimesh Channel Followed")]
-        GlimeshChannelFollowed = 510,
 
         // External Services = 1000
 
@@ -160,52 +132,26 @@ namespace MixItUp.Base.Services
         StreamElementsMerchPurchase = 1101,
     }
 
-    public class EventTrigger
+    public interface IEventService
     {
-        public EventTypeEnum Type { get; set; }
-        public StreamingPlatformTypeEnum Platform { get; set; } = StreamingPlatformTypeEnum.None;
-        public UserViewModel User { get; set; }
-        public List<string> Arguments { get; set; } = new List<string>();
-        public Dictionary<string, string> SpecialIdentifiers { get; set; } = new Dictionary<string, string>();
-        public UserViewModel TargetUser { get; set; }
+        ITwitchEventService TwitchEventService { get; }
 
-        public EventTrigger(EventTypeEnum type)
-        {
-            this.Type = type;
-        }
+        Task Initialize(ITwitchEventService twitchEventService);
 
-        public EventTrigger(EventTypeEnum type, UserViewModel user)
-            : this(type)
-        {
-            this.User = user;
-            if (this.User != null)
-            {
-                this.Platform = this.User.Platform;
-            }
-            else
-            {
-                this.Platform = StreamingPlatformTypeEnum.All;
-            }
-        }
+        EventCommandModel GetEventCommand(EventTypeEnum type);
 
-        public EventTrigger(EventTypeEnum type, UserViewModel user, Dictionary<string, string> specialIdentifiers)
-            : this(type, user)
-        {
-            this.SpecialIdentifiers = specialIdentifiers;
-        }
+        bool CanPerformEvent(EventTypeEnum type, CommandParametersModel parameters);
+
+        Task PerformEvent(EventTypeEnum type, CommandParametersModel parameters);
     }
 
-    public class EventService
+    public class EventService : IEventService
     {
         private static HashSet<EventTypeEnum> singleUseTracking = new HashSet<EventTypeEnum>()
         {
             EventTypeEnum.ChatUserFirstJoin, EventTypeEnum.ChatUserJoined, EventTypeEnum.ChatUserLeft,
 
             EventTypeEnum.TwitchChannelStreamStart, EventTypeEnum.TwitchChannelStreamStop, EventTypeEnum.TwitchChannelFollowed, EventTypeEnum.TwitchChannelUnfollowed, EventTypeEnum.TwitchChannelHosted, EventTypeEnum.TwitchChannelRaided, EventTypeEnum.TwitchChannelSubscribed, EventTypeEnum.TwitchChannelResubscribed,
-
-            EventTypeEnum.TrovoChannelFollowed,EventTypeEnum.TrovoChannelRaided, EventTypeEnum.TrovoChannelSubscribed, EventTypeEnum.TrovoChannelResubscribed,
-
-            EventTypeEnum.GlimeshChannelStreamStart, EventTypeEnum.GlimeshChannelStreamStop, EventTypeEnum.GlimeshChannelFollowed,
         };
 
         private LockedDictionary<EventTypeEnum, HashSet<Guid>> userEventTracking = new LockedDictionary<EventTypeEnum, HashSet<Guid>>();
@@ -220,36 +166,31 @@ namespace MixItUp.Base.Services
 
         public static async Task ProcessDonationEvent(EventTypeEnum type, UserDonationModel donation, List<string> arguments = null, Dictionary<string, string> additionalSpecialIdentifiers = null)
         {
-            EventTrigger trigger = new EventTrigger(type, donation.User);
-            trigger.User.Data.TotalAmountDonated += donation.Amount;
+            CommandParametersModel parameters = new CommandParametersModel(donation.User, donation.Platform, arguments, donation.GetSpecialIdentifiers());
 
-            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestDonationUserData] = trigger.User.ID;
-            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestDonationAmountData] = donation.AmountText;
-
-            if (arguments != null)
-            {
-                trigger.Arguments = arguments;
-            }
-            trigger.SpecialIdentifiers = donation.GetSpecialIdentifiers();
             if (additionalSpecialIdentifiers != null)
             {
                 foreach (var kvp in additionalSpecialIdentifiers)
                 {
-                    trigger.SpecialIdentifiers[kvp.Key] = kvp.Value;
+                    parameters.SpecialIdentifiers[kvp.Key] = kvp.Value;
                 }
             }
 
-            await ServiceManager.Get<EventService>().PerformEvent(trigger);
-
             foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
             {
-                if (trigger.User.HasPermissionsTo(streamPass.Permission))
+                if (parameters.User.HasPermissionsTo(streamPass.Permission))
                 {
                     streamPass.AddAmount(donation.User.Data, (int)Math.Ceiling(streamPass.DonationBonus * donation.Amount));
                 }
             }
 
-            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.All, trigger.User, string.Format("{0} Donated {1}", trigger.User.FullDisplayName, donation.AmountText), ChannelSession.Settings.AlertDonationColor));
+            parameters.User.Data.TotalAmountDonated += donation.Amount;
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestDonationUserData] = parameters.User.ID;
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestDonationAmountData] = donation.AmountText;
+
+            await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.All, parameters.User, string.Format("{0} Donated {1}", parameters.User.FullDisplayName, donation.AmountText), ChannelSession.Settings.AlertDonationColor));
+
+            await ChannelSession.Services.Events.PerformEvent(type, parameters);
 
             try
             {
@@ -261,14 +202,17 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public Task Initialize()
+        public ITwitchEventService TwitchEventService { get; private set; }
+
+        public Task Initialize(ITwitchEventService twitchEventService)
         {
+            this.TwitchEventService = twitchEventService;
             return Task.FromResult(0);
         }
 
         public EventCommandModel GetEventCommand(EventTypeEnum type)
         {
-            foreach (EventCommandModel command in ServiceManager.Get<CommandService>().EventCommands.ToList())
+            foreach (EventCommandModel command in ChannelSession.Services.Command.EventCommands.ToList())
             {
                 if (command.EventType == type)
                 {
@@ -278,43 +222,43 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        public bool CanPerformEvent(EventTrigger trigger)
+        public bool CanPerformEvent(EventTypeEnum type, CommandParametersModel parameters)
         {
-            UserViewModel user = (trigger.User != null) ? trigger.User : ChannelSession.GetCurrentUser();
-            if (EventService.singleUseTracking.Contains(trigger.Type) && this.userEventTracking.ContainsKey(trigger.Type))
+            UserViewModel user = (parameters.User != null) ? parameters.User : ChannelSession.GetCurrentUser();
+            if (EventService.singleUseTracking.Contains(type) && this.userEventTracking.ContainsKey(type))
             {
-                return !this.userEventTracking[trigger.Type].Contains(user.ID);
+                return !this.userEventTracking[type].Contains(user.ID);
             }
             return true;
         }
 
-        public async Task PerformEvent(EventTrigger trigger)
+        public async Task PerformEvent(EventTypeEnum type, CommandParametersModel parameters)
         {
-            if (this.CanPerformEvent(trigger))
+            if (this.CanPerformEvent(type, parameters))
             {
-                UserViewModel user = trigger.User;
+                UserViewModel user = parameters.User;
                 if (user == null)
                 {
                     user = ChannelSession.GetCurrentUser();
                 }
 
-                if (this.userEventTracking.ContainsKey(trigger.Type))
+                if (this.userEventTracking.ContainsKey(type))
                 {
                     lock (this.userEventTracking)
                     {
-                        this.userEventTracking[trigger.Type].Add(user.ID);
+                        this.userEventTracking[type].Add(user.ID);
                     }
                 }
 
-                await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
+                await ChannelSession.Services.User.AddOrUpdateActiveUser(user);
                 user.UpdateLastActivity();
 
-                EventCommandModel command = this.GetEventCommand(trigger.Type);
+                EventCommandModel command = this.GetEventCommand(type);
                 if (command != null)
                 {
-                    Logger.Log(LogLevel.Debug, $"Performing event trigger: {trigger.Type}");
+                    Logger.Log(LogLevel.Debug, $"Performing event trigger: {type}");
 
-                    await ServiceManager.Get<CommandService>().Queue(command, new CommandParametersModel(user, platform: trigger.Platform, arguments: trigger.Arguments, specialIdentifiers: trigger.SpecialIdentifiers) { TargetUser = trigger.TargetUser });
+                    await ChannelSession.Services.Command.Queue(command, parameters);
                 }
             }
         }

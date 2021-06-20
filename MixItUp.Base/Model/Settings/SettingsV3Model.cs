@@ -88,6 +88,8 @@ namespace MixItUp.Base.Model.Settings
         public OAuthTokenModel JustGivingOAuthToken { get; set; }
         [DataMember]
         public OAuthTokenModel RainMakerOAuthToken { get; set; }
+        [DataMember]
+        public OAuthTokenModel PixelChatOAuthToken { get; set; }
 
         #endregion Authentication
 
@@ -183,6 +185,8 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public int TwitchMassGiftedSubsFilterAmount { get; set; } = 1;
+        [DataMember]
+        public bool TwitchReplyToCommandChatMessages { get; set; }
 
         [DataMember]
         public HashSet<ActionTypeEnum> ActionsToHide { get; set; } = new HashSet<ActionTypeEnum>();
@@ -728,6 +732,10 @@ namespace MixItUp.Base.Model.Settings
             if (ServiceManager.Get<TwitterService>().IsConnected)
             {
                 this.TwitterOAuthToken = ServiceManager.Get<TwitterService>().GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.PixelChat.IsConnected)
+            {
+                this.PixelChatOAuthToken = ChannelSession.Services.PixelChat.GetOAuthTokenCopy();
             }
         }
 

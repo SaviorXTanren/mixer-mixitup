@@ -26,6 +26,7 @@
             <Separator Margin="10" />
 
             <GenericSettingsControls:GenericNumberSettingsOptionControl DataContext="{Binding TwitchMassGiftedSubsFilterAmount}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding TwitchReplyToCommandChatMessages}" />
 
             <Separator Margin="10" />
 

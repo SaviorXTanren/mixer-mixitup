@@ -181,8 +181,6 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<long> GetSubscriberCountV5(V5API.Channel.ChannelModel channel) { return await AsyncRunner.RunAsync(this.Connection.V5API.Channels.GetChannelSubscribersCount(channel)); }
 
-        public async Task<IEnumerable<V5API.Emotes.EmoteModel>> GetEmotesForUserV5(V5API.Users.UserModel user) { return await this.RunAsync(this.Connection.V5API.Users.GetUserEmotes(user)); }
-
         public async Task<V5API.Streams.StreamModel> GetV5LiveStream(V5API.Channel.ChannelModel channel) { return await AsyncRunner.RunAsync(this.Connection.V5API.Streams.GetChannelStream(channel)); }
 
         public async Task<IEnumerable<V5API.Streams.StreamModel>> GetV5ChannelStreams(IEnumerable<string> channelIDs, int maxResults) { return await this.RunAsync(this.Connection.V5API.Streams.GetStreams(channelIDs: channelIDs, streamType: StreamType.Live, maxResults: maxResults)); }
@@ -270,7 +268,21 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<IEnumerable<NewAPI.Chat.ChatBadgeSetModel>> GetGlobalChatBadges() { return await this.RunAsync(this.Connection.NewAPI.Chat.GetGlobalChatBadges()); }
 
-        public async Task<NewAPI.ChannelPoints.CustomChannelPointRewardModel> CreateCustomChannelPointRewards(NewAPI.Users.UserModel broadcaster, NewAPI.ChannelPoints.UpdatableCustomChannelPointRewardModel reward) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.ChannelPoints.CreateCustomReward(broadcaster, reward)); }
+        public async Task<Result<NewAPI.ChannelPoints.CustomChannelPointRewardModel>> CreateCustomChannelPointRewards(NewAPI.Users.UserModel broadcaster, NewAPI.ChannelPoints.UpdatableCustomChannelPointRewardModel reward)
+        {
+            try
+            {
+                return new Result<NewAPI.ChannelPoints.CustomChannelPointRewardModel>(await this.Connection.NewAPI.ChannelPoints.CreateCustomReward(broadcaster, reward));
+            }
+            catch (HttpRestRequestException ex)
+            {
+                return new Result<NewAPI.ChannelPoints.CustomChannelPointRewardModel>(await ex.Response.Content.ReadAsStringAsync());
+            }
+            catch (Exception ex)
+            {
+                return new Result<NewAPI.ChannelPoints.CustomChannelPointRewardModel>(ex.Message);
+            }
+        }
 
         public async Task<IEnumerable<NewAPI.ChannelPoints.CustomChannelPointRewardModel>> GetCustomChannelPointRewards(NewAPI.Users.UserModel broadcaster) { return await this.RunAsync(this.Connection.NewAPI.ChannelPoints.GetCustomRewards(broadcaster)); }
 
@@ -283,5 +295,9 @@ namespace MixItUp.Base.Services.Twitch
         public async Task<NewAPI.Predictions.PredictionModel> CreatePrediction(NewAPI.Predictions.CreatePredictionModel prediction) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Predictions.CreatePrediction(prediction)); }
 
         public async Task<NewAPI.Predictions.PredictionModel> GetPrediction(NewAPI.Users.UserModel broadcaster, string predictionID) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Predictions.GetPrediction(broadcaster, predictionID)); }
+
+        public async Task<IEnumerable<NewAPI.Chat.ChatEmoteModel>> GetGlobalEmotes() { return await this.RunAsync(this.Connection.NewAPI.Chat.GetGlobalEmotes()); }
+
+        public async Task<IEnumerable<NewAPI.Chat.ChatEmoteModel>> GetEmoteSets(IEnumerable<string> emoteSetIDs) { return await this.RunAsync(this.Connection.NewAPI.Chat.GetEmoteSets(emoteSetIDs)); }
     }
 }

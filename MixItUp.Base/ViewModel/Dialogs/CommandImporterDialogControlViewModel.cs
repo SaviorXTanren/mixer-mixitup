@@ -43,7 +43,7 @@ namespace MixItUp.Base.ViewModel.Dialogs
                 this.NotifyPropertyChanged();
             }
         }
-        private CommandTypeEnum selectedNewCommandType;
+        private CommandTypeEnum selectedNewCommandType = CommandTypeEnum.Chat;
 
         public bool IsExistingCommandSelected
         {

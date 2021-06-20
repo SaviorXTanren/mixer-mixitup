@@ -34,7 +34,7 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
 
         public DateTimeOffset DateTime { get { return this.model.DateTime; } }
 
-        public string DateTimeString { get { return this.DateTime.ToFriendlyDateTimeString(); } }
+        public string DateTimeString { get { return this.DateTime.ToCorrectLocalTime().ToFriendlyDateTimeString(); } }
 
         public List<bool> RatingItems { get; set; } = new List<bool>();
     }

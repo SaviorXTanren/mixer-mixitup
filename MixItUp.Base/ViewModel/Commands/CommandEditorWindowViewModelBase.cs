@@ -48,6 +48,20 @@ namespace MixItUp.Base.ViewModel.Commands
             return null;
         }
 
+        public static async Task<bool> ExportCommandToFile(CommandModelBase command)
+        {
+            if (command != null)
+            {
+                string fileName = ChannelSession.Services.FileService.ShowSaveFileDialog(command.Name + MixItUpCommandFileExtension);
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    await FileSerializerHelper.SerializeToFile(fileName, command);
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public CommandTypeEnum Type
         {
             get { return this.type; }
@@ -105,6 +119,8 @@ namespace MixItUp.Base.ViewModel.Commands
         public ICommand ExportCommand { get; private set; }
         public ICommand ImportCommand { get; private set; }
 
+        public bool IsExistingCommand { get { return this.existingCommand != null; } }
+
         public event EventHandler<CommandModelBase> CommandSaved = delegate { };
 
         protected CommandModelBase existingCommand;
@@ -153,15 +169,7 @@ namespace MixItUp.Base.ViewModel.Commands
 
             this.ExportCommand = this.CreateCommand(async () =>
             {
-                CommandModelBase command = await this.ValidateAndBuildCommand();
-                if (command != null)
-                {
-                    string fileName = ServiceManager.Get<IFileService>().ShowSaveFileDialog(this.Name + MixItUpCommandFileExtension);
-                    if (!string.IsNullOrEmpty(fileName))
-                    {
-                        await FileSerializerHelper.SerializeToFile(fileName, command);
-                    }
-                }
+                await CommandEditorWindowViewModelBase.ExportCommandToFile(await this.ValidateAndBuildCommand());
             });
 
             this.ImportCommand = this.CreateCommand(async () =>
