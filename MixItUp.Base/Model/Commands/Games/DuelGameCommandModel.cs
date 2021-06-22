@@ -154,6 +154,7 @@ namespace MixItUp.Base.Model.Commands.Games
             {
                 await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandCouldNotFindUser);
             }
+            await this.Requirements.Refund(parameters);
         }
 
         private void ClearData()
