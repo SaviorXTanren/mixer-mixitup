@@ -15,7 +15,7 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
                            
         mc:Ignorable="d"
-        Title="{x:Static resx:Resources.CommunityCommandsUploadCommunityCommand}" Height="600" Width="600">
+        Title="{x:Static resx:Resources.CommunityCommandsUploadCommunityCommand}" Height="500" Width="600">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -24,23 +24,26 @@
 
         <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
 
-        <Grid Grid.Row="0" Margin="16,0" VerticalAlignment="Center">
+        <Grid Grid.Row="0" Margin="16">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
+                <RowDefinition Height="15" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
+                <RowDefinition Height="15" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="15" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="30" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBox Grid.Row="0" x:Name="NameTextBox" Width="600" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" />
+            <TextBlock Grid.Row="0" Text="{x:Static resx:Resources.CommunityCommandsUploadCommunityCommand}" FontSize="24" HorizontalAlignment="Center" TextDecorations="Underline" FontWeight="Bold" />
 
-            <TextBox Grid.Row="2" x:Name="DescriptionTextBox" Width="600" Height="200" TextWrapping="Wrap" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Description}" />
+            <TextBox Grid.Row="2" x:Name="NameTextBox" Width="600" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" />
 
-            <Grid Grid.Row="4">
+            <TextBox Grid.Row="4" x:Name="DescriptionTextBox" Width="600" Height="200" TextWrapping="Wrap" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Description}" />
+
+            <Grid Grid.Row="6">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="20" />
@@ -50,10 +53,8 @@
                 <TextBox Grid.Column="0" x:Name="ImageFilePathTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommunityCommandsImageFilePath}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 <Button Grid.Column="2" x:Name="BrowseImageFilePathButton" Content="{x:Static resx:Resources.Browse}" Click="BrowseImageFilePathButton_Click" />
             </Grid>
-
-            <TextBlock Grid.Row="6" x:Name="ExternalAssetsDetectedTextBlock" Text="{x:Static resx:Resources.CommunityCommandsExternalAssetActionsDetected}" Visibility="Hidden" FontWeight="Bold" TextDecorations="Underline" TextWrapping="Wrap" Margin="0,20" />
-
-            <Grid Grid.Row="7" HorizontalAlignment="Center">
+            
+            <Grid Grid.Row="8" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="10" />

@@ -101,7 +101,10 @@ namespace MixItUp.WPF.Controls.MainControls
                 CommunityCommandsReviewCommandDialogControl dialogControl = new CommunityCommandsReviewCommandDialogControl();
                 if (bool.Equals(await DialogHelper.ShowCustom(dialogControl), true) && !string.IsNullOrEmpty(dialogControl.Review))
                 {
-                    await this.viewModel.ReviewCommand(dialogControl.Rating, dialogControl.Review);
+                    if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.CommunityCommandsReviewAgreement))
+                    {
+                        await this.viewModel.ReviewCommand(dialogControl.Rating, dialogControl.Review);
+                    }
                 }
             }
         }

@@ -2166,7 +2166,11 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following command contains actions that may use external assets in some way (EX: Sound, Overlay, File). When this action is uploaded, it WILL NOT include these external assets, just the actions themselves. We encourage creators to explain what the intent of these actions are or to upload these assets somewhere online and either include the links to them in the actions themselves or a link for where to download them in your description..
+        ///   Looks up a localized string similar to The following command contains actions that may use external assets in some way (EX: Sound, Overlay, File). When this action is uploaded, it WILL NOT include these external assets, just the actions themselves. We encourage creators to do one of the following:
+        ///
+        ///- Explain what the intent of your command is so that users can understand how they use their own assets in your commands.
+        ///
+        ///- Upload these assets somewhere online and either use links to them in the actions themselves or include a link in the descr [rest of string was truncated]&quot;;.
         /// </summary>
         public static string CommunityCommandsExternalAssetActionsDetected {
             get {
@@ -2207,6 +2211,32 @@ namespace MixItUp.Base {
         public static string CommunityCommandsReportCommand {
             get {
                 return ResourceManager.GetString("CommunityCommandsReportCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to By leaving a review for this Community Command, you agree that the contents of the review is appropriate for the general public and does not contain any sexually explicit material, hateful speech, or malicious processes.
+        ///
+        ///Failure to meet the above could lead to blocking of the ability to use the Community Commands service. Do you agree to these terms?.
+        /// </summary>
+        public static string CommunityCommandsReviewAgreement {
+            get {
+                return ResourceManager.GetString("CommunityCommandsReviewAgreement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to By uploading a command to the Community Command service, you agree to the following:
+        ///
+        ///- Any external assets used or referenced in this command are owned by me and I am granting permission for others to use them or available freely for use to the public.
+        ///
+        ///- The contents of these commands are appropriate for the general public and do not contain any sexually explicit material, hateful speech, or malicious processes.
+        ///
+        ///Failure to meet the above could have your command removed and lead to blocking of the a [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string CommunityCommandsUploadAgreement {
+            get {
+                return ResourceManager.GetString("CommunityCommandsUploadAgreement", resourceCulture);
             }
         }
         
