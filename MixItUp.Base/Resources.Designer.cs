@@ -10689,6 +10689,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Previous.
+        /// </summary>
+        public static string Previous {
+            get {
+                return ResourceManager.GetString("Previous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Primary Currency.
         /// </summary>
         public static string PrimaryCurrency {
