@@ -383,7 +383,10 @@ namespace MixItUp.Base.ViewModel.MainControls
                     this.Categories.Clear();
                     foreach (CommunityCommandCategoryModel category in await ChannelSession.Services.CommunityCommandsService.GetHomeCategories())
                     {
-                        this.Categories.Add(new CommunityCommandCategoryViewModel(category));
+                        if (category.Commands.Count > 0)
+                        {
+                            this.Categories.Add(new CommunityCommandCategoryViewModel(category));
+                        }
                     }
                 }
                 catch (Exception ex)
