@@ -106,7 +106,7 @@ namespace MixItUp.WPF.Windows.Commands
                 this.DescriptionTextBox.Text = this.uploadCommand.Description;
 
                 if (this.uploadCommand.Tags.Contains(CommunityCommandTagEnum.Sound) || this.uploadCommand.Tags.Contains(CommunityCommandTagEnum.Overlay) ||
-                    this.uploadCommand.Tags.Contains(CommunityCommandTagEnum.File))
+                    this.uploadCommand.Tags.Contains(CommunityCommandTagEnum.File) || this.uploadCommand.Tags.Contains(CommunityCommandTagEnum.ExternalProgram))
                 {
                     this.commandContainsMedia = true;
                 }
