@@ -268,6 +268,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Action Group Command.
+        /// </summary>
+        public static string ActionGroupCommand {
+            get {
+                return ResourceManager.GetString("ActionGroupCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Action Groups.
         /// </summary>
         public static string ActionGroups {
@@ -1489,6 +1498,15 @@ namespace MixItUp.Base {
         public static string ChatActionMissingChatText {
             get {
                 return ResourceManager.GetString("ChatActionMissingChatText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chat Command.
+        /// </summary>
+        public static string ChatCommand {
+            get {
+                return ResourceManager.GetString("ChatCommand", resourceCulture);
             }
         }
         
@@ -4062,6 +4080,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Event Command.
+        /// </summary>
+        public static string EventCommand {
+            get {
+                return ResourceManager.GetString("EventCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Event List.
         /// </summary>
         public static string EventList {
@@ -4861,6 +4888,15 @@ namespace MixItUp.Base {
         public static string Game {
             get {
                 return ResourceManager.GetString("Game", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Game Command.
+        /// </summary>
+        public static string GameCommand {
+            get {
+                return ResourceManager.GetString("GameCommand", resourceCulture);
             }
         }
         
@@ -13786,6 +13822,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Streamloots Card Command.
+        /// </summary>
+        public static string StreamlootsCardCommand {
+            get {
+                return ResourceManager.GetString("StreamlootsCardCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Card Name.
         /// </summary>
         public static string StreamlootsCardName {
@@ -14668,6 +14713,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Timer Command.
+        /// </summary>
+        public static string TimerCommand {
+            get {
+                return ResourceManager.GetString("TimerCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Interval (Minutes).
         /// </summary>
         public static string TimerInterval {
@@ -15241,6 +15295,15 @@ namespace MixItUp.Base {
         public static string TwitchChannelPoints {
             get {
                 return ResourceManager.GetString("TwitchChannelPoints", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel Points Command.
+        /// </summary>
+        public static string TwitchChannelPointsCommand {
+            get {
+                return ResourceManager.GetString("TwitchChannelPointsCommand", resourceCulture);
             }
         }
         
