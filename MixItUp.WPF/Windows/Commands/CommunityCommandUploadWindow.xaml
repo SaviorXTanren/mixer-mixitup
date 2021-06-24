@@ -39,9 +39,9 @@
 
             <TextBlock Grid.Row="0" Text="{x:Static resx:Resources.CommunityCommandsUploadCommunityCommand}" FontSize="24" HorizontalAlignment="Center" TextDecorations="Underline" FontWeight="Bold" />
 
-            <TextBox Grid.Row="2" x:Name="NameTextBox" Width="600" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" />
+            <TextBox Grid.Row="2" x:Name="NameTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" />
 
-            <TextBox Grid.Row="4" x:Name="DescriptionTextBox" Width="600" Height="200" TextWrapping="Wrap" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Description}" />
+            <TextBox Grid.Row="4" x:Name="DescriptionTextBox" Height="200" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Description}" />
 
             <Grid Grid.Row="6">
                 <Grid.ColumnDefinitions>
