@@ -11,21 +11,71 @@ using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 
 namespace MixItUp.Base.Services
 {
+    public class CommunityCommandsSearchResult
+    {
+        public const string PageNumberHeader = "Page-Number";
+        public const string PageSizeHeader = "Page-Size";
+        public const string TotalElementsHeader = "Total-Elements";
+        public const string TotalPagesHeader = "Total-Pages";
+
+        public static async Task<CommunityCommandsSearchResult> Create(HttpResponseMessage response)
+        {
+            CommunityCommandsSearchResult result = new CommunityCommandsSearchResult();
+            if (response.IsSuccessStatusCode)
+            {
+                result.Results.AddRange(await response.ProcessResponse<IEnumerable<CommunityCommandModel>>());
+
+                if (int.TryParse(response.GetHeaderValue(PageNumberHeader), out int pageNumber))
+                {
+                    result.PageNumber = pageNumber;
+                }
+                if (int.TryParse(response.GetHeaderValue(PageSizeHeader), out int pageSize))
+                {
+                    result.PageSize = pageSize;
+                }
+                if (int.TryParse(response.GetHeaderValue(TotalElementsHeader), out int totalElements))
+                {
+                    result.TotalElements = totalElements;
+                }
+                if (int.TryParse(response.GetHeaderValue(TotalPagesHeader), out int totalPages))
+                {
+                    result.TotalPages = totalPages;
+                }
+            }
+            return result;
+        }
+
+        public List<CommunityCommandModel> Results { get; set; } = new List<CommunityCommandModel>();
+
+        public int PageNumber { get; set; }
+        public int PageSize { get; set; }
+
+        public int TotalElements { get; set; }
+        public int TotalPages { get; set; }
+
+        public CommunityCommandsSearchResult() { }
+
+        public bool HasPreviousResults { get { return this.PageNumber > 1; } }
+
+        public bool HasNextResults { get { return this.PageNumber < this.TotalPages; } }
+    }
+
     public interface ICommunityCommandsService
     {
         Task<IEnumerable<CommunityCommandCategoryModel>> GetHomeCategories();
-        Task<IEnumerable<CommunityCommandModel>> SearchCommands(string searchText);
+        Task<CommunityCommandsSearchResult> SearchCommands(string query, int skip, int top);
         Task<CommunityCommandDetailsModel> GetCommandDetails(Guid id);
         Task<CommunityCommandDetailsModel> AddOrUpdateCommand(CommunityCommandUploadModel command);
         Task DeleteCommand(Guid id);
         Task ReportCommand(CommunityCommandReportModel report);
-        Task<IEnumerable<CommunityCommandDetailsModel>> GetCommandsByUser(Guid userID);
-        Task<IEnumerable<CommunityCommandDetailsModel>> GetMyCommands();
+        Task<CommunityCommandsSearchResult> GetCommandsByUser(Guid userID, int skip, int top);
+        Task<CommunityCommandsSearchResult> GetMyCommands(int skip, int top);
         Task<CommunityCommandReviewModel> AddReview(CommunityCommandReviewModel review);
         Task DownloadCommand(Guid id);
     }
@@ -86,13 +136,15 @@ namespace MixItUp.Base.Services
             return categories;
         }
 
-        public async Task<IEnumerable<CommunityCommandModel>> SearchCommands(string searchText)
+        public async Task<CommunityCommandsSearchResult> SearchCommands(string query, int skip, int top)
         {
             await Task.Delay(1000);
 
-            return this.commandCache.Where(c => c.Name.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
-                c.Description.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
-                c.Tags.Any(t => string.Equals(EnumLocalizationHelper.GetLocalizedName(t), searchText, StringComparison.InvariantCultureIgnoreCase)));
+            var commands = this.commandCache.Where(c => c.Name.Contains(query, StringComparison.InvariantCultureIgnoreCase) ||
+                c.Description.Contains(query, StringComparison.InvariantCultureIgnoreCase) ||
+                c.Tags.Any(t => string.Equals(EnumLocalizationHelper.GetLocalizedName(t), query, StringComparison.InvariantCultureIgnoreCase)));
+
+            return this.PrepareSearchResult(commands, skip, top);
         }
 
         public async Task<CommunityCommandDetailsModel> GetCommandDetails(Guid id)
@@ -154,20 +206,21 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task<IEnumerable<CommunityCommandDetailsModel>> GetCommandsByUser(Guid userID)
+        public async Task<CommunityCommandsSearchResult> GetCommandsByUser(Guid userID, int skip, int top)
         {
             await Task.Delay(1000);
 
-            return this.commandCache.Take(10).ToList();
+            return this.PrepareSearchResult(this.commandCache.Take(10), skip, top);
         }
 
-        public async Task<IEnumerable<CommunityCommandDetailsModel>> GetMyCommands()
+        public async Task<CommunityCommandsSearchResult> GetMyCommands(int skip, int top)
         {
             await Task.Delay(1000);
 
             var myCommands = this.commandCache.ToList();
             myCommands.Reverse();
-            return myCommands.Take(10);
+
+            return this.PrepareSearchResult(myCommands.Take(10), skip, top);
         }
 
         public async Task<CommunityCommandReviewModel> AddReview(CommunityCommandReviewModel review)
@@ -243,6 +296,29 @@ namespace MixItUp.Base.Services
 
             return storeCommand;
         }
+
+        private CommunityCommandsSearchResult PrepareSearchResult(IEnumerable<CommunityCommandModel> commands, int skip, int top)
+        {
+            CommunityCommandsSearchResult results = new CommunityCommandsSearchResult();
+
+            results.PageNumber = (skip / top) + 1;
+            results.PageSize = top;
+            results.TotalElements = commands.Count();
+            if (results.TotalElements == 0)
+            {
+                results.TotalPages = 1;
+            }
+            else
+            {
+                results.TotalPages = results.TotalElements % results.PageSize != 0
+                    ? results.TotalElements / results.PageSize + 1
+                    : results.TotalElements / results.PageSize;
+            }
+
+            results.Results.AddRange(commands.Skip(skip).Take(top));
+
+            return results;
+        }
     }
 
     public class CommunityCommandsService : OAuthRestServiceBase, ICommunityCommandsService
@@ -257,18 +333,21 @@ namespace MixItUp.Base.Services
 
         public async Task<IEnumerable<CommunityCommandCategoryModel>> GetHomeCategories()
         {
+            await EnsureLogin();
             return await GetAsync<IEnumerable<CommunityCommandCategoryModel>>("community/commands/categories");
         }
 
-        public async Task<IEnumerable<CommunityCommandModel>> SearchCommands(string searchText)
+        public async Task<CommunityCommandsSearchResult> SearchCommands(string query, int skip, int top)
         {
-            return await GetAsync<IEnumerable<CommunityCommandModel>>($"community/commands/command/search?query={HttpUtility.UrlEncode(searchText)}");
+            await EnsureLogin();
+            return await CommunityCommandsSearchResult.Create(await this.GetAsync($"community/commands/command/search?query={HttpUtility.UrlEncode(query)}&skip={skip}&top={top}"));
         }
 
         public async Task<CommunityCommandDetailsModel> GetCommandDetails(Guid id)
         {
             try
             {
+                await EnsureLogin();
                 return await GetAsync<CommunityCommandDetailsModel>($"community/commands/command/{id}");
             }
             catch (HttpRestRequestException ex) when (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -295,16 +374,16 @@ namespace MixItUp.Base.Services
             await PostAsync($"community/commands/command/{report.CommandID}/report", AdvancedHttpClient.CreateContentFromObject(report));
         }
 
-        public async Task<IEnumerable<CommunityCommandDetailsModel>> GetCommandsByUser(Guid userID)
+        public async Task<CommunityCommandsSearchResult> GetCommandsByUser(Guid userID, int skip, int top)
         {
             await EnsureLogin();
-            return await GetAsync<IEnumerable<CommunityCommandDetailsModel>>($"command/user/{userID}");
+            return await CommunityCommandsSearchResult.Create(await GetAsync($"community/commands/command/user/{userID}?skip={skip}&top={top}"));
         }
 
-        public async Task<IEnumerable<CommunityCommandDetailsModel>> GetMyCommands()
+        public async Task<CommunityCommandsSearchResult> GetMyCommands(int skip, int top)
         {
             await EnsureLogin();
-            return await GetAsync<IEnumerable<CommunityCommandDetailsModel>>("community/commands/command/mine");
+            return await CommunityCommandsSearchResult.Create(await GetAsync($"community/commands/command/mine?skip={skip}&top={top}"));
         }
 
         public async Task<CommunityCommandReviewModel> AddReview(CommunityCommandReviewModel review)
@@ -317,6 +396,7 @@ namespace MixItUp.Base.Services
         {
             try
             {
+                await EnsureLogin();
                 await GetAsync<IEnumerable<CommunityCommandDetailsModel>>($"community/commands/command/{id}/download");
             }
             catch { }

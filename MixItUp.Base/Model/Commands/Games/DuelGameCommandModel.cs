@@ -155,6 +155,7 @@ namespace MixItUp.Base.Model.Commands.Games
             {
                 await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandCouldNotFindUser, parameters.Platform);
             }
+            await this.Requirements.Refund(parameters);
         }
 
         private void ClearData()

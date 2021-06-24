@@ -11,7 +11,6 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -26,6 +25,8 @@ namespace MixItUp.WPF.Windows.Commands
         private CommunityCommandDetailsViewModel ccCommand;
 
         private CommunityCommandUploadModel uploadCommand;
+
+        private bool commandContainsMedia;
 
         public CommunityCommandUploadWindow(CommandModelBase command)
         {
@@ -104,6 +105,12 @@ namespace MixItUp.WPF.Windows.Commands
 
                 this.NameTextBox.Text = this.uploadCommand.Name;
                 this.DescriptionTextBox.Text = this.uploadCommand.Description;
+
+                if (this.uploadCommand.Tags.Contains(CommunityCommandTagEnum.Sound) || this.uploadCommand.Tags.Contains(CommunityCommandTagEnum.Overlay) ||
+                    this.uploadCommand.Tags.Contains(CommunityCommandTagEnum.File) || this.uploadCommand.Tags.Contains(CommunityCommandTagEnum.ExternalProgram))
+                {
+                    this.commandContainsMedia = true;
+                }
             }
             catch (Exception ex)
             {
@@ -126,6 +133,14 @@ namespace MixItUp.WPF.Windows.Commands
             {
                 try
                 {
+                    if (this.commandContainsMedia)
+                    {
+                        if (!await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.CommunityCommandsExternalAssetActionsDetected))
+                        {
+                            return;
+                        }
+                    }
+
                     if (string.IsNullOrEmpty(this.NameTextBox.Text))
                     {
                         await DialogHelper.ShowMessage(MixItUp.Base.Resources.CommunityCommandsUploadInvalidName);
@@ -150,6 +165,12 @@ namespace MixItUp.WPF.Windows.Commands
 
                     this.uploadCommand.Name = this.NameTextBox.Text;
                     this.uploadCommand.Description = this.DescriptionTextBox.Text;
+
+                    if (!await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.CommunityCommandsUploadAgreement))
+                    {
+                        this.Close();
+                        return;
+                    }
 
                     if (!string.IsNullOrEmpty(this.ImageFilePathTextBox.Text) && ServiceManager.Get<IFileService>().FileExists(this.ImageFilePathTextBox.Text))
                     {

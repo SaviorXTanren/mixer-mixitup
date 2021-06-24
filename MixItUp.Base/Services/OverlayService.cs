@@ -204,6 +204,8 @@ namespace MixItUp.Base.Services
             OverlayEndpointService overlay = (OverlayEndpointService)sender;
             this.OnOverlayConnectedOccurred(overlay, new EventArgs());
 
+            ChannelSession.ReconnectionOccurred("Overlay - " + overlay.Name);
+
             overlay.StartBatching();
             foreach (OverlayWidgetModel widget in ChannelSession.Settings.OverlayWidgets.Where(ow => ow.OverlayName.Equals(overlay.Name)))
             {
@@ -225,6 +227,8 @@ namespace MixItUp.Base.Services
         {
             OverlayEndpointService overlay = (OverlayEndpointService)sender;
             this.OnOverlayDisconnectedOccurred(overlay, closeStatus);
+
+            ChannelSession.DisconnectionOccurred("Overlay - " + overlay.Name);
         }
 
         #region IDisposable Support

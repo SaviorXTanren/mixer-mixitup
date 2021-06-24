@@ -95,7 +95,7 @@
         </Grid>
 
         <Grid Visibility="{Binding ShowSearch, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Grid Margin="20">
+            <Grid Margin="15">
                 <Button Command="{Binding BackCommand}" VerticalAlignment="Top" HorizontalAlignment="Left" Width="40" ToolTip="{x:Static resx:Resources.Back}">
                     <MaterialDesign:PackIcon Kind="ArrowBackCircle" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                 </Button>
@@ -106,6 +106,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="20" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0">
@@ -134,6 +135,30 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+
+                <Grid Grid.Row="3" Visibility="{Binding HasNextOrPreviousResults, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Margin="0,20,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="15" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Command="{Binding PreviousResultsCommand}" VerticalAlignment="Center" Width="40" ToolTip="{x:Static resx:Resources.Previous}">
+                        <MaterialDesign:PackIcon Kind="ArrowBack" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                    </Button>
+
+                    <TextBlock Grid.Column="2" Text="{Binding CurrentResultsPage}" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="3" Text="/" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <TextBlock Grid.Column="4" Text="{Binding TotaResultsPages}" VerticalAlignment="Center" />
+
+                    <Button Grid.Column="6" Command="{Binding NextResultsCommand}" VerticalAlignment="Center" Width="40" ToolTip="{x:Static resx:Resources.Next}">
+                        <MaterialDesign:PackIcon Kind="ArrowForward" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                    </Button>
+                </Grid>
             </Grid>
         </Grid>
 
@@ -296,7 +321,7 @@
         </Grid>
 
         <Grid Visibility="{Binding ShowUserCommands, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Grid Margin="20">
+            <Grid Margin="15">
                 <Button Command="{Binding BackCommand}" VerticalAlignment="Top" HorizontalAlignment="Left" Width="40" ToolTip="{x:Static resx:Resources.Back}">
                     <MaterialDesign:PackIcon Kind="ArrowBackCircle" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                 </Button>
@@ -307,6 +332,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="20" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Text="{Binding CommandDetails.Username}" FontSize="24" TextDecorations="Underline" FontWeight="Bold" HorizontalAlignment="Center" />
@@ -318,11 +344,36 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+
+
+                <Grid Grid.Row="3" Visibility="{Binding HasNextOrPreviousResults, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Margin="0,20,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="15" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Command="{Binding PreviousResultsCommand}" VerticalAlignment="Center" Width="40" ToolTip="{x:Static resx:Resources.Previous}">
+                        <MaterialDesign:PackIcon Kind="ArrowBack" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                    </Button>
+
+                    <TextBlock Grid.Column="2" Text="{Binding CurrentResultsPage}" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="3" Text="/" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <TextBlock Grid.Column="4" Text="{Binding TotaResultsPages}" VerticalAlignment="Center" />
+
+                    <Button Grid.Column="6" Command="{Binding NextResultsCommand}" VerticalAlignment="Center" Width="40" ToolTip="{x:Static resx:Resources.Next}">
+                        <MaterialDesign:PackIcon Kind="ArrowForward" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                    </Button>
+                </Grid>
             </Grid>
         </Grid>
 
         <Grid Visibility="{Binding ShowMyCommands, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Grid Margin="20">
+            <Grid Margin="15">
                 <Button Command="{Binding BackCommand}" VerticalAlignment="Top" HorizontalAlignment="Left" Width="40" ToolTip="{x:Static resx:Resources.Back}">
                     <MaterialDesign:PackIcon Kind="ArrowBackCircle" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                 </Button>
@@ -333,6 +384,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="20" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Text="{x:Static resx:Resources.CommunityCommandsMyCommands}" FontSize="24" TextDecorations="Underline" FontWeight="Bold" HorizontalAlignment="Center" />
@@ -344,6 +396,31 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+
+
+                <Grid Grid.Row="3" Visibility="{Binding HasNextOrPreviousResults, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Margin="0,20,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="15" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Command="{Binding PreviousResultsCommand}" VerticalAlignment="Center" Width="40" ToolTip="{x:Static resx:Resources.Previous}">
+                        <MaterialDesign:PackIcon Kind="ArrowBack" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                    </Button>
+
+                    <TextBlock Grid.Column="2" Text="{Binding CurrentResultsPage}" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="3" Text="/" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <TextBlock Grid.Column="4" Text="{Binding TotaResultsPages}" VerticalAlignment="Center" />
+
+                    <Button Grid.Column="6" Command="{Binding NextResultsCommand}" VerticalAlignment="Center" Width="40" ToolTip="{x:Static resx:Resources.Next}">
+                        <MaterialDesign:PackIcon Kind="ArrowForward" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                    </Button>
+                </Grid>
             </Grid>
         </Grid>
     </Grid>
