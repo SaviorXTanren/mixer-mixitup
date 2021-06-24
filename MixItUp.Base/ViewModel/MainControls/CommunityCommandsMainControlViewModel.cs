@@ -411,7 +411,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 this.SearchResults.Clear();
 
-                CommunityCommandsSearchResult results = await ChannelSession.Services.CommunityCommandsService.SearchCommands(this.SearchText, this.GetResultsPageSkip, SearchResultsPageSize);
+                CommunityCommandsSearchResult results = await ServiceManager.Get<CommunityCommandsService>().SearchCommands(this.SearchText, this.GetResultsPageSkip, SearchResultsPageSize);
                 foreach (CommunityCommandModel command in results.Results)
                 {
                     this.SearchResults.Add(new CommunityCommandViewModel(command));
@@ -427,7 +427,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             this.UserCommands.Clear();
 
-            CommunityCommandsSearchResult results = await ChannelSession.Services.CommunityCommandsService.GetCommandsByUser(this.CommandDetails.UserID, this.GetResultsPageSkip, SearchResultsPageSize);
+            CommunityCommandsSearchResult results = await ServiceManager.Get<CommunityCommandsService>().GetCommandsByUser(this.CommandDetails.UserID, this.GetResultsPageSkip, SearchResultsPageSize);
             foreach (CommunityCommandModel command in results.Results)
             {
                 this.UserCommands.Add(new CommunityCommandViewModel(command));
@@ -442,7 +442,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             this.MyCommands.Clear();
 
-            CommunityCommandsSearchResult results = await ChannelSession.Services.CommunityCommandsService.GetMyCommands(this.GetResultsPageSkip, SearchResultsPageSize);
+            CommunityCommandsSearchResult results = await ServiceManager.Get<CommunityCommandsService>().GetMyCommands(this.GetResultsPageSkip, SearchResultsPageSize);
             foreach (CommunityCommandModel command in results.Results)
             {
                 this.MyCommands.Add(new CommunityCommandViewModel(command));
