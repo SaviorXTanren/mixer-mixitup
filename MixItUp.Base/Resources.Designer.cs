@@ -15218,7 +15218,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Twitch Channel Followed (1 Minute Delay).
+        ///   Looks up a localized string similar to Twitch Channel Followed.
         /// </summary>
         public static string TwitchChannelFollowed {
             get {
@@ -15335,7 +15335,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Twitch Channel Stream Start (1 Minute Delay).
+        ///   Looks up a localized string similar to Twitch Channel Stream Start.
         /// </summary>
         public static string TwitchChannelStreamStart {
             get {

@@ -90,6 +90,7 @@ namespace MixItUp.Base.Services
         TwitchChannelRaided = 203,
 
         TwitchChannelFollowed = 210,
+        [Obsolete]
         TwitchChannelUnfollowed = 211,
 
         TwitchChannelSubscribed = 220,

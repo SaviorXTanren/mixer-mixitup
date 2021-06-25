@@ -4157,7 +4157,7 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
     <value>Twitch Channel Bits Cheered</value>
   </data>
   <data name="TwitchChannelFollowed" xml:space="preserve">
-    <value>Twitch Channel Followed (1 Minute Delay)</value>
+    <value>Twitch Channel Followed</value>
   </data>
   <data name="TwitchChannelHosted" xml:space="preserve">
     <value>Twitch Channel Hosted</value>
@@ -4184,7 +4184,7 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
     <value>Twitch Channel Resubscribed</value>
   </data>
   <data name="TwitchChannelStreamStart" xml:space="preserve">
-    <value>Twitch Channel Stream Start (1 Minute Delay)</value>
+    <value>Twitch Channel Stream Start</value>
   </data>
   <data name="TwitchChannelStreamStop" xml:space="preserve">
     <value>Twitch Channel Stream Stop</value>
