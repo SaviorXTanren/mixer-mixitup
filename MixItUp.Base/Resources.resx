@@ -5818,4 +5818,25 @@ Failure to meet the above could lead to blocking of the ability to use the Commu
 
 Failure to meet the above could have your command removed and lead to blocking of the ability to use the Community Commands service. Do you agree to these terms?</value>
   </data>
+  <data name="ActionGroupCommand" xml:space="preserve">
+    <value>Action Group Command</value>
+  </data>
+  <data name="ChatCommand" xml:space="preserve">
+    <value>Chat Command</value>
+  </data>
+  <data name="EventCommand" xml:space="preserve">
+    <value>Event Command</value>
+  </data>
+  <data name="GameCommand" xml:space="preserve">
+    <value>Game Command</value>
+  </data>
+  <data name="StreamlootsCardCommand" xml:space="preserve">
+    <value>Streamloots Card Command</value>
+  </data>
+  <data name="TimerCommand" xml:space="preserve">
+    <value>Timer Command</value>
+  </data>
+  <data name="TwitchChannelPointsCommand" xml:space="preserve">
+    <value>Twitch Channel Points Command</value>
+  </data>
 </root>
