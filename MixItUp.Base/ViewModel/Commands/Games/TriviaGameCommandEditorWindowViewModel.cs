@@ -238,6 +238,8 @@ namespace MixItUp.Base.ViewModel.Games
             this.SetUICommands();
         }
 
+        public override bool AutoAddCurrencyRequirement { get { return false; } }
+
         public override Task<CommandModelBase> CreateNewCommand()
         {
             return Task.FromResult<CommandModelBase>(new TriviaGameCommandModel(this.Name, this.GetChatTriggers(), this.TimeLimit, this.UseRandomOnlineQuestions, this.WinAmount, this.CustomQuestions.Select(o => o.GetModel()),

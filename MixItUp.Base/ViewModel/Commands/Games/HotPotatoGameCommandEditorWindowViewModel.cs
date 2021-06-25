@@ -132,6 +132,8 @@ namespace MixItUp.Base.ViewModel.Games
             }
         }
 
+        public override bool AutoAddCurrencyRequirement { get { return false; } }
+
         public override Task<CommandModelBase> CreateNewCommand()
         {
             return Task.FromResult<CommandModelBase>(new HotPotatoGameCommandModel(this.Name, this.GetChatTriggers(), this.LowerTimeLimit, this.UpperTimeLimit, this.ResetTimeOnToss, this.GetSelectionType(),

@@ -211,7 +211,7 @@ namespace MixItUp.Base.ViewModel.Games
         public GameCommandEditorWindowViewModelBase(CurrencyModel currency)
             : base(CommandTypeEnum.Game)
         {
-            if (currency != null)
+            if (currency != null && this.AutoAddCurrencyRequirement)
             {
                 this.PrimaryCurrencyName = currency.Name;
                 this.Requirements.Currency.Add(new CurrencyRequirementModel(currency, CurrencyRequirementTypeEnum.RequiredAmount, 10, 100));
@@ -226,6 +226,8 @@ namespace MixItUp.Base.ViewModel.Games
         public override bool CheckActionCount { get { return false; } }
 
         public virtual bool RequirePrimaryCurrency { get { return false; } }
+
+        public virtual bool AutoAddCurrencyRequirement { get { return true; } }
 
         public override async Task<Result> Validate()
         {
