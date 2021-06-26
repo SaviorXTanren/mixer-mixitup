@@ -601,30 +601,31 @@ namespace MixItUp.Base.ViewModel.Currency
                                     UserViewModel user = null;
                                     if (amount > 0)
                                     {
-                                        if (id > 0)
-                                        {
-                                            MixItUp.Base.Model.User.UserDataModel userData = ChannelSession.Settings.GetUserDataByTwitchID(id.ToString());
-                                            if (userData != null)
-                                            {
-                                                user = new UserViewModel(userData);
-                                            }
-                                            else
-                                            {
-                                                UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(id.ToString());
-                                                if (twitchUser != null)
-                                                {
-                                                    user = new UserViewModel(twitchUser);
-                                                }
-                                            }
-                                        }
-                                        else if (!string.IsNullOrEmpty(username))
-                                        {
-                                            UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(username);
-                                            if (twitchUser != null)
-                                            {
-                                                user = new UserViewModel(twitchUser);
-                                            }
-                                        }
+                                        // TODO
+                                        //if (id > 0)
+                                        //{
+                                        //    MixItUp.Base.Model.User.UserDataModel userData = ChannelSession.Settings.GetUserDataByTwitchID(id.ToString());
+                                        //    if (userData != null)
+                                        //    {
+                                        //        user = new UserViewModel(userData);
+                                        //    }
+                                        //    else
+                                        //    {
+                                        //        UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(id.ToString());
+                                        //        if (twitchUser != null)
+                                        //        {
+                                        //            user = new UserViewModel(twitchUser);
+                                        //        }
+                                        //    }
+                                        //}
+                                        //else if (!string.IsNullOrEmpty(username))
+                                        //{
+                                        //    UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(username);
+                                        //    if (twitchUser != null)
+                                        //    {
+                                        //        user = new UserViewModel(twitchUser);
+                                        //    }
+                                        //}
                                     }
 
                                     if (user != null)
@@ -891,7 +892,7 @@ namespace MixItUp.Base.ViewModel.Currency
                     addCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                     addCommand.Requirements.Cooldown.IndividualAmount = 5;
 
-                    addCommand.Actions.Add(new ConsumablesActionModel(this.Currency, ConsumablesActionTypeEnum.AddToSpecificUser, "$arg2text", username: "$targetusername"));
+                    addCommand.Actions.Add(new ConsumablesActionModel(this.Currency, ConsumablesActionTypeEnum.AddToSpecificUser, usersMustBePresent: true, "$arg2text", username: "$targetusername"));
                     addCommand.Actions.Add(new ChatActionModel(string.Format("@$targetusername received $arg2text {0}!", this.Currency.Name)));
                     commandsToAdd.Add(new NewAutoChatCommandModel(string.Format("!{0} - {1}", addCommand.Triggers.First(), "Adds Amount To Specified User"), addCommand));
 
@@ -901,7 +902,7 @@ namespace MixItUp.Base.ViewModel.Currency
                     addAllCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                     addAllCommand.Requirements.Cooldown.IndividualAmount = 5;
 
-                    addAllCommand.Actions.Add(new ConsumablesActionModel(this.Currency, ConsumablesActionTypeEnum.AddToAllChatUsers, "$arg1text"));
+                    addAllCommand.Actions.Add(new ConsumablesActionModel(this.Currency, ConsumablesActionTypeEnum.AddToAllChatUsers, usersMustBePresent: true, "$arg1text"));
                     addAllCommand.Actions.Add(new ChatActionModel(string.Format("Everyone got $arg1text {0}!", this.Currency.Name)));
                     commandsToAdd.Add(new NewAutoChatCommandModel(string.Format("!{0} - {1}", addAllCommand.Triggers.First(), "Adds Amount To All Chat Users"), addAllCommand));
 
@@ -913,7 +914,7 @@ namespace MixItUp.Base.ViewModel.Currency
                         giveCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                         giveCommand.Requirements.Cooldown.IndividualAmount = 5;
 
-                        giveCommand.Actions.Add(new ConsumablesActionModel(this.Currency, ConsumablesActionTypeEnum.AddToSpecificUser, "$arg2text", username: "$targetusername", deductFromUser: true));
+                        giveCommand.Actions.Add(new ConsumablesActionModel(this.Currency, ConsumablesActionTypeEnum.AddToSpecificUser, usersMustBePresent: true, "$arg2text", username: "$targetusername", deductFromUser: true));
                         giveCommand.Actions.Add(new ChatActionModel(string.Format("@$username gave @$targetusername $arg2text {0}!", this.Currency.Name)));
                         commandsToAdd.Add(new NewAutoChatCommandModel(string.Format("!{0} - {1}", giveCommand.Triggers.First(), "Gives Amount To Specified User"), giveCommand));
                     }

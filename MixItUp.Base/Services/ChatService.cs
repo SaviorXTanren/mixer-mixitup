@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model;
+﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Requirements;
@@ -12,7 +11,6 @@ using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -40,7 +38,7 @@ namespace MixItUp.Base.Services
 
         event EventHandler<Dictionary<string, uint>> OnPollEndOccurred;
 
-        Task SendMessage(string message, bool sendAsStreamer = false, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All);
+        Task SendMessage(string message, bool sendAsStreamer = false, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All, string replyMessageID = null);
         Task Whisper(UserViewModel user, string message, bool sendAsStreamer = false);
         Task Whisper(StreamingPlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false);
 
@@ -136,18 +134,18 @@ namespace MixItUp.Base.Services
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
-        public async Task SendMessage(string message, bool sendAsStreamer = false, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
+        public async Task SendMessage(string message, bool sendAsStreamer = false, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All, string replyMessageID = null)
         {
             if (!string.IsNullOrEmpty(message))
             {
                 if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
                 {
-                    await this.TwitchChatService.SendMessage(message, sendAsStreamer);
+                    await this.TwitchChatService.SendMessage(message, sendAsStreamer, replyMessageID);
 
                     if (sendAsStreamer || ChannelSession.TwitchBotConnection == null)
                     {
                         UserViewModel user = ChannelSession.GetCurrentUser();
-                        await this.AddMessage(new TwitchChatMessageViewModel(user, message));
+                        await this.AddMessage(new TwitchChatMessageViewModel(user, message, replyMessageID));
                     }
                 }
             }
@@ -166,7 +164,7 @@ namespace MixItUp.Base.Services
 
         public async Task Whisper(StreamingPlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false)
         {
-            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username, platform);
+            UserViewModel user = ChannelSession.Services.User.GetActiveUserByUsername(username, platform);
             if (user != null)
             {
                 await this.Whisper(user, message, sendAsStreamer);
@@ -258,7 +256,7 @@ namespace MixItUp.Base.Services
                 this.longestTrigger = 0;
                 this.wildcardCommands.Clear();
                 this.chatMenuCommands.Clear();
-                foreach (ChatCommandModel command in ChannelSession.AllEnabledChatAccessibleCommands)
+                foreach (ChatCommandModel command in ChannelSession.Services.Command.AllEnabledChatAccessibleCommands)
                 {
                     if (command.Wildcards)
                     {
@@ -301,15 +299,6 @@ namespace MixItUp.Base.Services
                 {
                     if (message.User != null)
                     {
-                        if (message.Platform == StreamingPlatformTypeEnum.Twitch)
-                        {
-                            UserViewModel activeUser = ChannelSession.Services.User.GetUserByTwitchID(message.User.TwitchID);
-                            if (activeUser != null)
-                            {
-                                message.User = activeUser;
-                            }
-                        }
-
                         message.User.UpdateLastActivity();
                         if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot && message.User.WhispererNumber == 0)
                         {
@@ -324,6 +313,11 @@ namespace MixItUp.Base.Services
                             });
                         }
                     }
+                }
+
+                if (message.User != null)
+                {
+                    await ChannelSession.Services.User.AddOrUpdateActiveUser(message.User);
                 }
 
                 // Add message to chat list
@@ -369,9 +363,7 @@ namespace MixItUp.Base.Services
 
                         if (!string.IsNullOrEmpty(message.PlainTextMessage))
                         {
-                            EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatWhisperReceived, message.User);
-                            trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
-                            await ChannelSession.Services.Events.PerformEvent(trigger);
+                            await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.ChatWhisperReceived, new CommandParametersModel(message));
                         }
 
                         // Don't send this if it's in response to another "You are whisperer #" message
@@ -409,10 +401,7 @@ namespace MixItUp.Base.Services
 
                         if (!string.IsNullOrEmpty(message.PlainTextMessage))
                         {
-                            EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatMessageReceived, message.User);
-                            trigger.Arguments = new List<string>(message.ToArguments());
-                            trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
-                            await ChannelSession.Services.Events.PerformEvent(trigger);
+                            await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.ChatMessageReceived, new CommandParametersModel(message));
                         }
 
                         message.User.Data.TotalChatMessageSent++;
@@ -420,7 +409,7 @@ namespace MixItUp.Base.Services
                         string primaryTaggedUsername = message.PrimaryTaggedUsername;
                         if (!string.IsNullOrEmpty(primaryTaggedUsername))
                         {
-                            UserViewModel primaryTaggedUser = ChannelSession.Services.User.GetUserByUsername(primaryTaggedUsername, message.Platform);
+                            UserViewModel primaryTaggedUser = ChannelSession.Services.User.GetActiveUserByUsername(primaryTaggedUsername, message.Platform);
                             if (primaryTaggedUser != null)
                             {
                                 primaryTaggedUser.Data.TotalTimesTagged++;
@@ -598,7 +587,7 @@ namespace MixItUp.Base.Services
 
                 if (users.Count() < 5)
                 {
-                    alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserJoinedChat, user.DisplayName), ChannelSession.Settings.AlertUserJoinLeaveColor));
+                    alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserJoinedChat, user.FullDisplayName), ChannelSession.Settings.AlertUserJoinLeaveColor));
                 }
             }
             this.DisplayUsersUpdated(this, new EventArgs());
@@ -637,7 +626,7 @@ namespace MixItUp.Base.Services
 
                     if (users.Count() < 5)
                     {
-                        alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserLeftChat, user.DisplayName), ChannelSession.Settings.AlertUserJoinLeaveColor));
+                        alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserLeftChat, user.FullDisplayName), ChannelSession.Settings.AlertUserJoinLeaveColor));
                     }
                 }
             }
@@ -672,7 +661,11 @@ namespace MixItUp.Base.Services
         private async Task RunChatCommand(ChatMessageViewModel message, CommandModelBase command, IEnumerable<string> arguments)
         {
             Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
-            await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(message.User, message.Platform, arguments));
+
+            CommandParametersModel parameters = new CommandParametersModel(message);
+            parameters.Arguments = new List<string>(arguments);   // Overwrite arguments to account for variable argument length for commands
+            parameters.SpecialIdentifiers["message"] = message.PlainTextMessage;
+            await ChannelSession.Services.Command.Queue(command, parameters);
 
             SettingsRequirementModel settings = command.Requirements.Settings;
             if (settings != null)

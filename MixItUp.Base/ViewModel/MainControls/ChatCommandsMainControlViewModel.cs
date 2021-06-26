@@ -50,7 +50,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             await base.OnLoadedInternal();
 
-            foreach (PreMadeChatCommandModelBase command in ChannelSession.PreMadeChatCommands.OrderBy(c => c.Name))
+            foreach (PreMadeChatCommandModelBase command in ChannelSession.Services.Command.PreMadeChatCommands.OrderBy(c => c.Name))
             {
                 this.allPreMadeChatCommands.Add(new PreMadeChatCommandControlViewModel(command));
             }
@@ -65,7 +65,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         protected override async Task OnVisibleInternal()
         {
-            if (ChannelSession.ChatCommands.Count != this.CommandGroups.Sum(cg => cg.Commands.Count))
+            if (ChannelSession.Services.Command.ChatCommands.Count != this.CommandGroups.Sum(cg => cg.Commands.Count))
             {
                 this.FullRefresh();
             }
@@ -74,7 +74,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         protected override IEnumerable<CommandModelBase> GetCommands()
         {
-            return ChannelSession.ChatCommands.ToList();
+            return ChannelSession.Services.Command.ChatCommands.ToList();
         }
 
         protected override void FilterCommands()

@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model;
+﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
@@ -35,6 +34,7 @@ namespace MixItUp.Base.Util
 
         public const string UserSpecialIdentifierHeader = "user";
         public const string ArgSpecialIdentifierHeader = "arg";
+        public const string ArgDelimitedSpecialIdentifierHeader = ArgSpecialIdentifierHeader + "delimited";
         public const string StreamerSpecialIdentifierHeader = "streamer";
         public const string TargetSpecialIdentifierHeader = "target";
 
@@ -42,6 +42,7 @@ namespace MixItUp.Base.Util
         public const string RandomNumberRegexSpecialIdentifier = RandomSpecialIdentifierHeader + "number";
         public const string RandomFollowerSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "follower";
         public const string RandomSubscriberSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "subscriber";
+        public const string RandomRegularSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "regular";
 
         public const string StreamBossSpecialIdentifierHeader = "streamboss";
 
@@ -232,24 +233,6 @@ namespace MixItUp.Base.Util
             return text;
         }
 
-        public static async Task<UserViewModel> GetUserFromArgument(string argument, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
-        {
-            string username = argument.Replace("@", "");
-            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username, platform);
-            if (user == null)
-            {
-                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ChannelSession.TwitchUserConnection != null)
-                {
-                    Twitch.Base.Models.NewAPI.Users.UserModel argUserModel = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(username);
-                    if (argUserModel != null)
-                    {
-                        user = new UserViewModel(argUserModel);
-                    }
-                }
-            }
-            return user;
-        }
-
         public static IEnumerable<UserDataModel> GetUserOrderedCurrencyList(CurrencyModel currency)
         {
             IEnumerable<UserDataModel> applicableUsers = SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
@@ -384,7 +367,7 @@ namespace MixItUp.Base.Util
                 {
                     IEnumerable<UserDataModel> applicableUsers = SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
                     UserDataModel topUserData = applicableUsers.Top(u => u.ViewingMinutes);
-                    UserViewModel topUser = ChannelSession.Services.User.GetUserByID(topUserData.ID);
+                    UserViewModel topUser = ChannelSession.Services.User.GetActiveUserByID(topUserData.ID);
                     if (topUser == null)
                     {
                         topUser = new UserViewModel(topUserData);
@@ -419,7 +402,7 @@ namespace MixItUp.Base.Util
                     {
                         IEnumerable<UserDataModel> applicableUsers = SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
                         UserDataModel topUserData = applicableUsers.Top(u => currency.GetAmount(u));
-                        UserViewModel topUser = ChannelSession.Services.User.GetUserByID(topUserData.ID);
+                        UserViewModel topUser = ChannelSession.Services.User.GetActiveUserByID(topUserData.ID);
                         if (topUser == null)
                         {
                             topUser = new UserViewModel(topUserData);
@@ -551,7 +534,7 @@ namespace MixItUp.Base.Util
                     string currentArgumentSpecialIdentifierHeader = ArgSpecialIdentifierHeader + (i + 1);
                     if (this.ContainsSpecialIdentifier(currentArgumentSpecialIdentifierHeader))
                     {
-                        UserViewModel argUser = await SpecialIdentifierStringBuilder.GetUserFromArgument(parameters.Arguments.ElementAt(i), parameters.Platform);
+                        UserViewModel argUser = await ChannelSession.Services.User.GetUserFullSearch(parameters.Platform, userID: null, parameters.Arguments.ElementAt(i));
                         if (argUser != null)
                         {
                             await this.HandleUserSpecialIdentifiers(argUser, currentArgumentSpecialIdentifierHeader);
@@ -561,8 +544,25 @@ namespace MixItUp.Base.Util
                     }
                 }
 
-                this.ReplaceSpecialIdentifier("allargs", string.Join(" ", parameters.Arguments));
+                string allArgs = string.Join(" ", parameters.Arguments);
+                this.ReplaceSpecialIdentifier("allargs", allArgs);
                 this.ReplaceSpecialIdentifier("argcount", parameters.Arguments.Count().ToString());
+
+                if (!string.IsNullOrEmpty(allArgs))
+                {
+                    if (this.ContainsSpecialIdentifier(ArgDelimitedSpecialIdentifierHeader) || this.ContainsSpecialIdentifier(ArgDelimitedSpecialIdentifierHeader + "count"))
+                    {
+                        List<string> delimitedArgs = new List<string>(allArgs.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
+
+                        for (int i = 0; i < delimitedArgs.Count(); i++)
+                        {
+                            string currentArgumentSpecialIdentifierHeader = ArgDelimitedSpecialIdentifierHeader + (i + 1);
+                            this.ReplaceSpecialIdentifier(currentArgumentSpecialIdentifierHeader + "text", delimitedArgs[i].Trim());
+                        }
+
+                        this.ReplaceSpecialIdentifier(ArgDelimitedSpecialIdentifierHeader + "count", delimitedArgs.Count.ToString());
+                    }
+                }
 
                 await this.ReplaceNumberRangeBasedRegexSpecialIdentifier(ArgSpecialIdentifierHeader + SpecialIdentifierNumberRangeRegexPattern + "text", (min, max) =>
                 {
@@ -647,6 +647,15 @@ namespace MixItUp.Base.Util
                     if (users != null && users.Count() > 0)
                     {
                         await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomSubscriberSpecialIdentifierHeader);
+                    }
+                }
+
+                if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.RandomRegularSpecialIdentifierHeader))
+                {
+                    IEnumerable<UserViewModel> users = workableUsers.Where(u => u.IsRegular);
+                    if (users != null && users.Count() > 0)
+                    {
+                        await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomRegularSpecialIdentifierHeader);
                     }
                 }
             }
@@ -799,6 +808,7 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "id", user.ID.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "name", user.Username);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "displayname", user.DisplayName);
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fulldisplayname", user.FullDisplayName);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "url", user.ChannelLink);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "avatar", user.AvatarLink);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "roles", user.RolesDisplayString);
@@ -818,6 +828,7 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "subage", user.SubscribeAgeString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "subtier", user.SubscribeTierString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "submonths", user.SubscribeMonths.ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "subbadge", user.SubscriberBadgeLink);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "isfollower", user.IsFollower.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "isregular", user.IsRegular.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "issubscriber", user.IsPlatformSubscriber.ToString());
@@ -904,22 +915,14 @@ namespace MixItUp.Base.Util
 
                     this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredSpecialIdentifier + period.ToString().ToLower() + "amount", bitsUser.score.ToString());
 
-                    UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(bitsUser.user_id);
+                    UserViewModel user = ChannelSession.Services.User.GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, bitsUser.user_id);
                     if (user == null)
                     {
-                        UserDataModel userData = ChannelSession.Settings.GetUserDataByTwitchID(bitsUser.user_id);
-                        if (userData == null)
+                        user = await UserViewModel.Create(new Twitch.Base.Models.NewAPI.Users.UserModel()
                         {
-                            user = new UserViewModel(new Twitch.Base.Models.NewAPI.Users.UserModel()
-                            {
-                                id = bitsUser.user_id,
-                                login = bitsUser.user_name
-                            });
-                        }
-                        else
-                        {
-                            user = new UserViewModel(userData);
-                        }
+                            id = bitsUser.user_id,
+                            login = bitsUser.user_name
+                        });
                     }
                     await this.HandleUserSpecialIdentifiers(user, SpecialIdentifierStringBuilder.TopBitsCheeredSpecialIdentifier + period.ToString().ToLower());
                 }

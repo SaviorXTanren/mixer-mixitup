@@ -198,7 +198,7 @@ namespace MixItUp.Base.Model.Currency
 
                         if (command != null)
                         {
-                            UserViewModel userViewModel = ChannelSession.Services.User.GetUserByID(user.ID);
+                            UserViewModel userViewModel = ChannelSession.Services.User.GetActiveUserByID(user.ID);
                             if (userViewModel == null)
                             {
                                 userViewModel = new UserViewModel(user);

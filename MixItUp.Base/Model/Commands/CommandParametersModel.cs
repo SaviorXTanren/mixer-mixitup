@@ -11,24 +11,6 @@ namespace MixItUp.Base.Model.Commands
     [DataContract]
     public class CommandParametersModel
     {
-        public static async Task<UserViewModel> SearchForUser(string username, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
-        {
-            username = username.Replace("@", "");
-            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username, platform);
-            if (user == null)
-            {
-                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ChannelSession.TwitchUserConnection != null)
-                {
-                    Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(username);
-                    if (twitchUser != null)
-                    {
-                        user = new UserViewModel(twitchUser);
-                    }
-                }
-            }
-            return user;
-        }
-
         public static CommandParametersModel GetTestParameters(Dictionary<string, string> specialIdentifiers)
         {
             UserViewModel currentUser = ChannelSession.GetCurrentUser();
@@ -47,9 +29,20 @@ namespace MixItUp.Base.Model.Commands
         [DataMember]
         public UserViewModel TargetUser { get; set; }
 
+        [DataMember]
+        public string TriggeringChatMessageID { get; set; }
+
         public CommandParametersModel() : this(ChannelSession.GetCurrentUser()) { }
 
         public CommandParametersModel(UserViewModel user) : this(user, StreamingPlatformTypeEnum.None) { }
+
+        public CommandParametersModel(ChatMessageViewModel message)
+            : this(message.User, message.Platform, message.ToArguments())
+        {
+            this.SpecialIdentifiers["message"] = message.PlainTextMessage;
+
+            this.TriggeringChatMessageID = message.ID;
+        }
 
         public CommandParametersModel(Dictionary<string, string> specialIdentifiers) : this(ChannelSession.GetCurrentUser(), specialIdentifiers) { }
 
@@ -62,8 +55,6 @@ namespace MixItUp.Base.Model.Commands
         public CommandParametersModel(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments) : this(user, platform, arguments, null) { }
 
         public CommandParametersModel(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers) : this(user, StreamingPlatformTypeEnum.None, arguments, specialIdentifiers) { }
-
-        public CommandParametersModel(ChatMessageViewModel message) : this(message.User, message.Platform, message.ToArguments()) { }
 
         public CommandParametersModel(UserViewModel user = null, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All, IEnumerable<string> arguments = null, Dictionary<string, string> specialIdentifiers = null)
         {
@@ -107,7 +98,7 @@ namespace MixItUp.Base.Model.Commands
             {
                 if (this.Arguments.Count > 0)
                 {
-                    this.TargetUser = await CommandParametersModel.SearchForUser(this.Arguments.First(), this.Platform);
+                    this.TargetUser = await ChannelSession.Services.User.GetUserFullSearch(this.Platform, userID: null, this.Arguments.First());
                 }
 
                 if (this.TargetUser == null || !this.Arguments.ElementAt(0).Replace("@", "").Equals(this.TargetUser.Username, StringComparison.InvariantCultureIgnoreCase))

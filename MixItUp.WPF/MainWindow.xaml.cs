@@ -125,6 +125,7 @@ namespace MixItUp.WPF
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Events, new EventsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Events");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Timers, new TimerControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Timers");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.ActionGroups, new ActionGroupControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Action-Groups");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.CommunityCommands, new CommunityCommandsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Community-Commands");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Users, new UsersControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Users");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.CurrencyRankInventory, new CurrencyRankInventoryControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency,-Rank,-&-Inventory");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.ChannelPoints, new TwitchChannelPointsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Channel-Points");
@@ -254,39 +255,8 @@ namespace MixItUp.WPF
         {
             await DispatcherHelper.Dispatcher.InvokeAsync(async () =>
             {
-                CommandImporterDialogControl dialog = new CommandImporterDialogControl();
-                if (bool.Equals(await DialogHelper.ShowCustom(dialog), true))
-                {
-                    await Task.Delay(500);
-
-                    if (dialog.ViewModel.IsNewCommandSelected)
-                    {
-                        if (dialog.ViewModel.SelectedNewCommandType == command.Type)
-                        {
-                            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(command);
-                            window.CommandSaved += Window_CommandSaved;
-                            window.ForceShow();
-                        }
-                        else
-                        {
-                            CommandEditorWindow window = new CommandEditorWindow(dialog.ViewModel.SelectedNewCommandType, command.Name, command.Actions);
-                            window.CommandSaved += Window_CommandSaved;
-                            window.ForceShow();
-                        }
-                    }
-                    else if (dialog.ViewModel.IsExistingCommandSelected)
-                    {
-                        CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(dialog.ViewModel.SelectedExistingCommand, command.Actions);
-                        window.CommandSaved += Window_CommandSaved;
-                        window.ForceShow();
-                    }
-                }
+                await DialogHelper.ShowCustom(new CommandImporterDialogControl(command));
             });
-        }
-
-        private void Window_CommandSaved(object sender, CommandModelBase command)
-        {
-            GroupedCommandsMainControlViewModelBase.CommandAddedEdited(command);
         }
     }
 }

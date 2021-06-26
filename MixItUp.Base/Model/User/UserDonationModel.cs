@@ -17,7 +17,7 @@ namespace MixItUp.Base.Model.User
         ExtraLife,
         TipeeeStream,
         TreatStream,
-        StreamJar,
+        Rainmaker,
         JustGiving,
         StreamElements,
     }
@@ -71,9 +71,9 @@ namespace MixItUp.Base.Model.User
             {
                 lock (this)
                 {
-                    if (this.user == null)
+                    if (this.user == null && !string.IsNullOrEmpty(this.username))
                     {
-                        this.user = ChannelSession.Services.User.GetUserFullSearch(this.Platform, null, this.Username);
+                        this.user = ChannelSession.Services.User.GetActiveUserByUsername(this.username, this.Platform);
                     }
                 }
                 return this.user;

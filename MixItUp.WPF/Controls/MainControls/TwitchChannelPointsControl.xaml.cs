@@ -55,7 +55,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 TwitchChannelPointsCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<TwitchChannelPointsCommandModel>();
                 if (command != null)
                 {
-                    ChannelSession.TwitchChannelPointsCommands.Remove(command);
+                    ChannelSession.Services.Command.TwitchChannelPointsCommands.Remove(command);
                     ChannelSession.Settings.RemoveCommand(command);
                     this.viewModel.RemoveCommand(command);
                     await ChannelSession.SaveSettings();

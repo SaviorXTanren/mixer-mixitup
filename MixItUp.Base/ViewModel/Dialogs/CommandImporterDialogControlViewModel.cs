@@ -42,7 +42,7 @@ namespace MixItUp.Base.ViewModel.Dialogs
                 this.NotifyPropertyChanged();
             }
         }
-        private CommandTypeEnum selectedNewCommandType;
+        private CommandTypeEnum selectedNewCommandType = CommandTypeEnum.Chat;
 
         public bool IsExistingCommandSelected
         {
@@ -68,7 +68,7 @@ namespace MixItUp.Base.ViewModel.Dialogs
                 this.selectedExistingCommandType = value;
                 this.NotifyPropertyChanged();
 
-                this.Commands.ClearAndAddRange(ChannelSession.AllCommands.Where(c => c.Type == this.SelectedExistingCommandType).OrderBy(c => c.Name));
+                this.Commands.ClearAndAddRange(ChannelSession.Services.Command.AllCommands.Where(c => c.Type == this.SelectedExistingCommandType).OrderBy(c => c.Name));
             }
         }
         private CommandTypeEnum selectedExistingCommandType;

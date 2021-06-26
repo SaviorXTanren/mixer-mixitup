@@ -13,12 +13,22 @@ namespace MixItUp.WPF.Services
     {
         private const int MaxBulkInsertRows = 10000;
 
-        public async Task Read(string databaseFilePath, string commandString, Action<Dictionary<string, object>> processRow)
+        public async Task Read(string databaseFilePath, string commandString, Action<Dictionary<string, object>> processRow) { await this.Read(databaseFilePath, commandString, null, processRow); }
+
+        public async Task Read(string databaseFilePath, string commandString, Dictionary<string, object> parameters, Action<Dictionary<string, object>> processRow)
         {
             await this.EstablishConnection(databaseFilePath, (connection) =>
             {
                 using (SQLiteCommand command = new SQLiteCommand(commandString, connection))
                 {
+                    if (parameters != null)
+                    {
+                        foreach (var kvp in parameters)
+                        {
+                            command.Parameters.Add(new SQLiteParameter(kvp.Key, value: kvp.Value));
+                        }
+                    }
+
                     using (SQLiteDataReader reader = command.ExecuteReader())
                     {
                         Dictionary<string, object> values = new Dictionary<string, object>();

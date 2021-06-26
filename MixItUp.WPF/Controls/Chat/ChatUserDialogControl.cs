@@ -31,7 +31,7 @@ namespace MixItUp.WPF.Controls.Chat
                             await ChannelSession.Services.Chat.TimeoutUser(user, 300);
                             break;
                         case UserDialogResult.Ban:
-                            if (await DialogHelper.ShowConfirmation(string.Format(Resources.BanUserPrompt, user.DisplayName)))
+                            if (await DialogHelper.ShowConfirmation(string.Format(Resources.BanUserPrompt, user.FullDisplayName)))
                             {
                                 await ChannelSession.Services.Chat.BanUser(user);
                             }
@@ -46,13 +46,13 @@ namespace MixItUp.WPF.Controls.Chat
                             await ChannelSession.TwitchUserConnection.UnfollowUser(ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
                             break;
                         case UserDialogResult.PromoteToMod:
-                            if (await DialogHelper.ShowConfirmation(string.Format(Resources.PromoteUserPrompt, user.DisplayName)))
+                            if (await DialogHelper.ShowConfirmation(string.Format(Resources.PromoteUserPrompt, user.FullDisplayName)))
                             {
                                 await ChannelSession.Services.Chat.ModUser(user);
                             }
                             break;
                         case UserDialogResult.DemoteFromMod:
-                            if (await DialogHelper.ShowConfirmation(string.Format(Resources.DemoteUserPrompt, user.DisplayName)))
+                            if (await DialogHelper.ShowConfirmation(string.Format(Resources.DemoteUserPrompt, user.FullDisplayName)))
                             {
                                 await ChannelSession.Services.Chat.UnmodUser(user);
                             }

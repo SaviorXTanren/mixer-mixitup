@@ -34,7 +34,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 UserViewModel user = this.Purchase.User;
                 if (user != null)
                 {
-                    return user.DisplayName;
+                    return user.FullDisplayName;
                 }
                 return "Unknown";
             }

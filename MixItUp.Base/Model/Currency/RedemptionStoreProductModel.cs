@@ -198,7 +198,7 @@ namespace MixItUp.Base.Model.Currency
             else
             {
                 name = name.Replace("@", "");
-                UserViewModel purchaseUser = ChannelSession.Services.User.GetUserByUsername(name, user.Platform);
+                UserViewModel purchaseUser = ChannelSession.Services.User.GetActiveUserByUsername(name, user.Platform);
                 if (purchaseUser != null)
                 {
                     IEnumerable<RedemptionStorePurchaseModel> purchases = ChannelSession.Settings.RedemptionStorePurchases.ToList().Where(p => p.UserID == user.ID);
@@ -265,7 +265,7 @@ namespace MixItUp.Base.Model.Currency
         {
             get
             {
-                UserViewModel user = ChannelSession.Services.User.GetUserByID(this.UserID);
+                UserViewModel user = ChannelSession.Services.User.GetActiveUserByID(this.UserID);
                 if (user == null)
                 {
                     UserDataModel userData = ChannelSession.Settings.GetUserData(this.UserID);

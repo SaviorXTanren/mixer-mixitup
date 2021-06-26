@@ -4,19 +4,17 @@ using System.Runtime.Serialization;
 namespace MixItUp.Base.Model.Store
 {
     [DataContract]
-    public class StoreLoginModel
+    public class CommunityCommandLoginModel
     {
         [DataMember]
         public Guid UserID { get; set; }
 
         [DataMember]
         public string TwitchAccessToken { get; set; }
-
-        // TODO: Add other access token types as needed
     }
 
     [DataContract]
-    public class StoreLoginResponseModel
+    public class CommunityCommandLoginResponseModel
     {
         [DataMember]
         public string AccessToken { get; set; }

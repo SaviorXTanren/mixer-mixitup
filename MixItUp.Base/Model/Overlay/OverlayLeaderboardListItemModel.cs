@@ -53,7 +53,7 @@ namespace MixItUp.Base.Model.Overlay
             public string Hash { get; set; }
 
             public OverlayLeaderboardItem(UserViewModel user, string hash)
-                : this(user.DisplayName, hash)
+                : this(user.FullDisplayName, hash)
             {
                 this.User = user;
             }
@@ -166,17 +166,7 @@ namespace MixItUp.Base.Model.Overlay
 
                 foreach (UserSubscriptionModel subscriber in subscribers)
                 {
-                    UserViewModel user = null;
-                    UserDataModel userData = ChannelSession.Settings.GetUserDataByTwitchID(subscriber.user.id);
-                    if (userData != null)
-                    {
-                        user = new UserViewModel(userData);
-                    }
-                    else
-                    {
-                        user = new UserViewModel(subscriber.user);
-                    }
-
+                    UserViewModel user = await UserViewModel.Create(subscriber.user);
                     DateTimeOffset? subDate = TwitchPlatformService.GetTwitchDateTime(subscriber.created_at);
                     if (subDate.HasValue && this.ShouldIncludeUser(user))
                     {

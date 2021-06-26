@@ -10,10 +10,16 @@
              xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
+                                      
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+                                      
              d:DesignHeight="400" d:DesignWidth="500">
-    <local:MainControlBase.Resources>
+    <local:GroupedCommandsMainControlBase.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-    </local:MainControlBase.Resources>
+    </local:GroupedCommandsMainControlBase.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -36,7 +42,7 @@
         </Grid>
 
         <ScrollViewer Grid.Row="2" Visibility="{Binding ShowList, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
-            <DataGrid ItemsSource="{Binding DefaultGroup}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+            <DataGrid ItemsSource="{Binding DefaultGroup}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch" PreviewMouseWheel="DataGrid_PreviewMouseWheel">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="{x:Static resx:Resources.RewardName}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                     <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="220">
@@ -64,7 +70,7 @@
                                     </Grid>
                                 </Expander.Header>
 
-                                <DataGrid ItemsSource="{Binding Commands}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+                                <DataGrid ItemsSource="{Binding Commands}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch" PreviewMouseWheel="DataGrid_PreviewMouseWheel">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="{x:Static resx:Resources.RewardName}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                                         <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="220">
@@ -86,15 +92,15 @@
         <Grid Grid.Row="4" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            
-            <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}" MinWidth="140" />
 
-            <Button x:Name="CreateChannelPointsEditorButton" Grid.Column="2" Command="{Binding CreateChannelPointRewardCommand}" Content="{x:Static resx:Resources.CreateChannelPointReward}" Width="220" />
+            <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click" Content="{x:Static resx:Resources.AddCommandToExistingReward}" Width="260" />
+
+            <Button x:Name="CreateChannelPointsEditorButton" Grid.Column="2" Command="{Binding CreateChannelPointRewardCommand}" Content="{x:Static resx:Resources.CreateNewChannelPointReward}" Width="260" />
 
             <Button x:Name="ChannelPointsEditorButton" Grid.Column="4" Command="{Binding ChannelPointsEditorCommand}" Width="195">
                 <StackPanel Orientation="Horizontal">

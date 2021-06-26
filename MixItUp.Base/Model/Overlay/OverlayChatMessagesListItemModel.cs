@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using Twitch.Base.Models.V5.Emotes;
+using Twitch.Base.Models.NewAPI.Chat;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -20,7 +20,7 @@ namespace MixItUp.Base.Model.Overlay
           <p style=""padding: 10px; margin: auto;"">
             <img src=""{USER_IMAGE}"" width=""{TEXT_SIZE}"" height=""{TEXT_SIZE}"" style=""vertical-align: middle; padding-right: 2px"">
             <span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; word-wrap: break-word; color: {USER_COLOR}; vertical-align: middle;"">{USERNAME}</span>
-            <img src=""{SUB_IMAGE}"" style=""vertical-align: middle; padding-right: 5px"" onerror=""this.style.display='none'"">
+            <img src=""{USER_SUB_IMAGE}"" style=""vertical-align: middle; padding-right: 5px"" onerror=""this.style.display='none'"">
             {MESSAGE}
           </p>
         </div>";
@@ -75,9 +75,9 @@ namespace MixItUp.Base.Model.Overlay
                         {
                             textParts.Add((string)messagePart);
                         }
-                        else if (messagePart is EmoteModel)
+                        else if (messagePart is ChatEmoteModel)
                         {
-                            imageURL = ((EmoteModel)messagePart).Size1URL;
+                            imageURL = ((ChatEmoteModel)messagePart).Size1URL;
                         }
                         else if (messagePart is BetterTTVEmoteModel)
                         {
@@ -105,10 +105,11 @@ namespace MixItUp.Base.Model.Overlay
                     {
                         item.TemplateReplacements.Add("MESSAGE", OverlayChatMessagesListItemModel.TextMessageHTMLTemplate);
                         item.TemplateReplacements.Add("TEXT", string.Join(" ", textParts));
-                        item.TemplateReplacements.Add("USERNAME", user.DisplayName);
+                        item.TemplateReplacements.Add("USERNAME", user.FullDisplayName);
                         item.TemplateReplacements.Add("USER_IMAGE", user.AvatarLink);
                         item.TemplateReplacements.Add("USER_COLOR", user.Color);
-                        item.TemplateReplacements.Add("SUB_IMAGE", string.Empty);
+                        item.TemplateReplacements.Add("SUB_IMAGE", user.SubscriberBadgeLink);
+                        item.TemplateReplacements.Add("USER_SUB_IMAGE", user.SubscriberBadgeLink);
                         item.TemplateReplacements.Add("TEXT_SIZE", this.Height.ToString());
                     }
 

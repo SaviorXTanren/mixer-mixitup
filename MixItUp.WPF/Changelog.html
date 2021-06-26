@@ -5,33 +5,32 @@
     <body>
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
-        <h2 style="color: #2e6c80;">v0.5.9.7005:</h2>
+        <h2 style="color: #2e6c80;">v0.5.10.4:</h2>
         <ul>
-            <li>Fixing bug with OAuth token reset fully removing user auth settings, which can cause a settings override if the account signed in to the default web browser does not match that account</li>
-            <li>Fixing bug with restoring of backup settings failing if the restored settings ID differs from the initially selected settings ID to delete and the restored settings ID already exists as settings</li>
-            <li>Using the Test button for the End Credits Overlay Widget will now only fill in test data if the given category doesn't already have users set for it and will only clear out data for those categories</li>
+            <li>Adding additional timeouts to Streamlabs &amp; StreamElements service connections to combat rapid disconnection issues to their servers</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.5.10.3:</h2>
+        <ul>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
-        <h2 style="color: #2e6c80;">v0.5.9.7004:</h2>
+        <h2 style="color: #2e6c80;">v0.5.10.2:</h2>
         <ul>
-            <li>Adding Cancel All Commands option to Command Action</li>
+            <li>Adding extra connection protection &amp; retry logic for unstable Streamlabs and StreamElements service connections</li>
+            <li>Adding $randomregularuser____ Special Identifier</li>
+            <li>Added Input Action support for F13 to F24</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
-        <h2 style="color: #2e6c80;">v0.5.9.7003:</h2>
+        <h2 style="color: #2e6c80;">v0.5.10.1:</h2>
         <ul>
-            <li>Fixing bug with multiplayer-based games starting cooldown early before the game has finished</li>
+            <li>Adding Export Actions option to Conditional Action</li>
+            <li>Fixing bug with Command Action not performing Usage Requirements &amp; Validation of the selected sub-command when using the Run Command option</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
-        <h2 style="color: #2e6c80;">v0.5.9.7002:</h2>
-        <ul>
-            <li>Fixing bug with game sub-commands not properly running</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v0.5.9.7001:</h2>
+        <h2 style="color: #2e6c80;">v0.5.10.0:</h2>
         <ul>
             <li>Command System Improvements:</li>
             <ul>
@@ -40,6 +39,7 @@
                 <li>Adding Requirement Errors Cooldown Type option to determine how requirement error messages should be cooled down under Settings -> Commands </li>
                 <li>Exported *.miucommand command files will now show Mix It Up icon in Windows Explorer and can be opened to import data into a new or existing command</li>
                 <li>Exported *.miucommand command files can now be drag &amp; dropped into a command editor window to import the actions from it</li>
+                <li>Adding Cancel All Commands option to Command Action</li>
             </ul>
             <li>Twitch Channel Point Reward Commands:</li>
             <ul>
@@ -49,9 +49,10 @@
             <li>Adding Streamloots Cards page for creating dedicated commands that are triggered when specific Streamloots cards are redeemed. <b>Only shown when Streamloots service is connected.</b></li>
             <li>Twitch Mass Subscriptions Gifted event command now includes all users that received a gifted sub as arguments to the command. <b>Requires the Twitch Mass Subscriptions Gifted Filter option enabled under Settings -> Commands</b></li>
             <li>Chat Message Received event command now includes the full message as arguments to the command</li>
-            <li>Adding settings menu for Counters to allow for viewing, editing, &amp; deletion</li>
             <li>The StreamElements donation event command can now be triggered in real-time and is no longer delayed by up to 1 minute</li>
+            <li>Adding settings menu for Counters to allow for viewing, editing, &amp; deletion</li>
             <li>Adding event command for StreamElements Merch Purchase</li>
+            <li>Using the Test button for the End Credits Overlay Widget will now only fill in test data if the given category doesn't already have users set for it and will only clear out data for those categories</li>
             <li>Adding uninstaller and registering in Windows add/remove programs</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>

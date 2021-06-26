@@ -1,5 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
@@ -9,6 +11,9 @@ namespace MixItUp.Base.ViewModel.MainControls
 {
     public class TwitchChannelPointsMainControlViewModel : GroupedCommandsMainControlViewModelBase
     {
+        private const string RewardCreationErrorTooManyRewards = "CREATE_CUSTOM_REWARD_TOO_MANY_REWARDS";
+        private const string RewardCreationErrorDuplicateReward = "CREATE_CUSTOM_REWARD_DUPLICATE_REWARD";
+
         public ICommand CreateChannelPointRewardCommand { get; set; }
 
         public ICommand ChannelPointsEditorCommand { get; set; }
@@ -23,22 +28,41 @@ namespace MixItUp.Base.ViewModel.MainControls
                 string name = await DialogHelper.ShowTextEntry(MixItUp.Base.Resources.ChannelPointRewardName);
                 if (!string.IsNullOrEmpty(name))
                 {
-                    CustomChannelPointRewardModel reward = await ChannelSession.TwitchUserConnection.CreateCustomChannelPointRewards(ChannelSession.TwitchUserNewAPI, new UpdatableCustomChannelPointRewardModel()
+                    Result<CustomChannelPointRewardModel> reward = await ChannelSession.TwitchUserConnection.CreateCustomChannelPointRewards(ChannelSession.TwitchUserNewAPI, new UpdatableCustomChannelPointRewardModel()
                     {
                         title = name,
                         cost = 1,
                         is_enabled = true,
                     });
 
-                    if (reward != null)
+                    if (reward.Success)
                     {
-                        this.AddCommand(new TwitchChannelPointsCommandModel(reward.title, reward.id));
+                        this.AddCommand(new TwitchChannelPointsCommandModel(reward.Value.title, reward.Value.id));
 
                         await DialogHelper.ShowMessage(MixItUp.Base.Resources.CreateChannelPointRewardSuccess);
                     }
                     else
                     {
-                        await DialogHelper.ShowMessage(MixItUp.Base.Resources.CreateChannelPointRewardFailure);
+                        string message = reward.Message;
+                        try
+                        {
+                            JObject jobj = JObject.Parse(reward.Message);
+                            if (jobj.ContainsKey("message"))
+                            {
+                                message = jobj["message"].ToString();
+                                if (string.Equals(message, RewardCreationErrorTooManyRewards, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    message = MixItUp.Base.Resources.TwitchChannelPointRewardCreationErrorTooManyRewards;
+                                }
+                                else if (string.Equals(message, RewardCreationErrorDuplicateReward, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    message = MixItUp.Base.Resources.TwitchChannelPointRewardCreationErrorRewardAlreadyExists;
+                                }
+                            }
+                        }
+                        catch (Exception) { }
+
+                        await DialogHelper.ShowMessage(string.Format(MixItUp.Base.Resources.CreateChannelPointRewardFailure, message));
                     }
                 }
             });
@@ -54,7 +78,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         protected override IEnumerable<CommandModelBase> GetCommands()
         {
-            return ChannelSession.TwitchChannelPointsCommands.ToList();
+            return ChannelSession.Services.Command.TwitchChannelPointsCommands.ToList();
         }
 
         private void GroupedCommandsMainControlViewModelBase_OnCommandAddedEdited(object sender, CommandModelBase command)

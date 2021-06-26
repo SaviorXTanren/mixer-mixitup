@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.Clients.PubSub.Messages;
-using Twitch.Base.Models.V5.Emotes;
+using Twitch.Base.Models.NewAPI.Chat;
 
 namespace MixItUp.Base.ViewModel.Chat.Twitch
 {
@@ -34,7 +34,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
         private const string MessageIDHighlightedMessage = "highlighted-message";
 
         private static HashSet<long> messageEmotesHashSet = new HashSet<long>();
-        private static Dictionary<string, EmoteModel> messageEmotesCache = new Dictionary<string, EmoteModel>();
+        private static Dictionary<string, ChatEmoteModel> messageEmotesCache = new Dictionary<string, ChatEmoteModel>();
 
         public bool IsSlashMe { get; set; }
 
@@ -43,9 +43,14 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
         public bool IsHighlightedMessage { get; set; }
 
         public string WhisperThreadID { get; set; }
+        public UserViewModel WhisperRecipient { get; set; }
 
-        public TwitchChatMessageViewModel(ChatMessagePacketModel message, UserViewModel user = null)
-            : base(message.ID, StreamingPlatformTypeEnum.Twitch, (user != null) ? user : new UserViewModel(message))
+        public string ReplyThreadID { get; set; }
+
+        public string PlainTextMessageNoCheermotes { get; set; }
+
+        public TwitchChatMessageViewModel(ChatMessagePacketModel message, UserViewModel user)
+            : base(message.ID, StreamingPlatformTypeEnum.Twitch, user)
         {
             this.User.SetTwitchChatDetails(message);
 
@@ -58,10 +63,10 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                     if (0 <= instance.Item1 && instance.Item1 < message.Message.Length && 0 <= instance.Item2 && instance.Item2 < message.Message.Length)
                     {
                         string emoteCode = message.Message.Substring(instance.Item1, instance.Item2 - instance.Item1 + 1);
-                        messageEmotesCache[emoteCode] = new EmoteModel()
+                        messageEmotesCache[emoteCode] = new ChatEmoteModel()
                         {
-                            id = emoteID,
-                            code = emoteCode
+                            id = emoteID.ToString(),
+                            name = emoteCode
                         };
                         messageEmotesHashSet.Add(kvp.Key);
                     }
@@ -83,25 +88,29 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             }
         }
 
-        public TwitchChatMessageViewModel(PubSubWhisperEventModel whisper, UserViewModel user = null)
-            : base(whisper.message_id, StreamingPlatformTypeEnum.Twitch, (user != null) ? user : new UserViewModel(whisper))
+        public TwitchChatMessageViewModel(PubSubWhisperEventModel whisper, UserViewModel user, UserViewModel recipient)
+            : base(whisper.message_id, StreamingPlatformTypeEnum.Twitch, user)
         {
             this.WhisperThreadID = whisper.thread_id;
 
-            UserViewModel recipient = new UserViewModel(whisper.recipient);
+            this.WhisperRecipient = recipient;
             this.TargetUsername = recipient.Username;
 
             this.ProcessMessageContents(whisper.body);
         }
 
-        public TwitchChatMessageViewModel(UserViewModel user, string message)
+        public TwitchChatMessageViewModel(UserViewModel user, string message, string replyMessageID = null)
             : base(string.Empty, StreamingPlatformTypeEnum.Twitch, user)
         {
+            this.ReplyThreadID = replyMessageID;
+
             this.ProcessMessageContents(message);
         }
 
         private void ProcessMessageContents(string message)
         {
+            List<string> messageNoCheermotes = new List<string>();
+
             if (!string.IsNullOrEmpty(message))
             {
                 string[] parts = message.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -125,6 +134,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                                 }
                             }
                         }
+                        messageNoCheermotes.Add(part);
 
                         if (ChannelSession.Services.Chat.TwitchChatService.Emotes.ContainsKey(part))
                         {
@@ -145,6 +155,8 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                     }
                 }
             }
+
+            this.PlainTextMessageNoCheermotes = string.Join(" ", messageNoCheermotes);
         }
     }
 }

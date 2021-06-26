@@ -13,13 +13,16 @@
     <Grid Margin="16" MaxWidth="300">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBox Grid.Row="0" x:Name="TextEntryTextBox" Width="200" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{Binding}" />
+        <TextBlock Grid.Row="0" x:Name="DescriptionTextBlock" Width="200" TextWrapping="Wrap" Visibility="Collapsed" Margin="0,0,0,10" />
 
-        <Grid Grid.Row="2">
+        <TextBox Grid.Row="1" x:Name="TextEntryTextBox" Width="200" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{Binding}" />
+
+        <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="10" />

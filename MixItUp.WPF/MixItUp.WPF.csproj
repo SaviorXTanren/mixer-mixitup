@@ -83,14 +83,14 @@
     <Reference Include="GongSolutions.WPF.DragDrop, Version=2.0.0.0, Culture=neutral, PublicKeyToken=91f1945125b7a587, processorArchitecture=MSIL">
       <HintPath>..\packages\gong-wpf-dragdrop.2.2.0\lib\net46\GongSolutions.WPF.DragDrop.dll</HintPath>
     </Reference>
-    <Reference Include="H.Engine.IO, Version=1.1.7.0, Culture=neutral, PublicKeyToken=56a250a977deb371, processorArchitecture=MSIL">
-      <HintPath>..\packages\H.Engine.IO.1.1.7\lib\net45\H.Engine.IO.dll</HintPath>
+    <Reference Include="H.Engine.IO, Version=1.1.7.1, Culture=neutral, PublicKeyToken=56a250a977deb371, processorArchitecture=MSIL">
+      <HintPath>..\packages\H.Engine.IO.1.1.7.1\lib\net45\H.Engine.IO.dll</HintPath>
     </Reference>
     <Reference Include="H.Socket.IO, Version=1.1.7.0, Culture=neutral, PublicKeyToken=56a250a977deb371, processorArchitecture=MSIL">
       <HintPath>..\packages\H.Socket.IO.1.1.7\lib\net45\H.Socket.IO.dll</HintPath>
     </Reference>
-    <Reference Include="H.WebSockets, Version=1.1.7.0, Culture=neutral, PublicKeyToken=56a250a977deb371, processorArchitecture=MSIL">
-      <HintPath>..\packages\H.WebSockets.1.1.7\lib\net45\H.WebSockets.dll</HintPath>
+    <Reference Include="H.WebSockets, Version=1.1.7.1, Culture=neutral, PublicKeyToken=56a250a977deb371, processorArchitecture=MSIL">
+      <HintPath>..\packages\H.WebSockets.1.1.7.1\lib\net45\H.WebSockets.dll</HintPath>
     </Reference>
     <Reference Include="Jace, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Jace.1.0.0\lib\netstandard1.6\Jace.dll</HintPath>
@@ -200,8 +200,8 @@
     <Reference Include="SocketIoClientDotNet, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SocketIoClientDotNet.1.0.6\lib\net45\SocketIoClientDotNet.dll</HintPath>
     </Reference>
-    <Reference Include="StreamingClient.Base, Version=1.0.0.4, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StreamingClientLibrary.Twitch.1.0.0.25\lib\netstandard2.0\StreamingClient.Base.dll</HintPath>
+    <Reference Include="StreamingClient.Base, Version=1.0.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamingClientLibrary.Twitch.1.0.0.28\lib\netstandard2.0\StreamingClient.Base.dll</HintPath>
     </Reference>
     <Reference Include="SuperSocket.ClientEngine, Version=0.10.0.0, Culture=neutral, PublicKeyToken=ee9af13f57f00acc, processorArchitecture=MSIL">
       <HintPath>..\packages\SuperSocket.ClientEngine.Core.0.10.0\lib\net45\SuperSocket.ClientEngine.dll</HintPath>
@@ -365,8 +365,8 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="Twitch.Base, Version=1.0.0.25, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StreamingClientLibrary.Twitch.1.0.0.25\lib\netstandard2.0\Twitch.Base.dll</HintPath>
+    <Reference Include="Twitch.Base, Version=1.0.0.28, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamingClientLibrary.Twitch.1.0.0.28\lib\netstandard2.0\Twitch.Base.dll</HintPath>
     </Reference>
     <Reference Include="websocket-sharp, Version=1.0.1.0, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
       <HintPath>..\packages\WebSocketSharp-netstandard.1.0.1\lib\net45\websocket-sharp.dll</HintPath>
@@ -441,6 +441,9 @@
     <Compile Include="Controls\Actions\OvrStreamActionEditorControl.xaml.cs">
       <DependentUpon>OvrStreamActionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\PixelChatActionEditorControl.xaml.cs">
+      <DependentUpon>PixelChatActionEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\SerialActionEditorControl.xaml.cs">
       <DependentUpon>SerialActionEditorControl.xaml</DependentUpon>
     </Compile>
@@ -455,6 +458,9 @@
     </Compile>
     <Compile Include="Controls\Actions\StreamlabsActionEditorControl.xaml.cs">
       <DependentUpon>StreamlabsActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\SubActionContainerControl.xaml.cs">
+      <DependentUpon>SubActionContainerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Actions\TextToSpeechActionEditorControl.xaml.cs">
       <DependentUpon>TextToSpeechActionEditorControl.xaml</DependentUpon>
@@ -564,6 +570,12 @@
     <Compile Include="Controls\Commands\UnlockCommandControl.xaml.cs">
       <DependentUpon>UnlockCommandControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\CommunityCommands\CommunityCommandListingLargeControl.xaml.cs">
+      <DependentUpon>CommunityCommandListingLargeControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CommunityCommands\CommunityCommandListingSmallControl.xaml.cs">
+      <DependentUpon>CommunityCommandListingSmallControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Currency\UserCurrencyIndividualEditorControl.xaml.cs">
       <DependentUpon>UserCurrencyIndividualEditorControl.xaml</DependentUpon>
     </Compile>
@@ -604,6 +616,12 @@
     <Compile Include="Controls\Dialogs\CommandSelectorDialogControl.xaml.cs">
       <DependentUpon>CommandSelectorDialogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Dialogs\CommunityCommands\CommunityCommandsReportCommandDialogControl.xaml.cs">
+      <DependentUpon>CommunityCommandsReportCommandDialogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\CommunityCommands\CommunityCommandsReviewCommandDialogControl.xaml.cs">
+      <DependentUpon>CommunityCommandsReviewCommandDialogControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Dialogs\GameTypeSelectorDialogControl.xaml.cs">
       <DependentUpon>GameTypeSelectorDialogControl.xaml</DependentUpon>
     </Compile>
@@ -631,6 +649,9 @@
     </Compile>
     <Compile Include="Controls\MainControls\CommandHistoryControl.xaml.cs">
       <DependentUpon>CommandHistoryControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\CommunityCommandsControl.xaml.cs">
+      <DependentUpon>CommunityCommandsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\CurrencyRankInventoryControl.xaml.cs">
       <DependentUpon>CurrencyRankInventoryControl.xaml</DependentUpon>
@@ -751,6 +772,9 @@
     <Compile Include="Controls\MainControls\QuoteControl.xaml.cs">
       <DependentUpon>QuoteControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Requirements\ArgumentsRequirementControl.xaml.cs">
+      <DependentUpon>ArgumentsRequirementControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Requirements\CooldownRequirementControl.xaml.cs">
       <DependentUpon>CooldownRequirementControl.xaml</DependentUpon>
     </Compile>
@@ -784,6 +808,9 @@
     <Compile Include="Controls\Services\OvrStreamServiceControl.xaml.cs">
       <DependentUpon>OvrStreamServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\PixelChatServiceControl.xaml.cs">
+      <DependentUpon>PixelChatServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\ServiceContainerControl.xaml.cs">
       <DependentUpon>ServiceContainerControl.xaml</DependentUpon>
     </Compile>
@@ -815,8 +842,8 @@
     <Compile Include="Controls\Services\StreamElementsServiceControl.xaml.cs">
       <DependentUpon>StreamElementsServiceControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Services\StreamJarServiceControl.xaml.cs">
-      <DependentUpon>StreamJarServiceControl.xaml</DependentUpon>
+    <Compile Include="Controls\Services\RainmakerServiceControl.xaml.cs">
+      <DependentUpon>RainmakerServiceControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Services\StreamlabsOBSServiceControl.xaml.cs">
       <DependentUpon>StreamlabsOBSServiceControl.xaml</DependentUpon>
@@ -961,6 +988,9 @@
     <Compile Include="Windows\Commands\CommandEditorWindow.xaml.cs">
       <DependentUpon>CommandEditorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Commands\CommunityCommandUploadWindow.xaml.cs">
+      <DependentUpon>CommunityCommandUploadWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Commands\GameCommandEditorWindow.xaml.cs">
       <DependentUpon>GameCommandEditorWindow.xaml</DependentUpon>
     </Compile>
@@ -1073,6 +1103,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Actions\PixelChatActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Actions\SerialActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1090,6 +1124,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\StreamlabsActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\SubActionContainerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1233,6 +1271,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\CommunityCommands\CommunityCommandListingLargeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\CommunityCommands\CommunityCommandListingSmallControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Currency\UserCurrencyIndividualEditorControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1285,6 +1331,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Dialogs\CommunityCommands\CommunityCommandsReportCommandDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\CommunityCommands\CommunityCommandsReviewCommandDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Dialogs\GameTypeSelectorDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1318,6 +1372,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\CommandHistoryControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\CommunityCommandsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1481,6 +1539,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Requirements\ArgumentsRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Requirements\CooldownRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1525,6 +1587,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\Services\PixelChatServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Services\ServiceContainerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1565,7 +1631,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Services\StreamJarServiceControl.xaml">
+    <Page Include="Controls\Services\RainmakerServiceControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1780,6 +1846,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Commands\CommandEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Commands\CommunityCommandUploadWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

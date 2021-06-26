@@ -9,6 +9,8 @@ namespace MixItUp.Base.Services
     {
         Task Read(string databaseFilePath, string commandString, Action<Dictionary<string, object>> processRow);
 
+        Task Read(string databaseFilePath, string commandString, Dictionary<string, object> parameters, Action<Dictionary<string, object>> processRow);
+
         Task Write(string databaseFilePath, string commandString);
 
         Task BulkWrite(string databaseFilePath, string commandString, IEnumerable<Dictionary<string, object>> parameters);

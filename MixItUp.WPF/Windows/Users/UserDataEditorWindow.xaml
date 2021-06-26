@@ -238,8 +238,8 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.CurrencyRankInventoryExempt}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
-                            <ToggleButton Grid.Column="2" IsChecked="{Binding User.Data.IsCurrencyRankExempt}" />
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SpecialtyExcluded}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" ToolTip="{x:Static resx:Resources.SpecialtyExcludedTooltip}" />
+                            <ToggleButton Grid.Column="2" IsChecked="{Binding User.Data.IsCurrencyRankExempt}" ToolTip="{x:Static resx:Resources.SpecialtyExcludedTooltip}" />
 
                         </Grid>
 

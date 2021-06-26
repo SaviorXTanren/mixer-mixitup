@@ -50,35 +50,34 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public UserRoleEnum UsersToApplyTo { get; set; }
 
-        public ConsumablesActionModel(CurrencyModel currency, ConsumablesActionTypeEnum actionType, string amount, string username = null, UserRoleEnum usersToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
-            : base(ActionTypeEnum.Consumables)
+        [DataMember]
+        public bool UsersMustBePresent { get; set; } = true;
+
+        public ConsumablesActionModel(CurrencyModel currency, ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount, string username = null, UserRoleEnum usersToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
+            : this(actionType, usersMustBePresent, amount, username, usersToApplyTo, deductFromUser)
         {
             this.CurrencyID = currency.ID;
-            this.ActionType = actionType;
-            this.Amount = amount;
-            this.Username = username;
-            this.UsersToApplyTo = usersToApplyTo;
-            this.DeductFromUser = deductFromUser;
         }
 
-        public ConsumablesActionModel(InventoryModel inventory, ConsumablesActionTypeEnum actionType, string itemName = null, string amount = null, string username = null, UserRoleEnum usersToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
-            : base(ActionTypeEnum.Consumables)
+        public ConsumablesActionModel(InventoryModel inventory, string itemName, ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount, string username = null, UserRoleEnum usersToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
+            : this(actionType, usersMustBePresent, amount, username, usersToApplyTo, deductFromUser)
         {
             this.InventoryID = inventory.ID;
-            this.ActionType = actionType;
             this.ItemName = itemName;
-            this.Amount = amount;
-            this.Username = username;
-            this.UsersToApplyTo = usersToApplyTo;
-            this.DeductFromUser = deductFromUser;
         }
 
-        public ConsumablesActionModel(StreamPassModel streamPass, ConsumablesActionTypeEnum actionType, string amount, string username = null, UserRoleEnum usersToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
-            : base(ActionTypeEnum.Consumables)
+        public ConsumablesActionModel(StreamPassModel streamPass, ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount, string username = null, UserRoleEnum usersToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
+            : this(actionType, usersMustBePresent, amount, username, usersToApplyTo, deductFromUser)
         {
             this.StreamPassID = streamPass.ID;
+        }
+
+        private ConsumablesActionModel(ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount = null, string username = null, UserRoleEnum usersToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
+            : base(ActionTypeEnum.Consumables)
+        {
             this.ActionType = actionType;
             this.Amount = amount;
+            this.UsersMustBePresent = usersMustBePresent;
             this.Username = username;
             this.UsersToApplyTo = usersToApplyTo;
             this.DeductFromUser = deductFromUser;
@@ -211,7 +210,17 @@ namespace MixItUp.Base.Model.Actions
                     if (!string.IsNullOrEmpty(this.Username))
                     {
                         string usernameString = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
-                        UserViewModel receivingUser = ChannelSession.Services.User.GetUserByUsername(usernameString, parameters.Platform);
+
+                        UserViewModel receivingUser = null;
+                        if (this.UsersMustBePresent)
+                        {
+                            receivingUser = ChannelSession.Services.User.GetActiveUserByUsername(usernameString, parameters.Platform);
+                        }
+                        else
+                        {
+                            receivingUser = await ChannelSession.Services.User.GetUserFullSearch(parameters.Platform, userID: null, usernameString);
+                        }
+
                         if (receivingUser != null)
                         {
                             receiverUserData.Add(receivingUser.Data);

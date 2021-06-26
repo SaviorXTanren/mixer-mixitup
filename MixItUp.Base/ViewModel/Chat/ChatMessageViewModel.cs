@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
@@ -134,9 +135,9 @@ namespace MixItUp.Base.ViewModel.Chat
                 if (!this.IsDeleted)
                 {
                     this.IsDeleted = true;
-                    if (moderator != null && !string.IsNullOrEmpty(moderator.DisplayName))
+                    if (moderator != null && !string.IsNullOrEmpty(moderator.FullDisplayName))
                     {
-                        this.DeletedBy = moderator.DisplayName;
+                        this.DeletedBy = moderator.FullDisplayName;
                     }
                     this.ModerationReason = reason;
 
@@ -148,12 +149,12 @@ namespace MixItUp.Base.ViewModel.Chat
 
                     if (moderator != null && this.User != null && !string.IsNullOrEmpty(this.PlainTextMessage))
                     {
-                        EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatMessageDeleted, moderator);
-                        trigger.Arguments.Add(this.User.Username);
-                        trigger.TargetUser = this.User;
-                        trigger.SpecialIdentifiers["message"] = this.PlainTextMessage;
-                        trigger.SpecialIdentifiers["reason"] = (!string.IsNullOrEmpty(this.ModerationReason)) ? this.ModerationReason : "Manual Deletion";
-                        await ChannelSession.Services.Events.PerformEvent(trigger);
+                        CommandParametersModel parameters = new CommandParametersModel(moderator);
+                        parameters.Arguments.Add(this.User.Username);
+                        parameters.TargetUser = this.User;
+                        parameters.SpecialIdentifiers["message"] = this.PlainTextMessage;
+                        parameters.SpecialIdentifiers["reason"] = (!string.IsNullOrEmpty(this.ModerationReason)) ? this.ModerationReason : "Manual Deletion";
+                        await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.ChatMessageDeleted, parameters);
                     }
                 }
             }

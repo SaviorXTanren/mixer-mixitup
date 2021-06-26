@@ -1,4 +1,5 @@
 ﻿using H.Socket.IO;
+using MixItUp.Base;
 using MixItUp.Base.Services;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
@@ -9,6 +10,7 @@ namespace MixItUp.WPF.Services
 {
     public class WindowsSocketIOConnection : ISocketIOConnection
     {
+        public event EventHandler OnConnected = delegate { };
         public event EventHandler OnDisconnected = delegate { };
 
         protected SocketIoClient socket = new SocketIoClient();
@@ -20,9 +22,20 @@ namespace MixItUp.WPF.Services
         public async Task Connect(string connectionURL)
         {
             this.connectionURL = connectionURL;
-            await this.socket.ConnectAsync(new Uri(this.connectionURL));
 
+            this.DisconnectEvents();
+
+            if (ChannelSession.IsDebug())
+            {
+                this.socket.HandledEventReceived += Socket_HandledEventReceived;
+                this.socket.UnhandledEventReceived += Socket_UnhandledEventReceived;
+            }
+            this.socket.Connected += Socket_Connected;
             this.socket.Disconnected += Socket_Disconnected;
+            this.socket.ErrorReceived += Socket_ErrorReceived;
+            this.socket.ExceptionOccurred += Socket_ExceptionOccurred;
+
+            await this.socket.ConnectAsync(new Uri(this.connectionURL));
         }
 
         public Task Disconnect()
@@ -31,12 +44,33 @@ namespace MixItUp.WPF.Services
             {
                 if (this.socket != null)
                 {
+                    this.DisconnectEvents();
                     this.socket.DisconnectAsync();
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
 
             return Task.FromResult(0);
+        }
+
+        public void Listen(string eventString, Action processEvent)
+        {
+            try
+            {
+                this.socket.Off(eventString);
+                this.socket.On(eventString, () =>
+                {
+                    try
+                    {
+                        processEvent();
+                    }
+                    catch (Exception ex) { Logger.Log(ex); }
+                });
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
         public void Listen(string eventString, Action<object> processEvent)
@@ -59,18 +93,6 @@ namespace MixItUp.WPF.Services
             }
         }
 
-        public void Listen<T>(string eventString, Action<T> processEvent)
-        {
-            this.Listen(eventString, (eventData) =>
-            {
-                JObject jobj = JObject.Parse(eventData.ToString());
-                if (jobj != null)
-                {
-                    processEvent(jobj.ToObject<T>());
-                }
-            });
-        }
-
         public void Send(string eventString, object data)
         {
             try
@@ -80,6 +102,45 @@ namespace MixItUp.WPF.Services
             catch (Exception ex) { Logger.Log(ex); }
         }
 
-        private void Socket_Disconnected(object sender, H.WebSockets.Args.WebSocketCloseEventArgs e) { this.OnDisconnected(this, new EventArgs()); }
+        private void Socket_Connected(object sender, H.Socket.IO.EventsArgs.SocketIoEventEventArgs e)
+        {
+            this.OnConnected(this, new EventArgs());
+        }
+
+        private void Socket_Disconnected(object sender, H.WebSockets.Args.WebSocketCloseEventArgs e)
+        {
+            this.DisconnectEvents();
+            this.OnDisconnected(this, new EventArgs());
+        }
+
+        private void Socket_ErrorReceived(object sender, H.Socket.IO.EventsArgs.SocketIoErrorEventArgs e)
+        {
+            Logger.Log(LogLevel.Error, "Socket Error Received: " + e.Value);
+        }
+
+        private void Socket_ExceptionOccurred(object sender, H.WebSockets.Utilities.DataEventArgs<Exception> e)
+        {
+            Logger.Log(LogLevel.Error, "Socket Exception Received: " + e.Value);
+        }
+
+        private void Socket_HandledEventReceived(object sender, H.Socket.IO.EventsArgs.SocketIoEventEventArgs e)
+        {
+            Logger.Log(LogLevel.Debug, "Socket Handled Data Received: " + e.Value);
+        }
+
+        private void Socket_UnhandledEventReceived(object sender, H.Socket.IO.EventsArgs.SocketIoEventEventArgs e)
+        {
+            Logger.Log(LogLevel.Debug, "Socket Unhandled Data Received: " + e.Value);
+        }
+
+        private void DisconnectEvents()
+        {
+            this.socket.HandledEventReceived -= Socket_HandledEventReceived;
+            this.socket.UnhandledEventReceived -= Socket_UnhandledEventReceived;
+            this.socket.Connected -= Socket_Connected;
+            this.socket.Disconnected -= Socket_Disconnected;
+            this.socket.ErrorReceived -= Socket_ErrorReceived;
+            this.socket.ExceptionOccurred -= Socket_ExceptionOccurred;
+        }
     }
 }

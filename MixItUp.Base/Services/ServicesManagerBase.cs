@@ -8,7 +8,7 @@ namespace MixItUp.Base.Services
     {
         public IMixItUpService MixItUpService { get; protected set; }
 
-        public IUserService User { get; protected set; }
+        public UserService User { get; protected set; }
 
         public IChatService Chat { get; protected set; }
         public IEventService Events { get; protected set; }
@@ -29,7 +29,7 @@ namespace MixItUp.Base.Services
         public IGiveawayService GiveawayService { get; protected set; }
         public ISerialService SerialService { get; protected set; }
         public WebhookService WebhookService { get; protected set; }
-        public CommunityCommandsService CommunityCommandsService { get; protected set; }
+        public ICommunityCommandsService CommunityCommandsService { get; protected set; }
 
         public IOverlayService Overlay { get; protected set; }
         public IStreamingSoftwareService OBSStudio { get; protected set; }
@@ -45,12 +45,13 @@ namespace MixItUp.Base.Services
         public ITelemetryService Telemetry { get; protected set; }
         public ITipeeeStreamService TipeeeStream { get; protected set; }
         public ITreatStreamService TreatStream { get; protected set; }
-        public IStreamJarService StreamJar { get; protected set; }
+        public RainmakerService Rainmaker { get; protected set; }
         public IPatreonService Patreon { get; protected set; }
         public IOvrStreamService OvrStream { get; protected set; }
         public IIFTTTService IFTTT { get; protected set; }
         public IStreamlootsService Streamloots { get; protected set; }
         public IJustGivingService JustGiving { get; protected set; }
+        public PixelChatService PixelChat { get; protected set; }
 
         public TwitchStatusService TwitchStatus { get; protected set; }
 

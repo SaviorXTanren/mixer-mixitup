@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace MixItUp.Base.Model.Store
 {
     [DataContract]
-    public class StoreCommandCategoryModel
+    public class CommunityCommandCategoryModel
     {
         [DataMember]
         public string Name { get; set; }
@@ -13,6 +13,6 @@ namespace MixItUp.Base.Model.Store
         public string Description { get; set; }
 
         [DataMember]
-        public List<StoreCommandModel> Commands { get; set; } = new List<StoreCommandModel>();
+        public List<CommunityCommandModel> Commands { get; set; } = new List<CommunityCommandModel>();
     }
 }

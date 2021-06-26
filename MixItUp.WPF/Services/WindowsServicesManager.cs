@@ -36,11 +36,13 @@ namespace MixItUp.WPF.Services
             //this.WebhookService = new WebhookService("https://localhost:44309/api/", "https://localhost:44309/webhookhub");
             this.DeveloperAPI = new WindowsDeveloperAPIService();
             this.Telemetry = new WindowsTelemetryService();
-            this.CommunityCommandsService = new CommunityCommandsService();
+            this.CommunityCommandsService = new CommunityCommandsService(MixItUp.Base.Services.MixItUpService.MixItUpAPIEndpoint);
+            //this.CommunityCommandsService = new CommunityCommandsService("https://localhost:44309/api/");
+            //this.CommunityCommandsService = new MockCommunityCommandsService();
 
             this.Streamlabs = new StreamlabsService(new WindowsSocketIOConnection());
             this.StreamElements = new StreamElementsService(new WindowsSocketIOConnection());
-            this.StreamJar = new StreamJarService();
+            this.Rainmaker = new RainmakerService(new WindowsSocketIOConnection());
             this.TipeeeStream = new TipeeeStreamService(new WindowsSocketIOConnection());
             this.TreatStream = new TreatStreamService(new WindowsSocketIOConnection());
             this.Streamloots = new StreamlootsService();
@@ -51,6 +53,7 @@ namespace MixItUp.WPF.Services
             this.Patreon = new PatreonService();
             this.Discord = new DiscordService();
             this.Twitter = new TwitterService();
+            this.PixelChat = new PixelChatService();
             this.OvrStream = new WindowsOvrStreamService();
             this.Overlay = new OverlayService();
 

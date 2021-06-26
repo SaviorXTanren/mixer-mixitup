@@ -68,7 +68,7 @@ namespace MixItUp.Base.Model.Commands
                 case EventTypeEnum.ExtraLifeDonation:
                 case EventTypeEnum.TipeeeStreamDonation:
                 case EventTypeEnum.TreatStreamDonation:
-                case EventTypeEnum.StreamJarDonation:
+                case EventTypeEnum.RainmakerDonation:
                 case EventTypeEnum.JustGivingDonation:
                 case EventTypeEnum.StreamElementsDonation:
                 case EventTypeEnum.StreamElementsMerchPurchase:
@@ -86,9 +86,10 @@ namespace MixItUp.Base.Model.Commands
                         case EventTypeEnum.ExtraLifeDonation: donation.Source = UserDonationSourceEnum.ExtraLife; break;
                         case EventTypeEnum.TipeeeStreamDonation: donation.Source = UserDonationSourceEnum.TipeeeStream; break;
                         case EventTypeEnum.TreatStreamDonation: donation.Source = UserDonationSourceEnum.TreatStream; break;
-                        case EventTypeEnum.StreamJarDonation: donation.Source = UserDonationSourceEnum.StreamJar; break;
+                        case EventTypeEnum.RainmakerDonation: donation.Source = UserDonationSourceEnum.Rainmaker; break;
                         case EventTypeEnum.JustGivingDonation: donation.Source = UserDonationSourceEnum.JustGiving; break;
                         case EventTypeEnum.StreamElementsDonation: donation.Source = UserDonationSourceEnum.StreamElements; break;
+                        case EventTypeEnum.StreamElementsMerchPurchase: donation.Source = UserDonationSourceEnum.StreamElements; break;
                     }
 
                     foreach (var kvp in donation.GetSpecialIdentifiers())
@@ -114,9 +115,11 @@ namespace MixItUp.Base.Model.Commands
                     break;
                 case EventTypeEnum.StreamlootsCardRedeemed:
                     specialIdentifiers["streamlootscardname"] = "Test Card";
+                    specialIdentifiers["streamlootscarddescription"] = "Test Description";
                     specialIdentifiers["streamlootscardimage"] = "https://res.cloudinary.com/streamloots/image/upload/f_auto,c_scale,w_250,q_90/static/e19c7bf6-ca3e-49a8-807e-b2e9a1a47524/en_dl_character.png";
                     specialIdentifiers["streamlootscardvideo"] = "https://cdn.streamloots.com/uploads/5c645b78666f31002f2979d1/3a6bf1dc-7d61-4f93-be0a-f5dc1d0d33b6.webm";
                     specialIdentifiers["streamlootscardsound"] = "https://static.streamloots.com/b355d1ef-d931-4c16-a48f-8bed0076401b/alerts/default.mp3";
+                    specialIdentifiers["streamlootscardalertmessage"] = "This is an alert message";
                     specialIdentifiers["streamlootsmessage"] = "Test Message";
                     break;
                 case EventTypeEnum.StreamlootsPackPurchased:
@@ -130,7 +133,7 @@ namespace MixItUp.Base.Model.Commands
         [DataMember]
         public EventTypeEnum EventType { get; set; }
 
-        public EventCommandModel(EventTypeEnum eventType) : base(eventType.ToString(), CommandTypeEnum.Event) { this.EventType = eventType; }
+        public EventCommandModel(EventTypeEnum eventType) : base(EnumLocalizationHelper.GetLocalizedName(eventType), CommandTypeEnum.Event) { this.EventType = eventType; }
 
 #pragma warning disable CS0612 // Type or member is obsolete
         internal EventCommandModel(MixItUp.Base.Commands.EventCommand command)

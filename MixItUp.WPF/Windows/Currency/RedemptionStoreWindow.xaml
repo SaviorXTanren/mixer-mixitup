@@ -164,7 +164,7 @@
                                 </Grid>
                             </Grid>
 
-                            <RequirementsControls:RequirementsSetControl Grid.Column="2" DataContext="{Binding ProductRequirements}" ShowSettings="False" />
+                            <RequirementsControls:RequirementsSetControl Grid.Column="2" DataContext="{Binding ProductRequirements}" ShowArguments="False" ShowSettings="False" />
                         </Grid>
 
                         <!-- Usage Requirements -->

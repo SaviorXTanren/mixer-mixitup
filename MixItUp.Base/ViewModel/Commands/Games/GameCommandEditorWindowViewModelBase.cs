@@ -211,7 +211,7 @@ namespace MixItUp.Base.ViewModel.Games
         public GameCommandEditorWindowViewModelBase(CurrencyModel currency)
             : base(CommandTypeEnum.Game)
         {
-            if (currency != null)
+            if (currency != null && this.AutoAddCurrencyRequirement)
             {
                 this.PrimaryCurrencyName = currency.Name;
                 this.Requirements.Currency.Add(new CurrencyRequirementModel(currency, CurrencyRequirementTypeEnum.RequiredAmount, 10, 100));
@@ -226,6 +226,8 @@ namespace MixItUp.Base.ViewModel.Games
         public override bool CheckActionCount { get { return false; } }
 
         public virtual bool RequirePrimaryCurrency { get { return false; } }
+
+        public virtual bool AutoAddCurrencyRequirement { get { return true; } }
 
         public override async Task<Result> Validate()
         {
@@ -251,8 +253,8 @@ namespace MixItUp.Base.ViewModel.Games
         public override Task SaveCommandToSettings(CommandModelBase command)
         {
             GameCommandModelBase c = (GameCommandModelBase)command;
-            ChannelSession.GameCommands.Remove(c);
-            ChannelSession.GameCommands.Add(c);
+            ChannelSession.Services.Command.GameCommands.Remove(c);
+            ChannelSession.Services.Command.GameCommands.Add(c);
             ChannelSession.Services.Chat.RebuildCommandTriggers();
             return Task.FromResult(0);
         }
@@ -314,7 +316,7 @@ namespace MixItUp.Base.ViewModel.Games
         {
             CustomCommandModel command = this.CreateBasicCommand();
             command.Actions.Add(new ChatActionModel(message, sendAsStreamer: false, isWhisper: whisper));
-            command.Actions.Add(new ConsumablesActionModel(currency, ConsumablesActionTypeEnum.AddToUser, amount));
+            command.Actions.Add(new ConsumablesActionModel(currency, ConsumablesActionTypeEnum.AddToUser, usersMustBePresent: true, amount));
             return command;
         }
 

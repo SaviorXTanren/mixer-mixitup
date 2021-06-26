@@ -35,9 +35,9 @@ namespace MixItUp.WPF.Util
             return bool.Equals(await this.ShowDialogWrapper(new ConfirmationDialogControl(message)), true);
         }
 
-        public async Task<string> ShowTextEntry(string message, string defaultValue = null)
+        public async Task<string> ShowTextEntry(string message, string defaultValue = null, string description = null)
         {
-            BasicTextEntryDialogControl dialog = new BasicTextEntryDialogControl(message, defaultValue);
+            BasicTextEntryDialogControl dialog = new BasicTextEntryDialogControl(message, defaultValue, description);
             if (bool.Equals(await this.ShowDialogWrapper(dialog), true))
             {
                 return dialog.TextEntry;

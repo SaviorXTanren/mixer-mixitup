@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-using TwitchV5API = Twitch.Base.Models.V5.Emotes;
+using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -45,7 +45,7 @@ namespace MixItUp.WPF.Controls.Chat
             this.DataContextChanged += EmoticonControl_DataContextChanged;
         }
 
-        public ChatImageControl(TwitchV5API.EmoteModel emote) : this() { this.DataContext = emote; }
+        public ChatImageControl(TwitchNewAPI.Chat.ChatEmoteModel emote) : this() { this.DataContext = emote; }
 
         public ChatImageControl(BetterTTVEmoteModel emote) : this() { this.DataContext = emote; }
 
@@ -64,11 +64,11 @@ namespace MixItUp.WPF.Controls.Chat
             {
                 if (this.DataContext != null)
                 {
-                    if (this.DataContext is TwitchV5API.EmoteModel)
+                    if (this.DataContext is TwitchNewAPI.Chat.ChatEmoteModel)
                     {
-                        TwitchV5API.EmoteModel emote = (TwitchV5API.EmoteModel)this.DataContext;
-                        this.Image.Source = await this.DownloadImageUrl(emote.URL);
-                        this.Image.ToolTip = this.AltText.Text = emote.code;
+                        TwitchNewAPI.Chat.ChatEmoteModel emote = (TwitchNewAPI.Chat.ChatEmoteModel)this.DataContext;
+                        this.Image.Source = await this.DownloadImageUrl(emote.Size1URL);
+                        this.Image.ToolTip = this.AltText.Text = emote.name;
                     }
                     else if (this.DataContext is BetterTTVEmoteModel)
                     {

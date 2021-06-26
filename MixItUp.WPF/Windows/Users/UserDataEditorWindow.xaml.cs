@@ -43,6 +43,11 @@ namespace MixItUp.WPF.Windows.Users
                 this.CurrencyRankStackPanel.Children.Add(new UserCurrencyIndividualEditorControl(this.user.Data, currency));
             }
 
+            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values.ToList())
+            {
+                this.CurrencyRankStackPanel.Children.Add(new UserCurrencyIndividualEditorControl(this.user.Data, streamPass));
+            }
+
             this.InventoryStackPanel.Children.Clear();
             foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.ToList())
             {
