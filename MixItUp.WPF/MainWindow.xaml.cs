@@ -1,9 +1,11 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Store;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.CommunityCommands;
 using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Controls.MainControls;
@@ -153,7 +155,7 @@ namespace MixItUp.WPF
 
             this.MainMenu.MenuItemSelected(MixItUp.Base.Resources.Chat);
 
-            ActivationProtocolHandler.OnStoreCommandActivation += ActivationProtocolHandler_OnStoreCommandActivation;
+            ActivationProtocolHandler.OnCommunityCommandActivation += ActivationProtocolHandler_OnCommunityCommandActivation;
             ActivationProtocolHandler.OnCommandFileActivation += ActivationProtocolHandler_OnCommandFileActivation;
         }
 
@@ -242,12 +244,15 @@ namespace MixItUp.WPF
             }
         }
 
-        private void ActivationProtocolHandler_OnStoreCommandActivation(object sender, Guid e)
+        private async void ActivationProtocolHandler_OnCommunityCommandActivation(object sender, Guid commandID)
         {
-            DispatcherHelper.Dispatcher.Invoke(() =>
+            await DispatcherHelper.Dispatcher.InvokeAsync(async () =>
             {
-                //CommandEditorWindow window = new CommandEditorWindow(Base.Model.Commands.CommandTypeEnum.Chat);
-                //window.ForceShow();
+                CommunityCommandDetailsModel commandDetails = await ChannelSession.Services.CommunityCommandsService.GetCommandDetails(commandID);
+                if (commandDetails != null)
+                {
+                    await CommunityCommandsControl.ProcessDownloadedCommunityCommand(new CommunityCommandDetailsViewModel(commandDetails));
+                }
             });
         }
 
