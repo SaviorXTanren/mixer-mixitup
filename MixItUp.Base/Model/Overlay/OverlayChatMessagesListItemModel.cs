@@ -75,9 +75,9 @@ namespace MixItUp.Base.Model.Overlay
                         {
                             textParts.Add((string)messagePart);
                         }
-                        else if (messagePart is ChatEmoteModel)
+                        else if (messagePart is TwitchChatEmoteViewModel)
                         {
-                            imageURL = ((ChatEmoteModel)messagePart).Size1URL;
+                            imageURL = ((TwitchChatEmoteViewModel)messagePart).ImageURL;
                         }
                         else if (messagePart is BetterTTVEmoteModel)
                         {

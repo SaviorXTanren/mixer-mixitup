@@ -45,7 +45,7 @@ namespace MixItUp.WPF.Controls.Chat
             this.DataContextChanged += EmoticonControl_DataContextChanged;
         }
 
-        public ChatImageControl(TwitchNewAPI.Chat.ChatEmoteModel emote) : this() { this.DataContext = emote; }
+        public ChatImageControl(TwitchChatEmoteViewModel emote) : this() { this.DataContext = emote; }
 
         public ChatImageControl(BetterTTVEmoteModel emote) : this() { this.DataContext = emote; }
 
@@ -64,11 +64,11 @@ namespace MixItUp.WPF.Controls.Chat
             {
                 if (this.DataContext != null)
                 {
-                    if (this.DataContext is TwitchNewAPI.Chat.ChatEmoteModel)
+                    if (this.DataContext is TwitchChatEmoteViewModel)
                     {
-                        TwitchNewAPI.Chat.ChatEmoteModel emote = (TwitchNewAPI.Chat.ChatEmoteModel)this.DataContext;
-                        this.Image.Source = await this.DownloadImageUrl(emote.Size1URL);
-                        this.Image.ToolTip = this.AltText.Text = emote.name;
+                        TwitchChatEmoteViewModel emote = (TwitchChatEmoteViewModel)this.DataContext;
+                        this.Image.Source = await this.DownloadImageUrl(emote.ImageURL);
+                        this.Image.ToolTip = this.AltText.Text = emote.Name;
                     }
                     else if (this.DataContext is BetterTTVEmoteModel)
                     {
