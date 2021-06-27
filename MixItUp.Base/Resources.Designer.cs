@@ -2272,7 +2272,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Upload Command.
+        ///   Looks up a localized string similar to Upload Community Command.
         /// </summary>
         public static string CommunityCommandsUploadCommunityCommand {
             get {
@@ -2304,6 +2304,24 @@ namespace MixItUp.Base {
         public static string CommunityCommandsUploadInvalidName {
             get {
                 return ResourceManager.GetString("CommunityCommandsUploadInvalidName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload To Community.
+        /// </summary>
+        public static string CommunityCommandsUploadToCommunity {
+            get {
+                return ResourceManager.GetString("CommunityCommandsUploadToCommunity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload To Community Commands.
+        /// </summary>
+        public static string CommunityCommandsUploadToCommunityTooltip {
+            get {
+                return ResourceManager.GetString("CommunityCommandsUploadToCommunityTooltip", resourceCulture);
             }
         }
         
