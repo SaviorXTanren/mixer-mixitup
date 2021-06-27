@@ -13,19 +13,28 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
     {
         public ChatEmoteModel Emote { get; set; }
 
-        public string Name { get { return this.Emote.name; } }
+        public string SimpleEmoteID { get; set; }
+        public string SimpleEmoteCode { get; set; }
+        public string SimpleEmoteURL { get { return $"https://static-cdn.jtvnw.net/emoticons/v1/{this.SimpleEmoteID}/1.0"; } }
 
-        public string ImageURL { get { return this.V2DarkImageURL; } }
+        public bool IsFullEmote { get { return this.Emote != null; } }
 
-        public string DefaultImageURL { get { return this.Emote.Size1URL; } }
+        public string Name { get { return this.IsFullEmote ? this.Emote.name : this.SimpleEmoteCode; } }
 
-        public string V2LightImageURL { get { return this.BuildV2EmoteURL("light"); } }
-
-        public string V2DarkImageURL { get { return this.BuildV2EmoteURL("dark"); } }
+        public string ImageURL { get { return this.IsFullEmote ? this.V2DarkImageURL : this.SimpleEmoteURL; } }
+        public string DefaultImageURL { get { return this.IsFullEmote ? this.Emote.Size1URL : this.SimpleEmoteURL; } }
+        public string V2LightImageURL { get { return this.IsFullEmote ? this.BuildV2EmoteURL("light") : this.SimpleEmoteURL; } }
+        public string V2DarkImageURL { get { return this.IsFullEmote ? this.BuildV2EmoteURL("dark") : this.SimpleEmoteURL; } }
 
         public TwitchChatEmoteViewModel(ChatEmoteModel emote)
         {
             this.Emote = emote;
+        }
+
+        public TwitchChatEmoteViewModel(string emoteID, string emoteCode)
+        {
+            this.SimpleEmoteID = emoteID;
+            this.SimpleEmoteCode = emoteCode;
         }
 
         private string BuildV2EmoteURL(string theme)
@@ -88,11 +97,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                     if (0 <= instance.Item1 && instance.Item1 < message.Message.Length && 0 <= instance.Item2 && instance.Item2 < message.Message.Length)
                     {
                         string emoteCode = message.Message.Substring(instance.Item1, instance.Item2 - instance.Item1 + 1);
-                        messageEmotesCache[emoteCode] = new TwitchChatEmoteViewModel(new ChatEmoteModel()
-                        {
-                            id = emoteID.ToString(),
-                            name = emoteCode
-                        });
+                        messageEmotesCache[emoteCode] = new TwitchChatEmoteViewModel(emoteID.ToString(), emoteCode);
                         messageEmotesHashSet.Add(kvp.Key);
                     }
                 }
