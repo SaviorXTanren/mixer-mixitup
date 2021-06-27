@@ -485,7 +485,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return string.IsNullOrEmpty(this.TwitchID); }
-                return false;
+                return true;
             }
         }
 
