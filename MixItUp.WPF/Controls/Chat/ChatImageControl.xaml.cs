@@ -114,28 +114,32 @@ namespace MixItUp.WPF.Controls.Chat
 
         private async Task<BitmapImage> DownloadImageUrl(string url)
         {
-            if (!ChatImageControl.bitmapImages.ContainsKey(url))
+            if (!string.IsNullOrEmpty(url))
             {
-                BitmapImage bitmap = new BitmapImage();
-                using (WebClient client = new WebClient())
+                if (!ChatImageControl.bitmapImages.ContainsKey(url))
                 {
-                    var bytes = await Task.Run<byte[]>(async () =>
+                    BitmapImage bitmap = new BitmapImage();
+                    using (WebClient client = new WebClient())
                     {
-                        try
+                        var bytes = await Task.Run<byte[]>(async () =>
                         {
-                            return await client.DownloadDataTaskAsync(url);
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Log("Failed to download image: " + url);
-                            throw ex;
-                        }
-                    });
-                    bitmap = WindowsImageService.Load(bytes);
+                            try
+                            {
+                                return await client.DownloadDataTaskAsync(url);
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Log("Failed to download image: " + url);
+                                throw ex;
+                            }
+                        });
+                        bitmap = WindowsImageService.Load(bytes);
+                    }
+                    ChatImageControl.bitmapImages[url] = bitmap;
                 }
-                ChatImageControl.bitmapImages[url] = bitmap;
+                return ChatImageControl.bitmapImages[url];
             }
-            return ChatImageControl.bitmapImages[url];
+            return null;
         }
 
         private void ProcessGifImage(string url)
