@@ -58,7 +58,6 @@ namespace MixItUp.Base.ViewModel.MainControls
         public ICommand ExportDataCommand { get; private set; }
 
         private bool firstVisibleOccurred = false;
-        private bool allUserDataLoaded = false;
 
         public UsersMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
@@ -83,6 +82,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                         "TotalCommandsRun", "TotalMonthsSubbed", "LastSeen" });
                     contents.Add(columns);
 
+                    await ChannelSession.Settings.LoadAllUserData();
                     foreach (UserDataModel user in ChannelSession.Settings.UserData.Values.ToList())
                     {
                         List<string> data = new List<string>() { user.ID.ToString(), user.TwitchID, user.Username, user.PrimaryRole.ToString(),
@@ -133,11 +133,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
                 try
                 {
-                    if (!this.allUserDataLoaded)
-                    {
-                        this.allUserDataLoaded = true;
-                        await ChannelSession.Settings.LoadUserData();
-                    }
+                    await ChannelSession.Settings.LoadAllUserData();
 
                     IEnumerable<UserDataModel> data = ChannelSession.Settings.UserData.Values.ToList();
                     if (!string.IsNullOrEmpty(this.UsernameFilter))

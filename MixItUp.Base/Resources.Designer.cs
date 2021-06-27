@@ -2224,6 +2224,19 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The following command contains actions that reference other commands inside of it (EX: Command A runs Command B using a Command Action). When this command is uploaded, it WILL NOT include these other referenced commands, just the current command. We encourage creators to do one of the following:
+        ///
+        ///- Combine your other referenced commands into this command so users only need this one to fully use your setup.
+        ///
+        ///- Upload the other commands needed for this command to work as well and reference their names in  [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string CommunityCommandsOtherCommandReferencedDetected {
+            get {
+                return ResourceManager.GetString("CommunityCommandsOtherCommandReferencedDetected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please describe why you wish to report this command. Please note that reporting commands should only be used if the command is deemed inappropriate or malicious. For everything else, please leave a Review of the command instead..
         /// </summary>
         public static string CommunityCommandsReportCommand {
@@ -2259,7 +2272,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Upload Command.
+        ///   Looks up a localized string similar to Upload Community Command.
         /// </summary>
         public static string CommunityCommandsUploadCommunityCommand {
             get {
@@ -2291,6 +2304,24 @@ namespace MixItUp.Base {
         public static string CommunityCommandsUploadInvalidName {
             get {
                 return ResourceManager.GetString("CommunityCommandsUploadInvalidName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload To Community.
+        /// </summary>
+        public static string CommunityCommandsUploadToCommunity {
+            get {
+                return ResourceManager.GetString("CommunityCommandsUploadToCommunity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload To Community Commands.
+        /// </summary>
+        public static string CommunityCommandsUploadToCommunityTooltip {
+            get {
+                return ResourceManager.GetString("CommunityCommandsUploadToCommunityTooltip", resourceCulture);
             }
         }
         

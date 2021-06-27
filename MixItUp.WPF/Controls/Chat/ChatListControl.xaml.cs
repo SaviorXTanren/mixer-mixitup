@@ -4,6 +4,7 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
@@ -163,7 +164,7 @@ namespace MixItUp.WPF.Controls.Chat
                     {
                         if (ChannelSession.Services.Chat.TwitchChatService != null)
                         {
-                            this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, this.FindMatchingEmoticons<ChatEmoteModel>(tag.Substring(1, tag.Length - 1), ChannelSession.Services.Chat.TwitchChatService.Emotes));
+                            this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, this.FindMatchingEmoticons<TwitchChatEmoteViewModel>(tag.Substring(1, tag.Length - 1), ChannelSession.Services.Chat.TwitchChatService.Emotes));
                         }
                     }
                     else if (ChannelSession.Settings.ShowBetterTTVEmotes || ChannelSession.Settings.ShowFrankerFaceZEmotes)
@@ -388,12 +389,12 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void SelectIntellisenseEmoticon()
         {
-            if (this.EmoticonIntellisenseListBox.SelectedItem is ChatEmoteModel)
+            if (this.EmoticonIntellisenseListBox.SelectedItem is TwitchChatEmoteViewModel)
             {
-                ChatEmoteModel emoticon = this.EmoticonIntellisenseListBox.SelectedItem as ChatEmoteModel;
+                TwitchChatEmoteViewModel emoticon = this.EmoticonIntellisenseListBox.SelectedItem as TwitchChatEmoteViewModel;
                 if (emoticon != null)
                 {
-                    this.SelectIntellisenseItem(emoticon.name);
+                    this.SelectIntellisenseItem(emoticon.Name);
                 }
             }
             else if (this.EmoticonIntellisenseListBox.SelectedItem is BetterTTVEmoteModel)

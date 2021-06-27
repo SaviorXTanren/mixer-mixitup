@@ -45,7 +45,7 @@ namespace MixItUp.WPF.Controls.Chat
             this.DataContextChanged += EmoticonControl_DataContextChanged;
         }
 
-        public ChatImageControl(TwitchNewAPI.Chat.ChatEmoteModel emote) : this() { this.DataContext = emote; }
+        public ChatImageControl(TwitchChatEmoteViewModel emote) : this() { this.DataContext = emote; }
 
         public ChatImageControl(BetterTTVEmoteModel emote) : this() { this.DataContext = emote; }
 
@@ -64,18 +64,18 @@ namespace MixItUp.WPF.Controls.Chat
             {
                 if (this.DataContext != null)
                 {
-                    if (this.DataContext is TwitchNewAPI.Chat.ChatEmoteModel)
+                    if (this.DataContext is TwitchChatEmoteViewModel)
                     {
-                        TwitchNewAPI.Chat.ChatEmoteModel emote = (TwitchNewAPI.Chat.ChatEmoteModel)this.DataContext;
-                        this.Image.Source = await this.DownloadImageUrl(emote.Size1URL);
-                        this.Image.ToolTip = this.AltText.Text = emote.name;
+                        TwitchChatEmoteViewModel emote = (TwitchChatEmoteViewModel)this.DataContext;
+                        this.ProcessGifImage(emote.ImageURL, emote.Name);
+                        this.Image.ToolTip = this.AltText.Text = emote.Name;
                     }
                     else if (this.DataContext is BetterTTVEmoteModel)
                     {
                         BetterTTVEmoteModel emote = (BetterTTVEmoteModel)this.DataContext;
                         if (emote.imageType.Equals("gif"))
                         {
-                            this.ProcessGifImage(emote.url);
+                            this.ProcessGifImage(emote.url, emote.code);
                         }
                         else
                         {
@@ -114,34 +114,39 @@ namespace MixItUp.WPF.Controls.Chat
 
         private async Task<BitmapImage> DownloadImageUrl(string url)
         {
-            if (!ChatImageControl.bitmapImages.ContainsKey(url))
+            if (!string.IsNullOrEmpty(url))
             {
-                BitmapImage bitmap = new BitmapImage();
-                using (WebClient client = new WebClient())
+                if (!ChatImageControl.bitmapImages.ContainsKey(url))
                 {
-                    var bytes = await Task.Run<byte[]>(async () =>
+                    BitmapImage bitmap = new BitmapImage();
+                    using (WebClient client = new WebClient())
                     {
-                        try
+                        var bytes = await Task.Run<byte[]>(async () =>
                         {
-                            return await client.DownloadDataTaskAsync(url);
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Log("Failed to download image: " + url);
-                            throw ex;
-                        }
-                    });
-                    bitmap = WindowsImageService.Load(bytes);
+                            try
+                            {
+                                return await client.DownloadDataTaskAsync(url);
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Log("Failed to download image: " + url);
+                                throw ex;
+                            }
+                        });
+                        bitmap = WindowsImageService.Load(bytes);
+                    }
+                    ChatImageControl.bitmapImages[url] = bitmap;
                 }
-                ChatImageControl.bitmapImages[url] = bitmap;
+                return ChatImageControl.bitmapImages[url];
             }
-            return ChatImageControl.bitmapImages[url];
+            return null;
         }
 
-        private void ProcessGifImage(string url)
+        private void ProcessGifImage(string url, string code)
         {
             this.GifImage.SetSize(ChannelSession.Settings.ChatFontSize * 2);
             this.GifImage.DataContext = url;
+            this.GifImage.ToolTip = code;
             this.GifImage.Visibility = Visibility.Visible;
         }
     }
