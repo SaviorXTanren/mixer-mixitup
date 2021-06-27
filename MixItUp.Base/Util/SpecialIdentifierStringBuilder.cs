@@ -233,14 +233,16 @@ namespace MixItUp.Base.Util
             return text;
         }
 
-        public static IEnumerable<UserDataModel> GetUserOrderedCurrencyList(CurrencyModel currency)
+        public static async Task<IEnumerable<UserDataModel>> GetUserOrderedCurrencyList(CurrencyModel currency)
         {
-            IEnumerable<UserDataModel> applicableUsers = SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
+            IEnumerable<UserDataModel> applicableUsers = await SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
             return applicableUsers.OrderByDescending(u => currency.GetAmount(u));
         }
 
-        public static IEnumerable<UserDataModel> GetAllNonExemptUsers()
+        public static async Task<IEnumerable<UserDataModel>> GetAllNonExemptUsers()
         {
+            await ChannelSession.Settings.LoadAllUserData();
+
             List<UserDataModel> exemptUsers = new List<UserDataModel>(ChannelSession.Settings.UserData.Values.Where(u => !u.IsCurrencyRankExempt));
             exemptUsers.Remove(ChannelSession.GetCurrentUser().Data);
             return exemptUsers;
@@ -343,9 +345,9 @@ namespace MixItUp.Base.Util
 
                 if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeRegexSpecialIdentifier))
                 {
-                    await this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeRegexSpecialIdentifier, (total) =>
+                    await this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeRegexSpecialIdentifier, async (total) =>
                     {
-                        IEnumerable<UserDataModel> applicableUsers = SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
+                        IEnumerable<UserDataModel> applicableUsers = await SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
                         List<string> timeUserList = new List<string>();
                         int userPosition = 1;
                         foreach (UserDataModel timeUser in applicableUsers.OrderByDescending(u => u.ViewingMinutes).Take(total))
@@ -359,13 +361,13 @@ namespace MixItUp.Base.Util
                         {
                             result = string.Join(", ", timeUserList);
                         }
-                        return Task.FromResult(result);
+                        return result;
                     });
                 }
 
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeSpecialIdentifier))
                 {
-                    IEnumerable<UserDataModel> applicableUsers = SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
+                    IEnumerable<UserDataModel> applicableUsers = await SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
                     UserDataModel topUserData = applicableUsers.Top(u => u.ViewingMinutes);
                     UserViewModel topUser = ChannelSession.Services.User.GetActiveUserByID(topUserData.ID);
                     if (topUser == null)
@@ -379,11 +381,11 @@ namespace MixItUp.Base.Util
                 {
                     if (this.ContainsRegexSpecialIdentifier(currency.TopRegexSpecialIdentifier))
                     {
-                        await this.ReplaceNumberBasedRegexSpecialIdentifier(currency.TopRegexSpecialIdentifier, (total) =>
+                        await this.ReplaceNumberBasedRegexSpecialIdentifier(currency.TopRegexSpecialIdentifier, async (total) =>
                         {
                             List<string> currencyUserList = new List<string>();
                             int userPosition = 1;
-                            foreach (UserDataModel userData in SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency).Take(total))
+                            foreach (UserDataModel userData in (await SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency)).Take(total))
                             {
                                 currencyUserList.Add($"#{userPosition}) {userData.Username} - {currency.GetAmount(userData)}");
                                 userPosition++;
@@ -394,13 +396,13 @@ namespace MixItUp.Base.Util
                             {
                                 result = string.Join(", ", currencyUserList);
                             }
-                            return Task.FromResult(result);
+                            return result;
                         });
                     }
 
                     if (this.ContainsSpecialIdentifier(currency.TopUserSpecialIdentifier))
                     {
-                        IEnumerable<UserDataModel> applicableUsers = SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
+                        IEnumerable<UserDataModel> applicableUsers = await SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
                         UserDataModel topUserData = applicableUsers.Top(u => currency.GetAmount(u));
                         UserViewModel topUser = ChannelSession.Services.User.GetActiveUserByID(topUserData.ID);
                         if (topUser == null)
@@ -723,7 +725,7 @@ namespace MixItUp.Base.Util
                     {
                         if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier))
                         {
-                            List<UserDataModel> sortedUsers = SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency).ToList();
+                            List<UserDataModel> sortedUsers = (await SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency)).ToList();
                             int index = sortedUsers.IndexOf(user.Data);
                             this.ReplaceSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier, (index + 1).ToString());
                         }
@@ -938,9 +940,17 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(userkey) && ChannelSession.Settings.LatestSpecialIdentifiersData.ContainsKey(userkey) && ChannelSession.Settings.LatestSpecialIdentifiersData[userkey] != null)
             {
-                if (Guid.TryParse(ChannelSession.Settings.LatestSpecialIdentifiersData[userkey].ToString(), out Guid userID) && ChannelSession.Settings.UserData.ContainsKey(userID))
+                if (Guid.TryParse(ChannelSession.Settings.LatestSpecialIdentifiersData[userkey].ToString(), out Guid userID))
                 {
-                    await this.HandleUserSpecialIdentifiers(new UserViewModel(ChannelSession.Settings.UserData[userID]), userkey);
+                    if (!ChannelSession.Settings.UserData.TryGetValue(userID, out UserDataModel userData))
+                    {
+                        userData = ChannelSession.Settings.GetUserData(userID);
+                    }
+
+                    if (userData != null)
+                    {
+                        await this.HandleUserSpecialIdentifiers(new UserViewModel(userData), userkey);
+                    }
                 }
             }
         }

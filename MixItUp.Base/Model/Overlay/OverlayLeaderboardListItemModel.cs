@@ -208,7 +208,7 @@ namespace MixItUp.Base.Model.Overlay
                 if (ChannelSession.Settings.Currency.ContainsKey(this.CurrencyID))
                 {
                     CurrencyModel currency = ChannelSession.Settings.Currency[this.CurrencyID];
-                    IEnumerable<UserDataModel> userDataList = SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency);
+                    IEnumerable<UserDataModel> userDataList = await SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency);
                     for (int i = 0; i < userDataList.Count() && items.Count < this.TotalToShow; i++)
                     {
                         UserDataModel userData = userDataList.ElementAt(i);
