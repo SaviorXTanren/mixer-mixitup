@@ -659,9 +659,9 @@ namespace MixItUp.Base.ViewModel.User
                 {
                     if (this.Data.RolesDisplayString == null)
                     {
-                        List<string> displayRoles = new List<string>(this.DisplayRoles.OrderByDescending(r => r).Select(r => r.ToString()));
+                        List<string> displayRoles = new List<string>(this.DisplayRoles.OrderByDescending(r => r).Select(r => EnumLocalizationHelper.GetLocalizedName(r)));
                         displayRoles.AddRange(this.CustomRoles);
-                        this.Data.RolesDisplayString = string.Join(", ", displayRoles.Select(r => EnumLocalizationHelper.GetLocalizedName(r)));
+                        this.Data.RolesDisplayString = string.Join(", ", displayRoles);
                     }
                     return this.Data.RolesDisplayString;
                 }
