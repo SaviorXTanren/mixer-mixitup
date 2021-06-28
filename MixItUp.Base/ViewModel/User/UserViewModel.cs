@@ -612,11 +612,6 @@ namespace MixItUp.Base.ViewModel.User
                                 userRoles.Remove(UserRoleEnum.User);
                             }
 
-                            if (userRoles.Contains(UserRoleEnum.ChannelEditor))
-                            {
-                                userRoles.Remove(UserRoleEnum.Mod);
-                            }
-
                             if (this.Data.UserRoles.Contains(UserRoleEnum.Subscriber) || this.Data.UserRoles.Contains(UserRoleEnum.Streamer))
                             {
                                 userRoles.Remove(UserRoleEnum.Follower);
@@ -631,8 +626,7 @@ namespace MixItUp.Base.ViewModel.User
 
                         List<string> displayRoles = userRoles.Select(r => EnumLocalizationHelper.GetLocalizedName(r)).ToList();
                         displayRoles.AddRange(this.CustomRoles);
-
-                        this.Data.RolesDisplayString = string.Join(", ", userRoles.OrderByDescending(r => r));
+                        this.Data.RolesDisplayString = string.Join(", ", displayRoles.OrderByDescending(r => r));
                     }
                     return this.Data.RolesDisplayString;
                 }
