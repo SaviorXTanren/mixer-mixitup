@@ -5853,4 +5853,7 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="CommunityCommandsUploadToCommunityTooltip" xml:space="preserve">
     <value>Upload To Community Commands</value>
   </data>
+  <data name="CustomSettings" xml:space="preserve">
+    <value>Custom Settings</value>
+  </data>
 </root>
