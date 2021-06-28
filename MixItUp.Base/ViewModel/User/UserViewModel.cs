@@ -302,6 +302,41 @@ namespace MixItUp.Base.ViewModel.User
         public HashSet<UserRoleEnum> UserRoles { get { return this.Data.UserRoles; } }
 
         [JsonIgnore]
+        public IEnumerable<UserRoleEnum> DisplayRoles
+        {
+            get
+            {
+                List<UserRoleEnum> userRoles = this.UserRoles.ToList();
+
+                if (this.Data.UserRoles.Contains(UserRoleEnum.Banned))
+                {
+                    userRoles.Clear();
+                    userRoles.Add(UserRoleEnum.Banned);
+                }
+                else
+                {
+                    if (this.Data.UserRoles.Count() > 1)
+                    {
+                        userRoles.Remove(UserRoleEnum.User);
+                    }
+
+                    if (this.Data.UserRoles.Contains(UserRoleEnum.Subscriber) || this.Data.UserRoles.Contains(UserRoleEnum.Streamer))
+                    {
+                        userRoles.Remove(UserRoleEnum.Follower);
+                    }
+
+                    if (this.Data.UserRoles.Contains(UserRoleEnum.Streamer))
+                    {
+                        userRoles.Remove(UserRoleEnum.ChannelEditor);
+                        userRoles.Remove(UserRoleEnum.Subscriber);
+                    }
+                }
+
+                return userRoles.OrderByDescending(r => r);
+            }
+        }
+
+        [JsonIgnore]
         public string AvatarLink
         {
             get
@@ -591,55 +626,55 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public string RolesDisplayString
+        public string RolesString
         {
             get
             {
-                lock (this.rolesDisplayStringLock)
+                lock (this.rolesStringLock)
+                {
+                    if (this.Data.RolesString == null)
+                    {
+                        List<string> displayRoles = new List<string>(this.DisplayRoles.OrderByDescending(r => r).Select(r => r.ToString()));
+                        displayRoles.AddRange(this.CustomRoles);
+                        this.Data.RolesString = string.Join(", ", displayRoles);
+                    }
+                    return this.Data.RolesString;
+                }
+            }
+            private set
+            {
+                lock (this.rolesStringLock)
+                {
+                    this.Data.RolesString = value;
+                }
+            }
+        }
+        private object rolesStringLock = new object();
+
+        public string RolesLocalizedString
+        {
+            get
+            {
+                lock (this.rolesLocalizedStringLock)
                 {
                     if (this.Data.RolesDisplayString == null)
                     {
-                        List<UserRoleEnum> userRoles = this.UserRoles.ToList();
-                        if (this.Data.UserRoles.Contains(UserRoleEnum.Banned))
-                        {
-                            userRoles.Clear();
-                            userRoles.Add(UserRoleEnum.Banned);
-                        }
-                        else
-                        {
-                            if (this.Data.UserRoles.Count() > 1)
-                            {
-                                userRoles.Remove(UserRoleEnum.User);
-                            }
-
-                            if (this.Data.UserRoles.Contains(UserRoleEnum.Subscriber) || this.Data.UserRoles.Contains(UserRoleEnum.Streamer))
-                            {
-                                userRoles.Remove(UserRoleEnum.Follower);
-                            }
-
-                            if (this.Data.UserRoles.Contains(UserRoleEnum.Streamer))
-                            {
-                                userRoles.Remove(UserRoleEnum.ChannelEditor);
-                                userRoles.Remove(UserRoleEnum.Subscriber);
-                            }
-                        }
-
-                        List<string> displayRoles = userRoles.Select(r => EnumLocalizationHelper.GetLocalizedName(r)).ToList();
+                        List<string> displayRoles = new List<string>(this.DisplayRoles.OrderByDescending(r => r).Select(r => r.ToString()));
                         displayRoles.AddRange(this.CustomRoles);
-                        this.Data.RolesDisplayString = string.Join(", ", displayRoles.OrderByDescending(r => r));
+                        this.Data.RolesDisplayString = string.Join(", ", displayRoles.Select(r => EnumLocalizationHelper.GetLocalizedName(r)));
                     }
                     return this.Data.RolesDisplayString;
                 }
             }
             private set
             {
-                lock (this.rolesDisplayStringLock)
+                lock (this.rolesLocalizedStringLock)
                 {
                     this.Data.RolesDisplayString = value;
                 }
             }
         }
-        private object rolesDisplayStringLock = new object();
+        private object rolesLocalizedStringLock = new object();
 
         [JsonIgnore]
         public bool IsFollower { get { return this.UserRoles.Contains(UserRoleEnum.Follower) || this.HasPermissionsTo(UserRoleEnum.Subscriber); } }
@@ -823,7 +858,7 @@ namespace MixItUp.Base.ViewModel.User
             this.SetCommonUserRoles();
 
             this.Color = null;
-            this.RolesDisplayString = null;
+            this.RolesLocalizedString = null;
         }
 
         private int GetTwitchBadgeVersion(string name)
@@ -961,7 +996,7 @@ namespace MixItUp.Base.ViewModel.User
                 this.SetTwitchRoles();
 
                 this.Color = null;
-                this.RolesDisplayString = null;
+                this.RolesLocalizedString = null;
             }
         }
 
@@ -1048,7 +1083,7 @@ namespace MixItUp.Base.ViewModel.User
 
             // Force re-build of roles display string
             this.Color = null;
-            this.RolesDisplayString = null;
+            this.RolesLocalizedString = null;
         }
 
         private Task RefreshExternalServiceDetails()

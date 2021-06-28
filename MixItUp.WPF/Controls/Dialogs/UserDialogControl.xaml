@@ -76,7 +76,7 @@
                 <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding FullDisplayName}" />
 
                 <TextBlock Grid.Column="0" Grid.Row="2" Text="{Binding Source={x:Static resx:Resources.Roles}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
-                <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding RolesDisplayString}" TextWrapping="Wrap" />
+                <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding RolesString}" TextWrapping="Wrap" />
 
                 <TextBlock Grid.Column="0" Grid.Row="4" Text="{Binding Source={x:Static resx:Resources.AccountAge}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                 <TextBlock Grid.Column="2" Grid.Row="4" Text="{Binding AccountAgeString}" />
