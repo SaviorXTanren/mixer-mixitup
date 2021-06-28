@@ -1,6 +1,8 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -11,8 +13,204 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.MainControls
 {
+    public enum UserSearchFilterTypeEnum
+    {
+        None,
+        Role,
+        WatchTime,
+        Consumables,
+        CustomSettings,
+    }
+
+    public class ConsumableSearchFilterViewModel : UIViewModelBase
+    {
+        public string Name
+        {
+            get
+            {
+                if (this.Currency != null)
+                {
+                    return this.Currency.Name;
+                }
+                else if (this.Inventory != null)
+                {
+                    return this.Inventory.Name;
+                }
+                else if (this.StreamPass != null)
+                {
+                    return this.StreamPass.Name;
+                }
+                return string.Empty;
+            }
+        }
+
+        public bool IsInventory { get { return this.Inventory != null; } }
+
+        public CurrencyModel Currency { get; private set; }
+
+        public InventoryModel Inventory { get; private set; }
+
+        public StreamPassModel StreamPass { get; private set; }
+
+        public ConsumableSearchFilterViewModel(CurrencyModel currency)
+        {
+            this.Currency = currency;
+        }
+
+        public ConsumableSearchFilterViewModel(InventoryModel inventory)
+        {
+            this.Inventory = inventory;
+        }
+
+        public ConsumableSearchFilterViewModel(StreamPassModel streamPass)
+        {
+            this.StreamPass = streamPass;
+        }
+    }
+
     public class UsersMainControlViewModel : WindowControlViewModelBase
     {
+        private const string GreaterThanAmountFilter = ">";
+        private const string EqualToAmountFilter = "=";
+        private const string LessThanAmountFilter = "<";
+
+        public IEnumerable<UserSearchFilterTypeEnum> SearchFilterTypes { get { return EnumHelper.GetEnumList<UserSearchFilterTypeEnum>(); } }
+
+        public UserSearchFilterTypeEnum SelectedSearchFilterType
+        {
+            get { return this.selectedSearchFilterType; }
+            set
+            {
+                this.selectedSearchFilterType = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("IsRoleSearchFilterType");
+                this.NotifyPropertyChanged("IsWatchTimeSearchFilterType");
+                this.NotifyPropertyChanged("IsConsumablesSearchFilterType");
+                this.NotifyPropertyChanged("IsCustomSettingsSearchFilterType");
+
+                this.RefreshUsers();
+            }
+        }
+        private UserSearchFilterTypeEnum selectedSearchFilterType = UserSearchFilterTypeEnum.None;
+
+        public bool IsRoleSearchFilterType { get { return this.SelectedSearchFilterType == UserSearchFilterTypeEnum.Role; } }
+
+        public IEnumerable<UserRoleEnum> UserRoleSearchFilters { get { return UserDataModel.GetSelectableUserRoles(); } }
+
+        public UserRoleEnum SelectedUserRoleSearchFilter
+        {
+            get { return this.selectedUserRoleSearchFilter; }
+            set
+            {
+                this.selectedUserRoleSearchFilter = value;
+                this.NotifyPropertyChanged();
+
+                this.RefreshUsers();
+            }
+        }
+        private UserRoleEnum selectedUserRoleSearchFilter = UserRoleEnum.User;
+
+        public bool IsWatchTimeSearchFilterType { get { return this.SelectedSearchFilterType == UserSearchFilterTypeEnum.WatchTime; } }
+
+        public IEnumerable<string> WatchTimeComparisonSearchFilters { get { return new List<string>() { GreaterThanAmountFilter, LessThanAmountFilter }; } }
+
+        public string SelectedWatchTimeComparisonSearchFilter
+        {
+            get { return this.selectedWatchTimeComparisonSearchFilter; }
+            set
+            {
+                this.selectedWatchTimeComparisonSearchFilter = value;
+                this.NotifyPropertyChanged();
+
+                this.RefreshUsers();
+            }
+        }
+        private string selectedWatchTimeComparisonSearchFilter = GreaterThanAmountFilter;
+
+        public int WatchTimeAmountSearchFilter
+        {
+            get { return this.watchTimeAmountSearchFilter; }
+            set
+            {
+                this.watchTimeAmountSearchFilter = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int watchTimeAmountSearchFilter = 0;
+
+        public bool IsConsumablesSearchFilterType { get { return this.SelectedSearchFilterType == UserSearchFilterTypeEnum.Consumables; } }
+
+        public ThreadSafeObservableCollection<ConsumableSearchFilterViewModel> ConsumablesSearchFilters { get; set; } = new ThreadSafeObservableCollection<ConsumableSearchFilterViewModel>();
+
+        public ConsumableSearchFilterViewModel SelectedConsumablesSearchFilter
+        {
+            get { return this.selectedConsumablesSearchFilter; }
+            set
+            {
+                this.selectedConsumablesSearchFilter = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("IsConsumablesSearchFilterInventory");
+
+                this.ConsumablesItemsSearchFilters.Clear();
+                this.SelectedConsumablesItemsSearchFilter = null;
+                if (this.IsConsumablesSearchFilterInventory)
+                {
+                    foreach (InventoryItemModel item in this.SelectedConsumablesSearchFilter.Inventory.Items.Values.ToList())
+                    {
+                        this.ConsumablesItemsSearchFilters.Add(item);
+                    }
+                }
+
+                this.RefreshUsers();
+            }
+        }
+        private ConsumableSearchFilterViewModel selectedConsumablesSearchFilter;
+
+        public bool IsConsumablesSearchFilterInventory { get { return this.SelectedConsumablesSearchFilter != null && this.SelectedConsumablesSearchFilter.IsInventory; } }
+
+        public ThreadSafeObservableCollection<InventoryItemModel> ConsumablesItemsSearchFilters { get; set; } = new ThreadSafeObservableCollection<InventoryItemModel>();
+
+        public InventoryItemModel SelectedConsumablesItemsSearchFilter
+        {
+            get { return this.selectedConsumablesItemsSearchFilter; }
+            set
+            {
+                this.selectedConsumablesItemsSearchFilter = value;
+                this.NotifyPropertyChanged();
+
+                this.RefreshUsers();
+            }
+        }
+        private InventoryItemModel selectedConsumablesItemsSearchFilter;
+
+        public IEnumerable<string> ConsumablesComparisonSearchFilters { get { return new List<string>() { GreaterThanAmountFilter, LessThanAmountFilter }; } }
+
+        public string SelectedConsumablesComparisonSearchFilter
+        {
+            get { return this.selectedConsumablesComparisonSearchFilter; }
+            set
+            {
+                this.selectedConsumablesComparisonSearchFilter = value;
+                this.NotifyPropertyChanged();
+
+                this.RefreshUsers();
+            }
+        }
+        private string selectedConsumablesComparisonSearchFilter = GreaterThanAmountFilter;
+
+        public int ConsumablesAmountSearchFilter
+        {
+            get { return this.consumablesAmountSearchFilter; }
+            set
+            {
+                this.consumablesAmountSearchFilter = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int consumablesAmountSearchFilter = 0;
+
+        public bool IsCustomSettingsSearchFilterType { get { return this.SelectedSearchFilterType == UserSearchFilterTypeEnum.CustomSettings; } }
+
         public IEnumerable<StreamingPlatformTypeEnum> Platforms { get { return StreamingPlatforms.SelectablePlatforms; } }
 
         public StreamingPlatformTypeEnum SelectedPlatform
@@ -149,6 +347,65 @@ namespace MixItUp.Base.ViewModel.MainControls
                         }
                     }
 
+                    if (this.SelectedSearchFilterType != UserSearchFilterTypeEnum.None)
+                    {
+                        if (this.IsRoleSearchFilterType)
+                        {
+                            data = data.Where(u => u.UserRoles.Contains(this.SelectedUserRoleSearchFilter));
+                        }
+                        else if (this.IsWatchTimeSearchFilterType && this.WatchTimeAmountSearchFilter > 0)
+                        {
+                            if (this.SelectedWatchTimeComparisonSearchFilter.Equals(GreaterThanAmountFilter))
+                            {
+                                data = data.Where(u => u.ViewingMinutes > this.WatchTimeAmountSearchFilter);
+                            }
+                            else if (this.SelectedWatchTimeComparisonSearchFilter.Equals(LessThanAmountFilter))
+                            {
+                                data = data.Where(u => u.ViewingMinutes < this.WatchTimeAmountSearchFilter);
+                            }
+                        }
+                        else if (this.IsConsumablesSearchFilterType && this.SelectedConsumablesSearchFilter != null && this.ConsumablesAmountSearchFilter > 0)
+                        {
+                            if (this.SelectedConsumablesSearchFilter.Currency != null)
+                            {
+                                if (this.SelectedConsumablesComparisonSearchFilter.Equals(GreaterThanAmountFilter))
+                                {
+                                    data = data.Where(u => this.SelectedConsumablesSearchFilter.Currency.GetAmount(u) > this.ConsumablesAmountSearchFilter);
+                                }
+                                else if (this.SelectedConsumablesComparisonSearchFilter.Equals(LessThanAmountFilter))
+                                {
+                                    data = data.Where(u => this.SelectedConsumablesSearchFilter.Currency.GetAmount(u) < this.ConsumablesAmountSearchFilter);
+                                }
+                            }
+                            else if (this.SelectedConsumablesSearchFilter.Inventory != null && this.SelectedConsumablesItemsSearchFilter != null)
+                            {
+                                if (this.SelectedConsumablesComparisonSearchFilter.Equals(GreaterThanAmountFilter))
+                                {
+                                    data = data.Where(u => this.SelectedConsumablesSearchFilter.Inventory.GetAmount(u, this.SelectedConsumablesItemsSearchFilter) > this.ConsumablesAmountSearchFilter);
+                                }
+                                else if (this.SelectedConsumablesComparisonSearchFilter.Equals(LessThanAmountFilter))
+                                {
+                                    data = data.Where(u => this.SelectedConsumablesSearchFilter.Inventory.GetAmount(u, this.SelectedConsumablesItemsSearchFilter) < this.ConsumablesAmountSearchFilter);
+                                }
+                            }
+                            else if (this.SelectedConsumablesSearchFilter.StreamPass != null)
+                            {
+                                if (this.SelectedConsumablesComparisonSearchFilter.Equals(GreaterThanAmountFilter))
+                                {
+                                    data = data.Where(u => this.SelectedConsumablesSearchFilter.StreamPass.GetAmount(u) > this.ConsumablesAmountSearchFilter);
+                                }
+                                else if (this.SelectedConsumablesComparisonSearchFilter.Equals(LessThanAmountFilter))
+                                {
+                                    data = data.Where(u => this.SelectedConsumablesSearchFilter.StreamPass.GetAmount(u) < this.ConsumablesAmountSearchFilter);
+                                }
+                            }
+                        }
+                        else if (this.IsCustomSettingsSearchFilterType)
+                        {
+                            data = data.Where(u => u.IsCurrencyRankExempt || u.CustomTitle != null || u.CustomCommandIDs.Count > 0 || u.EntranceCommandID != Guid.Empty);
+                        }
+                    }
+
                     if (this.SortColumnIndex == 0) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.Username) : data.OrderBy(u => u.Username); }
                     else if (this.SortColumnIndex == 1) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.Platform) : data.OrderBy(u => u.Platform); }
                     else if (this.SortColumnIndex == 2) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryRole) : data.OrderBy(u => u.PrimaryRole); }
@@ -185,6 +442,25 @@ namespace MixItUp.Base.ViewModel.MainControls
                 this.RefreshUsers();
             }
             this.firstVisibleOccurred = true;
+
+            this.ConsumablesSearchFilters.Clear();
+            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
+            {
+                this.ConsumablesSearchFilters.Add(new ConsumableSearchFilterViewModel(currency));
+            }
+
+            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values.ToList())
+            {
+                this.ConsumablesSearchFilters.Add(new ConsumableSearchFilterViewModel(streamPass));
+            }
+
+            foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.ToList())
+            {
+                this.ConsumablesSearchFilters.Add(new ConsumableSearchFilterViewModel(inventory));
+            }
+
+            this.SelectedConsumablesSearchFilter = null;
+
             return base.OnVisibleInternal();
         }
     }
