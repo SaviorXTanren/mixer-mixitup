@@ -170,13 +170,63 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <GroupBox Header="{x:Static resx:Resources.CurrencyRank}" Grid.Column="0">
-                        <StackPanel x:Name="CurrencyRankStackPanel" />
+                    <GroupBox Header="{x:Static resx:Resources.CurrencyRank}" Grid.Column="0" MaxHeight="200">
+                        <ScrollViewer>
+                            <ItemsControl ItemsSource="{Binding Consumables}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="10,5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="20" />
+                                                <ColumnDefinition Width="60" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" />
+
+                                            <TextBox Grid.Column="2" Text="{Binding Amount}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
                     </GroupBox>
 
-                    <GroupBox Header="{x:Static resx:Resources.Inventory}" Grid.Column="2">
-                        <ScrollViewer VerticalScrollBarVisibility="Visible" MaxHeight="200">
-                            <StackPanel x:Name="InventoryStackPanel" />
+                    <GroupBox Header="{x:Static resx:Resources.Inventory}" Grid.Column="2" MaxHeight="200">
+                        <ScrollViewer>
+                            <ItemsControl ItemsSource="{Binding Inventories}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="5,5">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="10" />
+                                                <RowDefinition Height="*" />
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Text="{Binding Name}" Grid.Row="0" TextDecorations="Underline" />
+
+                                            <ItemsControl Grid.Row="2" ItemsSource="{Binding Items}" Margin="20,0,0,0">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid Margin="10,5">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="20" />
+                                                                <ColumnDefinition Width="60" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" />
+
+                                                            <TextBox Grid.Column="2" Text="{Binding Amount}" />
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </ScrollViewer>
                     </GroupBox>
                 </Grid>

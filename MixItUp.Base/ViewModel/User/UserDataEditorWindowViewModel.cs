@@ -11,6 +11,123 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.User
 {
+    public class UserConsumableEditorViewModel : UIViewModelBase
+    {
+        public string Name
+        {
+            get
+            {
+                if (this.currency != null)
+                {
+                    return this.currency.Name;
+                }
+                else if (this.inventory != null && this.item != null)
+                {
+                    return this.item.Name;
+                }
+                else if (this.streamPass != null)
+                {
+                    return this.streamPass.Name;
+                }
+                return string.Empty;
+            }
+        }
+
+        public int Amount
+        {
+            get
+            {
+                if (this.currency != null)
+                {
+                    return this.currency.GetAmount(this.user);
+                }
+                else if (this.inventory != null && this.item != null)
+                {
+                    return this.inventory.GetAmount(this.user, this.item);
+                }
+                else if (this.streamPass != null)
+                {
+                    return this.streamPass.GetAmount(this.user);
+                }
+                return 0;
+            }
+            set
+            {
+                if (value >= 0)
+                {
+                    if (this.currency != null)
+                    {
+                        this.currency.SetAmount(this.user, value);
+                    }
+                    else if (this.inventory != null && this.item != null)
+                    {
+                        this.inventory.SetAmount(this.user, this.item, value);
+                    }
+                    else if (this.streamPass != null)
+                    {
+                        this.streamPass.SetAmount(this.user, value);
+                    }
+                }
+                this.NotifyPropertyChanged();
+            }
+        }
+
+        private UserDataModel user;
+
+        private CurrencyModel currency;
+
+        private InventoryModel inventory;
+        private InventoryItemModel item;
+
+        private StreamPassModel streamPass;
+
+        public UserConsumableEditorViewModel(UserDataModel user, CurrencyModel currency)
+            : this(user)
+        {
+            this.currency = currency;
+        }
+
+        public UserConsumableEditorViewModel(UserDataModel user, InventoryModel inventory, InventoryItemModel item)
+            : this(user)
+        {
+            this.inventory = inventory;
+            this.item = item;
+        }
+
+        public UserConsumableEditorViewModel(UserDataModel user, StreamPassModel streamPass)
+            : this(user)
+        {
+            this.streamPass = streamPass;
+        }
+
+        private UserConsumableEditorViewModel(UserDataModel user)
+        {
+            this.user = user;
+        }
+    }
+
+    public class UserInventoryEditorViewModel
+    {
+        public string Name { get { return this.inventory.Name; } }
+
+        public ThreadSafeObservableCollection<UserConsumableEditorViewModel> Items { get; set; } = new ThreadSafeObservableCollection<UserConsumableEditorViewModel>();
+
+        private UserDataModel user;
+
+        private InventoryModel inventory;
+
+        public UserInventoryEditorViewModel(UserDataModel user, InventoryModel inventory)
+        {
+            this.user = user;
+            this.inventory = inventory;
+
+            foreach (InventoryItemModel item in this.inventory.Items.Values)
+            {
+                this.Items.Add(new UserConsumableEditorViewModel(this.user, this.inventory, item));
+            }
+        }
+    }
+
     public class UserMetricViewModel
     {
         public string Name { get; set; }
@@ -49,6 +166,10 @@ namespace MixItUp.Base.ViewModel.User
                 this.NotifyPropertyChanged("ViewingHours");
             }
         }
+
+        public ThreadSafeObservableCollection<UserConsumableEditorViewModel> Consumables { get; set; } = new ThreadSafeObservableCollection<UserConsumableEditorViewModel>();
+
+        public ThreadSafeObservableCollection<UserInventoryEditorViewModel> Inventories { get; set; } = new ThreadSafeObservableCollection<UserInventoryEditorViewModel>();
 
         public ThreadSafeObservableCollection<UserOnlyChatCommandModel> UserOnlyChatCommands { get; set; } = new ThreadSafeObservableCollection<UserOnlyChatCommandModel>();
         public bool HasUserOnlyChatCommands { get { return this.UserOnlyChatCommands.Count > 0; } }
@@ -128,6 +249,23 @@ namespace MixItUp.Base.ViewModel.User
         public async Task Load()
         {
             await this.User.RefreshDetails(force: true);
+
+            this.Consumables.Clear();
+            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
+            {
+                this.Consumables.Add(new UserConsumableEditorViewModel(this.User.Data, currency));
+            }
+
+            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values.ToList())
+            {
+                this.Consumables.Add(new UserConsumableEditorViewModel(this.User.Data, streamPass));
+            }
+
+            this.Inventories.Clear();
+            foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.ToList())
+            {
+                this.Inventories.Add(new UserInventoryEditorViewModel(this.User.Data, inventory));
+            }
 
             this.RefreshUserOnlyChatCommands();
 
