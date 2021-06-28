@@ -11,29 +11,8 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.MainControls
 {
-    public enum UserSearchTypeEnum
-    {
-        Role,
-        WatchTime,
-        Consumables,
-        CustomSettings,
-    }
-
     public class UsersMainControlViewModel : WindowControlViewModelBase
     {
-        public IEnumerable<UserSearchTypeEnum> SearchFilterTypes { get { return EnumHelper.GetEnumList<UserSearchTypeEnum>(); } }
-
-        public UserSearchTypeEnum SelectedSearchFilterType
-        {
-            get { return this.selectedSearchFilterType; }
-            set
-            {
-                this.selectedSearchFilterType = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private UserSearchTypeEnum selectedSearchFilterType;
-
         public IEnumerable<StreamingPlatformTypeEnum> Platforms { get { return StreamingPlatforms.SelectablePlatforms; } }
 
         public StreamingPlatformTypeEnum SelectedPlatform

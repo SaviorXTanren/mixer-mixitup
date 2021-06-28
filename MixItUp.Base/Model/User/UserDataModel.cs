@@ -173,8 +173,6 @@ namespace MixItUp.Base.Model.User
         [JsonIgnore]
         public HashSet<string> CustomRoles { get; set; } = new HashSet<string>();
         [JsonIgnore]
-        public HashSet<string> AllRoles { get; set; } = new HashSet<string>();
-        [JsonIgnore]
         public string RolesDisplayString { get; set; } = null;
 
         [JsonIgnore]

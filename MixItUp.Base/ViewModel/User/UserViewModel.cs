@@ -591,62 +591,6 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public string RolesString
-        {
-            get
-            {
-                lock (this.rolesDisplayStringLock)
-                {
-                    if (this.Data.AllRoles.Count == 0)
-                    {
-                        List<UserRoleEnum> userRoles = this.UserRoles.ToList();
-                        if (this.Data.UserRoles.Contains(UserRoleEnum.Banned))
-                        {
-                            userRoles.Clear();
-                            userRoles.Add(UserRoleEnum.Banned);
-                        }
-                        else
-                        {
-                            if (this.Data.UserRoles.Count() > 1)
-                            {
-                                userRoles.Remove(UserRoleEnum.User);
-                            }
-
-                            if (this.Data.UserRoles.Contains(UserRoleEnum.Subscriber) || this.Data.UserRoles.Contains(UserRoleEnum.Streamer))
-                            {
-                                userRoles.Remove(UserRoleEnum.Follower);
-                            }
-
-                            if (this.Data.UserRoles.Contains(UserRoleEnum.Streamer))
-                            {
-                                userRoles.Remove(UserRoleEnum.ChannelEditor);
-                                userRoles.Remove(UserRoleEnum.Subscriber);
-                            }
-                        }
-
-
-
-                        this.Data.AllRoles.Add();
-
-                        this.Data.RolesDisplayString = string.Join(", ", userRoles.OrderByDescending(r => r));
-
-                        List<string> displayRoles = userRoles.Select(r => EnumLocalizationHelper.GetLocalizedName(r)).ToList();
-                        displayRoles.AddRange(this.CustomRoles);
-
-                        this.Data.RolesDisplayString = string.Join(", ", displayRoles.OrderByDescending(r => r));
-                    }
-                    return this.Data.RolesDisplayString;
-                }
-            }
-            private set
-            {
-                lock (this.rolesDisplayStringLock)
-                {
-                    this.Data.RolesDisplayString = value;
-                }
-            }
-        }
-
         public string RolesDisplayString
         {
             get
@@ -668,6 +612,11 @@ namespace MixItUp.Base.ViewModel.User
                                 userRoles.Remove(UserRoleEnum.User);
                             }
 
+                            if (userRoles.Contains(UserRoleEnum.ChannelEditor))
+                            {
+                                userRoles.Remove(UserRoleEnum.Mod);
+                            }
+
                             if (this.Data.UserRoles.Contains(UserRoleEnum.Subscriber) || this.Data.UserRoles.Contains(UserRoleEnum.Streamer))
                             {
                                 userRoles.Remove(UserRoleEnum.Follower);
@@ -683,7 +632,7 @@ namespace MixItUp.Base.ViewModel.User
                         List<string> displayRoles = userRoles.Select(r => EnumLocalizationHelper.GetLocalizedName(r)).ToList();
                         displayRoles.AddRange(this.CustomRoles);
 
-                        this.Data.RolesDisplayString = string.Join(", ", displayRoles.OrderByDescending(r => r));
+                        this.Data.RolesDisplayString = string.Join(", ", userRoles.OrderByDescending(r => r));
                     }
                     return this.Data.RolesDisplayString;
                 }
