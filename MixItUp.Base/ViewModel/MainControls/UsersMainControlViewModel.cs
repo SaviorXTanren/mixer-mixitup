@@ -71,33 +71,8 @@ namespace MixItUp.Base.ViewModel.MainControls
     public class UsersMainControlViewModel : WindowControlViewModelBase
     {
         private const string GreaterThanAmountFilter = ">";
+        private const string EqualToAmountFilter = "=";
         private const string LessThanAmountFilter = "<";
-
-        private const int MaxUsersPerPage = 100;
-
-        public IEnumerable<StreamingPlatformTypeEnum> Platforms { get { return StreamingPlatforms.SelectablePlatforms; } }
-
-        public StreamingPlatformTypeEnum SelectedPlatform
-        {
-            get { return this.selectedPlatform; }
-            set
-            {
-                this.selectedPlatform = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private StreamingPlatformTypeEnum selectedPlatform = StreamingPlatformTypeEnum.All;
-
-        public string UsernameFilter
-        {
-            get { return this.usernameFilter; }
-            set
-            {
-                this.usernameFilter = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private string usernameFilter;
 
         public IEnumerable<UserSearchFilterTypeEnum> SearchFilterTypes { get { return EnumHelper.GetEnumList<UserSearchFilterTypeEnum>(); } }
 
@@ -106,8 +81,6 @@ namespace MixItUp.Base.ViewModel.MainControls
             get { return this.selectedSearchFilterType; }
             set
             {
-                bool valueChanged = this.selectedSearchFilterType != value;
-
                 this.selectedSearchFilterType = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged("IsRoleSearchFilterType");
@@ -115,17 +88,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 this.NotifyPropertyChanged("IsConsumablesSearchFilterType");
                 this.NotifyPropertyChanged("IsCustomSettingsSearchFilterType");
 
-                if (valueChanged)
-                {
-                    if (this.SelectedSearchFilterType == UserSearchFilterTypeEnum.Role)
-                    {
-                        this.RefreshUsers();
-                    }
-                    else if (this.SelectedSearchFilterType == UserSearchFilterTypeEnum.CustomSettings)
-                    {
-                        this.RefreshUsers();
-                    }
-                }
+                this.RefreshUsers();
             }
         }
         private UserSearchFilterTypeEnum selectedSearchFilterType = UserSearchFilterTypeEnum.None;
@@ -139,15 +102,10 @@ namespace MixItUp.Base.ViewModel.MainControls
             get { return this.selectedUserRoleSearchFilter; }
             set
             {
-                bool valueChanged = this.selectedUserRoleSearchFilter != value;
-
                 this.selectedUserRoleSearchFilter = value;
                 this.NotifyPropertyChanged();
 
-                if (valueChanged)
-                {
-                    this.RefreshUsers();
-                }
+                this.RefreshUsers();
             }
         }
         private UserRoleEnum selectedUserRoleSearchFilter = UserRoleEnum.User;
@@ -163,6 +121,8 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 this.selectedWatchTimeComparisonSearchFilter = value;
                 this.NotifyPropertyChanged();
+
+                this.RefreshUsers();
             }
         }
         private string selectedWatchTimeComparisonSearchFilter = GreaterThanAmountFilter;
@@ -200,6 +160,8 @@ namespace MixItUp.Base.ViewModel.MainControls
                         this.ConsumablesItemsSearchFilters.Add(item);
                     }
                 }
+
+                this.RefreshUsers();
             }
         }
         private ConsumableSearchFilterViewModel selectedConsumablesSearchFilter;
@@ -215,6 +177,8 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 this.selectedConsumablesItemsSearchFilter = value;
                 this.NotifyPropertyChanged();
+
+                this.RefreshUsers();
             }
         }
         private InventoryItemModel selectedConsumablesItemsSearchFilter;
@@ -228,6 +192,8 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 this.selectedConsumablesComparisonSearchFilter = value;
                 this.NotifyPropertyChanged();
+
+                this.RefreshUsers();
             }
         }
         private string selectedConsumablesComparisonSearchFilter = GreaterThanAmountFilter;
@@ -245,7 +211,31 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public bool IsCustomSettingsSearchFilterType { get { return this.SelectedSearchFilterType == UserSearchFilterTypeEnum.CustomSettings; } }
 
-        public ICommand FilterUsersCommand { get; set; }
+        public IEnumerable<StreamingPlatformTypeEnum> Platforms { get { return StreamingPlatforms.SelectablePlatforms; } }
+
+        public StreamingPlatformTypeEnum SelectedPlatform
+        {
+            get { return this.selectedPlatform; }
+            set
+            {
+                this.selectedPlatform = value;
+                this.NotifyPropertyChanged();
+
+                this.RefreshUsers();
+            }
+        }
+        private StreamingPlatformTypeEnum selectedPlatform = StreamingPlatformTypeEnum.All;
+
+        public string UsernameFilter
+        {
+            get { return this.usernameFilter; }
+            set
+            {
+                this.usernameFilter = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string usernameFilter;
 
         public ThreadSafeObservableCollection<UserDataModel> Users { get; private set; } = new ThreadSafeObservableCollection<UserDataModel>();
 
@@ -263,60 +253,13 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public bool IsDescendingSort { get { return this.SortDirection == ListSortDirection.Descending; } }
 
-        public bool ShowNextResults { get { return this.CurrentResultsPage < this.TotaResultsPages; } }
-        public ICommand NextResultsCommand { get; set; }
-
-        public bool ShowPreviousResults { get { return this.CurrentResultsPage > 1; } }
-        public ICommand PreviousResultsCommand { get; set; }
-
-        public int CurrentResultsPage
-        {
-            get { return this.currentResultsPage; }
-            set
-            {
-                this.currentResultsPage = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private int currentResultsPage;
-
-        public int TotaResultsPages
-        {
-            get { return this.totaResultsPages; }
-            set
-            {
-                this.totaResultsPages = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private int totaResultsPages;
-
         public ICommand ExportDataCommand { get; private set; }
 
         private bool firstVisibleOccurred = false;
 
-        private IEnumerable<UserDataModel> filteredUsers = new List<UserDataModel>();
-
         public UsersMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
-            this.FilterUsersCommand = this.CreateCommand(async () =>
-            {
-                await this.RefreshUsersAsync();
-            });
-
-            this.PreviousResultsCommand = this.CreateCommand(() =>
-            {
-                this.CurrentResultsPage--;
-                this.UpdateUserPaging();
-            });
-
-            this.NextResultsCommand = this.CreateCommand(() =>
-            {
-                this.CurrentResultsPage++;
-                this.UpdateUserPaging();
-            });
-
             this.ExportDataCommand = this.CreateCommand(async () =>
             {
                 string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog("User Data.txt");
@@ -470,14 +413,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                     else if (this.SortColumnIndex == 4) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryCurrency) : data.OrderBy(u => u.PrimaryCurrency); }
                     else if (this.SortColumnIndex == 5) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryRankPoints) : data.OrderBy(u => u.PrimaryRankPoints); }
 
-                    lock (this.Users)
-                    {
-                        filteredUsers = data;
-                        this.TotaResultsPages = (int)Math.Ceiling(((double)filteredUsers.Count()) / ((double)MaxUsersPerPage));
-                    }
-
-                    this.CurrentResultsPage = 1;
-                    this.UpdateUserPaging();
+                    this.Users.ClearAndAddRange(data);
                 }
                 catch (Exception ex) { Logger.Log(ex); }
 
@@ -526,20 +462,6 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.SelectedConsumablesSearchFilter = null;
 
             return base.OnVisibleInternal();
-        }
-
-        private void UpdateUserPaging()
-        {
-            lock (this.Users)
-            {
-                if (filteredUsers != null)
-                {
-                    this.Users.ClearAndAddRange(filteredUsers.Skip((this.CurrentResultsPage - 1) * MaxUsersPerPage).Take(MaxUsersPerPage));
-                }
-
-                this.NotifyPropertyChanged("ShowNextResults");
-                this.NotifyPropertyChanged("ShowPreviousResults");
-            }
         }
     }
 }
