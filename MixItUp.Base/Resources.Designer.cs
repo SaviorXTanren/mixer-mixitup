@@ -2976,15 +2976,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Custom Settings.
-        /// </summary>
-        public static string CustomSettings {
-            get {
-                return ResourceManager.GetString("CustomSettings", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Custom Title.
         /// </summary>
         public static string CustomTitle {
@@ -4658,15 +4649,6 @@ namespace MixItUp.Base {
         public static string FilterName {
             get {
                 return ResourceManager.GetString("FilterName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Filter Type.
-        /// </summary>
-        public static string FilterType {
-            get {
-                return ResourceManager.GetString("FilterType", resourceCulture);
             }
         }
         

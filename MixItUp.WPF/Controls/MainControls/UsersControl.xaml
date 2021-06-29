@@ -35,13 +35,9 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" ItemsSource="{Binding Platforms}" SelectedItem="{Binding SelectedPlatform}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Platform}" Width="80" Margin="0,3,0,0">
+            <ComboBox Grid.Column="0" ItemsSource="{Binding Platforms}" SelectedItem="{Binding SelectedPlatform}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Platform}" Width="100" Margin="0,3,0,0">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -50,54 +46,6 @@
             </ComboBox>
 
             <TextBox Grid.Column="2" x:Name="UsernameFilterTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Username}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" TextChanged="UsernameFilterTextBox_TextChanged" />
-
-            <ComboBox Grid.Column="4" ItemsSource="{Binding SearchFilterTypes}" SelectedItem="{Binding SelectedSearchFilterType}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FilterType}" Width="150" Margin="0,3,0,0">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-
-            <Grid Grid.Column="6" Visibility="{Binding IsRoleSearchFilterType, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <ComboBox ItemsSource="{Binding UserRoleSearchFilters}" SelectedItem="{Binding SelectedUserRoleSearchFilter}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserRole}" Width="100" Margin="0,3,0,0">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-            </Grid>
-
-            <Grid Grid.Column="6" Visibility="{Binding IsWatchTimeSearchFilterType, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <ComboBox Grid.Column="0" ItemsSource="{Binding WatchTimeComparisonSearchFilters}" SelectedItem="{Binding SelectedWatchTimeComparisonSearchFilter}" Margin="0,15,0,0" />
-
-                <TextBox Grid.Column="2" x:Name="WatchTimeAmountSearchFilterTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Minutes}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" TextChanged="WatchTimeAmountSearchFilterTextBox_TextChanged" />
-            </Grid>
-
-            <Grid Grid.Column="6" Visibility="{Binding IsConsumablesSearchFilterType, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <ComboBox Grid.Column="0" ItemsSource="{Binding ConsumablesSearchFilters}" SelectedItem="{Binding SelectedConsumablesSearchFilter}" DisplayMemberPath="Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Consumables}" Width="100" Margin="0,3,0,0" />
-                <ComboBox Grid.Column="1" Visibility="{Binding IsConsumablesSearchFilterInventory, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding ConsumablesItemsSearchFilters}" SelectedItem="{Binding SelectedConsumablesItemsSearchFilter}" DisplayMemberPath="Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Item}" Margin="5,3,0,0" Width="100" />
-
-                <ComboBox Grid.Column="3" ItemsSource="{Binding ConsumablesComparisonSearchFilters}" SelectedItem="{Binding SelectedConsumablesComparisonSearchFilter}" Margin="0,15,0,0" />
-
-                <TextBox Grid.Column="5" x:Name="ConsumablesAmountSearchFilterTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" TextChanged="ConsumablesAmountSearchFilterTextBox_TextChanged" />
-            </Grid>
 
         </Grid>
 

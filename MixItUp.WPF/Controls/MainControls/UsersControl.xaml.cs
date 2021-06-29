@@ -40,23 +40,10 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async Task UpdateText()
         {
-            UIElement elementToFocus = null;
-            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
-            {
-                if (this.UsernameFilterTextBox.IsFocused) { elementToFocus = this.UsernameFilterTextBox; }
-                else if (this.WatchTimeAmountSearchFilterTextBox.IsFocused) { elementToFocus = this.WatchTimeAmountSearchFilterTextBox; }
-                else if (this.ConsumablesAmountSearchFilterTextBox.IsFocused) { elementToFocus = this.ConsumablesAmountSearchFilterTextBox; }
-                return Task.CompletedTask;
-            });
-
             await this.viewModel.RefreshUsersAsync();
-
             await DispatcherHelper.Dispatcher.InvokeAsync(() =>
             {
-                if (elementToFocus != null)
-                {
-                    elementToFocus.Focus();
-                }
+                this.UsernameFilterTextBox.Focus();
                 return Task.CompletedTask;
             });
         }
@@ -65,24 +52,6 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             this.viewModel.UsernameFilter = this.UsernameFilterTextBox.Text;
             textChangedTimer.Change(500, Timeout.Infinite);
-        }
-
-        private void WatchTimeAmountSearchFilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (int.TryParse(this.WatchTimeAmountSearchFilterTextBox.Text, out int amount))
-            {
-                this.viewModel.WatchTimeAmountSearchFilter = amount;
-                textChangedTimer.Change(500, Timeout.Infinite);
-            }
-        }
-
-        private void ConsumablesAmountSearchFilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (int.TryParse(this.ConsumablesAmountSearchFilterTextBox.Text, out int amount))
-            {
-                this.viewModel.ConsumablesAmountSearchFilter = amount;
-                textChangedTimer.Change(500, Timeout.Infinite);
-            }
         }
 
         private void UserEditButton_Click(object sender, RoutedEventArgs e)
