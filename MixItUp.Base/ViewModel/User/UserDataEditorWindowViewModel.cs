@@ -4,11 +4,9 @@ using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.User
@@ -174,6 +172,48 @@ namespace MixItUp.Base.ViewModel.User
         public ThreadSafeObservableCollection<UserConsumableEditorViewModel> Consumables { get; set; } = new ThreadSafeObservableCollection<UserConsumableEditorViewModel>();
 
         public ThreadSafeObservableCollection<UserInventoryEditorViewModel> Inventories { get; set; } = new ThreadSafeObservableCollection<UserInventoryEditorViewModel>();
+
+        public bool HasInventorySelected
+        {
+            get { return this.selectedInventory != null; }
+        }
+
+        private UserInventoryEditorViewModel selectedInventory;
+        public UserInventoryEditorViewModel SelectedInventory
+        {
+            get { return this.selectedInventory; }
+            set
+            {
+                this.selectedInventory = value;
+                this.SelectedItem = null;
+
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("SelectedInventoryItems");
+                this.NotifyPropertyChanged("HasInventorySelected");
+            }
+        }
+
+        public IEnumerable<UserConsumableEditorViewModel> SelectedInventoryItems
+        {
+            get { return this.selectedInventory?.Items?.OrderBy(i => i.Name); }
+        }
+
+        public bool HasItemSelected
+        {
+            get { return this.selectedItem != null; }
+        }
+
+        private UserConsumableEditorViewModel selectedItem;
+        public UserConsumableEditorViewModel SelectedItem
+        {
+            get { return this.selectedItem; }
+            set
+            {
+                this.selectedItem = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("HasItemSelected");
+            }
+        }
 
         public ThreadSafeObservableCollection<UserOnlyChatCommandModel> UserOnlyChatCommands { get; set; } = new ThreadSafeObservableCollection<UserOnlyChatCommandModel>();
         public bool HasUserOnlyChatCommands { get { return this.UserOnlyChatCommands.Count > 0; } }
