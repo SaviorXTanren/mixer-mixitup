@@ -67,6 +67,12 @@ namespace MixItUp.WPF.Controls.MainControls
             textChangedTimer.Change(500, Timeout.Infinite);
         }
 
+        private void SearchFilterTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.WatchTimeAmountSearchFilterTextBox.Text = null;
+            this.ConsumablesAmountSearchFilterTextBox.Text = null;
+        }
+
         private void WatchTimeAmountSearchFilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (int.TryParse(this.WatchTimeAmountSearchFilterTextBox.Text, out int amount))
