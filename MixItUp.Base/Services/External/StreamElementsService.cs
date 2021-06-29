@@ -292,14 +292,21 @@ namespace MixItUp.Base.Services.External
 
                 this.socket.Listen("authenticated", (data) =>
                 {
-                    if (data != null)
+                    try
                     {
-                        JObject eventJObj = JObject.Parse(data.ToString());
-                        var channelId = eventJObj["channelId"]?.Value<string>();
-                        if (this.channel._id.Equals(channelId))
+                        if (data != null)
                         {
-                            this.WebSocketConnected = true;
+                            JObject eventJObj = JObject.Parse(data.ToString());
+                            var channelId = eventJObj["channelId"]?.Value<string>();
+                            if (this.channel._id.Equals(channelId))
+                            {
+                                this.WebSocketConnected = true;
+                            }
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
                     }
                 });
 
