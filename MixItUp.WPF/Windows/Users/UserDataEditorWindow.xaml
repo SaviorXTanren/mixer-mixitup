@@ -170,46 +170,48 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <GroupBox Header="{x:Static resx:Resources.CurrencyRank}" Grid.Column="0" MaxHeight="200">
-                        <ScrollViewer>
-                            <ItemsControl ItemsSource="{Binding Consumables}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid Margin="10,5">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="20" />
-                                                <ColumnDefinition Width="60" />
-                                            </Grid.ColumnDefinitions>
+                    <GroupBox Header="{x:Static resx:Resources.CurrencyRank}" Grid.Column="0" MaxHeight="200" MinWidth="200">
+                        <Grid Margin="10,0,10,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                                            <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" />
+                            <ComboBox
+                                ItemsSource="{Binding Consumables}"
+                                SelectedItem="{Binding SelectedConsumable}"
+                                IsEditable="False"
+                                Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Consumables}"
+                                DisplayMemberPath="Name" Grid.Row="0">
+                                <ComboBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <VirtualizingStackPanel />
+                                    </ItemsPanelTemplate>
+                                </ComboBox.ItemsPanel>
+                            </ComboBox>
 
-                                            <TextBox Grid.Column="2" Text="{Binding Amount}" />
-                                        </Grid>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </ScrollViewer>
+                            <TextBox IsEnabled="{Binding HasConsumableSelected}" Text="{Binding SelectedConsumable.Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Quantity}" Grid.Row="4" />
+                        </Grid>
                     </GroupBox>
 
-                    <GroupBox Header="{x:Static resx:Resources.Inventory}" Grid.Column="2" MaxHeight="200">
-                        <Grid>
+                    <GroupBox Header="{x:Static resx:Resources.Inventory}" Grid.Column="2" MaxHeight="200" MinWidth="200">
+                        <Grid Margin="10,0,10,0">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="10" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="10" />
-                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
                             <ComboBox
                                 ItemsSource="{Binding Inventories}"
                                 SelectedItem="{Binding SelectedInventory}"
                                 IsEditable="False"
-                                HorizontalAlignment="Left"
                                 Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                                 MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Inventory}"
-                                DisplayMemberPath="Name" Width="200" Grid.Row="0">
+                                DisplayMemberPath="Name" Grid.Row="0">
                                 <ComboBox.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <VirtualizingStackPanel />
@@ -222,10 +224,9 @@
                                 SelectedItem="{Binding SelectedItem}"
                                 IsEnabled="{Binding HasInventorySelected}"
                                 IsEditable="False"
-                                HorizontalAlignment="Left"
                                 Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                                 MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Item}"
-                                DisplayMemberPath="Name" Width="200" Grid.Row="2">
+                                DisplayMemberPath="Name" Grid.Row="1">
                                 <ComboBox.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <VirtualizingStackPanel />
@@ -233,7 +234,7 @@
                                 </ComboBox.ItemsPanel>
                             </ComboBox>
 
-                            <TextBox IsEnabled="{Binding HasItemSelected}" Text="{Binding SelectedItem.Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Quantity}" Grid.Row="4" />
+                            <TextBox IsEnabled="{Binding HasItemSelected}" Text="{Binding SelectedItem.Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Quantity}" Grid.Row="3" />
                         </Grid>
                     </GroupBox>
                 </Grid>
