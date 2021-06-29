@@ -4,9 +4,11 @@ using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.User
@@ -121,10 +123,12 @@ namespace MixItUp.Base.ViewModel.User
             this.user = user;
             this.inventory = inventory;
 
+            List<UserConsumableEditorViewModel> itemsToAdd = new List<UserConsumableEditorViewModel>();
             foreach (InventoryItemModel item in this.inventory.Items.Values)
             {
-                this.Items.Add(new UserConsumableEditorViewModel(this.user, this.inventory, item));
+                itemsToAdd.Add(new UserConsumableEditorViewModel(this.user, this.inventory, item));
             }
+            this.Items.ClearAndAddRange(itemsToAdd);
         }
     }
 
@@ -250,22 +254,23 @@ namespace MixItUp.Base.ViewModel.User
         {
             await this.User.RefreshDetails(force: true);
 
-            this.Consumables.Clear();
+            List<UserConsumableEditorViewModel> consumablesToAdd = new List<UserConsumableEditorViewModel>();
             foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
             {
-                this.Consumables.Add(new UserConsumableEditorViewModel(this.User.Data, currency));
+                consumablesToAdd.Add(new UserConsumableEditorViewModel(this.User.Data, currency));
             }
-
             foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values.ToList())
             {
-                this.Consumables.Add(new UserConsumableEditorViewModel(this.User.Data, streamPass));
+                consumablesToAdd.Add(new UserConsumableEditorViewModel(this.User.Data, streamPass));
             }
+            this.Consumables.ClearAndAddRange(consumablesToAdd);
 
-            this.Inventories.Clear();
+            List<UserInventoryEditorViewModel> inventoriesToAdd = new List<UserInventoryEditorViewModel>();
             foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.ToList())
             {
-                this.Inventories.Add(new UserInventoryEditorViewModel(this.User.Data, inventory));
+                inventoriesToAdd.Add(new UserInventoryEditorViewModel(this.User.Data, inventory));
             }
+            this.Inventories.ClearAndAddRange(inventoriesToAdd);
 
             this.RefreshUserOnlyChatCommands();
 
