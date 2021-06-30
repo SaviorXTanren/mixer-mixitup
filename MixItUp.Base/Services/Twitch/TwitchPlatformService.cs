@@ -36,7 +36,6 @@ namespace MixItUp.Base.Services.Twitch
             OAuthClientScopeEnum.channel_editor,
             OAuthClientScopeEnum.channel_read,
             OAuthClientScopeEnum.channel_subscriptions,
-            OAuthClientScopeEnum.user_follows_edit,
             OAuthClientScopeEnum.user_read,
             OAuthClientScopeEnum.user_subscriptions,
 
@@ -54,7 +53,6 @@ namespace MixItUp.Base.Services.Twitch
             OAuthClientScopeEnum.chat__read,
             OAuthClientScopeEnum.user__edit,
             OAuthClientScopeEnum.user__edit__broadcast,
-            OAuthClientScopeEnum.user__edit__follows,
             OAuthClientScopeEnum.whispers__read,
             OAuthClientScopeEnum.whispers__edit,
         };
@@ -213,10 +211,6 @@ namespace MixItUp.Base.Services.Twitch
             }
             return null;
         }
-
-        public async Task<bool> FollowUser(NewAPI.Users.UserModel channel, NewAPI.Users.UserModel user) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Users.FollowUser(channel, user)); }
-
-        public async Task<bool> UnfollowUser(NewAPI.Users.UserModel channel, NewAPI.Users.UserModel user) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Users.UnfollowUser(channel, user)); }
 
         public async Task<NewAPI.Games.GameModel> GetNewAPIGameByID(string id) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Games.GetGameByID(id)); }
 
