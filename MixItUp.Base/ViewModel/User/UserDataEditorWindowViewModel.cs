@@ -262,10 +262,10 @@ namespace MixItUp.Base.ViewModel.User
         public IEnumerable<PatreonCampaignMember> PatreonUsers { get { return ChannelSession.Services.Patreon.CampaignMembers.ToList(); } }
         public PatreonCampaignMember PatreonUser
         {
-            get { return this.User.Data.PatreonUser; }
+            get { return this.patreonUser; }
             set
             {
-                this.User.Data.PatreonUser = value;
+                this.User.Data.PatreonUser = this.patreonUser = value;
                 if (this.User.Data.PatreonUser != null)
                 {
                     this.User.Data.PatreonUserID = value.UserID;
@@ -277,6 +277,7 @@ namespace MixItUp.Base.ViewModel.User
                 this.NotifyPropertyChanged();
             }
         }
+        private PatreonCampaignMember patreonUser;
 
         public bool CurrencyRankExempt
         {
@@ -311,6 +312,11 @@ namespace MixItUp.Base.ViewModel.User
         public async Task Load()
         {
             await this.User.RefreshDetails(force: true);
+
+            if (ChannelSession.Services.Patreon.IsConnected)
+            {
+                this.PatreonUser = this.User.PatreonUser;
+            }
 
             List<UserConsumableEditorViewModel> consumablesToAdd = new List<UserConsumableEditorViewModel>();
             foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
