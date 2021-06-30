@@ -185,7 +185,7 @@ namespace MixItUp.Base.ViewModel.User
             set
             {
                 this.selectedInventory = value;
-                this.SelectedItem = null;
+                this.SelectedItem = this.selectedInventory?.Items?.FirstOrDefault();
 
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged("SelectedInventoryItems");
@@ -212,6 +212,24 @@ namespace MixItUp.Base.ViewModel.User
                 this.selectedItem = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged("HasItemSelected");
+            }
+        }
+
+        public bool HasConsumableSelected
+        {
+            get { return this.selectedConsumable != null; }
+        }
+
+        private UserConsumableEditorViewModel selectedConsumable;
+        public UserConsumableEditorViewModel SelectedConsumable
+        {
+            get { return this.selectedConsumable; }
+            set
+            {
+                this.selectedConsumable = value;
+
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("HasConsumableSelected");
             }
         }
 
@@ -304,6 +322,7 @@ namespace MixItUp.Base.ViewModel.User
                 consumablesToAdd.Add(new UserConsumableEditorViewModel(this.User.Data, streamPass));
             }
             this.Consumables.ClearAndAddRange(consumablesToAdd);
+            this.SelectedConsumable = this.Consumables.FirstOrDefault();
 
             List<UserInventoryEditorViewModel> inventoriesToAdd = new List<UserInventoryEditorViewModel>();
             foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.ToList())
@@ -311,6 +330,7 @@ namespace MixItUp.Base.ViewModel.User
                 inventoriesToAdd.Add(new UserInventoryEditorViewModel(this.User.Data, inventory));
             }
             this.Inventories.ClearAndAddRange(inventoriesToAdd);
+            this.SelectedInventory = this.Inventories.FirstOrDefault();
 
             this.RefreshUserOnlyChatCommands();
 
