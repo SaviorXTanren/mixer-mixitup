@@ -148,10 +148,7 @@ namespace MixItUp.Base.Services.Twitch
         private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
         private SemaphoreSlim whisperSemaphore = new SemaphoreSlim(1);
 
-        public TwitchChatService()
-        {
-            this.emoteSetIDs.Add("0");  // Default channel emotes
-        }
+        public TwitchChatService() { }
 
         public bool IsUserConnected { get { return this.userClient != null && this.userClient.IsOpen(); } }
         public bool IsBotConnected { get { return this.botClient != null && this.botClient.IsOpen(); } }
