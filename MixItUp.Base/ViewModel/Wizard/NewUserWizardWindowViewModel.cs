@@ -149,7 +149,7 @@ namespace MixItUp.Base.ViewModel.Wizard
         {
             this.DiscordCommand = this.CreateCommand(() => { ProcessHelper.LaunchLink("https://mixitupapp.com/discord"); });
             this.TwitterCommand = this.CreateCommand(() => { ProcessHelper.LaunchLink("https://twitter.com/MixItUpApp"); });
-            this.YouTubeCommand = this.CreateCommand(() => { ProcessHelper.LaunchLink("https://www.youtube.com/channel/UCcY0vKI9yqcMTgh8OzSnRSA"); });
+            this.YouTubeCommand = this.CreateCommand(() => { ProcessHelper.LaunchLink("https://www.youtube.com/c/MixItUpApp"); });
             this.WikiCommand = this.CreateCommand(() => { ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki"); });
 
             this.Twitch.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
