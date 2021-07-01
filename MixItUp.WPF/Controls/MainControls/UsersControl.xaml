@@ -97,7 +97,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <ComboBox Grid.Column="0" ItemsSource="{Binding ConsumablesSearchFilters}" SelectedItem="{Binding SelectedConsumablesSearchFilter}" DisplayMemberPath="Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Consumables}" Width="100" Margin="0,3,0,0" />
+                <ComboBox Grid.Column="0" ItemsSource="{Binding ConsumablesSearchFilters}" SelectedItem="{Binding SelectedConsumablesSearchFilter}" DisplayMemberPath="Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Consumables}" Width="115" Margin="0,3,0,0" />
                 <ComboBox Grid.Column="1" Visibility="{Binding IsConsumablesSearchFilterInventory, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding ConsumablesItemsSearchFilters}" SelectedItem="{Binding SelectedConsumablesItemsSearchFilter}" DisplayMemberPath="Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Item}" Margin="5,3,0,0" Width="100" />
 
                 <ComboBox Grid.Column="3" ItemsSource="{Binding ConsumablesComparisonSearchFilters}" SelectedItem="{Binding SelectedConsumablesComparisonSearchFilter}" Margin="0,15,0,0" />
