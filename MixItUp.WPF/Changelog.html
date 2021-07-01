@@ -33,6 +33,10 @@
                     <li>We have financed a server to allow us to handle Twitch events that require Twitch's Web Hooks system. This will allow us to remove the 1 Minute Delay on certain events, as well as add support for brand-new events that were not previously possible.</li>
                     <li>The following events have been updated to be real-time: Twitch Channel Stream Start, Twitch Channel Followed</li>
                     <li>The following events have been added: Twitch Channel Stream Stop, Twitch Channel Hype Train Begin, Twitch Channel Hype Train End</li>
+                    <ul>
+                        <li>Twitch Channel Hype Train Begin includes the following Special Identifiers: $hypetraintotalpoints, $hypetrainlevelpoints, $hypetrainlevelgoal</li>
+                        <li>Twitch Channel Hype Train End includes the following Special Identifiers: $hypetraintotalpoints, $hypetraintotalpoints</li>
+                    </ul>
                     <li>In the event of an outage of our server or a local disconnection, the Twitch Channel Stream Start &amp; Twitch Channel Followed events will fall back to their old 1 Minute Delay logic, while the newly added events will be unavailable.</li>
                     <li>Adding $messagenocheermotes Special Identifier to Twitch Channel Bits Cheered event command that has only the text of the user's message and no cheermotes in the message</li>
                     <li>Message text is now available as Argument Special Identifiers for the Twitch Channel Resubscribed &amp; Twitch Channel Bits Cheered event commands</li>
