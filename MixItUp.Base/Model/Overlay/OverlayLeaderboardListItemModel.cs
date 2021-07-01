@@ -297,29 +297,31 @@ namespace MixItUp.Base.Model.Overlay
         private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation)
         {
             UserViewModel user = donation.User;
-
-            if (!this.userDonations.ContainsKey(user.ID))
+            if (user != null)
             {
-                this.userDonations[user.ID] = donation.Copy();
-                this.userDonations[user.ID].Amount = 0.0;
-            }
-            this.userDonations[user.ID].Amount += donation.Amount;
-
-            List<OverlayLeaderboardItem> items = new List<OverlayLeaderboardItem>();
-
-            var orderedUsers = this.userDonations.OrderByDescending(kvp => kvp.Value.Amount);
-            for (int i = 0; i < orderedUsers.Count() && items.Count() < this.TotalToShow; i++)
-            {
-                var kvp = orderedUsers.ElementAt(i);
-                UserDataModel userData = ChannelSession.Settings.GetUserData(kvp.Key);
-                if (userData != null)
+                if (!this.userDonations.ContainsKey(user.ID))
                 {
-                    items.Add(new OverlayLeaderboardItem(new UserViewModel(userData), kvp.Value.AmountText));
+                    this.userDonations[user.ID] = donation.Copy();
+                    this.userDonations[user.ID].Amount = 0.0;
                 }
-            }
+                this.userDonations[user.ID].Amount += donation.Amount;
 
-            await this.ProcessLeaderboardItems(items);
-            this.SendUpdateRequired();
+                List<OverlayLeaderboardItem> items = new List<OverlayLeaderboardItem>();
+
+                var orderedUsers = this.userDonations.OrderByDescending(kvp => kvp.Value.Amount);
+                for (int i = 0; i < orderedUsers.Count() && items.Count() < this.TotalToShow; i++)
+                {
+                    var kvp = orderedUsers.ElementAt(i);
+                    UserDataModel userData = ChannelSession.Settings.GetUserData(kvp.Key);
+                    if (userData != null)
+                    {
+                        items.Add(new OverlayLeaderboardItem(new UserViewModel(userData), kvp.Value.AmountText));
+                    }
+                }
+
+                await this.ProcessLeaderboardItems(items);
+                this.SendUpdateRequired();
+            }
         }
 
         private async Task ProcessLeaderboardItems(List<OverlayLeaderboardItem> items)

@@ -16,7 +16,7 @@ namespace MixItUp.Base.Model.User.Twitch
         {
             this.User = user;
             this.Amount = bitsEvent.bits_used;
-            this.Message = new TwitchChatMessageViewModel(user, !string.IsNullOrEmpty(bitsEvent.chat_message) ? bitsEvent.chat_message : string.Empty);
+            this.Message = new TwitchChatMessageViewModel(user, bitsEvent);
         }
     }
 }

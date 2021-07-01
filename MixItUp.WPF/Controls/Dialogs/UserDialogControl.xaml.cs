@@ -1,8 +1,6 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
 using System.Windows.Controls;
-using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.WPF.Controls.Dialogs
 {
@@ -14,8 +12,6 @@ namespace MixItUp.WPF.Controls.Dialogs
         Ban,
         Unban,
         Close,
-        Follow,
-        Unfollow,
         PromoteToMod,
         DemoteFromMod,
         ChannelPage,
@@ -45,13 +41,6 @@ namespace MixItUp.WPF.Controls.Dialogs
                 await this.user.RefreshDetails(force: true);
 
                 this.DataContext = this.user;
-
-                UserFollowModel follow = await ChannelSession.TwitchUserConnection.CheckIfFollowsNewAPI(this.user.GetTwitchNewAPIUserModel(), ChannelSession.TwitchUserNewAPI);
-                if (follow != null && !string.IsNullOrEmpty(follow.followed_at))
-                {
-                    this.UnfollowButton.Visibility = System.Windows.Visibility.Visible;
-                    this.FollowButton.Visibility = System.Windows.Visibility.Collapsed;
-                }
 
                 if (this.user.UserRoles.Contains(UserRoleEnum.Banned))
                 {

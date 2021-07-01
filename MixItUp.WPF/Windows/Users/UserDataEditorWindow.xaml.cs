@@ -1,13 +1,10 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.WPF.Controls.Currency;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Commands;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -36,23 +33,6 @@ namespace MixItUp.WPF.Windows.Users
         protected override async Task OnLoaded()
         {
             await this.viewModel.Load();
-
-            this.CurrencyRankStackPanel.Children.Clear();
-            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
-            {
-                this.CurrencyRankStackPanel.Children.Add(new UserCurrencyIndividualEditorControl(this.user.Data, currency));
-            }
-
-            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values.ToList())
-            {
-                this.CurrencyRankStackPanel.Children.Add(new UserCurrencyIndividualEditorControl(this.user.Data, streamPass));
-            }
-
-            this.InventoryStackPanel.Children.Clear();
-            foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.ToList())
-            {
-                this.InventoryStackPanel.Children.Add(new UserInventoryEditorControl(this.user.Data, inventory));
-            }
         }
 
         private void AddUserOnlyCommandButton_Click(object sender, RoutedEventArgs e)

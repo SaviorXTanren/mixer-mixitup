@@ -54,6 +54,11 @@ namespace MixItUp.WPF.Controls.MainControls
             textChangedTimer.Change(500, Timeout.Infinite);
         }
 
+        private void FilterUsersButton_Click(object sender, RoutedEventArgs e)
+        {
+            textChangedTimer.Change(1, Timeout.Infinite);
+        }
+
         private void UserEditButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;

@@ -11,13 +11,13 @@
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-                                        
+
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
-                  
+
         Icon="./../../Logo.ico"
         Title="User Editing" Height="600" Width="600">
     <Windows:LoadingWindowBase.Resources>
@@ -83,7 +83,7 @@
                                     <ColumnDefinition Width="5" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                
+
                                 <TextBlock Grid.Column="0" VerticalAlignment="Bottom" Margin="0,0,0,5" Text="{Binding Source={x:Static resx:Resources.WatchTime}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                                 <TextBox Grid.Column="2" Width="50" Text="{Binding ViewingHours}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Hours}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
                                 <TextBox Grid.Column="4" Width="50" Text="{Binding ViewingMinutes}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Minutes}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
@@ -113,7 +113,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.Roles}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
-                                <TextBlock Grid.Column="2" Text="{Binding User.RolesDisplayString}" />
+                                <TextBlock Grid.Column="2" Text="{Binding User.RolesString}" />
                             </Grid>
 
                             <Grid Grid.Row="2">
@@ -170,14 +170,72 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <GroupBox Header="{x:Static resx:Resources.CurrencyRank}" Grid.Column="0">
-                        <StackPanel x:Name="CurrencyRankStackPanel" />
+                    <GroupBox Header="{x:Static resx:Resources.CurrencyRank}" Grid.Column="0" MaxHeight="200" MinWidth="200">
+                        <Grid Margin="10,0,10,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <ComboBox
+                                ItemsSource="{Binding Consumables}"
+                                SelectedItem="{Binding SelectedConsumable}"
+                                IsEditable="False"
+                                Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Consumables}"
+                                DisplayMemberPath="Name" Grid.Row="0">
+                                <ComboBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <VirtualizingStackPanel />
+                                    </ItemsPanelTemplate>
+                                </ComboBox.ItemsPanel>
+                            </ComboBox>
+
+                            <TextBox IsEnabled="{Binding HasConsumableSelected}" Text="{Binding SelectedConsumable.Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Quantity}" Grid.Row="4" />
+                        </Grid>
                     </GroupBox>
 
-                    <GroupBox Header="{x:Static resx:Resources.Inventory}" Grid.Column="2">
-                        <ScrollViewer VerticalScrollBarVisibility="Visible" MaxHeight="200">
-                            <StackPanel x:Name="InventoryStackPanel" />
-                        </ScrollViewer>
+                    <GroupBox Header="{x:Static resx:Resources.Inventory}" Grid.Column="2" MaxHeight="200" MinWidth="200">
+                        <Grid Margin="10,0,10,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <ComboBox
+                                ItemsSource="{Binding Inventories}"
+                                SelectedItem="{Binding SelectedInventory}"
+                                IsEditable="False"
+                                Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Inventory}"
+                                DisplayMemberPath="Name" Grid.Row="0">
+                                <ComboBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <VirtualizingStackPanel />
+                                    </ItemsPanelTemplate>
+                                </ComboBox.ItemsPanel>
+                            </ComboBox>
+
+                            <ComboBox
+                                ItemsSource="{Binding SelectedInventoryItems}"
+                                SelectedItem="{Binding SelectedItem}"
+                                IsEnabled="{Binding HasInventorySelected}"
+                                IsEditable="False"
+                                Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Item}"
+                                DisplayMemberPath="Name" Grid.Row="1">
+                                <ComboBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <VirtualizingStackPanel />
+                                    </ItemsPanelTemplate>
+                                </ComboBox.ItemsPanel>
+                            </ComboBox>
+
+                            <TextBox IsEnabled="{Binding HasItemSelected}" Text="{Binding SelectedItem.Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Quantity}" Grid.Row="3" />
+                        </Grid>
                     </GroupBox>
                 </Grid>
 

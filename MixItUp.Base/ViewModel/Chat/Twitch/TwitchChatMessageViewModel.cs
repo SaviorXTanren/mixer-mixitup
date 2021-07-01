@@ -129,6 +129,14 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             this.ProcessMessageContents(whisper.body);
         }
 
+        public TwitchChatMessageViewModel(UserViewModel user, PubSubBitsEventV2Model bitsCheer)
+            : base(bitsCheer.message_id, StreamingPlatformTypeEnum.Twitch, user)
+        {
+            this.HasBits = true;
+
+            this.ProcessMessageContents((!string.IsNullOrEmpty(bitsCheer.chat_message)) ? bitsCheer.chat_message : string.Empty);
+        }
+
         public TwitchChatMessageViewModel(UserViewModel user, string message, string replyMessageID = null)
             : base(string.Empty, StreamingPlatformTypeEnum.Twitch, user)
         {
@@ -151,20 +159,17 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                     {
                         if (this.HasBits)
                         {
-                            foreach (TwitchBitsCheermoteViewModel cheermote in ChannelSession.Services.Chat.TwitchChatService.BitsCheermotes)
+                            TwitchBitsCheerViewModel bitCheermote = this.GetBitCheermote(part);
+                            if (bitCheermote != null)
                             {
-                                if (part.StartsWith(cheermote.ID) && int.TryParse(part.Replace(cheermote.ID, ""), out int amount) && amount > 0)
-                                {
-                                    TwitchBitsCheermoteTierViewModel tier = cheermote.GetAppropriateTier(amount);
-                                    if (tier != null)
-                                    {
-                                        this.MessageParts[this.MessageParts.Count - 1] = new TwitchBitsCheerViewModel(part, amount, tier);
-                                        continue;
-                                    }
-                                }
+                                this.MessageParts[this.MessageParts.Count - 1] = bitCheermote;
+                                continue;
+                            }
+                            else
+                            {
+                                messageNoCheermotes.Add(part);
                             }
                         }
-                        messageNoCheermotes.Add(part);
 
                         if (ChannelSession.Services.Chat.TwitchChatService.Emotes.ContainsKey(part))
                         {
@@ -186,7 +191,30 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                 }
             }
 
-            this.PlainTextMessageNoCheermotes = string.Join(" ", messageNoCheermotes);
+            if (this.HasBits)
+            {
+                this.PlainTextMessageNoCheermotes = string.Join(" ", messageNoCheermotes);
+            }
+            else
+            {
+                this.PlainTextMessageNoCheermotes = this.PlainTextMessage;
+            }
+        }
+
+        private TwitchBitsCheerViewModel GetBitCheermote(string part)
+        {
+            foreach (TwitchBitsCheermoteViewModel cheermote in ChannelSession.Services.Chat.TwitchChatService.BitsCheermotes)
+            {
+                if (part.StartsWith(cheermote.ID, StringComparison.InvariantCultureIgnoreCase) && int.TryParse(part.ToLower().Replace(cheermote.ID.ToLower(), ""), out int amount) && amount > 0)
+                {
+                    TwitchBitsCheermoteTierViewModel tier = cheermote.GetAppropriateTier(amount);
+                    if (tier != null)
+                    {
+                        return new TwitchBitsCheerViewModel(part, amount, tier);
+                    }
+                }
+            }
+            return null;
         }
     }
 }
