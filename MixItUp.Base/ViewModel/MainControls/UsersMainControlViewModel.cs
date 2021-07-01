@@ -445,6 +445,25 @@ namespace MixItUp.Base.ViewModel.MainControls
                 this.RefreshUsers();
             }
             this.firstVisibleOccurred = true;
+
+            this.ConsumablesSearchFilters.Clear();
+            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
+            {
+                this.ConsumablesSearchFilters.Add(new ConsumableSearchFilterViewModel(currency));
+            }
+
+            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values.ToList())
+            {
+                this.ConsumablesSearchFilters.Add(new ConsumableSearchFilterViewModel(streamPass));
+            }
+
+            foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.ToList())
+            {
+                this.ConsumablesSearchFilters.Add(new ConsumableSearchFilterViewModel(inventory));
+            }
+
+            this.SelectedConsumablesSearchFilter = null;
+
             return base.OnVisibleInternal();
         }
     }
