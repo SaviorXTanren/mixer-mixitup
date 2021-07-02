@@ -4157,7 +4157,7 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
     <value>Twitch Channel Bits Cheered</value>
   </data>
   <data name="TwitchChannelFollowed" xml:space="preserve">
-    <value>Twitch Channel Followed (1 Minute Delay)</value>
+    <value>Twitch Channel Followed</value>
   </data>
   <data name="TwitchChannelHosted" xml:space="preserve">
     <value>Twitch Channel Hosted</value>
@@ -4184,7 +4184,7 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
     <value>Twitch Channel Resubscribed</value>
   </data>
   <data name="TwitchChannelStreamStart" xml:space="preserve">
-    <value>Twitch Channel Stream Start (1 Minute Delay)</value>
+    <value>Twitch Channel Stream Start</value>
   </data>
   <data name="TwitchChannelStreamStop" xml:space="preserve">
     <value>Twitch Channel Stream Stop</value>
@@ -5709,7 +5709,7 @@ special users that you want to allow more control to such as a Moderator.</value
     <value>{0}K+</value>
   </data>
   <data name="CommunityCommandsUploadCommunityCommand" xml:space="preserve">
-    <value>Upload Command</value>
+    <value>Upload Community Command</value>
   </data>
   <data name="CommandEditor" xml:space="preserve">
     <value>Command Editor</value>
@@ -5838,5 +5838,31 @@ Failure to meet the above could have your command removed and lead to blocking o
   </data>
   <data name="TwitchChannelPointsCommand" xml:space="preserve">
     <value>Twitch Channel Points Command</value>
+  </data>
+  <data name="CommunityCommandsOtherCommandReferencedDetected" xml:space="preserve">
+    <value>The following command contains actions that reference other commands inside of it (EX: Command A runs Command B using a Command Action). When this command is uploaded, it WILL NOT include these other referenced commands, just the current command. We encourage creators to do one of the following:
+
+- Combine your other referenced commands into this command so users only need this one to fully use your setup.
+
+- Upload the other commands needed for this command to work as well and reference their names in the description for each command.
+
+- Explain what the intent of your command is so that users can understand how they can incorporate their own commands in to it.
+
+Failure to do one of the following could effect how users rate &amp; review your command. Do you still wish to upload this command?</value>
+  </data>
+  <data name="CommunityCommandsUploadToCommunity" xml:space="preserve">
+    <value>Upload To Community</value>
+  </data>
+  <data name="CommunityCommandsUploadToCommunityTooltip" xml:space="preserve">
+    <value>Upload To Community Commands</value>
+  </data>
+  <data name="CustomSettings" xml:space="preserve">
+    <value>Custom Settings</value>
+  </data>
+  <data name="FilterType" xml:space="preserve">
+    <value>Filter Type</value>
+  </data>
+  <data name="Link" xml:space="preserve">
+    <value>Link</value>
   </data>
 </root>

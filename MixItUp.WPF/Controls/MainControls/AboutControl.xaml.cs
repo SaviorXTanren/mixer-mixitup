@@ -32,7 +32,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void DiscordButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://mixitupapp.com/discord"); }
 
-        private void YouTubeButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://www.youtube.com/channel/UCcY0vKI9yqcMTgh8OzSnRSA"); }
+        private void YouTubeButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://www.youtube.com/c/MixItUpApp"); }
 
         private void TwitchButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://twitch.tv/MixItUpApp"); }
 

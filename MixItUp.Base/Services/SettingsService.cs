@@ -596,7 +596,7 @@ namespace MixItUp.Base.Services
                     settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = null;
                 }
 
-                await settings.LoadUserData();
+                await settings.LoadAllUserData();
 
                 await ServiceManager.Get<IDatabaseService>().Write(settings.DatabaseFilePath, "ALTER TABLE Users ADD COLUMN TwitchUsername TEXT DEFAULT NULL");
                 await ServiceManager.Get<IDatabaseService>().Write(settings.DatabaseFilePath, "ALTER TABLE Users ADD COLUMN YouTubeUsername TEXT DEFAULT NULL");

@@ -27,6 +27,7 @@ namespace MixItUp.WPF.Windows.Commands
         private CommunityCommandUploadModel uploadCommand;
 
         private bool commandContainsMedia;
+        private bool commandReferencesOtherCommand;
 
         public CommunityCommandUploadWindow(CommandModelBase command)
         {
@@ -111,6 +112,11 @@ namespace MixItUp.WPF.Windows.Commands
                 {
                     this.commandContainsMedia = true;
                 }
+
+                if (this.uploadCommand.Tags.Contains(CommunityCommandTagEnum.Command))
+                {
+                    this.commandReferencesOtherCommand = true;
+                }
             }
             catch (Exception ex)
             {
@@ -136,6 +142,14 @@ namespace MixItUp.WPF.Windows.Commands
                     if (this.commandContainsMedia)
                     {
                         if (!await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.CommunityCommandsExternalAssetActionsDetected))
+                        {
+                            return;
+                        }
+                    }
+
+                    if (this.commandReferencesOtherCommand)
+                    {
+                        if (!await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.CommunityCommandsOtherCommandReferencedDetected))
                         {
                             return;
                         }

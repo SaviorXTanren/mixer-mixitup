@@ -78,7 +78,7 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Visible" MaxHeight="505">
+                            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Visible" MaxHeight="400">
                                 <DataGrid ItemsSource="{Binding Items}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="{x:Static resx:Resources.ItemName}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />

@@ -8,6 +8,7 @@ using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Controls.Dialogs.CommunityCommands;
 using MixItUp.WPF.Windows.Commands;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,6 +22,26 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class CommunityCommandsControl : MainControlBase
     {
+        private static HashSet<Guid> downloadedCommandsCache = new HashSet<Guid>();
+
+        public static async Task ProcessDownloadedCommunityCommand(CommunityCommandDetailsViewModel command)
+        {
+            if (bool.Equals(await DialogHelper.ShowCustom(new CommandImporterDialogControl(command.PrimaryCommand)), true))
+            {
+                if (!CommunityCommandsControl.downloadedCommandsCache.Contains(command.ID))
+                {
+                    CommunityCommandsControl.downloadedCommandsCache.Add(command.ID);
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                    {
+                        await ChannelSession.Services.CommunityCommandsService.DownloadCommand(command.ID);
+                    }, new CancellationToken());
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                }
+            }
+        }
+
         private CommunityCommandsMainControlViewModel viewModel;
 
         public CommunityCommandsControl()
@@ -79,20 +100,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void DownloadCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            if (bool.Equals(await DialogHelper.ShowCustom(new CommandImporterDialogControl(this.viewModel.CommandDetails.PrimaryCommand)), true))
-            {
-                if (!this.viewModel.DownloadedCommandsCache.Contains(this.viewModel.CommandDetails.ID))
-                {
-                    this.viewModel.DownloadedCommandsCache.Add(this.viewModel.CommandDetails.ID);
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
-                    {
-                        await ServiceManager.Get<CommunityCommandsService>().DownloadCommand(this.viewModel.CommandDetails.ID);
-                    }, new CancellationToken());
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                }
-            }
+            await CommunityCommandsControl.ProcessDownloadedCommunityCommand(this.viewModel.CommandDetails);
         }
 
         private async void ReviewCommandButton_Click(object sender, RoutedEventArgs e)

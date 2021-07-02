@@ -919,18 +919,20 @@ namespace MixItUp.Base.Model.Commands
         {
             if (parameters.Arguments != null && parameters.Arguments.Count() == 1)
             {
-                // TODO
-//                string mixerUsername = parameters.Arguments.First().Replace("@", "");
-//#pragma warning disable CS0612 // Type or member is obsolete
-//                UserDataModel mixerUserData = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.Mixer, mixerUsername);
-//#pragma warning restore CS0612 // Type or member is obsolete
-//                if (mixerUserData != null)
-//                {
-//                    LinkedAccounts[parameters.User.ID] = mixerUserData.ID;
-//                    await ServiceManager.Get<ChatService>().SendMessage($"@{parameters.User.Username} is attempting to link the Mixer account {mixerUserData.MixerUsername} to their {parameters.User.Platform} account. Mods can type \"!approvemixeraccount @<TWITCH USERNAME>\" in chat to approve this linking.");
-//                    return;
-//                }
-//                await ServiceManager.Get<ChatService>().SendMessage("There is no Mixer user data for that username");
+                await ChannelSession.Settings.LoadAllUserData();
+
+                string mixerUsername = parameters.Arguments.First().Replace("@", "");
+
+#pragma warning disable CS0612 // Type or member is obsolete
+                UserDataModel mixerUserData = ChannelSession.Settings.UserData.Values.ToList().FirstOrDefault(u => u.Platform == StreamingPlatformTypeEnum.Mixer && string.Equals(u.MixerUsername, mixerUsername, StringComparison.OrdinalIgnoreCase));
+#pragma warning restore CS0612 // Type or member is obsolete
+                if (mixerUserData != null)
+                {
+                    LinkedAccounts[parameters.User.ID] = mixerUserData.ID;
+                    await ServiceManager.Get<ChatService>().SendMessage($"@{parameters.User.Username} is attempting to link the Mixer account {mixerUserData.MixerUsername} to their {parameters.User.Platform} account. Mods can type \"!approvemixeraccount @<TWITCH USERNAME>\" in chat to approve this linking.");
+                    return;
+                }
+                await ServiceManager.Get<ChatService>().SendMessage("There is no Mixer user data for that username");
             }
             else
             {

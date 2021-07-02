@@ -542,6 +542,8 @@ namespace MixItUp.Base.Model.Settings
         [JsonIgnore]
         public string SettingsLocalBackupFilePath { get { return Path.Combine(SettingsV3Model.SettingsDirectoryName, this.SettingsLocalBackupFileName); } }
 
+        private bool fullUserDataLoadOccurred = false;
+
         public SettingsV3Model() { }
 
         public SettingsV3Model(string name)
@@ -781,6 +783,29 @@ namespace MixItUp.Base.Model.Settings
             }
         }
 
+        public async Task<UserDataModel> GetUserDataByID(Guid id)
+        {
+            UserDataModel userData = null;
+
+            if (id != Guid.Empty)
+            {
+                await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE ID = @ID",
+                    new Dictionary<string, object>() { { "ID", id } },
+                    (Dictionary<string, object> data) =>
+                    {
+                        userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString());
+                    });
+
+                if (userData != null)
+                {
+                    this.UserData[userData.ID] = userData;
+                    this.UserData.ClearTracking(userData.ID);
+                }
+            }
+
+            return userData;
+        }
+
         public async Task<UserDataModel> GetUserDataByPlatformID(StreamingPlatformTypeEnum platform, string platformID = null)
         {
             UserDataModel userData = null;
@@ -845,23 +870,22 @@ namespace MixItUp.Base.Model.Settings
             this.UserData.ManualValueChanged(user.ID);
         }
 
-        public async Task LoadUserData(int amount = 0)
+        public async Task LoadAllUserData()
         {
-            string query = "SELECT * FROM Users";
-            if (amount > 0)
+            if (!this.fullUserDataLoadOccurred)
             {
-                query += " LIMIT " + amount;
-            }
+                this.fullUserDataLoadOccurred = true;
 
-            await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, query, (Dictionary<string, object> data) =>
-            {
-                UserDataModel userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString());
-                if (!this.UserData.ContainsKey(userData.ID))
+                await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
                 {
-                    this.UserData[userData.ID] = userData;
-                    this.UserData.ClearTracking(userData.ID);
-                }
-            });
+                    UserDataModel userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString());
+                    if (!this.UserData.ContainsKey(userData.ID))
+                    {
+                        this.UserData[userData.ID] = userData;
+                        this.UserData.ClearTracking(userData.ID);
+                    }
+                });
+            }
         }
 
         public CommandModelBase GetCommand(Guid id) { return this.Commands.ContainsKey(id) ? this.Commands[id] : null; }

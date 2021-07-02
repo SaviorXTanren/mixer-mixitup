@@ -369,6 +369,8 @@ namespace MixItUp.Base.Model.Currency
 
         public async Task Reset()
         {
+            await ChannelSession.Settings.LoadAllUserData();
+
             foreach (UserDataModel user in ChannelSession.Settings.UserData.Values.ToList())
             {
                 if (user.InventoryAmounts.ContainsKey(this.ID))

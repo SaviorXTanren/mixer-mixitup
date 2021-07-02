@@ -118,43 +118,18 @@ namespace MixItUp.Base.ViewModel.MainControls
             List<EventCommandItemViewModel> commands = new List<EventCommandItemViewModel>();
 
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStart));
-            if (ServiceManager.Get<WebhookService>().IsConnected && ServiceManager.Get<WebhookService>().IsAllowed)
-            {
-                EventCommandModel command = ServiceManager.Get<EventService>().GetEventCommand(EventTypeEnum.TwitchChannelStreamStop);
-                if (command != null)
-                {
-                    commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStop));
-                }
-            }
-
+            commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStop));
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelFollowed));
-            //commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelUnfollowed));
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHosted));
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelRaided));
-
-            if (ServiceManager.Get<WebhookService>().IsConnected && ServiceManager.Get<WebhookService>().IsAllowed)
-            {
-                EventCommandModel command = ServiceManager.Get<EventService>().GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainBegin);
-                if (command != null)
-                {
-                    commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainBegin));
-                }
-
-                //commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainProgress));
-
-                command = ServiceManager.Get<EventService>().GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainEnd);
-                if (command != null)
-                {
-                    commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainEnd));
-                }
-            }
-
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelSubscribed));
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelResubscribed));
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelSubscriptionGifted));
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelMassSubscriptionsGifted));
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelBitsCheered));
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelPointsRedeemed));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainBegin));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainEnd));
 
             commands.Add(this.GetEventCommand(EventTypeEnum.TrovoChannelFollowed));
             commands.Add(this.GetEventCommand(EventTypeEnum.TrovoChannelRaided));

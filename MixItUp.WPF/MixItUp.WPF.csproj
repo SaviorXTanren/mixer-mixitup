@@ -648,12 +648,6 @@
     <Compile Include="Controls\CommunityCommands\CommunityCommandListingSmallControl.xaml.cs">
       <DependentUpon>CommunityCommandListingSmallControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Currency\UserCurrencyIndividualEditorControl.xaml.cs">
-      <DependentUpon>UserCurrencyIndividualEditorControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Currency\UserInventoryEditorControl.xaml.cs">
-      <DependentUpon>UserInventoryEditorControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Dashboard\ChatDashboardControl.xaml.cs">
       <DependentUpon>ChatDashboardControl.xaml</DependentUpon>
     </Compile>
@@ -1043,6 +1037,7 @@
       <DependentUpon>UpdateWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Util\ActionListDropHandler.cs" />
+    <Compile Include="Util\AlternationIndexConverter.cs" />
     <Compile Include="Util\RegistryHelpers.cs" />
     <Compile Include="Util\StrikethroughConverter.cs" />
     <Compile Include="Util\FrameworkElementHelpers.cs" />
@@ -1349,14 +1344,6 @@
     <Page Include="Controls\CommunityCommands\CommunityCommandListingSmallControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Currency\UserCurrencyIndividualEditorControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\Currency\UserInventoryEditorControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Dashboard\ChatDashboardControl.xaml">
       <SubType>Designer</SubType>

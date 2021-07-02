@@ -22,9 +22,9 @@ namespace MixItUp.Base.Util
         public const string FileAssociationProgramID = "MixItUp.MIUCommand.1";
 
         public const string URIProtocolActivationHeader = "mixitup";
-        public const string URIProtocolActivationStoreCommand = URIProtocolActivationHeader + "://store/command/";
+        public const string URIProtocolActivationCommunityCommand = URIProtocolActivationHeader + "://community/command/";
 
-        public static event EventHandler<Guid> OnStoreCommandActivation = delegate { };
+        public static event EventHandler<Guid> OnCommunityCommandActivation = delegate { };
         public static event EventHandler<CommandModelBase> OnCommandFileActivation = delegate { };
 
         private static Task activationHandlerTask;
@@ -48,11 +48,11 @@ namespace MixItUp.Base.Util
                                 int count = await pipeServer.ReadAsync(responseBytes, 0, responseBytes.Length);
                                 string response = Encoding.ASCII.GetString(responseBytes, 0, count);
 
-                                if (response.StartsWith(URIProtocolActivationStoreCommand))
+                                if (response.StartsWith(URIProtocolActivationCommunityCommand))
                                 {
-                                    if (Guid.TryParse(response.Replace(URIProtocolActivationStoreCommand, ""), out Guid commandID))
+                                    if (Guid.TryParse(response.Replace(URIProtocolActivationCommunityCommand, ""), out Guid commandID))
                                     {
-                                        ActivationProtocolHandler.OnStoreCommandActivation(null, commandID);
+                                        ActivationProtocolHandler.OnCommunityCommandActivation(null, commandID);
                                     }
                                 }
                                 else if (response.EndsWith(CommandEditorWindowViewModelBase.MixItUpCommandFileExtension))

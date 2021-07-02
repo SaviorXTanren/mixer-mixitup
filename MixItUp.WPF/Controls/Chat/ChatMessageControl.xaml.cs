@@ -115,9 +115,9 @@ namespace MixItUp.WPF.Controls.Chat
                                 string messagePartString = (string)messagePart;
                                 this.AddStringMessage(messagePartString, isHighlighted: highlighted, isItalicized: italics);
                             }
-                            else if (messagePart is TwitchNewAPI.Chat.ChatEmoteModel)
+                            else if (messagePart is TwitchChatEmoteViewModel)
                             {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((TwitchNewAPI.Chat.ChatEmoteModel)messagePart));
+                                this.MessageWrapPanel.Children.Add(new ChatImageControl((TwitchChatEmoteViewModel)messagePart));
                             }
                             else if (messagePart is BetterTTVEmoteModel)
                             {

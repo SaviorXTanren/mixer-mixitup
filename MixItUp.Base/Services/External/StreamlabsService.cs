@@ -179,24 +179,31 @@ namespace MixItUp.Base.Services.External
 
                     this.socket.Listen("event", async (data) =>
                     {
-                        if (data != null)
+                        try
                         {
-                            JObject eventJObj = JObject.Parse(data.ToString());
-                            if (eventJObj.ContainsKey("type"))
+                            if (data != null)
                             {
-                                if (eventJObj["type"].Value<string>().Equals("donation", StringComparison.InvariantCultureIgnoreCase))
+                                JObject eventJObj = JObject.Parse(data.ToString());
+                                if (eventJObj.ContainsKey("type"))
                                 {
-                                    var messages = eventJObj["message"] as JArray;
-                                    if (messages != null)
+                                    if (eventJObj["type"].Value<string>().Equals("donation", StringComparison.InvariantCultureIgnoreCase))
                                     {
-                                        foreach (var message in messages)
+                                        var messages = eventJObj["message"] as JArray;
+                                        if (messages != null)
                                         {
-                                            StreamlabsDonation slDonation = message.ToObject<StreamlabsDonation>();
-                                            await EventService.ProcessDonationEvent(EventTypeEnum.StreamlabsDonation, slDonation.ToGenericDonation());
+                                            foreach (var message in messages)
+                                            {
+                                                StreamlabsDonation slDonation = message.ToObject<StreamlabsDonation>();
+                                                await EventService.ProcessDonationEvent(EventTypeEnum.StreamlabsDonation, slDonation.ToGenericDonation());
+                                            }
                                         }
                                     }
                                 }
                             }
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Log(ex);
                         }
                     });
 

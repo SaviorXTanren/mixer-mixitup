@@ -207,11 +207,13 @@
                                 <Grid Grid.Row="0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="15" />
                                         <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="15" />
                                         <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="15" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="15" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
@@ -235,6 +237,11 @@
 
                                     <Button Grid.Column="6" x:Name="ReportCommandButton" Visibility="{Binding CommandDetails.IsPublicCommand, Converter={StaticResource BooleanToVisibilityConverter}}" Content="{x:Static resx:Resources.Report}" Click="ReportCommandButton_Click" VerticalAlignment="Center" />
                                     <Button Grid.Column="6" Command="{Binding DeleteMyCommandCommand}" Visibility="{Binding CommandDetails.IsMyCommand, Converter={StaticResource BooleanToVisibilityConverter}}" Content="{x:Static resx:Resources.Delete}" VerticalAlignment="Center" />
+
+                                    <Button Grid.Column="8" Command="{Binding WebsiteLinkCommand}" VerticalAlignment="Center" Width="40" ToolTip="{x:Static resx:Resources.Link}">
+                                        <MaterialDesign:PackIcon Kind="Link" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                    </Button>
+
                                 </Grid>
 
                                 <Grid Grid.Row="2">

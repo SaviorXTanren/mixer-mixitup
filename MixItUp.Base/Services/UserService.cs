@@ -49,7 +49,7 @@ namespace MixItUp.Base.Services
             if (!string.IsNullOrEmpty(username))
             {
                 username = this.SanitizeUsername(username);
-                if (platform == StreamingPlatformTypeEnum.None)
+                if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
                 {
                     foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.SupportedPlatforms)
                     {

@@ -53,7 +53,8 @@ namespace MixItUp.Base.Model.Commands
                     break;
                 case EventTypeEnum.TwitchChannelBitsCheered:
                     specialIdentifiers["bitsamount"] = "10";
-                    specialIdentifiers["Message"] = "Test Message";
+                    specialIdentifiers["messagenocheermotes"] = "Test Message";
+                    specialIdentifiers["message"] = "Test Message";
                     break;
                 case EventTypeEnum.TwitchChannelPointsRedeemed:
                     specialIdentifiers["rewardname"] = "Test Reward";
@@ -125,6 +126,15 @@ namespace MixItUp.Base.Model.Commands
                 case EventTypeEnum.StreamlootsPackPurchased:
                 case EventTypeEnum.StreamlootsPackGifted:
                     specialIdentifiers["streamlootspurchasequantity"] = "1";
+                    break;
+                case EventTypeEnum.TwitchChannelHypeTrainBegin:
+                    specialIdentifiers["hypetraintotalpoints"] = "1";
+                    specialIdentifiers["hypetrainlevelpoints"] = "123";
+                    specialIdentifiers["hypetrainlevelgoal"] = "5";
+                    break;
+                case EventTypeEnum.TwitchChannelHypeTrainEnd:
+                    specialIdentifiers["hypetraintotallevel"] = "5";
+                    specialIdentifiers["hypetraintotalpoints"] = "1234";
                     break;
             }
             return specialIdentifiers;

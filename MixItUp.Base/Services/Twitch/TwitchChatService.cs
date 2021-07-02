@@ -66,9 +66,10 @@ namespace MixItUp.Base.Services.Twitch
         private const string SubMysteryGiftUserNoticeMessageTypeID = "submysterygift";
         private const string SubGiftPaidUpgradeUserNoticeMessageTypeID = "giftpaidupgrade";
 
-        private IEnumerable<string> emoteSetIDs = null;
-        public IDictionary<string, ChatEmoteModel> Emotes { get { return this.emotes; } }
-        private Dictionary<string, ChatEmoteModel> emotes = new Dictionary<string, ChatEmoteModel>();
+        private List<string> emoteSetIDs = new List<string>();
+
+        public IDictionary<string, TwitchChatEmoteViewModel> Emotes { get { return this.emotes; } }
+        private Dictionary<string, TwitchChatEmoteViewModel> emotes = new Dictionary<string, TwitchChatEmoteViewModel>();
 
         public IDictionary<string, BetterTTVEmoteModel> BetterTTVEmotes { get { return this.betterTTVEmotes; } }
         private Dictionary<string, BetterTTVEmoteModel> betterTTVEmotes = new Dictionary<string, BetterTTVEmoteModel>();
@@ -277,7 +278,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 foreach (ChatEmoteModel emote in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetGlobalEmotes())
                 {
-                    this.emotes[emote.name] = emote;
+                    this.emotes[emote.name] = new TwitchChatEmoteViewModel(emote);
                 }
             }));
 
@@ -287,7 +288,7 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     foreach (ChatEmoteModel emote in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetEmoteSets(this.emoteSetIDs))
                     {
-                        this.emotes[emote.name] = emote;
+                        this.emotes[emote.name] = new TwitchChatEmoteViewModel(emote);
                     }
                 }));
             }
@@ -673,7 +674,10 @@ namespace MixItUp.Base.Services.Twitch
 
         private void UserClient_OnGlobalUserStateReceived(object sender, ChatGlobalUserStatePacketModel userState)
         {
-            this.emoteSetIDs = userState.EmoteSetsDictionary;
+            if (userState.EmoteSetsDictionary != null)
+            {
+                this.emoteSetIDs.AddRange(userState.EmoteSetsDictionary);
+            }
         }
 
         private async void UserClient_OnUserNoticeReceived(object sender, ChatUserNoticePacketModel userNotice)

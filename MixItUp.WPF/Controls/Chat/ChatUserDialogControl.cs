@@ -42,18 +42,6 @@ namespace MixItUp.WPF.Controls.Chat
                         case UserDialogResult.Unban:
                             await ServiceManager.Get<ChatService>().UnbanUser(user);
                             break;
-                        case UserDialogResult.Follow:
-                            if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
-                            {
-                                await ServiceManager.Get<TwitchSessionService>().UserConnection.FollowUser(ServiceManager.Get<TwitchSessionService>().UserNewAPI, user.GetTwitchNewAPIUserModel());
-                            }
-                            break;
-                        case UserDialogResult.Unfollow:
-                            if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
-                            {
-                                await ServiceManager.Get<TwitchSessionService>().UserConnection.UnfollowUser(ServiceManager.Get<TwitchSessionService>().UserNewAPI, user.GetTwitchNewAPIUserModel());
-                            }
-                            break;
                         case UserDialogResult.PromoteToMod:
                             if (await DialogHelper.ShowConfirmation(string.Format(Resources.PromoteUserPrompt, user.FullDisplayName)))
                             {

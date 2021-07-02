@@ -456,9 +456,9 @@ namespace MixItUp.Base.Model.Actions
                             {
                                 if (string.Equals(results.status, "COMPLETED", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    PollChoiceModel winningChoice = results.choices.OrderBy(c => c.votes).Last();
-
-                                    parameters.SpecialIdentifiers[PollChoiceSpecialIdentifier] = winningChoice.title;
+                                    int maxVotes = results.choices.Max(c => c.votes);
+                                    IEnumerable<PollChoiceModel> winningChoices = results.choices.Where(c => c.votes == maxVotes);
+                                    parameters.SpecialIdentifiers[PollChoiceSpecialIdentifier] = string.Join(" & ", winningChoices.Select(c => c.title));
 
                                     await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(this.Actions, parameters));
                                     return;
