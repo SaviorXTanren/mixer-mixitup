@@ -78,6 +78,8 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private CommunityCommandDetailsViewModel commandDetails;
 
+        public ICommand WebsiteLinkCommand { get; set; }
+
         public ICommand GetUserCommandsCommand { get; set; }
 
         public bool ShowUserCommands
@@ -238,6 +240,11 @@ namespace MixItUp.Base.ViewModel.MainControls
                 {
                     Logger.Log(ex);
                 }
+            });
+
+            this.WebsiteLinkCommand = this.CreateCommand(() =>
+            {
+                ProcessHelper.LaunchLink(this.CommandDetails?.WebsiteURL);
             });
 
             this.GetUserCommandsCommand = this.CreateCommand(async () =>
