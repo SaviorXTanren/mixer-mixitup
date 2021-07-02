@@ -314,7 +314,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             await this.User.RefreshDetails(force: true);
 
-            if (ChannelSession.Services.Patreon.IsConnected)
+            if (ServiceManager.Get<PatreonService>().IsConnected)
             {
                 this.PatreonUser = this.User.PatreonUser;
             }

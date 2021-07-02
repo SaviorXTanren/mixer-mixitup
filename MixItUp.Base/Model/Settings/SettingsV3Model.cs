@@ -789,7 +789,7 @@ namespace MixItUp.Base.Model.Settings
 
             if (id != Guid.Empty)
             {
-                await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE ID = @ID",
+                await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE ID = @ID",
                     new Dictionary<string, object>() { { "ID", id } },
                     (Dictionary<string, object> data) =>
                     {

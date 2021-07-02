@@ -15,6 +15,7 @@ namespace MixItUp.Base.Services
 {
     public enum EventTypeEnum
     {
+        // General Events
         None = 0,
 
         // Platform-agnostic = 1
@@ -42,44 +43,7 @@ namespace MixItUp.Base.Services
 
         // Mixer = 100
 
-        [Obsolete]
-        MixerChannelStreamStart = 100,
-        [Obsolete]
-        MixerChannelStreamStop = 101,
-        [Obsolete]
-        MixerChannelHosted = 102,
 
-        [Obsolete]
-        MixerChannelFollowed = 110,
-        [Obsolete]
-        MixerChannelUnfollowed = 111,
-
-        [Obsolete]
-        MixerChannelSubscribed = 120,
-        [Obsolete]
-        MixerChannelResubscribed = 121,
-        [Obsolete]
-        MixerChannelSubscriptionGifted = 122,
-
-        //MixerChatUserFirstJoin = 150,
-        //MixerChatUserPurge = 151,
-        //MixerChatUserBan = 152,
-        //MixerChatMessageReceived = 153,
-        //MixerChatUserJoined = 154,
-        //MixerChatUserLeft = 155,
-        //MixerChatMessageDeleted = 156,
-        //MixerChatUserTimeout = 156,
-
-        [Obsolete]
-        MixerChannelSparksUsed = 170,
-        [Obsolete]
-        MixerChannelEmbersUsed = 171,
-        [Obsolete]
-        MixerChannelSkillUsed = 172,
-        [Obsolete]
-        MixerChannelMilestoneReached = 173,
-        [Obsolete]
-        MixerChannelFanProgressionLevelUp = 174,
 
         // Twitch = 200
 
@@ -113,7 +77,6 @@ namespace MixItUp.Base.Services
         TwitchChannelHypeTrainProgress = 281,
         TwitchChannelHypeTrainEnd = 282,
 
-        // 300
         // 300 = YouTube
 
         // 400 = Trovo
@@ -166,7 +129,7 @@ namespace MixItUp.Base.Services
         {
             EventTypeEnum.ChatUserFirstJoin, EventTypeEnum.ChatUserJoined, EventTypeEnum.ChatUserLeft,
 
-            EventTypeEnum.TwitchChannelStreamStart, EventTypeEnum.TwitchChannelStreamStop, EventTypeEnum.TwitchChannelFollowed, EventTypeEnum.TwitchChannelUnfollowed, EventTypeEnum.TwitchChannelHosted, EventTypeEnum.TwitchChannelRaided, EventTypeEnum.TwitchChannelSubscribed, EventTypeEnum.TwitchChannelResubscribed,
+            EventTypeEnum.TwitchChannelStreamStart, EventTypeEnum.TwitchChannelStreamStop, EventTypeEnum.TwitchChannelFollowed, EventTypeEnum.TwitchChannelHosted, EventTypeEnum.TwitchChannelRaided, EventTypeEnum.TwitchChannelSubscribed, EventTypeEnum.TwitchChannelResubscribed,
 
             EventTypeEnum.TrovoChannelFollowed,EventTypeEnum.TrovoChannelRaided, EventTypeEnum.TrovoChannelSubscribed, EventTypeEnum.TrovoChannelResubscribed,
 
