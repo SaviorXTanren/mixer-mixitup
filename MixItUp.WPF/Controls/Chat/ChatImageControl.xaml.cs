@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -74,7 +73,6 @@ namespace MixItUp.WPF.Controls.Chat
                     {
                         TwitchChatEmoteViewModel emote = (TwitchChatEmoteViewModel)this.DataContext;
                         this.ProcessGifImage(emote.Name, emote.ImageURL);
-                        this.Image.ToolTip = this.AltText.Text = emote.Name;
                     }
                     else if (this.DataContext is BetterTTVEmoteModel)
                     {
@@ -171,17 +169,20 @@ namespace MixItUp.WPF.Controls.Chat
         private async Task ProcessImage(string name, string url)
         {
             this.Image.Source = await this.DownloadImageUrl(url);
-            this.Image.ToolTip = this.AltText.Text = name;
+            this.Image.ToolTip = name;
             this.ResizeImage(this.Image);
+
+            this.AltText.Text = name;
         }
 
         private void ProcessGifImage(string name, string url)
         {
-            this.GifImage.SetSize(ChannelSession.Settings.ChatFontSize * 2);
-            this.GifImage.ToolTip = name;
+            this.GifImage.SetSize(ChannelSession.Settings.ChatFontSize * 2);       
             this.GifImage.DataContext = url;
-            this.GifImage.ToolTip = code;
+            this.GifImage.ToolTip = name;
             this.GifImage.Visibility = Visibility.Visible;
+
+            this.AltText.Text = name;
         }
 
         private void ResizeImage(Image image) { image.MaxWidth = image.MaxHeight = image.Width = image.Height = ChannelSession.Settings.ChatFontSize * 2; }
