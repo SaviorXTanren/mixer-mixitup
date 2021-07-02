@@ -103,7 +103,7 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task<PrivateChannelModel> GetCurrentChannel() { return await AsyncRunner.RunAsync(this.Connection.Channels.GetCurrentChannel()); }
 
-        public async Task<ChannelModel> GetChannelByID(string channelID) { return await AsyncRunner.RunAsync(this.Connection.Channels.GetChannel(channelID)); }
+        public async Task<ChannelModel> GetChannelByID(string channelID) { return await AsyncRunner.RunAsync(this.Connection.Channels.GetChannelByID(channelID)); }
 
         public async Task<bool> UpdateChannel(string id, string title = null, string categoryID = null, string langaugeCode = null, ChannelAudienceTypeEnum? audience = null) { return await AsyncRunner.RunAsync(this.Connection.Channels.UpdateChannel(id, title, categoryID, langaugeCode, audience)); }
 
