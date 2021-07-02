@@ -1026,8 +1026,7 @@ namespace MixItUp.Base.ViewModel.User
 
             this.SetCommonUserRoles();
 
-            this.Color = null;
-            this.RolesLocalizedString = null;
+            this.ClearDisplayProperties();
         }
 
         private int GetTwitchBadgeVersion(string name)
@@ -1210,9 +1209,7 @@ namespace MixItUp.Base.ViewModel.User
 
                     this.SetTwitchRoles();
 
-                    this.Color = null;
-                    this.RolesString = null;
-                    this.RolesLocalizedString = null;
+                    this.ClearDisplayProperties();
                 }
             }
         }
@@ -1492,8 +1489,13 @@ namespace MixItUp.Base.ViewModel.User
                 this.UserRoles.Remove(UserRoleEnum.Regular);
             }
 
-            // Force re-build of roles display string
+            this.ClearDisplayProperties();
+        }
+
+        private void ClearDisplayProperties()
+        {
             this.Color = null;
+            this.RolesString = null;
             this.RolesLocalizedString = null;
         }
 

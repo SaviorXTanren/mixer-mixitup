@@ -73,7 +73,7 @@ namespace MixItUp.WPF.Controls.Chat
                     if (this.DataContext is TwitchChatEmoteViewModel)
                     {
                         TwitchChatEmoteViewModel emote = (TwitchChatEmoteViewModel)this.DataContext;
-                        this.ProcessGifImage(emote.ImageURL, emote.Name);
+                        this.ProcessGifImage(emote.Name, emote.ImageURL);
                         this.Image.ToolTip = this.AltText.Text = emote.Name;
                     }
                     else if (this.DataContext is BetterTTVEmoteModel)
