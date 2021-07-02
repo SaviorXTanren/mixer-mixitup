@@ -1290,8 +1290,7 @@ namespace MixItUp.Base.ViewModel.User
                     this.YouTubeAvatarLink = youtubeUser.Snippet.Thumbnails.Standard.Url;
                     this.YouTubeURL = youtubeUser.Snippet.CustomUrl;
 
-                    this.Color = null;
-                    this.RolesDisplayString = null;
+                    this.ClearDisplayProperties();
                 }
 
                 this.SetYouTubeRoles();
@@ -1355,8 +1354,7 @@ namespace MixItUp.Base.ViewModel.User
                     this.GlimeshDisplayName = glimeshUser.displayname ?? glimeshUser.username;
                     this.GlimeshAvatarLink = glimeshUser.avatarUrl;
 
-                    this.Color = null;
-                    this.RolesDisplayString = null;
+                    this.ClearDisplayProperties();
                 }
 
                 this.SetGlimeshRoles();
@@ -1388,8 +1386,7 @@ namespace MixItUp.Base.ViewModel.User
                     this.TrovoUsername = trovoUser.username;
                     this.TrovoDisplayName = trovoUser.nickname ?? trovoUser.username;
 
-                    this.Color = null;
-                    this.RolesDisplayString = null;
+                    this.ClearDisplayProperties();
                 }
 
                 this.SetTrovoRoles();
