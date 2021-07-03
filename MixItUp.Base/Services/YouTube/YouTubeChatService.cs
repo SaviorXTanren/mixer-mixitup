@@ -106,7 +106,7 @@ namespace MixItUp.Base.Services.YouTube
                 {
                     try
                     {
-                        LiveBroadcast broadcast = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetActiveBroadcast();
+                        LiveBroadcast broadcast = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetMyActiveBroadcast();
                         if (broadcast != null)
                         {
                             return new Result("No live broadcast currently");

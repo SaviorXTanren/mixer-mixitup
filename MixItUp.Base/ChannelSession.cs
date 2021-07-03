@@ -400,7 +400,7 @@ namespace MixItUp.Base
 
                     if (ServiceManager.Get<TwitchSessionService>().IsConnected)
                     {
-                        IEnumerable<TwitchV5API.Users.UserModel> channelEditors = await ServiceManager.Get<TwitchPlatformService>().GetV5APIChannelEditors(ServiceManager.Get<TwitchSessionService>().ChannelV5);
+                        IEnumerable<TwitchV5API.Users.UserModel> channelEditors = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetV5APIChannelEditors(ServiceManager.Get<TwitchSessionService>().ChannelV5);
                         if (channelEditors != null)
                         {
                             foreach (TwitchV5API.Users.UserModel channelEditor in channelEditors)

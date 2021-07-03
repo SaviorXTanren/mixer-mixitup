@@ -137,10 +137,10 @@ namespace MixItUp.WPF.Services
 
             await this.OBSCommandTimeoutWrapper((cancellationToken) =>
             {
-                BrowserSourceProperties properties = this.OBSWebsocket.GetBrowserSourceProperties(sourceName, sceneName);
-                properties.IsLocalFile = false;
-                properties.URL = url;
-                this.OBSWebsocket.SetBrowserSourceProperties(sourceName, properties);
+                SourceSettings properties = this.OBSWebsocket.GetSourceSettings(sourceName, sceneName);
+                properties.Settings["is_local_file"] = false;
+                properties.Settings["url"] = url;
+                this.OBSWebsocket.SetSourceSettings(sourceName, properties.Settings);
 
                 return true;
             });
@@ -152,8 +152,15 @@ namespace MixItUp.WPF.Services
             {
                 Logger.Log(LogLevel.Debug, "Setting source dimensions - " + sourceName);
 
-                this.OBSWebsocket.SetSceneItemPosition(sourceName, dimensions.X, dimensions.Y, sceneName);
-                this.OBSWebsocket.SetSceneItemTransform(sourceName, dimensions.Rotation, dimensions.XScale, dimensions.YScale, sceneName);
+                SceneItemProperties properties = this.OBSWebsocket.GetSceneItemProperties(sourceName, sceneName);
+
+                properties.Position.X = dimensions.X;
+                properties.Position.Y = dimensions.Y;
+                properties.Scale.X = dimensions.XScale;
+                properties.Scale.Y = dimensions.YScale;
+                properties.Rotation = dimensions.Rotation;
+
+                this.OBSWebsocket.SetSceneItemProperties(properties, sceneName);
 
                 return false;
             });

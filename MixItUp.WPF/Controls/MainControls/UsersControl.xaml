@@ -134,7 +134,7 @@
                         <DataGridTextColumn Binding="{Binding PrimaryCurrency}" IsReadOnly="True" Width="80">
                             <DataGridTextColumn.Header>
                                 <Grid HorizontalAlignment="Center" Margin="0,0,0,0">
-                                    <MaterialDesign:PackIcon Kind="Coin" Height="24" Width="24" />
+                                    <MaterialDesign:PackIcon Kind="Bitcoin" Height="24" Width="24" />
                                 </Grid>
                             </DataGridTextColumn.Header>
                         </DataGridTextColumn>
