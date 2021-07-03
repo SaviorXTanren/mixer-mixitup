@@ -300,6 +300,16 @@ namespace MixItUp.Base.ViewModel.User
         public ThreadSafeObservableCollection<UserMetricViewModel> Metrics1 { get; private set; } = new ThreadSafeObservableCollection<UserMetricViewModel>();
         public ThreadSafeObservableCollection<UserMetricViewModel> Metrics2 { get; private set; } = new ThreadSafeObservableCollection<UserMetricViewModel>();
 
+        public string Notes
+        {
+            get { return this.User.Data.Notes; }
+            set
+            {
+                this.User.Data.Notes = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+
         public UserDataEditorWindowViewModel(UserDataModel user)
         {
             this.User = ChannelSession.Services.User.GetActiveUserByID(user.ID);

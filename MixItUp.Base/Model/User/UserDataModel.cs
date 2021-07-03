@@ -165,6 +165,9 @@ namespace MixItUp.Base.Model.User
         public uint TotalMonthsSubbed { get; set; }
 
         [DataMember]
+        public string Notes { get; set; }
+
+        [DataMember]
         public DateTimeOffset LastSeen { get; set; }
 
         [JsonIgnore]
@@ -402,14 +405,16 @@ namespace MixItUp.Base.Model.User
             this.IsCurrencyRankExempt = other.IsCurrencyRankExempt;
             this.PatreonUserID = other.PatreonUserID;
 
-            this.TotalStreamsWatched = other.TotalStreamsWatched;
-            this.TotalAmountDonated = other.TotalAmountDonated;
-            this.TotalSubsGifted = other.TotalSubsGifted;
-            this.TotalSubsReceived = other.TotalSubsReceived;
-            this.TotalChatMessageSent = other.TotalChatMessageSent;
-            this.TotalTimesTagged = other.TotalTimesTagged;
-            this.TotalCommandsRun = other.TotalCommandsRun;
-            this.TotalMonthsSubbed = other.TotalMonthsSubbed;
+            this.TotalStreamsWatched += other.TotalStreamsWatched;
+            this.TotalAmountDonated += other.TotalAmountDonated;
+            this.TotalSubsGifted += other.TotalSubsGifted;
+            this.TotalSubsReceived += other.TotalSubsReceived;
+            this.TotalChatMessageSent += other.TotalChatMessageSent;
+            this.TotalTimesTagged += other.TotalTimesTagged;
+            this.TotalCommandsRun += other.TotalCommandsRun;
+            this.TotalMonthsSubbed += other.TotalMonthsSubbed;
+
+            this.Notes += other.Notes;
         }
     }
 }
