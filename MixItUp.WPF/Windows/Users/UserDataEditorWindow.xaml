@@ -44,6 +44,8 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <GroupBox Header="{x:Static resx:Resources.UserData}" Grid.Row="0">
@@ -352,6 +354,10 @@
                     </Grid>
                 </GroupBox>
 
+                <GroupBox Header="{x:Static resx:Resources.Notes}" Grid.Row="10">
+                    <TextBox Text="{Binding Notes}" Height="200" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap" />
+                </GroupBox>
+                
             </Grid>
         </ScrollViewer>
 
