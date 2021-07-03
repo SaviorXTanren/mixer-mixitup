@@ -39,7 +39,7 @@
                                 </Button>
 
                                 <Button Grid.Column="2" Command="{Binding RefundCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Refund}">
-                                    <MaterialDesign:PackIcon Kind="Bitcoin" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                    <MaterialDesign:PackIcon Kind="Cash100" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                 </Button>
 
                                 <Button Grid.Column="4" Command="{Binding DeleteCommand}" IsEnabled="{Binding CanManualRedeem}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}">

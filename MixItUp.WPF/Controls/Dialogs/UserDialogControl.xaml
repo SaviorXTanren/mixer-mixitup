@@ -107,7 +107,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <MaterialDesign:PackIcon Kind="Bitcoin" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Grid.Column="0" ToolTip="{x:Static resx:Resources.PrimaryCurrency}" />
+            <MaterialDesign:PackIcon Kind="Cash100" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Grid.Column="0" ToolTip="{x:Static resx:Resources.PrimaryCurrency}" />
             <TextBlock Grid.Column="2" Text="{Binding Data.PrimaryCurrency}" VerticalAlignment="Center" />
 
             <MaterialDesign:PackIcon Kind="ShieldStar" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Grid.Column="4" ToolTip="{x:Static resx:Resources.PrimaryRank}" />
