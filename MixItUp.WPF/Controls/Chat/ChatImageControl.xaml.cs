@@ -67,7 +67,7 @@ namespace MixItUp.WPF.Controls.Chat
                     if (this.DataContext is TwitchChatEmoteViewModel)
                     {
                         TwitchChatEmoteViewModel emote = (TwitchChatEmoteViewModel)this.DataContext;
-                        this.ProcessGifImage(emote.ImageURL, emote.Name);
+                        this.ProcessGifImage(emote.Name, emote.ImageURL);
                         this.Image.ToolTip = this.AltText.Text = emote.Name;
                     }
                     else if (this.DataContext is BetterTTVEmoteModel)
@@ -75,7 +75,7 @@ namespace MixItUp.WPF.Controls.Chat
                         BetterTTVEmoteModel emote = (BetterTTVEmoteModel)this.DataContext;
                         if (emote.imageType.Equals("gif"))
                         {
-                            this.ProcessGifImage(emote.url, emote.code);
+                            this.ProcessGifImage(emote.code, emote.url);
                         }
                         else
                         {
@@ -142,7 +142,7 @@ namespace MixItUp.WPF.Controls.Chat
             return null;
         }
 
-        private void ProcessGifImage(string url, string code)
+        private void ProcessGifImage(string code, string url)
         {
             this.GifImage.SetSize(ChannelSession.Settings.ChatFontSize * 2);
             this.GifImage.DataContext = url;

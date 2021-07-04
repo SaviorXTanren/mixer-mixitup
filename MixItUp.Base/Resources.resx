@@ -5859,4 +5859,10 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="FilterType" xml:space="preserve">
     <value>Filter Type</value>
   </data>
+  <data name="Link" xml:space="preserve">
+    <value>Link</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
 </root>
