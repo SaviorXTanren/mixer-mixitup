@@ -550,8 +550,8 @@ namespace MixItUp.Base.Model.Settings
         {
             foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
             {
-                this.platformUserIDLookups[platform] = new LockedDictionary<string, Guid>();
-                this.platformUsernameLookups[platform] = new LockedDictionary<string, Guid>();
+                this.platformUserIDLookups[platform] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
+                this.platformUsernameLookups[platform] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
             }
         }
 
@@ -861,7 +861,7 @@ namespace MixItUp.Base.Model.Settings
             userData = null;
             if (!string.IsNullOrEmpty(columnName))
             {
-                await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE " + columnName + " = @PlatformUsername",
+                await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE " + columnName + " LIKE @PlatformUsername",
                     new Dictionary<string, object>() { { "PlatformUsername", platformUsername } },
                     (Dictionary<string, object> data) =>
                     {
