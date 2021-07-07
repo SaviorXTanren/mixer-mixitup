@@ -920,7 +920,7 @@ namespace MixItUp.Base.Model.Commands
                 UserViewModel targetUser = ChannelSession.Services.User.GetActiveUserByUsername(parameters.Arguments.First().Replace("@", ""), parameters.User.Platform);
                 if (targetUser != null && LinkMixerAccountPreMadeChatCommandModel.LinkedAccounts.ContainsKey(targetUser.ID))
                 {
-                    UserDataModel mixerUserData = ChannelSession.Settings.GetUserData(LinkMixerAccountPreMadeChatCommandModel.LinkedAccounts[targetUser.ID]);
+                    UserDataModel mixerUserData = await ChannelSession.Settings.GetUserDataByID(LinkMixerAccountPreMadeChatCommandModel.LinkedAccounts[targetUser.ID]);
                     if (mixerUserData != null)
                     {
                         LinkMixerAccountPreMadeChatCommandModel.LinkedAccounts.Remove(targetUser.ID);

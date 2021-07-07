@@ -283,7 +283,7 @@ namespace MixItUp.Base.Model.Overlay
             for (int i = 0; i < orderedUsers.Count() && items.Count() < this.TotalToShow; i++)
             {
                 var kvp = orderedUsers.ElementAt(i);
-                UserDataModel userData = ChannelSession.Settings.GetUserData(kvp.Key);
+                UserDataModel userData = await ChannelSession.Settings.GetUserDataByID(kvp.Key);
                 if (userData != null)
                 {
                     items.Add(new OverlayLeaderboardItem(new UserViewModel(userData), kvp.Value.GetAge()));
@@ -312,7 +312,7 @@ namespace MixItUp.Base.Model.Overlay
                 for (int i = 0; i < orderedUsers.Count() && items.Count() < this.TotalToShow; i++)
                 {
                     var kvp = orderedUsers.ElementAt(i);
-                    UserDataModel userData = ChannelSession.Settings.GetUserData(kvp.Key);
+                    UserDataModel userData = await ChannelSession.Settings.GetUserDataByID(kvp.Key);
                     if (userData != null)
                     {
                         items.Add(new OverlayLeaderboardItem(new UserViewModel(userData), kvp.Value.AmountText));
@@ -358,8 +358,8 @@ namespace MixItUp.Base.Model.Overlay
                     // Detect if we had a list before, and we have a list now, and the top user changed, let's trigger the event
                     if (this.lastItems.Count() > 0 && updatedList.Count() > 0)
                     {
-                        UserViewModel previous = this.lastItems.First().GetUser();
-                        UserViewModel current = updatedList.First().GetUser();
+                        UserViewModel previous = await this.lastItems.First().GetUser();
+                        UserViewModel current = await updatedList .First().GetUser();
                         if (previous != null && current != null && !previous.ID.Equals(current.ID))
                         {
                             await ChannelSession.Services.Command.Queue(this.LeaderChangedCommand, new CommandParametersModel(current, new string[] { previous.Username }) { TargetUser = previous });

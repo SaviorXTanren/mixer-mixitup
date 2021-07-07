@@ -947,7 +947,7 @@ namespace MixItUp.Base.Util
                 {
                     if (!ChannelSession.Settings.UserData.TryGetValue(userID, out UserDataModel userData))
                     {
-                        userData = ChannelSession.Settings.GetUserData(userID);
+                        userData = await ChannelSession.Settings.GetUserDataByID(userID);
                     }
 
                     if (userData != null)
