@@ -23,8 +23,8 @@ namespace MixItUp.Base.Services
         {
             foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
             {
-                this.platformUserIDLookups[platform] = new LockedDictionary<string, Guid>();
-                this.platformUsernameLookups[platform] = new LockedDictionary<string, Guid>();
+                this.platformUserIDLookups[platform] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
+                this.platformUsernameLookups[platform] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
             }
         }
 
