@@ -150,7 +150,7 @@ namespace MixItUp.Base.ViewModel.Games
 
         public GameOutcomeViewModel() : this(string.Empty) { }
 
-        public GameOutcomeViewModel(string name) : this(name, 0, 0) { }
+        public GameOutcomeViewModel(string name) : this(name, 0, 100) { }
 
         public GameOutcomeViewModel(string name, int probability, double payout) : this(name, probability, payout, new CustomCommandModel(MixItUp.Base.Resources.GameSubCommand)) { }
 
