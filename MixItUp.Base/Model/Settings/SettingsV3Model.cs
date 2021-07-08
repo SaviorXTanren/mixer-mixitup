@@ -873,22 +873,20 @@ namespace MixItUp.Base.Model.Settings
             return userData;
         }
 
-        public void AddUserData(UserDataModel userData) { this.SetUserData(userData); }
-
         public async Task LoadAllUserData()
         {
             if (!this.fullUserDataLoadOccurred)
             {
                 this.fullUserDataLoadOccurred = true;
 
-                await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
+                await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users", (Action<Dictionary<string, object>>)((Dictionary<string, object> data) =>
                 {
-                    this.SetUserData(JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString()));
-                });
+                    this.SetUserData((UserDataModel)JSONSerializerHelper.DeserializeFromString<UserDataModel>((string)data[(string)"Data"].ToString()));
+                }));
             }
         }
 
-        private void SetUserData(UserDataModel userData)
+        public void SetUserData(UserDataModel userData)
         {
             if (userData != null)
             {
@@ -900,9 +898,12 @@ namespace MixItUp.Base.Model.Settings
                         this.UserData.ClearTracking(userData.ID);
                     }
 
-                    if (!string.IsNullOrEmpty(userData.TwitchID) && !string.IsNullOrEmpty(userData.TwitchUsername))
+                    if (!string.IsNullOrEmpty(userData.TwitchID))
                     {
                         this.platformUserIDLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchID] = userData.ID;
+                    }
+                    if (!string.IsNullOrEmpty(userData.TwitchUsername))
+                    {
                         this.platformUsernameLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchUsername] = userData.ID;
                     }
                 }

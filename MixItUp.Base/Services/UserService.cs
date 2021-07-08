@@ -81,9 +81,12 @@ namespace MixItUp.Base.Services
 
                 this.activeUsers[user.ID] = user;
 
-                if (!string.IsNullOrEmpty(user.TwitchID) && !string.IsNullOrEmpty(user.TwitchUsername))
+                if (!string.IsNullOrEmpty(user.TwitchID))
                 {
                     this.platformUserIDLookups[StreamingPlatformTypeEnum.Twitch][user.TwitchID] = user.ID;
+                }
+                if (!string.IsNullOrEmpty(user.TwitchUsername))
+                {
                     this.platformUsernameLookups[StreamingPlatformTypeEnum.Twitch][user.TwitchUsername] = user.ID;
                 }
 
@@ -154,6 +157,15 @@ namespace MixItUp.Base.Services
             {
                 this.activeUsers.Remove(user.ID);
 
+                if (!string.IsNullOrEmpty(user.TwitchID))
+                {
+                    this.platformUserIDLookups[StreamingPlatformTypeEnum.Twitch].Remove(user.TwitchID);
+                }
+                if (!string.IsNullOrEmpty(user.TwitchUsername))
+                {
+                    this.platformUsernameLookups[StreamingPlatformTypeEnum.Twitch].Remove(user.TwitchUsername);
+                }
+
                 await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.ChatUserLeft, new CommandParametersModel(user));
             }
         }
@@ -194,16 +206,14 @@ namespace MixItUp.Base.Services
 
                 if (user == null)
                 {
-                    UserDataModel userData = null;
-                    if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && userData == null)
+                    UserDataModel userData = await ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, userID);
+                    if (userData != null)
                     {
-                        userData = await ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, userID);
-
-                        if (userData != null)
-                        {
-                            user = new UserViewModel(userData);
-                        }
-                        else
+                        user = new UserViewModel(userData);
+                    }
+                    else
+                    {
+                        if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
                         {
                             var twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(userID);
                             if (twitchUser != null)
@@ -221,12 +231,20 @@ namespace MixItUp.Base.Services
                 user = ChannelSession.Services.User.GetActiveUserByUsername(username);
                 if (user == null)
                 {
-                    if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ChannelSession.TwitchUserConnection != null)
+                    UserDataModel userData = await ChannelSession.Settings.GetUserDataByPlatformUsername(StreamingPlatformTypeEnum.Twitch, username);
+                    if (userData != null)
                     {
-                        var twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(username);
-                        if (twitchUser != null)
+                        user = new UserViewModel(userData);
+                    }
+                    else
+                    {
+                        if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
                         {
-                            user = await UserViewModel.Create(twitchUser);
+                            var twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(username);
+                            if (twitchUser != null)
+                            {
+                                user = await UserViewModel.Create(twitchUser);
+                            }
                         }
                     }
 
