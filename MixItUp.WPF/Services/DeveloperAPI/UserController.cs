@@ -24,7 +24,11 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             {
                 if (Guid.TryParse(usernameOrID, out Guid userId))
                 {
-                    user = ChannelSession.Settings.GetUserData(userId);
+                    user = await ChannelSession.Settings.GetUserDataByID(userId);
+                }
+                else if (int.TryParse(usernameOrID, out int twitchID))
+                {
+                    user = await ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, usernameOrID);
                 }
                 else
                 {

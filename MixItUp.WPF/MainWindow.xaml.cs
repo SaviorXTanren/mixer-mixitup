@@ -2,15 +2,12 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Store;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.CommunityCommands;
-using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Windows;
-using MixItUp.WPF.Windows.Commands;
 using StreamingClient.Base.Util;
 using System;
 using System.Reflection;

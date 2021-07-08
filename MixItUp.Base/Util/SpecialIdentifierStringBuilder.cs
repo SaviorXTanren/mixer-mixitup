@@ -819,6 +819,7 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "title", user.Title);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "moderationstrikes", user.Data.ModerationStrikes.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "color", UserViewModel.UserDefaultColor.Equals(user.Color) ? "#000000" : user.Color);
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "inchat", ChannelSession.Services.User.IsUserActive(user.ID).ToString());
 
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "twitchid", user.TwitchID);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "twitchcolor", user.Data.TwitchColor);
@@ -946,7 +947,7 @@ namespace MixItUp.Base.Util
                 {
                     if (!ChannelSession.Settings.UserData.TryGetValue(userID, out UserDataModel userData))
                     {
-                        userData = ChannelSession.Settings.GetUserData(userID);
+                        userData = await ChannelSession.Settings.GetUserDataByID(userID);
                     }
 
                     if (userData != null)
