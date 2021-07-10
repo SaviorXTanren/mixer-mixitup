@@ -70,7 +70,7 @@ namespace MixItUp.Base.Services
             this.ChatterTracker = new TrackedNumberStatisticDataTrackerModel(Resources.Chatters, "MessageTextOutline", (StatisticDataTrackerModelBase stats) =>
             {
                 TrackedNumberStatisticDataTrackerModel numberStats = (TrackedNumberStatisticDataTrackerModel)stats;
-                numberStats.AddValue(ServiceManager.Get<UserService>().Count());
+                numberStats.AddValue(ServiceManager.Get<UserService>().ActiveUserCount());
                 return Task.FromResult(0);
             });
 

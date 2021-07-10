@@ -369,7 +369,7 @@ namespace MixItUp.Base.Model.Currency
 
         public async Task Reset()
         {
-            await ChannelSession.Settings.LoadAllUserData();
+            await ServiceManager.Get<UserService>().LoadAllUserData();
 
             foreach (UserDataModel user in ChannelSession.Settings.UserData.Values.ToList())
             {

@@ -278,7 +278,7 @@ namespace MixItUp.Base.ViewModel.User
                                 {
                                     if (newUser)
                                     {
-                                        ChannelSession.Settings.SetUserData(user);
+                                        ServiceManager.Get<UserService>().SetUserData(user);
                                     }
 
                                     int iValue = 0;

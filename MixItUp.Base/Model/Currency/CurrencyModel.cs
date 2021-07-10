@@ -357,7 +357,7 @@ namespace MixItUp.Base.Model.Currency
                     {
                         DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
                         bool bonusesCanBeApplied = (ServiceManager.Get<TwitchSessionService>().StreamIsLive || this.OfflineAcquireAmount > 0);
-                        foreach (UserViewModel user in ServiceManager.Get<UserService>().GetAllWorkableUsers())
+                        foreach (UserViewModel user in ServiceManager.Get<UserService>().GetAllWorkableActiveUsers())
                         {
                             if (!user.Data.IsCurrencyRankExempt && (!this.HasMinimumActiveRate || user.LastActivity > minActiveTime))
                             {
@@ -453,7 +453,7 @@ namespace MixItUp.Base.Model.Currency
 
         public async Task Reset()
         {
-            await ChannelSession.Settings.LoadAllUserData();
+            await ServiceManager.Get<UserService>().LoadAllUserData();
 
             foreach (UserDataModel user in ChannelSession.Settings.UserData.Values.ToList())
             {

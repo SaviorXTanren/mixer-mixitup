@@ -290,7 +290,7 @@ namespace MixItUp.Base.Model.Overlay
             for (int i = 0; i < orderedUsers.Count() && items.Count() < this.TotalToShow; i++)
             {
                 var kvp = orderedUsers.ElementAt(i);
-                UserDataModel userData = await ChannelSession.Settings.GetUserDataByID(kvp.Key);
+                UserDataModel userData = await ServiceManager.Get<UserService>().GetUserDataByID(kvp.Key);
                 if (userData != null)
                 {
                     items.Add(new OverlayLeaderboardItem(new UserViewModel(userData), kvp.Value.GetAge()));
@@ -319,7 +319,7 @@ namespace MixItUp.Base.Model.Overlay
                 for (int i = 0; i < orderedUsers.Count() && items.Count() < this.TotalToShow; i++)
                 {
                     var kvp = orderedUsers.ElementAt(i);
-                    UserDataModel userData = await ChannelSession.Settings.GetUserDataByID(kvp.Key);
+                    UserDataModel userData = await ServiceManager.Get<UserService>().GetUserDataByID(kvp.Key);
                     if (userData != null)
                     {
                         items.Add(new OverlayLeaderboardItem(new UserViewModel(userData), kvp.Value.AmountText));

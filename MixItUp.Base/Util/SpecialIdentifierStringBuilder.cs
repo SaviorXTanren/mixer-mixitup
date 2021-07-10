@@ -244,7 +244,7 @@ namespace MixItUp.Base.Util
 
         public static async Task<IEnumerable<UserDataModel>> GetAllNonExemptUsers()
         {
-            await ChannelSession.Settings.LoadAllUserData();
+            await ServiceManager.Get<UserService>().LoadAllUserData();
 
             List<UserDataModel> exemptUsers = new List<UserDataModel>(ChannelSession.Settings.UserData.Values.Where(u => !u.IsCurrencyRankExempt));
             exemptUsers.Remove(ChannelSession.GetCurrentUser().Data);
@@ -634,7 +634,7 @@ namespace MixItUp.Base.Util
                     });
                 }
 
-                IEnumerable<UserViewModel> workableUsers = ServiceManager.Get<UserService>().GetAllWorkableUsers();
+                IEnumerable<UserViewModel> workableUsers = ServiceManager.Get<UserService>().GetAllWorkableActiveUsers();
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSpecialIdentifierHeader + "user"))
                 {
                     if (workableUsers != null && workableUsers.Count() > 0)
@@ -964,7 +964,7 @@ namespace MixItUp.Base.Util
                 {
                     if (!ChannelSession.Settings.UserData.TryGetValue(userID, out UserDataModel userData))
                     {
-                        userData = await ChannelSession.Settings.GetUserDataByID(userID);
+                        userData = await ServiceManager.Get<UserService>().GetUserDataByID(userID);
                     }
 
                     if (userData != null)

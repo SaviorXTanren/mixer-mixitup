@@ -106,7 +106,7 @@ namespace MixItUp.Base.Model.Commands
                     this.TargetUser = await ServiceManager.Get<UserService>().GetUserFullSearch(this.Platform, userID: null, this.Arguments.First());
                 }
 
-                if (this.TargetUser == null || !this.Arguments.ElementAt(0).Replace("@", "").Equals(this.TargetUser.Username, StringComparison.InvariantCultureIgnoreCase))
+                if (this.TargetUser == null || !UserService.SanitizeUsername(this.Arguments.ElementAt(0)).Equals(this.TargetUser.Username, StringComparison.InvariantCultureIgnoreCase))
                 {
                     this.TargetUser = this.User;
                 }

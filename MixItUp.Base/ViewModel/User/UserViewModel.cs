@@ -71,7 +71,7 @@ namespace MixItUp.Base.ViewModel.User
 
             user.SetTwitchRoles();
 
-            ChannelSession.Settings.SetUserData(user.Data);
+            ServiceManager.Get<UserService>().SetUserData(user.Data);
 
             return user;
         }
@@ -87,7 +87,7 @@ namespace MixItUp.Base.ViewModel.User
 
             user.SetTwitchRoles();
 
-            ChannelSession.Settings.SetUserData(user.Data);
+            ServiceManager.Get<UserService>().SetUserData(user.Data);
 
             return user;
         }
@@ -104,7 +104,7 @@ namespace MixItUp.Base.ViewModel.User
 
             user.SetTwitchChatDetails(twitchMessage);
 
-            ChannelSession.Settings.SetUserData(user.Data);
+            ServiceManager.Get<UserService>().SetUserData(user.Data);
 
             return user;
         }
@@ -119,7 +119,7 @@ namespace MixItUp.Base.ViewModel.User
 
             user.SetTwitchRoles();
 
-            ChannelSession.Settings.SetUserData(user.Data);
+            ServiceManager.Get<UserService>().SetUserData(user.Data);
 
             return user;
         }
@@ -135,7 +135,7 @@ namespace MixItUp.Base.ViewModel.User
 
             user.SetTwitchRoles();
 
-            ChannelSession.Settings.SetUserData(user.Data);
+            ServiceManager.Get<UserService>().SetUserData(user.Data);
 
             return user;
         }
@@ -156,7 +156,7 @@ namespace MixItUp.Base.ViewModel.User
 
             user.SetTwitchChatDetails(packet);
 
-            ChannelSession.Settings.SetUserData(user.Data);
+            ServiceManager.Get<UserService>().SetUserData(user.Data);
 
             return user;
         }
@@ -170,7 +170,7 @@ namespace MixItUp.Base.ViewModel.User
 
             user.SetTwitchRoles();
 
-            ChannelSession.Settings.SetUserData(user.Data);
+            ServiceManager.Get<UserService>().SetUserData(user.Data);
 
             return user;
         }
@@ -184,7 +184,7 @@ namespace MixItUp.Base.ViewModel.User
 
             user.SetTwitchRoles();
 
-            ChannelSession.Settings.SetUserData(user.Data);
+            ServiceManager.Get<UserService>().SetUserData(user.Data);
 
             return user;
         }
@@ -199,7 +199,7 @@ namespace MixItUp.Base.ViewModel.User
 
             user.SetTwitchRoles();
 
-            ChannelSession.Settings.SetUserData(user.Data);
+            ServiceManager.Get<UserService>().SetUserData(user.Data);
 
             return user;
         }
@@ -213,7 +213,7 @@ namespace MixItUp.Base.ViewModel.User
 
             user.SetTwitchRoles();
 
-            ChannelSession.Settings.SetUserData(user.Data);
+            ServiceManager.Get<UserService>().SetUserData(user.Data);
 
             return user;
         }
@@ -228,7 +228,7 @@ namespace MixItUp.Base.ViewModel.User
 
             user.SetTwitchRoles();
 
-            ChannelSession.Settings.SetUserData(user.Data);
+            ServiceManager.Get<UserService>().SetUserData(user.Data);
 
             return user;
         }
@@ -325,7 +325,7 @@ namespace MixItUp.Base.ViewModel.User
             UserDataModel data = new UserDataModel();
             if (!string.IsNullOrEmpty(platformID))
             {
-                data = await ChannelSession.Settings.GetUserDataByPlatformID(platform, platformID);
+                data = await ServiceManager.Get<UserService>().GetUserDataByPlatformID(platform, platformID);
                 if (data == null)
                 {
                     data = new UserDataModel();
@@ -336,7 +336,7 @@ namespace MixItUp.Base.ViewModel.User
                         case StreamingPlatformTypeEnum.Trovo: data.TrovoID = platformID; break;
                         case StreamingPlatformTypeEnum.Glimesh: data.GlimeshID = platformID; break;
                     }
-                    ChannelSession.Settings.SetUserData(data);
+                    ServiceManager.Get<UserService>().SetUserData(data);
                 }
             }
             return new UserViewModel(data);

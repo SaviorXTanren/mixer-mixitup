@@ -3,6 +3,7 @@ using MixItUp.Base;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,15 +25,15 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             {
                 if (Guid.TryParse(usernameOrID, out Guid userId))
                 {
-                    user = await ChannelSession.Settings.GetUserDataByID(userId);
+                    user = await ServiceManager.Get<UserService>().GetUserDataByID(userId);
                 }
                 else if (int.TryParse(usernameOrID, out int twitchID))
                 {
-                    user = await ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, usernameOrID);
+                    user = await ServiceManager.Get<UserService>().GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, usernameOrID);
                 }
                 else
                 {
-                    user = await ChannelSession.Settings.GetUserDataByPlatformUsername(StreamingPlatformTypeEnum.Twitch, usernameOrID);
+                    user = await ServiceManager.Get<UserService>().GetUserDataByPlatformUsername(StreamingPlatformTypeEnum.Twitch, usernameOrID);
                 }
             }
             return user;
@@ -80,10 +81,10 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             UserDataModel user = null;
             if (!string.IsNullOrEmpty(usernameOrID))
             {
-                user = await ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, usernameOrID);
+                user = await ServiceManager.Get<UserService>().GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, usernameOrID);
                 if (user == null)
                 {
-                    user = await ChannelSession.Settings.GetUserDataByPlatformUsername(StreamingPlatformTypeEnum.Twitch, usernameOrID);
+                    user = await ServiceManager.Get<UserService>().GetUserDataByPlatformUsername(StreamingPlatformTypeEnum.Twitch, usernameOrID);
                 }
             }
 

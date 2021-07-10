@@ -186,7 +186,7 @@ namespace MixItUp.Base.Model.Currency
             }
             else
             {
-                name = name.Replace("@", "");
+                name = UserService.SanitizeUsername(name);
                 UserViewModel purchaseUser = ServiceManager.Get<UserService>().GetActiveUserByUsername(name, user.Platform);
                 if (purchaseUser != null)
                 {

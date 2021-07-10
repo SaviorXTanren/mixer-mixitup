@@ -598,7 +598,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private async Task<UserViewModel> GetUser(Guid userID)
         {
-            UserDataModel data = await ChannelSession.Settings.GetUserDataByID(userID);
+            UserDataModel data = await ServiceManager.Get<UserService>().GetUserDataByID(userID);
             if (data != null)
             {
                 return new UserViewModel(data);

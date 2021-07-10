@@ -13,7 +13,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using GlimeshBase = Glimesh.Base;
 using TrovoBase = Trovo.Base;
-using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 
 namespace MixItUp.Base.Services
 {
@@ -21,10 +20,14 @@ namespace MixItUp.Base.Services
     {
         public static readonly HashSet<string> SpecialUserAccounts = new HashSet<string>() { "boomtvmod", "streamjar", "pretzelrocks", "scottybot", "streamlabs", "streamelements", "nightbot", "deepbot", "moobot", "coebot", "wizebot", "phantombot", "stay_hydrated_bot", "stayhealthybot", "anotherttvviewer", "commanderroot", "lurxx", "thecommandergroot", "moobot", "thelurxxer", "twitchprimereminder", "communityshowcase", "banmonitor", "wizebot" };
 
+        public static string SanitizeUsername(string username) { return !string.IsNullOrEmpty(username) ? username.ToLower().Replace("@", "").Trim() : string.Empty; }
+
         private LockedDictionary<Guid, UserViewModel> activeUsers = new LockedDictionary<Guid, UserViewModel>();
 
         private Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>> platformUserIDLookups { get; set; } = new Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>>();
         private Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>> platformUsernameLookups { get; set; } = new Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>>();
+
+        private bool fullUserDataLoadOccurred = false;
 
         public UserService()
         {
@@ -48,7 +51,7 @@ namespace MixItUp.Base.Services
         {
             if (!string.IsNullOrEmpty(username))
             {
-                username = this.SanitizeUsername(username);
+                username = UserService.SanitizeUsername(username);
                 if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
                 {
                     foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.SupportedPlatforms)
@@ -155,7 +158,7 @@ namespace MixItUp.Base.Services
         {
             if (!string.IsNullOrEmpty(username))
             {
-                username = this.SanitizeUsername(username);
+                username = UserService.SanitizeUsername(username);
                 if (this.platformUsernameLookups[platform].ContainsKey(username))
                 {
                     UserViewModel user = this.GetActiveUserByID(this.platformUsernameLookups[platform][username]);
@@ -218,24 +221,169 @@ namespace MixItUp.Base.Services
 
         public IEnumerable<UserViewModel> GetAllActiveUsers() { return this.activeUsers.Values.ToList(); }
 
-        public IEnumerable<UserViewModel> GetAllWorkableUsers()
+        public IEnumerable<UserViewModel> GetAllWorkableActiveUsers()
         {
             IEnumerable<UserViewModel> results = this.GetAllActiveUsers();
             return results.Where(u => !u.IgnoreForQueries);
         }
 
-        public IEnumerable<UserViewModel> GetAllWorkableUsers(StreamingPlatformTypeEnum platform)
+        public IEnumerable<UserViewModel> GetAllWorkableActiveUsers(StreamingPlatformTypeEnum platform)
         {
-            IEnumerable<UserViewModel> results = this.GetAllWorkableUsers();
+            IEnumerable<UserViewModel> results = this.GetAllWorkableActiveUsers();
             return results.Where(u => platform.HasFlag(u.Platform));
         }
 
-        public UserViewModel GetRandomUser(CommandParametersModel parameters, bool excludeCurrencyRankExempt = false)
+        public UserViewModel GetRandomActiveUser(CommandParametersModel parameters, bool excludeCurrencyRankExempt = false)
         {
-            List<UserViewModel> results = new List<UserViewModel>(this.GetAllWorkableUsers(parameters.Platform));
+            List<UserViewModel> results = new List<UserViewModel>(this.GetAllWorkableActiveUsers(parameters.Platform));
             results.Remove(parameters.User);
             if (excludeCurrencyRankExempt) { results.RemoveAll(u => u.Data.IsCurrencyRankExempt); }
             return results.Random();
+        }
+
+        public int ActiveUserCount() { return this.activeUsers.Count; }
+
+        public async Task<UserDataModel> GetUserDataByID(Guid id)
+        {
+            UserDataModel userData = null;
+
+            if (id == Guid.Empty)
+            {
+                return userData;
+            }
+
+            if (ChannelSession.Settings.UserData.TryGetValue(id, out userData))
+            {
+                return userData;
+            }
+
+            IEnumerable<UserDataModel> results = await ChannelSession.Settings.LoadUserData("SELECT * FROM Users WHERE ID = @ID", new Dictionary<string, object>() { { "ID", id } });
+            if (results.Count() > 0)
+            {
+                userData = results.First();
+                this.SetUserData(userData);
+            }
+            return userData;
+        }
+
+        public async Task<UserDataModel> GetUserDataByPlatformID(StreamingPlatformTypeEnum platform, string platformID)
+        {
+            UserDataModel userData = null;
+
+            if (string.IsNullOrEmpty(platformID) || platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
+            {
+                return userData;
+            }
+
+            if (this.platformUserIDLookups[platform].TryGetValue(platformID, out Guid id) && ChannelSession.Settings.UserData.TryGetValue(id, out userData))
+            {
+                return userData;
+            }
+
+            string columnName = null;
+            switch (platform)
+            {
+                case StreamingPlatformTypeEnum.Twitch: columnName = "TwitchID"; break;
+            }
+
+            if (!string.IsNullOrEmpty(columnName))
+            {
+                IEnumerable<UserDataModel> results = await ChannelSession.Settings.LoadUserData("SELECT * FROM Users WHERE " + columnName + " = @PlatformID", new Dictionary<string, object>() { { "PlatformID", platformID } });
+                if (results.Count() > 0)
+                {
+                    userData = results.First();
+                    this.SetUserData(userData);
+                }
+            }
+            return userData;
+        }
+
+        public async Task<UserDataModel> GetUserDataByPlatformUsername(StreamingPlatformTypeEnum platform, string platformUsername)
+        {
+            UserDataModel userData = null;
+
+            if (string.IsNullOrEmpty(platformUsername) || platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
+            {
+                return null;
+            }
+
+            if (this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id) && ChannelSession.Settings.UserData.TryGetValue(id, out userData))
+            {
+                return userData;
+            }
+
+            string columnName = null;
+            switch (platform)
+            {
+                case StreamingPlatformTypeEnum.Twitch: columnName = "TwitchUsername"; break;
+            }
+
+            if (!string.IsNullOrEmpty(columnName))
+            {
+                IEnumerable<UserDataModel> results = await ChannelSession.Settings.LoadUserData("SELECT * FROM Users WHERE " + columnName + " LIKE @PlatformUsername", new Dictionary<string, object>() { { "PlatformUsername", platformUsername } });
+                if (results.Count() > 0)
+                {
+                    userData = results.First();
+                    this.SetUserData(userData);
+                }
+            }
+            return userData;
+        }
+
+        public async Task LoadAllUserData()
+        {
+            if (!this.fullUserDataLoadOccurred)
+            {
+                this.fullUserDataLoadOccurred = true;
+
+                foreach (UserDataModel userData in await ChannelSession.Settings.LoadUserData("SELECT * FROM Users", new Dictionary<string, object>()))
+                {
+                    this.SetUserData(userData);
+                }
+            }
+        }
+
+        public void SetUserData(UserDataModel userData)
+        {
+            if (userData != null)
+            {
+                lock (ChannelSession.Settings.UserData)
+                {
+                    if (!ChannelSession.Settings.UserData.ContainsKey(userData.ID))
+                    {
+                        ChannelSession.Settings.UserData[userData.ID] = userData;
+                        ChannelSession.Settings.UserData.ClearTracking(userData.ID);
+                    }
+
+                    if (!string.IsNullOrEmpty(userData.TwitchID))
+                    {
+                        this.platformUserIDLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchID] = userData.ID;
+                    }
+                    if (!string.IsNullOrEmpty(userData.TwitchUsername))
+                    {
+                        this.platformUsernameLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchUsername] = userData.ID;
+                    }
+                }
+            }
+        }
+
+        public void ClearMixerUserData()
+        {
+#pragma warning disable CS0612 // Type or member is obsolete
+            foreach (UserDataModel userData in ChannelSession.Settings.UserData.Values.ToList())
+            {
+                if (userData.MixerID > 0)
+                {
+                    ChannelSession.Settings.UserData.Remove(userData.ID);
+                }
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
+        }
+
+        public async Task ClearAllUserData()
+        {
+            ChannelSession.Settings.UserData.Clear();
+            await ServiceManager.Get<IDatabaseService>().Write(ChannelSession.Settings.DatabaseFilePath, "DELETE FROM Users");
         }
 
         public async Task<UserViewModel> GetUserFullSearch(StreamingPlatformTypeEnum platform, string userID = null, string username = null)
@@ -250,7 +398,7 @@ namespace MixItUp.Base.Services
 
                 if (user == null)
                 {
-                    UserDataModel userData = await ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, userID);
+                    UserDataModel userData = await this.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, userID);
                     if (userData != null)
                     {
                         user = new UserViewModel(userData);
@@ -271,11 +419,11 @@ namespace MixItUp.Base.Services
 
             if (user == null && !string.IsNullOrEmpty(username))
             {
-                username = this.SanitizeUsername(username);
+                username = UserService.SanitizeUsername(username);
                 user = ServiceManager.Get<UserService>().GetActiveUserByUsername(username);
                 if (user == null)
                 {
-                    UserDataModel userData = await ChannelSession.Settings.GetUserDataByPlatformUsername(StreamingPlatformTypeEnum.Twitch, username);
+                    UserDataModel userData = await this.GetUserDataByPlatformUsername(StreamingPlatformTypeEnum.Twitch, username);
                     if (userData != null)
                     {
                         user = new UserViewModel(userData);
@@ -328,9 +476,5 @@ namespace MixItUp.Base.Services
 
             return user;
         }
-
-        public int Count() { return this.activeUsers.Count; }
-
-        private string SanitizeUsername(string username) { return username.ToLower().Replace("@", "").Trim(); }
     }
 }

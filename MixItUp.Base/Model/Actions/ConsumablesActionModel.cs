@@ -235,7 +235,7 @@ namespace MixItUp.Base.Model.Actions
                 }
                 else if (this.ActionType == ConsumablesActionTypeEnum.AddToAllChatUsers || this.ActionType == ConsumablesActionTypeEnum.SubtractFromAllChatUsers)
                 {
-                    foreach (UserViewModel chatUser in ServiceManager.Get<UserService>().GetAllWorkableUsers())
+                    foreach (UserViewModel chatUser in ServiceManager.Get<UserService>().GetAllWorkableActiveUsers())
                     {
                         if (chatUser.HasPermissionsTo(this.UsersToApplyTo))
                         {

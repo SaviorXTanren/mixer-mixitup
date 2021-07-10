@@ -238,7 +238,7 @@ namespace MixItUp.Base.Model.Commands.Games
             if (currencyRequirement != null && betAmount > 0)
             {
                 string currencyName = currencyRequirement.Currency?.Name;
-                List<UserViewModel> users = new List<UserViewModel>(ServiceManager.Get<UserService>().GetAllWorkableUsers(parameters.Platform).Shuffle());
+                List<UserViewModel> users = new List<UserViewModel>(ServiceManager.Get<UserService>().GetAllWorkableActiveUsers(parameters.Platform).Shuffle());
                 users.Remove(parameters.User);
                 foreach (UserViewModel user in users)
                 {
@@ -251,7 +251,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else
             {
-                return ServiceManager.Get<UserService>().GetRandomUser(parameters, excludeCurrencyRankExempt: true);
+                return ServiceManager.Get<UserService>().GetRandomActiveUser(parameters, excludeCurrencyRankExempt: true);
             }
         }
 

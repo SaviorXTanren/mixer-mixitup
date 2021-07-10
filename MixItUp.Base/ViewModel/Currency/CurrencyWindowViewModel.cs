@@ -531,7 +531,7 @@ namespace MixItUp.Base.ViewModel.Currency
                             return;
                         }
 
-                        await ChannelSession.Settings.LoadAllUserData();
+                        await ServiceManager.Get<UserService>().LoadAllUserData();
 
                         await this.Currency.Reset();
                         foreach (MixItUp.Base.Model.User.UserDataModel userData in ChannelSession.Settings.UserData.Values)
@@ -644,7 +644,7 @@ namespace MixItUp.Base.ViewModel.Currency
                                     }
                                 }
 
-                                await ChannelSession.Settings.LoadAllUserData();
+                                await ServiceManager.Get<UserService>().LoadAllUserData();
 
                                 foreach (var kvp in this.userImportData)
                                 {
@@ -676,7 +676,7 @@ namespace MixItUp.Base.ViewModel.Currency
 
             this.ExportToFileCommand = this.CreateCommand(async () =>
             {
-                await ChannelSession.Settings.LoadAllUserData();
+                await ServiceManager.Get<UserService>().LoadAllUserData();
 
                 string filePath = ServiceManager.Get<IFileService>().ShowSaveFileDialog(this.Currency.Name + " Data.txt");
                 if (!string.IsNullOrEmpty(filePath))

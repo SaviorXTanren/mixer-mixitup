@@ -919,9 +919,9 @@ namespace MixItUp.Base.Model.Commands
         {
             if (parameters.Arguments != null && parameters.Arguments.Count() == 1)
             {
-                await ChannelSession.Settings.LoadAllUserData();
+                await ServiceManager.Get<UserService>().LoadAllUserData();
 
-                string mixerUsername = parameters.Arguments.First().Replace("@", "");
+                string mixerUsername = UserService.SanitizeUsername(parameters.Arguments.First());
 
 #pragma warning disable CS0612 // Type or member is obsolete
                 UserDataModel mixerUserData = ChannelSession.Settings.UserData.Values.ToList().FirstOrDefault(u => u.Platform == StreamingPlatformTypeEnum.Mixer && string.Equals(u.MixerUsername, mixerUsername, StringComparison.OrdinalIgnoreCase));
@@ -949,10 +949,10 @@ namespace MixItUp.Base.Model.Commands
         {
             if (parameters.Arguments != null && parameters.Arguments.Count() == 1)
             {
-                UserViewModel targetUser = ServiceManager.Get<UserService>().GetActiveUserByUsername(parameters.Arguments.First().Replace("@", ""), parameters.User.Platform);
+                UserViewModel targetUser = ServiceManager.Get<UserService>().GetActiveUserByUsername(UserService.SanitizeUsername(parameters.Arguments.First()), parameters.User.Platform);
                 if (targetUser != null && LinkMixerAccountPreMadeChatCommandModel.LinkedAccounts.ContainsKey(targetUser.ID))
                 {
-                    UserDataModel mixerUserData = await ChannelSession.Settings.GetUserDataByID(LinkMixerAccountPreMadeChatCommandModel.LinkedAccounts[targetUser.ID]);
+                    UserDataModel mixerUserData = await ServiceManager.Get<UserService>().GetUserDataByID(LinkMixerAccountPreMadeChatCommandModel.LinkedAccounts[targetUser.ID]);
                     if (mixerUserData != null)
                     {
                         LinkMixerAccountPreMadeChatCommandModel.LinkedAccounts.Remove(targetUser.ID);

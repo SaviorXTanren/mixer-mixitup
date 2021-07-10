@@ -724,7 +724,7 @@ namespace MixItUp.Base.Services
 
         private Task ProcessHoursCurrency(CancellationToken cancellationToken)
         {
-            foreach (UserViewModel user in ServiceManager.Get<UserService>().GetAllWorkableUsers())
+            foreach (UserViewModel user in ServiceManager.Get<UserService>().GetAllWorkableActiveUsers())
             {
                 user.UpdateMinuteData();
             }

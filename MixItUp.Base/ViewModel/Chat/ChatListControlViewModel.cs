@@ -109,9 +109,7 @@ namespace MixItUp.Base.ViewModel.Chat
                         string message = this.SendMessageText.Substring(whisperRegexMatch.Value.Length);
 
                         Match userNameMatch = ChatListControlViewModel.UserNameTagRegex.Match(whisperRegexMatch.Value);
-                        string username = userNameMatch.Value;
-                        username = username.Trim();
-                        username = username.Replace("@", "");
+                        string username = UserService.SanitizeUsername(userNameMatch.Value);
 
                         await ServiceManager.Get<ChatService>().Whisper(StreamingPlatformTypeEnum.All, username, message, this.SendAsStreamer);
                     }
@@ -124,9 +122,7 @@ namespace MixItUp.Base.ViewModel.Chat
                         string[] splits = this.SendMessageText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         if (splits.Length == 3)
                         {
-                            string username = splits[1];
-                            username = username.Trim();
-                            username = username.Replace("@", "");
+                            string username = UserService.SanitizeUsername(splits[1]);
                             UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByUsername(username);
                             if (user != null)
                             {
@@ -150,9 +146,7 @@ namespace MixItUp.Base.ViewModel.Chat
                         string[] splits = this.SendMessageText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         if (splits.Length == 2)
                         {
-                            string username = splits[1];
-                            username = username.Trim();
-                            username = username.Replace("@", "");
+                            string username = UserService.SanitizeUsername(splits[1]);
                             UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByUsername(username);
                             if (user != null)
                             {

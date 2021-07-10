@@ -268,7 +268,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                         "TotalCommandsRun", "TotalMonthsSubbed", "LastSeen" });
                     contents.Add(columns);
 
-                    await ChannelSession.Settings.LoadAllUserData();
+                    await ServiceManager.Get<UserService>().LoadAllUserData();
                     foreach (UserDataModel user in ChannelSession.Settings.UserData.Values.ToList())
                     {
                         List<string> data = new List<string>() { user.ID.ToString(), user.TwitchID, user.Username, user.PrimaryRole.ToString(),
@@ -319,7 +319,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
                 try
                 {
-                    await ChannelSession.Settings.LoadAllUserData();
+                    await ServiceManager.Get<UserService>().LoadAllUserData();
 
                     IEnumerable<UserDataModel> data = ChannelSession.Settings.UserData.Values.ToList();
                     if (!string.IsNullOrEmpty(this.UsernameFilter))

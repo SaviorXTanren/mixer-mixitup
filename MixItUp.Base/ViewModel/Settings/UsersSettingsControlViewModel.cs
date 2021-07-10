@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using MixItUp.Base.Services;
 
 namespace MixItUp.Base.ViewModel.Settings
 {
@@ -122,7 +123,7 @@ namespace MixItUp.Base.ViewModel.Settings
             {
                 if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.ClearAllMixerUserDataWarning))
                 {
-                    ChannelSession.Settings.ClearMixerUserData();
+                    ServiceManager.Get<UserService>().ClearMixerUserData();
                     await ChannelSession.SaveSettings();
                     GlobalEvents.RestartRequested();
                 }
@@ -132,7 +133,7 @@ namespace MixItUp.Base.ViewModel.Settings
             {
                 if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.ClearAllUserDataWarning))
                 {
-                    await ChannelSession.Settings.ClearAllUserData();
+                    await ServiceManager.Get<UserService>().ClearAllUserData();
                     await ChannelSession.SaveSettings();
                     GlobalEvents.RestartRequested();
                 }

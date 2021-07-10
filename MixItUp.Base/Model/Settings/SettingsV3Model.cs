@@ -8,8 +8,6 @@ using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
-using MixItUp.Base.Services.Glimesh;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Dashboard;
 using Newtonsoft.Json;
@@ -525,11 +523,6 @@ namespace MixItUp.Base.Model.Settings
         [JsonIgnore]
         public DatabaseDictionary<Guid, UserDataModel> UserData { get; set; } = new DatabaseDictionary<Guid, UserDataModel>();
 
-        [JsonIgnore]
-        private Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>> platformUserIDLookups { get; set; } = new Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>>();
-        [JsonIgnore]
-        private Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>> platformUsernameLookups { get; set; } = new Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>>();
-
         #endregion Database Data
 
         [JsonIgnore]
@@ -547,16 +540,7 @@ namespace MixItUp.Base.Model.Settings
         [JsonIgnore]
         public string SettingsLocalBackupFilePath { get { return Path.Combine(SettingsV3Model.SettingsDirectoryName, this.SettingsLocalBackupFileName); } }
 
-        private bool fullUserDataLoadOccurred = false;
-
-        public SettingsV3Model()
-        {
-            foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
-            {
-                this.platformUserIDLookups[platform] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
-                this.platformUsernameLookups[platform] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
-            }
-        }
+        public SettingsV3Model() { }
 
         public SettingsV3Model(string name)
             : this()
@@ -669,25 +653,6 @@ namespace MixItUp.Base.Model.Settings
             this.InitializeMissingData();
         }
 
-        public void ClearMixerUserData()
-        {
-#pragma warning disable CS0612 // Type or member is obsolete
-            foreach (UserDataModel userData in this.UserData.Values.ToList())
-            {
-                if (userData.MixerID > 0)
-                {
-                    this.UserData.Remove(userData.ID);
-                }
-            }
-#pragma warning restore CS0612 // Type or member is obsolete
-        }
-
-        public async Task ClearAllUserData()
-        {
-            this.UserData.Clear();
-            await ServiceManager.Get<IDatabaseService>().Write(this.DatabaseFilePath, "DELETE FROM Users");
-        }
-
         public void CopyLatestValues()
         {
             Logger.Log(LogLevel.Debug, "Copying over latest values into Settings object");
@@ -783,130 +748,17 @@ namespace MixItUp.Base.Model.Settings
                 this.Quotes.GetAddedChangedValues().Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() }, { "@Quote", q.Quote }, { "@GameName", q.GameName }, { "@DateTime", q.DateTime.ToString() } }));
         }
 
-        public async Task<UserDataModel> GetUserDataByID(Guid id)
+        public async Task<IEnumerable<UserDataModel>> LoadUserData(string query, Dictionary<string, object> parameters)
         {
-            if (id == Guid.Empty)
-            {
-                return null;
-            }
+            List<UserDataModel> results = new List<UserDataModel>();
 
-            if (this.UserData.TryGetValue(id, out UserDataModel userData))
-            {
-                return userData;
-            }
-
-            await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE ID = @ID",
-                new Dictionary<string, object>() { { "ID", id } },
+            await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, query, parameters,
                 (Dictionary<string, object> data) =>
                 {
-                    userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString());
+                    results.Add(JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString()));
                 });
 
-            this.SetUserData(userData);
-            return userData;
-        }
-
-        public async Task<UserDataModel> GetUserDataByPlatformID(StreamingPlatformTypeEnum platform, string platformID)
-        {
-            if (string.IsNullOrEmpty(platformID) || platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
-            {
-                return null;
-            }
-
-            if (this.platformUserIDLookups[platform].TryGetValue(platformID, out Guid id) && this.UserData.TryGetValue(id, out UserDataModel userData))
-            {
-                return userData;
-            }
-
-            string columnName = null;
-            switch (platform)
-            {
-                case StreamingPlatformTypeEnum.Twitch: columnName = "TwitchID"; break;
-            }
-
-            userData = null;
-            if (!string.IsNullOrEmpty(columnName))
-            {
-                await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE " + columnName + " = @PlatformID",
-                    new Dictionary<string, object>() { { "PlatformID", platformID } },
-                    (Dictionary<string, object> data) =>
-                    {
-                        userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString());
-                    });
-            }
-
-            this.SetUserData(userData);
-            return userData;
-        }
-
-        public async Task<UserDataModel> GetUserDataByPlatformUsername(StreamingPlatformTypeEnum platform, string platformUsername)
-        {
-            if (string.IsNullOrEmpty(platformUsername) || platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
-            {
-                return null;
-            }
-
-            if (this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id) && this.UserData.TryGetValue(id, out UserDataModel userData))
-            {
-                return userData;
-            }
-
-            string columnName = null;
-            switch (platform)
-            {
-                case StreamingPlatformTypeEnum.Twitch: columnName = "TwitchUsername"; break;
-            }
-
-            userData = null;
-            if (!string.IsNullOrEmpty(columnName))
-            {
-                await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE " + columnName + " LIKE @PlatformUsername",
-                    new Dictionary<string, object>() { { "PlatformUsername", platformUsername } },
-                    (Dictionary<string, object> data) =>
-                    {
-                        userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString());
-                    });
-            }
-
-            this.SetUserData(userData);
-            return userData;
-        }
-
-        public async Task LoadAllUserData()
-        {
-            if (!this.fullUserDataLoadOccurred)
-            {
-                this.fullUserDataLoadOccurred = true;
-
-                await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Users", (Action<Dictionary<string, object>>)((Dictionary<string, object> data) =>
-                {
-                    this.SetUserData((UserDataModel)JSONSerializerHelper.DeserializeFromString<UserDataModel>((string)data[(string)"Data"].ToString()));
-                }));
-            }
-        }
-
-        public void SetUserData(UserDataModel userData)
-        {
-            if (userData != null)
-            {
-                lock (this.UserData)
-                {
-                    if (!this.UserData.ContainsKey(userData.ID))
-                    {
-                        this.UserData[userData.ID] = userData;
-                        this.UserData.ClearTracking(userData.ID);
-                    }
-
-                    if (!string.IsNullOrEmpty(userData.TwitchID))
-                    {
-                        this.platformUserIDLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchID] = userData.ID;
-                    }
-                    if (!string.IsNullOrEmpty(userData.TwitchUsername))
-                    {
-                        this.platformUsernameLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchUsername] = userData.ID;
-                    }
-                }
-            }
+            return results;
         }
 
         public CommandModelBase GetCommand(Guid id) { return this.Commands.ContainsKey(id) ? this.Commands[id] : null; }
