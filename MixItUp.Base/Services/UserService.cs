@@ -259,7 +259,7 @@ namespace MixItUp.Base.Services
                     {
                         if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
                         {
-                            var twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(userID);
+                            var twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(userID);
                             if (twitchUser != null)
                             {
                                 user = await UserViewModel.Create(twitchUser);
@@ -284,7 +284,7 @@ namespace MixItUp.Base.Services
                     {
                         if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceManager.Get<TwitchSessionService>().UserConnection != null)
                         {
-                            var twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(username);
+                            var twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
                             if (twitchUser != null)
                             {
                                 user = await UserViewModel.Create(twitchUser);
