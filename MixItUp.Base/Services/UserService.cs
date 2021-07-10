@@ -30,8 +30,8 @@ namespace MixItUp.Base.Services
         {
             foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
             {
-                this.platformUserIDLookups[platform] = new LockedDictionary<string, Guid>();
-                this.platformUsernameLookups[platform] = new LockedDictionary<string, Guid>();
+                this.platformUserIDLookups[platform] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
+                this.platformUsernameLookups[platform] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
             }
         }
 
@@ -88,9 +88,12 @@ namespace MixItUp.Base.Services
 
                 this.activeUsers[user.ID] = user;
 
-                if (!string.IsNullOrEmpty(user.TwitchID) && !string.IsNullOrEmpty(user.TwitchUsername))
+                if (!string.IsNullOrEmpty(user.TwitchID))
                 {
                     this.platformUserIDLookups[StreamingPlatformTypeEnum.Twitch][user.TwitchID] = user.ID;
+                }
+                if (!string.IsNullOrEmpty(user.TwitchUsername))
+                {
                     this.platformUsernameLookups[StreamingPlatformTypeEnum.Twitch][user.TwitchUsername] = user.ID;
                 }
 
@@ -180,9 +183,12 @@ namespace MixItUp.Base.Services
             {
                 this.activeUsers.Remove(user.ID);
 
-                if (!string.IsNullOrEmpty(user.TwitchID) && !string.IsNullOrEmpty(user.TwitchUsername))
+                if (!string.IsNullOrEmpty(user.TwitchID))
                 {
                     this.platformUserIDLookups[StreamingPlatformTypeEnum.Twitch].Remove(user.TwitchID);
+                }
+                if (!string.IsNullOrEmpty(user.TwitchUsername))
+                {
                     this.platformUsernameLookups[StreamingPlatformTypeEnum.Twitch].Remove(user.TwitchUsername);
                 }
 
@@ -205,21 +211,6 @@ namespace MixItUp.Base.Services
                 }
 
                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserLeft, new CommandParametersModel(user));
-            }
-        }
-
-        public void Clear()
-        {
-            this.activeUsers.Clear();
-
-            foreach (var kvp in this.platformUserIDLookups)
-            {
-                kvp.Value.Clear();
-            }
-
-            foreach (var kvp in this.platformUsernameLookups)
-            {
-                kvp.Value.Clear();
             }
         }
 
@@ -259,18 +250,16 @@ namespace MixItUp.Base.Services
 
                 if (user == null)
                 {
-                    UserDataModel userData = null;
-                    if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && userData == null)
+                    UserDataModel userData = await ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, userID);
+                    if (userData != null)
                     {
-                        userData = await ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, userID);
-
-                        if (userData != null)
+                        user = new UserViewModel(userData);
+                    }
+                    else
+                    {
+                        if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
                         {
-                            user = new UserViewModel(userData);
-                        }
-                        else
-                        {
-                            var twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(userID);
+                            var twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(userID);
                             if (twitchUser != null)
                             {
                                 user = await UserViewModel.Create(twitchUser);
@@ -286,39 +275,47 @@ namespace MixItUp.Base.Services
                 user = ServiceManager.Get<UserService>().GetActiveUserByUsername(username);
                 if (user == null)
                 {
-                    if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceManager.Get<TwitchSessionService>().UserConnection != null)
+                    UserDataModel userData = await ChannelSession.Settings.GetUserDataByPlatformUsername(StreamingPlatformTypeEnum.Twitch, username);
+                    if (userData != null)
                     {
-                        TwitchNewAPI.Users.UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
-                        if (twitchUser != null)
-                        {
-                            return await UserViewModel.Create(twitchUser);
-                        }
+                        user = new UserViewModel(userData);
                     }
-
-                    if (platform.HasFlag(StreamingPlatformTypeEnum.YouTube) && ServiceManager.Get<YouTubeSessionService>().UserConnection != null)
+                    else
                     {
-                        Google.Apis.YouTube.v3.Data.Channel youtubeUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByUsername(username);
-                        if (youtubeUser != null)
+                        if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceManager.Get<TwitchSessionService>().UserConnection != null)
                         {
-                            return await UserViewModel.Create(youtubeUser);
+                            var twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(username);
+                            if (twitchUser != null)
+                            {
+                                user = await UserViewModel.Create(twitchUser);
+                            }
                         }
-                    }
 
-                    if (platform.HasFlag(StreamingPlatformTypeEnum.Glimesh) && ServiceManager.Get<GlimeshSessionService>().UserConnection != null)
-                    {
-                        GlimeshBase.Models.Users.UserModel glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByName(username);
-                        if (glimeshUser != null)
+                        if (platform.HasFlag(StreamingPlatformTypeEnum.YouTube) && ServiceManager.Get<YouTubeSessionService>().UserConnection != null)
                         {
-                            return await UserViewModel.Create(glimeshUser);
+                            Google.Apis.YouTube.v3.Data.Channel youtubeUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByUsername(username);
+                            if (youtubeUser != null)
+                            {
+                                return await UserViewModel.Create(youtubeUser);
+                            }
                         }
-                    }
 
-                    if (platform.HasFlag(StreamingPlatformTypeEnum.Trovo) && ServiceManager.Get<TrovoSessionService>().UserConnection != null)
-                    {
-                        TrovoBase.Models.Users.UserModel trovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(username);
-                        if (trovoUser != null)
+                        if (platform.HasFlag(StreamingPlatformTypeEnum.Glimesh) && ServiceManager.Get<GlimeshSessionService>().UserConnection != null)
                         {
-                            return await UserViewModel.Create(trovoUser);
+                            GlimeshBase.Models.Users.UserModel glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByName(username);
+                            if (glimeshUser != null)
+                            {
+                                return await UserViewModel.Create(glimeshUser);
+                            }
+                        }
+
+                        if (platform.HasFlag(StreamingPlatformTypeEnum.Trovo) && ServiceManager.Get<TrovoSessionService>().UserConnection != null)
+                        {
+                            TrovoBase.Models.Users.UserModel trovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(username);
+                            if (trovoUser != null)
+                            {
+                                return await UserViewModel.Create(trovoUser);
+                            }
                         }
                     }
 

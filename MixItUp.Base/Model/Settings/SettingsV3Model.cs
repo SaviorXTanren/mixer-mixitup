@@ -525,6 +525,11 @@ namespace MixItUp.Base.Model.Settings
         [JsonIgnore]
         public DatabaseDictionary<Guid, UserDataModel> UserData { get; set; } = new DatabaseDictionary<Guid, UserDataModel>();
 
+        [JsonIgnore]
+        private Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>> platformUserIDLookups { get; set; } = new Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>>();
+        [JsonIgnore]
+        private Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>> platformUsernameLookups { get; set; } = new Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>>();
+
         #endregion Database Data
 
         [JsonIgnore]
@@ -544,7 +549,14 @@ namespace MixItUp.Base.Model.Settings
 
         private bool fullUserDataLoadOccurred = false;
 
-        public SettingsV3Model() { }
+        public SettingsV3Model()
+        {
+            foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
+            {
+                this.platformUserIDLookups[platform] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
+                this.platformUsernameLookups[platform] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
+            }
+        }
 
         public SettingsV3Model(string name)
             : this()
@@ -771,44 +783,40 @@ namespace MixItUp.Base.Model.Settings
                 this.Quotes.GetAddedChangedValues().Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() }, { "@Quote", q.Quote }, { "@GameName", q.GameName }, { "@DateTime", q.DateTime.ToString() } }));
         }
 
-        public UserDataModel GetUserData(Guid id)
-        {
-            lock (this.UserData)
-            {
-                if (this.UserData.ContainsKey(id))
-                {
-                    return this.UserData[id];
-                }
-                return null;
-            }
-        }
-
         public async Task<UserDataModel> GetUserDataByID(Guid id)
         {
-            UserDataModel userData = null;
-
-            if (id != Guid.Empty)
+            if (id == Guid.Empty)
             {
-                await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE ID = @ID",
-                    new Dictionary<string, object>() { { "ID", id } },
-                    (Dictionary<string, object> data) =>
-                    {
-                        userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString());
-                    });
-
-                if (userData != null)
-                {
-                    this.UserData[userData.ID] = userData;
-                    this.UserData.ClearTracking(userData.ID);
-                }
+                return null;
             }
 
+            if (this.UserData.TryGetValue(id, out UserDataModel userData))
+            {
+                return userData;
+            }
+
+            await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE ID = @ID",
+                new Dictionary<string, object>() { { "ID", id } },
+                (Dictionary<string, object> data) =>
+                {
+                    userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString());
+                });
+
+            this.SetUserData(userData);
             return userData;
         }
 
-        public async Task<UserDataModel> GetUserDataByPlatformID(StreamingPlatformTypeEnum platform, string platformID = null)
+        public async Task<UserDataModel> GetUserDataByPlatformID(StreamingPlatformTypeEnum platform, string platformID)
         {
-            UserDataModel userData = null;
+            if (string.IsNullOrEmpty(platformID) || platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
+            {
+                return null;
+            }
+
+            if (this.platformUserIDLookups[platform].TryGetValue(platformID, out Guid id) && this.UserData.TryGetValue(id, out UserDataModel userData))
+            {
+                return userData;
+            }
 
             string columnName = null;
             switch (platform)
@@ -816,6 +824,7 @@ namespace MixItUp.Base.Model.Settings
                 case StreamingPlatformTypeEnum.Twitch: columnName = "TwitchID"; break;
             }
 
+            userData = null;
             if (!string.IsNullOrEmpty(columnName))
             {
                 await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE " + columnName + " = @PlatformID",
@@ -824,20 +833,23 @@ namespace MixItUp.Base.Model.Settings
                     {
                         userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString());
                     });
-
-                if (userData != null)
-                {
-                    this.UserData[userData.ID] = userData;
-                    this.UserData.ClearTracking(userData.ID);
-                }
             }
 
+            this.SetUserData(userData);
             return userData;
         }
 
         public async Task<UserDataModel> GetUserDataByPlatformUsername(StreamingPlatformTypeEnum platform, string platformUsername)
         {
-            UserDataModel userData = null;
+            if (string.IsNullOrEmpty(platformUsername) || platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
+            {
+                return null;
+            }
+
+            if (this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id) && this.UserData.TryGetValue(id, out UserDataModel userData))
+            {
+                return userData;
+            }
 
             string columnName = null;
             switch (platform)
@@ -845,29 +857,19 @@ namespace MixItUp.Base.Model.Settings
                 case StreamingPlatformTypeEnum.Twitch: columnName = "TwitchUsername"; break;
             }
 
+            userData = null;
             if (!string.IsNullOrEmpty(columnName))
             {
-                await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE " + columnName + " = @PlatformUsername",
+                await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE " + columnName + " LIKE @PlatformUsername",
                     new Dictionary<string, object>() { { "PlatformUsername", platformUsername } },
                     (Dictionary<string, object> data) =>
                     {
                         userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString());
                     });
-
-                if (userData != null)
-                {
-                    this.UserData[userData.ID] = userData;
-                    this.UserData.ClearTracking(userData.ID);
-                }
             }
 
+            this.SetUserData(userData);
             return userData;
-        }
-
-        public void AddUserData(UserDataModel user)
-        {
-            this.UserData[user.ID] = user;
-            this.UserData.ManualValueChanged(user.ID);
         }
 
         public async Task LoadAllUserData()
@@ -876,15 +878,34 @@ namespace MixItUp.Base.Model.Settings
             {
                 this.fullUserDataLoadOccurred = true;
 
-                await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
+                await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Users", (Action<Dictionary<string, object>>)((Dictionary<string, object> data) =>
                 {
-                    UserDataModel userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString());
+                    this.SetUserData((UserDataModel)JSONSerializerHelper.DeserializeFromString<UserDataModel>((string)data[(string)"Data"].ToString()));
+                }));
+            }
+        }
+
+        public void SetUserData(UserDataModel userData)
+        {
+            if (userData != null)
+            {
+                lock (this.UserData)
+                {
                     if (!this.UserData.ContainsKey(userData.ID))
                     {
                         this.UserData[userData.ID] = userData;
                         this.UserData.ClearTracking(userData.ID);
                     }
-                });
+
+                    if (!string.IsNullOrEmpty(userData.TwitchID))
+                    {
+                        this.platformUserIDLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchID] = userData.ID;
+                    }
+                    if (!string.IsNullOrEmpty(userData.TwitchUsername))
+                    {
+                        this.platformUsernameLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchUsername] = userData.ID;
+                    }
+                }
             }
         }
 

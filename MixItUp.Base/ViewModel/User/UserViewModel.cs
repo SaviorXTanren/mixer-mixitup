@@ -71,6 +71,8 @@ namespace MixItUp.Base.ViewModel.User
 
             user.SetTwitchRoles();
 
+            ChannelSession.Settings.SetUserData(user.Data);
+
             return user;
         }
 
@@ -84,6 +86,8 @@ namespace MixItUp.Base.ViewModel.User
             user.TwitchAvatarLink = twitchUser.logo;
 
             user.SetTwitchRoles();
+
+            ChannelSession.Settings.SetUserData(user.Data);
 
             return user;
         }
@@ -100,6 +104,8 @@ namespace MixItUp.Base.ViewModel.User
 
             user.SetTwitchChatDetails(twitchMessage);
 
+            ChannelSession.Settings.SetUserData(user.Data);
+
             return user;
         }
 
@@ -112,6 +118,8 @@ namespace MixItUp.Base.ViewModel.User
             user.TwitchDisplayName = (!string.IsNullOrEmpty(whisper.tags.display_name)) ? whisper.tags.display_name : user.TwitchUsername;
 
             user.SetTwitchRoles();
+
+            ChannelSession.Settings.SetUserData(user.Data);
 
             return user;
         }
@@ -126,6 +134,8 @@ namespace MixItUp.Base.ViewModel.User
             user.TwitchAvatarLink = whisperRecipient.profile_image;
 
             user.SetTwitchRoles();
+
+            ChannelSession.Settings.SetUserData(user.Data);
 
             return user;
         }
@@ -146,6 +156,8 @@ namespace MixItUp.Base.ViewModel.User
 
             user.SetTwitchChatDetails(packet);
 
+            ChannelSession.Settings.SetUserData(user.Data);
+
             return user;
         }
 
@@ -158,6 +170,8 @@ namespace MixItUp.Base.ViewModel.User
 
             user.SetTwitchRoles();
 
+            ChannelSession.Settings.SetUserData(user.Data);
+
             return user;
         }
 
@@ -169,6 +183,8 @@ namespace MixItUp.Base.ViewModel.User
             user.TwitchDisplayName = user.TwitchUsername = packet.user_name;
 
             user.SetTwitchRoles();
+
+            ChannelSession.Settings.SetUserData(user.Data);
 
             return user;
         }
@@ -183,6 +199,8 @@ namespace MixItUp.Base.ViewModel.User
 
             user.SetTwitchRoles();
 
+            ChannelSession.Settings.SetUserData(user.Data);
+
             return user;
         }
 
@@ -194,6 +212,8 @@ namespace MixItUp.Base.ViewModel.User
             user.TwitchDisplayName = user.TwitchUsername = follow.from_name;
 
             user.SetTwitchRoles();
+
+            ChannelSession.Settings.SetUserData(user.Data);
 
             return user;
         }
@@ -207,6 +227,8 @@ namespace MixItUp.Base.ViewModel.User
             user.TwitchDisplayName = follow.UserDisplayName;
 
             user.SetTwitchRoles();
+
+            ChannelSession.Settings.SetUserData(user.Data);
 
             return user;
         }
@@ -314,7 +336,7 @@ namespace MixItUp.Base.ViewModel.User
                         case StreamingPlatformTypeEnum.Trovo: data.TrovoID = platformID; break;
                         case StreamingPlatformTypeEnum.Glimesh: data.GlimeshID = platformID; break;
                     }
-                    ChannelSession.Settings.AddUserData(data);
+                    ChannelSession.Settings.SetUserData(data);
                 }
             }
             return new UserViewModel(data);

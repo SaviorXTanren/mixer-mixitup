@@ -388,17 +388,17 @@ namespace MixItUp.Base.Model.Overlay
                     Dictionary<UserViewModel, string> items = new Dictionary<UserViewModel, string>();
                     switch (kvp.Key)
                     {
-                        case OverlayEndCreditsSectionTypeEnum.Chatters: items = this.GetUsersDictionary(this.viewers); break;
-                        case OverlayEndCreditsSectionTypeEnum.Subscribers: items = this.GetUsersDictionary(this.subs); break;
-                        case OverlayEndCreditsSectionTypeEnum.Moderators: items = this.GetUsersDictionary(this.mods); break;
-                        case OverlayEndCreditsSectionTypeEnum.Followers: items = this.GetUsersDictionary(this.follows); break;
-                        case OverlayEndCreditsSectionTypeEnum.Hosts: items = this.GetUsersDictionary(this.hosts); break;
-                        case OverlayEndCreditsSectionTypeEnum.Raids: items = this.GetUsersDictionary(this.raids); break;
-                        case OverlayEndCreditsSectionTypeEnum.NewSubscribers: items = this.GetUsersDictionary(this.newSubs); break;
-                        case OverlayEndCreditsSectionTypeEnum.Resubscribers: items = this.GetUsersDictionary(this.resubs); break;
-                        case OverlayEndCreditsSectionTypeEnum.GiftedSubs: items = this.GetUsersDictionary(this.giftedSubs); break;
-                        case OverlayEndCreditsSectionTypeEnum.Donations: items = this.GetUsersDictionary(this.donations); break;
-                        case OverlayEndCreditsSectionTypeEnum.Bits: items = this.GetUsersDictionary(this.bits); break;
+                        case OverlayEndCreditsSectionTypeEnum.Chatters: items = await this.GetUsersDictionary(this.viewers); break;
+                        case OverlayEndCreditsSectionTypeEnum.Subscribers: items = await this.GetUsersDictionary(this.subs); break;
+                        case OverlayEndCreditsSectionTypeEnum.Moderators: items = await this.GetUsersDictionary(this.mods); break;
+                        case OverlayEndCreditsSectionTypeEnum.Followers: items = await this.GetUsersDictionary(this.follows); break;
+                        case OverlayEndCreditsSectionTypeEnum.Hosts: items = await this.GetUsersDictionary(this.hosts); break;
+                        case OverlayEndCreditsSectionTypeEnum.Raids: items = await this.GetUsersDictionary(this.raids); break;
+                        case OverlayEndCreditsSectionTypeEnum.NewSubscribers: items = await this.GetUsersDictionary(this.newSubs); break;
+                        case OverlayEndCreditsSectionTypeEnum.Resubscribers: items = await this.GetUsersDictionary(this.resubs); break;
+                        case OverlayEndCreditsSectionTypeEnum.GiftedSubs: items = await this.GetUsersDictionary(this.giftedSubs); break;
+                        case OverlayEndCreditsSectionTypeEnum.Donations: items = await this.GetUsersDictionary(this.donations); break;
+                        case OverlayEndCreditsSectionTypeEnum.Bits: items = await this.GetUsersDictionary(this.bits); break;
                     }
                     await this.PerformSectionTemplateReplacement(htmlBuilder, kvp.Key, items, parameters);
                 }
@@ -533,14 +533,14 @@ namespace MixItUp.Base.Model.Overlay
             return true;
         }
 
-        private Dictionary<UserViewModel, string> GetUsersDictionary(HashSet<Guid> data)
+        private async Task<Dictionary<UserViewModel, string>> GetUsersDictionary(HashSet<Guid> data)
         {
             Dictionary<UserViewModel, string> results = new Dictionary<UserViewModel, string>();
             foreach (Guid userID in data)
             {
                 try
                 {
-                    UserViewModel user = this.GetUser(userID);
+                    UserViewModel user = await this.GetUser(userID);
                     if (user != null)
                     {
                         results[user] = string.Empty;
@@ -554,14 +554,14 @@ namespace MixItUp.Base.Model.Overlay
             return results;
         }
 
-        private Dictionary<UserViewModel, string> GetUsersDictionary(Dictionary<Guid, uint> data)
+        private async Task<Dictionary<UserViewModel, string>> GetUsersDictionary(Dictionary<Guid, uint> data)
         {
             Dictionary<UserViewModel, string> results = new Dictionary<UserViewModel, string>();
             foreach (var kvp in data)
             {
                 try
                 {
-                    UserViewModel user = this.GetUser(kvp.Key);
+                    UserViewModel user = await this.GetUser(kvp.Key);
                     if (user != null)
                     {
                         results[user] = kvp.Value.ToString();
@@ -575,14 +575,14 @@ namespace MixItUp.Base.Model.Overlay
             return results;
         }
 
-        private Dictionary<UserViewModel, string> GetUsersDictionary(Dictionary<Guid, double> data)
+        private async Task<Dictionary<UserViewModel, string>> GetUsersDictionary(Dictionary<Guid, double> data)
         {
             Dictionary<UserViewModel, string> results = new Dictionary<UserViewModel, string>();
             foreach (var kvp in data)
             {
                 try
                 {
-                    UserViewModel user = this.GetUser(kvp.Key);
+                    UserViewModel user = await this.GetUser(kvp.Key);
                     if (user != null)
                     {
                         results[user] = kvp.Value.ToCurrencyString();
@@ -596,9 +596,9 @@ namespace MixItUp.Base.Model.Overlay
             return results;
         }
 
-        private UserViewModel GetUser(Guid userID)
+        private async Task<UserViewModel> GetUser(Guid userID)
         {
-            UserDataModel data = ChannelSession.Settings.GetUserData(userID);
+            UserDataModel data = await ChannelSession.Settings.GetUserDataByID(userID);
             if (data != null)
             {
                 return new UserViewModel(data);

@@ -58,15 +58,11 @@ namespace MixItUp.WPF.Controls.Chat
                             ProcessHelper.LaunchLink(user.ChannelLink);
                             break;
                         case UserDialogResult.EditUser:
-                            UserDataModel userData = ChannelSession.Settings.GetUserData(user.ID);
-                            if (userData != null)
-                            {
-                                UserDataEditorWindow window = new UserDataEditorWindow(userData);
-                                await Task.Delay(100);
-                                window.Show();
-                                await Task.Delay(100);
-                                window.Focus();
-                            }
+                            UserDataEditorWindow window = new UserDataEditorWindow(user.Data);
+                            await Task.Delay(100);
+                            window.Show();
+                            await Task.Delay(100);
+                            window.Focus();
                             break;
                         case UserDialogResult.Close:
                         default:

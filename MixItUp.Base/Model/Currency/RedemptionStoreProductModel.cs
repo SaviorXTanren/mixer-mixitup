@@ -223,6 +223,9 @@ namespace MixItUp.Base.Model.Currency
         [DataMember]
         public RedemptionStorePurchaseRedemptionState State { get; set; } = RedemptionStorePurchaseRedemptionState.AutoRedeemed;
 
+        [JsonIgnore]
+        public UserViewModel User { get; set; }
+
         public RedemptionStorePurchaseModel() { }
 
         public RedemptionStorePurchaseModel(RedemptionStoreProductModel product, UserViewModel user)
@@ -231,6 +234,8 @@ namespace MixItUp.Base.Model.Currency
             this.ProductID = product.ID;
             this.UserID = user.ID;
             this.PurchaseDate = DateTimeOffset.Now;
+
+            this.User = user;
         }
 
         [JsonIgnore]
@@ -243,24 +248,6 @@ namespace MixItUp.Base.Model.Currency
                     return ChannelSession.Settings.RedemptionStoreProducts[this.ProductID];
                 }
                 return null;
-            }
-        }
-
-        [JsonIgnore]
-        public UserViewModel User
-        {
-            get
-            {
-                UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByID(this.UserID);
-                if (user == null)
-                {
-                    UserDataModel userData = ChannelSession.Settings.GetUserData(this.UserID);
-                    if (user != null)
-                    {
-                        user = new UserViewModel(userData);
-                    }
-                }
-                return user;
             }
         }
 

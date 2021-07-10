@@ -50,14 +50,14 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayListIndividualItemModel() { }
 
-        public UserViewModel GetUser()
+        public async Task<UserViewModel> GetUser()
         {
             if (this.cachedUser == null && this.UserID != Guid.Empty)
             {
                 this.cachedUser = ServiceManager.Get<UserService>().GetActiveUserByID(this.UserID);
                 if (this.cachedUser == null)
                 {
-                    UserDataModel userData = ChannelSession.Settings.GetUserData(this.UserID);
+                    UserDataModel userData = await ChannelSession.Settings.GetUserDataByID(this.UserID);
                     if (userData != null)
                     {
                         this.cachedUser = new UserViewModel(userData);
