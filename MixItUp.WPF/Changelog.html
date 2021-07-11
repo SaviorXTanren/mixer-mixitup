@@ -5,6 +5,76 @@
     <body>
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
+        <h2 style="color: #2e6c80;">v0.5.11.0:</h2>
+        <ul>
+            <li>Community Commands:</li>
+            <ul>
+                <li>Re-adding the Community Commands feature (formerly known as the Mix It Up Store), which allows users to upload commands they have created and search through commands other users have made.</li>
+                <li>By visiting the Community Commands section from the main menu, you will be able to see some of the highlighted commands available, search for commands, and see the commands you have uploaded</li>
+                <li>Users can rate &amp; review commands based on how well they worked and how much they liked them. They can also report commands if they deemed malicious or inappropriate.</li>
+                <li>Commands can be uploaded by editing an existing command you have and selected "Upload Command" in the bottom-right of the command editor window. A command must be saved first before the option will be available.</li>
+                <li>Uploaded commands can have their metadata (name, description, &amp; image) edited by visiting the command inside of the Community Commands feature and selecting Edit or remove a command by selected Delete.</il>
+                <li>Commands can be updated by simply re-uploading the same command again. Commands are tied based on their internal ID, so if you delete your local copy of your command, you will be unable to upload it to the same community command.</li>
+            </ul>
+            <li>Events</li>
+            <ul>
+                <li>Twitch:</li>
+                <ul>
+                    <li>We have financed a server to allow us to handle Twitch events that require Twitch's Web Hooks system. This will allow us to remove the 1 Minute Delay on certain events, as well as add support for brand-new events that were not previously possible.</li>
+                    <li>The following events have been updated to be real-time: Twitch Channel Stream Start, Twitch Channel Followed</li>
+                    <li>The following events have been added: Twitch Channel Stream Stop, Twitch Channel Hype Train Begin, Twitch Channel Hype Train End</li>
+                    <ul>
+                        <li>Twitch Channel Hype Train Begin includes the following Special Identifiers: $hypetraintotalpoints, $hypetrainlevelpoints, $hypetrainlevelgoal</li>
+                        <li>Twitch Channel Hype Train End includes the following Special Identifiers: $hypetraintotalpoints, $hypetraintotalpoints</li>
+                    </ul>
+                    <li>In the event of an outage of our server or a local disconnection, the Twitch Channel Stream Start &amp; Twitch Channel Followed events will fall back to their old 1 Minute Delay logic, while the newly added events will be unavailable.</li>
+                    <li>Adding $messagenocheermotes Special Identifier to Twitch Channel Bits Cheered event command that has only the text of the user's message and no cheermotes in the message</li>
+                    <li>Message text is now available as Argument Special Identifiers for the Twitch Channel Resubscribed &amp; Twitch Channel Bits Cheered event commands</li>
+                </ul>
+                <li>Renaming StreamJar service to Rainmaker service, updating authentication for service, and adding support for real-time donation events</li>
+                <li>Fixing breaking change with StreamElements service where data being sent down was in a new format that it had previously been which was causing donations to not be properly detected</li>
+            </ul>
+            <li>Usage Requirements:</li>
+            <ul>
+                <li>Adding advanced, multi-role selecton for User Role usage requirement</li>
+                <li>Adding Arguments usage requirement which allows you to set required or optional arguments to a command based on it's type (Number, Decimal, Text, User). If a required argument is missing, an error message will be shown with the name of the arguments and correct ordering.</li>
+            </ul>
+            <li>Actions:</li>
+            <ul>
+                <li>Twitch Action:</li>
+                <ul>
+                    <li>Adding Poll options to Twitch action. Sub-actions can be added that will be run when the poll is complete and will contain the $pollchoice Special Identifier for the winning poll choice. This action <b>DOES NOT</b> wait for the poll to complete</li>
+                    <li>Adding Prediction options to Twitch action. Sub-actions can be added that will be run when the prediction is complete and will contain the $predictionoutcome Special Identifier for the winning prediction. This action <b>DOES NOT</b> wait for the prediction to complete</li>
+                    <li>Adding Special Identifier processing for various fields on the Update Channel Point option</li>
+                </ul>
+                <li>Adding "Repeat While True" option to Conditional action to allow repeated looping for sub-actions while the conditional clauses remain true</li>
+                <li>Adding option Currency/Rank/Inventory action for whether users must be present in chat</li>
+                <li>Adding urlencode() function to Special Identifier action</li>
+            </ul>
+            <li>Special Identifiers:</li>
+            <ul>
+                <li>Adding $message Special Identifier for all chat-based commands that contains the entire chat message used</li>
+                <li>Adding $streamlootscarddescription and $streamlootscardalertmessage Special Identifiers for Streamloots event commands &amp; Streamloots Card commands</li>
+                <li>Adding $argdelimitedXtext and $argdelimitedcount Special Identifiers that split argument text based on the '|' character with leading &amp; trailing spaces automatically removed. For example, the text "Hello World | How are you|     on this fine day" would have 3 arguments of $argdelimited1text, $argdelimited2text, $argdelimited3text containing the respective text of "Hello World", "How are you", "on this fine day".</li>
+                <li>Adding $usersubbadge Special Identifier</li>
+                <li>Adding $userfulldisplayname Special Identifier</li>
+                <li>Adding $userismod Special Identifier for whether the current user has the Moderator role</li>
+                <li>Adding $userdisplayroles Special Identifier for the language localized version of roles for a user</li>
+                <li>Adding $userinchat Special Identifier. Accuracy for this Special Identifier can't be guaranteed due to the unreliability of chat notifications sent down to us. All that can be guaranteed is that the user is either currently in chat or was in chat at some point during the specific instance of Mix It Up</li>
+            </ul>
+            <li>Removing the ability to follow/unfollow a user from the User pop-up dialog in Chat due to Twitch deprecation of the corresponding API: https://blog.twitch.tv/en/2021/06/28/deprecation-of-create-and-delete-follows-api-endpoints/</li>
+            <li>Adding filter options to Users page</li>
+            <li>Adding Notes section to User editor for adding details information about individual users</li>
+            <li>Adding additional error messaging and updating display text for Channel Point Reward buttons &amp; functionality</li>
+            <li>Adding memory &amp; performance usage improvements by only loading in user data when it is needed rather than loading all user data in on launch</li>
+            <li>Adding enforcement for targeted users to be detected in chat for Game commands</li>
+            <li>Adjusting display name for user's to better match how it is displayed natively in Twitch for alternative languages</li>
+            <li>Adding UI support for bit &amp; follower channel emotes</li>
+            <li>The Chat Message Overlay Widget now processes the {USER_SUB_IMAGE} text for the URL of the user's subscriber badge image</li>
+            <li>Fixing bug with Duel game command not properly refunding user if the target user does not accept</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
         <h2 style="color: #2e6c80;">v0.5.10.4:</h2>
         <ul>
             <li>Adding additional timeouts to Streamlabs &amp; StreamElements service connections to combat rapid disconnection issues to their servers</li>
