@@ -322,6 +322,8 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
+
+                        <TextBlock Grid.Row="8" Visibility="{Binding HasReviews, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{x:Static resx:Resources.CommunityCommandsNoReviews}" HorizontalAlignment="Center" />
                     </Grid>
                 </Grid>
             </ScrollViewer>

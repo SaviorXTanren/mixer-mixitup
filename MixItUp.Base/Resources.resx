@@ -5865,4 +5865,7 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="Notes" xml:space="preserve">
     <value>Notes</value>
   </data>
+  <data name="CommunityCommandsNoReviews" xml:space="preserve">
+    <value>No reviews currently, why not leave one!</value>
+  </data>
 </root>
