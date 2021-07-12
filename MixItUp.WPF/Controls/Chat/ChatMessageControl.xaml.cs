@@ -68,9 +68,9 @@ namespace MixItUp.WPF.Controls.Chat
                         string color = alert.Color;
                         try
                         {
-                            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(color))
+                            if (ColorSchemes.HTMLColorSchemeDictionary.TryGetValue(color.Replace(" ", string.Empty), out var colorOverride))
                             {
-                                color = ColorSchemes.HTMLColorSchemeDictionary[color];
+                                color = colorOverride;
                             }
                             foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom(color));
                         }
