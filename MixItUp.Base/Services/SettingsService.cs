@@ -333,10 +333,24 @@ namespace MixItUp.Base.Services
             {
                 await SettingsV3Upgrader.Version2Upgrade(currentVersion, filePath);
                 await SettingsV3Upgrader.Version3Upgrade(currentVersion, filePath);
+                await SettingsV3Upgrader.Version4Upgrade(currentVersion, filePath);
             }
             SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
             settings.Version = SettingsV3Model.LatestVersion;
             return settings;
+        }
+
+        public static async Task Version4Upgrade(int version, string filePath)
+        {
+            if (version < 4)
+            {
+                SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
+                await settings.Initialize();
+
+
+
+                await ServiceManager.Get<SettingsService>().Save(settings);
+            }
         }
 
         public static async Task Version3Upgrade(int version, string filePath)
