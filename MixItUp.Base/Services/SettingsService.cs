@@ -376,7 +376,7 @@ namespace MixItUp.Base.Services
                 Dictionary<Guid, string> userIDToUsername = new Dictionary<Guid, string>();
                 foreach (var kvp in settings.UserData)
                 {
-                    if (kvp.Value.Platform == StreamingPlatformTypeEnum.Twitch && !string.IsNullOrEmpty(kvp.Value.TwitchUsername))
+                    if (kvp.Value.Platforms.Contains(StreamingPlatformTypeEnum.Twitch) && !string.IsNullOrEmpty(kvp.Value.TwitchUsername))
                     {
                         userIDToUsername[kvp.Key] = kvp.Value.TwitchUsername;
                     }

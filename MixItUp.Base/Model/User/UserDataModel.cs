@@ -267,23 +267,26 @@ namespace MixItUp.Base.Model.User
         public UserDataModel() { }
 
         [JsonIgnore]
-        public StreamingPlatformTypeEnum Platform
+        public HashSet<StreamingPlatformTypeEnum> Platforms
         {
             get
             {
-                StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None;
+                if (this.platforms == null)
+                {
+                    this.platforms = new HashSet<StreamingPlatformTypeEnum>();
 
 #pragma warning disable CS0612 // Type or member is obsolete
-                if (this.MixerID > 0) { platform = platform | StreamingPlatformTypeEnum.Mixer; }
+                    if (this.MixerID > 0) { this.platforms.Add(StreamingPlatformTypeEnum.Mixer); }
 #pragma warning restore CS0612 // Type or member is obsolete
-                if (!string.IsNullOrEmpty(this.TwitchID)) { platform = platform | StreamingPlatformTypeEnum.Twitch; }
-                if (!string.IsNullOrEmpty(this.YouTubeID)) { platform = platform | StreamingPlatformTypeEnum.YouTube; }
-                if (!string.IsNullOrEmpty(this.GlimeshID)) { platform = platform | StreamingPlatformTypeEnum.Glimesh; }
-                if (!string.IsNullOrEmpty(this.TrovoID)) { platform = platform | StreamingPlatformTypeEnum.Trovo; }
-
-                return platform;
+                    if (!string.IsNullOrEmpty(this.TwitchID)) { this.platforms.Add(StreamingPlatformTypeEnum.Twitch); }
+                    if (!string.IsNullOrEmpty(this.YouTubeID)) { this.platforms.Add(StreamingPlatformTypeEnum.YouTube); }
+                    if (!string.IsNullOrEmpty(this.GlimeshID)) { this.platforms.Add(StreamingPlatformTypeEnum.Glimesh); }
+                    if (!string.IsNullOrEmpty(this.TrovoID)) { this.platforms.Add(StreamingPlatformTypeEnum.Trovo); }
+                }
+                return this.platforms;
             }
         }
+        private HashSet<StreamingPlatformTypeEnum> platforms = null;
 
         [JsonIgnore]
         public string Username
@@ -291,12 +294,12 @@ namespace MixItUp.Base.Model.User
             get
             {
 #pragma warning disable CS0612 // Type or member is obsolete
-                if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer)) { return this.MixerUsername; }
+                if (this.Platforms.Contains(StreamingPlatformTypeEnum.Mixer)) { return this.MixerUsername; }
 #pragma warning restore CS0612 // Type or member is obsolete
-                else if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch)) { return this.TwitchUsername; }
-                else if (this.Platform.HasFlag(StreamingPlatformTypeEnum.YouTube)) { return this.YouTubeUsername; }
-                else if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Glimesh)) { return this.GlimeshUsername; }
-                else if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Trovo)) { return this.TrovoUsername; }
+                else if (this.Platforms.Contains(StreamingPlatformTypeEnum.Twitch)) { return this.TwitchUsername; }
+                else if (this.Platforms.Contains(StreamingPlatformTypeEnum.YouTube)) { return this.YouTubeUsername; }
+                else if (this.Platforms.Contains(StreamingPlatformTypeEnum.Glimesh)) { return this.GlimeshUsername; }
+                else if (this.Platforms.Contains(StreamingPlatformTypeEnum.Trovo)) { return this.TrovoUsername; }
                 return string.Empty;
             }
         }
@@ -306,10 +309,10 @@ namespace MixItUp.Base.Model.User
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchUserRoles; }
-                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return this.YouTubeUserRoles; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.GlimeshUserRoles; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return this.TrovoUserRoles; }
+                if (this.Platforms.Contains(StreamingPlatformTypeEnum.Twitch)) { return this.TwitchUserRoles; }
+                else if (this.Platforms.Contains(StreamingPlatformTypeEnum.YouTube)) { return this.YouTubeUserRoles; }
+                else if (this.Platforms.Contains(StreamingPlatformTypeEnum.Glimesh)) { return this.GlimeshUserRoles; }
+                else if (this.Platforms.Contains(StreamingPlatformTypeEnum.Trovo)) { return this.TrovoUserRoles; }
                 return new HashSet<UserRoleEnum>() { UserRoleEnum.User };
             }
         }

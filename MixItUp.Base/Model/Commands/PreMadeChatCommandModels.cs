@@ -924,7 +924,7 @@ namespace MixItUp.Base.Model.Commands
                 string mixerUsername = UserService.SanitizeUsername(parameters.Arguments.First());
 
 #pragma warning disable CS0612 // Type or member is obsolete
-                UserDataModel mixerUserData = ChannelSession.Settings.UserData.Values.ToList().FirstOrDefault(u => u.Platform == StreamingPlatformTypeEnum.Mixer && string.Equals(u.MixerUsername, mixerUsername, StringComparison.OrdinalIgnoreCase));
+                UserDataModel mixerUserData = ChannelSession.Settings.UserData.Values.ToList().FirstOrDefault(u => u.Platforms.Contains(StreamingPlatformTypeEnum.Mixer) && string.Equals(u.MixerUsername, mixerUsername, StringComparison.OrdinalIgnoreCase));
 #pragma warning restore CS0612 // Type or member is obsolete
                 if (mixerUserData != null)
                 {

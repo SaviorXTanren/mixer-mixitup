@@ -327,7 +327,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                         string filter = this.UsernameFilter.ToLower();
                         if (this.SelectedPlatform != StreamingPlatformTypeEnum.All)
                         {
-                            data = data.Where(u => u.Platform.HasFlag(this.SelectedPlatform) && u.Username != null && u.Username.Contains(filter, StringComparison.OrdinalIgnoreCase));
+                            data = data.Where(u => u.Platforms.Contains(this.SelectedPlatform) && u.Username != null && u.Username.Contains(filter, StringComparison.OrdinalIgnoreCase));
                         }
                         else
                         {
@@ -411,7 +411,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                     }
 
                     if (this.SortColumnIndex == 0) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.Username) : data.OrderBy(u => u.Username); }
-                    else if (this.SortColumnIndex == 1) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.Platform) : data.OrderBy(u => u.Platform); }
+                    else if (this.SortColumnIndex == 1) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.Platforms) : data.OrderBy(u => u.Platforms); }
                     else if (this.SortColumnIndex == 2) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryRole) : data.OrderBy(u => u.PrimaryRole); }
                     else if (this.SortColumnIndex == 3) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.ViewingMinutes) : data.OrderBy(u => u.ViewingMinutes); }
                     else if (this.SortColumnIndex == 4) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryCurrency) : data.OrderBy(u => u.PrimaryCurrency); }

@@ -313,7 +313,7 @@ namespace MixItUp.Base.ViewModel.User
         public Guid ID { get { return this.Data.ID; } }
 
         [JsonIgnore]
-        public StreamingPlatformTypeEnum Platform { get { return this.Data.Platform; } }
+        public StreamingPlatformTypeEnum Platform { get { return this.Data.Platforms.FirstOrDefault(); } }
 
         [JsonIgnore]
         public string PlatformID
