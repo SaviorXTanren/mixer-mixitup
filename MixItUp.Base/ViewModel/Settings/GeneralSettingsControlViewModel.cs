@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Actions;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Settings.Generic;
@@ -17,6 +18,7 @@ namespace MixItUp.Base.ViewModel.Settings
         public GenericToggleSettingsOptionControlViewModel PreviewProgram { get; set; }
 
         public GenericComboBoxSettingsOptionControlViewModel<LanguageOptions> Language { get; set; }
+        public GenericComboBoxSettingsOptionControlViewModel<StreamingPlatformTypeEnum> DefaultStreamingPlatform { get; set; }
         public GenericComboBoxSettingsOptionControlViewModel<StreamingSoftwareTypeEnum> DefaultStreamingSoftware { get; set; }
         public GenericComboBoxSettingsOptionControlViewModel<string> DefaultAudioOutput { get; set; }
 
@@ -44,6 +46,9 @@ namespace MixItUp.Base.ViewModel.Settings
                     ChannelSession.AppSettings.SettingsChangeRestartRequired = true;
                     ChannelSession.AppSettings.LanguageOption = value;
                 });
+
+            this.DefaultStreamingPlatform = new GenericComboBoxSettingsOptionControlViewModel<StreamingPlatformTypeEnum>(MixItUp.Base.Resources.DefaultStreamingPlatform,
+                StreamingPlatforms.SupportedPlatforms, ChannelSession.Settings.DefaultStreamingPlatform, (value) => { ChannelSession.Settings.DefaultStreamingPlatform = value; });
 
             this.DefaultStreamingSoftware = new GenericComboBoxSettingsOptionControlViewModel<StreamingSoftwareTypeEnum>(MixItUp.Base.Resources.DefaultStreamingSoftware,
                 new List<StreamingSoftwareTypeEnum>() { StreamingSoftwareTypeEnum.OBSStudio, StreamingSoftwareTypeEnum.XSplit, StreamingSoftwareTypeEnum.StreamlabsOBS },

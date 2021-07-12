@@ -3228,6 +3228,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Default Streaming Platform.
+        /// </summary>
+        public static string DefaultStreamingPlatform {
+            get {
+                return ResourceManager.GetString("DefaultStreamingPlatform", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Default Streaming Software.
         /// </summary>
         public static string DefaultStreamingSoftware {
