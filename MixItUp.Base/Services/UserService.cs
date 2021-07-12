@@ -363,6 +363,33 @@ namespace MixItUp.Base.Services
                     {
                         this.platformUsernameLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchUsername] = userData.ID;
                     }
+
+                    if (!string.IsNullOrEmpty(userData.YouTubeID))
+                    {
+                        this.platformUserIDLookups[StreamingPlatformTypeEnum.YouTube][userData.YouTubeID] = userData.ID;
+                    }
+                    if (!string.IsNullOrEmpty(userData.YouTubeUsername))
+                    {
+                        this.platformUsernameLookups[StreamingPlatformTypeEnum.YouTube][userData.YouTubeUsername] = userData.ID;
+                    }
+
+                    if (!string.IsNullOrEmpty(userData.TrovoID))
+                    {
+                        this.platformUserIDLookups[StreamingPlatformTypeEnum.Trovo][userData.TrovoID] = userData.ID;
+                    }
+                    if (!string.IsNullOrEmpty(userData.TrovoUsername))
+                    {
+                        this.platformUsernameLookups[StreamingPlatformTypeEnum.Trovo][userData.TrovoUsername] = userData.ID;
+                    }
+
+                    if (!string.IsNullOrEmpty(userData.GlimeshID))
+                    {
+                        this.platformUserIDLookups[StreamingPlatformTypeEnum.Glimesh][userData.GlimeshID] = userData.ID;
+                    }
+                    if (!string.IsNullOrEmpty(userData.GlimeshUsername))
+                    {
+                        this.platformUsernameLookups[StreamingPlatformTypeEnum.Glimesh][userData.GlimeshUsername] = userData.ID;
+                    }
                 }
             }
         }

@@ -62,90 +62,68 @@ namespace MixItUp.Base.ViewModel.User
 
         public static async Task<UserViewModel> Create(TwitchNewAPI.Users.UserModel twitchUser)
         {
-            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, twitchUser.id);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, twitchUser.id, twitchUser.login);
 
-            user.TwitchID = twitchUser.id;
-            user.TwitchUsername = twitchUser.login;
             user.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : user.TwitchUsername;
             user.TwitchAvatarLink = twitchUser.profile_image_url;
 
             user.SetTwitchRoles();
-
-            ServiceManager.Get<UserService>().SetUserData(user.Data);
 
             return user;
         }
 
         public static async Task<UserViewModel> Create(TwitchV5API.Users.UserModel twitchUser)
         {
-            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, twitchUser.id);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, twitchUser.id, twitchUser.name);
 
-            user.TwitchID = twitchUser.id;
-            user.TwitchUsername = twitchUser.name;
             user.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : user.TwitchUsername;
             user.TwitchAvatarLink = twitchUser.logo;
 
             user.SetTwitchRoles();
-
-            ServiceManager.Get<UserService>().SetUserData(user.Data);
 
             return user;
         }
 
         public static async Task<UserViewModel> Create(ChatMessagePacketModel twitchMessage)
         {
-            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, twitchMessage.UserID);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, twitchMessage.UserID, twitchMessage.UserLogin);
 
-            user.TwitchID = twitchMessage.UserID;
-            user.TwitchUsername = twitchMessage.UserLogin;
             user.TwitchDisplayName = (!string.IsNullOrEmpty(twitchMessage.UserDisplayName)) ? twitchMessage.UserDisplayName : user.TwitchUsername;
 
             user.SetTwitchRoles();
 
             user.SetTwitchChatDetails(twitchMessage);
 
-            ServiceManager.Get<UserService>().SetUserData(user.Data);
-
             return user;
         }
 
         public static async Task<UserViewModel> Create(PubSubWhisperEventModel whisper)
         {
-            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, whisper.from_id.ToString());
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, whisper.from_id.ToString(), whisper.tags.login);
 
-            user.TwitchID = whisper.from_id.ToString();
-            user.TwitchUsername = whisper.tags.login;
             user.TwitchDisplayName = (!string.IsNullOrEmpty(whisper.tags.display_name)) ? whisper.tags.display_name : user.TwitchUsername;
 
             user.SetTwitchRoles();
-
-            ServiceManager.Get<UserService>().SetUserData(user.Data);
 
             return user;
         }
 
         public static async Task<UserViewModel> Create(PubSubWhisperEventRecipientModel whisperRecipient)
         {
-            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, whisperRecipient.id.ToString());
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, whisperRecipient.id.ToString(), whisperRecipient.username);
 
-            user.TwitchID = whisperRecipient.id.ToString();
-            user.TwitchUsername = whisperRecipient.username;
             user.TwitchDisplayName = (!string.IsNullOrEmpty(whisperRecipient.display_name)) ? whisperRecipient.display_name : user.TwitchUsername;
             user.TwitchAvatarLink = whisperRecipient.profile_image;
 
             user.SetTwitchRoles();
-
-            ServiceManager.Get<UserService>().SetUserData(user.Data);
 
             return user;
         }
 
         public static async Task<UserViewModel> Create(ChatUserNoticePacketModel packet)
         {
-            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, packet.UserID.ToString());
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, packet.UserID.ToString(), !string.IsNullOrEmpty(packet.RaidUserLogin) ? packet.RaidUserLogin : packet.Login);
 
-            user.TwitchID = packet.UserID.ToString();
-            user.TwitchUsername = !string.IsNullOrEmpty(packet.RaidUserLogin) ? packet.RaidUserLogin : packet.Login;
             user.TwitchDisplayName = !string.IsNullOrEmpty(packet.RaidUserDisplayName) ? packet.RaidUserDisplayName : packet.DisplayName;
             if (string.IsNullOrEmpty(user.TwitchDisplayName))
             {
@@ -156,89 +134,66 @@ namespace MixItUp.Base.ViewModel.User
 
             user.SetTwitchChatDetails(packet);
 
-            ServiceManager.Get<UserService>().SetUserData(user.Data);
-
             return user;
         }
 
         public static async Task<UserViewModel> Create(ChatClearChatPacketModel packet)
         {
-            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, packet.UserID);
-
-            user.TwitchID = packet.UserID;
-            user.TwitchUsername = packet.UserLogin;
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, packet.UserID, packet.UserLogin);
 
             user.SetTwitchRoles();
-
-            ServiceManager.Get<UserService>().SetUserData(user.Data);
 
             return user;
         }
 
         public static async Task<UserViewModel> Create(PubSubBitsEventV2Model packet)
         {
-            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, packet.user_id);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, packet.user_id, packet.user_name);
 
-            user.TwitchID = packet.user_id;
-            user.TwitchDisplayName = user.TwitchUsername = packet.user_name;
+            user.TwitchDisplayName = packet.user_name;
 
             user.SetTwitchRoles();
-
-            ServiceManager.Get<UserService>().SetUserData(user.Data);
 
             return user;
         }
 
         public static async Task<UserViewModel> Create(PubSubSubscriptionsEventModel packet)
         {
-            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, packet.user_id);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, packet.user_id, packet.user_name);
 
-            user.TwitchID = packet.user_id;
-            user.TwitchUsername = packet.user_name;
             user.TwitchDisplayName = (!string.IsNullOrEmpty(packet.display_name)) ? packet.display_name : user.TwitchUsername;
 
             user.SetTwitchRoles();
-
-            ServiceManager.Get<UserService>().SetUserData(user.Data);
 
             return user;
         }
 
         public static async Task<UserViewModel> Create(UserFollowModel follow)
         {
-            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, follow.from_id);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, follow.from_id, follow.from_name);
 
-            user.TwitchID = follow.from_id;
-            user.TwitchDisplayName = user.TwitchUsername = follow.from_name;
+            user.TwitchDisplayName = follow.from_name;
 
             user.SetTwitchRoles();
-
-            ServiceManager.Get<UserService>().SetUserData(user.Data);
 
             return user;
         }
 
         public static async Task<UserViewModel> Create(TwitchWebhookFollowModel follow)
         {
-            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, follow.UserID);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, follow.UserID, follow.Username);
 
-            user.TwitchID = follow.UserID;
-            user.TwitchUsername = follow.Username;
             user.TwitchDisplayName = follow.UserDisplayName;
 
             user.SetTwitchRoles();
-
-            ServiceManager.Get<UserService>().SetUserData(user.Data);
 
             return user;
         }
 
         public static async Task<UserViewModel> Create(Glimesh.Base.Models.Users.UserModel glimeshUser)
         {
-            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Glimesh, glimeshUser.id);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Glimesh, glimeshUser.id, glimeshUser.username);
 
-            user.GlimeshID = glimeshUser.id;
-            user.GlimeshUsername = glimeshUser.username;
             user.GlimeshDisplayName = glimeshUser.displayname;
             user.GlimeshAvatarLink = glimeshUser.avatarUrl;
             user.AccountDate = GlimeshPlatformService.GetGlimeshDateTime(glimeshUser.confirmedAt);
@@ -252,10 +207,8 @@ namespace MixItUp.Base.ViewModel.User
 
         public static async Task<UserViewModel> Create(Trovo.Base.Models.Users.UserModel trovoUser)
         {
-            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Trovo, trovoUser.user_id);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Trovo, trovoUser.user_id, trovoUser.username);
 
-            user.TrovoID = trovoUser.user_id;
-            user.TrovoUsername = trovoUser.username;
             user.TrovoDisplayName = trovoUser.nickname;
 
             user.SetTrovoRoles();
@@ -265,10 +218,8 @@ namespace MixItUp.Base.ViewModel.User
 
         public static async Task<UserViewModel> Create(Trovo.Base.Models.Users.PrivateUserModel trovoUser)
         {
-            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Trovo, trovoUser.userId);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Trovo, trovoUser.userId, trovoUser.userName);
 
-            user.TrovoID = trovoUser.userId;
-            user.TrovoUsername = trovoUser.userName;
             user.TrovoDisplayName = trovoUser.nickName;
             user.TrovoAvatarLink = trovoUser.profilePic;
 
@@ -279,10 +230,9 @@ namespace MixItUp.Base.ViewModel.User
 
         public static async Task<UserViewModel> Create(Trovo.Base.Models.Chat.ChatMessageModel message)
         {
-            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Trovo, message.sender_id);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Trovo, message.sender_id.ToString(), message.user_name);
 
-            user.TrovoID = message.sender_id;
-            user.TrovoUsername = user.TrovoDisplayName = message.nick_name;
+            user.TrovoDisplayName = message.nick_name;
 
             user.SetTrovoChatDetails(message);
 
@@ -291,10 +241,9 @@ namespace MixItUp.Base.ViewModel.User
 
         public static async Task<UserViewModel> Create(Google.Apis.YouTube.v3.Data.Channel channel)
         {
-            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.YouTube, channel.Id);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.YouTube, channel.Id, channel.Snippet.Title);
 
-            user.YouTubeID = channel.Id;
-            user.YouTubeUsername = user.YouTubeDisplayName = channel.Snippet.Title;
+            user.YouTubeDisplayName = channel.Snippet.Title;
             user.YouTubeAvatarLink = channel.Snippet.Thumbnails.Default__.Url;
             user.YouTubeURL = "https://www.youtube.com/channel/" + channel.Id;
 
@@ -305,7 +254,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public static async Task<UserViewModel> Create(Google.Apis.YouTube.v3.Data.LiveChatMessage message)
         {
-            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.YouTube, message.AuthorDetails?.ChannelId);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.YouTube, message.AuthorDetails?.ChannelId, message.AuthorDetails.DisplayName);
 
             user.SetYouTubeChatDetails(message);
 
@@ -320,24 +269,42 @@ namespace MixItUp.Base.ViewModel.User
         [Obsolete]
         public UserViewModel() { }
 
-        private static async Task<UserViewModel> Create(StreamingPlatformTypeEnum platform, string platformID)
+        private static async Task<UserViewModel> Create(StreamingPlatformTypeEnum platform, string platformID, string platformUsername)
         {
             UserDataModel data = new UserDataModel();
-            if (!string.IsNullOrEmpty(platformID))
+            if (!string.IsNullOrEmpty(platformID) && !string.IsNullOrEmpty(platformUsername))
             {
                 data = await ServiceManager.Get<UserService>().GetUserDataByPlatformID(platform, platformID);
                 if (data == null)
                 {
-                    data = new UserDataModel();
-                    switch (platform)
+                    data = await ServiceManager.Get<UserService>().GetUserDataByPlatformUsername(platform, platformUsername);
+                    if (data == null)
                     {
-                        case StreamingPlatformTypeEnum.Twitch: data.TwitchID = platformID; break;
-                        case StreamingPlatformTypeEnum.YouTube: data.YouTubeID = platformID; break;
-                        case StreamingPlatformTypeEnum.Trovo: data.TrovoID = platformID; break;
-                        case StreamingPlatformTypeEnum.Glimesh: data.GlimeshID = platformID; break;
+                        data = new UserDataModel();
                     }
-                    ServiceManager.Get<UserService>().SetUserData(data);
                 }
+
+                switch (platform)
+                {
+                    case StreamingPlatformTypeEnum.Twitch:
+                        data.TwitchID = platformID;
+                        data.TwitchUsername = platformUsername;
+                        break;
+                    case StreamingPlatformTypeEnum.YouTube:
+                        data.YouTubeID = platformID;
+                        data.YouTubeUsername = platformUsername;
+                        break;
+                    case StreamingPlatformTypeEnum.Trovo:
+                        data.TrovoID = platformID;
+                        data.TrovoUsername = platformUsername;
+                        break;
+                    case StreamingPlatformTypeEnum.Glimesh:
+                        data.GlimeshID = platformID;
+                        data.GlimeshUsername = platformUsername;
+                        break;
+                }
+
+                ServiceManager.Get<UserService>().SetUserData(data);
             }
             return new UserViewModel(data);
         }

@@ -272,7 +272,7 @@ namespace MixItUp.Base.Services.Trovo
                 }
                 this.messagesProcessed.Add(message.message_id);
 
-                UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Trovo, messageContainer.chats.First().sender_id);
+                UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Trovo, messageContainer.chats.First().sender_id.ToString());
                 if (user == null)
                 {
                     UserModel trovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(messageContainer.chats.First().nick_name);
