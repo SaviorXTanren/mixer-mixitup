@@ -888,7 +888,7 @@ namespace MixItUp.Base.Model.Settings
 
         public void SetUserData(UserDataModel userData)
         {
-            if (userData != null)
+            if (userData != null && userData.Platform != StreamingPlatformTypeEnum.None)
             {
                 lock (this.UserData)
                 {
