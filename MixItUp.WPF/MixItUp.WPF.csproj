@@ -1987,10 +1987,6 @@
       <Project>{d2a5558c-73e9-4266-9959-1b0b61b4d3cd}</Project>
       <Name>MixItUp.SignalR.Client</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MixItUp.Uninstaller\MixItUp.Uninstaller.csproj">
-      <Project>{36c2dc8e-a581-4299-bdab-c6824a8f09ac}</Project>
-      <Name>MixItUp.Uninstaller</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Images\Discord.png" />
