@@ -15276,6 +15276,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Prediction titles must be 45 characters or less.
+        /// </summary>
+        public static string TwitchActionPredictionTitleTooLong {
+            get {
+                return ResourceManager.GetString("TwitchActionPredictionTitleTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Twitch Action: Stream Marker description must be 140 characters or less.
         /// </summary>
         public static string TwitchActionStreamMarkerDescriptionMustBe140CharactersOrLess {
