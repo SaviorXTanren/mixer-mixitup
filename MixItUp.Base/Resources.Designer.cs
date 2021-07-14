@@ -8446,6 +8446,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Load Model.
+        /// </summary>
+        public static string LoadModel {
+            get {
+                return ResourceManager.GetString("LoadModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to LOCATION.
         /// </summary>
         public static string Location {
@@ -12118,6 +12127,15 @@ namespace MixItUp.Base {
         public static string RunForEachUser {
             get {
                 return ResourceManager.GetString("RunForEachUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run Hot Key.
+        /// </summary>
+        public static string RunHotKey {
+            get {
+                return ResourceManager.GetString("RunHotKey", resourceCulture);
             }
         }
         
@@ -16565,6 +16583,87 @@ namespace MixItUp.Base {
         public static string VolumeHeader {
             get {
                 return ResourceManager.GetString("VolumeHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VTube Studio.
+        /// </summary>
+        public static string VTubeStudio {
+            get {
+                return ResourceManager.GetString("VTubeStudio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VTube Studio Action: Missing Hot Key.
+        /// </summary>
+        public static string VTubeStudioActionMissingHotKey {
+            get {
+                return ResourceManager.GetString("VTubeStudioActionMissingHotKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VTube Studio Action: Missing Model.
+        /// </summary>
+        public static string VTubeStudioActionMissingModel {
+            get {
+                return ResourceManager.GetString("VTubeStudioActionMissingModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VTube Studio connection failed, please ensure VTube Studio is running, the API is enabled on the settings menu, and you have approved access within a timely manner..
+        /// </summary>
+        public static string VTubeStudioConnectionFailed {
+            get {
+                return ResourceManager.GetString("VTubeStudioConnectionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current Model: .
+        /// </summary>
+        public static string VTubeStudioCurrentModel {
+            get {
+                return ResourceManager.GetString("VTubeStudioCurrentModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hot Key.
+        /// </summary>
+        public static string VTubeStudioHotKey {
+            get {
+                return ResourceManager.GetString("VTubeStudioHotKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VTube Studio connectivity allows you to control functionality in the VTube Studio software, such as changing the currently displayed model and triggering hot keys within the application..
+        /// </summary>
+        public static string VTubeStudioInfo {
+            get {
+                return ResourceManager.GetString("VTubeStudioInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Model.
+        /// </summary>
+        public static string VTubeStudioModel {
+            get {
+                return ResourceManager.GetString("VTubeStudioModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VTube Studio not connected, please ensure the software is running and the service is connected on the Services page..
+        /// </summary>
+        public static string VTubeStudioNotConnected {
+            get {
+                return ResourceManager.GetString("VTubeStudioNotConnected", resourceCulture);
             }
         }
         
