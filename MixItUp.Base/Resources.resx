@@ -5902,6 +5902,6 @@ Failure to do one of the following could effect how users rate &amp; review your
     <value>Model</value>
   </data>
   <data name="VTubeStudioNotConnected" xml:space="preserve">
-    <value>VTube Studio not connected, please ensure the software is running and the service is connected on the Services page.</value>
+    <value>VTube Studio not connected</value>
   </data>
 </root>

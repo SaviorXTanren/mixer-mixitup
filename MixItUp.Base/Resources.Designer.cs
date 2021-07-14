@@ -16659,7 +16659,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to VTube Studio not connected, please ensure the software is running and the service is connected on the Services page..
+        ///   Looks up a localized string similar to VTube Studio not connected.
         /// </summary>
         public static string VTubeStudioNotConnected {
             get {
