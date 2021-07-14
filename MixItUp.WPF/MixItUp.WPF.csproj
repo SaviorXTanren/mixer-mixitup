@@ -477,6 +477,9 @@
     <Compile Include="Controls\Actions\TwitterActionEditorControl.xaml.cs">
       <DependentUpon>TwitterActionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\VTubeStudioActionEditorControl.xaml.cs">
+      <DependentUpon>VTubeStudioActionEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\WaitActionEditorControl.xaml.cs">
       <DependentUpon>WaitActionEditorControl.xaml</DependentUpon>
     </Compile>
@@ -866,6 +869,9 @@
     <Compile Include="Controls\Services\TwitterServiceControl.xaml.cs">
       <DependentUpon>TwitterServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\VTubeStudioServiceControl.xaml.cs">
+      <DependentUpon>VTubeStudioServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\XSplitServiceControl.xaml.cs">
       <DependentUpon>XSplitServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1141,6 +1147,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\TwitterActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\VTubeStudioActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1653,6 +1663,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Services\TwitterServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\VTubeStudioServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

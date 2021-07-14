@@ -417,6 +417,7 @@ namespace MixItUp.Base
                         if (ChannelSession.Settings.DiscordOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Discord] = ChannelSession.Settings.DiscordOAuthToken; }
                         if (ChannelSession.Settings.TwitterOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Twitter] = ChannelSession.Settings.TwitterOAuthToken; }
                         if (ChannelSession.Settings.PixelChatOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.PixelChat] = ChannelSession.Settings.PixelChatOAuthToken; }
+                        if (ChannelSession.Settings.PixelChatOAuthToken != null) { externalServiceToConnect[ServiceManager.Services.VTubeStudio] = ChannelSession.Settings.VTubeStudioOAuthToken; }
                         if (ChannelSession.Services.OBSStudio.IsEnabled) { externalServiceToConnect[ChannelSession.Services.OBSStudio] = null; }
                         if (ChannelSession.Services.StreamlabsOBS.IsEnabled) { externalServiceToConnect[ChannelSession.Services.StreamlabsOBS] = null; }
                         if (ChannelSession.Services.XSplit.IsEnabled) { externalServiceToConnect[ChannelSession.Services.XSplit] = null; }

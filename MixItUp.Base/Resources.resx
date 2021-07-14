@@ -5901,4 +5901,37 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="PixelChatActionMissingSceneAndSceneComponent" xml:space="preserve">
     <value>Pixel Chat Action: Missing Scene &amp; Scene Component</value>
   </data>
+  <data name="VTubeStudio" xml:space="preserve">
+    <value>VTube Studio</value>
+  </data>
+  <data name="VTubeStudioConnectionFailed" xml:space="preserve">
+    <value>VTube Studio connection failed, please ensure VTube Studio is running, the API is enabled on the settings menu, and you have approved access within a timely manner.</value>
+  </data>
+  <data name="VTubeStudioInfo" xml:space="preserve">
+    <value>VTube Studio connectivity allows you to control functionality in the VTube Studio software, such as changing the currently displayed model and triggering hot keys within the application.</value>
+  </data>
+  <data name="LoadModel" xml:space="preserve">
+    <value>Load Model</value>
+  </data>
+  <data name="RunHotKey" xml:space="preserve">
+    <value>Run Hot Key</value>
+  </data>
+  <data name="VTubeStudioActionMissingHotKey" xml:space="preserve">
+    <value>VTube Studio Action: Missing Hot Key</value>
+  </data>
+  <data name="VTubeStudioActionMissingModel" xml:space="preserve">
+    <value>VTube Studio Action: Missing Model</value>
+  </data>
+  <data name="VTubeStudioCurrentModel" xml:space="preserve">
+    <value>Current Model: </value>
+  </data>
+  <data name="VTubeStudioHotKey" xml:space="preserve">
+    <value>Hot Key</value>
+  </data>
+  <data name="VTubeStudioModel" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="VTubeStudioNotConnected" xml:space="preserve">
+    <value>VTube Studio not connected, please ensure the software is running and the service is connected on the Services page.</value>
+  </data>
 </root>

@@ -87,6 +87,8 @@ namespace MixItUp.Base.Model.Settings
         public OAuthTokenModel RainMakerOAuthToken { get; set; }
         [DataMember]
         public OAuthTokenModel PixelChatOAuthToken { get; set; }
+        [DataMember]
+        public OAuthTokenModel VTubeStudioOAuthToken { get; set; }
 
         #endregion Authentication
 
@@ -753,6 +755,10 @@ namespace MixItUp.Base.Model.Settings
             if (ChannelSession.Services.PixelChat.IsConnected)
             {
                 this.PixelChatOAuthToken = ChannelSession.Services.PixelChat.GetOAuthTokenCopy();
+            }
+            if (ServiceManager.Get<VTubeStudioService>().IsConnected)
+            {
+                this.VTubeStudioOAuthToken = ServiceManager.Get<VTubeStudioService>().GetOAuthTokenCopy();
             }
         }
 
