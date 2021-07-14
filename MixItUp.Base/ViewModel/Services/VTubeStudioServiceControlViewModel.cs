@@ -30,7 +30,7 @@ namespace MixItUp.Base.ViewModel.Services
             {
                 await ServiceManager.Get<VTubeStudioService>().Disconnect();
 
-                ChannelSession.Settings.StreamlabsOAuthToken = null;
+                ChannelSession.Settings.VTubeStudioOAuthToken = null;
 
                 this.IsConnected = false;
             });
