@@ -79,8 +79,12 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
 
             foreach (CommunityCommandReviewModel review in this.model.Reviews.OrderByDescending(r => r.DateTime))
             {
-                this.Reviews.Add(new CommunityCommandReviewViewModel(review));
+                if (!string.IsNullOrEmpty(review.Review))
+                {
+                    this.Reviews.Add(new CommunityCommandReviewViewModel(review));
+                }
             }
+            this.NotifyPropertyChanged("HasReviews");
         }
 
         public virtual bool IsMyCommand { get { return false; } }
@@ -92,6 +96,8 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
         public List<CommunityCommandReviewViewModel> Reviews { get; } = new List<CommunityCommandReviewViewModel>();
 
         public CommandModelBase PrimaryCommand { get { return this.Commands.FirstOrDefault(); } }
+
+        public bool HasReviews { get { return this.Reviews.Count > 0; } }
     }
 
     public class MyCommunityCommandDetailsViewModel : CommunityCommandDetailsViewModel

@@ -2224,6 +2224,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No reviews currently, why not leave one!.
+        /// </summary>
+        public static string CommunityCommandsNoReviews {
+            get {
+                return ResourceManager.GetString("CommunityCommandsNoReviews", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The following command contains actions that reference other commands inside of it (EX: Command A runs Command B using a Command Action). When this command is uploaded, it WILL NOT include these other referenced commands, just the current command. We encourage creators to do one of the following:
         ///
         ///- Combine your other referenced commands into this command so users only need this one to fully use your setup.
@@ -15299,6 +15308,15 @@ namespace MixItUp.Base {
         public static string TwitchActionCreatePredictionTwoChoices {
             get {
                 return ResourceManager.GetString("TwitchActionCreatePredictionTwoChoices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prediction titles must be 45 characters or less.
+        /// </summary>
+        public static string TwitchActionPredictionTitleTooLong {
+            get {
+                return ResourceManager.GetString("TwitchActionPredictionTitleTooLong", resourceCulture);
             }
         }
         

@@ -108,7 +108,7 @@ namespace MixItUp.WPF.Controls.MainControls
             if (!this.viewModel.CommandDetails.Username.Equals(ChannelSession.GetCurrentUser().Username, StringComparison.CurrentCultureIgnoreCase))
             {
                 CommunityCommandsReviewCommandDialogControl dialogControl = new CommunityCommandsReviewCommandDialogControl();
-                if (bool.Equals(await DialogHelper.ShowCustom(dialogControl), true) && !string.IsNullOrEmpty(dialogControl.Review))
+                if (bool.Equals(await DialogHelper.ShowCustom(dialogControl), true))
                 {
                     if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.CommunityCommandsReviewAgreement))
                     {

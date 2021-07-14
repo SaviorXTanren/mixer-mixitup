@@ -282,6 +282,14 @@ namespace MixItUp.Base.Services.Twitch
                 }
             }));
 
+            initializationTasks.Add(Task.Run(async () =>
+            {
+                foreach (ChatEmoteModel emote in await ChannelSession.TwitchUserConnection.GetChannelEmotes(ChannelSession.TwitchUserNewAPI))
+                {
+                    this.emotes[emote.name] = new TwitchChatEmoteViewModel(emote);
+                }
+            }));
+
             if (this.emoteSetIDs != null)
             {
                 initializationTasks.Add(Task.Run(async () =>

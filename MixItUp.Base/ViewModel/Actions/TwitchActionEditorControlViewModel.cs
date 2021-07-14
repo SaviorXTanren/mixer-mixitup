@@ -14,6 +14,8 @@ namespace MixItUp.Base.ViewModel.Actions
 {
     public class TwitchActionEditorControlViewModel : SubActionContainerControlViewModel
     {
+        private const int PredictionTitleMaxLength = 45;
+
         public override ActionTypeEnum Type { get { return ActionTypeEnum.Twitch; } }
 
         public IEnumerable<TwitchActionType> ActionTypes { get { return EnumHelper.GetEnumList<TwitchActionType>(); } }
@@ -481,6 +483,11 @@ namespace MixItUp.Base.ViewModel.Actions
                 if (string.IsNullOrEmpty(this.PredictionTitle))
                 {
                     return new Result(MixItUp.Base.Resources.TwitchActionCreatePredictionMissingTitle);
+                }
+
+                if (this.PredictionTitle.Length > 45)
+                {
+                    return new Result(MixItUp.Base.Resources.TwitchActionPredictionTitleTooLong);
                 }
 
                 if (this.PredictionDurationSeconds <= 0)

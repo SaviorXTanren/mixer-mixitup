@@ -345,7 +345,7 @@ namespace MixItUp.Base.Services
 
         public void SetUserData(UserDataModel userData)
         {
-            if (userData != null)
+            if (userData != null && userData.Platforms.Count() > 0)
             {
                 lock (ChannelSession.Settings.UserData)
                 {

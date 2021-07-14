@@ -12,6 +12,7 @@ namespace MixItUp.Uninstaller
     {
         public const string MixItUpProcessName = "MixItUp";
         public static readonly string MixItUpStartMenuDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.StartMenu), "Mix It Up");
+        public static readonly string DefaultInstallDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MixItUp");
         public const string MixItUpShortcutFileName = "Mix It Up.lnk";
         public static string MixItUpDesktopShortcutFilePath { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), MixItUpShortcutFileName); } }
 
@@ -44,6 +45,15 @@ namespace MixItUp.Uninstaller
 
         public static void Main(string[] args)
         {
+            var tempPath = Path.GetTempPath();
+
+            if (!Assembly.GetExecutingAssembly().Location.StartsWith(DefaultInstallDirectory, StringComparison.OrdinalIgnoreCase) &&
+                !Assembly.GetExecutingAssembly().Location.StartsWith(tempPath, StringComparison.OrdinalIgnoreCase))
+            {
+                // Wait, we are running from some unexpected location, do nothing
+                return;
+            }
+
             // Uninstall process
             ////////////////////
             // Copy self to temp dir, run exe with old path
