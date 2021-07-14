@@ -3,7 +3,10 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Twitch;
+using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -17,17 +20,26 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
+    public class AuthenticationMultiRequest
+    {
+        public string TwitchAccessToken { get; set; }
+        public string GlimeshAccessToken { get; set; }
+        public string TrovoAccessToken { get; set; }
+        public string YouTubeAccessToken { get; set; }
+    }
+
     public interface IWebhookService
     {
         Task<Result> Connect();
         Task Disconnect();
 
-        Task Authenticate(string twitchAccessToken);
+        Task Authenticate(string twitchAccessToken, string glimeshAccessToken, string trovoAccessToken, string youTubeAccessToken);
     }
 
     public class WebhookService : OAuthRestServiceBase, IWebhookService
     {
         public const string AuthenticateMethodName = "Authenticate";
+        // public const string AuthenticateMultiMethodName = "AuthenticateMulti";
 
         private readonly string apiAddress;
         private readonly SignalRConnection signalRConnection;
@@ -108,8 +120,12 @@ namespace MixItUp.Base.Services
         {
             ChannelSession.ReconnectionOccurred("Webhook Events");
 
-            var twitchUserOAuthToken = ServiceManager.Get<TwitchSessionService>().UserConnection.Connection.GetOAuthTokenCopy();
-            await this.Authenticate(twitchUserOAuthToken?.accessToken);
+            var twitchUserOAuthToken = ServiceManager.Get<TwitchSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy();
+            var glimeshUserOAuthToken = ServiceManager.Get<GlimeshSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy();
+            var trovoUserOAuthToken = ServiceManager.Get<TrovoSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy();
+            var youTubeUserOAuthToken = ServiceManager.Get<YouTubeSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy();
+
+            await this.Authenticate(twitchUserOAuthToken?.accessToken, glimeshUserOAuthToken?.accessToken, trovoUserOAuthToken?.accessToken, youTubeUserOAuthToken?.accessToken);
         }
 
         private void SignalRConnection_Disconnected(object sender, Exception e)
@@ -117,9 +133,18 @@ namespace MixItUp.Base.Services
             ChannelSession.DisconnectionOccurred("Webhook Events");
         }
 
-        public async Task Authenticate(string twitchAccessToken)
+        public async Task Authenticate(string twitchAccessToken, string glimeshAccessToken, string trovoAccessToken, string youTubeAccessToken)
         {
             await this.AsyncWrapper(this.signalRConnection.Send(AuthenticateMethodName, twitchAccessToken));
+            //await this.AsyncWrapper(this.signalRConnection.Send(
+            //    AuthenticateMultiMethodName,
+            //    new AuthenticationMultiRequest
+            //    {
+            //        TwitchAccessToken = twitchAccessToken,
+            //        GlimeshAccessToken = glimeshAccessToken,
+            //        TrovoAccessToken = trovoAccessToken,
+            //        YouTubeAccessToken = youTubeAccessToken
+            //    }));
         }
 
         protected override string GetBaseAddress() { return this.apiAddress; }
