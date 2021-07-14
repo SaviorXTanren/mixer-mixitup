@@ -284,7 +284,7 @@ namespace MixItUp.Base.Services.Twitch
 
             initializationTasks.Add(Task.Run(async () =>
             {
-                foreach (ChatEmoteModel emote in await ChannelSession.TwitchUserConnection.GetChannelEmotes(ChannelSession.TwitchUserNewAPI))
+                foreach (ChatEmoteModel emote in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelEmotes(ServiceManager.Get<TwitchSessionService>().UserNewAPI))
                 {
                     this.emotes[emote.name] = new TwitchChatEmoteViewModel(emote);
                 }
