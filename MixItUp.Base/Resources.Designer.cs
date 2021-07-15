@@ -2206,7 +2206,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Image File Path (Optional).
+        ///   Looks up a localized string similar to Image File Path (Optional) (Resized to 100x100 pixels).
         /// </summary>
         public static string CommunityCommandsImageFilePath {
             get {
@@ -2262,6 +2262,24 @@ namespace MixItUp.Base {
         public static string CommunityCommandsReviewAgreement {
             get {
                 return ResourceManager.GetString("CommunityCommandsReviewAgreement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Screenshot.
+        /// </summary>
+        public static string CommunityCommandsScreenshot {
+            get {
+                return ResourceManager.GetString("CommunityCommandsScreenshot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Screenshot File Path (Optional) (Resized to 1280x720 pixels max).
+        /// </summary>
+        public static string CommunityCommandsScreenshotFilePath {
+            get {
+                return ResourceManager.GetString("CommunityCommandsScreenshotFilePath", resourceCulture);
             }
         }
         

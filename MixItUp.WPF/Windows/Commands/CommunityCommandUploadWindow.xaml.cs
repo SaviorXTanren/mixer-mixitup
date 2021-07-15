@@ -132,6 +132,15 @@ namespace MixItUp.WPF.Windows.Commands
             }
         }
 
+        private void BrowseScreenshotFilePathButton_Click(object sender, RoutedEventArgs e)
+        {
+            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.ImageFileFilter());
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                this.ScreenshotFilePathTextBox.Text = filePath;
+            }
+        }
+
         private async void UploadButton_Click(object sender, RoutedEventArgs e)
         {
             await this.RunAsyncOperation(async () =>
@@ -173,7 +182,15 @@ namespace MixItUp.WPF.Windows.Commands
                             await DialogHelper.ShowMessage(MixItUp.Base.Resources.CommunityCommandsUploadInvalidImageFile);
                             return;
                         }
-                        this.uploadCommand.ImageFileData = await ChannelSession.Services.FileService.ReadFileAsBytes(this.ImageFilePathTextBox.Text);
+                    }
+
+                    if (!string.IsNullOrEmpty(this.ScreenshotFilePathTextBox.Text))
+                    {
+                        if (!ChannelSession.Services.FileService.FileExists(this.ScreenshotFilePathTextBox.Text))
+                        {
+                            await DialogHelper.ShowMessage(MixItUp.Base.Resources.CommunityCommandsUploadInvalidImageFile);
+                            return;
+                        }
                     }
 
                     this.uploadCommand.Name = this.NameTextBox.Text;
@@ -195,6 +212,39 @@ namespace MixItUp.WPF.Windows.Commands
                                 using (var image = Image.Load(imageFilePath))
                                 {
                                     image.Mutate(i => i.Resize(100, 100));
+                                    using (MemoryStream memoryStream = new MemoryStream())
+                                    {
+                                        image.SaveAsPng(memoryStream);
+                                        return memoryStream.ToArray();
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Log(ex);
+                            }
+                            return null;
+                        });
+                    }
+
+                    if (!string.IsNullOrEmpty(this.ScreenshotFilePathTextBox.Text) && ChannelSession.Services.FileService.FileExists(this.ScreenshotFilePathTextBox.Text))
+                    {
+                        string screenshotFilePath = this.ScreenshotFilePathTextBox.Text;
+                        this.uploadCommand.ScreenshotFileData = await Task.Run(() =>
+                        {
+                            try
+                            {
+                                using (var image = Image.Load(screenshotFilePath))
+                                {
+                                    if (image.Width > 1280)
+                                    {
+                                        image.Mutate(i => i.Resize(1280, 0));
+                                    }
+                                    if (image.Height > 720)
+                                    {
+                                        image.Mutate(i => i.Resize(0, 720));
+                                    }
+
                                     using (MemoryStream memoryStream = new MemoryStream())
                                     {
                                         image.SaveAsPng(memoryStream);

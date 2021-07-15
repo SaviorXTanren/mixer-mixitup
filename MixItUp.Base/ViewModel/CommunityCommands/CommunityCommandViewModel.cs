@@ -25,6 +25,8 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
 
         public string ImageURL { get { return this.model.ImageURL; } }
 
+        public string ScreenshotURL { get { return this.model.ScreenshotURL; } }
+
         public HashSet<CommunityCommandTagEnum> Tags { get { return this.model.Tags; } }
 
         public Guid UserID { get { return this.model.UserId; } }
