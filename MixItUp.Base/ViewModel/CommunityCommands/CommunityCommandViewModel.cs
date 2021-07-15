@@ -86,7 +86,7 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
                     this.Reviews.Add(new CommunityCommandReviewViewModel(review));
                 }
             }
-            this.NotifyPropertyChanged("HasReviews");
+            this.NotifyPropertyChanged("HasNoReviews");
         }
 
         public virtual bool IsMyCommand { get { return false; } }
@@ -99,7 +99,7 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
 
         public CommandModelBase PrimaryCommand { get { return this.Commands.FirstOrDefault(); } }
 
-        public bool HasReviews { get { return this.Reviews.Count > 0; } }
+        public bool HasNoReviews { get { return this.Reviews.Count == 0; } }
     }
 
     public class MyCommunityCommandDetailsViewModel : CommunityCommandDetailsViewModel

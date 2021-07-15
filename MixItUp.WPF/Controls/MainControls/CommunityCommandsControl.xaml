@@ -180,6 +180,8 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="40" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="10" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
@@ -275,9 +277,11 @@
 
                         <TextBox Grid.Row="4" Text="{Binding CommandDetails.Description, Mode=OneWay}" Style="{StaticResource TextBoxReadOnlySelectable}" />
 
-                        <TextBlock Grid.Row="6" Text="{Binding Source={x:Static resx:Resources.RatingsAndReviews}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" TextDecorations="Underline" FontWeight="Bold" HorizontalAlignment="Center" />
+                        <Image Grid.Row="6" Source="{Binding CommandDetails.ScreenshotURL}" HorizontalAlignment="Center" />
 
-                        <ItemsControl Grid.Row="8" ItemsSource="{Binding CommandDetails.Reviews}">
+                        <TextBlock Grid.Row="8" Text="{Binding Source={x:Static resx:Resources.RatingsAndReviews}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" TextDecorations="Underline" FontWeight="Bold" HorizontalAlignment="Center" />
+
+                        <ItemsControl Grid.Row="10" ItemsSource="{Binding CommandDetails.Reviews}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="10,20">
@@ -291,7 +295,7 @@
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="10" />
-                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="100" />
                                                 <ColumnDefinition Width="40" />
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
@@ -323,7 +327,7 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
 
-                        <TextBlock Grid.Row="8" Visibility="{Binding HasReviews, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{x:Static resx:Resources.CommunityCommandsNoReviews}" HorizontalAlignment="Center" />
+                        <TextBlock Grid.Row="10" Visibility="{Binding CommandDetails.HasNoReviews, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{x:Static resx:Resources.CommunityCommandsNoReviews}" HorizontalAlignment="Center" />
                     </Grid>
                 </Grid>
             </ScrollViewer>
