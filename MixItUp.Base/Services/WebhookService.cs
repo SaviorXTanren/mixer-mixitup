@@ -16,6 +16,7 @@ using StreamingClient.Base.Services;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -94,16 +95,33 @@ namespace MixItUp.Base.Services
             });
         }
 
+        public void BackgroundConnect()
+        {
+            AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+            {
+                Result result = await this.Connect();
+                if (!result.Success)
+                {
+                    SignalRConnection_Disconnected(this, new Exception());
+                }
+            }, new CancellationToken());
+        }
+
         public async Task<Result> Connect()
         {
             if (!this.IsConnected)
             {
+                this.signalRConnection.Connected -= SignalRConnection_Connected;
+                this.signalRConnection.Disconnected -= SignalRConnection_Disconnected;
+
                 this.signalRConnection.Connected += SignalRConnection_Connected;
                 this.signalRConnection.Disconnected += SignalRConnection_Disconnected;
 
-                await this.signalRConnection.Connect();
-
-                return new Result(this.IsConnected);
+                if (await this.signalRConnection.Connect())
+                {
+                    return new Result(this.IsConnected);
+                }
+                return new Result(MixItUp.Base.Resources.WebhooksServiceFailedConnection);
             }
             return new Result(MixItUp.Base.Resources.WebhookServiceAlreadyConnected);
         }
@@ -118,7 +136,7 @@ namespace MixItUp.Base.Services
 
         private async void SignalRConnection_Connected(object sender, EventArgs e)
         {
-            ChannelSession.ReconnectionOccurred("Webhook Events");
+            ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.WebhookEvents);
 
             var twitchUserOAuthToken = ServiceManager.Get<TwitchSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy();
             var glimeshUserOAuthToken = ServiceManager.Get<GlimeshSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy();
@@ -128,9 +146,20 @@ namespace MixItUp.Base.Services
             await this.Authenticate(twitchUserOAuthToken?.accessToken, glimeshUserOAuthToken?.accessToken, trovoUserOAuthToken?.accessToken, youTubeUserOAuthToken?.accessToken);
         }
 
-        private void SignalRConnection_Disconnected(object sender, Exception e)
+        private async void SignalRConnection_Disconnected(object sender, Exception e)
         {
-            ChannelSession.DisconnectionOccurred("Webhook Events");
+            ChannelSession.DisconnectionOccurred(MixItUp.Base.Resources.WebhookEvents);
+
+            Result result = new Result();
+            do
+            {
+                await this.Disconnect();
+
+                await Task.Delay(5000 + RandomHelper.GenerateRandomNumber(5000));
+
+                result = await this.Connect();
+            }
+            while (!result.Success);
         }
 
         public async Task Authenticate(string twitchAccessToken, string glimeshAccessToken, string trovoAccessToken, string youTubeAccessToken)

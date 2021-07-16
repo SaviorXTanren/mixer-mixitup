@@ -371,7 +371,7 @@ namespace MixItUp.Base
 
                 try
                 {
-                    await ServiceManager.Get<WebhookService>().Connect();
+                    ServiceManager.Get<WebhookService>().BackgroundConnect();
 
                     foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                     {

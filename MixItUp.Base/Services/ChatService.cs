@@ -404,22 +404,25 @@ namespace MixItUp.Base.Services
 
                 if (message is UserChatMessageViewModel && message.User != null)
                 {
-                    if (message.IsWhisper && !message.IsStreamerOrBot)
+                    if (message.IsWhisper)
                     {
-                        if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatWhisperSoundFilePath))
+                        if (!message.IsStreamerOrBot)
                         {
-                            await ServiceManager.Get<IAudioService>().Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, ChannelSession.Settings.NotificationChatWhisperSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
-                        }
+                            if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatWhisperSoundFilePath))
+                            {
+                                await ServiceManager.Get<IAudioService>().Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, ChannelSession.Settings.NotificationChatWhisperSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
+                            }
 
-                        if (!string.IsNullOrEmpty(message.PlainTextMessage))
-                        {
-                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatWhisperReceived, new CommandParametersModel(message));
-                        }
+                            if (!string.IsNullOrEmpty(message.PlainTextMessage))
+                            {
+                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatWhisperReceived, new CommandParametersModel(message));
+                            }
 
-                        // Don't send this if it's in response to another "You are whisperer #" message
-                        if (ChannelSession.Settings.TrackWhispererNumber && message.User.WhispererNumber > 0 && !message.PlainTextMessage.StartsWith("You are whisperer #", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            await ServiceManager.Get<ChatService>().Whisper(message.User, $"You are whisperer #{message.User.WhispererNumber}.", sendAsStreamer: false);
+                            // Don't send this if it's in response to another "You are whisperer #" message
+                            if (ChannelSession.Settings.TrackWhispererNumber && message.User.WhispererNumber > 0 && !message.PlainTextMessage.StartsWith("You are whisperer #", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                await ServiceManager.Get<ChatService>().Whisper(message.User, $"You are whisperer #{message.User.WhispererNumber}.", sendAsStreamer: false);
+                            }
                         }
                     }
                     else
