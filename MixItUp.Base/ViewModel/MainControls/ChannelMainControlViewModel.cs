@@ -79,13 +79,13 @@ namespace MixItUp.Base.ViewModel.MainControls
         public ICommand OpenChannelCommand { get; private set; }
         public ICommand RaidChannelCommand { get; private set; }
 
-        public SearchFindChannelToRaidItemViewModel(Twitch.Base.Models.V5.Streams.StreamModel stream)
+        public SearchFindChannelToRaidItemViewModel(Twitch.Base.Models.NewAPI.Streams.StreamModel stream)
             : this()
         {
-            this.ID = stream.channel.id;
-            this.Name = stream.channel.name;
-            this.Viewers = stream.viewers;
-            this.GameName = stream.game;
+            this.ID = stream.user_id;
+            this.Name = stream.user_login;
+            this.Viewers = stream.viewer_count;
+            this.GameName = stream.game_name;
         }
 
         public SearchFindChannelToRaidItemViewModel(Twitch.Base.Models.NewAPI.Streams.StreamModel stream, GameModel game)
@@ -237,9 +237,9 @@ namespace MixItUp.Base.ViewModel.MainControls
 
                 if (this.SelectedSearchFindChannelToRaidOption == SearchFindChannelToRaidTypeEnum.Featured)
                 {
-                    foreach (Twitch.Base.Models.V5.Streams.FeaturedStreamModel stream in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetV5FeaturedStreams(10))
+                    foreach (Twitch.Base.Models.NewAPI.Streams.StreamModel stream in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetTopStreams(10))
                     {
-                        results.Add(new SearchFindChannelToRaidItemViewModel(stream.stream));
+                        results.Add(new SearchFindChannelToRaidItemViewModel(stream));
                     }
                 }
                 else if (this.SelectedSearchFindChannelToRaidOption == SearchFindChannelToRaidTypeEnum.SameGame && this.currentGame != null)
@@ -278,7 +278,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
                 else if (this.SelectedSearchFindChannelToRaidOption == SearchFindChannelToRaidTypeEnum.FollowedChannels)
                 {
-                    foreach (Twitch.Base.Models.V5.Streams.StreamModel stream in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetV5FollowedStreams(10))
+                    foreach (Twitch.Base.Models.NewAPI.Streams.StreamModel stream in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetFollowedStreams(ServiceManager.Get<TwitchSessionService>().UserNewAPI, 10))
                     {
                         results.Add(new SearchFindChannelToRaidItemViewModel(stream));
                     }
@@ -286,21 +286,26 @@ namespace MixItUp.Base.ViewModel.MainControls
                 else if (this.SelectedSearchFindChannelToRaidOption == SearchFindChannelToRaidTypeEnum.TeamMembers)
                 {
                     List<Twitch.Base.Models.V5.Users.UserModel> users = new List<Twitch.Base.Models.V5.Users.UserModel>();
-                    foreach (Twitch.Base.Models.V5.Teams.TeamModel team in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelTeams(ServiceManager.Get<TwitchSessionService>().ChannelV5))
+                    foreach (Twitch.Base.Models.NewAPI.Teams.TeamModel team in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelTeams(ServiceManager.Get<TwitchSessionService>().UserNewAPI))
                     {
-                        Twitch.Base.Models.V5.Teams.TeamDetailsModel teamDetails = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetTeamDetails(team);
+                        Twitch.Base.Models.NewAPI.Teams.TeamDetailsModel teamDetails = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetTeam(team.id);
                         if (teamDetails != null && teamDetails.users != null)
                         {
-                            foreach (Twitch.Base.Models.V5.Users.UserModel user in teamDetails.users)
+                            foreach (Twitch.Base.Models.NewAPI.Teams.TeamMemberModel user in teamDetails.users)
                             {
-                                users.Add(user);
+                                users.Add(new Twitch.Base.Models.V5.Users.UserModel()
+                                {
+                                    id = user.user_id,
+                                    name = user.user_login,
+                                    display_name = user.user_name
+                                });
                             }
                         }
                     }
 
                     if (users.Count > 0)
                     {
-                        foreach (Twitch.Base.Models.V5.Streams.StreamModel stream in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetV5ChannelStreams(users.Select(u => u.id), 10))
+                        foreach (Twitch.Base.Models.NewAPI.Streams.StreamModel stream in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStreams(users.Select(u => u.id)))
                         {
                             results.Add(new SearchFindChannelToRaidItemViewModel(stream));
                         }

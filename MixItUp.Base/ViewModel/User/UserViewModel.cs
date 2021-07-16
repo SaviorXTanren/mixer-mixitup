@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.Clients.PubSub.Messages;
 using Twitch.Base.Models.NewAPI.Chat;
+using Twitch.Base.Models.NewAPI.Subscriptions;
 using Twitch.Base.Models.NewAPI.Users;
 using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 using TwitchV5API = Twitch.Base.Models.V5;
@@ -1225,10 +1226,10 @@ namespace MixItUp.Base.ViewModel.User
 
         private async Task RefreshTwitchUserAccountDate()
         {
-            TwitchV5API.Users.UserModel twitchV5User = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetV5APIUserByLogin(this.TwitchUsername);
-            if (twitchV5User != null && !string.IsNullOrEmpty(twitchV5User.created_at))
+            TwitchNewAPI.Users.UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(this.TwitchID);
+            if (twitchUser != null && !string.IsNullOrEmpty(twitchUser.created_at))
             {
-                this.AccountDate = TwitchPlatformService.GetTwitchDateTime(twitchV5User.created_at);
+                this.AccountDate = TwitchPlatformService.GetTwitchDateTime(twitchUser.created_at);
             }
         }
 
@@ -1249,11 +1250,12 @@ namespace MixItUp.Base.ViewModel.User
         {
             if (ServiceManager.Get<TwitchSessionService>().UserNewAPI.IsAffiliate() || ServiceManager.Get<TwitchSessionService>().UserNewAPI.IsPartner())
             {
-                TwitchV5API.Users.UserSubscriptionModel subscription = await ServiceManager.Get<TwitchSessionService>().UserConnection.CheckIfSubscribedV5(ServiceManager.Get<TwitchSessionService>().ChannelV5, this.GetTwitchV5APIUserModel());
-                if (subscription != null && !string.IsNullOrEmpty(subscription.created_at))
+                SubscriptionModel subscription = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetUserSubscription(ServiceManager.Get<TwitchSessionService>().UserNewAPI, this.GetTwitchNewAPIUserModel());
+                if (subscription != null)
                 {
-                    this.SubscribeDate = TwitchPlatformService.GetTwitchDateTime(subscription.created_at);
-                    this.Data.TwitchSubscriberTier = TwitchEventService.GetSubTierNumberFromText(subscription.sub_plan);
+                    // TODO: No subscription data from this API
+                    //this.SubscribeDate = TwitchPlatformService.GetTwitchDateTime(subscription.created_at);
+                    this.Data.TwitchSubscriberTier = TwitchEventService.GetSubTierNumberFromText(subscription.tier);
                 }
                 else
                 {

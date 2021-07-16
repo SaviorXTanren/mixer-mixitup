@@ -481,7 +481,7 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "userdonationamount", participant.sumDonations.ToString());
             }
 
-            if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader))
+            if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader) && ServiceManager.Get<TwitchSessionService>().StreamNewAPI != null)
             {
                 if (this.ContainsSpecialIdentifier(StreamUptimeSpecialIdentifierHeader) || this.ContainsSpecialIdentifier(StreamStartSpecialIdentifierHeader))
                 {
@@ -503,21 +503,21 @@ namespace MixItUp.Base.Util
 
                 if (ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<TwitchSessionService>().StreamV5?.viewers.ToString());
-                    if (ServiceManager.Get<TwitchSessionService>().UserNewAPI != null)
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<TwitchSessionService>().StreamNewAPI?.viewer_count.ToString());
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewscount", ServiceManager.Get<TwitchSessionService>().UserNewAPI?.view_count.ToString());
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<TwitchSessionService>().StreamNewAPI.title);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceManager.Get<TwitchSessionService>().StreamNewAPI.game_name);
+
+                    if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount"))
                     {
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewscount", ServiceManager.Get<TwitchSessionService>().UserNewAPI?.view_count.ToString());
+                        long followCount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetFollowerCount(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", followCount.ToString());
                     }
-                    if (ServiceManager.Get<TwitchSessionService>().ChannelV5 != null)
+
+                    if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount"))
                     {
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<TwitchSessionService>().ChannelV5.status);
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceManager.Get<TwitchSessionService>().ChannelV5.game);
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", ServiceManager.Get<TwitchSessionService>().ChannelV5.followers.ToString());
-                        if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount"))
-                        {
-                            long subCount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscriberCountV5(ServiceManager.Get<TwitchSessionService>().ChannelV5);
-                            this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount", subCount.ToString());
-                        }
+                        long subCount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscriberCount(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount", subCount.ToString());
                     }
                 }
                 else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
@@ -861,15 +861,26 @@ namespace MixItUp.Base.Util
                 string userStreamHeader = identifierHeader + UserSpecialIdentifierHeader + "stream";
                 if (this.ContainsSpecialIdentifier(userStreamHeader))
                 {
-                    if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceManager.Get<TwitchSessionService>().IsConnected)
+                    if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Glimesh) && ServiceManager.Get<GlimeshSessionService>().IsConnected)
                     {
-                        Twitch.Base.Models.V5.Channel.ChannelModel channel = ServiceManager.Get<TwitchSessionService>().ChannelV5;
-                        if (channel != null)
+                        if (ServiceManager.Get<TwitchSessionService>().StreamNewAPI != null)
                         {
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "title", channel.status);
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "game", channel.game);
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "followercount", channel.followers.ToString());
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "viewscount", channel.views.ToString());
+                            this.ReplaceSpecialIdentifier(userStreamHeader + "viewercount", ServiceManager.Get<TwitchSessionService>().StreamNewAPI?.viewer_count.ToString());
+                            this.ReplaceSpecialIdentifier(userStreamHeader + "viewscount", ServiceManager.Get<TwitchSessionService>().UserNewAPI?.view_count.ToString());
+                            this.ReplaceSpecialIdentifier(userStreamHeader + "title", ServiceManager.Get<TwitchSessionService>().StreamNewAPI.title);
+                            this.ReplaceSpecialIdentifier(userStreamHeader + "game", ServiceManager.Get<TwitchSessionService>().StreamNewAPI.game_name);
+
+                            if (this.ContainsSpecialIdentifier(userStreamHeader + "followercount"))
+                            {
+                                long followCount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetFollowerCount(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
+                                this.ReplaceSpecialIdentifier(userStreamHeader + "followercount", followCount.ToString());
+                            }
+
+                            if (this.ContainsSpecialIdentifier(userStreamHeader + "subscribercount"))
+                            {
+                                long subCount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscriberCount(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
+                                this.ReplaceSpecialIdentifier(userStreamHeader + "subscribercount", subCount.ToString());
+                            }
                         }
                     }
                     else if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Glimesh) && ServiceManager.Get<GlimeshSessionService>().IsConnected)

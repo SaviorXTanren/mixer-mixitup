@@ -20,6 +20,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Twitch.Base.Models.NewAPI.Channels;
 using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 using TwitchV5API = Twitch.Base.Models.V5;
 
@@ -402,12 +403,12 @@ namespace MixItUp.Base
 
                     if (ServiceManager.Get<TwitchSessionService>().IsConnected)
                     {
-                        IEnumerable<TwitchV5API.Users.UserModel> channelEditors = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetV5APIChannelEditors(ServiceManager.Get<TwitchSessionService>().ChannelV5);
+                        IEnumerable<ChannelEditorUserModel> channelEditors = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelEditors(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
                         if (channelEditors != null)
                         {
-                            foreach (TwitchV5API.Users.UserModel channelEditor in channelEditors)
+                            foreach (ChannelEditorUserModel channelEditor in channelEditors)
                             {
-                                ServiceManager.Get<TwitchSessionService>().ChannelEditorsV5.Add(channelEditor.id);
+                                ServiceManager.Get<TwitchSessionService>().ChannelEditorsV5.Add(channelEditor.user_id);
                             }
                         }
                     }
@@ -506,8 +507,8 @@ namespace MixItUp.Base
                             {
                                 type = "Affiliate";
                             }
-                            ServiceManager.Get<ITelemetryService>().TrackChannelMetrics(type, ServiceManager.Get<TwitchSessionService>().StreamV5.viewers, ServiceManager.Get<ChatService>().AllUsers.Count,
-                                ServiceManager.Get<TwitchSessionService>().StreamV5.game, ServiceManager.Get<TwitchSessionService>().ChannelV5.views, ServiceManager.Get<TwitchSessionService>().ChannelV5.followers);
+                            ServiceManager.Get<ITelemetryService>().TrackChannelMetrics(type, ServiceManager.Get<TwitchSessionService>().StreamNewAPI.viewer_count, ServiceManager.Get<ChatService>().AllUsers.Count,
+                                ServiceManager.Get<TwitchSessionService>().StreamNewAPI.game_name, ServiceManager.Get<TwitchSessionService>().UserNewAPI.view_count);
                         }
                         catch (Exception ex)
                         {

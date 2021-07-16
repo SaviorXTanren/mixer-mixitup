@@ -13,7 +13,7 @@ namespace MixItUp.Base.Services
         void TrackCommand(CommandTypeEnum type, string details = null);
         void TrackAction(ActionTypeEnum type);
         void TrackService(string type);
-        void TrackChannelMetrics(string type, long viewerCount, long chatterCount, string game, long viewCount, long followCount);
+        void TrackChannelMetrics(string type, long viewerCount, long chatterCount, string game, long viewCount);
 
         void SetUserID(string userID);
     }

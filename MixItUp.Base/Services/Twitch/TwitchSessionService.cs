@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Twitch.Base.Models.NewAPI.Channels;
 using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 using TwitchV5API = Twitch.Base.Models.V5;
 
@@ -15,14 +16,11 @@ namespace MixItUp.Base.Services.Twitch
     {
         public TwitchPlatformService UserConnection { get; private set; }
         public TwitchPlatformService BotConnection { get; private set; }
-        public TwitchV5API.Users.UserModel UserV5 { get; private set; }
-        public TwitchV5API.Channel.ChannelModel ChannelV5 { get; private set; }
-        public TwitchV5API.Streams.StreamModel StreamV5 { get; private set; }
         public HashSet<string> ChannelEditorsV5 { get; private set; } = new HashSet<string>();
         public TwitchNewAPI.Users.UserModel UserNewAPI { get; set; }
         public TwitchNewAPI.Users.UserModel BotNewAPI { get; set; }
         public TwitchNewAPI.Streams.StreamModel StreamNewAPI { get; set; }
-        public bool StreamIsLive { get { return this.StreamV5 != null && this.StreamV5.IsLive; } }
+        public bool StreamIsLive { get { return this.StreamNewAPI != null; } }
 
         public bool IsConnected { get { return this.UserConnection != null; } }
 
@@ -36,12 +34,6 @@ namespace MixItUp.Base.Services.Twitch
                 if (this.UserNewAPI == null)
                 {
                     return new Result("Failed to get New API Twitch user data");
-                }
-
-                this.UserV5 = await this.UserConnection.GetV5APIUserByLogin(this.UserNewAPI.login);
-                if (this.UserV5 == null)
-                {
-                    return new Result("Failed to get V5 API Twitch user data");
                 }
             }
             return result;
@@ -90,12 +82,6 @@ namespace MixItUp.Base.Services.Twitch
                     if (this.UserNewAPI == null)
                     {
                         return new Result("Failed to get Twitch user data");
-                    }
-
-                    this.UserV5 = await this.UserConnection.GetV5APIUserByLogin(this.UserNewAPI.login);
-                    if (this.UserV5 == null)
-                    {
-                        return new Result("Failed to get V5 API Twitch user data");
                     }
 
                     if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken != null)
@@ -154,20 +140,17 @@ namespace MixItUp.Base.Services.Twitch
                 try
                 {
                     TwitchNewAPI.Users.UserModel twitchChannelNew = await this.UserConnection.GetNewAPICurrentUser();
-                    TwitchV5API.Channel.ChannelModel twitchChannelv5 = await this.UserConnection.GetCurrentV5APIChannel();
-                    if (twitchChannelNew != null && twitchChannelv5 != null)
+                    if (twitchChannelNew != null)
                     {
                         this.UserNewAPI = twitchChannelNew;
-                        this.ChannelV5 = twitchChannelv5;
                         this.StreamNewAPI = await this.UserConnection.GetStream(this.UserNewAPI);
-                        this.StreamV5 = await this.UserConnection.GetV5LiveStream(this.ChannelV5);
 
-                        IEnumerable<TwitchV5API.Users.UserModel> channelEditors = await this.UserConnection.GetV5APIChannelEditors(this.ChannelV5);
+                        IEnumerable<ChannelEditorUserModel> channelEditors = await this.UserConnection.GetChannelEditors(this.UserNewAPI);
                         if (channelEditors != null)
                         {
-                            foreach (TwitchV5API.Users.UserModel channelEditor in channelEditors)
+                            foreach (ChannelEditorUserModel channelEditor in channelEditors)
                             {
-                                this.ChannelEditorsV5.Add(channelEditor.id);
+                                this.ChannelEditorsV5.Add(channelEditor.user_id);
                             }
                         }
 
@@ -280,12 +263,6 @@ namespace MixItUp.Base.Services.Twitch
                 if (twitchUserNewAPI != null)
                 {
                     this.UserNewAPI = twitchUserNewAPI;
-
-                    TwitchV5API.Users.UserModel twitchUserV5 = await this.UserConnection.GetV5APIUserByLogin(this.UserNewAPI.login);
-                    if (twitchUserV5 != null)
-                    {
-                        this.UserV5 = twitchUserV5;
-                    }
                 }
             }
 
@@ -301,22 +278,9 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task RefreshChannel()
         {
-            if (this.UserConnection != null)
+            if (this.UserConnection != null && this.UserNewAPI != null)
             {
-                if (this.ChannelV5 != null)
-                {
-                    TwitchV5API.Channel.ChannelModel twitchChannel = await this.UserConnection.GetV5APIChannel(this.ChannelV5.id);
-                    if (twitchChannel != null)
-                    {
-                        this.ChannelV5 = twitchChannel;
-                        this.StreamV5 = await this.UserConnection.GetV5LiveStream(this.ChannelV5);
-                    }
-                }
-
-                if (this.UserNewAPI != null)
-                {
-                    this.StreamNewAPI = await this.UserConnection.GetStream(this.UserNewAPI);
-                }
+                this.StreamNewAPI = await this.UserConnection.GetStream(this.UserNewAPI);
             }
         }
     }
