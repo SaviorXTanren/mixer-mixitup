@@ -8896,15 +8896,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to connect to Mix It Up API service.
-        /// </summary>
-        public static string MixItUpAPIServiceFailedConnection {
-            get {
-                return ResourceManager.GetString("MixItUpAPIServiceFailedConnection", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Mix It Up Commands.
         /// </summary>
         public static string MixItUpCommands {
@@ -16686,6 +16677,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Webhook Events.
+        /// </summary>
+        public static string WebhookEvents {
+            get {
+                return ResourceManager.GetString("WebhookEvents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Webhook service already connected.
         /// </summary>
         public static string WebhookServiceAlreadyConnected {
@@ -16700,6 +16700,15 @@ namespace MixItUp.Base {
         public static string WebHooksPage {
             get {
                 return ResourceManager.GetString("WebHooksPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to connect to Mix It Up Web Hooks service.
+        /// </summary>
+        public static string WebhooksServiceFailedConnection {
+            get {
+                return ResourceManager.GetString("WebhooksServiceFailedConnection", resourceCulture);
             }
         }
         

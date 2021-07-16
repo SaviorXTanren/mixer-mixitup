@@ -19,7 +19,6 @@ namespace MixItUp.SignalR.Client
         {
             this.Address = address;
             this.connection = new HubConnectionBuilder().AddJsonProtocol().WithUrl(this.Address).Build();
-            this.connection.Closed += Connection_Closed;
         }
 
         public void IncreaseDefaultConnectionLimit() { ServicePointManager.DefaultConnectionLimit = 10; }
@@ -32,19 +31,16 @@ namespace MixItUp.SignalR.Client
 
         public async Task<bool> Connect()
         {
-            for (int i = 0; i < 3; i++)
+            try
             {
-                try
-                {
-                    await this.connection.StartAsync();
-                    this.Connected?.Invoke(this, new EventArgs());
-                    return true;
-                }
-                catch { }
+                this.connection.Closed -= Connection_Closed;
+                this.connection.Closed += Connection_Closed;
 
-                // Retry in 5 seconds
-                await Task.Delay(5000);
+                await this.connection.StartAsync();
+                this.Connected?.Invoke(this, new EventArgs());
+                return true;
             }
+            catch { }
             return false;
         }
 
@@ -63,9 +59,8 @@ namespace MixItUp.SignalR.Client
 
         private async Task Connection_Closed(Exception ex)
         {
+            await this.Disconnect();
             this.Disconnected?.Invoke(this, ex);
-            await Task.Delay(5000);
-            await this.Connect();
         }
     }
 }
