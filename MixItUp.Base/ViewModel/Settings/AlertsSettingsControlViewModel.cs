@@ -15,6 +15,7 @@ namespace MixItUp.Base.ViewModel.Settings
         public GenericColorComboBoxSettingsOptionControlViewModel GiftedSub { get; set; }
         public GenericColorComboBoxSettingsOptionControlViewModel MassGiftedSub { get; set; }
         public GenericColorComboBoxSettingsOptionControlViewModel BitsCheered { get; set; }
+        public GenericColorComboBoxSettingsOptionControlViewModel HypeTrain { get; set; }
         public GenericColorComboBoxSettingsOptionControlViewModel ChannelPoints { get; set; }
         public GenericColorComboBoxSettingsOptionControlViewModel Donation { get; set; }
         public GenericColorComboBoxSettingsOptionControlViewModel Streamloots { get; set; }
@@ -32,6 +33,7 @@ namespace MixItUp.Base.ViewModel.Settings
             this.GiftedSub = new GenericToggleColorComboBoxSettingsControlViewModel(MixItUp.Base.Resources.ShowGiftedSubs, ChannelSession.Settings.AlertGiftedSubColor, (value) => { ChannelSession.Settings.AlertGiftedSubColor = value; });
             this.MassGiftedSub = new GenericToggleColorComboBoxSettingsControlViewModel(MixItUp.Base.Resources.ShowMassGiftedSubs, ChannelSession.Settings.AlertMassGiftedSubColor, (value) => { ChannelSession.Settings.AlertMassGiftedSubColor = value; });
             this.BitsCheered = new GenericToggleColorComboBoxSettingsControlViewModel(MixItUp.Base.Resources.ShowBitsCheered, ChannelSession.Settings.AlertBitsCheeredColor, (value) => { ChannelSession.Settings.AlertBitsCheeredColor = value; });
+            this.HypeTrain = new GenericToggleColorComboBoxSettingsControlViewModel(MixItUp.Base.Resources.ShowHypeTrain, ChannelSession.Settings.AlertHypeTrainColor, (value) => { ChannelSession.Settings.AlertHypeTrainColor = value; });
             this.ChannelPoints = new GenericToggleColorComboBoxSettingsControlViewModel(MixItUp.Base.Resources.ShowChannelPoints, ChannelSession.Settings.AlertChannelPointsColor, (value) => { ChannelSession.Settings.AlertChannelPointsColor = value; });
             this.Donation = new GenericToggleColorComboBoxSettingsControlViewModel(MixItUp.Base.Resources.ShowDonations, ChannelSession.Settings.AlertDonationColor, (value) => { ChannelSession.Settings.AlertDonationColor = value; });
             this.Streamloots = new GenericToggleColorComboBoxSettingsControlViewModel(MixItUp.Base.Resources.ShowStreamloots, ChannelSession.Settings.AlertStreamlootsColor, (value) => { ChannelSession.Settings.AlertStreamlootsColor = value; });

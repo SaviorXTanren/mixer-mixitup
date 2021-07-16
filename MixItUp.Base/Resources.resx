@@ -5724,7 +5724,7 @@ special users that you want to allow more control to such as a Moderator.</value
 Failure to do one of the following could effect how users rate &amp; review your command. Do you still wish to upload this command?</value>
   </data>
   <data name="CommunityCommandsImageFilePath" xml:space="preserve">
-    <value>Image File Path (Optional)</value>
+    <value>Image File Path (Optional) (Resized to 100x100 pixels)</value>
   </data>
   <data name="CommunityCommandsUploadInvalidDescription" xml:space="preserve">
     <value>A valid description must be specified</value>
@@ -5873,6 +5873,21 @@ Failure to do one of the following could effect how users rate &amp; review your
   </data>
   <data name="TwitchActionPredictionTitleTooLong" xml:space="preserve">
     <value>Prediction titles must be 45 characters or less</value>
+  </data>
+  <data name="CommunityCommandsScreenshot" xml:space="preserve">
+    <value>Screenshot</value>
+  </data>
+  <data name="CommunityCommandsScreenshotFilePath" xml:space="preserve">
+    <value>Screenshot File Path (Optional) (Resized to 1280x720 pixels max)</value>
+  </data>
+  <data name="ShowHypeTrain" xml:space="preserve">
+    <value>Show Hype Train</value>
+  </data>
+  <data name="HypeTrainEndedReachedLevel" xml:space="preserve">
+    <value>Hype Train Ended - Reached Level {0}</value>
+  </data>
+  <data name="HypeTrainStarted" xml:space="preserve">
+    <value>Hype Train Started</value>
   </data>
   <data name="DefaultStreamingPlatform" xml:space="preserve">
     <value>Default Streaming Platform</value>

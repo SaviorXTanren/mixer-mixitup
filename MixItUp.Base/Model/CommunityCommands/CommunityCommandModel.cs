@@ -75,6 +75,9 @@ namespace MixItUp.Base.Model.Store
         public string ImageURL { get; set; }
 
         [DataMember]
+        public string ScreenshotURL { get; set; }
+
+        [DataMember]
         public HashSet<CommunityCommandTagEnum> Tags { get; set; } = new HashSet<CommunityCommandTagEnum>();
 
         [DataMember]
@@ -147,10 +150,16 @@ namespace MixItUp.Base.Model.Store
         public string ImageURL { get; set; }
 
         [DataMember]
+        public string ScreenshotURL { get; set; }
+
+        [DataMember]
         public HashSet<CommunityCommandTagEnum> Tags { get; set; } = new HashSet<CommunityCommandTagEnum>();
 
         [DataMember]
         public byte[] ImageFileData { get; set; }
+
+        [DataMember]
+        public byte[] ScreenshotFileData { get; set; }
 
         [DataMember]
         public string Data { get; set; }

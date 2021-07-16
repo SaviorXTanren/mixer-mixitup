@@ -227,6 +227,8 @@ namespace MixItUp.Base.Services
             eventCommandSpecialIdentifiers["hypetrainlevelpoints"] = levelPoints.ToString();
             eventCommandSpecialIdentifiers["hypetrainlevelgoal"] = levelGoal.ToString();
             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeTrainBegin, new CommandParametersModel(ChannelSession.GetCurrentUser(), eventCommandSpecialIdentifiers));
+
+            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, MixItUp.Base.Resources.HypeTrainStarted, ChannelSession.Settings.AlertHypeTrainColor));
         }
 
         //private async Task TwitchChannelHypeTrainProgress(int level, int totalPoints, int levelPoints, int levelGoal)
@@ -250,6 +252,8 @@ namespace MixItUp.Base.Services
             eventCommandSpecialIdentifiers["hypetraintotallevel"] = level.ToString();
             eventCommandSpecialIdentifiers["hypetraintotalpoints"] = totalPoints.ToString();
             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeTrainEnd, new CommandParametersModel(ChannelSession.GetCurrentUser(), eventCommandSpecialIdentifiers));
+
+            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, string.Format(MixItUp.Base.Resources.HypeTrainEndedReachedLevel, level.ToString()), ChannelSession.Settings.AlertHypeTrainColor));
         }
     }
 }
