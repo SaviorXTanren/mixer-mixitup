@@ -7456,6 +7456,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hype Train Ended - Reached Level {0}.
+        /// </summary>
+        public static string HypeTrainEndedReachedLevel {
+            get {
+                return ResourceManager.GetString("HypeTrainEndedReachedLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hype Train Started.
+        /// </summary>
+        public static string HypeTrainStarted {
+            get {
+                return ResourceManager.GetString("HypeTrainStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to IFTTT.
         /// </summary>
         public static string IFTTT {
@@ -12883,6 +12901,15 @@ namespace MixItUp.Base {
         public static string ShowHosts {
             get {
                 return ResourceManager.GetString("ShowHosts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Hype Train.
+        /// </summary>
+        public static string ShowHypeTrain {
+            get {
+                return ResourceManager.GetString("ShowHypeTrain", resourceCulture);
             }
         }
         

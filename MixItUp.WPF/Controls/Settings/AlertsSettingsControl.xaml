@@ -24,6 +24,7 @@
             <GenericSettingsControls:GenericColorComboBoxSettingsOptionControl DataContext="{Binding GiftedSub}" />
             <GenericSettingsControls:GenericColorComboBoxSettingsOptionControl DataContext="{Binding MassGiftedSub}" />
             <GenericSettingsControls:GenericColorComboBoxSettingsOptionControl DataContext="{Binding BitsCheered}" />
+            <GenericSettingsControls:GenericColorComboBoxSettingsOptionControl DataContext="{Binding HypeTrain}" />
             <GenericSettingsControls:GenericColorComboBoxSettingsOptionControl DataContext="{Binding ChannelPoints}" />
             <GenericSettingsControls:GenericColorComboBoxSettingsOptionControl DataContext="{Binding Donation}" />
             <GenericSettingsControls:GenericColorComboBoxSettingsOptionControl DataContext="{Binding Streamloots}" />

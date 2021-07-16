@@ -5877,4 +5877,13 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="CommunityCommandsScreenshotFilePath" xml:space="preserve">
     <value>Screenshot File Path (Optional) (Resized to 1280x720 pixels max)</value>
   </data>
+  <data name="ShowHypeTrain" xml:space="preserve">
+    <value>Show Hype Train</value>
+  </data>
+  <data name="HypeTrainEndedReachedLevel" xml:space="preserve">
+    <value>Hype Train Ended - Reached Level {0}</value>
+  </data>
+  <data name="HypeTrainStarted" xml:space="preserve">
+    <value>Hype Train Started</value>
+  </data>
 </root>
