@@ -2046,6 +2046,9 @@
     <Resource Include="Assets\Images\Twitter.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\OBS\obs-websocket-4.9.1-Windows-Installer.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Logo.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -2113,9 +2116,6 @@
     <Resource Include="Assets\Images\Twitch-Small.png" />
     <Resource Include="Assets\Images\Glimesh.png" />
     <Resource Include="Assets\Images\Trovo.png" />
-    <Content Include="Assets\OBS\obs-websocket-4.8.0-Windows-Installer.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Assets\Sounds\Ariel.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
