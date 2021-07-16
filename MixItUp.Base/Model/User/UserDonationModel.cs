@@ -74,6 +74,10 @@ namespace MixItUp.Base.Model.User
                     if (this.user == null && !string.IsNullOrEmpty(this.username))
                     {
                         this.user = ChannelSession.Services.User.GetActiveUserByUsername(this.username, this.Platform);
+                        if (this.user == null)
+                        {
+                            this.user = UserViewModel.Create(this.username);
+                        }
                     }
                 }
                 return this.user;
