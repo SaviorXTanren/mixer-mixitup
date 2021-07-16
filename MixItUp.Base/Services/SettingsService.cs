@@ -347,7 +347,10 @@ namespace MixItUp.Base.Services
                 SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
                 await settings.Initialize();
 
-
+                if (settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch))
+                {
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = null;
+                }
 
                 await ServiceManager.Get<SettingsService>().Save(settings);
             }
