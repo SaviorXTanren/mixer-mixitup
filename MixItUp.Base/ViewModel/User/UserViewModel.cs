@@ -21,7 +21,6 @@ using Twitch.Base.Models.NewAPI.Chat;
 using Twitch.Base.Models.NewAPI.Subscriptions;
 using Twitch.Base.Models.NewAPI.Users;
 using TwitchNewAPI = Twitch.Base.Models.NewAPI;
-using TwitchV5API = Twitch.Base.Models.V5;
 
 namespace MixItUp.Base.ViewModel.User
 {
@@ -67,18 +66,6 @@ namespace MixItUp.Base.ViewModel.User
 
             user.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : user.TwitchUsername;
             user.TwitchAvatarLink = twitchUser.profile_image_url;
-
-            user.SetTwitchRoles();
-
-            return user;
-        }
-
-        public static async Task<UserViewModel> Create(TwitchV5API.Users.UserModel twitchUser)
-        {
-            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, twitchUser.id, twitchUser.name);
-
-            user.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : user.TwitchUsername;
-            user.TwitchAvatarLink = twitchUser.logo;
 
             user.SetTwitchRoles();
 
@@ -1140,16 +1127,6 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public TwitchV5API.Users.UserModel GetTwitchV5APIUserModel()
-        {
-            return new TwitchV5API.Users.UserModel()
-            {
-                id = this.TwitchID,
-                name = this.TwitchUsername,
-                display_name = this.TwitchDisplayName,
-            };
-        }
-
         public TwitchNewAPI.Users.UserModel GetTwitchNewAPIUserModel()
         {
             return new TwitchNewAPI.Users.UserModel()
@@ -1212,7 +1189,7 @@ namespace MixItUp.Base.ViewModel.User
                 this.TwitchUserRoles.Add(UserRoleEnum.Streamer);
             }
 
-            if (ServiceManager.Get<TwitchSessionService>().ChannelEditorsV5.Contains(this.TwitchID))
+            if (ServiceManager.Get<TwitchSessionService>().ChannelEditors.Contains(this.TwitchID))
             {
                 this.TwitchUserRoles.Add(UserRoleEnum.ChannelEditor);
             }
@@ -1253,7 +1230,7 @@ namespace MixItUp.Base.ViewModel.User
                 SubscriptionModel subscription = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetUserSubscription(ServiceManager.Get<TwitchSessionService>().UserNewAPI, this.GetTwitchNewAPIUserModel());
                 if (subscription != null)
                 {
-                    // TODO: No subscription data from this API
+                    // TODO: No subscription data from this API. https://twitch.uservoice.com/forums/310213-developers/suggestions/43806120-add-subscription-date-to-subscription-apis
                     //this.SubscribeDate = TwitchPlatformService.GetTwitchDateTime(subscription.created_at);
                     this.Data.TwitchSubscriberTier = TwitchEventService.GetSubTierNumberFromText(subscription.tier);
                 }

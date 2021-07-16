@@ -15,7 +15,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Bits;
-using Twitch.Base.Models.V5.Users;
 using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.Model.Overlay

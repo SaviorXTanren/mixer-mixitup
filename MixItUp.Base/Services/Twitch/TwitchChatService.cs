@@ -20,8 +20,6 @@ using Twitch.Base.Clients;
 using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.NewAPI.Bits;
 using Twitch.Base.Models.NewAPI.Chat;
-using Twitch.Base.Models.NewAPI.Users;
-using Twitch.Base.Models.V5.Emotes;
 
 namespace MixItUp.Base.Services.Twitch
 {

@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Channels;
-using TwitchNewAPI = Twitch.Base.Models.NewAPI;
-using TwitchV5API = Twitch.Base.Models.V5;
+using Twitch.Base.Models.NewAPI.Streams;
+using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.Services.Twitch
 {
@@ -16,10 +16,10 @@ namespace MixItUp.Base.Services.Twitch
     {
         public TwitchPlatformService UserConnection { get; private set; }
         public TwitchPlatformService BotConnection { get; private set; }
-        public HashSet<string> ChannelEditorsV5 { get; private set; } = new HashSet<string>();
-        public TwitchNewAPI.Users.UserModel UserNewAPI { get; set; }
-        public TwitchNewAPI.Users.UserModel BotNewAPI { get; set; }
-        public TwitchNewAPI.Streams.StreamModel StreamNewAPI { get; set; }
+        public HashSet<string> ChannelEditors { get; private set; } = new HashSet<string>();
+        public UserModel UserNewAPI { get; set; }
+        public UserModel BotNewAPI { get; set; }
+        public StreamModel StreamNewAPI { get; set; }
         public bool StreamIsLive { get { return this.StreamNewAPI != null; } }
 
         public bool IsConnected { get { return this.UserConnection != null; } }
@@ -139,7 +139,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 try
                 {
-                    TwitchNewAPI.Users.UserModel twitchChannelNew = await this.UserConnection.GetNewAPICurrentUser();
+                    UserModel twitchChannelNew = await this.UserConnection.GetNewAPICurrentUser();
                     if (twitchChannelNew != null)
                     {
                         this.UserNewAPI = twitchChannelNew;
@@ -150,7 +150,7 @@ namespace MixItUp.Base.Services.Twitch
                         {
                             foreach (ChannelEditorUserModel channelEditor in channelEditors)
                             {
-                                this.ChannelEditorsV5.Add(channelEditor.user_id);
+                                this.ChannelEditors.Add(channelEditor.user_id);
                             }
                         }
 
@@ -259,7 +259,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (this.UserConnection != null)
             {
-                TwitchNewAPI.Users.UserModel twitchUserNewAPI = await this.UserConnection.GetNewAPICurrentUser();
+                UserModel twitchUserNewAPI = await this.UserConnection.GetNewAPICurrentUser();
                 if (twitchUserNewAPI != null)
                 {
                     this.UserNewAPI = twitchUserNewAPI;
@@ -268,7 +268,7 @@ namespace MixItUp.Base.Services.Twitch
 
             if (this.BotConnection != null)
             {
-                TwitchNewAPI.Users.UserModel botUserNewAPI = await this.BotConnection.GetNewAPICurrentUser();
+                UserModel botUserNewAPI = await this.BotConnection.GetNewAPICurrentUser();
                 if (botUserNewAPI != null)
                 {
                     this.BotNewAPI = botUserNewAPI;

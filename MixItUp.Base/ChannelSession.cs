@@ -1,6 +1,4 @@
 ﻿using MixItUp.Base.Model;
-using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
@@ -21,8 +19,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Channels;
-using TwitchNewAPI = Twitch.Base.Models.NewAPI;
-using TwitchV5API = Twitch.Base.Models.V5;
 
 namespace MixItUp.Base
 {
@@ -52,7 +48,7 @@ namespace MixItUp.Base
             ServiceManager.Add(new CommandService());
             ServiceManager.Add(new SettingsService());
             ServiceManager.Add(new MixItUpService());
-            ServiceManager.Add(new WebhookService(MixItUp.Base.Services.MixItUpService.MixItUpAPIEndpoint, "https://mixitupapi.azurewebsites.net/webhookhub"));
+            ServiceManager.Add(new WebhookService(MixItUpService.MixItUpAPIEndpoint, "https://mixitupapi.azurewebsites.net/webhookhub"));
             ServiceManager.Add(new UserService());
             ServiceManager.Add(new ChatService());
             ServiceManager.Add(new EventService());
@@ -408,7 +404,7 @@ namespace MixItUp.Base
                         {
                             foreach (ChannelEditorUserModel channelEditor in channelEditors)
                             {
-                                ServiceManager.Get<TwitchSessionService>().ChannelEditorsV5.Add(channelEditor.user_id);
+                                ServiceManager.Get<TwitchSessionService>().ChannelEditors.Add(channelEditor.user_id);
                             }
                         }
                     }
