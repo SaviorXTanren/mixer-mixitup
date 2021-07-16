@@ -8896,6 +8896,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to connect to Mix It Up API service.
+        /// </summary>
+        public static string MixItUpAPIServiceFailedConnection {
+            get {
+                return ResourceManager.GetString("MixItUpAPIServiceFailedConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mix It Up Commands.
         /// </summary>
         public static string MixItUpCommands {

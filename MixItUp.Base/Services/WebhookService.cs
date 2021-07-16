@@ -88,9 +88,11 @@ namespace MixItUp.Base.Services
                 this.signalRConnection.Connected += SignalRConnection_Connected;
                 this.signalRConnection.Disconnected += SignalRConnection_Disconnected;
 
-                await this.signalRConnection.Connect();
-
-                return new Result(this.IsConnected);
+                if (await this.signalRConnection.Connect())
+                {
+                    return new Result(this.IsConnected);
+                }
+                return new Result(MixItUp.Base.Resources.MixItUpAPIServiceFailedConnection);
             }
             return new Result(MixItUp.Base.Resources.WebhookServiceAlreadyConnected);
         }
