@@ -32,7 +32,7 @@ namespace MixItUp.SignalR.Client
 
         public async Task<bool> Connect()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 3; i++)
             {
                 try
                 {
