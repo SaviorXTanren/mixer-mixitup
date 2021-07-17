@@ -92,44 +92,41 @@ namespace MixItUp.Base.Model.Actions
         {
             if (ServiceManager.Get<PixelChatService>().IsConnected)
             {
-                if (this.ActionType == PixelChatActionTypeEnum.ShowHideSceneComponent)
+                PixelChatSendMessageModel sendMessage;
+                if (this.ActionType == PixelChatActionTypeEnum.TriggerShoutout)
                 {
-
+                    UserViewModel user = parameters.User;
+                    if (!string.IsNullOrEmpty(this.TargetUsername))
+                    {
+                        string targetUsername = await this.ReplaceStringWithSpecialModifiers(this.TargetUsername, parameters);
+                        UserViewModel targetUser = await ServiceManager.Get<UserService>().GetUserFullSearch(parameters.Platform, userID: null, targetUsername);
+                        if (targetUser != null)
+                        {
+                            user = targetUser;
+                        }
+                    }
+                    sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString(), user.Username, StreamingPlatformTypeEnum.Twitch);
                 }
+                else if (this.ActionType == PixelChatActionTypeEnum.TriggerCountdown || this.ActionType == PixelChatActionTypeEnum.TriggerCountup ||
+                    this.ActionType == PixelChatActionTypeEnum.AddStreamathonTime)
+                {
+                    int.TryParse(await this.ReplaceStringWithSpecialModifiers(this.TimeAmount, parameters), out int timeAmount);
+                    sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString(), timeAmount);
+                }
+                //else if (this.ActionType == PixelChatActionTypeEnum.ShowHideSceneComponent)
+                //{
+
+                //}
                 else
                 {
-                    PixelChatSendMessageModel sendMessage;
-                    if (this.ActionType == PixelChatActionTypeEnum.TriggerShoutout)
-                    {
-                        UserViewModel user = parameters.User;
-                        if (!string.IsNullOrEmpty(this.TargetUsername))
-                        {
-                            string targetUsername = await this.ReplaceStringWithSpecialModifiers(this.TargetUsername, parameters);
-                            UserViewModel targetUser = await ServiceManager.Get<UserService>().GetUserFullSearch(parameters.Platform, userID: null, targetUsername);
-                            if (targetUser != null)
-                            {
-                                user = targetUser;
-                            }
-                        }
-                        sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString(), user.Username, StreamingPlatformTypeEnum.Twitch);
-                    }
-                    else if (this.ActionType == PixelChatActionTypeEnum.TriggerCountdown || this.ActionType == PixelChatActionTypeEnum.TriggerCountup ||
-                        this.ActionType == PixelChatActionTypeEnum.AddStreamathonTime)
-                    {
-                        int.TryParse(await this.ReplaceStringWithSpecialModifiers(this.TimeAmount, parameters), out int timeAmount);
-                        sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString(), timeAmount);
-                    }
-                    else
-                    {
-                        sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString());
-                    }
-
-                    char[] characters = sendMessage.type.ToCharArray();
-                    characters[0] = Char.ToLower(characters[0]);
-                    sendMessage.type = new string(characters);
-
-                    await ServiceManager.Get<PixelChatService>().SendMessageToOverlay(this.OverlayID, sendMessage);
+                    sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString());
                 }
+
+                char[] characters = sendMessage.type.ToCharArray();
+                characters[0] = Char.ToLower(characters[0]);
+                sendMessage.type = new string(characters);
+
+                await ServiceManager.Get<PixelChatService>().SendMessageToOverlay(this.OverlayID, sendMessage);
             }
         }
     }
