@@ -211,11 +211,18 @@ namespace MixItUp.Base.Services.External
             return false;
         }
 
-        public async Task<IEnumerable<VTubeStudioHotKey>> GetAllHotKeys()
+        public async Task<IEnumerable<VTubeStudioHotKey>> GetHotKeys(string modelID = null)
         {
             List<VTubeStudioHotKey> results = new List<VTubeStudioHotKey>();
 
-            VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(new VTubeStudioWebSocketRequestPacket("HotkeysInCurrentModelRequest"));
+            VTubeStudioWebSocketRequestPacket packet = new VTubeStudioWebSocketRequestPacket("HotkeysInCurrentModelRequest");
+            if (!string.IsNullOrEmpty(modelID))
+            {
+                packet.data = new JObject();
+                packet.data["modelID"] = modelID;
+            }
+
+            VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(packet);
             if (response != null && response.data != null && response.data.TryGetValue("availableHotkeys", out JToken hotKeys) && hotKeys is JArray)
             {
                 foreach (VTubeStudioHotKey hotKey in ((JArray)hotKeys).ToTypedArray<VTubeStudioHotKey>())
