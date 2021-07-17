@@ -148,6 +148,7 @@ namespace MixItUp.WPF.Controls.Chat
                 textBlock.Text = word + " ";
                 textBlock.FontSize = ChannelSession.Settings.ChatFontSize;
                 textBlock.VerticalAlignment = VerticalAlignment.Center;
+                textBlock.TextWrapping = TextWrapping.Wrap;
                 if (foreground != null)
                 {
                     textBlock.FontWeight = FontWeights.Bold;
