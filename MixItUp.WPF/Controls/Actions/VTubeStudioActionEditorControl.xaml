@@ -49,15 +49,15 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="40" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-                <TextBlock Grid.Column="0" Text="{Binding CurrentModelDisplayText}" VerticalAlignment="Center" Margin="0,10,0,0" />
+                <ComboBox Grid.Row="0" ItemsSource="{Binding Models}" SelectedItem="{Binding SelectedModel}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VTubeStudioModel}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="modelName" />
 
-                <ComboBox Grid.Column="2" ItemsSource="{Binding HotKeys}" SelectedItem="{Binding SelectedHotKey}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VTubeStudioHotKey}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="name" />
+                <ComboBox Grid.Row="2" ItemsSource="{Binding HotKeys}" SelectedItem="{Binding SelectedHotKey}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VTubeStudioHotKey}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="name" />
             </Grid>
         </Grid>
     </Grid>

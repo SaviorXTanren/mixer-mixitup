@@ -40,8 +40,17 @@ namespace MixItUp.Base.ViewModel.Actions
             get { return this.selectedModel; }
             set
             {
+                bool updateOccurred = value != this.selectedModel;
+
                 this.selectedModel = value;
                 this.NotifyPropertyChanged();
+
+                if (updateOccurred)
+                {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    this.LoadHotKeysForCurrentModel();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                }
             }
         }
         private VTubeStudioModel selectedModel;
@@ -159,13 +168,24 @@ namespace MixItUp.Base.ViewModel.Actions
                 }
                 this.SelectedModel = this.Models.FirstOrDefault(m => string.Equals(m.modelID, this.modelID));
 
-                foreach (VTubeStudioHotKey hotKey in await ServiceManager.Get<VTubeStudioService>().GetAllHotKeys())
-                {
-                    this.HotKeys.Add(hotKey);
-                }
+                await this.LoadHotKeysForCurrentModel();
                 this.SelectedHotKey = this.HotKeys.FirstOrDefault(hk => string.Equals(hk.hotkeyID, this.hotKeyID));
             }
             await base.OnLoadedInternal();
+        }
+
+        private async Task LoadHotKeysForCurrentModel()
+        {
+            this.HotKeys.Clear();
+            this.SelectedHotKey = null;
+
+            if (this.SelectedModel != null)
+            {
+                foreach (VTubeStudioHotKey hotKey in await ServiceManager.Get<VTubeStudioService>().GetHotKeys(this.SelectedModel.modelID))
+                {
+                    this.HotKeys.Add(hotKey);
+                }
+            }
         }
     }
 }
