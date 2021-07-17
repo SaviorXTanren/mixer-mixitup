@@ -63,8 +63,8 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" Visibility="Hidden" x:Name="ScreenshotFilePathTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommunityCommandsScreenshotFilePath}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                <Button Grid.Column="2" Visibility="Hidden" x:Name="BrowseScreenshotFilePathButton" Content="{x:Static resx:Resources.Browse}" Click="BrowseScreenshotFilePathButton_Click" />
+                <TextBox Grid.Column="0" x:Name="ScreenshotFilePathTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommunityCommandsScreenshotFilePath}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <Button Grid.Column="2" x:Name="BrowseScreenshotFilePathButton" Content="{x:Static resx:Resources.Browse}" Click="BrowseScreenshotFilePathButton_Click" />
             </Grid>
 
             <Grid Grid.Row="10" HorizontalAlignment="Center">
