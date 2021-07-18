@@ -94,7 +94,6 @@ namespace MixItUp.Base.ViewModel.Requirements
             {
                 this.selectedAdvancedRole = value;
                 this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("IsSubscriberRole");
             }
         }
         private UserRoleEnum selectedAdvancedRole = UserRoleEnum.User;
@@ -165,6 +164,7 @@ namespace MixItUp.Base.ViewModel.Requirements
                 {
                     this.SelectedAdvancedRoles.Add(new UserRoleViewModel(this, this.SelectedAdvancedRole));
                 }
+                this.NotifyPropertyChanged("IsSubscriberRole");
             });
         }
 
