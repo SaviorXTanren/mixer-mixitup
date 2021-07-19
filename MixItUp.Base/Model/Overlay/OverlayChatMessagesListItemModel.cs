@@ -37,7 +37,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public override Task LoadTestData()
         {
-            ChatMessageViewModel message = new ChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.All, ChannelSession.GetCurrentUser());
+            UserChatMessageViewModel message = new UserChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.All, ChannelSession.GetCurrentUser());
             message.AddStringMessagePart("Test Message");
             this.GlobalEvents_OnChatMessageReceived(this, message);
             return Task.FromResult(0);
