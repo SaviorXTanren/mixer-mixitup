@@ -248,7 +248,7 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                if (commandInstance.State == CommandInstanceStateEnum.Canceled || commandInstance.State == CommandInstanceStateEnum.Completed)
+                if (commandInstance.State != CommandInstanceStateEnum.Pending)
                 {
                     return;
                 }
