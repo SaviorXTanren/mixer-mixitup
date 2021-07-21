@@ -74,7 +74,7 @@
                 </ItemsControl>
             </ScrollViewer>
 
-            <Button Grid.Row="8" Width="160" Content="{Binding ImportButtonText}" Command="{Binding ImportButtonCommand}" />
+            <Button Grid.Row="8" Width="160" IsEnabled="{Binding ImportButtonState}" Content="{Binding ImportButtonText}" Command="{Binding ImportButtonCommand}" />
 
         </Grid>
 
