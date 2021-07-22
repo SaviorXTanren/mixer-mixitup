@@ -147,9 +147,9 @@ namespace MixItUp.Base.ViewModel.Chat
 
                     this.OnDeleted(this, new EventArgs());
 
-                    if (moderator != null && this.User != null && !string.IsNullOrEmpty(this.PlainTextMessage))
+                    if (this.User != null && !string.IsNullOrEmpty(this.PlainTextMessage))
                     {
-                        CommandParametersModel parameters = new CommandParametersModel(moderator);
+                        CommandParametersModel parameters = new CommandParametersModel(moderator ?? this.User);
                         parameters.Arguments.Add(this.User.Username);
                         parameters.TargetUser = this.User;
                         parameters.SpecialIdentifiers["message"] = this.PlainTextMessage;

@@ -123,6 +123,7 @@ namespace MixItUp.Base.Services
                 this.TwitchChatService = twitchChatService;
 
                 this.TwitchChatService.OnMessageOccurred += TwitchChatService_OnMessageOccurred;
+                this.TwitchChatService.OnMessageDeletedOccurred += TwitchChatService_OnMessageDeletedOccurred;
                 this.TwitchChatService.OnUsersJoinOccurred += TwitchChatService_OnUsersJoinOccurred;
                 this.TwitchChatService.OnUsersLeaveOccurred += TwitchChatService_OnUsersLeaveOccurred;
 
@@ -705,6 +706,24 @@ namespace MixItUp.Base.Services
         private async void TwitchChatService_OnMessageOccurred(object sender, ChatMessageViewModel message)
         {
             await this.AddMessage(message);
+        }
+
+        private async void TwitchChatService_OnMessageDeletedOccurred(object sender, TwitchChatMessageViewModel twitchMessage)
+        {
+            if (!this.messagesLookup.TryGetValue(twitchMessage.ID, out ChatMessageViewModel message))
+            {
+                message = twitchMessage;
+            }    
+
+            if (!message.IsDeleted)
+            {
+                await message.Delete();
+            }
+
+            if (ChannelSession.Settings.HideDeletedMessages)
+            {
+                await this.RemoveMessage(message);
+            }
         }
 
         private async void TwitchChatService_OnUsersJoinOccurred(object sender, IEnumerable<UserViewModel> users)

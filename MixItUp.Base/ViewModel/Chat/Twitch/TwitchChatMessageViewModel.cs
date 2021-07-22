@@ -137,6 +137,12 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             this.ProcessMessageContents((!string.IsNullOrEmpty(bitsCheer.chat_message)) ? bitsCheer.chat_message : string.Empty);
         }
 
+        public TwitchChatMessageViewModel(ChatClearMessagePacketModel messageDeletion, UserViewModel user)
+            : base(messageDeletion.ID, StreamingPlatformTypeEnum.Twitch, user)
+        {
+            this.ProcessMessageContents(messageDeletion.Message);
+        }
+
         public TwitchChatMessageViewModel(UserViewModel user, string message, string replyMessageID = null)
             : base(string.Empty, StreamingPlatformTypeEnum.Twitch, user)
         {
