@@ -31,8 +31,6 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <ComboBox Grid.Row="2" Visibility="{Binding ShowScenes, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding Scenes}" SelectedItem="{Binding SelectedScene}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Scene}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
-
         <ComboBox Grid.Row="2" Visibility="{Binding ShowOverlays, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding Overlays}" SelectedItem="{Binding SelectedOverlay}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Overlay}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
         <Grid Grid.Row="4" Visibility="{Binding ShowTargetUsernameGrid, Converter={StaticResource BooleanToVisibilityConverter}}">

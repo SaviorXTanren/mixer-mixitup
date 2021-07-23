@@ -21,7 +21,6 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.selectedActionType = value;
                 this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("ShowScenes");
                 this.NotifyPropertyChanged("ShowOverlays");
                 this.NotifyPropertyChanged("ShowTargetUsernameGrid");
                 this.NotifyPropertyChanged("ShowTimeAmountGrid");
@@ -52,51 +51,6 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private PixelChatActionTypeEnum selectedActionType;
-
-        public bool ShowScenes { get { return false; } } // return this.SelectedActionType == PixelChatActionTypeEnum.ShowHideSceneComponent; } }
-
-        public ThreadSafeObservableCollection<PixelChatSceneModel> Scenes { get; set; } = new ThreadSafeObservableCollection<PixelChatSceneModel>();
-
-        public PixelChatSceneModel SelectedScene
-        {
-            get { return this.selectedScene; }
-            set
-            {
-                this.selectedScene = value;
-                this.NotifyPropertyChanged();
-
-                this.SceneComponents.Clear();
-                if (this.SelectedScene != null)
-                {
-
-                }
-            }
-        }
-        private PixelChatSceneModel selectedScene;
-
-        public ThreadSafeObservableCollection<PixelChatSceneComponentModel> SceneComponents { get; set; } = new ThreadSafeObservableCollection<PixelChatSceneComponentModel>();
-
-        public PixelChatSceneComponentModel SelectedSceneComponent
-        {
-            get { return this.selectedSceneComponent; }
-            set
-            {
-                this.selectedSceneComponent = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private PixelChatSceneComponentModel selectedSceneComponent;
-
-        public bool ShowHideSceneComponent
-        {
-            get { return this.showHideSceneComponent; }
-            set
-            {
-                this.showHideSceneComponent = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private bool showHideSceneComponent;
 
         public bool ShowOverlays
         {
@@ -189,19 +143,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public override async Task<Result> Validate()
         {
-            if (this.ShowScenes)
-            {
-                if (this.SelectedScene == null)
-                {
-                    return new Result(MixItUp.Base.Resources.PixelChatActionMissingScene);
-                }
-
-                if (this.SelectedSceneComponent == null)
-                {
-                    return new Result(MixItUp.Base.Resources.PixelChatActionMissingSceneComponent);
-                }
-            }
-            else if (this.ShowOverlays)
+            if (this.ShowOverlays)
             {
                 if (this.SelectedOverlay == null)
                 {
@@ -223,11 +165,6 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             if (ChannelSession.Services.PixelChat.IsConnected)
             {
-                //foreach (PixelChatSceneModel scene in (await ChannelSession.Services.PixelChat.GetScenes()).OrderBy(o => o.Name))
-                //{
-                //    this.Scenes.Add(scene);
-                //}
-
                 foreach (PixelChatOverlayModel overlay in (await ChannelSession.Services.PixelChat.GetOverlays()).OrderBy(o => o.Name))
                 {
                     this.allOverlays.Add(overlay);
@@ -238,11 +175,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override Task<ActionModelBase> GetActionInternal()
         {
-            if (this.ShowScenes)
-            {
-                //return Task.FromResult<ActionModelBase>(PixelChatActionModel.CreateShowHideSceneComponent(this.SelectedScene.id, this.SelectedSceneComponent.id, this.ShowHideSceneComponent));
-            }
-            else if (this.ShowOverlays)
+            if (this.ShowOverlays)
             {
                 if (this.ShowTargetUsernameGrid)
                 {
