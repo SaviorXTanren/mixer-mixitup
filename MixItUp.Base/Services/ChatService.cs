@@ -153,8 +153,13 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task DeleteMessage(ChatMessageViewModel message)
+        public async Task DeleteMessage(ChatMessageViewModel message, bool externalDeletion = false)
         {
+            if (externalDeletion && !this.messagesLookup.TryGetValue(message.ID, out ChatMessageViewModel existingMessage))
+            {
+                message = existingMessage;
+            }
+
             if (!string.IsNullOrEmpty(message.ID))
             {
                 if (message.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Has<TwitchChatService>())

@@ -79,6 +79,17 @@ namespace MixItUp.Base.ViewModel.User
         }
         private string importButtonText = MixItUp.Base.Resources.ImportData;
 
+        public bool ImportButtonState
+        {
+            get { return this.importButtonState; }
+            set
+            {
+                this.importButtonState = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool importButtonState = true;
+
         public ICommand ImportButtonCommand { get; private set; }
 
         public UserDataImportWindowViewModel()
@@ -112,6 +123,8 @@ namespace MixItUp.Base.ViewModel.User
 
             this.ImportButtonCommand = this.CreateCommand(async () =>
             {
+                this.ImportButtonState = false;
+
                 try
                 {
                     int usersImported = 0;
@@ -218,41 +231,57 @@ namespace MixItUp.Base.ViewModel.User
 
                                 bool newUser = true;
                                 UserDataModel user = null;
-                                if (twitchID > 0)
+                                if (twitchID > 0 && !string.IsNullOrEmpty(twitchUsername))
                                 {
-                                    // TODO
-                                    //user = ChannelSession.Settings.GetUserDataByTwitchID(twitchID.ToString());
-                                    //if (user != null)
-                                    //{
-                                    //    newUser = false;
-                                    //}
-                                    //else
-                                    //{
-                                    //    Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(twitchID.ToString());
-                                    //    if (twitchUser != null)
-                                    //    {
-                                    //        UserViewModel userViewModel = new UserViewModel(twitchUser);
-                                    //        user = userViewModel.Data;
-                                    //    }
-                                    //}
+                                    user = await ServiceManager.Get<UserService>().GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, twitchID.ToString());
+                                    if (user != null)
+                                    {
+                                        newUser = false;
+                                    }
+                                    else
+                                    {
+                                        UserViewModel userViewModel = await UserViewModel.Create(new Twitch.Base.Models.NewAPI.Users.UserModel()
+                                        {
+                                            id = twitchID.ToString(),
+                                            login = twitchUsername,
+                                            display_name = twitchUsername,
+                                        });
+                                        user = userViewModel.Data;
+                                    }
+                                }
+                                else if (twitchID > 0)
+                                {
+                                    user = await ServiceManager.Get<UserService>().GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, twitchID.ToString());
+                                    if (user != null)
+                                    {
+                                        newUser = false;
+                                    }
+                                    else
+                                    {
+                                        Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(twitchID.ToString());
+                                        if (twitchUser != null)
+                                        {
+                                            UserViewModel userViewModel = await UserViewModel.Create(twitchUser);
+                                            user = userViewModel.Data;
+                                        }
+                                    }
                                 }
                                 else if (!string.IsNullOrEmpty(twitchUsername))
                                 {
-                                    // TODO
-                                    //Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(twitchUsername);
-                                    //if (twitchUser != null)
-                                    //{
-                                    //    user = ChannelSession.Settings.GetUserDataByTwitchID(twitchUser.id);
-                                    //    if (user != null)
-                                    //    {
-                                    //        newUser = false;
-                                    //    }
-                                    //    else
-                                    //    {
-                                    //        UserViewModel userViewModel = new UserViewModel(twitchUser);
-                                    //        user = userViewModel.Data;
-                                    //    }
-                                    //}
+                                    user = await ServiceManager.Get<UserService>().GetUserDataByPlatformUsername(StreamingPlatformTypeEnum.Twitch, twitchUsername);
+                                    if (user != null)
+                                    {
+                                        newUser = false;
+                                    }
+                                    else
+                                    {
+                                        Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(twitchUsername);
+                                        if (twitchUser != null)
+                                        {
+                                            UserViewModel userViewModel = await UserViewModel.Create(twitchUser);
+                                            user = userViewModel.Data;
+                                        }
+                                    }
                                 }
                                 else if (!string.IsNullOrEmpty(mixerUsername))
                                 {
@@ -341,7 +370,9 @@ namespace MixItUp.Base.ViewModel.User
                     Logger.Log(ex);
                     await DialogHelper.ShowMessage(Resources.ImportFailed);
                 }
+
                 this.ImportButtonText = MixItUp.Base.Resources.ImportData;
+                this.ImportButtonState = true;
             });
         }
 

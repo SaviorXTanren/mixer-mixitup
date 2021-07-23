@@ -132,6 +132,7 @@ namespace MixItUp.Base.Services.Twitch
                         this.userClient.OnUserNoticeReceived += UserClient_OnUserNoticeReceived;
                         this.userClient.OnChatClearReceived += UserClient_OnChatClearReceived;
                         this.userClient.OnMessageReceived += UserClient_OnMessageReceived;
+                        this.userClient.OnClearMessageReceived += UserClient_OnClearMessageReceived;
 
                         this.userClient.OnUserListReceived += UserClient_OnUserListReceived;
                         await this.userClient.Connect();
@@ -183,6 +184,7 @@ namespace MixItUp.Base.Services.Twitch
                     this.userClient.OnUserNoticeReceived -= UserClient_OnUserNoticeReceived;
                     this.userClient.OnChatClearReceived -= UserClient_OnChatClearReceived;
                     this.userClient.OnMessageReceived -= UserClient_OnMessageReceived;
+                    this.userClient.OnClearMessageReceived -= UserClient_OnClearMessageReceived;
 
                     await this.userClient.Disconnect();
                 }
@@ -836,6 +838,20 @@ namespace MixItUp.Base.Services.Twitch
                     UserViewModel user = await ServiceManager.Get<UserService>().GetUserFullSearch(StreamingPlatformTypeEnum.Twitch, message.UserID, message.UserLogin);
                     await ServiceManager.Get<ChatService>().AddMessage(new TwitchChatMessageViewModel(message, user));
                 }
+            }
+        }
+
+        private async void UserClient_OnClearMessageReceived(object sender, ChatClearMessagePacketModel packet)
+        {
+            if (packet != null && !string.IsNullOrEmpty(packet.ID) && !string.IsNullOrEmpty(packet.UserLogin))
+            {
+                UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByUsername(packet.UserLogin, StreamingPlatformTypeEnum.Twitch);
+                if (user == null)
+                {
+                    user = UserViewModel.Create(packet.UserLogin);
+                }
+
+                await ServiceManager.Get<ChatService>().DeleteMessage(new TwitchChatMessageViewModel(packet, user), externalDeletion: true);
             }
         }
 

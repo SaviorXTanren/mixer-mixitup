@@ -406,7 +406,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                         }
                         else if (this.IsCustomSettingsSearchFilterType)
                         {
-                            data = data.Where(u => u.IsCurrencyRankExempt || u.CustomTitle != null || u.CustomCommandIDs.Count > 0 || u.EntranceCommandID != Guid.Empty);
+                            data = data.Where(u => u.IsCurrencyRankExempt || u.CustomTitle != null || u.CustomCommandIDs.Count > 0 || u.EntranceCommandID != Guid.Empty || !string.IsNullOrEmpty(u.Notes));
                         }
                     }
 

@@ -10,8 +10,6 @@ namespace MixItUp.Base.Model.Actions
 {
     public enum PixelChatActionTypeEnum
     {
-        [Obsolete]
-        ShowHideSceneComponent,
         TriggerGiveaway,
         TriggerCredits,
         TriggerShoutout,
@@ -24,16 +22,6 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class PixelChatActionModel : ActionModelBase
     {
-        //public static PixelChatActionModel CreateShowHideSceneComponent(string sceneID, string sceneComponentID, bool showHide)
-        //{
-        //    return new PixelChatActionModel(PixelChatActionTypeEnum.ShowHideSceneComponent)
-        //    {
-        //        SceneID = sceneID,
-        //        SceneComponentID = sceneComponentID,
-        //        ShowHideSceneComponent = showHide
-        //    };
-        //}
-
         public static PixelChatActionModel CreateBasicOverlay(PixelChatActionTypeEnum actionType, string overlayID)
         {
             return new PixelChatActionModel(actionType)
@@ -62,14 +50,6 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public PixelChatActionTypeEnum ActionType { get; set; }
-
-        [DataMember]
-        public string SceneID { get; set; }
-        [DataMember]
-        public string SceneComponentID { get; set; }
-
-        [DataMember]
-        public bool ShowHideSceneComponent { get; set; }
 
         [DataMember]
         public string OverlayID { get; set; }
@@ -113,10 +93,6 @@ namespace MixItUp.Base.Model.Actions
                     int.TryParse(await this.ReplaceStringWithSpecialModifiers(this.TimeAmount, parameters), out int timeAmount);
                     sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString(), timeAmount);
                 }
-                //else if (this.ActionType == PixelChatActionTypeEnum.ShowHideSceneComponent)
-                //{
-
-                //}
                 else
                 {
                     sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString());
