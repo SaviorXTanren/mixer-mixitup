@@ -251,7 +251,7 @@ namespace MixItUp.Base.ViewModel.User
                     {
                         case StreamingPlatformTypeEnum.Twitch: data.TwitchID = platformID; break;
                     }
-                    ChannelSession.Settings.SetUserData(data);
+                    ChannelSession.Settings.SetUserData(data, newData: true);
                 }
             }
             return new UserViewModel(data);

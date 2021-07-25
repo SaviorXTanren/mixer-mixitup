@@ -761,7 +761,7 @@ namespace MixItUp.Base.Model.Settings
             IEnumerable<Guid> removedUsers = this.UserData.GetRemovedValues();
             await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ToString() } }));
 
-            IEnumerable<UserDataModel> changedUsers = this.UserData.GetChangedValues();
+            IEnumerable<UserDataModel> changedUsers = this.UserData.GetAddedChangedValues();
             await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath,
                 "REPLACE INTO Users(ID, TwitchID, TwitchUsername, YouTubeID, YouTubeUsername, FacebookID, FacebookUsername, TrovoID, TrovoUsername, GlimeshID, GlimeshUsername, Data) " +
                 "VALUES(@ID, @TwitchID, @TwitchUsername, @YouTubeID, @YouTubeUsername, @FacebookID, @FacebookUsername, @TrovoID, @TrovoUsername, @GlimeshID, @GlimeshUsername, @Data)",
@@ -888,7 +888,7 @@ namespace MixItUp.Base.Model.Settings
             }
         }
 
-        public void SetUserData(UserDataModel userData)
+        public void SetUserData(UserDataModel userData, bool newData = false)
         {
             if (userData != null && userData.Platform != StreamingPlatformTypeEnum.None)
             {
@@ -897,7 +897,14 @@ namespace MixItUp.Base.Model.Settings
                     if (!this.UserData.ContainsKey(userData.ID))
                     {
                         this.UserData[userData.ID] = userData;
-                        this.UserData.ClearTracking(userData.ID);
+                        if (newData)
+                        {
+                            this.UserData.ManualValueChanged(userData.ID);
+                        }
+                        else
+                        {
+                            this.UserData.ClearTracking(userData.ID);
+                        }
                     }
 
                     if (!string.IsNullOrEmpty(userData.TwitchID))

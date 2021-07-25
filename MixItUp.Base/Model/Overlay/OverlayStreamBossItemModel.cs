@@ -171,7 +171,7 @@ namespace MixItUp.Base.Model.Overlay
 
             if (this.CurrentBossID != Guid.Empty)
             {
-                UserDataModel userData = await ChannelSession .Settings.GetUserDataByID(this.CurrentBossID);
+                UserDataModel userData = await ChannelSession.Settings.GetUserDataByID(this.CurrentBossID);
                 if (userData != null)
                 {
                     this.CurrentBoss = new UserViewModel(userData);
