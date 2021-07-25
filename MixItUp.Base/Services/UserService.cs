@@ -343,7 +343,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public void SetUserData(UserDataModel userData)
+        public void SetUserData(UserDataModel userData, bool newData = false)
         {
             if (userData != null && userData.Platforms.Count() > 0)
             {
@@ -352,7 +352,14 @@ namespace MixItUp.Base.Services
                     if (!ChannelSession.Settings.UserData.ContainsKey(userData.ID))
                     {
                         ChannelSession.Settings.UserData[userData.ID] = userData;
-                        ChannelSession.Settings.UserData.ClearTracking(userData.ID);
+                        if (newData)
+                        {
+                            ChannelSession.Settings.UserData.ManualValueChanged(userData.ID);
+                        }
+                        else
+                        {
+                            ChannelSession.Settings.UserData.ClearTracking(userData.ID);
+                        }
                     }
 
                     if (!string.IsNullOrEmpty(userData.TwitchID))

@@ -151,8 +151,7 @@ namespace MixItUp.Base.Model.User
             }
 
             this.CustomTitle = other.CustomTitle;
-            this.ViewingMinutes += other.ViewingMinutes;
-            this.OfflineViewingMinutes += other.OfflineViewingMinutes;
+            this.OnlineViewingMinutes += other.OnlineViewingMinutes;
 
             this.CustomCommandIDs = other.CustomCommandIDs;
             this.EntranceCommandID = other.EntranceCommandID;

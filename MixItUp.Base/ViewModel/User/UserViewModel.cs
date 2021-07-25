@@ -292,7 +292,7 @@ namespace MixItUp.Base.ViewModel.User
                         break;
                 }
 
-                ServiceManager.Get<UserService>().SetUserData(data);
+                ServiceManager.Get<UserService>().SetUserData(data, newData: true);
             }
             return new UserViewModel(data);
         }
