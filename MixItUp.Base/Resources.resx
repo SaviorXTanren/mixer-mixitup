@@ -4844,7 +4844,7 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
     <value>Font Color</value>
   </data>
   <data name="FontName" xml:space="preserve">
-    <value>FontName</value>
+    <value>Font Name</value>
   </data>
   <data name="GoalAmount" xml:space="preserve">
     <value>Goal Amount</value>

@@ -4887,7 +4887,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to FontName.
+        ///   Looks up a localized string similar to Font Name.
         /// </summary>
         public static string FontName {
             get {
