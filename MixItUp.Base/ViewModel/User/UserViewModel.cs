@@ -24,29 +24,6 @@ using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 
 namespace MixItUp.Base.ViewModel.User
 {
-    public static class NewAPITwitchUserModelExtensions
-    {
-        public static bool IsAffiliate(this TwitchNewAPI.Users.UserModel twitchUser)
-        {
-            return twitchUser.broadcaster_type.Equals("affiliate");
-        }
-
-        public static bool IsPartner(this TwitchNewAPI.Users.UserModel twitchUser)
-        {
-            return twitchUser.broadcaster_type.Equals("partner");
-        }
-
-        public static bool IsStaff(this TwitchNewAPI.Users.UserModel twitchUser)
-        {
-            return twitchUser.type.Equals("staff") || twitchUser.type.Equals("admin");
-        }
-
-        public static bool IsGlobalMod(this TwitchNewAPI.Users.UserModel twitchUser)
-        {
-            return twitchUser.type.Equals("global_mod");
-        }
-    }
-
     public class UserViewModel : IEquatable<UserViewModel>, IComparable<UserViewModel>
     {
         public const string UserDefaultColor = "MaterialDesignBody";

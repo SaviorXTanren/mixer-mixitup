@@ -284,4 +284,27 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
     }
+
+    public static class TwitchNewAPIUserModelExtensions
+    {
+        public static bool IsAffiliate(this UserModel twitchUser)
+        {
+            return twitchUser.broadcaster_type.Equals("affiliate");
+        }
+
+        public static bool IsPartner(this UserModel twitchUser)
+        {
+            return twitchUser.broadcaster_type.Equals("partner");
+        }
+
+        public static bool IsStaff(this UserModel twitchUser)
+        {
+            return twitchUser.type.Equals("staff") || twitchUser.type.Equals("admin");
+        }
+
+        public static bool IsGlobalMod(this UserModel twitchUser)
+        {
+            return twitchUser.type.Equals("global_mod");
+        }
+    }
 }

@@ -1,11 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using MixItUp.Base.Model.User.Platform;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.User
 {
-    public class UserV2Model
+    public class UserV2Model : IEquatable<UserV2Model>
     {
         [DataMember]
         public Guid ID { get; set; } = Guid.NewGuid();
@@ -67,7 +68,7 @@ namespace MixItUp.Base.Model.User
         public DateTimeOffset LastSeen { get; set; }
 
         [DataMember]
-        private Dictionary<StreamingPlatformTypeEnum, UserPlatformV2Model> PlatformData { get; set; } = new Dictionary<StreamingPlatformTypeEnum, UserPlatformV2Model>();
+        private Dictionary<StreamingPlatformTypeEnum, UserPlatformV2ModelBase> PlatformData { get; set; } = new Dictionary<StreamingPlatformTypeEnum, UserPlatformV2ModelBase>();
 
         public UserV2Model() { }
 
@@ -75,23 +76,22 @@ namespace MixItUp.Base.Model.User
 
         public bool HasPlatformData(StreamingPlatformTypeEnum platform) { return this.PlatformData.ContainsKey(platform); }
 
-        public T GetPlatformData<T>(StreamingPlatformTypeEnum platform) where T : UserPlatformV2Model
+        public T GetPlatformData<T>(StreamingPlatformTypeEnum platform) where T : UserPlatformV2ModelBase
         {
-            if (!this.PlatformData.ContainsKey(platform))
+            if (this.PlatformData.ContainsKey(platform))
             {
-                if (platform == StreamingPlatformTypeEnum.Twitch) { this.PlatformData[platform] = new TwitchUserPlatformV2Model(); }
-                else if (platform == StreamingPlatformTypeEnum.YouTube) { this.PlatformData[platform] = new YouTubeUserPlatformV2Model(); }
-                else if (platform == StreamingPlatformTypeEnum.Glimesh) { this.PlatformData[platform] = new GlimeshUserPlatformV2Model(); }
-                else if (platform == StreamingPlatformTypeEnum.Trovo) { this.PlatformData[platform] = new TrovoUserPlatformV2Model(); }
+                return (T)this.PlatformData[platform];
             }
-            return (T)this.PlatformData[platform];
+            return null;
         }
+
+        public void AddPlatformData(UserPlatformV2ModelBase platformModel) { this.PlatformData[platformModel.Platform] = platformModel; }
 
         public override bool Equals(object obj)
         {
-            if (obj is UserDataModel)
+            if (obj is UserV2Model)
             {
-                return this.Equals((UserDataModel)obj);
+                return this.Equals((UserV2Model)obj);
             }
             return false;
         }
@@ -112,7 +112,7 @@ namespace MixItUp.Base.Model.User
             {
                 if (!this.HasPlatformData(platform))
                 {
-                    this.PlatformData[platform] = other.GetPlatformData<UserPlatformV2Model>(platform);
+                    this.PlatformData[platform] = other.GetPlatformData<UserPlatformV2ModelBase>(platform);
                 }
             }
 
