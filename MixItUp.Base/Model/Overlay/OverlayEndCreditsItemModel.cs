@@ -251,7 +251,7 @@ namespace MixItUp.Base.Model.Overlay
                     this.bits[userID] = 123;
                 }
             }
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public override Task Initialize()
@@ -307,7 +307,7 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
             GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
             GlobalEvents.OnBitsOccurred -= GlobalEvents_OnBitsOccurred;
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public override async Task Reset()

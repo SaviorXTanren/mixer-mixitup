@@ -52,7 +52,7 @@ namespace MixItUp.Base.ViewModel.Commands
         {
             ServiceManager.Get<CommandService>().TwitchChannelPointsCommands.Remove((TwitchChannelPointsCommandModel)this.existingCommand);
             ServiceManager.Get<CommandService>().TwitchChannelPointsCommands.Add((TwitchChannelPointsCommandModel)command);
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         protected override async Task OnLoadedInternal()

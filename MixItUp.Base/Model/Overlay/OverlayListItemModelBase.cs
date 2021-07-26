@@ -178,7 +178,7 @@ namespace MixItUp.Base.Model.Overlay
             this.Items.Clear();
             this.Items.AddRange(this.cachedItems);
             this.cachedItems.Clear();
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         protected override async Task PerformReplacements(JObject jobj, CommandParametersModel parameters)

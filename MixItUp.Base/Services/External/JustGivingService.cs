@@ -150,7 +150,7 @@ namespace MixItUp.Base.Services.External
         {
             this.cancellationTokenSource.Cancel();
             this.token = null;
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public void SetFundraiser(JustGivingFundraiser fundraiser)

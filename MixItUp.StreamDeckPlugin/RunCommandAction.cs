@@ -172,7 +172,7 @@ namespace MixItUp.StreamDeckPlugin
 
         public override Task RunTickAsync()
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 }

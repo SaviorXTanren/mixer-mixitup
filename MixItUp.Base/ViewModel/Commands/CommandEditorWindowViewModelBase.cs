@@ -207,7 +207,7 @@ namespace MixItUp.Base.ViewModel.Commands
         public virtual Task UpdateExistingCommand(CommandModelBase command)
         {
             command.Name = this.Name;
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public abstract Task SaveCommandToSettings(CommandModelBase command);
@@ -285,7 +285,7 @@ namespace MixItUp.Base.ViewModel.Commands
             return command;
         }
 
-        protected virtual Task UpdateCommandGroup() { return Task.FromResult(0); }
+        protected virtual Task UpdateCommandGroup() { return Task.CompletedTask; }
         protected virtual void SelectedCommandGroupChanged() { }
 
         protected CommandGroupSettingsModel GetCommandGroup()

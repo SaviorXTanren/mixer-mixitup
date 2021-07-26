@@ -20,7 +20,7 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public override Task<CommandModelBase> CreateNewCommand() { return Task.FromResult<CommandModelBase>(new CustomCommandModel(this.Name)); }
 
-        public override Task SaveCommandToSettings(CommandModelBase command) { return Task.FromResult(0); }
+        public override Task SaveCommandToSettings(CommandModelBase command) { return Task.CompletedTask; }
 
         public override Dictionary<string, string> GetTestSpecialIdentifiers() { return CustomCommandModel.GetCustomTestSpecialIdentifiers(this.Name); }
     }

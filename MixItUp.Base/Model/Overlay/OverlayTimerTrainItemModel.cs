@@ -243,7 +243,7 @@ namespace MixItUp.Base.Model.Overlay
                         this.stackedTime = 0;
                     }
                 }
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
 
             if (this.timeLeft > 0)
@@ -273,7 +273,7 @@ namespace MixItUp.Base.Model.Overlay
                     this.stackedTime--;
                 }
             }
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         #region IDisposable Support

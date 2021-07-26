@@ -161,7 +161,7 @@ namespace MixItUp.Base.Model.Requirements
             {
                 this.individualCooldowns[parameters.User.ID] = DateTimeOffset.MinValue;
             }
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public override void Reset()

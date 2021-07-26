@@ -198,7 +198,7 @@ namespace MixItUp.Base.Model.Statistics
         private Func<EventStatisticDataTrackerModel, string> customToStringFunction;
 
         public EventStatisticDataTrackerModel(string name, string iconName, IEnumerable<string> exportHeaders, Func<EventStatisticDataTrackerModel, string> customToStringFunction = null)
-            : base(name, iconName, (StatisticDataTrackerModelBase stats) => { return Task.FromResult(0); })
+            : base(name, iconName, (StatisticDataTrackerModelBase stats) => { return Task.CompletedTask; })
         {
             this.exportHeaders = exportHeaders;
             this.customToStringFunction = customToStringFunction;

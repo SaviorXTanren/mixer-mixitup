@@ -121,7 +121,7 @@ namespace MixItUp.Base.Services.External
 
         public override Task Disconnect()
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public async Task<PixelChatUserModel> GetUser()
@@ -212,7 +212,7 @@ namespace MixItUp.Base.Services.External
 
         protected override Task RefreshOAuthToken()
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         protected override Task<AdvancedHttpClient> GetHttpClient(bool autoRefreshToken = true)

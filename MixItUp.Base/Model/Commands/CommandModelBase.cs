@@ -236,11 +236,11 @@ namespace MixItUp.Base.Model.Commands
 
         public IEnumerable<CommandParametersModel> GetPerformingUsers(CommandParametersModel parameters) { return this.Requirements.GetPerformingUsers(parameters); }
 
-        public virtual Task PreRun(CommandParametersModel parameters) { return Task.FromResult(0); }
+        public virtual Task PreRun(CommandParametersModel parameters) { return Task.CompletedTask; }
 
-        public virtual Task CustomRun(CommandParametersModel parameters) { return Task.FromResult(0); }
+        public virtual Task CustomRun(CommandParametersModel parameters) { return Task.CompletedTask; }
 
-        public virtual Task PostRun(CommandParametersModel parameters) { return Task.FromResult(0); }
+        public virtual Task PostRun(CommandParametersModel parameters) { return Task.CompletedTask; }
 
         public override string ToString() { return string.Format("{0} - {1}", this.ID, this.Name); }
 

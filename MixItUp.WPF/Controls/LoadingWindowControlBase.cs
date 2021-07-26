@@ -21,7 +21,7 @@ namespace MixItUp.WPF.Controls
             });
         }
 
-        protected virtual Task InitializeInternal() { return Task.FromResult(0); }
+        protected virtual Task InitializeInternal() { return Task.CompletedTask; }
 
         protected virtual async void LoadingWindowControlBase_IsVisibleChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
         {

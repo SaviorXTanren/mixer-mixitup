@@ -91,7 +91,7 @@ namespace MixItUp.WPF.Controls.Dashboard
                     }
                 }
 
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
 

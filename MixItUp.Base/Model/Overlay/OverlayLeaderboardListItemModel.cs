@@ -154,7 +154,7 @@ namespace MixItUp.Base.Model.Overlay
         public override Task LoadTestData()
         {
             UserViewModel user = ChannelSession.GetCurrentUser();
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public override async Task Enable()

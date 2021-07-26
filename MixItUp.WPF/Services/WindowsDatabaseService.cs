@@ -47,7 +47,7 @@ namespace MixItUp.WPF.Services
                         values.Clear();
                     }
                 }
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
 

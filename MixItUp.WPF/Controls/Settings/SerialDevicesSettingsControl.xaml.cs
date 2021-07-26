@@ -58,7 +58,7 @@ namespace MixItUp.WPF.Controls.Settings
                 this.DTREnabledCheckBox.IsChecked = false;
                 this.RTSEnabledCheckBox.IsChecked = false;
 
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
 

@@ -26,9 +26,9 @@ namespace MixItUp.WPF.Controls.Dashboard
             });
         }
 
-        protected virtual Task InitializeInternal() { return Task.FromResult(0); }
+        protected virtual Task InitializeInternal() { return Task.CompletedTask; }
 
-        protected virtual Task OnVisibilityChanged() { return Task.FromResult(0); }
+        protected virtual Task OnVisibilityChanged() { return Task.CompletedTask; }
 
         private async void DashboardControlBase_IsVisibleChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
         {

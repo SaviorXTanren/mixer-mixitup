@@ -348,7 +348,7 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     this.userJoinEvents.Add(user);
                 }
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
             this.initialUserLogins.Clear();
         }
@@ -501,7 +501,7 @@ namespace MixItUp.Base.Services.Twitch
                     joinsToProcess.Add(username);
                     this.userJoinEvents.Remove(username);
                 }
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
 
             if (joinsToProcess.Count > 0)
@@ -528,7 +528,7 @@ namespace MixItUp.Base.Services.Twitch
                     leavesToProcess.Add(username);
                     this.userLeaveEvents.Remove(username);
                 }
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
 
             if (leavesToProcess.Count > 0)
@@ -655,7 +655,7 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     this.userJoinEvents.Add(userJoin.UserLogin);
                 }
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
 
@@ -667,7 +667,7 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     this.userLeaveEvents.Add(userLeave.UserLogin);
                 }
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
 

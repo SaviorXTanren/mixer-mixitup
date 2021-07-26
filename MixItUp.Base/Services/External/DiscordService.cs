@@ -589,7 +589,7 @@ namespace MixItUp.Base.Services.External
 
         protected override Task<Result> InitializeInternal() { throw new NotImplementedException(); }
 
-        protected override Task RefreshOAuthToken() { return Task.FromResult(0); }
+        protected override Task RefreshOAuthToken() { return Task.CompletedTask; }
 
         private async Task<HttpResponseMessage> ModifyServerMember(DiscordServer server, DiscordUser user, JObject content)
         {
@@ -681,7 +681,7 @@ namespace MixItUp.Base.Services.External
         {
             this.token = null;
             this.cancellationTokenSource.Cancel();
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public async Task<DiscordGateway> GetBotGateway() { return await this.botService.GetBotGateway(); }

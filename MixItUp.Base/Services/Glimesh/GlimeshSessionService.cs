@@ -128,7 +128,7 @@ namespace MixItUp.Base.Services.Glimesh
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].BotOAuthToken = null;
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].BotID = null;
 
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public async Task<Result> InitializeUser(SettingsV3Model settings)

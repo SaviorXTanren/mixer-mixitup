@@ -120,7 +120,7 @@ namespace MixItUp.Base.Services
 
             GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatCommandMessageReceived;
 
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         private async Task GiveawayTimerBackground()

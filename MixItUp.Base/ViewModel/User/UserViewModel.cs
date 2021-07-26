@@ -1078,7 +1078,7 @@ namespace MixItUp.Base.ViewModel.User
             {
                 this.Data.ModerationStrikes--;
             }
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public void UpdateMinuteData()
@@ -1468,7 +1468,7 @@ namespace MixItUp.Base.ViewModel.User
                     this.Data.PatreonUserID = null;
                 }
             }
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 }

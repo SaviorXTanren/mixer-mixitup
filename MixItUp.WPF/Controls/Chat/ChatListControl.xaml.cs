@@ -121,7 +121,7 @@ namespace MixItUp.WPF.Controls.Chat
                     }
                 }
 
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
 

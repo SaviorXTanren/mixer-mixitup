@@ -64,14 +64,14 @@ namespace MixItUp.Base.Services
                 }
 
                 numberStats.AddValue(viewersCurrent);
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
 
             this.ChatterTracker = new TrackedNumberStatisticDataTrackerModel(Resources.Chatters, "MessageTextOutline", (StatisticDataTrackerModelBase stats) =>
             {
                 TrackedNumberStatisticDataTrackerModel numberStats = (TrackedNumberStatisticDataTrackerModel)stats;
                 numberStats.AddValue(ServiceManager.Get<UserService>().ActiveUserCount());
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
 
             this.FollowTracker = new EventStatisticDataTrackerModel(Resources.Follows, "AccountPlus", new List<string>() { "Username", "Date & Time" });
@@ -95,7 +95,7 @@ namespace MixItUp.Base.Services
                 staticStats.AddValue(Resources.Resubs, ServiceManager.Get<StatisticsService>()?.ResubscriberTracker?.Total.ToString() ?? "0");
                 staticStats.AddValue(Resources.Gifted, ServiceManager.Get<StatisticsService>()?.GiftedSubscriptionsTracker?.Total.ToString() ?? "0");
 
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
 
             this.DonationsTracker = new EventStatisticDataTrackerModel(Resources.Donations, "CashMultiple", new List<string>() { "Username", "Amount", "Date & Time" }, (EventStatisticDataTrackerModel dataTracker) =>

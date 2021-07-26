@@ -61,7 +61,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private async Task AddGameQueueUsers(IEnumerable<UserViewModel> users)
         {
-            await this.listSemaphore.WaitAndRelease((System.Func<Task<int>>)(() =>
+            await this.listSemaphore.WaitAndRelease(() =>
             {
                 foreach (UserViewModel user in this.lastUsers)
                 {
@@ -85,8 +85,9 @@ namespace MixItUp.Base.Model.Overlay
                 this.lastUsers = new List<UserViewModel>(users);
 
                 this.SendUpdateRequired();
-                return Task.FromResult(0);
-            }));
+
+                return Task.CompletedTask;
+            });
         }
     }
 }

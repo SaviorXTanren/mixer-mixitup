@@ -41,7 +41,7 @@ namespace MixItUp.WPF.Controls
                 {
                     ProcessHelper.LaunchLink(this.incidents.FirstOrDefault().Link);
                 }
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
 
@@ -95,7 +95,7 @@ namespace MixItUp.WPF.Controls
                     await Task.Delay(60000);
                 }
             });
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         private void GlobalEvents_OnRefreshWarningUI(object sender, EventArgs e)

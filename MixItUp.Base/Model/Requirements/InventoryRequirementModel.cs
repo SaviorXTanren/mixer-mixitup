@@ -103,7 +103,7 @@ namespace MixItUp.Base.Model.Requirements
             {
                 inventory.AddAmount(parameters.User.Data, this.ItemID, this.Amount);
             }
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public Result ValidateAmount(UserViewModel user, int amount)

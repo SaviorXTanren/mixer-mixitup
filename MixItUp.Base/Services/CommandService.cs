@@ -128,7 +128,7 @@ namespace MixItUp.Base.Services
 
             ServiceManager.Get<ChatService>().RebuildCommandTriggers();
 
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public async Task Queue(Guid commandID) { await this.Queue(ChannelSession.Settings.GetCommand(commandID)); }
@@ -230,7 +230,7 @@ namespace MixItUp.Base.Services
                                 singularTask = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
                             }
                         }
-                        return Task.FromResult(0);
+                        return Task.CompletedTask;
                     });
                 }
             }

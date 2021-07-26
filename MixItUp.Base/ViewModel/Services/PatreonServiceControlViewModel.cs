@@ -73,7 +73,7 @@ namespace MixItUp.Base.ViewModel.Services
                 this.RefreshTiers();
                 this.SelectedTier = this.Tiers.FirstOrDefault(t => t.ID.Equals(ChannelSession.Settings.PatreonTierSubscriberEquivalent));
             }
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public void RefreshTiers()

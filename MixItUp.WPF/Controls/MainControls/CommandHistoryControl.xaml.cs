@@ -30,7 +30,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.viewModel.UncheckSelectAll += ViewModel_UncheckSelectAll;
 
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         private async Task UpdateText()

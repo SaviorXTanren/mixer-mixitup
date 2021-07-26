@@ -245,7 +245,7 @@ namespace MixItUp.Base.Services.External
         {
             this.token = null;
             this.cancellationTokenSource.Cancel();
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public async Task<TiltifyUser> GetUser()
@@ -321,7 +321,7 @@ namespace MixItUp.Base.Services.External
 
         protected override Task RefreshOAuthToken()
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         protected override void DisposeInternal()

@@ -49,7 +49,7 @@ namespace MixItUp.WPF.Services
             }
             catch (Exception ex) { Logger.Log(ex); }
 
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public void Listen(string eventString, Action processEvent)

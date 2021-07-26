@@ -245,7 +245,7 @@ namespace MixItUp.Base.Commands
                     }
                 }, this.currentCancellationTokenSource.Token);
             }
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public async Task PerformAndWait(UserViewModel user, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
@@ -375,7 +375,7 @@ namespace MixItUp.Base.Commands
         {
             protected override SemaphoreSlim AsyncSemaphore { get { return null; } }
 
-            protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments) { return Task.FromResult(0); }
+            protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments) { return Task.CompletedTask; }
         }
 
         public MixPlayJoystickCommand() { }

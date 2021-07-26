@@ -140,7 +140,7 @@ namespace MixItUp.Base.Services.External
 
             this.OnStreamlootsConnectionChanged(this, new EventArgs());
 
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         protected override Task<Result> InitializeInternal()
@@ -156,7 +156,7 @@ namespace MixItUp.Base.Services.External
             return Task.FromResult(new Result());
         }
 
-        protected override Task RefreshOAuthToken() { return Task.FromResult(0); }
+        protected override Task RefreshOAuthToken() { return Task.CompletedTask; }
 
         protected override void DisposeInternal()
         {

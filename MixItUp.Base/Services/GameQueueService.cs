@@ -75,21 +75,21 @@ namespace MixItUp.Base.Services
         {
             this.queue.Remove(user);
             GlobalEvents.GameQueueUpdated();
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public Task MoveUp(UserViewModel user)
         {
             this.queue.MoveUp(user);
             GlobalEvents.GameQueueUpdated();
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public Task MoveDown(UserViewModel user)
         {
             this.queue.MoveDown(user);
             GlobalEvents.GameQueueUpdated();
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public async Task SelectFirst()
@@ -176,7 +176,7 @@ namespace MixItUp.Base.Services
         {
             this.queue.Clear();
             GlobalEvents.GameQueueUpdated();
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         private async Task<bool> ValidateJoin(UserViewModel user)

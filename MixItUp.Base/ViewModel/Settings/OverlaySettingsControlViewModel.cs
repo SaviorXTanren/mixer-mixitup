@@ -76,7 +76,7 @@ namespace MixItUp.Base.ViewModel.Settings
         protected override Task OnLoadedInternal()
         {
             this.Endpoints.ClearAndAddRange(ServiceManager.Get<OverlayService>().AllOverlayNameAndPorts.OrderBy(kvp => kvp.Value).Select(kvp => new OverlayEndpointListingViewModel(this, kvp.Key, kvp.Value)));
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 }

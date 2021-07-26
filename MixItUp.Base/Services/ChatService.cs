@@ -364,7 +364,7 @@ namespace MixItUp.Base.Services
                                     whisperMap[message.User.ID] = whisperMap.Count + 1;
                                 }
                                 message.User.WhispererNumber = whisperMap[message.User.ID];
-                                return Task.FromResult(0);
+                                return Task.CompletedTask;
                             });
                         }
                     }
@@ -617,7 +617,7 @@ namespace MixItUp.Base.Services
         {
             this.messagesLookup.Remove(message.ID);
             this.Messages.Remove(message);
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public async Task UsersJoined(IEnumerable<UserViewModel> users)
@@ -747,7 +747,7 @@ namespace MixItUp.Base.Services
                 streamPass.UpdateUserData();
             }
 
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 }

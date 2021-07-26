@@ -86,7 +86,7 @@ namespace MixItUp.Base.Services
                     this.timerCommandIndexes[kvp.Key] = 0;
                 }
 
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
 
@@ -133,7 +133,7 @@ namespace MixItUp.Base.Services
                         }
                     }
 
-                    return Task.FromResult(0);
+                    return Task.CompletedTask;
                 });
 
                 foreach (string timerGroupToRun in timerGroupsToRun)

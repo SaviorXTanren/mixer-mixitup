@@ -57,7 +57,7 @@ namespace MixItUp.Base.ViewModel.Commands
         {
             ServiceManager.Get<CommandService>().TimerCommands.Remove((TimerCommandModel)this.existingCommand);
             ServiceManager.Get<CommandService>().TimerCommands.Add((TimerCommandModel)command);
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         protected override async Task UpdateCommandGroup()

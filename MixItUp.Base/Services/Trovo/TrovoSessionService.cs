@@ -128,7 +128,7 @@ namespace MixItUp.Base.Services.Trovo
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].BotOAuthToken = null;
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].BotID = null;
 
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public async Task<Result> InitializeUser(SettingsV3Model settings)

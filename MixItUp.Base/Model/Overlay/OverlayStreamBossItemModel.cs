@@ -243,7 +243,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 boss = this.CurrentBoss;
                 health = this.CurrentHealth;
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
 
             Dictionary<string, string> replacementSets = new Dictionary<string, string>();
@@ -312,7 +312,7 @@ namespace MixItUp.Base.Model.Overlay
 
                 this.SendUpdateRequired();
 
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
 

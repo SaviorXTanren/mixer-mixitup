@@ -257,7 +257,7 @@ namespace MixItUp.Base.ViewModel.Games
             ServiceManager.Get<CommandService>().GameCommands.Remove(c);
             ServiceManager.Get<CommandService>().GameCommands.Add(c);
             ServiceManager.Get<ChatService>().RebuildCommandTriggers();
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         protected Result ValidateOutcomes(IEnumerable<GameOutcomeViewModel> outcomes)

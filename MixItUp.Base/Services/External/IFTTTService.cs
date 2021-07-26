@@ -25,7 +25,7 @@ namespace MixItUp.Base.Services.External
 
         public override Task Disconnect()
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public async Task SendTrigger(string eventName, Dictionary<string, string> values)
@@ -61,7 +61,7 @@ namespace MixItUp.Base.Services.External
 
         protected override Task RefreshOAuthToken()
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 }

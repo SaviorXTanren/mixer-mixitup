@@ -21,7 +21,7 @@ namespace MixItUp.Base.Model.Actions
 
         protected override Task PerformInternal(CommandParametersModel parameters)
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 }

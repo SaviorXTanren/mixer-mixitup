@@ -67,7 +67,7 @@ namespace MixItUp.Base.ViewModel.Commands
             this.CancelCommand = this.CreateCommand(() =>
             {
                 ServiceManager.Get<CommandService>().Cancel(this.model);
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
 
             this.ReplayCommand = this.CreateCommand(async () =>

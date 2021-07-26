@@ -40,7 +40,7 @@ namespace MixItUp.WPF.Controls.Dashboard
                 {
                     Logger.Log(ex);
                 }
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
 
@@ -60,7 +60,7 @@ namespace MixItUp.WPF.Controls.Dashboard
                 {
                     Logger.Log(ex);
                 }
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
 
@@ -80,7 +80,7 @@ namespace MixItUp.WPF.Controls.Dashboard
                 {
                     Logger.Log(ex);
                 }
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
     }

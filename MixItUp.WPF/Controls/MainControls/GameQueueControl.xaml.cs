@@ -51,7 +51,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     this.viewModel.MoveUpCommand.Execute(queueUser.user);
                 }
                 catch (Exception ex) { Logger.Log(ex); }
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
 
@@ -65,7 +65,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     this.viewModel.MoveDownCommand.Execute(queueUser.user);
                 }
                 catch (Exception ex) { Logger.Log(ex); }
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
 
@@ -79,7 +79,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     this.viewModel.DeleteCommand.Execute(queueUser.user);
                 }
                 catch (Exception ex) { Logger.Log(ex); }
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
     }

@@ -97,7 +97,7 @@ namespace MixItUp.Base.Util
                     this.connectionTestSuccessful = true;
                 }
             }
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         protected override async Task<WebSocketCloseStatus> Receive()

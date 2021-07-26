@@ -148,7 +148,7 @@ namespace MixItUp.Base.Actions
 
         protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 
@@ -166,7 +166,7 @@ namespace MixItUp.Base.Actions
 
         protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 
@@ -184,7 +184,7 @@ namespace MixItUp.Base.Actions
 
         protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 
@@ -202,7 +202,7 @@ namespace MixItUp.Base.Actions
 
         protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 }

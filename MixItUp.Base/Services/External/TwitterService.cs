@@ -131,7 +131,7 @@ namespace MixItUp.Base.Services.External
         public override Task Disconnect()
         {
             this.token = null;
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public void SetAuthPin(string pin)
@@ -264,7 +264,7 @@ namespace MixItUp.Base.Services.External
         protected override Task RefreshOAuthToken()
         {
             this.GetOAuthTokenCopy();
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         protected override void DisposeInternal()

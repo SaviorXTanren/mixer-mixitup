@@ -42,7 +42,7 @@ namespace MixItUp.Base.ViewModel.Commands
         {
             ServiceManager.Get<CommandService>().EventCommands.Remove((EventCommandModel)this.existingCommand);
             ServiceManager.Get<CommandService>().EventCommands.Add((EventCommandModel)command);
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public override Dictionary<string, string> GetTestSpecialIdentifiers() { return EventCommandModel.GetEventTestSpecialIdentifiers(this.EventType); }

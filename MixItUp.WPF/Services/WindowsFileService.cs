@@ -39,7 +39,7 @@ namespace MixItUp.WPF.Services
         public Task DeleteFile(string filePath)
         {
             File.Delete(filePath);
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public Task CreateDirectory(string path)
@@ -48,7 +48,7 @@ namespace MixItUp.WPF.Services
             {
                 Directory.CreateDirectory(path);
             }
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public async Task CopyDirectory(string sourceDirectoryPath, string destinationDirectoryPath)

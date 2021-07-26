@@ -47,7 +47,7 @@ namespace MixItUp.Base.ViewModel.Commands
         {
             ServiceManager.Get<CommandService>().ActionGroupCommands.Remove((ActionGroupCommandModel)this.existingCommand);
             ServiceManager.Get<CommandService>().ActionGroupCommands.Add((ActionGroupCommandModel)command);
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 }

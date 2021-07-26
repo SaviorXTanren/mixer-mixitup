@@ -40,7 +40,7 @@ namespace MixItUp.Base.Model.Overlay
             UserChatMessageViewModel message = new UserChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.All, ChannelSession.GetCurrentUser());
             message.AddStringMessagePart("Test Message");
             this.GlobalEvents_OnChatMessageReceived(this, message);
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public override async Task Enable()
@@ -117,7 +117,7 @@ namespace MixItUp.Base.Model.Overlay
                     {
                         this.Items.Add(item);
                         this.SendUpdateRequired();
-                        return Task.FromResult(0);
+                        return Task.CompletedTask;
                     });
                 }
             }
@@ -130,7 +130,7 @@ namespace MixItUp.Base.Model.Overlay
                 OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateRemoveItem(id.ToString());
                 this.Items.Add(item);
                 this.SendUpdateRequired();
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
     }

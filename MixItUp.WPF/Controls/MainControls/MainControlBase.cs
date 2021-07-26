@@ -40,9 +40,9 @@ namespace MixItUp.WPF.Controls.MainControls
             e.Handled = true;
         }
 
-        protected virtual Task InitializeInternal() { return Task.FromResult(0); }
+        protected virtual Task InitializeInternal() { return Task.CompletedTask; }
 
-        protected virtual Task OnVisibilityChanged() { return Task.FromResult(0); }
+        protected virtual Task OnVisibilityChanged() { return Task.CompletedTask; }
 
         private async void MainControlBase_IsVisibleChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
         {

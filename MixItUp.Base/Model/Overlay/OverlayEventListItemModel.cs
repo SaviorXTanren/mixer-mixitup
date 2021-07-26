@@ -185,7 +185,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 this.Items.Add(item);
                 this.SendUpdateRequired();
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
     }

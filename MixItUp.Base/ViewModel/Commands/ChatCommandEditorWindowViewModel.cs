@@ -160,7 +160,7 @@ namespace MixItUp.Base.ViewModel.Commands
             ServiceManager.Get<CommandService>().ChatCommands.Remove((ChatCommandModel)this.existingCommand);
             ServiceManager.Get<CommandService>().ChatCommands.Add((ChatCommandModel)command);
             ServiceManager.Get<ChatService>().RebuildCommandTriggers();
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         protected HashSet<string> GetChatTriggers()
@@ -204,7 +204,7 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public override Task SaveCommandToSettings(CommandModelBase command)
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 }

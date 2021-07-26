@@ -198,7 +198,7 @@ namespace MixItUp.Base.Services.External
             this.Disconnected(this, new EventArgs());
             ChannelSession.DisconnectionOccurred("Streamlabs OBS");
 
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public async Task<bool> TestConnection() { return (await this.GetActiveScene() != null); }
@@ -234,7 +234,7 @@ namespace MixItUp.Base.Services.External
             }
         }
 
-        public Task SetSourceFilterVisibility(string sourceName, string filterName, bool visibility) { return Task.FromResult(0); }
+        public Task SetSourceFilterVisibility(string sourceName, string filterName, bool visibility) { return Task.CompletedTask; }
 
         public async Task SetWebBrowserSourceURL(string sceneName, string sourceName, string url)
         {
@@ -324,7 +324,7 @@ namespace MixItUp.Base.Services.External
             return true;
         }
 
-        public Task SetSceneCollection(string sceneCollectionName) { return Task.FromResult(0); }
+        public Task SetSceneCollection(string sceneCollectionName) { return Task.CompletedTask; }
 
         private async Task<StreamlabsOBSScene> GetActiveScene()
         {

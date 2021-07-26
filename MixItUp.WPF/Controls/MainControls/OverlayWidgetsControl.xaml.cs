@@ -40,7 +40,7 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Window.RunAsyncOperation(async () =>
             {
                 await this.viewModel.OnVisible();
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
 

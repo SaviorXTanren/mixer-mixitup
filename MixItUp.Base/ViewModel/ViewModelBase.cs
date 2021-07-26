@@ -179,11 +179,11 @@ namespace MixItUp.Base.ViewModels
             }
         }
 
-        protected virtual Task OnLoadedInternal() { return Task.FromResult(0); }
+        protected virtual Task OnLoadedInternal() { return Task.CompletedTask; }
 
-        protected virtual Task OnVisibleInternal() { return Task.FromResult(0); }
+        protected virtual Task OnVisibleInternal() { return Task.CompletedTask; }
 
-        protected virtual Task OnClosedInternal() { return Task.FromResult(0); }
+        protected virtual Task OnClosedInternal() { return Task.CompletedTask; }
 
         protected async Task RunAsync(Func<Task> function)
         {

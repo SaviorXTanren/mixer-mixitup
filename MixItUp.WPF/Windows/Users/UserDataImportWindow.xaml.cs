@@ -20,7 +20,7 @@ namespace MixItUp.WPF.Windows.Users
         protected override Task OnLoaded()
         {
             this.DataContext = this.viewModel = new UserDataImportWindowViewModel();
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 }

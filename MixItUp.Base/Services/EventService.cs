@@ -186,7 +186,7 @@ namespace MixItUp.Base.Services
 
         public Task Initialize()
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public EventCommandModel GetEventCommand(EventTypeEnum type)

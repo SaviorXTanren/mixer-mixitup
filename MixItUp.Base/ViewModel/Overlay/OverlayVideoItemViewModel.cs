@@ -79,7 +79,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 {
                     this.FilePath = filePath;
                 }
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
 

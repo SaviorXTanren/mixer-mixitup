@@ -101,7 +101,7 @@ namespace MixItUp.Base.Services.External
             {
                 Logger.Log(ex);
             }
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 
@@ -282,7 +282,7 @@ namespace MixItUp.Base.Services.External
             return new Result(MixItUp.Base.Resources.VTubeStudioConnectionFailed);
         }
 
-        protected override Task RefreshOAuthToken() { return Task.FromResult(0); }
+        protected override Task RefreshOAuthToken() { return Task.CompletedTask; }
 
         private async Task<bool> ConnectWebSocket()
         {

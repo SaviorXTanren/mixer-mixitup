@@ -69,7 +69,7 @@ namespace MixItUp.WPF.Controls.Actions
                     }
                 }
             }
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         private void ActionContainer_Maximized(object sender, RoutedEventArgs e)

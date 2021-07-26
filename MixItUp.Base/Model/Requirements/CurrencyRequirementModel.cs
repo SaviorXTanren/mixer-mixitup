@@ -152,7 +152,7 @@ namespace MixItUp.Base.Model.Requirements
             {
                 this.AddSubtractAmount(parameters.User, this.GetAmount(parameters));
             }
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public int GetAmount(CommandParametersModel parameters)

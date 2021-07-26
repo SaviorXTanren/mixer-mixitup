@@ -31,7 +31,7 @@ namespace MixItUp.Base.ViewModel.Commands
         {
             ServiceManager.Get<CommandService>().StreamlootsCardCommands.Remove((StreamlootsCardCommandModel)this.existingCommand);
             ServiceManager.Get<CommandService>().StreamlootsCardCommands.Add((StreamlootsCardCommandModel)command);
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 }

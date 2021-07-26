@@ -155,7 +155,7 @@ namespace MixItUp.Base.Services.External
 
             this.cancellationTokenSource.Cancel();
 
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public async Task<ExtraLifeTeam> GetTeam() { return await this.GetTeam(ChannelSession.Settings.ExtraLifeTeamID); }
@@ -215,7 +215,7 @@ namespace MixItUp.Base.Services.External
         protected override Task RefreshOAuthToken()
         {
             this.token = new OAuthTokenModel() { expiresIn = int.MaxValue };
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         protected override async Task<Result> InitializeInternal()

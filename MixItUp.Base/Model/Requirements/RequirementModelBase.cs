@@ -46,10 +46,10 @@ namespace MixItUp.Base.Model.Requirements
             {
                 this.individualErrorCooldown = DateTimeOffset.Now;
             }
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
-        public virtual Task Refund(CommandParametersModel parameters) { return Task.FromResult(0); }
+        public virtual Task Refund(CommandParametersModel parameters) { return Task.CompletedTask; }
 
         public virtual void Reset() { }
 

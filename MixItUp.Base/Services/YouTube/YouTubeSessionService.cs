@@ -120,7 +120,7 @@ namespace MixItUp.Base.Services.YouTube
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].BotOAuthToken = null;
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].BotID = null;
 
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public async Task<Result> InitializeUser(SettingsV3Model settings)
@@ -244,7 +244,7 @@ namespace MixItUp.Base.Services.YouTube
 
         public Task RefreshChannel()
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 }

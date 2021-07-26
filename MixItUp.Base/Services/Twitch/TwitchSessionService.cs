@@ -130,7 +130,7 @@ namespace MixItUp.Base.Services.Twitch
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = null;
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotID = null;
 
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public async Task<Result> InitializeUser(SettingsV3Model settings)

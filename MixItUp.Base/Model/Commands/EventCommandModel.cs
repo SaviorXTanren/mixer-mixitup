@@ -171,7 +171,7 @@ namespace MixItUp.Base.Model.Commands
                         EventCommandModel.FollowEventsInQueue++;
                         allowFollowEvent = true;
                     }
-                    return Task.FromResult(0);
+                    return Task.CompletedTask;
                 });
 
                 if (!allowFollowEvent)

@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.MainControls
         protected override Task InitializeInternal()
         {
             this.DataContext = this.viewModel = new EventsMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         private void NewEventCommandButton_Click(object sender, RoutedEventArgs e)

@@ -56,7 +56,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 this.webApp = null;
             }
             this.IsConnected = false;
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 

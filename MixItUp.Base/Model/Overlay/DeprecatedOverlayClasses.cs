@@ -160,20 +160,20 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         public virtual bool SupportsTestButton { get { return false; } }
 
-        public virtual Task LoadTestData() { return Task.FromResult(0); }
+        public virtual Task LoadTestData() { return Task.CompletedTask; }
 
         public abstract Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers);
 
         public virtual Task Initialize()
         {
             this.IsInitialized = true;
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public virtual Task Disable()
         {
             this.IsInitialized = false;
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public T Copy<T>() { return JSONSerializerHelper.DeserializeFromString<T>(JSONSerializerHelper.SerializeToString(this)); }
@@ -616,7 +616,7 @@ namespace MixItUp.Base.Model.Overlay
             this.Effects.Duration = this.Duration = 3;
             this.lastClipURL = "https://clips.twitch.tv/embed?clip=HotAmazonianKoupreyNotATK&parent=localhost";
 
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public override async Task Enable()
