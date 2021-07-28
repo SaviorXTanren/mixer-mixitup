@@ -9490,6 +9490,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not Following.
+        /// </summary>
+        public static string NotFollowing {
+            get {
+                return ResourceManager.GetString("NotFollowing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Notifications.
         /// </summary>
         public static string Notifications {

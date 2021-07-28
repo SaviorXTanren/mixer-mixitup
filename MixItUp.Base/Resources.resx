@@ -5931,4 +5931,7 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="VTubeStudioNotConnected" xml:space="preserve">
     <value>VTube Studio not connected</value>
   </data>
+  <data name="NotFollowing" xml:space="preserve">
+    <value>Not Following</value>
+  </data>
 </root>

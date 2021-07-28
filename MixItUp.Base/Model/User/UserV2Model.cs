@@ -43,23 +43,23 @@ namespace MixItUp.Base.Model.User
         public uint ModerationStrikes { get; set; }
 
         [DataMember]
-        public uint TotalStreamsWatched { get; set; }
+        public long TotalStreamsWatched { get; set; }
         [DataMember]
-        public double TotalAmountDonated { get; set; }
+        public long TotalAmountDonated { get; set; }
         [DataMember]
-        public uint TotalBitsCheered { get; set; }
+        public long TotalBitsCheered { get; set; }
         [DataMember]
-        public uint TotalSubsGifted { get; set; }
+        public long TotalSubsGifted { get; set; }
         [DataMember]
-        public uint TotalSubsReceived { get; set; }
+        public long TotalSubsReceived { get; set; }
         [DataMember]
-        public uint TotalChatMessageSent { get; set; }
+        public long TotalChatMessageSent { get; set; }
         [DataMember]
-        public uint TotalTimesTagged { get; set; }
+        public long TotalTimesTagged { get; set; }
         [DataMember]
-        public uint TotalCommandsRun { get; set; }
+        public long TotalCommandsRun { get; set; }
         [DataMember]
-        public uint TotalMonthsSubbed { get; set; }
+        public long TotalMonthsSubbed { get; set; }
 
         [DataMember]
         public string Notes { get; set; }
