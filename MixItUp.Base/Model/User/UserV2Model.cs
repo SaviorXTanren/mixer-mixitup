@@ -65,7 +65,7 @@ namespace MixItUp.Base.Model.User
         public string Notes { get; set; }
 
         [DataMember]
-        public DateTimeOffset LastSeen { get; set; }
+        public DateTimeOffset LastActivity { get; set; }
 
         [DataMember]
         private Dictionary<StreamingPlatformTypeEnum, UserPlatformV2ModelBase> PlatformData { get; set; } = new Dictionary<StreamingPlatformTypeEnum, UserPlatformV2ModelBase>();
