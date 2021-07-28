@@ -348,6 +348,8 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task AddMassGiftedSub(TwitchMassGiftedSubEventModel massGiftedSubEvent)
         {
+            massGiftedSubEvent.Gifter.Data.TotalSubsGifted = (uint)massGiftedSubEvent.LifetimeGifted;
+
             if (ChannelSession.Settings.TwitchMassGiftedSubsFilterAmount > 0)
             {
                 if (massGiftedSubEvent.TotalGifted > ChannelSession.Settings.TwitchMassGiftedSubsFilterAmount)
@@ -513,7 +515,7 @@ namespace MixItUp.Base.Services.Twitch
                 }
             }
 
-            user.Data.TotalBitsCheered += (uint)bitsCheered.Amount;
+            user.Data.TotalBitsCheered = (uint)packet.total_bits_used;
 
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheeredUserData] = user.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheeredAmountData] = bitsCheered.Amount;
@@ -522,6 +524,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 CommandParametersModel parameters = new CommandParametersModel(user, bitsCheered.Message.ToArguments());
                 parameters.SpecialIdentifiers["bitsamount"] = bitsCheered.Amount.ToString();
+                parameters.SpecialIdentifiers["bitslifetimeamount"] = packet.total_bits_used.ToString();
                 parameters.SpecialIdentifiers["messagenocheermotes"] = bitsCheered.Message.PlainTextMessageNoCheermotes;
                 parameters.SpecialIdentifiers["message"] = bitsCheered.Message.PlainTextMessage;
                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelBitsCheered, parameters);
@@ -698,7 +701,6 @@ namespace MixItUp.Base.Services.Twitch
 
             giftedSubEvent.Receiver.SubscribeDate = DateTimeOffset.Now;
             giftedSubEvent.Receiver.Data.TwitchSubscriberTier = giftedSubEvent.PlanTierNumber;
-            giftedSubEvent.Gifter.Data.TotalSubsGifted += (uint)giftedSubEvent.MonthsGifted;
             giftedSubEvent.Receiver.Data.TotalSubsReceived += (uint)giftedSubEvent.MonthsGifted;
             giftedSubEvent.Receiver.Data.TotalMonthsSubbed += (uint)giftedSubEvent.MonthsGifted;
 
