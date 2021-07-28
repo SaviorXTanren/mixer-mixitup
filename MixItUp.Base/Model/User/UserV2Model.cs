@@ -32,9 +32,9 @@ namespace MixItUp.Base.Model.User
         public int OnlineViewingMinutes { get; set; }
 
         [DataMember]
-        public List<Guid> CustomCommandIDs { get; set; } = new List<Guid>();
-        [DataMember]
         public Guid EntranceCommandID { get; set; }
+        [DataMember]
+        public List<Guid> CustomCommandIDs { get; set; } = new List<Guid>();
 
         [DataMember]
         public string PatreonUserID { get; set; }

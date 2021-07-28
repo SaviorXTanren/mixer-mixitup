@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
@@ -15,6 +16,8 @@ namespace MixItUp.Base.ViewModel.User
 {
     public class UserV2ViewModel : UIViewModelBase, IEquatable<UserV2ViewModel>, IComparable<UserV2ViewModel>
     {
+        private const string UserDefaultColor = "MaterialDesignBody";
+
         private StreamingPlatformTypeEnum platform;
         private UserV2Model model;
         private UserPlatformV2ModelBase platformModel;
@@ -74,7 +77,9 @@ namespace MixItUp.Base.ViewModel.User
 
         public HashSet<UserRoleEnum> Roles { get { return this.platformModel.Roles; } }
 
-        public UserRoleEnum PrimaryRole { get { return (this.Roles.Count() > 0) ? this.Roles.ToList().Max() : UserRoleEnum.User; } }
+        public UserRoleEnum PrimaryRole { get { return (this.Roles.Count() > 0) ? this.Roles.Max() : UserRoleEnum.User; } }
+
+        public string PrimaryRoleString { get { return EnumLocalizationHelper.GetLocalizedName(this.PrimaryRole); } }
 
         public bool IsPlatformSubscriber { get { return this.Roles.Contains(UserRoleEnum.Subscriber); } }
 
@@ -144,7 +149,7 @@ namespace MixItUp.Base.ViewModel.User
 
                     if (string.IsNullOrEmpty(this.color))
                     {
-                        this.color = UserViewModel.UserDefaultColor;
+                        this.color = UserV2ViewModel.UserDefaultColor;
                     }
                 }
                 return this.color;
@@ -223,6 +228,24 @@ namespace MixItUp.Base.ViewModel.User
             set { this.model.ModerationStrikes = value; }
         }
 
+        public bool IsSpecialtyExcluded
+        {
+            get { return this.model.IsSpecialtyExcluded; }
+            set { this.model.IsSpecialtyExcluded = value; }
+        }
+
+        public CommandModelBase EntranceCommand
+        {
+            get { return ChannelSession.Settings.GetCommand(this.model.EntranceCommandID); }
+            set { this.model.EntranceCommandID = (value != null) ? value.ID : Guid.Empty; }
+        }
+
+        public DateTimeOffset LastActivity { get { return this.model.LastActivity; } }
+
+        public bool UpdatedThisSession { get; set; }
+
+        public bool IsInChat { get; set; }
+
         public string SortableID
         {
             get
@@ -240,10 +263,6 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
         private string sortableID;
-
-        public DateTimeOffset LastActivity { get { return this.model.LastActivity; } }
-
-        public bool UpdatedThisSession { get; set; }
 
         public int WhispererNumber { get; set; }
 
@@ -391,5 +410,7 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public int CompareTo(UserV2ViewModel other) { return this.Username.CompareTo(other.Username); }
+
+        public override string ToString() { return this.Username; }
     }
 }
