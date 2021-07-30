@@ -138,27 +138,27 @@
     <comment>Manual</comment>
   </data>
   <data name="Account" xml:space="preserve">
-    <value>Account</value>
+    <value>Konto</value>
     <comment>Manual</comment>
   </data>
   <data name="AccountDay" xml:space="preserve">
-    <value>Account ist 1 Tag alt</value>
+    <value>Konto ist 1 Tag alt</value>
     <comment>Manual</comment>
   </data>
   <data name="AccountHour" xml:space="preserve">
-    <value>Account ist 1 Stunde alt</value>
+    <value>Konto ist 1 Stunde alt</value>
     <comment>Manual</comment>
   </data>
   <data name="AccountMonth" xml:space="preserve">
-    <value>Account ist 1 Monat alt</value>
+    <value>Konto ist 1 Monat alt</value>
     <comment>Manual</comment>
   </data>
   <data name="Accounts" xml:space="preserve">
-    <value>Accounts</value>
+    <value>Konten</value>
     <comment>Manual</comment>
   </data>
   <data name="AccountWeek" xml:space="preserve">
-    <value>Account ist 1 Woche alt</value>
+    <value>Konto ist 1 Woche alt</value>
     <comment>Manual</comment>
   </data>
   <data name="AcquireRate" xml:space="preserve">
@@ -278,7 +278,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
-    <value>Auto-Einloggen in aktuellen Account</value>
+    <value>Auto-Einloggen in aktuellen Konto</value>
     <comment>Manual</comment>
   </data>
   <data name="AutomaticReset" xml:space="preserve">
@@ -322,7 +322,7 @@
     <comment>Manual</comment>
   </data>
   <data name="BotAccount" xml:space="preserve">
-    <value>Bot Account</value>
+    <value>Bot Konto</value>
     <comment>Manual</comment>
   </data>
   <data name="Brown" xml:space="preserve">
@@ -570,7 +570,7 @@
     <comment>Manual</comment>
   </data>
   <data name="DisableAllTimers" xml:space="preserve">
-    <value>Alle Hinweise deaktivieren</value>
+    <value>Alle Zeitschalter deaktivieren</value>
     <comment>Manual</comment>
   </data>
   <data name="DisableChat" xml:space="preserve">
@@ -606,11 +606,11 @@
     <comment>Manual</comment>
   </data>
   <data name="Edit" xml:space="preserve">
-    <value>Editieren</value>
+    <value>Bearbeiten</value>
     <comment>Manual</comment>
   </data>
   <data name="EditCommand" xml:space="preserve">
-    <value>Befehl anpassen</value>
+    <value>Befehl bearbeiten</value>
     <comment>Manual</comment>
   </data>
   <data name="Enable" xml:space="preserve">
@@ -638,7 +638,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Event" xml:space="preserve">
-    <value>Event</value>
+    <value>Ereigniss</value>
     <comment>Manual</comment>
   </data>
   <data name="EventBonuses" xml:space="preserve">
@@ -646,19 +646,19 @@
     <comment>Manual</comment>
   </data>
   <data name="EventList" xml:space="preserve">
-    <value>Eventliste</value>
+    <value>Ereignissliste</value>
     <comment>Manual</comment>
   </data>
   <data name="Events" xml:space="preserve">
-    <value>Events</value>
+    <value>Ereignisse</value>
     <comment>Manual</comment>
   </data>
   <data name="ExemptFromRule" xml:space="preserve">
-    <value>Ausgenomme Rollen</value>
+    <value>Ausgenomme Rolle</value>
     <comment>Manual</comment>
   </data>
   <data name="ExemptFromRuleAndStrikes" xml:space="preserve">
-    <value>Ausgenomme Rollen &amp; Verwarnungen</value>
+    <value>Ausgenomme Rolle &amp; Verwarnung</value>
     <comment>Manual</comment>
   </data>
   <data name="ExitConfirmation" xml:space="preserve">
@@ -810,7 +810,7 @@
     <comment>Manual</comment>
   </data>
   <data name="IgnoreYourBotAccountForCommands" xml:space="preserve">
-    <value>Ignoriere deinen Bot Account für Befehle</value>
+    <value>Ignoriere deinen Bot Konto für Befehle</value>
     <comment>Manual</comment>
   </data>
   <data name="Image" xml:space="preserve">
@@ -958,7 +958,7 @@
     <comment>Manual</comment>
   </data>
   <data name="MaxPunctSymbolsEmotes" xml:space="preserve">
-    <value>Max Zeichensetzung / Symbole / Emotes</value>
+    <value>max. Satzzeichen / Symbole / Emotes</value>
     <comment>Manual</comment>
   </data>
   <data name="MeetTheTeam" xml:space="preserve">
@@ -1434,7 +1434,7 @@
     <comment>Manual</comment>
   </data>
   <data name="StreamerAccount" xml:space="preserve">
-    <value>Streamaccount</value>
+    <value>Streamkonto</value>
     <comment>Manual</comment>
   </data>
   <data name="StreamerAge" xml:space="preserve">
@@ -1462,11 +1462,11 @@
     <comment>Manual</comment>
   </data>
   <data name="SubAge" xml:space="preserve">
-    <value>Sub-Alter</value>
+    <value>Abo-Alter</value>
     <comment>Manual</comment>
   </data>
   <data name="SubBonus" xml:space="preserve">
-    <value>Sub Bonus</value>
+    <value>Abo Bonus</value>
     <comment>Manual</comment>
   </data>
   <data name="SubmitABug" xml:space="preserve">
@@ -1474,7 +1474,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Subs" xml:space="preserve">
-    <value>Subs</value>
+    <value>Abos</value>
     <comment>Manual</comment>
   </data>
   <data name="SubscribeAge" xml:space="preserve">
@@ -1490,11 +1490,11 @@
     <comment>Manual</comment>
   </data>
   <data name="SubsGifted" xml:space="preserve">
-    <value>Subs verschenkt</value>
+    <value>Abos verschenkt</value>
     <comment>Manual</comment>
   </data>
   <data name="SubsReceived" xml:space="preserve">
-    <value>Subs erhalten</value>
+    <value>Abos erhalten</value>
     <comment>Manual</comment>
   </data>
   <data name="SubtractFromAllChatUsers" xml:space="preserve">
@@ -1558,7 +1558,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Timers" xml:space="preserve">
-    <value>Hinweise</value>
+    <value>Zeitschalter</value>
     <comment>Manual</comment>
   </data>
   <data name="TimerTrain" xml:space="preserve">
@@ -1574,7 +1574,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Total" xml:space="preserve">
-    <value>Totale</value>
+    <value>Gesamt</value>
     <comment>Manual</comment>
   </data>
   <data name="TotalTimeMins" xml:space="preserve">
@@ -1932,10 +1932,215 @@
     <value>XSplit</value>
     <comment>Manual</comment>
   </data>
+  <data name="TwitchChannelBitsCheered" xml:space="preserve">
+    <value>Twitch-Kanal Bits bejubelt</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="TwitchChannelFollowed" xml:space="preserve">
+    <value>Twitch-Kanal gefolgt</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="TwitchChannelHosted" xml:space="preserve">
+    <value>Twitch-Kanal Gehostet</value>
+    <comment>Manual</comment>
+  </data>
   <data name="TwitchChannelMassSubscriptionsGifted" xml:space="preserve">
-    <value>Twitch Channel Massenabonnements verschenkt</value>
+    <value>Twitch-Kanal Massenabonnements verschenkt</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="TwitchChannelPointsRedeemed" xml:space="preserve">
+    <value>Twitch-Kanal Punkte eingelöst</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="TwitchChannelRaided" xml:space="preserve">
+    <value>Twitch-Kanal Überfallen</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="TwitchChannelResubscribed" xml:space="preserve">
+    <value>Twitch-Kanal Abonnement erneuert</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="TwitchChannelStreamStart" xml:space="preserve">
+    <value>Twitch-Kanal Stream gestartet</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="TwitchChannelStreamStop" xml:space="preserve">
+    <value>Twitch-Kanal Stream gestoppt</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="TwitchChannelSubscribed" xml:space="preserve">
+    <value>Twitch-Kanal abonniert</value>
+    <comment>Manual</comment>
   </data>
   <data name="TwitchChannelSubscriptionGifted" xml:space="preserve">
-    <value>Twitch Channel Abonnement verschenkt</value>
+    <value>Twitch-Kanal Abonnement verschenkt</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="TwitchChannelUnfollowed" xml:space="preserve">
+    <value>Twitch-Kanal entfolgt</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="TwitchChannelMassSubscriptionsGifted" xml:space="preserve">
+    <value>Twitch-Kanal Massenabonnements verschenkt</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="TwitchChannelSubscriptionGifted" xml:space="preserve">
+    <value>Twitch-Kanal Abonnement verschenkt</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="TwitchChannelHypeTrainBegin" xml:space="preserve">
+    <value>Twitch-Kanal Hype Train gestartet</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="TwitchChannelHypeTrainProgress" xml:space="preserve">
+    <value>Twitch-Kanal Hype Train vorankommen</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="TwitchChannelHypeTrainEnd" xml:space="preserve">
+    <value>Twitch-Kanal Hype Train beendet</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="ClearQueue" xml:space="preserve">
+    <value>Warteschlange leeren</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="SubPriorityHeader" xml:space="preserve">
+    <value>Abo-Priorität:</value>
+    <comment>Manual</comment>
+  </data>
+   <data name="UserSelection" xml:space="preserve">
+    <value>Benutzer ausgewählt</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+    <comment>Manual</comment>
+  </data>
+    <data name="LastSeen" xml:space="preserve">
+    <value>Zuletzt gesehen</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="RunOneRandomly" xml:space="preserve">
+    <value>Run One Randomly</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="CommunityCommands" xml:space="preserve">
+    <value>Community Befehle</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="SearchText" xml:space="preserve">
+    <value>Such Text</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="CommunityCommandsMyCommands" xml:space="preserve">
+    <value>Meine Befehle</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>Notizen</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="SpecialtyExcluded" xml:space="preserve">
+    <value>Extra ausgenommen</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="SpecialtyExcludedTooltip" xml:space="preserve">
+    <value>Extra ausgenomme Benutzer werden in verschiedenen Aktionen und Funktionen in der Anwendung ignoriert.
+      Dies schließt Dinge wie Währungs-/Rangsanforderungnen, Zufällige Benutzerwahl und Bestenlisten mit ein.
+      Diese Option ist für Bot-Konten und spezielle Benutzer empfohlen, die mehr Kontrolle erhalten sollen als z.B. Moderatoren.
+    </value>
+    <comment>Manual</comment>
+  </data>
+   <data name="CommandEditor" xml:space="preserve">
+    <value>Kommando anpassen</value>
+    <comment>Manual</comment>
+  </data>
+    <data name="AutoReplenish" xml:space="preserve">
+    <value>Automatisch Aufstocken</value>
+    <comment>Manual</comment>
+  </data>
+   <data name="BitsCheered" xml:space="preserve">
+    <value>Bits bejubelt</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="ExportQuotes" xml:space="preserve">
+    <value>Zitate exportieren</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="DeleteQuotePrompt" xml:space="preserve">
+    <value>Möchten Sie dieses Zitat wirklich löschen?</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="GiftedSubs" xml:space="preserve">
+    <value>Verschenkte Abos</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="ShowGiftedSubs" xml:space="preserve">
+    <value>Verschenkte Abos anzeigen</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="ShowSubsResubs" xml:space="preserve">
+    <value>Abos/erneurte Abos anzeigen</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="ShowHosts" xml:space="preserve">
+    <value>Hosts anzeigen</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="ShowFollows" xml:space="preserve">
+    <value>Follower anzeigen</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="ShowRaids" xml:space="preserve">
+    <value>Überfälle anzeigen</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="ShowHypeTrain" xml:space="preserve">
+    <value>Hype Train anzeigen</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="ShowChannelPoints" xml:space="preserve">
+    <value>Kanalpunkte anzeigen</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Resubscribes" xml:space="preserve">
+    <value>Erneuerte Abonnements</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Average" xml:space="preserve">
+    <value>Durchschnitt</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="MaxCaps" xml:space="preserve">
+    <value>max. Großbuchstaben</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="FollowEventModeration" xml:space="preserve">
+    <value>Folgen Ereigniss Moderation</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="FollowEventModerationMaxQueue" xml:space="preserve">
+    <value>max. Warteschlange</value>
+    <comment>Manual</comment>
+  </data>
+   <data name="CommandHistory" xml:space="preserve">
+    <value>Befehlshistorie</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>Zustand</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="CancelSelected" xml:space="preserve">
+    <value>ausgewähle abbrechen</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="ReplaySelected" xml:space="preserve">
+    <value>ausgewähle wiederholen</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Changelog" xml:space="preserve">
+    <value>Änderungsprotokoll</value>
+    <comment>Manual</comment>
   </data>
 </root>
