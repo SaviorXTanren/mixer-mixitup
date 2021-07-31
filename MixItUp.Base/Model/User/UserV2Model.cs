@@ -87,6 +87,10 @@ namespace MixItUp.Base.Model.User
 
         public void AddPlatformData(UserPlatformV2ModelBase platformModel) { this.PlatformData[platformModel.Platform] = platformModel; }
 
+        public string GetPlatformID(StreamingPlatformTypeEnum platform) { return this.HasPlatformData(platform) ? this.GetPlatformData<UserPlatformV2ModelBase>(platform).ID : null; }
+
+        public string GetPlatformUsername(StreamingPlatformTypeEnum platform) { return this.HasPlatformData(platform) ? this.GetPlatformData<UserPlatformV2ModelBase>(platform).Username : null; }
+
         public override bool Equals(object obj)
         {
             if (obj is UserV2Model)

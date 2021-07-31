@@ -24,7 +24,6 @@ using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 
 namespace MixItUp.Base.ViewModel.User
 {
-    [Obsolete]
     public class UserViewModel : IEquatable<UserViewModel>, IComparable<UserViewModel>
     {
         public const string UserDefaultColor = "MaterialDesignBody";
