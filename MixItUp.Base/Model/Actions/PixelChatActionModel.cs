@@ -1,6 +1,8 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -9,6 +11,7 @@ namespace MixItUp.Base.Model.Actions
 {
     public enum PixelChatActionTypeEnum
     {
+        ShowHideSceneComponent,
         TriggerGiveaway,
         TriggerCredits,
         TriggerShoutout,
@@ -22,6 +25,16 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class PixelChatActionModel : ActionModelBase
     {
+        public static PixelChatActionModel CreateShowHideSceneComponent(string sceneID, string componentID, bool visible)
+        {
+            return new PixelChatActionModel(PixelChatActionTypeEnum.ShowHideSceneComponent)
+            {
+                SceneID = sceneID,
+                ComponentID = componentID,
+                SceneComponentVisible = visible,
+            };
+        }
+
         public static PixelChatActionModel CreateBasicOverlay(PixelChatActionTypeEnum actionType, string overlayID)
         {
             return new PixelChatActionModel(actionType)
@@ -52,6 +65,13 @@ namespace MixItUp.Base.Model.Actions
         public PixelChatActionTypeEnum ActionType { get; set; }
 
         [DataMember]
+        public string SceneID { get; set; }
+        [DataMember]
+        public string ComponentID { get; set; }
+        [DataMember]
+        public bool SceneComponentVisible { get; set; }
+
+        [DataMember]
         public string OverlayID { get; set; }
 
         [DataMember]
@@ -72,47 +92,62 @@ namespace MixItUp.Base.Model.Actions
         {
             if (ChannelSession.Services.PixelChat.IsConnected)
             {
-                PixelChatSendMessageModel sendMessage = null;
-                if (this.ActionType == PixelChatActionTypeEnum.TriggerShoutout || this.ActionType == PixelChatActionTypeEnum.AddUserToGiveaway)
+                if (this.ActionType == PixelChatActionTypeEnum.ShowHideSceneComponent)
                 {
-                    UserViewModel user = parameters.User;
-                    if (!string.IsNullOrEmpty(this.TargetUsername))
+                    Result result = await ChannelSession.Services.PixelChat.EditSceneComponent(this.SceneID, this.ComponentID, this.SceneComponentVisible);
+                    if (!result.Success)
                     {
-                        string targetUsername = await this.ReplaceStringWithSpecialModifiers(this.TargetUsername, parameters);
-                        UserViewModel targetUser = await ChannelSession.Services.User.GetUserFullSearch(parameters.Platform, userID: null, targetUsername);
-                        if (targetUser != null)
-                        {
-                            user = targetUser;
-                        }
+                        Logger.Log(LogLevel.Error, result.Message);
                     }
-
-                    if (this.ActionType == PixelChatActionTypeEnum.TriggerShoutout)
-                    {
-                        sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString(), user.Username, StreamingPlatformTypeEnum.Twitch);
-                    }
-                    else if (this.ActionType == PixelChatActionTypeEnum.AddUserToGiveaway)
-                    {
-                        sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString(), user.Username);
-                    }
-                }
-                else if (this.ActionType == PixelChatActionTypeEnum.TriggerCountdown || this.ActionType == PixelChatActionTypeEnum.TriggerCountup ||
-                    this.ActionType == PixelChatActionTypeEnum.AddStreamathonTime)
-                {
-                    int.TryParse(await this.ReplaceStringWithSpecialModifiers(this.TimeAmount, parameters), out int timeAmount);
-                    sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString(), timeAmount);
                 }
                 else
                 {
-                    sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString());
-                }
+                    PixelChatSendMessageModel sendMessage = null;
+                    if (this.ActionType == PixelChatActionTypeEnum.TriggerShoutout || this.ActionType == PixelChatActionTypeEnum.AddUserToGiveaway)
+                    {
+                        UserViewModel user = parameters.User;
+                        if (!string.IsNullOrEmpty(this.TargetUsername))
+                        {
+                            string targetUsername = await this.ReplaceStringWithSpecialModifiers(this.TargetUsername, parameters);
+                            UserViewModel targetUser = await ChannelSession.Services.User.GetUserFullSearch(parameters.Platform, userID: null, targetUsername);
+                            if (targetUser != null)
+                            {
+                                user = targetUser;
+                            }
+                        }
 
-                if (sendMessage != null)
-                {
-                    char[] characters = sendMessage.type.ToCharArray();
-                    characters[0] = Char.ToLower(characters[0]);
-                    sendMessage.type = new string(characters);
+                        if (this.ActionType == PixelChatActionTypeEnum.TriggerShoutout)
+                        {
+                            sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString(), user.Username, StreamingPlatformTypeEnum.Twitch);
+                        }
+                        else if (this.ActionType == PixelChatActionTypeEnum.AddUserToGiveaway)
+                        {
+                            sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString(), user.Username);
+                        }
+                    }
+                    else if (this.ActionType == PixelChatActionTypeEnum.TriggerCountdown || this.ActionType == PixelChatActionTypeEnum.TriggerCountup ||
+                        this.ActionType == PixelChatActionTypeEnum.AddStreamathonTime)
+                    {
+                        int.TryParse(await this.ReplaceStringWithSpecialModifiers(this.TimeAmount, parameters), out int timeAmount);
+                        sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString(), timeAmount);
+                    }
+                    else
+                    {
+                        sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString());
+                    }
 
-                    await ChannelSession.Services.PixelChat.SendMessageToOverlay(this.OverlayID, sendMessage);
+                    if (sendMessage != null)
+                    {
+                        char[] characters = sendMessage.type.ToCharArray();
+                        characters[0] = Char.ToLower(characters[0]);
+                        sendMessage.type = new string(characters);
+
+                        Result result = await ChannelSession.Services.PixelChat.SendMessageToOverlay(this.OverlayID, sendMessage);
+                        if (!result.Success)
+                        {
+                            Logger.Log(LogLevel.Error, result.Message);
+                        }
+                    }
                 }
             }
         }

@@ -31,6 +31,23 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
+        <ComboBox Grid.Row="2" Visibility="{Binding ShowScenes, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding Scenes}" SelectedItem="{Binding SelectedScene}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Scene}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+        <Grid Grid.Row="4" Visibility="{Binding ShowScenes, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Grid.Column="0" Visibility="{Binding ShowScenes, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding SceneComponents}" SelectedItem="{Binding SelectedSceneComponent}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SceneComponent}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            
+            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Visible}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <ToggleButton Grid.Column="4" IsChecked="{Binding SceneComponentVisible}" VerticalAlignment="Center"/>
+        </Grid>
+
         <ComboBox Grid.Row="2" Visibility="{Binding ShowOverlays, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding Overlays}" SelectedItem="{Binding SelectedOverlay}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Overlay}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
         <Grid Grid.Row="4" Visibility="{Binding ShowTargetUsernameGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
