@@ -257,7 +257,7 @@ namespace MixItUp.Base.ViewModel.Actions
         public PixelChatActionEditorControlViewModel()
             : base()
         {
-            this.SelectedActionType = PixelChatActionTypeEnum.TriggerGiveaway;
+            this.SelectedActionType = PixelChatActionTypeEnum.ShowHideSceneComponent;
         }
 
         public override async Task<Result> Validate()
