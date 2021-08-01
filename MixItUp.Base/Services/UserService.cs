@@ -102,6 +102,10 @@ namespace MixItUp.Base.Services
                 {
                     user.IgnoreForQueries = true;
                 }
+                else if (user.Data.IsCurrencyRankExempt)
+                {
+                    user.IgnoreForQueries = true;
+                }
                 else
                 {
                     user.IgnoreForQueries = false;
