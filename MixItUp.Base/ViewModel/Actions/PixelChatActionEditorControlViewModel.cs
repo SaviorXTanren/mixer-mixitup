@@ -44,7 +44,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 {
                     this.Overlays.AddRange(this.allOverlays.Where(o => o.type.Equals(PixelChatOverlayModel.CreditsOverlayType)));
                 }
-                else if (this.SelectedActionType == PixelChatActionTypeEnum.TriggerGiveaway)
+                else if (this.SelectedActionType == PixelChatActionTypeEnum.TriggerGiveaway || this.SelectedActionType == PixelChatActionTypeEnum.AddUserToGiveaway)
                 {
                     this.Overlays.AddRange(this.allOverlays.Where(o => o.type.Equals(PixelChatOverlayModel.GiveawayOverlayType)));
                 }
@@ -59,7 +59,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 return this.SelectedActionType == PixelChatActionTypeEnum.TriggerShoutout || this.SelectedActionType == PixelChatActionTypeEnum.TriggerCountdown ||
                     this.SelectedActionType == PixelChatActionTypeEnum.TriggerCountup || this.SelectedActionType == PixelChatActionTypeEnum.StartStreamathon ||
                     this.SelectedActionType == PixelChatActionTypeEnum.AddStreamathonTime || this.SelectedActionType == PixelChatActionTypeEnum.TriggerCredits ||
-                    this.SelectedActionType == PixelChatActionTypeEnum.TriggerGiveaway;
+                    this.SelectedActionType == PixelChatActionTypeEnum.TriggerGiveaway || this.SelectedActionType == PixelChatActionTypeEnum.AddUserToGiveaway;
             }
         }
 
@@ -80,7 +80,7 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             get
             {
-                return this.SelectedActionType == PixelChatActionTypeEnum.TriggerShoutout;
+                return this.SelectedActionType == PixelChatActionTypeEnum.TriggerShoutout || this.SelectedActionType == PixelChatActionTypeEnum.AddUserToGiveaway;
             }
         }
 
@@ -121,17 +121,20 @@ namespace MixItUp.Base.ViewModel.Actions
             : base(action)
         {
             this.SelectedActionType = action.ActionType;
+
             if (this.ShowOverlays)
             {
                 this.SelectedOverlay = this.allOverlays.FirstOrDefault(o => o.id.Equals(action.OverlayID));
-                if (this.ShowTargetUsernameGrid)
-                {
-                    this.TargetUsername = action.TargetUsername;
-                }
-                else if (this.ShowTimeAmountGrid)
-                {
-                    this.TimeAmount = action.TimeAmount;
-                }
+            }
+
+            if (this.ShowTargetUsernameGrid)
+            {
+                this.TargetUsername = action.TargetUsername;
+            }
+
+            if (this.ShowTimeAmountGrid)
+            {
+                this.TimeAmount = action.TimeAmount;
             }
         }
 
@@ -143,21 +146,16 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public override async Task<Result> Validate()
         {
-            if (this.ShowOverlays)
+            if (this.ShowOverlays && this.SelectedOverlay == null)
             {
-                if (this.SelectedOverlay == null)
-                {
-                    return new Result(MixItUp.Base.Resources.PixelChatActionMissingOverlay);
-                }
-
-                if (this.ShowTimeAmountGrid)
-                {
-                    if (string.IsNullOrEmpty(this.TimeAmount))
-                    {
-                        return new Result(MixItUp.Base.Resources.PixelChatActionMissingTimeAmount);
-                    }
-                }
+                return new Result(MixItUp.Base.Resources.PixelChatActionMissingOverlay);
             }
+
+            if (this.ShowTimeAmountGrid && string.IsNullOrEmpty(this.TimeAmount))
+            {
+                return new Result(MixItUp.Base.Resources.PixelChatActionMissingTimeAmount);
+            }
+
             return await base.Validate();
         }
 

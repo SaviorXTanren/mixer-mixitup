@@ -95,6 +95,15 @@ namespace MixItUp.Base.Services.External
             this.data = amount;
         }
 
+        public PixelChatSendMessageModel(string type, string username)
+            : this(type)
+        {
+            this.data = new JObject()
+            {
+                { "username", username }
+            };
+        }
+
         public PixelChatSendMessageModel(string type, string username, StreamingPlatformTypeEnum platform)
             : this(type)
         {

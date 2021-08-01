@@ -511,6 +511,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add User To Giveaway.
+        /// </summary>
+        public static string AddUserToGiveaway {
+            get {
+                return ResourceManager.GetString("AddUserToGiveaway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Advanced.
         /// </summary>
         public static string Advanced {
