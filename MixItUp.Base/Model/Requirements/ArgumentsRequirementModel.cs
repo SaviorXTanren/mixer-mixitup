@@ -20,10 +20,13 @@ namespace MixItUp.Base.Model.Requirements
     [DataContract]
     public class ArgumentsRequirementItemModel
     {
+        [DataMember]
         public string Name { get; set; }
 
+        [DataMember]
         public ArgumentsRequirementItemTypeEnum Type { get; set; }
 
+        [DataMember]
         public bool Optional { get; set; }
 
         public ArgumentsRequirementItemModel(string name, ArgumentsRequirementItemTypeEnum type, bool optional)
