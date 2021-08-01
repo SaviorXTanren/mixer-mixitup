@@ -41,6 +41,10 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        public UserV2Model Model { get { return this.model; } }
+
+        public UserPlatformV2ModelBase PlatformModel { get { return this.platformModel; } }
+
         public Guid ID { get { return this.model.ID; } }
 
         public StreamingPlatformTypeEnum Platform { get { return this.platform; } }

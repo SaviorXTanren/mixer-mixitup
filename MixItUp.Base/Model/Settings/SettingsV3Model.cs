@@ -529,6 +529,9 @@ namespace MixItUp.Base.Model.Settings
         [JsonIgnore]
         public DatabaseDictionary<Guid, UserDataModel> UserData { get; set; } = new DatabaseDictionary<Guid, UserDataModel>();
 
+        [JsonIgnore]
+        public DatabaseDictionary<Guid, UserV2Model> UsersV2 { get; set; } = new DatabaseDictionary<Guid, UserV2Model>();
+
         #endregion Database Data
 
         [JsonIgnore]
@@ -767,6 +770,28 @@ namespace MixItUp.Base.Model.Settings
                 {
                     results.Add(JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString()));
                 });
+
+            return results;
+        }
+
+        public async Task<IEnumerable<UserV2Model>> LoadUserV2Data(string query, Dictionary<string, object> parameters)
+        {
+            List<UserV2Model> results = new List<UserV2Model>();
+
+            await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, query, parameters,
+                (Dictionary<string, object> data) =>
+                {
+                    results.Add(JSONSerializerHelper.DeserializeFromString<UserV2Model>(data["Data"].ToString()));
+                });
+
+            foreach (UserV2Model user in results)
+            {
+                if (!this.UserData.ContainsKey(user.ID))
+                {
+                    this.UsersV2[user.ID] = user;
+                    this.UsersV2.ClearTracking(user.ID);
+                }
+            }
 
             return results;
         }
