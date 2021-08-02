@@ -643,10 +643,10 @@ namespace MixItUp.Base.Services
                 }
 
                 await ChannelSession.Services.Database.BulkWrite(settings.DatabaseFilePath,
-                    "UPDATE Users SET TwitchUsername = @TwitchUsername WHERE ID = @ID",
+                    "UPDATE Users SET TwitchUsername = $TwitchUsername WHERE ID = $ID",
                     userIDToUsername.Select(u => new Dictionary<string, object>()
                     {
-                        { "@ID", u.Key.ToString() }, { "TwitchUsername", u.Value.ToString() }
+                        { "$ID", u.Key.ToString() }, { "$TwitchUsername", u.Value.ToString() }
                     }));
 
                 await ChannelSession.Services.Settings.Save(settings);

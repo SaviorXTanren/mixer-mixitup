@@ -27,11 +27,11 @@ namespace MixItUp.WPF.Services
                         {
                             if (kvp.Value == null)
                             {
-                                command.Parameters.Add(new SqliteParameter(kvp.Key, value: DBNull.Value));
+                                command.Parameters.AddWithValue(kvp.Key, DBNull.Value);
                             }
                             else
                             {
-                                command.Parameters.Add(new SqliteParameter(kvp.Key, value: kvp.Value));
+                                command.Parameters.AddWithValue(kvp.Key, kvp.Value);
                             }
                         }
                     }
@@ -91,11 +91,11 @@ namespace MixItUp.WPF.Services
                                     {
                                         if (kvp.Value == null)
                                         {
-                                            command.Parameters.Add(new SqliteParameter(kvp.Key, value: DBNull.Value));
+                                            command.Parameters.AddWithValue(kvp.Key, DBNull.Value);
                                         }
                                         else
                                         {
-                                            command.Parameters.Add(new SqliteParameter(kvp.Key, value: kvp.Value));
+                                            command.Parameters.AddWithValue(kvp.Key, kvp.Value);
                                         }
                                     }
 
@@ -125,7 +125,7 @@ namespace MixItUp.WPF.Services
                         {
                             using (SqliteConnection connection = new SqliteConnection("Data Source=" + databaseFilePath))
                             {
-                                connection.Open();
+                                await connection.OpenAsync();
                                 await databaseQuery(connection);
                             }
                         }

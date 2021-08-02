@@ -759,31 +759,31 @@ namespace MixItUp.Base.Model.Settings
         public async Task SaveDatabaseData()
         {
             IEnumerable<Guid> removedUsers = this.UserData.GetRemovedValues();
-            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ToString() } }));
+            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Users WHERE ID = $ID", removedUsers.Select(u => new Dictionary<string, object>() { { "$ID", u.ToString() } }));
 
             IEnumerable<UserDataModel> changedUsers = this.UserData.GetAddedChangedValues();
             await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath,
                 "REPLACE INTO Users(ID, TwitchID, TwitchUsername, YouTubeID, YouTubeUsername, FacebookID, FacebookUsername, TrovoID, TrovoUsername, GlimeshID, GlimeshUsername, Data) " +
-                "VALUES(@ID, @TwitchID, @TwitchUsername, @YouTubeID, @YouTubeUsername, @FacebookID, @FacebookUsername, @TrovoID, @TrovoUsername, @GlimeshID, @GlimeshUsername, @Data)",
+                "VALUES($ID, $TwitchID, $TwitchUsername, $YouTubeID, $YouTubeUsername, $FacebookID, $FacebookUsername, $TrovoID, $TrovoUsername, $GlimeshID, $GlimeshUsername, $Data)",
                 changedUsers.Select(u => new Dictionary<string, object>()
                 {
-                    { "@ID", u.ID.ToString() }, { "TwitchID", u.TwitchID }, { "TwitchUsername", u.TwitchUsername }, { "YouTubeID", null }, { "YouTubeUsername", null },
-                    { "FacebookID", null }, { "FacebookUsername", null }, { "TrovoID", null }, { "TrovoUsername", null }, { "GlimeshID", null }, { "GlimeshUsername", null },
-                    { "@Data", JSONSerializerHelper.SerializeToString(u) }
+                    { "$ID", u.ID.ToString() }, { "$TwitchID", u.TwitchID }, { "$TwitchUsername", u.TwitchUsername }, { "$YouTubeID", null }, { "$YouTubeUsername", null },
+                    { "$FacebookID", null }, { "$FacebookUsername", null }, { "$TrovoID", null }, { "$TrovoUsername", null }, { "$GlimeshID", null }, { "$GlimeshUsername", null },
+                    { "$Data", JSONSerializerHelper.SerializeToString(u) }
                 }));
 
             List<Guid> removedCommands = new List<Guid>();
-            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Commands WHERE ID = @ID",
-                this.Commands.GetRemovedValues().Select(id => new Dictionary<string, object>() { { "@ID", id.ToString() } }));
+            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Commands WHERE ID = $ID",
+                this.Commands.GetRemovedValues().Select(id => new Dictionary<string, object>() { { "$ID", id.ToString() } }));
 
-            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES(@ID, @TypeID, @Data)",
-                this.Commands.GetAddedChangedValues().Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() }, { "@TypeID", (int)c.Type }, { "@Data", JSONSerializerHelper.SerializeToString(c) } }));
+            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES($ID, $TypeID, $Data)",
+                this.Commands.GetAddedChangedValues().Select(c => new Dictionary<string, object>() { { "$ID", c.ID.ToString() }, { "$TypeID", (int)c.Type }, { "$Data", JSONSerializerHelper.SerializeToString(c) } }));
 
-            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Quotes WHERE ID = @ID",
-                this.Quotes.GetRemovedValues().Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() } }));
+            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Quotes WHERE ID = $ID",
+                this.Quotes.GetRemovedValues().Select(q => new Dictionary<string, object>() { { "$ID", q.ID.ToString() } }));
 
-            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Quotes(ID, Quote, GameName, DateTime) VALUES(@ID, @Quote, @GameName, @DateTime)",
-                this.Quotes.GetAddedChangedValues().Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() }, { "@Quote", q.Quote }, { "@GameName", q.GameName }, { "@DateTime", q.DateTime.ToString() } }));
+            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Quotes(ID, Quote, GameName, DateTime) VALUES($ID, $Quote, $GameName, $DateTime)",
+                this.Quotes.GetAddedChangedValues().Select(q => new Dictionary<string, object>() { { "$ID", q.ID.ToString() }, { "$Quote", q.Quote }, { "$GameName", q.GameName }, { "$DateTime", q.DateTime.ToString() } }));
         }
 
         public async Task<UserDataModel> GetUserDataByID(Guid id)
@@ -798,8 +798,8 @@ namespace MixItUp.Base.Model.Settings
                 return userData;
             }
 
-            await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE ID = @ID",
-                new Dictionary<string, object>() { { "ID", id } },
+            await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE ID = $ID",
+                new Dictionary<string, object>() { { "$ID", id.ToString() } },
                 (Dictionary<string, object> data) =>
                 {
                     userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString());
@@ -830,8 +830,8 @@ namespace MixItUp.Base.Model.Settings
             userData = null;
             if (!string.IsNullOrEmpty(columnName))
             {
-                await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE " + columnName + " = @PlatformID",
-                    new Dictionary<string, object>() { { "PlatformID", platformID } },
+                await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE " + columnName + " = $PlatformID",
+                    new Dictionary<string, object>() { { "$PlatformID", platformID } },
                     (Dictionary<string, object> data) =>
                     {
                         userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString());
@@ -863,8 +863,8 @@ namespace MixItUp.Base.Model.Settings
             userData = null;
             if (!string.IsNullOrEmpty(columnName))
             {
-                await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE " + columnName + " LIKE @PlatformUsername",
-                    new Dictionary<string, object>() { { "PlatformUsername", platformUsername } },
+                await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users WHERE " + columnName + " LIKE $PlatformUsername",
+                    new Dictionary<string, object>() { { "$PlatformUsername", platformUsername } },
                     (Dictionary<string, object> data) =>
                     {
                         userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString());

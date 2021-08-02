@@ -812,11 +812,11 @@ namespace MixItUp.Base.Model.Settings
             if (this.IsStreamer)
             {
                 IEnumerable<Guid> removedUsers = this.UserData.GetRemovedValues();
-                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ToString() } }));
+                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Users WHERE ID = $ID", removedUsers.Select(u => new Dictionary<string, object>() { { "$ID", u.ToString() } }));
 
                 IEnumerable<UserDataModel> changedUsers = this.UserData.GetChangedValues();
-                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Users(ID, Data) VALUES(@ID, @Data)",
-                    changedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ID.ToString() }, { "@Data", JSONSerializerHelper.SerializeToString(u) } }));
+                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Users(ID, Data) VALUES($ID, $Data)",
+                    changedUsers.Select(u => new Dictionary<string, object>() { { "$ID", u.ID.ToString() }, { "$Data", JSONSerializerHelper.SerializeToString(u) } }));
 
                 List<Guid> removedCommands = new List<Guid>();
                 removedCommands.AddRange(this.ChatCommands.GetRemovedValues().Select(c => c.ID));
@@ -826,8 +826,8 @@ namespace MixItUp.Base.Model.Settings
                 removedCommands.AddRange(this.GameCommands.GetRemovedValues().Select(c => c.ID));
                 removedCommands.AddRange(this.TwitchChannelPointsCommands.GetRemovedValues().Select(c => c.ID));
                 removedCommands.AddRange(this.CustomCommands.GetRemovedValues());
-                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Commands WHERE ID = @ID",
-                    removedCommands.Select(id => new Dictionary<string, object>() { { "@ID", id.ToString() } }));
+                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Commands WHERE ID = $ID",
+                    removedCommands.Select(id => new Dictionary<string, object>() { { "$ID", id.ToString() } }));
 
                 List<CommandBase> addedChangedCommands = new List<CommandBase>();
                 addedChangedCommands.AddRange(this.ChatCommands.GetAddedChangedValues());
@@ -837,14 +837,14 @@ namespace MixItUp.Base.Model.Settings
                 addedChangedCommands.AddRange(this.GameCommands.GetAddedChangedValues());
                 addedChangedCommands.AddRange(this.TwitchChannelPointsCommands.GetAddedChangedValues());
                 addedChangedCommands.AddRange(this.CustomCommands.GetAddedChangedValues());
-                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES(@ID, @TypeID, @Data)",
-                    addedChangedCommands.Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() }, { "@TypeID", (int)c.Type }, { "@Data", JSONSerializerHelper.SerializeToString(c) } }));
+                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES($ID, $TypeID, $Data)",
+                    addedChangedCommands.Select(c => new Dictionary<string, object>() { { "$ID", c.ID.ToString() }, { "$TypeID", (int)c.Type }, { "$Data", JSONSerializerHelper.SerializeToString(c) } }));
 
-                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Quotes WHERE ID = @ID",
-                    this.Quotes.GetRemovedValues().Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() } }));
+                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Quotes WHERE ID = $ID",
+                    this.Quotes.GetRemovedValues().Select(q => new Dictionary<string, object>() { { "$ID", q.ID.ToString() } }));
 
-                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Quotes(ID, Data) VALUES(@ID, @Data)",
-                    this.Quotes.GetAddedChangedValues().Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() }, { "@Data", JSONSerializerHelper.SerializeToString(q.Model) } }));
+                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Quotes(ID, Data) VALUES($ID, $Data)",
+                    this.Quotes.GetAddedChangedValues().Select(q => new Dictionary<string, object>() { { "$ID", q.ID.ToString() }, { "$Data", JSONSerializerHelper.SerializeToString(q.Model) } }));
             }
         }
 
