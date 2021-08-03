@@ -2,6 +2,7 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,40 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Actions
 {
+    public class PixelChatSceneComponentViewModel : UIViewModelBase
+    {
+        private PixelChatSceneComponentModel component;
+        private PixelChatOverlayModel overlay;
+
+        public PixelChatSceneComponentViewModel(PixelChatSceneComponentModel component)
+        {
+            this.component = component;
+        }
+
+        public PixelChatSceneComponentViewModel(PixelChatSceneComponentModel component, PixelChatOverlayModel overlay)
+            : this(component)
+        {
+            this.overlay = overlay;
+        }
+
+        public string ID { get { return this.component.ID; } }
+
+        public string Name
+        {
+            get
+            {
+                if (this.overlay != null)
+                {
+                    return this.overlay.Name;
+                }
+                else
+                {
+                    return this.component.Name;
+                }
+            }
+        }
+    }
+
     public class PixelChatActionEditorControlViewModel : ActionEditorControlViewModelBase
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.PixelChat; } }
@@ -22,9 +57,14 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.selectedActionType = value;
                 this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("ShowScenes");
                 this.NotifyPropertyChanged("ShowOverlays");
                 this.NotifyPropertyChanged("ShowTargetUsernameGrid");
                 this.NotifyPropertyChanged("ShowTimeAmountGrid");
+
+                this.SelectedScene = null;
+                this.SelectedSceneComponent = null;
+                this.SceneComponents.Clear();
 
                 this.SelectedOverlay = null;
                 this.Overlays.Clear();
@@ -45,13 +85,78 @@ namespace MixItUp.Base.ViewModel.Actions
                 {
                     this.Overlays.AddRange(this.allOverlays.Where(o => o.type.Equals(PixelChatOverlayModel.CreditsOverlayType)));
                 }
-                else if (this.SelectedActionType == PixelChatActionTypeEnum.TriggerGiveaway)
+                else if (this.SelectedActionType == PixelChatActionTypeEnum.TriggerGiveaway || this.SelectedActionType == PixelChatActionTypeEnum.AddUserToGiveaway)
                 {
                     this.Overlays.AddRange(this.allOverlays.Where(o => o.type.Equals(PixelChatOverlayModel.GiveawayOverlayType)));
                 }
             }
         }
         private PixelChatActionTypeEnum selectedActionType;
+
+        public bool ShowScenes
+        {
+            get
+            {
+                return this.selectedActionType == PixelChatActionTypeEnum.ShowHideSceneComponent;
+            }
+        }
+
+        public ThreadSafeObservableCollection<PixelChatSceneModel> Scenes { get; set; } = new ThreadSafeObservableCollection<PixelChatSceneModel>();
+
+        public PixelChatSceneModel SelectedScene
+        {
+            get { return this.selectedScene; }
+            set
+            {
+                this.selectedScene = value;
+                this.NotifyPropertyChanged();
+
+                this.SceneComponents.Clear();
+                if (this.SelectedScene != null)
+                {
+                    foreach (var kvp in this.SelectedScene.components)
+                    {
+                        if (!string.IsNullOrEmpty(kvp.Value.OverlayID))
+                        {
+                            PixelChatOverlayModel overlay = this.allOverlays.FirstOrDefault(o => string.Equals(o.id, kvp.Value.OverlayID));
+                            if (overlay != null)
+                            {
+                                this.SceneComponents.Add(new PixelChatSceneComponentViewModel(kvp.Value, overlay));
+                            }
+                        }
+                        else
+                        {
+                            this.SceneComponents.Add(new PixelChatSceneComponentViewModel(kvp.Value));
+                        }
+                    }
+                }
+            }
+        }
+        private PixelChatSceneModel selectedScene;
+
+        public ThreadSafeObservableCollection<PixelChatSceneComponentViewModel> SceneComponents { get; set; } = new ThreadSafeObservableCollection<PixelChatSceneComponentViewModel>();
+
+        public PixelChatSceneComponentViewModel SelectedSceneComponent
+        {
+            get { return this.selectedSceneComponent; }
+            set
+            {
+                this.selectedSceneComponent = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private PixelChatSceneComponentViewModel selectedSceneComponent;
+
+        public bool SceneComponentVisible
+        {
+            get { return this.sceneComponentVisible; }
+            set
+            {
+                this.sceneComponentVisible = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool sceneComponentVisible;
 
         public bool ShowOverlays
         {
@@ -60,7 +165,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 return this.SelectedActionType == PixelChatActionTypeEnum.TriggerShoutout || this.SelectedActionType == PixelChatActionTypeEnum.TriggerCountdown ||
                     this.SelectedActionType == PixelChatActionTypeEnum.TriggerCountup || this.SelectedActionType == PixelChatActionTypeEnum.StartStreamathon ||
                     this.SelectedActionType == PixelChatActionTypeEnum.AddStreamathonTime || this.SelectedActionType == PixelChatActionTypeEnum.TriggerCredits ||
-                    this.SelectedActionType == PixelChatActionTypeEnum.TriggerGiveaway;
+                    this.SelectedActionType == PixelChatActionTypeEnum.TriggerGiveaway || this.SelectedActionType == PixelChatActionTypeEnum.AddUserToGiveaway;
             }
         }
 
@@ -81,7 +186,7 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             get
             {
-                return this.SelectedActionType == PixelChatActionTypeEnum.TriggerShoutout;
+                return this.SelectedActionType == PixelChatActionTypeEnum.TriggerShoutout || this.SelectedActionType == PixelChatActionTypeEnum.AddUserToGiveaway;
             }
         }
 
@@ -116,49 +221,66 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string timeAmount;
 
+        private string sceneID = null;
+        private string sceneComponentID = null;
+        private string overlayID = null;
+
         private List<PixelChatOverlayModel> allOverlays = new List<PixelChatOverlayModel>();
 
         public PixelChatActionEditorControlViewModel(PixelChatActionModel action)
             : base(action)
         {
             this.SelectedActionType = action.ActionType;
+
+            if (this.ShowScenes)
+            {
+                this.sceneID = action.SceneID;
+                this.sceneComponentID = action.ComponentID;
+                this.SceneComponentVisible = action.SceneComponentVisible;
+            }
+
             if (this.ShowOverlays)
             {
-                this.SelectedOverlay = this.allOverlays.FirstOrDefault(o => o.id.Equals(action.OverlayID));
-                if (this.ShowTargetUsernameGrid)
-                {
-                    this.TargetUsername = action.TargetUsername;
-                }
-                else if (this.ShowTimeAmountGrid)
-                {
-                    this.TimeAmount = action.TimeAmount;
-                }
+                this.overlayID = action.OverlayID;
+            }
+
+            if (this.ShowTargetUsernameGrid)
+            {
+                this.TargetUsername = action.TargetUsername;
+            }
+
+            if (this.ShowTimeAmountGrid)
+            {
+                this.TimeAmount = action.TimeAmount;
             }
         }
 
         public PixelChatActionEditorControlViewModel()
             : base()
         {
-            this.SelectedActionType = PixelChatActionTypeEnum.TriggerGiveaway;
+            this.SelectedActionType = PixelChatActionTypeEnum.ShowHideSceneComponent;
         }
 
         public override async Task<Result> Validate()
         {
-            if (this.ShowOverlays)
+            if (this.ShowScenes)
             {
-                if (this.SelectedOverlay == null)
+                if (this.SelectedScene == null || this.SelectedSceneComponent == null)
                 {
-                    return new Result(MixItUp.Base.Resources.PixelChatActionMissingOverlay);
-                }
-
-                if (this.ShowTimeAmountGrid)
-                {
-                    if (string.IsNullOrEmpty(this.TimeAmount))
-                    {
-                        return new Result(MixItUp.Base.Resources.PixelChatActionMissingTimeAmount);
-                    }
+                    return new Result(MixItUp.Base.Resources.PixelChatActionMissingSceneAndSceneComponent);
                 }
             }
+
+            if (this.ShowOverlays && this.SelectedOverlay == null)
+            {
+                return new Result(MixItUp.Base.Resources.PixelChatActionMissingOverlay);
+            }
+
+            if (this.ShowTimeAmountGrid && string.IsNullOrEmpty(this.TimeAmount))
+            {
+                return new Result(MixItUp.Base.Resources.PixelChatActionMissingTimeAmount);
+            }
+
             return await base.Validate();
         }
 
@@ -166,9 +288,25 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             if (ServiceManager.Get<PixelChatService>().IsConnected)
             {
+                foreach (PixelChatSceneModel scene in (await ServiceManager.Get<PixelChatService>().GetScenes()).OrderBy(o => o.Name))
+                {
+                    this.Scenes.Add(scene);
+                }
+
                 foreach (PixelChatOverlayModel overlay in (await ServiceManager.Get<PixelChatService>().GetOverlays()).OrderBy(o => o.Name))
                 {
                     this.allOverlays.Add(overlay);
+                }
+
+                if (this.ShowScenes)
+                {
+                    this.SelectedScene = this.Scenes.FirstOrDefault(s => s.id.Equals(this.sceneID));
+                    this.SelectedSceneComponent = this.SceneComponents.FirstOrDefault(sc => sc.ID.Equals(this.sceneComponentID));
+                }
+
+                if (this.ShowOverlays)
+                {
+                    this.SelectedOverlay = this.allOverlays.FirstOrDefault(o => o.id.Equals(this.overlayID));
                 }
             }
             await base.OnLoadedInternal();
@@ -176,7 +314,11 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override Task<ActionModelBase> GetActionInternal()
         {
-            if (this.ShowOverlays)
+            if (this.ShowScenes)
+            {
+                return Task.FromResult<ActionModelBase>(PixelChatActionModel.CreateShowHideSceneComponent(this.SelectedScene.id, this.SelectedSceneComponent.ID, this.SceneComponentVisible));
+            }
+            else if (this.ShowOverlays)
             {
                 if (this.ShowTargetUsernameGrid)
                 {

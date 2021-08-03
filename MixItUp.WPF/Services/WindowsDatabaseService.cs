@@ -2,10 +2,10 @@
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Data.Sqlite;
 
 namespace MixItUp.WPF.Services
 {
@@ -19,17 +19,24 @@ namespace MixItUp.WPF.Services
         {
             await this.EstablishConnection(databaseFilePath, (connection) =>
             {
-                using (SQLiteCommand command = new SQLiteCommand(commandString, connection))
+                using (SqliteCommand command = new SqliteCommand(commandString, connection))
                 {
                     if (parameters != null)
                     {
                         foreach (var kvp in parameters)
                         {
-                            command.Parameters.Add(new SQLiteParameter(kvp.Key, value: kvp.Value));
+                            if (kvp.Value == null)
+                            {
+                                command.Parameters.AddWithValue(kvp.Key, DBNull.Value);
+                            }
+                            else
+                            {
+                                command.Parameters.AddWithValue(kvp.Key, kvp.Value);
+                            }
                         }
                     }
 
-                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    using (SqliteDataReader reader = command.ExecuteReader())
                     {
                         Dictionary<string, object> values = new Dictionary<string, object>();
                         while (reader.Read())
@@ -57,7 +64,7 @@ namespace MixItUp.WPF.Services
 
             await this.EstablishConnection(databaseFilePath, async (connection) =>
             {
-                using (SQLiteCommand command = new SQLiteCommand(commandString, connection))
+                using (SqliteCommand command = new SqliteCommand(commandString, connection))
                 {
                     await command.ExecuteNonQueryAsync();
                 }
@@ -72,9 +79,9 @@ namespace MixItUp.WPF.Services
                 {
                     var rowsToInsert = parameters.Skip(i).Take(WindowsDatabaseService.MaxBulkInsertRows);
 
-                    using (SQLiteTransaction transaction = connection.BeginTransaction())
+                    using (SqliteTransaction transaction = connection.BeginTransaction())
                     {
-                        using (SQLiteCommand command = new SQLiteCommand(commandString, connection))
+                        using (SqliteCommand command = new SqliteCommand(commandString, connection, transaction))
                         {
                             foreach (Dictionary<string, object> rowParameters in rowsToInsert)
                             {
@@ -82,7 +89,14 @@ namespace MixItUp.WPF.Services
                                 {
                                     foreach (var kvp in rowParameters)
                                     {
-                                        command.Parameters.Add(new SQLiteParameter(kvp.Key, value: kvp.Value));
+                                        if (kvp.Value == null)
+                                        {
+                                            command.Parameters.AddWithValue(kvp.Key, DBNull.Value);
+                                        }
+                                        else
+                                        {
+                                            command.Parameters.AddWithValue(kvp.Key, kvp.Value);
+                                        }
                                     }
 
                                     Logger.Log(LogLevel.Debug, string.Format("SQLite Query: {0} - {1}", commandString, JSONSerializerHelper.SerializeToString(rowParameters)));
@@ -99,7 +113,7 @@ namespace MixItUp.WPF.Services
             });
         }
 
-        private async Task EstablishConnection(string databaseFilePath, Func<SQLiteConnection, Task> databaseQuery)
+        private async Task EstablishConnection(string databaseFilePath, Func<SqliteConnection, Task> databaseQuery)
         {
             try
             {
@@ -107,10 +121,17 @@ namespace MixItUp.WPF.Services
                 {
                     await Task.Run(async () =>
                     {
-                        using (SQLiteConnection connection = new SQLiteConnection("Data Source=" + databaseFilePath))
+                        try
                         {
-                            await connection.OpenAsync();
-                            await databaseQuery(connection);
+                            using (SqliteConnection connection = new SqliteConnection("Data Source=" + databaseFilePath))
+                            {
+                                await connection.OpenAsync();
+                                await databaseQuery(connection);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Log(ex);
                         }
                     });
                 }

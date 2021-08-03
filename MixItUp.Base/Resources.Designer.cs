@@ -511,6 +511,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add User To Giveaway.
+        /// </summary>
+        public static string AddUserToGiveaway {
+            get {
+                return ResourceManager.GetString("AddUserToGiveaway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Advanced.
         /// </summary>
         public static string Advanced {
@@ -10660,6 +10669,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pixel Chat Action: Missing Scene &amp; Scene Component.
+        /// </summary>
+        public static string PixelChatActionMissingSceneAndSceneComponent {
+            get {
+                return ResourceManager.GetString("PixelChatActionMissingSceneAndSceneComponent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pixel Chat Action: Missing Scene Component.
         /// </summary>
         public static string PixelChatActionMissingSceneComponent {
@@ -12334,6 +12352,15 @@ namespace MixItUp.Base {
         public static string SceneCollectionName {
             get {
                 return ResourceManager.GetString("SceneCollectionName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scene Component.
+        /// </summary>
+        public static string SceneComponent {
+            get {
+                return ResourceManager.GetString("SceneComponent", resourceCulture);
             }
         }
         

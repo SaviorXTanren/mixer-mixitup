@@ -5895,6 +5895,15 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="WebhookEvents" xml:space="preserve">
     <value>Webhook Events</value>
   </data>
+  <data name="AddUserToGiveaway" xml:space="preserve">
+    <value>Add User To Giveaway</value>
+  </data>
+  <data name="SceneComponent" xml:space="preserve">
+    <value>Scene Component</value>
+  </data>
+  <data name="PixelChatActionMissingSceneAndSceneComponent" xml:space="preserve">
+    <value>Pixel Chat Action: Missing Scene &amp; Scene Component</value>
+  </data>
   <data name="DefaultStreamingPlatform" xml:space="preserve">
     <value>Default Streaming Platform</value>
   </data>

@@ -345,6 +345,7 @@ namespace MixItUp.Base.Services
                     this.platformUsernameLookups[StreamingPlatformTypeEnum.Trovo][user.TrovoUsername] = user.ID;
                 }
 
+                // TODO
                 if (UserService.SpecialUserAccounts.Contains(user.Username.ToLower()))
                 {
                     user.IgnoreForQueries = true;
@@ -357,7 +358,10 @@ namespace MixItUp.Base.Services
                 {
                     user.IgnoreForQueries = true;
                 }
-                // TODO
+                else if (user.Data.IsCurrencyRankExempt)
+                {
+                    user.IgnoreForQueries = true;
+                }
                 else
                 {
                     user.IgnoreForQueries = false;

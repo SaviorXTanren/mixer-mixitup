@@ -274,32 +274,15 @@ namespace MixItUp.Base.Services.Twitch
         {
             List<Task> initializationTasks = new List<Task>();
 
-            initializationTasks.Add(Task.Run(async() =>
-            {
-                foreach (ChatEmoteModel emote in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetGlobalEmotes())
-                {
-                    this.emotes[emote.name] = new TwitchChatEmoteViewModel(emote);
-                }
-            }));
-
-            initializationTasks.Add(Task.Run(async () =>
-            {
-                foreach (ChatEmoteModel emote in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelEmotes(ServiceManager.Get<TwitchSessionService>().UserNewAPI))
-                {
-                    this.emotes[emote.name] = new TwitchChatEmoteViewModel(emote);
-                }
-            }));
-
+            List<Task<IEnumerable<ChatEmoteModel>>> twitchEmoteTasks = new List<Task<IEnumerable<ChatEmoteModel>>>();
+            twitchEmoteTasks.Add(ServiceManager.Get<TwitchSessionService>().UserConnection.GetGlobalEmotes());
+            twitchEmoteTasks.Add(ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelEmotes(ChannelSession.TwitchUserNewAPI));
             if (this.emoteSetIDs != null)
             {
-                initializationTasks.Add(Task.Run(async () =>
-                {
-                    foreach (ChatEmoteModel emote in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetEmoteSets(this.emoteSetIDs))
-                    {
-                        this.emotes[emote.name] = new TwitchChatEmoteViewModel(emote);
-                    }
-                }));
+                twitchEmoteTasks.Add(ServiceManager.Get<TwitchSessionService>().UserConnection.GetEmoteSets(this.emoteSetIDs));
             }
+
+            initializationTasks.AddRange(twitchEmoteTasks);
 
             Task<IEnumerable<ChatBadgeSetModel>> globalChatBadgesTask = ServiceManager.Get<TwitchSessionService>().UserConnection.GetGlobalChatBadges();
             initializationTasks.Add(globalChatBadgesTask);
@@ -322,6 +305,17 @@ namespace MixItUp.Base.Services.Twitch
             initializationTasks.Add(cheermotesTask);
 
             await Task.WhenAll(initializationTasks);
+
+            foreach (Task<IEnumerable<ChatEmoteModel>> emoteTask in twitchEmoteTasks)
+            {
+                if (emoteTask.IsCompleted && emoteTask.Result != null)
+                {
+                    foreach (ChatEmoteModel emote in emoteTask.Result)
+                    {
+                        this.emotes[emote.name] = new TwitchChatEmoteViewModel(emote);
+                    }
+                }
+            }
 
             foreach (ChatBadgeSetModel badgeSet in globalChatBadgesTask.Result)
             {

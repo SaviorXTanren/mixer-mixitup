@@ -56,7 +56,7 @@ namespace MixItUp.Base.Services.External
     {
         public string id { get; set; }
         public JObject settings { get; set; } = new JObject();
-        public JObject components { get; set; } = new JObject();
+        public Dictionary<string, PixelChatSceneComponentModel> components { get; set; } = new Dictionary<string, PixelChatSceneComponentModel>();
 
         public string Name
         {
@@ -73,8 +73,29 @@ namespace MixItUp.Base.Services.External
 
     public class PixelChatSceneComponentModel
     {
-        public string id { get; set; }
+        public string type { get; set; }
         public bool hidden { get; set; }
+        public JToken component { get; set; }
+
+        public string ID { get; set; }
+        public string Name { get; set; }
+        public string OverlayID { get; set; }
+
+        public void SetProperties()
+        {
+            if (string.Equals(this.type, "image") && this.component is JObject && ((JObject)this.component).TryGetValue("name", out JToken imageName))
+            {
+                this.Name = imageName.ToString();
+            }
+            else if (string.Equals(this.type, "url"))
+            {
+                this.Name = this.component.ToString();
+            }
+            else if (string.Equals(this.type, "overlay"))
+            {
+                this.OverlayID = this.component.ToString();
+            }
+        }
     }
 
     public class PixelChatSendMessageModel
@@ -93,6 +114,15 @@ namespace MixItUp.Base.Services.External
             : this(type)
         {
             this.data = amount;
+        }
+
+        public PixelChatSendMessageModel(string type, string username)
+            : this(type)
+        {
+            this.data = new JObject()
+            {
+                { "username", username }
+            };
         }
 
         public PixelChatSendMessageModel(string type, string username, StreamingPlatformTypeEnum platform)
@@ -150,6 +180,15 @@ namespace MixItUp.Base.Services.External
                         scenes.Add(kvp.Value.ToObject<PixelChatSceneModel>());
                     }
                 }
+
+                foreach (PixelChatSceneModel scene in scenes)
+                {
+                    foreach (var kvp in scene.components)
+                    {
+                        kvp.Value.ID = kvp.Key;
+                        kvp.Value.SetProperties();
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -177,6 +216,30 @@ namespace MixItUp.Base.Services.External
                 Logger.Log(ex);
             }
             return overlays;
+        }
+
+        public async Task<Result> EditSceneComponent(string sceneID, string componentID, bool visible)
+        {
+            try
+            {
+                JObject jobj = new JObject();
+                jobj["hidden"] = !visible;
+
+                HttpResponseMessage response = await this.PatchAsync($"scenes/{sceneID}/components/{componentID}", AdvancedHttpClient.CreateContentFromObject(jobj));
+                if (response.IsSuccessStatusCode)
+                {
+                    return new Result();
+                }
+                else
+                {
+                    return new Result(await response.Content.ReadAsStringAsync());
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return new Result(ex);
+            }
         }
 
         public async Task<Result> SendMessageToOverlay(string overlayID, PixelChatSendMessageModel message)
