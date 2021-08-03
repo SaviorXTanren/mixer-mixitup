@@ -11236,7 +11236,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to StreamJar Donation.
+        ///   Looks up a localized string similar to Rainmaker Donation.
         /// </summary>
         public static string RainmakerDonation {
             get {
