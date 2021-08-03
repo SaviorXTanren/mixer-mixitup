@@ -3354,13 +3354,13 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <value>Failed Guess</value>
   </data>
   <data name="GameCommandHangmanFailedGuessExample" xml:space="preserve">
-    <value>@$username drops their coins into the pot and try the letter $arg1text...but it was wrong! $gamehangmancurrent</value>
+    <value>@$username drops their coins into the pot and guesses "$arg1text"...but it was wrong! $gamehangmancurrent</value>
   </data>
   <data name="GameCommandHangmanGameLostExample" xml:space="preserve">
     <value>The game is lost with too many failed guesses; the correct answer was "$gamehangmananswer". There goes $gametotalamount {0}!</value>
   </data>
   <data name="GameCommandHangmanGameWonExample" xml:space="preserve">
-    <value>@$username got the last letter for "$gamehangmananswer", winning the whole pot of $gamepayout {0}!</value>
+    <value>@$username got the secret word "$gamehangmananswer", winning the whole pot of $gamepayout {0}!</value>
   </data>
   <data name="GameCommandHangmanMaxFailures" xml:space="preserve">
     <value>Max Failures</value>
@@ -3375,7 +3375,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <value>Successful Guess</value>
   </data>
   <data name="GameCommandHangmanSuccessfulGuessExample" xml:space="preserve">
-    <value>@$username drops their coins into the pot and try the letter $arg1text...and gets it right! $gamehangmancurrent</value>
+    <value>@$username drops their coins into the pot and guesses $arg1text...and gets it right! $gamehangmancurrent</value>
   </data>
   <data name="GameCommandHitmanAppearsExample" xml:space="preserve">
     <value>It's hitman $gamehitmanname! Quick, type $gamehitmanname in chat!</value>
@@ -5942,5 +5942,11 @@ Failure to do one of the following could effect how users rate &amp; review your
   </data>
   <data name="NotFollowing" xml:space="preserve">
     <value>Not Following</value>
+  </data>
+  <data name="GameCommandHangmanMissingGuess" xml:space="preserve">
+    <value>A guess must be specified</value>
+  </data>
+  <data name="GameCommandHangmanAllowWordGuess" xml:space="preserve">
+    <value>Allow Word Guess</value>
   </data>
 </root>
