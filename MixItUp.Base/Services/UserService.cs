@@ -58,16 +58,18 @@ namespace MixItUp.Base.Services
                 {
                     if (user.OnlineViewingMinutes == 0)
                     {
-                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserFirstJoin, new CommandParametersModel(user));
+                        // TODO
+                        //await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserFirstJoin, new CommandParametersModel(user));
                     }
 
-                    CommandParametersModel parameters = new CommandParametersModel(user);
-                    if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.ChatUserJoined, parameters))
-                    {
-                        user.UpdateLastActivity();
-                        user.Model.TotalStreamsWatched++;
-                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserJoined, parameters);
-                    }
+                    // TODO
+                    //CommandParametersModel parameters = new CommandParametersModel(user);
+                    //if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.ChatUserJoined, parameters))
+                    //{
+                    //    user.UpdateLastActivity();
+                    //    user.Model.TotalStreamsWatched++;
+                    //    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserJoined, parameters);
+                    //}
                 }
             }
         }

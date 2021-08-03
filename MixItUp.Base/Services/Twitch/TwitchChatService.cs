@@ -276,7 +276,7 @@ namespace MixItUp.Base.Services.Twitch
 
             List<Task<IEnumerable<ChatEmoteModel>>> twitchEmoteTasks = new List<Task<IEnumerable<ChatEmoteModel>>>();
             twitchEmoteTasks.Add(ServiceManager.Get<TwitchSessionService>().UserConnection.GetGlobalEmotes());
-            twitchEmoteTasks.Add(ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelEmotes(ChannelSession.TwitchUserNewAPI));
+            twitchEmoteTasks.Add(ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelEmotes(ServiceManager.Get<TwitchSessionService>().UserNewAPI));
             if (this.emoteSetIDs != null)
             {
                 twitchEmoteTasks.Add(ServiceManager.Get<TwitchSessionService>().UserConnection.GetEmoteSets(this.emoteSetIDs));
