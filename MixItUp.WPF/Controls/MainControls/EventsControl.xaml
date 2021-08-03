@@ -18,7 +18,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="{x:Static resx:Resources.Service}" Binding="{Binding Service}" IsReadOnly="True" Width="200" />
                 <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="240">
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" MinWidth="230" Width="230">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid HorizontalAlignment="Center">
