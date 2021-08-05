@@ -326,7 +326,7 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             this.SourceGetCurrentDimensionsCommand = this.CreateCommand(async () =>
             {
-                if (string.IsNullOrEmpty(this.SourceName))
+                if (!string.IsNullOrEmpty(this.SourceName))
                 {
                     StreamingSoftwareSourceDimensionsModel dimensions = await StreamingSoftwareActionModel.GetSourceDimensions(this.SelectedStreamingSoftwareType, this.SceneName, this.SourceName);
                     if (dimensions != null)
