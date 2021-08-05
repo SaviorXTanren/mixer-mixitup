@@ -43,36 +43,59 @@ namespace MixItUp.Base.Services
 
         public async Task AddOrUpdateActiveUser(UserV2ViewModel user)
         {
-            if (user != null)
+            if (user == null)
             {
-                bool newUser = !this.activeUsers.ContainsKey(user.ID);
+                return;
+            }
 
-                this.activeUsers[user.ID] = user;
+            bool newUser = !this.activeUsers.ContainsKey(user.ID);
 
-                this.SetUserData(user.Model);
+            this.activeUsers[user.ID] = user;
+
+            this.SetUserData(user.Model);
+
+            // TODO
+            // Add IgnoreForQueries logic
+
+            if (newUser)
+            {
+                if (user.OnlineViewingMinutes == 0)
+                {
+                    // TODO
+                    //await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserFirstJoin, new CommandParametersModel(user));
+                }
 
                 // TODO
-                // Add IgnoreForQueries logic
-
-                if (newUser)
-                {
-                    if (user.OnlineViewingMinutes == 0)
-                    {
-                        // TODO
-                        //await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserFirstJoin, new CommandParametersModel(user));
-                    }
-
-                    // TODO
-                    //CommandParametersModel parameters = new CommandParametersModel(user);
-                    //if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.ChatUserJoined, parameters))
-                    //{
-                    //    user.UpdateLastActivity();
-                    //    user.Model.TotalStreamsWatched++;
-                    //    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserJoined, parameters);
-                    //}
-                }
+                //CommandParametersModel parameters = new CommandParametersModel(user);
+                //if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.ChatUserJoined, parameters))
+                //{
+                //    user.UpdateLastActivity();
+                //    user.Model.TotalStreamsWatched++;
+                //    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserJoined, parameters);
+                //}
             }
         }
+
+        public async Task RemoveActiveUser(StreamingPlatformTypeEnum platform, string platformUsername)
+        {
+            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id) && this.activeUsers.TryGetValue(id, out UserV2ViewModel user))
+            {
+                await this.RemoveActiveUser(user);
+            }
+        }
+
+        public async Task RemoveActiveUser(UserV2ViewModel user)
+        {
+            if (user != null && this.activeUsers.ContainsKey(user.ID))
+            {
+                this.activeUsers.Remove(user.ID);
+
+                // TODO
+                //await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserLeft, new CommandParametersModel(user));
+            }
+        }
+
+        public IEnumerable<UserV2ViewModel> GetActiveUsers() { return this.activeUsers.Values.ToList(); }
 
         public async Task<UserV2ViewModel> GetUserByID(Guid id)
         {
@@ -100,7 +123,7 @@ namespace MixItUp.Base.Services
                 return user;
             }
 
-            if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.None)
+            if (platform == StreamingPlatformTypeEnum.None)
             {
                 return user;
             }
@@ -146,7 +169,7 @@ namespace MixItUp.Base.Services
                     throw new InvalidOperationException("Trovo does not support user look-up by user ID");
                 }
 
-                return this.Create(platformModel);
+                return this.CreateUser(platformModel);
             }
 
             return null;
@@ -161,7 +184,7 @@ namespace MixItUp.Base.Services
                 return user;
             }
 
-            if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.None)
+            if (platform == StreamingPlatformTypeEnum.None)
             {
                 foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.SupportedPlatforms)
                 {
@@ -174,7 +197,7 @@ namespace MixItUp.Base.Services
                 return null;
             }
 
-            if (this.platformUserIDLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id))
+            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id))
             {
                 user = await this.GetUserByID(id);
                 if (user != null)
@@ -219,13 +242,13 @@ namespace MixItUp.Base.Services
                     }
                 }
 
-                return this.Create(platformModel);
+                return this.CreateUser(platformModel);
             }
 
             return null;
         }
 
-        public UserV2ViewModel Create(UserPlatformV2ModelBase platformModel)
+        public UserV2ViewModel CreateUser(UserPlatformV2ModelBase platformModel)
         {
             if (platformModel != null)
             {
@@ -281,7 +304,7 @@ namespace MixItUp.Base.Services
             if (!string.IsNullOrEmpty(username))
             {
                 username = UserService.SanitizeUsername(username);
-                if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.None)
+                if (platform == StreamingPlatformTypeEnum.None)
                 {
                     foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.SupportedPlatforms)
                     {
