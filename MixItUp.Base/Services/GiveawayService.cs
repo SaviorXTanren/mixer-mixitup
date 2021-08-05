@@ -184,7 +184,7 @@ namespace MixItUp.Base.Services
                         }
                         else
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(string.Format("@{0} you've won the giveaway; type \"!claim\" in chat!.", this.Winner.Username), StreamingPlatformTypeEnum.All);
+                            await ServiceManager.Get<ChatService>().SendMessage(string.Format("@{0} you've won the giveaway; type \"!claim\" in chat!.", this.Winner.Username), StreamingPlatformTypeEnum.None);
 
                             this.TimeLeft = 60;
                             while (this.TimeLeft > 0)
@@ -204,7 +204,7 @@ namespace MixItUp.Base.Services
                     }
                     else
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage("There are no users that entered/left in the giveaway", StreamingPlatformTypeEnum.All);
+                        await ServiceManager.Get<ChatService>().SendMessage("There are no users that entered/left in the giveaway", StreamingPlatformTypeEnum.None);
                         await this.End();
                         return;
                     }

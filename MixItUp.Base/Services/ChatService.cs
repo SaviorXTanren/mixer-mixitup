@@ -101,7 +101,7 @@ namespace MixItUp.Base.Services
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
-        public async Task SendMessage(string message, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All, bool sendAsStreamer = false, string replyMessageID = null)
+        public async Task SendMessage(string message, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, bool sendAsStreamer = false, string replyMessageID = null)
         {
             if (!string.IsNullOrEmpty(message))
             {

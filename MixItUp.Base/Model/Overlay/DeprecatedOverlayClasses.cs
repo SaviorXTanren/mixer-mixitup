@@ -612,7 +612,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public override Task LoadTestData()
         {
-            this.Platform = StreamingPlatformTypeEnum.All;
+            this.Platform = StreamingPlatformTypeEnum.None;
             this.Effects.Duration = this.Duration = 3;
             this.lastClipURL = "https://clips.twitch.tv/embed?clip=HotAmazonianKoupreyNotATK&parent=localhost";
 

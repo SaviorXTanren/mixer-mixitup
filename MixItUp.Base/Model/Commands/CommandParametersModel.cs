@@ -1,8 +1,4 @@
 ﻿using MixItUp.Base.Services;
-using MixItUp.Base.Services.Glimesh;
-using MixItUp.Base.Services.Trovo;
-using MixItUp.Base.Services.Twitch;
-using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -19,13 +15,13 @@ namespace MixItUp.Base.Model.Commands
         public static CommandParametersModel GetTestParameters(Dictionary<string, string> specialIdentifiers)
         {
             UserViewModel currentUser = ChannelSession.GetCurrentUser();
-            return new CommandParametersModel(currentUser, StreamingPlatformTypeEnum.All, new List<string>() { "@" + currentUser.Username }, specialIdentifiers) { TargetUser = currentUser };
+            return new CommandParametersModel(currentUser, StreamingPlatformTypeEnum.None, new List<string>() { "@" + currentUser.Username }, specialIdentifiers) { TargetUser = currentUser };
         }
 
         [DataMember]
         public UserViewModel User { get; set; } = ChannelSession.GetCurrentUser();
         [DataMember]
-        public StreamingPlatformTypeEnum Platform { get; set; } = StreamingPlatformTypeEnum.All;
+        public StreamingPlatformTypeEnum Platform { get; set; } = StreamingPlatformTypeEnum.None;
         [DataMember]
         public List<string> Arguments { get; set; } = new List<string>();
         [DataMember]
@@ -61,7 +57,7 @@ namespace MixItUp.Base.Model.Commands
 
         public CommandParametersModel(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers) : this(user, StreamingPlatformTypeEnum.None, arguments, specialIdentifiers) { }
 
-        public CommandParametersModel(UserViewModel user = null, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All, IEnumerable<string> arguments = null, Dictionary<string, string> specialIdentifiers = null)
+        public CommandParametersModel(UserViewModel user = null, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> specialIdentifiers = null)
         {
             if (user != null)
             {

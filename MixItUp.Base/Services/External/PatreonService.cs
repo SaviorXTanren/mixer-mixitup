@@ -52,7 +52,7 @@ namespace MixItUp.Base.Services.External
                 {
                     return StreamingPlatformTypeEnum.Twitch;
                 }
-                return StreamingPlatformTypeEnum.All;
+                return StreamingPlatformTypeEnum.None;
             }
         }
 

@@ -212,7 +212,7 @@ namespace MixItUp.Base.Model.Actions
 
         public virtual async Task TestPerform(Dictionary<string, string> specialIdentifiers)
         {
-            await this.Perform(new CommandParametersModel(ChannelSession.GetCurrentUser(), StreamingPlatformTypeEnum.All, new List<string>() { "@" + ChannelSession.GetCurrentUser().Username }, specialIdentifiers) { TargetUser = ChannelSession.GetCurrentUser() });
+            await this.Perform(new CommandParametersModel(ChannelSession.GetCurrentUser(), StreamingPlatformTypeEnum.None, new List<string>() { "@" + ChannelSession.GetCurrentUser().Username }, specialIdentifiers) { TargetUser = ChannelSession.GetCurrentUser() });
         }
 
         public async Task Perform(CommandParametersModel parameters)

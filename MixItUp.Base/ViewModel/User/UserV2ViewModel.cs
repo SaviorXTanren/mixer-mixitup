@@ -27,7 +27,7 @@ namespace MixItUp.Base.ViewModel.User
             this.platform = platform;
             this.model = model;
             
-            if (this.platform != StreamingPlatformTypeEnum.None && this.platform != StreamingPlatformTypeEnum.All)
+            if (this.platform != StreamingPlatformTypeEnum.None)
             {
                 this.platformModel = this.model.GetPlatformData<UserPlatformV2ModelBase>(this.platform);
             }

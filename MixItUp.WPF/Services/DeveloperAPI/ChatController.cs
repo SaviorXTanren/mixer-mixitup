@@ -49,7 +49,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            await ServiceManager.Get<ChatService>().SendMessage(chatMessage.Message, StreamingPlatformTypeEnum.All, chatMessage.SendAsStreamer);
+            await ServiceManager.Get<ChatService>().SendMessage(chatMessage.Message, StreamingPlatformTypeEnum.None, chatMessage.SendAsStreamer);
         }
 
         [Route("whisper")]
@@ -66,7 +66,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            await ServiceManager.Get<ChatService>().Whisper(StreamingPlatformTypeEnum.All, chatWhisper.UserName, chatWhisper.Message, chatWhisper.SendAsStreamer);
+            await ServiceManager.Get<ChatService>().Whisper(StreamingPlatformTypeEnum.None, chatWhisper.UserName, chatWhisper.Message, chatWhisper.SendAsStreamer);
         }
     }
 }

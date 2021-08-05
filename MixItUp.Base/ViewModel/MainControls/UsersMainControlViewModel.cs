@@ -87,7 +87,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 this.NotifyPropertyChanged();
             }
         }
-        private StreamingPlatformTypeEnum selectedPlatform = StreamingPlatformTypeEnum.All;
+        private StreamingPlatformTypeEnum selectedPlatform = StreamingPlatformTypeEnum.None;
 
         public string UsernameFilter
         {
@@ -325,7 +325,9 @@ namespace MixItUp.Base.ViewModel.MainControls
                     if (!string.IsNullOrEmpty(this.UsernameFilter))
                     {
                         string filter = this.UsernameFilter.ToLower();
+#pragma warning disable CS0612 // Type or member is obsolete
                         if (this.SelectedPlatform != StreamingPlatformTypeEnum.All)
+#pragma warning restore CS0612 // Type or member is obsolete
                         {
                             data = data.Where(u => u.Platforms.Contains(this.SelectedPlatform) && u.Username != null && u.Username.Contains(filter, StringComparison.OrdinalIgnoreCase));
                         }

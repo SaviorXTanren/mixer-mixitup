@@ -111,7 +111,7 @@ namespace MixItUp.Base.ViewModel.Chat
                         Match userNameMatch = ChatListControlViewModel.UserNameTagRegex.Match(whisperRegexMatch.Value);
                         string username = UserService.SanitizeUsername(userNameMatch.Value);
 
-                        await ServiceManager.Get<ChatService>().Whisper(StreamingPlatformTypeEnum.All, username, message, this.SendAsStreamer);
+                        await ServiceManager.Get<ChatService>().Whisper(StreamingPlatformTypeEnum.None, username, message, this.SendAsStreamer);
                     }
                     else if (ChatListControlViewModel.ClearRegex.IsMatch(this.SendMessageText))
                     {
@@ -160,7 +160,7 @@ namespace MixItUp.Base.ViewModel.Chat
                     }
                     else
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage(this.SendMessageText, StreamingPlatformTypeEnum.All, sendAsStreamer: this.SendAsStreamer);
+                        await ServiceManager.Get<ChatService>().SendMessage(this.SendMessageText, StreamingPlatformTypeEnum.None, sendAsStreamer: this.SendAsStreamer);
                     }
 
                     this.SentMessageHistory.Remove(this.SendMessageText);

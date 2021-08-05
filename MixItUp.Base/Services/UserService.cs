@@ -100,7 +100,7 @@ namespace MixItUp.Base.Services
                 return user;
             }
 
-            if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
+            if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.None)
             {
                 return user;
             }
@@ -161,7 +161,7 @@ namespace MixItUp.Base.Services
                 return user;
             }
 
-            if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
+            if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.None)
             {
                 foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.SupportedPlatforms)
                 {
@@ -281,7 +281,7 @@ namespace MixItUp.Base.Services
             if (!string.IsNullOrEmpty(username))
             {
                 username = UserService.SanitizeUsername(username);
-                if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
+                if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.None)
                 {
                     foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.SupportedPlatforms)
                     {
@@ -503,7 +503,7 @@ namespace MixItUp.Base.Services
         {
             UserDataModel userData = null;
 
-            if (string.IsNullOrEmpty(platformID) || platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
+            if (string.IsNullOrEmpty(platformID) || platform == StreamingPlatformTypeEnum.None)
             {
                 return userData;
             }
@@ -535,7 +535,7 @@ namespace MixItUp.Base.Services
         {
             UserDataModel userData = null;
 
-            if (string.IsNullOrEmpty(platformUsername) || platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
+            if (string.IsNullOrEmpty(platformUsername) || platform == StreamingPlatformTypeEnum.None)
             {
                 return null;
             }
