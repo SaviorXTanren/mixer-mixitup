@@ -56,21 +56,25 @@ namespace MixItUp.Base.Services
 
             this.signalRConnection.Listen("TwitchFollowEvent", (string followerId, string followerUsername, string followerDisplayName) =>
             {
+                Logger.Log($"Webhook Event - Follow - {followerId} - {followerUsername}");
                 var _ = this.TwitchFollowEvent(followerId, followerUsername, followerDisplayName);
             });
 
             this.signalRConnection.Listen("TwitchStreamStartedEvent", () =>
             {
+                Logger.Log($"Webhook Event - Stream Start");
                 var _ = this.TwitchStreamStartedEvent();
             });
 
             this.signalRConnection.Listen("TwitchStreamStoppedEvent", () =>
             {
+                Logger.Log($"Webhook Event - Stream Stop");
                 var _ = this.TwitchStreamStoppedEvent();
             });
 
             this.signalRConnection.Listen("TwitchChannelHypeTrainBegin", (int totalPoints, int levelPoints, int levelGoal) =>
             {
+                Logger.Log($"Webhook Event - Hype Train Begin");
                 var _ = this.TwitchChannelHypeTrainBegin(totalPoints, levelPoints, levelGoal);
             });
 
@@ -81,6 +85,7 @@ namespace MixItUp.Base.Services
 
             this.signalRConnection.Listen("TwitchChannelHypeTrainEnd", (int level, int totalPoints) =>
             {
+                Logger.Log($"Webhook Event - Hype Train End - {level} - {totalPoints}");
                 var _ = this.TwitchChannelHypeTrainEnd(level, totalPoints);
             });
 
