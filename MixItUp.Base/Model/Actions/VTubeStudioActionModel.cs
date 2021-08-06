@@ -38,15 +38,15 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (ServiceManager.Get<VTubeStudioService>().IsConnected)
+            if (ChannelSession.Services.VTubeStudio.IsConnected)
             {
                 if (this.ActionType == VTubeStudioActionTypeEnum.LoadModel)
                 {
-                    await ServiceManager.Get<VTubeStudioService>().LoadModel(this.ModelID);
+                    await ChannelSession.Services.VTubeStudio.LoadModel(this.ModelID);
                 }
                 else if (this.ActionType == VTubeStudioActionTypeEnum.RunHotKey)
                 {
-                    await ServiceManager.Get<VTubeStudioService>().RunHotKey(this.HotKeyID);
+                    await ChannelSession.Services.VTubeStudio.RunHotKey(this.HotKeyID);
                 }
             }
         }

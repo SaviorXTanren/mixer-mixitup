@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Model.Actions;
-using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
@@ -13,7 +12,7 @@ namespace MixItUp.Base.ViewModel.Actions
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.VTubeStudio; } }
 
-        public bool VTubeStudioConnected { get { return ServiceManager.Get<VTubeStudioService>().IsConnected; } }
+        public bool VTubeStudioConnected { get { return ChannelSession.Services.VTubeStudio.IsConnected; } }
         public bool VTubeStudioNotConnected { get { return !this.VTubeStudioConnected; } }
 
         public IEnumerable<VTubeStudioActionTypeEnum> ActionTypes { get { return EnumHelper.GetEnumList<VTubeStudioActionTypeEnum>(); } }
@@ -160,9 +159,9 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             if (this.VTubeStudioConnected)
             {
-                this.CurrentModel = await ServiceManager.Get<VTubeStudioService>().GetCurrentModel();
+                this.CurrentModel = await ChannelSession.Services.VTubeStudio.GetCurrentModel();
 
-                foreach (VTubeStudioModel model in await ServiceManager.Get<VTubeStudioService>().GetAllModels())
+                foreach (VTubeStudioModel model in await ChannelSession.Services.VTubeStudio.GetAllModels())
                 {
                     this.Models.Add(model);
                 }
@@ -181,7 +180,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
             if (this.SelectedModel != null)
             {
-                foreach (VTubeStudioHotKey hotKey in await ServiceManager.Get<VTubeStudioService>().GetHotKeys(this.SelectedModel.modelID))
+                foreach (VTubeStudioHotKey hotKey in await ChannelSession.Services.VTubeStudio.GetHotKeys(this.SelectedModel.modelID))
                 {
                     this.HotKeys.Add(hotKey);
                 }

@@ -15,7 +15,7 @@ namespace MixItUp.Base.ViewModel.Services
         {
             this.ConnectCommand = this.CreateCommand(async () =>
             {
-                Result result = await ServiceManager.Get<VTubeStudioService>().Connect();
+                Result result = await ChannelSession.Services.VTubeStudio.Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;
@@ -28,14 +28,14 @@ namespace MixItUp.Base.ViewModel.Services
 
             this.DisconnectCommand = this.CreateCommand(async () =>
             {
-                await ServiceManager.Get<VTubeStudioService>().Disconnect();
+                await ChannelSession.Services.VTubeStudio.Disconnect();
 
                 ChannelSession.Settings.StreamlabsOAuthToken = null;
 
                 this.IsConnected = false;
             });
 
-            this.IsConnected = ServiceManager.Get<VTubeStudioService>().IsConnected;
+            this.IsConnected = ChannelSession.Services.VTubeStudio.IsConnected;
         }
     }
 }

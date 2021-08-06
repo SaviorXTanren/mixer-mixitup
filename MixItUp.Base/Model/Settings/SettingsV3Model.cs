@@ -756,9 +756,9 @@ namespace MixItUp.Base.Model.Settings
             {
                 this.PixelChatOAuthToken = ChannelSession.Services.PixelChat.GetOAuthTokenCopy();
             }
-            if (ServiceManager.Get<VTubeStudioService>().IsConnected)
+            if (ChannelSession.Services.VTubeStudio.IsConnected)
             {
-                this.VTubeStudioOAuthToken = ServiceManager.Get<VTubeStudioService>().GetOAuthTokenCopy();
+                this.VTubeStudioOAuthToken = ChannelSession.Services.VTubeStudio.GetOAuthTokenCopy();
             }
         }
 
