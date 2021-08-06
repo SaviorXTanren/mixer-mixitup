@@ -1,6 +1,4 @@
-﻿using MixItUp.Base.Services;
-using MixItUp.Base.Services.External;
-using MixItUp.Base.Util;
+﻿using MixItUp.Base.Util;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Services
@@ -30,7 +28,7 @@ namespace MixItUp.Base.ViewModel.Services
             {
                 await ChannelSession.Services.VTubeStudio.Disconnect();
 
-                ChannelSession.Settings.StreamlabsOAuthToken = null;
+                ChannelSession.Settings.VTubeStudioOAuthToken = null;
 
                 this.IsConnected = false;
             });
