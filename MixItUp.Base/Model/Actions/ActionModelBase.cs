@@ -45,7 +45,6 @@ namespace MixItUp.Base.Model.Actions
         OvrStream,
         IFTTT,
         Twitch,
-        [Obsolete]
         PixelChat,
         [Obsolete]
         VTubeStudio,
