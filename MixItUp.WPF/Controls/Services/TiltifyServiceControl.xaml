@@ -22,13 +22,9 @@
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.TiltifyInfo1}"/>
-
-            <TextBlock Grid.Row="2" TextWrapping="Wrap" Text="{x:Static resx:Resources.TiltifyInfo2}"/>
         </Grid>
 
         <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">

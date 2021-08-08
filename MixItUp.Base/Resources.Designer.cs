@@ -14798,15 +14798,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to NOTE: When logging in, please us the Email option to log in to your account. It is not currently possible to log in with connected accounts..
-        /// </summary>
-        public static string TiltifyInfo2 {
-            get {
-                return ResourceManager.GetString("TiltifyInfo2", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Failed to get User data.
         /// </summary>
         public static string TiltifyUserDataFailed {

@@ -4638,9 +4638,6 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="TiltifyInfo1" xml:space="preserve">
     <value>Tiltify service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to Tiltify and approve Mix It Up to access your information. Once you have connect Tiltify, you need to select the campaign you wish to use when detecting donations.</value>
   </data>
-  <data name="TiltifyInfo2" xml:space="preserve">
-    <value>NOTE: When logging in, please us the Email option to log in to your account. It is not currently possible to log in with connected accounts.</value>
-  </data>
   <data name="TipeeeStream" xml:space="preserve">
     <value>TipeeeStream</value>
   </data>
