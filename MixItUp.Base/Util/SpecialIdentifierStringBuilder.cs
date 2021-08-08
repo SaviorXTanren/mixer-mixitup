@@ -506,6 +506,7 @@ namespace MixItUp.Base.Util
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<TwitchSessionService>().StreamNewAPI?.viewer_count.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewscount", ServiceManager.Get<TwitchSessionService>().UserNewAPI?.view_count.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<TwitchSessionService>().StreamNewAPI.title);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gameimage", ServiceManager.Get<TwitchSessionService>().StreamNewAPI.thumbnail_url);
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceManager.Get<TwitchSessionService>().StreamNewAPI.game_name);
 
                     if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount"))
@@ -868,6 +869,7 @@ namespace MixItUp.Base.Util
                             this.ReplaceSpecialIdentifier(userStreamHeader + "viewercount", ServiceManager.Get<TwitchSessionService>().StreamNewAPI?.viewer_count.ToString());
                             this.ReplaceSpecialIdentifier(userStreamHeader + "viewscount", ServiceManager.Get<TwitchSessionService>().UserNewAPI?.view_count.ToString());
                             this.ReplaceSpecialIdentifier(userStreamHeader + "title", ServiceManager.Get<TwitchSessionService>().StreamNewAPI.title);
+                            this.ReplaceSpecialIdentifier(userStreamHeader + "gameimage", ServiceManager.Get<TwitchSessionService>().StreamNewAPI.thumbnail_url);
                             this.ReplaceSpecialIdentifier(userStreamHeader + "game", ServiceManager.Get<TwitchSessionService>().StreamNewAPI.game_name);
 
                             if (this.ContainsSpecialIdentifier(userStreamHeader + "followercount"))
