@@ -277,7 +277,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap" Width="450">Mix It Up is a desktop-only application, so your settings and data only exist on their computer. Therefore we encourge our users to set up automatic backups for their settings to ensure you always have something to fall back to in the event of any issues:</TextBlock>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap" Width="450">Mix It Up is a desktop-only application, so your settings and data only exist on your computer. Therefore we encourge users to set up automatic backups for your settings to ensure you always have something to fall back to in the event of any issues:</TextBlock>
 
                             <Grid Grid.Column="2">
                                 <Grid.RowDefinitions>
