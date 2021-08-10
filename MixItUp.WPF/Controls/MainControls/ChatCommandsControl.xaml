@@ -171,7 +171,7 @@
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" MinWidth="200" Width="*" />
                                             <DataGridTextColumn Header="{x:Static resx:Resources.Commands}" Binding="{Binding TriggersString}" IsReadOnly="True" MinWidth="125" Width="125" />
-                                            <DataGridTextColumn Header="{x:Static resx:Resources.Permissions}" Binding="{Binding Requirements.Role.Role, Converter={StaticResource LocalizationConverter}}" IsReadOnly="True" MinWidth="115" Width="115" />
+                                            <DataGridTextColumn Header="{x:Static resx:Resources.Permissions}" Binding="{Binding Requirements.Role.DisplayRole, Converter={StaticResource LocalizationConverter}}" IsReadOnly="True" MinWidth="115" Width="115" />
                                             <DataGridTextColumn Binding="{Binding Requirements.Cooldown.IndividualAmount}" IsReadOnly="True" MinWidth="60" Width="60">
                                                 <DataGridTextColumn.Header>
                                                     <Grid HorizontalAlignment="Center" Background="Transparent">
