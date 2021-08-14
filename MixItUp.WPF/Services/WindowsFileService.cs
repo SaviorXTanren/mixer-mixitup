@@ -77,6 +77,22 @@ namespace MixItUp.WPF.Services
             return File.Exists(filePath);
         }
 
+        public long GetFileSize(string filePath)
+        {
+            if (this.FileExists(filePath))
+            {
+                try
+                {
+                    return new FileInfo(filePath).Length;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+            }
+            return 0;
+        }
+
         public async Task<string> ReadFile(string filePath)
         {
             try

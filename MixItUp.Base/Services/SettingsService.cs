@@ -238,6 +238,12 @@ namespace MixItUp.Base.Services
             {
                 Logger.Log(LogLevel.Debug, "Settings local backup save operation started");
 
+                if (ChannelSession.Services.FileService.GetFileSize(settings.SettingsFilePath) == 0)
+                {
+                    Logger.Log(LogLevel.Debug, "Main settings file is empty, aborting local backup settings save operation");
+                    return;
+                }
+
                 await semaphore.WaitAndRelease(async () =>
                 {
                     await FileSerializerHelper.SerializeToFile(settings.SettingsLocalBackupFilePath, settings);
