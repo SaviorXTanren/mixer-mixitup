@@ -76,6 +76,7 @@ namespace MixItUp.Base.Services.External
         public string type { get; set; }
         public bool hidden { get; set; }
         public JToken component { get; set; }
+        public string olid { get; set; }
 
         public string ID { get; set; }
         public string Name { get; set; }
@@ -87,13 +88,20 @@ namespace MixItUp.Base.Services.External
             {
                 this.Name = imageName.ToString();
             }
-            else if (string.Equals(this.type, "url"))
+            else if (string.Equals(this.type, "url") && this.component != null)
             {
                 this.Name = this.component.ToString();
             }
             else if (string.Equals(this.type, "overlay"))
             {
-                this.OverlayID = this.component.ToString();
+                if (this.component != null)
+                {
+                    this.OverlayID = this.component.ToString();
+                }
+                else
+                {
+                    this.OverlayID = this.olid;
+                }
             }
         }
     }
