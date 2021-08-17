@@ -22,6 +22,9 @@ namespace MixItUp.Base.Model.User.Platform
         [DataMember]
         public Dictionary<string, int> BadgeInfo { get; set; } = new Dictionary<string, int>();
 
+        [DataMember]
+        public long TotalBitsCheered { get; set; }
+
         public TwitchUserPlatformV2Model(UserModel user)
         {
             this.Platform = StreamingPlatformTypeEnum.Twitch;

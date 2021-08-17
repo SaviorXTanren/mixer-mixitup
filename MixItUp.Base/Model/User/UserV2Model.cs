@@ -43,25 +43,6 @@ namespace MixItUp.Base.Model.User
         public uint ModerationStrikes { get; set; }
 
         [DataMember]
-        public long TotalStreamsWatched { get; set; }
-        [DataMember]
-        public long TotalAmountDonated { get; set; }
-        [DataMember]
-        public long TotalBitsCheered { get; set; }
-        [DataMember]
-        public long TotalSubsGifted { get; set; }
-        [DataMember]
-        public long TotalSubsReceived { get; set; }
-        [DataMember]
-        public long TotalChatMessageSent { get; set; }
-        [DataMember]
-        public long TotalTimesTagged { get; set; }
-        [DataMember]
-        public long TotalCommandsRun { get; set; }
-        [DataMember]
-        public long TotalMonthsSubbed { get; set; }
-
-        [DataMember]
         public string Notes { get; set; }
 
         [DataMember]
@@ -162,15 +143,6 @@ namespace MixItUp.Base.Model.User
 
             this.IsSpecialtyExcluded = other.IsSpecialtyExcluded;
             this.PatreonUserID = other.PatreonUserID;
-
-            this.TotalStreamsWatched += other.TotalStreamsWatched;
-            this.TotalAmountDonated += other.TotalAmountDonated;
-            this.TotalSubsGifted += other.TotalSubsGifted;
-            this.TotalSubsReceived += other.TotalSubsReceived;
-            this.TotalChatMessageSent += other.TotalChatMessageSent;
-            this.TotalTimesTagged += other.TotalTimesTagged;
-            this.TotalCommandsRun += other.TotalCommandsRun;
-            this.TotalMonthsSubbed += other.TotalMonthsSubbed;
 
             this.Notes += other.Notes;
         }
