@@ -156,6 +156,27 @@ namespace MixItUp.Base.Services.External
             return new Result(MixItUp.Base.Resources.VTubeStudioConnectionFailed);
         }
 
+        public override async Task<Result> Connect(OAuthTokenModel token)
+        {
+            try
+            {
+                this.token = token;
+                if (await this.ConnectWebSocket())
+                {
+                    VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(new VTubeStudioWebSocketRequestPacket("APIStateRequest"));
+                    if (response != null && response.data != null && response.data.ContainsKey("active"))
+                    {
+                        return await this.InitializeInternal();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            return new Result(MixItUp.Base.Resources.VTubeStudioConnectionFailed);
+        }
+
         public override async Task Disconnect()
         {
             this.token = null;

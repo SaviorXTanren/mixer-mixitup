@@ -16749,7 +16749,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to VTube Studio connectivity allows you to control functionality in the VTube Studio software, such as changing the currently displayed model and triggering hot keys within the application..
+        ///   Looks up a localized string similar to VTube Studio connectivity allows you to control functionality in the VTube Studio software, such as changing the currently displayed model and triggering hot keys within the application. To connect to VTube Studio, please ensure the software is running and the API is enabled on the settings menu..
         /// </summary>
         public static string VTubeStudioInfo {
             get {
