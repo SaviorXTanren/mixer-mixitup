@@ -52,6 +52,7 @@ namespace MixItUp.Base.Services
         public IStreamlootsService Streamloots { get; protected set; }
         public IJustGivingService JustGiving { get; protected set; }
         public PixelChatService PixelChat { get; protected set; }
+        public IVoicemodService Voicemod { get; protected internal set; }
         public VTubeStudioService VTubeStudio { get; protected set; }
 
         public TwitchStatusService TwitchStatus { get; protected set; }

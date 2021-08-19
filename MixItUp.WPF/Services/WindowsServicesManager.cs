@@ -3,6 +3,8 @@ using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Services.DeveloperAPI;
+using StreamingClient.Base.Util;
+using System;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Services
@@ -55,6 +57,7 @@ namespace MixItUp.WPF.Services
             this.Twitter = new TwitterService();
             this.PixelChat = new PixelChatService();
             this.VTubeStudio = new VTubeStudioService();
+            this.Voicemod = new VoicemodEmptyService();
             this.OvrStream = new WindowsOvrStreamService();
             this.Overlay = new OverlayService();
 

@@ -16614,6 +16614,51 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Voice Change On/Off.
+        /// </summary>
+        public static string VoiceChangerOnOff {
+            get {
+                return ResourceManager.GetString("VoiceChangerOnOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voicemod.
+        /// </summary>
+        public static string Voicemod {
+            get {
+                return ResourceManager.GetString("Voicemod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voicemod connection failed, please ensure Voicemod is running..
+        /// </summary>
+        public static string VoicemodConnectionFailed {
+            get {
+                return ResourceManager.GetString("VoicemodConnectionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voicemod connectivity allows you to control functionality in the Voicemod software, such as enabling/disabling voice changing and changing the voice you&apos;re using..
+        /// </summary>
+        public static string VoicemodInfo {
+            get {
+                return ResourceManager.GetString("VoicemodInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voicemod not connected, please ensure the software is running and the service is connected on the Services page..
+        /// </summary>
+        public static string VoicemodNotConnected {
+            get {
+                return ResourceManager.GetString("VoicemodNotConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Volcano.
         /// </summary>
         public static string Volcano {
