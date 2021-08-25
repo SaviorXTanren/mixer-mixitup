@@ -4,6 +4,7 @@ using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Commands;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -53,7 +54,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.BlockLinksExemptComboBox.SelectedItem = ChannelSession.Settings.ModerationBlockLinksExcempt;
             this.BlockLinksApplyStrikesToggleButton.IsChecked = ChannelSession.Settings.ModerationBlockLinksApplyStrikes;
 
-            this.ChatInteractiveParticipationComboBox.ItemsSource = Enum.GetValues(typeof(ModerationChatInteractiveParticipationEnum));
+            this.ChatInteractiveParticipationComboBox.ItemsSource = EnumHelper.GetEnumList<ModerationChatInteractiveParticipationEnum>();
             this.ChatInteractiveParticipationComboBox.SelectedItem = ChannelSession.Settings.ModerationChatInteractiveParticipation;
             this.ChatParticipationExemptComboBox.SelectedItem = ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt;
 
