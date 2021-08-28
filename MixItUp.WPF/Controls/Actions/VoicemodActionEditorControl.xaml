@@ -19,11 +19,11 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Visibility="{Binding VoicemodNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,10" Text="{x:Static resx:Resources.VoicemodNotConnected}"/>
+        <TextBlock Grid.Row="0" Visibility="{Binding VoicemodNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,10" TextWrapping="Wrap" Text="{x:Static resx:Resources.VoicemodNotConnected}"/>
 
         <ComboBox Grid.Row="1" ItemsSource="{Binding ActionTypes}" SelectedItem="{Binding SelectedActionType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Action}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
             <ComboBox.ItemTemplate>
@@ -41,7 +41,7 @@
             <Grid Grid.Row="0" HorizontalAlignment="Right">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
@@ -49,5 +49,40 @@
                 <ToggleButton Grid.Column="2" IsChecked="{Binding State}" VerticalAlignment="Center"/>
             </Grid>
         </Grid>
+
+        <Grid Grid.Row="3" Visibility="{Binding ShowVoiceGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <ComboBox Grid.Column="0" ItemsSource="{Binding Voices}" SelectedItem="{Binding SelectedVoice}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Voice}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="friendlyName" />
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="3" Visibility="{Binding ShowRandomVoiceGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ComboBox Grid.Row="0" ItemsSource="{Binding RandomVoiceTypes}" SelectedItem="{Binding SelectedRandomVoiceType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Options}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </Grid>
+
+        <Grid Grid.Row="3" Visibility="{Binding ShowPlaySoundGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <ComboBox Grid.Column="0" ItemsSource="{Binding Sounds}" SelectedItem="{Binding SelectedSound}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Sound}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" />
+            </Grid>
+        </Grid>
+
     </Grid>
 </local:ActionEditorControlBase>

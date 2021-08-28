@@ -1,19 +1,46 @@
 ﻿using MixItUp.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.External
 {
-    public class VoicemodVoiceModel
+    public class VoicemodVoiceModel : IComparable<VoicemodVoiceModel>
     {
         public string voiceID { get; set; }
         public string friendlyName { get; set; }
+
+        public int CompareTo(VoicemodVoiceModel other) { return this.friendlyName.CompareTo(friendlyName); }
+    }
+
+    public class VoicemodMemeModel : IComparable<VoicemodMemeModel>
+    {
+        public string Name { get; set; }
+        public string FileName { get; set; }
+        public string Type { get; set; }
+        public string Image { get; set; }
+
+        public int CompareTo(VoicemodMemeModel other) { return this.Name.CompareTo(Name); }
+    }
+
+    public enum VoicemodRandomVoiceType
+    {
+        AllVoices,
+        FavoriteVoices,
+        CustomVoices,
     }
 
     public interface IVoicemodService : IOAuthExternalService
     {
-        Task VoiceChangerOnOff(bool state);
         Task<IEnumerable<VoicemodVoiceModel>> GetVoices();
+        Task VoiceChangerOnOff(bool state);
+        Task SelectVoice(string voiceID);
+        Task RandomVoice(VoicemodRandomVoiceType voiceType);
+
+        Task BeepSoundOnOff(bool state);
+
+        Task<IEnumerable<VoicemodMemeModel>> GetMemeSounds();
+        Task PlayMemeSound(string fileName);
     }
 
     public class VoicemodEmptyService : OAuthExternalServiceBase, IVoicemodService
@@ -26,9 +53,19 @@ namespace MixItUp.Base.Services.External
 
         public override Task Disconnect() { return Task.CompletedTask; }
 
+        public Task<IEnumerable<VoicemodVoiceModel>> GetVoices() { return Task.FromResult<IEnumerable<VoicemodVoiceModel>>(new List<VoicemodVoiceModel>()); }
+
         public Task VoiceChangerOnOff(bool state) { return Task.CompletedTask; }
 
-        public Task<IEnumerable<VoicemodVoiceModel>> GetVoices() { return Task.FromResult<IEnumerable<VoicemodVoiceModel>>(new List<VoicemodVoiceModel>()); }
+        public Task SelectVoice(string voiceID) { return Task.CompletedTask; }
+
+        public Task RandomVoice(VoicemodRandomVoiceType voiceType) { return Task.CompletedTask; }
+
+        public Task BeepSoundOnOff(bool state) { return Task.CompletedTask; }
+
+        public Task<IEnumerable<VoicemodMemeModel>> GetMemeSounds() { return Task.FromResult<IEnumerable<VoicemodMemeModel>>(new List<VoicemodMemeModel>()); }
+
+        public Task PlayMemeSound(string fileName) { return Task.CompletedTask; }
 
         protected override Task<Result> InitializeInternal() { return Task.FromResult(new Result(success: false)); }
 

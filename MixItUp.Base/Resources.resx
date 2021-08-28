@@ -5946,4 +5946,31 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="VoiceChangerOnOff" xml:space="preserve">
     <value>Voice Change On/Off</value>
   </data>
+  <data name="AllVoices" xml:space="preserve">
+    <value>All Voices</value>
+  </data>
+  <data name="CustomVoices" xml:space="preserve">
+    <value>Custom Voices</value>
+  </data>
+  <data name="FavoriteVoices" xml:space="preserve">
+    <value>Favorite Voices</value>
+  </data>
+  <data name="BeepSoundOnOff" xml:space="preserve">
+    <value>Beep Sound On/Off</value>
+  </data>
+  <data name="PlaySound" xml:space="preserve">
+    <value>Play Sound</value>
+  </data>
+  <data name="RandomVoice" xml:space="preserve">
+    <value>Random Voice</value>
+  </data>
+  <data name="SelectVoice" xml:space="preserve">
+    <value>Select Voice</value>
+  </data>
+  <data name="VoicemodActionMissingSound" xml:space="preserve">
+    <value>Voicemod Action: Missing Sound</value>
+  </data>
+  <data name="VoicemodActionMissingVoice" xml:space="preserve">
+    <value>Voicemod Action: Missing Voice</value>
+  </data>
 </root>

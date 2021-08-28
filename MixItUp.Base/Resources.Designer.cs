@@ -583,6 +583,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All Voices.
+        /// </summary>
+        public static string AllVoices {
+            get {
+                return ResourceManager.GetString("AllVoices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Alt.
         /// </summary>
         public static string Alt {
@@ -1012,6 +1021,15 @@ namespace MixItUp.Base {
         public static string BaudRate {
             get {
                 return ResourceManager.GetString("BaudRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Beep Sound On/Off.
+        /// </summary>
+        public static string BeepSoundOnOff {
+            get {
+                return ResourceManager.GetString("BeepSoundOnOff", resourceCulture);
             }
         }
         
@@ -3030,6 +3048,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Custom Voices.
+        /// </summary>
+        public static string CustomVoices {
+            get {
+                return ResourceManager.GetString("CustomVoices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cyan.
         /// </summary>
         public static string Cyan {
@@ -4577,6 +4604,15 @@ namespace MixItUp.Base {
         public static string Fast {
             get {
                 return ResourceManager.GetString("Fast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Favorite Voices.
+        /// </summary>
+        public static string FavoriteVoices {
+            get {
+                return ResourceManager.GetString("FavoriteVoices", resourceCulture);
             }
         }
         
@@ -10768,6 +10804,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Play Sound.
+        /// </summary>
+        public static string PlaySound {
+            get {
+                return ResourceManager.GetString("PlaySound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Play Title.
         /// </summary>
         public static string PlayTitle {
@@ -11295,6 +11340,15 @@ namespace MixItUp.Base {
         public static string RandomizeTimers {
             get {
                 return ResourceManager.GetString("RandomizeTimers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Random Voice.
+        /// </summary>
+        public static string RandomVoice {
+            get {
+                return ResourceManager.GetString("RandomVoice", resourceCulture);
             }
         }
         
@@ -12532,6 +12586,15 @@ namespace MixItUp.Base {
         public static string SelectRandom {
             get {
                 return ResourceManager.GetString("SelectRandom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Voice.
+        /// </summary>
+        public static string SelectVoice {
+            get {
+                return ResourceManager.GetString("SelectVoice", resourceCulture);
             }
         }
         
@@ -16628,6 +16691,24 @@ namespace MixItUp.Base {
         public static string Voicemod {
             get {
                 return ResourceManager.GetString("Voicemod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voicemod Action: Missing Sound.
+        /// </summary>
+        public static string VoicemodActionMissingSound {
+            get {
+                return ResourceManager.GetString("VoicemodActionMissingSound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voicemod Action: Missing Voice.
+        /// </summary>
+        public static string VoicemodActionMissingVoice {
+            get {
+                return ResourceManager.GetString("VoicemodActionMissingVoice", resourceCulture);
             }
         }
         
