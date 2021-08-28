@@ -3,6 +3,7 @@ using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -47,7 +48,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool ShowVoiceGrid { get { return this.SelectedActionType == VoicemodActionTypeEnum.SelectVoice; } }
 
-        public SortableObservableCollection<VoicemodVoiceModel> Voices { get; set; } = new SortableObservableCollection<VoicemodVoiceModel>();
+        public ObservableCollection<VoicemodVoiceModel> Voices { get; set; } = new ObservableCollection<VoicemodVoiceModel>();
 
         public VoicemodVoiceModel SelectedVoice
         {
@@ -77,7 +78,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool ShowPlaySoundGrid { get { return this.SelectedActionType == VoicemodActionTypeEnum.PlaySound; } }
 
-        public SortableObservableCollection<VoicemodMemeModel> Sounds { get; set; } = new SortableObservableCollection<VoicemodMemeModel>();
+        public ObservableCollection<VoicemodMemeModel> Sounds { get; set; } = new ObservableCollection<VoicemodMemeModel>();
 
         public VoicemodMemeModel SelectedSound
         {
@@ -171,7 +172,7 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             if (this.VoicemodConnected)
             {
-                foreach (VoicemodVoiceModel voice in await ChannelSession.Services.Voicemod.GetVoices())
+                foreach (VoicemodVoiceModel voice in (await ChannelSession.Services.Voicemod.GetVoices()).OrderBy(v => v.friendlyName))
                 {
                     this.Voices.Add(voice);
                 }
@@ -181,7 +182,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.SelectedVoice = this.Voices.FirstOrDefault(v => string.Equals(this.voiceID, v.voiceID));
                 }
 
-                foreach (VoicemodMemeModel sound in await ChannelSession.Services.Voicemod.GetMemeSounds())
+                foreach (VoicemodMemeModel sound in (await ChannelSession.Services.Voicemod.GetMemeSounds()).OrderBy(v => v.Name))
                 {
                     this.Sounds.Add(sound);
                 }

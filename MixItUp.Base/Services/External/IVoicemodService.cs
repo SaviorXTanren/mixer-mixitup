@@ -1,26 +1,21 @@
 ﻿using MixItUp.Base.Util;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.External
 {
-    public class VoicemodVoiceModel : IComparable<VoicemodVoiceModel>
+    public class VoicemodVoiceModel
     {
         public string voiceID { get; set; }
         public string friendlyName { get; set; }
-
-        public int CompareTo(VoicemodVoiceModel other) { return this.friendlyName.CompareTo(friendlyName); }
     }
 
-    public class VoicemodMemeModel : IComparable<VoicemodMemeModel>
+    public class VoicemodMemeModel
     {
         public string Name { get; set; }
         public string FileName { get; set; }
         public string Type { get; set; }
         public string Image { get; set; }
-
-        public int CompareTo(VoicemodMemeModel other) { return this.Name.CompareTo(Name); }
     }
 
     public enum VoicemodRandomVoiceType
