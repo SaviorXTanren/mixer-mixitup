@@ -5973,4 +5973,28 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="VoicemodActionMissingVoice" xml:space="preserve">
     <value>Voicemod Action: Missing Voice</value>
   </data>
+  <data name="MoveModel" xml:space="preserve">
+    <value>Move Model</value>
+  </data>
+  <data name="RelativeToModel" xml:space="preserve">
+    <value>Relative To Model</value>
+  </data>
+  <data name="VTubeStudioActionModelSize" xml:space="preserve">
+    <value>Size (+/- 100.0)</value>
+  </data>
+  <data name="VTubeStudioActionMoveModelInvalidTime" xml:space="preserve">
+    <value>VTube Studio Action: A non-negative number must be specified for movement time</value>
+  </data>
+  <data name="VTubeStudioActionRotation" xml:space="preserve">
+    <value>Rotation (+/- 360.0)</value>
+  </data>
+  <data name="VTubeStudioActionTimeInSeconds" xml:space="preserve">
+    <value>Time Span (0.0 - 2.0 Seconds)</value>
+  </data>
+  <data name="VTubeStudioActionXMovement" xml:space="preserve">
+    <value>X Movement (+/- 5.0)</value>
+  </data>
+  <data name="VTubeStudioActionYMovement" xml:space="preserve">
+    <value>Y Movement (+/- 5.0)</value>
+  </data>
 </root>

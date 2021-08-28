@@ -9238,6 +9238,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Move Model.
+        /// </summary>
+        public static string MoveModel {
+            get {
+                return ResourceManager.GetString("MoveModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Move Up.
         /// </summary>
         public static string MoveUp {
@@ -11601,6 +11610,15 @@ namespace MixItUp.Base {
         public static string RegularStatusOnlineViewingTime {
             get {
                 return ResourceManager.GetString("RegularStatusOnlineViewingTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Relative To Model.
+        /// </summary>
+        public static string RelativeToModel {
+            get {
+                return ResourceManager.GetString("RelativeToModel", resourceCulture);
             }
         }
         
@@ -16799,6 +16817,60 @@ namespace MixItUp.Base {
         public static string VTubeStudioActionMissingModel {
             get {
                 return ResourceManager.GetString("VTubeStudioActionMissingModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Size (+/- 100.0).
+        /// </summary>
+        public static string VTubeStudioActionModelSize {
+            get {
+                return ResourceManager.GetString("VTubeStudioActionModelSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VTube Studio Action: A non-negative number must be specified for movement time.
+        /// </summary>
+        public static string VTubeStudioActionMoveModelInvalidTime {
+            get {
+                return ResourceManager.GetString("VTubeStudioActionMoveModelInvalidTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rotation (+/- 360.0).
+        /// </summary>
+        public static string VTubeStudioActionRotation {
+            get {
+                return ResourceManager.GetString("VTubeStudioActionRotation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time Span (0.0 - 2.0 Seconds).
+        /// </summary>
+        public static string VTubeStudioActionTimeInSeconds {
+            get {
+                return ResourceManager.GetString("VTubeStudioActionTimeInSeconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X Movement (+/- 5.0).
+        /// </summary>
+        public static string VTubeStudioActionXMovement {
+            get {
+                return ResourceManager.GetString("VTubeStudioActionXMovement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Y Movement (+/- 5.0).
+        /// </summary>
+        public static string VTubeStudioActionYMovement {
+            get {
+                return ResourceManager.GetString("VTubeStudioActionYMovement", resourceCulture);
             }
         }
         
