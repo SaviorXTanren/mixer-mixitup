@@ -16758,7 +16758,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Voicemod not connected, please ensure the software is running and the service is connected on the Services page..
+        ///   Looks up a localized string similar to Voicemod not connected, please ensure the software is running and is connected on the Services page..
         /// </summary>
         public static string VoicemodNotConnected {
             get {
@@ -16929,7 +16929,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to VTube Studio not connected, please ensure the software is running and the service is connected on the Services page..
+        ///   Looks up a localized string similar to VTube Studio not connected, please ensure the software is running and is connected on the Services page..
         /// </summary>
         public static string VTubeStudioNotConnected {
             get {

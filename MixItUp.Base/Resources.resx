@@ -5929,10 +5929,10 @@ Failure to do one of the following could effect how users rate &amp; review your
     <value>Model</value>
   </data>
   <data name="VTubeStudioNotConnected" xml:space="preserve">
-    <value>VTube Studio not connected, please ensure the software is running and the service is connected on the Services page.</value>
+    <value>VTube Studio not connected, please ensure the software is running and is connected on the Services page.</value>
   </data>
   <data name="VoicemodNotConnected" xml:space="preserve">
-    <value>Voicemod not connected, please ensure the software is running and the service is connected on the Services page.</value>
+    <value>Voicemod not connected, please ensure the software is running and is connected on the Services page.</value>
   </data>
   <data name="VoicemodConnectionFailed" xml:space="preserve">
     <value>Voicemod connection failed, please ensure Voicemod is running.</value>

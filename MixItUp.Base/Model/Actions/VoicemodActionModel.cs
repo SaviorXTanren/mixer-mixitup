@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Util;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -55,6 +56,15 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
+            if (ChannelSession.Settings.EnableVoicemodStudio && !ChannelSession.Services.Voicemod.IsConnected)
+            {
+                Result result = await ChannelSession.Services.Voicemod.Connect();
+                if (!result.Success)
+                {
+                    return;
+                }
+            }
+
             if (ChannelSession.Services.Voicemod.IsConnected)
             {
                 if (this.ActionType == VoicemodActionTypeEnum.VoiceChangerOnOff)

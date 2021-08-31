@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Util;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -63,6 +64,15 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
+            if (ChannelSession.Settings.VTubeStudioOAuthToken != null && !ChannelSession.Services.VTubeStudio.IsConnected)
+            {
+                Result result = await ChannelSession.Services.VTubeStudio.Connect(ChannelSession.Settings.VTubeStudioOAuthToken);
+                if (!result.Success)
+                {
+                    return;
+                }
+            }
+
             if (ChannelSession.Services.VTubeStudio.IsConnected)
             {
                 if (this.ActionType == VTubeStudioActionTypeEnum.LoadModel)

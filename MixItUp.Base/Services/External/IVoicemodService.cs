@@ -25,7 +25,7 @@ namespace MixItUp.Base.Services.External
         CustomVoices,
     }
 
-    public interface IVoicemodService : IOAuthExternalService
+    public interface IVoicemodService : IExternalService
     {
         Task<IEnumerable<VoicemodVoiceModel>> GetVoices();
         Task VoiceChangerOnOff(bool state);
@@ -39,15 +39,17 @@ namespace MixItUp.Base.Services.External
         Task StopAllMemeSounds();
     }
 
-    public class VoicemodEmptyService : OAuthExternalServiceBase, IVoicemodService
+    public class VoicemodEmptyService : IVoicemodService
     {
-        public override string Name { get { return "Voicemod"; } }
+        public string Name { get { return "Voicemod"; } }
 
-        public VoicemodEmptyService() : base(string.Empty) { }
+        public bool IsConnected { get { return false; } }
 
-        public override Task<Result> Connect() { return Task.FromResult(new Result(success: false)); }
+        public VoicemodEmptyService() { }
 
-        public override Task Disconnect() { return Task.CompletedTask; }
+        public Task<Result> Connect() { return Task.FromResult(new Result(success: false)); }
+
+        public Task Disconnect() { return Task.CompletedTask; }
 
         public Task<IEnumerable<VoicemodVoiceModel>> GetVoices() { return Task.FromResult<IEnumerable<VoicemodVoiceModel>>(new List<VoicemodVoiceModel>()); }
 
@@ -64,9 +66,5 @@ namespace MixItUp.Base.Services.External
         public Task PlayMemeSound(string fileName) { return Task.CompletedTask; }
 
         public Task StopAllMemeSounds() { return Task.CompletedTask; }
-
-        protected override Task<Result> InitializeInternal() { return Task.FromResult(new Result(success: false)); }
-
-        protected override Task RefreshOAuthToken() { return Task.CompletedTask; }
     }
 }

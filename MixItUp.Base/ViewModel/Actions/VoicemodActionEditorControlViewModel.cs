@@ -174,6 +174,15 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override async Task OnLoadedInternal()
         {
+            if (ChannelSession.Settings.EnableVoicemodStudio && !ChannelSession.Services.Voicemod.IsConnected)
+            {
+                Result result = await ChannelSession.Services.Voicemod.Connect();
+                if (!result.Success)
+                {
+                    return;
+                }
+            }
+
             if (this.VoicemodConnected)
             {
                 foreach (VoicemodVoiceModel voice in (await ChannelSession.Services.Voicemod.GetVoices()).OrderBy(v => v.friendlyName))
