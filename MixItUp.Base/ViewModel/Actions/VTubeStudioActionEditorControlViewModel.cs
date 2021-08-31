@@ -6,6 +6,7 @@ using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Actions
 {
@@ -26,6 +27,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.selectedActionType = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged("ShowLoadModelGrid");
+                this.NotifyPropertyChanged("ShowMoveModelGrid");
                 this.NotifyPropertyChanged("ShowRunHotKeyGrid");
             }
         }
@@ -54,6 +56,76 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private VTubeStudioModel selectedModel;
+
+        public bool ShowMoveModelGrid { get { return this.SelectedActionType == VTubeStudioActionTypeEnum.MoveModel; } }
+
+        public double TimeInSeconds
+        {
+            get { return this.timeInSeconds; }
+            set
+            {
+                this.timeInSeconds = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private double timeInSeconds;
+
+        public bool RelativeToModel
+        {
+            get { return this.relativeToModel; }
+            set
+            {
+                this.relativeToModel = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool relativeToModel;
+
+        public double? MovementX
+        {
+            get { return this.movementX; }
+            set
+            {
+                this.movementX = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private double? movementX;
+
+        public double? MovementY
+        {
+            get { return this.movementY; }
+            set
+            {
+                this.movementY = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private double? movementY;
+
+        public double? Rotation
+        {
+            get { return this.rotation; }
+            set
+            {
+                this.rotation = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private double? rotation;
+
+        public double? Size
+        {
+            get { return this.size; }
+            set
+            {
+                this.size = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private double? size;
+
+        public ICommand GetCurrentModelMovementCommand { get; set; }
 
         public bool ShowRunHotKeyGrid { get { return this.SelectedActionType == VTubeStudioActionTypeEnum.RunHotKey; } }
 
@@ -95,6 +167,15 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.modelID = action.ModelID;
             }
+            else if (this.ShowMoveModelGrid)
+            {
+                this.TimeInSeconds = action.MovementTimeInSeconds;
+                this.RelativeToModel = action.MovementRelative;
+                this.MovementX = action.MovementX;
+                this.MovementY = action.MovementY;
+                this.Rotation = action.Rotation;
+                this.Size = action.Size;
+            }
             else if (this.ShowRunHotKeyGrid)
             {
                 this.modelID = action.ModelID;
@@ -114,6 +195,13 @@ namespace MixItUp.Base.ViewModel.Actions
                     {
                         return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.VTubeStudioActionMissingModel));
                     }
+                }
+            }
+            else if (this.ShowMoveModelGrid)
+            {
+                if (this.TimeInSeconds < 0)
+                {
+                    return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.VTubeStudioActionMoveModelInvalidTime));
                 }
             }
             else if (this.ShowRunHotKeyGrid)
@@ -142,6 +230,10 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 return Task.FromResult<ActionModelBase>(VTubeStudioActionModel.CreateForModelLoad(this.SelectedModel?.modelID ?? this.modelID));
             }
+            else if (this.ShowMoveModelGrid)
+            {
+                return Task.FromResult<ActionModelBase>(VTubeStudioActionModel.CreateForMoveModel(this.TimeInSeconds, this.RelativeToModel, this.MovementX, this.MovementY, this.Rotation, this.Size));
+            }
             else if (this.ShowRunHotKeyGrid)
             {
                 if (this.SelectedHotKey != null)
@@ -158,6 +250,21 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override async Task OnLoadedInternal()
         {
+            this.GetCurrentModelMovementCommand = this.CreateCommand(async () =>
+            {
+                if (this.VTubeStudioConnected)
+                {
+                    VTubeStudioModel model = await ServiceManager.Get<VTubeStudioService>().GetCurrentModel();
+                    if (model != null && model.modelPosition != null)
+                    {
+                        this.MovementX = model.modelPosition.positionX;
+                        this.MovementY = model.modelPosition.positionY;
+                        this.Rotation = model.modelPosition.rotation;
+                        this.Size = model.modelPosition.size;
+                    }
+                }
+            });
+
             if (this.VTubeStudioConnected)
             {
                 this.CurrentModel = await ServiceManager.Get<VTubeStudioService>().GetCurrentModel();

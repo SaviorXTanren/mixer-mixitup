@@ -74,6 +74,15 @@ namespace MixItUp.Base
             ServiceManager.Add(new TwitterService());
             ServiceManager.Add(new PixelChatService());
             ServiceManager.Add(new VTubeStudioService());
+            try
+            {
+                Type voicemodServiceType = Type.GetType("MixItUp.Base.Services.External.VoicemodService");
+                if (voicemodServiceType != null)
+                {
+                    ServiceManager.Add((IVoicemodService)Activator.CreateInstance(voicemodServiceType));
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
 
             ServiceManager.Add(new TwitchSessionService());
             ServiceManager.Add(new TwitchStatusService());
@@ -287,6 +296,7 @@ namespace MixItUp.Base
                 if (ChannelSession.Settings.TwitterOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<TwitterService>()] = ChannelSession.Settings.TwitterOAuthToken; }
                 if (ChannelSession.Settings.PixelChatOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<PixelChatService>()] = ChannelSession.Settings.PixelChatOAuthToken; }
                 if (ChannelSession.Settings.VTubeStudioOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<VTubeStudioService>()] = ChannelSession.Settings.VTubeStudioOAuthToken; }
+                if (ChannelSession.Settings.EnableVoicemodStudio) { externalServiceToConnect[ServiceManager.Get<IVoicemodService>()] = null; }
                 if (ServiceManager.Get<IOBSStudioService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<IOBSStudioService>()] = null; }
                 if (ServiceManager.Get<StreamlabsOBSService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<StreamlabsOBSService>()] = null; }
                 if (ServiceManager.Get<XSplitService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<XSplitService>()] = null; }

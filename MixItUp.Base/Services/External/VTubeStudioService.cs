@@ -14,6 +14,15 @@ namespace MixItUp.Base.Services.External
         public bool modelLoaded { get; set; }
         public string modelName { get; set; }
         public string modelID { get; set; }
+        public VTubeStudioModelPosition modelPosition { get; set; }
+    }
+
+    public class VTubeStudioModelPosition
+    {
+        public double positionX { get; set; }
+        public double positionY { get; set; }
+        public double rotation { get; set; }
+        public double size { get; set; }
     }
 
     public class VTubeStudioHotKey
@@ -156,6 +165,27 @@ namespace MixItUp.Base.Services.External
             return new Result(MixItUp.Base.Resources.VTubeStudioConnectionFailed);
         }
 
+        public override async Task<Result> Connect(OAuthTokenModel token)
+        {
+            try
+            {
+                this.token = token;
+                if (await this.ConnectWebSocket())
+                {
+                    VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(new VTubeStudioWebSocketRequestPacket("APIStateRequest"));
+                    if (response != null && response.data != null && response.data.ContainsKey("active"))
+                    {
+                        return await this.InitializeInternal();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            return new Result(MixItUp.Base.Resources.VTubeStudioConnectionFailed);
+        }
+
         public override async Task Disconnect()
         {
             this.token = null;
@@ -205,6 +235,24 @@ namespace MixItUp.Base.Services.External
 
             VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(new VTubeStudioWebSocketRequestPacket("ModelLoadRequest", data));
             if (response != null && response.data != null && response.data.ContainsKey("modelID"))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> MoveModel(double timeInSeconds, bool relative, double? x, double? y, double? rotation, double? size)
+        {
+            JObject data = new JObject();
+            data["timeInSeconds"] = timeInSeconds;
+            data["valuesAreRelativeToModel"] = relative;
+            if (x.HasValue) { data["positionX"] = x; }
+            if (y.HasValue) { data["positionY"] = y; }
+            if (rotation.HasValue) { data["rotation"] = rotation; }
+            if (size.HasValue) { data["size"] = size; }
+
+            VTubeStudioWebSocketResponsePacket response = await this.websocket.SendAndReceive(new VTubeStudioWebSocketRequestPacket("MoveModelRequest", data));
+            if (response != null && response.data != null)
             {
                 return true;
             }

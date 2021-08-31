@@ -583,6 +583,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All Voices.
+        /// </summary>
+        public static string AllVoices {
+            get {
+                return ResourceManager.GetString("AllVoices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Alt.
         /// </summary>
         public static string Alt {
@@ -1012,6 +1021,15 @@ namespace MixItUp.Base {
         public static string BaudRate {
             get {
                 return ResourceManager.GetString("BaudRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Beep Sound On/Off.
+        /// </summary>
+        public static string BeepSoundOnOff {
+            get {
+                return ResourceManager.GetString("BeepSoundOnOff", resourceCulture);
             }
         }
         
@@ -3030,6 +3048,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Custom Voices.
+        /// </summary>
+        public static string CustomVoices {
+            get {
+                return ResourceManager.GetString("CustomVoices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cyan.
         /// </summary>
         public static string Cyan {
@@ -4586,6 +4613,15 @@ namespace MixItUp.Base {
         public static string Fast {
             get {
                 return ResourceManager.GetString("Fast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Favorite Voices.
+        /// </summary>
+        public static string FavoriteVoices {
+            get {
+                return ResourceManager.GetString("FavoriteVoices", resourceCulture);
             }
         }
         
@@ -9229,6 +9265,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Move Model.
+        /// </summary>
+        public static string MoveModel {
+            get {
+                return ResourceManager.GetString("MoveModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Move Up.
         /// </summary>
         public static string MoveUp {
@@ -10804,6 +10849,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Play Sound.
+        /// </summary>
+        public static string PlaySound {
+            get {
+                return ResourceManager.GetString("PlaySound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Play Title.
         /// </summary>
         public static string PlayTitle {
@@ -11335,6 +11389,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Random Voice.
+        /// </summary>
+        public static string RandomVoice {
+            get {
+                return ResourceManager.GetString("RandomVoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rank.
         /// </summary>
         public static string Rank {
@@ -11583,6 +11646,15 @@ namespace MixItUp.Base {
         public static string RegularStatusOnlineViewingTime {
             get {
                 return ResourceManager.GetString("RegularStatusOnlineViewingTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Relative To Model.
+        /// </summary>
+        public static string RelativeToModel {
+            get {
+                return ResourceManager.GetString("RelativeToModel", resourceCulture);
             }
         }
         
@@ -12568,6 +12640,15 @@ namespace MixItUp.Base {
         public static string SelectRandom {
             get {
                 return ResourceManager.GetString("SelectRandom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Voice.
+        /// </summary>
+        public static string SelectVoice {
+            get {
+                return ResourceManager.GetString("SelectVoice", resourceCulture);
             }
         }
         
@@ -16659,6 +16740,69 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Voice Change On/Off.
+        /// </summary>
+        public static string VoiceChangerOnOff {
+            get {
+                return ResourceManager.GetString("VoiceChangerOnOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voicemod.
+        /// </summary>
+        public static string Voicemod {
+            get {
+                return ResourceManager.GetString("Voicemod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voicemod Action: Missing Sound.
+        /// </summary>
+        public static string VoicemodActionMissingSound {
+            get {
+                return ResourceManager.GetString("VoicemodActionMissingSound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voicemod Action: Missing Voice.
+        /// </summary>
+        public static string VoicemodActionMissingVoice {
+            get {
+                return ResourceManager.GetString("VoicemodActionMissingVoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voicemod connection failed, please ensure Voicemod is running..
+        /// </summary>
+        public static string VoicemodConnectionFailed {
+            get {
+                return ResourceManager.GetString("VoicemodConnectionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voicemod connectivity allows you to control functionality in the Voicemod software, such as enabling/disabling voice changing and changing the voice you&apos;re using..
+        /// </summary>
+        public static string VoicemodInfo {
+            get {
+                return ResourceManager.GetString("VoicemodInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voicemod not connected, please ensure the software is running and the service is connected on the Services page..
+        /// </summary>
+        public static string VoicemodNotConnected {
+            get {
+                return ResourceManager.GetString("VoicemodNotConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Volcano.
         /// </summary>
         public static string Volcano {
@@ -16722,6 +16866,60 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Size (+/- 100.0).
+        /// </summary>
+        public static string VTubeStudioActionModelSize {
+            get {
+                return ResourceManager.GetString("VTubeStudioActionModelSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VTube Studio Action: A non-negative number must be specified for movement time.
+        /// </summary>
+        public static string VTubeStudioActionMoveModelInvalidTime {
+            get {
+                return ResourceManager.GetString("VTubeStudioActionMoveModelInvalidTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rotation (+/- 360.0).
+        /// </summary>
+        public static string VTubeStudioActionRotation {
+            get {
+                return ResourceManager.GetString("VTubeStudioActionRotation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time Span (0.0 - 2.0 Seconds).
+        /// </summary>
+        public static string VTubeStudioActionTimeInSeconds {
+            get {
+                return ResourceManager.GetString("VTubeStudioActionTimeInSeconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X Movement (+/- 5.0).
+        /// </summary>
+        public static string VTubeStudioActionXMovement {
+            get {
+                return ResourceManager.GetString("VTubeStudioActionXMovement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Y Movement (+/- 5.0).
+        /// </summary>
+        public static string VTubeStudioActionYMovement {
+            get {
+                return ResourceManager.GetString("VTubeStudioActionYMovement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to VTube Studio connection failed, please ensure VTube Studio is running, the API is enabled on the settings menu, and you have approved access within a timely manner..
         /// </summary>
         public static string VTubeStudioConnectionFailed {
@@ -16749,7 +16947,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to VTube Studio connectivity allows you to control functionality in the VTube Studio software, such as changing the currently displayed model and triggering hot keys within the application..
+        ///   Looks up a localized string similar to VTube Studio connectivity allows you to control functionality in the VTube Studio software, such as changing the currently displayed model and triggering hot keys within the application. To connect to VTube Studio, please ensure the software is running and the API is enabled on the settings menu..
         /// </summary>
         public static string VTubeStudioInfo {
             get {

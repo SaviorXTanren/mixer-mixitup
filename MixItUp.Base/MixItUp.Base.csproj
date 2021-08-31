@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Compile Include="..\..\Mix It Up Web\MixItUpSecrets.cs" Link="MixItUpSecrets.cs" />
+    <Compile Include="..\..\Mix It Up Web\Services\External\VoicemodService.cs" Link="Services\External\VoicemodService.cs" />
   </ItemGroup>
 
   <ItemGroup>

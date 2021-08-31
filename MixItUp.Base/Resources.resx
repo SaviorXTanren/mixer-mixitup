@@ -5911,7 +5911,7 @@ Failure to do one of the following could effect how users rate &amp; review your
     <value>VTube Studio connection failed, please ensure VTube Studio is running, the API is enabled on the settings menu, and you have approved access within a timely manner.</value>
   </data>
   <data name="VTubeStudioInfo" xml:space="preserve">
-    <value>VTube Studio connectivity allows you to control functionality in the VTube Studio software, such as changing the currently displayed model and triggering hot keys within the application.</value>
+    <value>VTube Studio connectivity allows you to control functionality in the VTube Studio software, such as changing the currently displayed model and triggering hot keys within the application. To connect to VTube Studio, please ensure the software is running and the API is enabled on the settings menu.</value>
   </data>
   <data name="LoadModel" xml:space="preserve">
     <value>Load Model</value>
@@ -5945,5 +5945,71 @@ Failure to do one of the following could effect how users rate &amp; review your
   </data>
   <data name="GameCommandHangmanAllowWordGuess" xml:space="preserve">
     <value>Allow Word Guess</value>
+  </data>
+  <data name="VoicemodNotConnected" xml:space="preserve">
+    <value>Voicemod not connected, please ensure the software is running and the service is connected on the Services page.</value>
+  </data>
+  <data name="VoicemodConnectionFailed" xml:space="preserve">
+    <value>Voicemod connection failed, please ensure Voicemod is running.</value>
+  </data>
+  <data name="Voicemod" xml:space="preserve">
+    <value>Voicemod</value>
+  </data>
+  <data name="VoicemodInfo" xml:space="preserve">
+    <value>Voicemod connectivity allows you to control functionality in the Voicemod software, such as enabling/disabling voice changing and changing the voice you're using.</value>
+  </data>
+  <data name="VoiceChangerOnOff" xml:space="preserve">
+    <value>Voice Change On/Off</value>
+  </data>
+  <data name="AllVoices" xml:space="preserve">
+    <value>All Voices</value>
+  </data>
+  <data name="CustomVoices" xml:space="preserve">
+    <value>Custom Voices</value>
+  </data>
+  <data name="FavoriteVoices" xml:space="preserve">
+    <value>Favorite Voices</value>
+  </data>
+  <data name="BeepSoundOnOff" xml:space="preserve">
+    <value>Beep Sound On/Off</value>
+  </data>
+  <data name="PlaySound" xml:space="preserve">
+    <value>Play Sound</value>
+  </data>
+  <data name="RandomVoice" xml:space="preserve">
+    <value>Random Voice</value>
+  </data>
+  <data name="SelectVoice" xml:space="preserve">
+    <value>Select Voice</value>
+  </data>
+  <data name="VoicemodActionMissingSound" xml:space="preserve">
+    <value>Voicemod Action: Missing Sound</value>
+  </data>
+  <data name="VoicemodActionMissingVoice" xml:space="preserve">
+    <value>Voicemod Action: Missing Voice</value>
+  </data>
+  <data name="MoveModel" xml:space="preserve">
+    <value>Move Model</value>
+  </data>
+  <data name="RelativeToModel" xml:space="preserve">
+    <value>Relative To Model</value>
+  </data>
+  <data name="VTubeStudioActionModelSize" xml:space="preserve">
+    <value>Size (+/- 100.0)</value>
+  </data>
+  <data name="VTubeStudioActionMoveModelInvalidTime" xml:space="preserve">
+    <value>VTube Studio Action: A non-negative number must be specified for movement time</value>
+  </data>
+  <data name="VTubeStudioActionRotation" xml:space="preserve">
+    <value>Rotation (+/- 360.0)</value>
+  </data>
+  <data name="VTubeStudioActionTimeInSeconds" xml:space="preserve">
+    <value>Time Span (0.0 - 2.0 Seconds)</value>
+  </data>
+  <data name="VTubeStudioActionXMovement" xml:space="preserve">
+    <value>X Movement (+/- 5.0)</value>
+  </data>
+  <data name="VTubeStudioActionYMovement" xml:space="preserve">
+    <value>Y Movement (+/- 5.0)</value>
   </data>
 </root>

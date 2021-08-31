@@ -23,7 +23,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Visibility="{Binding VTubeStudioNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,10" Text="{x:Static resx:Resources.VTubeStudioNotConnected}"/>
+        <TextBlock Grid.Row="0" Visibility="{Binding VTubeStudioNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,10" Text="{x:Static resx:Resources.VTubeStudioNotConnected}"/>
 
         <ComboBox Grid.Row="1" ItemsSource="{Binding ActionTypes}" SelectedItem="{Binding SelectedActionType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Action}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
             <ComboBox.ItemTemplate>
@@ -40,6 +40,53 @@
 
             <Grid Grid.Row="0">
                 <ComboBox Grid.Column="0" ItemsSource="{Binding Models}" SelectedItem="{Binding SelectedModel}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VTubeStudioModel}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="modelName" />
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="3" Visibility="{Binding ShowMoveModelGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" Text="{Binding TimeInSeconds}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VTubeStudioActionTimeInSeconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.RelativeToModel}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                <ToggleButton Grid.Column="4" IsChecked="{Binding RelativeToModel}" VerticalAlignment="Center"/>
+
+                <Button Grid.Column="6" Content="{x:Static resx:Resources.GetCurrent}" Command="{Binding GetCurrentModelMovementCommand}" />
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" Text="{Binding MovementX}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VTubeStudioActionXMovement}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <TextBox Grid.Column="2" Text="{Binding MovementY}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VTubeStudioActionYMovement}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <TextBox Grid.Column="4" Text="{Binding Rotation}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VTubeStudioActionRotation}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <TextBox Grid.Column="6" Text="{Binding Size}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VTubeStudioActionModelSize}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             </Grid>
         </Grid>
 

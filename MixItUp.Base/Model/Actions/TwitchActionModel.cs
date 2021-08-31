@@ -258,26 +258,25 @@ namespace MixItUp.Base.Model.Actions
                 }
                 else if (this.ActionType == TwitchActionType.VIPUser || this.ActionType == TwitchActionType.UnVIPUser)
                 {
-                    UserViewModel targetUser = null;
+                    string targetUsername = null;
                     if (!string.IsNullOrEmpty(this.Username))
                     {
-                        string username = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
-                        targetUser = ServiceManager.Get<UserService>().GetActiveUserByUsername(username, parameters.Platform);
+                        targetUsername = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
                     }
                     else
                     {
-                        targetUser = parameters.User;
+                        targetUsername = parameters.User.Username;
                     }
 
-                    if (targetUser != null)
+                    if (!string.IsNullOrEmpty(targetUsername))
                     {
                         if (this.ActionType == TwitchActionType.VIPUser)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage("/vip @" + targetUser.TwitchUsername, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                            await ServiceManager.Get<ChatService>().SendMessage("/vip @" + targetUsername, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
                         }
                         else if (this.ActionType == TwitchActionType.UnVIPUser)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage("/unvip @" + targetUser.TwitchUsername, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                            await ServiceManager.Get<ChatService>().SendMessage("/unvip @" + targetUsername, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
                         }
                     }
                 }
