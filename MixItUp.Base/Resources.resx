@@ -5997,4 +5997,7 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="VTubeStudioActionYMovement" xml:space="preserve">
     <value>Y Movement (+/- 5.0)</value>
   </data>
+  <data name="StopAllSounds" xml:space="preserve">
+    <value>Stop All Sounds</value>
+  </data>
 </root>

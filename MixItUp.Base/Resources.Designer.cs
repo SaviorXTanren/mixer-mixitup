@@ -13664,6 +13664,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Stop All Sounds.
+        /// </summary>
+        public static string StopAllSounds {
+            get {
+                return ResourceManager.GetString("StopAllSounds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stop Command.
         /// </summary>
         public static string StopCommand {

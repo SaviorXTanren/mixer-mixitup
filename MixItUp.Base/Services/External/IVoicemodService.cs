@@ -36,6 +36,7 @@ namespace MixItUp.Base.Services.External
 
         Task<IEnumerable<VoicemodMemeModel>> GetMemeSounds();
         Task PlayMemeSound(string fileName);
+        Task StopAllMemeSounds();
     }
 
     public class VoicemodEmptyService : OAuthExternalServiceBase, IVoicemodService
@@ -61,6 +62,8 @@ namespace MixItUp.Base.Services.External
         public Task<IEnumerable<VoicemodMemeModel>> GetMemeSounds() { return Task.FromResult<IEnumerable<VoicemodMemeModel>>(new List<VoicemodMemeModel>()); }
 
         public Task PlayMemeSound(string fileName) { return Task.CompletedTask; }
+
+        public Task StopAllMemeSounds() { return Task.CompletedTask; }
 
         protected override Task<Result> InitializeInternal() { return Task.FromResult(new Result(success: false)); }
 

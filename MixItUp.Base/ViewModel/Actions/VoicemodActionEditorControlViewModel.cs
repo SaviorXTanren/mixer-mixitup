@@ -165,6 +165,10 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 return Task.FromResult<ActionModelBase>(VoicemodActionModel.CreateForPlaySound(this.SelectedSound != null ? this.SelectedSound.FileName : this.soundFileName));
             }
+            else if (this.SelectedActionType == VoicemodActionTypeEnum.StopAllSounds)
+            {
+                return Task.FromResult<ActionModelBase>(VoicemodActionModel.CreateForStopAllSounds());
+            }
             return Task.FromResult<ActionModelBase>(null);
         }
 

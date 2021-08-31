@@ -12,6 +12,7 @@ namespace MixItUp.Base.Model.Actions
         RandomVoice,
         BeepSoundOnOff,
         PlaySound,
+        StopAllSounds,
     }
 
     [DataContract]
@@ -26,6 +27,8 @@ namespace MixItUp.Base.Model.Actions
         public static VoicemodActionModel CreateForBeepSoundOnOff(bool state) { return new VoicemodActionModel(VoicemodActionTypeEnum.BeepSoundOnOff) { State = state }; }
 
         public static VoicemodActionModel CreateForPlaySound(string soundFileName) { return new VoicemodActionModel(VoicemodActionTypeEnum.PlaySound) { SoundFileName = soundFileName }; }
+
+        public static VoicemodActionModel CreateForStopAllSounds() { return new VoicemodActionModel(VoicemodActionTypeEnum.StopAllSounds); }
 
         [DataMember]
         public VoicemodActionTypeEnum ActionType { get; set; }
@@ -73,6 +76,10 @@ namespace MixItUp.Base.Model.Actions
                 else if (this.ActionType == VoicemodActionTypeEnum.PlaySound)
                 {
                     await ChannelSession.Services.Voicemod.PlayMemeSound(this.SoundFileName);
+                }
+                else if (this.ActionType == VoicemodActionTypeEnum.StopAllSounds)
+                {
+                    await ChannelSession.Services.Voicemod.StopAllMemeSounds();
                 }
             }
         }
