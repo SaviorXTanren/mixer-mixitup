@@ -166,11 +166,24 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 return Task.FromResult<ActionModelBase>(VoicemodActionModel.CreateForPlaySound(this.SelectedSound != null ? this.SelectedSound.FileName : this.soundFileName));
             }
+            else if (this.SelectedActionType == VoicemodActionTypeEnum.StopAllSounds)
+            {
+                return Task.FromResult<ActionModelBase>(VoicemodActionModel.CreateForStopAllSounds());
+            }
             return Task.FromResult<ActionModelBase>(null);
         }
 
         protected override async Task OnLoadedInternal()
         {
+            if (ChannelSession.Settings.EnableVoicemodStudio && !ServiceManager.Get<IVoicemodService>().IsConnected)
+            {
+                Result result = await ServiceManager.Get<IVoicemodService>().Connect();
+                if (!result.Success)
+                {
+                    return;
+                }
+            }
+
             if (this.VoicemodConnected)
             {
                 foreach (VoicemodVoiceModel voice in (await ServiceManager.Get<IVoicemodService>().GetVoices()).OrderBy(v => v.friendlyName))

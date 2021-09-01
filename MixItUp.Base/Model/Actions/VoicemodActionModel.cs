@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Util;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -13,6 +14,7 @@ namespace MixItUp.Base.Model.Actions
         RandomVoice,
         BeepSoundOnOff,
         PlaySound,
+        StopAllSounds,
     }
 
     [DataContract]
@@ -27,6 +29,8 @@ namespace MixItUp.Base.Model.Actions
         public static VoicemodActionModel CreateForBeepSoundOnOff(bool state) { return new VoicemodActionModel(VoicemodActionTypeEnum.BeepSoundOnOff) { State = state }; }
 
         public static VoicemodActionModel CreateForPlaySound(string soundFileName) { return new VoicemodActionModel(VoicemodActionTypeEnum.PlaySound) { SoundFileName = soundFileName }; }
+
+        public static VoicemodActionModel CreateForStopAllSounds() { return new VoicemodActionModel(VoicemodActionTypeEnum.StopAllSounds); }
 
         [DataMember]
         public VoicemodActionTypeEnum ActionType { get; set; }
@@ -53,6 +57,15 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
+            if (ChannelSession.Settings.EnableVoicemodStudio && !ServiceManager.Get<IVoicemodService>().IsConnected)
+            {
+                Result result = await ServiceManager.Get<IVoicemodService>().Connect();
+                if (!result.Success)
+                {
+                    return;
+                }
+            }
+
             if (ServiceManager.Get<IVoicemodService>().IsConnected)
             {
                 if (this.ActionType == VoicemodActionTypeEnum.VoiceChangerOnOff)
@@ -74,6 +87,10 @@ namespace MixItUp.Base.Model.Actions
                 else if (this.ActionType == VoicemodActionTypeEnum.PlaySound)
                 {
                     await ServiceManager.Get<IVoicemodService>().PlayMemeSound(this.SoundFileName);
+                }
+                else if (this.ActionType == VoicemodActionTypeEnum.StopAllSounds)
+                {
+                    await ServiceManager.Get<IVoicemodService>().StopAllMemeSounds();
                 }
             }
         }

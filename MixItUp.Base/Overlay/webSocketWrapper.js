@@ -76,14 +76,16 @@ function isStringEmpty(str) {
 
 function logToSessionStorage(log) {
     try {
-        if (typeof (Storage) !== "undefined") {
-            if (!sessionStorage.logs) {
-                sessionStorage.logs = "";
-            }
-            sessionStorage.logs += "\n\n" + log.toString();
+        // Disabling session storage logging unless needed for diagnosing issues.
+        //
+        //if (typeof (Storage) !== "undefined") {
+        //    if (!sessionStorage.logs) {
+        //        sessionStorage.logs = "";
+        //    }
+        //    sessionStorage.logs += "\n\n" + log.toString();
 
-            console.log(log.toString());
-        }
+        //    console.log(log.toString());
+        //}
     }
     catch (err) { }
 }

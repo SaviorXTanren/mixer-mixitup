@@ -55,6 +55,8 @@ namespace MixItUp.Base.Services
         private LockedList<string> filteredWords = new LockedList<string>();
         private LockedList<string> bannedWords = new LockedList<string>();
 
+        private DateTimeOffset chatParticipationLastErrorMessage = DateTimeOffset.MinValue;
+
         public async Task Initialize()
         {
             if (ServiceManager.Get<IFileService>().FileExists(ModerationService.CommunityFilteredWordsFilePath))
@@ -271,7 +273,7 @@ namespace MixItUp.Base.Services
                     return false;
                 }
 
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ModeratorOnly && user.HasPermissionsTo(UserRoleEnum.Mod))
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ModeratorOnly && !user.HasPermissionsTo(UserRoleEnum.Mod))
                 {
                     return false;
                 }
@@ -382,6 +384,12 @@ namespace MixItUp.Base.Services
 
                 if (isChat)
                 {
+                    if (this.chatParticipationLastErrorMessage > DateTimeOffset.Now)
+                    {
+                        return;
+                    }
+
+                    this.chatParticipationLastErrorMessage = DateTimeOffset.Now.AddSeconds(10);
                     await ServiceManager.Get<ChatService>().SendMessage(string.Format("@{0}: Your message has been deleted because only {1} can participate currently.", user.Username, reason), platform: user.Platform);
                 }
             }

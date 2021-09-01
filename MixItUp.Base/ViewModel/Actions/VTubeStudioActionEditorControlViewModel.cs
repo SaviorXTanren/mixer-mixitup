@@ -265,6 +265,15 @@ namespace MixItUp.Base.ViewModel.Actions
                 }
             });
 
+            if (ChannelSession.Settings.VTubeStudioOAuthToken != null && !this.VTubeStudioConnected)
+            {
+                Result result = await ServiceManager.Get<VTubeStudioService>().Connect(ChannelSession.Settings.VTubeStudioOAuthToken);
+                if (!result.Success)
+                {
+                    return;
+                }
+            }
+
             if (this.VTubeStudioConnected)
             {
                 this.CurrentModel = await ServiceManager.Get<VTubeStudioService>().GetCurrentModel();
