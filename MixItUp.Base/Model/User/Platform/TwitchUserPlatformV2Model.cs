@@ -32,73 +32,36 @@ namespace MixItUp.Base.Model.User.Platform
             this.SetUserProperties(user);
         }
 
-        public TwitchUserPlatformV2Model(ChatMessagePacketModel message)
-        {
-            this.Platform = StreamingPlatformTypeEnum.Twitch;
-            this.ID = message.UserID;
-            this.Username = message.UserLogin;
-            this.DisplayName = message.UserDisplayName;
-        }
+        public TwitchUserPlatformV2Model(ChatMessagePacketModel message) : this(message.UserID, message.UserLogin, message.UserDisplayName) { }
 
-        public TwitchUserPlatformV2Model(PubSubWhisperEventModel whisper)
-        {
-            this.Platform = StreamingPlatformTypeEnum.Twitch;
-            this.ID = whisper.from_id.ToString();
-            this.Username = whisper.tags.login;
-            this.DisplayName = whisper.tags.display_name;
-        }
+        public TwitchUserPlatformV2Model(PubSubWhisperEventModel whisper) : this(whisper.from_id.ToString(), whisper.tags.login, whisper.tags.display_name) { }
 
         public TwitchUserPlatformV2Model(PubSubWhisperEventRecipientModel whisper)
+            : this(whisper.id.ToString(), whisper.username, whisper.display_name)
         {
-            this.Platform = StreamingPlatformTypeEnum.Twitch;
-            this.ID = whisper.id.ToString();
-            this.Username = whisper.username;
-            this.DisplayName = whisper.display_name;
             this.AvatarLink = whisper.profile_image;
         }
 
         public TwitchUserPlatformV2Model(ChatUserNoticePacketModel notice)
-        {
-            this.Platform = StreamingPlatformTypeEnum.Twitch;
-            this.ID = notice.UserID.ToString();
-            this.Username = !string.IsNullOrEmpty(notice.RaidUserLogin) ? notice.RaidUserLogin : notice.Login;
-            this.DisplayName = !string.IsNullOrEmpty(notice.RaidUserDisplayName) ? notice.RaidUserDisplayName : notice.DisplayName;
-        }
+             : this(notice.UserID.ToString(), !string.IsNullOrEmpty(notice.RaidUserLogin) ? notice.RaidUserLogin : notice.Login, !string.IsNullOrEmpty(notice.RaidUserDisplayName) ? notice.RaidUserDisplayName : notice.DisplayName)
+        { }
 
-        public TwitchUserPlatformV2Model(ChatClearChatPacketModel packet)
-        {
-            this.Platform = StreamingPlatformTypeEnum.Twitch;
-            this.ID = packet.UserID;
-            this.Username = packet.UserLogin;
-        }
+        public TwitchUserPlatformV2Model(ChatClearChatPacketModel packet) : this(packet.UserID, packet.UserLogin, null) { }
 
-        public TwitchUserPlatformV2Model(PubSubBitsEventV2Model packet)
-        {
-            this.Platform = StreamingPlatformTypeEnum.Twitch;
-            this.ID = packet.user_id;
-            this.Username = packet.user_name;
-        }
+        public TwitchUserPlatformV2Model(PubSubBitsEventV2Model packet) : this(packet.user_id, packet.user_name, null) { }
 
-        public TwitchUserPlatformV2Model(PubSubSubscriptionsEventModel packet)
-        {
-            this.Platform = StreamingPlatformTypeEnum.Twitch;
-            this.ID = packet.user_id;
-            this.Username = packet.user_name;
-        }
+        public TwitchUserPlatformV2Model(PubSubSubscriptionsEventModel packet) : this(packet.user_id, packet.user_name, null) { }
 
-        public TwitchUserPlatformV2Model(UserFollowModel follow)
-        {
-            this.Platform = StreamingPlatformTypeEnum.Twitch;
-            this.ID = follow.from_id;
-            this.Username = follow.from_name;
-        }
+        public TwitchUserPlatformV2Model(UserFollowModel follow) : this(follow.from_id, follow.from_name, null) { }
 
-        public TwitchUserPlatformV2Model(TwitchWebhookFollowModel follow)
+        public TwitchUserPlatformV2Model(TwitchWebhookFollowModel follow) : this(follow.UserID, follow.Username, follow.UserDisplayName) { }
+
+        public TwitchUserPlatformV2Model(string id, string username, string displayName)
         {
             this.Platform = StreamingPlatformTypeEnum.Twitch;
-            this.ID = follow.UserID;
-            this.Username = follow.Username;
-            this.DisplayName = follow.UserDisplayName;
+            this.ID = id;
+            this.Username = username;
+            this.DisplayName = displayName;
         }
 
         private TwitchUserPlatformV2Model() { }

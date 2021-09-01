@@ -32,6 +32,9 @@ namespace MixItUp.Base.Model.User.Platform
         public int SubscriberTier { get; set; } = 0;
 
         [DataMember]
+        public int OnlineViewingMinutes { get; set; }
+
+        [DataMember]
         public long TotalStreamsWatched { get; set; }
         [DataMember]
         public long TotalAmountDonated { get; set; }

@@ -1,13 +1,9 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Model.Commands.Games;
-using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using System;
@@ -340,10 +336,39 @@ namespace MixItUp.Base.Services
                 await SettingsV3Upgrader.Version2Upgrade(currentVersion, filePath);
                 await SettingsV3Upgrader.Version3Upgrade(currentVersion, filePath);
                 await SettingsV3Upgrader.Version4Upgrade(currentVersion, filePath);
+                await SettingsV3Upgrader.Version5Upgrade(currentVersion, filePath);
             }
             SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
             settings.Version = SettingsV3Model.LatestVersion;
             return settings;
+        }
+
+        public static async Task Version5Upgrade(int version, string filePath)
+        {
+            if (version < 5)
+            {
+                SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
+                await settings.Initialize();
+
+                foreach (StreamingPlatformTypeEnum type in settings.StreamingPlatformAuthentications.Keys.ToList())
+                {
+                    if (type != StreamingPlatformTypeEnum.Twitch)
+                    {
+                        settings.StreamingPlatformAuthentications.Remove(type);
+                    }
+                }
+
+                foreach (UserDataModel oldUserData in await settings.LoadUserData("SELECT * FROM Users", new Dictionary<string, object>()))
+                {
+                    UserV2Model user = oldUserData.ToV2Model();
+                    if (user != null)
+                    {
+                        settings.UsersV2[user.ID] = user;
+                    }
+                }
+
+                await ServiceManager.Get<SettingsService>().Save(settings);
+            }
         }
 
         public static async Task Version4Upgrade(int version, string filePath)

@@ -12,6 +12,8 @@ namespace MixItUp.Base.Model.User
         public Guid ID { get; set; } = Guid.NewGuid();
 
         [DataMember]
+        public DateTimeOffset LastActivity { get; set; }
+        [DataMember]
         public DateTimeOffset LastUpdated { get; set; }
         [JsonIgnore]
         public bool UpdatedThisSession { get; set; } = false;
@@ -29,9 +31,6 @@ namespace MixItUp.Base.Model.User
         public bool IsSpecialtyExcluded { get; set; }
 
         [DataMember]
-        public int OnlineViewingMinutes { get; set; }
-
-        [DataMember]
         public Guid EntranceCommandID { get; set; }
         [DataMember]
         public List<Guid> CustomCommandIDs { get; set; } = new List<Guid>();
@@ -44,9 +43,6 @@ namespace MixItUp.Base.Model.User
 
         [DataMember]
         public string Notes { get; set; }
-
-        [DataMember]
-        public DateTimeOffset LastActivity { get; set; }
 
         [DataMember]
         private Dictionary<StreamingPlatformTypeEnum, UserPlatformV2ModelBase> PlatformData { get; set; } = new Dictionary<StreamingPlatformTypeEnum, UserPlatformV2ModelBase>();
@@ -136,7 +132,6 @@ namespace MixItUp.Base.Model.User
             }
 
             this.CustomTitle = other.CustomTitle;
-            this.OnlineViewingMinutes += other.OnlineViewingMinutes;
 
             this.CustomCommandIDs = other.CustomCommandIDs;
             this.EntranceCommandID = other.EntranceCommandID;

@@ -192,10 +192,10 @@ namespace MixItUp.Base.ViewModel.User
 
         public int OnlineViewingMinutes
         {
-            get { return this.model.OnlineViewingMinutes; }
+            get { return this.platformModel.OnlineViewingMinutes; }
             set
             {
-                this.model.OnlineViewingMinutes = value;
+                this.platformModel.OnlineViewingMinutes = value;
                 this.NotifyPropertyChanged("OnlineViewingMinutes");
                 this.NotifyPropertyChanged("OnlineViewingMinutesOnly");
                 this.NotifyPropertyChanged("OnlineViewingHoursOnly");

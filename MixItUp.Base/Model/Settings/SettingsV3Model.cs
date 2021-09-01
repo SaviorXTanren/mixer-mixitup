@@ -738,11 +738,11 @@ namespace MixItUp.Base.Model.Settings
             IEnumerable<Guid> removedUsers = this.UserData.GetRemovedValues();
             await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "DELETE FROM Users WHERE ID = $ID", removedUsers.Select(u => new Dictionary<string, object>() { { "$ID", u.ToString() } }));
 
-            IEnumerable<UserDataModel> changedUsers = this.UserData.GetAddedChangedValues();
+            IEnumerable<UserDataModel> changedOldUsers = this.UserData.GetAddedChangedValues();
             await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath,
                 "REPLACE INTO Users(ID, TwitchID, TwitchUsername, YouTubeID, YouTubeUsername, FacebookID, FacebookUsername, TrovoID, TrovoUsername, GlimeshID, GlimeshUsername, Data) " +
                 "VALUES($ID, $TwitchID, $TwitchUsername, $YouTubeID, $YouTubeUsername, $FacebookID, $FacebookUsername, $TrovoID, $TrovoUsername, $GlimeshID, $GlimeshUsername, $Data)",
-                changedUsers.Select(u => new Dictionary<string, object>()
+                changedOldUsers.Select(u => new Dictionary<string, object>()
                 {
                     { "$ID", u.ID.ToString() },
                     { "$TwitchID", u.TwitchID }, { "$TwitchUsername", u.TwitchUsername },
@@ -750,6 +750,23 @@ namespace MixItUp.Base.Model.Settings
                     { "$FacebookID", null }, { "$FacebookUsername", null },
                     { "$TrovoID", null }, { "$TrovoUsername", null },
                     { "$GlimeshID", null }, { "$GlimeshUsername", null },
+                    { "$Data", JSONSerializerHelper.SerializeToString(u) }
+                }));
+
+            IEnumerable<UserV2Model> changedUsers = this.UsersV2.GetAddedChangedValues();
+            await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath,
+                "REPLACE INTO Users(ID, TwitchID, TwitchUsername, YouTubeID, YouTubeUsername, FacebookID, FacebookUsername, TrovoID, TrovoUsername, GlimeshID, GlimeshUsername, Data) " +
+                "VALUES($ID, $TwitchID, $TwitchUsername, $YouTubeID, $YouTubeUsername, $FacebookID, $FacebookUsername, $TrovoID, $TrovoUsername, $GlimeshID, $GlimeshUsername, $Data)",
+                changedUsers.Select(u => new Dictionary<string, object>()
+                {
+                    { "$ID", u.ID.ToString() },
+                    { "$TwitchID", u.GetPlatformID(StreamingPlatformTypeEnum.Twitch) }, { "$TwitchUsername", u.GetPlatformUsername(StreamingPlatformTypeEnum.Twitch) },
+                    { "$YouTubeID", u.GetPlatformID(StreamingPlatformTypeEnum.YouTube) }, { "$YouTubeUsername", u.GetPlatformUsername(StreamingPlatformTypeEnum.YouTube) },
+#pragma warning disable CS0612 // Type or member is obsolete
+                    { "$FacebookID", u.GetPlatformID(StreamingPlatformTypeEnum.Facebook) }, { "$FacebookUsername", u.GetPlatformUsername(StreamingPlatformTypeEnum.Facebook) },
+#pragma warning restore CS0612 // Type or member is obsolete
+                    { "$TrovoID", u.GetPlatformID(StreamingPlatformTypeEnum.Trovo) }, { "$TrovoUsername", u.GetPlatformUsername(StreamingPlatformTypeEnum.Trovo) },
+                    { "$GlimeshID", u.GetPlatformID(StreamingPlatformTypeEnum.Glimesh) }, { "$GlimeshUsername", u.GetPlatformUsername(StreamingPlatformTypeEnum.Glimesh) },
                     { "$Data", JSONSerializerHelper.SerializeToString(u) }
                 }));
 

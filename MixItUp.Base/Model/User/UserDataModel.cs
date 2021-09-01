@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
@@ -500,6 +501,69 @@ namespace MixItUp.Base.Model.User
             this.TotalMonthsSubbed += other.TotalMonthsSubbed;
 
             this.Notes += other.Notes;
+        }
+
+        public UserV2Model ToV2Model()
+        {
+            if (!string.IsNullOrEmpty(this.TwitchID))
+            {
+                UserV2Model result = new UserV2Model();
+                result.ID = this.ID;
+                result.LastActivity = this.LastActivity;
+                result.LastUpdated = this.LastUpdated;
+
+                foreach (var kvp in this.CurrencyAmounts)
+                {
+                    result.CurrencyAmounts[kvp.Key] = this.CurrencyAmounts[kvp.Key];
+                }
+
+                foreach (var kvp in this.InventoryAmounts)
+                {
+                    result.InventoryAmounts[kvp.Key] = new Dictionary<Guid, int>();
+                    foreach (var itemKVP in this.InventoryAmounts[kvp.Key])
+                    {
+                        result.InventoryAmounts[kvp.Key][itemKVP.Key] = this.InventoryAmounts[kvp.Key][itemKVP.Key];
+                    }
+                }
+
+                foreach (var kvp in this.StreamPassAmounts)
+                {
+                    result.StreamPassAmounts[kvp.Key] = this.StreamPassAmounts[kvp.Key];
+                }
+
+                result.CustomTitle = this.CustomTitle;
+                result.IsSpecialtyExcluded = this.IsCurrencyRankExempt;
+                result.EntranceCommandID = this.EntranceCommandID;
+                result.CustomCommandIDs.AddRange(this.CustomCommandIDs);
+                result.PatreonUserID = this.PatreonUserID;
+                result.ModerationStrikes = this.ModerationStrikes;
+                result.Notes = this.Notes;
+
+                TwitchUserPlatformV2Model platformData = new TwitchUserPlatformV2Model(this.TwitchID, this.TwitchUsername, this.TwitchDisplayName);
+                platformData.AccountDate = this.TwitchAccountDate;
+                platformData.AvatarLink = this.TwitchAvatarLink;
+                platformData.BadgeInfo = this.TwitchBadgeInfo;
+                platformData.Badges = this.TwitchBadges;
+                platformData.Color = this.TwitchColor;
+                platformData.FollowDate = this.TwitchFollowDate;
+                platformData.OnlineViewingMinutes = this.ViewingMinutes;
+                platformData.Roles = this.TwitchUserRoles;
+                platformData.SubscribeDate = this.TwitchSubscribeDate;
+                platformData.SubscriberTier = this.TwitchSubscriberTier;
+                platformData.TotalAmountDonated = Convert.ToInt64(this.TotalAmountDonated);
+                platformData.TotalBitsCheered = this.TotalBitsCheered;
+                platformData.TotalChatMessageSent = this.TotalChatMessageSent;
+                platformData.TotalCommandsRun = this.TotalCommandsRun;
+                platformData.TotalMonthsSubbed = this.TotalMonthsSubbed;
+                platformData.TotalStreamsWatched = this.TotalStreamsWatched;
+                platformData.TotalSubsGifted = this.TotalSubsGifted;
+                platformData.TotalSubsReceived = this.TotalSubsReceived;
+                platformData.TotalTimesTagged = this.TotalTimesTagged;
+                result.AddPlatformData(platformData);
+
+                return result;
+            }
+            return null;
         }
     }
 }

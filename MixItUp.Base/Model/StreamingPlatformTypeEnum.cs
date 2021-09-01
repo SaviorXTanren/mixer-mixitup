@@ -14,6 +14,8 @@ namespace MixItUp.Base.Model
         YouTube = 3,
         Trovo = 4,
         Glimesh = 5,
+        [Obsolete]
+        Facebook = 6,
 
         [Obsolete]
         All = 2147483647,
