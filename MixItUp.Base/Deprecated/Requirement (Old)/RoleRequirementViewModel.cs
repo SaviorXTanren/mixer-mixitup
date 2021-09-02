@@ -34,7 +34,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             this.SubscriberTier = subscriberTier;
         }
 
-        public bool DoesMeetRequirement(UserViewModel user)
+        public bool DoesMeetRequirement(UserV2ViewModel user)
         {
             if (user.HasPermissionsTo(this.MixerRole))
             {

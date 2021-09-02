@@ -120,7 +120,7 @@ namespace MixItUp.Base.Model.Currency
 
     public class InventoryTradeModel
     {
-        public UserViewModel User { get; set; }
+        public UserV2ViewModel User { get; set; }
         public InventoryItemModel Item { get; set; }
         public int Amount { get; set; }
     }
@@ -265,7 +265,7 @@ namespace MixItUp.Base.Model.Currency
             return null;
         }
 
-        public int GetAmount(UserDataModel user, InventoryItemModel item)
+        public int GetAmount(UserV2Model user, InventoryItemModel item)
         {
             if (user.InventoryAmounts.ContainsKey(this.ID) && user.InventoryAmounts[this.ID].ContainsKey(item.ID))
             {
@@ -274,7 +274,7 @@ namespace MixItUp.Base.Model.Currency
             return 0;
         }
 
-        public int GetAmount(UserDataModel user, Guid itemID)
+        public int GetAmount(UserV2Model user, Guid itemID)
         {
             if (this.ItemExists(itemID))
             {
@@ -283,7 +283,7 @@ namespace MixItUp.Base.Model.Currency
             return 0;
         }
 
-        public Dictionary<Guid, int> GetAmounts(UserDataModel user)
+        public Dictionary<Guid, int> GetAmounts(UserV2Model user)
         {
             Dictionary<Guid, int> amounts = new Dictionary<Guid, int>();
             foreach (InventoryItemModel item in this.Items.Values)
@@ -293,7 +293,7 @@ namespace MixItUp.Base.Model.Currency
             return amounts;
         }
 
-        public bool HasAmount(UserDataModel user, Guid itemID, int amount)
+        public bool HasAmount(UserV2Model user, Guid itemID, int amount)
         {
             if (this.ItemExists(itemID))
             {
@@ -302,12 +302,12 @@ namespace MixItUp.Base.Model.Currency
             return false;
         }
 
-        public bool HasAmount(UserDataModel user, InventoryItemModel item, int amount)
+        public bool HasAmount(UserV2Model user, InventoryItemModel item, int amount)
         {
             return (user.IsCurrencyRankExempt || this.GetAmount(user, item) >= amount);
         }
 
-        public void SetAmount(UserDataModel user, Guid itemID, int amount)
+        public void SetAmount(UserV2Model user, Guid itemID, int amount)
         {
             if (this.ItemExists(itemID))
             {
@@ -315,7 +315,7 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public void SetAmount(UserDataModel user, InventoryItemModel item, int amount)
+        public void SetAmount(UserV2Model user, InventoryItemModel item, int amount)
         {
             if (!user.InventoryAmounts.ContainsKey(this.ID))
             {
@@ -325,11 +325,11 @@ namespace MixItUp.Base.Model.Currency
 
             if (ChannelSession.Settings != null)
             {
-                ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+                ChannelSession.Settings.Users.ManualValueChanged(user.ID);
             }
         }
 
-        public void AddAmount(UserDataModel user, Guid itemID, int amount)
+        public void AddAmount(UserV2Model user, Guid itemID, int amount)
         {
             if (this.ItemExists(itemID))
             {
@@ -337,7 +337,7 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public void AddAmount(UserDataModel user, InventoryItemModel item, int amount)
+        public void AddAmount(UserV2Model user, InventoryItemModel item, int amount)
         {
             if (!user.IsCurrencyRankExempt && amount > 0)
             {
@@ -345,7 +345,7 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public void SubtractAmount(UserDataModel user, Guid itemID, int amount)
+        public void SubtractAmount(UserV2Model user, Guid itemID, int amount)
         {
             if (this.ItemExists(itemID))
             {
@@ -353,7 +353,7 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public void SubtractAmount(UserDataModel user, InventoryItemModel item, int amount)
+        public void SubtractAmount(UserV2Model user, InventoryItemModel item, int amount)
         {
             if (!user.IsCurrencyRankExempt)
             {
@@ -361,28 +361,28 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public void ResetAmount(UserDataModel user)
+        public void ResetAmount(UserV2Model user)
         {
             user.InventoryAmounts[this.ID] = new Dictionary<Guid, int>();
-            ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+            ChannelSession.Settings.Users.ManualValueChanged(user.ID);
         }
 
         public async Task Reset()
         {
             await ServiceManager.Get<UserService>().LoadAllUserData();
 
-            foreach (UserDataModel user in ChannelSession.Settings.UserData.Values.ToList())
+            foreach (UserV2Model user in ChannelSession.Settings.Users.Values.ToList())
             {
                 if (user.InventoryAmounts.ContainsKey(this.ID))
                 {
                     user.InventoryAmounts[this.ID] = new Dictionary<Guid, int>();
-                    ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+                    ChannelSession.Settings.Users.ManualValueChanged(user.ID);
                 }
             }
             await ChannelSession.SaveSettings();
         }
 
-        public async Task PerformShopCommand(UserViewModel user, IEnumerable<string> arguments = null)
+        public async Task PerformShopCommand(UserV2ViewModel user, IEnumerable<string> arguments = null)
         {
             try
             {
@@ -557,7 +557,7 @@ namespace MixItUp.Base.Model.Currency
             catch (Exception ex) { Logger.Log(ex); }
         }
 
-        public async Task PerformTradeCommand(UserViewModel user, IEnumerable<string> arguments = null)
+        public async Task PerformTradeCommand(UserV2ViewModel user, IEnumerable<string> arguments = null)
         {
             try
             {
@@ -565,7 +565,7 @@ namespace MixItUp.Base.Model.Currency
                 {
                     if (this.tradeReceiver == null && arguments.Count() >= 2)
                     {
-                        UserViewModel targetUser = await ServiceManager.Get<UserService>().GetUserFullSearch(user.Platform, userID: null, arguments.First());
+                        UserV2ViewModel targetUser = await ServiceManager.Get<UserService>().GetUserFullSearch(user.Platform, userID: null, arguments.First());
                         if (targetUser == null)
                         {
                             await ServiceManager.Get<ChatService>().SendMessage("The specified user does not exist", user.Platform);

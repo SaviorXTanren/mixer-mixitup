@@ -197,8 +197,8 @@ namespace MixItUp.Base.Model.Overlay
                 this.testDataFilled.Add(OverlayEndCreditsSectionTypeEnum.Bits);
             }
 
-            UserViewModel user = ChannelSession.GetCurrentUser();
-            List<Guid> userIDs = new List<Guid>(ChannelSession.Settings.UserData.Keys.Take(20));
+            UserV2ViewModel user = ChannelSession.GetCurrentUser();
+            List<Guid> userIDs = new List<Guid>(ChannelSession.Settings.Users.Keys.Take(20));
             for (int i = userIDs.Count; i < 20; i++)
             {
                 userIDs.Add(user.ID);
@@ -385,7 +385,7 @@ namespace MixItUp.Base.Model.Overlay
                 }
                 else
                 {
-                    Dictionary<UserViewModel, string> items = new Dictionary<UserViewModel, string>();
+                    Dictionary<UserV2ViewModel, string> items = new Dictionary<UserV2ViewModel, string>();
                     switch (kvp.Key)
                     {
                         case OverlayEndCreditsSectionTypeEnum.Chatters: items = await this.GetUsersDictionary(this.viewers); break;
@@ -415,7 +415,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
+        private void GlobalEvents_OnFollowOccurred(object sender, UserV2ViewModel user)
         {
             if (!this.follows.Contains(user.ID))
             {
@@ -424,7 +424,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private void GlobalEvents_OnHostOccurred(object sender, UserViewModel host)
+        private void GlobalEvents_OnHostOccurred(object sender, UserV2ViewModel host)
         {
             if (!this.hosts.Contains(host.ID))
             {
@@ -433,7 +433,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private void GlobalEvents_OnRaidOccurred(object sender, Tuple<UserViewModel, int> raid)
+        private void GlobalEvents_OnRaidOccurred(object sender, Tuple<UserV2ViewModel, int> raid)
         {
             if (!this.raids.ContainsKey(raid.Item1.ID))
             {
@@ -442,7 +442,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
+        private void GlobalEvents_OnSubscribeOccurred(object sender, UserV2ViewModel user)
         {
             if (!this.newSubs.Contains(user.ID))
             {
@@ -451,7 +451,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> resub)
+        private void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserV2ViewModel, int> resub)
         {
             if (!this.resubs.ContainsKey(resub.Item1.ID))
             {
@@ -460,7 +460,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> subGift)
+        private void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserV2ViewModel, UserV2ViewModel> subGift)
         {
             if (!this.newSubs.Contains(subGift.Item2.ID))
             {
@@ -496,7 +496,7 @@ namespace MixItUp.Base.Model.Overlay
             this.bits[bits.User.ID] += (uint)bits.Amount;
         }
 
-        private void AddUserForRole(UserViewModel user)
+        private void AddUserForRole(UserV2ViewModel user)
         {
             if (this.ShouldIncludeUser(user))
             {
@@ -512,7 +512,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private bool ShouldIncludeUser(UserViewModel user)
+        private bool ShouldIncludeUser(UserV2ViewModel user)
         {
             if (user == null)
             {
@@ -533,14 +533,14 @@ namespace MixItUp.Base.Model.Overlay
             return true;
         }
 
-        private async Task<Dictionary<UserViewModel, string>> GetUsersDictionary(HashSet<Guid> data)
+        private async Task<Dictionary<UserV2ViewModel, string>> GetUsersDictionary(HashSet<Guid> data)
         {
-            Dictionary<UserViewModel, string> results = new Dictionary<UserViewModel, string>();
+            Dictionary<UserV2ViewModel, string> results = new Dictionary<UserV2ViewModel, string>();
             foreach (Guid userID in data)
             {
                 try
                 {
-                    UserViewModel user = await this.GetUser(userID);
+                    UserV2ViewModel user = await this.GetUser(userID);
                     if (user != null)
                     {
                         results[user] = string.Empty;
@@ -554,14 +554,14 @@ namespace MixItUp.Base.Model.Overlay
             return results;
         }
 
-        private async Task<Dictionary<UserViewModel, string>> GetUsersDictionary(Dictionary<Guid, uint> data)
+        private async Task<Dictionary<UserV2ViewModel, string>> GetUsersDictionary(Dictionary<Guid, uint> data)
         {
-            Dictionary<UserViewModel, string> results = new Dictionary<UserViewModel, string>();
+            Dictionary<UserV2ViewModel, string> results = new Dictionary<UserV2ViewModel, string>();
             foreach (var kvp in data)
             {
                 try
                 {
-                    UserViewModel user = await this.GetUser(kvp.Key);
+                    UserV2ViewModel user = await this.GetUser(kvp.Key);
                     if (user != null)
                     {
                         results[user] = kvp.Value.ToString();
@@ -575,14 +575,14 @@ namespace MixItUp.Base.Model.Overlay
             return results;
         }
 
-        private async Task<Dictionary<UserViewModel, string>> GetUsersDictionary(Dictionary<Guid, double> data)
+        private async Task<Dictionary<UserV2ViewModel, string>> GetUsersDictionary(Dictionary<Guid, double> data)
         {
-            Dictionary<UserViewModel, string> results = new Dictionary<UserViewModel, string>();
+            Dictionary<UserV2ViewModel, string> results = new Dictionary<UserV2ViewModel, string>();
             foreach (var kvp in data)
             {
                 try
                 {
-                    UserViewModel user = await this.GetUser(kvp.Key);
+                    UserV2ViewModel user = await this.GetUser(kvp.Key);
                     if (user != null)
                     {
                         results[user] = kvp.Value.ToCurrencyString();
@@ -596,17 +596,17 @@ namespace MixItUp.Base.Model.Overlay
             return results;
         }
 
-        private async Task<UserViewModel> GetUser(Guid userID)
+        private async Task<UserV2ViewModel> GetUser(Guid userID)
         {
-            UserDataModel data = await ServiceManager.Get<UserService>().GetUserDataByID(userID);
+            UserV2Model data = await ServiceManager.Get<UserService>().GetUserDataByID(userID);
             if (data != null)
             {
-                return new UserViewModel(data);
+                return new UserV2ViewModel(data);
             }
             return null;
         }
 
-        private async Task PerformSectionTemplateReplacement(StringBuilder htmlBuilder, OverlayEndCreditsSectionTypeEnum itemType, Dictionary<UserViewModel, string> replacers, CommandParametersModel parameters)
+        private async Task PerformSectionTemplateReplacement(StringBuilder htmlBuilder, OverlayEndCreditsSectionTypeEnum itemType, Dictionary<UserV2ViewModel, string> replacers, CommandParametersModel parameters)
         {
             if (this.SectionTemplates.ContainsKey(itemType) && replacers.Count > 0)
             {

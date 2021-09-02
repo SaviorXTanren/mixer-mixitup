@@ -103,7 +103,7 @@ namespace MixItUp.Base.Actions
             this.Label = EnumLocalizationHelper.GetLocalizedName(this.Type);
         }
 
-        public async Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        public async Task Perform(UserV2ViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             await this.AsyncSemaphore.WaitAndRelease(async () =>
             {
@@ -114,7 +114,7 @@ namespace MixItUp.Base.Actions
             });
         }
 
-        protected abstract Task PerformInternal(UserViewModel user, IEnumerable<string> arguments);
+        protected abstract Task PerformInternal(UserV2ViewModel user, IEnumerable<string> arguments);
 
         protected async Task<string> ReplaceStringWithSpecialModifiers(string str, CommandParametersModel parameters, bool encode = false)
         {
@@ -146,7 +146,7 @@ namespace MixItUp.Base.Actions
 
         public SongRequestAction() { }
 
-        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserV2ViewModel user, IEnumerable<string> arguments)
         {
             return Task.CompletedTask;
         }
@@ -164,7 +164,7 @@ namespace MixItUp.Base.Actions
         public SpotifyAction() : base(ActionTypeEnum.Spotify) { }
 #pragma warning restore CS0612 // Type or member is obsolete
 
-        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserV2ViewModel user, IEnumerable<string> arguments)
         {
             return Task.CompletedTask;
         }
@@ -182,7 +182,7 @@ namespace MixItUp.Base.Actions
         public InteractiveAction() : base(ActionTypeEnum.Interactive) { }
 #pragma warning restore CS0612 // Type or member is obsolete
 
-        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserV2ViewModel user, IEnumerable<string> arguments)
         {
             return Task.CompletedTask;
         }
@@ -200,7 +200,7 @@ namespace MixItUp.Base.Actions
         public MixerClipsAction() : base(ActionTypeEnum.MixerClips) { }
 #pragma warning restore CS0612 // Type or member is obsolete
 
-        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserV2ViewModel user, IEnumerable<string> arguments)
         {
             return Task.CompletedTask;
         }

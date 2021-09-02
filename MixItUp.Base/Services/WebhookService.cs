@@ -196,10 +196,10 @@ namespace MixItUp.Base.Services
 
         private async Task TwitchFollowEvent(string followerId, string followerUsername, string followerDisplayName)
         {
-            UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, followerId);
+            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, followerId);
             if (user == null)
             {
-                user = await UserViewModel.Create(new TwitchWebhookFollowModel()
+                user = await UserV2ViewModel.Create(new TwitchWebhookFollowModel()
                 {
                     StreamerID = ServiceManager.Get<TwitchSessionService>().UserNewAPI.id,
 

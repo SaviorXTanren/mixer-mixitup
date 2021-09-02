@@ -82,7 +82,7 @@ namespace MixItUp.Base.ViewModel.Currency
             }
         }
         private string name;
-        public IEnumerable<UserRoleEnum> Permissions { get; private set; } = UserDataModel.GetSelectableUserRoles();
+        public IEnumerable<UserRoleEnum> Permissions { get; private set; } = UserV2Model.GetSelectableUserRoles();
         public UserRoleEnum Permission
         {
             get { return this.permission; }

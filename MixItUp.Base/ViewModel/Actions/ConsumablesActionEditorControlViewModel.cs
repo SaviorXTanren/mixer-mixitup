@@ -161,7 +161,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool CanDeductFromUser { get { return this.SelectedActionType == ConsumablesActionTypeEnum.AddToSpecificUser || this.SelectedActionType == ConsumablesActionTypeEnum.AddToAllChatUsers; } }
 
-        public IEnumerable<UserRoleEnum> UsersToApplyTo { get { return UserDataModel.GetSelectableUserRoles(); } }
+        public IEnumerable<UserRoleEnum> UsersToApplyTo { get { return UserV2Model.GetSelectableUserRoles(); } }
 
         public UserRoleEnum SelectedUsersToApplyTo
         {

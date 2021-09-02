@@ -48,20 +48,20 @@ namespace MixItUp.Base.Commands
             }
         }
 
-        public void ResetCooldown(UserViewModel user) {  }
+        public void ResetCooldown(UserV2ViewModel user) {  }
 
-        protected override async Task<bool> PerformPreChecks(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        protected override async Task<bool> PerformPreChecks(UserV2ViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             return await this.permissionsCheckSemaphore.WaitAndRelease(() =>
             {
-                IEnumerable<UserViewModel> triggeringUsers = new List<UserViewModel>();
+                IEnumerable<UserV2ViewModel> triggeringUsers = new List<UserV2ViewModel>();
                 if (triggeringUsers == null)
                 {
                     // The action did not trigger due to threshold requirements not being met
                     return Task.FromResult(false);
                 }
 
-                foreach (UserViewModel triggeringUser in triggeringUsers)
+                foreach (UserV2ViewModel triggeringUser in triggeringUsers)
                 {
                     // Do our best to subtract the required currency
                     this.Requirements.TrySubtractCurrencyAmount(triggeringUser);

@@ -64,7 +64,7 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public bool ShowSimpleRoles { get { return !this.IsAdvancedRolesSelected; } }
 
-        public IEnumerable<UserRoleEnum> Roles { get { return UserDataModel.GetSelectableUserRoles(); } }
+        public IEnumerable<UserRoleEnum> Roles { get { return UserV2Model.GetSelectableUserRoles(); } }
 
         public UserRoleEnum SelectedRole
         {
@@ -82,7 +82,7 @@ namespace MixItUp.Base.ViewModel.Requirements
         {
             get
             {
-                List<UserRoleEnum> roles = new List<UserRoleEnum>(UserDataModel.GetSelectableUserRoles());
+                List<UserRoleEnum> roles = new List<UserRoleEnum>(UserV2Model.GetSelectableUserRoles());
                 roles.Remove(UserRoleEnum.VIPExclusive);
                 return roles;
             }

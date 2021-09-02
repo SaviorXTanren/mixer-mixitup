@@ -16,7 +16,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public string TriggersString { get { return this.command.TriggersString; } }
 
-        public IEnumerable<UserRoleEnum> RoleValues { get { return UserDataModel.GetSelectableUserRoles(); } }
+        public IEnumerable<UserRoleEnum> RoleValues { get { return UserV2Model.GetSelectableUserRoles(); } }
         public UserRoleEnum SelectedRole
         {
             get { return this.command.Requirements.Role.Role; }
@@ -69,7 +69,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
             this.TestCommand = this.CreateCommand(async () =>
             {
-                UserViewModel currentUser = ChannelSession.GetCurrentUser();
+                UserV2ViewModel currentUser = ChannelSession.GetCurrentUser();
                 await ServiceManager.Get<CommandService>().Queue(command, new CommandParametersModel(currentUser, arguments: new List<string>() { "@" + currentUser.Username }));
             });
         }

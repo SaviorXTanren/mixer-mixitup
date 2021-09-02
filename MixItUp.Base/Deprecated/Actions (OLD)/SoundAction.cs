@@ -39,7 +39,7 @@ namespace MixItUp.Base.Actions
             this.OutputDevice = outputDevice;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override async Task PerformInternal(UserV2ViewModel user, IEnumerable<string> arguments)
         {
             string audioFilePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, null);
 

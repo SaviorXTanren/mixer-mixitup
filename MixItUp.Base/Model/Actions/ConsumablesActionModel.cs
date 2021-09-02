@@ -201,7 +201,7 @@ namespace MixItUp.Base.Model.Actions
                     return;
                 }
 
-                HashSet<UserDataModel> receiverUserData = new HashSet<UserDataModel>();
+                HashSet<UserV2Model> receiverUserData = new HashSet<UserV2Model>();
                 if (this.ActionType == ConsumablesActionTypeEnum.AddToUser)
                 {
                     receiverUserData.Add(parameters.User.Data);
@@ -212,7 +212,7 @@ namespace MixItUp.Base.Model.Actions
                     {
                         string usernameString = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
 
-                        UserViewModel receivingUser = null;
+                        UserV2ViewModel receivingUser = null;
                         if (this.UsersMustBePresent)
                         {
                             receivingUser = ServiceManager.Get<UserService>().GetActiveUserByUsername(usernameString, parameters.Platform);
@@ -235,7 +235,7 @@ namespace MixItUp.Base.Model.Actions
                 }
                 else if (this.ActionType == ConsumablesActionTypeEnum.AddToAllChatUsers || this.ActionType == ConsumablesActionTypeEnum.SubtractFromAllChatUsers)
                 {
-                    foreach (UserViewModel chatUser in ServiceManager.Get<UserService>().GetAllWorkableActiveUsers())
+                    foreach (UserV2ViewModel chatUser in ServiceManager.Get<UserService>().GetAllWorkableActiveUsers())
                     {
                         if (chatUser.HasPermissionsTo(this.UsersToApplyTo))
                         {
@@ -278,7 +278,7 @@ namespace MixItUp.Base.Model.Actions
 
                 if (receiverUserData.Count > 0)
                 {
-                    foreach (UserDataModel receiverUser in receiverUserData)
+                    foreach (UserV2Model receiverUser in receiverUserData)
                     {
                         if (currency != null)
                         {

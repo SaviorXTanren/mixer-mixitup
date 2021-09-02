@@ -184,7 +184,7 @@ namespace MixItUp.Base.Services.Glimesh
             });
         }
 
-        public async Task ShortTimeoutUser(UserViewModel user)
+        public async Task ShortTimeoutUser(UserV2ViewModel user)
         {
             await AsyncRunner.RunAsync(async () =>
             {
@@ -195,7 +195,7 @@ namespace MixItUp.Base.Services.Glimesh
             });
         }
 
-        public async Task LongTimeoutUser(UserViewModel user)
+        public async Task LongTimeoutUser(UserV2ViewModel user)
         {
             await AsyncRunner.RunAsync(async () =>
             {
@@ -206,7 +206,7 @@ namespace MixItUp.Base.Services.Glimesh
             });
         }
 
-        public async Task BanUser(UserViewModel user)
+        public async Task BanUser(UserV2ViewModel user)
         {
             await AsyncRunner.RunAsync(async () =>
             {
@@ -217,7 +217,7 @@ namespace MixItUp.Base.Services.Glimesh
             });
         }
 
-        public async Task UnbanUser(UserViewModel user)
+        public async Task UnbanUser(UserV2ViewModel user)
         {
             await AsyncRunner.RunAsync(async () =>
             {
@@ -244,17 +244,17 @@ namespace MixItUp.Base.Services.Glimesh
         {
             if (message != null && !string.IsNullOrEmpty(message.Message))
             {
-                UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, message.User?.id);
+                UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, message.User?.id);
                 if (user == null)
                 {
                     UserModel glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByID(message.User?.id);
                     if (glimeshUser != null)
                     {
-                        user = await UserViewModel.Create(glimeshUser);
+                        user = await UserV2ViewModel.Create(glimeshUser);
                     }
                     else
                     {
-                        user = await UserViewModel.Create(message);
+                        user = await UserV2ViewModel.Create(message);
                     }
                     await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
                 }
@@ -296,10 +296,10 @@ namespace MixItUp.Base.Services.Glimesh
         {
             try
             {
-                UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, follow.Follow.user.id);
+                UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, follow.Follow.user.id);
                 if (user == null)
                 {
-                    user = await UserViewModel.Create(follow.Follow.user);
+                    user = await UserV2ViewModel.Create(follow.Follow.user);
                 }
 
                 CommandParametersModel parameters = new CommandParametersModel(user);

@@ -32,7 +32,7 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public StreamingSourceDimensions SourceDimensions { get; set; }
 
-        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments) { throw new NotImplementedException(); }
+        protected override Task PerformInternal(UserV2ViewModel user, IEnumerable<string> arguments) { throw new NotImplementedException(); }
     }
 
     [DataContract]
@@ -55,7 +55,7 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public string SourceURL { get; set; }
 
-        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments) { throw new NotImplementedException(); }
+        protected override Task PerformInternal(UserV2ViewModel user, IEnumerable<string> arguments) { throw new NotImplementedException(); }
     }
 
     [DataContract]
@@ -75,6 +75,6 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public string SourceText { get; set; }
 
-        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments) { throw new NotImplementedException(); }
+        protected override Task PerformInternal(UserV2ViewModel user, IEnumerable<string> arguments) { throw new NotImplementedException(); }
     }
 }

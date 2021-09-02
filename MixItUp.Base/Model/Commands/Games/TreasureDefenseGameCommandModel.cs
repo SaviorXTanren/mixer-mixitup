@@ -58,9 +58,9 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private int runBetAmount;
         [JsonIgnore]
-        private Dictionary<UserViewModel, CommandParametersModel> runUsers = new Dictionary<UserViewModel, CommandParametersModel>();
+        private Dictionary<UserV2ViewModel, CommandParametersModel> runUsers = new Dictionary<UserV2ViewModel, CommandParametersModel>();
         [JsonIgnore]
-        private Dictionary<UserViewModel, WinLosePlayerType> runUserTypes = new Dictionary<UserViewModel, WinLosePlayerType>();
+        private Dictionary<UserV2ViewModel, WinLosePlayerType> runUserTypes = new Dictionary<UserV2ViewModel, WinLosePlayerType>();
 
         public TreasureDefenseGameCommandModel(string name, HashSet<string> triggers, int minimumParticipants, int timeLimit, int kingTimeLimit, int thiefPlayerPercentage, CustomCommandModel startedCommand,
             CustomCommandModel userJoinCommand, CustomCommandModel notEnoughPlayersCommand, CustomCommandModel knightUserCommand, CustomCommandModel thiefUserCommand, CustomCommandModel kingUserCommand,

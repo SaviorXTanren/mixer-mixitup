@@ -116,7 +116,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected GameOutcomeModel() { }
 
-        public RoleProbabilityPayoutModel GetRoleProbabilityPayout(UserViewModel user)
+        public RoleProbabilityPayoutModel GetRoleProbabilityPayout(UserV2ViewModel user)
         {
             var roleProbabilities = this.RoleProbabilityPayouts.Where(kvp => user.HasPermissionsTo(kvp.Key)).OrderByDescending(kvp => kvp.Key);
             if (roleProbabilities.Count() > 0)
@@ -126,7 +126,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return null;
         }
 
-        public double GetPayoutMultiplier(UserViewModel user)
+        public double GetPayoutMultiplier(UserV2ViewModel user)
         {
             RoleProbabilityPayoutModel roleProbabilityPayout = this.GetRoleProbabilityPayout(user);
             if (roleProbabilityPayout != null)
@@ -231,16 +231,16 @@ namespace MixItUp.Base.Model.Commands.Games
             }
         }
 
-        protected UserViewModel GetRandomUser(CommandParametersModel parameters)
+        protected UserV2ViewModel GetRandomUser(CommandParametersModel parameters)
         {
             CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
             int betAmount = this.GetPrimaryBetAmount(parameters);
             if (currencyRequirement != null && betAmount > 0)
             {
                 string currencyName = currencyRequirement.Currency?.Name;
-                List<UserViewModel> users = new List<UserViewModel>(ServiceManager.Get<UserService>().GetAllWorkableActiveUsers(parameters.Platform).Shuffle());
+                List<UserV2ViewModel> users = new List<UserV2ViewModel>(ServiceManager.Get<UserService>().GetAllWorkableActiveUsers(parameters.Platform).Shuffle());
                 users.Remove(parameters.User);
-                foreach (UserViewModel user in users)
+                foreach (UserV2ViewModel user in users)
                 {
                     if (!user.Data.IsCurrencyRankExempt && currencyRequirement.Currency.HasAmount(user.Data, betAmount))
                     {
@@ -305,7 +305,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return (currencyRequirement != null) ? currencyRequirement.Currency.HasAmount(parameters.User.Data, amount) : false;
         }
 
-        protected GameOutcomeModel SelectRandomOutcome(UserViewModel user, IEnumerable<GameOutcomeModel> outcomes)
+        protected GameOutcomeModel SelectRandomOutcome(UserV2ViewModel user, IEnumerable<GameOutcomeModel> outcomes)
         {
             int randomNumber = this.GenerateProbability();
             int cumulativeOutcomeProbability = 0;
@@ -345,7 +345,7 @@ namespace MixItUp.Base.Model.Commands.Games
             });
         }
 
-        protected void PerformPrimarySetPayout(UserViewModel user, int payout)
+        protected void PerformPrimarySetPayout(UserV2ViewModel user, int payout)
         {
             CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
             if (currencyRequirement != null)

@@ -25,7 +25,7 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public SettingsRequirementViewModel() { }
 
-        public bool DoesMeetRequirement(UserViewModel user)
+        public bool DoesMeetRequirement(UserV2ViewModel user)
         {
             if (!string.IsNullOrEmpty(this.PatreonBenefitIDRequirement) && !user.HasPermissionsTo(UserRoleEnum.Mod))
             {

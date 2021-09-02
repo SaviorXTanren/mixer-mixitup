@@ -73,7 +73,7 @@ namespace MixItUp.Base.ViewModel.Settings
         }
         private string titleName;
 
-        public IEnumerable<UserRoleEnum> Roles { get; private set; } = UserDataModel.GetSelectableUserRoles();
+        public IEnumerable<UserRoleEnum> Roles { get; private set; } = UserV2Model.GetSelectableUserRoles();
         public UserRoleEnum SelectedRole
         {
             get { return this.selectedRole; }

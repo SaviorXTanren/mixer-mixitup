@@ -14,11 +14,11 @@ namespace MixItUp.Base.Services
     {
         private const string QueuePositionSpecialIdentifier = "queueposition";
 
-        private LockedList<UserViewModel> queue = new LockedList<UserViewModel>();
+        private LockedList<UserV2ViewModel> queue = new LockedList<UserV2ViewModel>();
 
         public GameQueueService() { }
 
-        public IEnumerable<UserViewModel> Queue { get { return this.queue.ToList(); } }
+        public IEnumerable<UserV2ViewModel> Queue { get { return this.queue.ToList(); } }
 
         public bool IsEnabled { get; private set; }
 
@@ -34,7 +34,7 @@ namespace MixItUp.Base.Services
             await this.Clear();
         }
 
-        public async Task Join(UserViewModel user)
+        public async Task Join(UserV2ViewModel user)
         {
             if (await this.ValidateJoin(user))
             {
@@ -61,7 +61,7 @@ namespace MixItUp.Base.Services
             GlobalEvents.GameQueueUpdated();
         }
 
-        public async Task JoinFront(UserViewModel user)
+        public async Task JoinFront(UserV2ViewModel user)
         {
             if (await this.ValidateJoin(user))
             {
@@ -71,21 +71,21 @@ namespace MixItUp.Base.Services
             GlobalEvents.GameQueueUpdated();
         }
 
-        public Task Leave(UserViewModel user)
+        public Task Leave(UserV2ViewModel user)
         {
             this.queue.Remove(user);
             GlobalEvents.GameQueueUpdated();
             return Task.CompletedTask;
         }
 
-        public Task MoveUp(UserViewModel user)
+        public Task MoveUp(UserV2ViewModel user)
         {
             this.queue.MoveUp(user);
             GlobalEvents.GameQueueUpdated();
             return Task.CompletedTask;
         }
 
-        public Task MoveDown(UserViewModel user)
+        public Task MoveDown(UserV2ViewModel user)
         {
             this.queue.MoveDown(user);
             GlobalEvents.GameQueueUpdated();
@@ -96,7 +96,7 @@ namespace MixItUp.Base.Services
         {
             if (this.queue.Count > 0)
             {
-                UserViewModel user = this.queue.ElementAt(0);
+                UserV2ViewModel user = this.queue.ElementAt(0);
                 this.queue.Remove(user);
                 await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GameQueueUserSelectedCommandID, new CommandParametersModel(user));
                 GlobalEvents.GameQueueUpdated();
@@ -105,7 +105,7 @@ namespace MixItUp.Base.Services
 
         public async Task SelectFirstType(RoleRequirementModel roleRequirement)
         {
-            foreach (UserViewModel user in this.queue.ToList())
+            foreach (UserV2ViewModel user in this.queue.ToList())
             {
                 Result result = await roleRequirement.Validate(new CommandParametersModel(user));
                 if (result.Success)
@@ -124,20 +124,20 @@ namespace MixItUp.Base.Services
             if (this.queue.Count > 0)
             {
                 int index = RandomHelper.GenerateRandomNumber(this.queue.Count());
-                UserViewModel user = this.queue.ElementAt(index);
+                UserV2ViewModel user = this.queue.ElementAt(index);
                 this.queue.Remove(user);
                 await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GameQueueUserSelectedCommandID, new CommandParametersModel(user));
                 GlobalEvents.GameQueueUpdated();
             }
         }
 
-        public int GetUserPosition(UserViewModel user)
+        public int GetUserPosition(UserV2ViewModel user)
         {
             int position = this.queue.IndexOf(user);
             return (position != -1) ? position + 1 : position;
         }
 
-        public async Task PrintUserPosition(UserViewModel user)
+        public async Task PrintUserPosition(UserV2ViewModel user)
         {
             int position = this.GetUserPosition(user);
             if (position != -1)
@@ -179,7 +179,7 @@ namespace MixItUp.Base.Services
             return Task.CompletedTask;
         }
 
-        private async Task<bool> ValidateJoin(UserViewModel user)
+        private async Task<bool> ValidateJoin(UserV2ViewModel user)
         {
             int position = this.GetUserPosition(user);
             if (position != -1)

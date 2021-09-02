@@ -73,7 +73,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        private UserDataModel user;
+        private UserV2Model user;
 
         private CurrencyModel currency;
 
@@ -82,26 +82,26 @@ namespace MixItUp.Base.ViewModel.User
 
         private StreamPassModel streamPass;
 
-        public UserConsumableEditorViewModel(UserDataModel user, CurrencyModel currency)
+        public UserConsumableEditorViewModel(UserV2Model user, CurrencyModel currency)
             : this(user)
         {
             this.currency = currency;
         }
 
-        public UserConsumableEditorViewModel(UserDataModel user, InventoryModel inventory, InventoryItemModel item)
+        public UserConsumableEditorViewModel(UserV2Model user, InventoryModel inventory, InventoryItemModel item)
             : this(user)
         {
             this.inventory = inventory;
             this.item = item;
         }
 
-        public UserConsumableEditorViewModel(UserDataModel user, StreamPassModel streamPass)
+        public UserConsumableEditorViewModel(UserV2Model user, StreamPassModel streamPass)
             : this(user)
         {
             this.streamPass = streamPass;
         }
 
-        private UserConsumableEditorViewModel(UserDataModel user)
+        private UserConsumableEditorViewModel(UserV2Model user)
         {
             this.user = user;
         }
@@ -113,11 +113,11 @@ namespace MixItUp.Base.ViewModel.User
 
         public ThreadSafeObservableCollection<UserConsumableEditorViewModel> Items { get; set; } = new ThreadSafeObservableCollection<UserConsumableEditorViewModel>();
 
-        private UserDataModel user;
+        private UserV2Model user;
 
         private InventoryModel inventory;
 
-        public UserInventoryEditorViewModel(UserDataModel user, InventoryModel inventory)
+        public UserInventoryEditorViewModel(UserV2Model user, InventoryModel inventory)
         {
             this.user = user;
             this.inventory = inventory;
@@ -147,7 +147,7 @@ namespace MixItUp.Base.ViewModel.User
     {
         public const string UserEntranceCommandName = "Entrance Command";
 
-        public UserViewModel User { get; private set; }
+        public UserV2ViewModel User { get; private set; }
 
         public int ViewingHours
         {
@@ -292,7 +292,7 @@ namespace MixItUp.Base.ViewModel.User
                     {
                         currency.ResetAmount(this.User.Data);
                     }
-                    ChannelSession.Settings.UserData.ManualValueChanged(this.User.ID);
+                    ChannelSession.Settings.Users.ManualValueChanged(this.User.ID);
                 }
                 this.NotifyPropertyChanged();
             }
@@ -311,12 +311,12 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public UserDataEditorWindowViewModel(UserDataModel user)
+        public UserDataEditorWindowViewModel(UserV2Model user)
         {
             this.User = ServiceManager.Get<UserService>().GetActiveUserByID(user.ID);
             if (this.User == null)
             {
-                this.User = new UserViewModel(user);
+                this.User = new UserV2ViewModel(user);
             }
         }
 

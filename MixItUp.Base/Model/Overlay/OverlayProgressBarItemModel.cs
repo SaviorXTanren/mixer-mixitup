@@ -259,13 +259,13 @@ namespace MixItUp.Base.Model.Overlay
             return replacementSets;
         }
 
-        private void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user) { this.AddAmount(1); }
+        private void GlobalEvents_OnFollowOccurred(object sender, UserV2ViewModel user) { this.AddAmount(1); }
 
-        private void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user) { this.AddAmount(1); }
+        private void GlobalEvents_OnSubscribeOccurred(object sender, UserV2ViewModel user) { this.AddAmount(1); }
 
-        private void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user) { this.AddAmount(1); }
+        private void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserV2ViewModel, int> user) { this.AddAmount(1); }
 
-        private void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e) { this.AddAmount(1); }
+        private void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserV2ViewModel, UserV2ViewModel> e) { this.AddAmount(1); }
 
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { this.AddAmount(donation.Amount); }
 

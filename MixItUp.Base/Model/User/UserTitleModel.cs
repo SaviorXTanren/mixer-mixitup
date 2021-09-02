@@ -34,7 +34,7 @@ namespace MixItUp.Base.Model.User
             this.Months = months;
         }
 
-        public bool MeetsTitle(UserViewModel user)
+        public bool MeetsTitle(UserV2ViewModel user)
         {
             if (user.HasPermissionsTo(this.Role))
             {

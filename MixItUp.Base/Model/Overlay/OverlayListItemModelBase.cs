@@ -46,28 +46,28 @@ namespace MixItUp.Base.Model.Overlay
         public string Hash { get; set; } = string.Empty;
 
         [JsonIgnore]
-        private UserViewModel cachedUser;
+        private UserV2ViewModel cachedUser;
 
         public OverlayListIndividualItemModel() { }
 
-        public async Task<UserViewModel> GetUser()
+        public async Task<UserV2ViewModel> GetUser()
         {
             if (this.cachedUser == null && this.UserID != Guid.Empty)
             {
                 this.cachedUser = ServiceManager.Get<UserService>().GetActiveUserByID(this.UserID);
                 if (this.cachedUser == null)
                 {
-                    UserDataModel userData = await ServiceManager.Get<UserService>().GetUserDataByID(this.UserID);
+                    UserV2Model userData = await ServiceManager.Get<UserService>().GetUserDataByID(this.UserID);
                     if (userData != null)
                     {
-                        this.cachedUser = new UserViewModel(userData);
+                        this.cachedUser = new UserV2ViewModel(userData);
                     }
                 }
             }
             return this.cachedUser;
         }
 
-        public static OverlayListIndividualItemModel CreateAddItem(string id, UserViewModel user, int position, string html)
+        public static OverlayListIndividualItemModel CreateAddItem(string id, UserV2ViewModel user, int position, string html)
         {
             return new OverlayListIndividualItemModel()
             {

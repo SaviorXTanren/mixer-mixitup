@@ -189,7 +189,7 @@ namespace MixItUp.Base.Model.Requirements
             }
         }
 
-        public Result ValidateAmount(UserViewModel user, int amount)
+        public Result ValidateAmount(UserV2ViewModel user, int amount)
         {
             if (!user.Data.IsCurrencyRankExempt && !this.Currency.HasAmount(user.Data, amount))
             {
@@ -199,7 +199,7 @@ namespace MixItUp.Base.Model.Requirements
             return new Result();
         }
 
-        public void AddSubtractAmount(UserViewModel user, int amount)
+        public void AddSubtractAmount(UserV2ViewModel user, int amount)
         {
             CurrencyModel currency = this.Currency;
             if (currency != null && !user.Data.IsCurrencyRankExempt)

@@ -122,7 +122,7 @@ namespace MixItUp.Base.Model.Overlay
             return replacementSets;
         }
 
-        private async void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
+        private async void GlobalEvents_OnFollowOccurred(object sender, UserV2ViewModel user)
         {
             if (!this.follows.Contains(user.ID))
             {
@@ -131,7 +131,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async void GlobalEvents_OnHostOccurred(object sender, UserViewModel host)
+        private async void GlobalEvents_OnHostOccurred(object sender, UserV2ViewModel host)
         {
             if (!this.hosts.Contains(host.ID))
             {
@@ -140,7 +140,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async void GlobalEvents_OnRaidOccurred(object sender, Tuple<UserViewModel, int> raid)
+        private async void GlobalEvents_OnRaidOccurred(object sender, Tuple<UserV2ViewModel, int> raid)
         {
             if (!this.raids.Contains(raid.Item1.ID))
             {
@@ -149,7 +149,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
+        private async void GlobalEvents_OnSubscribeOccurred(object sender, UserV2ViewModel user)
         {
             if (!this.subs.Contains(user.ID))
             {
@@ -158,7 +158,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
+        private async void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserV2ViewModel, int> user)
         {
             if (!this.subs.Contains(user.Item1.ID))
             {
@@ -167,7 +167,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
+        private async void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserV2ViewModel, UserV2ViewModel> e)
         {
             await this.AddEvent(e.Item2.FullDisplayName);
         }

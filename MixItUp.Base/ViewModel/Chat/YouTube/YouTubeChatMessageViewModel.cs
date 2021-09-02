@@ -14,7 +14,7 @@ namespace MixItUp.Base.ViewModel.Chat.YouTube
         // 
         // https://www.gstatic.com/youtube/img/emojis/emojis-svg-5.json
 
-        public YouTubeChatMessageViewModel(LiveChatMessage message, UserViewModel user = null)
+        public YouTubeChatMessageViewModel(LiveChatMessage message, UserV2ViewModel user = null)
             : base(message.Id, StreamingPlatformTypeEnum.YouTube, user)
         {
             string[] parts = message.Snippet.DisplayMessage.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);

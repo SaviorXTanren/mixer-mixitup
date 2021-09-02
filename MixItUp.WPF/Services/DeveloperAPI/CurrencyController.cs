@@ -75,13 +75,13 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
             CurrencyModel currency = ChannelSession.Settings.Currency[currencyID];
 
-            Dictionary<Guid, UserDataModel> allUsersDictionary = ChannelSession.Settings.UserData.ToDictionary();
+            Dictionary<Guid, UserV2Model> allUsersDictionary = ChannelSession.Settings.Users.ToDictionary();
 
-            IEnumerable<UserDataModel> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
+            IEnumerable<UserV2Model> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
             allUsers = allUsers.Where(u => !u.IsCurrencyRankExempt);
 
             List<User> currencyUserList = new List<User>();
-            foreach (UserDataModel currencyUser in allUsers.OrderByDescending(u => currency.GetAmount(u)).Take(count))
+            foreach (UserV2Model currencyUser in allUsers.OrderByDescending(u => currency.GetAmount(u)).Take(count))
             {
                 currencyUserList.Add(UserController.UserFromUserDataViewModel(currencyUser));
             }
@@ -117,7 +117,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             List<User> users = new List<User>();
             foreach (var giveData in giveDatas)
             {
-                UserDataModel user = await UserController.GetUserData(giveData.UsernameOrID);
+                UserV2Model user = await UserController.GetUserData(giveData.UsernameOrID);
                 if (user != null && giveData.Amount > 0)
                 {
                     currency.AddAmount(user, giveData.Amount);

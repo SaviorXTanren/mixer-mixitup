@@ -79,13 +79,13 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
         public bool IsHighlightedMessage { get; set; }
 
         public string WhisperThreadID { get; set; }
-        public UserViewModel WhisperRecipient { get; set; }
+        public UserV2ViewModel WhisperRecipient { get; set; }
 
         public string ReplyThreadID { get; set; }
 
         public string PlainTextMessageNoCheermotes { get; set; }
 
-        public TwitchChatMessageViewModel(ChatMessagePacketModel message, UserViewModel user)
+        public TwitchChatMessageViewModel(ChatMessagePacketModel message, UserV2ViewModel user)
             : base(message.ID, StreamingPlatformTypeEnum.Twitch, user)
         {
             this.User.SetTwitchChatDetails(message);
@@ -120,7 +120,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             }
         }
 
-        public TwitchChatMessageViewModel(PubSubWhisperEventModel whisper, UserViewModel user, UserViewModel recipient)
+        public TwitchChatMessageViewModel(PubSubWhisperEventModel whisper, UserV2ViewModel user, UserV2ViewModel recipient)
             : base(whisper.message_id, StreamingPlatformTypeEnum.Twitch, user)
         {
             this.WhisperThreadID = whisper.thread_id;
@@ -131,7 +131,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             this.ProcessMessageContents(whisper.body);
         }
 
-        public TwitchChatMessageViewModel(UserViewModel user, PubSubBitsEventV2Model bitsCheer)
+        public TwitchChatMessageViewModel(UserV2ViewModel user, PubSubBitsEventV2Model bitsCheer)
             : base(bitsCheer.message_id, StreamingPlatformTypeEnum.Twitch, user)
         {
             this.HasBits = true;
@@ -139,13 +139,13 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             this.ProcessMessageContents((!string.IsNullOrEmpty(bitsCheer.chat_message)) ? bitsCheer.chat_message : string.Empty);
         }
 
-        public TwitchChatMessageViewModel(ChatClearMessagePacketModel messageDeletion, UserViewModel user)
+        public TwitchChatMessageViewModel(ChatClearMessagePacketModel messageDeletion, UserV2ViewModel user)
             : base(messageDeletion.ID, StreamingPlatformTypeEnum.Twitch, user)
         {
             this.ProcessMessageContents(messageDeletion.Message);
         }
 
-        public TwitchChatMessageViewModel(UserViewModel user, string message, string replyMessageID = null)
+        public TwitchChatMessageViewModel(UserV2ViewModel user, string message, string replyMessageID = null)
             : base(string.Empty, StreamingPlatformTypeEnum.Twitch, user)
         {
             this.ReplyThreadID = replyMessageID;

@@ -529,10 +529,7 @@ namespace MixItUp.Base.Model.Settings
         public DatabaseList<UserQuoteModel> Quotes { get; set; } = new DatabaseList<UserQuoteModel>();
 
         [JsonIgnore]
-        public DatabaseDictionary<Guid, UserDataModel> UserData { get; set; } = new DatabaseDictionary<Guid, UserDataModel>();
-
-        [JsonIgnore]
-        public DatabaseDictionary<Guid, UserV2Model> UsersV2 { get; set; } = new DatabaseDictionary<Guid, UserV2Model>();
+        public DatabaseDictionary<Guid, UserV2Model> Users { get; set; } = new DatabaseDictionary<Guid, UserV2Model>();
 
         #endregion Database Data
 
@@ -735,25 +732,10 @@ namespace MixItUp.Base.Model.Settings
 
         public async Task SaveDatabaseData()
         {
-            IEnumerable<Guid> removedUsers = this.UserData.GetRemovedValues();
+            IEnumerable<Guid> removedUsers = this.Users.GetRemovedValues();
             await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "DELETE FROM Users WHERE ID = $ID", removedUsers.Select(u => new Dictionary<string, object>() { { "$ID", u.ToString() } }));
 
-            IEnumerable<UserDataModel> changedOldUsers = this.UserData.GetAddedChangedValues();
-            await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath,
-                "REPLACE INTO Users(ID, TwitchID, TwitchUsername, YouTubeID, YouTubeUsername, FacebookID, FacebookUsername, TrovoID, TrovoUsername, GlimeshID, GlimeshUsername, Data) " +
-                "VALUES($ID, $TwitchID, $TwitchUsername, $YouTubeID, $YouTubeUsername, $FacebookID, $FacebookUsername, $TrovoID, $TrovoUsername, $GlimeshID, $GlimeshUsername, $Data)",
-                changedOldUsers.Select(u => new Dictionary<string, object>()
-                {
-                    { "$ID", u.ID.ToString() },
-                    { "$TwitchID", u.TwitchID }, { "$TwitchUsername", u.TwitchUsername },
-                    { "$YouTubeID", null }, { "$YouTubeUsername", null },
-                    { "$FacebookID", null }, { "$FacebookUsername", null },
-                    { "$TrovoID", null }, { "$TrovoUsername", null },
-                    { "$GlimeshID", null }, { "$GlimeshUsername", null },
-                    { "$Data", JSONSerializerHelper.SerializeToString(u) }
-                }));
-
-            IEnumerable<UserV2Model> changedUsers = this.UsersV2.GetAddedChangedValues();
+            IEnumerable<UserV2Model> changedUsers = this.Users.GetAddedChangedValues();
             await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath,
                 "REPLACE INTO Users(ID, TwitchID, TwitchUsername, YouTubeID, YouTubeUsername, FacebookID, FacebookUsername, TrovoID, TrovoUsername, GlimeshID, GlimeshUsername, Data) " +
                 "VALUES($ID, $TwitchID, $TwitchUsername, $YouTubeID, $YouTubeUsername, $FacebookID, $FacebookUsername, $TrovoID, $TrovoUsername, $GlimeshID, $GlimeshUsername, $Data)",
@@ -784,19 +766,6 @@ namespace MixItUp.Base.Model.Settings
                 this.Quotes.GetAddedChangedValues().Select(q => new Dictionary<string, object>() { { "$ID", q.ID.ToString() }, { "$Quote", q.Quote }, { "$GameName", q.GameName }, { "$DateTime", q.DateTime.ToString() } }));
         }
 
-        public async Task<IEnumerable<UserDataModel>> LoadUserData(string query, Dictionary<string, object> parameters)
-        {
-            List<UserDataModel> results = new List<UserDataModel>();
-
-            await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, query, parameters,
-                (Dictionary<string, object> data) =>
-                {
-                    results.Add(JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString()));
-                });
-
-            return results;
-        }
-
         public async Task<IEnumerable<UserV2Model>> LoadUserV2Data(string query, Dictionary<string, object> parameters)
         {
             List<UserV2Model> results = new List<UserV2Model>();
@@ -809,10 +778,10 @@ namespace MixItUp.Base.Model.Settings
 
             foreach (UserV2Model user in results)
             {
-                if (!this.UserData.ContainsKey(user.ID))
+                if (!this.Users.ContainsKey(user.ID))
                 {
-                    this.UsersV2[user.ID] = user;
-                    this.UsersV2.ClearTracking(user.ID);
+                    this.Users[user.ID] = user;
+                    this.Users.ClearTracking(user.ID);
                 }
             }
 

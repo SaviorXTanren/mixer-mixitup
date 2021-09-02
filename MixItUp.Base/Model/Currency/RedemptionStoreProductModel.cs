@@ -88,7 +88,7 @@ namespace MixItUp.Base.Model.Currency
     [DataContract]
     public class RedemptionStorePurchaseModel
     {
-        public static async Task Purchase(UserViewModel user, IEnumerable<string> arguments)
+        public static async Task Purchase(UserV2ViewModel user, IEnumerable<string> arguments)
         {
             if (arguments.Count() == 0)
             {
@@ -164,7 +164,7 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public static async Task Redeem(UserViewModel user, IEnumerable<string> arguments)
+        public static async Task Redeem(UserV2ViewModel user, IEnumerable<string> arguments)
         {
             if (!user.HasPermissionsTo(UserRoleEnum.Mod))
             {
@@ -187,7 +187,7 @@ namespace MixItUp.Base.Model.Currency
             else
             {
                 name = UserService.SanitizeUsername(name);
-                UserViewModel purchaseUser = ServiceManager.Get<UserService>().GetActiveUserByUsername(name, user.Platform);
+                UserV2ViewModel purchaseUser = ServiceManager.Get<UserService>().GetActiveUserByUsername(name, user.Platform);
                 if (purchaseUser != null)
                 {
                     IEnumerable<RedemptionStorePurchaseModel> purchases = ChannelSession.Settings.RedemptionStorePurchases.ToList().Where(p => p.UserID == user.ID);
@@ -224,11 +224,11 @@ namespace MixItUp.Base.Model.Currency
         public RedemptionStorePurchaseRedemptionState State { get; set; } = RedemptionStorePurchaseRedemptionState.AutoRedeemed;
 
         [JsonIgnore]
-        public UserViewModel User { get; set; }
+        public UserV2ViewModel User { get; set; }
 
         public RedemptionStorePurchaseModel() { }
 
-        public RedemptionStorePurchaseModel(RedemptionStoreProductModel product, UserViewModel user)
+        public RedemptionStorePurchaseModel(RedemptionStoreProductModel product, UserV2ViewModel user)
         {
             this.ID = Guid.NewGuid();
             this.ProductID = product.ID;
@@ -254,7 +254,7 @@ namespace MixItUp.Base.Model.Currency
         public async Task Redeem()
         {
             RedemptionStoreProductModel product = this.Product;
-            UserViewModel user = this.User;
+            UserV2ViewModel user = this.User;
             if (product != null && user != null)
             {
                 CommandModelBase command = product.Command;
@@ -286,7 +286,7 @@ namespace MixItUp.Base.Model.Currency
         public async Task Refund()
         {
             RedemptionStoreProductModel product = this.Product;
-            UserViewModel user = this.User;
+            UserV2ViewModel user = this.User;
             if (product != null && user != null)
             {
                 await product.Requirements.Refund(new CommandParametersModel(user));

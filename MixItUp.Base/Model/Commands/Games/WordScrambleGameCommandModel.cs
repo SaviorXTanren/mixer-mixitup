@@ -50,7 +50,7 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private int runBetAmount;
         [JsonIgnore]
-        private Dictionary<UserViewModel, CommandParametersModel> runUsers = new Dictionary<UserViewModel, CommandParametersModel>();
+        private Dictionary<UserV2ViewModel, CommandParametersModel> runUsers = new Dictionary<UserV2ViewModel, CommandParametersModel>();
         [JsonIgnore]
         private string runWord;
         [JsonIgnore]

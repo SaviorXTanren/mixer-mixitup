@@ -291,7 +291,7 @@ namespace MixItUp.Base.ViewModel.User
         public void UpdateViewingMinutes()
         {
             this.OnlineViewingMinutes++;
-            ChannelSession.Settings.UserData.ManualValueChanged(this.ID);
+            ChannelSession.Settings.Users.ManualValueChanged(this.ID);
 
             if (ChannelSession.Settings.RegularUserMinimumHours > 0 && this.OnlineViewingHoursOnly >= ChannelSession.Settings.RegularUserMinimumHours)
             {

@@ -55,7 +55,7 @@ namespace MixItUp.Base.Actions
             this.GroupName = groupName;
         }
 
-        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserV2ViewModel user, IEnumerable<string> arguments)
         {
             return Task.CompletedTask;
         }
@@ -78,7 +78,7 @@ namespace MixItUp.Base.Actions
         public ActionGroupAction() : base(ActionTypeEnum.ActionGroup) { }
 #pragma warning restore CS0612 // Type or member is obsolete
 
-        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserV2ViewModel user, IEnumerable<string> arguments)
         {
             return Task.CompletedTask;
         }

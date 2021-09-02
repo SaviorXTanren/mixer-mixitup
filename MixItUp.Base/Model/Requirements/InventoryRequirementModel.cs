@@ -106,7 +106,7 @@ namespace MixItUp.Base.Model.Requirements
             return Task.CompletedTask;
         }
 
-        public Result ValidateAmount(UserViewModel user, int amount)
+        public Result ValidateAmount(UserV2ViewModel user, int amount)
         {
             if (!user.Data.IsCurrencyRankExempt && !this.Inventory.HasAmount(user.Data, this.ItemID, amount))
             {

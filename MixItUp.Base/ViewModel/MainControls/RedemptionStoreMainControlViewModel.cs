@@ -31,7 +31,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             get
             {
-                UserViewModel user = this.Purchase.User;
+                UserV2ViewModel user = this.Purchase.User;
                 if (user != null)
                 {
                     return user.FullDisplayName;

@@ -14,7 +14,7 @@ namespace MixItUp.WPF.Controls.Chat
 {
     public static class ChatUserDialogControl
     {
-        public static async Task ShowUserDialog(UserViewModel user)
+        public static async Task ShowUserDialog(UserV2ViewModel user)
         {
             if (user != null && !user.IsAnonymous)
             {

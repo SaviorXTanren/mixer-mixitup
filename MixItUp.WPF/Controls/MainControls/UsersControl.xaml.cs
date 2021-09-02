@@ -62,7 +62,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private void UserEditButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            UserDataModel userData = (UserDataModel)button.DataContext;
+            UserV2Model userData = (UserV2Model)button.DataContext;
             UserDataEditorWindow window = new UserDataEditorWindow(userData);
             window.Closed += Window_Closed;
             window.Show();
@@ -71,7 +71,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private async void UserDeleteButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            UserDataModel userData = (UserDataModel)button.DataContext;
+            UserV2Model userData = (UserV2Model)button.DataContext;
             await this.viewModel.DeleteUser(userData);
         }
 

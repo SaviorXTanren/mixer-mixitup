@@ -15,7 +15,7 @@ namespace MixItUp.Base.Services
 {
     public class GiveawayUser
     {
-        public UserViewModel User { get; set; }
+        public UserV2ViewModel User { get; set; }
         public int Entries { get; set; }
     }
 
@@ -26,7 +26,7 @@ namespace MixItUp.Base.Services
         public string Item { get; private set; }
         public int TimeLeft { get; private set; }
         public IEnumerable<GiveawayUser> Users { get { return this.enteredUsers.Values.ToList(); } }
-        public UserViewModel Winner { get; private set; }
+        public UserV2ViewModel Winner { get; private set; }
 
         private ChatCommandModel giveawayCommand = null;
 

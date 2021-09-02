@@ -7,7 +7,7 @@ namespace MixItUp.Base.ViewModel.Chat.Glimesh
 {
     public class GlimeshChatMessageViewModel : UserChatMessageViewModel
     {
-        public GlimeshChatMessageViewModel(ChatMessagePacketModel message, UserViewModel user = null)
+        public GlimeshChatMessageViewModel(ChatMessagePacketModel message, UserV2ViewModel user = null)
             : base(message.ID, StreamingPlatformTypeEnum.Glimesh, user)
         {
             foreach (ChatMessageTokenModel token in message.MessageTokens)

@@ -60,7 +60,7 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private bool collectActive = false;
         [JsonIgnore]
-        private HashSet<UserViewModel> collectUsers = new HashSet<UserViewModel>();
+        private HashSet<UserV2ViewModel> collectUsers = new HashSet<UserV2ViewModel>();
 
         public VolcanoGameCommandModel(string name, HashSet<string> triggers, string statusArgument, CustomCommandModel stage1DepositCommand, CustomCommandModel stage1StatusCommand,
             int stage2MinimumAmount, CustomCommandModel stage2DepositCommand, CustomCommandModel stage2StatusCommand,

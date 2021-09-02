@@ -723,7 +723,7 @@ namespace MixItUp.Base.Model.Commands
                     username = username.Substring(1);
                 }
 
-                UserViewModel targetUser = ServiceManager.Get<UserService>().GetActiveUserByUsername(username, parameters.Platform);
+                UserV2ViewModel targetUser = ServiceManager.Get<UserService>().GetActiveUserByUsername(username, parameters.Platform);
                 if (targetUser != null)
                 {
                     targetUser.Title = string.Join(" ", parameters.Arguments.Skip(1));
@@ -924,7 +924,7 @@ namespace MixItUp.Base.Model.Commands
                 string mixerUsername = UserService.SanitizeUsername(parameters.Arguments.First());
 
 #pragma warning disable CS0612 // Type or member is obsolete
-                UserDataModel mixerUserData = ChannelSession.Settings.UserData.Values.ToList().FirstOrDefault(u => u.Platforms.Contains(StreamingPlatformTypeEnum.Mixer) && string.Equals(u.MixerUsername, mixerUsername, StringComparison.OrdinalIgnoreCase));
+                UserV2Model mixerUserData = ChannelSession.Settings.Users.Values.ToList().FirstOrDefault(u => u.Platforms.Contains(StreamingPlatformTypeEnum.Mixer) && string.Equals(u.MixerUsername, mixerUsername, StringComparison.OrdinalIgnoreCase));
 #pragma warning restore CS0612 // Type or member is obsolete
                 if (mixerUserData != null)
                 {
@@ -949,16 +949,16 @@ namespace MixItUp.Base.Model.Commands
         {
             if (parameters.Arguments != null && parameters.Arguments.Count() == 1)
             {
-                UserViewModel targetUser = ServiceManager.Get<UserService>().GetActiveUserByUsername(UserService.SanitizeUsername(parameters.Arguments.First()), parameters.User.Platform);
+                UserV2ViewModel targetUser = ServiceManager.Get<UserService>().GetActiveUserByUsername(UserService.SanitizeUsername(parameters.Arguments.First()), parameters.User.Platform);
                 if (targetUser != null && LinkMixerAccountPreMadeChatCommandModel.LinkedAccounts.ContainsKey(targetUser.ID))
                 {
-                    UserDataModel mixerUserData = await ServiceManager.Get<UserService>().GetUserDataByID(LinkMixerAccountPreMadeChatCommandModel.LinkedAccounts[targetUser.ID]);
+                    UserV2Model mixerUserData = await ServiceManager.Get<UserService>().GetUserDataByID(LinkMixerAccountPreMadeChatCommandModel.LinkedAccounts[targetUser.ID]);
                     if (mixerUserData != null)
                     {
                         LinkMixerAccountPreMadeChatCommandModel.LinkedAccounts.Remove(targetUser.ID);
                         targetUser.Data.MergeData(mixerUserData);
 
-                        ChannelSession.Settings.UserData.Remove(mixerUserData.ID);
+                        ChannelSession.Settings.Users.Remove(mixerUserData.ID);
 
                         await ServiceManager.Get<ChatService>().SendMessage($"The user data from the account {mixerUserData.MixerUsername} on Mixer has been deleted and merged into @{targetUser.Username}.", parameters.Platform);
                         return;

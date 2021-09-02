@@ -13,7 +13,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 {
     public class QueueUser
     {
-        public UserViewModel user { get; set; }
+        public UserV2ViewModel user { get; set; }
 
         public int QueuePosition { get; set; }
 
@@ -21,7 +21,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public string PrimaryRole { get { return EnumHelper.GetEnumName(this.user.PrimaryRole); } }
 
-        public QueueUser(UserViewModel user, int queuePosition)
+        public QueueUser(UserV2ViewModel user, int queuePosition)
         {
             this.user = user;
             this.QueuePosition = queuePosition;
@@ -96,19 +96,19 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.MoveUpCommand = this.CreateCommand(async (user) =>
             {
-                await ServiceManager.Get<GameQueueService>().MoveUp((UserViewModel)user);
+                await ServiceManager.Get<GameQueueService>().MoveUp((UserV2ViewModel)user);
                 this.NotifyPropertyChanges();
             });
 
             this.MoveDownCommand = this.CreateCommand(async (user) =>
             {
-                await ServiceManager.Get<GameQueueService>().MoveDown((UserViewModel)user);
+                await ServiceManager.Get<GameQueueService>().MoveDown((UserV2ViewModel)user);
                 this.NotifyPropertyChanges();
             });
 
             this.DeleteCommand = this.CreateCommand(async (user) =>
             {
-                await ServiceManager.Get<GameQueueService>().Leave((UserViewModel)user);
+                await ServiceManager.Get<GameQueueService>().Leave((UserV2ViewModel)user);
                 this.NotifyPropertyChanges();
             });
 
@@ -126,7 +126,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             List<QueueUser> queue = new List<QueueUser>();
             int position = 1;
-            foreach (UserViewModel user in ServiceManager.Get<GameQueueService>().Queue)
+            foreach (UserV2ViewModel user in ServiceManager.Get<GameQueueService>().Queue)
             {
                 queue.Add(new QueueUser(user, position));
                 position++;

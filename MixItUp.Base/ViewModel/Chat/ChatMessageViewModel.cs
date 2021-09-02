@@ -40,13 +40,13 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public string ModerationReason { get; private set; }
 
-        public UserViewModel User { get; set; }
+        public UserV2ViewModel User { get; set; }
 
         public DateTimeOffset ProcessingStartTime { get; set; }
 
         public event EventHandler OnDeleted = delegate { };
 
-        public ChatMessageViewModel(string id, StreamingPlatformTypeEnum platform, UserViewModel user)
+        public ChatMessageViewModel(string id, StreamingPlatformTypeEnum platform, UserV2ViewModel user)
         {
             this.ID = id;
             this.Platform = platform;
@@ -135,7 +135,7 @@ namespace MixItUp.Base.ViewModel.Chat
             return false;
         }
 
-        public async Task Delete(UserViewModel moderator = null, string reason = null)
+        public async Task Delete(UserV2ViewModel moderator = null, string reason = null)
         {
             try
             {

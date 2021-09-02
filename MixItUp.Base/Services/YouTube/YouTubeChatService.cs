@@ -169,11 +169,11 @@ namespace MixItUp.Base.Services.YouTube
 
         public async Task DeleteMessage(ChatMessageViewModel message) { await this.userClient.DeleteMessage(new LiveChatMessage() { Id = message.ID }); }
 
-        public async Task<LiveChatModerator> ModUser(UserViewModel user) { return await this.userClient.ModUser(new Channel() { Id = user.YouTubeID }); }
+        public async Task<LiveChatModerator> ModUser(UserV2ViewModel user) { return await this.userClient.ModUser(new Channel() { Id = user.YouTubeID }); }
 
-        public async Task<LiveChatBan> TimeoutUser(UserViewModel user, ulong duration) { return await this.userClient.TimeoutUser(new Channel() { Id = user.YouTubeID }, duration); }
+        public async Task<LiveChatBan> TimeoutUser(UserV2ViewModel user, ulong duration) { return await this.userClient.TimeoutUser(new Channel() { Id = user.YouTubeID }, duration); }
 
-        public async Task<LiveChatBan> BanUser(UserViewModel user) { return await this.userClient.BanUser(new Channel() { Id = user.YouTubeID }); }
+        public async Task<LiveChatBan> BanUser(UserV2ViewModel user) { return await this.userClient.BanUser(new Channel() { Id = user.YouTubeID }); }
 
         public async Task<IEnumerable<YouTubeChatEmoteModel>> GetChatEmotes()
         {
@@ -198,17 +198,17 @@ namespace MixItUp.Base.Services.YouTube
 
                     if (message.AuthorDetails?.ChannelId != null)
                     {
-                        UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.YouTube, message.AuthorDetails.ChannelId);
+                        UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.YouTube, message.AuthorDetails.ChannelId);
                         if (user == null)
                         {
                             Channel youtubeUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByID(message.AuthorDetails.ChannelId);
                             if (youtubeUser != null)
                             {
-                                user = await UserViewModel.Create(youtubeUser);
+                                user = await UserV2ViewModel.Create(youtubeUser);
                             }
                             else
                             {
-                                user = await UserViewModel.Create(message);
+                                user = await UserV2ViewModel.Create(message);
                             }
                             await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
                         }

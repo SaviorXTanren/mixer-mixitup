@@ -14,7 +14,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 {
     public class ChatMainControlViewModel : ChatListControlViewModel
     {
-        public IEnumerable<UserViewModel> DisplayUsers { get; private set; }
+        public IEnumerable<UserV2ViewModel> DisplayUsers { get; private set; }
 
         public bool ShowViewerAndChatterNumbers { get { return !ChannelSession.Settings.HideViewerAndChatterNumbers; } }
 

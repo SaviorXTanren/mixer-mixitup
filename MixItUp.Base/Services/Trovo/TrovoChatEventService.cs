@@ -229,15 +229,15 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task<bool> ClearChat() { return await this.PerformChatCommand("clear"); }
 
-        public async Task<bool> ModUser(UserViewModel user) { return await this.PerformChatCommand("mod @" + user.TrovoUsername); }
+        public async Task<bool> ModUser(UserV2ViewModel user) { return await this.PerformChatCommand("mod @" + user.TrovoUsername); }
 
-        public async Task<bool> UnmodUser(UserViewModel user) { return await this.PerformChatCommand("unmod @" + user.TrovoUsername); }
+        public async Task<bool> UnmodUser(UserV2ViewModel user) { return await this.PerformChatCommand("unmod @" + user.TrovoUsername); }
 
-        public async Task<bool> TimeoutUser(UserViewModel user, int duration) { return await this.PerformChatCommand($"ban @{user.TrovoUsername} {duration}"); }
+        public async Task<bool> TimeoutUser(UserV2ViewModel user, int duration) { return await this.PerformChatCommand($"ban @{user.TrovoUsername} {duration}"); }
 
-        public async Task<bool> BanUser(UserViewModel user) { return await this.PerformChatCommand("ban @" + user.TrovoUsername); }
+        public async Task<bool> BanUser(UserV2ViewModel user) { return await this.PerformChatCommand("ban @" + user.TrovoUsername); }
 
-        public async Task<bool> UnbanUser(UserViewModel user) { return await this.PerformChatCommand("unban @" + user.TrovoUsername); }
+        public async Task<bool> UnbanUser(UserV2ViewModel user) { return await this.PerformChatCommand("unban @" + user.TrovoUsername); }
 
         public async Task<bool> PerformChatCommand(string command)
         {
@@ -272,17 +272,17 @@ namespace MixItUp.Base.Services.Trovo
                 }
                 this.messagesProcessed.Add(message.message_id);
 
-                UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Trovo, messageContainer.chats.First().sender_id.ToString());
+                UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Trovo, messageContainer.chats.First().sender_id.ToString());
                 if (user == null)
                 {
                     UserModel trovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(messageContainer.chats.First().nick_name);
                     if (trovoUser != null)
                     {
-                        user = await UserViewModel.Create(trovoUser);
+                        user = await UserV2ViewModel.Create(trovoUser);
                     }
                     else
                     {
-                        user = await UserViewModel.Create(message);
+                        user = await UserV2ViewModel.Create(message);
                     }
                     await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
                 }
@@ -355,7 +355,7 @@ namespace MixItUp.Base.Services.Trovo
                         }
                     }
 
-                    GlobalEvents.ResubscribeOccurred(new Tuple<UserViewModel, int>(user, 1));
+                    GlobalEvents.ResubscribeOccurred(new Tuple<UserV2ViewModel, int>(user, 1));
                     await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Trovo, user, string.Format("{0} Subscribed", user.DisplayName), ChannelSession.Settings.AlertSubColor));
                 }
                 else if (message.type == ChatMessageTypeEnum.GiftedSubscriptionSentMessage)
@@ -382,7 +382,7 @@ namespace MixItUp.Base.Services.Trovo
                     if (splits.Length == 2)
                     {
                         string gifteeUsername = splits[1];
-                        UserViewModel giftee = ServiceManager.Get<UserService>().GetActiveUserByUsername(gifteeUsername, StreamingPlatformTypeEnum.Trovo);
+                        UserV2ViewModel giftee = ServiceManager.Get<UserService>().GetActiveUserByUsername(gifteeUsername, StreamingPlatformTypeEnum.Trovo);
                         if (giftee == null)
                         {
                             UserModel gifteeTrovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(gifteeUsername);
@@ -392,7 +392,7 @@ namespace MixItUp.Base.Services.Trovo
                             }
                             else
                             {
-                                giftee = await UserViewModel.Create(gifteeTrovoUser);
+                                giftee = await UserV2ViewModel.Create(gifteeTrovoUser);
                             }
                         }
 

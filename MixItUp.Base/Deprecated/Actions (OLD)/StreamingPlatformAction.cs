@@ -64,7 +64,7 @@ namespace MixItUp.Base.Actions
             this.ActionType = type;
         }
 
-        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserV2ViewModel user, IEnumerable<string> arguments)
         {
             return Task.CompletedTask;
         }

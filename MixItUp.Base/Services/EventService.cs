@@ -203,7 +203,7 @@ namespace MixItUp.Base.Services
 
         public bool CanPerformEvent(EventTypeEnum type, CommandParametersModel parameters)
         {
-            UserViewModel user = (parameters.User != null) ? parameters.User : ChannelSession.GetCurrentUser();
+            UserV2ViewModel user = (parameters.User != null) ? parameters.User : ChannelSession.GetCurrentUser();
             if (EventService.singleUseTracking.Contains(type) && this.userEventTracking.ContainsKey(type))
             {
                 return !this.userEventTracking[type].Contains(user.ID);
@@ -215,7 +215,7 @@ namespace MixItUp.Base.Services
         {
             if (this.CanPerformEvent(type, parameters))
             {
-                UserViewModel user = parameters.User;
+                UserV2ViewModel user = parameters.User;
                 if (user == null)
                 {
                     user = ChannelSession.GetCurrentUser();

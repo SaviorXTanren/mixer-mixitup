@@ -121,37 +121,37 @@ namespace MixItUp.Base.Services
             this.Statistics.Add(this.BitsTracker);
         }
 
-        private void Constellation_OnFollowOccurred(object sender, UserViewModel e)
+        private void Constellation_OnFollowOccurred(object sender, UserV2ViewModel e)
         {
             this.FollowTracker.OnStatisticEventOccurred(e.Username);
         }
 
-        private void Constellation_OnUnfollowOccurred(object sender, UserViewModel e)
+        private void Constellation_OnUnfollowOccurred(object sender, UserV2ViewModel e)
         {
             this.UnfollowTracker.OnStatisticEventOccurred(e.Username);
         }
 
-        private void Constellation_OnHostedOccurred(object sender, UserViewModel e)
+        private void Constellation_OnHostedOccurred(object sender, UserV2ViewModel e)
         {
             this.HostsTracker.OnStatisticEventOccurred(e.Username);
         }
 
-        private void GlobalEvents_OnRaidOccurred(object sender, Tuple<UserViewModel, int> e)
+        private void GlobalEvents_OnRaidOccurred(object sender, Tuple<UserV2ViewModel, int> e)
         {
             this.RaidsTracker.OnStatisticEventOccurred(e.Item1.Username, e.Item2);
         }
 
-        private void Constellation_OnSubscribedOccurred(object sender, UserViewModel e)
+        private void Constellation_OnSubscribedOccurred(object sender, UserV2ViewModel e)
         {
             this.SubscriberTracker.OnStatisticEventOccurred(e.Username);
         }
 
-        private void Constellation_OnResubscribedOccurred(object sender, Tuple<UserViewModel, int> e)
+        private void Constellation_OnResubscribedOccurred(object sender, Tuple<UserV2ViewModel, int> e)
         {
             this.ResubscriberTracker.OnStatisticEventOccurred(e.Item1.Username);
         }
 
-        private void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
+        private void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserV2ViewModel, UserV2ViewModel> e)
         {
             this.GiftedSubscriptionsTracker.OnStatisticEventOccurred(e.Item1.Username, e.Item2.Username);
         }

@@ -11,7 +11,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public AlertChatMessageViewModel(StreamingPlatformTypeEnum platform, string message, string color = null) : this(platform, ChannelSession.GetCurrentUser(), message, color) { }
 
-        public AlertChatMessageViewModel(StreamingPlatformTypeEnum platform, UserViewModel user, string message, string color = null)
+        public AlertChatMessageViewModel(StreamingPlatformTypeEnum platform, UserV2ViewModel user, string message, string color = null)
             : base(string.Empty, platform, user)
         {
             this.Color = color;

@@ -374,7 +374,7 @@ namespace MixItUp.Base.Services.Twitch
             });
         }
 
-        public async Task SendWhisperMessage(UserViewModel user, string message, bool sendAsStreamer = false)
+        public async Task SendWhisperMessage(UserV2ViewModel user, string message, bool sendAsStreamer = false)
         {
             await this.messageSemaphore.WaitAndRelease(async () =>
             {
@@ -416,7 +416,7 @@ namespace MixItUp.Base.Services.Twitch
             });
         }
 
-        public async Task ModUser(UserViewModel user)
+        public async Task ModUser(UserV2ViewModel user)
         {
             await AsyncRunner.RunAsync(async () =>
             {
@@ -427,7 +427,7 @@ namespace MixItUp.Base.Services.Twitch
             });
         }
 
-        public async Task UnmodUser(UserViewModel user)
+        public async Task UnmodUser(UserV2ViewModel user)
         {
             await AsyncRunner.RunAsync(async () =>
             {
@@ -438,7 +438,7 @@ namespace MixItUp.Base.Services.Twitch
             });
         }
 
-        public async Task TimeoutUser(UserViewModel user, int lengthInSeconds)
+        public async Task TimeoutUser(UserV2ViewModel user, int lengthInSeconds)
         {
             await AsyncRunner.RunAsync(async () =>
             {
@@ -449,7 +449,7 @@ namespace MixItUp.Base.Services.Twitch
             });
         }
 
-        public async Task BanUser(UserViewModel user)
+        public async Task BanUser(UserV2ViewModel user)
         {
             await AsyncRunner.RunAsync(async () =>
             {
@@ -460,7 +460,7 @@ namespace MixItUp.Base.Services.Twitch
             });
         }
 
-        public async Task UnbanUser(UserViewModel user)
+        public async Task UnbanUser(UserV2ViewModel user)
         {
             await AsyncRunner.RunAsync(async () =>
             {
@@ -500,10 +500,10 @@ namespace MixItUp.Base.Services.Twitch
 
             if (joinsToProcess.Count > 0)
             {
-                List<UserViewModel> processedUsers = new List<UserViewModel>();
+                List<UserV2ViewModel> processedUsers = new List<UserV2ViewModel>();
                 foreach (string username in joinsToProcess)
                 {
-                    UserViewModel user = await ServiceManager.Get<UserService>().GetUserFullSearch(StreamingPlatformTypeEnum.Twitch, userID: null, username);
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserFullSearch(StreamingPlatformTypeEnum.Twitch, userID: null, username);
                     if (user != null)
                     {
                         await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
@@ -527,12 +527,12 @@ namespace MixItUp.Base.Services.Twitch
 
             if (leavesToProcess.Count > 0)
             {
-                List<UserViewModel> processedUsers = new List<UserViewModel>();
+                List<UserV2ViewModel> processedUsers = new List<UserV2ViewModel>();
                 foreach (string username in leavesToProcess)
                 {
                     if (!string.IsNullOrEmpty(username))
                     {
-                        UserViewModel user = await ServiceManager.Get<UserService>().RemoveActiveUserByUsername(StreamingPlatformTypeEnum.Twitch, username);
+                        UserV2ViewModel user = await ServiceManager.Get<UserService>().RemoveActiveUserByUsername(StreamingPlatformTypeEnum.Twitch, username);
                         if (user != null)
                         {
                             processedUsers.Add(user);
@@ -667,7 +667,7 @@ namespace MixItUp.Base.Services.Twitch
 
         private void UserClient_OnUserStateReceived(object sender, ChatUserStatePacketModel userState)
         {
-            UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByUsername(userState.UserDisplayName, StreamingPlatformTypeEnum.Twitch);
+            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByUsername(userState.UserDisplayName, StreamingPlatformTypeEnum.Twitch);
             if (user != null)
             {
                 user.SetTwitchChatDetails(userState);
@@ -688,10 +688,10 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (RaidUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
                 {
-                    UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, userNotice.UserID.ToString());
+                    UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, userNotice.UserID.ToString());
                     if (user == null)
                     {
-                        user = await UserViewModel.Create(userNotice);
+                        user = await UserV2ViewModel.Create(userNotice);
                     }
                     user.SetTwitchChatDetails(userNotice);
 
@@ -727,7 +727,7 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     if (ServiceManager.Has<TwitchEventService>())
                     {
-                        UserViewModel gifter = UserViewModel.Create("An Anonymous Gifter");
+                        UserV2ViewModel gifter = UserV2ViewModel.Create("An Anonymous Gifter");
                         if (!TwitchMassGiftedSubEventModel.IsAnonymousGifter(userNotice))
                         {
                             gifter = await ServiceManager.Get<UserService>().GetUserFullSearch(StreamingPlatformTypeEnum.Twitch, userNotice.UserID.ToString(), userNotice.Login);
@@ -740,10 +740,10 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     if (ServiceManager.Has<TwitchEventService>())
                     {
-                        UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, userNotice.UserID.ToString());
+                        UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, userNotice.UserID.ToString());
                         if (user == null)
                         {
-                            user = await UserViewModel.Create(userNotice);
+                            user = await UserV2ViewModel.Create(userNotice);
                         }
                         user.SetTwitchChatDetails(userNotice);
 
@@ -761,10 +761,10 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void UserClient_OnChatClearReceived(object sender, ChatClearChatPacketModel chatClear)
         {
-            UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, chatClear.UserID);
+            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, chatClear.UserID);
             if (user == null)
             {
-                user = await UserViewModel.Create(chatClear);
+                user = await UserV2ViewModel.Create(chatClear);
             }
 
             if (chatClear.IsClear)
@@ -805,7 +805,7 @@ namespace MixItUp.Base.Services.Twitch
                         Logger.Log(LogLevel.Debug, JSONSerializerHelper.SerializeToString(message));
 
                         string hosterUsername = message.Message.Substring(0, message.Message.IndexOf(' '));
-                        UserViewModel user = await ServiceManager.Get<UserService>().GetUserFullSearch(StreamingPlatformTypeEnum.Twitch, userID: null, hosterUsername);
+                        UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserFullSearch(StreamingPlatformTypeEnum.Twitch, userID: null, hosterUsername);
                         if (user != null)
                         {
                             await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
@@ -829,7 +829,7 @@ namespace MixItUp.Base.Services.Twitch
                 }
                 else
                 {
-                    UserViewModel user = await ServiceManager.Get<UserService>().GetUserFullSearch(StreamingPlatformTypeEnum.Twitch, message.UserID, message.UserLogin);
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserFullSearch(StreamingPlatformTypeEnum.Twitch, message.UserID, message.UserLogin);
                     await ServiceManager.Get<ChatService>().AddMessage(new TwitchChatMessageViewModel(message, user));
                 }
             }
@@ -839,10 +839,10 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (packet != null && !string.IsNullOrEmpty(packet.ID) && !string.IsNullOrEmpty(packet.UserLogin))
             {
-                UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByUsername(packet.UserLogin, StreamingPlatformTypeEnum.Twitch);
+                UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByUsername(packet.UserLogin, StreamingPlatformTypeEnum.Twitch);
                 if (user == null)
                 {
-                    user = UserViewModel.Create(packet.UserLogin);
+                    user = UserV2ViewModel.Create(packet.UserLogin);
                 }
 
                 await ServiceManager.Get<ChatService>().DeleteMessage(new TwitchChatMessageViewModel(packet, user), externalDeletion: true);

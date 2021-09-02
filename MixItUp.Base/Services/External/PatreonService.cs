@@ -696,7 +696,7 @@ namespace MixItUp.Base.Services.External
                             }
                             else
                             {
-                                parameters.User = UserViewModel.Create(member.User.PlatformUsername);
+                                parameters.User = UserV2ViewModel.Create(member.User.PlatformUsername);
                             }
 
                             parameters.SpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierNameSpecialIdentifier] = tier.Title;

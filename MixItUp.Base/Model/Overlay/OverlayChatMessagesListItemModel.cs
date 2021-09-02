@@ -100,7 +100,7 @@ namespace MixItUp.Base.Model.Overlay
                         }
                     }
 
-                    UserViewModel user = await item.GetUser();
+                    UserV2ViewModel user = await item.GetUser();
                     if (user != null)
                     {
                         item.TemplateReplacements.Add("MESSAGE", OverlayChatMessagesListItemModel.TextMessageHTMLTemplate);

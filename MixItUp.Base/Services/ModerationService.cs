@@ -88,7 +88,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task<string> ShouldTextBeModerated(UserViewModel user, string text, bool containsLink = false)
+        public async Task<string> ShouldTextBeModerated(UserV2ViewModel user, string text, bool containsLink = false)
         {
             string reason = null;
 
@@ -130,7 +130,7 @@ namespace MixItUp.Base.Services
             return reason;
         }
 
-        public async Task<string> ShouldTextBeFilteredWordModerated(UserViewModel user, string text)
+        public async Task<string> ShouldTextBeFilteredWordModerated(UserV2ViewModel user, string text)
         {
             text = PrepareTextForChecking(text);
 
@@ -168,7 +168,7 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        public string ShouldTextBeExcessiveModerated(UserViewModel user, string text)
+        public string ShouldTextBeExcessiveModerated(UserV2ViewModel user, string text)
         {
             if (!user.HasPermissionsTo(ChannelSession.Settings.ModerationChatTextExcempt))
             {
@@ -229,7 +229,7 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        public string ShouldTextBeLinkModerated(UserViewModel user, string text, bool containsLink = false)
+        public string ShouldTextBeLinkModerated(UserV2ViewModel user, string text, bool containsLink = false)
         {
             text = PrepareTextForChecking(text);
 
@@ -244,7 +244,7 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        public bool DoesUserMeetChatInteractiveParticipationRequirement(UserViewModel user, ChatMessageViewModel message = null)
+        public bool DoesUserMeetChatInteractiveParticipationRequirement(UserV2ViewModel user, ChatMessageViewModel message = null)
         {
             if (ChannelSession.Settings.ModerationChatInteractiveParticipation != ModerationChatInteractiveParticipationEnum.None)
             {
@@ -328,7 +328,7 @@ namespace MixItUp.Base.Services
             return true;
         }
 
-        public async Task SendChatInteractiveParticipationWhisper(UserViewModel user, bool isChat = false)
+        public async Task SendChatInteractiveParticipationWhisper(UserV2ViewModel user, bool isChat = false)
         {
             if (user != null)
             {

@@ -53,8 +53,8 @@ namespace MixItUp.Base.Services
         public ThreadSafeObservableCollection<ChatMessageViewModel> Messages { get; private set; } = new ThreadSafeObservableCollection<ChatMessageViewModel>();
         private LockedDictionary<string, ChatMessageViewModel> messagesLookup = new LockedDictionary<string, ChatMessageViewModel>();
 
-        public LockedDictionary<Guid, UserViewModel> AllUsers { get; private set; } = new LockedDictionary<Guid, UserViewModel>();
-        public IEnumerable<UserViewModel> DisplayUsers
+        public LockedDictionary<Guid, UserV2ViewModel> AllUsers { get; private set; } = new LockedDictionary<Guid, UserV2ViewModel>();
+        public IEnumerable<UserV2ViewModel> DisplayUsers
         {
             get
             {
@@ -65,7 +65,7 @@ namespace MixItUp.Base.Services
             }
         }
         public event EventHandler DisplayUsersUpdated = delegate { };
-        private SortedList<string, UserViewModel> displayUsers = new SortedList<string, UserViewModel>();
+        private SortedList<string, UserV2ViewModel> displayUsers = new SortedList<string, UserV2ViewModel>();
         private object displayUsersLock = new object();
 
         public event EventHandler ChatCommandsReprocessed = delegate { };
@@ -111,7 +111,7 @@ namespace MixItUp.Base.Services
 
                     if (sendAsStreamer || ServiceManager.Get<TwitchSessionService>().BotConnection == null)
                     {
-                        UserViewModel user = ChannelSession.GetCurrentUser();
+                        UserV2ViewModel user = ChannelSession.GetCurrentUser();
                         await this.AddMessage(new TwitchChatMessageViewModel(user, message, replyMessageID));
                     }
                 }
@@ -133,7 +133,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task Whisper(UserViewModel user, string message, bool sendAsStreamer = false)
+        public async Task Whisper(UserV2ViewModel user, string message, bool sendAsStreamer = false)
         {
             if (user != null && !string.IsNullOrEmpty(message))
             {
@@ -146,7 +146,7 @@ namespace MixItUp.Base.Services
 
         public async Task Whisper(StreamingPlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false)
         {
-            UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByUsername(username, platform);
+            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByUsername(username, platform);
             if (user != null)
             {
                 await this.Whisper(user, message, sendAsStreamer);
@@ -205,7 +205,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task PurgeUser(UserViewModel user)
+        public async Task PurgeUser(UserV2ViewModel user)
         {
             if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Has<TwitchChatService>())
             {
@@ -213,7 +213,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task TimeoutUser(UserViewModel user, uint durationInSeconds)
+        public async Task TimeoutUser(UserV2ViewModel user, uint durationInSeconds)
         {
             if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Has<TwitchChatService>())
             {
@@ -231,7 +231,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task ModUser(UserViewModel user)
+        public async Task ModUser(UserV2ViewModel user)
         {
             if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Has<TwitchChatService>())
             {
@@ -249,7 +249,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task UnmodUser(UserViewModel user)
+        public async Task UnmodUser(UserV2ViewModel user)
         {
             if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Has<TwitchChatService>())
             {
@@ -262,7 +262,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task BanUser(UserViewModel user)
+        public async Task BanUser(UserV2ViewModel user)
         {
             if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Has<TwitchChatService>())
             {
@@ -285,7 +285,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task UnbanUser(UserViewModel user)
+        public async Task UnbanUser(UserV2ViewModel user)
         {
             if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Has<TwitchChatService>())
             {
@@ -467,7 +467,7 @@ namespace MixItUp.Base.Services
                         string primaryTaggedUsername = message.PrimaryTaggedUsername;
                         if (!string.IsNullOrEmpty(primaryTaggedUsername))
                         {
-                            UserViewModel primaryTaggedUser = ServiceManager.Get<UserService>().GetActiveUserByUsername(primaryTaggedUsername, message.Platform);
+                            UserV2ViewModel primaryTaggedUser = ServiceManager.Get<UserService>().GetActiveUserByUsername(primaryTaggedUsername, message.Platform);
                             if (primaryTaggedUser != null)
                             {
                                 primaryTaggedUser.Data.TotalTimesTagged++;
@@ -620,11 +620,11 @@ namespace MixItUp.Base.Services
             return Task.CompletedTask;
         }
 
-        public async Task UsersJoined(IEnumerable<UserViewModel> users)
+        public async Task UsersJoined(IEnumerable<UserV2ViewModel> users)
         {
             List<AlertChatMessageViewModel> alerts = new List<AlertChatMessageViewModel>();
 
-            foreach (UserViewModel user in users)
+            foreach (UserV2ViewModel user in users)
             {
                 this.AllUsers[user.ID] = user;
                 lock (displayUsersLock)
@@ -645,11 +645,11 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task UsersLeft(IEnumerable<UserViewModel> users)
+        public async Task UsersLeft(IEnumerable<UserV2ViewModel> users)
         {
             List<AlertChatMessageViewModel> alerts = new List<AlertChatMessageViewModel>();
 
-            foreach (UserViewModel user in users)
+            foreach (UserV2ViewModel user in users)
             {
                 if (this.AllUsers.Remove(user.ID))
                 {
@@ -732,7 +732,7 @@ namespace MixItUp.Base.Services
 
         private Task ProcessHoursCurrency(CancellationToken cancellationToken)
         {
-            foreach (UserViewModel user in ServiceManager.Get<UserService>().GetAllWorkableActiveUsers())
+            foreach (UserV2ViewModel user in ServiceManager.Get<UserService>().GetAllWorkableActiveUsers())
             {
                 user.UpdateMinuteData();
             }

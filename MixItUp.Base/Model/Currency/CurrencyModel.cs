@@ -257,7 +257,7 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public int GetAmount(UserDataModel user)
+        public int GetAmount(UserV2Model user)
         {
             if (user.CurrencyAmounts.ContainsKey(this.ID))
             {
@@ -266,40 +266,40 @@ namespace MixItUp.Base.Model.Currency
             return 0;
         }
 
-        public bool HasAmount(UserDataModel user, int amount)
+        public bool HasAmount(UserV2Model user, int amount)
         {
             return (user.IsCurrencyRankExempt || this.GetAmount(user) >= amount);
         }
 
-        public void SetAmount(UserDataModel user, int amount)
+        public void SetAmount(UserV2Model user, int amount)
         {
             RankModel prevRank = this.GetRank(user);
 
             user.CurrencyAmounts[this.ID] = Math.Min(Math.Max(amount, 0), this.MaxAmount);
             if (ChannelSession.Settings != null)
             {
-                ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+                ChannelSession.Settings.Users.ManualValueChanged(user.ID);
             }
 
             RankModel newRank = this.GetRank(user);
 
-            UserViewModel userViewModel = ServiceManager.Get<UserService>().GetActiveUserByID(user.ID);
-            if (userViewModel == null)
+            UserV2ViewModel UserV2ViewModel = ServiceManager.Get<UserService>().GetActiveUserByID(user.ID);
+            if (UserV2ViewModel == null)
             {
-                userViewModel = new UserViewModel(user);
+                UserV2ViewModel = new UserV2ViewModel(user);
             }
 
             if (newRank.Amount > prevRank.Amount && this.RankChangedCommand != null)
             {
-                AsyncRunner.RunAsyncBackground((cancellationToken) => ServiceManager.Get<CommandService>().Queue(this.RankChangedCommand, new CommandParametersModel(userViewModel)), new CancellationToken());
+                AsyncRunner.RunAsyncBackground((cancellationToken) => ServiceManager.Get<CommandService>().Queue(this.RankChangedCommand, new CommandParametersModel(UserV2ViewModel)), new CancellationToken());
             }
             else if (newRank.Amount < prevRank.Amount && this.RankDownCommand != null)
             {
-                AsyncRunner.RunAsyncBackground((cancellationToken) => ServiceManager.Get<CommandService>().Queue(this.RankDownCommand, new CommandParametersModel(userViewModel)), new CancellationToken());
+                AsyncRunner.RunAsyncBackground((cancellationToken) => ServiceManager.Get<CommandService>().Queue(this.RankDownCommand, new CommandParametersModel(UserV2ViewModel)), new CancellationToken());
             }
         }
 
-        public void AddAmount(UserDataModel user, int amount)
+        public void AddAmount(UserV2Model user, int amount)
         {
             if (!user.IsCurrencyRankExempt && amount > 0)
             {
@@ -307,7 +307,7 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public void SubtractAmount(UserDataModel user, int amount)
+        public void SubtractAmount(UserV2Model user, int amount)
         {
             if (!user.IsCurrencyRankExempt)
             {
@@ -315,9 +315,9 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public void ResetAmount(UserDataModel user) { this.SetAmount(user, 0); }
+        public void ResetAmount(UserV2Model user) { this.SetAmount(user, 0); }
 
-        public RankModel GetRank(UserDataModel user)
+        public RankModel GetRank(UserV2Model user)
         {
             if (this.Ranks.Count > 0)
             {
@@ -331,7 +331,7 @@ namespace MixItUp.Base.Model.Currency
             return CurrencyModel.NoRank;
         }
 
-        public RankModel GetNextRank(UserDataModel user)
+        public RankModel GetNextRank(UserV2Model user)
         {
             if (this.Ranks.Count > 0)
             {
@@ -357,7 +357,7 @@ namespace MixItUp.Base.Model.Currency
                     {
                         DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
                         bool bonusesCanBeApplied = (ServiceManager.Get<TwitchSessionService>().StreamIsLive || this.OfflineAcquireAmount > 0);
-                        foreach (UserViewModel user in ServiceManager.Get<UserService>().GetAllWorkableActiveUsers())
+                        foreach (UserV2ViewModel user in ServiceManager.Get<UserService>().GetAllWorkableActiveUsers())
                         {
                             if (!user.Data.IsCurrencyRankExempt && (!this.HasMinimumActiveRate || user.LastActivity > minActiveTime))
                             {
@@ -387,7 +387,7 @@ namespace MixItUp.Base.Model.Currency
                                             this.AddAmount(user.Data, bonus);
                                         }
                                     }
-                                    ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+                                    ChannelSession.Settings.Users.ManualValueChanged(user.ID);
                                 }
                             }
                         }
@@ -455,12 +455,12 @@ namespace MixItUp.Base.Model.Currency
         {
             await ServiceManager.Get<UserService>().LoadAllUserData();
 
-            foreach (UserDataModel user in ChannelSession.Settings.UserData.Values.ToList())
+            foreach (UserV2Model user in ChannelSession.Settings.Users.Values.ToList())
             {
                 if (this.GetAmount(user) > 0)
                 {
                     this.SetAmount(user, 0);
-                    ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+                    ChannelSession.Settings.Users.ManualValueChanged(user.ID);
                 }
             }
             this.LastReset = new DateTimeOffset(DateTimeOffset.Now.Date);

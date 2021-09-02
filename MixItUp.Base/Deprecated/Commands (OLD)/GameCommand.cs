@@ -58,7 +58,7 @@ namespace MixItUp.Base.Commands
             this.Command = command;
         }
 
-        public int GetRoleProbability(UserViewModel user)
+        public int GetRoleProbability(UserV2ViewModel user)
         {
             var roleProbabilities = this.RoleProbabilities.Select(kvp => kvp.Key).OrderByDescending(k => k);
             if (roleProbabilities.Any(r => user.HasPermissionsTo(r)))
@@ -68,12 +68,12 @@ namespace MixItUp.Base.Commands
             return this.RoleProbabilities[roleProbabilities.LastOrDefault()];
         }
 
-        public int GetPayout(UserViewModel user, int betAmount)
+        public int GetPayout(UserV2ViewModel user, int betAmount)
         {
             return Convert.ToInt32(Convert.ToDouble(betAmount) * this.GetPayoutAmount(user));
         }
 
-        private double GetPayoutAmount(UserViewModel user)
+        private double GetPayoutAmount(UserV2ViewModel user)
         {
             if (this.RolePayouts.Count > 0)
             {

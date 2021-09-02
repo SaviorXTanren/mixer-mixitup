@@ -48,11 +48,11 @@ namespace MixItUp.Base.Model.Overlay
         {
             public string ID { get; set; }
 
-            public UserViewModel User { get; set; }
+            public UserV2ViewModel User { get; set; }
 
             public string Hash { get; set; }
 
-            public OverlayLeaderboardItem(UserViewModel user, string hash)
+            public OverlayLeaderboardItem(UserV2ViewModel user, string hash)
                 : this(user.FullDisplayName, hash)
             {
                 this.User = user;
@@ -153,7 +153,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public override Task LoadTestData()
         {
-            UserViewModel user = ChannelSession.GetCurrentUser();
+            UserV2ViewModel user = ChannelSession.GetCurrentUser();
             return Task.CompletedTask;
         }
 
@@ -167,7 +167,7 @@ namespace MixItUp.Base.Model.Overlay
 
                 //foreach (UserSubscriptionModel subscriber in subscribers)
                 //{
-                //    UserViewModel user = await UserViewModel.Create(subscriber.user);
+                //    UserV2ViewModel user = await UserV2ViewModel.Create(subscriber.user);
                 //    DateTimeOffset? subDate = TwitchPlatformService.GetTwitchDateTime(subscriber.created_at);
                 //    if (subDate.HasValue && this.ShouldIncludeUser(user))
                 //    {
@@ -211,13 +211,13 @@ namespace MixItUp.Base.Model.Overlay
                 if (ChannelSession.Settings.Currency.ContainsKey(this.CurrencyID))
                 {
                     CurrencyModel currency = ChannelSession.Settings.Currency[this.CurrencyID];
-                    IEnumerable<UserDataModel> userDataList = await SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency);
+                    IEnumerable<UserV2Model> userDataList = await SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency);
                     for (int i = 0; i < userDataList.Count() && items.Count < this.TotalToShow; i++)
                     {
-                        UserDataModel userData = userDataList.ElementAt(i);
+                        UserV2Model userData = userDataList.ElementAt(i);
                         if (!userData.IsCurrencyRankExempt)
                         {
-                            items.Add(new OverlayLeaderboardItem(new UserViewModel(userData), currency.GetAmount(userData).ToString()));
+                            items.Add(new OverlayLeaderboardItem(new UserV2ViewModel(userData), currency.GetAmount(userData).ToString()));
                         }
                     }
                 }
@@ -265,18 +265,18 @@ namespace MixItUp.Base.Model.Overlay
             return await base.GetProcessedItem(parameters);
         }
 
-        private async void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
+        private async void GlobalEvents_OnSubscribeOccurred(object sender, UserV2ViewModel user)
         {
             userSubDates[user.ID] = DateTimeOffset.Now;
             await this.UpdateSubscribers();
         }
 
-        private async void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
+        private async void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserV2ViewModel, int> user)
         {
             await this.UpdateSubscribers();
         }
 
-        private async void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
+        private async void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserV2ViewModel, UserV2ViewModel> e)
         {
             await this.UpdateSubscribers();
         }
@@ -289,10 +289,10 @@ namespace MixItUp.Base.Model.Overlay
             for (int i = 0; i < orderedUsers.Count() && items.Count() < this.TotalToShow; i++)
             {
                 var kvp = orderedUsers.ElementAt(i);
-                UserDataModel userData = await ServiceManager.Get<UserService>().GetUserDataByID(kvp.Key);
+                UserV2Model userData = await ServiceManager.Get<UserService>().GetUserDataByID(kvp.Key);
                 if (userData != null)
                 {
-                    items.Add(new OverlayLeaderboardItem(new UserViewModel(userData), kvp.Value.GetAge()));
+                    items.Add(new OverlayLeaderboardItem(new UserV2ViewModel(userData), kvp.Value.GetAge()));
                 }
             }
 
@@ -302,7 +302,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation)
         {
-            UserViewModel user = donation.User;
+            UserV2ViewModel user = donation.User;
             if (user != null)
             {
                 if (!this.userDonations.ContainsKey(user.ID))
@@ -318,10 +318,10 @@ namespace MixItUp.Base.Model.Overlay
                 for (int i = 0; i < orderedUsers.Count() && items.Count() < this.TotalToShow; i++)
                 {
                     var kvp = orderedUsers.ElementAt(i);
-                    UserDataModel userData = await ServiceManager.Get<UserService>().GetUserDataByID(kvp.Key);
+                    UserV2Model userData = await ServiceManager.Get<UserService>().GetUserDataByID(kvp.Key);
                     if (userData != null)
                     {
-                        items.Add(new OverlayLeaderboardItem(new UserViewModel(userData), kvp.Value.AmountText));
+                        items.Add(new OverlayLeaderboardItem(new UserV2ViewModel(userData), kvp.Value.AmountText));
                     }
                 }
 
@@ -364,8 +364,8 @@ namespace MixItUp.Base.Model.Overlay
                     // Detect if we had a list before, and we have a list now, and the top user changed, let's trigger the event
                     if (this.lastItems.Count() > 0 && updatedList.Count() > 0)
                     {
-                        UserViewModel previous = await this.lastItems.First().GetUser();
-                        UserViewModel current = await updatedList .First().GetUser();
+                        UserV2ViewModel previous = await this.lastItems.First().GetUser();
+                        UserV2ViewModel current = await updatedList .First().GetUser();
                         if (previous != null && current != null && !previous.ID.Equals(current.ID))
                         {
                             await ServiceManager.Get<CommandService>().Queue(this.LeaderChangedCommand, new CommandParametersModel(current, new string[] { previous.Username }) { TargetUser = previous });
@@ -377,7 +377,7 @@ namespace MixItUp.Base.Model.Overlay
             }));
         }
 
-        private bool ShouldIncludeUser(UserViewModel user)
+        private bool ShouldIncludeUser(UserV2ViewModel user)
         {
             if (user == null)
             {

@@ -66,7 +66,7 @@ namespace MixItUp.Base.Model.User
         public string AmountText { get { return this.Amount.ToCurrencyString(); } }
 
         [JsonIgnore]
-        public UserViewModel User
+        public UserV2ViewModel User
         {
             get
             {
@@ -77,14 +77,14 @@ namespace MixItUp.Base.Model.User
                         this.user = ServiceManager.Get<UserService>().GetActiveUserByUsername(this.username, this.Platform);
                         if (this.user == null)
                         {
-                            this.user = UserViewModel.Create(this.username);
+                            this.user = UserV2ViewModel.Create(this.username);
                         }
                     }
                 }
                 return this.user;
             }
         }
-        private UserViewModel user;
+        private UserV2ViewModel user;
 
         public Dictionary<string, string> GetSpecialIdentifiers()
         {

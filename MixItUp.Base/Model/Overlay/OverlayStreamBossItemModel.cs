@@ -126,7 +126,7 @@ namespace MixItUp.Base.Model.Overlay
         }
 
         [JsonIgnore]
-        public UserViewModel CurrentBoss { get; set; }
+        public UserV2ViewModel CurrentBoss { get; set; }
 
         private SemaphoreSlim HealthSemaphore = new SemaphoreSlim(1);
 
@@ -172,10 +172,10 @@ namespace MixItUp.Base.Model.Overlay
 
             if (this.CurrentBossID != Guid.Empty)
             {
-                UserDataModel userData = await ServiceManager.Get<UserService>().GetUserDataByID(this.CurrentBossID);
+                UserV2Model userData = await ServiceManager.Get<UserService>().GetUserDataByID(this.CurrentBossID);
                 if (userData != null)
                 {
-                    this.CurrentBoss = new UserViewModel(userData);
+                    this.CurrentBoss = new UserV2ViewModel(userData);
                 }
                 else
                 {
@@ -236,7 +236,7 @@ namespace MixItUp.Base.Model.Overlay
 
         protected override async Task<Dictionary<string, string>> GetTemplateReplacements(CommandParametersModel parameters)
         {
-            UserViewModel boss = null;
+            UserV2ViewModel boss = null;
             int health = 0;
 
             await this.HealthSemaphore.WaitAndRelease(() =>
@@ -272,7 +272,7 @@ namespace MixItUp.Base.Model.Overlay
             return replacementSets;
         }
 
-        private async Task ReduceHealth(UserViewModel user, double amount)
+        private async Task ReduceHealth(UserV2ViewModel user, double amount)
         {
             await this.HealthSemaphore.WaitAndRelease(async () =>
             {
@@ -316,7 +316,7 @@ namespace MixItUp.Base.Model.Overlay
             });
         }
 
-        private async void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
+        private async void GlobalEvents_OnFollowOccurred(object sender, UserV2ViewModel user)
         {
             if (!this.follows.Contains(user.ID))
             {
@@ -325,7 +325,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async void GlobalEvents_OnHostOccurred(object sender, UserViewModel host)
+        private async void GlobalEvents_OnHostOccurred(object sender, UserV2ViewModel host)
         {
             if (!this.hosts.Contains(host.ID))
             {
@@ -334,7 +334,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async void GlobalEvents_OnRaidOccurred(object sender, Tuple<UserViewModel, int> raid)
+        private async void GlobalEvents_OnRaidOccurred(object sender, Tuple<UserV2ViewModel, int> raid)
         {
             if (!this.raids.Contains(raid.Item1.ID))
             {
@@ -343,17 +343,17 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
+        private async void GlobalEvents_OnSubscribeOccurred(object sender, UserV2ViewModel user)
         {
             await this.ReduceHealth(user, this.SubscriberBonus);
         }
 
-        private async void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
+        private async void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserV2ViewModel, int> user)
         {
             await this.ReduceHealth(user.Item1, this.SubscriberBonus);
         }
 
-        private async void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
+        private async void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserV2ViewModel, UserV2ViewModel> e)
         {
             await this.ReduceHealth(e.Item1, this.SubscriberBonus);
         }

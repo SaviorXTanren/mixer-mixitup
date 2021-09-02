@@ -47,7 +47,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
 
-        public IEnumerable<UserRoleEnum> UserRoles { get { return UserDataModel.GetSelectableUserRoles(); } }
+        public IEnumerable<UserRoleEnum> UserRoles { get { return UserV2Model.GetSelectableUserRoles(); } }
 
         public UserRoleEnum SelectedUserRole
         {

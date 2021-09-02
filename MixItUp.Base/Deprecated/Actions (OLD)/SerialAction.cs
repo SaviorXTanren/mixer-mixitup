@@ -34,7 +34,7 @@ namespace MixItUp.Base.Actions
             this.Message = message;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override async Task PerformInternal(UserV2ViewModel user, IEnumerable<string> arguments)
         {
             SerialDeviceModel serialDevice = ChannelSession.Settings.SerialDevices.FirstOrDefault(sd => sd.PortName.Equals(this.PortName));
             if (serialDevice != null)

@@ -78,7 +78,7 @@ namespace MixItUp.Base.Model.Actions
             }
             else
             {
-                UserViewModel targetUser = null;
+                UserV2ViewModel targetUser = null;
                 if (!string.IsNullOrEmpty(this.TargetUsername))
                 {
                     string username = await this.ReplaceStringWithSpecialModifiers(this.TargetUsername, parameters);

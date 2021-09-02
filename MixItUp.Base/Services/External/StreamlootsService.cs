@@ -261,8 +261,8 @@ namespace MixItUp.Base.Services.External
             var purchase = jobj["data"].ToObject<StreamlootsPurchaseModel>();
             if (purchase != null)
             {
-                UserViewModel user = this.GetUser(purchase.data.Username);
-                UserViewModel giftee = (string.IsNullOrEmpty(purchase.data.Giftee)) ? null : this.GetUser(purchase.data.Giftee);
+                UserV2ViewModel user = this.GetUser(purchase.data.Username);
+                UserV2ViewModel giftee = (string.IsNullOrEmpty(purchase.data.Giftee)) ? null : this.GetUser(purchase.data.Giftee);
 
                 CommandParametersModel parameters = new CommandParametersModel(user);
                 parameters.SpecialIdentifiers["streamlootspurchasequantity"] = purchase.data.Quantity.ToString();
@@ -276,7 +276,7 @@ namespace MixItUp.Base.Services.External
                     await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.StreamlootsPackPurchased, parameters);
                 }
 
-                GlobalEvents.StreamlootsPurchaseOccurred(new Tuple<UserViewModel, int>(user, purchase.data.Quantity));
+                GlobalEvents.StreamlootsPurchaseOccurred(new Tuple<UserV2ViewModel, int>(user, purchase.data.Quantity));
 
                 if (giftee != null)
                 {
@@ -295,7 +295,7 @@ namespace MixItUp.Base.Services.External
             StreamlootsCardModel card = jobj["data"].ToObject<StreamlootsCardModel>();
             if (card != null && !string.IsNullOrEmpty(card.data?.cardName))
             {
-                UserViewModel user = this.GetUser(card.data.Username);
+                UserV2ViewModel user = this.GetUser(card.data.Username);
 
                 Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
                 specialIdentifiers["streamlootscardname"] = card.data.cardName;
@@ -332,12 +332,12 @@ namespace MixItUp.Base.Services.External
             }
         }
 
-        private UserViewModel GetUser(string username)
+        private UserV2ViewModel GetUser(string username)
         {
-            UserViewModel user = ServiceManager.Get<UserService>().GetActiveUserByUsername(username);
+            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByUsername(username);
             if (user == null)
             {
-                user = UserViewModel.Create(username);
+                user = UserV2ViewModel.Create(username);
             }
             return user;
         }

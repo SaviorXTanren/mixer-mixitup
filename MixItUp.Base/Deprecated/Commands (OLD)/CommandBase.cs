@@ -170,7 +170,7 @@ namespace MixItUp.Base.Commands
             await this.Perform(ChannelSession.GetCurrentUser(), platform, arguments, extraSpecialIdentifiers: extraSpecialIdentifiers);
         }
 
-        public Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
+        public Task Perform(UserV2ViewModel user, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
             if (this.IsEnabled)
             {
@@ -248,7 +248,7 @@ namespace MixItUp.Base.Commands
             return Task.CompletedTask;
         }
 
-        public async Task PerformAndWait(UserViewModel user, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
+        public async Task PerformAndWait(UserV2ViewModel user, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
             try
             {
@@ -279,12 +279,12 @@ namespace MixItUp.Base.Commands
             return CommandBase.DoesTextMatchCommand(text, CommandBase.CommandMatchingRegexFormat, this.CommandTriggers, out arguments);
         }
 
-        protected virtual Task<bool> PerformPreChecks(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        protected virtual Task<bool> PerformPreChecks(UserV2ViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             return Task.FromResult(true);
         }
 
-        protected virtual async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
+        protected virtual async Task PerformInternal(UserV2ViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
             List<ActionBase> actionsToRun = new List<ActionBase>();
             if (this.IsRandomized)
@@ -375,7 +375,7 @@ namespace MixItUp.Base.Commands
         {
             protected override SemaphoreSlim AsyncSemaphore { get { return null; } }
 
-            protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments) { return Task.CompletedTask; }
+            protected override Task PerformInternal(UserV2ViewModel user, IEnumerable<string> arguments) { return Task.CompletedTask; }
         }
 
         public MixPlayJoystickCommand() { }

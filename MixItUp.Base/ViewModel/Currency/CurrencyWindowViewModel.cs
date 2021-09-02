@@ -534,7 +534,7 @@ namespace MixItUp.Base.ViewModel.Currency
                         await ServiceManager.Get<UserService>().LoadAllUserData();
 
                         await this.Currency.Reset();
-                        foreach (MixItUp.Base.Model.User.UserDataModel userData in ChannelSession.Settings.UserData.Values)
+                        foreach (MixItUp.Base.Model.User.UserV2Model userData in ChannelSession.Settings.Users.Values)
                         {
                             int intervalsToGive = userData.ViewingMinutes / this.Currency.AcquireInterval;
                             this.Currency.AddAmount(userData, this.Currency.AcquireAmount * intervalsToGive);
@@ -546,7 +546,7 @@ namespace MixItUp.Base.ViewModel.Currency
                             {
                                 this.Currency.AddAmount(userData, this.Currency.SubscriberBonus * intervalsToGive);
                             }
-                            ChannelSession.Settings.UserData.ManualValueChanged(userData.ID);
+                            ChannelSession.Settings.Users.ManualValueChanged(userData.ID);
                         }
                     }
                 }
@@ -603,23 +603,23 @@ namespace MixItUp.Base.ViewModel.Currency
                                         throw new InvalidOperationException("File is not in the correct format");
                                     }
 
-                                    UserViewModel user = null;
+                                    UserV2ViewModel user = null;
                                     if (amount > 0)
                                     {
                                         // TODO
                                         //if (id > 0)
                                         //{
-                                        //    MixItUp.Base.Model.User.UserDataModel userData = ChannelSession.Settings.GetUserDataByTwitchID(id.ToString());
+                                        //    MixItUp.Base.Model.User.UserV2Model userData = ChannelSession.Settings.GetUserDataByTwitchID(id.ToString());
                                         //    if (userData != null)
                                         //    {
-                                        //        user = new UserViewModel(userData);
+                                        //        user = new UserV2ViewModel(userData);
                                         //    }
                                         //    else
                                         //    {
                                         //        UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(id.ToString());
                                         //        if (twitchUser != null)
                                         //        {
-                                        //            user = new UserViewModel(twitchUser);
+                                        //            user = new UserV2ViewModel(twitchUser);
                                         //        }
                                         //    }
                                         //}
@@ -628,7 +628,7 @@ namespace MixItUp.Base.ViewModel.Currency
                                         //    UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(username);
                                         //    if (twitchUser != null)
                                         //    {
-                                        //        user = new UserViewModel(twitchUser);
+                                        //        user = new UserV2ViewModel(twitchUser);
                                         //    }
                                         //}
                                     }
@@ -648,9 +648,9 @@ namespace MixItUp.Base.ViewModel.Currency
 
                                 foreach (var kvp in this.userImportData)
                                 {
-                                    if (ChannelSession.Settings.UserData.ContainsKey(kvp.Key))
+                                    if (ChannelSession.Settings.Users.ContainsKey(kvp.Key))
                                     {
-                                        MixItUp.Base.Model.User.UserDataModel userData = ChannelSession.Settings.UserData[kvp.Key];
+                                        MixItUp.Base.Model.User.UserV2Model userData = ChannelSession.Settings.Users[kvp.Key];
                                         this.Currency.SetAmount(userData, kvp.Value);
                                     }
                                 }
@@ -682,7 +682,7 @@ namespace MixItUp.Base.ViewModel.Currency
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     StringBuilder fileContents = new StringBuilder();
-                    foreach (MixItUp.Base.Model.User.UserDataModel userData in ChannelSession.Settings.UserData.Values.ToList())
+                    foreach (MixItUp.Base.Model.User.UserV2Model userData in ChannelSession.Settings.Users.Values.ToList())
                     {
                         fileContents.AppendLine(string.Format("{0} {1} {2}", userData.TwitchID, userData.Username, this.Currency.GetAmount(userData)));
                     }

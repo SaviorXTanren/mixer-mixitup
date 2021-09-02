@@ -119,7 +119,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public bool IsRoleSearchFilterType { get { return this.SelectedSearchFilterType == UserSearchFilterTypeEnum.Role; } }
 
-        public IEnumerable<UserRoleEnum> UserRoleSearchFilters { get { return UserDataModel.GetSelectableUserRoles(); } }
+        public IEnumerable<UserRoleEnum> UserRoleSearchFilters { get { return UserV2Model.GetSelectableUserRoles(); } }
 
         public UserRoleEnum SelectedUserRoleSearchFilter
         {
@@ -225,7 +225,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public bool IsCustomSettingsSearchFilterType { get { return this.SelectedSearchFilterType == UserSearchFilterTypeEnum.CustomSettings; } }
 
-        public ThreadSafeObservableCollection<UserDataModel> Users { get; private set; } = new ThreadSafeObservableCollection<UserDataModel>();
+        public ThreadSafeObservableCollection<UserV2Model> Users { get; private set; } = new ThreadSafeObservableCollection<UserV2Model>();
 
         public int SortColumnIndex
         {
@@ -269,7 +269,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                     contents.Add(columns);
 
                     await ServiceManager.Get<UserService>().LoadAllUserData();
-                    foreach (UserDataModel user in ChannelSession.Settings.UserData.Values.ToList())
+                    foreach (UserV2Model user in ChannelSession.Settings.Users.Values.ToList())
                     {
                         List<string> data = new List<string>() { user.ID.ToString(), user.TwitchID, user.Username, user.PrimaryRole.ToString(),
                             user.ViewingMinutes.ToString(), user.OfflineViewingMinutes.ToString(), user.CustomTitle };
@@ -321,7 +321,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 {
                     await ServiceManager.Get<UserService>().LoadAllUserData();
 
-                    IEnumerable<UserDataModel> data = ChannelSession.Settings.UserData.Values.ToList();
+                    IEnumerable<UserV2Model> data = ChannelSession.Settings.Users.Values.ToList();
                     if (!string.IsNullOrEmpty(this.UsernameFilter))
                     {
                         string filter = this.UsernameFilter.ToLower();
@@ -431,11 +431,11 @@ namespace MixItUp.Base.ViewModel.MainControls
             });
         }
 
-        public async Task DeleteUser(UserDataModel user)
+        public async Task DeleteUser(UserV2Model user)
         {
             if (await DialogHelper.ShowConfirmation(Resources.DeleteUserDataPrompt))
             {
-                ChannelSession.Settings.UserData.Remove(user.ID);
+                ChannelSession.Settings.Users.Remove(user.ID);
                 await ServiceManager.Get<UserService>().RemoveActiveUserByID(user.ID);
             }
             this.RefreshUsers();

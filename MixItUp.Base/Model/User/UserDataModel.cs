@@ -33,6 +33,7 @@ namespace MixItUp.Base.Model.User
         Custom = 99,
     }
 
+    [Obsolete]
     [DataContract]
     public class UserDataModel : IEquatable<UserDataModel>
     {

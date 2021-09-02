@@ -106,11 +106,11 @@ namespace MixItUp.Base.Model.Actions
                     PixelChatSendMessageModel sendMessage = null;
                     if (this.ActionType == PixelChatActionTypeEnum.TriggerShoutout || this.ActionType == PixelChatActionTypeEnum.AddUserToGiveaway)
                     {
-                        UserViewModel user = parameters.User;
+                        UserV2ViewModel user = parameters.User;
                         if (!string.IsNullOrEmpty(this.TargetUsername))
                         {
                             string targetUsername = await this.ReplaceStringWithSpecialModifiers(this.TargetUsername, parameters);
-                            UserViewModel targetUser = await ServiceManager.Get<UserService>().GetUserFullSearch(parameters.Platform, userID: null, targetUsername);
+                            UserV2ViewModel targetUser = await ServiceManager.Get<UserService>().GetUserFullSearch(parameters.Platform, userID: null, targetUsername);
                             if (targetUser != null)
                             {
                                 user = targetUser;

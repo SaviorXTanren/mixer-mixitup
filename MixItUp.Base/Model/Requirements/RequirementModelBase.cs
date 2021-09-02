@@ -24,7 +24,7 @@ namespace MixItUp.Base.Model.Requirements
 
         public static DateTimeOffset UpdateErrorCooldown() { return DateTimeOffset.Now.AddSeconds(ChannelSession.Settings.RequirementErrorsCooldownAmount); }
 
-        public static async Task SendRequirementErrorMessage(UserViewModel user, Result result)
+        public static async Task SendRequirementErrorMessage(UserV2ViewModel user, Result result)
         {
             string message = result.ToString();
             if (ChannelSession.Settings.IncludeUsernameWithRequirementErrors)
@@ -55,7 +55,7 @@ namespace MixItUp.Base.Model.Requirements
 
         public void SetIndividualErrorCooldown(DateTimeOffset datetime) { this.individualErrorCooldown = datetime; }
 
-        public async Task SendErrorChatMessage(UserViewModel user, Result result)
+        public async Task SendErrorChatMessage(UserV2ViewModel user, Result result)
         {
             if (ChannelSession.Settings.RequirementErrorsCooldownType != RequirementErrorCooldownTypeEnum.None)
             {

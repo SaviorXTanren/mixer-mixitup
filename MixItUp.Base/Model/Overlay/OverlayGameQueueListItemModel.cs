@@ -17,7 +17,7 @@ namespace MixItUp.Base.Model.Overlay
           <p style=""position: absolute; top: 50%; left: 5%; float: left; text-align: left; font-family: '{TEXT_FONT}'; font-size: {TEXT_HEIGHT}px; color: {TEXT_COLOR}; white-space: nowrap; font-weight: bold; margin: auto; transform: translate(0, -50%);"">#{POSITION} {USERNAME}</p>
         </div>";
 
-        private List<UserViewModel> lastUsers = new List<UserViewModel>();
+        private List<UserV2ViewModel> lastUsers = new List<UserV2ViewModel>();
 
         public OverlayGameQueueListItemModel() : base() { }
 
@@ -28,9 +28,9 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task LoadTestData()
         {
-            UserViewModel user = ChannelSession.GetCurrentUser();
+            UserV2ViewModel user = ChannelSession.GetCurrentUser();
 
-            List<UserViewModel> users = new List<UserViewModel>();
+            List<UserV2ViewModel> users = new List<UserV2ViewModel>();
             for (int i = 0; i < this.TotalToShow; i++)
             {
                 users.Add(user);
@@ -59,11 +59,11 @@ namespace MixItUp.Base.Model.Overlay
             await this.AddGameQueueUsers(ServiceManager.Get<GameQueueService>().Queue);
         }
 
-        private async Task AddGameQueueUsers(IEnumerable<UserViewModel> users)
+        private async Task AddGameQueueUsers(IEnumerable<UserV2ViewModel> users)
         {
             await this.listSemaphore.WaitAndRelease(() =>
             {
-                foreach (UserViewModel user in this.lastUsers)
+                foreach (UserV2ViewModel user in this.lastUsers)
                 {
                     if (!users.Contains(user))
                     {
@@ -73,7 +73,7 @@ namespace MixItUp.Base.Model.Overlay
 
                 for (int i = 0; i < users.Count() && i < this.TotalToShow; i++)
                 {
-                    UserViewModel user = users.ElementAt(i);
+                    UserV2ViewModel user = users.ElementAt(i);
 
                     OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(user.ID.ToString(), user, i + 1, this.HTML);
                     item.TemplateReplacements.Add("USERNAME", (string)user.FullDisplayName);
@@ -82,7 +82,7 @@ namespace MixItUp.Base.Model.Overlay
                     this.Items.Add(item);
                 }
 
-                this.lastUsers = new List<UserViewModel>(users);
+                this.lastUsers = new List<UserV2ViewModel>(users);
 
                 this.SendUpdateRequired();
 

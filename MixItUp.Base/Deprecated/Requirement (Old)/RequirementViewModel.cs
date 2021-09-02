@@ -51,7 +51,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             this.Cooldown.Amount = cooldown;
         }
 
-        public async Task<bool> DoesMeetUserRoleRequirement(UserViewModel user)
+        public async Task<bool> DoesMeetUserRoleRequirement(UserV2ViewModel user)
         {
             if (this.Role != null)
             {
@@ -67,7 +67,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             return true;
         }
 
-        public bool DoesMeetCooldownRequirement(UserViewModel user)
+        public bool DoesMeetCooldownRequirement(UserV2ViewModel user)
         {
             if (this.Cooldown != null)
             {
@@ -76,7 +76,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             return true;
         }
 
-        public bool DoesMeetCurrencyRequirement(UserViewModel user)
+        public bool DoesMeetCurrencyRequirement(UserV2ViewModel user)
         {
             if (this.Currency != null)
             {
@@ -94,7 +94,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             return true;
         }
 
-        public bool DoesMeetRankRequirement(UserViewModel user)
+        public bool DoesMeetRankRequirement(UserV2ViewModel user)
         {
             if (this.Rank != null)
             {
@@ -103,7 +103,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             return true;
         }
 
-        public bool DoesMeetInventoryRequirement(UserViewModel user)
+        public bool DoesMeetInventoryRequirement(UserV2ViewModel user)
         {
             if (this.Inventory != null)
             {
@@ -112,7 +112,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             return true;
         }
 
-        public bool DoesMeetSettingsRequirement(UserViewModel user)
+        public bool DoesMeetSettingsRequirement(UserV2ViewModel user)
         {
             if (this.Settings != null)
             {
@@ -121,7 +121,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             return true;
         }
 
-        public bool TrySubtractCurrencyAmount(UserViewModel user, bool requireAmount = false)
+        public bool TrySubtractCurrencyAmount(UserV2ViewModel user, bool requireAmount = false)
         {
             if (this.Currency != null)
             {
@@ -130,7 +130,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             return true;
         }
 
-        public bool TrySubtractCurrencyAmount(UserViewModel user, int amount, bool requireAmount = false)
+        public bool TrySubtractCurrencyAmount(UserV2ViewModel user, int amount, bool requireAmount = false)
         {
             if (this.Currency != null)
             {
@@ -139,7 +139,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             return true;
         }
 
-        public bool TrySubtractInventoryAmount(UserViewModel user, bool requireAmount = false)
+        public bool TrySubtractInventoryAmount(UserV2ViewModel user, bool requireAmount = false)
         {
             if (this.Inventory != null)
             {
@@ -148,7 +148,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             return true;
         }
 
-        public bool TrySubtractInventoryAmount(UserViewModel user, int amount, bool requireAmount = false)
+        public bool TrySubtractInventoryAmount(UserV2ViewModel user, int amount, bool requireAmount = false)
         {
             if (this.Inventory != null)
             {

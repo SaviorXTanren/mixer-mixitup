@@ -149,7 +149,7 @@ namespace MixItUp.WPF.Controls.Chat
                     {
                         string filter = tag.Substring(1);
 
-                        IEnumerable<UserViewModel> users = ServiceManager.Get<UserService>().GetAllActiveUsers();
+                        IEnumerable<UserV2ViewModel> users = ServiceManager.Get<UserService>().GetAllActiveUsers();
                         if (!string.IsNullOrEmpty(filter))
                         {
                             users = users.Where(u => !string.IsNullOrEmpty(u.Username) && u.Username.StartsWith(filter, StringComparison.InvariantCultureIgnoreCase)).ToList();
@@ -419,7 +419,7 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void SelectIntellisenseUser()
         {
-            UserViewModel user = UsernameIntellisenseListBox.SelectedItem as UserViewModel;
+            UserV2ViewModel user = UsernameIntellisenseListBox.SelectedItem as UserV2ViewModel;
             if (user != null)
             {
                 this.SelectIntellisenseItem("@" + user.Username);

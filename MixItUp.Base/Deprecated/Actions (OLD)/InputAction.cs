@@ -72,7 +72,7 @@ namespace MixItUp.Base.Actions
             this.Alt = alt;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override async Task PerformInternal(UserV2ViewModel user, IEnumerable<string> arguments)
         {
             if (this.Shift) { ServiceManager.Get<IInputService>().KeyDown(InputKeyEnum.LeftShift); }
             if (this.Control) { ServiceManager.Get<IInputService>().KeyDown(InputKeyEnum.LeftControl); }

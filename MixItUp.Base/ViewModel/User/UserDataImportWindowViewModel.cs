@@ -230,7 +230,7 @@ namespace MixItUp.Base.ViewModel.User
                                 }
 
                                 bool newUser = true;
-                                UserDataModel user = null;
+                                UserV2Model user = null;
                                 if (twitchID > 0 && !string.IsNullOrEmpty(twitchUsername))
                                 {
                                     user = await ServiceManager.Get<UserService>().GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, twitchID.ToString());
@@ -240,13 +240,13 @@ namespace MixItUp.Base.ViewModel.User
                                     }
                                     else
                                     {
-                                        UserViewModel userViewModel = await UserViewModel.Create(new Twitch.Base.Models.NewAPI.Users.UserModel()
+                                        UserV2ViewModel UserV2ViewModel = await UserV2ViewModel.Create(new Twitch.Base.Models.NewAPI.Users.UserModel()
                                         {
                                             id = twitchID.ToString(),
                                             login = twitchUsername,
                                             display_name = twitchUsername,
                                         });
-                                        user = userViewModel.Data;
+                                        user = UserV2ViewModel.Data;
                                     }
                                 }
                                 else if (twitchID > 0)
@@ -261,8 +261,8 @@ namespace MixItUp.Base.ViewModel.User
                                         Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(twitchID.ToString());
                                         if (twitchUser != null)
                                         {
-                                            UserViewModel userViewModel = await UserViewModel.Create(twitchUser);
-                                            user = userViewModel.Data;
+                                            UserV2ViewModel UserV2ViewModel = await UserV2ViewModel.Create(twitchUser);
+                                            user = UserV2ViewModel.Data;
                                         }
                                     }
                                 }
@@ -278,8 +278,8 @@ namespace MixItUp.Base.ViewModel.User
                                         Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(twitchUsername);
                                         if (twitchUser != null)
                                         {
-                                            UserViewModel userViewModel = await UserViewModel.Create(twitchUser);
-                                            user = userViewModel.Data;
+                                            UserV2ViewModel UserV2ViewModel = await UserV2ViewModel.Create(twitchUser);
+                                            user = UserV2ViewModel.Data;
                                         }
                                     }
                                 }
@@ -287,7 +287,7 @@ namespace MixItUp.Base.ViewModel.User
                                 {
                                     // TODO
 //#pragma warning disable CS0612 // Type or member is obsolete
-//                                    UserDataModel mixerUserData = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.Mixer, mixerUsername);
+//                                    UserV2Model mixerUserData = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.Mixer, mixerUsername);
 //#pragma warning restore CS0612 // Type or member is obsolete
 //                                    if (mixerUserData != null)
 //                                    {
@@ -295,7 +295,7 @@ namespace MixItUp.Base.ViewModel.User
 //                                    }
 //                                    else
 //                                    {
-//                                        user = new UserDataModel()
+//                                        user = new UserV2Model()
 //                                        {
 //                                            MixerID = uint.MaxValue,
 //                                            MixerUsername = mixerUsername
@@ -335,7 +335,7 @@ namespace MixItUp.Base.ViewModel.User
                                         }
                                     }
 
-                                    ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+                                    ChannelSession.Settings.Users.ManualValueChanged(user.ID);
 
                                     usersImported++;
                                     this.ImportButtonText = string.Format("{0} {1}", usersImported, MixItUp.Base.Resources.Imported);

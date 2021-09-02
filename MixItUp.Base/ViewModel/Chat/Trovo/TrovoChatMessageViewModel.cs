@@ -18,7 +18,7 @@ namespace MixItUp.Base.ViewModel.Chat.Trovo
 
         public ChatMessageTypeEnum MessageType { get; set; }
 
-        public TrovoChatMessageViewModel(ChatMessageModel message, UserViewModel user = null)
+        public TrovoChatMessageViewModel(ChatMessageModel message, UserV2ViewModel user = null)
             : base(message.message_id, StreamingPlatformTypeEnum.Trovo, user)
         {
             this.MessageType = message.type;

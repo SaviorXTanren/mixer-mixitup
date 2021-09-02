@@ -17,7 +17,7 @@ namespace MixItUp.Base.ViewModel.Requirement
         public int TimeSpan { get; set; }
 
         [JsonIgnore]
-        private Dictionary<UserViewModel, DateTime> performs = new Dictionary<UserViewModel, DateTime>();
+        private Dictionary<UserV2ViewModel, DateTime> performs = new Dictionary<UserV2ViewModel, DateTime>();
 
         public ThresholdRequirementViewModel() { }
 

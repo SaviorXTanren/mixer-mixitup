@@ -43,7 +43,7 @@ namespace MixItUp.Base.Actions
             this.StreamlabType = type;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override async Task PerformInternal(UserV2ViewModel user, IEnumerable<string> arguments)
         {
             if (ServiceManager.Get<StreamlabsService>().IsConnected)
             {

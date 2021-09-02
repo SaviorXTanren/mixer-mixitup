@@ -18,9 +18,9 @@ namespace MixItUp.WPF.Services.DeveloperAPI
     [RoutePrefix("api/users")]
     public class UserController : ApiController
     {
-        public static async Task<UserDataModel> GetUserData(string usernameOrID)
+        public static async Task<UserV2Model> GetUserData(string usernameOrID)
         {
-            UserDataModel user = null;
+            UserV2Model user = null;
             if (!string.IsNullOrEmpty(usernameOrID))
             {
                 if (Guid.TryParse(usernameOrID, out Guid userId))
@@ -46,7 +46,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             List<User> users = new List<User>();
             foreach (var usernameOrID in usernamesOrIDs)
             {
-                UserDataModel user = await UserController.GetUserData(usernameOrID);
+                UserV2Model user = await UserController.GetUserData(usernameOrID);
                 if (user != null)
                 {
                     users.Add(UserFromUserDataViewModel(user));
@@ -60,7 +60,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpGet]
         public async Task<User> Get(string usernameOrID)
         {
-            UserDataModel user = await UserController.GetUserData(usernameOrID);
+            UserV2Model user = await UserController.GetUserData(usernameOrID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -78,7 +78,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpGet]
         public async Task<User> GetTwitch(string usernameOrID)
         {
-            UserDataModel user = null;
+            UserV2Model user = null;
             if (!string.IsNullOrEmpty(usernameOrID))
             {
                 user = await ServiceManager.Get<UserService>().GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, usernameOrID);
@@ -105,7 +105,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpPut, HttpPatch]
         public async Task<User> Update(string usernameOrID, [FromBody] User updatedUserData)
         {
-            UserDataModel user = await UserController.GetUserData(usernameOrID);
+            UserV2Model user = await UserController.GetUserData(usernameOrID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -119,7 +119,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             return UpdateUser(user, updatedUserData);
         }
 
-        private User UpdateUser(UserDataModel user, User updatedUserData)
+        private User UpdateUser(UserV2Model user, User updatedUserData)
         {
             if (updatedUserData == null || !updatedUserData.ID.Equals(user.ID))
             {
@@ -151,7 +151,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpPut, HttpPatch]
         public async Task<User> AdjustUserCurrency(string usernameOrID, Guid currencyID, [FromBody] AdjustCurrency currencyUpdate)
         {
-            UserDataModel user = await UserController.GetUserData(usernameOrID);
+            UserV2Model user = await UserController.GetUserData(usernameOrID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -169,7 +169,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpPut, HttpPatch]
         public async Task<User> AdjustUserInventory(string usernameOrID, Guid inventoryID, [FromBody]AdjustInventory inventoryUpdate)
         {
-            UserDataModel user = await UserController.GetUserData(usernameOrID);
+            UserV2Model user = await UserController.GetUserData(usernameOrID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -197,20 +197,20 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            Dictionary<Guid, UserDataModel> allUsersDictionary = ChannelSession.Settings.UserData.ToDictionary();
+            Dictionary<Guid, UserV2Model> allUsersDictionary = ChannelSession.Settings.Users.ToDictionary();
 
-            IEnumerable<UserDataModel> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
+            IEnumerable<UserV2Model> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
             allUsers = allUsers.Where(u => !u.IsCurrencyRankExempt);
 
             List<User> userList = new List<User>();
-            foreach (UserDataModel user in allUsers.OrderByDescending(u => u.ViewingMinutes).Take(count))
+            foreach (UserV2Model user in allUsers.OrderByDescending(u => u.ViewingMinutes).Take(count))
             {
                 userList.Add(UserFromUserDataViewModel(user));
             }
             return userList;
         }
 
-        public static User UserFromUserDataViewModel(UserDataModel userData)
+        public static User UserFromUserDataViewModel(UserV2Model userData)
         {
             User user = new User
             {
@@ -233,7 +233,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             return user;
         }
 
-        private User AdjustCurrency(UserDataModel user, Guid currencyID, [FromBody] AdjustCurrency currencyUpdate)
+        private User AdjustCurrency(UserV2Model user, Guid currencyID, [FromBody] AdjustCurrency currencyUpdate)
         {
             if (!ChannelSession.Settings.Currency.ContainsKey(currencyID))
             {
@@ -280,7 +280,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             return UserFromUserDataViewModel(user);
         }
 
-        private User AdjustInventory(UserDataModel user, Guid inventoryID, [FromBody]AdjustInventory inventoryUpdate)
+        private User AdjustInventory(UserV2Model user, Guid inventoryID, [FromBody]AdjustInventory inventoryUpdate)
         {
             if (!ChannelSession.Settings.Inventory.ContainsKey(inventoryID))
             {

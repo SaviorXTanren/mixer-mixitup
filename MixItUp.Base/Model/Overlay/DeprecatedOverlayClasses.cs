@@ -33,14 +33,14 @@ namespace MixItUp.Base.Model.Overlay
 
         public virtual OverlayCustomHTMLItem GetCopy() { return this.Copy<OverlayCustomHTMLItem>(); }
 
-        public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        public override async Task<OverlayItemBase> GetProcessedItem(UserV2ViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             OverlayCustomHTMLItem item = this.GetCopy();
             item.HTMLText = await this.PerformReplacement(item.HTMLText, user, arguments, extraSpecialIdentifiers);
             return item;
         }
 
-        protected virtual async Task<string> PerformReplacement(string text, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        protected virtual async Task<string> PerformReplacement(string text, UserV2ViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             foreach (var kvp in await this.GetReplacementSets(user, arguments, extraSpecialIdentifiers))
             {
@@ -49,7 +49,7 @@ namespace MixItUp.Base.Model.Overlay
             return await this.ReplaceStringWithSpecialModifiers(text, user, arguments, extraSpecialIdentifiers);
         }
 
-        protected virtual Task<Dictionary<string, string>> GetReplacementSets(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        protected virtual Task<Dictionary<string, string>> GetReplacementSets(UserV2ViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             return Task.FromResult(new Dictionary<string, string>());
         }
@@ -72,7 +72,7 @@ namespace MixItUp.Base.Model.Overlay
             this.HTMLText = htmlText;
         }
 
-        public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        public override async Task<OverlayItemBase> GetProcessedItem(UserV2ViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             OverlayHTMLItem item = this.Copy<OverlayHTMLItem>();
             item.HTMLText = await this.ReplaceStringWithSpecialModifiers(item.HTMLText, user, arguments, extraSpecialIdentifiers);
@@ -121,7 +121,7 @@ namespace MixItUp.Base.Model.Overlay
             this.FileID = Guid.NewGuid().ToString().Replace("-", string.Empty);
         }
 
-        public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        public override async Task<OverlayItemBase> GetProcessedItem(UserV2ViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             OverlayImageItem item = this.Copy<OverlayImageItem>();
             item.FilePath = await this.ReplaceStringWithSpecialModifiers(item.FilePath, user, arguments, extraSpecialIdentifiers);
@@ -162,7 +162,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public virtual Task LoadTestData() { return Task.CompletedTask; }
 
-        public abstract Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers);
+        public abstract Task<OverlayItemBase> GetProcessedItem(UserV2ViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers);
 
         public virtual Task Initialize()
         {
@@ -178,7 +178,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public T Copy<T>() { return JSONSerializerHelper.DeserializeFromString<T>(JSONSerializerHelper.SerializeToString(this)); }
 
-        protected Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, bool encode = false)
+        protected Task<string> ReplaceStringWithSpecialModifiers(string str, UserV2ViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, bool encode = false)
         {
             return Task.FromResult(string.Empty);
         }
@@ -433,7 +433,7 @@ namespace MixItUp.Base.Model.Overlay
             this.ShadowColor = shadowColor;
         }
 
-        public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        public override async Task<OverlayItemBase> GetProcessedItem(UserV2ViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             OverlayTextItem item = this.Copy<OverlayTextItem>();
             item.Text = await this.ReplaceStringWithSpecialModifiers(item.Text, user, arguments, extraSpecialIdentifiers);
@@ -491,7 +491,7 @@ namespace MixItUp.Base.Model.Overlay
             this.FileID = Guid.NewGuid().ToString().Replace("-", string.Empty);
         }
 
-        public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        public override async Task<OverlayItemBase> GetProcessedItem(UserV2ViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             OverlayVideoItem item = this.Copy<OverlayVideoItem>();
             item.FilePath = await this.ReplaceStringWithSpecialModifiers(item.FilePath, user, arguments, extraSpecialIdentifiers);
@@ -526,7 +526,7 @@ namespace MixItUp.Base.Model.Overlay
             this.Height = height;
         }
 
-        public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        public override async Task<OverlayItemBase> GetProcessedItem(UserV2ViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             OverlayWebPageItem item = this.Copy<OverlayWebPageItem>();
             item.URL = await this.ReplaceStringWithSpecialModifiers(item.URL, user, arguments, extraSpecialIdentifiers, encode: true);
@@ -563,7 +563,7 @@ namespace MixItUp.Base.Model.Overlay
             this.Volume = volume;
         }
 
-        public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        public override async Task<OverlayItemBase> GetProcessedItem(UserV2ViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             OverlayYouTubeItem item = this.Copy<OverlayYouTubeItem>();
             item.VideoID = await this.ReplaceStringWithSpecialModifiers(item.VideoID, user, arguments, extraSpecialIdentifiers, encode: true);

@@ -25,9 +25,9 @@ namespace MixItUp.WPF.Controls.Dialogs
     /// </summary>
     public partial class UserDialogControl : UserControl
     {
-        private UserViewModel user;
+        private UserV2ViewModel user;
 
-        public UserDialogControl(UserViewModel user)
+        public UserDialogControl(UserV2ViewModel user)
         {
             this.user = user;
 
