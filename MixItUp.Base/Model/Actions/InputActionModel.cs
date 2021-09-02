@@ -59,19 +59,6 @@ namespace MixItUp.Base.Model.Actions
             this.Alt = alt;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal InputActionModel(MixItUp.Base.Actions.InputAction action)
-            : base(ActionTypeEnum.Input)
-        {
-            this.Key = action.Key;
-            if (action.Mouse != null) { this.Mouse = (SimpleInputMouseEnum)(int)action.Mouse; }
-            this.ActionType = (InputActionTypeEnum)(int)action.ActionType;
-            this.Shift = action.Shift;
-            this.Control = action.Control;
-            this.Alt = action.Alt;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private InputActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)

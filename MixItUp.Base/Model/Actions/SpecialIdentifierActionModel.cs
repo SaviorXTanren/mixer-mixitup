@@ -1,7 +1,5 @@
-﻿using Jace;
-using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Util;
 using System;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
@@ -35,17 +33,6 @@ namespace MixItUp.Base.Model.Actions
             this.MakeGloballyUsable = makeGloballyUsable;
             this.ShouldProcessMath = shouldProcessMath;
         }
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal SpecialIdentifierActionModel(MixItUp.Base.Actions.SpecialIdentifierAction action)
-            : base(ActionTypeEnum.SpecialIdentifier)
-        {
-            this.SpecialIdentifierName = action.SpecialIdentifierName;
-            this.ReplacementText = action.SpecialIdentifierReplacement;
-            this.MakeGloballyUsable = action.MakeGloballyUsable;
-            this.ShouldProcessMath = action.SpecialIdentifierShouldProcessMath;
-        }
-#pragma warning disable CS0612 // Type or member is obsolete
 
         private SpecialIdentifierActionModel() { }
 

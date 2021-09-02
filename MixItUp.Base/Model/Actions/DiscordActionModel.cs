@@ -44,18 +44,6 @@ namespace MixItUp.Base.Model.Actions
             this.ActionType = actionType;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal DiscordActionModel(MixItUp.Base.Actions.DiscordAction action)
-            : base(ActionTypeEnum.Discord)
-        {
-            this.ActionType = (DiscordActionTypeEnum)(int)action.DiscordType;
-            this.ChannelID = action.SendMessageChannelID;
-            this.MessageText = action.SendMessageText;
-            this.FilePath = action.FilePath;
-            this.ShouldMuteDeafen = action.ShouldMuteDeafen;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private DiscordActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)

@@ -28,15 +28,6 @@ namespace MixItUp.Base.Model.Commands.Games
         public string CorrectAnswer { get { return this.Answers[0]; } }
 
         public TriviaGameQuestionModel() { }
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal TriviaGameQuestionModel(Base.Commands.TriviaGameQuestion question)
-        {
-            this.Question = question.Question;
-            this.Answers.Add(question.CorrectAnswer);
-            this.Answers.AddRange(question.WrongAnswers);
-        }
-#pragma warning disable CS0612 // Type or member is obsolete
     }
 
     [DataContract]

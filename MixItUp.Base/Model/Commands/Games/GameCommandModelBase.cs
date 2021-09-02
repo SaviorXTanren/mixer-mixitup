@@ -87,33 +87,6 @@ namespace MixItUp.Base.Model.Commands.Games
             this.Command = command;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal GameOutcomeModel(Base.Commands.GameOutcome outcome)
-        {
-            this.Name = outcome.Name;
-            this.Command = new CustomCommandModel(outcome.Command) { IsEmbedded = true };
-            foreach (var kvp in outcome.RoleProbabilities)
-            {
-                this.RoleProbabilityPayouts[kvp.Key] = new RoleProbabilityPayoutModel(kvp.Key, kvp.Value);
-            }
-
-            if (outcome.RolePayouts.Count > 0)
-            {
-                foreach (var kvp in outcome.RolePayouts)
-                {
-                    this.RoleProbabilityPayouts[kvp.Key].Payout = kvp.Value;
-                }
-            }
-            else
-            {
-                foreach (var kvp in this.RoleProbabilityPayouts)
-                {
-                    kvp.Value.Payout = outcome.Payout;
-                }
-            }
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         protected GameOutcomeModel() { }
 
         public RoleProbabilityPayoutModel GetRoleProbabilityPayout(UserV2ViewModel user)

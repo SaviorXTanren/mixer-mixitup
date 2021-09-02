@@ -66,22 +66,6 @@ namespace MixItUp.Base.Model.Commands.Games
             this.GameCompleteCommand = gameCompleteCommand;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal BetGameCommandModel(Base.Commands.BetGameCommand command)
-            : base(command, GameCommandTypeEnum.Bet)
-        {
-            this.StarterRole = command.GameStarterRequirement.MixerRole;
-            this.MinimumParticipants = command.MinimumParticipants;
-            this.TimeLimit = command.TimeLimit;
-            this.BetOptions = new List<GameOutcomeModel>(command.BetOptions.Select(bo => new GameOutcomeModel(bo)));
-            this.StartedCommand = new CustomCommandModel(command.StartedCommand) { IsEmbedded = true };
-            this.UserJoinCommand = new CustomCommandModel(command.UserJoinCommand) { IsEmbedded = true };
-            this.NotEnoughPlayersCommand = new CustomCommandModel(command.NotEnoughPlayersCommand) { IsEmbedded = true };
-            this.BetsClosedCommand = new CustomCommandModel(command.BetsClosedCommand) { IsEmbedded = true };
-            this.GameCompleteCommand = new CustomCommandModel(command.GameCompleteCommand) { IsEmbedded = true };
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private BetGameCommandModel() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()

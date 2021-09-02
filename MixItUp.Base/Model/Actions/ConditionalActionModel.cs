@@ -88,25 +88,6 @@ namespace MixItUp.Base.Model.Actions
             this.Actions = new List<ActionModelBase>(actions);
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal ConditionalActionModel(MixItUp.Base.Actions.ConditionalAction action, ActionModelBase subAction)
-            : base(ActionTypeEnum.Conditional)
-        {
-            this.CaseSensitive = !action.IgnoreCase;
-            this.Operator = (ConditionalOperatorTypeEnum)(int)action.Operator;
-
-            foreach (var clause in action.Clauses)
-            {
-                this.Clauses.Add(new ConditionalClauseModel((ConditionalComparisionTypeEnum)(int)clause.ComparisionType, clause.Value1, clause.Value2, clause.Value3));
-            }
-
-            if (subAction != null)
-            {
-                this.Actions.Add(subAction);
-            }
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private ConditionalActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)

@@ -36,17 +36,6 @@ namespace MixItUp.Base.Model.Actions
             this.ShowWidget = showWidget;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal OverlayActionModel(MixItUp.Base.Actions.OverlayAction action)
-            : base(ActionTypeEnum.Overlay)
-        {
-            this.OverlayName = action.OverlayName;
-            this.OverlayItem = action.OverlayItem;
-            this.WidgetID = action.WidgetID;
-            this.ShowWidget = action.ShowWidget;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private OverlayActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)

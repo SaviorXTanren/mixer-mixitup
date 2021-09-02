@@ -24,15 +24,6 @@ namespace MixItUp.Base.Model.Actions
             this.Message = message;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal SerialActionModel(MixItUp.Base.Actions.SerialAction action)
-            : base(ActionTypeEnum.Serial)
-        {
-            this.PortName = action.PortName;
-            this.Message = action.Message;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private SerialActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)

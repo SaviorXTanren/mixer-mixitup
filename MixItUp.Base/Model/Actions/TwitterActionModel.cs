@@ -52,17 +52,6 @@ namespace MixItUp.Base.Model.Actions
             this.ActionType = actionType;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal TwitterActionModel(MixItUp.Base.Actions.TwitterAction action)
-            : base(ActionTypeEnum.Twitter)
-        {
-            this.ActionType = (TwitterActionTypeEnum)(int)action.ActionType;
-            this.TweetText = action.TweetText;
-            this.ImagePath = action.ImagePath;
-            this.NameUpdate = action.NewProfileName;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private TwitterActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)

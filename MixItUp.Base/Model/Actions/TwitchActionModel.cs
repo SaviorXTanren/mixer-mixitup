@@ -2,7 +2,6 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -182,51 +181,6 @@ namespace MixItUp.Base.Model.Actions
         {
             this.ActionType = type;
         }
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal TwitchActionModel(MixItUp.Base.Actions.StreamingPlatformAction action)
-            : base(ActionTypeEnum.Twitch)
-        {
-            if (action.ActionType == Base.Actions.StreamingPlatformActionType.Host)
-            {
-                this.ActionType = TwitchActionType.Host;
-                this.Username = action.HostChannelName;
-            }
-            else if (action.ActionType == Base.Actions.StreamingPlatformActionType.Raid)
-            {
-                this.ActionType = TwitchActionType.Raid;
-                this.Username = action.HostChannelName;
-            }
-            else if (action.ActionType == Base.Actions.StreamingPlatformActionType.RunAd)
-            {
-                this.ActionType = TwitchActionType.RunAd;
-                this.AdLength = action.AdLength;
-            }
-        }
-
-        internal TwitchActionModel(MixItUp.Base.Actions.ClipsAction action)
-            : base(ActionTypeEnum.Twitch)
-        {
-            this.ActionType = TwitchActionType.Clip;
-            this.ClipIncludeDelay = action.IncludeDelay;
-            this.ShowInfoInChat = action.ShowClipInfoInChat;
-        }
-
-        internal TwitchActionModel(MixItUp.Base.Actions.ModerationAction action)
-            : base(ActionTypeEnum.Twitch)
-        {
-            if (action.ModerationType == Base.Actions.ModerationActionTypeEnum.VIPUser)
-            {
-                this.ActionType = TwitchActionType.VIPUser;
-                this.Username = action.UserName;
-            }
-            else if (action.ModerationType == Base.Actions.ModerationActionTypeEnum.UnVIPUser)
-            {
-                this.ActionType = TwitchActionType.UnVIPUser;
-                this.Username = action.UserName;
-            }
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
 
         private TwitchActionModel() { }
 

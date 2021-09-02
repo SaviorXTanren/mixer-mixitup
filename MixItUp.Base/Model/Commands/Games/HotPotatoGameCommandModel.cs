@@ -51,32 +51,6 @@ namespace MixItUp.Base.Model.Commands.Games
             this.PotatoExplodeCommand = potatoExplodeCommand;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal HotPotatoGameCommandModel(Base.Commands.BeachBallGameCommand command)
-            : base(command, GameCommandTypeEnum.HotPotato)
-        {
-            this.LowerTimeLimit = command.LowerLimit;
-            this.UpperTimeLimit = command.UpperLimit;
-            this.ResetTimeOnToss = true;
-            this.PlayerSelectionType = GamePlayerSelectionType.Targeted;
-            this.StartedCommand = new CustomCommandModel(command.StartedCommand) { IsEmbedded = true };
-            this.TossPotatoCommand = new CustomCommandModel(command.BallHitCommand) { IsEmbedded = true };
-            this.PotatoExplodeCommand = new CustomCommandModel(command.BallMissedCommand) { IsEmbedded = true };
-        }
-
-        internal HotPotatoGameCommandModel(Base.Commands.HotPotatoGameCommand command)
-            : base(command, GameCommandTypeEnum.HotPotato)
-        {
-            this.LowerTimeLimit = command.LowerLimit;
-            this.UpperTimeLimit = command.UpperLimit;
-            this.ResetTimeOnToss = false;
-            this.PlayerSelectionType = GamePlayerSelectionType.Targeted;
-            this.StartedCommand = new CustomCommandModel(command.StartedCommand) { IsEmbedded = true };
-            this.TossPotatoCommand = new CustomCommandModel(command.TossPotatoCommand) { IsEmbedded = true };
-            this.PotatoExplodeCommand = new CustomCommandModel(command.PotatoExplodeCommand) { IsEmbedded = true };
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private HotPotatoGameCommandModel() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()

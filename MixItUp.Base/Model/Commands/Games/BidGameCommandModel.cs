@@ -51,25 +51,6 @@ namespace MixItUp.Base.Model.Commands.Games
             this.GameCompleteCommand = gameCompleteCommand;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal BidGameCommandModel(Base.Commands.BidGameCommand command)
-            : base(command, GameCommandTypeEnum.Bid)
-        {
-            this.StarterRole = command.GameStarterRequirement.MixerRole;
-            this.TimeLimit = command.TimeLimit;
-            this.StartedCommand = new CustomCommandModel(command.StartedCommand) { IsEmbedded = true };
-            this.NewTopBidderCommand = new CustomCommandModel(command.UserJoinCommand) { IsEmbedded = true };
-            this.NotEnoughPlayersCommand = new CustomCommandModel(command.NotEnoughPlayersCommand) { IsEmbedded = true };
-            this.GameCompleteCommand = new CustomCommandModel(command.GameCompleteCommand) { IsEmbedded = true };
-
-            if (this.Requirements.Currency.Count() == 0)
-            {
-                this.Requirements.Requirements.Add(new CurrencyRequirementModel(ChannelSession.Settings.Currency.Values.First(c => !c.IsRank), CurrencyRequirementTypeEnum.MinimumOnly, 0, 0));
-            }
-            this.Requirements.Currency.First().RequirementType = CurrencyRequirementTypeEnum.MinimumOnly;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private BidGameCommandModel() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()

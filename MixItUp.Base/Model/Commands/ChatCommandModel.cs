@@ -64,18 +64,6 @@ namespace MixItUp.Base.Model.Commands
 
         public ChatCommandModel(string name, HashSet<string> triggers, bool includeExclamation, bool wildcards) : this(name, CommandTypeEnum.Chat, triggers, includeExclamation, wildcards) { }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal ChatCommandModel(MixItUp.Base.Commands.ChatCommand command)
-            : base(command)
-        {
-            this.Name = command.Name;
-            this.Type = CommandTypeEnum.Chat;
-            this.Triggers = command.Commands;
-            this.IncludeExclamation = command.IncludeExclamationInCommands;
-            this.Wildcards = command.Wildcards;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         protected ChatCommandModel(string name, CommandTypeEnum type, HashSet<string> triggers, bool includeExclamation, bool wildcards)
             : base(name, type)
         {
@@ -104,14 +92,6 @@ namespace MixItUp.Base.Model.Commands
         {
             this.UserID = userID;
         }
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal UserOnlyChatCommandModel(MixItUp.Base.Commands.ChatCommand command, Guid userID)
-            : base(command)
-        {
-            this.UserID = userID;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
 
         private UserOnlyChatCommandModel() { }
     }

@@ -50,21 +50,6 @@ namespace MixItUp.Base.Model.Requirements
             this.MaxAmount = maxAmount;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal CurrencyRequirementModel(MixItUp.Base.ViewModel.Requirement.CurrencyRequirementViewModel requirement)
-        {
-            this.CurrencyID = requirement.CurrencyID;
-            this.MinAmount = requirement.RequiredAmount;
-            this.MaxAmount = requirement.MaximumAmount;
-            switch (requirement.RequirementType)
-            {
-                case ViewModel.Requirement.CurrencyRequirementTypeEnum.RequiredAmount: this.RequirementType = CurrencyRequirementTypeEnum.RequiredAmount; break;
-                case ViewModel.Requirement.CurrencyRequirementTypeEnum.MinimumOnly: this.RequirementType = CurrencyRequirementTypeEnum.MinimumOnly; break;
-                case ViewModel.Requirement.CurrencyRequirementTypeEnum.MinimumAndMaximum: this.RequirementType = CurrencyRequirementTypeEnum.MinimumAndMaximum; break;
-            }
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         protected CurrencyRequirementModel() { }
 
         protected override DateTimeOffset RequirementErrorCooldown { get { return CurrencyRequirementModel.requirementErrorCooldown; } set { CurrencyRequirementModel.requirementErrorCooldown = value; } }

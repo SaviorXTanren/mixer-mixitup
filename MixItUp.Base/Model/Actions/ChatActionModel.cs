@@ -28,17 +28,6 @@ namespace MixItUp.Base.Model.Actions
             this.WhisperUserName = whisperUserName;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal ChatActionModel(MixItUp.Base.Actions.ChatAction action)
-            : base(ActionTypeEnum.Chat)
-        {
-            this.ChatText = action.ChatText;
-            this.SendAsStreamer = action.SendAsStreamer;
-            this.IsWhisper = action.IsWhisper;
-            this.WhisperUserName = action.WhisperUserName;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private ChatActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)

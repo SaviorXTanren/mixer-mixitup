@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Requirements;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using System.Runtime.Serialization;
@@ -43,16 +42,6 @@ namespace MixItUp.Base.Model.Actions
             this.RoleRequirement = roleRequirement;
             this.TargetUsername = targetUsername;
         }
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal GameQueueActionModel(MixItUp.Base.Actions.GameQueueAction action)
-            : base(ActionTypeEnum.GameQueue)
-        {
-            this.ActionType = (GameQueueActionType)(int)action.GameQueueType;
-            this.RoleRequirement = (action.RoleRequirement != null) ? new RoleRequirementModel(action.RoleRequirement) : null;
-            this.TargetUsername = action.TargetUsername;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
 
         private GameQueueActionModel() { }
 

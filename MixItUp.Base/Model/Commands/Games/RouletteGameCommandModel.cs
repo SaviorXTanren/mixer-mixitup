@@ -70,23 +70,6 @@ namespace MixItUp.Base.Model.Commands.Games
             this.GameCompleteCommand = gameCompleteCommand;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal RouletteGameCommandModel(Base.Commands.RouletteGameCommand command)
-            : base(command, GameCommandTypeEnum.Roulette)
-        {
-            this.MinimumParticipants = command.MinimumParticipants;
-            this.TimeLimit = command.TimeLimit;
-            this.BetType = command.IsNumberRange ? RouletteGameCommandBetType.NumberRange : RouletteGameCommandBetType.Custom;
-            this.BetOptions = new HashSet<string>(command.ValidBetTypes);
-            this.StartedCommand = new CustomCommandModel(command.StartedCommand) { IsEmbedded = true };
-            this.UserJoinCommand = new CustomCommandModel(command.UserJoinCommand) { IsEmbedded = true };
-            this.NotEnoughPlayersCommand = new CustomCommandModel(command.NotEnoughPlayersCommand) { IsEmbedded = true };
-            this.UserSuccessOutcome = new GameOutcomeModel(command.UserSuccessOutcome);
-            this.UserFailureCommand = new CustomCommandModel(command.UserFailOutcome.Command) { IsEmbedded = true };
-            this.GameCompleteCommand = new CustomCommandModel(command.GameCompleteCommand) { IsEmbedded = true };
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private RouletteGameCommandModel() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()

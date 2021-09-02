@@ -73,24 +73,6 @@ namespace MixItUp.Base.Model.Commands.Games
             this.UserFailureCommand = userFailureCommand;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal HitmanGameCommandModel(Base.Commands.HitmanGameCommand command)
-            : base(command, GameCommandTypeEnum.Hitman)
-        {
-            this.MinimumParticipants = command.MinimumParticipants;
-            this.TimeLimit = command.TimeLimit;
-            this.HitmanTimeLimit = command.HitmanTimeLimit;
-            this.CustomWordsFilePath = command.CustomWordsFilePath;
-            this.StartedCommand = new CustomCommandModel(command.StartedCommand) { IsEmbedded = true };
-            this.UserJoinCommand = new CustomCommandModel(command.UserJoinCommand) { IsEmbedded = true };
-            this.NotEnoughPlayersCommand = new CustomCommandModel(command.NotEnoughPlayersCommand) { IsEmbedded = true };
-            this.HitmanApproachingCommand = new CustomCommandModel(command.HitmanApproachingCommand) { IsEmbedded = true };
-            this.HitmanAppearsCommand = new CustomCommandModel(command.HitmanAppearsCommand) { IsEmbedded = true };
-            this.UserSuccessCommand = new CustomCommandModel(command.UserSuccessOutcome.Command) { IsEmbedded = true };
-            this.UserFailureCommand = new CustomCommandModel(command.UserFailOutcome.Command) { IsEmbedded = true };
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private HitmanGameCommandModel() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()

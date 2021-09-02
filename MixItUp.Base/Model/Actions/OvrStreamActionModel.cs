@@ -37,23 +37,6 @@ namespace MixItUp.Base.Model.Actions
             this.Variables = variables;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal OvrStreamActionModel(MixItUp.Base.Actions.OvrStreamAction action)
-            : base(ActionTypeEnum.OvrStream)
-        {
-            switch (action.OvrStreamActionType)
-            {
-                case Base.Actions.OvrStreamActionTypeEnum.PlayTitle: this.ActionType = OvrStreamActionTypeEnum.PlayTitle; break;
-                case Base.Actions.OvrStreamActionTypeEnum.HideTitle: this.ActionType = OvrStreamActionTypeEnum.HideTitle; break;
-                case Base.Actions.OvrStreamActionTypeEnum.EnableTitle: this.ActionType = OvrStreamActionTypeEnum.EnableTitle; break;
-                case Base.Actions.OvrStreamActionTypeEnum.DisableTitle: this.ActionType = OvrStreamActionTypeEnum.DisableTitle; break;
-                case Base.Actions.OvrStreamActionTypeEnum.UpdateVariables: this.ActionType = OvrStreamActionTypeEnum.UpdateVariables; break;
-            }
-            this.TitleName = action.TitleName;
-            this.Variables = action.Variables;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private OvrStreamActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)

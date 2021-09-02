@@ -56,22 +56,6 @@ namespace MixItUp.Base.Model.Commands.Games
             this.InspectionCommand = inspectionCommand;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal LockBoxGameCommandModel(Base.Commands.LockBoxGameCommand command)
-            : base(command, GameCommandTypeEnum.LockBox)
-        {
-            this.CombinationLength = command.CombinationLength;
-            this.InitialAmount = command.InitialAmount;
-            this.SuccessfulCommand = new CustomCommandModel(command.SuccessfulGuessCommand) { IsEmbedded = true };
-            this.FailureCommand = new CustomCommandModel(command.FailedGuessCommand) { IsEmbedded = true };
-            this.StatusArgument = command.StatusArgument;
-            this.StatusCommand = new CustomCommandModel(command.StatusCommand) { IsEmbedded = true };
-            this.InspectionArgument = command.InspectionArgument;
-            this.InspectionCost = command.InspectionCost;
-            this.InspectionCommand = new CustomCommandModel(command.InspectionCommand) { IsEmbedded = true };
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private LockBoxGameCommandModel() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()

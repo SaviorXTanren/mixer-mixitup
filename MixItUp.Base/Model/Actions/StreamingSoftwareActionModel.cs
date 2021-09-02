@@ -195,37 +195,6 @@ namespace MixItUp.Base.Model.Actions
 
         private StreamingSoftwareActionModel() { }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal StreamingSoftwareActionModel(MixItUp.Base.Actions.StreamingSoftwareAction action)
-            : base(ActionTypeEnum.StreamingSoftware)
-        {
-            this.StreamingSoftwareType = (StreamingSoftwareTypeEnum)(int)action.SoftwareType;
-            this.ActionType = (StreamingSoftwareActionTypeEnum)(int)action.ActionType;
-            if (this.ActionType == StreamingSoftwareActionTypeEnum.SceneCollection)
-            {
-                this.ItemName = action.SceneCollectionName;
-            }
-            else if (this.ActionType == StreamingSoftwareActionTypeEnum.Scene)
-            {
-                this.ItemName = action.SceneName;
-            }
-            else if (this.ActionType == StreamingSoftwareActionTypeEnum.SourceDimensions || this.ActionType == StreamingSoftwareActionTypeEnum.SourceVisibility ||
-                this.ActionType == StreamingSoftwareActionTypeEnum.TextSource || this.ActionType == StreamingSoftwareActionTypeEnum.WebBrowserSource)
-            {
-                this.ItemName = action.SourceName;
-                this.ParentName = action.SceneName;
-            }
-            this.Visible = action.SourceVisible;
-            this.SourceText = action.SourceText;
-            this.SourceTextFilePath = action.SourceTextFilePath;
-            this.SourceURL = action.SourceURL;
-            if (action.SourceDimensions != null)
-            {
-                this.SourceDimensions = new StreamingSoftwareSourceDimensionsModel(action.SourceDimensions.X, action.SourceDimensions.Y, action.SourceDimensions.Rotation, action.SourceDimensions.XScale, action.SourceDimensions.YScale);
-            }
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         public StreamingSoftwareTypeEnum SelectedStreamingSoftware { get { return (this.StreamingSoftwareType == StreamingSoftwareTypeEnum.DefaultSetting) ? ChannelSession.Settings.DefaultStreamingSoftware : this.StreamingSoftwareType; } }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)

@@ -43,31 +43,6 @@ namespace MixItUp.Base.Model.Actions
             this.ModerationReason = moderationReason;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal ModerationActionModel(MixItUp.Base.Actions.ModerationAction action)
-            : base(ActionTypeEnum.Moderation)
-        {
-            if (action.ModerationType != Base.Actions.ModerationActionTypeEnum.VIPUser && action.ModerationType != Base.Actions.ModerationActionTypeEnum.UnVIPUser)
-            {
-                switch (action.ModerationType)
-                {
-                    case Base.Actions.ModerationActionTypeEnum.ChatTimeout: this.ActionType = ModerationActionTypeEnum.TimeoutUser; break;
-                    case Base.Actions.ModerationActionTypeEnum.PurgeUser: this.ActionType = ModerationActionTypeEnum.PurgeUser; break;
-                    case Base.Actions.ModerationActionTypeEnum.ClearChat: this.ActionType = ModerationActionTypeEnum.ClearChat; break;
-                    case Base.Actions.ModerationActionTypeEnum.BanUser: this.ActionType = ModerationActionTypeEnum.BanUser; break;
-                    case Base.Actions.ModerationActionTypeEnum.UnbanUser: this.ActionType = ModerationActionTypeEnum.UnbanUser; break;
-                    case Base.Actions.ModerationActionTypeEnum.ModUser: this.ActionType = ModerationActionTypeEnum.ModUser; break;
-                    case Base.Actions.ModerationActionTypeEnum.UnmodUser: this.ActionType = ModerationActionTypeEnum.UnmodUser; break;
-                    case Base.Actions.ModerationActionTypeEnum.AddModerationStrike: this.ActionType = ModerationActionTypeEnum.AddModerationStrike; break;
-                    case Base.Actions.ModerationActionTypeEnum.RemoveModerationStrike: this.ActionType = ModerationActionTypeEnum.RemoveModerationStrike; break;
-                }
-                this.TargetUsername = action.UserName;
-                this.TimeoutAmount = action.TimeAmount;
-                this.ModerationReason = action.ModerationReason;
-            }
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private ModerationActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)

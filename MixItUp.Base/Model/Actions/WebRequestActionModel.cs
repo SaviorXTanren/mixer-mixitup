@@ -48,23 +48,6 @@ namespace MixItUp.Base.Model.Actions
             this.JSONToSpecialIdentifiers = jsonToSpecialIdentifiers;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal WebRequestActionModel(MixItUp.Base.Actions.WebRequestAction action)
-            : base(ActionTypeEnum.WebRequest)
-        {
-            this.Url = action.Url;
-            if (action.ResponseAction == Base.Actions.WebRequestResponseActionTypeEnum.JSONToSpecialIdentifiers)
-            {
-                this.ResponseType = WebRequestResponseParseTypeEnum.JSONToSpecialIdentifiers;
-                this.JSONToSpecialIdentifiers = action.JSONToSpecialIdentifiers;
-            }
-            else
-            {
-                this.ResponseType = WebRequestResponseParseTypeEnum.PlainText;
-            }
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private WebRequestActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)

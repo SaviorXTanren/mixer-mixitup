@@ -44,14 +44,6 @@ namespace MixItUp.Base.Model.Commands
         public CommandGroupSettingsModel() { }
 
         public CommandGroupSettingsModel(string name) { this.Name = name; }
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal CommandGroupSettingsModel(MixItUp.Base.Commands.CommandGroupSettings oldGroupSettings)
-        {
-            this.Name = oldGroupSettings.Name;
-            this.TimerInterval = oldGroupSettings.TimerInterval;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
     }
 
     [DataContract]
@@ -110,34 +102,6 @@ namespace MixItUp.Base.Model.Commands
             this.Name = name;
             this.Type = type;
         }
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        protected CommandModelBase(MixItUp.Base.Commands.CommandBase command)
-        {
-            if (command != null)
-            {
-                this.ID = command.ID;
-                this.GroupName = command.GroupName;
-                this.IsEnabled = command.IsEnabled;
-                this.Unlocked = command.Unlocked;
-
-                if (command is MixItUp.Base.Commands.PermissionsCommandBase)
-                {
-                    MixItUp.Base.Commands.PermissionsCommandBase pCommand = (MixItUp.Base.Commands.PermissionsCommandBase)command;
-                    this.Requirements = new RequirementsSetModel(pCommand.Requirements);
-                }
-
-                foreach (MixItUp.Base.Actions.ActionBase action in command.Actions)
-                {
-                    this.Actions.AddRange(ActionModelBase.UpgradeAction(action));
-                }
-            }
-            else
-            {
-                this.ID = Guid.NewGuid();
-            }
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
 
         protected CommandModelBase() { }
 

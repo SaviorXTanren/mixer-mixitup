@@ -28,15 +28,6 @@ namespace MixItUp.Base.Model.Requirements
 
         public RoleRequirementModel() { }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal RoleRequirementModel(MixItUp.Base.ViewModel.Requirement.RoleRequirementViewModel requirement)
-            : this()
-        {
-            this.Role = requirement.MixerRole;
-            this.SubscriberTier = requirement.SubscriberTier;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         public RoleRequirementModel(UserRoleEnum role, int subscriberTier = 1, string patreonBenefitID = null)
         {
             this.Role = role;

@@ -25,24 +25,6 @@ namespace MixItUp.Base.Model.Commands.Games
             this.FailedCommand = failedCommand;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal StealGameCommandModel(Base.Commands.StealGameCommand command)
-            : base(command, GameCommandTypeEnum.Steal)
-        {
-            this.PlayerSelectionType = GamePlayerSelectionType.Random;
-            this.SuccessfulOutcome = new GameOutcomeModel(command.SuccessfulOutcome);
-            this.FailedCommand = new CustomCommandModel(command.FailedOutcome.Command) { IsEmbedded = true };
-        }
-
-        internal StealGameCommandModel(Base.Commands.PickpocketGameCommand command)
-            : base(command, GameCommandTypeEnum.Steal)
-        {
-            this.PlayerSelectionType = GamePlayerSelectionType.Targeted;
-            this.SuccessfulOutcome = new GameOutcomeModel(command.SuccessfulOutcome);
-            this.FailedCommand = new CustomCommandModel(command.FailedOutcome.Command) { IsEmbedded = true };
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private StealGameCommandModel() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()

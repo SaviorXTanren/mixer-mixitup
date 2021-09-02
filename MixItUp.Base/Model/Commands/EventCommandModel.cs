@@ -145,16 +145,6 @@ namespace MixItUp.Base.Model.Commands
 
         public EventCommandModel(EventTypeEnum eventType) : base(EnumLocalizationHelper.GetLocalizedName(eventType), CommandTypeEnum.Event) { this.EventType = eventType; }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal EventCommandModel(MixItUp.Base.Commands.EventCommand command)
-            : base(command)
-        {
-            this.Name = command.EventCommandType.ToString();
-            this.Type = CommandTypeEnum.Event;
-            this.EventType = command.EventCommandType;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         protected EventCommandModel() : base() { }
 
         public override Dictionary<string, string> GetTestSpecialIdentifiers() { return EventCommandModel.GetEventTestSpecialIdentifiers(this.EventType); }

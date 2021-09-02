@@ -29,17 +29,6 @@ namespace MixItUp.Base.Model.Actions
             this.EventValue3 = eventValue3;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal IFTTTActionModel(MixItUp.Base.Actions.IFTTTAction action)
-            : base(ActionTypeEnum.IFTTT)
-        {
-            this.EventName = action.EventName;
-            this.EventValue1 = action.EventValue1;
-            this.EventValue2 = action.EventValue2;
-            this.EventValue3 = action.EventValue3;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private IFTTTActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)

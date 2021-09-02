@@ -22,15 +22,6 @@ namespace MixItUp.Base.Model.Commands.Games
             this.AnyOrder = anyOrder;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal SlotMachineGameOutcomeModel(Base.Commands.SlotsGameOutcome outcome)
-            : base(outcome)
-        {
-            this.Symbols = new List<string>() { outcome.Symbol1, outcome.Symbol2, outcome.Symbol3 };
-            this.AnyOrder = outcome.AnyOrder;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private SlotMachineGameOutcomeModel() { }
 
         public bool ValidateSymbols(List<string> inputSymbols)

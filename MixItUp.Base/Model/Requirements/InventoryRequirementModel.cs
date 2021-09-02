@@ -31,15 +31,6 @@ namespace MixItUp.Base.Model.Requirements
             this.Amount = amount;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal InventoryRequirementModel(MixItUp.Base.ViewModel.Requirement.InventoryRequirementViewModel requirement)
-        {
-            this.InventoryID = requirement.InventoryID;
-            this.ItemID = requirement.ItemID;
-            this.Amount = requirement.Amount;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         protected override DateTimeOffset RequirementErrorCooldown { get { return InventoryRequirementModel.requirementErrorCooldown; } set { InventoryRequirementModel.requirementErrorCooldown = value; } }
 
         [JsonIgnore]

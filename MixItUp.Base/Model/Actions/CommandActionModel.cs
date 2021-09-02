@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,35 +65,6 @@ namespace MixItUp.Base.Model.Actions
         {
             this.ActionType = commandActionType;
         }
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal CommandActionModel(MixItUp.Base.Actions.CommandAction action)
-            : base(ActionTypeEnum.Command)
-        {
-            this.ActionType = (CommandActionTypeEnum)(int)action.CommandActionType;
-            this.CommandID = action.CommandID;
-            if (!string.IsNullOrEmpty(action.PreMadeType))
-            {
-                string typeName = action.PreMadeType.Replace("ChatCommand", "PreMadeChatCommandModel");
-                typeName = typeName.Replace("MixItUp.Base.Commands", "MixItUp.Base.Model.Commands");
-                try
-                {
-                    Type type = System.Type.GetType(typeName);
-                    if (type != null)
-                    {
-                        this.PreMadeType = type;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
-                }
-            }
-            this.Arguments = action.CommandArguments;
-            this.WaitForCommandToFinish = false;
-            this.CommandGroupName = action.GroupName;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
 
         private CommandActionModel() { }
 

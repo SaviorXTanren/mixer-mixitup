@@ -45,17 +45,6 @@ namespace MixItUp.Base.Model.Actions
             this.LineIndex = lineIndex;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal FileActionModel(MixItUp.Base.Actions.FileAction action)
-            : base(ActionTypeEnum.File)
-        {
-            this.ActionType = (FileActionTypeEnum)(int)action.FileActionType;
-            this.FilePath = action.FilePath;
-            this.TransferText = action.TransferText;
-            this.LineIndex = action.LineIndexToRead;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private FileActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)

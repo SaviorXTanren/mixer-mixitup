@@ -84,22 +84,6 @@ namespace MixItUp.Base.Model.Actions
             this.DeductFromUser = deductFromUser;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal ConsumablesActionModel(MixItUp.Base.Actions.CurrencyAction action)
-            : base(ActionTypeEnum.Consumables)
-        {
-            this.CurrencyID = action.CurrencyID;
-            this.InventoryID = action.InventoryID;
-            this.ItemName = action.ItemName;
-            this.StreamPassID = action.StreamPassID;
-            this.ActionType = (ConsumablesActionTypeEnum)(int)action.CurrencyActionType;
-            this.Amount = action.Amount;
-            this.Username = action.Username;
-            this.UsersToApplyTo = action.RoleRequirement;
-            this.DeductFromUser = action.DeductFromUser;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private ConsumablesActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
