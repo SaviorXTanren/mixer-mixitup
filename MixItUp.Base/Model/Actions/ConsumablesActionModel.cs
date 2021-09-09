@@ -48,39 +48,42 @@ namespace MixItUp.Base.Model.Actions
         public string Amount { get; set; }
         [DataMember]
         public bool DeductFromUser { get; set; }
+        [Obsolete]
         [DataMember]
         public OldUserRoleEnum UsersToApplyTo { get; set; }
+        [DataMember]
+        public UserRoleEnum UserRoleToApplyTo { get; set; }
 
         [DataMember]
         public bool UsersMustBePresent { get; set; } = true;
 
-        public ConsumablesActionModel(CurrencyModel currency, ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount, string username = null, OldUserRoleEnum usersToApplyTo = OldUserRoleEnum.User, bool deductFromUser = false)
-            : this(actionType, usersMustBePresent, amount, username, usersToApplyTo, deductFromUser)
+        public ConsumablesActionModel(CurrencyModel currency, ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount, string username = null, UserRoleEnum userRoleToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
+            : this(actionType, usersMustBePresent, amount, username, userRoleToApplyTo, deductFromUser)
         {
             this.CurrencyID = currency.ID;
         }
 
-        public ConsumablesActionModel(InventoryModel inventory, string itemName, ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount, string username = null, OldUserRoleEnum usersToApplyTo = OldUserRoleEnum.User, bool deductFromUser = false)
-            : this(actionType, usersMustBePresent, amount, username, usersToApplyTo, deductFromUser)
+        public ConsumablesActionModel(InventoryModel inventory, string itemName, ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount, string username = null, UserRoleEnum userRoleToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
+            : this(actionType, usersMustBePresent, amount, username, userRoleToApplyTo, deductFromUser)
         {
             this.InventoryID = inventory.ID;
             this.ItemName = itemName;
         }
 
-        public ConsumablesActionModel(StreamPassModel streamPass, ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount, string username = null, OldUserRoleEnum usersToApplyTo = OldUserRoleEnum.User, bool deductFromUser = false)
-            : this(actionType, usersMustBePresent, amount, username, usersToApplyTo, deductFromUser)
+        public ConsumablesActionModel(StreamPassModel streamPass, ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount, string username = null, UserRoleEnum userRoleToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
+            : this(actionType, usersMustBePresent, amount, username, userRoleToApplyTo, deductFromUser)
         {
             this.StreamPassID = streamPass.ID;
         }
 
-        private ConsumablesActionModel(ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount = null, string username = null, OldUserRoleEnum usersToApplyTo = OldUserRoleEnum.User, bool deductFromUser = false)
+        private ConsumablesActionModel(ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount = null, string username = null, UserRoleEnum userRoleToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
             : base(ActionTypeEnum.Consumables)
         {
             this.ActionType = actionType;
             this.Amount = amount;
             this.UsersMustBePresent = usersMustBePresent;
             this.Username = username;
-            this.UsersToApplyTo = usersToApplyTo;
+            this.UserRoleToApplyTo = userRoleToApplyTo;
             this.DeductFromUser = deductFromUser;
         }
 
@@ -221,7 +224,7 @@ namespace MixItUp.Base.Model.Actions
                 {
                     foreach (UserV2ViewModel chatUser in ServiceManager.Get<UserService>().GetAllWorkableActiveUsers())
                     {
-                        if (chatUser.HasPermissionsTo(this.UsersToApplyTo))
+                        if (chatUser.HasRole(this.UserRoleToApplyTo))
                         {
                             receiverUserData.Add(chatUser.Data);
                         }

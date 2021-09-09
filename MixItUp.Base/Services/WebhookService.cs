@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
@@ -210,22 +211,26 @@ namespace MixItUp.Base.Services
 
         private async Task TwitchFollowEvent(string followerId, string followerUsername, string followerDisplayName)
         {
-            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, followerId);
+            TwitchWebhookFollowModel webhookFollow = new TwitchWebhookFollowModel()
+            {
+                StreamerID = ServiceManager.Get<TwitchSessionService>().UserNewAPI.id,
+
+                UserID = followerId,
+                Username = followerUsername,
+                UserDisplayName = followerDisplayName
+            });
+
+            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, followerId);
             if (user == null)
             {
-                user = await UserV2ViewModel.Create(new TwitchWebhookFollowModel()
-                {
-                    StreamerID = ServiceManager.Get<TwitchSessionService>().UserNewAPI.id,
-
-                    UserID = followerId,
-                    Username = followerUsername,
-                    UserDisplayName = followerDisplayName
-                });
+                user = ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(webhookFollow));
             }
 
-            ServiceManager.Get<TwitchEventService>().FollowCache.Add(user.TwitchID);
+            ServiceManager.Get<TwitchEventService>().FollowCache.Add(webhookFollow.UserID);
 
-            if (user.UserRoles.Contains(OldUserRoleEnum.Banned))
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (user.HasRole(UserRoleEnum.Banned))
+#pragma warning restore CS0612 // Type or member is obsolete
             {
                 return;
             }
@@ -244,7 +249,7 @@ namespace MixItUp.Base.Services
 
                 foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
                 {
-                    if (user.HasPermissionsTo(streamPass.Permission))
+                    if (user.MeetsRole(streamPass.Permission))
                     {
                         streamPass.AddAmount(user.Data, streamPass.FollowBonus);
                     }

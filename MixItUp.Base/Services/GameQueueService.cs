@@ -40,9 +40,9 @@ namespace MixItUp.Base.Services
             {
                 if (ChannelSession.Settings.GameQueueSubPriority)
                 {
-                    if (user.HasPermissionsTo(OldUserRoleEnum.Subscriber))
+                    if (user.MeetsRole(UserRoleEnum.Subscriber))
                     {
-                        int totalSubs = this.Queue.Count(u => u.HasPermissionsTo(OldUserRoleEnum.Subscriber));
+                        int totalSubs = this.Queue.Count(u => u.MeetsRole(UserRoleEnum.Subscriber));
                         this.queue.Insert(totalSubs, user);
                     }
                     else

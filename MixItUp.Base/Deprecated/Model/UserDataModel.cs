@@ -9,6 +9,7 @@ using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.User
 {
+    [Obsolete]
     public enum OldUserRoleEnum
     {
         Banned,
@@ -478,10 +479,9 @@ namespace MixItUp.Base.Model.User
                 platformData.Color = this.TwitchColor;
                 platformData.FollowDate = this.TwitchFollowDate;
                 platformData.OnlineViewingMinutes = this.ViewingMinutes;
-                platformData.Roles = this.TwitchUserRoles;
                 platformData.SubscribeDate = this.TwitchSubscribeDate;
                 platformData.SubscriberTier = this.TwitchSubscriberTier;
-                platformData.TotalAmountDonated = Convert.ToInt64(this.TotalAmountDonated);
+                platformData.TotalAmountDonated = this.TotalAmountDonated;
                 platformData.TotalBitsCheered = this.TotalBitsCheered;
                 platformData.TotalChatMessageSent = this.TotalChatMessageSent;
                 platformData.TotalCommandsRun = this.TotalCommandsRun;
@@ -490,6 +490,10 @@ namespace MixItUp.Base.Model.User
                 platformData.TotalSubsGifted = this.TotalSubsGifted;
                 platformData.TotalSubsReceived = this.TotalSubsReceived;
                 platformData.TotalTimesTagged = this.TotalTimesTagged;
+                foreach (OldUserRoleEnum role in this.TwitchUserRoles)
+                {
+                    platformData.Roles.Add(MixItUp.Base.Model.User.UserRoles.ConvertFromOldRole(role));
+                }
                 result.AddPlatformData(platformData);
 
                 return result;

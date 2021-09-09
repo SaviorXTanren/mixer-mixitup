@@ -92,6 +92,28 @@ namespace MixItUp.Base.Model.User
             }
             return roles;
         }
+
+#pragma warning disable CS0612 // Type or member is obsolete
+        public static UserRoleEnum ConvertFromOldRole(OldUserRoleEnum role)
+        {
+            switch (role)
+            {
+                case OldUserRoleEnum.Affiliate: return UserRoleEnum.TwitchAffiliate;
+                case OldUserRoleEnum.Partner: return UserRoleEnum.TwitchPartner;
+                case OldUserRoleEnum.Follower: return UserRoleEnum.Follower;
+                case OldUserRoleEnum.Regular: return UserRoleEnum.Regular;
+                case OldUserRoleEnum.VIP: return UserRoleEnum.TwitchVIP;
+                case OldUserRoleEnum.Subscriber: return UserRoleEnum.Subscriber;
+                case OldUserRoleEnum.VIPExclusive: return UserRoleEnum.TwitchVIP;
+                case OldUserRoleEnum.GlobalMod: return UserRoleEnum.TwitchGlobalMod;
+                case OldUserRoleEnum.Mod: return UserRoleEnum.Moderator;
+                case OldUserRoleEnum.ChannelEditor: return UserRoleEnum.TwitchChannelEditor;
+                case OldUserRoleEnum.Staff: return UserRoleEnum.TwitchStaff;
+                case OldUserRoleEnum.Streamer: return UserRoleEnum.Streamer;
+                default: return UserRoleEnum.User;
+            }
+        }
+#pragma warning restore CS0612 // Type or member is obsolete
     }
 
     public abstract class UserRoleAttributeBase : Attribute { }

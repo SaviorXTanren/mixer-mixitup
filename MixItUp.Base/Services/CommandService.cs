@@ -278,7 +278,7 @@ namespace MixItUp.Base.Services
 
                 foreach (CommandParametersModel p in commandInstance.RunnerParameters)
                 {
-                    p.User.Data.TotalCommandsRun++;
+                    p.User.TotalCommandsRun++;
                     await this.RunDirectlyInternal(commandInstance, p);
                 }
 

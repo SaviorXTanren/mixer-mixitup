@@ -92,7 +92,7 @@ namespace MixItUp.Base.Services
         {
             string reason = null;
 
-            if (string.IsNullOrEmpty(text) || user.IgnoreForQueries)
+            if (string.IsNullOrEmpty(text) || user.IsSpecialtyExcluded)
             {
                 return reason;
             }
@@ -134,7 +134,7 @@ namespace MixItUp.Base.Services
         {
             text = PrepareTextForChecking(text);
 
-            if (!user.HasPermissionsTo(ChannelSession.Settings.ModerationFilteredWordsExcempt))
+            if (!user.MeetsRole(ChannelSession.Settings.ModerationFilteredWordsExcempt))
             {
                 if (ChannelSession.Settings.ModerationUseCommunityFilteredWords)
                 {
@@ -170,7 +170,7 @@ namespace MixItUp.Base.Services
 
         public string ShouldTextBeExcessiveModerated(UserV2ViewModel user, string text)
         {
-            if (!user.HasPermissionsTo(ChannelSession.Settings.ModerationChatTextExcempt))
+            if (!user.MeetsRole(ChannelSession.Settings.ModerationChatTextExcempt))
             {
                 if (ChannelSession.Settings.ModerationCapsBlockCount > 0)
                 {
@@ -233,7 +233,7 @@ namespace MixItUp.Base.Services
         {
             text = PrepareTextForChecking(text);
 
-            if (!user.HasPermissionsTo(ChannelSession.Settings.ModerationBlockLinksExcempt))
+            if (!user.MeetsRole(ChannelSession.Settings.ModerationBlockLinksExcempt))
             {
                 if (ChannelSession.Settings.ModerationBlockLinks && (containsLink || LinkRegex.IsMatch(text)))
                 {
@@ -253,27 +253,27 @@ namespace MixItUp.Base.Services
                     return false;
                 }
 
-                if (user.IgnoreForQueries)
+                if (user.IsSpecialtyExcluded)
                 {
                     return true;
                 }
 
-                if (user.HasPermissionsTo(ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt))
+                if (user.MeetsRole(ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt))
                 {
                     return true;
                 }
 
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.FollowerOnly && !user.HasPermissionsTo(OldUserRoleEnum.Follower))
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.FollowerOnly && !user.MeetsRole(UserRoleEnum.Follower))
                 {
                     return false;
                 }
 
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.SubscriberOnly && !user.HasPermissionsTo(OldUserRoleEnum.Subscriber))
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.SubscriberOnly && !user.MeetsRole(UserRoleEnum.Subscriber))
                 {
                     return false;
                 }
 
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ModeratorOnly && !user.HasPermissionsTo(OldUserRoleEnum.Mod))
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ModeratorOnly && !user.MeetsRole(UserRoleEnum.Moderator))
                 {
                     return false;
                 }
@@ -303,7 +303,7 @@ namespace MixItUp.Base.Services
                     return false;
                 }
 
-                TimeSpan viewingLength = TimeSpan.FromMinutes(user.Data.ViewingMinutes);
+                TimeSpan viewingLength = TimeSpan.FromMinutes(user.OnlineViewingMinutes);
                 if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ViewingTenMinutes && viewingLength.TotalMinutes < 10)
                 {
                     return false;

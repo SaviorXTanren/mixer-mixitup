@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -38,7 +37,7 @@ namespace MixItUp.Base.Model.User.Platform
         [DataMember]
         public long TotalStreamsWatched { get; set; }
         [DataMember]
-        public long TotalAmountDonated { get; set; }
+        public double TotalAmountDonated { get; set; }
         [DataMember]
         public long TotalSubsGifted { get; set; }
         [DataMember]

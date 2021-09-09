@@ -22,6 +22,8 @@ namespace MixItUp.Base.ViewModel.User
         private UserV2Model model;
         private UserPlatformV2ModelBase platformModel;
 
+        private object cachePropertiesLock = new object();
+
         public UserV2ViewModel(StreamingPlatformTypeEnum platform, UserV2Model model)
         {
             this.platform = platform;
@@ -29,31 +31,35 @@ namespace MixItUp.Base.ViewModel.User
             
             if (this.platform != StreamingPlatformTypeEnum.None)
             {
-                this.platformModel = this.model.GetPlatformData<UserPlatformV2ModelBase>(this.platform);
+                this.platformModel = this.Model.GetPlatformData<UserPlatformV2ModelBase>(this.platform);
             }
-            else if (this.model.HasPlatformData(ChannelSession.Settings.DefaultStreamingPlatform))
+            else if (this.Model.HasPlatformData(ChannelSession.Settings.DefaultStreamingPlatform))
             {
-                this.platformModel = this.model.GetPlatformData<UserPlatformV2ModelBase>(ChannelSession.Settings.DefaultStreamingPlatform);
+                this.platformModel = this.Model.GetPlatformData<UserPlatformV2ModelBase>(ChannelSession.Settings.DefaultStreamingPlatform);
             }
             else
             {
-                this.platformModel = this.model.GetPlatformData<UserPlatformV2ModelBase>(this.model.GetPlatforms().First());
+                this.platformModel = this.Model.GetPlatformData<UserPlatformV2ModelBase>(this.Model.GetPlatforms().First());
             }
         }
 
-        public UserV2Model Model { get { return this.model; } }
+        public UserV2Model Model { get { return this.Model; } }
 
         public UserPlatformV2ModelBase PlatformModel { get { return this.platformModel; } }
 
-        public Guid ID { get { return this.model.ID; } }
+        public Guid ID { get { return this.Model.ID; } }
 
         public StreamingPlatformTypeEnum Platform { get { return this.platform; } }
 
-        public string PlatformID { get { return this.platformModel.ID; } }
+        public HashSet<StreamingPlatformTypeEnum> AllPlatforms { get { return this.Model.GetPlatforms(); } }
 
-        public string Username { get { return this.platformModel.Username; } }
+        public bool IsUnassociated { get { return this.Platform == StreamingPlatformTypeEnum.None; } }
 
-        public string DisplayName { get { return !string.IsNullOrEmpty(this.platformModel.DisplayName) ? this.platformModel.DisplayName : this.Username; } }
+        public string PlatformID { get { return this.PlatformModel.ID; } }
+
+        public string Username { get { return this.PlatformModel.Username; } }
+
+        public string DisplayName { get { return !string.IsNullOrEmpty(this.PlatformModel.DisplayName) ? this.PlatformModel.DisplayName : this.Username; } }
 
         public string FullDisplayName
         {
@@ -61,7 +67,7 @@ namespace MixItUp.Base.ViewModel.User
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                 {
-                    if (!string.IsNullOrEmpty(this.platformModel.DisplayName) && !string.Equals(this.DisplayName, this.Username, StringComparison.OrdinalIgnoreCase))
+                    if (!string.IsNullOrEmpty(this.PlatformModel.DisplayName) && !string.Equals(this.DisplayName, this.Username, StringComparison.OrdinalIgnoreCase))
                     {
                         return $"{this.DisplayName} ({this.Username})";
                     }
@@ -77,11 +83,29 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public string AvatarLink { get { return this.platformModel.AvatarLink; } }
+        public string AvatarLink { get { return this.PlatformModel.AvatarLink; } }
 
-        public HashSet<UserRoleEnum> Roles { get { return this.platformModel.Roles; } }
+        public HashSet<UserRoleEnum> Roles { get { return this.PlatformModel.Roles; } }
 
-        public UserRoleEnum PrimaryRole { get { return this.Roles.Max(); } }
+        public UserRoleEnum PrimaryRole
+        {
+            get
+            {
+                lock (cachePropertiesLock)
+                {
+#pragma warning disable CS0612 // Type or member is obsolete
+                    if (this.primaryRole == UserRoleEnum.Banned)
+#pragma warning restore CS0612 // Type or member is obsolete
+                    {
+                        this.primaryRole = this.Roles.Max();
+                    }
+                    return this.primaryRole;
+                }
+            }
+        }
+#pragma warning disable CS0612 // Type or member is obsolete
+        private UserRoleEnum primaryRole = UserRoleEnum.Banned;
+#pragma warning restore CS0612 // Type or member is obsolete
 
         public string PrimaryRoleString { get { return EnumLocalizationHelper.GetLocalizedName(this.PrimaryRole); } }
 
@@ -127,38 +151,41 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.color == null)
+                lock (cachePropertiesLock)
                 {
-                    if (ChannelSession.Settings.UseCustomUsernameColors)
+                    if (this.color == null)
                     {
-                        foreach (OldUserRoleEnum role in this.Roles.OrderByDescending(r => r))
+                        if (ChannelSession.Settings.UseCustomUsernameColors)
                         {
-                            if (ChannelSession.Settings.CustomUsernameColors.ContainsKey(role))
+                            foreach (UserRoleEnum role in this.Roles.OrderByDescending(r => r))
                             {
-                                string name = ChannelSession.Settings.CustomUsernameColors[role];
-                                if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(name))
+                                if (ChannelSession.Settings.CustomUsernameColors.ContainsKey(role))
                                 {
-                                    this.color = ColorSchemes.HTMLColorSchemeDictionary[name];
-                                    break;
+                                    string name = ChannelSession.Settings.CustomUsernameColors[role];
+                                    if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(name))
+                                    {
+                                        this.color = ColorSchemes.HTMLColorSchemeDictionary[name];
+                                        break;
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    if (string.IsNullOrEmpty(this.color))
-                    {
-                        if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                        if (string.IsNullOrEmpty(this.color))
                         {
-                            this.color = ((TwitchUserPlatformV2Model)this.platformModel).Color;
+                            if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                            {
+                                this.color = ((TwitchUserPlatformV2Model)this.PlatformModel).Color;
+                            }
+                        }
+
+                        if (string.IsNullOrEmpty(this.color))
+                        {
+                            this.color = UserV2ViewModel.UserDefaultColor;
                         }
                     }
-
-                    if (string.IsNullOrEmpty(this.color))
-                    {
-                        this.color = UserV2ViewModel.UserDefaultColor;
-                    }
+                    return this.color;
                 }
-                return this.color;
             }
         }
         private string color;
@@ -168,36 +195,32 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return $"https://www.twitch.tv/{this.Username}"; }
-                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return ((YouTubeUserPlatformV2Model)this.platformModel).YouTubeURL; }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return ((YouTubeUserPlatformV2Model)this.PlatformModel).YouTubeURL; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return $"https://www.glimesh.tv/{this.Username}"; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return $"https://trovo.live/{this.Username}"; }
                 return string.Empty;
             }
         }
 
-        public DateTimeOffset? AccountDate { get { return this.platformModel.AccountDate; } }
+        public DateTimeOffset? AccountDate { get { return this.PlatformModel.AccountDate; } set { this.PlatformModel.AccountDate = value; } }
         public string AccountDateString { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.Unknown; } }
 
-        public DateTimeOffset? FollowDate { get { return this.platformModel.FollowDate; } }
+        public DateTimeOffset? FollowDate { get { return this.PlatformModel.FollowDate; } set { this.PlatformModel.FollowDate = value; } }
         public string FollowAgeString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.NotFollowing; } }
         public int FollowMonths { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().TotalMonthsFromNow() : 0; } }
 
-        public DateTimeOffset? SubscribeDate { get { return this.platformModel.SubscribeDate; } }
+        public DateTimeOffset? SubscribeDate { get { return this.PlatformModel.SubscribeDate; } set { this.PlatformModel.SubscribeDate = value; } }
         public string SubscribeAgeString { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.NotSubscribed; } }
         public int SubscribeMonths { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow() : 0; } }
 
-        public int SubscribeTier { get { return this.platformModel.SubscriberTier; } }
-
-        public bool IsUnassociated { get { return this.Platform == StreamingPlatformTypeEnum.None; } }
-
-        public HashSet<StreamingPlatformTypeEnum> AllPlatforms { get { return this.model.GetPlatforms(); } }
+        public int SubscribeTier { get { return this.PlatformModel.SubscriberTier; } }
 
         public int OnlineViewingMinutes
         {
-            get { return this.platformModel.OnlineViewingMinutes; }
+            get { return this.PlatformModel.OnlineViewingMinutes; }
             set
             {
-                this.platformModel.OnlineViewingMinutes = value;
+                this.PlatformModel.OnlineViewingMinutes = value;
                 this.NotifyPropertyChanged("OnlineViewingMinutes");
                 this.NotifyPropertyChanged("OnlineViewingMinutesOnly");
                 this.NotifyPropertyChanged("OnlineViewingHoursOnly");
@@ -228,25 +251,73 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        public long TotalStreamsWatched
+        {
+            get { return this.PlatformModel.TotalStreamsWatched; }
+            set { this.PlatformModel.TotalStreamsWatched = value; }
+        }
+
+        public double TotalAmountDonated
+        {
+            get { return this.PlatformModel.TotalAmountDonated; }
+            set { this.PlatformModel.TotalAmountDonated = value; }
+        }
+
+        public long TotalSubsGifted
+        {
+            get { return this.PlatformModel.TotalSubsGifted; }
+            set { this.PlatformModel.TotalSubsGifted = value; }
+        }
+
+        public long TotalSubsReceived
+        {
+            get { return this.PlatformModel.TotalSubsReceived; }
+            set { this.PlatformModel.TotalSubsReceived = value; }
+        }
+
+        public long TotalChatMessageSent
+        {
+            get { return this.PlatformModel.TotalChatMessageSent; }
+            set { this.PlatformModel.TotalChatMessageSent = value; }
+        }
+
+        public long TotalTimesTagged
+        {
+            get { return this.PlatformModel.TotalTimesTagged; }
+            set { this.PlatformModel.TotalTimesTagged = value; }
+        }
+
+        public long TotalCommandsRun
+        {
+            get { return this.PlatformModel.TotalCommandsRun; }
+            set { this.PlatformModel.TotalCommandsRun = value; }
+        }
+
+        public long TotalMonthsSubbed
+        {
+            get { return this.PlatformModel.TotalMonthsSubbed; }
+            set { this.PlatformModel.TotalMonthsSubbed = value; }
+        }
+
         public uint ModerationStrikes
         {
-            get { return this.model.ModerationStrikes; }
-            set { this.model.ModerationStrikes = value; }
+            get { return this.Model.ModerationStrikes; }
+            set { this.Model.ModerationStrikes = value; }
         }
 
         public bool IsSpecialtyExcluded
         {
-            get { return this.model.IsSpecialtyExcluded; }
-            set { this.model.IsSpecialtyExcluded = value; }
+            get { return this.Model.IsSpecialtyExcluded; }
+            set { this.Model.IsSpecialtyExcluded = value; }
         }
 
         public CommandModelBase EntranceCommand
         {
-            get { return ChannelSession.Settings.GetCommand(this.model.EntranceCommandID); }
-            set { this.model.EntranceCommandID = (value != null) ? value.ID : Guid.Empty; }
+            get { return ChannelSession.Settings.GetCommand(this.Model.EntranceCommandID); }
+            set { this.Model.EntranceCommandID = (value != null) ? value.ID : Guid.Empty; }
         }
 
-        public DateTimeOffset LastActivity { get { return this.model.LastActivity; } }
+        public DateTimeOffset LastActivity { get { return this.Model.LastActivity; } }
 
         public bool UpdatedThisSession { get; set; }
 
@@ -256,16 +327,19 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.sortableID == null)
+                lock (cachePropertiesLock)
                 {
-                    UserRoleEnum role = this.PrimaryRole;
-                    if (role < UserRoleEnum.Subscriber)
+                    if (this.sortableID == null)
                     {
-                        role = UserRoleEnum.User;
+                        UserRoleEnum role = this.PrimaryRole;
+                        if (role < UserRoleEnum.Subscriber)
+                        {
+                            role = UserRoleEnum.User;
+                        }
+                        this.sortableID = (999 - role) + "-" + this.Username + "-" + this.Platform.ToString();
                     }
-                    this.sortableID = (999 - role) + "-" + this.Username + "-" + this.Platform.ToString();
+                    return this.sortableID;
                 }
-                return this.sortableID;
             }
         }
         private string sortableID;
@@ -288,7 +362,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public void UpdateLastActivity() { this.model.LastActivity = DateTimeOffset.Now; }
+        public void UpdateLastActivity() { this.Model.LastActivity = DateTimeOffset.Now; }
 
         public void UpdateViewingMinutes()
         {
@@ -328,13 +402,12 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public Task RemoveModerationStrike()
+        public void RemoveModerationStrike()
         {
             if (this.ModerationStrikes > 0)
             {
                 this.ModerationStrikes--;
             }
-            return Task.CompletedTask;
         }
 
         public async Task Refresh(bool force = false)
@@ -392,8 +465,14 @@ namespace MixItUp.Base.ViewModel.User
 
         private void ClearCachedProperties()
         {
-            this.color = null;
-            this.sortableID = null;
+            lock (cachePropertiesLock)
+            {
+                this.color = null;
+                this.sortableID = null;
+#pragma warning disable CS0612 // Type or member is obsolete
+                this.primaryRole = UserRoleEnum.Banned;
+#pragma warning restore CS0612 // Type or member is obsolete
+            }
         }
 
         public override bool Equals(object obj)

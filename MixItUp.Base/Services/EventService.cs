@@ -162,13 +162,13 @@ namespace MixItUp.Base.Services
 
             foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
             {
-                if (parameters.User.HasPermissionsTo(streamPass.Permission))
+                if (parameters.User.MeetsRole(streamPass.Permission))
                 {
-                    streamPass.AddAmount(donation.User.Data, (int)Math.Ceiling(streamPass.DonationBonus * donation.Amount));
+                    streamPass.AddAmount(donation.User.Model, (int)Math.Ceiling(streamPass.DonationBonus * donation.Amount));
                 }
             }
 
-            parameters.User.Data.TotalAmountDonated += donation.Amount;
+            parameters.User.TotalAmountDonated += donation.Amount;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestDonationUserData] = parameters.User.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestDonationAmountData] = donation.AmountText;
 

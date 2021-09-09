@@ -31,6 +31,10 @@ namespace MixItUp.Base.ViewModel.Commands
                     return await FileSerializerHelper.DeserializeFromFile<CommandModelBase>(filePath);
                 }
             }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
             return null;
         }
 

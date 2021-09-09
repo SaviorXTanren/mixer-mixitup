@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
+using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
@@ -373,6 +374,20 @@ namespace MixItUp.Base.Services
                 }
 #pragma warning restore CS0612 // Type or member is obsolete
 
+#pragma warning disable CS0612 // Type or member is obsolete
+                foreach (CommandModelBase command in settings.Commands.Values)
+                {
+                    foreach (ActionModelBase action in command.Actions)
+                    {
+                        if (action is ConsumablesActionModel)
+                        {
+                            ConsumablesActionModel cAction = (ConsumablesActionModel)action;
+                            cAction.UserRoleToApplyTo = UserRoles.ConvertFromOldRole(cAction.UsersToApplyTo);
+                        }
+                    }
+                }
+#pragma warning restore CS0612 // Type or member is obsolete
+
                 await ServiceManager.Get<SettingsService>().Save(settings);
             }
         }
@@ -387,14 +402,5 @@ namespace MixItUp.Base.Services
             JObject settingsJObj = JObject.Parse(fileData);
             return (int)settingsJObj["Version"];
         }
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        private static Guid ImportCustomCommand(SettingsV3Model settings, CustomCommand oldCommand)
-        {
-            CustomCommandModel newCommand = new CustomCommandModel(oldCommand);
-            settings.SetCommand(newCommand);
-            return newCommand.ID;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
     }
 }
