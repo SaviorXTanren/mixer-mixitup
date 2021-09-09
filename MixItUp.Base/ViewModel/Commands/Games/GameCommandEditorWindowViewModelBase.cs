@@ -18,7 +18,7 @@ namespace MixItUp.Base.ViewModel.Games
 {
     public class RoleProbabilityPayoutViewModel : NotifyPropertyChangedBase
     {
-        public UserRoleEnum Role
+        public OldUserRoleEnum Role
         {
             get { return this.role; }
             set
@@ -27,7 +27,7 @@ namespace MixItUp.Base.ViewModel.Games
                 this.NotifyPropertyChanged();
             }
         }
-        private UserRoleEnum role;
+        private OldUserRoleEnum role;
 
         public int Probability
         {
@@ -51,7 +51,7 @@ namespace MixItUp.Base.ViewModel.Games
         }
         private double payout;
 
-        public RoleProbabilityPayoutViewModel(UserRoleEnum role, int probability, double payout)
+        public RoleProbabilityPayoutViewModel(OldUserRoleEnum role, int probability, double payout)
         {
             this.Role = role;
             this.Probability = probability;
@@ -158,9 +158,9 @@ namespace MixItUp.Base.ViewModel.Games
         public GameOutcomeViewModel(string name, int probability, double payout, CustomCommandModel command)
         {
             this.Name = name;
-            this.RoleProbabilityPayouts.Add(new RoleProbabilityPayoutViewModel(UserRoleEnum.User, probability, payout));
-            this.RoleProbabilityPayouts.Add(new RoleProbabilityPayoutViewModel(UserRoleEnum.Subscriber, probability, payout));
-            this.RoleProbabilityPayouts.Add(new RoleProbabilityPayoutViewModel(UserRoleEnum.Mod, probability, payout));
+            this.RoleProbabilityPayouts.Add(new RoleProbabilityPayoutViewModel(OldUserRoleEnum.User, probability, payout));
+            this.RoleProbabilityPayouts.Add(new RoleProbabilityPayoutViewModel(OldUserRoleEnum.Subscriber, probability, payout));
+            this.RoleProbabilityPayouts.Add(new RoleProbabilityPayoutViewModel(OldUserRoleEnum.Mod, probability, payout));
             this.Command = command;
             this.SetRoleProbabilityPayoutProperties();
         }
@@ -192,9 +192,9 @@ namespace MixItUp.Base.ViewModel.Games
 
         private void SetRoleProbabilityPayoutProperties()
         {
-            this.userRoleProbabilityPayout = this.RoleProbabilityPayouts.FirstOrDefault(rpp => rpp.Role == UserRoleEnum.User);
-            this.subRoleProbabilityPayout = this.RoleProbabilityPayouts.FirstOrDefault(rpp => rpp.Role == UserRoleEnum.Subscriber);
-            this.modRoleProbabilityPayout = this.RoleProbabilityPayouts.FirstOrDefault(rpp => rpp.Role == UserRoleEnum.Mod);
+            this.userRoleProbabilityPayout = this.RoleProbabilityPayouts.FirstOrDefault(rpp => rpp.Role == OldUserRoleEnum.User);
+            this.subRoleProbabilityPayout = this.RoleProbabilityPayouts.FirstOrDefault(rpp => rpp.Role == OldUserRoleEnum.Subscriber);
+            this.modRoleProbabilityPayout = this.RoleProbabilityPayouts.FirstOrDefault(rpp => rpp.Role == OldUserRoleEnum.Mod);
         }
     }
 
@@ -267,7 +267,7 @@ namespace MixItUp.Base.ViewModel.Games
                 return new Result(MixItUp.Base.Resources.GameCommandAtLeast1Outcome);
             }
 
-            Dictionary<UserRoleEnum, int> probabilities = new Dictionary<UserRoleEnum, int>();
+            Dictionary<OldUserRoleEnum, int> probabilities = new Dictionary<OldUserRoleEnum, int>();
             foreach (RoleProbabilityPayoutViewModel rpp in outcomes.First().RoleProbabilityPayouts)
             {
                 probabilities[rpp.Role] = 0;

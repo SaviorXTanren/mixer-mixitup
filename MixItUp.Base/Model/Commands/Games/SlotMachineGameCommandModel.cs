@@ -15,7 +15,7 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public bool AnyOrder { get; set; }
 
-        public SlotMachineGameOutcomeModel(string name, Dictionary<UserRoleEnum, RoleProbabilityPayoutModel> roleProbabilityPayouts, CustomCommandModel command, IEnumerable<string> symbols, bool anyOrder)
+        public SlotMachineGameOutcomeModel(string name, Dictionary<OldUserRoleEnum, RoleProbabilityPayoutModel> roleProbabilityPayouts, CustomCommandModel command, IEnumerable<string> symbols, bool anyOrder)
             : base(name, roleProbabilityPayouts, command)
         {
             this.Symbols = new List<string>(symbols);

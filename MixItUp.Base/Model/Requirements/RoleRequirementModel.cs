@@ -16,9 +16,9 @@ namespace MixItUp.Base.Model.Requirements
         private static DateTimeOffset requirementErrorCooldown = DateTimeOffset.MinValue;
 
         [DataMember]
-        public UserRoleEnum Role { get; set; }
+        public OldUserRoleEnum Role { get; set; }
         [DataMember]
-        public HashSet<UserRoleEnum> RoleList { get; set; } = new HashSet<UserRoleEnum>();
+        public HashSet<OldUserRoleEnum> RoleList { get; set; } = new HashSet<OldUserRoleEnum>();
 
         [DataMember]
         public int SubscriberTier { get; set; } = 1;
@@ -28,16 +28,16 @@ namespace MixItUp.Base.Model.Requirements
 
         public RoleRequirementModel() { }
 
-        public RoleRequirementModel(UserRoleEnum role, int subscriberTier = 1, string patreonBenefitID = null)
+        public RoleRequirementModel(OldUserRoleEnum role, int subscriberTier = 1, string patreonBenefitID = null)
         {
             this.Role = role;
             this.SubscriberTier = subscriberTier;
             this.PatreonBenefitID = patreonBenefitID;
         }
 
-        public RoleRequirementModel(IEnumerable<UserRoleEnum> roleList, int subscriberTier = 1, string patreonBenefitID = null)
+        public RoleRequirementModel(IEnumerable<OldUserRoleEnum> roleList, int subscriberTier = 1, string patreonBenefitID = null)
         {
-            this.RoleList = new HashSet<UserRoleEnum>(roleList);
+            this.RoleList = new HashSet<OldUserRoleEnum>(roleList);
             this.SubscriberTier = subscriberTier;
             this.PatreonBenefitID = patreonBenefitID;
         }
@@ -63,11 +63,11 @@ namespace MixItUp.Base.Model.Requirements
         {
             if (this.RoleList.Count > 0)
             {
-                foreach (UserRoleEnum role in parameters.User.UserRoles)
+                foreach (OldUserRoleEnum role in parameters.User.UserRoles)
                 {
                     if (this.RoleList.Contains(role))
                     {
-                        if (role != UserRoleEnum.Subscriber || parameters.User.SubscribeTier >= this.SubscriberTier)
+                        if (role != OldUserRoleEnum.Subscriber || parameters.User.SubscribeTier >= this.SubscriberTier)
                         {
                             return Task.FromResult(new Result());
                         }
@@ -95,7 +95,7 @@ namespace MixItUp.Base.Model.Requirements
                     return Task.FromResult(this.CreateErrorMessage(parameters));
                 }
 
-                if (this.Role == UserRoleEnum.Subscriber && !parameters.User.ExceedsPermissions(this.Role))
+                if (this.Role == OldUserRoleEnum.Subscriber && !parameters.User.ExceedsPermissions(this.Role))
                 {
                     if (parameters.User.SubscribeTier < this.SubscriberTier)
                     {
@@ -111,7 +111,7 @@ namespace MixItUp.Base.Model.Requirements
             List<string> roleNames = new List<string>();
             if (this.RoleList.Count > 0)
             {
-                foreach (UserRoleEnum role in this.RoleList)
+                foreach (OldUserRoleEnum role in this.RoleList)
                 {
                     roleNames.Add(this.GetRoleName(role));
                 }
@@ -123,10 +123,10 @@ namespace MixItUp.Base.Model.Requirements
             return new Result(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, string.Join(" / ", roleNames)));
         }
 
-        private string GetRoleName(UserRoleEnum role)
+        private string GetRoleName(OldUserRoleEnum role)
         {
             string roleName = EnumLocalizationHelper.GetLocalizedName(role);
-            if (role == UserRoleEnum.Subscriber)
+            if (role == OldUserRoleEnum.Subscriber)
             {
                 string tierText = string.Empty;
                 switch (this.SubscriberTier)
@@ -137,9 +137,9 @@ namespace MixItUp.Base.Model.Requirements
                 }
                 roleName = tierText + " " + roleName;
             }
-            else if (role == UserRoleEnum.VIPExclusive)
+            else if (role == OldUserRoleEnum.VIPExclusive)
             {
-                roleName = EnumLocalizationHelper.GetLocalizedName(UserRoleEnum.VIP);
+                roleName = EnumLocalizationHelper.GetLocalizedName(OldUserRoleEnum.VIP);
             }
             return roleName;
         }

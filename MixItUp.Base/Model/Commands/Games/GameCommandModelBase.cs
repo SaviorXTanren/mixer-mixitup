@@ -48,7 +48,7 @@ namespace MixItUp.Base.Model.Commands.Games
     public class RoleProbabilityPayoutModel
     {
         [DataMember]
-        public UserRoleEnum Role { get; set; }
+        public OldUserRoleEnum Role { get; set; }
 
         [DataMember]
         public int Probability { get; set; }
@@ -56,9 +56,9 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public double Payout { get; set; }
 
-        public RoleProbabilityPayoutModel(UserRoleEnum role, int probability) : this(role, probability, 0) { }
+        public RoleProbabilityPayoutModel(OldUserRoleEnum role, int probability) : this(role, probability, 0) { }
 
-        public RoleProbabilityPayoutModel(UserRoleEnum role, int probability, double payout)
+        public RoleProbabilityPayoutModel(OldUserRoleEnum role, int probability, double payout)
         {
             this.Role = role;
             this.Probability = probability;
@@ -75,12 +75,12 @@ namespace MixItUp.Base.Model.Commands.Games
         public string Name { get; set; }
 
         [DataMember]
-        public Dictionary<UserRoleEnum, RoleProbabilityPayoutModel> RoleProbabilityPayouts { get; set; } = new Dictionary<UserRoleEnum, RoleProbabilityPayoutModel>();
+        public Dictionary<OldUserRoleEnum, RoleProbabilityPayoutModel> RoleProbabilityPayouts { get; set; } = new Dictionary<OldUserRoleEnum, RoleProbabilityPayoutModel>();
 
         [DataMember]
         public CustomCommandModel Command { get; set; }
 
-        public GameOutcomeModel(string name, Dictionary<UserRoleEnum, RoleProbabilityPayoutModel> roleProbabilityPayouts, CustomCommandModel command)
+        public GameOutcomeModel(string name, Dictionary<OldUserRoleEnum, RoleProbabilityPayoutModel> roleProbabilityPayouts, CustomCommandModel command)
         {
             this.Name = name;
             this.RoleProbabilityPayouts = roleProbabilityPayouts;

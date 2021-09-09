@@ -369,7 +369,7 @@ namespace MixItUp.Base.Model.Currency
                                     {
                                         int bonus = 0;
 
-                                        if (this.RegularBonus > 0 && user.UserRoles.Contains(UserRoleEnum.Regular))
+                                        if (this.RegularBonus > 0 && user.UserRoles.Contains(OldUserRoleEnum.Regular))
                                         {
                                             bonus = Math.Max(this.RegularBonus, bonus);
                                         }
@@ -377,7 +377,7 @@ namespace MixItUp.Base.Model.Currency
                                         {
                                             bonus = Math.Max(this.SubscriberBonus, bonus);
                                         }
-                                        if (this.ModeratorBonus > 0 && user.HasPermissionsTo(UserRoleEnum.Mod))
+                                        if (this.ModeratorBonus > 0 && user.HasPermissionsTo(OldUserRoleEnum.Mod))
                                         {
                                             bonus = Math.Max(this.ModeratorBonus, bonus);
                                         }

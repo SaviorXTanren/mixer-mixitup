@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace MixItUp.Base.Model
 {
-    [Flags]
     public enum StreamingPlatformTypeEnum
     {
         None = 0,

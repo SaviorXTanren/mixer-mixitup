@@ -18,7 +18,7 @@ namespace MixItUp.Base.Model.Commands.Games
         public const string GameBetWinningOptionSpecialIdentifier = "gamebetwinningoption";
 
         [DataMember]
-        public UserRoleEnum StarterRole { get; set; }
+        public OldUserRoleEnum StarterRole { get; set; }
         [DataMember]
         public int MinimumParticipants { get; set; }
         [DataMember]
@@ -51,7 +51,7 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private Dictionary<UserV2ViewModel, int> runUserSelections = new Dictionary<UserV2ViewModel, int>();
 
-        public BetGameCommandModel(string name, HashSet<string> triggers, UserRoleEnum starterRole, int minimumParticipants, int timeLimit, IEnumerable<GameOutcomeModel> betOptions,
+        public BetGameCommandModel(string name, HashSet<string> triggers, OldUserRoleEnum starterRole, int minimumParticipants, int timeLimit, IEnumerable<GameOutcomeModel> betOptions,
             CustomCommandModel startedCommand, CustomCommandModel userJoinCommand, CustomCommandModel notEnoughPlayersCommand, CustomCommandModel betsClosedCommand, CustomCommandModel gameCompleteCommand)
             : base(name, triggers, GameCommandTypeEnum.Bet)
         {

@@ -44,13 +44,13 @@ namespace MixItUp.WPF.Controls.Dialogs
 
                 this.DataContext = this.user;
 
-                if (this.user.UserRoles.Contains(UserRoleEnum.Banned))
+                if (this.user.UserRoles.Contains(OldUserRoleEnum.Banned))
                 {
                     this.UnbanButton.Visibility = System.Windows.Visibility.Visible;
                     this.BanButton.Visibility = System.Windows.Visibility.Collapsed;
                 }
 
-                if (this.user.UserRoles.Contains(UserRoleEnum.Mod))
+                if (this.user.UserRoles.Contains(OldUserRoleEnum.Mod))
                 {
                     this.DemoteFromModButton.Visibility = System.Windows.Visibility.Visible;
                     this.PromoteToModButton.Visibility = System.Windows.Visibility.Collapsed;

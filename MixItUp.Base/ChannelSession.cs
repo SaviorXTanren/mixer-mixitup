@@ -391,18 +391,6 @@ namespace MixItUp.Base
                         }
                     }
 
-                    if (ChannelSession.Settings.ModerationResetStrikesOnLaunch)
-                    {
-                        foreach (UserV2Model userData in ChannelSession.Settings.Users.Values)
-                        {
-                            if (userData.ModerationStrikes > 0)
-                            {
-                                userData.ModerationStrikes = 0;
-                                ChannelSession.Settings.Users.ManualValueChanged(userData.ID);
-                            }
-                        }
-                    }
-
                     await ServiceManager.Get<CommandService>().Initialize();
                     await ServiceManager.Get<TimerService>().Initialize();
                     await ServiceManager.Get<ModerationService>().Initialize();

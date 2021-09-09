@@ -117,7 +117,7 @@ namespace MixItUp.Base.ViewModel.Settings
                     GlobalEvents.ChatVisualSettingsChanged();
                 });
 
-            foreach (UserRoleEnum role in UserV2Model.GetSelectableUserRoles().OrderBy(r => r))
+            foreach (OldUserRoleEnum role in UserV2Model.GetSelectableUserRoles().OrderBy(r => r))
             {
                 string name = EnumHelper.GetEnumName(role);
                 name = MixItUp.Base.Resources.ResourceManager.GetSafeString(name);

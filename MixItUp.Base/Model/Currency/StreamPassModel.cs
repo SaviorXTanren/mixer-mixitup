@@ -26,7 +26,7 @@ namespace MixItUp.Base.Model.Currency
         [DataMember]
         public string SpecialIdentifier { get; set; }
         [DataMember]
-        public UserRoleEnum Permission { get; set; }
+        public OldUserRoleEnum Permission { get; set; }
         [DataMember]
         public int MaxLevel { get; set; }
         [DataMember]
@@ -236,7 +236,7 @@ namespace MixItUp.Base.Model.Currency
                         if (user.Data.ViewingMinutes % this.ViewingRateMinutes == 0)
                         {
                             int amount = this.ViewingRateAmount;
-                            if (this.SubMultiplier > 1.0 && user.HasPermissionsTo(UserRoleEnum.Subscriber))
+                            if (this.SubMultiplier > 1.0 && user.HasPermissionsTo(OldUserRoleEnum.Subscriber))
                             {
                                 amount = (int)Math.Ceiling(((double)amount) * this.SubMultiplier);
                             }

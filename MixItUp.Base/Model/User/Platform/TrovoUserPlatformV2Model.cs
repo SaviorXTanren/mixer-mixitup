@@ -63,50 +63,12 @@ namespace MixItUp.Base.Model.User.Platform
                 {
                     HashSet<string> rolesSet = new HashSet<string>(message.roles);
 
-                    if (rolesSet.Contains(ChatMessageModel.StreamerRole))
-                    {
-                        this.Roles.Add(UserRoleEnum.Streamer);
-                    }
-                    else
-                    {
-                        this.Roles.Remove(UserRoleEnum.Streamer);
-                    }
-
-                    if (rolesSet.Contains(ChatMessageModel.AdminRole))
-                    {
-                        this.Roles.Add(UserRoleEnum.Staff);
-                    }
-                    else
-                    {
-                        this.Roles.Remove(UserRoleEnum.Staff);
-                    }
-
-                    if (rolesSet.Contains(ChatMessageModel.WardenRole) || rolesSet.Contains(ChatMessageModel.SuperModRole))
-                    {
-                        this.Roles.Add(UserRoleEnum.GlobalMod);
-                    }
-                    else
-                    {
-                        this.Roles.Remove(UserRoleEnum.GlobalMod);
-                    }
-
-                    if (rolesSet.Contains(ChatMessageModel.ModeratorRole))
-                    {
-                        this.Roles.Add(UserRoleEnum.Mod);
-                    }
-                    else
-                    {
-                        this.Roles.Remove(UserRoleEnum.Mod);
-                    }
-
-                    if (rolesSet.Contains(ChatMessageModel.FollowerRole))
-                    {
-                        this.Roles.Add(UserRoleEnum.Follower);
-                    }
-                    else
-                    {
-                        this.Roles.Remove(UserRoleEnum.Follower);
-                    }
+                    if (rolesSet.Contains(ChatMessageModel.StreamerRole)) { this.Roles.Add(UserRoleEnum.Streamer); } else { this.Roles.Remove(UserRoleEnum.Streamer); }
+                    if (rolesSet.Contains(ChatMessageModel.AdminRole)) { this.Roles.Add(UserRoleEnum.TrovoAdmin); } else { this.Roles.Remove(UserRoleEnum.TrovoAdmin); }
+                    if (rolesSet.Contains(ChatMessageModel.WardenRole)) { this.Roles.Add(UserRoleEnum.TrovoWarden); } else { this.Roles.Remove(UserRoleEnum.TrovoWarden); }
+                    if (rolesSet.Contains(ChatMessageModel.SuperModRole)) { this.Roles.Add(UserRoleEnum.TrovoSuperMod); } else { this.Roles.Remove(UserRoleEnum.TrovoSuperMod); }
+                    if (rolesSet.Contains(ChatMessageModel.ModeratorRole)) { this.Roles.Add(UserRoleEnum.Moderator); } else { this.Roles.Remove(UserRoleEnum.Moderator); }
+                    if (rolesSet.Contains(ChatMessageModel.FollowerRole)) { this.Roles.Add(UserRoleEnum.Follower); } else { this.Roles.Remove(UserRoleEnum.Follower); }
 
                     if (rolesSet.Contains(ChatMessageModel.SubscriberRole))
                     {

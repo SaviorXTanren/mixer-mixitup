@@ -49,31 +49,31 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public bool DeductFromUser { get; set; }
         [DataMember]
-        public UserRoleEnum UsersToApplyTo { get; set; }
+        public OldUserRoleEnum UsersToApplyTo { get; set; }
 
         [DataMember]
         public bool UsersMustBePresent { get; set; } = true;
 
-        public ConsumablesActionModel(CurrencyModel currency, ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount, string username = null, UserRoleEnum usersToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
+        public ConsumablesActionModel(CurrencyModel currency, ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount, string username = null, OldUserRoleEnum usersToApplyTo = OldUserRoleEnum.User, bool deductFromUser = false)
             : this(actionType, usersMustBePresent, amount, username, usersToApplyTo, deductFromUser)
         {
             this.CurrencyID = currency.ID;
         }
 
-        public ConsumablesActionModel(InventoryModel inventory, string itemName, ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount, string username = null, UserRoleEnum usersToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
+        public ConsumablesActionModel(InventoryModel inventory, string itemName, ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount, string username = null, OldUserRoleEnum usersToApplyTo = OldUserRoleEnum.User, bool deductFromUser = false)
             : this(actionType, usersMustBePresent, amount, username, usersToApplyTo, deductFromUser)
         {
             this.InventoryID = inventory.ID;
             this.ItemName = itemName;
         }
 
-        public ConsumablesActionModel(StreamPassModel streamPass, ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount, string username = null, UserRoleEnum usersToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
+        public ConsumablesActionModel(StreamPassModel streamPass, ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount, string username = null, OldUserRoleEnum usersToApplyTo = OldUserRoleEnum.User, bool deductFromUser = false)
             : this(actionType, usersMustBePresent, amount, username, usersToApplyTo, deductFromUser)
         {
             this.StreamPassID = streamPass.ID;
         }
 
-        private ConsumablesActionModel(ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount = null, string username = null, UserRoleEnum usersToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
+        private ConsumablesActionModel(ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount = null, string username = null, OldUserRoleEnum usersToApplyTo = OldUserRoleEnum.User, bool deductFromUser = false)
             : base(ActionTypeEnum.Consumables)
         {
             this.ActionType = actionType;

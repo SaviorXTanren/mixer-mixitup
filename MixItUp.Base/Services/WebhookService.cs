@@ -2,7 +2,6 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Model.User.Twitch;
 using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
@@ -16,6 +15,7 @@ using StreamingClient.Base.Services;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,6 +27,20 @@ namespace MixItUp.Base.Services
         public string GlimeshAccessToken { get; set; }
         public string TrovoAccessToken { get; set; }
         public string YouTubeAccessToken { get; set; }
+    }
+
+    [DataContract]
+    public class TwitchWebhookFollowModel
+    {
+        [DataMember]
+        public string StreamerID { get; set; }
+
+        [DataMember]
+        public string UserID { get; set; }
+        [DataMember]
+        public string Username { get; set; }
+        [DataMember]
+        public string UserDisplayName { get; set; }
     }
 
     public interface IWebhookService
@@ -211,7 +225,7 @@ namespace MixItUp.Base.Services
 
             ServiceManager.Get<TwitchEventService>().FollowCache.Add(user.TwitchID);
 
-            if (user.UserRoles.Contains(UserRoleEnum.Banned))
+            if (user.UserRoles.Contains(OldUserRoleEnum.Banned))
             {
                 return;
             }

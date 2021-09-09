@@ -538,11 +538,11 @@ namespace MixItUp.Base.ViewModel.Currency
                         {
                             int intervalsToGive = userData.ViewingMinutes / this.Currency.AcquireInterval;
                             this.Currency.AddAmount(userData, this.Currency.AcquireAmount * intervalsToGive);
-                            if (userData.TwitchUserRoles.Contains(UserRoleEnum.Mod) || userData.TwitchUserRoles.Contains(UserRoleEnum.ChannelEditor))
+                            if (userData.TwitchUserRoles.Contains(OldUserRoleEnum.Mod) || userData.TwitchUserRoles.Contains(OldUserRoleEnum.ChannelEditor))
                             {
                                 this.Currency.AddAmount(userData, this.Currency.ModeratorBonus * intervalsToGive);
                             }
-                            else if (userData.TwitchUserRoles.Contains(UserRoleEnum.Subscriber))
+                            else if (userData.TwitchUserRoles.Contains(OldUserRoleEnum.Subscriber))
                             {
                                 this.Currency.AddAmount(userData, this.Currency.SubscriberBonus * intervalsToGive);
                             }
@@ -877,7 +877,7 @@ namespace MixItUp.Base.ViewModel.Currency
             {
                 ChatCommandModel statusCommand = new ChatCommandModel("User " + this.Currency.Name, new HashSet<string>() { this.Currency.SpecialIdentifier });
                 statusCommand.Requirements.AddBasicRequirements();
-                statusCommand.Requirements.Role.Role = UserRoleEnum.User;
+                statusCommand.Requirements.Role.Role = OldUserRoleEnum.User;
                 statusCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                 statusCommand.Requirements.Cooldown.IndividualAmount = 5;
 
@@ -897,7 +897,7 @@ namespace MixItUp.Base.ViewModel.Currency
                 {
                     ChatCommandModel addCommand = new ChatCommandModel("Add " + this.Currency.Name, new HashSet<string>() { "add" + this.Currency.SpecialIdentifier });
                     addCommand.Requirements.AddBasicRequirements();
-                    addCommand.Requirements.Role.Role = UserRoleEnum.Mod;
+                    addCommand.Requirements.Role.Role = OldUserRoleEnum.Mod;
                     addCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                     addCommand.Requirements.Cooldown.IndividualAmount = 5;
 
@@ -907,7 +907,7 @@ namespace MixItUp.Base.ViewModel.Currency
 
                     ChatCommandModel addAllCommand = new ChatCommandModel("Add All " + this.Currency.Name, new HashSet<string>() { "addall" + this.Currency.SpecialIdentifier });
                     addAllCommand.Requirements.AddBasicRequirements();
-                    addAllCommand.Requirements.Role.Role = UserRoleEnum.Mod;
+                    addAllCommand.Requirements.Role.Role = OldUserRoleEnum.Mod;
                     addAllCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                     addAllCommand.Requirements.Cooldown.IndividualAmount = 5;
 
@@ -919,7 +919,7 @@ namespace MixItUp.Base.ViewModel.Currency
                     {
                         ChatCommandModel giveCommand = new ChatCommandModel("Give " + this.Currency.Name, new HashSet<string>() { "give" + this.Currency.SpecialIdentifier });
                         giveCommand.Requirements.AddBasicRequirements();
-                        giveCommand.Requirements.Role.Role = UserRoleEnum.User;
+                        giveCommand.Requirements.Role.Role = OldUserRoleEnum.User;
                         giveCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                         giveCommand.Requirements.Cooldown.IndividualAmount = 5;
 

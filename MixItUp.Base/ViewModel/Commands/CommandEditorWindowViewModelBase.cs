@@ -7,7 +7,6 @@ using MixItUp.Base.ViewModel.Requirements;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -17,7 +16,6 @@ namespace MixItUp.Base.ViewModel.Commands
     public abstract class CommandEditorWindowViewModelBase : ActionEditorListControlViewModel
     {
         public const string MixItUpCommandFileExtension = ".miucommand";
-        public const string MixItUpOldCommandFileExtension = ".mixitupc";
 
         public static string OpenCommandFileBrowser()
         {
@@ -26,21 +24,9 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public static async Task<CommandModelBase> ImportCommandFromFile(string filePath)
         {
-            if (!string.IsNullOrEmpty(filePath))
+            try
             {
-                if (Path.GetExtension(filePath).Equals(MixItUpOldCommandFileExtension))
-                {
-#pragma warning disable CS0612 // Type or member is obsolete
-                    MixItUp.Base.Commands.CommandBase command = await FileSerializerHelper.DeserializeFromFile<MixItUp.Base.Commands.CommandBase>(filePath);
-                    ActionGroupCommandModel actionGroup = new ActionGroupCommandModel(command.Name, false);
-                    foreach (MixItUp.Base.Actions.ActionBase action in command.Actions)
-                    {
-                        actionGroup.Actions.AddRange(ActionModelBase.UpgradeAction(action));
-                    }
-                    return actionGroup;
-#pragma warning restore CS0612 // Type or member is obsolete
-                }
-                else
+                if (!string.IsNullOrEmpty(filePath))
                 {
                     return await FileSerializerHelper.DeserializeFromFile<CommandModelBase>(filePath);
                 }

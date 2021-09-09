@@ -82,8 +82,8 @@ namespace MixItUp.Base.ViewModel.Currency
             }
         }
         private string name;
-        public IEnumerable<UserRoleEnum> Permissions { get; private set; } = UserV2Model.GetSelectableUserRoles();
-        public UserRoleEnum Permission
+        public IEnumerable<OldUserRoleEnum> Permissions { get; private set; } = UserV2Model.GetSelectableUserRoles();
+        public OldUserRoleEnum Permission
         {
             get { return this.permission; }
             set
@@ -92,7 +92,7 @@ namespace MixItUp.Base.ViewModel.Currency
                 this.NotifyPropertyChanged();
             }
         }
-        private UserRoleEnum permission = UserRoleEnum.User;
+        private OldUserRoleEnum permission = OldUserRoleEnum.User;
         public int MaxLevel
         {
             get { return this.maxLevel; }
@@ -498,7 +498,7 @@ namespace MixItUp.Base.ViewModel.Currency
             {
                 ChatCommandModel statusCommand = new ChatCommandModel("User " + this.StreamPass.Name, new HashSet<string>() { this.StreamPass.SpecialIdentifier });
                 statusCommand.Requirements.AddBasicRequirements();
-                statusCommand.Requirements.Role.Role = UserRoleEnum.User;
+                statusCommand.Requirements.Role.Role = OldUserRoleEnum.User;
                 statusCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                 statusCommand.Requirements.Cooldown.IndividualAmount = 5;
                 statusCommand.Actions.Add(new ChatActionModel(string.Format("@$username is level ${0} with ${1} points!", this.StreamPass.UserLevelSpecialIdentifier, this.StreamPass.UserAmountSpecialIdentifier)));
@@ -506,7 +506,7 @@ namespace MixItUp.Base.ViewModel.Currency
 
                 ChatCommandModel addCommand = new ChatCommandModel("Add " + this.StreamPass.Name, new HashSet<string>() { "add" + this.StreamPass.SpecialIdentifier });
                 addCommand.Requirements.AddBasicRequirements();
-                addCommand.Requirements.Role.Role = UserRoleEnum.Mod;
+                addCommand.Requirements.Role.Role = OldUserRoleEnum.Mod;
                 addCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                 addCommand.Requirements.Cooldown.IndividualAmount = 5;
                 addCommand.Actions.Add(new ConsumablesActionModel(this.StreamPass, ConsumablesActionTypeEnum.AddToSpecificUser, usersMustBePresent:true, "$arg2text", username: "$targetusername"));
@@ -515,7 +515,7 @@ namespace MixItUp.Base.ViewModel.Currency
 
                 ChatCommandModel addAllCommand = new ChatCommandModel("Add All " + this.StreamPass.Name, new HashSet<string>() { "addall" + this.StreamPass.SpecialIdentifier });
                 addAllCommand.Requirements.AddBasicRequirements();
-                addAllCommand.Requirements.Role.Role = UserRoleEnum.Mod;
+                addAllCommand.Requirements.Role.Role = OldUserRoleEnum.Mod;
                 addAllCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                 addAllCommand.Requirements.Cooldown.IndividualAmount = 5;
                 addAllCommand.Actions.Add(new ConsumablesActionModel(this.StreamPass, ConsumablesActionTypeEnum.AddToAllChatUsers, usersMustBePresent: true, "$arg1text"));

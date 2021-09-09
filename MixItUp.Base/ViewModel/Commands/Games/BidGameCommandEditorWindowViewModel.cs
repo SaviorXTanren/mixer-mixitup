@@ -13,9 +13,9 @@ namespace MixItUp.Base.ViewModel.Games
 {
     public class BidGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        public IEnumerable<UserRoleEnum> StarterRoles { get { return UserV2Model.GetSelectableUserRoles(); } }
+        public IEnumerable<OldUserRoleEnum> StarterRoles { get { return UserV2Model.GetSelectableUserRoles(); } }
 
-        public UserRoleEnum SelectedStarterRole
+        public OldUserRoleEnum SelectedStarterRole
         {
             get { return this.selectedStarterRole; }
             set
@@ -24,7 +24,7 @@ namespace MixItUp.Base.ViewModel.Games
                 this.NotifyPropertyChanged();
             }
         }
-        private UserRoleEnum selectedStarterRole;
+        private OldUserRoleEnum selectedStarterRole;
 
         public int TimeLimit
         {
@@ -98,7 +98,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.Name = MixItUp.Base.Resources.Bid;
             this.Triggers = MixItUp.Base.Resources.Bid.Replace(" ", string.Empty).ToLower();
 
-            this.SelectedStarterRole = UserRoleEnum.Mod;
+            this.SelectedStarterRole = OldUserRoleEnum.Mod;
             this.TimeLimit = 60;
             this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandBidStartedExample, this.PrimaryCurrencyName));
             this.NewTopBidderCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandBidNewTopBidderExample, this.PrimaryCurrencyName));

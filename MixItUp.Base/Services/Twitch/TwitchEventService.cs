@@ -1,9 +1,7 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model;
+﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Model.User.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
@@ -126,6 +124,22 @@ namespace MixItUp.Base.Services.Twitch
             this.LifetimeGifted = userNotice.SubTotalGiftedLifetime;
             this.PlanTier = TwitchEventService.GetSubTierNameFromText(userNotice.SubPlan);
             this.PlanTierNumber = 1;
+        }
+    }
+
+    public class TwitchUserBitsCheeredModel
+    {
+        public UserV2ViewModel User { get; set; }
+
+        public int Amount { get; set; }
+
+        public TwitchChatMessageViewModel Message { get; set; }
+
+        public TwitchUserBitsCheeredModel(UserV2ViewModel user, PubSubBitsEventV2Model bitsEvent)
+        {
+            this.User = user;
+            this.Amount = bitsEvent.bits_used;
+            this.Message = new TwitchChatMessageViewModel(user, bitsEvent);
         }
     }
 
@@ -404,7 +418,7 @@ namespace MixItUp.Base.Services.Twitch
                                 user = await UserV2ViewModel.Create(follow);
                             }
 
-                            if (user.UserRoles.Contains(UserRoleEnum.Banned))
+                            if (user.UserRoles.Contains(OldUserRoleEnum.Banned))
                             {
                                 return;
                             }

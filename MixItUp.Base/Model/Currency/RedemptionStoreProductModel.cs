@@ -166,7 +166,7 @@ namespace MixItUp.Base.Model.Currency
 
         public static async Task Redeem(UserV2ViewModel user, IEnumerable<string> arguments)
         {
-            if (!user.HasPermissionsTo(UserRoleEnum.Mod))
+            if (!user.HasPermissionsTo(OldUserRoleEnum.Mod))
             {
                 await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.YouDoNotHavePermissions, user.Platform);
                 return;

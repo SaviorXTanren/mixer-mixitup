@@ -1,8 +1,5 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.User.Platform;
+﻿using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services.External;
-using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
@@ -12,7 +9,7 @@ using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.User
 {
-    public enum UserRoleEnum
+    public enum OldUserRoleEnum
     {
         Banned,
         User = 10,
@@ -37,11 +34,11 @@ namespace MixItUp.Base.Model.User
     [DataContract]
     public class UserDataModel : IEquatable<UserDataModel>
     {
-        public static IEnumerable<UserRoleEnum> GetSelectableUserRoles()
+        public static IEnumerable<OldUserRoleEnum> GetSelectableUserRoles()
         {
-            List<UserRoleEnum> roles = new List<UserRoleEnum>(EnumHelper.GetEnumList<UserRoleEnum>());
-            roles.Remove(UserRoleEnum.Banned);
-            roles.Remove(UserRoleEnum.Custom);
+            List<OldUserRoleEnum> roles = new List<OldUserRoleEnum>(EnumHelper.GetEnumList<OldUserRoleEnum>());
+            roles.Remove(OldUserRoleEnum.Banned);
+            roles.Remove(OldUserRoleEnum.Custom);
             return roles;
         }
 
@@ -66,7 +63,7 @@ namespace MixItUp.Base.Model.User
         public uint MixerChannelID { get; set; }
 
         [DataMember]
-        public HashSet<UserRoleEnum> MixerUserRoles { get; set; } = new HashSet<UserRoleEnum>() { UserRoleEnum.User };
+        public HashSet<OldUserRoleEnum> MixerUserRoles { get; set; } = new HashSet<OldUserRoleEnum>() { OldUserRoleEnum.User };
 
         [DataMember]
         public DateTimeOffset? MixerAccountDate { get; set; }
@@ -89,7 +86,7 @@ namespace MixItUp.Base.Model.User
         public string TwitchAvatarLink { get; set; }
 
         [DataMember]
-        public HashSet<UserRoleEnum> TwitchUserRoles { get; set; } = new HashSet<UserRoleEnum>() { UserRoleEnum.User };
+        public HashSet<OldUserRoleEnum> TwitchUserRoles { get; set; } = new HashSet<OldUserRoleEnum>() { OldUserRoleEnum.User };
         [DataMember]
         public Dictionary<string, int> TwitchBadges { get; set; } = new Dictionary<string, int>();
         [DataMember]
@@ -123,7 +120,7 @@ namespace MixItUp.Base.Model.User
         public string YouTubeURL { get; set; }
 
         [DataMember]
-        public HashSet<UserRoleEnum> YouTubeUserRoles { get; set; } = new HashSet<UserRoleEnum>() { UserRoleEnum.User };
+        public HashSet<OldUserRoleEnum> YouTubeUserRoles { get; set; } = new HashSet<OldUserRoleEnum>() { OldUserRoleEnum.User };
 
         [DataMember]
         public DateTimeOffset? YouTubeAccountDate { get; set; }
@@ -146,7 +143,7 @@ namespace MixItUp.Base.Model.User
         public string GlimeshAvatarLink { get; set; }
 
         [DataMember]
-        public HashSet<UserRoleEnum> GlimeshUserRoles { get; set; } = new HashSet<UserRoleEnum>() { UserRoleEnum.User };
+        public HashSet<OldUserRoleEnum> GlimeshUserRoles { get; set; } = new HashSet<OldUserRoleEnum>() { OldUserRoleEnum.User };
 
         [DataMember]
         public DateTimeOffset? GlimeshAccountDate { get; set; }
@@ -169,7 +166,7 @@ namespace MixItUp.Base.Model.User
         public string TrovoAvatarLink { get; set; }
 
         [DataMember]
-        public HashSet<UserRoleEnum> TrovoUserRoles { get; set; } = new HashSet<UserRoleEnum>() { UserRoleEnum.User };
+        public HashSet<OldUserRoleEnum> TrovoUserRoles { get; set; } = new HashSet<OldUserRoleEnum>() { OldUserRoleEnum.User };
 
         [DataMember]
         public DateTimeOffset? TrovoAccountDate { get; set; }
@@ -203,13 +200,6 @@ namespace MixItUp.Base.Model.User
         public List<Guid> CustomCommandIDs { get; set; } = new List<Guid>();
         [DataMember]
         public Guid EntranceCommandID { get; set; }
-
-        [DataMember]
-        [Obsolete]
-        public LockedList<ChatCommand> CustomCommands { get; set; } = new LockedList<ChatCommand>();
-        [DataMember]
-        [Obsolete]
-        public CustomCommand EntranceCommand { get; set; }
 
         [DataMember]
         public bool IsCurrencyRankExempt { get; set; }
@@ -307,7 +297,7 @@ namespace MixItUp.Base.Model.User
         }
 
         [JsonIgnore]
-        public HashSet<UserRoleEnum> UserRoles
+        public HashSet<OldUserRoleEnum> UserRoles
         {
             get
             {
@@ -315,12 +305,12 @@ namespace MixItUp.Base.Model.User
                 else if (this.Platforms.Contains(StreamingPlatformTypeEnum.YouTube)) { return this.YouTubeUserRoles; }
                 else if (this.Platforms.Contains(StreamingPlatformTypeEnum.Glimesh)) { return this.GlimeshUserRoles; }
                 else if (this.Platforms.Contains(StreamingPlatformTypeEnum.Trovo)) { return this.TrovoUserRoles; }
-                return new HashSet<UserRoleEnum>() { UserRoleEnum.User };
+                return new HashSet<OldUserRoleEnum>() { OldUserRoleEnum.User };
             }
         }
 
         [JsonIgnore]
-        public UserRoleEnum PrimaryRole { get { return (this.UserRoles.Count() > 0) ? this.UserRoles.ToList().Max() : UserRoleEnum.User; } }
+        public OldUserRoleEnum PrimaryRole { get { return (this.UserRoles.Count() > 0) ? this.UserRoles.ToList().Max() : OldUserRoleEnum.User; } }
 
         [JsonIgnore]
         public string ViewingHoursString { get { return (this.ViewingMinutes / 60).ToString(); } }
@@ -361,66 +351,6 @@ namespace MixItUp.Base.Model.User
 
         [JsonIgnore]
         public string ViewingTimeShortString { get { return string.Format("{0}H & {1}M", this.ViewingHoursString, this.ViewingMinutesString); } }
-
-        [JsonIgnore]
-        public int PrimaryCurrency
-        {
-            get
-            {
-                CurrencyModel currency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => !c.IsRank && c.IsPrimary);
-                if (currency != null)
-                {
-                    return currency.GetAmount(this);
-                }
-                return 0;
-            }
-        }
-
-        [JsonIgnore]
-        public RankModel Rank
-        {
-            get
-            {
-                CurrencyModel currency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => !c.IsRank && c.IsPrimary);
-                if (currency != null)
-                {
-                    return currency.GetRank(this);
-                }
-                return CurrencyModel.NoRank;
-            }
-        }
-
-        [JsonIgnore]
-        public int PrimaryRankPoints
-        {
-            get
-            {
-                CurrencyModel currency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => c.IsRank && c.IsPrimary);
-                if (currency != null)
-                {
-                    return currency.GetAmount(this);
-                }
-                return 0;
-            }
-        }
-
-        [JsonIgnore]
-        public string PrimaryRankName
-        {
-            get
-            {
-                return this.Rank.Name;
-            }
-        }
-
-        [JsonIgnore]
-        public string PrimaryRankNameAndPoints
-        {
-            get
-            {
-                return string.Format("{0} - {1}", this.PrimaryRankName, this.PrimaryRankPoints);
-            }
-        }
 
         public override bool Equals(object obj)
         {

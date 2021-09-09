@@ -119,9 +119,9 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public bool IsRoleSearchFilterType { get { return this.SelectedSearchFilterType == UserSearchFilterTypeEnum.Role; } }
 
-        public IEnumerable<UserRoleEnum> UserRoleSearchFilters { get { return UserV2Model.GetSelectableUserRoles(); } }
+        public IEnumerable<OldUserRoleEnum> UserRoleSearchFilters { get { return UserV2Model.GetSelectableUserRoles(); } }
 
-        public UserRoleEnum SelectedUserRoleSearchFilter
+        public OldUserRoleEnum SelectedUserRoleSearchFilter
         {
             get { return this.selectedUserRoleSearchFilter; }
             set
@@ -130,7 +130,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 this.NotifyPropertyChanged();
             }
         }
-        private UserRoleEnum selectedUserRoleSearchFilter = UserRoleEnum.User;
+        private OldUserRoleEnum selectedUserRoleSearchFilter = OldUserRoleEnum.User;
 
         public bool IsWatchTimeSearchFilterType { get { return this.SelectedSearchFilterType == UserSearchFilterTypeEnum.WatchTime; } }
 

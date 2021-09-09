@@ -148,6 +148,8 @@ namespace MixItUp.Base.Services
 
         public static async Task ProcessDonationEvent(EventTypeEnum type, UserDonationModel donation, List<string> arguments = null, Dictionary<string, string> additionalSpecialIdentifiers = null)
         {
+            await donation.AssignUser();
+
             CommandParametersModel parameters = new CommandParametersModel(donation.User, donation.Platform, arguments, donation.GetSpecialIdentifiers());
 
             if (additionalSpecialIdentifiers != null)

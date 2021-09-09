@@ -14,7 +14,7 @@ namespace MixItUp.Base.Model.User
         public string Name { get; set; }
 
         [DataMember]
-        public UserRoleEnum Role { get; set; }
+        public OldUserRoleEnum Role { get; set; }
 
         [DataMember]
         public int Months { get; set; }
@@ -27,7 +27,7 @@ namespace MixItUp.Base.Model.User
 
         public UserTitleModel() { }
 
-        public UserTitleModel(string name, UserRoleEnum role, int months = 0)
+        public UserTitleModel(string name, OldUserRoleEnum role, int months = 0)
         {
             this.Name = name;
             this.Role = role;
@@ -38,28 +38,24 @@ namespace MixItUp.Base.Model.User
         {
             if (user.HasPermissionsTo(this.Role))
             {
-                if (this.Role == UserRoleEnum.Follower)
+                if (this.Role == OldUserRoleEnum.Follower)
                 {
                     if (user.FollowDate != null)
                     {
                         return user.FollowDate.GetValueOrDefault().TotalMonthsFromNow() >= this.Months;
                     }
-                    else if (!user.ExceedsPermissions(this.Role))
+                    else if (!user.HasPermissionsTo(this.Role))
                     {
                         return false;
                     }
                 }
-                else if (this.Role == UserRoleEnum.Subscriber)
+                else if (this.Role == OldUserRoleEnum.Subscriber)
                 {
                     if (user.SubscribeDate != null)
                     {
                         return user.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow() >= this.Months;
                     }
-                    else if (user.IsEquivalentToSubscriber() && this.Months == 1)
-                    {
-                        return true;
-                    }
-                    else if (!user.ExceedsPermissions(this.Role))
+                    else if (!user.HasPermissionsTo(this.Role))
                     {
                         return false;
                     }

@@ -17,7 +17,7 @@ namespace MixItUp.Base.ViewModel.Settings
     {
         public string Name { get { return this.Title.Name; } }
 
-        public UserRoleEnum Role { get { return this.Title.Role; } }
+        public OldUserRoleEnum Role { get { return this.Title.Role; } }
 
         public string RoleString { get { return this.Title.RoleString; } }
 
@@ -73,8 +73,8 @@ namespace MixItUp.Base.ViewModel.Settings
         }
         private string titleName;
 
-        public IEnumerable<UserRoleEnum> Roles { get; private set; } = UserV2Model.GetSelectableUserRoles();
-        public UserRoleEnum SelectedRole
+        public IEnumerable<OldUserRoleEnum> Roles { get; private set; } = UserV2Model.GetSelectableUserRoles();
+        public OldUserRoleEnum SelectedRole
         {
             get { return this.selectedRole; }
             set
@@ -91,7 +91,7 @@ namespace MixItUp.Base.ViewModel.Settings
                 this.NotifyPropertyChanged("CanSelectMinimumMonths");
             }
         }
-        private UserRoleEnum selectedRole = UserRoleEnum.User;
+        private OldUserRoleEnum selectedRole = OldUserRoleEnum.User;
 
         public int MinimumMonths
         {
@@ -106,7 +106,7 @@ namespace MixItUp.Base.ViewModel.Settings
             }
         }
         private int minimumMonths;
-        public bool CanSelectMinimumMonths { get { return this.SelectedRole == UserRoleEnum.Follower || SelectedRole == UserRoleEnum.Subscriber; } }
+        public bool CanSelectMinimumMonths { get { return this.SelectedRole == OldUserRoleEnum.Follower || SelectedRole == OldUserRoleEnum.Subscriber; } }
 
         public ICommand AddCommand { get; set; }
 
@@ -164,7 +164,7 @@ namespace MixItUp.Base.ViewModel.Settings
                 UserTitleViewModel existingTitle = this.Titles.FirstOrDefault(t => t.Role.Equals(this.SelectedRole));
                 if (existingTitle != null)
                 {
-                    if (existingTitle.Role == UserRoleEnum.Follower || existingTitle.Role == UserRoleEnum.Subscriber)
+                    if (existingTitle.Role == OldUserRoleEnum.Follower || existingTitle.Role == OldUserRoleEnum.Subscriber)
                     {
                         if (existingTitle.Months == this.MinimumMonths)
                         {

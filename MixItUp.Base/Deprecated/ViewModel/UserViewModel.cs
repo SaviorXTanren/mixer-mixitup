@@ -341,36 +341,36 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [JsonIgnore]
-        public HashSet<UserRoleEnum> UserRoles { get { return this.Data.UserRoles; } }
+        public HashSet<OldUserRoleEnum> UserRoles { get { return this.Data.UserRoles; } }
 
         [JsonIgnore]
-        public IEnumerable<UserRoleEnum> DisplayRoles
+        public IEnumerable<OldUserRoleEnum> DisplayRoles
         {
             get
             {
-                List<UserRoleEnum> userRoles = this.UserRoles.ToList();
+                List<OldUserRoleEnum> userRoles = this.UserRoles.ToList();
 
-                if (this.Data.UserRoles.Contains(UserRoleEnum.Banned))
+                if (this.Data.UserRoles.Contains(OldUserRoleEnum.Banned))
                 {
                     userRoles.Clear();
-                    userRoles.Add(UserRoleEnum.Banned);
+                    userRoles.Add(OldUserRoleEnum.Banned);
                 }
                 else
                 {
                     if (this.Data.UserRoles.Count() > 1)
                     {
-                        userRoles.Remove(UserRoleEnum.User);
+                        userRoles.Remove(OldUserRoleEnum.User);
                     }
 
-                    if (this.Data.UserRoles.Contains(UserRoleEnum.Subscriber) || this.Data.UserRoles.Contains(UserRoleEnum.Streamer))
+                    if (this.Data.UserRoles.Contains(OldUserRoleEnum.Subscriber) || this.Data.UserRoles.Contains(OldUserRoleEnum.Streamer))
                     {
-                        userRoles.Remove(UserRoleEnum.Follower);
+                        userRoles.Remove(OldUserRoleEnum.Follower);
                     }
 
-                    if (this.Data.UserRoles.Contains(UserRoleEnum.Streamer))
+                    if (this.Data.UserRoles.Contains(OldUserRoleEnum.Streamer))
                     {
-                        userRoles.Remove(UserRoleEnum.ChannelEditor);
-                        userRoles.Remove(UserRoleEnum.Subscriber);
+                        userRoles.Remove(OldUserRoleEnum.ChannelEditor);
+                        userRoles.Remove(OldUserRoleEnum.Subscriber);
                     }
                 }
 
@@ -406,7 +406,7 @@ namespace MixItUp.Base.ViewModel.User
 
                     if (ChannelSession.Settings.UseCustomUsernameColors)
                     {
-                        foreach (UserRoleEnum role in this.UserRoles.OrderByDescending(r => r))
+                        foreach (OldUserRoleEnum role in this.UserRoles.OrderByDescending(r => r))
                         {
                             if (ChannelSession.Settings.CustomUsernameColors.ContainsKey(role))
                             {
@@ -497,11 +497,11 @@ namespace MixItUp.Base.ViewModel.User
 
                 if (this.FollowDate == null || this.FollowDate.GetValueOrDefault() == DateTimeOffset.MinValue)
                 {
-                    this.UserRoles.Remove(UserRoleEnum.Follower);
+                    this.UserRoles.Remove(OldUserRoleEnum.Follower);
                 }
                 else
                 {
-                    this.UserRoles.Add(UserRoleEnum.Follower);
+                    this.UserRoles.Add(OldUserRoleEnum.Follower);
                 }
             }
         }
@@ -525,11 +525,11 @@ namespace MixItUp.Base.ViewModel.User
 
                 if (this.SubscribeDate == null || this.SubscribeDate.GetValueOrDefault() == DateTimeOffset.MinValue)
                 {
-                    this.UserRoles.Remove(UserRoleEnum.Subscriber);
+                    this.UserRoles.Remove(OldUserRoleEnum.Subscriber);
                 }
                 else
                 {
-                    this.UserRoles.Add(UserRoleEnum.Subscriber);
+                    this.UserRoles.Add(OldUserRoleEnum.Subscriber);
                 }
             }
         }
@@ -610,7 +610,7 @@ namespace MixItUp.Base.ViewModel.User
         public string TwitchDisplayName { get { return this.Data.TwitchDisplayName; } private set { this.Data.TwitchDisplayName = value; } }
         public string TwitchAvatarLink { get { return this.Data.TwitchAvatarLink; } private set { this.Data.TwitchAvatarLink = value; } }
 
-        public HashSet<UserRoleEnum> TwitchUserRoles { get { return this.Data.TwitchUserRoles; } private set { this.Data.TwitchUserRoles = value; } }
+        public HashSet<OldUserRoleEnum> TwitchUserRoles { get { return this.Data.TwitchUserRoles; } private set { this.Data.TwitchUserRoles = value; } }
 
         public int TwitchSubMonths
         {
@@ -654,7 +654,7 @@ namespace MixItUp.Base.ViewModel.User
         public string YouTubeAvatarLink { get { return this.Data.YouTubeAvatarLink; } private set { this.Data.YouTubeAvatarLink = value; } }
         public string YouTubeURL { get { return this.Data.YouTubeURL; } private set { this.Data.YouTubeURL = value; } }
 
-        public HashSet<UserRoleEnum> YouTubeUserRoles { get { return this.Data.YouTubeUserRoles; } private set { this.Data.YouTubeUserRoles = value; } }
+        public HashSet<OldUserRoleEnum> YouTubeUserRoles { get { return this.Data.YouTubeUserRoles; } private set { this.Data.YouTubeUserRoles = value; } }
 
         #endregion YouTube
 
@@ -665,7 +665,7 @@ namespace MixItUp.Base.ViewModel.User
         public string GlimeshDisplayName { get { return this.Data.GlimeshDisplayName; } private set { this.Data.GlimeshDisplayName = value; } }
         public string GlimeshAvatarLink { get { return this.Data.GlimeshAvatarLink; } private set { this.Data.GlimeshAvatarLink = value; } }
 
-        public HashSet<UserRoleEnum> GlimeshUserRoles { get { return this.Data.GlimeshUserRoles; } private set { this.Data.GlimeshUserRoles = value; } }
+        public HashSet<OldUserRoleEnum> GlimeshUserRoles { get { return this.Data.GlimeshUserRoles; } private set { this.Data.GlimeshUserRoles = value; } }
 
         #endregion Glimesh
 
@@ -676,7 +676,7 @@ namespace MixItUp.Base.ViewModel.User
         public string TrovoDisplayName { get { return this.Data.TrovoDisplayName; } private set { this.Data.TrovoDisplayName = value; } }
         public string TrovoAvatarLink { get { return this.Data.TrovoAvatarLink; } private set { this.Data.TrovoAvatarLink = value; } }
 
-        public HashSet<UserRoleEnum> TrovoUserRoles { get { return this.Data.GlimeshUserRoles; } private set { this.Data.GlimeshUserRoles = value; } }
+        public HashSet<OldUserRoleEnum> TrovoUserRoles { get { return this.Data.GlimeshUserRoles; } private set { this.Data.GlimeshUserRoles = value; } }
 
         #endregion Trovo
 
@@ -694,7 +694,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public PatreonCampaignMember PatreonUser { get { return this.Data.PatreonUser; } set { this.Data.PatreonUser = value; } }
 
-        public UserRoleEnum PrimaryRole { get { return this.Data.PrimaryRole; } }
+        public OldUserRoleEnum PrimaryRole { get { return this.Data.PrimaryRole; } }
 
         public string PrimaryRoleString { get { return EnumLocalizationHelper.GetLocalizedName(this.PrimaryRole); } }
 
@@ -703,10 +703,10 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                UserRoleEnum role = this.PrimaryRole;
-                if (role < UserRoleEnum.Subscriber)
+                OldUserRoleEnum role = this.PrimaryRole;
+                if (role < OldUserRoleEnum.Subscriber)
                 {
-                    role = UserRoleEnum.User;
+                    role = OldUserRoleEnum.User;
                 }
                 return (999 - role) + "-" + this.Username + "-" + this.Platform.ToString();
             }
@@ -786,11 +786,11 @@ namespace MixItUp.Base.ViewModel.User
         private object rolesLocalizedStringLock = new object();
 
         [JsonIgnore]
-        public bool IsFollower { get { return this.UserRoles.Contains(UserRoleEnum.Follower) || this.HasPermissionsTo(UserRoleEnum.Subscriber); } }
+        public bool IsFollower { get { return this.UserRoles.Contains(OldUserRoleEnum.Follower) || this.HasPermissionsTo(OldUserRoleEnum.Subscriber); } }
         [JsonIgnore]
-        public bool IsRegular { get { return this.UserRoles.Contains(UserRoleEnum.Regular); } }
+        public bool IsRegular { get { return this.UserRoles.Contains(OldUserRoleEnum.Regular); } }
         [JsonIgnore]
-        public bool IsPlatformSubscriber { get { return this.UserRoles.Contains(UserRoleEnum.Subscriber); } }
+        public bool IsPlatformSubscriber { get { return this.UserRoles.Contains(OldUserRoleEnum.Subscriber); } }
         [JsonIgnore]
         public bool ShowSubscriberBadge { get { return !ChannelSession.Settings.HideUserSubscriberBadge && this.IsPlatformSubscriber && !string.IsNullOrEmpty(this.SubscriberBadgeLink); } }
 
@@ -833,18 +833,18 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [JsonIgnore]
-        public bool IsSubscriber { get { return this.UserRoles.Contains(UserRoleEnum.Subscriber) || this.IsEquivalentToSubscriber(); } }
+        public bool IsSubscriber { get { return this.UserRoles.Contains(OldUserRoleEnum.Subscriber) || this.IsEquivalentToSubscriber(); } }
 
-        public bool HasPermissionsTo(UserRoleEnum checkRole)
+        public bool HasPermissionsTo(OldUserRoleEnum checkRole)
         {
             Logger.Log($"Checking role permission for user: {this.PrimaryRole} - {checkRole}");
 
-            if (checkRole == UserRoleEnum.Subscriber && this.IsEquivalentToSubscriber())
+            if (checkRole == OldUserRoleEnum.Subscriber && this.IsEquivalentToSubscriber())
             {
                 return true;
             }
 
-            if (checkRole == UserRoleEnum.VIPExclusive && this.UserRoles.Contains(UserRoleEnum.VIP))
+            if (checkRole == OldUserRoleEnum.VIPExclusive && this.UserRoles.Contains(OldUserRoleEnum.VIP))
             {
                 return true;
             }
@@ -857,7 +857,7 @@ namespace MixItUp.Base.ViewModel.User
             return this.PrimaryRole >= checkRole;
         }
 
-        public bool ExceedsPermissions(UserRoleEnum checkRole) { return this.PrimaryRole > checkRole; }
+        public bool ExceedsPermissions(OldUserRoleEnum checkRole) { return this.PrimaryRole > checkRole; }
 
         public bool IsEquivalentToSubscriber()
         {
@@ -952,12 +952,12 @@ namespace MixItUp.Base.ViewModel.User
 
             if (this.Data.TwitchBadges != null)
             {
-                if (this.HasTwitchBadge("admin") || this.HasTwitchBadge("staff")) { this.TwitchUserRoles.Add(UserRoleEnum.Staff); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Staff); }
-                if (this.HasTwitchBadge("global_mod")) { this.TwitchUserRoles.Add(UserRoleEnum.GlobalMod); } else { this.TwitchUserRoles.Remove(UserRoleEnum.GlobalMod); }
-                if (this.HasTwitchBadge("moderator")) { this.TwitchUserRoles.Add(UserRoleEnum.Mod); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Mod); }
-                if (this.IsTwitchSubscriber) { this.TwitchUserRoles.Add(UserRoleEnum.Subscriber); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Subscriber); }
-                if (this.HasTwitchBadge("turbo") || this.HasTwitchBadge("premium")) { this.TwitchUserRoles.Add(UserRoleEnum.Premium); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Premium); }
-                if (this.HasTwitchBadge("vip")) { this.TwitchUserRoles.Add(UserRoleEnum.VIP); } else { this.TwitchUserRoles.Remove(UserRoleEnum.VIP); }
+                if (this.HasTwitchBadge("admin") || this.HasTwitchBadge("staff")) { this.TwitchUserRoles.Add(OldUserRoleEnum.Staff); } else { this.TwitchUserRoles.Remove(OldUserRoleEnum.Staff); }
+                if (this.HasTwitchBadge("global_mod")) { this.TwitchUserRoles.Add(OldUserRoleEnum.GlobalMod); } else { this.TwitchUserRoles.Remove(OldUserRoleEnum.GlobalMod); }
+                if (this.HasTwitchBadge("moderator")) { this.TwitchUserRoles.Add(OldUserRoleEnum.Mod); } else { this.TwitchUserRoles.Remove(OldUserRoleEnum.Mod); }
+                if (this.IsTwitchSubscriber) { this.TwitchUserRoles.Add(OldUserRoleEnum.Subscriber); } else { this.TwitchUserRoles.Remove(OldUserRoleEnum.Subscriber); }
+                if (this.HasTwitchBadge("turbo") || this.HasTwitchBadge("premium")) { this.TwitchUserRoles.Add(OldUserRoleEnum.Premium); } else { this.TwitchUserRoles.Remove(OldUserRoleEnum.Premium); }
+                if (this.HasTwitchBadge("vip")) { this.TwitchUserRoles.Add(OldUserRoleEnum.VIP); } else { this.TwitchUserRoles.Remove(OldUserRoleEnum.VIP); }
 
                 if (ServiceManager.Get<TwitchChatService>() != null)
                 {
@@ -965,8 +965,8 @@ namespace MixItUp.Base.ViewModel.User
                     else if (this.HasTwitchBadge("admin")) { this.TwitchRoleBadge = this.GetTwitchBadgeURL("admin"); }
                     else if (this.HasTwitchBadge("extension")) { this.TwitchRoleBadge = this.GetTwitchBadgeURL("extension"); }
                     else if (this.HasTwitchBadge("twitchbot")) { this.TwitchRoleBadge = this.GetTwitchBadgeURL("twitchbot"); }
-                    else if (this.TwitchUserRoles.Contains(UserRoleEnum.Mod)) { this.TwitchRoleBadge = this.GetTwitchBadgeURL("moderator"); }
-                    else if (this.TwitchUserRoles.Contains(UserRoleEnum.VIP)) { this.TwitchRoleBadge = this.GetTwitchBadgeURL("vip"); }
+                    else if (this.TwitchUserRoles.Contains(OldUserRoleEnum.Mod)) { this.TwitchRoleBadge = this.GetTwitchBadgeURL("moderator"); }
+                    else if (this.TwitchUserRoles.Contains(OldUserRoleEnum.VIP)) { this.TwitchRoleBadge = this.GetTwitchBadgeURL("vip"); }
 
                     if (this.HasTwitchSubscriberFounderBadge) { this.TwitchSubscriberBadge = this.GetTwitchBadgeURL("founder"); }
                     else if (this.HasTwitchSubscriberBadge) { this.TwitchSubscriberBadge = this.GetTwitchBadgeURL("subscriber"); }                   
@@ -1097,11 +1097,11 @@ namespace MixItUp.Base.ViewModel.User
 
             if (ChannelSession.Settings.RegularUserMinimumHours > 0 && this.Data.ViewingHoursPart >= ChannelSession.Settings.RegularUserMinimumHours)
             {
-                this.UserRoles.Add(UserRoleEnum.Regular);
+                this.UserRoles.Add(OldUserRoleEnum.Regular);
             }
             else
             {
-                this.UserRoles.Remove(UserRoleEnum.Regular);
+                this.UserRoles.Remove(OldUserRoleEnum.Regular);
             }
         }
 
@@ -1147,10 +1147,10 @@ namespace MixItUp.Base.ViewModel.User
                     this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : this.TwitchDisplayName;
                     this.TwitchAvatarLink = twitchUser.profile_image_url;
 
-                    if (twitchUser.IsPartner()) { this.UserRoles.Add(UserRoleEnum.Partner); } else { this.UserRoles.Remove(UserRoleEnum.Partner); }
-                    if (twitchUser.IsAffiliate()) { this.UserRoles.Add(UserRoleEnum.Affiliate); } else { this.UserRoles.Remove(UserRoleEnum.Affiliate); }
-                    if (twitchUser.IsStaff()) { this.UserRoles.Add(UserRoleEnum.Staff); } else { this.UserRoles.Remove(UserRoleEnum.Staff); }
-                    if (twitchUser.IsGlobalMod()) { this.UserRoles.Add(UserRoleEnum.GlobalMod); } else { this.UserRoles.Remove(UserRoleEnum.GlobalMod); }
+                    if (twitchUser.IsPartner()) { this.UserRoles.Add(OldUserRoleEnum.Partner); } else { this.UserRoles.Remove(OldUserRoleEnum.Partner); }
+                    if (twitchUser.IsAffiliate()) { this.UserRoles.Add(OldUserRoleEnum.Affiliate); } else { this.UserRoles.Remove(OldUserRoleEnum.Affiliate); }
+                    if (twitchUser.IsStaff()) { this.UserRoles.Add(OldUserRoleEnum.Staff); } else { this.UserRoles.Remove(OldUserRoleEnum.Staff); }
+                    if (twitchUser.IsGlobalMod()) { this.UserRoles.Add(OldUserRoleEnum.GlobalMod); } else { this.UserRoles.Remove(OldUserRoleEnum.GlobalMod); }
 
                     this.SetTwitchRoles();
 
@@ -1161,19 +1161,19 @@ namespace MixItUp.Base.ViewModel.User
 
         private void SetTwitchRoles()
         {
-            this.TwitchUserRoles.Add(UserRoleEnum.User);
+            this.TwitchUserRoles.Add(OldUserRoleEnum.User);
             if (ServiceManager.Get<TwitchSessionService>().UserNewAPI != null && ServiceManager.Get<TwitchSessionService>().UserNewAPI.id.Equals(this.TwitchID))
             {
-                this.TwitchUserRoles.Add(UserRoleEnum.Streamer);
+                this.TwitchUserRoles.Add(OldUserRoleEnum.Streamer);
             }
 
             if (ServiceManager.Get<TwitchSessionService>().ChannelEditors.Contains(this.TwitchID))
             {
-                this.TwitchUserRoles.Add(UserRoleEnum.ChannelEditor);
+                this.TwitchUserRoles.Add(OldUserRoleEnum.ChannelEditor);
             }
             else
             {
-                this.TwitchUserRoles.Remove(UserRoleEnum.ChannelEditor);
+                this.TwitchUserRoles.Remove(OldUserRoleEnum.ChannelEditor);
             }
 
             this.IsInChat = true;
@@ -1245,39 +1245,39 @@ namespace MixItUp.Base.ViewModel.User
 
         private void SetYouTubeRoles(Google.Apis.YouTube.v3.Data.LiveChatMessage message = null)
         {
-            this.YouTubeUserRoles.Add(UserRoleEnum.User);
+            this.YouTubeUserRoles.Add(OldUserRoleEnum.User);
             if (ServiceManager.Get<YouTubeSessionService>().Channel != null && ServiceManager.Get<YouTubeSessionService>().Channel.Id.Equals(this.YouTubeID))
             {
-                this.YouTubeUserRoles.Add(UserRoleEnum.Streamer);
+                this.YouTubeUserRoles.Add(OldUserRoleEnum.Streamer);
             }
 
             if (message != null)
             {
                 if (message.AuthorDetails.IsChatOwner.GetValueOrDefault())
                 {
-                    this.YouTubeUserRoles.Add(UserRoleEnum.Streamer);
+                    this.YouTubeUserRoles.Add(OldUserRoleEnum.Streamer);
                 }
                 else
                 {
-                    this.YouTubeUserRoles.Remove(UserRoleEnum.Streamer);
+                    this.YouTubeUserRoles.Remove(OldUserRoleEnum.Streamer);
                 }
 
                 if (message.AuthorDetails.IsChatModerator.GetValueOrDefault())
                 {
-                    this.YouTubeUserRoles.Add(UserRoleEnum.Mod);
+                    this.YouTubeUserRoles.Add(OldUserRoleEnum.Mod);
                 }
                 else
                 {
-                    this.YouTubeUserRoles.Add(UserRoleEnum.Mod);
+                    this.YouTubeUserRoles.Add(OldUserRoleEnum.Mod);
                 }
 
                 if (message.AuthorDetails.IsChatSponsor.GetValueOrDefault())
                 {
-                    this.YouTubeUserRoles.Add(UserRoleEnum.Subscriber);
+                    this.YouTubeUserRoles.Add(OldUserRoleEnum.Subscriber);
                 }
                 else
                 {
-                    this.YouTubeUserRoles.Add(UserRoleEnum.Subscriber);
+                    this.YouTubeUserRoles.Add(OldUserRoleEnum.Subscriber);
                 }
 
                 this.IsInChat = true;
@@ -1308,10 +1308,10 @@ namespace MixItUp.Base.ViewModel.User
         }
         private void SetGlimeshRoles()
         {
-            this.GlimeshUserRoles.Add(UserRoleEnum.User);
+            this.GlimeshUserRoles.Add(OldUserRoleEnum.User);
             if (ServiceManager.Get<GlimeshSessionService>().User != null && ServiceManager.Get<GlimeshSessionService>().User.id.Equals(this.GlimeshID))
             {
-                this.GlimeshUserRoles.Add(UserRoleEnum.Streamer);
+                this.GlimeshUserRoles.Add(OldUserRoleEnum.Streamer);
             }
 
             this.IsInChat = true;
@@ -1341,10 +1341,10 @@ namespace MixItUp.Base.ViewModel.User
 
         private void SetTrovoRoles(IEnumerable<string> roles = null)
         {
-            this.TrovoUserRoles.Add(UserRoleEnum.User);
+            this.TrovoUserRoles.Add(OldUserRoleEnum.User);
             if (ServiceManager.Get<GlimeshSessionService>().User != null && ServiceManager.Get<GlimeshSessionService>().User.id.Equals(this.GlimeshID))
             {
-                this.TrovoUserRoles.Add(UserRoleEnum.Streamer);
+                this.TrovoUserRoles.Add(OldUserRoleEnum.Streamer);
             }
 
             if (roles != null)
@@ -1353,57 +1353,57 @@ namespace MixItUp.Base.ViewModel.User
 
                 if (rolesSet.Contains(Trovo.Base.Models.Chat.ChatMessageModel.StreamerRole))
                 {
-                    this.TrovoUserRoles.Add(UserRoleEnum.Streamer);
+                    this.TrovoUserRoles.Add(OldUserRoleEnum.Streamer);
                 }
                 else
                 {
-                    this.TrovoUserRoles.Remove(UserRoleEnum.Streamer);
+                    this.TrovoUserRoles.Remove(OldUserRoleEnum.Streamer);
                 }
 
                 if (rolesSet.Contains(Trovo.Base.Models.Chat.ChatMessageModel.AdminRole))
                 {
-                    this.TrovoUserRoles.Add(UserRoleEnum.Staff);
+                    this.TrovoUserRoles.Add(OldUserRoleEnum.Staff);
                 }
                 else
                 {
-                    this.TrovoUserRoles.Remove(UserRoleEnum.Staff);
+                    this.TrovoUserRoles.Remove(OldUserRoleEnum.Staff);
                 }
 
                 if (rolesSet.Contains(Trovo.Base.Models.Chat.ChatMessageModel.WardenRole))
                 {
-                    this.TrovoUserRoles.Add(UserRoleEnum.GlobalMod);
+                    this.TrovoUserRoles.Add(OldUserRoleEnum.GlobalMod);
                 }
                 else
                 {
-                    this.TrovoUserRoles.Remove(UserRoleEnum.GlobalMod);
+                    this.TrovoUserRoles.Remove(OldUserRoleEnum.GlobalMod);
                 }
 
                 if (rolesSet.Contains(Trovo.Base.Models.Chat.ChatMessageModel.ModeratorRole))
                 {
-                    this.TrovoUserRoles.Add(UserRoleEnum.Mod);
+                    this.TrovoUserRoles.Add(OldUserRoleEnum.Mod);
                 }
                 else
                 {
-                    this.TrovoUserRoles.Remove(UserRoleEnum.Mod);
+                    this.TrovoUserRoles.Remove(OldUserRoleEnum.Mod);
                 }
 
                 if (rolesSet.Contains(Trovo.Base.Models.Chat.ChatMessageModel.FollowerRole))
                 {
-                    this.TrovoUserRoles.Add(UserRoleEnum.Follower);
+                    this.TrovoUserRoles.Add(OldUserRoleEnum.Follower);
                 }
                 else
                 {
-                    this.TrovoUserRoles.Remove(UserRoleEnum.Follower);
+                    this.TrovoUserRoles.Remove(OldUserRoleEnum.Follower);
                 }
 
                 if (rolesSet.Contains(Trovo.Base.Models.Chat.ChatMessageModel.SubscriberRole))
                 {
-                    this.TrovoUserRoles.Add(UserRoleEnum.Subscriber);
+                    this.TrovoUserRoles.Add(OldUserRoleEnum.Subscriber);
                     this.Data.TrovoSubscriberLevel = 1;
                 }
                 else
                 {
-                    this.TrovoUserRoles.Remove(UserRoleEnum.Subscriber);
+                    this.TrovoUserRoles.Remove(OldUserRoleEnum.Subscriber);
                     this.Data.TrovoSubscriberLevel = 0;
                 }
 
@@ -1415,21 +1415,21 @@ namespace MixItUp.Base.ViewModel.User
 
         private void SetCommonUserRoles()
         {
-            if (this.UserRoles.Contains(UserRoleEnum.Streamer))
+            if (this.UserRoles.Contains(OldUserRoleEnum.Streamer))
             {
-                this.UserRoles.Add(UserRoleEnum.ChannelEditor);
-                this.UserRoles.Add(UserRoleEnum.Mod);
-                this.UserRoles.Add(UserRoleEnum.Subscriber);
-                this.UserRoles.Add(UserRoleEnum.Follower);
+                this.UserRoles.Add(OldUserRoleEnum.ChannelEditor);
+                this.UserRoles.Add(OldUserRoleEnum.Mod);
+                this.UserRoles.Add(OldUserRoleEnum.Subscriber);
+                this.UserRoles.Add(OldUserRoleEnum.Follower);
             }
 
             if (ChannelSession.Settings.RegularUserMinimumHours > 0 && this.Data.ViewingHoursPart >= ChannelSession.Settings.RegularUserMinimumHours)
             {
-                this.UserRoles.Add(UserRoleEnum.Regular);
+                this.UserRoles.Add(OldUserRoleEnum.Regular);
             }
             else
             {
-                this.UserRoles.Remove(UserRoleEnum.Regular);
+                this.UserRoles.Remove(OldUserRoleEnum.Regular);
             }
 
             this.ClearDisplayProperties();

@@ -501,11 +501,11 @@ namespace MixItUp.Base.Model.Overlay
             if (this.ShouldIncludeUser(user))
             {
                 this.viewers.Add(user.ID);
-                if (user.UserRoles.Contains(UserRoleEnum.Subscriber) || user.IsEquivalentToSubscriber())
+                if (user.UserRoles.Contains(OldUserRoleEnum.Subscriber) || user.IsEquivalentToSubscriber())
                 {
                     this.subs.Add(user.ID);
                 }
-                if (user.UserRoles.Contains(UserRoleEnum.Mod) || user.UserRoles.Contains(UserRoleEnum.ChannelEditor))
+                if (user.UserRoles.Contains(OldUserRoleEnum.Mod) || user.UserRoles.Contains(OldUserRoleEnum.ChannelEditor))
                 {
                     this.mods.Add(user.ID);
                 }

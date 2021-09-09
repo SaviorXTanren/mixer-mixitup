@@ -81,11 +81,11 @@ namespace MixItUp.Base.ViewModel.User
 
         public HashSet<UserRoleEnum> Roles { get { return this.platformModel.Roles; } }
 
-        public UserRoleEnum PrimaryRole { get { return (this.Roles.Count() > 0) ? this.Roles.Max() : UserRoleEnum.User; } }
+        public UserRoleEnum PrimaryRole { get { return this.Roles.Max(); } }
 
         public string PrimaryRoleString { get { return EnumLocalizationHelper.GetLocalizedName(this.PrimaryRole); } }
 
-        public bool IsPlatformSubscriber { get { return this.Roles.Contains(UserRoleEnum.Subscriber); } }
+        public bool IsPlatformSubscriber { get { return this.Roles.Contains(UserRoleEnum.Subscriber) || this.Roles.Contains(UserRoleEnum.YouTubeMember); } }
 
         public bool IsExternalSubscriber
         {
@@ -106,19 +106,21 @@ namespace MixItUp.Base.ViewModel.User
 
         public bool IsSubscriber { get { return this.IsPlatformSubscriber || this.IsExternalSubscriber; } }
 
-        public bool HasPermissionsTo(UserRoleEnum checkRole)
+        public bool HasRole(UserRoleEnum role) { return this.Roles.Contains(role); }
+
+        public bool MeetsRole(UserRoleEnum role)
         {
-            if (checkRole == UserRoleEnum.Subscriber && this.IsSubscriber)
+            if ((role == UserRoleEnum.Subscriber || role == UserRoleEnum.YouTubeMember) && this.IsSubscriber)
             {
                 return true;
             }
 
             if (ChannelSession.Settings.ExplicitUserRoleRequirements)
             {
-                return this.Roles.Contains(checkRole);
+                return this.HasRole(role);
             }
-
-            return this.PrimaryRole >= checkRole;
+            
+            return this.PrimaryRole >= role;
         }
 
         public string Color
@@ -129,7 +131,7 @@ namespace MixItUp.Base.ViewModel.User
                 {
                     if (ChannelSession.Settings.UseCustomUsernameColors)
                     {
-                        foreach (UserRoleEnum role in this.Roles.OrderByDescending(r => r))
+                        foreach (OldUserRoleEnum role in this.Roles.OrderByDescending(r => r))
                         {
                             if (ChannelSession.Settings.CustomUsernameColors.ContainsKey(role))
                             {

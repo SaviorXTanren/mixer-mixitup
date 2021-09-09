@@ -8,6 +8,13 @@ namespace MixItUp.Base.Model.User
 {
     public class UserV2Model : IEquatable<UserV2Model>
     {
+        public static UserV2Model CreateUnassociatedUser(string username)
+        {
+            UserV2Model user = new UserV2Model() { ID = Guid.Empty };
+            user.AddPlatformData(new UnassociatedUserPlatformV2Model(username));
+            return user;
+        }
+
         [DataMember]
         public Guid ID { get; set; } = Guid.NewGuid();
 

@@ -16,12 +16,12 @@ namespace MixItUp.Base.Services
 {
     public class UserService
     {
-        public static readonly HashSet<string> SpecialUserAccounts = new HashSet<string>() { "boomtvmod", "streamjar", "pretzelrocks", "scottybot", "streamlabs", "streamelements", "nightbot", "deepbot", "moobot", "coebot", "wizebot", "phantombot", "stay_hydrated_bot", "stayhealthybot", "anotherttvviewer", "commanderroot", "lurxx", "thecommandergroot", "moobot", "thelurxxer", "twitchprimereminder", "communityshowcase", "banmonitor", "wizebot" };
-
         public static string SanitizeUsername(string username) { return !string.IsNullOrEmpty(username) ? username.ToLower().Replace("@", "").Trim() : string.Empty; }
 
         private Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>> platformUserIDLookups { get; set; } = new Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>>();
         private Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>> platformUsernameLookups { get; set; } = new Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>>();
+
+        private Dictionary<Guid, UserV2ViewModel> activeUsers = new Dictionary<Guid, UserV2ViewModel>();
 
         private bool fullUserDataLoadOccurred = false;
 
@@ -34,20 +34,17 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private Dictionary<Guid, UserV2ViewModel> activeUsers = new Dictionary<Guid, UserV2ViewModel>();
-
         public async Task AddOrUpdateActiveUser(UserV2ViewModel user)
         {
-            if (user == null)
+            if (user == null || user.ID == Guid.Empty)
             {
                 return;
             }
 
             bool newUser = !this.activeUsers.ContainsKey(user.ID);
 
-            this.activeUsers[user.ID] = user;
-
             this.SetUserData(user.Model);
+            this.activeUsers[user.ID] = user;
 
             // TODO
             // Add IgnoreForQueries logic
@@ -243,6 +240,19 @@ namespace MixItUp.Base.Services
             return null;
         }
 
+        public async Task LoadAllUserData()
+        {
+            if (!this.fullUserDataLoadOccurred)
+            {
+                this.fullUserDataLoadOccurred = true;
+
+                foreach (UserV2Model userData in await ChannelSession.Settings.LoadUserV2Data("SELECT * FROM Users", new Dictionary<string, object>()))
+                {
+                    this.SetUserData(userData);
+                }
+            }
+        }
+
         public UserV2ViewModel CreateUser(UserPlatformV2ModelBase platformModel)
         {
             if (platformModel != null)
@@ -259,13 +269,18 @@ namespace MixItUp.Base.Services
 
         private void SetUserData(UserV2Model userData, bool newData = false)
         {
-            if (userData != null && userData.GetPlatforms().Count() > 0)
+            if (userData != null && userData.ID != Guid.Empty && userData.GetPlatforms().Count() > 0 && !userData.HasPlatformData(StreamingPlatformTypeEnum.None))
             {
                 lock (ChannelSession.Settings.Users)
                 {
                     if (!ChannelSession.Settings.Users.ContainsKey(userData.ID))
                     {
                         ChannelSession.Settings.Users[userData.ID] = userData;
+                        if (ChannelSession.Settings.ModerationResetStrikesOnLaunch)
+                        {
+                            userData.ModerationStrikes = 0;
+                        }
+
                         ChannelSession.Settings.Users.ManualValueChanged(userData.ID);
                     }
 

@@ -47,9 +47,9 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
 
-        public IEnumerable<UserRoleEnum> UserRoles { get { return UserV2Model.GetSelectableUserRoles(); } }
+        public IEnumerable<OldUserRoleEnum> UserRoles { get { return UserV2Model.GetSelectableUserRoles(); } }
 
-        public UserRoleEnum SelectedUserRole
+        public OldUserRoleEnum SelectedUserRole
         {
             get { return this.selectedUserRole; }
             set
@@ -58,7 +58,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged();
             }
         }
-        private UserRoleEnum selectedUserRole;
+        private OldUserRoleEnum selectedUserRole;
 
         public bool ShowUserRoles { get { return this.SelectedActionType == GameQueueActionType.SelectFirstType; } }
 
@@ -72,7 +72,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowUserRoles)
             {
-                this.SelectedUserRole = (action.RoleRequirement != null) ? action.RoleRequirement.Role : UserRoleEnum.User;
+                this.SelectedUserRole = (action.RoleRequirement != null) ? action.RoleRequirement.Role : OldUserRoleEnum.User;
             }
         }
 

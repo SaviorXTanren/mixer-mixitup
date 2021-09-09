@@ -14,7 +14,7 @@ namespace MixItUp.Base.ViewModel.Requirements
 {
     public class UserRoleViewModel : UIViewModelBase, IComparable<UserRoleViewModel>
     {
-        public UserRoleEnum Role
+        public OldUserRoleEnum Role
         {
             get { return this.role; }
             set
@@ -23,13 +23,13 @@ namespace MixItUp.Base.ViewModel.Requirements
                 this.NotifyPropertyChanged();
             }
         }
-        private UserRoleEnum role;
+        private OldUserRoleEnum role;
 
         public ICommand DeleteAdvancedRoleCommand { get; private set; }
 
         private RoleRequirementViewModel viewModel;
 
-        public UserRoleViewModel(RoleRequirementViewModel viewModel, UserRoleEnum role)
+        public UserRoleViewModel(RoleRequirementViewModel viewModel, OldUserRoleEnum role)
         {
             this.viewModel = viewModel;
             this.Role = role;
@@ -64,9 +64,9 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public bool ShowSimpleRoles { get { return !this.IsAdvancedRolesSelected; } }
 
-        public IEnumerable<UserRoleEnum> Roles { get { return UserV2Model.GetSelectableUserRoles(); } }
+        public IEnumerable<OldUserRoleEnum> Roles { get { return UserV2Model.GetSelectableUserRoles(); } }
 
-        public UserRoleEnum SelectedRole
+        public OldUserRoleEnum SelectedRole
         {
             get { return this.selectedRole; }
             set
@@ -76,19 +76,19 @@ namespace MixItUp.Base.ViewModel.Requirements
                 this.NotifyPropertyChanged("IsSubscriberRole");
             }
         }
-        private UserRoleEnum selectedRole = UserRoleEnum.User;
+        private OldUserRoleEnum selectedRole = OldUserRoleEnum.User;
 
-        public IEnumerable<UserRoleEnum> AdvancedRoles
+        public IEnumerable<OldUserRoleEnum> AdvancedRoles
         {
             get
             {
-                List<UserRoleEnum> roles = new List<UserRoleEnum>(UserV2Model.GetSelectableUserRoles());
-                roles.Remove(UserRoleEnum.VIPExclusive);
+                List<OldUserRoleEnum> roles = new List<OldUserRoleEnum>(UserV2Model.GetSelectableUserRoles());
+                roles.Remove(OldUserRoleEnum.VIPExclusive);
                 return roles;
             }
         }
 
-        public UserRoleEnum SelectedAdvancedRole
+        public OldUserRoleEnum SelectedAdvancedRole
         {
             get { return this.selectedAdvancedRole; }
             set
@@ -97,7 +97,7 @@ namespace MixItUp.Base.ViewModel.Requirements
                 this.NotifyPropertyChanged();
             }
         }
-        private UserRoleEnum selectedAdvancedRole = UserRoleEnum.User;
+        private OldUserRoleEnum selectedAdvancedRole = OldUserRoleEnum.User;
 
         public SortableObservableCollection<UserRoleViewModel> SelectedAdvancedRoles { get; set; } = new SortableObservableCollection<UserRoleViewModel>();
 
@@ -107,11 +107,11 @@ namespace MixItUp.Base.ViewModel.Requirements
             {
                 if (this.IsAdvancedRolesSelected)
                 {
-                    return this.SelectedAdvancedRoles.Any(r => r.Role == UserRoleEnum.Subscriber);
+                    return this.SelectedAdvancedRoles.Any(r => r.Role == OldUserRoleEnum.Subscriber);
                 }
                 else
                 {
-                    return this.SelectedRole == UserRoleEnum.Subscriber;
+                    return this.SelectedRole == OldUserRoleEnum.Subscriber;
                 }
             }
         }
@@ -175,7 +175,7 @@ namespace MixItUp.Base.ViewModel.Requirements
             if (requirement.RoleList.Count > 0)
             {
                 this.IsAdvancedRolesSelected = true;
-                foreach (UserRoleEnum role in requirement.RoleList)
+                foreach (OldUserRoleEnum role in requirement.RoleList)
                 {
                     this.SelectedAdvancedRoles.Add(new UserRoleViewModel(this, role));
                 }

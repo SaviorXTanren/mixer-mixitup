@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Model.User.Twitch;
-using MixItUp.Base.Services;
+﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -116,19 +115,12 @@ namespace MixItUp.Base.Model.User.Platform
             this.AvatarLink = user.profile_image_url;
             this.AccountDate = TwitchPlatformService.GetTwitchDateTime(user.created_at);
 
-            if (user.IsPartner()) { this.Roles.Add(UserRoleEnum.Partner); } else { this.Roles.Remove(UserRoleEnum.Partner); }
-            if (user.IsAffiliate()) { this.Roles.Add(UserRoleEnum.Affiliate); } else { this.Roles.Remove(UserRoleEnum.Affiliate); }
-            if (user.IsStaff()) { this.Roles.Add(UserRoleEnum.Staff); } else { this.Roles.Remove(UserRoleEnum.Staff); }
-            if (user.IsGlobalMod()) { this.Roles.Add(UserRoleEnum.GlobalMod); } else { this.Roles.Remove(UserRoleEnum.GlobalMod); }
+            if (user.IsAffiliate()) { this.Roles.Add(UserRoleEnum.TwitchAffiliate); } else { this.Roles.Remove(UserRoleEnum.TwitchAffiliate); }
+            if (user.IsPartner()) { this.Roles.Add(UserRoleEnum.TwitchPartner); } else { this.Roles.Remove(UserRoleEnum.TwitchPartner); }
+            if (user.IsGlobalMod()) { this.Roles.Add(UserRoleEnum.TwitchGlobalMod); } else { this.Roles.Remove(UserRoleEnum.TwitchGlobalMod); }
+            if (user.IsStaff()) { this.Roles.Add(UserRoleEnum.TwitchStaff); } else { this.Roles.Remove(UserRoleEnum.TwitchStaff); }
 
-            if (ServiceManager.Get<TwitchSessionService>().ChannelEditors.Contains(this.ID))
-            {
-                this.Roles.Add(UserRoleEnum.ChannelEditor);
-            }
-            else
-            {
-                this.Roles.Remove(UserRoleEnum.ChannelEditor);
-            }
+            if (ServiceManager.Get<TwitchSessionService>().ChannelEditors.Contains(this.ID)) { this.Roles.Add(UserRoleEnum.TwitchChannelEditor); } else { this.Roles.Remove(UserRoleEnum.TwitchChannelEditor); }
         }
 
         private UserModel GetTwitchNewAPIUserModel()

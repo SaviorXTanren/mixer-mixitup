@@ -15,7 +15,7 @@ namespace MixItUp.Base.Model.Commands.Games
     public class BidGameCommandModel : GameCommandModelBase
     {
         [DataMember]
-        public UserRoleEnum StarterRole { get; set; }
+        public OldUserRoleEnum StarterRole { get; set; }
         [DataMember]
         public int TimeLimit { get; set; }
 
@@ -39,7 +39,7 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private int lastBidAmount;
 
-        public BidGameCommandModel(string name, HashSet<string> triggers, UserRoleEnum starterRole, int timeLimit, CustomCommandModel startedCommand, CustomCommandModel newTopBidderCommand,
+        public BidGameCommandModel(string name, HashSet<string> triggers, OldUserRoleEnum starterRole, int timeLimit, CustomCommandModel startedCommand, CustomCommandModel newTopBidderCommand,
             CustomCommandModel notEnoughPlayersCommand, CustomCommandModel gameCompleteCommand)
             : base(name, triggers, GameCommandTypeEnum.Bid)
         {

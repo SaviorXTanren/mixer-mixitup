@@ -48,32 +48,9 @@ namespace MixItUp.Base.Model.User.Platform
             this.AvatarLink = message.AuthorDetails.ProfileImageUrl;
             this.YouTubeURL = message.AuthorDetails.ChannelUrl;
 
-            if (message.AuthorDetails.IsChatOwner.GetValueOrDefault())
-            {
-                this.Roles.Add(UserRoleEnum.Streamer);
-            }
-            else
-            {
-                this.Roles.Remove(UserRoleEnum.Streamer);
-            }
-
-            if (message.AuthorDetails.IsChatModerator.GetValueOrDefault())
-            {
-                this.Roles.Add(UserRoleEnum.Mod);
-            }
-            else
-            {
-                this.Roles.Add(UserRoleEnum.Mod);
-            }
-
-            if (message.AuthorDetails.IsChatSponsor.GetValueOrDefault())
-            {
-                this.Roles.Add(UserRoleEnum.Subscriber);
-            }
-            else
-            {
-                this.Roles.Add(UserRoleEnum.Subscriber);
-            }
+            if (message.AuthorDetails.IsChatOwner.GetValueOrDefault()) { this.Roles.Add(UserRoleEnum.Streamer); } else { this.Roles.Remove(UserRoleEnum.Streamer); }
+            if (message.AuthorDetails.IsChatModerator.GetValueOrDefault()) { this.Roles.Add(UserRoleEnum.Moderator); } else { this.Roles.Remove(UserRoleEnum.Moderator); }
+            if (message.AuthorDetails.IsChatSponsor.GetValueOrDefault()) { this.Roles.Add(UserRoleEnum.YouTubeMember); } else { this.Roles.Remove(UserRoleEnum.YouTubeMember); }
         }
 
         private void SetChannelProperties(Channel channel)
