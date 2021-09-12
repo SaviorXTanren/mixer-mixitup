@@ -307,7 +307,7 @@ namespace MixItUp.Base.Model.Currency
             return (user.IsCurrencyRankExempt || this.GetAmount(user, item) >= amount);
         }
 
-        public void SetAmount(UserV2Model user, Guid itemID, int amount)
+        public void SetAmount(UserV2ViewModel user, Guid itemID, int amount)
         {
             if (this.ItemExists(itemID))
             {

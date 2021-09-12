@@ -34,66 +34,18 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task AddOrUpdateActiveUser(UserV2ViewModel user)
-        {
-            if (user == null || user.ID == Guid.Empty)
-            {
-                return;
-            }
-
-            bool newUser = !this.activeUsers.ContainsKey(user.ID);
-
-            this.SetUserData(user.Model);
-            this.activeUsers[user.ID] = user;
-
-            // TODO
-            // Add IgnoreForQueries logic
-
-            if (newUser)
-            {
-                if (user.OnlineViewingMinutes == 0)
-                {
-                    // TODO
-                    //await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserFirstJoin, new CommandParametersModel(user));
-                }
-
-                // TODO
-                //CommandParametersModel parameters = new CommandParametersModel(user);
-                //if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.ChatUserJoined, parameters))
-                //{
-                //    user.UpdateLastActivity();
-                //    user.Model.TotalStreamsWatched++;
-                //    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserJoined, parameters);
-                //}
-            }
-        }
-
-        public async Task RemoveActiveUser(StreamingPlatformTypeEnum platform, string platformUsername)
-        {
-            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id) && this.activeUsers.TryGetValue(id, out UserV2ViewModel user))
-            {
-                await this.RemoveActiveUser(user);
-            }
-        }
-
-        public async Task RemoveActiveUser(UserV2ViewModel user)
-        {
-            if (user != null && this.activeUsers.ContainsKey(user.ID))
-            {
-                this.activeUsers.Remove(user.ID);
-
-                // TODO
-                //await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserLeft, new CommandParametersModel(user));
-            }
-        }
-
-        public IEnumerable<UserV2ViewModel> GetActiveUsers() { return this.activeUsers.Values.ToList(); }
+        #region Users
 
         public async Task<UserV2ViewModel> GetUserByID(Guid id)
         {
             if (this.activeUsers.TryGetValue(id, out UserV2ViewModel user))
             {
                 return user;
+            }
+
+            if (ChannelSession.Settings.Users.ContainsKey(id))
+            {
+                return new UserV2ViewModel(ChannelSession.Settings.DefaultStreamingPlatform, ChannelSession.Settings.Users[id]);
             }
 
             IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data("SELECT * FROM Users WHERE ID = @ID", new Dictionary<string, object>() { { "ID", id } });
@@ -240,19 +192,6 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        public async Task LoadAllUserData()
-        {
-            if (!this.fullUserDataLoadOccurred)
-            {
-                this.fullUserDataLoadOccurred = true;
-
-                foreach (UserV2Model userData in await ChannelSession.Settings.LoadUserV2Data("SELECT * FROM Users", new Dictionary<string, object>()))
-                {
-                    this.SetUserData(userData);
-                }
-            }
-        }
-
         public UserV2ViewModel CreateUser(UserPlatformV2ModelBase platformModel)
         {
             if (platformModel != null)
@@ -265,6 +204,28 @@ namespace MixItUp.Base.Services
                 return user;
             }
             return null;
+        }
+
+        public static UserV2ViewModel CreateUserViewModel(UserV2Model user)
+        {
+            if (user != null)
+            {
+                return new UserV2ViewModel(ChannelSession.Settings.DefaultStreamingPlatform, user);
+            }
+            return null;
+        }
+
+        public async Task LoadAllUserData()
+        {
+            if (!this.fullUserDataLoadOccurred)
+            {
+                this.fullUserDataLoadOccurred = true;
+
+                foreach (UserV2Model userData in await ChannelSession.Settings.LoadUserV2Data("SELECT * FROM Users", new Dictionary<string, object>()))
+                {
+                    this.SetUserData(userData);
+                }
+            }
         }
 
         private void SetUserData(UserV2Model userData, bool newData = false)
@@ -293,5 +254,68 @@ namespace MixItUp.Base.Services
                 }
             }
         }
+
+        #endregion Users
+
+        #region Active Users
+
+        #endregion Active Users
+
+        public async Task AddOrUpdateActiveUser(UserV2ViewModel user)
+        {
+            if (user == null || user.ID == Guid.Empty)
+            {
+                return;
+            }
+
+            bool newUser = !this.activeUsers.ContainsKey(user.ID);
+
+            this.SetUserData(user.Model);
+            this.activeUsers[user.ID] = user;
+
+            // TODO
+            // Add IgnoreForQueries logic
+
+            if (newUser)
+            {
+                if (user.OnlineViewingMinutes == 0)
+                {
+                    // TODO
+                    //await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserFirstJoin, new CommandParametersModel(user));
+                }
+
+                // TODO
+                //CommandParametersModel parameters = new CommandParametersModel(user);
+                //if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.ChatUserJoined, parameters))
+                //{
+                //    user.UpdateLastActivity();
+                //    user.Model.TotalStreamsWatched++;
+                //    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserJoined, parameters);
+                //}
+            }
+        }
+
+        public async Task RemoveActiveUser(StreamingPlatformTypeEnum platform, string platformUsername)
+        {
+            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id) && this.activeUsers.TryGetValue(id, out UserV2ViewModel user))
+            {
+                await this.RemoveActiveUser(user);
+            }
+        }
+
+        public async Task RemoveActiveUser(UserV2ViewModel user)
+        {
+            if (user != null && this.activeUsers.ContainsKey(user.ID))
+            {
+                this.activeUsers.Remove(user.ID);
+
+                // TODO
+                //await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserLeft, new CommandParametersModel(user));
+            }
+        }
+
+        public IEnumerable<UserV2ViewModel> GetActiveUsers() { return this.activeUsers.Values.ToList(); }
+
+        public int GetActiveUserCount() { return this.activeUsers.Count; }
     }
 }

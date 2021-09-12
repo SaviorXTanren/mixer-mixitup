@@ -130,23 +130,6 @@ namespace MixItUp.Base.ViewModel.User
 
         public bool IsSubscriber { get { return this.IsPlatformSubscriber || this.IsExternalSubscriber; } }
 
-        public bool HasRole(UserRoleEnum role) { return this.Roles.Contains(role); }
-
-        public bool MeetsRole(UserRoleEnum role)
-        {
-            if ((role == UserRoleEnum.Subscriber || role == UserRoleEnum.YouTubeMember) && this.IsSubscriber)
-            {
-                return true;
-            }
-
-            if (ChannelSession.Settings.ExplicitUserRoleRequirements)
-            {
-                return this.HasRole(role);
-            }
-            
-            return this.PrimaryRole >= role;
-        }
-
         public string Color
         {
             get
@@ -159,9 +142,9 @@ namespace MixItUp.Base.ViewModel.User
                         {
                             foreach (UserRoleEnum role in this.Roles.OrderByDescending(r => r))
                             {
-                                if (ChannelSession.Settings.CustomUsernameColors.ContainsKey(role))
+                                if (ChannelSession.Settings.CustomUsernameRoleColors.ContainsKey(role))
                                 {
-                                    string name = ChannelSession.Settings.CustomUsernameColors[role];
+                                    string name = ChannelSession.Settings.CustomUsernameRoleColors[role];
                                     if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(name))
                                     {
                                         this.color = ColorSchemes.HTMLColorSchemeDictionary[name];
@@ -214,6 +197,12 @@ namespace MixItUp.Base.ViewModel.User
         public int SubscribeMonths { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow() : 0; } }
 
         public int SubscribeTier { get { return this.PlatformModel.SubscriberTier; } }
+
+        public Dictionary<Guid, int> CurrencyAmounts { get { return this.Model.CurrencyAmounts; } }
+
+        public Dictionary<Guid, Dictionary<Guid, int>> InventoryAmounts { get { return this.Model.InventoryAmounts; } }
+
+        public Dictionary<Guid, int> StreamPassAmounts { get { return this.Model.StreamPassAmounts; } }
 
         public int OnlineViewingMinutes
         {
@@ -319,7 +308,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public DateTimeOffset LastActivity { get { return this.Model.LastActivity; } }
 
-        public bool UpdatedThisSession { get; set; }
+        public bool UpdatedThisSession { get { return this.Model.UpdatedThisSession; } set { this.Model.UpdatedThisSession = value; } }
 
         public bool IsInChat { get; set; }
 
@@ -377,6 +366,23 @@ namespace MixItUp.Base.ViewModel.User
             {
                 this.Roles.Remove(UserRoleEnum.Regular);
             }
+        }
+
+        public bool HasRole(UserRoleEnum role) { return this.Roles.Contains(role); }
+
+        public bool MeetsRole(UserRoleEnum role)
+        {
+            if ((role == UserRoleEnum.Subscriber || role == UserRoleEnum.YouTubeMember) && this.IsSubscriber)
+            {
+                return true;
+            }
+
+            if (ChannelSession.Settings.ExplicitUserRoleRequirements)
+            {
+                return this.HasRole(role);
+            }
+
+            return this.PrimaryRole >= role;
         }
 
         public async Task AddModerationStrike(string moderationReason = null)

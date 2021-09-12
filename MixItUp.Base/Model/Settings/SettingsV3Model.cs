@@ -162,7 +162,10 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool UseCustomUsernameColors { get; set; }
         [DataMember]
+        [Obsolete]
         public Dictionary<OldUserRoleEnum, string> CustomUsernameColors { get; set; } = new Dictionary<OldUserRoleEnum, string>();
+        [DataMember]
+        public Dictionary<UserRoleEnum, string> CustomUsernameRoleColors { get; set; } = new Dictionary<UserRoleEnum, string>();
 
         #endregion Chat
 

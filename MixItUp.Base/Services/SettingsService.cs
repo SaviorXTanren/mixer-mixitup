@@ -357,7 +357,16 @@ namespace MixItUp.Base.Services
                 }
 
 #pragma warning disable CS0612 // Type or member is obsolete
-                List<UserDataModel> oldUserData = new List<UserDataModel>();
+                foreach (var kvp in settings.CustomUsernameColors)
+                {
+                    UserRoleEnum newRole = UserRoles.ConvertFromOldRole(kvp.Key);
+                    settings.CustomUsernameRoleColors[newRole] = kvp.Value;
+                }
+#pragma warning restore CS0612 // Type or member is obsolete
+
+
+#pragma warning disable CS0612 // Type or member is obsolete
+                    List<UserDataModel> oldUserData = new List<UserDataModel>();
 
                 await ServiceManager.Get<IDatabaseService>().Read(settings.DatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
                 {
