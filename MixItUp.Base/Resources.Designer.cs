@@ -10534,6 +10534,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pattern.
+        /// </summary>
+        public static string Pattern {
+            get {
+                return ResourceManager.GetString("Pattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Payout.
         /// </summary>
         public static string Payout {
@@ -11574,6 +11583,15 @@ namespace MixItUp.Base {
         public static string Refund {
             get {
                 return ResourceManager.GetString("Refund", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Regex Match.
+        /// </summary>
+        public static string RegexMatch {
+            get {
+                return ResourceManager.GetString("RegexMatch", resourceCulture);
             }
         }
         
@@ -16475,6 +16493,15 @@ namespace MixItUp.Base {
         public static string ValidThresholdUserAmountMustBeSpecified {
             get {
                 return ResourceManager.GetString("ValidThresholdUserAmountMustBeSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value.
+        /// </summary>
+        public static string Value {
+            get {
+                return ResourceManager.GetString("Value", resourceCulture);
             }
         }
         

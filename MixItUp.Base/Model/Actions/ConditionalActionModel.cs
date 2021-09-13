@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Actions
@@ -22,6 +23,7 @@ namespace MixItUp.Base.Model.Actions
         Between,
         Replaced,
         NotReplaced,
+        RegexMatch,
     }
 
     public enum ConditionalOperatorTypeEnum
@@ -165,6 +167,10 @@ namespace MixItUp.Base.Model.Actions
             else if (clause.ComparisionType == ConditionalComparisionTypeEnum.NotReplaced)
             {
                 return clause.Value1.Equals(v1);
+            }
+            else if (clause.ComparisionType == ConditionalComparisionTypeEnum.RegexMatch)
+            {
+                return Regex.IsMatch(v1, v2, this.CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase);
             }
             else
             {

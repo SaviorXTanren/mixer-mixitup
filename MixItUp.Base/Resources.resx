@@ -6000,4 +6000,13 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="StopAllSounds" xml:space="preserve">
     <value>Stop All Sounds</value>
   </data>
+  <data name="RegexMatch" xml:space="preserve">
+    <value>Regex Match</value>
+  </data>
+  <data name="Pattern" xml:space="preserve">
+    <value>Pattern</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
 </root>
