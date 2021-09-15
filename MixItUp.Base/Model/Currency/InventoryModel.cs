@@ -265,7 +265,7 @@ namespace MixItUp.Base.Model.Currency
             return null;
         }
 
-        public int GetAmount(UserV2Model user, InventoryItemModel item)
+        public int GetAmount(UserV2ViewModel user, InventoryItemModel item)
         {
             if (user.InventoryAmounts.ContainsKey(this.ID) && user.InventoryAmounts[this.ID].ContainsKey(item.ID))
             {
@@ -274,7 +274,7 @@ namespace MixItUp.Base.Model.Currency
             return 0;
         }
 
-        public int GetAmount(UserV2Model user, Guid itemID)
+        public int GetAmount(UserV2ViewModel user, Guid itemID)
         {
             if (this.ItemExists(itemID))
             {
@@ -283,7 +283,7 @@ namespace MixItUp.Base.Model.Currency
             return 0;
         }
 
-        public Dictionary<Guid, int> GetAmounts(UserV2Model user)
+        public Dictionary<Guid, int> GetAmounts(UserV2ViewModel user)
         {
             Dictionary<Guid, int> amounts = new Dictionary<Guid, int>();
             foreach (InventoryItemModel item in this.Items.Values)
@@ -293,7 +293,7 @@ namespace MixItUp.Base.Model.Currency
             return amounts;
         }
 
-        public bool HasAmount(UserV2Model user, Guid itemID, int amount)
+        public bool HasAmount(UserV2ViewModel user, Guid itemID, int amount)
         {
             if (this.ItemExists(itemID))
             {
@@ -302,9 +302,9 @@ namespace MixItUp.Base.Model.Currency
             return false;
         }
 
-        public bool HasAmount(UserV2Model user, InventoryItemModel item, int amount)
+        public bool HasAmount(UserV2ViewModel user, InventoryItemModel item, int amount)
         {
-            return (user.IsCurrencyRankExempt || this.GetAmount(user, item) >= amount);
+            return (user.IsSpecialtyExcluded || this.GetAmount(user, item) >= amount);
         }
 
         public void SetAmount(UserV2ViewModel user, Guid itemID, int amount)
@@ -315,7 +315,7 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public void SetAmount(UserV2Model user, InventoryItemModel item, int amount)
+        public void SetAmount(UserV2ViewModel user, InventoryItemModel item, int amount)
         {
             if (!user.InventoryAmounts.ContainsKey(this.ID))
             {
@@ -329,7 +329,7 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public void AddAmount(UserV2Model user, Guid itemID, int amount)
+        public void AddAmount(UserV2ViewModel user, Guid itemID, int amount)
         {
             if (this.ItemExists(itemID))
             {
@@ -337,15 +337,15 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public void AddAmount(UserV2Model user, InventoryItemModel item, int amount)
+        public void AddAmount(UserV2ViewModel user, InventoryItemModel item, int amount)
         {
-            if (!user.IsCurrencyRankExempt && amount > 0)
+            if (!user.IsSpecialtyExcluded && amount > 0)
             {
                 this.SetAmount(user, item, this.GetAmount(user, item) + amount);
             }
         }
 
-        public void SubtractAmount(UserV2Model user, Guid itemID, int amount)
+        public void SubtractAmount(UserV2ViewModel user, Guid itemID, int amount)
         {
             if (this.ItemExists(itemID))
             {
@@ -353,15 +353,15 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public void SubtractAmount(UserV2Model user, InventoryItemModel item, int amount)
+        public void SubtractAmount(UserV2ViewModel user, InventoryItemModel item, int amount)
         {
-            if (!user.IsCurrencyRankExempt)
+            if (!user.IsSpecialtyExcluded)
             {
                 this.SetAmount(user, item, this.GetAmount(user, item) - amount);
             }
         }
 
-        public void ResetAmount(UserV2Model user)
+        public void ResetAmount(UserV2ViewModel user)
         {
             user.InventoryAmounts[this.ID] = new Dictionary<Guid, int>();
             ChannelSession.Settings.Users.ManualValueChanged(user.ID);
@@ -448,13 +448,13 @@ namespace MixItUp.Base.Model.Currency
                                 if (item.HasBuyAmount)
                                 {
                                     int itemMaxAmount = (item.HasMaxAmount) ? item.MaxAmount : this.DefaultMaxAmount;
-                                    if ((this.GetAmount(user.Data, item) + amount) <= itemMaxAmount)
+                                    if ((this.GetAmount(user, item) + amount) <= itemMaxAmount)
                                     {
                                         totalcost = item.BuyAmount * amount;
-                                        if (currency.HasAmount(user.Data, totalcost))
+                                        if (currency.HasAmount(user, totalcost))
                                         {
-                                            currency.SubtractAmount(user.Data, totalcost);
-                                            this.AddAmount(user.Data, item, amount);
+                                            currency.SubtractAmount(user, totalcost);
+                                            this.AddAmount(user, item, amount);
                                             command = this.ItemsBoughtCommand;
                                         }
                                         else
@@ -477,10 +477,10 @@ namespace MixItUp.Base.Model.Currency
                                 if (item.HasSellAmount)
                                 {
                                     totalcost = item.SellAmount * amount;
-                                    if (this.HasAmount(user.Data, item, amount))
+                                    if (this.HasAmount(user, item, amount))
                                     {
-                                        this.SubtractAmount(user.Data, item, amount);
-                                        currency.AddAmount(user.Data, totalcost);
+                                        this.SubtractAmount(user, item, amount);
+                                        currency.AddAmount(user, totalcost);
                                         command = this.ItemsSoldCommand;
                                     }
                                     else
@@ -565,7 +565,7 @@ namespace MixItUp.Base.Model.Currency
                 {
                     if (this.tradeReceiver == null && arguments.Count() >= 2)
                     {
-                        UserV2ViewModel targetUser = await ServiceManager.Get<UserService>().GetUserFullSearch(user.Platform, userID: null, arguments.First());
+                        UserV2ViewModel targetUser = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(user.Platform, arguments.First());
                         if (targetUser == null)
                         {
                             await ServiceManager.Get<ChatService>().SendMessage("The specified user does not exist", user.Platform);
@@ -596,7 +596,7 @@ namespace MixItUp.Base.Model.Currency
                             return;
                         }
 
-                        if (!this.HasAmount(user.Data, item, amount))
+                        if (!this.HasAmount(user, item, amount))
                         {
                             await ServiceManager.Get<ChatService>().SendMessage(string.Format("You do not have the required {0} {1} to trade", amount, item.Name), user.Platform);
                             return;
@@ -658,7 +658,7 @@ namespace MixItUp.Base.Model.Currency
                             return;
                         }
 
-                        if (!this.HasAmount(user.Data, item, amount))
+                        if (!this.HasAmount(user, item, amount))
                         {
                             await ServiceManager.Get<ChatService>().SendMessage(string.Format("You do not have the required {0} {1} to trade", amount, item.Name), user.Platform);
                             return;
@@ -673,24 +673,24 @@ namespace MixItUp.Base.Model.Currency
                     else if (this.tradeSender != null && this.tradeReceiver != null && this.tradeReceiver.Amount > 0 && this.tradeSender.User.Equals(user))
                     {
                         int senderItemMaxAmount = (this.tradeReceiver.Item.HasMaxAmount) ? this.tradeReceiver.Item.MaxAmount : this.DefaultMaxAmount;
-                        if ((this.GetAmount(this.tradeSender.User.Data, this.tradeReceiver.Item) + this.tradeReceiver.Amount) > senderItemMaxAmount)
+                        if ((this.GetAmount(this.tradeSender.User, this.tradeReceiver.Item) + this.tradeReceiver.Amount) > senderItemMaxAmount)
                         {
                             await ServiceManager.Get<ChatService>().SendMessage(string.Format("You can only have {0} {1} in total", senderItemMaxAmount, this.tradeReceiver.Item.Name), this.tradeReceiver.User.Platform);
                             return;
                         }
 
                         int receiverItemMaxAmount = (this.tradeSender.Item.HasMaxAmount) ? this.tradeSender.Item.MaxAmount : this.DefaultMaxAmount;
-                        if ((this.GetAmount(this.tradeReceiver.User.Data, this.tradeSender.Item) + this.tradeSender.Amount) > receiverItemMaxAmount)
+                        if ((this.GetAmount(this.tradeReceiver.User, this.tradeSender.Item) + this.tradeSender.Amount) > receiverItemMaxAmount)
                         {
                             await ServiceManager.Get<ChatService>().SendMessage(string.Format("You can only have {0} {1} in total", receiverItemMaxAmount, this.tradeSender.Item.Name), this.tradeSender.User.Platform);
                             return;
                         }
 
-                        this.SubtractAmount(this.tradeSender.User.Data, this.tradeSender.Item, this.tradeSender.Amount);
-                        this.AddAmount(this.tradeReceiver.User.Data, this.tradeSender.Item, this.tradeSender.Amount);
+                        this.SubtractAmount(this.tradeSender.User, this.tradeSender.Item, this.tradeSender.Amount);
+                        this.AddAmount(this.tradeReceiver.User, this.tradeSender.Item, this.tradeSender.Amount);
 
-                        this.SubtractAmount(this.tradeReceiver.User.Data, this.tradeReceiver.Item, this.tradeReceiver.Amount);
-                        this.AddAmount(this.tradeSender.User.Data, this.tradeReceiver.Item, this.tradeReceiver.Amount);
+                        this.SubtractAmount(this.tradeReceiver.User, this.tradeReceiver.Item, this.tradeReceiver.Amount);
+                        this.AddAmount(this.tradeSender.User, this.tradeReceiver.Item, this.tradeReceiver.Amount);
 
                         if (this.ItemsTradedCommand != null)
                         {

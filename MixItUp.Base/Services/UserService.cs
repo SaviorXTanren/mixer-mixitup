@@ -259,7 +259,74 @@ namespace MixItUp.Base.Services
 
         #region Active Users
 
-        #endregion Active Users
+        public UserV2ViewModel GetActiveUserByID(Guid id)
+        {
+            if (this.activeUsers.TryGetValue(id, out UserV2ViewModel user))
+            {
+                return user;
+            }
+            return null;
+        }
+
+        public UserV2ViewModel GetActiveUserByPlatformID(StreamingPlatformTypeEnum platform, string platformID, bool performPlatformSearch = false)
+        {
+            UserV2ViewModel user = null;
+
+            if (string.IsNullOrEmpty(platformID))
+            {
+                return user;
+            }
+
+            if (platform == StreamingPlatformTypeEnum.None)
+            {
+                return user;
+            }
+
+            if (this.platformUserIDLookups.ContainsKey(platform) && this.platformUserIDLookups[platform].TryGetValue(platformID, out Guid id))
+            {
+                user = this.GetActiveUserByID(id);
+                if (user != null)
+                {
+                    return user;
+                }
+            }
+
+            return null;
+        }
+
+        public UserV2ViewModel GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum platform, string platformUsername, bool performPlatformSearch = false)
+        {
+            UserV2ViewModel user = null;
+
+            if (string.IsNullOrEmpty(platformUsername))
+            {
+                return user;
+            }
+
+            if (platform == StreamingPlatformTypeEnum.None)
+            {
+                foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.SupportedPlatforms)
+                {
+                    user = this.GetActiveUserByPlatformUsername(p, platformUsername, performPlatformSearch);
+                    if (user != null)
+                    {
+                        return user;
+                    }
+                }
+                return null;
+            }
+
+            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id))
+            {
+                user = this.GetActiveUserByID(id);
+                if (user != null)
+                {
+                    return user;
+                }
+            }
+
+            return null;
+        }
 
         public async Task AddOrUpdateActiveUser(UserV2ViewModel user)
         {
@@ -317,5 +384,7 @@ namespace MixItUp.Base.Services
         public IEnumerable<UserV2ViewModel> GetActiveUsers() { return this.activeUsers.Values.ToList(); }
 
         public int GetActiveUserCount() { return this.activeUsers.Count; }
+
+        #endregion Active Users
     }
 }

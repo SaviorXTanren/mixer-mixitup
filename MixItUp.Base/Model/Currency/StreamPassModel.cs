@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
@@ -25,8 +24,11 @@ namespace MixItUp.Base.Model.Currency
         public string Name { get; set; }        
         [DataMember]
         public string SpecialIdentifier { get; set; }
+        [Obsolete]
         [DataMember]
         public OldUserRoleEnum Permission { get; set; }
+        [DataMember]
+        public UserRoleEnum UserPermission { get; set; }
         [DataMember]
         public int MaxLevel { get; set; }
         [DataMember]
@@ -71,7 +73,7 @@ namespace MixItUp.Base.Model.Currency
         {
             this.Name = copy.Name + " COPY";
             this.SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.Name, maxLength: 15);
-            this.Permission = copy.Permission;
+            this.UserPermission = copy.UserPermission;
             this.MaxLevel = copy.MaxLevel;
             this.PointsForLevelUp = copy.PointsForLevelUp;
             this.SubMultiplier = copy.SubMultiplier;
@@ -143,7 +145,7 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public int GetAmount(UserV2Model user)
+        public int GetAmount(UserV2ViewModel user)
         {
             if (user.StreamPassAmounts.ContainsKey(this.ID))
             {
@@ -152,14 +154,14 @@ namespace MixItUp.Base.Model.Currency
             return 0;
         }
 
-        public int GetLevel(UserV2Model user) { return (this.GetAmount(user) / this.PointsForLevelUp); }
+        public int GetLevel(UserV2ViewModel user) { return (this.GetAmount(user) / this.PointsForLevelUp); }
 
-        public bool HasAmount(UserV2Model user, int amount)
+        public bool HasAmount(UserV2ViewModel user, int amount)
         {
-            return (user.IsCurrencyRankExempt || this.GetAmount(user) >= amount);
+            return (user.IsSpecialtyExcluded || this.GetAmount(user) >= amount);
         }
 
-        public void SetAmount(UserV2Model user, int amount)
+        public void SetAmount(UserV2ViewModel user, int amount)
         {
             user.StreamPassAmounts[this.ID] = Math.Min(Math.Max(amount, 0), this.MaxPoints);
             if (ChannelSession.Settings != null)
@@ -168,9 +170,9 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public void AddAmount(UserV2Model user, int amount)
+        public void AddAmount(UserV2ViewModel user, int amount)
         {
-            if (!user.IsCurrencyRankExempt && amount > 0)
+            if (!user.IsSpecialtyExcluded && amount > 0)
             {
                 int currentLevel = this.GetLevel(user);
 
@@ -200,27 +202,22 @@ namespace MixItUp.Base.Model.Currency
 
                         if (command != null)
                         {
-                            UserV2ViewModel UserV2ViewModel = ServiceManager.Get<UserService>().GetActiveUserByID(user.ID);
-                            if (UserV2ViewModel == null)
-                            {
-                                UserV2ViewModel = new UserV2ViewModel(user);
-                            }
-                            AsyncRunner.RunAsyncBackground((cancellationToken) => ServiceManager.Get<CommandService>().Queue(command, new CommandParametersModel(UserV2ViewModel, specialIdentifiers: specialIdentifiers)), new CancellationToken());
+                            AsyncRunner.RunAsyncBackground((cancellationToken) => ServiceManager.Get<CommandService>().Queue(command, new CommandParametersModel(user, specialIdentifiers: specialIdentifiers)), new CancellationToken());
                         }
                     }
                 }
             }
         }
 
-        public void SubtractAmount(UserV2Model user, int amount)
+        public void SubtractAmount(UserV2ViewModel user, int amount)
         {
-            if (!user.IsCurrencyRankExempt)
+            if (!user.IsSpecialtyExcluded)
             {
                 this.SetAmount(user, this.GetAmount(user) - amount);
             }
         }
 
-        public void ResetAmount(UserV2Model user) { this.SetAmount(user, 0); }
+        public void ResetAmount(UserV2ViewModel user) { this.SetAmount(user, 0); }
 
         public void UpdateUserData()
         {
@@ -229,18 +226,18 @@ namespace MixItUp.Base.Model.Currency
             if (ServiceManager.Get<TwitchSessionService>().StreamIsLive && this.StartDate.Date <= date && date <= this.EndDate && this.ViewingRateMinutes > 0)
             {
                 DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
-                foreach (UserV2ViewModel user in ServiceManager.Get<UserService>().GetAllWorkableActiveUsers())
+                foreach (UserV2ViewModel user in ServiceManager.Get<UserService>().GetActiveUsers())
                 {
-                    if (!user.Data.IsCurrencyRankExempt && user.HasPermissionsTo(this.Permission) && (this.MinimumActiveRate == 0 || user.LastActivity > minActiveTime))
+                    if (!user.IsSpecialtyExcluded && user.MeetsRole(this.UserPermission) && (this.MinimumActiveRate == 0 || user.LastActivity > minActiveTime))
                     {
-                        if (user.Data.ViewingMinutes % this.ViewingRateMinutes == 0)
+                        if (user.OnlineViewingMinutes % this.ViewingRateMinutes == 0)
                         {
                             int amount = this.ViewingRateAmount;
-                            if (this.SubMultiplier > 1.0 && user.HasPermissionsTo(OldUserRoleEnum.Subscriber))
+                            if (this.SubMultiplier > 1.0 && user.MeetsRole(UserRoleEnum.Subscriber))
                             {
                                 amount = (int)Math.Ceiling(((double)amount) * this.SubMultiplier);
                             }
-                            this.AddAmount(user.Data, amount);
+                            this.AddAmount(user, amount);
                             ChannelSession.Settings.Users.ManualValueChanged(user.ID);
                         }
                     }
@@ -254,9 +251,9 @@ namespace MixItUp.Base.Model.Currency
 
             foreach (UserV2Model user in ChannelSession.Settings.Users.Values.ToList())
             {
-                if (this.GetAmount(user) > 0)
+                if (user.StreamPassAmounts[this.ID] > 0)
                 {
-                    this.SetAmount(user, 0);
+                    user.StreamPassAmounts[this.ID] = 0;
                     ChannelSession.Settings.Users.ManualValueChanged(user.ID);
                 }
             }

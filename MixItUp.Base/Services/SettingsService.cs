@@ -364,9 +364,15 @@ namespace MixItUp.Base.Services
                 }
 #pragma warning restore CS0612 // Type or member is obsolete
 
+#pragma warning disable CS0612 // Type or member is obsolete
+                foreach (var kvp in settings.StreamPass)
+                {
+                    kvp.Value.UserPermission = UserRoles.ConvertFromOldRole(kvp.Value.Permission);
+                }
+#pragma warning restore CS0612 // Type or member is obsolete
 
 #pragma warning disable CS0612 // Type or member is obsolete
-                    List<UserDataModel> oldUserData = new List<UserDataModel>();
+                List<UserDataModel> oldUserData = new List<UserDataModel>();
 
                 await ServiceManager.Get<IDatabaseService>().Read(settings.DatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
                 {

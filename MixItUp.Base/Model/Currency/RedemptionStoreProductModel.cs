@@ -166,7 +166,7 @@ namespace MixItUp.Base.Model.Currency
 
         public static async Task Redeem(UserV2ViewModel user, IEnumerable<string> arguments)
         {
-            if (!user.HasPermissionsTo(OldUserRoleEnum.Mod))
+            if (!user.MeetsRole(UserRoleEnum.Moderator))
             {
                 await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.YouDoNotHavePermissions, user.Platform);
                 return;
@@ -187,7 +187,7 @@ namespace MixItUp.Base.Model.Currency
             else
             {
                 name = UserService.SanitizeUsername(name);
-                UserV2ViewModel purchaseUser = ServiceManager.Get<UserService>().GetActiveUserByUsername(name, user.Platform);
+                UserV2ViewModel purchaseUser = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(user.Platform, name);
                 if (purchaseUser != null)
                 {
                     IEnumerable<RedemptionStorePurchaseModel> purchases = ChannelSession.Settings.RedemptionStorePurchases.ToList().Where(p => p.UserID == user.ID);
