@@ -2,6 +2,7 @@
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
@@ -398,6 +399,77 @@ namespace MixItUp.Base.Services
                         {
                             ConsumablesActionModel cAction = (ConsumablesActionModel)action;
                             cAction.UserRoleToApplyTo = UserRoles.ConvertFromOldRole(cAction.UsersToApplyTo);
+                        }
+                    }
+
+                    if (command is BetGameCommandModel)
+                    {
+                        BetGameCommandModel gCommand = (BetGameCommandModel)command;
+                        gCommand.StarterUserRole = UserRoles.ConvertFromOldRole(gCommand.StarterRole);
+
+                        foreach (GameOutcomeModel outcome in gCommand.BetOptions)
+                        {
+                            foreach (var kvp in outcome.RoleProbabilityPayouts)
+                            {
+                                UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
+                                outcome.UserRoleProbabilityPayouts[role] = kvp.Value;
+                            }
+                        }
+                    }
+                    else if (command is BidGameCommandModel)
+                    {
+                        BidGameCommandModel gCommand = (BidGameCommandModel)command;
+                        gCommand.StarterUserRole = UserRoles.ConvertFromOldRole(gCommand.StarterRole);
+                    }
+                    else if (command is DuelGameCommandModel)
+                    {
+                        DuelGameCommandModel gCommand = (DuelGameCommandModel)command;
+                        foreach (var kvp in gCommand.SuccessfulOutcome.RoleProbabilityPayouts)
+                        {
+                            UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
+                            gCommand.SuccessfulOutcome.UserRoleProbabilityPayouts[role] = kvp.Value;
+                        }
+                    }
+                    else if (command is HeistGameCommandModel)
+                    {
+                        HeistGameCommandModel gCommand = (HeistGameCommandModel)command;
+                        foreach (var kvp in gCommand.UserSuccessOutcome.RoleProbabilityPayouts)
+                        {
+                            UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
+                            gCommand.UserSuccessOutcome.UserRoleProbabilityPayouts[role] = kvp.Value;
+                        }
+                    }
+                    else if (command is RouletteGameCommandModel)
+                    {
+                        RouletteGameCommandModel gCommand = (RouletteGameCommandModel)command;
+                        foreach (var kvp in gCommand.UserSuccessOutcome.RoleProbabilityPayouts)
+                        {
+                            UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
+                            gCommand.UserSuccessOutcome.UserRoleProbabilityPayouts[role] = kvp.Value;
+                        }
+                    }
+                    else if (command is SpinGameCommandModel)
+                    {
+                        SpinGameCommandModel gCommand = (SpinGameCommandModel)command;
+                        foreach (GameOutcomeModel outcome in gCommand.Outcomes)
+                        {
+                            foreach (var kvp in outcome.RoleProbabilityPayouts)
+                            {
+                                UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
+                                outcome.UserRoleProbabilityPayouts[role] = kvp.Value;
+                            }
+                        }
+                    }
+                    else if (command is SlotMachineGameCommandModel)
+                    {
+                        SlotMachineGameCommandModel gCommand = (SlotMachineGameCommandModel)command;
+                        foreach (SlotMachineGameOutcomeModel outcome in gCommand.Outcomes)
+                        {
+                            foreach (var kvp in outcome.RoleProbabilityPayouts)
+                            {
+                                UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
+                                outcome.UserRoleProbabilityPayouts[role] = kvp.Value;
+                            }
                         }
                     }
                 }

@@ -17,8 +17,11 @@ namespace MixItUp.Base.Model.Commands.Games
         public const string GameBetOptionsSpecialIdentifier = "gamebetoptions";
         public const string GameBetWinningOptionSpecialIdentifier = "gamebetwinningoption";
 
+        [Obsolete]
         [DataMember]
         public OldUserRoleEnum StarterRole { get; set; }
+        [DataMember]
+        public UserRoleEnum StarterUserRole { get; set; }
         [DataMember]
         public int MinimumParticipants { get; set; }
         [DataMember]
@@ -51,11 +54,11 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private Dictionary<UserV2ViewModel, int> runUserSelections = new Dictionary<UserV2ViewModel, int>();
 
-        public BetGameCommandModel(string name, HashSet<string> triggers, OldUserRoleEnum starterRole, int minimumParticipants, int timeLimit, IEnumerable<GameOutcomeModel> betOptions,
+        public BetGameCommandModel(string name, HashSet<string> triggers, UserRoleEnum starterRole, int minimumParticipants, int timeLimit, IEnumerable<GameOutcomeModel> betOptions,
             CustomCommandModel startedCommand, CustomCommandModel userJoinCommand, CustomCommandModel notEnoughPlayersCommand, CustomCommandModel betsClosedCommand, CustomCommandModel gameCompleteCommand)
             : base(name, triggers, GameCommandTypeEnum.Bet)
         {
-            this.StarterRole = starterRole;
+            this.StarterUserRole = starterRole;
             this.MinimumParticipants = minimumParticipants;
             this.TimeLimit = timeLimit;
             this.BetOptions = new List<GameOutcomeModel>(betOptions);
@@ -88,7 +91,7 @@ namespace MixItUp.Base.Model.Commands.Games
             {
                 if (this.betsClosed)
                 {
-                    if (parameters.User.HasPermissionsTo(this.StarterRole))
+                    if (parameters.User.MeetsRole(this.StarterUserRole))
                     {
                         // At least to arguments
                         //      1st must be "answer"
@@ -124,7 +127,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     }
                     else
                     {
-                        return new Result(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole));
+                        return new Result(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterUserRole));
                     }
                 }
                 else if (parameters.Arguments.Count == 0 || !int.TryParse(parameters.Arguments[0], out int choice) || choice <= 0 || choice > this.BetOptions.Count)
@@ -134,7 +137,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else
             {
-                if (parameters.User.HasPermissionsTo(this.StarterRole))
+                if (parameters.User.MeetsRole(this.StarterUserRole))
                 {
                     this.gameActive = true;
                     this.runParameters = parameters;
@@ -173,7 +176,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     await this.RunSubCommand(this.StartedCommand, parameters);
                     return new Result(success: false);
                 }
-                return new Result(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole));
+                return new Result(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterUserRole));
             }
             return new Result();
         }

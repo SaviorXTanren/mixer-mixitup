@@ -110,22 +110,6 @@ namespace MixItUp.Base.Model.Commands.Games
             this.UserFailureCommand = userFailureCommand;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal TriviaGameCommandModel(Base.Commands.TriviaGameCommand command)
-            : base(command, GameCommandTypeEnum.Trivia)
-        {
-            this.TimeLimit = command.TimeLimit;
-            this.UseRandomOnlineQuestions = command.UseRandomOnlineQuestions;
-            this.WinAmount = command.WinAmount;
-            this.CustomQuestions = new List<TriviaGameQuestionModel>(command.CustomQuestions.Select(q => new TriviaGameQuestionModel(q)));
-            this.StartedCommand = new CustomCommandModel(command.StartedCommand) { IsEmbedded = true };
-            this.UserJoinCommand = new CustomCommandModel(command.UserJoinCommand) { IsEmbedded = true };
-            this.CorrectAnswerCommand = new CustomCommandModel(command.CorrectAnswerCommand) { IsEmbedded = true };
-            this.UserSuccessCommand = new CustomCommandModel(command.UserSuccessOutcome.Command) { IsEmbedded = true };
-            this.UserFailureCommand = new CustomCommandModel(MixItUp.Base.Resources.GameSubCommand) { IsEmbedded = true };
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private TriviaGameCommandModel() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()

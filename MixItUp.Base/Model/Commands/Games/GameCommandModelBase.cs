@@ -47,8 +47,11 @@ namespace MixItUp.Base.Model.Commands.Games
     [DataContract]
     public class RoleProbabilityPayoutModel
     {
+        [Obsolete]
         [DataMember]
         public OldUserRoleEnum Role { get; set; }
+        [DataMember]
+        public UserRoleEnum UserRole { get; set; }
 
         [DataMember]
         public int Probability { get; set; }
@@ -56,11 +59,11 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public double Payout { get; set; }
 
-        public RoleProbabilityPayoutModel(OldUserRoleEnum role, int probability) : this(role, probability, 0) { }
+        public RoleProbabilityPayoutModel(UserRoleEnum role, int probability) : this(role, probability, 0) { }
 
-        public RoleProbabilityPayoutModel(OldUserRoleEnum role, int probability, double payout)
+        public RoleProbabilityPayoutModel(UserRoleEnum role, int probability, double payout)
         {
-            this.Role = role;
+            this.UserRole = role;
             this.Probability = probability;
             this.Payout = payout;
         }
@@ -74,16 +77,19 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public string Name { get; set; }
 
+        [Obsolete]
         [DataMember]
         public Dictionary<OldUserRoleEnum, RoleProbabilityPayoutModel> RoleProbabilityPayouts { get; set; } = new Dictionary<OldUserRoleEnum, RoleProbabilityPayoutModel>();
+        [DataMember]
+        public Dictionary<UserRoleEnum, RoleProbabilityPayoutModel> UserRoleProbabilityPayouts { get; set; } = new Dictionary<UserRoleEnum, RoleProbabilityPayoutModel>();
 
         [DataMember]
         public CustomCommandModel Command { get; set; }
 
-        public GameOutcomeModel(string name, Dictionary<OldUserRoleEnum, RoleProbabilityPayoutModel> roleProbabilityPayouts, CustomCommandModel command)
+        public GameOutcomeModel(string name, Dictionary<UserRoleEnum, RoleProbabilityPayoutModel> roleProbabilityPayouts, CustomCommandModel command)
         {
             this.Name = name;
-            this.RoleProbabilityPayouts = roleProbabilityPayouts;
+            this.UserRoleProbabilityPayouts = roleProbabilityPayouts;
             this.Command = command;
         }
 
@@ -91,7 +97,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         public RoleProbabilityPayoutModel GetRoleProbabilityPayout(UserV2ViewModel user)
         {
-            var roleProbabilities = this.RoleProbabilityPayouts.Where(kvp => user.HasPermissionsTo(kvp.Key)).OrderByDescending(kvp => kvp.Key);
+            var roleProbabilities = this.UserRoleProbabilityPayouts.Where(kvp => user.MeetsRole(kvp.Key)).OrderByDescending(kvp => kvp.Key);
             if (roleProbabilities.Count() > 0)
             {
                 return roleProbabilities.FirstOrDefault().Value;
@@ -132,16 +138,6 @@ namespace MixItUp.Base.Model.Commands.Games
         {
             this.GameType = gameType;
         }
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal GameCommandModelBase(Base.Commands.GameCommandBase command, GameCommandTypeEnum gameType)
-            : this(command.Name, command.Commands, gameType)
-        {
-            this.ID = command.ID;
-            this.IsEnabled = command.IsEnabled;
-            this.Requirements = new RequirementsSetModel(command.Requirements);
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
 
         protected GameCommandModelBase() : base() { }
 
@@ -215,7 +211,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 users.Remove(parameters.User);
                 foreach (UserV2ViewModel user in users)
                 {
-                    if (!user.Data.IsCurrencyRankExempt && currencyRequirement.Currency.HasAmount(user.Data, betAmount))
+                    if (!user.IsSpecialtyExcluded && currencyRequirement.Currency.HasAmount(user, betAmount))
                     {
                         return user;
                     }
@@ -261,7 +257,7 @@ namespace MixItUp.Base.Model.Commands.Games
             if (currencyRequirement != null && betAmount > 0)
             {
                 string currencyName = currencyRequirement.Currency?.Name;
-                if (currencyRequirement.Currency.HasAmount(parameters.TargetUser.Data, betAmount))
+                if (currencyRequirement.Currency.HasAmount(parameters.TargetUser, betAmount))
                 {
                     return true;
                 }
@@ -275,7 +271,7 @@ namespace MixItUp.Base.Model.Commands.Games
         protected bool ValidatePrimaryCurrencyAmount(CommandParametersModel parameters, int amount)
         {
             CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
-            return (currencyRequirement != null) ? currencyRequirement.Currency.HasAmount(parameters.User.Data, amount) : false;
+            return (currencyRequirement != null) ? currencyRequirement.Currency.HasAmount(parameters.User, amount) : false;
         }
 
         protected GameOutcomeModel SelectRandomOutcome(UserV2ViewModel user, IEnumerable<GameOutcomeModel> outcomes)

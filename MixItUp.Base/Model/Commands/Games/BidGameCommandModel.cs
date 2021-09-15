@@ -3,8 +3,8 @@ using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,8 +14,11 @@ namespace MixItUp.Base.Model.Commands.Games
     [DataContract]
     public class BidGameCommandModel : GameCommandModelBase
     {
+        [Obsolete]
         [DataMember]
         public OldUserRoleEnum StarterRole { get; set; }
+        [DataMember]
+        public UserRoleEnum StarterUserRole { get; set; }
         [DataMember]
         public int TimeLimit { get; set; }
 
@@ -39,11 +42,11 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private int lastBidAmount;
 
-        public BidGameCommandModel(string name, HashSet<string> triggers, OldUserRoleEnum starterRole, int timeLimit, CustomCommandModel startedCommand, CustomCommandModel newTopBidderCommand,
+        public BidGameCommandModel(string name, HashSet<string> triggers, UserRoleEnum starterRole, int timeLimit, CustomCommandModel startedCommand, CustomCommandModel newTopBidderCommand,
             CustomCommandModel notEnoughPlayersCommand, CustomCommandModel gameCompleteCommand)
             : base(name, triggers, GameCommandTypeEnum.Bid)
         {
-            this.StarterRole = starterRole;
+            this.StarterUserRole = starterRole;
             this.TimeLimit = timeLimit;
             this.StartedCommand = startedCommand;
             this.NewTopBidderCommand = newTopBidderCommand;
@@ -67,7 +70,7 @@ namespace MixItUp.Base.Model.Commands.Games
         {
             if (!this.gameActive)
             {
-                if (parameters.User.HasPermissionsTo(this.StarterRole))
+                if (parameters.User.MeetsRole(this.StarterUserRole))
                 {
                     this.gameActive = true;
                     this.lastBidAmount = this.GetPrimaryCurrencyRequirement()?.GetAmount(parameters) ?? 0;
@@ -98,7 +101,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     await this.RunSubCommand(this.StartedCommand, this.runParameters);
                     return new Result(success: false);
                 }
-                return new Result(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole));
+                return new Result(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterUserRole));
             }
             return new Result();
         }

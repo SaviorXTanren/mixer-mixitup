@@ -15,7 +15,7 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public bool AnyOrder { get; set; }
 
-        public SlotMachineGameOutcomeModel(string name, Dictionary<OldUserRoleEnum, RoleProbabilityPayoutModel> roleProbabilityPayouts, CustomCommandModel command, IEnumerable<string> symbols, bool anyOrder)
+        public SlotMachineGameOutcomeModel(string name, Dictionary<UserRoleEnum, RoleProbabilityPayoutModel> roleProbabilityPayouts, CustomCommandModel command, IEnumerable<string> symbols, bool anyOrder)
             : base(name, roleProbabilityPayouts, command)
         {
             this.Symbols = new List<string>(symbols);
@@ -74,16 +74,6 @@ namespace MixItUp.Base.Model.Commands.Games
             this.FailureCommand = failureCommand;
             this.Outcomes = new List<SlotMachineGameOutcomeModel>(outcomes);
         }
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal SlotMachineGameCommandModel(Base.Commands.SlotMachineGameCommand command)
-            : base(command, GameCommandTypeEnum.SlotMachine)
-        {
-            this.Symbols = new List<string>(command.AllSymbols);
-            this.FailureCommand = new CustomCommandModel(command.FailureOutcomeCommand) { IsEmbedded = true };
-            this.Outcomes = new List<SlotMachineGameOutcomeModel>(command.Outcomes.Select(o => new SlotMachineGameOutcomeModel((Base.Commands.SlotsGameOutcome)o)));
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
 
         private SlotMachineGameCommandModel() { }
 

@@ -328,6 +328,8 @@ namespace MixItUp.Base.Services
             return null;
         }
 
+        public bool IsUserActive(Guid userID) { return this.GetActiveUserByID(userID) != null; }
+
         public async Task AddOrUpdateActiveUser(UserV2ViewModel user)
         {
             if (user == null || user.ID == Guid.Empty)
