@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.Clients.PubSub.Messages;
+using Twitch.Base.Models.NewAPI.Chat;
 using Twitch.Base.Models.NewAPI.Subscriptions;
 using Twitch.Base.Models.NewAPI.Users;
 
@@ -20,6 +21,9 @@ namespace MixItUp.Base.Model.User.Platform
         public Dictionary<string, int> Badges { get; set; } = new Dictionary<string, int>();
         [DataMember]
         public Dictionary<string, int> BadgeInfo { get; set; } = new Dictionary<string, int>();
+
+        [DataMember]
+        public ChatBadgeModel SubscriberBadge { get; set; }
 
         [DataMember]
         public long TotalBitsCheered { get; set; }
@@ -64,6 +68,10 @@ namespace MixItUp.Base.Model.User.Platform
         }
 
         private TwitchUserPlatformV2Model() { }
+
+        public bool HasTwitchSubscriberBadge { get { return this.HasTwitchBadge("subscriber"); } }
+
+        public bool HasTwitchSubscriberFounderBadge { get { return this.HasTwitchBadge("founder"); } }
 
         public override async Task Refresh()
         {
@@ -120,7 +128,35 @@ namespace MixItUp.Base.Model.User.Platform
             if (user.IsGlobalMod()) { this.Roles.Add(UserRoleEnum.TwitchGlobalMod); } else { this.Roles.Remove(UserRoleEnum.TwitchGlobalMod); }
             if (user.IsStaff()) { this.Roles.Add(UserRoleEnum.TwitchStaff); } else { this.Roles.Remove(UserRoleEnum.TwitchStaff); }
 
+            if (this.HasTwitchSubscriberFounderBadge) { this.SubscriberBadge = this.GetTwitchBadgeURL("founder"); }
+            else if (this.HasTwitchSubscriberBadge) { this.SubscriberBadge = this.GetTwitchBadgeURL("subscriber"); }
+            else { this.SubscriberBadge = null; }
+
             if (ServiceManager.Get<TwitchSessionService>().ChannelEditors.Contains(this.ID)) { this.Roles.Add(UserRoleEnum.TwitchChannelEditor); } else { this.Roles.Remove(UserRoleEnum.TwitchChannelEditor); }
+        }
+
+        private int GetTwitchBadgeVersion(string name)
+        {
+            if (this.Badges != null && this.Badges.TryGetValue(name, out int version))
+            {
+                return version;
+            }
+            return -1;
+        }
+
+        private bool HasTwitchBadge(string name) { return this.GetTwitchBadgeVersion(name) >= 0; }
+
+        private ChatBadgeModel GetTwitchBadgeURL(string name)
+        {
+            if (ServiceManager.Get<TwitchChatService>().ChatBadges.ContainsKey(name))
+            {
+                int versionID = this.GetTwitchBadgeVersion(name);
+                if (ServiceManager.Get<TwitchChatService>().ChatBadges[name].versions.ContainsKey(versionID.ToString()))
+                {
+                    return ServiceManager.Get<TwitchChatService>().ChatBadges[name].versions[versionID.ToString()];
+                }
+            }
+            return null;
         }
 
         private UserModel GetTwitchNewAPIUserModel()

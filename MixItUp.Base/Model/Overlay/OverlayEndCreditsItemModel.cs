@@ -409,7 +409,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
         {
-            if (message.User != null && !message.User.IgnoreForQueries)
+            if (message.User != null && !message.User.IsSpecialtyExcluded)
             {
                 this.AddUserForRole(message.User);
             }
@@ -486,7 +486,7 @@ namespace MixItUp.Base.Model.Overlay
             this.donations[donation.User.ID] += donation.Amount;
         }
 
-        private void GlobalEvents_OnBitsOccurred(object sender, User.Twitch.TwitchUserBitsCheeredModel bits)
+        private void GlobalEvents_OnBitsOccurred(object sender, TwitchUserBitsCheeredModel bits)
         {
             if (!this.bits.ContainsKey(bits.User.ID))
             {
@@ -501,11 +501,11 @@ namespace MixItUp.Base.Model.Overlay
             if (this.ShouldIncludeUser(user))
             {
                 this.viewers.Add(user.ID);
-                if (user.UserRoles.Contains(OldUserRoleEnum.Subscriber) || user.IsEquivalentToSubscriber())
+                if (user.MeetsRole(UserRoleEnum.Subscriber))
                 {
                     this.subs.Add(user.ID);
                 }
-                if (user.UserRoles.Contains(OldUserRoleEnum.Mod) || user.UserRoles.Contains(OldUserRoleEnum.ChannelEditor))
+                if (user.MeetsRole(UserRoleEnum.Moderator) || user.MeetsRole(UserRoleEnum.TwitchChannelEditor))
                 {
                     this.mods.Add(user.ID);
                 }
@@ -524,8 +524,7 @@ namespace MixItUp.Base.Model.Overlay
                 return false;
             }
 
-            // TODO
-            if (ServiceManager.Get<TwitchSessionService>().BotConnection != null && string.Equals(user.TwitchID, ServiceManager.Get<TwitchSessionService>().BotNewAPI?.id))
+            if (user.IsSpecialtyExcluded)
             {
                 return false;
             }
@@ -540,7 +539,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 try
                 {
-                    UserV2ViewModel user = await this.GetUser(userID);
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(userID);
                     if (user != null)
                     {
                         results[user] = string.Empty;
@@ -561,7 +560,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 try
                 {
-                    UserV2ViewModel user = await this.GetUser(kvp.Key);
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(kvp.Key);
                     if (user != null)
                     {
                         results[user] = kvp.Value.ToString();
@@ -582,7 +581,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 try
                 {
-                    UserV2ViewModel user = await this.GetUser(kvp.Key);
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(kvp.Key);
                     if (user != null)
                     {
                         results[user] = kvp.Value.ToCurrencyString();
@@ -594,16 +593,6 @@ namespace MixItUp.Base.Model.Overlay
                 }
             }
             return results;
-        }
-
-        private async Task<UserV2ViewModel> GetUser(Guid userID)
-        {
-            UserV2Model data = await ServiceManager.Get<UserService>().GetUserDataByID(userID);
-            if (data != null)
-            {
-                return new UserV2ViewModel(data);
-            }
-            return null;
         }
 
         private async Task PerformSectionTemplateReplacement(StringBuilder htmlBuilder, OverlayEndCreditsSectionTypeEnum itemType, Dictionary<UserV2ViewModel, string> replacers, CommandParametersModel parameters)

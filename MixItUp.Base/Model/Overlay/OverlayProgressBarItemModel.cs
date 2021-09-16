@@ -71,10 +71,6 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int Height { get; set; }
 
-        [Obsolete]
-        [DataMember]
-        public CustomCommand GoalReachedCommand { get; set; }
-
         [DataMember]
         public Guid ProgressGoalReachedCommandID { get; set; }
 

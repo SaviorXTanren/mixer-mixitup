@@ -80,10 +80,6 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public Guid CurrencyID { get; set; }
 
-        [Obsolete]
-        [DataMember]
-        public CustomCommand NewLeaderCommand { get; set; }
-
         [DataMember]
         public Guid LeaderChangedCommandID { get; set; }
 
@@ -215,7 +211,7 @@ namespace MixItUp.Base.Model.Overlay
                     for (int i = 0; i < userDataList.Count() && items.Count < this.TotalToShow; i++)
                     {
                         UserV2Model userData = userDataList.ElementAt(i);
-                        if (!userData.IsCurrencyRankExempt)
+                        if (!userData.IsSpecialtyExcluded)
                         {
                             items.Add(new OverlayLeaderboardItem(new UserV2ViewModel(userData), currency.GetAmount(userData).ToString()));
                         }
@@ -289,10 +285,10 @@ namespace MixItUp.Base.Model.Overlay
             for (int i = 0; i < orderedUsers.Count() && items.Count() < this.TotalToShow; i++)
             {
                 var kvp = orderedUsers.ElementAt(i);
-                UserV2Model userData = await ServiceManager.Get<UserService>().GetUserDataByID(kvp.Key);
-                if (userData != null)
+                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(kvp.Key);
+                if (user != null)
                 {
-                    items.Add(new OverlayLeaderboardItem(new UserV2ViewModel(userData), kvp.Value.GetAge()));
+                    items.Add(new OverlayLeaderboardItem(user, kvp.Value.GetAge()));
                 }
             }
 
@@ -318,10 +314,10 @@ namespace MixItUp.Base.Model.Overlay
                 for (int i = 0; i < orderedUsers.Count() && items.Count() < this.TotalToShow; i++)
                 {
                     var kvp = orderedUsers.ElementAt(i);
-                    UserV2Model userData = await ServiceManager.Get<UserService>().GetUserDataByID(kvp.Key);
-                    if (userData != null)
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(kvp.Key);
+                    if (user != null)
                     {
-                        items.Add(new OverlayLeaderboardItem(new UserV2ViewModel(userData), kvp.Value.AmountText));
+                        items.Add(new OverlayLeaderboardItem(user, kvp.Value.AmountText));
                     }
                 }
 
@@ -389,8 +385,7 @@ namespace MixItUp.Base.Model.Overlay
                 return false;
             }
 
-            // TODO
-            if (ServiceManager.Get<TwitchSessionService>().BotConnection != null && string.Equals(user.TwitchID, ServiceManager.Get<TwitchSessionService>().BotNewAPI?.id))
+            if (user.IsSpecialtyExcluded)
             {
                 return false;
             }

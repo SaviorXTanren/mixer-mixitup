@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Overlay

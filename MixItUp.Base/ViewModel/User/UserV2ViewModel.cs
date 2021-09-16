@@ -197,6 +197,21 @@ namespace MixItUp.Base.ViewModel.User
         public int SubscribeMonths { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow() : 0; } }
 
         public int SubscribeTier { get { return this.PlatformModel.SubscriberTier; } }
+        public string SubscriberBadgeLink
+        {
+            get
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                {
+                    TwitchUserPlatformV2Model twitchPlatformModel = (TwitchUserPlatformV2Model)this.PlatformModel;
+                    if (twitchPlatformModel.SubscriberBadge != null)
+                    {
+                        return twitchPlatformModel.SubscriberBadge.image_url_1x;
+                    }
+                }
+                return null;
+            }
+        }
 
         public Dictionary<Guid, int> CurrencyAmounts { get { return this.Model.CurrencyAmounts; } }
 

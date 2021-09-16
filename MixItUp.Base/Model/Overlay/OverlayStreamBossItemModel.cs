@@ -1,8 +1,7 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Model.User.Twitch;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -99,10 +98,6 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public bool DamageTaken { get; set; }
 
-        [Obsolete]
-        [DataMember]
-        public CustomCommand NewStreamBossCommand { get; set; }
-
         [DataMember]
         public Guid StreamBossChangedCommandID { get; set; }
 
@@ -172,12 +167,8 @@ namespace MixItUp.Base.Model.Overlay
 
             if (this.CurrentBossID != Guid.Empty)
             {
-                UserV2Model userData = await ServiceManager.Get<UserService>().GetUserDataByID(this.CurrentBossID);
-                if (userData != null)
-                {
-                    this.CurrentBoss = new UserV2ViewModel(userData);
-                }
-                else
+                this.CurrentBoss = await ServiceManager.Get<UserService>().GetUserByID(this.CurrentBossID);
+                if (this.CurrentBoss == null)
                 {
                     this.CurrentBossID = Guid.Empty;
                 }

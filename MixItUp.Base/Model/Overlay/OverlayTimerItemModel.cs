@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
@@ -25,10 +24,6 @@ namespace MixItUp.Base.Model.Overlay
         public string TextFont { get; set; }
         [DataMember]
         public int TextSize { get; set; }
-
-        [Obsolete]
-        [DataMember]
-        public CustomCommand TimerCompleteCommand { get; set; }
 
         [DataMember]
         public Guid TimerFinishedCommandID { get; set; }
