@@ -176,9 +176,9 @@ namespace MixItUp.Base.Model.Requirements
 
         public Result ValidateAmount(UserV2ViewModel user, int amount)
         {
-            if (!user.Data.IsCurrencyRankExempt && !this.Currency.HasAmount(user.Data, amount))
+            if (!user.IsSpecialtyExcluded && !this.Currency.HasAmount(user, amount))
             {
-                int currentAmount = this.Currency.GetAmount(user.Data);
+                int currentAmount = this.Currency.GetAmount(user);
                 return new Result(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amount, this.Currency.Name) + " " + string.Format(MixItUp.Base.Resources.RequirementCurrentAmount, currentAmount));
             }
             return new Result();
@@ -187,15 +187,15 @@ namespace MixItUp.Base.Model.Requirements
         public void AddSubtractAmount(UserV2ViewModel user, int amount)
         {
             CurrencyModel currency = this.Currency;
-            if (currency != null && !user.Data.IsCurrencyRankExempt)
+            if (currency != null && !user.IsSpecialtyExcluded)
             {
                 if (amount > 0)
                 {
-                    currency.AddAmount(user.Data, amount);
+                    currency.AddAmount(user, amount);
                 }
                 else if (amount < 0)
                 {
-                    currency.SubtractAmount(user.Data, -amount);
+                    currency.SubtractAmount(user, -amount);
                 }
             }
         }

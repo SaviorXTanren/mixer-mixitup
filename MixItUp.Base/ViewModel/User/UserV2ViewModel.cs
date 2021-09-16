@@ -400,6 +400,8 @@ namespace MixItUp.Base.ViewModel.User
             return this.PrimaryRole >= role;
         }
 
+        public bool ExceedRole(UserRoleEnum role) { return this.PrimaryRole > role; }
+
         public async Task AddModerationStrike(string moderationReason = null)
         {
             Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();

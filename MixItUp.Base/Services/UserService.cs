@@ -268,7 +268,7 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        public UserV2ViewModel GetActiveUserByPlatformID(StreamingPlatformTypeEnum platform, string platformID, bool performPlatformSearch = false)
+        public UserV2ViewModel GetActiveUserByPlatformID(StreamingPlatformTypeEnum platform, string platformID)
         {
             UserV2ViewModel user = null;
 
@@ -294,7 +294,7 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        public UserV2ViewModel GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum platform, string platformUsername, bool performPlatformSearch = false)
+        public UserV2ViewModel GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum platform, string platformUsername)
         {
             UserV2ViewModel user = null;
 
@@ -307,7 +307,7 @@ namespace MixItUp.Base.Services
             {
                 foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.SupportedPlatforms)
                 {
-                    user = this.GetActiveUserByPlatformUsername(p, platformUsername, performPlatformSearch);
+                    user = this.GetActiveUserByPlatformUsername(p, platformUsername);
                     if (user != null)
                     {
                         return user;

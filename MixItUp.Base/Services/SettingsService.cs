@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Commands.Games;
+using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
@@ -392,15 +393,6 @@ namespace MixItUp.Base.Services
 #pragma warning disable CS0612 // Type or member is obsolete
                 foreach (CommandModelBase command in settings.Commands.Values)
                 {
-                    foreach (ActionModelBase action in command.Actions)
-                    {
-                        if (action is ConsumablesActionModel)
-                        {
-                            ConsumablesActionModel cAction = (ConsumablesActionModel)action;
-                            cAction.UserRoleToApplyTo = UserRoles.ConvertFromOldRole(cAction.UsersToApplyTo);
-                        }
-                    }
-
                     if (command is BetGameCommandModel)
                     {
                         BetGameCommandModel gCommand = (BetGameCommandModel)command;
@@ -469,6 +461,28 @@ namespace MixItUp.Base.Services
                                 UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
                                 outcome.UserRoleProbabilityPayouts[role] = kvp.Value;
                             }
+                        }
+                    }
+
+                    foreach (RequirementModelBase requirement in command.Requirements.Requirements)
+                    {
+                        if (requirement is RoleRequirementModel)
+                        {
+                            RoleRequirementModel rRequirement = (RoleRequirementModel)requirement;
+                            rRequirement.UserRole = UserRoles.ConvertFromOldRole(rRequirement.Role);
+                            foreach (OldUserRoleEnum oldRole in rRequirement.UserRoleList)
+                            {
+                                rRequirement.UserRoleList.Add(UserRoles.ConvertFromOldRole(oldRole));
+                            }
+                        }
+                    }
+
+                    foreach (ActionModelBase action in command.Actions)
+                    {
+                        if (action is ConsumablesActionModel)
+                        {
+                            ConsumablesActionModel cAction = (ConsumablesActionModel)action;
+                            cAction.UserRoleToApplyTo = UserRoles.ConvertFromOldRole(cAction.UsersToApplyTo);
                         }
                     }
                 }

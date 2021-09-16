@@ -85,27 +85,27 @@ namespace MixItUp.Base.Model.Requirements
                 return Task.FromResult(new Result(MixItUp.Base.Resources.RankDoesNotExist));
             }
 
-            if (!parameters.User.Data.IsCurrencyRankExempt)
+            if (!parameters.User.IsSpecialtyExcluded)
             {
-                RankModel currentRank = rankSystem.GetRank(parameters.User.Data);
+                RankModel currentRank = rankSystem.GetRank(parameters.User);
                 if (this.MatchType == RankRequirementMatchTypeEnum.GreaterThanOrEqualTo)
                 {
-                    if (!rankSystem.HasAmount(parameters.User.Data, rank.Amount))
+                    if (!rankSystem.HasAmount(parameters.User, rank.Amount))
                     {
                         return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.RankRequirementNotGreaterThanOrEqual, rank.Name, rank.Amount, rankSystem.Name) + " " + string.Format(MixItUp.Base.Resources.RequirementCurrentAmount, currentRank)));
                     }
                 }
                 else if (this.MatchType == RankRequirementMatchTypeEnum.EqualTo)
                 {
-                    if (rankSystem.GetRank(parameters.User.Data) != rank)
+                    if (rankSystem.GetRank(parameters.User) != rank)
                     {
                         return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.RankRequirementNotGreaterThanOrEqual, rank.Name, rank.Amount, rankSystem.Name) + " " + string.Format(MixItUp.Base.Resources.RequirementCurrentAmount, currentRank)));
                     }
                 }
                 else if (this.MatchType == RankRequirementMatchTypeEnum.LessThanOrEqualTo)
                 {
-                    RankModel nextRank = rankSystem.GetNextRank(parameters.User.Data);
-                    if (nextRank != CurrencyModel.NoRank && rankSystem.HasAmount(parameters.User.Data, nextRank.Amount))
+                    RankModel nextRank = rankSystem.GetNextRank(parameters.User);
+                    if (nextRank != CurrencyModel.NoRank && rankSystem.HasAmount(parameters.User, nextRank.Amount))
                     {
                         return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.RankRequirementNotLessThan, rank.Name, rank.Amount, rankSystem.Name) + " " + string.Format(MixItUp.Base.Resources.RequirementCurrentAmount, currentRank)));
                     }

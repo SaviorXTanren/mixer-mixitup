@@ -81,27 +81,27 @@ namespace MixItUp.Base.Model.Requirements
         {
             await base.Perform(parameters);
             InventoryModel inventory = this.Inventory;
-            if (inventory != null && !parameters.User.Data.IsCurrencyRankExempt)
+            if (inventory != null && !parameters.User.IsSpecialtyExcluded)
             {
-                inventory.SubtractAmount(parameters.User.Data, this.ItemID, this.Amount);
+                inventory.SubtractAmount(parameters.User, this.ItemID, this.Amount);
             }
         }
 
         public override Task Refund(CommandParametersModel parameters)
         {
             InventoryModel inventory = this.Inventory;
-            if (inventory != null && !parameters.User.Data.IsCurrencyRankExempt)
+            if (inventory != null && !parameters.User.IsSpecialtyExcluded)
             {
-                inventory.AddAmount(parameters.User.Data, this.ItemID, this.Amount);
+                inventory.AddAmount(parameters.User, this.ItemID, this.Amount);
             }
             return Task.CompletedTask;
         }
 
         public Result ValidateAmount(UserV2ViewModel user, int amount)
         {
-            if (!user.Data.IsCurrencyRankExempt && !this.Inventory.HasAmount(user.Data, this.ItemID, amount))
+            if (!user.IsSpecialtyExcluded && !this.Inventory.HasAmount(user, this.ItemID, amount))
             {
-                int currentAmount = this.Inventory.GetAmount(user.Data, this.ItemID);
+                int currentAmount = this.Inventory.GetAmount(user, this.ItemID);
                 return new Result(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amount, this.Item.Name) + " " + string.Format(MixItUp.Base.Resources.RequirementCurrentAmount, currentAmount));
             }
             return new Result();
