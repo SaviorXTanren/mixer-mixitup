@@ -316,7 +316,7 @@ namespace MixItUp.Base.Services.External
                     {
                         if (data != null)
                         {
-                            Logger.ForceLog(LogLevel.Information, "StreamElements event: " + data.ToString());
+                            Logger.ForceLog(LogLevel.Debug, "StreamElements event: " + data.ToString());
 
                             StreamElementsWebSocketEventModel e = JSONSerializerHelper.DeserializeFromString<StreamElementsWebSocketEventModel>(data.ToString());
                             if (e.type != null && e.data != null)
