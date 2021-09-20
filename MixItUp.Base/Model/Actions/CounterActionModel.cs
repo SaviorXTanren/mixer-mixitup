@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Util;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -56,6 +57,7 @@ namespace MixItUp.Base.Model.Actions
                 else
                 {
                     string amountText = await this.ReplaceStringWithSpecialModifiers(this.Amount, parameters);
+                    amountText = MathHelper.ProcessMathEquation(amountText).ToString();
                     if (double.TryParse(amountText, out double amount))
                     {
                         if (this.ActionType == CounterActionTypeEnum.Update)
