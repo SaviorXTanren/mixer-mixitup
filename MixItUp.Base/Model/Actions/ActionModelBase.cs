@@ -47,6 +47,7 @@ namespace MixItUp.Base.Model.Actions
         Twitch,
         PixelChat,
         VTubeStudio,
+        [Obsolete]
         Voicemod,
     }
 
