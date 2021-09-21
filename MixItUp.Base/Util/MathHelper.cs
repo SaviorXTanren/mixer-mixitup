@@ -23,6 +23,9 @@ namespace MixItUp.Base.Util
                 engine.AddFunction("customrandom", Random);
                 engine.AddFunction("randomrange", RandomRange);
 
+                // If they used +1, then trim it off
+                equation = equation.TrimStart(' ', '+');
+
                 result = engine.Calculate(equation);
             }
             catch (Exception ex)
