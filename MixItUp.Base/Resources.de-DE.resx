@@ -258,7 +258,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AmountPlusMinus" xml:space="preserve">
-    <value>Menge (+/-)</value>
+    <value>Menge</value>
     <comment>Manual</comment>
   </data>
   <data name="AnyChatMessageSound" xml:space="preserve">

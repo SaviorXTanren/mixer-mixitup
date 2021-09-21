@@ -241,7 +241,7 @@
     <value>寄付金額</value>
   </data>
   <data name="AmountPlusMinus" xml:space="preserve">
-    <value>金額 (+/- )</value>
+    <value>金額</value>
   </data>
   <data name="AmountSeconds" xml:space="preserve">
     <value>金額 (秒)</value>

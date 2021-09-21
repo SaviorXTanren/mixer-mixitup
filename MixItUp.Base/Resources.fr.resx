@@ -241,7 +241,7 @@
     <value>Montant donné</value>
   </data>
   <data name="AmountPlusMinus" xml:space="preserve">
-    <value>Montant (+/-)</value>
+    <value>Montant</value>
   </data>
   <data name="AmountSeconds" xml:space="preserve">
     <value>Montant (Secondes)</value>

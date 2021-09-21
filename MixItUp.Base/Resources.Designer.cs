@@ -628,7 +628,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Amount (+/-).
+        ///   Looks up a localized string similar to Amount.
         /// </summary>
         public static string AmountPlusMinus {
             get {

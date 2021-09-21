@@ -241,7 +241,7 @@
     <value>Cantidad donada</value>
   </data>
   <data name="AmountPlusMinus" xml:space="preserve">
-    <value>Importe (+/-)</value>
+    <value>Importe</value>
   </data>
   <data name="AmountSeconds" xml:space="preserve">
     <value>Cantidad (segundos)</value>
