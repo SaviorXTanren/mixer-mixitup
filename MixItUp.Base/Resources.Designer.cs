@@ -3922,6 +3922,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This dialog can be used to edit the test values for the special identifiers..
+        /// </summary>
+        public static string EditTestSpecialIdentifierText {
+            get {
+                return ResourceManager.GetString("EditTestSpecialIdentifierText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit User.
         /// </summary>
         public static string EditUser {
