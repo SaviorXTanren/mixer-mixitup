@@ -35,7 +35,7 @@ namespace MixItUp.WPF.Controls.MainControls
             services.Add(new ServiceContainerControl(this.Window, new TreatStreamServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new RainmakerServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new PixelChatServiceControl()));
-            //services.Add(new ServiceContainerControl(this.Window, new VoicemodServiceControl()));
+            services.Add(new ServiceContainerControl(this.Window, new VoicemodServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new VTubeStudioServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new PatreonServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new StreamlootsServiceControl()));
