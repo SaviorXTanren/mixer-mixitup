@@ -506,7 +506,7 @@ namespace MixItUp.Base
                                     message.AppendLine(" - " + service.Name);
                                 }
                                 message.AppendLine();
-                                message.Append("Please go to the Services page to reconnect them manually.");
+                                message.Append("We will attempt to re-connect with the service when possible. If this continues, please go to the Services page to reconnect them manually.");
                                 await DialogHelper.ShowMessage(message.ToString());
                             }
                         }
