@@ -6009,4 +6009,7 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="Value" xml:space="preserve">
     <value>Value</value>
   </data>
+  <data name="EditTestSpecialIdentifierText" xml:space="preserve">
+    <value>This dialog can be used to edit the test values for the special identifiers.</value>
+  </data>
 </root>
