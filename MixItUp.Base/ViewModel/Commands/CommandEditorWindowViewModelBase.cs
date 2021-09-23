@@ -61,6 +61,39 @@ namespace MixItUp.Base.ViewModel.Commands
             return false;
         }
 
+        public static async Task TestCommandWithTestSpecialIdentifiers(CommandModelBase command)
+        {
+            Dictionary<string, string> testSpecialIdentifiers = command.GetTestSpecialIdentifiers();
+            if (testSpecialIdentifiers != null && testSpecialIdentifiers.Count > 0)
+            {
+                testSpecialIdentifiers = await DialogHelper.ShowEditTestSpecialIdentifiersDialog(testSpecialIdentifiers);
+                if (testSpecialIdentifiers == null)
+                {
+                    return;
+                }
+            }
+
+            await ChannelSession.Services.Command.RunDirectly(new CommandInstanceModel(command, CommandParametersModel.GetTestParameters(testSpecialIdentifiers)));
+            if (command.Requirements.Cooldown != null)
+            {
+                command.Requirements.Cooldown.Reset();
+            }
+        }
+
+        public static async Task TestCommandWithTestSpecialIdentifiers(IEnumerable<ActionModelBase> actions, Dictionary<string, string> testSpecialIdentifiers)
+        {
+            if (testSpecialIdentifiers != null && testSpecialIdentifiers.Count > 0)
+            {
+                testSpecialIdentifiers = await DialogHelper.ShowEditTestSpecialIdentifiersDialog(testSpecialIdentifiers);
+                if (testSpecialIdentifiers == null)
+                {
+                    return;
+                }
+            }
+
+            await ChannelSession.Services.Command.RunDirectly(new CommandInstanceModel(actions, CommandParametersModel.GetTestParameters(testSpecialIdentifiers)));
+        }
+
         public CommandTypeEnum Type
         {
             get { return this.type; }
@@ -161,7 +194,7 @@ namespace MixItUp.Base.ViewModel.Commands
                     IEnumerable<ActionModelBase> actions = await this.GetActions();
                     if (actions != null)
                     {
-                        await ChannelSession.Services.Command.Queue(new CommandInstanceModel(actions, CommandParametersModel.GetTestParameters(this.GetTestSpecialIdentifiers())));
+                        await CommandEditorWindowViewModelBase.TestCommandWithTestSpecialIdentifiers(actions, this.GetTestSpecialIdentifiers());
                     }
                 }
             });

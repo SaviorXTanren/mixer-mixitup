@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Commands;
 using MixItUp.Base.ViewModel.Currency;
 using MixItUp.Base.ViewModel.Games;
 using MixItUp.Base.ViewModel.MainControls;
@@ -138,23 +139,7 @@ namespace MixItUp.WPF.Controls.Commands
             CommandModelBase command = this.GetCommandFromCommandButtons();
             if (command != null)
             {
-                Dictionary<string, string> testSpecialIdentifiers = command.GetTestSpecialIdentifiers();
-                if (testSpecialIdentifiers != null && testSpecialIdentifiers.Count > 0)
-                {
-                    EditTestSpecialIdentifiersDialogControl dialogControl = new EditTestSpecialIdentifiersDialogControl(testSpecialIdentifiers);
-                    if (bool.Equals(await DialogHelper.ShowCustom(dialogControl), false))
-                    {
-                        return;
-                    }
-
-                    testSpecialIdentifiers = dialogControl.GetSpecialIdentifiers();
-                }
-
-                await ChannelSession.Services.Command.RunDirectly(new CommandInstanceModel(command, CommandParametersModel.GetTestParameters(testSpecialIdentifiers)));
-                if (command.Requirements.Cooldown != null)
-                {
-                    command.Requirements.Cooldown.Reset();
-                }
+                await CommandEditorWindowViewModelBase.TestCommandWithTestSpecialIdentifiers(command);
             }
         }
 

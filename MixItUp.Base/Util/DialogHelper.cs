@@ -17,6 +17,8 @@ namespace MixItUp.Base.Util
 
         Task<object> ShowCustomTimed(object dialog, int timeout);
 
+        Task<Dictionary<string, string>> ShowEditTestSpecialIdentifiersDialog(Dictionary<string, string> specialIdentifiers);
+
         void CloseCurrent();
     }
 
@@ -38,7 +40,9 @@ namespace MixItUp.Base.Util
         public static async Task<object> ShowCustom(object dialog) { return await DialogHelper.dialogShower.ShowCustom(dialog); }
 
         public static async Task<object> ShowCustomTimed(object dialog, int timeout) { return await DialogHelper.dialogShower.ShowCustomTimed(dialog, timeout); }
-        
+
+        public static async Task<Dictionary<string, string>> ShowEditTestSpecialIdentifiersDialog(Dictionary<string, string> specialIdentifiers) { return await DialogHelper.dialogShower.ShowEditTestSpecialIdentifiersDialog(specialIdentifiers); }
+
         public static async Task ShowFailedResult(Result result) { await DialogHelper.ShowFailedResults(new List<Result>() { result }); }
 
         public static async Task ShowFailedResults(IEnumerable<Result> results)
