@@ -18,7 +18,21 @@
             <ColumnDefinition Width="150" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.VoicemodInfo}"/>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto " />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.VoicemodInfo}"/>
+
+            <TextBlock Grid.Row="2" TextWrapping="Wrap">
+                <Hyperlink NavigateUri="https://link.xsolla.com/trj5q0xW" RequestNavigate="Hyperlink_RequestNavigate">
+                    <TextBlock Text="{x:Static resx:Resources.VoicemodWebsite}"/>
+                </Hyperlink>
+            </TextBlock>
+        </Grid>
 
         <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid Visibility="{Binding IsConnected, Converter={StaticResource BooleanToVisibilityConverter}}">

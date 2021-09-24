@@ -16785,7 +16785,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Voicemod connectivity allows you to control functionality in the Voicemod software, such as enabling/disabling voice changing and changing the voice you&apos;re using..
+        ///   Looks up a localized string similar to Voicemod connectivity allows you to control functionality in the Voicemod software, such as enabling/disabling voice changing and changing the voice you&apos;re using. Some functionality or features in Voicemod require a paid subscription. For more information, please visit the Voicemod website:.
         /// </summary>
         public static string VoicemodInfo {
             get {
@@ -16799,6 +16799,15 @@ namespace MixItUp.Base {
         public static string VoicemodNotConnected {
             get {
                 return ResourceManager.GetString("VoicemodNotConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voicemod Website.
+        /// </summary>
+        public static string VoicemodWebsite {
+            get {
+                return ResourceManager.GetString("VoicemodWebsite", resourceCulture);
             }
         }
         
