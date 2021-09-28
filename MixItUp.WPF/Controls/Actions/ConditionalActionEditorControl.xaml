@@ -79,7 +79,17 @@
                             <ColumnDefinition Width="30" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBox Grid.Column="0" Text="{Binding Value1}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FirstValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <Grid Grid.Column="0" Visibility="{Binding IsNormalComparision, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBox Text="{Binding Value1}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FirstValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        </Grid>
+
+                        <Grid Grid.Column="0" Visibility="{Binding IsBetweenOperatorSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBox Text="{Binding Value1}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FirstValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        </Grid>
+
+                        <Grid Grid.Column="0" Visibility="{Binding IsRegexMatch, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBox Text="{Binding Value1}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Value}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        </Grid>
 
                         <ComboBox Grid.Column="2" ItemsSource="{Binding ComparisonTypes}" SelectedItem="{Binding ComparisionType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Compare}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80">
                             <ComboBox.ItemTemplate>
@@ -89,7 +99,9 @@
                             </ComboBox.ItemTemplate>
                         </ComboBox>
 
-                        <TextBox Grid.Column="4" Text="{Binding Value2}" IsEnabled="{Binding IsValue2Definable}" Visibility="{Binding IsBetweenOperatorNotSelected, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SecondValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <Grid Grid.Column="4" Visibility="{Binding IsNormalComparision, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBox Text="{Binding Value2}" IsEnabled="{Binding IsValue2Definable}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SecondValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        </Grid>
 
                         <Grid Grid.Column="4" Visibility="{Binding IsBetweenOperatorSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Grid.ColumnDefinitions>
@@ -100,6 +112,10 @@
 
                             <TextBox Grid.Column="0" Text="{Binding Value2}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                             <TextBox Grid.Column="2" Text="{Binding Value3}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        </Grid>
+
+                        <Grid Grid.Column="4" Visibility="{Binding IsRegexMatch, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBox Text="{Binding Value2}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Pattern}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         </Grid>
 
                         <Button Grid.Column="6" Visibility="{Binding CanBeRemoved, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Command="{Binding DeleteCommand}" />

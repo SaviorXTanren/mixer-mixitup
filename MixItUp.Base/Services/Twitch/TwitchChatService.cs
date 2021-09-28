@@ -133,6 +133,7 @@ namespace MixItUp.Base.Services.Twitch
                         this.userClient.OnChatClearReceived += UserClient_OnChatClearReceived;
                         this.userClient.OnMessageReceived += UserClient_OnMessageReceived;
                         this.userClient.OnClearMessageReceived += UserClient_OnClearMessageReceived;
+                        this.userClient.OnHostTargetReceived += UserClient_OnHostTargetReceived;
 
                         this.userClient.OnUserListReceived += UserClient_OnUserListReceived;
                         await this.userClient.Connect();
@@ -185,6 +186,7 @@ namespace MixItUp.Base.Services.Twitch
                     this.userClient.OnChatClearReceived -= UserClient_OnChatClearReceived;
                     this.userClient.OnMessageReceived -= UserClient_OnMessageReceived;
                     this.userClient.OnClearMessageReceived -= UserClient_OnClearMessageReceived;
+                    this.userClient.OnHostTargetReceived -= UserClient_OnHostTargetReceived;
 
                     await this.userClient.Disconnect();
                 }
@@ -846,6 +848,14 @@ namespace MixItUp.Base.Services.Twitch
                 }
 
                 await ServiceManager.Get<ChatService>().DeleteMessage(new TwitchChatMessageViewModel(packet, user), externalDeletion: true);
+            }
+        }
+
+        private async void UserClient_OnHostTargetReceived(object sender, ChatHostTargetPacketModel packet)
+        {
+            if (packet.IsStartingHostMode && !ChannelSession.Services.Events.CanPerformEvent(EventTypeEnum.TwitchChannelStreamStart, new CommandParametersModel()))
+            {
+                await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.TwitchChannelStreamStop, new CommandParametersModel());
             }
         }
 

@@ -53,6 +53,7 @@
     value   : The object must be serialized with 
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
+
     mimetype: application/x-microsoft.net.object.bytearray.base64
     value   : The object must be serialized into a byte array 
             : using a System.ComponentModel.TypeConverter
@@ -173,7 +174,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AmountPlusMinus" xml:space="preserve">
-    <value>Aantal (+/-)</value>
+    <value>Aantal</value>
     <comment>Manual</comment>
   </data>
   <data name="AmountSeconds" xml:space="preserve">

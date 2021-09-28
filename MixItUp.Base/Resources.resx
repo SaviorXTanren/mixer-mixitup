@@ -241,7 +241,7 @@
     <value>Amount Donated</value>
   </data>
   <data name="AmountPlusMinus" xml:space="preserve">
-    <value>Amount (+/-)</value>
+    <value>Amount</value>
   </data>
   <data name="AmountSeconds" xml:space="preserve">
     <value>Amount (Seconds)</value>
@@ -5956,7 +5956,7 @@ Failure to do one of the following could effect how users rate &amp; review your
     <value>Voicemod</value>
   </data>
   <data name="VoicemodInfo" xml:space="preserve">
-    <value>Voicemod connectivity allows you to control functionality in the Voicemod software, such as enabling/disabling voice changing and changing the voice you're using.</value>
+    <value>Voicemod connectivity allows you to control functionality in the Voicemod software, such as enabling/disabling voice changing and changing the voice you're using. Some functionality or features in Voicemod require a paid subscription. For more information, please visit the Voicemod website:</value>
   </data>
   <data name="VoiceChangerOnOff" xml:space="preserve">
     <value>Voice Change On/Off</value>
@@ -6014,5 +6014,20 @@ Failure to do one of the following could effect how users rate &amp; review your
   </data>
   <data name="StopAllSounds" xml:space="preserve">
     <value>Stop All Sounds</value>
+  </data>
+  <data name="RegexMatch" xml:space="preserve">
+    <value>Regex Match</value>
+  </data>
+  <data name="Pattern" xml:space="preserve">
+    <value>Pattern</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="EditTestSpecialIdentifierText" xml:space="preserve">
+    <value>This dialog can be used to edit the test values for the special identifiers.</value>
+  </data>
+  <data name="VoicemodWebsite" xml:space="preserve">
+    <value>Voicemod Website</value>
   </data>
 </root>

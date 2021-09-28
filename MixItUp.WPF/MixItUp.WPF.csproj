@@ -701,6 +701,9 @@
     <Compile Include="Controls\Dialogs\CommunityCommands\CommunityCommandsReviewCommandDialogControl.xaml.cs">
       <DependentUpon>CommunityCommandsReviewCommandDialogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Dialogs\EditTestSpecialIdentifiersDialogControl.xaml.cs">
+      <DependentUpon>EditTestSpecialIdentifiersDialogControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Dialogs\GameTypeSelectorDialogControl.xaml.cs">
       <DependentUpon>GameTypeSelectorDialogControl.xaml</DependentUpon>
     </Compile>
@@ -1421,6 +1424,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\CommunityCommands\CommunityCommandsReviewCommandDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\EditTestSpecialIdentifiersDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -19,7 +19,7 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public static string OpenCommandFileBrowser()
         {
-            return ServiceManager.Get<IFileService>().ShowOpenFileDialog(string.Format("Mix It Up Command (*{0})|*{0};*{1}|All files (*.*)|*.*", MixItUpCommandFileExtension, MixItUpOldCommandFileExtension));
+            return ServiceManager.Get<IFileService>().ShowOpenFileDialog(string.Format("Mix It Up Command (*{0})|*{0}|All files (*.*)|*.*", MixItUpCommandFileExtension));
         }
 
         public static async Task<CommandModelBase> ImportCommandFromFile(string filePath)
@@ -50,6 +50,39 @@ namespace MixItUp.Base.ViewModel.Commands
                 }
             }
             return false;
+        }
+
+        public static async Task TestCommandWithTestSpecialIdentifiers(CommandModelBase command)
+        {
+            Dictionary<string, string> testSpecialIdentifiers = command.GetTestSpecialIdentifiers();
+            if (testSpecialIdentifiers != null && testSpecialIdentifiers.Count > 0)
+            {
+                testSpecialIdentifiers = await DialogHelper.ShowEditTestSpecialIdentifiersDialog(testSpecialIdentifiers);
+                if (testSpecialIdentifiers == null)
+                {
+                    return;
+                }
+            }
+
+            await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(command, CommandParametersModel.GetTestParameters(testSpecialIdentifiers)));
+            if (command.Requirements.Cooldown != null)
+            {
+                command.Requirements.Cooldown.Reset();
+            }
+        }
+
+        public static async Task TestCommandWithTestSpecialIdentifiers(IEnumerable<ActionModelBase> actions, Dictionary<string, string> testSpecialIdentifiers)
+        {
+            if (testSpecialIdentifiers != null && testSpecialIdentifiers.Count > 0)
+            {
+                testSpecialIdentifiers = await DialogHelper.ShowEditTestSpecialIdentifiersDialog(testSpecialIdentifiers);
+                if (testSpecialIdentifiers == null)
+                {
+                    return;
+                }
+            }
+
+            await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(actions, CommandParametersModel.GetTestParameters(testSpecialIdentifiers)));
         }
 
         public CommandTypeEnum Type
@@ -152,7 +185,7 @@ namespace MixItUp.Base.ViewModel.Commands
                     IEnumerable<ActionModelBase> actions = await this.GetActions();
                     if (actions != null)
                     {
-                        await ServiceManager.Get<CommandService>().Queue(new CommandInstanceModel(actions, CommandParametersModel.GetTestParameters(this.GetTestSpecialIdentifiers())));
+                        await CommandEditorWindowViewModelBase.TestCommandWithTestSpecialIdentifiers(actions, this.GetTestSpecialIdentifiers());
                     }
                 }
             });

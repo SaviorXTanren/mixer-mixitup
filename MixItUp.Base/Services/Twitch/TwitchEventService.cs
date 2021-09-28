@@ -508,10 +508,18 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void PubSub_OnBitsV2Received(object sender, PubSubBitsEventV2Model packet)
         {
-            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, packet.user_id);
-            if (user == null)
+            UserV2ViewModel user;
+            if (packet.is_anonymous)
             {
-                user = await UserV2ViewModel.Create(packet);
+                user = UserV2ViewModel.Create(MixItUp.Base.Resources.Anonymous);
+            }
+            else
+            {
+                user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, packet.user_id);
+                if (user == null)
+                {
+                    user = await UserV2ViewModel.Create(packet);
+                }
             }
 
             TwitchUserBitsCheeredModel bitsCheered = new TwitchUserBitsCheeredModel(user, packet);

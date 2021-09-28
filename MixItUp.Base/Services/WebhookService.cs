@@ -218,7 +218,7 @@ namespace MixItUp.Base.Services
                 UserID = followerId,
                 Username = followerUsername,
                 UserDisplayName = followerDisplayName
-            });
+            };
 
             UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, followerId);
             if (user == null)
@@ -244,14 +244,14 @@ namespace MixItUp.Base.Services
 
                 foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                 {
-                    currency.AddAmount(user.Data, currency.OnFollowBonus);
+                    currency.AddAmount(user, currency.OnFollowBonus);
                 }
 
                 foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
                 {
-                    if (user.MeetsRole(streamPass.Permission))
+                    if (user.MeetsRole(streamPass.UserPermission))
                     {
-                        streamPass.AddAmount(user.Data, streamPass.FollowBonus);
+                        streamPass.AddAmount(user, streamPass.FollowBonus);
                     }
                 }
 

@@ -241,7 +241,7 @@
     <value>Сумма пожертвовано</value>
   </data>
   <data name="AmountPlusMinus" xml:space="preserve">
-    <value>Сумма (к/-)</value>
+    <value>Сумма</value>
   </data>
   <data name="AmountSeconds" xml:space="preserve">
     <value>Сумма (секунды)</value>
