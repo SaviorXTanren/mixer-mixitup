@@ -547,6 +547,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A JSON parameter name must be specified..
+        /// </summary>
+        public static string AJSONParameterNameMustBeSpecified {
+            get {
+                return ResourceManager.GetString("AJSONParameterNameMustBeSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Alerts.
         /// </summary>
         public static string Alerts {
@@ -777,6 +786,15 @@ namespace MixItUp.Base {
         public static string ArgumentsRequirementValidName {
             get {
                 return ResourceManager.GetString("ArgumentsRequirementValidName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A special identifier name must be specified..
+        /// </summary>
+        public static string ASpecialIdentifierNameMustBeSpecified {
+            get {
+                return ResourceManager.GetString("ASpecialIdentifierNameMustBeSpecified", resourceCulture);
             }
         }
         

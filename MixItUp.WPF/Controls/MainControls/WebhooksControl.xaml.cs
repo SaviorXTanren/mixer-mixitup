@@ -6,6 +6,8 @@ using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Controls.Commands;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Commands;
+using StreamingClient.Base.Util;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -61,14 +63,21 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                WebhookCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<WebhookCommandModel>();
-                if (command != null)
+                try
                 {
-                    ChannelSession.Services.Command.WebhookCommands.Remove(command);
-                    ChannelSession.Settings.RemoveCommand(command);
-                    await ChannelSession.Services.WebhookService.DeleteWebhook(command.ID);
-                    await this.viewModel.RefreshCommands();
-                    await ChannelSession.SaveSettings();
+                    WebhookCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<WebhookCommandModel>();
+                    if (command != null)
+                    {
+                        ChannelSession.Services.Command.WebhookCommands.Remove(command);
+                        ChannelSession.Settings.RemoveCommand(command);
+                        await ChannelSession.Services.WebhookService.DeleteWebhook(command.ID);
+                        await this.viewModel.RefreshCommands();
+                        await ChannelSession.SaveSettings();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
                 }
             });
         }
@@ -77,9 +86,16 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                await ChannelSession.Services.WebhookService.CreateWebhook();
-                await this.viewModel.RefreshCommands();
-                await ChannelSession.SaveSettings();
+                try
+                {
+                    await ChannelSession.Services.WebhookService.CreateWebhook();
+                    await this.viewModel.RefreshCommands();
+                    await ChannelSession.SaveSettings();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
             });
         }
 

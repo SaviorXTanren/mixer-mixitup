@@ -6027,4 +6027,10 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="WebhookJSONMapPairs" xml:space="preserve">
     <value>Webhook JSON Map Pairs</value>
   </data>
+  <data name="AJSONParameterNameMustBeSpecified" xml:space="preserve">
+    <value>A JSON parameter name must be specified.</value>
+  </data>
+  <data name="ASpecialIdentifierNameMustBeSpecified" xml:space="preserve">
+    <value>A special identifier name must be specified.</value>
+  </data>
 </root>

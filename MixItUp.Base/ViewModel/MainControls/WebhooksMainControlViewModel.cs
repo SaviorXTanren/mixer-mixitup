@@ -1,6 +1,8 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Webhooks;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -57,16 +59,23 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public async Task RefreshCommands()
         {
-            this.WebhookCommands.Clear();
-
-            GetWebhooksResponseModel response = await ChannelSession.Services.WebhookService.GetWebhooks();
-            foreach (var webhook in response.Webhooks)
+            try
             {
-                var command = ChannelSession.Services.Command.WebhookCommands.FirstOrDefault(c => c.ID == webhook.Id);
-                this.WebhookCommands.Add(new WebhookCommandItemViewModel(webhook, command));
-            }
+                this.WebhookCommands.Clear();
 
-            MaxNumberOfWebhooks = response.MaxNumberOfWebhooks;
+                GetWebhooksResponseModel response = await ChannelSession.Services.WebhookService.GetWebhooks();
+                foreach (var webhook in response.Webhooks)
+                {
+                    var command = ChannelSession.Services.Command.WebhookCommands.FirstOrDefault(c => c.ID == webhook.Id);
+                    this.WebhookCommands.Add(new WebhookCommandItemViewModel(webhook, command));
+                }
+
+                MaxNumberOfWebhooks = response.MaxNumberOfWebhooks;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
     }
 }

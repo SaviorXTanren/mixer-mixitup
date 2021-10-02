@@ -65,6 +65,7 @@ namespace MixItUp.Base.Model.Commands
             types.Remove(CommandTypeEnum.PreMade);
             types.Remove(CommandTypeEnum.UserOnlyChat);
             types.Remove(CommandTypeEnum.Custom);
+            types.Remove(CommandTypeEnum.Webhook);
             return types;
         }
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Commands
@@ -22,5 +23,10 @@ namespace MixItUp.Base.Model.Commands
         public WebhookCommandModel(string name) : base(name, CommandTypeEnum.Webhook) { }
 
         protected WebhookCommandModel() : base() { }
+
+        public override Dictionary<string, string> GetTestSpecialIdentifiers()
+        {
+            return JSONParameters.ToDictionary(j => j.SpecialIdentifierName, j => "Test Value");
+        }
     }
 }

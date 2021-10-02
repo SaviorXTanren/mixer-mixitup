@@ -3,6 +3,8 @@ using MixItUp.Base.Model.Webhooks;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -31,13 +33,17 @@ namespace MixItUp.Base.ViewModel.Commands
     {
         private Guid webhookID;
 
+        // Prevent uploading
+        public override bool IsExistingCommand => false;
+
         public ICommand AddJSONParameterCommand { get; private set; }
         public ThreadSafeObservableCollection<WebhookJSONParameterViewModel> JSONParameters { get; set; } = new ThreadSafeObservableCollection<WebhookJSONParameterViewModel>();
 
         public WebhookCommandEditorWindowViewModel(WebhookCommandModel existingCommand) : base(existingCommand)
         {
             this.webhookID = existingCommand.ID;
-            foreach(var param in existingCommand.JSONParameters)
+            JSONParameters.Clear();
+            foreach (var param in existingCommand.JSONParameters)
             {
                 JSONParameters.Add(new WebhookJSONParameterViewModel(this) { JSONParameterName = param.JSONParameterName, SpecialIdentifierName = param.SpecialIdentifierName });
             }
@@ -46,6 +52,11 @@ namespace MixItUp.Base.ViewModel.Commands
         public WebhookCommandEditorWindowViewModel(Webhook webhook) : base(CommandTypeEnum.Webhook)
         {
             this.webhookID = webhook.Id;
+        }
+
+        public override Dictionary<string, string> GetTestSpecialIdentifiers()
+        {
+            return JSONParameters.ToDictionary(j => j.SpecialIdentifierName, j => "Test Value");
         }
 
         protected override async Task OnLoadedInternal()
@@ -63,6 +74,17 @@ namespace MixItUp.Base.ViewModel.Commands
             {
                 return Task.FromResult(new Result(MixItUp.Base.Resources.ACommandNameMustBeSpecified));
             }
+
+            if (this.JSONParameters.Any(j => string.IsNullOrWhiteSpace(j.JSONParameterName)))
+            {
+                return Task.FromResult(new Result(MixItUp.Base.Resources.AJSONParameterNameMustBeSpecified));
+            }
+
+            if (this.JSONParameters.Any(j => string.IsNullOrWhiteSpace(j.SpecialIdentifierName)))
+            {
+                return Task.FromResult(new Result(MixItUp.Base.Resources.ASpecialIdentifierNameMustBeSpecified));
+            }
+
             return Task.FromResult(new Result());
         }
 
@@ -86,7 +108,8 @@ namespace MixItUp.Base.ViewModel.Commands
             // Save JSON Params here
             var webhookCommand = (WebhookCommandModel)command;
 
-            foreach(var param in this.JSONParameters)
+            webhookCommand.JSONParameters.Clear();
+            foreach (var param in this.JSONParameters)
             {
                 webhookCommand.JSONParameters.Add(new WebhookJSONParameter { JSONParameterName = param.JSONParameterName, SpecialIdentifierName = param.SpecialIdentifierName });
             }

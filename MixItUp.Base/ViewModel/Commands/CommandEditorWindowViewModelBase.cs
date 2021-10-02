@@ -151,7 +151,7 @@ namespace MixItUp.Base.ViewModel.Commands
         public ICommand ExportCommand { get; private set; }
         public ICommand ImportCommand { get; private set; }
 
-        public bool IsExistingCommand { get { return this.existingCommand != null; } }
+        public virtual bool IsExistingCommand { get { return this.existingCommand != null; } }
 
         public event EventHandler<CommandModelBase> CommandSaved = delegate { };
 
