@@ -232,12 +232,12 @@ namespace MixItUp.Base.Model.Actions
         {
             if (this.ActionType == TwitchActionType.Host)
             {
-                string channelName = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                string channelName = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
                 await ChannelSession.Services.Chat.SendMessage("/host @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
             }
             else if (this.ActionType == TwitchActionType.Raid)
             {
-                string channelName = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                string channelName = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
                 await ChannelSession.Services.Chat.SendMessage("/raid @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
             }
             else if (this.ActionType == TwitchActionType.RunAd)
@@ -257,7 +257,7 @@ namespace MixItUp.Base.Model.Actions
                 string targetUsername = null;
                 if (!string.IsNullOrEmpty(this.Username))
                 {
-                    targetUsername = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                    targetUsername = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
                 }
                 else
                 {
@@ -303,7 +303,7 @@ namespace MixItUp.Base.Model.Actions
             }
             else if (this.ActionType == TwitchActionType.StreamMarker)
             {
-                string description = await this.ReplaceStringWithSpecialModifiers(this.StreamMarkerDescription, parameters);
+                string description = await ReplaceStringWithSpecialModifiers(this.StreamMarkerDescription, parameters);
                 if (!string.IsNullOrEmpty(description) && description.Length > TwitchActionModel.StreamMarkerMaxDescriptionLength)
                 {
                     description = description.Substring(0, TwitchActionModel.StreamMarkerMaxDescriptionLength);
@@ -343,12 +343,12 @@ namespace MixItUp.Base.Model.Actions
                 }
 #pragma warning restore CS0612 // Type or member is obsolete
 
-                int.TryParse(await this.ReplaceStringWithSpecialModifiers(this.ChannelPointRewardCostString, parameters), out int cost);
+                int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardCostString, parameters), out int cost);
                 if (cost > 0) { jobj["cost"] = cost; }
 
                 if (this.ChannelPointRewardUpdateCooldownsAndLimits)
                 {
-                    int.TryParse(await this.ReplaceStringWithSpecialModifiers(this.ChannelPointRewardMaxPerStreamString, parameters), out int maxPerStream);
+                    int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardMaxPerStreamString, parameters), out int maxPerStream);
                     if (maxPerStream > 0)
                     {
                         jobj["max_per_stream_setting"] = new JObject()
@@ -365,7 +365,7 @@ namespace MixItUp.Base.Model.Actions
                         };
                     }
 
-                    int.TryParse(await this.ReplaceStringWithSpecialModifiers(this.ChannelPointRewardMaxPerUserString, parameters), out int maxPerUser);
+                    int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardMaxPerUserString, parameters), out int maxPerUser);
                     if (maxPerUser > 0)
                     {
                         jobj["max_per_user_per_stream_setting"] = new JObject()
@@ -382,7 +382,7 @@ namespace MixItUp.Base.Model.Actions
                         };
                     }
 
-                    int.TryParse(await this.ReplaceStringWithSpecialModifiers(this.ChannelPointRewardGlobalCooldownString, parameters), out int globalCooldown);
+                    int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardGlobalCooldownString, parameters), out int globalCooldown);
                     if (globalCooldown > 0)
                     {
                         jobj["global_cooldown_setting"] = new JObject()
@@ -413,14 +413,14 @@ namespace MixItUp.Base.Model.Actions
                 {
                     choices.Add(new CreatePollChoiceModel()
                     {
-                        title = await this.ReplaceStringWithSpecialModifiers(choice, parameters)
+                        title = await ReplaceStringWithSpecialModifiers(choice, parameters)
                     });
                 }
 
                 PollModel poll = await ChannelSession.TwitchUserConnection.CreatePoll(new CreatePollModel()
                 {
                     broadcaster_id = ChannelSession.TwitchUserNewAPI.id,
-                    title = await this.ReplaceStringWithSpecialModifiers(this.PollTitle, parameters),
+                    title = await ReplaceStringWithSpecialModifiers(this.PollTitle, parameters),
                     duration = this.PollDurationSeconds,
                     channel_points_voting_enabled = this.PollChannelPointsCost > 0,
                     channel_points_per_vote = this.PollChannelPointsCost,
@@ -477,14 +477,14 @@ namespace MixItUp.Base.Model.Actions
                 {
                     outcomes.Add(new CreatePredictionOutcomeModel()
                     {
-                        title = await this.ReplaceStringWithSpecialModifiers(outcome, parameters)
+                        title = await ReplaceStringWithSpecialModifiers(outcome, parameters)
                     });
                 }
 
                 PredictionModel prediction = await ChannelSession.TwitchUserConnection.CreatePrediction(new CreatePredictionModel()
                 {
                     broadcaster_id = ChannelSession.TwitchUserNewAPI.id,
-                    title = await this.ReplaceStringWithSpecialModifiers(this.PredictionTitle, parameters),
+                    title = await ReplaceStringWithSpecialModifiers(this.PredictionTitle, parameters),
                     prediction_window = this.PredictionDurationSeconds,
                     outcomes = outcomes
                 });

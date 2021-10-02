@@ -14,7 +14,11 @@ namespace MixItUp.WPF.Services
         public void Initialize()
         {
             this.Secrets = new SecretsService();
-            this.MixItUpService = new MixItUpService();
+
+            var mixItUpService = new MixItUpService();
+            this.MixItUpService = mixItUpService;
+            this.CommunityCommandsService = mixItUpService;
+            this.WebhookService = mixItUpService;
 
             this.User = new UserService();
             this.Chat = new ChatService();
@@ -34,13 +38,8 @@ namespace MixItUp.WPF.Services
             this.AudioService = new WindowsAudioService();
             this.GiveawayService = new GiveawayService();
             this.SerialService = new SerialService();
-            this.WebhookService = new WebhookService(MixItUp.Base.Services.MixItUpService.MixItUpAPIEndpoint, "https://mixitupapi.azurewebsites.net/webhookhub");
-            //this.WebhookService = new WebhookService("https://localhost:44309/api/", "https://localhost:44309/webhookhub");
             this.DeveloperAPI = new WindowsDeveloperAPIService();
             this.Telemetry = new WindowsTelemetryService();
-            this.CommunityCommandsService = new CommunityCommandsService(MixItUp.Base.Services.MixItUpService.MixItUpAPIEndpoint);
-            //this.CommunityCommandsService = new CommunityCommandsService("https://localhost:44309/api/");
-            //this.CommunityCommandsService = new MockCommunityCommandsService();
 
             this.Streamlabs = new StreamlabsService(new WindowsSocketIOConnection());
             this.StreamElements = new StreamElementsService(new WindowsSocketIOConnection());

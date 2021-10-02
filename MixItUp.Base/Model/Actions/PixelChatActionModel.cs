@@ -108,7 +108,7 @@ namespace MixItUp.Base.Model.Actions
                         UserViewModel user = parameters.User;
                         if (!string.IsNullOrEmpty(this.TargetUsername))
                         {
-                            string targetUsername = await this.ReplaceStringWithSpecialModifiers(this.TargetUsername, parameters);
+                            string targetUsername = await ReplaceStringWithSpecialModifiers(this.TargetUsername, parameters);
                             UserViewModel targetUser = await ChannelSession.Services.User.GetUserFullSearch(parameters.Platform, userID: null, targetUsername);
                             if (targetUser != null)
                             {
@@ -128,7 +128,7 @@ namespace MixItUp.Base.Model.Actions
                     else if (this.ActionType == PixelChatActionTypeEnum.TriggerCountdown || this.ActionType == PixelChatActionTypeEnum.TriggerCountup ||
                         this.ActionType == PixelChatActionTypeEnum.AddStreamathonTime)
                     {
-                        int.TryParse(await this.ReplaceStringWithSpecialModifiers(this.TimeAmount, parameters), out int timeAmount);
+                        int.TryParse(await ReplaceStringWithSpecialModifiers(this.TimeAmount, parameters), out int timeAmount);
                         sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString(), timeAmount);
                     }
                     else

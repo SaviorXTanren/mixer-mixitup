@@ -6015,4 +6015,16 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="VoicemodWebsite" xml:space="preserve">
     <value>Voicemod Website</value>
   </data>
+  <data name="Webhooks" xml:space="preserve">
+    <value>Webhooks</value>
+  </data>
+  <data name="CopyURL" xml:space="preserve">
+    <value>Copy URL</value>
+  </data>
+  <data name="AddWebhook" xml:space="preserve">
+    <value>Add Webhook</value>
+  </data>
+  <data name="WebhookJSONMapPairs" xml:space="preserve">
+    <value>Webhook JSON Map Pairs</value>
+  </data>
 </root>

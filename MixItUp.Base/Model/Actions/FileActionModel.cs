@@ -59,7 +59,7 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            string filePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
+            string filePath = await ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
             filePath = filePath.ToFilePathString();
 
             string textToWrite = string.Empty;
@@ -100,7 +100,7 @@ namespace MixItUp.Base.Model.Actions
                 if (this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile ||
                     this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine)
                 {
-                    string lineToRead = await this.ReplaceStringWithSpecialModifiers(this.LineIndex, parameters);
+                    string lineToRead = await ReplaceStringWithSpecialModifiers(this.LineIndex, parameters);
                     if (!int.TryParse(lineToRead, out lineIndex))
                     {
                         return;
@@ -178,7 +178,7 @@ namespace MixItUp.Base.Model.Actions
         private async Task<string> GetTextToSave(CommandParametersModel parameters)
         {
             string textToWrite = (!string.IsNullOrEmpty(this.TransferText)) ? this.TransferText : string.Empty;
-            return await this.ReplaceStringWithSpecialModifiers(textToWrite, parameters);
+            return await ReplaceStringWithSpecialModifiers(textToWrite, parameters);
         }
     }
 }

@@ -144,8 +144,8 @@ namespace MixItUp.Base.Model.Actions
 
         private async Task<bool> Check(ConditionalClauseModel clause, CommandParametersModel parameters)
         {
-            string v1 = await this.ReplaceStringWithSpecialModifiers(clause.Value1, parameters);
-            string v2 = await this.ReplaceStringWithSpecialModifiers(clause.Value2, parameters);
+            string v1 = await ReplaceStringWithSpecialModifiers(clause.Value1, parameters);
+            string v2 = await ReplaceStringWithSpecialModifiers(clause.Value2, parameters);
 
             if (clause.ComparisionType == ConditionalComparisionTypeEnum.Contains || clause.ComparisionType == ConditionalComparisionTypeEnum.DoesNotContain)
             {
@@ -154,7 +154,7 @@ namespace MixItUp.Base.Model.Actions
             }
             else if (clause.ComparisionType == ConditionalComparisionTypeEnum.Between)
             {
-                string v3 = await this.ReplaceStringWithSpecialModifiers(clause.Value3, parameters);
+                string v3 = await ReplaceStringWithSpecialModifiers(clause.Value3, parameters);
                 if (double.TryParse(v1, out double v1num) && double.TryParse(v2, out double v2num) && double.TryParse(v3, out double v3num))
                 {
                     return (v2num <= v1num && v1num <= v3num);

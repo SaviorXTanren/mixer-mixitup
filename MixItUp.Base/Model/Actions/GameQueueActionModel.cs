@@ -87,7 +87,7 @@ namespace MixItUp.Base.Model.Actions
                 UserViewModel targetUser = parameters.User;
                 if (!string.IsNullOrEmpty(this.TargetUsername))
                 {
-                    string username = await this.ReplaceStringWithSpecialModifiers(this.TargetUsername, parameters);
+                    string username = await ReplaceStringWithSpecialModifiers(this.TargetUsername, parameters);
                     targetUser = ChannelSession.Services.User.GetActiveUserByUsername(username, parameters.Platform);
                     if (targetUser == null)
                     {

@@ -56,7 +56,7 @@ namespace MixItUp.Base.Model.Actions
                 }
                 else
                 {
-                    string amountText = await this.ReplaceStringWithSpecialModifiers(this.Amount, parameters);
+                    string amountText = await ReplaceStringWithSpecialModifiers(this.Amount, parameters);
                     amountText = MathHelper.ProcessMathEquation(amountText).ToString();
                     if (double.TryParse(amountText, out double amount))
                     {

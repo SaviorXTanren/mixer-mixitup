@@ -64,7 +64,7 @@ namespace MixItUp.Base.Model.Actions
                     Dictionary<string, string> processedVariables = new Dictionary<string, string>();
                     foreach (var kvp in this.Variables)
                     {
-                        processedVariables[kvp.Key] = await this.ReplaceStringWithSpecialModifiers(kvp.Value, parameters);
+                        processedVariables[kvp.Key] = await ReplaceStringWithSpecialModifiers(kvp.Value, parameters);
 
                         // Since OvrStream doesn't support URI based images, we need to trigger a download and get the path to those files
                         if (processedVariables[kvp.Key].StartsWith("http", StringComparison.InvariantCultureIgnoreCase))

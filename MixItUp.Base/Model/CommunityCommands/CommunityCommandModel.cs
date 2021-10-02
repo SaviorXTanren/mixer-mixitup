@@ -53,6 +53,7 @@ namespace MixItUp.Base.Model.Store
         StreamlootsCardCommand,
         TwitchChannelPointsCommand,
         GameCommand,
+        Webhook,
 
         // Extra Tags
         [Obsolete]

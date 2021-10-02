@@ -206,7 +206,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 if (!string.IsNullOrEmpty(this.CurrentAmountCustom))
                 {
-                    string customAmount = await this.ReplaceStringWithSpecialModifiers(this.CurrentAmountCustom, parameters);
+                    string customAmount = await ReplaceStringWithSpecialModifiers(this.CurrentAmountCustom, parameters);
                     if (double.TryParse(customAmount, out amount))
                     {
                         if (this.StartAmount <= 0)
@@ -219,7 +219,7 @@ namespace MixItUp.Base.Model.Overlay
 
                 if (!string.IsNullOrEmpty(this.GoalAmountCustom))
                 {
-                    string customGoal = await this.ReplaceStringWithSpecialModifiers(this.GoalAmountCustom, parameters);
+                    string customGoal = await ReplaceStringWithSpecialModifiers(this.GoalAmountCustom, parameters);
                     if (double.TryParse(customGoal, out goal))
                     {
                         this.GoalAmount = goal;

@@ -42,13 +42,13 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            string message = await this.ReplaceStringWithSpecialModifiers(this.ChatText, parameters);
+            string message = await ReplaceStringWithSpecialModifiers(this.ChatText, parameters);
             if (this.IsWhisper)
             {
                 string whisperUserName = parameters.User.Username;
                 if (!string.IsNullOrEmpty(this.WhisperUserName))
                 {
-                    whisperUserName = await this.ReplaceStringWithSpecialModifiers(this.WhisperUserName, parameters);
+                    whisperUserName = await ReplaceStringWithSpecialModifiers(this.WhisperUserName, parameters);
                 }
                 await ChannelSession.Services.Chat.Whisper(parameters.Platform, whisperUserName, message, this.SendAsStreamer);
             }

@@ -69,8 +69,8 @@ namespace MixItUp.Base.Model.Actions
             {
                 if (this.ActionType == TwitterActionTypeEnum.SendTweet)
                 {
-                    string tweet = await this.ReplaceStringWithSpecialModifiers(this.TweetText, parameters);
-                    string imagePath = await this.ReplaceStringWithSpecialModifiers(this.ImagePath, parameters);
+                    string tweet = await ReplaceStringWithSpecialModifiers(this.TweetText, parameters);
+                    string imagePath = await ReplaceStringWithSpecialModifiers(this.ImagePath, parameters);
 
                     if (!string.IsNullOrEmpty(tweet))
                     {

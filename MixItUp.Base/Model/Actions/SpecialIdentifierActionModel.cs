@@ -51,7 +51,7 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            string replacementText = await this.ReplaceStringWithSpecialModifiers(this.ReplacementText, parameters);
+            string replacementText = await ReplaceStringWithSpecialModifiers(this.ReplacementText, parameters);
 
             replacementText = await this.ProcessStringFunction(replacementText, "removespaces", (text) => { return Task.FromResult(text.Replace(" ", string.Empty)); });
             replacementText = await this.ProcessStringFunction(replacementText, "removecommas", (text) => { return Task.FromResult(text.Replace(",", string.Empty)); });

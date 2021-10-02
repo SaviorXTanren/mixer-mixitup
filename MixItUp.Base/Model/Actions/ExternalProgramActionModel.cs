@@ -54,7 +54,7 @@ namespace MixItUp.Base.Model.Actions
 
             Process process = new Process();
             process.StartInfo.FileName = this.FilePath;
-            process.StartInfo.Arguments = await this.ReplaceStringWithSpecialModifiers(this.Arguments, parameters);
+            process.StartInfo.Arguments = await ReplaceStringWithSpecialModifiers(this.Arguments, parameters);
             process.StartInfo.CreateNoWindow = !this.ShowWindow;
             process.StartInfo.WindowStyle = (!this.ShowWindow) ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal;
             process.StartInfo.UseShellExecute = false;

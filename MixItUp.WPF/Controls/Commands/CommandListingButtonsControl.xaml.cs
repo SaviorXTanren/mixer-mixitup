@@ -61,6 +61,11 @@ namespace MixItUp.WPF.Controls.Commands
                     GameOutcomeViewModel commandItem = (GameOutcomeViewModel)commandListingButtonsControl.DataContext;
                     return (T)(CommandModelBase)commandItem.Command;
                 }
+                else if (commandListingButtonsControl.DataContext is WebhookCommandItemViewModel)
+                {
+                    WebhookCommandItemViewModel commandItem = (WebhookCommandItemViewModel)commandListingButtonsControl.DataContext;
+                    return (T)(CommandModelBase)commandItem.Command;
+                }
             }
             return null;
         }

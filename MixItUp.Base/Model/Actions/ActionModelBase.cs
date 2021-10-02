@@ -229,7 +229,7 @@ namespace MixItUp.Base.Model.Actions
 
         protected abstract Task PerformInternal(CommandParametersModel parameters);
 
-        protected async Task<string> ReplaceStringWithSpecialModifiers(string str, CommandParametersModel parameters, bool encode = false)
+        protected static async Task<string> ReplaceStringWithSpecialModifiers(string str, CommandParametersModel parameters, bool encode = false)
         {
             return await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(str, parameters, encode);
         }

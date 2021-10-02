@@ -140,6 +140,7 @@ namespace MixItUp.WPF
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Moderation, new ModerationControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Moderation");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.CommandHistory, new CommandHistoryControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Commands");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Services, new ServicesControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Services");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Webhooks, new WebhooksControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Webhooks");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Accounts, new AccountsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Changelog, new ChangelogControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.About, new AboutControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");

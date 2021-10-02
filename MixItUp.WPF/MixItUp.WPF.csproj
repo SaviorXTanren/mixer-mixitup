@@ -570,6 +570,9 @@
     <Compile Include="Controls\Commands\Games\WordScrambleGameCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>WordScrambleGameCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Commands\WebhookCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>WebhookCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Commands\StreamlootsCardCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>StreamlootsCardCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -671,6 +674,9 @@
     </Compile>
     <Compile Include="Controls\MainControls\RedemptionStoreControl.xaml.cs">
       <DependentUpon>RedemptionStoreControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\WebhooksControl.xaml.cs">
+      <DependentUpon>WebhooksControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\StreamlootsCardsControl.xaml.cs">
       <DependentUpon>StreamlootsCardsControl.xaml</DependentUpon>
@@ -1279,6 +1285,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Commands\WebhookCommandEditorDetailsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\Commands\StreamlootsCardCommandEditorDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1410,6 +1420,10 @@
     <Page Include="Controls\MainControls\RedemptionStoreControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\WebhooksControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\MainControls\StreamlootsCardsControl.xaml">
       <Generator>MSBuild:Compile</Generator>

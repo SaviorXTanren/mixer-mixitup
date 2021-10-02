@@ -384,7 +384,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (!cancellationToken.IsCancellationRequested)
             {
-                if (ChannelSession.Services.WebhookService.IsConnected && ChannelSession.Services.WebhookService.IsAllowed)
+                if (ChannelSession.Services.WebhookService.IsWebhookHubConnected && ChannelSession.Services.WebhookService.IsWebhookHubAllowed)
                 {
                     // We are using the new webhooks
                     return;

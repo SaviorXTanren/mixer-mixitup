@@ -47,15 +47,15 @@ namespace MixItUp.Base.Model.Actions
                 Dictionary<string, string> values = new Dictionary<string, string>();
                 if (!string.IsNullOrEmpty(this.EventValue1))
                 {
-                    values["value1"] = await this.ReplaceStringWithSpecialModifiers(this.EventValue1, parameters);
+                    values["value1"] = await ReplaceStringWithSpecialModifiers(this.EventValue1, parameters);
                 }
                 if (!string.IsNullOrEmpty(this.EventValue2))
                 {
-                    values["value2"] = await this.ReplaceStringWithSpecialModifiers(this.EventValue2, parameters);
+                    values["value2"] = await ReplaceStringWithSpecialModifiers(this.EventValue2, parameters);
                 }
                 if (!string.IsNullOrEmpty(this.EventValue3))
                 {
-                    values["value3"] = await this.ReplaceStringWithSpecialModifiers(this.EventValue3, parameters);
+                    values["value3"] = await ReplaceStringWithSpecialModifiers(this.EventValue3, parameters);
                 }
                 await ChannelSession.Services.IFTTT.SendTrigger(this.EventName, values);
             }

@@ -46,7 +46,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 text = text.Replace($"{{{kvp.Key}}}", kvp.Value);
             }
-            return await this.ReplaceStringWithSpecialModifiers(text, user, arguments, extraSpecialIdentifiers);
+            return await ReplaceStringWithSpecialModifiers(text, user, arguments, extraSpecialIdentifiers);
         }
 
         protected virtual Task<Dictionary<string, string>> GetReplacementSets(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
@@ -75,7 +75,7 @@ namespace MixItUp.Base.Model.Overlay
         public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             OverlayHTMLItem item = this.Copy<OverlayHTMLItem>();
-            item.HTMLText = await this.ReplaceStringWithSpecialModifiers(item.HTMLText, user, arguments, extraSpecialIdentifiers);
+            item.HTMLText = await ReplaceStringWithSpecialModifiers(item.HTMLText, user, arguments, extraSpecialIdentifiers);
             return item;
         }
     }
@@ -124,7 +124,7 @@ namespace MixItUp.Base.Model.Overlay
         public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             OverlayImageItem item = this.Copy<OverlayImageItem>();
-            item.FilePath = await this.ReplaceStringWithSpecialModifiers(item.FilePath, user, arguments, extraSpecialIdentifiers);
+            item.FilePath = await ReplaceStringWithSpecialModifiers(item.FilePath, user, arguments, extraSpecialIdentifiers);
             if (!Uri.IsWellFormedUriString(item.FilePath, UriKind.RelativeOrAbsolute))
             {
                 item.FilePath = item.FilePath.ToFilePathString();
@@ -436,7 +436,7 @@ namespace MixItUp.Base.Model.Overlay
         public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             OverlayTextItem item = this.Copy<OverlayTextItem>();
-            item.Text = await this.ReplaceStringWithSpecialModifiers(item.Text, user, arguments, extraSpecialIdentifiers);
+            item.Text = await ReplaceStringWithSpecialModifiers(item.Text, user, arguments, extraSpecialIdentifiers);
             return item;
         }
     }
@@ -494,7 +494,7 @@ namespace MixItUp.Base.Model.Overlay
         public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             OverlayVideoItem item = this.Copy<OverlayVideoItem>();
-            item.FilePath = await this.ReplaceStringWithSpecialModifiers(item.FilePath, user, arguments, extraSpecialIdentifiers);
+            item.FilePath = await ReplaceStringWithSpecialModifiers(item.FilePath, user, arguments, extraSpecialIdentifiers);
             if (!Uri.IsWellFormedUriString(item.FilePath, UriKind.RelativeOrAbsolute))
             {
                 item.FilePath = item.FilePath.ToFilePathString();
@@ -529,7 +529,7 @@ namespace MixItUp.Base.Model.Overlay
         public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             OverlayWebPageItem item = this.Copy<OverlayWebPageItem>();
-            item.URL = await this.ReplaceStringWithSpecialModifiers(item.URL, user, arguments, extraSpecialIdentifiers, encode: true);
+            item.URL = await ReplaceStringWithSpecialModifiers(item.URL, user, arguments, extraSpecialIdentifiers, encode: true);
             return item;
         }
     }
@@ -566,7 +566,7 @@ namespace MixItUp.Base.Model.Overlay
         public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             OverlayYouTubeItem item = this.Copy<OverlayYouTubeItem>();
-            item.VideoID = await this.ReplaceStringWithSpecialModifiers(item.VideoID, user, arguments, extraSpecialIdentifiers, encode: true);
+            item.VideoID = await ReplaceStringWithSpecialModifiers(item.VideoID, user, arguments, extraSpecialIdentifiers, encode: true);
             return item;
         }
     }

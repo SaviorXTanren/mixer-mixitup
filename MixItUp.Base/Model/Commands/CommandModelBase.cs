@@ -23,6 +23,7 @@ namespace MixItUp.Base.Model.Commands
         TwitchChannelPoints = 7,
         PreMade = 8,
         StreamlootsCard = 9,
+        Webhook = 10,
 
         // Specialty Command Types
         UserOnlyChat = 1000,

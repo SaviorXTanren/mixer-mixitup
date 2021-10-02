@@ -130,7 +130,7 @@ namespace MixItUp.Base.Model.Actions
                     List<string> newArguments = new List<string>();
                     if (!string.IsNullOrEmpty(this.Arguments))
                     {
-                        string processedMessage = await this.ReplaceStringWithSpecialModifiers(this.Arguments, parameters);
+                        string processedMessage = await ReplaceStringWithSpecialModifiers(this.Arguments, parameters);
                         newArguments = processedMessage.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList();
                     }
                     else

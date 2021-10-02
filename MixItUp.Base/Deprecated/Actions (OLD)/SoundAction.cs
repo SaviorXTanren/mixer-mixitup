@@ -41,7 +41,7 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            string audioFilePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, null);
+            string audioFilePath = await ReplaceStringWithSpecialModifiers(this.FilePath, null);
 
             if (SoundAction.MixItUpOverlay.Equals(this.OutputDevice))
             {

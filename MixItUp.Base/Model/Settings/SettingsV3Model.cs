@@ -626,6 +626,10 @@ namespace MixItUp.Base.Model.Settings
                 {
                     command = JSONSerializerHelper.DeserializeFromString<UserOnlyChatCommandModel>(commandData);
                 }
+                else if (type == CommandTypeEnum.Webhook)
+                {
+                    command = JSONSerializerHelper.DeserializeFromString<WebhookCommandModel>(commandData);
+                }
 
                 if (command != null)
                 {
