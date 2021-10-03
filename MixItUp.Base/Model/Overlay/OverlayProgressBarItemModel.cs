@@ -232,7 +232,7 @@ namespace MixItUp.Base.Model.Overlay
             if (goal != 0.0)
             {
                 percentage = (amount / goal);
-                if (!this.GoalReached && percentage >= 1.0)
+                if (!this.GoalReached && amount >= goal)
                 {
                     this.GoalReached = true;
                     if (this.ProgressGoalReachedCommand != null)
