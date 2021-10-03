@@ -117,14 +117,14 @@ namespace MixItUp.Base.Services
 
     public class MixItUpService : OAuthRestServiceBase, ICommunityCommandsService, IMixItUpService, IWebhookService, IDisposable
     {
-        //private const string MixItUpAPIEndpoint = "https://mixitupapi.azurewebsites.net/api/";
-        //private const string MixItUpSignalRHubEndpoint = "https://mixitupapi.azurewebsites.net/webhookhub";
+        public const string MixItUpAPIEndpoint = "https://mixitupapi.azurewebsites.net/api/";
+        public const string MixItUpSignalRHubEndpoint = "https://mixitupapi.azurewebsites.net/webhookhub";
 
         //public const string MixItUpAPIEndpoint = "https://localhost:44309/api/";                // Dev Endpoint
         //public const string MixItUpSignalRHubEndpoint = "https://localhost:44309/webhookhub";   // Dev Endpoint
 
-        public const string MixItUpAPIEndpoint = "https://9d71-98-97-49-144.ngrok.io/api/";                 // NGROK Endpoint
-        public const string MixItUpSignalRHubEndpoint = "https://9d71-98-97-49-144.ngrok.io/webhookhub";    // NGROK Endpoint
+        //public const string MixItUpAPIEndpoint = "https://9d71-98-97-49-144.ngrok.io/api/";                 // NGROK Endpoint
+        //public const string MixItUpSignalRHubEndpoint = "https://9d71-98-97-49-144.ngrok.io/webhookhub";    // NGROK Endpoint
 
         private string accessToken = null;
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
