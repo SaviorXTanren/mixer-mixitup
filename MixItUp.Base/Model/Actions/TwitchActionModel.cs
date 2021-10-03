@@ -303,12 +303,12 @@ namespace MixItUp.Base.Model.Actions
                 }
 #pragma warning restore CS0612 // Type or member is obsolete
 
-                int.TryParse(await this.ReplaceStringWithSpecialModifiers(this.ChannelPointRewardCostString, parameters), out int cost);
+                int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardCostString, parameters), out int cost);
                 if (cost > 0) { jobj["cost"] = cost; }
 
                 if (this.ChannelPointRewardUpdateCooldownsAndLimits)
                 {
-                    int.TryParse(await this.ReplaceStringWithSpecialModifiers(this.ChannelPointRewardMaxPerStreamString, parameters), out int maxPerStream);
+                    int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardMaxPerStreamString, parameters), out int maxPerStream);
                     if (maxPerStream > 0)
                     {
                         jobj["max_per_stream_setting"] = new JObject()
@@ -325,7 +325,7 @@ namespace MixItUp.Base.Model.Actions
                         };
                     }
 
-                    int.TryParse(await this.ReplaceStringWithSpecialModifiers(this.ChannelPointRewardMaxPerUserString, parameters), out int maxPerUser);
+                    int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardMaxPerUserString, parameters), out int maxPerUser);
                     if (maxPerUser > 0)
                     {
                         jobj["max_per_user_per_stream_setting"] = new JObject()
@@ -342,7 +342,7 @@ namespace MixItUp.Base.Model.Actions
                         };
                     }
 
-                    int.TryParse(await this.ReplaceStringWithSpecialModifiers(this.ChannelPointRewardGlobalCooldownString, parameters), out int globalCooldown);
+                    int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardGlobalCooldownString, parameters), out int globalCooldown);
                     if (globalCooldown > 0)
                     {
                         jobj["global_cooldown_setting"] = new JObject()
@@ -373,14 +373,14 @@ namespace MixItUp.Base.Model.Actions
                 {
                     choices.Add(new CreatePollChoiceModel()
                     {
-                        title = await this.ReplaceStringWithSpecialModifiers(choice, parameters)
+                        title = await ReplaceStringWithSpecialModifiers(choice, parameters)
                     });
                 }
 
                 PollModel poll = await ServiceManager.Get<TwitchSessionService>().UserConnection.CreatePoll(new CreatePollModel()
                 {
                     broadcaster_id = ServiceManager.Get<TwitchSessionService>().UserNewAPI.id,
-                    title = await this.ReplaceStringWithSpecialModifiers(this.PollTitle, parameters),
+                    title = await ReplaceStringWithSpecialModifiers(this.PollTitle, parameters),
                     duration = this.PollDurationSeconds,
                     channel_points_voting_enabled = this.PollChannelPointsCost > 0,
                     channel_points_per_vote = this.PollChannelPointsCost,
@@ -437,14 +437,14 @@ namespace MixItUp.Base.Model.Actions
                 {
                     outcomes.Add(new CreatePredictionOutcomeModel()
                     {
-                        title = await this.ReplaceStringWithSpecialModifiers(outcome, parameters)
+                        title = await ReplaceStringWithSpecialModifiers(outcome, parameters)
                     });
                 }
 
                 PredictionModel prediction = await ServiceManager.Get<TwitchSessionService>().UserConnection.CreatePrediction(new CreatePredictionModel()
                 {
                     broadcaster_id = ServiceManager.Get<TwitchSessionService>().UserNewAPI.id,
-                    title = await this.ReplaceStringWithSpecialModifiers(this.PredictionTitle, parameters),
+                    title = await ReplaceStringWithSpecialModifiers(this.PredictionTitle, parameters),
                     prediction_window = this.PredictionDurationSeconds,
                     outcomes = outcomes
                 });

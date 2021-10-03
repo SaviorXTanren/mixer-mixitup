@@ -234,13 +234,13 @@ namespace MixItUp.Base.Model.Actions
                     string name = null;
                     if (!string.IsNullOrEmpty(this.ItemName))
                     {
-                        name = await this.ReplaceStringWithSpecialModifiers(this.ItemName, parameters);
+                        name = await ReplaceStringWithSpecialModifiers(this.ItemName, parameters);
                     }
 
                     string parentName = null;
                     if (!string.IsNullOrEmpty(this.ParentName))
                     {
-                        parentName = await this.ReplaceStringWithSpecialModifiers(this.ParentName, parameters);
+                        parentName = await ReplaceStringWithSpecialModifiers(this.ParentName, parameters);
                     }
 
                     if (this.ActionType == StreamingSoftwareActionTypeEnum.StartStopStream)
@@ -273,7 +273,7 @@ namespace MixItUp.Base.Model.Actions
                     {
                         if (this.ActionType == StreamingSoftwareActionTypeEnum.WebBrowserSource && !string.IsNullOrEmpty(this.SourceURL))
                         {
-                            await ssService.SetWebBrowserSourceURL(parentName, name, await this.ReplaceStringWithSpecialModifiers(this.SourceURL, parameters));
+                            await ssService.SetWebBrowserSourceURL(parentName, name, await ReplaceStringWithSpecialModifiers(this.SourceURL, parameters));
                         }
                         else if (this.ActionType == StreamingSoftwareActionTypeEnum.TextSource && !string.IsNullOrEmpty(this.SourceText) && !string.IsNullOrEmpty(this.SourceTextFilePath))
                         {
@@ -286,7 +286,7 @@ namespace MixItUp.Base.Model.Actions
 
                                 using (StreamWriter writer = new StreamWriter(File.Open(this.SourceTextFilePath, FileMode.Create)))
                                 {
-                                    writer.Write(await this.ReplaceStringWithSpecialModifiers(this.SourceText, parameters));
+                                    writer.Write(await ReplaceStringWithSpecialModifiers(this.SourceText, parameters));
                                     writer.Flush();
                                 }
                             }

@@ -31,7 +31,7 @@ namespace MixItUp.Base.Model.Actions
             SerialDeviceModel serialDevice = ChannelSession.Settings.SerialDevices.FirstOrDefault(sd => sd.PortName.Equals(this.PortName));
             if (serialDevice != null)
             {
-                await ServiceManager.Get<SerialService>().SendMessage(serialDevice, await this.ReplaceStringWithSpecialModifiers(this.Message, parameters));
+                await ServiceManager.Get<SerialService>().SendMessage(serialDevice, await ReplaceStringWithSpecialModifiers(this.Message, parameters));
             }
         }
     }

@@ -130,7 +130,7 @@ namespace MixItUp.Base.Model.Actions
             OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlay(ServiceManager.Get<OverlayService>().DefaultOverlayName);
             if (overlay != null)
             {
-                string message = await this.ReplaceStringWithSpecialModifiers(this.Text, parameters);
+                string message = await ReplaceStringWithSpecialModifiers(this.Text, parameters);
                 await overlay.SendTextToSpeech(new OverlayTextToSpeech() { Text = message, Voice = this.Voice, Volume = this.Volume / 100.0, Pitch = this.Pitch / 100.0, Rate = this.Rate / 100.0 });
             }
         }

@@ -33,6 +33,7 @@ namespace MixItUp.Base.Services
         public List<GameCommandModelBase> GameCommands { get; set; } = new List<GameCommandModelBase>();
         public List<TwitchChannelPointsCommandModel> TwitchChannelPointsCommands { get; set; } = new List<TwitchChannelPointsCommandModel>();
         public List<StreamlootsCardCommandModel> StreamlootsCardCommands { get; set; } = new List<StreamlootsCardCommandModel>();
+        public List<WebhookCommandModel> WebhookCommands { get; set; } = new List<WebhookCommandModel>();
 
         public IEnumerable<CommandModelBase> AllEnabledChatAccessibleCommands
         {
@@ -59,6 +60,7 @@ namespace MixItUp.Base.Services
                 commands.AddRange(this.ActionGroupCommands);
                 commands.AddRange(this.TwitchChannelPointsCommands);
                 commands.AddRange(this.StreamlootsCardCommands);
+                commands.AddRange(this.WebhookCommands);
                 return commands;
             }
         }
@@ -101,6 +103,7 @@ namespace MixItUp.Base.Services
             this.GameCommands.Clear();
             this.TwitchChannelPointsCommands.Clear();
             this.StreamlootsCardCommands.Clear();
+            this.WebhookCommands.Clear();
 
             foreach (CommandModelBase command in ChannelSession.Settings.Commands.Values.ToList())
             {
@@ -115,6 +118,7 @@ namespace MixItUp.Base.Services
                 else if (command is ActionGroupCommandModel) { this.ActionGroupCommands.Add((ActionGroupCommandModel)command); }
                 else if (command is TwitchChannelPointsCommandModel) { this.TwitchChannelPointsCommands.Add((TwitchChannelPointsCommandModel)command); }
                 else if (command is StreamlootsCardCommandModel) { this.StreamlootsCardCommands.Add((StreamlootsCardCommandModel)command); }
+                else if (command is WebhookCommandModel) { this.WebhookCommands.Add((WebhookCommandModel)command); }
             }
 
             foreach (PreMadeChatCommandSettingsModel commandSetting in ChannelSession.Settings.PreMadeChatCommandSettings)

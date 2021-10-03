@@ -520,6 +520,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Webhook.
+        /// </summary>
+        public static string AddWebhook {
+            get {
+                return ResourceManager.GetString("AddWebhook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Advanced.
         /// </summary>
         public static string Advanced {
@@ -534,6 +543,15 @@ namespace MixItUp.Base {
         public static string Affiliate {
             get {
                 return ResourceManager.GetString("Affiliate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A JSON parameter name must be specified..
+        /// </summary>
+        public static string AJSONParameterNameMustBeSpecified {
+            get {
+                return ResourceManager.GetString("AJSONParameterNameMustBeSpecified", resourceCulture);
             }
         }
         
@@ -768,6 +786,15 @@ namespace MixItUp.Base {
         public static string ArgumentsRequirementValidName {
             get {
                 return ResourceManager.GetString("ArgumentsRequirementValidName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A special identifier name must be specified..
+        /// </summary>
+        public static string ASpecialIdentifierNameMustBeSpecified {
+            get {
+                return ResourceManager.GetString("ASpecialIdentifierNameMustBeSpecified", resourceCulture);
             }
         }
         
@@ -2574,6 +2601,15 @@ namespace MixItUp.Base {
         public static string Copy {
             get {
                 return ResourceManager.GetString("Copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy URL.
+        /// </summary>
+        public static string CopyURL {
+            get {
+                return ResourceManager.GetString("CopyURL", resourceCulture);
             }
         }
         
@@ -17096,6 +17132,24 @@ namespace MixItUp.Base {
         public static string WebhookEvents {
             get {
                 return ResourceManager.GetString("WebhookEvents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Webhook JSON Map Pairs.
+        /// </summary>
+        public static string WebhookJSONMapPairs {
+            get {
+                return ResourceManager.GetString("WebhookJSONMapPairs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Webhooks.
+        /// </summary>
+        public static string Webhooks {
+            get {
+                return ResourceManager.GetString("Webhooks", resourceCulture);
             }
         }
         

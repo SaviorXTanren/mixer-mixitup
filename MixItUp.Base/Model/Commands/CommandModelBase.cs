@@ -24,6 +24,7 @@ namespace MixItUp.Base.Model.Commands
         TwitchChannelPoints = 7,
         PreMade = 8,
         StreamlootsCard = 9,
+        Webhook = 10,
 
         // Specialty Command Types
         UserOnlyChat = 1000,
@@ -57,6 +58,7 @@ namespace MixItUp.Base.Model.Commands
             types.Remove(CommandTypeEnum.PreMade);
             types.Remove(CommandTypeEnum.UserOnlyChat);
             types.Remove(CommandTypeEnum.Custom);
+            types.Remove(CommandTypeEnum.Webhook);
             return types;
         }
 

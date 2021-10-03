@@ -121,7 +121,7 @@ namespace MixItUp.Base.Model.Actions
 
                 if (!string.IsNullOrEmpty(this.ItemName))
                 {
-                    string itemName = await this.ReplaceStringWithSpecialModifiers(this.ItemName, parameters);
+                    string itemName = await ReplaceStringWithSpecialModifiers(this.ItemName, parameters);
                     item = inventory.GetItem(itemName);
                     if (item == null)
                     {
@@ -172,7 +172,7 @@ namespace MixItUp.Base.Model.Actions
             }
             else
             {
-                string amountTextValue = await this.ReplaceStringWithSpecialModifiers(this.Amount, parameters);
+                string amountTextValue = await ReplaceStringWithSpecialModifiers(this.Amount, parameters);
                 amountTextValue = MathHelper.ProcessMathEquation(amountTextValue).ToString();
 
                 if (!double.TryParse(amountTextValue, out double doubleAmount))
@@ -197,7 +197,7 @@ namespace MixItUp.Base.Model.Actions
                 {
                     if (!string.IsNullOrEmpty(this.Username))
                     {
-                        string usernameString = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                        string usernameString = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
 
                         UserV2ViewModel receivingUser = null;
                         if (this.UsersMustBePresent)
