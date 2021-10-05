@@ -78,6 +78,24 @@ namespace MixItUp.Base.Model.Settings
         public bool IsMaximized { get; set; }
 
         [DataMember]
+        public double DashboardTop { get; set; }
+
+        [DataMember]
+        public double DashboardLeft { get; set; }
+
+        [DataMember]
+        public double DashboardWidth { get; set; }
+
+        [DataMember]
+        public double DashboardHeight { get; set; }
+
+        [DataMember]
+        public bool IsDashboardMaximized { get; set; }
+
+        [DataMember]
+        public bool IsDashboardPinned { get; set; }
+
+        [DataMember]
         public LanguageOptions LanguageOption { get; set; }
 
         [DataMember]
