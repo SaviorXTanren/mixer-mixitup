@@ -16,6 +16,8 @@ namespace MixItUp.Base.ViewModel.User
 {
     public class UserV2ViewModel : UIViewModelBase, IEquatable<UserV2ViewModel>, IComparable<UserV2ViewModel>
     {
+        public static UserV2ViewModel CreateUnassociated(string username = null) { return new UserV2ViewModel(StreamingPlatformTypeEnum.None, UserV2Model.CreateUnassociated(username)); }
+
         private const string UserDefaultColor = "MaterialDesignBody";
 
         private StreamingPlatformTypeEnum platform;
@@ -186,7 +188,7 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public DateTimeOffset? AccountDate { get { return this.PlatformModel.AccountDate; } set { this.PlatformModel.AccountDate = value; } }
-        public string AccountDateString { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.Unknown; } }
+        public string AccountAgeString { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.NotSubscribed; } }
 
         public DateTimeOffset? FollowDate { get { return this.PlatformModel.FollowDate; } set { this.PlatformModel.FollowDate = value; } }
         public string FollowAgeString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.NotFollowing; } }
@@ -196,7 +198,14 @@ namespace MixItUp.Base.ViewModel.User
         public string SubscribeAgeString { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.NotSubscribed; } }
         public int SubscribeMonths { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow() : 0; } }
 
-        public int SubscribeTier { get { return this.PlatformModel.SubscriberTier; } }
+        public int SubscriberTier { get { return this.PlatformModel.SubscriberTier; } set { this.PlatformModel.SubscriberTier = value; } }
+        public string SubscriberTierString
+        {
+            get
+            {
+                return (this.SubscriberTier > 0) ? $"{MixItUp.Base.Resources.Tier} {this.SubscriberTier}" : MixItUp.Base.Resources.NotSubscribed;
+            }
+        }
         public string SubscriberBadgeLink
         {
             get
@@ -319,6 +328,31 @@ namespace MixItUp.Base.ViewModel.User
         {
             get { return ChannelSession.Settings.GetCommand(this.Model.EntranceCommandID); }
             set { this.Model.EntranceCommandID = (value != null) ? value.ID : Guid.Empty; }
+        }
+
+        public string Title
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(this.CustomTitle))
+                {
+                    return this.CustomTitle;
+                }
+
+                UserTitleModel title = ChannelSession.Settings.UserTitles.OrderByDescending(t => t.Role).ThenByDescending(t => t.Months).FirstOrDefault(t => t.MeetsTitle(this));
+                if (title != null)
+                {
+                    return title.Name;
+                }
+
+                return MixItUp.Base.Resources.NoTitle;
+            }
+        }
+
+        public string CustomTitle
+        {
+            get { return this.Model.CustomTitle; }
+            set { this.Model.CustomTitle = value; }
         }
 
         public DateTimeOffset LastActivity { get { return this.Model.LastActivity; } }

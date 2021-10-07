@@ -5,8 +5,12 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Store;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Model.User.Twitch;
+using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Model.Webhooks;
+using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
+using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -18,16 +22,31 @@ using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using TwitchBase = Twitch.Base;
 
 namespace MixItUp.Base.Services
 {
-    public class MixItUpService : IDisposable
+    public interface IMixItUpService : IDisposable
+    {
+        bool IsWebhookHubConnected { get; }
+        bool IsWebhookHubAllowed { get; }
+        void BackgroundConnect();
+        Task<Result> Connect();
+        Task Disconnect();
+
+        Task Authenticate(string twitchAccessToken);
+
+        Task<GetWebhooksResponseModel> GetWebhooks();
+        Task<Webhook> CreateWebhook();
+        Task DeleteWebhook(Guid id);
+    }
+
+    public interface IWebhookService
     {
         bool IsWebhookHubConnected { get; }
         bool IsWebhookHubAllowed { get; }
@@ -302,13 +321,8 @@ namespace MixItUp.Base.Services
         {
             if (accessToken == null)
             {
-                var twitchUserOAuthToken = ChannelSession.TwitchUserConnection.Connection.GetOAuthTokenCopy();
-                var login = new CommunityCommandLoginModel
-                {
-                    TwitchAccessToken = twitchUserOAuthToken?.accessToken,
-                };
-
-                var loginResponse = await PostAsync<CommunityCommandLoginResponseModel>("user/login", AdvancedHttpClient.CreateContentFromObject(login));
+                var token = this.GetLoginToken();
+                var loginResponse = await PostAsync<CommunityCommandLoginResponseModel>("user/login", AdvancedHttpClient.CreateContentFromObject(token));
                 this.accessToken = loginResponse.AccessToken;
             }
         }
@@ -384,7 +398,7 @@ namespace MixItUp.Base.Services
 
         public async Task Authenticate(string twitchAccessToken)
         {
-            await this.AsyncWrapper(this.signalRConnection.Send(AuthenticateMethodName, twitchAccessToken));
+            await this.AsyncWrapper(this.signalRConnection.Send(AuthenticateMethodName, ); //twitchAccessToken));
         }
 
         public async Task<GetWebhooksResponseModel> GetWebhooks()
@@ -416,62 +430,28 @@ namespace MixItUp.Base.Services
 
         private async Task TwitchFollowEvent(string followerId, string followerUsername, string followerDisplayName)
         {
-            UserViewModel user = ChannelSession.Services.User.GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, followerId);
+            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, followerId);
             if (user == null)
             {
-                user = await UserViewModel.Create(new TwitchWebhookFollowModel()
+                user = ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(new TwitchWebhookUserFollowModel()
                 {
-                    StreamerID = ChannelSession.TwitchUserNewAPI.id,
-
-                    UserID = followerId,
+                    ID = followerId,
                     Username = followerUsername,
-                    UserDisplayName = followerDisplayName
-                });
+                    DisplayName = followerDisplayName
+                }));
             }
 
-            ChannelSession.Services.Events.TwitchEventService.FollowCache.Add(user.TwitchID);
-
-            if (user.UserRoles.Contains(UserRoleEnum.Banned))
-            {
-                return;
-            }
-
-            CommandParametersModel parameters = new CommandParametersModel(user);
-            if (ChannelSession.Services.Events.CanPerformEvent(EventTypeEnum.TwitchChannelFollowed, parameters))
-            {
-                user.FollowDate = DateTimeOffset.Now;
-
-                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user.ID;
-
-                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
-                {
-                    currency.AddAmount(user.Data, currency.OnFollowBonus);
-                }
-
-                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
-                {
-                    if (user.HasPermissionsTo(streamPass.Permission))
-                    {
-                        streamPass.AddAmount(user.Data, streamPass.FollowBonus);
-                    }
-                }
-
-                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Followed", user.FullDisplayName), ChannelSession.Settings.AlertFollowColor));
-
-                await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.TwitchChannelFollowed, parameters);
-
-                GlobalEvents.FollowOccurred(user);
-            }
+            await ServiceManager.Get<TwitchEventService>().AddFollow(user);
         }
 
         private async Task TwitchStreamStartedEvent()
         {
-            await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.TwitchChannelStreamStart, new CommandParametersModel());
+            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStart, new CommandParametersModel());
         }
 
         private async Task TwitchStreamStoppedEvent()
         {
-            await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.TwitchChannelStreamStop, new CommandParametersModel());
+            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStop, new CommandParametersModel());
         }
 
         private async Task TwitchChannelHypeTrainBegin(int totalPoints, int levelPoints, int levelGoal)
@@ -480,9 +460,9 @@ namespace MixItUp.Base.Services
             eventCommandSpecialIdentifiers["hypetraintotalpoints"] = totalPoints.ToString();
             eventCommandSpecialIdentifiers["hypetrainlevelpoints"] = levelPoints.ToString();
             eventCommandSpecialIdentifiers["hypetrainlevelgoal"] = levelGoal.ToString();
-            await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.TwitchChannelHypeTrainBegin, new CommandParametersModel(ChannelSession.GetCurrentUser(), eventCommandSpecialIdentifiers));
+            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeTrainBegin, new CommandParametersModel(ChannelSession.GetCurrentUser(), eventCommandSpecialIdentifiers));
 
-            await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, MixItUp.Base.Resources.HypeTrainStarted, ChannelSession.Settings.AlertHypeTrainColor));
+            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, MixItUp.Base.Resources.HypeTrainStarted, ChannelSession.Settings.AlertHypeTrainColor));
         }
 
         //private async Task TwitchChannelHypeTrainProgress(int level, int totalPoints, int levelPoints, int levelGoal)
@@ -505,16 +485,16 @@ namespace MixItUp.Base.Services
             Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
             eventCommandSpecialIdentifiers["hypetraintotallevel"] = level.ToString();
             eventCommandSpecialIdentifiers["hypetraintotalpoints"] = totalPoints.ToString();
-            await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.TwitchChannelHypeTrainEnd, new CommandParametersModel(ChannelSession.GetCurrentUser(), eventCommandSpecialIdentifiers));
+            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeTrainEnd, new CommandParametersModel(ChannelSession.GetCurrentUser(), eventCommandSpecialIdentifiers));
 
-            await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, string.Format(MixItUp.Base.Resources.HypeTrainEndedReachedLevel, level.ToString()), ChannelSession.Settings.AlertHypeTrainColor));
+            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, string.Format(MixItUp.Base.Resources.HypeTrainEndedReachedLevel, level.ToString()), ChannelSession.Settings.AlertHypeTrainColor));
         }
 
         private async Task TriggerGenericWebhook(Guid id, string payload)
         {
             try
             {
-                var command = ChannelSession.Services.Command.WebhookCommands.FirstOrDefault(c => c.ID == id);
+                var command = ServiceManager.Get<CommandService>().WebhookCommands.FirstOrDefault(c => c.ID == id);
                 if (command != null && command.IsEnabled)
                 {
                     if (string.IsNullOrEmpty(payload))
@@ -530,13 +510,37 @@ namespace MixItUp.Base.Services
                     Dictionary<string, string> jsonParameters = command.JSONParameters.ToDictionary(param => param.JSONParameterName, param => param.SpecialIdentifierName);
                     await WebRequestActionModel.ProcessJSONToSpecialIdentifiers(payload, jsonParameters, parameters);
 
-                    await ChannelSession.Services.Command.Queue(command, parameters);
+                    await ServiceManager.Get<CommandService>().Queue(command, parameters);
                 }
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
             }
+        }
+
+        private CommunityCommandLoginModel GetLoginToken()
+        {
+            var login = new CommunityCommandLoginModel();
+
+            if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
+            {
+                login.TwitchAccessToken = ServiceManager.Get<TwitchSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
+            }
+            if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().IsConnected)
+            {
+                login.TwitchAccessToken = ServiceManager.Get<YouTubeSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
+            }
+            if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
+            {
+                login.TwitchAccessToken = ServiceManager.Get<TrovoSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
+            }
+            if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().IsConnected)
+            {
+                login.TwitchAccessToken = ServiceManager.Get<GlimeshSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
+            }
+
+            return login;
         }
 
         #region IDisposable Support

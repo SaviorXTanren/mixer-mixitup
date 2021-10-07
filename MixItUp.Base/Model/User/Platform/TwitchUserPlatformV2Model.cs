@@ -57,7 +57,7 @@ namespace MixItUp.Base.Model.User.Platform
 
         public TwitchUserPlatformV2Model(UserFollowModel follow) : this(follow.from_id, follow.from_name, null) { }
 
-        public TwitchUserPlatformV2Model(TwitchWebhookFollowModel follow) : this(follow.UserID, follow.Username, follow.UserDisplayName) { }
+        public TwitchUserPlatformV2Model(TwitchWebhookUserFollowModel follow) : this(follow.ID, follow.Username, follow.DisplayName) { }
 
         public TwitchUserPlatformV2Model(string id, string username, string displayName)
         {
@@ -115,6 +115,15 @@ namespace MixItUp.Base.Model.User.Platform
             }
         }
 
+        public UserModel GetTwitchNewAPIUserModel()
+        {
+            return new UserModel()
+            {
+                id = this.ID,
+                login = this.Username
+            };
+        }
+
         private void SetUserProperties(UserModel user)
         {
             this.ID = user.id;
@@ -157,15 +166,6 @@ namespace MixItUp.Base.Model.User.Platform
                 }
             }
             return null;
-        }
-
-        private UserModel GetTwitchNewAPIUserModel()
-        {
-            return new UserModel()
-            {
-                id = this.ID,
-                login = this.Username
-            };
         }
     }
 }

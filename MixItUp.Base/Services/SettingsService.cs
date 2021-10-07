@@ -358,14 +358,22 @@ namespace MixItUp.Base.Services
                 }
 
 #pragma warning disable CS0612 // Type or member is obsolete
+                settings.ModerationFilteredWordsExcemptUserRole = UserRoles.ConvertFromOldRole(settings.ModerationFilteredWordsExcempt);
+                settings.ModerationChatTextExcemptUserRole = UserRoles.ConvertFromOldRole(settings.ModerationChatTextExcempt);
+                settings.ModerationBlockLinksExcemptUserRole = UserRoles.ConvertFromOldRole(settings.ModerationBlockLinksExcempt);
+                settings.ModerationChatInteractiveParticipationExcemptUserRole = UserRoles.ConvertFromOldRole(settings.ModerationChatInteractiveParticipationExcempt);
+
+                foreach (var title in settings.UserTitles)
+                {
+                    title.UserRole = UserRoles.ConvertFromOldRole(title.Role);
+                }
+
                 foreach (var kvp in settings.CustomUsernameColors)
                 {
                     UserRoleEnum newRole = UserRoles.ConvertFromOldRole(kvp.Key);
                     settings.CustomUsernameRoleColors[newRole] = kvp.Value;
                 }
-#pragma warning restore CS0612 // Type or member is obsolete
 
-#pragma warning disable CS0612 // Type or member is obsolete
                 foreach (var kvp in settings.StreamPass)
                 {
                     kvp.Value.UserPermission = UserRoles.ConvertFromOldRole(kvp.Value.Permission);

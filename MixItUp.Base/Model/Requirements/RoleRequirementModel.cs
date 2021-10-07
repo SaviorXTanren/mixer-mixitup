@@ -76,7 +76,7 @@ namespace MixItUp.Base.Model.Requirements
                     {
                         if (role == UserRoleEnum.Subscriber || role == UserRoleEnum.YouTubeMember)
                         {
-                            if (parameters.User.SubscribeTier >= this.SubscriberTier)
+                            if (parameters.User.SubscriberTier >= this.SubscriberTier)
                             {
                                 return Task.FromResult(new Result());
                             }
@@ -94,7 +94,7 @@ namespace MixItUp.Base.Model.Requirements
                 {
                     if (this.UserRole == UserRoleEnum.Subscriber || this.UserRole == UserRoleEnum.YouTubeMember)
                     {
-                        if (parameters.User.ExceedRole(this.UserRole) || parameters.User.SubscribeTier >= this.SubscriberTier)
+                        if (parameters.User.ExceedRole(this.UserRole) || parameters.User.SubscriberTier >= this.SubscriberTier)
                         {
                             return Task.FromResult(new Result());
                         }

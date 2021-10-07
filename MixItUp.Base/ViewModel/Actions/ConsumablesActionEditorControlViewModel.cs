@@ -161,9 +161,9 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool CanDeductFromUser { get { return this.SelectedActionType == ConsumablesActionTypeEnum.AddToSpecificUser || this.SelectedActionType == ConsumablesActionTypeEnum.AddToAllChatUsers; } }
 
-        public IEnumerable<OldUserRoleEnum> UsersToApplyTo { get { return UserV2Model.GetSelectableUserRoles(); } }
+        public IEnumerable<UserRoleEnum> UsersToApplyTo { get { return UserRoles.All; } }
 
-        public OldUserRoleEnum SelectedUsersToApplyTo
+        public UserRoleEnum SelectedUsersToApplyTo
         {
             get { return this.selectedUsersToApplyTo; }
             set
@@ -172,7 +172,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged();
             }
         }
-        private OldUserRoleEnum selectedUsersToApplyTo;
+        private UserRoleEnum selectedUsersToApplyTo;
 
         public bool CanSelectUsersToApplyTo { get { return this.SelectedActionType == ConsumablesActionTypeEnum.AddToAllChatUsers || this.SelectedActionType == ConsumablesActionTypeEnum.SubtractFromAllChatUsers; } }
 

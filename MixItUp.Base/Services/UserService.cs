@@ -123,6 +123,7 @@ namespace MixItUp.Base.Services
         {
             UserV2ViewModel user = null;
 
+            platformUsername = UserService.SanitizeUsername(platformUsername);
             if (string.IsNullOrEmpty(platformUsername))
             {
                 return user;
@@ -298,6 +299,7 @@ namespace MixItUp.Base.Services
         {
             UserV2ViewModel user = null;
 
+            platformUsername = UserService.SanitizeUsername(platformUsername);
             if (string.IsNullOrEmpty(platformUsername))
             {
                 return user;

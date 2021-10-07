@@ -13,49 +13,52 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public string Name { get; set; }
 
+        [Obsolete]
         [DataMember]
         public OldUserRoleEnum Role { get; set; }
+        [DataMember]
+        public UserRoleEnum UserRole { get; set; }
 
         [DataMember]
         public int Months { get; set; }
 
         [JsonProperty]
-        public string RoleString { get { return EnumHelper.GetEnumName(this.Role); } }
+        public string RoleString { get { return EnumHelper.GetEnumName(this.UserRole); } }
 
         [JsonProperty]
         public string MonthsString { get { return (this.Months > 0) ? this.Months.ToString() : string.Empty; } }
 
         public UserTitleModel() { }
 
-        public UserTitleModel(string name, OldUserRoleEnum role, int months = 0)
+        public UserTitleModel(string name, UserRoleEnum role, int months = 0)
         {
             this.Name = name;
-            this.Role = role;
+            this.UserRole = role;
             this.Months = months;
         }
 
         public bool MeetsTitle(UserV2ViewModel user)
         {
-            if (user.HasPermissionsTo(this.Role))
+            if (user.MeetsRole(this.UserRole))
             {
-                if (this.Role == OldUserRoleEnum.Follower)
+                if (this.UserRole == UserRoleEnum.Follower || this.UserRole == UserRoleEnum.YouTubeSubscriber)
                 {
                     if (user.FollowDate != null)
                     {
                         return user.FollowDate.GetValueOrDefault().TotalMonthsFromNow() >= this.Months;
                     }
-                    else if (!user.HasPermissionsTo(this.Role))
+                    else if (!user.MeetsRole(this.UserRole))
                     {
                         return false;
                     }
                 }
-                else if (this.Role == OldUserRoleEnum.Subscriber)
+                else if (this.UserRole == UserRoleEnum.Subscriber || this.UserRole == UserRoleEnum.YouTubeMember)
                 {
                     if (user.SubscribeDate != null)
                     {
                         return user.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow() >= this.Months;
                     }
-                    else if (!user.HasPermissionsTo(this.Role))
+                    else if (!user.MeetsRole(this.UserRole))
                     {
                         return false;
                     }
@@ -78,7 +81,7 @@ namespace MixItUp.Base.Model.User
 
         public int CompareTo(UserTitleModel other)
         {
-            if (this.Role == other.Role)
+            if (this.UserRole == other.UserRole)
             {
                 if (this.Months < other.Months)
                 {
@@ -90,7 +93,7 @@ namespace MixItUp.Base.Model.User
                 }
                 return 0;
             }
-            return this.Role.CompareTo(other.Role);
+            return this.UserRole.CompareTo(other.UserRole);
         }
 
         public override int GetHashCode() { return this.Name.GetHashCode(); }

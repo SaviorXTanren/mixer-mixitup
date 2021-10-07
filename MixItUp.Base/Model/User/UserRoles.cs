@@ -64,6 +64,9 @@ namespace MixItUp.Base.Model.User
 
     public static class UserRoles
     {
+        public static IEnumerable<UserRoleEnum> All { get { return all; } }
+        private readonly static IEnumerable<UserRoleEnum> all = EnumHelper.GetEnumList<UserRoleEnum>();
+
         public static IEnumerable<UserRoleEnum> Generic { get { return generic; } }
         private readonly static IEnumerable<UserRoleEnum> generic = GetSelectableRoles<GenericUserRoleAttribute>();
 

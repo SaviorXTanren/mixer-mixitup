@@ -350,8 +350,11 @@ namespace MixItUp.Base.Model.Settings
         public int ModerationFilteredWordsTimeout1MinuteOffenseCount { get; set; }
         [DataMember]
         public int ModerationFilteredWordsTimeout5MinuteOffenseCount { get; set; }
+        [Obsolete]
         [DataMember]
         public OldUserRoleEnum ModerationFilteredWordsExcempt { get; set; } = OldUserRoleEnum.Mod;
+        [DataMember]
+        public UserRoleEnum ModerationFilteredWordsExcemptUserRole { get; set; } = UserRoleEnum.Moderator;
         [DataMember]
         public bool ModerationFilteredWordsApplyStrikes { get; set; } = true;
 
@@ -363,22 +366,31 @@ namespace MixItUp.Base.Model.Settings
         public int ModerationPunctuationBlockCount { get; set; }
         [DataMember]
         public bool ModerationPunctuationBlockIsPercentage { get; set; } = true;
+        [Obsolete]
         [DataMember]
         public OldUserRoleEnum ModerationChatTextExcempt { get; set; } = OldUserRoleEnum.Mod;
+        [DataMember]
+        public UserRoleEnum ModerationChatTextExcemptUserRole { get; set; } = UserRoleEnum.Moderator;
         [DataMember]
         public bool ModerationChatTextApplyStrikes { get; set; } = true;
 
         [DataMember]
         public bool ModerationBlockLinks { get; set; }
+        [Obsolete]
         [DataMember]
         public OldUserRoleEnum ModerationBlockLinksExcempt { get; set; } = OldUserRoleEnum.Mod;
+        [DataMember]
+        public UserRoleEnum ModerationBlockLinksExcemptUserRole { get; set; } = UserRoleEnum.Moderator;
         [DataMember]
         public bool ModerationBlockLinksApplyStrikes { get; set; } = true;
 
         [DataMember]
         public ModerationChatInteractiveParticipationEnum ModerationChatInteractiveParticipation { get; set; } = ModerationChatInteractiveParticipationEnum.None;
+        [Obsolete]
         [DataMember]
         public OldUserRoleEnum ModerationChatInteractiveParticipationExcempt { get; set; } = OldUserRoleEnum.Mod;
+        [DataMember]
+        public UserRoleEnum ModerationChatInteractiveParticipationExcemptUserRole { get; set; } = UserRoleEnum.Moderator;
 
         [DataMember]
         public bool ModerationFollowEvent { get; set; }

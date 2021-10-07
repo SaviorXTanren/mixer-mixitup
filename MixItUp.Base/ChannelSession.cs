@@ -48,7 +48,6 @@ namespace MixItUp.Base
             ServiceManager.Add(new CommandService());
             ServiceManager.Add(new SettingsService());
             ServiceManager.Add(new MixItUpService());
-            ServiceManager.Add(new WebhookService(MixItUpService.MixItUpAPIEndpoint, "https://mixitupapi.azurewebsites.net/webhookhub"));
             ServiceManager.Add(new UserService());
             ServiceManager.Add(new ChatService());
             ServiceManager.Add(new EventService());
