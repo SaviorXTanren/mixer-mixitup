@@ -378,11 +378,13 @@ namespace MixItUp.Base.Services
                 {
                     kvp.Value.UserPermission = UserRoles.ConvertFromOldRole(kvp.Value.Permission);
                 }
-#pragma warning restore CS0612 // Type or member is obsolete
 
-#pragma warning disable CS0612 // Type or member is obsolete
+                foreach (var commandSettings in settings.PreMadeChatCommandSettings)
+                {
+                    commandSettings.UserRole = UserRoles.ConvertFromOldRole(commandSettings.Role);
+                }
+
                 List<UserDataModel> oldUserData = new List<UserDataModel>();
-
                 await ServiceManager.Get<IDatabaseService>().Read(settings.DatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
                 {
                     oldUserData.Add(JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString()));
@@ -396,9 +398,7 @@ namespace MixItUp.Base.Services
                         settings.Users[user.ID] = user;
                     }
                 }
-#pragma warning restore CS0612 // Type or member is obsolete
 
-#pragma warning disable CS0612 // Type or member is obsolete
                 foreach (CommandModelBase command in settings.Commands.Values)
                 {
                     if (command is BetGameCommandModel)

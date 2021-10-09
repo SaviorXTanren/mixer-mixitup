@@ -144,16 +144,16 @@ namespace MixItUp.Base.ViewModel.User
             return user;
         }
 
-        public static async Task<UserViewModel> Create(TwitchWebhookFollowModel follow)
-        {
-            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, follow.UserID, follow.Username);
+        //public static async Task<UserViewModel> Create(TwitchWebhookFollowModel follow)
+        //{
+        //    UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, follow.UserID, follow.Username);
 
-            user.TwitchDisplayName = follow.UserDisplayName;
+        //    user.TwitchDisplayName = follow.UserDisplayName;
 
-            user.SetTwitchRoles();
+        //    user.SetTwitchRoles();
 
-            return user;
-        }
+        //    return user;
+        //}
 
         public static async Task<UserViewModel> Create(Glimesh.Base.Models.Users.UserModel glimeshUser)
         {
@@ -239,37 +239,37 @@ namespace MixItUp.Base.ViewModel.User
             UserDataModel data = new UserDataModel();
             if (!string.IsNullOrEmpty(platformID) && !string.IsNullOrEmpty(platformUsername))
             {
-                data = await ServiceManager.Get<UserService>().GetUserDataByPlatformID(platform, platformID);
-                if (data == null)
-                {
-                    data = await ServiceManager.Get<UserService>().GetUserDataByPlatformUsername(platform, platformUsername);
-                    if (data == null)
-                    {
-                        data = new UserDataModel();
-                    }
-                }
+                //data = await ServiceManager.Get<UserService>().GetUserDataByPlatformID(platform, platformID);
+                //if (data == null)
+                //{
+                //    data = await ServiceManager.Get<UserService>().GetUserDataByPlatformUsername(platform, platformUsername);
+                //    if (data == null)
+                //    {
+                //        data = new UserDataModel();
+                //    }
+                //}
 
-                switch (platform)
-                {
-                    case StreamingPlatformTypeEnum.Twitch:
-                        data.TwitchID = platformID;
-                        data.TwitchUsername = platformUsername;
-                        break;
-                    case StreamingPlatformTypeEnum.YouTube:
-                        data.YouTubeID = platformID;
-                        data.YouTubeUsername = platformUsername;
-                        break;
-                    case StreamingPlatformTypeEnum.Trovo:
-                        data.TrovoID = platformID;
-                        data.TrovoUsername = platformUsername;
-                        break;
-                    case StreamingPlatformTypeEnum.Glimesh:
-                        data.GlimeshID = platformID;
-                        data.GlimeshUsername = platformUsername;
-                        break;
-                }
+                //switch (platform)
+                //{
+                //    case StreamingPlatformTypeEnum.Twitch:
+                //        data.TwitchID = platformID;
+                //        data.TwitchUsername = platformUsername;
+                //        break;
+                //    case StreamingPlatformTypeEnum.YouTube:
+                //        data.YouTubeID = platformID;
+                //        data.YouTubeUsername = platformUsername;
+                //        break;
+                //    case StreamingPlatformTypeEnum.Trovo:
+                //        data.TrovoID = platformID;
+                //        data.TrovoUsername = platformUsername;
+                //        break;
+                //    case StreamingPlatformTypeEnum.Glimesh:
+                //        data.GlimeshID = platformID;
+                //        data.GlimeshUsername = platformUsername;
+                //        break;
+                //}
 
-                ServiceManager.Get<UserService>().SetUserData(data, newData: true);
+                //ServiceManager.Get<UserService>().SetUserData(data, newData: true);
             }
             return new UserViewModel(data);
         }
@@ -720,11 +720,11 @@ namespace MixItUp.Base.ViewModel.User
                     return this.Data.CustomTitle;
                 }
 
-                UserTitleModel title = ChannelSession.Settings.UserTitles.OrderByDescending(t => t.Role).ThenByDescending(t => t.Months).FirstOrDefault(t => t.MeetsTitle(this));
-                if (title != null)
-                {
-                    return title.Name;
-                }
+                //UserTitleModel title = ChannelSession.Settings.UserTitles.OrderByDescending(t => t.Role).ThenByDescending(t => t.Months).FirstOrDefault(t => t.MeetsTitle(this));
+                //if (title != null)
+                //{
+                //    return title.Name;
+                //}
 
                 return "No Title";
             }
@@ -1058,18 +1058,18 @@ namespace MixItUp.Base.ViewModel.User
             extraSpecialIdentifiers.Add(ModerationService.ModerationReasonSpecialIdentifier, moderationReason);
 
             this.Data.ModerationStrikes++;
-            if (this.Data.ModerationStrikes == 1)
-            {
-                await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.ModerationStrike1CommandID, new CommandParametersModel(this, extraSpecialIdentifiers));
-            }
-            else if (this.Data.ModerationStrikes == 2)
-            {
-                await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.ModerationStrike2CommandID, new CommandParametersModel(this, extraSpecialIdentifiers));
-            }
-            else if (this.Data.ModerationStrikes >= 3)
-            {
-                await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.ModerationStrike3CommandID, new CommandParametersModel(this, extraSpecialIdentifiers));
-            }
+            //if (this.Data.ModerationStrikes == 1)
+            //{
+            //    await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.ModerationStrike1CommandID, new CommandParametersModel(this, extraSpecialIdentifiers));
+            //}
+            //else if (this.Data.ModerationStrikes == 2)
+            //{
+            //    await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.ModerationStrike2CommandID, new CommandParametersModel(this, extraSpecialIdentifiers));
+            //}
+            //else if (this.Data.ModerationStrikes >= 3)
+            //{
+            //    await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.ModerationStrike3CommandID, new CommandParametersModel(this, extraSpecialIdentifiers));
+            //}
         }
 
         public Task RemoveModerationStrike()

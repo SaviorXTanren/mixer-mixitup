@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
-using MixItUp.Base.ViewModel.Requirements;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
@@ -16,13 +15,13 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public string TriggersString { get { return this.command.TriggersString; } }
 
-        public IEnumerable<OldUserRoleEnum> RoleValues { get { return UserV2Model.GetSelectableUserRoles(); } }
-        public OldUserRoleEnum SelectedRole
+        public IEnumerable<UserRoleEnum> RoleValues { get { return UserRoles.All; } }
+        public UserRoleEnum SelectedRole
         {
-            get { return this.command.Requirements.Role.Role; }
+            get { return this.command.Requirements.Role.UserRole; }
             set
             {
-                this.command.Requirements.Role.Role = value;
+                this.command.Requirements.Role.UserRole = value;
                 this.UpdateSetting();
                 this.NotifyPropertyChanged();
             }

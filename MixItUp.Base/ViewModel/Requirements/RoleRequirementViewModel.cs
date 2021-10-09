@@ -14,7 +14,7 @@ namespace MixItUp.Base.ViewModel.Requirements
 {
     public class UserRoleViewModel : UIViewModelBase, IComparable<UserRoleViewModel>
     {
-        public OldUserRoleEnum Role
+        public UserRoleEnum Role
         {
             get { return this.role; }
             set
@@ -23,13 +23,13 @@ namespace MixItUp.Base.ViewModel.Requirements
                 this.NotifyPropertyChanged();
             }
         }
-        private OldUserRoleEnum role;
+        private UserRoleEnum role;
 
         public ICommand DeleteAdvancedRoleCommand { get; private set; }
 
         private RoleRequirementViewModel viewModel;
 
-        public UserRoleViewModel(RoleRequirementViewModel viewModel, OldUserRoleEnum role)
+        public UserRoleViewModel(RoleRequirementViewModel viewModel, UserRoleEnum role)
         {
             this.viewModel = viewModel;
             this.Role = role;
@@ -64,9 +64,9 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public bool ShowSimpleRoles { get { return !this.IsAdvancedRolesSelected; } }
 
-        public IEnumerable<OldUserRoleEnum> Roles { get { return UserV2Model.GetSelectableUserRoles(); } }
+        public IEnumerable<UserRoleEnum> Roles { get { return UserRoles.Generic; } }
 
-        public OldUserRoleEnum SelectedRole
+        public UserRoleEnum SelectedRole
         {
             get { return this.selectedRole; }
             set
@@ -76,19 +76,11 @@ namespace MixItUp.Base.ViewModel.Requirements
                 this.NotifyPropertyChanged("IsSubscriberRole");
             }
         }
-        private OldUserRoleEnum selectedRole = OldUserRoleEnum.User;
+        private UserRoleEnum selectedRole = UserRoleEnum.User;
 
-        public IEnumerable<OldUserRoleEnum> AdvancedRoles
-        {
-            get
-            {
-                List<OldUserRoleEnum> roles = new List<OldUserRoleEnum>(UserV2Model.GetSelectableUserRoles());
-                roles.Remove(OldUserRoleEnum.VIPExclusive);
-                return roles;
-            }
-        }
+        public IEnumerable<UserRoleEnum> AdvancedRoles { get { return UserRoles.All; } }
 
-        public OldUserRoleEnum SelectedAdvancedRole
+        public UserRoleEnum SelectedAdvancedRole
         {
             get { return this.selectedAdvancedRole; }
             set
@@ -97,7 +89,7 @@ namespace MixItUp.Base.ViewModel.Requirements
                 this.NotifyPropertyChanged();
             }
         }
-        private OldUserRoleEnum selectedAdvancedRole = OldUserRoleEnum.User;
+        private UserRoleEnum selectedAdvancedRole = UserRoleEnum.User;
 
         public SortableObservableCollection<UserRoleViewModel> SelectedAdvancedRoles { get; set; } = new SortableObservableCollection<UserRoleViewModel>();
 
@@ -107,11 +99,11 @@ namespace MixItUp.Base.ViewModel.Requirements
             {
                 if (this.IsAdvancedRolesSelected)
                 {
-                    return this.SelectedAdvancedRoles.Any(r => r.Role == OldUserRoleEnum.Subscriber);
+                    return this.SelectedAdvancedRoles.Any(r => r.Role == UserRoleEnum.Subscriber);
                 }
                 else
                 {
-                    return this.SelectedRole == OldUserRoleEnum.Subscriber;
+                    return this.SelectedRole == UserRoleEnum.Subscriber;
                 }
             }
         }
@@ -172,17 +164,17 @@ namespace MixItUp.Base.ViewModel.Requirements
         public RoleRequirementViewModel(RoleRequirementModel requirement)
             : this()
         {
-            if (requirement.RoleList.Count > 0)
+            if (requirement.UserRoleList.Count > 0)
             {
                 this.IsAdvancedRolesSelected = true;
-                foreach (OldUserRoleEnum role in requirement.RoleList)
+                foreach (UserRoleEnum role in requirement.UserRoleList)
                 {
                     this.SelectedAdvancedRoles.Add(new UserRoleViewModel(this, role));
                 }
             }
             else
             {
-                this.SelectedRole = requirement.Role;
+                this.SelectedRole = requirement.UserRole;
             }
             this.SubscriberTier = requirement.SubscriberTier;
             if (this.IsPatreonConnected && !string.IsNullOrEmpty(requirement.PatreonBenefitID))
