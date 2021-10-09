@@ -40,6 +40,7 @@ namespace MixItUp.WPF
             { LanguageOptions.French, "fr-FR" },
             { LanguageOptions.Portuguese, "pt-BR" },
             { LanguageOptions.Russian, "ru-RU" },
+            { LanguageOptions.Ukrainian, "uk-UA" },
 
             { LanguageOptions.Pseudo, "qps-ploc" },
         };
