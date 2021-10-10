@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Model.User.Twitch;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -15,16 +14,13 @@ namespace MixItUp.Base.Model.Overlay
 {
     public enum OverlayTickerTapeItemTypeEnum
     {
-        Followers,
-        Hosts,
-        Subscribers,
-        Donations,
-        [Obsolete]
-        Sparks,
-        [Obsolete]
-        Embers,
-        Bits,
-        Raids
+        Followers = 0,
+        Hosts = 1,
+        Subscribers = 2,
+        Donations = 3,
+
+        Bits = 6,
+        Raids = 7,
     }
 
     [DataContract]

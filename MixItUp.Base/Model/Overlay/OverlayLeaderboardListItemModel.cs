@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
@@ -213,7 +212,8 @@ namespace MixItUp.Base.Model.Overlay
                         UserV2Model userData = userDataList.ElementAt(i);
                         if (!userData.IsSpecialtyExcluded)
                         {
-                            items.Add(new OverlayLeaderboardItem(new UserV2ViewModel(userData), currency.GetAmount(userData).ToString()));
+                            UserV2ViewModel user = new UserV2ViewModel(userData);
+                            items.Add(new OverlayLeaderboardItem(user, currency.GetAmount(user).ToString()));
                         }
                     }
                 }
@@ -314,10 +314,10 @@ namespace MixItUp.Base.Model.Overlay
                 for (int i = 0; i < orderedUsers.Count() && items.Count() < this.TotalToShow; i++)
                 {
                     var kvp = orderedUsers.ElementAt(i);
-                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(kvp.Key);
+                    UserV2ViewModel dUser = await ServiceManager.Get<UserService>().GetUserByID(kvp.Key);
                     if (user != null)
                     {
-                        items.Add(new OverlayLeaderboardItem(user, kvp.Value.AmountText));
+                        items.Add(new OverlayLeaderboardItem(dUser, kvp.Value.AmountText));
                     }
                 }
 

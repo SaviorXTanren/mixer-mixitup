@@ -376,8 +376,7 @@ namespace MixItUp.Base.Services
         {
             ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.WebhookEvents);
 
-            var twitchUserOAuthToken = ChannelSession.TwitchUserConnection.Connection.GetOAuthTokenCopy();
-            await this.Authenticate(twitchUserOAuthToken?.accessToken);
+            await this.Authenticate(JSONSerializerHelper.SerializeToString(this.GetLoginToken()));
         }
 
         private async void SignalRConnection_Disconnected(object sender, Exception e)
@@ -398,7 +397,7 @@ namespace MixItUp.Base.Services
 
         public async Task Authenticate(string twitchAccessToken)
         {
-            await this.AsyncWrapper(this.signalRConnection.Send(AuthenticateMethodName, ); //twitchAccessToken));
+            await this.AsyncWrapper(this.signalRConnection.Send(AuthenticateMethodName, JSONSerializerHelper.SerializeToString(this.GetLoginToken())));
         }
 
         public async Task<GetWebhooksResponseModel> GetWebhooks()
@@ -529,15 +528,15 @@ namespace MixItUp.Base.Services
             }
             if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().IsConnected)
             {
-                login.TwitchAccessToken = ServiceManager.Get<YouTubeSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
+                login.YouTubeAccessToken = ServiceManager.Get<YouTubeSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
             }
             if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
             {
-                login.TwitchAccessToken = ServiceManager.Get<TrovoSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
+                login.TrovoAccessToken = ServiceManager.Get<TrovoSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
             }
             if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().IsConnected)
             {
-                login.TwitchAccessToken = ServiceManager.Get<GlimeshSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
+                login.GlimeshAccessToken = ServiceManager.Get<GlimeshSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
             }
 
             return login;

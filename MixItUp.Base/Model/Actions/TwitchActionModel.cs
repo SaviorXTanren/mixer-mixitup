@@ -190,12 +190,12 @@ namespace MixItUp.Base.Model.Actions
             {
                 if (this.ActionType == TwitchActionType.Host)
                 {
-                    string channelName = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                    string channelName = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
                     await ServiceManager.Get<ChatService>().SendMessage("/host @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
                 }
                 else if (this.ActionType == TwitchActionType.Raid)
                 {
-                    string channelName = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                    string channelName = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
                     await ServiceManager.Get<ChatService>().SendMessage("/raid @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
                 }
                 else if (this.ActionType == TwitchActionType.RunAd)
@@ -215,7 +215,7 @@ namespace MixItUp.Base.Model.Actions
                     string targetUsername = null;
                     if (!string.IsNullOrEmpty(this.Username))
                     {
-                        targetUsername = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                        targetUsername = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
                     }
                     else
                     {
@@ -261,7 +261,7 @@ namespace MixItUp.Base.Model.Actions
                 }
                 else if (this.ActionType == TwitchActionType.StreamMarker)
                 {
-                    string description = await this.ReplaceStringWithSpecialModifiers(this.StreamMarkerDescription, parameters);
+                    string description = await ReplaceStringWithSpecialModifiers(this.StreamMarkerDescription, parameters);
                     if (!string.IsNullOrEmpty(description) && description.Length > TwitchActionModel.StreamMarkerMaxDescriptionLength)
                     {
                         await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StreamMarkerDescriptionMustBe140CharactersOrLess);

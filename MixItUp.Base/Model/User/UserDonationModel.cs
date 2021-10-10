@@ -76,7 +76,7 @@ namespace MixItUp.Base.Model.User
                 this.User = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(this.Platform, this.username);
                 if (this.User == null)
                 {
-                    this.User = new UserV2ViewModel(StreamingPlatformTypeEnum.None, UserV2Model.CreateUnassociatedUser(this.Username));
+                    this.User = UserV2ViewModel.CreateUnassociated(this.Username);
                 }
             }
         }

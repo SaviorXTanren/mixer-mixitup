@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model.Statistics;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Model.User.Twitch;
 using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
@@ -70,7 +69,7 @@ namespace MixItUp.Base.Services
             this.ChatterTracker = new TrackedNumberStatisticDataTrackerModel(Resources.Chatters, "MessageTextOutline", (StatisticDataTrackerModelBase stats) =>
             {
                 TrackedNumberStatisticDataTrackerModel numberStats = (TrackedNumberStatisticDataTrackerModel)stats;
-                numberStats.AddValue(ServiceManager.Get<UserService>().ActiveUserCount());
+                numberStats.AddValue(ServiceManager.Get<UserService>().GetActiveUserCount());
                 return Task.CompletedTask;
             });
 

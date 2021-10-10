@@ -1,6 +1,4 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model;
-using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -9,7 +7,6 @@ using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;

@@ -1,7 +1,5 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Model.User.Twitch;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
@@ -19,13 +17,9 @@ namespace MixItUp.Base.Model.Overlay
         Followers = 0,
         Subscribers = 1,
         Donations = 2,
-        [Obsolete]
-        Sparks = 3,
-        [Obsolete]
-        Milestones = 4,
+
         Custom = 5,
-        [Obsolete]
-        Embers = 6,
+
         Bits = 7,
     }
 
