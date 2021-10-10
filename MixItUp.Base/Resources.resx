@@ -6051,4 +6051,7 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="NoTitle" xml:space="preserve">
     <value>No Title</value>
   </data>
+  <data name="Ukrainian" xml:space="preserve">
+    <value>Ukrainian</value>
+  </data>
 </root>

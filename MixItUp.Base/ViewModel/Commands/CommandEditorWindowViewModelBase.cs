@@ -22,18 +22,16 @@ namespace MixItUp.Base.ViewModel.Commands
             return ServiceManager.Get<IFileService>().ShowOpenFileDialog(string.Format("Mix It Up Command (*{0})|*{0}|All files (*.*)|*.*", MixItUpCommandFileExtension));
         }
 
-        public static async Task<CommandModelBase> ImportCommandFromFile(string filePath)
+        public static Task<CommandModelBase> ImportCommandFromFile(string filePath)
         {
-            try
+            return ImportCommandFromFile<CommandModelBase>(filePath);
+        }
+
+        public static async Task<T> ImportCommandFromFile<T>(string filePath) where T : CommandModelBase
+        {
+            if (!string.IsNullOrEmpty(filePath))
             {
-                if (!string.IsNullOrEmpty(filePath))
-                {
-                    return await FileSerializerHelper.DeserializeFromFile<CommandModelBase>(filePath);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
+                return await FileSerializerHelper.DeserializeFromFile<T>(filePath);
             }
             return null;
         }
@@ -199,10 +197,39 @@ namespace MixItUp.Base.ViewModel.Commands
             {
                 try
                 {
-                    CommandModelBase command = await CommandEditorWindowViewModelBase.ImportCommandFromFile(CommandEditorWindowViewModelBase.OpenCommandFileBrowser());
+                    string filename = CommandEditorWindowViewModelBase.OpenCommandFileBrowser();
+                    CommandModelBase command = null;
+
+                    // Check if the imported command type matches the currently edited command. If so, import additional information.
+                    switch (this.Type)
+                    {
+                        case CommandTypeEnum.Webhook:
+                            WebhookCommandModel webhookCommandModel = await CommandEditorWindowViewModelBase.ImportCommandFromFile<WebhookCommandModel>(filename);
+                            command = webhookCommandModel;
+
+                            WebhookCommandEditorWindowViewModel thisType = this as WebhookCommandEditorWindowViewModel;
+                            if (webhookCommandModel != null && thisType != null)
+                            {
+                                // Merge JSON Mapping
+                                foreach (var map in webhookCommandModel.JSONParameters)
+                                {
+                                    if (!thisType.JSONParameters.Any(j => j.JSONParameterName == map.JSONParameterName || j.SpecialIdentifierName == map.SpecialIdentifierName))
+                                    {
+                                        thisType.JSONParameters.Add(new WebhookJSONParameterViewModel(thisType) { JSONParameterName = map.JSONParameterName, SpecialIdentifierName = map.SpecialIdentifierName });
+                                    }
+                                }
+                            }
+
+                            break;
+                    }
+
+                    if (command == null)
+                    {
+                        command = await CommandEditorWindowViewModelBase.ImportCommandFromFile(filename);
+                    }
+
                     if (command != null)
                     {
-                        // TODO Check if the imported command type matches the currently edited command. If so, import additional information.
                         foreach (ActionModelBase action in command.Actions)
                         {
                             await this.AddAction(action);
