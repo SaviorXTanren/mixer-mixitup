@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Webhooks;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
@@ -114,8 +115,8 @@ namespace MixItUp.Base.ViewModel.Commands
                 webhookCommand.JSONParameters.Add(new WebhookJSONParameter { JSONParameterName = param.JSONParameterName, SpecialIdentifierName = param.SpecialIdentifierName });
             }
 
-            ChannelSession.Services.Command.WebhookCommands.Remove((WebhookCommandModel)this.existingCommand);
-            ChannelSession.Services.Command.WebhookCommands.Add(webhookCommand);
+            ServiceManager.Get<CommandService>().WebhookCommands.Remove((WebhookCommandModel)this.existingCommand);
+            ServiceManager.Get<CommandService>().WebhookCommands.Add(webhookCommand);
             return Task.FromResult(0);
         }
     }

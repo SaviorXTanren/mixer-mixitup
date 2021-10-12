@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Webhooks;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
@@ -63,10 +64,10 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 this.WebhookCommands.Clear();
 
-                GetWebhooksResponseModel response = await ChannelSession.Services.WebhookService.GetWebhooks();
+                GetWebhooksResponseModel response = await ServiceManager.Get<MixItUpService>().GetWebhooks();
                 foreach (var webhook in response.Webhooks)
                 {
-                    var command = ChannelSession.Services.Command.WebhookCommands.FirstOrDefault(c => c.ID == webhook.Id);
+                    var command = ServiceManager.Get<CommandService>().WebhookCommands.FirstOrDefault(c => c.ID == webhook.Id);
                     this.WebhookCommands.Add(new WebhookCommandItemViewModel(webhook, command));
                 }
 

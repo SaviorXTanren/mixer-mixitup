@@ -853,9 +853,9 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void UserClient_OnHostTargetReceived(object sender, ChatHostTargetPacketModel packet)
         {
-            if (packet.IsStartingHostMode && !ChannelSession.Services.Events.CanPerformEvent(EventTypeEnum.TwitchChannelStreamStart, new CommandParametersModel()))
+            if (packet.IsStartingHostMode && !ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TwitchChannelStreamStart, new CommandParametersModel()))
             {
-                await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.TwitchChannelStreamStop, new CommandParametersModel());
+                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStop, new CommandParametersModel());
             }
         }
 
