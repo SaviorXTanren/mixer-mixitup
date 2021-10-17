@@ -626,31 +626,30 @@ namespace MixItUp.Base.ViewModel.Currency
                                     UserV2ViewModel user = null;
                                     if (amount > 0)
                                     {
-                                        // TODO
-                                        //if (id > 0)
-                                        //{
-                                        //    MixItUp.Base.Model.User.UserV2Model userData = ChannelSession.Settings.GetUserDataByTwitchID(id.ToString());
-                                        //    if (userData != null)
-                                        //    {
-                                        //        user = new UserV2ViewModel(userData);
-                                        //    }
-                                        //    else
-                                        //    {
-                                        //        UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(id.ToString());
-                                        //        if (twitchUser != null)
-                                        //        {
-                                        //            user = new UserV2ViewModel(twitchUser);
-                                        //        }
-                                        //    }
-                                        //}
-                                        //else if (!string.IsNullOrEmpty(username))
-                                        //{
-                                        //    UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(username);
-                                        //    if (twitchUser != null)
-                                        //    {
-                                        //        user = new UserV2ViewModel(twitchUser);
-                                        //    }
-                                        //}
+                                        if (id > 0)
+                                        {
+                                            UserDataModel userData = await ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, id.ToString());
+                                            if (userData != null)
+                                            {
+                                                user = new UserViewModel(userData);
+                                            }
+                                            else
+                                            {
+                                                UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(id.ToString());
+                                                if (twitchUser != null)
+                                                {
+                                                    user = await UserViewModel.Create(twitchUser);
+                                                }
+                                            }
+                                        }
+                                        else if (!string.IsNullOrEmpty(username))
+                                        {
+                                            UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(username);
+                                            if (twitchUser != null)
+                                            {
+                                                user = await UserViewModel.Create(twitchUser);
+                                            }
+                                        }
                                     }
 
                                     if (user != null)
