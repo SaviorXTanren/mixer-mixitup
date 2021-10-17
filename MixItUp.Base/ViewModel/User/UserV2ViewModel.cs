@@ -418,6 +418,14 @@ namespace MixItUp.Base.ViewModel.User
             set { this.Model.CustomTitle = value; }
         }
 
+        public Guid EntranceCommandID
+        {
+            get { return this.Model.EntranceCommandID; }
+            set { this.Model.EntranceCommandID = value; }
+        }
+
+        public List<Guid> CustomCommandIDs { get { return this.Model.CustomCommandIDs; } }
+
         public DateTimeOffset LastActivity { get { return this.Model.LastActivity; } }
 
         public bool UpdatedThisSession { get { return this.Model.UpdatedThisSession; } set { this.Model.UpdatedThisSession = value; } }

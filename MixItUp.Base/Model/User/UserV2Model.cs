@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.User
@@ -68,6 +69,8 @@ namespace MixItUp.Base.Model.User
             }
             return null;
         }
+
+        public IEnumerable<UserPlatformV2ModelBase> GetAllPlatformData() { return this.PlatformData.Values.ToList(); }
 
         public void AddPlatformData(UserPlatformV2ModelBase platformModel) { this.PlatformData[platformModel.Platform] = platformModel; }
 

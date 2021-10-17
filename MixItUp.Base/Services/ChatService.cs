@@ -377,9 +377,12 @@ namespace MixItUp.Base.Services
 
                 // Add message to chat list
                 bool showMessage = true;
-                if (ChannelSession.Settings.HideBotMessages && message.User != null && ServiceManager.Get<TwitchSessionService>().BotNewAPI != null && message.User.TwitchID.Equals(ServiceManager.Get<TwitchSessionService>().BotNewAPI.id))
+                if (ChannelSession.Settings.HideBotMessages && message.User != null)
                 {
-                    showMessage = false;
+                    if (ServiceManager.Get<TwitchSessionService>().BotNewAPI != null && message.User.Platform == StreamingPlatformTypeEnum.Twitch && message.User.PlatformID.Equals(ServiceManager.Get<TwitchSessionService>().BotNewAPI.id))
+                    {
+                        showMessage = false;
+                    }
                 }
 
                 if (!(message is AlertChatMessageViewModel) || !ChannelSession.Settings.OnlyShowAlertsInDashboard)
@@ -451,9 +454,9 @@ namespace MixItUp.Base.Services
                         if (message.User != null && !this.userEntranceCommands.Contains(message.User.ID))
                         {
                             this.userEntranceCommands.Add(message.User.ID);
-                            if (ChannelSession.Settings.GetCommand(message.User.Data.EntranceCommandID) != null)
+                            if (ChannelSession.Settings.GetCommand(message.User.EntranceCommandID) != null)
                             {
-                                await ServiceManager.Get<CommandService>().Queue(message.User.Data.EntranceCommandID, new CommandParametersModel(message.User, message.Platform, message.ToArguments()));
+                                await ServiceManager.Get<CommandService>().Queue(message.User.EntranceCommandID, new CommandParametersModel(message.User, message.Platform, message.ToArguments()));
                             }
                         }
 
@@ -462,7 +465,7 @@ namespace MixItUp.Base.Services
                             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatMessageReceived, new CommandParametersModel(message));
                         }
 
-                        message.User.Data.TotalChatMessageSent++;
+                        message.User.TotalChatMessageSent++;
 
                         string primaryTaggedUsername = message.PrimaryTaggedUsername;
                         if (!string.IsNullOrEmpty(primaryTaggedUsername))
@@ -470,12 +473,12 @@ namespace MixItUp.Base.Services
                             UserV2ViewModel primaryTaggedUser = ServiceManager.Get<UserService>().GetActiveUserByUsername(primaryTaggedUsername, message.Platform);
                             if (primaryTaggedUser != null)
                             {
-                                primaryTaggedUser.Data.TotalTimesTagged++;
+                                primaryTaggedUser.TotalTimesTagged++;
                             }
                         }
                     }
 
-                    await message.User.RefreshDetails();
+                    await message.User.Refresh();
 
                     if (!message.IsWhisper && await message.CheckForModeration())
                     {
@@ -484,7 +487,9 @@ namespace MixItUp.Base.Services
                     }
 
                     IEnumerable<string> arguments = null;
-                    if (!string.IsNullOrEmpty(message.PlainTextMessage) && message.User != null && !message.User.UserRoles.Contains(OldUserRoleEnum.Banned))
+#pragma warning disable CS0612 // Type or member is obsolete
+                    if (!string.IsNullOrEmpty(message.PlainTextMessage) && message.User != null && !message.User.HasRole(UserRoleEnum.Banned))
+#pragma warning restore CS0612 // Type or member is obsolete
                     {
                         if (!ChannelSession.Settings.AllowCommandWhispering && message.IsWhisper)
                         {
@@ -493,7 +498,7 @@ namespace MixItUp.Base.Services
 
                         if (ChannelSession.Settings.IgnoreBotAccountCommands)
                         {
-                            if (ServiceManager.Get<TwitchSessionService>().BotNewAPI != null && message.User.TwitchID.Equals(ServiceManager.Get<TwitchSessionService>().BotNewAPI.id))
+                            if (ServiceManager.Get<TwitchSessionService>().BotNewAPI != null && message.User.Platform == StreamingPlatformTypeEnum.Twitch && message.User.Platform.Equals(ServiceManager.Get<TwitchSessionService>().BotNewAPI.id))
                             {
                                 return;
                             }
@@ -503,11 +508,11 @@ namespace MixItUp.Base.Services
                         Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0} - {1}", message.ID, message));
 
                         bool commandTriggered = false;
-                        if (message.User.Data.CustomCommandIDs.Count > 0)
+                        if (message.User.CustomCommandIDs.Count > 0)
                         {
                             Dictionary<string, CommandModelBase> userOnlyTriggersToCommands = new Dictionary<string, CommandModelBase>();
                             List<ChatCommandModel> userOnlyWildcardCommands = new List<ChatCommandModel>();
-                            foreach (Guid commandID in message.User.Data.CustomCommandIDs)
+                            foreach (Guid commandID in message.User.CustomCommandIDs)
                             {
                                 ChatCommandModel command = (ChatCommandModel)ChannelSession.Settings.GetCommand(commandID);
                                 if (command != null && command.IsEnabled)

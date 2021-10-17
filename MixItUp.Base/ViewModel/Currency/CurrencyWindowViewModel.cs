@@ -4,6 +4,7 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
@@ -534,17 +535,36 @@ namespace MixItUp.Base.ViewModel.Currency
                         await ServiceManager.Get<UserService>().LoadAllUserData();
 
                         await this.Currency.Reset();
-                        foreach (MixItUp.Base.Model.User.UserV2Model userData in ChannelSession.Settings.Users.Values)
+                        foreach (UserV2Model userData in ChannelSession.Settings.Users.Values)
                         {
-                            int intervalsToGive = userData.ViewingMinutes / this.Currency.AcquireInterval;
-                            this.Currency.AddAmount(userData, this.Currency.AcquireAmount * intervalsToGive);
-                            if (userData.TwitchUserRoles.Contains(OldUserRoleEnum.Mod) || userData.TwitchUserRoles.Contains(OldUserRoleEnum.ChannelEditor))
+                            int minutes = 0;
+                            bool moderatorBonus = false;
+                            bool subscriberBonus = false;
+                            foreach (UserPlatformV2ModelBase platformUserData in userData.GetAllPlatformData())
                             {
-                                this.Currency.AddAmount(userData, this.Currency.ModeratorBonus * intervalsToGive);
+                                minutes += platformUserData.OnlineViewingMinutes;
+                                if (platformUserData.Roles.Contains(UserRoleEnum.Moderator))
+                                {
+                                    moderatorBonus = true;
+                                }
+                                if (platformUserData.Roles.Contains(UserRoleEnum.Subscriber))
+                                {
+                                    subscriberBonus = true;
+                                }
                             }
-                            else if (userData.TwitchUserRoles.Contains(OldUserRoleEnum.Subscriber))
+
+                            int intervalsToGive = minutes / this.Currency.AcquireInterval;
+
+                            UserV2ViewModel user = new UserV2ViewModel(userData);
+
+                            this.Currency.AddAmount(user, this.Currency.AcquireAmount * intervalsToGive);
+                            if (moderatorBonus)
                             {
-                                this.Currency.AddAmount(userData, this.Currency.SubscriberBonus * intervalsToGive);
+                                this.Currency.AddAmount(user, this.Currency.ModeratorBonus * intervalsToGive);
+                            }
+                            else if (subscriberBonus)
+                            {
+                                this.Currency.AddAmount(user, this.Currency.SubscriberBonus * intervalsToGive);
                             }
                             ChannelSession.Settings.Users.ManualValueChanged(userData.ID);
                         }
@@ -650,8 +670,8 @@ namespace MixItUp.Base.ViewModel.Currency
                                 {
                                     if (ChannelSession.Settings.Users.ContainsKey(kvp.Key))
                                     {
-                                        MixItUp.Base.Model.User.UserV2Model userData = ChannelSession.Settings.Users[kvp.Key];
-                                        this.Currency.SetAmount(userData, kvp.Value);
+                                        UserV2Model userData = ChannelSession.Settings.Users[kvp.Key];
+                                        this.Currency.SetAmount(new UserV2ViewModel(userData), kvp.Value);
                                     }
                                 }
 
@@ -682,9 +702,11 @@ namespace MixItUp.Base.ViewModel.Currency
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     StringBuilder fileContents = new StringBuilder();
-                    foreach (MixItUp.Base.Model.User.UserV2Model userData in ChannelSession.Settings.Users.Values.ToList())
+                    foreach (UserV2Model userData in ChannelSession.Settings.Users.Values.ToList())
                     {
-                        fileContents.AppendLine(string.Format("{0} {1} {2}", userData.TwitchID, userData.Username, this.Currency.GetAmount(userData)));
+                        UserV2ViewModel user = new UserV2ViewModel(userData);
+
+                        fileContents.AppendLine(string.Format("{0} {1} {2} {3} {4}", user.ID, user.Platform, user.PlatformID, user.Username, this.Currency.GetAmount(user)));
                     }
                     await ServiceManager.Get<IFileService>().SaveFile(filePath, fileContents.ToString());
                 }
