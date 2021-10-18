@@ -6054,4 +6054,16 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="Ukrainian" xml:space="preserve">
     <value>Ukrainian</value>
   </data>
+  <data name="TwitchID" xml:space="preserve">
+    <value>Twitch ID</value>
+  </data>
+  <data name="TwitchUsername" xml:space="preserve">
+    <value>Twitch Username</value>
+  </data>
+  <data name="ViewingHours" xml:space="preserve">
+    <value>Viewing Hours</value>
+  </data>
+  <data name="ViewingMinutes" xml:space="preserve">
+    <value>Viewing Minutes</value>
+  </data>
 </root>

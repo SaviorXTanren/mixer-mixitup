@@ -15798,6 +15798,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twitch ID.
+        /// </summary>
+        public static string TwitchID {
+            get {
+                return ResourceManager.GetString("TwitchID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Twitch Mass Gifted Subs Filter Amount.
         /// </summary>
         public static string TwitchMassGiftedSubsFilterAmount {
@@ -15850,6 +15859,15 @@ namespace MixItUp.Base {
         public static string TwitchReplyToCommandChatMessages {
             get {
                 return ResourceManager.GetString("TwitchReplyToCommandChatMessages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Username.
+        /// </summary>
+        public static string TwitchUsername {
+            get {
+                return ResourceManager.GetString("TwitchUsername", resourceCulture);
             }
         }
         
@@ -16700,6 +16718,24 @@ namespace MixItUp.Base {
         public static string Viewing {
             get {
                 return ResourceManager.GetString("Viewing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Viewing Hours.
+        /// </summary>
+        public static string ViewingHours {
+            get {
+                return ResourceManager.GetString("ViewingHours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Viewing Minutes.
+        /// </summary>
+        public static string ViewingMinutes {
+            get {
+                return ResourceManager.GetString("ViewingMinutes", resourceCulture);
             }
         }
         

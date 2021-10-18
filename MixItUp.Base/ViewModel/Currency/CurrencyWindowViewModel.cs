@@ -535,7 +535,7 @@ namespace MixItUp.Base.ViewModel.Currency
                         await ServiceManager.Get<UserService>().LoadAllUserData();
 
                         await this.Currency.Reset();
-                        foreach (UserV2Model userData in ChannelSession.Settings.Users.Values)
+                        foreach (UserV2Model userData in ChannelSession.Settings.Users.Values.ToList())
                         {
                             int minutes = 0;
                             bool moderatorBonus = false;
@@ -587,6 +587,8 @@ namespace MixItUp.Base.ViewModel.Currency
                             string[] lines = fileContents.Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries);
                             if (lines.Count() > 0)
                             {
+                                await ServiceManager.Get<UserService>().LoadAllUserData();
+
                                 foreach (string line in lines)
                                 {
                                     long id = 0;
@@ -628,49 +630,20 @@ namespace MixItUp.Base.ViewModel.Currency
                                     {
                                         if (id > 0)
                                         {
-                                            UserDataModel userData = await ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, id.ToString());
-                                            if (userData != null)
-                                            {
-                                                user = new UserViewModel(userData);
-                                            }
-                                            else
-                                            {
-                                                UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(id.ToString());
-                                                if (twitchUser != null)
-                                                {
-                                                    user = await UserViewModel.Create(twitchUser);
-                                                }
-                                            }
+                                            user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, id.ToString(), performPlatformSearch: true);
                                         }
                                         else if (!string.IsNullOrEmpty(username))
                                         {
-                                            UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(username);
-                                            if (twitchUser != null)
-                                            {
-                                                user = await UserViewModel.Create(twitchUser);
-                                            }
+                                            user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, username, performPlatformSearch: true);
                                         }
                                     }
 
                                     if (user != null)
                                     {
-                                        if (!this.userImportData.ContainsKey(user.ID))
-                                        {
-                                            this.userImportData[user.ID] = amount;
-                                        }
-                                        this.userImportData[user.ID] = Math.Max(this.userImportData[user.ID], amount);
+                                        this.Currency.SetAmount(user, amount);
+                                        ChannelSession.Settings.Users.ManualValueChanged(user.ID);
+
                                         this.ImportFromFileText = string.Format("{0} {1}...", this.userImportData.Count(), MixItUp.Base.Resources.Imported);
-                                    }
-                                }
-
-                                await ServiceManager.Get<UserService>().LoadAllUserData();
-
-                                foreach (var kvp in this.userImportData)
-                                {
-                                    if (ChannelSession.Settings.Users.ContainsKey(kvp.Key))
-                                    {
-                                        UserV2Model userData = ChannelSession.Settings.Users[kvp.Key];
-                                        this.Currency.SetAmount(new UserV2ViewModel(userData), kvp.Value);
                                     }
                                 }
 
@@ -898,7 +871,7 @@ namespace MixItUp.Base.ViewModel.Currency
             {
                 ChatCommandModel statusCommand = new ChatCommandModel("User " + this.Currency.Name, new HashSet<string>() { this.Currency.SpecialIdentifier });
                 statusCommand.Requirements.AddBasicRequirements();
-                statusCommand.Requirements.Role.Role = OldUserRoleEnum.User;
+                statusCommand.Requirements.Role.Role = UserRoleEnum.User;
                 statusCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                 statusCommand.Requirements.Cooldown.IndividualAmount = 5;
 
@@ -918,7 +891,7 @@ namespace MixItUp.Base.ViewModel.Currency
                 {
                     ChatCommandModel addCommand = new ChatCommandModel("Add " + this.Currency.Name, new HashSet<string>() { "add" + this.Currency.SpecialIdentifier });
                     addCommand.Requirements.AddBasicRequirements();
-                    addCommand.Requirements.Role.Role = OldUserRoleEnum.Mod;
+                    addCommand.Requirements.Role.Role = UserRoleEnum.Moderator;
                     addCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                     addCommand.Requirements.Cooldown.IndividualAmount = 5;
 
@@ -928,7 +901,7 @@ namespace MixItUp.Base.ViewModel.Currency
 
                     ChatCommandModel addAllCommand = new ChatCommandModel("Add All " + this.Currency.Name, new HashSet<string>() { "addall" + this.Currency.SpecialIdentifier });
                     addAllCommand.Requirements.AddBasicRequirements();
-                    addAllCommand.Requirements.Role.Role = OldUserRoleEnum.Mod;
+                    addAllCommand.Requirements.Role.Role = UserRoleEnum.Moderator;
                     addAllCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                     addAllCommand.Requirements.Cooldown.IndividualAmount = 5;
 
@@ -940,7 +913,7 @@ namespace MixItUp.Base.ViewModel.Currency
                     {
                         ChatCommandModel giveCommand = new ChatCommandModel("Give " + this.Currency.Name, new HashSet<string>() { "give" + this.Currency.SpecialIdentifier });
                         giveCommand.Requirements.AddBasicRequirements();
-                        giveCommand.Requirements.Role.Role = OldUserRoleEnum.User;
+                        giveCommand.Requirements.Role.Role = UserRoleEnum.User;
                         giveCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                         giveCommand.Requirements.Cooldown.IndividualAmount = 5;
 

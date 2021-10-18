@@ -426,6 +426,12 @@ namespace MixItUp.Base.ViewModel.User
 
         public List<Guid> CustomCommandIDs { get { return this.Model.CustomCommandIDs; } }
 
+        public string Notes
+        {
+            get { return this.Model.Notes; }
+            set { this.Model.Notes = value; }
+        }
+
         public DateTimeOffset LastActivity { get { return this.Model.LastActivity; } }
 
         public bool UpdatedThisSession { get { return this.Model.UpdatedThisSession; } set { this.Model.UpdatedThisSession = value; } }

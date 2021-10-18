@@ -1,33 +1,21 @@
 ﻿using ExcelDataReader;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.User
 {
     public class UserDataImportColumnViewModel : UIViewModelBase
     {
-        public const string TwitchIDColumn = "Twitch ID";
-        public const string TwitchUsernameColumn = "Twitch Username";
-        public const string MixerUsernameColumn = "Mixer Username";
-        public const string LiveViewingHoursColumn = "Live Viewing Time (Hours)";
-        public const string LiveViewingMinutesColumn = "Live Viewing Time (Mins)";
-        public const string OfflineViewingHoursColumn = "Offline Viewing Time (Hours)";
-        public const string OfflineViewingMinutesColumn = "Offline Viewing Time (Mins)";
-
         public string Name { get; private set; }
 
         public int? ColumnNumber
@@ -94,13 +82,10 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserDataImportWindowViewModel()
         {
-            this.Columns.Add(new UserDataImportColumnViewModel(UserDataImportColumnViewModel.TwitchIDColumn));
-            this.Columns.Add(new UserDataImportColumnViewModel(UserDataImportColumnViewModel.TwitchUsernameColumn));
-            this.Columns.Add(new UserDataImportColumnViewModel(UserDataImportColumnViewModel.MixerUsernameColumn));
-            this.Columns.Add(new UserDataImportColumnViewModel(UserDataImportColumnViewModel.LiveViewingHoursColumn));
-            this.Columns.Add(new UserDataImportColumnViewModel(UserDataImportColumnViewModel.LiveViewingMinutesColumn));
-            this.Columns.Add(new UserDataImportColumnViewModel(UserDataImportColumnViewModel.OfflineViewingHoursColumn));
-            this.Columns.Add(new UserDataImportColumnViewModel(UserDataImportColumnViewModel.OfflineViewingMinutesColumn));
+            this.Columns.Add(new UserDataImportColumnViewModel(MixItUp.Base.Resources.TwitchID));
+            this.Columns.Add(new UserDataImportColumnViewModel(MixItUp.Base.Resources.TwitchUsername));
+            this.Columns.Add(new UserDataImportColumnViewModel(MixItUp.Base.Resources.ViewingHours));
+            this.Columns.Add(new UserDataImportColumnViewModel(MixItUp.Base.Resources.ViewingMinutes));
 
             foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
             {
@@ -161,6 +146,8 @@ namespace MixItUp.Base.ViewModel.User
 
                     List<List<string>> lines = new List<List<string>>();
 
+                    await ServiceManager.Get<UserService>().LoadAllUserData();
+
                     string extension = Path.GetExtension(this.UserDataFilePath);
                     if (extension.Equals(".txt") || extension.Equals(".csv"))
                     {
@@ -212,121 +199,52 @@ namespace MixItUp.Base.ViewModel.User
                             try
                             {
                                 long twitchID = 0;
-                                if (this.columnDictionary[UserDataImportColumnViewModel.TwitchIDColumn].ArrayNumber >= 0)
+                                if (this.columnDictionary[MixItUp.Base.Resources.TwitchID].ArrayNumber >= 0)
                                 {
-                                    long.TryParse(line[this.columnDictionary[UserDataImportColumnViewModel.TwitchIDColumn].ArrayNumber], out twitchID);
+                                    long.TryParse(line[this.columnDictionary[MixItUp.Base.Resources.TwitchID].ArrayNumber], out twitchID);
                                 }
 
                                 string twitchUsername = null;
-                                if (this.columnDictionary[UserDataImportColumnViewModel.TwitchUsernameColumn].ArrayNumber >= 0)
+                                if (this.columnDictionary[MixItUp.Base.Resources.TwitchUsername].ArrayNumber >= 0)
                                 {
-                                    twitchUsername = line[this.columnDictionary[UserDataImportColumnViewModel.TwitchUsernameColumn].ArrayNumber];
+                                    twitchUsername = line[this.columnDictionary[MixItUp.Base.Resources.TwitchUsername].ArrayNumber];
                                 }
 
-                                string mixerUsername = null;
-                                if (this.columnDictionary[UserDataImportColumnViewModel.MixerUsernameColumn].ArrayNumber >= 0)
-                                {
-                                    mixerUsername = line[this.columnDictionary[UserDataImportColumnViewModel.MixerUsernameColumn].ArrayNumber];
-                                }
-
-                                bool newUser = true;
-                                UserV2Model user = null;
+                                UserV2ViewModel user = null;
                                 if (twitchID > 0 && !string.IsNullOrEmpty(twitchUsername))
                                 {
-                                    user = await ServiceManager.Get<UserService>().GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, twitchID.ToString());
-                                    if (user != null)
+                                    user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, twitchID.ToString());
+                                    if (user == null)
                                     {
-                                        newUser = false;
-                                    }
-                                    else
-                                    {
-                                        UserV2ViewModel UserV2ViewModel = await UserV2ViewModel.Create(new Twitch.Base.Models.NewAPI.Users.UserModel()
+                                        user = ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(new Twitch.Base.Models.NewAPI.Users.UserModel()
                                         {
                                             id = twitchID.ToString(),
                                             login = twitchUsername,
                                             display_name = twitchUsername,
-                                        });
-                                        user = UserV2ViewModel.Data;
+                                        }));
                                     }
                                 }
                                 else if (twitchID > 0)
                                 {
-                                    user = await ServiceManager.Get<UserService>().GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, twitchID.ToString());
-                                    if (user != null)
-                                    {
-                                        newUser = false;
-                                    }
-                                    else
-                                    {
-                                        Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(twitchID.ToString());
-                                        if (twitchUser != null)
-                                        {
-                                            UserV2ViewModel UserV2ViewModel = await UserV2ViewModel.Create(twitchUser);
-                                            user = UserV2ViewModel.Data;
-                                        }
-                                    }
+                                    user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, twitchID.ToString(), performPlatformSearch: true);
                                 }
                                 else if (!string.IsNullOrEmpty(twitchUsername))
                                 {
-                                    user = await ServiceManager.Get<UserService>().GetUserDataByPlatformUsername(StreamingPlatformTypeEnum.Twitch, twitchUsername);
-                                    if (user != null)
-                                    {
-                                        newUser = false;
-                                    }
-                                    else
-                                    {
-                                        Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(twitchUsername);
-                                        if (twitchUser != null)
-                                        {
-                                            UserV2ViewModel UserV2ViewModel = await UserV2ViewModel.Create(twitchUser);
-                                            user = UserV2ViewModel.Data;
-                                        }
-                                    }
-                                }
-                                else if (!string.IsNullOrEmpty(mixerUsername))
-                                {
-                                    // TODO
-//#pragma warning disable CS0612 // Type or member is obsolete
-//                                    UserV2Model mixerUserData = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.Mixer, mixerUsername);
-//#pragma warning restore CS0612 // Type or member is obsolete
-//                                    if (mixerUserData != null)
-//                                    {
-//                                        newUser = false;
-//                                    }
-//                                    else
-//                                    {
-//                                        user = new UserV2Model()
-//                                        {
-//                                            MixerID = uint.MaxValue,
-//                                            MixerUsername = mixerUsername
-//                                        };
-//                                    }
+                                    user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, twitchUsername, performPlatformSearch: true);
                                 }
 
                                 if (user != null)
                                 {
-                                    if (newUser)
+                                    int iValue = 0;
+                                    if (this.GetIntValueFromLineColumn(MixItUp.Base.Resources.ViewingHours, line, out iValue))
                                     {
-                                        ServiceManager.Get<UserService>().SetUserData(user);
+                                        user.OnlineViewingHoursOnly = iValue;
+                                    }
+                                    if (this.GetIntValueFromLineColumn(MixItUp.Base.Resources.ViewingMinutes, line, out iValue))
+                                    {
+                                        user.OnlineViewingMinutesOnly = iValue;
                                     }
 
-                                    int iValue = 0;
-                                    if (this.GetIntValueFromLineColumn(UserDataImportColumnViewModel.LiveViewingHoursColumn, line, out iValue))
-                                    {
-                                        user.ViewingHoursPart = iValue;
-                                    }
-                                    if (this.GetIntValueFromLineColumn(UserDataImportColumnViewModel.LiveViewingMinutesColumn, line, out iValue))
-                                    {
-                                        user.ViewingMinutesPart = iValue;
-                                    }
-                                    if (this.GetIntValueFromLineColumn(UserDataImportColumnViewModel.OfflineViewingHoursColumn, line, out iValue))
-                                    {
-                                        user.OfflineViewingMinutes = iValue;
-                                    }
-                                    if (this.GetIntValueFromLineColumn(UserDataImportColumnViewModel.OfflineViewingMinutesColumn, line, out iValue))
-                                    {
-                                        user.OfflineViewingMinutes = iValue;
-                                    }
                                     foreach (var kvp in nameToCurrencies)
                                     {
                                         if (this.GetIntValueFromLineColumn(kvp.Key, line, out iValue))
