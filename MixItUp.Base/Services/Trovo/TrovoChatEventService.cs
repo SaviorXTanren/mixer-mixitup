@@ -300,14 +300,14 @@ namespace MixItUp.Base.Services.Trovo
 
                         foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                         {
-                            currency.AddAmount(user.Data, currency.OnFollowBonus);
+                            currency.AddAmount(user, currency.OnFollowBonus);
                         }
 
                         foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
                         {
-                            if (user.HasPermissionsTo(streamPass.Permission))
+                            if (user.MeetsRole(streamPass.UserPermission))
                             {
-                                streamPass.AddAmount(user.Data, streamPass.FollowBonus);
+                                streamPass.AddAmount(user, streamPass.FollowBonus);
                             }
                         }
 
@@ -338,14 +338,14 @@ namespace MixItUp.Base.Services.Trovo
 
                         foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                         {
-                            currency.AddAmount(user.Data, currency.OnSubscribeBonus);
+                            currency.AddAmount(user, currency.OnSubscribeBonus);
                         }
 
                         foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
                         {
-                            if (parameters.User.HasPermissionsTo(streamPass.Permission))
+                            if (parameters.User.MeetsRole(streamPass.UserPermission))
                             {
-                                streamPass.AddAmount(user.Data, streamPass.SubscribeBonus);
+                                streamPass.AddAmount(user, streamPass.SubscribeBonus);
                             }
                         }
 
@@ -401,20 +401,20 @@ namespace MixItUp.Base.Services.Trovo
 
                         giftee.SubscribeDate = DateTimeOffset.Now;
                         //giftedSubEvent.Receiver.Data.TwitchSubscriberTier = giftedSubEvent.PlanTierNumber;
-                        user.Data.TotalSubsGifted++;
-                        giftee.Data.TotalSubsReceived++;
+                        user.TotalSubsGifted++;
+                        giftee.TotalSubsReceived++;
                         //giftedSubEvent.Receiver.Data.TotalMonthsSubbed += (uint)giftedSubEvent.MonthsGifted;
 
                         foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                         {
-                            currency.AddAmount(user.Data, currency.OnSubscribeBonus);
+                            currency.AddAmount(user, currency.OnSubscribeBonus);
                         }
 
                         foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
                         {
-                            if (user.HasPermissionsTo(streamPass.Permission))
+                            if (user.MeetsRole(streamPass.UserPermission))
                             {
-                                streamPass.AddAmount(user.Data, streamPass.SubscribeBonus);
+                                streamPass.AddAmount(user, streamPass.SubscribeBonus);
                             }
                         }
 
@@ -448,14 +448,14 @@ namespace MixItUp.Base.Services.Trovo
 
                             foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
                             {
-                                currency.AddAmount(user.Data, currency.OnHostBonus);
+                                currency.AddAmount(user, currency.OnHostBonus);
                             }
 
                             foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
                             {
-                                if (user.HasPermissionsTo(streamPass.Permission))
+                                if (user.MeetsRole(streamPass.UserPermission))
                                 {
-                                    streamPass.AddAmount(user.Data, streamPass.HostBonus);
+                                    streamPass.AddAmount(user, streamPass.HostBonus);
                                 }
                             }
 

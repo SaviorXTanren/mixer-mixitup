@@ -77,7 +77,7 @@ namespace MixItUp.Base.ViewModel.Chat
         {
             if (this.setting != null)
             {
-                this.setting.Role = this.command.Requirements.Role.Role;
+                this.setting.UserRole = this.command.Requirements.Role.UserRole;
                 this.setting.Cooldown = this.command.Requirements.Cooldown.Amount;
                 this.setting.IsEnabled = this.command.IsEnabled;
             }

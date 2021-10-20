@@ -807,6 +807,14 @@ namespace MixItUp.Base.Model.Settings
             return results;
         }
 
+        public async Task ClearUserV2Data()
+        {
+            ChannelSession.Settings.Users.Clear();
+            ChannelSession.Settings.Users.ClearTracking();
+
+            await ServiceManager.Get<IDatabaseService>().Write(this.DatabaseFilePath, "DELETE FROM Users");
+        }
+
         public CommandModelBase GetCommand(Guid id) { return this.Commands.ContainsKey(id) ? this.Commands[id] : null; }
 
         public T GetCommand<T>(Guid id) where T : CommandModelBase { return (T)this.GetCommand(id); }

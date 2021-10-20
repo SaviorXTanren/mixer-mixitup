@@ -162,9 +162,9 @@ namespace MixItUp.Base.Services
 
             foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
             {
-                if (parameters.User.MeetsRole(streamPass.Permission))
+                if (parameters.User.MeetsRole(streamPass.UserPermission))
                 {
-                    streamPass.AddAmount(donation.User.Model, (int)Math.Ceiling(streamPass.DonationBonus * donation.Amount));
+                    streamPass.AddAmount(donation.User, (int)Math.Ceiling(streamPass.DonationBonus * donation.Amount));
                 }
             }
 

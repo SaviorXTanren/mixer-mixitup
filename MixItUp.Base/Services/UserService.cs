@@ -229,6 +229,15 @@ namespace MixItUp.Base.Services
             }
         }
 
+        public async Task ClearAllUserData()
+        {
+            this.platformUserIDLookups.Clear();
+            this.platformUsernameLookups.Clear();
+            this.activeUsers.Clear();
+
+            await ChannelSession.Settings.ClearUserV2Data();
+        }
+
         private void SetUserData(UserV2Model userData, bool newData = false)
         {
             if (userData != null && userData.ID != Guid.Empty && userData.GetPlatforms().Count() > 0 && !userData.HasPlatformData(StreamingPlatformTypeEnum.None))

@@ -13,7 +13,7 @@ namespace MixItUp.Base.ViewModel.Settings
     {
         public string Name { get { return this.Title.Name; } }
 
-        public UserRoleEnum Role { get { return this.Title.UserRole; } }
+        public UserRoleEnum Role { get { return this.Title.Role; } }
 
         public string RoleString { get { return this.Title.RoleString; } }
 
@@ -148,7 +148,7 @@ namespace MixItUp.Base.ViewModel.Settings
                 UserTitleViewModel existingTitle = this.Titles.FirstOrDefault(t => t.Role.Equals(this.SelectedRole));
                 if (existingTitle != null)
                 {
-                    if (existingTitle.Role == OldUserRoleEnum.Follower || existingTitle.Role == OldUserRoleEnum.Subscriber)
+                    if (existingTitle.Role == UserRoleEnum.Follower || existingTitle.Role == UserRoleEnum.YouTubeSubscriber || existingTitle.Role == UserRoleEnum.Subscriber)
                     {
                         if (existingTitle.Months == this.MinimumMonths)
                         {

@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.ViewModel.Requirements;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -72,7 +71,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowUserRoles)
             {
-                this.SelectedUserRole = (action.RoleRequirement != null) ? action.RoleRequirement.Role : UserRoleEnum.User;
+                this.SelectedUserRole = (action.RoleRequirement != null) ? action.RoleRequirement.UserRole : UserRoleEnum.User;
             }
         }
 

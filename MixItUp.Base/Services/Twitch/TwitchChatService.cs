@@ -705,14 +705,14 @@ namespace MixItUp.Base.Services.Twitch
 
                         foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
                         {
-                            currency.AddAmount(user.Data, currency.OnHostBonus);
+                            currency.AddAmount(user, currency.OnHostBonus);
                         }
 
                         foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
                         {
-                            if (user.HasPermissionsTo(streamPass.Permission))
+                            if (user.MeetsRole(streamPass.UserPermission))
                             {
-                                streamPass.AddAmount(user.Data, streamPass.HostBonus);
+                                streamPass.AddAmount(user, streamPass.HostBonus);
                             }
                         }
 

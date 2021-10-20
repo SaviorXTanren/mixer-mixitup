@@ -134,7 +134,7 @@ namespace MixItUp.Base.Services
         {
             text = PrepareTextForChecking(text);
 
-            if (!user.MeetsRole(ChannelSession.Settings.ModerationFilteredWordsExcempt))
+            if (!user.MeetsRole(ChannelSession.Settings.ModerationFilteredWordsExcemptUserRole))
             {
                 if (ChannelSession.Settings.ModerationUseCommunityFilteredWords)
                 {
@@ -170,7 +170,7 @@ namespace MixItUp.Base.Services
 
         public string ShouldTextBeExcessiveModerated(UserV2ViewModel user, string text)
         {
-            if (!user.MeetsRole(ChannelSession.Settings.ModerationChatTextExcempt))
+            if (!user.MeetsRole(ChannelSession.Settings.ModerationChatTextExcemptUserRole))
             {
                 if (ChannelSession.Settings.ModerationCapsBlockCount > 0)
                 {
@@ -233,7 +233,7 @@ namespace MixItUp.Base.Services
         {
             text = PrepareTextForChecking(text);
 
-            if (!user.MeetsRole(ChannelSession.Settings.ModerationBlockLinksExcempt))
+            if (!user.MeetsRole(ChannelSession.Settings.ModerationBlockLinksExcemptUserRole))
             {
                 if (ChannelSession.Settings.ModerationBlockLinks && (containsLink || LinkRegex.IsMatch(text)))
                 {
@@ -258,7 +258,7 @@ namespace MixItUp.Base.Services
                     return true;
                 }
 
-                if (user.MeetsRole(ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt))
+                if (user.MeetsRole(ChannelSession.Settings.ModerationChatInteractiveParticipationExcemptUserRole))
                 {
                     return true;
                 }
