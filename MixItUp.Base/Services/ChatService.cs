@@ -146,7 +146,7 @@ namespace MixItUp.Base.Services
 
         public async Task Whisper(StreamingPlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false)
         {
-            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByUsername(username, platform);
+            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(platform, username);
             if (user != null)
             {
                 await this.Whisper(user, message, sendAsStreamer);
@@ -470,7 +470,7 @@ namespace MixItUp.Base.Services
                         string primaryTaggedUsername = message.PrimaryTaggedUsername;
                         if (!string.IsNullOrEmpty(primaryTaggedUsername))
                         {
-                            UserV2ViewModel primaryTaggedUser = ServiceManager.Get<UserService>().GetActiveUserByUsername(primaryTaggedUsername, message.Platform);
+                            UserV2ViewModel primaryTaggedUser = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(message.Platform, primaryTaggedUsername);
                             if (primaryTaggedUser != null)
                             {
                                 primaryTaggedUser.TotalTimesTagged++;

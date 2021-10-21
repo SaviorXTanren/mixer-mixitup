@@ -375,12 +375,23 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task RemoveActiveUser(StreamingPlatformTypeEnum platform, string platformUsername)
+        public async Task<UserV2ViewModel> RemoveActiveUser(StreamingPlatformTypeEnum platform, string platformUsername)
         {
-            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id) && this.activeUsers.TryGetValue(id, out UserV2ViewModel user))
+            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id))
+            {
+                return await this.RemoveActiveUser(id);
+            }
+            return null;
+        }
+
+        public async Task<UserV2ViewModel> RemoveActiveUser(Guid id)
+        {
+            if (this.activeUsers.TryGetValue(id, out UserV2ViewModel user))
             {
                 await this.RemoveActiveUser(user);
+                return user;
             }
+            return null;
         }
 
         public async Task RemoveActiveUser(UserV2ViewModel user)

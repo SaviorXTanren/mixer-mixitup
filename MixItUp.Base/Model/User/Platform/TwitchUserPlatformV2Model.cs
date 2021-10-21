@@ -23,7 +23,11 @@ namespace MixItUp.Base.Model.User.Platform
         public Dictionary<string, int> BadgeInfo { get; set; } = new Dictionary<string, int>();
 
         [DataMember]
+        public ChatBadgeModel RoleBadge { get; set; }
+        [DataMember]
         public ChatBadgeModel SubscriberBadge { get; set; }
+        [DataMember]
+        public ChatBadgeModel SpecialtyBadge { get; set; }
 
         [DataMember]
         public long TotalBitsCheered { get; set; }
@@ -57,8 +61,6 @@ namespace MixItUp.Base.Model.User.Platform
 
         public TwitchUserPlatformV2Model(UserFollowModel follow) : this(follow.from_id, follow.from_name, null) { }
 
-        public TwitchUserPlatformV2Model(TwitchWebhookUserFollowModel follow) : this(follow.ID, follow.Username, follow.DisplayName) { }
-
         public TwitchUserPlatformV2Model(string id, string username, string displayName)
         {
             this.Platform = StreamingPlatformTypeEnum.Twitch;
@@ -72,6 +74,8 @@ namespace MixItUp.Base.Model.User.Platform
         public bool HasTwitchSubscriberBadge { get { return this.HasTwitchBadge("subscriber"); } }
 
         public bool HasTwitchSubscriberFounderBadge { get { return this.HasTwitchBadge("founder"); } }
+
+        public bool IsTwitchSubscriber { get { return this.HasTwitchSubscriberBadge || this.HasTwitchSubscriberFounderBadge; } }
 
         public override async Task Refresh()
         {
@@ -122,6 +126,62 @@ namespace MixItUp.Base.Model.User.Platform
                 id = this.ID,
                 login = this.Username
             };
+        }
+
+        public void SetUserProperties(ChatMessagePacketModel message)
+        {
+            this.SetUserProperties(message.UserDisplayName, message.BadgeDictionary, message.BadgeInfoDictionary, message.Color);
+        }
+
+        public void SetUserProperties(ChatUserStatePacketModel userState)
+        {
+            this.SetUserProperties(userState.UserDisplayName, userState.BadgeDictionary, userState.BadgeInfoDictionary, userState.Color);
+        }
+
+        public void SetUserProperties(ChatUserNoticePacketModel userNotice)
+        {
+            this.SetUserProperties(userNotice.UserDisplayName, userNotice.BadgeDictionary, userNotice.BadgeInfoDictionary, userNotice.Color);
+        }
+
+        private void SetUserProperties(string displayName, Dictionary<string, int> badges, Dictionary<string, int> badgeInfo, string color)
+        {
+            this.DisplayName = displayName;
+            this.Badges = badges;
+            this.BadgeInfo = badgeInfo;
+            if (!string.IsNullOrEmpty(color))
+            {
+                this.Color = color;
+            }
+
+            if (this.Badges != null)
+            {
+                if (this.HasTwitchBadge("admin") || this.HasTwitchBadge("staff")) { this.Roles.Add(UserRoleEnum.TwitchStaff); } else { this.Roles.Remove(UserRoleEnum.TwitchStaff); }
+                if (this.HasTwitchBadge("global_mod")) { this.Roles.Add(UserRoleEnum.TwitchGlobalMod); } else { this.Roles.Remove(UserRoleEnum.TwitchGlobalMod); }
+                if (this.HasTwitchBadge("moderator")) { this.Roles.Add(UserRoleEnum.Moderator); } else { this.Roles.Remove(UserRoleEnum.Moderator); }
+                if (this.IsTwitchSubscriber) { this.Roles.Add(UserRoleEnum.Subscriber); } else { this.Roles.Remove(UserRoleEnum.Subscriber); }
+                if (this.HasTwitchBadge("turbo") || this.HasTwitchBadge("premium")) { this.Roles.Add(UserRoleEnum.TwitchTurbo); } else { this.Roles.Remove(UserRoleEnum.TwitchTurbo); }
+                if (this.HasTwitchBadge("vip")) { this.Roles.Add(UserRoleEnum.TwitchVIP); } else { this.Roles.Remove(UserRoleEnum.TwitchVIP); }
+
+                if (ServiceManager.Get<TwitchChatService>() != null)
+                {
+                    if (this.HasTwitchBadge("staff")) { this.RoleBadge = this.GetTwitchBadgeURL("staff"); }
+                    else if (this.HasTwitchBadge("admin")) { this.RoleBadge = this.GetTwitchBadgeURL("admin"); }
+                    else if (this.HasTwitchBadge("extension")) { this.RoleBadge = this.GetTwitchBadgeURL("extension"); }
+                    else if (this.HasTwitchBadge("twitchbot")) { this.RoleBadge = this.GetTwitchBadgeURL("twitchbot"); }
+                    else if (this.Roles.Contains(UserRoleEnum.Moderator)) { this.RoleBadge = this.GetTwitchBadgeURL("moderator"); }
+                    else if (this.Roles.Contains(UserRoleEnum.TwitchVIP)) { this.RoleBadge = this.GetTwitchBadgeURL("vip"); }
+
+                    if (this.HasTwitchSubscriberFounderBadge) { this.SubscriberBadge = this.GetTwitchBadgeURL("founder"); }
+                    else if (this.HasTwitchSubscriberBadge) { this.SubscriberBadge = this.GetTwitchBadgeURL("subscriber"); }
+
+                    if (this.HasTwitchBadge("sub-gift-leader")) { this.SpecialtyBadge = this.GetTwitchBadgeURL("sub-gift-leader"); }
+                    else if (this.HasTwitchBadge("bits-leader")) { this.SpecialtyBadge = this.GetTwitchBadgeURL("bits-leader"); }
+                    else if (this.HasTwitchBadge("sub-gifter")) { this.SpecialtyBadge = this.GetTwitchBadgeURL("sub-gifter"); }
+                    else if (this.HasTwitchBadge("bits")) { this.SpecialtyBadge = this.GetTwitchBadgeURL("bits"); }
+                    else if (this.HasTwitchBadge("premium")) { this.SpecialtyBadge = this.GetTwitchBadgeURL("premium"); }
+                }
+            }
+
         }
 
         private void SetUserProperties(UserModel user)

@@ -2,7 +2,6 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
-using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
@@ -73,7 +72,7 @@ namespace MixItUp.Base.ViewModel.Chat
                     {
                         return true;
                     }
-                    else if (ServiceManager.Get<TwitchSessionService>().BotNewAPI != null && string.Equals(ServiceManager.Get<TwitchSessionService>().BotNewAPI.id, this.User.TwitchID, StringComparison.InvariantCultureIgnoreCase))
+                    else if (this.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().BotNewAPI != null && string.Equals(ServiceManager.Get<TwitchSessionService>().BotNewAPI.id, this.User.PlatformID, StringComparison.InvariantCultureIgnoreCase))
                     {
                         return true;
                     }

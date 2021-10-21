@@ -2,9 +2,7 @@
 using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Store;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Model.Webhooks;
 using MixItUp.Base.Services.Glimesh;
@@ -27,7 +25,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using TwitchBase = Twitch.Base;
 
 namespace MixItUp.Base.Services
 {
@@ -432,12 +429,7 @@ namespace MixItUp.Base.Services
             UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, followerId);
             if (user == null)
             {
-                user = ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(new TwitchWebhookUserFollowModel()
-                {
-                    ID = followerId,
-                    Username = followerUsername,
-                    DisplayName = followerDisplayName
-                }));
+                user = ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(followerId, followerUsername, followerDisplayName));
             }
 
             await ServiceManager.Get<TwitchEventService>().AddFollow(user);

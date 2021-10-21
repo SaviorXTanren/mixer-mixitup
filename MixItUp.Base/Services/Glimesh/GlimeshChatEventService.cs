@@ -190,7 +190,7 @@ namespace MixItUp.Base.Services.Glimesh
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.ShortTimeoutUser(ServiceManager.Get<GlimeshSessionService>().Channel?.id, user.GlimeshID);
+                    await this.userClient.ShortTimeoutUser(ServiceManager.Get<GlimeshSessionService>().Channel?.id, user.PlatformID);
                 }
             });
         }
@@ -201,7 +201,7 @@ namespace MixItUp.Base.Services.Glimesh
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.LongTimeoutUser(ServiceManager.Get<GlimeshSessionService>().Channel?.id, user.GlimeshID);
+                    await this.userClient.LongTimeoutUser(ServiceManager.Get<GlimeshSessionService>().Channel?.id, user.PlatformID);
                 }
             });
         }
@@ -212,7 +212,7 @@ namespace MixItUp.Base.Services.Glimesh
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.BanUser(ServiceManager.Get<GlimeshSessionService>().Channel?.id, user.GlimeshID);
+                    await this.userClient.BanUser(ServiceManager.Get<GlimeshSessionService>().Channel?.id, user.PlatformID);
                 }
             });
         }
@@ -223,7 +223,7 @@ namespace MixItUp.Base.Services.Glimesh
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.UnbanUser(ServiceManager.Get<GlimeshSessionService>().Channel?.id, user.GlimeshID);
+                    await this.userClient.UnbanUser(ServiceManager.Get<GlimeshSessionService>().Channel?.id, user.PlatformID);
                 }
             });
         }
@@ -316,7 +316,7 @@ namespace MixItUp.Base.Services.Glimesh
 
                     foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
                     {
-                        if (user.HasPermissionsTo(streamPass.UserPermission))
+                        if (user.MeetsRole(streamPass.UserPermission))
                         {
                             streamPass.AddAmount(user, streamPass.FollowBonus);
                         }
