@@ -25,7 +25,16 @@ namespace MixItUp.Base.Model.Actions
         public OverlayActionModel(string overlayName, OverlayItemModelBase overlayItem)
             : base(ActionTypeEnum.Overlay)
         {
-            this.OverlayName = overlayName;
+            var overlays = ChannelSession.Services.Overlay.GetOverlayNames();
+            if (overlays.Contains(overlayName))
+            {
+                this.OverlayName = overlayName;
+            }
+            else
+            {
+                this.OverlayName = ChannelSession.Services.Overlay.DefaultOverlayName;
+            }
+
             this.OverlayItem = overlayItem;
         }
 

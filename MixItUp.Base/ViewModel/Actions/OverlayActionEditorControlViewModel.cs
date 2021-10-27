@@ -59,7 +59,15 @@ namespace MixItUp.Base.ViewModel.Actions
             get { return this.selectedOverlayEndpoint; }
             set
             {
-                this.selectedOverlayEndpoint = value;
+                var overlays = ChannelSession.Services.Overlay.GetOverlayNames();
+                if (overlays.Contains(value))
+                {
+                    this.selectedOverlayEndpoint = value;
+                }
+                else
+                {
+                    this.selectedOverlayEndpoint = ChannelSession.Services.Overlay.DefaultOverlayName;
+                }
                 this.NotifyPropertyChanged();
             }
         }
