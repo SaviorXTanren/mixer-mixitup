@@ -27,6 +27,9 @@ namespace MixItUp.Base.Model.User
         public bool UpdatedThisSession { get; set; } = false;
 
         [DataMember]
+        public int OnlineViewingMinutes { get; set; }
+
+        [DataMember]
         public Dictionary<Guid, int> CurrencyAmounts { get; set; } = new Dictionary<Guid, int>();
         [DataMember]
         public Dictionary<Guid, Dictionary<Guid, int>> InventoryAmounts { get; set; } = new Dictionary<Guid, Dictionary<Guid, int>>();
@@ -51,6 +54,23 @@ namespace MixItUp.Base.Model.User
 
         [DataMember]
         public string Notes { get; set; }
+
+        [DataMember]
+        public long TotalStreamsWatched { get; set; }
+        [DataMember]
+        public double TotalAmountDonated { get; set; }
+        [DataMember]
+        public long TotalSubsGifted { get; set; }
+        [DataMember]
+        public long TotalSubsReceived { get; set; }
+        [DataMember]
+        public long TotalChatMessageSent { get; set; }
+        [DataMember]
+        public long TotalTimesTagged { get; set; }
+        [DataMember]
+        public long TotalCommandsRun { get; set; }
+        [DataMember]
+        public long TotalMonthsSubbed { get; set; }
 
         [DataMember]
         private Dictionary<StreamingPlatformTypeEnum, UserPlatformV2ModelBase> PlatformData { get; set; } = new Dictionary<StreamingPlatformTypeEnum, UserPlatformV2ModelBase>();

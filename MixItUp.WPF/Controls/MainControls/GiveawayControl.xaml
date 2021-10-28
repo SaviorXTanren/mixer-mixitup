@@ -112,7 +112,7 @@
                         <CommandsControls:CommandListingButtonsControl x:Name="GiveawayUserJoinedCommand" DataContext="{Binding GiveawayUserJoinedCommand}" HorizontalAlignment="Center" EditClicked="GiveawayUserJoinedCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
                     </GroupBox>
 
-                    <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.WinnerSelected}">
+                    <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.UserWon}">
                         <CommandsControls:CommandListingButtonsControl x:Name="GiveawayWinnerSelectedCommand" DataContext="{Binding GiveawayWinnerSelectedCommand}" HorizontalAlignment="Center" EditClicked="GiveawayWinnerSelectedCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
                     </GroupBox>
                 </Grid>

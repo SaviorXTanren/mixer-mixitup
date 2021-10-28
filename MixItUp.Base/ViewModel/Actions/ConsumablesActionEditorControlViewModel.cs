@@ -211,7 +211,7 @@ namespace MixItUp.Base.ViewModel.Actions
             this.Amount = action.Amount;
 
             this.DeductFromUser = action.DeductFromUser;
-            this.SelectedUsersToApplyTo = action.UsersToApplyTo;
+            this.SelectedUsersToApplyTo = action.UserRoleToApplyTo;
             this.TargetUsername = action.Username;
         }
 

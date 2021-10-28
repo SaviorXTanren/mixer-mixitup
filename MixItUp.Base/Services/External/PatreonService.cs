@@ -689,14 +689,14 @@ namespace MixItUp.Base.Services.External
                         {
                             CommandParametersModel parameters = new CommandParametersModel();
 
-                            parameters.User = await ServiceManager.Get<UserService>().GetUserFullSearch(member.User.Platform, member.User.PlatformUserID, member.User.PlatformUsername);
+                            parameters.User = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(member.User.Platform, member.User.PlatformUserID);
                             if (parameters.User != null)
                             {
-                                parameters.User.Data.PatreonUserID = member.UserID;
+                                parameters.User.PatreonUserID = member.UserID;
                             }
                             else
                             {
-                                parameters.User = UserV2ViewModel.Create(member.User.PlatformUsername);
+                                parameters.User = UserV2ViewModel.CreateUnassociated(member.User.PlatformUsername);
                             }
 
                             parameters.SpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierNameSpecialIdentifier] = tier.Title;

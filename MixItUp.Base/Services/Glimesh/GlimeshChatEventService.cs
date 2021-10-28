@@ -5,6 +5,7 @@ using Glimesh.Base.Models.Users;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Glimesh;
@@ -250,11 +251,11 @@ namespace MixItUp.Base.Services.Glimesh
                     UserModel glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByID(message.User?.id);
                     if (glimeshUser != null)
                     {
-                        user = await UserV2ViewModel.Create(glimeshUser);
+                        user = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(glimeshUser));
                     }
                     else
                     {
-                        user = await UserV2ViewModel.Create(message);
+                        user = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(message));
                     }
                     await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
                 }

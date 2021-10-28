@@ -291,10 +291,10 @@ namespace MixItUp.Base.ViewModel.User
 
         public int OnlineViewingMinutes
         {
-            get { return this.PlatformModel.OnlineViewingMinutes; }
+            get { return this.Model.OnlineViewingMinutes; }
             set
             {
-                this.PlatformModel.OnlineViewingMinutes = value;
+                this.Model.OnlineViewingMinutes = value;
                 this.NotifyPropertyChanged("OnlineViewingMinutes");
                 this.NotifyPropertyChanged("OnlineViewingMinutesOnly");
                 this.NotifyPropertyChanged("OnlineViewingHoursOnly");
@@ -329,50 +329,50 @@ namespace MixItUp.Base.ViewModel.User
 
         public long TotalStreamsWatched
         {
-            get { return this.PlatformModel.TotalStreamsWatched; }
-            set { this.PlatformModel.TotalStreamsWatched = value; }
+            get { return this.Model.TotalStreamsWatched; }
+            set { this.Model.TotalStreamsWatched = value; }
         }
 
         public double TotalAmountDonated
         {
-            get { return this.PlatformModel.TotalAmountDonated; }
-            set { this.PlatformModel.TotalAmountDonated = value; }
+            get { return this.Model.TotalAmountDonated; }
+            set { this.Model.TotalAmountDonated = value; }
         }
 
         public long TotalSubsGifted
         {
-            get { return this.PlatformModel.TotalSubsGifted; }
-            set { this.PlatformModel.TotalSubsGifted = value; }
+            get { return this.Model.TotalSubsGifted; }
+            set { this.Model.TotalSubsGifted = value; }
         }
 
         public long TotalSubsReceived
         {
-            get { return this.PlatformModel.TotalSubsReceived; }
-            set { this.PlatformModel.TotalSubsReceived = value; }
+            get { return this.Model.TotalSubsReceived; }
+            set { this.Model.TotalSubsReceived = value; }
         }
 
         public long TotalChatMessageSent
         {
-            get { return this.PlatformModel.TotalChatMessageSent; }
-            set { this.PlatformModel.TotalChatMessageSent = value; }
+            get { return this.Model.TotalChatMessageSent; }
+            set { this.Model.TotalChatMessageSent = value; }
         }
 
         public long TotalTimesTagged
         {
-            get { return this.PlatformModel.TotalTimesTagged; }
-            set { this.PlatformModel.TotalTimesTagged = value; }
+            get { return this.Model.TotalTimesTagged; }
+            set { this.Model.TotalTimesTagged = value; }
         }
 
         public long TotalCommandsRun
         {
-            get { return this.PlatformModel.TotalCommandsRun; }
-            set { this.PlatformModel.TotalCommandsRun = value; }
+            get { return this.Model.TotalCommandsRun; }
+            set { this.Model.TotalCommandsRun = value; }
         }
 
         public long TotalMonthsSubbed
         {
-            get { return this.PlatformModel.TotalMonthsSubbed; }
-            set { this.PlatformModel.TotalMonthsSubbed = value; }
+            get { return this.Model.TotalMonthsSubbed; }
+            set { this.Model.TotalMonthsSubbed = value; }
         }
 
         public uint ModerationStrikes

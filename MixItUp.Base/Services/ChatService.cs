@@ -737,9 +737,9 @@ namespace MixItUp.Base.Services
 
         private Task ProcessHoursCurrency(CancellationToken cancellationToken)
         {
-            foreach (UserV2ViewModel user in ServiceManager.Get<UserService>().GetAllWorkableActiveUsers())
+            foreach (UserV2ViewModel user in ServiceManager.Get<UserService>().GetActiveUsers())
             {
-                user.UpdateMinuteData();
+                user.UpdateViewingMinutes();
             }
 
             foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)

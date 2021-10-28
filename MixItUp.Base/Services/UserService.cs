@@ -394,7 +394,7 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        public async Task RemoveActiveUser(UserV2ViewModel user)
+        public async Task<UserV2ViewModel> RemoveActiveUser(UserV2ViewModel user)
         {
             if (user != null && this.activeUsers.ContainsKey(user.ID))
             {
@@ -403,9 +403,20 @@ namespace MixItUp.Base.Services
                 // TODO
                 //await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserLeft, new CommandParametersModel(user));
             }
+            return user;
         }
 
-        public IEnumerable<UserV2ViewModel> GetActiveUsers() { return this.activeUsers.Values.ToList(); }
+        public IEnumerable<UserV2ViewModel> GetActiveUsers(StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
+        {
+            if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
+            {
+                return this.activeUsers.Values.ToList();
+            }
+            else
+            {
+                return this.activeUsers.Values.ToList().Where(u => u.Platform == platform);
+            }
+        }
 
         public int GetActiveUserCount() { return this.activeUsers.Count; }
 

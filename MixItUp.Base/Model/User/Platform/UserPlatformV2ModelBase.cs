@@ -31,26 +31,6 @@ namespace MixItUp.Base.Model.User.Platform
         [DataMember]
         public int SubscriberTier { get; set; } = 0;
 
-        [DataMember]
-        public int OnlineViewingMinutes { get; set; }
-
-        [DataMember]
-        public long TotalStreamsWatched { get; set; }
-        [DataMember]
-        public double TotalAmountDonated { get; set; }
-        [DataMember]
-        public long TotalSubsGifted { get; set; }
-        [DataMember]
-        public long TotalSubsReceived { get; set; }
-        [DataMember]
-        public long TotalChatMessageSent { get; set; }
-        [DataMember]
-        public long TotalTimesTagged { get; set; }
-        [DataMember]
-        public long TotalCommandsRun { get; set; }
-        [DataMember]
-        public long TotalMonthsSubbed { get; set; }
-
         protected UserPlatformV2ModelBase() { }
 
         public abstract Task Refresh();

@@ -382,7 +382,7 @@ namespace MixItUp.Base.Services.Trovo
                     if (splits.Length == 2)
                     {
                         string gifteeUsername = splits[1];
-                        UserV2ViewModel giftee = ServiceManager.Get<UserService>().GetActiveUserByUsername(gifteeUsername, StreamingPlatformTypeEnum.Trovo);
+                        UserV2ViewModel giftee = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum.Trovo, gifteeUsername);
                         if (giftee == null)
                         {
                             UserModel gifteeTrovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(gifteeUsername);

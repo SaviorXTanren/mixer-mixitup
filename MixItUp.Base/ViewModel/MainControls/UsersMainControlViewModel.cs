@@ -1,8 +1,10 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
@@ -255,7 +257,11 @@ namespace MixItUp.Base.ViewModel.MainControls
                 {
                     List<List<string>> contents = new List<List<string>>();
 
-                    List<string> columns = new List<string>() { "MixItUpID", "TwitchID", "Username", "PrimaryRole", "ViewingMinutes", "OfflineViewingMinutes", "CustomTitle" };
+                    List<string> columns = new List<string>() { "MixItUpID" };
+                    foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
+                    {
+                        columns.AddRange(new List<string>() { platform.ToString() + "ID", platform.ToString() + "Username" });
+                    }
                     foreach (var kvp in ChannelSession.Settings.Currency)
                     {
                         columns.Add(kvp.Value.Name.Replace(" ", ""));
@@ -264,15 +270,28 @@ namespace MixItUp.Base.ViewModel.MainControls
                     {
                         columns.Add(kvp.Value.Name.Replace(" ", ""));
                     }
-                    columns.AddRange(new List<string>() { "TotalStreamsWatched", "TotalAmountDonated", "TotalSubsGifted", "TotalSubsReceived", "TotalChatMessagesSent", "TotalTimesTagged",
+                    columns.AddRange(new List<string>() { "Minutes", "CustomTitle", "TotalStreamsWatched", "TotalAmountDonated", "TotalSubsGifted", "TotalSubsReceived", "TotalChatMessagesSent", "TotalTimesTagged",
                         "TotalCommandsRun", "TotalMonthsSubbed", "LastSeen" });
                     contents.Add(columns);
 
                     await ServiceManager.Get<UserService>().LoadAllUserData();
-                    foreach (UserV2Model user in ChannelSession.Settings.Users.Values.ToList())
+                    foreach (UserV2Model u in ChannelSession.Settings.Users.Values.ToList())
                     {
-                        List<string> data = new List<string>() { user.ID.ToString(), user.TwitchID, user.Username, user.PrimaryRole.ToString(),
-                            user.ViewingMinutes.ToString(), user.OfflineViewingMinutes.ToString(), user.CustomTitle };
+                        UserV2ViewModel user = new UserV2ViewModel(u);
+
+                        List<string> data = new List<string>() { user.ID.ToString() };
+                        foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
+                        {
+                            UserPlatformV2ModelBase platformUser = user.GetPlatformData<UserPlatformV2ModelBase>(platform);
+                            if (platformUser != null)
+                            {
+                                columns.AddRange(new List<string>() { platformUser.ID, platformUser.Username });
+                            }
+                            else
+                            {
+                                columns.AddRange(new List<string>() { "", "", "" });
+                            }
+                        }
                         foreach (var kvp in ChannelSession.Settings.Currency)
                         {
                             data.Add(kvp.Value.GetAmount(user).ToString());
@@ -281,8 +300,8 @@ namespace MixItUp.Base.ViewModel.MainControls
                         {
                             data.Add(kvp.Value.GetAmount(user).ToString());
                         }
-                        data.AddRange(new List<string>() { user.TotalStreamsWatched.ToString(), user.TotalAmountDonated.ToString(), user.TotalSubsGifted.ToString(), user.TotalSubsReceived.ToString(),
-                            user.TotalChatMessageSent.ToString(), user.TotalTimesTagged.ToString(), user.TotalCommandsRun.ToString(), user.TotalMonthsSubbed.ToString(), user.LastSeen.ToFriendlyDateTimeString() });
+                        data.AddRange(new List<string>() { user.OnlineViewingMinutes.ToString(), user.CustomTitle, user.TotalStreamsWatched.ToString(), user.TotalAmountDonated.ToString(), user.TotalSubsGifted.ToString(), user.TotalSubsReceived.ToString(),
+                            user.TotalChatMessageSent.ToString(), user.TotalTimesTagged.ToString(), user.TotalCommandsRun.ToString(), user.TotalMonthsSubbed.ToString(), user.LastActivity.ToFriendlyDateTimeString() });
                         contents.Add(data);
                     }
 
@@ -325,15 +344,13 @@ namespace MixItUp.Base.ViewModel.MainControls
                     if (!string.IsNullOrEmpty(this.UsernameFilter))
                     {
                         string filter = this.UsernameFilter.ToLower();
-#pragma warning disable CS0612 // Type or member is obsolete
                         if (this.SelectedPlatform != StreamingPlatformTypeEnum.All)
-#pragma warning restore CS0612 // Type or member is obsolete
                         {
-                            data = data.Where(u => u.Platforms.Contains(this.SelectedPlatform) && u.Username != null && u.Username.Contains(filter, StringComparison.OrdinalIgnoreCase));
+                            data = data.Where(u => u.HasPlatformData(this.SelectedPlatform) && u.GetPlatformUsername(this.SelectedPlatform) != null && u.GetPlatformUsername(this.SelectedPlatform).Contains(filter, StringComparison.OrdinalIgnoreCase));
                         }
                         else
                         {
-                            data = data.Where(u => u.Username != null && u.Username.Contains(filter, StringComparison.OrdinalIgnoreCase));
+                            data = data.Where(u => u.GetPlatformUsername(ChannelSession.Settings.DefaultStreamingPlatform) != null && u.GetPlatformUsername(ChannelSession.Settings.DefaultStreamingPlatform).Contains(filter, StringComparison.OrdinalIgnoreCase));
                         }
                     }
 
@@ -347,15 +364,15 @@ namespace MixItUp.Base.ViewModel.MainControls
                         {
                             if (this.SelectedWatchTimeComparisonSearchFilter.Equals(GreaterThanAmountFilter))
                             {
-                                data = data.Where(u => u.ViewingMinutes > this.WatchTimeAmountSearchFilter);
+                                data = data.Where(u => u.OnlineViewingMinutes > this.WatchTimeAmountSearchFilter);
                             }
                             else if (this.SelectedWatchTimeComparisonSearchFilter.Equals(LessThanAmountFilter))
                             {
-                                data = data.Where(u => u.ViewingMinutes < this.WatchTimeAmountSearchFilter);
+                                data = data.Where(u => u.OnlineViewingMinutes < this.WatchTimeAmountSearchFilter);
                             }
                             else if (this.SelectedWatchTimeComparisonSearchFilter.Equals(EqualToAmountFilter))
                             {
-                                data = data.Where(u => u.ViewingMinutes == this.WatchTimeAmountSearchFilter);
+                                data = data.Where(u => u.OnlineViewingMinutes == this.WatchTimeAmountSearchFilter);
                             }
                         }
                         else if (this.IsConsumablesSearchFilterType && this.SelectedConsumablesSearchFilter != null && this.ConsumablesAmountSearchFilter > 0)
@@ -408,14 +425,14 @@ namespace MixItUp.Base.ViewModel.MainControls
                         }
                         else if (this.IsCustomSettingsSearchFilterType)
                         {
-                            data = data.Where(u => u.IsCurrencyRankExempt || u.CustomTitle != null || u.CustomCommandIDs.Count > 0 || u.EntranceCommandID != Guid.Empty || !string.IsNullOrEmpty(u.Notes));
+                            data = data.Where(u => u.IsSpecialtyExcluded || u.CustomTitle != null || u.CustomCommandIDs.Count > 0 || u.EntranceCommandID != Guid.Empty || !string.IsNullOrEmpty(u.Notes));
                         }
                     }
 
                     if (this.SortColumnIndex == 0) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.Username) : data.OrderBy(u => u.Username); }
                     else if (this.SortColumnIndex == 1) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.Platforms) : data.OrderBy(u => u.Platforms); }
                     else if (this.SortColumnIndex == 2) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryRole) : data.OrderBy(u => u.PrimaryRole); }
-                    else if (this.SortColumnIndex == 3) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.ViewingMinutes) : data.OrderBy(u => u.ViewingMinutes); }
+                    else if (this.SortColumnIndex == 3) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.OnlineViewingMinutes) : data.OrderBy(u => u.OnlineViewingMinutes); }
                     else if (this.SortColumnIndex == 4) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryCurrency) : data.OrderBy(u => u.PrimaryCurrency); }
                     else if (this.SortColumnIndex == 5) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryRankPoints) : data.OrderBy(u => u.PrimaryRankPoints); }
 
@@ -436,7 +453,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             if (await DialogHelper.ShowConfirmation(Resources.DeleteUserDataPrompt))
             {
                 ChannelSession.Settings.Users.Remove(user.ID);
-                await ServiceManager.Get<UserService>().RemoveActiveUserByID(user.ID);
+                await ServiceManager.Get<UserService>().RemoveActiveUser(user.ID);
             }
             this.RefreshUsers();
         }

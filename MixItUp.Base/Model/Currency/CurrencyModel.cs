@@ -266,6 +266,15 @@ namespace MixItUp.Base.Model.Currency
             return 0;
         }
 
+        public int GetAmount(UserV2Model user)
+        {
+            if (user.CurrencyAmounts.ContainsKey(this.ID))
+            {
+                return user.CurrencyAmounts[this.ID];
+            }
+            return 0;
+        }
+
         public bool HasAmount(UserV2ViewModel user, int amount)
         {
             return (user.IsSpecialtyExcluded || this.GetAmount(user) >= amount);

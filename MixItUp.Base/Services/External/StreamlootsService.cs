@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -334,10 +335,10 @@ namespace MixItUp.Base.Services.External
 
         private UserV2ViewModel GetUser(string username)
         {
-            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByUsername(username);
+            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum.All, username);
             if (user == null)
             {
-                user = UserV2ViewModel.Create(username);
+                user = UserV2ViewModel.CreateUnassociated(username);
             }
             return user;
         }

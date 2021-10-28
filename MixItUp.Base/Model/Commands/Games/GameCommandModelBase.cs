@@ -207,7 +207,7 @@ namespace MixItUp.Base.Model.Commands.Games
             if (currencyRequirement != null && betAmount > 0)
             {
                 string currencyName = currencyRequirement.Currency?.Name;
-                List<UserV2ViewModel> users = new List<UserV2ViewModel>(ServiceManager.Get<UserService>().GetAllWorkableActiveUsers(parameters.Platform).Shuffle());
+                List<UserV2ViewModel> users = new List<UserV2ViewModel>(ServiceManager.Get<UserService>().GetActiveUsers(parameters.Platform).Shuffle());
                 users.Remove(parameters.User);
                 foreach (UserV2ViewModel user in users)
                 {

@@ -16497,6 +16497,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User Won.
+        /// </summary>
+        public static string UserWon {
+            get {
+                return ResourceManager.GetString("UserWon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A valid chat purchase command must be specified.
         /// </summary>
         public static string ValidChatPurchaseCommand {

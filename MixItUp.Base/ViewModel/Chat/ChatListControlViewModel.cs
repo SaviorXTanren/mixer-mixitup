@@ -123,7 +123,7 @@ namespace MixItUp.Base.ViewModel.Chat
                         if (splits.Length == 3)
                         {
                             string username = UserService.SanitizeUsername(splits[1]);
-                            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByUsername(username);
+                            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum.All, username);
                             if (user != null)
                             {
                                 if (uint.TryParse(splits[2], out uint amount) && amount > 0)
@@ -147,7 +147,7 @@ namespace MixItUp.Base.ViewModel.Chat
                         if (splits.Length == 2)
                         {
                             string username = UserService.SanitizeUsername(splits[1]);
-                            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByUsername(username);
+                            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum.All, username);
                             if (user != null)
                             {
                                 await ServiceManager.Get<ChatService>().BanUser(user);

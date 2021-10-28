@@ -283,6 +283,24 @@ namespace MixItUp.Base.Model.Currency
             return 0;
         }
 
+        public int GetAmount(UserV2Model user, InventoryItemModel item)
+        {
+            if (user.InventoryAmounts.ContainsKey(this.ID) && user.InventoryAmounts[this.ID].ContainsKey(item.ID))
+            {
+                return user.InventoryAmounts[this.ID][item.ID];
+            }
+            return 0;
+        }
+
+        public int GetAmount(UserV2Model user, Guid itemID)
+        {
+            if (this.ItemExists(itemID))
+            {
+                return this.GetAmount(user, this.GetItem(itemID));
+            }
+            return 0;
+        }
+
         public Dictionary<Guid, int> GetAmounts(UserV2ViewModel user)
         {
             Dictionary<Guid, int> amounts = new Dictionary<Guid, int>();

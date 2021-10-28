@@ -154,6 +154,15 @@ namespace MixItUp.Base.Model.Currency
             return 0;
         }
 
+        public int GetAmount(UserV2Model user)
+        {
+            if (user.StreamPassAmounts.ContainsKey(this.ID))
+            {
+                return user.StreamPassAmounts[this.ID];
+            }
+            return 0;
+        }
+
         public int GetLevel(UserV2ViewModel user) { return (this.GetAmount(user) / this.PointsForLevelUp); }
 
         public bool HasAmount(UserV2ViewModel user, int amount)

@@ -6066,4 +6066,7 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="ViewingMinutes" xml:space="preserve">
     <value>Viewing Minutes</value>
   </data>
+  <data name="UserWon" xml:space="preserve">
+    <value>User Won</value>
+  </data>
 </root>
