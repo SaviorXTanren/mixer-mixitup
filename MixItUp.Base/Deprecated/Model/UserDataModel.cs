@@ -469,6 +469,15 @@ namespace MixItUp.Base.Model.User
                 result.CustomCommandIDs.AddRange(this.CustomCommandIDs);
                 result.PatreonUserID = this.PatreonUserID;
                 result.ModerationStrikes = this.ModerationStrikes;
+                result.OnlineViewingMinutes = this.ViewingMinutes;
+                result.TotalAmountDonated = this.TotalAmountDonated;
+                result.TotalChatMessageSent = this.TotalChatMessageSent;
+                result.TotalCommandsRun = this.TotalCommandsRun;
+                result.TotalMonthsSubbed = this.TotalMonthsSubbed;
+                result.TotalStreamsWatched = this.TotalStreamsWatched;
+                result.TotalSubsGifted = this.TotalSubsGifted;
+                result.TotalSubsReceived = this.TotalSubsReceived;
+                result.TotalTimesTagged = this.TotalTimesTagged;
                 result.Notes = this.Notes;
 
                 TwitchUserPlatformV2Model platformData = new TwitchUserPlatformV2Model(this.TwitchID, this.TwitchUsername, this.TwitchDisplayName);
@@ -478,18 +487,11 @@ namespace MixItUp.Base.Model.User
                 platformData.Badges = this.TwitchBadges;
                 platformData.Color = this.TwitchColor;
                 platformData.FollowDate = this.TwitchFollowDate;
-                platformData.OnlineViewingMinutes = this.ViewingMinutes;
                 platformData.SubscribeDate = this.TwitchSubscribeDate;
                 platformData.SubscriberTier = this.TwitchSubscriberTier;
-                platformData.TotalAmountDonated = this.TotalAmountDonated;
+
                 platformData.TotalBitsCheered = this.TotalBitsCheered;
-                platformData.TotalChatMessageSent = this.TotalChatMessageSent;
-                platformData.TotalCommandsRun = this.TotalCommandsRun;
-                platformData.TotalMonthsSubbed = this.TotalMonthsSubbed;
-                platformData.TotalStreamsWatched = this.TotalStreamsWatched;
-                platformData.TotalSubsGifted = this.TotalSubsGifted;
-                platformData.TotalSubsReceived = this.TotalSubsReceived;
-                platformData.TotalTimesTagged = this.TotalTimesTagged;
+
                 foreach (OldUserRoleEnum role in this.TwitchUserRoles)
                 {
                     platformData.Roles.Add(MixItUp.Base.Model.User.UserRoles.ConvertFromOldRole(role));

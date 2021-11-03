@@ -26,7 +26,7 @@ namespace MixItUp.Base
     {
         public static ApplicationSettingsV2Model AppSettings { get; private set; }
         public static SettingsV3Model Settings { get; private set; }
-        private static UserV2Model User { get; private set; }
+        public static UserV2Model User { get; private set; }
 
         private static CancellationTokenSource sessionBackgroundCancellationTokenSource = new CancellationTokenSource();
         private static int sessionBackgroundTimer = 0;

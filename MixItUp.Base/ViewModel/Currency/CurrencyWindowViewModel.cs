@@ -540,17 +540,15 @@ namespace MixItUp.Base.ViewModel.Currency
                             int minutes = 0;
                             bool moderatorBonus = false;
                             bool subscriberBonus = false;
-                            foreach (UserPlatformV2ModelBase platformUserData in userData.GetAllPlatformData())
+
+                            minutes += userData.OnlineViewingMinutes;
+                            if (userData.Roles.Contains(UserRoleEnum.Moderator))
                             {
-                                minutes += platformUserData.OnlineViewingMinutes;
-                                if (platformUserData.Roles.Contains(UserRoleEnum.Moderator))
-                                {
-                                    moderatorBonus = true;
-                                }
-                                if (platformUserData.Roles.Contains(UserRoleEnum.Subscriber))
-                                {
-                                    subscriberBonus = true;
-                                }
+                                moderatorBonus = true;
+                            }
+                            if (userData.Roles.Contains(UserRoleEnum.Subscriber))
+                            {
+                                subscriberBonus = true;
                             }
 
                             int intervalsToGive = minutes / this.Currency.AcquireInterval;

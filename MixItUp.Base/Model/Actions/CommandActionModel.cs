@@ -128,7 +128,14 @@ namespace MixItUp.Base.Model.Actions
                 if (command != null)
                 {
                     command.IsEnabled = (this.ActionType == CommandActionTypeEnum.EnableCommand) ? true : false;
-                    ServiceManager.Get<ChatService>().RebuildCommandTriggers();
+                    if (command is ChatCommandModel)
+                    {
+                        ServiceManager.Get<ChatService>().RebuildCommandTriggers();
+                    }
+                    else if (command is TimerCommandModel)
+                    {
+                        await ServiceManager.Get<TimerService>().RebuildTimerGroups();
+                    }
                 }
             }
             else if (this.ActionType == CommandActionTypeEnum.DisableCommandGroup || this.ActionType == CommandActionTypeEnum.EnableCommandGroup)
@@ -136,12 +143,31 @@ namespace MixItUp.Base.Model.Actions
                 IEnumerable<CommandModelBase> commands = this.CommandGroup;
                 if (commands != null)
                 {
+                    bool chatCommand = false;
+                    bool timerCommand = false;
                     foreach (CommandModelBase cmd in commands)
                     {
                         cmd.IsEnabled = (this.ActionType == CommandActionTypeEnum.EnableCommandGroup) ? true : false;
                         ChannelSession.Settings.Commands.ManualValueChanged(cmd.ID);
+
+                        if (cmd is ChatCommandModel)
+                        {
+                            chatCommand = true;
+                        }
+                        else if (command is TimerCommandModel)
+                        {
+                            timerCommand = true;
+                        }
                     }
-                    ServiceManager.Get<ChatService>().RebuildCommandTriggers();
+
+                    if (chatCommand)
+                    {
+                        ServiceManager.Get<ChatService>().RebuildCommandTriggers();
+                    }
+                    if (timerCommand)
+                    {
+                        await ServiceManager.Get<TimerService>().RebuildTimerGroups();
+                    }
                 }
             }
             else if (this.ActionType == CommandActionTypeEnum.CancelAllCommands)
