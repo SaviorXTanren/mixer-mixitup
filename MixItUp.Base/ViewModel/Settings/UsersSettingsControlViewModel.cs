@@ -13,7 +13,7 @@ namespace MixItUp.Base.ViewModel.Settings
     {
         public string Name { get { return this.Title.Name; } }
 
-        public UserRoleEnum Role { get { return this.Title.Role; } }
+        public UserRoleEnum Role { get { return this.Title.UserRole; } }
 
         public string RoleString { get { return this.Title.RoleString; } }
 
@@ -177,7 +177,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
         private void RefreshTitleList()
         {
-            this.Titles.ClearAndAddRange(ChannelSession.Settings.UserTitles.OrderBy(t => t.Role).ThenBy(t => t.Months).Select(t => new UserTitleViewModel(this, t)));
+            this.Titles.ClearAndAddRange(ChannelSession.Settings.UserTitles.OrderBy(t => t.UserRole).ThenBy(t => t.Months).Select(t => new UserTitleViewModel(this, t)));
         }
     }
 }

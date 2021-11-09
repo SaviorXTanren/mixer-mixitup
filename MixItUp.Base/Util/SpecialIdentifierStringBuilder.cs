@@ -354,9 +354,10 @@ namespace MixItUp.Base.Util
                         IEnumerable<UserV2Model> applicableUsers = await SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
                         List<string> timeUserList = new List<string>();
                         int userPosition = 1;
-                        foreach (UserV2Model timeUser in applicableUsers.OrderByDescending(u => u.ViewingMinutes).Take(total))
+                        foreach (UserV2Model timeUser in applicableUsers.OrderByDescending(u => u.OnlineViewingMinutes).Take(total))
                         {
-                            timeUserList.Add($"#{userPosition}) {timeUser.Username} - {timeUser.ViewingTimeShortString}");
+                            UserV2ViewModel timeUserViewModel = new UserV2ViewModel(timeUser);
+                            timeUserList.Add($"#{userPosition}) {timeUserViewModel.Username} - {timeUserViewModel.OnlineViewingTimeString}");
                             userPosition++;
                         }
 
@@ -372,7 +373,7 @@ namespace MixItUp.Base.Util
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeSpecialIdentifier))
                 {
                     IEnumerable<UserV2Model> applicableUsers = await SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
-                    UserV2Model topUserData = applicableUsers.Top(u => u.ViewingMinutes);
+                    UserV2Model topUserData = applicableUsers.Top(u => u.OnlineViewingMinutes);
                     UserV2ViewModel topUser = ServiceManager.Get<UserService>().GetActiveUserByID(topUserData.ID);
                     if (topUser == null)
                     {
@@ -391,7 +392,8 @@ namespace MixItUp.Base.Util
                             int userPosition = 1;
                             foreach (UserV2Model userData in (await SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency)).Take(total))
                             {
-                                currencyUserList.Add($"#{userPosition}) {userData.Username} - {currency.GetAmount(userData)}");
+                                UserV2ViewModel userViewModel = new UserV2ViewModel(userData);
+                                currencyUserList.Add($"#{userPosition}) {userViewModel.Username} - {currency.GetAmount(userData)}");
                                 userPosition++;
                             }
 

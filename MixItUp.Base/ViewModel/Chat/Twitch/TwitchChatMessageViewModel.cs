@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.ViewModel.User;
@@ -88,7 +89,10 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
         public TwitchChatMessageViewModel(ChatMessagePacketModel message, UserV2ViewModel user)
             : base(message.ID, StreamingPlatformTypeEnum.Twitch, user)
         {
-            this.User.SetTwitchChatDetails(message);
+            if (this.User != null)
+            {
+                this.User.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).SetUserProperties(message);
+            }
 
             foreach (var kvp in message.EmotesDictionary)
             {

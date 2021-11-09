@@ -403,7 +403,7 @@ namespace MixItUp.Base.ViewModel.User
                     return this.CustomTitle;
                 }
 
-                UserTitleModel title = ChannelSession.Settings.UserTitles.OrderByDescending(t => t.Role).ThenByDescending(t => t.Months).FirstOrDefault(t => t.MeetsTitle(this));
+                UserTitleModel title = ChannelSession.Settings.UserTitles.OrderByDescending(t => t.UserRole).ThenByDescending(t => t.Months).FirstOrDefault(t => t.MeetsTitle(this));
                 if (title != null)
                 {
                     return title.Name;
@@ -434,8 +434,6 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public DateTimeOffset LastActivity { get { return this.Model.LastActivity; } }
-
-        public bool UpdatedThisSession { get { return this.Model.UpdatedThisSession; } set { this.Model.UpdatedThisSession = value; } }
 
         public DateTimeOffset LastUpdated { get; private set; }
 
@@ -553,9 +551,8 @@ namespace MixItUp.Base.ViewModel.User
             if (!this.IsUnassociated)
             {
                 TimeSpan lastUpdatedTimeSpan = DateTimeOffset.Now - this.LastUpdated;
-                if (!this.UpdatedThisSession || force || lastUpdatedTimeSpan > RefreshTimeSpan)
+                if (force || lastUpdatedTimeSpan > RefreshTimeSpan)
                 {
-                    this.UpdatedThisSession = true;
                     this.LastUpdated = DateTimeOffset.Now;
                     this.UpdateLastActivity();
 

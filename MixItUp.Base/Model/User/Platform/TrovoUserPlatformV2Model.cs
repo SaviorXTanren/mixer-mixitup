@@ -31,7 +31,7 @@ namespace MixItUp.Base.Model.User.Platform
         {
             this.Platform = StreamingPlatformTypeEnum.Trovo;
 
-            this.SetMessageProperties(message);
+            this.SetUserProperties(message);
         }
 
         private TrovoUserPlatformV2Model() { }
@@ -50,7 +50,7 @@ namespace MixItUp.Base.Model.User.Platform
             }
         }
 
-        public void SetMessageProperties(ChatMessageModel message)
+        public void SetUserProperties(ChatMessageModel message)
         {
             if (message != null)
             {

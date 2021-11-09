@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Model.User.Platform;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,9 +21,7 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public DateTimeOffset LastActivity { get; set; }
         [DataMember]
-        public DateTimeOffset LastUpdated { get; set; }
-        [JsonIgnore]
-        public bool UpdatedThisSession { get; set; } = false;
+        public DateTimeOffset LastUpdated { get; set; } = DateTimeOffset.MinValue;
 
         [DataMember]
         public int OnlineViewingMinutes { get; set; }

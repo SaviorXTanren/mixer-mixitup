@@ -1,5 +1,6 @@
 ﻿using Google.Apis.YouTube.v3.Data;
 using MixItUp.Base.Model;
+using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.YouTube;
@@ -169,11 +170,11 @@ namespace MixItUp.Base.Services.YouTube
 
         public async Task DeleteMessage(ChatMessageViewModel message) { await this.userClient.DeleteMessage(new LiveChatMessage() { Id = message.ID }); }
 
-        public async Task<LiveChatModerator> ModUser(UserV2ViewModel user) { return await this.userClient.ModUser(new Channel() { Id = user.YouTubeID }); }
+        public async Task<LiveChatModerator> ModUser(UserV2ViewModel user) { return await this.userClient.ModUser(new Channel() { Id = user.PlatformID }); }
 
-        public async Task<LiveChatBan> TimeoutUser(UserV2ViewModel user, ulong duration) { return await this.userClient.TimeoutUser(new Channel() { Id = user.YouTubeID }, duration); }
+        public async Task<LiveChatBan> TimeoutUser(UserV2ViewModel user, ulong duration) { return await this.userClient.TimeoutUser(new Channel() { Id = user.PlatformID }, duration); }
 
-        public async Task<LiveChatBan> BanUser(UserV2ViewModel user) { return await this.userClient.BanUser(new Channel() { Id = user.YouTubeID }); }
+        public async Task<LiveChatBan> BanUser(UserV2ViewModel user) { return await this.userClient.BanUser(new Channel() { Id = user.PlatformID }); }
 
         public async Task<IEnumerable<YouTubeChatEmoteModel>> GetChatEmotes()
         {
@@ -204,15 +205,15 @@ namespace MixItUp.Base.Services.YouTube
                             Channel youtubeUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByID(message.AuthorDetails.ChannelId);
                             if (youtubeUser != null)
                             {
-                                user = await UserV2ViewModel.Create(youtubeUser);
+                                user = ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(youtubeUser));
                             }
                             else
                             {
-                                user = await UserV2ViewModel.Create(message);
+                                user = ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(message));
                             }
                             await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
                         }
-                        user.SetYouTubeChatDetails(message);
+                        user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).SetMessageProperties(message);
 
                         // https://developers.google.com/youtube/v3/live/docs/liveChatMessages#resource
 

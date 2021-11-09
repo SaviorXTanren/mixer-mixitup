@@ -41,5 +41,7 @@ namespace MixItUp.Base.Model.User.Platform
             this.AvatarLink = user.avatarUrl;
             this.AccountDate = GlimeshPlatformService.GetGlimeshDateTime(user.confirmedAt);
         }
+
+        public void SetUserProperties(ChatMessagePacketModel message) { this.SetUserProperties(message.User); }
     }
 }

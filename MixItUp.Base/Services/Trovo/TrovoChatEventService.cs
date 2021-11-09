@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Trovo;
@@ -224,20 +225,20 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task<bool> DeleteMessage(ChatMessageViewModel message)
         {
-            return await this.GetChatClient(sendAsStreamer: true).DeleteMessage(ServiceManager.Get<TrovoSessionService>().Channel.channel_id, message.ID, message.User?.TrovoID);
+            return await this.GetChatClient(sendAsStreamer: true).DeleteMessage(ServiceManager.Get<TrovoSessionService>().Channel.channel_id, message.ID, message.User?.PlatformID);
         }
 
         public async Task<bool> ClearChat() { return await this.PerformChatCommand("clear"); }
 
-        public async Task<bool> ModUser(UserV2ViewModel user) { return await this.PerformChatCommand("mod @" + user.TrovoUsername); }
+        public async Task<bool> ModUser(UserV2ViewModel user) { return await this.PerformChatCommand("mod @" + user.Username); }
 
-        public async Task<bool> UnmodUser(UserV2ViewModel user) { return await this.PerformChatCommand("unmod @" + user.TrovoUsername); }
+        public async Task<bool> UnmodUser(UserV2ViewModel user) { return await this.PerformChatCommand("unmod @" + user.Username); }
 
-        public async Task<bool> TimeoutUser(UserV2ViewModel user, int duration) { return await this.PerformChatCommand($"ban @{user.TrovoUsername} {duration}"); }
+        public async Task<bool> TimeoutUser(UserV2ViewModel user, int duration) { return await this.PerformChatCommand($"ban @{user.Username} {duration}"); }
 
-        public async Task<bool> BanUser(UserV2ViewModel user) { return await this.PerformChatCommand("ban @" + user.TrovoUsername); }
+        public async Task<bool> BanUser(UserV2ViewModel user) { return await this.PerformChatCommand("ban @" + user.Username); }
 
-        public async Task<bool> UnbanUser(UserV2ViewModel user) { return await this.PerformChatCommand("unban @" + user.TrovoUsername); }
+        public async Task<bool> UnbanUser(UserV2ViewModel user) { return await this.PerformChatCommand("unban @" + user.Username); }
 
         public async Task<bool> PerformChatCommand(string command)
         {
@@ -278,16 +279,16 @@ namespace MixItUp.Base.Services.Trovo
                     UserModel trovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(messageContainer.chats.First().nick_name);
                     if (trovoUser != null)
                     {
-                        user = await UserV2ViewModel.Create(trovoUser);
+                        user = ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(trovoUser));
                     }
                     else
                     {
-                        user = await UserV2ViewModel.Create(message);
+                        user = ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(message));
                     }
                     await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
                 }
 
-                user.SetTrovoChatDetails(message);
+                user.GetPlatformData<TrovoUserPlatformV2Model>(StreamingPlatformTypeEnum.Trovo).SetUserProperties(message);
 
                 if (message.type == ChatMessageTypeEnum.FollowAlert)
                 {
@@ -392,7 +393,7 @@ namespace MixItUp.Base.Services.Trovo
                             }
                             else
                             {
-                                giftee = await UserV2ViewModel.Create(gifteeTrovoUser);
+                                giftee = ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(gifteeTrovoUser));
                             }
                         }
 
