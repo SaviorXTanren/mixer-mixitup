@@ -6069,4 +6069,7 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="UserWon" xml:space="preserve">
     <value>User Won</value>
   </data>
+  <data name="InitializeSessionUserInitializationFailed" xml:space="preserve">
+    <value>Failed to initialize user information</value>
+  </data>
 </root>

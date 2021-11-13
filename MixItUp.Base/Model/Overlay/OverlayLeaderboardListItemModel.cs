@@ -148,7 +148,6 @@ namespace MixItUp.Base.Model.Overlay
 
         public override Task LoadTestData()
         {
-            UserV2ViewModel user = ChannelSession.GetCurrentUser();
             return Task.CompletedTask;
         }
 
@@ -380,7 +379,7 @@ namespace MixItUp.Base.Model.Overlay
                 return false;
             }
 
-            if (user.ID.Equals(ChannelSession.GetCurrentUser()?.ID))
+            if (user.ID.Equals(ChannelSession.User.ID))
             {
                 return false;
             }

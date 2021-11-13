@@ -7798,6 +7798,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to initialize user information.
+        /// </summary>
+        public static string InitializeSessionUserInitializationFailed {
+            get {
+                return ResourceManager.GetString("InitializeSessionUserInitializationFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Input (Keyboard &amp; Mouse).
         /// </summary>
         public static string InputKeyboardAndMouse {

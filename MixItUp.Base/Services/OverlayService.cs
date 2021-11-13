@@ -154,7 +154,7 @@ namespace MixItUp.Base.Services
         {
             token.ThrowIfCancellationRequested();
 
-            UserV2ViewModel user = ChannelSession.GetCurrentUser();
+            UserV2ViewModel user = ChannelSession.User;
 
             foreach (var widgetGroup in ChannelSession.Settings.OverlayWidgets.GroupBy(ow => ow.OverlayName))
             {

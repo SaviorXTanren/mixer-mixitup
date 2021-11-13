@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Settings;
-using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Glimesh;
@@ -26,7 +26,7 @@ namespace MixItUp.Base
     {
         public static ApplicationSettingsV2Model AppSettings { get; private set; }
         public static SettingsV3Model Settings { get; private set; }
-        public static UserV2Model User { get; private set; }
+        public static UserV2ViewModel User { get; private set; }
 
         private static CancellationTokenSource sessionBackgroundCancellationTokenSource = new CancellationTokenSource();
         private static int sessionBackgroundTimer = 0;
@@ -133,51 +133,6 @@ namespace MixItUp.Base
             await ServiceManager.Get<SettingsService>().Save(ChannelSession.Settings);
         }
 
-        public static UserV2ViewModel GetCurrentUser()
-        {
-            // TO-DO: Update UserV2ViewModel so that all platform accounts are combined into the same UserV2ViewModel
-
-            lock (ChannelSession.Settings)
-            {
-                if (ChannelSession.User == null)
-                {
-                    if (ServiceManager.Get<TwitchSessionService>().IsConnected)
-                    {
-                        ChannelSession.User = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, ServiceManager.Get<TwitchSessionService>().UserNewAPI.id, performPlatformSearch: true);
-                        if (user == null)
-                        {
-                            user = UserV2ViewModel.Create(ServiceManager.Get<TwitchSessionService>().UserNewAPI).Result;
-                        }
-                    }
-                    else if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
-                    {
-                        user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.YouTube, ServiceManager.Get<YouTubeSessionService>().Channel.Id);
-                        if (user == null)
-                        {
-                            user = UserV2ViewModel.Create(ServiceManager.Get<YouTubeSessionService>().Channel).Result;
-                        }
-                    }
-                    else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
-                    {
-                        user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, ServiceManager.Get<GlimeshSessionService>().User.id);
-                        if (user == null)
-                        {
-                            user = UserV2ViewModel.Create(ServiceManager.Get<GlimeshSessionService>().User).Result;
-                        }
-                    }
-                    else if (ServiceManager.Get<TrovoSessionService>().IsConnected)
-                    {
-                        user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Trovo, ServiceManager.Get<TrovoSessionService>().User.userId);
-                        if (user == null)
-                        {
-                            user = UserV2ViewModel.Create(ServiceManager.Get<TrovoSessionService>().User).Result;
-                        }
-                    }
-                }
-                return new UserV2ViewModel(ChannelSession.User);
-            }
-        }
-
         public static async Task<Result> Connect(SettingsV3Model settings)
         {
             Result result = new Result();
@@ -278,6 +233,45 @@ namespace MixItUp.Base
                 {
                     ChannelSession.Settings.Name = "Test";
                 }
+
+                if (ChannelSession.User == null && ServiceManager.Get<TwitchSessionService>().IsConnected)
+                {
+                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, ServiceManager.Get<TwitchSessionService>().UserNewAPI.id);
+                    if (ChannelSession.User == null)
+                    {
+                        ChannelSession.User = ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(ServiceManager.Get<TwitchSessionService>().UserNewAPI));
+                    }
+                }
+                if (ChannelSession.User == null && ServiceManager.Get<YouTubeSessionService>().IsConnected)
+                {
+                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.YouTube, ServiceManager.Get<YouTubeSessionService>().Channel.Id);
+                    if (ChannelSession.User == null)
+                    {
+                        ChannelSession.User = ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(ServiceManager.Get<YouTubeSessionService>().Channel));
+                    }
+                }
+                if (ChannelSession.User == null && ServiceManager.Get<GlimeshSessionService>().IsConnected)
+                {
+                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, ServiceManager.Get<GlimeshSessionService>().User.id);
+                    if (ChannelSession.User == null)
+                    {
+                        ChannelSession.User = ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(ServiceManager.Get<GlimeshSessionService>().User));
+                    }
+                }
+                if (ChannelSession.User == null && ServiceManager.Get<TrovoSessionService>().IsConnected)
+                {
+                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Trovo, ServiceManager.Get<TrovoSessionService>().User.userId);
+                    if (ChannelSession.User == null)
+                    {
+                        ChannelSession.User = ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(ServiceManager.Get<TrovoSessionService>().User));
+                    }
+                }
+
+                if (ChannelSession.User == null)
+                {
+                    return new Result(MixItUp.Base.Resources.InitializeSessionUserInitializationFailed);
+                }
+                await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(ChannelSession.User);
 
                 await ServiceManager.Get<ChatService>().Initialize();
                 await ServiceManager.Get<EventService>().Initialize();

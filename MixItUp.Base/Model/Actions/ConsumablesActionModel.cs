@@ -229,7 +229,7 @@ namespace MixItUp.Base.Model.Actions
                             receiverUserData.Add(chatUser);
                         }
                     }
-                    receiverUserData.Add(ChannelSession.GetCurrentUser());
+                    receiverUserData.Add(ChannelSession.User);
                 }
 
                 if ((this.DeductFromUser && receiverUserData.Count > 0) || this.ActionType == ConsumablesActionTypeEnum.SubtractFromUser)

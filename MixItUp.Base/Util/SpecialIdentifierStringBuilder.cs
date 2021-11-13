@@ -248,7 +248,8 @@ namespace MixItUp.Base.Util
             await ServiceManager.Get<UserService>().LoadAllUserData();
 
             List<UserV2Model> exemptUsers = new List<UserV2Model>(ChannelSession.Settings.Users.Values.Where(u => !u.IsSpecialtyExcluded));
-            exemptUsers.Remove(ChannelSession.GetCurrentUser());
+            // TODO
+            //exemptUsers.Remove(ChannelSession.User);
             return exemptUsers;
         }
 
@@ -604,7 +605,7 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(StreamerSpecialIdentifierHeader))
             {
-                await this.HandleUserSpecialIdentifiers(ChannelSession.GetCurrentUser(), StreamerSpecialIdentifierHeader);
+                await this.HandleUserSpecialIdentifiers(ChannelSession.User, StreamerSpecialIdentifierHeader);
             }
 
             if (this.ContainsSpecialIdentifier(StreamBossSpecialIdentifierHeader))
@@ -734,27 +735,28 @@ namespace MixItUp.Base.Util
 
                 foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.OrderByDescending(c => c.UserAmountSpecialIdentifier))
                 {
-                    if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier))
-                    {
-                        if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier))
-                        {
-                            List<UserV2Model> sortedUsers = (await SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency)).ToList();
-                            int index = sortedUsers.IndexOf(user);
-                            this.ReplaceSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier, (index + 1).ToString());
-                        }
+                    // TODO
+                    //if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier))
+                    //{
+                    //    if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier))
+                    //    {
+                    //        List<UserV2Model> sortedUsers = (await SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency)).ToList();
+                    //        int index = sortedUsers.IndexOf(user);
+                    //        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier, (index + 1).ToString());
+                    //    }
 
-                        int amount = currency.GetAmount(user);
-                        RankModel rank = currency.GetRank(user);
-                        RankModel nextRank = currency.GetNextRank(user);
+                    //    int amount = currency.GetAmount(user);
+                    //    RankModel rank = currency.GetRank(user);
+                    //    RankModel nextRank = currency.GetNextRank(user);
 
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNextNameSpecialIdentifier, nextRank.Name);
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextDisplaySpecialIdentifier, nextRank.Amount.ToString("N0"));
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextSpecialIdentifier, nextRank.Amount.ToString());
+                    //    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNextNameSpecialIdentifier, nextRank.Name);
+                    //    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextDisplaySpecialIdentifier, nextRank.Amount.ToString("N0"));
+                    //    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextSpecialIdentifier, nextRank.Amount.ToString());
 
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNameSpecialIdentifier, rank.Name);
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountDisplaySpecialIdentifier, amount.ToString("N0"));
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier, amount.ToString());
-                    }
+                    //    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNameSpecialIdentifier, rank.Name);
+                    //    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountDisplaySpecialIdentifier, amount.ToString("N0"));
+                    //    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier, amount.ToString());
+                    //}
                 }
 
                 foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.OrderByDescending(c => c.UserAmountSpecialIdentifierHeader))

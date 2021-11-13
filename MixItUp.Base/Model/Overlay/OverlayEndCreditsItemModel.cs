@@ -197,7 +197,7 @@ namespace MixItUp.Base.Model.Overlay
                 this.testDataFilled.Add(OverlayEndCreditsSectionTypeEnum.Bits);
             }
 
-            UserV2ViewModel user = ChannelSession.GetCurrentUser();
+            UserV2ViewModel user = ChannelSession.User;
             List<Guid> userIDs = new List<Guid>(ChannelSession.Settings.Users.Keys.Take(20));
             for (int i = userIDs.Count; i < 20; i++)
             {
@@ -519,7 +519,7 @@ namespace MixItUp.Base.Model.Overlay
                 return false;
             }
 
-            if (user.ID.Equals(ChannelSession.GetCurrentUser()?.ID))
+            if (user.ID.Equals(ChannelSession.User.ID))
             {
                 return false;
             }

@@ -14,12 +14,11 @@ namespace MixItUp.Base.Model.Commands
     {
         public static CommandParametersModel GetTestParameters(Dictionary<string, string> specialIdentifiers)
         {
-            UserV2ViewModel currentUser = ChannelSession.GetCurrentUser();
-            return new CommandParametersModel(currentUser, StreamingPlatformTypeEnum.None, new List<string>() { "@" + currentUser.Username }, specialIdentifiers) { TargetUser = currentUser };
+            return new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.None, new List<string>() { "@" + ChannelSession.User.Username }, specialIdentifiers) { TargetUser = ChannelSession.User };
         }
 
         [DataMember]
-        public UserV2ViewModel User { get; set; } = ChannelSession.GetCurrentUser();
+        public UserV2ViewModel User { get; set; } = ChannelSession.User;
         [DataMember]
         public StreamingPlatformTypeEnum Platform { get; set; } = StreamingPlatformTypeEnum.None;
         [DataMember]
@@ -33,7 +32,7 @@ namespace MixItUp.Base.Model.Commands
         [DataMember]
         public string TriggeringChatMessageID { get; set; }
 
-        public CommandParametersModel() : this(ChannelSession.GetCurrentUser()) { }
+        public CommandParametersModel() : this(ChannelSession.User) { }
 
         public CommandParametersModel(UserV2ViewModel user) : this(user, StreamingPlatformTypeEnum.None) { }
 
@@ -45,7 +44,7 @@ namespace MixItUp.Base.Model.Commands
             this.TriggeringChatMessageID = message.ID;
         }
 
-        public CommandParametersModel(Dictionary<string, string> specialIdentifiers) : this(ChannelSession.GetCurrentUser(), specialIdentifiers) { }
+        public CommandParametersModel(Dictionary<string, string> specialIdentifiers) : this(ChannelSession.User, specialIdentifiers) { }
 
         public CommandParametersModel(UserV2ViewModel user, StreamingPlatformTypeEnum platform) : this(user, platform, null) { }
 

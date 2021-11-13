@@ -176,7 +176,7 @@ namespace MixItUp.Base.Model.Overlay
 
             if (this.CurrentBoss == null)
             {
-                this.CurrentBoss = ChannelSession.GetCurrentUser();
+                this.CurrentBoss = ChannelSession.User;
                 this.CurrentHealth = this.CurrentStartingHealth = this.StartingHealth;
             }
             this.CurrentBossID = this.CurrentBoss.ID;

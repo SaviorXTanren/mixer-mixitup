@@ -272,7 +272,7 @@ namespace MixItUp.Base.Services.Glimesh
             {
                 if (!ServiceManager.Get<GlimeshSessionService>().Channel.IsLive && channel.Channel.IsLive)
                 {
-                    CommandParametersModel parameters = new CommandParametersModel(ChannelSession.GetCurrentUser());
+                    CommandParametersModel parameters = new CommandParametersModel(ChannelSession.User);
                     if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.GlimeshChannelStreamStart, parameters))
                     {
                         await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.GlimeshChannelStreamStart, parameters);
@@ -280,7 +280,7 @@ namespace MixItUp.Base.Services.Glimesh
                 }
                 else if (ServiceManager.Get<GlimeshSessionService>().Channel.IsLive && !channel.Channel.IsLive)
                 {
-                    CommandParametersModel parameters = new CommandParametersModel(ChannelSession.GetCurrentUser());
+                    CommandParametersModel parameters = new CommandParametersModel(ChannelSession.User);
                     if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.GlimeshChannelStreamStop, parameters))
                     {
                         await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.GlimeshChannelStreamStop, parameters);

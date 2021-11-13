@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services.Glimesh;
@@ -360,8 +361,7 @@ namespace MixItUp.Base.Services
             {
                 if (user.OnlineViewingMinutes == 0)
                 {
-                    // TODO
-                    //await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserFirstJoin, new CommandParametersModel(user));
+                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserFirstJoin, new CommandParametersModel(user));
                 }
 
                 // TODO
@@ -400,8 +400,7 @@ namespace MixItUp.Base.Services
             {
                 this.activeUsers.Remove(user.ID);
 
-                // TODO
-                //await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserLeft, new CommandParametersModel(user));
+                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserLeft, new CommandParametersModel(user));
             }
             return user;
         }

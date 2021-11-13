@@ -451,7 +451,7 @@ namespace MixItUp.Base.Services
             eventCommandSpecialIdentifiers["hypetraintotalpoints"] = totalPoints.ToString();
             eventCommandSpecialIdentifiers["hypetrainlevelpoints"] = levelPoints.ToString();
             eventCommandSpecialIdentifiers["hypetrainlevelgoal"] = levelGoal.ToString();
-            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeTrainBegin, new CommandParametersModel(ChannelSession.GetCurrentUser(), eventCommandSpecialIdentifiers));
+            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeTrainBegin, new CommandParametersModel(ChannelSession.User, eventCommandSpecialIdentifiers));
 
             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, MixItUp.Base.Resources.HypeTrainStarted, ChannelSession.Settings.AlertHypeTrainColor));
         }
@@ -476,7 +476,7 @@ namespace MixItUp.Base.Services
             Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
             eventCommandSpecialIdentifiers["hypetraintotallevel"] = level.ToString();
             eventCommandSpecialIdentifiers["hypetraintotalpoints"] = totalPoints.ToString();
-            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeTrainEnd, new CommandParametersModel(ChannelSession.GetCurrentUser(), eventCommandSpecialIdentifiers));
+            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeTrainEnd, new CommandParametersModel(ChannelSession.User, eventCommandSpecialIdentifiers));
 
             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, string.Format(MixItUp.Base.Resources.HypeTrainEndedReachedLevel, level.ToString()), ChannelSession.Settings.AlertHypeTrainColor));
         }
@@ -497,7 +497,7 @@ namespace MixItUp.Base.Services
                     eventCommandSpecialIdentifiers["webhookpayload"] = payload;
 
                     // Do JSON => Special Identifier logic
-                    CommandParametersModel parameters = new CommandParametersModel(ChannelSession.GetCurrentUser(), eventCommandSpecialIdentifiers);
+                    CommandParametersModel parameters = new CommandParametersModel(ChannelSession.User, eventCommandSpecialIdentifiers);
                     Dictionary<string, string> jsonParameters = command.JSONParameters.ToDictionary(param => param.JSONParameterName, param => param.SpecialIdentifierName);
                     await WebRequestActionModel.ProcessJSONToSpecialIdentifiers(payload, jsonParameters, parameters);
 

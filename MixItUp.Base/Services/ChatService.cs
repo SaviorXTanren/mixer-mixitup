@@ -111,8 +111,7 @@ namespace MixItUp.Base.Services
 
                     if (sendAsStreamer || ServiceManager.Get<TwitchSessionService>().BotConnection == null)
                     {
-                        UserV2ViewModel user = ChannelSession.GetCurrentUser();
-                        await this.AddMessage(new TwitchChatMessageViewModel(user, message, replyMessageID));
+                        await this.AddMessage(new TwitchChatMessageViewModel(ChannelSession.User, message, replyMessageID));
                     }
                 }
 

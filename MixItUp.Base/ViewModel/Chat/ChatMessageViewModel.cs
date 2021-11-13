@@ -60,7 +60,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public bool IsWhisper { get { return !string.IsNullOrEmpty(this.TargetUsername); } }
 
-        public bool IsStreamerTagged { get { return Regex.IsMatch(this.PlainTextMessage.ToLower(), string.Format(TaggingRegexFormat, ChannelSession.GetCurrentUser()?.Username ?? string.Empty)); } }
+        public bool IsStreamerTagged { get { return Regex.IsMatch(this.PlainTextMessage.ToLower(), string.Format(TaggingRegexFormat, ChannelSession.User.Username ?? string.Empty)); } }
 
         public virtual bool IsStreamerOrBot
         {
@@ -68,7 +68,7 @@ namespace MixItUp.Base.ViewModel.Chat
             {
                 if (this.User != null)
                 {
-                    if (this.User.ID.Equals(ChannelSession.GetCurrentUser().ID))
+                    if (this.User.ID.Equals(ChannelSession.User.ID))
                     {
                         return true;
                     }

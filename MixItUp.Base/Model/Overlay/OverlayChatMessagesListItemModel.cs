@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using Twitch.Base.Models.NewAPI.Chat;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -37,7 +36,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public override Task LoadTestData()
         {
-            UserChatMessageViewModel message = new UserChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.None, ChannelSession.GetCurrentUser());
+            UserChatMessageViewModel message = new UserChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.None, ChannelSession.User);
             message.AddStringMessagePart("Test Message");
             this.GlobalEvents_OnChatMessageReceived(this, message);
             return Task.CompletedTask;
