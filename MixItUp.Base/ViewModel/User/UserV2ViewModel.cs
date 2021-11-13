@@ -464,7 +464,25 @@ namespace MixItUp.Base.ViewModel.User
 
         public bool HasWhisperNumber { get { return this.WhispererNumber > 0; } }
 
-        public PatreonCampaignMember PatreonUser { get; private set; }
+        public string PatreonID { get { return this.Model.PatreonUserID; } }
+
+        public PatreonCampaignMember PatreonUser
+        {
+            get { return this.patreonUser; }
+            set
+            {
+                this.patreonUser = value;
+                if (this.patreonUser != null)
+                {
+                    this.Model.PatreonUserID = this.patreonUser.ID;
+                }
+                else
+                {
+                    this.model.PatreonUserID = null;
+                }
+            }
+        }
+        private PatreonCampaignMember patreonUser;
 
         public PatreonTier PatreonTier
         {

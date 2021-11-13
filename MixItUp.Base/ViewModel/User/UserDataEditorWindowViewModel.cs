@@ -263,22 +263,13 @@ namespace MixItUp.Base.ViewModel.User
         public IEnumerable<PatreonCampaignMember> PatreonUsers { get { return ServiceManager.Get<PatreonService>().CampaignMembers.ToList(); } }
         public PatreonCampaignMember PatreonUser
         {
-            get { return this.patreonUser; }
+            get { return this.User.PatreonUser; }
             set
             {
-                this.User.PatreonUser = this.patreonUser = value;
-                if (this.User.PatreonUser != null)
-                {
-                    this.User.PatreonUserID = value.UserID;
-                }
-                else
-                {
-                    this.User.PatreonUserID = null;
-                }
+                this.User.PatreonUser = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private PatreonCampaignMember patreonUser;
 
         public bool IsSpecialtyExcluded
         {
