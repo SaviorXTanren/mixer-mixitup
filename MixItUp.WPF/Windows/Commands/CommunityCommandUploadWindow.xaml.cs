@@ -63,7 +63,7 @@ namespace MixItUp.WPF.Windows.Commands
 
                     this.uploadCommand.SetCommands(new List<CommandModelBase>() { this.command });
 
-                    CommunityCommandDetailsModel existingCommand = await ServiceManager.Get<CommunityCommandsService>().GetCommandDetails(command.ID);
+                    CommunityCommandDetailsModel existingCommand = await ServiceManager.Get<MixItUpService>().GetCommandDetails(command.ID);
                     if (existingCommand != null)
                     {
                         this.uploadCommand.ID = existingCommand.ID;
@@ -262,7 +262,7 @@ namespace MixItUp.WPF.Windows.Commands
                         });
                     }
 
-                    await ServiceManager.Get<CommunityCommandsService>().AddOrUpdateCommand(this.uploadCommand);
+                    await ServiceManager.Get<MixItUpService>().AddOrUpdateCommand(this.uploadCommand);
 
                     this.Close();
                 }

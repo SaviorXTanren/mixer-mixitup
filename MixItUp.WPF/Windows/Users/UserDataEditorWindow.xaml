@@ -251,7 +251,7 @@
                         <DataGrid Grid.Row="0" ItemsSource="{Binding UserOnlyChatCommands}" Visibility="{Binding HasUserOnlyChatCommands, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch" Margin="0,0,0,10">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
-                                <DataGridTextColumn Header="{x:Static resx:Resources.Commands}" Binding="{Binding CommandsString}" IsReadOnly="True" Width="125" />
+                                <DataGridTextColumn Header="{x:Static resx:Resources.Commands}" Binding="{Binding TriggersString}" IsReadOnly="True" Width="125" />
                                 <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="240">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>

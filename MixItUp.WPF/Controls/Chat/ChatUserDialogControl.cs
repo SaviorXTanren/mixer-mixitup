@@ -1,8 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Dialogs;
@@ -16,7 +14,7 @@ namespace MixItUp.WPF.Controls.Chat
     {
         public static async Task ShowUserDialog(UserV2ViewModel user)
         {
-            if (user != null && !user.IsAnonymous)
+            if (user != null && user.Platform != StreamingPlatformTypeEnum.None)
             {
                 object result = await DialogHelper.ShowCustom(new UserDialogControl(user));
                 if (result != null)
@@ -58,7 +56,7 @@ namespace MixItUp.WPF.Controls.Chat
                             ProcessHelper.LaunchLink(user.ChannelLink);
                             break;
                         case UserDialogResult.EditUser:
-                            UserDataEditorWindow window = new UserDataEditorWindow(user.Data);
+                            UserDataEditorWindow window = new UserDataEditorWindow(user.Model);
                             await Task.Delay(100);
                             window.Show();
                             await Task.Delay(100);

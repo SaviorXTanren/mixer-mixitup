@@ -301,6 +301,16 @@ namespace MixItUp.Base.Model.Currency
             return 0;
         }
 
+        public Dictionary<Guid, int> GetAmounts(UserV2Model user)
+        {
+            Dictionary<Guid, int> amounts = new Dictionary<Guid, int>();
+            foreach (InventoryItemModel item in this.Items.Values)
+            {
+                amounts[item.ID] = this.GetAmount(user, item);
+            }
+            return amounts;
+        }
+
         public Dictionary<Guid, int> GetAmounts(UserV2ViewModel user)
         {
             Dictionary<Guid, int> amounts = new Dictionary<Guid, int>();

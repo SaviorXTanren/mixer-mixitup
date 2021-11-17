@@ -1,17 +1,16 @@
-﻿using MixItUp.Base;
+﻿using MixItUp.API.Models;
+using MixItUp.Base;
+using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web.Http;
 using System.Net.Http;
 using System.Net.Http.Formatting;
-using MixItUp.Base.Model.User;
-using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace MixItUp.WPF.Services.DeveloperAPI
 {
@@ -78,12 +77,12 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             Dictionary<Guid, UserV2Model> allUsersDictionary = ChannelSession.Settings.Users.ToDictionary();
 
             IEnumerable<UserV2Model> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
-            allUsers = allUsers.Where(u => !u.IsCurrencyRankExempt);
+            allUsers = allUsers.Where(u => !u.IsSpecialtyExcluded);
 
             List<User> currencyUserList = new List<User>();
             foreach (UserV2Model currencyUser in allUsers.OrderByDescending(u => currency.GetAmount(u)).Take(count))
             {
-                currencyUserList.Add(UserController.UserFromUserDataViewModel(currencyUser));
+                currencyUserList.Add(UserController.UserFromUserDataViewModel(new UserV2ViewModel(currencyUser)));
             }
             return currencyUserList;
         }
@@ -117,7 +116,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             List<User> users = new List<User>();
             foreach (var giveData in giveDatas)
             {
-                UserV2Model user = await UserController.GetUserData(giveData.UsernameOrID);
+                UserV2ViewModel user = await UserController.GetUserData(giveData.UsernameOrID);
                 if (user != null && giveData.Amount > 0)
                 {
                     currency.AddAmount(user, giveData.Amount);

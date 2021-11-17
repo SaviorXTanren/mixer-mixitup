@@ -247,7 +247,7 @@ namespace MixItUp.WPF
         {
             await DispatcherHelper.Dispatcher.InvokeAsync(async () =>
             {
-                CommunityCommandDetailsModel commandDetails = await ServiceManager.Get<CommunityCommandsService>().GetCommandDetails(commandID);
+                CommunityCommandDetailsModel commandDetails = await ServiceManager.Get<MixItUpService>().GetCommandDetails(commandID);
                 if (commandDetails != null)
                 {
                     await CommunityCommandsControl.ProcessDownloadedCommunityCommand(new CommunityCommandDetailsViewModel(commandDetails));

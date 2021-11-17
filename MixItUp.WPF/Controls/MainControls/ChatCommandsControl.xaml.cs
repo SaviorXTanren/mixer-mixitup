@@ -1,14 +1,14 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Commands;
-using MixItUp.Base.ViewModel.MainControls;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Controls.Commands;
 using MixItUp.WPF.Windows.Commands;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using MixItUp.Base.Services;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
