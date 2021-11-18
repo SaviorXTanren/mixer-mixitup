@@ -113,7 +113,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void ReviewCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!this.viewModel.CommandDetails.Username.Equals(ChannelSession.GetCurrentUser().Username, StringComparison.CurrentCultureIgnoreCase))
+            if (!this.viewModel.CommandDetails.Username.Equals(ChannelSession.User.Username, StringComparison.CurrentCultureIgnoreCase))
             {
                 CommunityCommandsReviewCommandDialogControl dialogControl = new CommunityCommandsReviewCommandDialogControl();
                 if (bool.Equals(await DialogHelper.ShowCustom(dialogControl), true))

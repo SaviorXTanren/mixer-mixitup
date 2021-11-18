@@ -149,7 +149,7 @@ namespace MixItUp.WPF.Controls.Chat
                     {
                         string filter = tag.Substring(1);
 
-                        IEnumerable<UserV2ViewModel> users = ServiceManager.Get<UserService>().GetAllActiveUsers();
+                        IEnumerable<UserV2ViewModel> users = ServiceManager.Get<UserService>().GetActiveUsers();
                         if (!string.IsNullOrEmpty(filter))
                         {
                             users = users.Where(u => !string.IsNullOrEmpty(u.Username) && u.Username.StartsWith(filter, StringComparison.InvariantCultureIgnoreCase)).ToList();

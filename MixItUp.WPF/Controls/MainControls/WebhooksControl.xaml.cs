@@ -68,9 +68,9 @@ namespace MixItUp.WPF.Controls.MainControls
                     WebhookCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<WebhookCommandModel>();
                     if (command != null)
                     {
-                        ChannelSession.Services.Command.WebhookCommands.Remove(command);
+                        ServiceManager.Get<CommandService>().WebhookCommands.Remove(command);
                         ChannelSession.Settings.RemoveCommand(command);
-                        await ChannelSession.Services.WebhookService.DeleteWebhook(command.ID);
+                        await ServiceManager.Get<MixItUpService>().DeleteWebhook(command.ID);
                         await this.viewModel.RefreshCommands();
                         await ChannelSession.SaveSettings();
                     }
@@ -88,7 +88,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 try
                 {
-                    await ChannelSession.Services.WebhookService.CreateWebhook();
+                    await ServiceManager.Get<MixItUpService>().CreateWebhook();
                     await this.viewModel.RefreshCommands();
                     await ChannelSession.SaveSettings();
                 }

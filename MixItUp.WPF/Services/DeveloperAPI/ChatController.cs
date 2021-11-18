@@ -19,10 +19,10 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         {
             List<User> users = new List<User>();
 
-            var chatUsers = ServiceManager.Get<UserService>().GetAllWorkableActiveUsers();
+            var chatUsers = ServiceManager.Get<UserService>().GetActiveUsers();
             foreach (var chatUser in chatUsers)
             {
-                users.Add(UserController.UserFromUserDataViewModel(chatUser.Data));
+                users.Add(UserController.UserFromUserDataViewModel(chatUser));
             }
 
             return Task.FromResult<IEnumerable<User>>(users);

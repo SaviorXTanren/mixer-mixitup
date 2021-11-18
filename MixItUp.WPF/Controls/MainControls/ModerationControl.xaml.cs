@@ -32,31 +32,31 @@ namespace MixItUp.WPF.Controls.MainControls
             this.MaxCapsTypeComboBox.ItemsSource = ModerationControl.ChatTextModerationSliderTypes;
             this.MaxPunctuationSymbolsEmotesTypeComboBox.ItemsSource = ModerationControl.ChatTextModerationSliderTypes;
 
-            this.FilteredWordsExemptComboBox.ItemsSource = UserV2Model.GetSelectableUserRoles();
-            this.ChatTextModerationExemptComboBox.ItemsSource = UserV2Model.GetSelectableUserRoles();
-            this.BlockLinksExemptComboBox.ItemsSource = UserV2Model.GetSelectableUserRoles();
-            this.ChatParticipationExemptComboBox.ItemsSource = UserV2Model.GetSelectableUserRoles();
+            this.FilteredWordsExemptComboBox.ItemsSource = UserRoles.Generic;
+            this.ChatTextModerationExemptComboBox.ItemsSource = UserRoles.Generic;
+            this.BlockLinksExemptComboBox.ItemsSource = UserRoles.Generic;
+            this.ChatParticipationExemptComboBox.ItemsSource = UserRoles.Generic;
 
             this.CommunityBannedWordsToggleButton.IsChecked = ChannelSession.Settings.ModerationUseCommunityFilteredWords;
             this.FilteredWordsTextBox.Text = this.ConvertFilteredWordListToText(ChannelSession.Settings.FilteredWords);
             this.BannedWordsTextBox.Text = this.ConvertFilteredWordListToText(ChannelSession.Settings.BannedWords);
-            this.FilteredWordsExemptComboBox.SelectedItem = ChannelSession.Settings.ModerationFilteredWordsExcempt;
+            this.FilteredWordsExemptComboBox.SelectedItem = ChannelSession.Settings.ModerationFilteredWordsExcemptUserRole;
             this.FilteredWordsApplyStrikesToggleButton.IsChecked = ChannelSession.Settings.ModerationFilteredWordsApplyStrikes;
 
             this.MaxCapsSlider.Value = ChannelSession.Settings.ModerationCapsBlockCount;
             this.MaxCapsTypeComboBox.SelectedIndex = ChannelSession.Settings.ModerationCapsBlockIsPercentage ? 0 : 1;
             this.MaxPunctuationSymbolsEmotesSlider.Value = ChannelSession.Settings.ModerationPunctuationBlockCount;
             this.MaxPunctuationSymbolsEmotesTypeComboBox.SelectedIndex = ChannelSession.Settings.ModerationPunctuationBlockIsPercentage ? 0 : 1;
-            this.ChatTextModerationExemptComboBox.SelectedItem = ChannelSession.Settings.ModerationChatTextExcempt;
+            this.ChatTextModerationExemptComboBox.SelectedItem = ChannelSession.Settings.ModerationChatTextExcemptUserRole;
             this.ChatTextApplyStrikesToggleButton.IsChecked = ChannelSession.Settings.ModerationChatTextApplyStrikes;
 
             this.BlockLinksToggleButton.IsChecked = ChannelSession.Settings.ModerationBlockLinks;
-            this.BlockLinksExemptComboBox.SelectedItem = ChannelSession.Settings.ModerationBlockLinksExcempt;
+            this.BlockLinksExemptComboBox.SelectedItem = ChannelSession.Settings.ModerationBlockLinksExcemptUserRole;
             this.BlockLinksApplyStrikesToggleButton.IsChecked = ChannelSession.Settings.ModerationBlockLinksApplyStrikes;
 
             this.ChatInteractiveParticipationComboBox.ItemsSource = EnumHelper.GetEnumList<ModerationChatInteractiveParticipationEnum>();
             this.ChatInteractiveParticipationComboBox.SelectedItem = ChannelSession.Settings.ModerationChatInteractiveParticipation;
-            this.ChatParticipationExemptComboBox.SelectedItem = ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt;
+            this.ChatParticipationExemptComboBox.SelectedItem = ChannelSession.Settings.ModerationChatInteractiveParticipationExcemptUserRole;
 
             this.FollowEventModerationToggleButton.IsChecked = ChannelSession.Settings.ModerationFollowEvent;
             this.FollowEventModerationMaxQueueTextBox.Text = ChannelSession.Settings.ModerationFollowEventMaxInQueue.ToString();
@@ -81,22 +81,22 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     this.ConvertFilteredTextToWordList(this.FilteredWordsTextBox.Text, ChannelSession.Settings.FilteredWords);
                     this.ConvertFilteredTextToWordList(this.BannedWordsTextBox.Text, ChannelSession.Settings.BannedWords);
-                    ChannelSession.Settings.ModerationFilteredWordsExcempt = (OldUserRoleEnum)this.FilteredWordsExemptComboBox.SelectedItem;
+                    ChannelSession.Settings.ModerationFilteredWordsExcemptUserRole = (UserRoleEnum)this.FilteredWordsExemptComboBox.SelectedItem;
                     ChannelSession.Settings.ModerationFilteredWordsApplyStrikes = this.FilteredWordsApplyStrikesToggleButton.IsChecked.GetValueOrDefault();
 
                     ChannelSession.Settings.ModerationCapsBlockCount = (int)this.MaxCapsSlider.Value;
                     ChannelSession.Settings.ModerationCapsBlockIsPercentage = (this.MaxCapsTypeComboBox.SelectedIndex == 0);
                     ChannelSession.Settings.ModerationPunctuationBlockCount = (int)this.MaxPunctuationSymbolsEmotesSlider.Value;
                     ChannelSession.Settings.ModerationPunctuationBlockIsPercentage = (this.MaxPunctuationSymbolsEmotesTypeComboBox.SelectedIndex == 0);
-                    ChannelSession.Settings.ModerationChatTextExcempt = (OldUserRoleEnum)this.ChatTextModerationExemptComboBox.SelectedItem;
+                    ChannelSession.Settings.ModerationChatTextExcemptUserRole = (UserRoleEnum)this.ChatTextModerationExemptComboBox.SelectedItem;
                     ChannelSession.Settings.ModerationChatTextApplyStrikes = this.ChatTextApplyStrikesToggleButton.IsChecked.GetValueOrDefault();
 
                     ChannelSession.Settings.ModerationBlockLinks = this.BlockLinksToggleButton.IsChecked.GetValueOrDefault();
-                    ChannelSession.Settings.ModerationBlockLinksExcempt = (OldUserRoleEnum)this.BlockLinksExemptComboBox.SelectedItem;
+                    ChannelSession.Settings.ModerationBlockLinksExcemptUserRole = (UserRoleEnum)this.BlockLinksExemptComboBox.SelectedItem;
                     ChannelSession.Settings.ModerationBlockLinksApplyStrikes = this.BlockLinksApplyStrikesToggleButton.IsChecked.GetValueOrDefault();
 
                     ChannelSession.Settings.ModerationChatInteractiveParticipation = (ModerationChatInteractiveParticipationEnum)this.ChatInteractiveParticipationComboBox.SelectedItem;
-                    ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt = (OldUserRoleEnum)this.ChatParticipationExemptComboBox.SelectedItem;
+                    ChannelSession.Settings.ModerationChatInteractiveParticipationExcemptUserRole = (UserRoleEnum)this.ChatParticipationExemptComboBox.SelectedItem;
 
                     if (ChannelSession.Settings.ModerationFollowEvent != this.FollowEventModerationToggleButton.IsChecked.GetValueOrDefault())
                     {
