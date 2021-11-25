@@ -66,7 +66,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            await ServiceManager.Get<ChatService>().Whisper(StreamingPlatformTypeEnum.None, chatWhisper.UserName, chatWhisper.Message, chatWhisper.SendAsStreamer);
+            await ServiceManager.Get<ChatService>().Whisper(chatWhisper.UserName, StreamingPlatformTypeEnum.All, chatWhisper.Message, chatWhisper.SendAsStreamer);
         }
     }
 }

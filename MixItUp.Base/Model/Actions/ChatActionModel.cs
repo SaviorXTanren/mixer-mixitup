@@ -40,12 +40,12 @@ namespace MixItUp.Base.Model.Actions
                 {
                     whisperUserName = await ReplaceStringWithSpecialModifiers(this.WhisperUserName, parameters);
                 }
-                await ServiceManager.Get<ChatService>().Whisper(parameters.Platform, whisperUserName, message, this.SendAsStreamer);
+                await ServiceManager.Get<ChatService>().Whisper(whisperUserName, parameters.Platform, message, this.SendAsStreamer);
             }
             else
             {
                 string replyMessageID = ChannelSession.Settings.TwitchReplyToCommandChatMessages ? parameters.TriggeringChatMessageID : null;
-                await ServiceManager.Get<ChatService>().SendMessage(message, platform: StreamingPlatformTypeEnum.None, this.SendAsStreamer, replyMessageID: replyMessageID);
+                await ServiceManager.Get<ChatService>().SendMessage(message, this.SendAsStreamer, replyMessageID: replyMessageID);
             }
         }
     }

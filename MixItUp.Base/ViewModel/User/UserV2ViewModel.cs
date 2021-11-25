@@ -53,7 +53,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public UserV2Model Model { get { return this.Model; } }
+        public UserV2Model Model { get { return this.model; } }
 
         public UserPlatformV2ModelBase PlatformModel { get { return this.platformModel; } }
 
