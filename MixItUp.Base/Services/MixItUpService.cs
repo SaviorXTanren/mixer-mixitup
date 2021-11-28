@@ -194,31 +194,39 @@ namespace MixItUp.Base.Services
         // IMixItUpService
         public async Task<MixItUpUpdateModel> GetLatestUpdate()
         {
-            MixItUpUpdateModel update = await ServiceManager.Get<MixItUpService>().GetLatestPublicUpdate();
-            if (update != null)
+            try
             {
-                if (ChannelSession.AppSettings.PreviewProgram)
+                MixItUpUpdateModel update = await ServiceManager.Get<MixItUpService>().GetLatestPublicUpdate();
+                if (update != null)
                 {
-                    MixItUpUpdateModel previewUpdate = await ServiceManager.Get<MixItUpService>().GetLatestPreviewUpdate();
-                    if (previewUpdate != null && previewUpdate.SystemVersion >= update.SystemVersion)
+                    if (ChannelSession.AppSettings.PreviewProgram)
                     {
-                        update = previewUpdate;
+                        MixItUpUpdateModel previewUpdate = await ServiceManager.Get<MixItUpService>().GetLatestPreviewUpdate();
+                        if (previewUpdate != null && previewUpdate.SystemVersion >= update.SystemVersion)
+                        {
+                            update = previewUpdate;
+                        }
+                    }
+
+                    // Remove this when we wish to re-enable Test Builds
+                    ChannelSession.AppSettings.TestBuild = false;
+
+                    if (ChannelSession.AppSettings.TestBuild)
+                    {
+                        MixItUpUpdateModel testUpdate = await ServiceManager.Get<MixItUpService>().GetLatestTestUpdate();
+                        if (testUpdate != null && testUpdate.SystemVersion >= update.SystemVersion)
+                        {
+                            update = testUpdate;
+                        }
                     }
                 }
-
-                // Remove this when we wish to re-enable Test Builds
-                ChannelSession.AppSettings.TestBuild = false;
-
-                if (ChannelSession.AppSettings.TestBuild)
-                {
-                    MixItUpUpdateModel testUpdate = await ServiceManager.Get<MixItUpService>().GetLatestTestUpdate();
-                    if (testUpdate != null && testUpdate.SystemVersion >= update.SystemVersion)
-                    {
-                        update = testUpdate;
-                    }
-                }
+                return update;
             }
-            return update;
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            return null;
         }
         public async Task<MixItUpUpdateModel> GetLatestPublicUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates"); }
         public async Task<MixItUpUpdateModel> GetLatestPreviewUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates/preview"); }
