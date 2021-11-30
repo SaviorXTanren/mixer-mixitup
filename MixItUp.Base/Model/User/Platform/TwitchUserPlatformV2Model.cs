@@ -23,9 +23,9 @@ namespace MixItUp.Base.Model.User.Platform
         public Dictionary<string, int> BadgeInfo { get; set; } = new Dictionary<string, int>();
 
         [DataMember]
-        public ChatBadgeModel RoleBadge { get; set; }
-        [DataMember]
         public ChatBadgeModel SubscriberBadge { get; set; }
+        [DataMember]
+        public ChatBadgeModel RoleBadge { get; set; }
         [DataMember]
         public ChatBadgeModel SpecialtyBadge { get; set; }
 
@@ -182,6 +182,9 @@ namespace MixItUp.Base.Model.User.Platform
                 }
             }
 
+            this.SubscriberBadgeLink = this.SubscriberBadge?.image_url_1x;
+            this.RoleBadgeLink = this.RoleBadge?.image_url_1x;
+            this.SpecialtyBadgeLink = this.SpecialtyBadge?.image_url_1x;
         }
 
         private void SetUserProperties(UserModel user)
@@ -202,6 +205,10 @@ namespace MixItUp.Base.Model.User.Platform
             else { this.SubscriberBadge = null; }
 
             if (ServiceManager.Get<TwitchSessionService>().ChannelEditors.Contains(this.ID)) { this.Roles.Add(UserRoleEnum.TwitchChannelEditor); } else { this.Roles.Remove(UserRoleEnum.TwitchChannelEditor); }
+
+            this.SubscriberBadgeLink = this.SubscriberBadge?.image_url_1x;
+            this.RoleBadgeLink = this.RoleBadge?.image_url_1x;
+            this.SpecialtyBadgeLink = this.SpecialtyBadge?.image_url_1x;
         }
 
         private int GetTwitchBadgeVersion(string name)

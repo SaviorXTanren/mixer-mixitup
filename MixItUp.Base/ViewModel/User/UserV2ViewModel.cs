@@ -6,6 +6,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
+using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -94,6 +95,8 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public string AvatarLink { get { return this.PlatformModel.AvatarLink; } }
+
+        public bool ShowUserAvatar { get { return !ChannelSession.Settings.HideUserAvatar; } }
 
         public HashSet<UserRoleEnum> Roles { get { return this.PlatformModel.Roles; } }
 
@@ -249,6 +252,19 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        public string PlatformBadgeLink
+        {
+            get
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return "/Assets/Images/Twitch-Small.png"; }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return "/Assets/Images/YouTube.png"; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return "/Assets/Images/Glimesh.png"; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return "/Assets/Images/Trovo.png"; }
+                return null;
+            }
+        }
+        public bool ShowPlatformBadge { get { return true; } }
+
         public DateTimeOffset? AccountDate { get { return this.PlatformModel.AccountDate; } set { this.PlatformModel.AccountDate = value; } }
         public string AccountAgeString { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.NotSubscribed; } }
 
@@ -268,21 +284,14 @@ namespace MixItUp.Base.ViewModel.User
                 return (this.SubscriberTier > 0) ? $"{MixItUp.Base.Resources.Tier} {this.SubscriberTier}" : MixItUp.Base.Resources.NotSubscribed;
             }
         }
-        public string SubscriberBadgeLink
-        {
-            get
-            {
-                if (this.Platform == StreamingPlatformTypeEnum.Twitch)
-                {
-                    TwitchUserPlatformV2Model twitchPlatformModel = (TwitchUserPlatformV2Model)this.PlatformModel;
-                    if (twitchPlatformModel.SubscriberBadge != null)
-                    {
-                        return twitchPlatformModel.SubscriberBadge.image_url_1x;
-                    }
-                }
-                return null;
-            }
-        }
+        public string PlatformSubscriberBadgeLink { get { return this.PlatformModel.SubscriberBadgeLink; } }
+        public bool ShowPlatformSubscriberBadge { get { return !ChannelSession.Settings.HideUserSubscriberBadge && this.IsPlatformSubscriber && !string.IsNullOrEmpty(this.PlatformSubscriberBadgeLink); } }
+
+        public string PlatformRoleBadgeLink { get { return this.PlatformModel.RoleBadgeLink; } }
+        public bool ShowPlatformRoleBadge { get { return !ChannelSession.Settings.HideUserRoleBadge && !string.IsNullOrEmpty(this.PlatformRoleBadgeLink); } }
+
+        public string PlatformSpecialtyBadgeLink { get { return this.PlatformModel.SpecialtyBadgeLink; } }
+        public bool ShowPlatformSpecialtyBadge { get { return !ChannelSession.Settings.HideUserRoleBadge && !string.IsNullOrEmpty(this.PlatformSpecialtyBadgeLink); } }
 
         public Dictionary<Guid, int> CurrencyAmounts { get { return this.Model.CurrencyAmounts; } }
 

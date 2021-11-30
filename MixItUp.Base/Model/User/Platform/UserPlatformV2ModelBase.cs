@@ -18,6 +18,12 @@ namespace MixItUp.Base.Model.User.Platform
         public string DisplayName { get; set; }
         [DataMember]
         public string AvatarLink { get; set; }
+        [DataMember]
+        public string SubscriberBadgeLink { get; set; }
+        [DataMember]
+        public string RoleBadgeLink { get; set; }
+        [DataMember]
+        public string SpecialtyBadgeLink { get; set; }
 
         [DataMember]
         public HashSet<UserRoleEnum> Roles { get; set; } = new HashSet<UserRoleEnum>() { UserRoleEnum.User };
