@@ -4428,7 +4428,7 @@ Activé. Vous pouvez penser que cela ressemble à l’option « Déverrouiller 
     <value>Chemin du fichier image / URL</value>
   </data>
   <data name="IPAddress" xml:space="preserve">
-    <value>Adresse IP (facultatif)</value>
+    <value>Adresse IP</value>
   </data>
   <data name="ItemHeight" xml:space="preserve">
     <value>Hauteur de l’élément (pixels)</value>

@@ -4428,7 +4428,7 @@ Habilitado. Puede pensar que es similar a alternar la opción "Desbloquear coman
     <value>Ruta del archivo de imagen / URL</value>
   </data>
   <data name="IPAddress" xml:space="preserve">
-    <value>Dirección IP (opcional)</value>
+    <value>Dirección IP</value>
   </data>
   <data name="ItemHeight" xml:space="preserve">
     <value>Altura del artículo (píxeles)</value>

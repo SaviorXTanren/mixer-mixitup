@@ -4428,7 +4428,7 @@ Habilitado. Você pode pensar nisso como semelhante à opção "Desbloquear Coma
     <value>Caminho do arquivo de imagem / URL</value>
   </data>
   <data name="IPAddress" xml:space="preserve">
-    <value>Endereço IP (opcional)</value>
+    <value>Endereço IP</value>
   </data>
   <data name="ItemHeight" xml:space="preserve">
     <value>Altura do item (Pixels)</value>

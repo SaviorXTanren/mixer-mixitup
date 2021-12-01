@@ -4428,7 +4428,7 @@ Ingeschakeld. Je kunt het zien als vergelijkbaar met het schakelen tussen de opt
     <value>Pad naar afbeeldingsbestand / URL</value>
   </data>
   <data name="IPAddress" xml:space="preserve">
-    <value>IP-adres (optioneel)</value>
+    <value>IP-adres</value>
   </data>
   <data name="ItemHeight" xml:space="preserve">
     <value>Itemhoogte (pixels)</value>

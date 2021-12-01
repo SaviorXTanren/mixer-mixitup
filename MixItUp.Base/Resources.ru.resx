@@ -4428,7 +4428,7 @@
     <value>Путь к файлу изображения / URL</value>
   </data>
   <data name="IPAddress" xml:space="preserve">
-    <value>IP-адрес (необязательно)</value>
+    <value>IP-адрес</value>
   </data>
   <data name="ItemHeight" xml:space="preserve">
     <value>Высота элемента (пиксели)</value>
