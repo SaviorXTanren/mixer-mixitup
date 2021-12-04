@@ -9,6 +9,7 @@ using System.Windows.Input;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Model;
 
 namespace MixItUp.Base.ViewModel.MainControls
 {
@@ -63,7 +64,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.ClearChatConfirmation))
                 {
-                    await ServiceManager.Get<ChatService>().ClearMessages();
+                    await ServiceManager.Get<ChatService>().ClearMessages(StreamingPlatformTypeEnum.All);
                 }
             });
 

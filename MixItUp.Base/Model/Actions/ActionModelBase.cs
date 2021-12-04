@@ -78,7 +78,7 @@ namespace MixItUp.Base.Model.Actions
 
         public virtual async Task TestPerform(Dictionary<string, string> specialIdentifiers)
         {
-            await this.Perform(new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.None, new List<string>() { "@" + ChannelSession.User.Username }, specialIdentifiers) { TargetUser = ChannelSession.User });
+            await this.Perform(new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.All, new List<string>() { "@" + ChannelSession.User.Username }, specialIdentifiers) { TargetUser = ChannelSession.User });
         }
 
         public async Task Perform(CommandParametersModel parameters)

@@ -68,7 +68,7 @@ namespace MixItUp.Base.Services
                 return user;
             }
 
-            if (platform == StreamingPlatformTypeEnum.None)
+            if (platform == StreamingPlatformTypeEnum.Default)
             {
                 return user;
             }
@@ -130,7 +130,7 @@ namespace MixItUp.Base.Services
                 return user;
             }
 
-            if (platform == StreamingPlatformTypeEnum.None)
+            if (platform == StreamingPlatformTypeEnum.Default)
             {
                 foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.SupportedPlatforms)
                 {
@@ -241,7 +241,7 @@ namespace MixItUp.Base.Services
 
         private void SetUserData(UserV2Model userData, bool newData = false)
         {
-            if (userData != null && userData.ID != Guid.Empty && userData.GetPlatforms().Count() > 0 && !userData.HasPlatformData(StreamingPlatformTypeEnum.None))
+            if (userData != null && userData.ID != Guid.Empty && userData.GetPlatforms().Count() > 0 && !userData.HasPlatformData(StreamingPlatformTypeEnum.Default))
             {
                 lock (ChannelSession.Settings.Users)
                 {
@@ -288,7 +288,7 @@ namespace MixItUp.Base.Services
                 return user;
             }
 
-            if (platform == StreamingPlatformTypeEnum.None)
+            if (platform == StreamingPlatformTypeEnum.Default)
             {
                 return user;
             }
@@ -315,7 +315,7 @@ namespace MixItUp.Base.Services
                 return user;
             }
 
-            if (platform == StreamingPlatformTypeEnum.None)
+            if (platform == StreamingPlatformTypeEnum.Default)
             {
                 foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.SupportedPlatforms)
                 {
@@ -407,7 +407,7 @@ namespace MixItUp.Base.Services
 
         public IEnumerable<UserV2ViewModel> GetActiveUsers(StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
         {
-            if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
+            if (platform == StreamingPlatformTypeEnum.Default || platform == StreamingPlatformTypeEnum.All)
             {
                 return this.activeUsers.Values.ToList();
             }

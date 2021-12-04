@@ -14,7 +14,7 @@ namespace MixItUp.WPF.Controls.Chat
     {
         public static async Task ShowUserDialog(UserV2ViewModel user)
         {
-            if (user != null && user.Platform != StreamingPlatformTypeEnum.None)
+            if (user != null && user.Platform != StreamingPlatformTypeEnum.Default)
             {
                 object result = await DialogHelper.ShowCustom(new UserDialogControl(user));
                 if (result != null)

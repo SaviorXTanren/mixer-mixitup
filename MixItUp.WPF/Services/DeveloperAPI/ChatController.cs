@@ -32,7 +32,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpDelete]
         public async Task ClearChat()
         {
-            await ServiceManager.Get<ChatService>().ClearMessages();
+            await ServiceManager.Get<ChatService>().ClearMessages(StreamingPlatformTypeEnum.All);
         }
 
         [Route("message")]
@@ -49,7 +49,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            await ServiceManager.Get<ChatService>().SendMessage(chatMessage.Message, StreamingPlatformTypeEnum.None, chatMessage.SendAsStreamer);
+            await ServiceManager.Get<ChatService>().SendMessage(chatMessage.Message, StreamingPlatformTypeEnum.Default, chatMessage.SendAsStreamer);
         }
 
         [Route("whisper")]

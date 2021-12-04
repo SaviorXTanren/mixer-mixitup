@@ -5,8 +5,7 @@ namespace MixItUp.Base.Model
 {
     public enum StreamingPlatformTypeEnum
     {
-        None = 0,
-        All = 0,
+        Default = 0,
 
         [Obsolete]
         Mixer = 1,
@@ -16,6 +15,8 @@ namespace MixItUp.Base.Model
         Glimesh = 5,
         [Obsolete]
         Facebook = 6,
+
+        All = 99999,
     }
 
     public static class StreamingPlatforms
@@ -30,6 +31,7 @@ namespace MixItUp.Base.Model
 
         public static IEnumerable<StreamingPlatformTypeEnum> SelectablePlatforms { get; private set; } = new List<StreamingPlatformTypeEnum>()
         {
+            StreamingPlatformTypeEnum.Default,
             StreamingPlatformTypeEnum.All,
             StreamingPlatformTypeEnum.Twitch,
             StreamingPlatformTypeEnum.YouTube,

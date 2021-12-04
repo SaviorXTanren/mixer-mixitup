@@ -37,7 +37,7 @@ namespace MixItUp.WPF.Controls.Dialogs
 
         private async void UserDialogControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (this.user != null && this.user.Platform != StreamingPlatformTypeEnum.None && !string.IsNullOrEmpty(this.user.Username))
+            if (this.user != null && this.user.Platform != StreamingPlatformTypeEnum.Default && !string.IsNullOrEmpty(this.user.Username))
             {
                 await this.user.Refresh(force: true);
 

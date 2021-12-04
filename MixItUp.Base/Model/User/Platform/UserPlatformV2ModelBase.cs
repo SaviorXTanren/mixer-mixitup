@@ -68,7 +68,7 @@ namespace MixItUp.Base.Model.User.Platform
     {
         public UnassociatedUserPlatformV2Model(string username)
         {
-            this.Platform = StreamingPlatformTypeEnum.None;
+            this.Platform = StreamingPlatformTypeEnum.Default;
             this.ID = Guid.Empty.ToString();
             this.Username = this.DisplayName = username;
         }

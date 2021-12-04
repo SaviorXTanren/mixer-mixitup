@@ -89,7 +89,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 this.NotifyPropertyChanged();
             }
         }
-        private StreamingPlatformTypeEnum selectedPlatform = StreamingPlatformTypeEnum.None;
+        private StreamingPlatformTypeEnum selectedPlatform = StreamingPlatformTypeEnum.Default;
 
         public string UsernameFilter
         {

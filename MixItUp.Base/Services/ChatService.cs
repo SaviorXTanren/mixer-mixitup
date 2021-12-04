@@ -203,19 +203,34 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task ClearMessages()
+        public async Task ClearMessages(StreamingPlatformTypeEnum platform)
         {
-            this.messagesLookup.Clear();
-            this.Messages.Clear();
-
-            if (ServiceManager.Has<TwitchChatService>() && ServiceManager.Get<TwitchChatService>().IsUserConnected)
+            if (platform == StreamingPlatformTypeEnum.All)
             {
-                await ServiceManager.Get<TwitchChatService>().ClearMessages();
+                foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.SupportedPlatforms)
+                {
+                    await this.ClearMessages(p);
+                }
             }
-
-            if (ServiceManager.Has<TrovoChatEventService>() && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
+            else
             {
-                await ServiceManager.Get<TrovoChatEventService>().ClearChat();
+                if (platform == StreamingPlatformTypeEnum.Twitch)
+                {
+                    if (ServiceManager.Has<TwitchChatService>() && ServiceManager.Get<TwitchChatService>().IsUserConnected)
+                    {
+                        await ServiceManager.Get<TwitchChatService>().ClearMessages();
+                    }
+                }
+                else if (platform == StreamingPlatformTypeEnum.Trovo)
+                {
+                    if (ServiceManager.Has<TrovoChatEventService>() && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
+                    {
+                        await ServiceManager.Get<TrovoChatEventService>().ClearChat();
+                    }
+                }
+
+                this.messagesLookup.Clear();
+                this.Messages.Clear();
             }
         }
 

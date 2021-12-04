@@ -115,7 +115,7 @@ namespace MixItUp.Base.ViewModel.Chat
                     }
                     else if (ChatListControlViewModel.ClearRegex.IsMatch(this.SendMessageText))
                     {
-                        await ServiceManager.Get<ChatService>().ClearMessages();
+                        await ServiceManager.Get<ChatService>().ClearMessages(StreamingPlatformTypeEnum.Twitch);
                     }
                     else if (ChatListControlViewModel.TimeoutRegex.IsMatch(this.SendMessageText))
                     {
@@ -160,7 +160,7 @@ namespace MixItUp.Base.ViewModel.Chat
                     }
                     else
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage(this.SendMessageText, StreamingPlatformTypeEnum.None, sendAsStreamer: this.SendAsStreamer);
+                        await ServiceManager.Get<ChatService>().SendMessage(this.SendMessageText, StreamingPlatformTypeEnum.Default, sendAsStreamer: this.SendAsStreamer);
                     }
 
                     this.SentMessageHistory.Remove(this.SendMessageText);
