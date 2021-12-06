@@ -105,10 +105,10 @@ namespace MixItUp.Base.Services
         {
             if (!string.IsNullOrEmpty(message))
             {
-                foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
+                await StreamingPlatforms.ForEachPlatform(async (p) =>
                 {
-                    await this.SendMessage(message, platform, sendAsStreamer, replyMessageID);
-                }
+                    await this.SendMessage(message, p, sendAsStreamer, replyMessageID);
+                });
             }
         }
 
@@ -207,10 +207,10 @@ namespace MixItUp.Base.Services
         {
             if (platform == StreamingPlatformTypeEnum.All)
             {
-                foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.SupportedPlatforms)
+                await StreamingPlatforms.ForEachPlatform(async (p) =>
                 {
                     await this.ClearMessages(p);
-                }
+                });
             }
             else
             {

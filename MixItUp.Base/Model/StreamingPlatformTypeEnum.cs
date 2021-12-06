@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model
 {
@@ -46,6 +47,22 @@ namespace MixItUp.Base.Model
             else if (platform == StreamingPlatformTypeEnum.Trovo) { return "/Assets/Images/Trovo.png"; }
             else if (platform == StreamingPlatformTypeEnum.Glimesh) { return "/Assets/Images/Glimesh.png"; }
             return string.Empty;
+        }
+
+        public static void ForEachPlatform(Action<StreamingPlatformTypeEnum> action)
+        {
+            foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
+            {
+                action(platform);
+            }
+        }
+
+        public static async Task ForEachPlatform(Func<StreamingPlatformTypeEnum, Task> function)
+        {
+            foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
+            {
+                await function(platform);
+            }
         }
     }
 }

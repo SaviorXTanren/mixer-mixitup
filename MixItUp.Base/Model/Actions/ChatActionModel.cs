@@ -9,10 +9,10 @@ namespace MixItUp.Base.Model.Actions
     public class ChatActionModel : ActionModelBase
     {
         [DataMember]
-        public StreamingPlatformTypeEnum StreamingPlatform { get; set; } = StreamingPlatformTypeEnum.Default;
+        public string ChatText { get; set; }
 
         [DataMember]
-        public string ChatText { get; set; }
+        public StreamingPlatformTypeEnum StreamingPlatform { get; set; } = StreamingPlatformTypeEnum.Default;
 
         [DataMember]
         public bool SendAsStreamer { get; set; }
@@ -22,11 +22,11 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public string WhisperUserName { get; set; }
 
-        public ChatActionModel(StreamingPlatformTypeEnum streamingPlatform, string chatText, bool sendAsStreamer = false, bool isWhisper = false, string whisperUserName = null)
+        public ChatActionModel(string chatText, StreamingPlatformTypeEnum streamingPlatform = StreamingPlatformTypeEnum.Default, bool sendAsStreamer = false, bool isWhisper = false, string whisperUserName = null)
             : base(ActionTypeEnum.Chat)
         {
-            this.StreamingPlatform = streamingPlatform;
             this.ChatText = chatText;
+            this.StreamingPlatform = streamingPlatform;
             this.SendAsStreamer = sendAsStreamer;
             this.IsWhisper = isWhisper;
             this.WhisperUserName = whisperUserName;

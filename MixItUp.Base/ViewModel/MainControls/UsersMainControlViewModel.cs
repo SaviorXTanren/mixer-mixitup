@@ -258,10 +258,10 @@ namespace MixItUp.Base.ViewModel.MainControls
                     List<List<string>> contents = new List<List<string>>();
 
                     List<string> columns = new List<string>() { "MixItUpID" };
-                    foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
+                    StreamingPlatforms.ForEachPlatform((p) =>
                     {
-                        columns.AddRange(new List<string>() { platform.ToString() + "ID", platform.ToString() + "Username" });
-                    }
+                        columns.AddRange(new List<string>() { p.ToString() + "ID", p.ToString() + "Username" });
+                    });
                     foreach (var kvp in ChannelSession.Settings.Currency)
                     {
                         columns.Add(kvp.Value.Name.Replace(" ", ""));
@@ -280,9 +280,9 @@ namespace MixItUp.Base.ViewModel.MainControls
                         UserV2ViewModel user = new UserV2ViewModel(u);
 
                         List<string> data = new List<string>() { user.ID.ToString() };
-                        foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
+                        StreamingPlatforms.ForEachPlatform((p) =>
                         {
-                            UserPlatformV2ModelBase platformUser = user.GetPlatformData<UserPlatformV2ModelBase>(platform);
+                            UserPlatformV2ModelBase platformUser = user.GetPlatformData<UserPlatformV2ModelBase>(p);
                             if (platformUser != null)
                             {
                                 columns.AddRange(new List<string>() { platformUser.ID, platformUser.Username });
@@ -291,7 +291,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                             {
                                 columns.AddRange(new List<string>() { "", "", "" });
                             }
-                        }
+                        });
                         foreach (var kvp in ChannelSession.Settings.Currency)
                         {
                             data.Add(kvp.Value.GetAmount(user).ToString());

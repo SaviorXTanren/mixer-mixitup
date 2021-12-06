@@ -28,11 +28,11 @@ namespace MixItUp.Base.Services
 
         public UserService()
         {
-            foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
+            StreamingPlatforms.ForEachPlatform((p) =>
             {
-                this.platformUserIDLookups[platform] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
-                this.platformUsernameLookups[platform] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
-            }
+                this.platformUserIDLookups[p] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
+                this.platformUsernameLookups[p] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
+            });
         }
 
         #region Users
@@ -132,15 +132,15 @@ namespace MixItUp.Base.Services
 
             if (platform == StreamingPlatformTypeEnum.Default)
             {
-                foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.SupportedPlatforms)
+                await StreamingPlatforms.ForEachPlatform(async (p) =>
                 {
                     user = await this.GetUserByPlatformUsername(p, platformUsername, performPlatformSearch);
                     if (user != null)
                     {
-                        return user;
+                        return;
                     }
-                }
-                return null;
+                });
+                return user;
             }
 
             if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id))
@@ -317,15 +317,15 @@ namespace MixItUp.Base.Services
 
             if (platform == StreamingPlatformTypeEnum.Default)
             {
-                foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.SupportedPlatforms)
+                StreamingPlatforms.ForEachPlatform((p) =>
                 {
                     user = this.GetActiveUserByPlatformUsername(p, platformUsername);
                     if (user != null)
                     {
-                        return user;
+                        return;
                     }
-                }
-                return null;
+                });
+                return user;
             }
 
             if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id))
