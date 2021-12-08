@@ -27,17 +27,6 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private ModerationActionTypeEnum selectedActionType;
 
-        public StreamingPlatformTypeEnum StreamingPlatform
-        {
-            get { return this.streamingPlatform; }
-            set
-            {
-                this.streamingPlatform = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private StreamingPlatformTypeEnum streamingPlatform = StreamingPlatformTypeEnum.Default;
-
         public bool ShowTargetUserGrid { get { return this.SelectedActionType != ModerationActionTypeEnum.ClearChat; } }
 
         public string TargetUsername
@@ -81,7 +70,6 @@ namespace MixItUp.Base.ViewModel.Actions
             : base(action)
         {
             this.SelectedActionType = action.ActionType;
-            this.StreamingPlatform = action.StreamingPlatform;
             this.TargetUsername = action.TargetUsername;
             this.TimeoutAmount = action.TimeoutAmount;
             this.ModerationReason = action.ModerationReason;
@@ -103,7 +91,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override Task<ActionModelBase> GetActionInternal()
         {
-            return Task.FromResult<ActionModelBase>(new ModerationActionModel(this.SelectedActionType, this.StreamingPlatform, this.TargetUsername, this.TimeoutAmount, this.ModerationReason));
+            return Task.FromResult<ActionModelBase>(new ModerationActionModel(this.SelectedActionType, this.TargetUsername, this.TimeoutAmount, this.ModerationReason));
         }
     }
 }

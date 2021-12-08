@@ -26,8 +26,6 @@ namespace MixItUp.Base.Model.Actions
         public ModerationActionTypeEnum ActionType { get; set; }
 
         [DataMember]
-        public StreamingPlatformTypeEnum StreamingPlatform { get; set; } = StreamingPlatformTypeEnum.Default;
-        [DataMember]
         public string TargetUsername { get; set; }
 
         [DataMember]
@@ -36,11 +34,10 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public string ModerationReason { get; set; }
 
-        public ModerationActionModel(ModerationActionTypeEnum actionType, StreamingPlatformTypeEnum streamingPlatform, string targetUsername = null, string timeoutAmount = null, string moderationReason = null)
+        public ModerationActionModel(ModerationActionTypeEnum actionType, string targetUsername = null, string timeoutAmount = null, string moderationReason = null)
             : base(ActionTypeEnum.Moderation)
         {
             this.ActionType = actionType;
-            this.StreamingPlatform = streamingPlatform;
             this.TargetUsername = targetUsername;
             this.TimeoutAmount = timeoutAmount;
             this.ModerationReason = moderationReason;
@@ -52,7 +49,7 @@ namespace MixItUp.Base.Model.Actions
         {
             if (this.ActionType == ModerationActionTypeEnum.ClearChat)
             {
-                await ServiceManager.Get<ChatService>().ClearMessages(this.StreamingPlatform);
+                await ServiceManager.Get<ChatService>().ClearMessages(parameters.Platform);
             }
             else
             {

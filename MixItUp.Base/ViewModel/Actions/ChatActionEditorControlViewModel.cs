@@ -20,17 +20,6 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string chatText;
 
-        public StreamingPlatformTypeEnum StreamingPlatform
-        {
-            get { return this.streamingPlatform; }
-            set
-            {
-                this.streamingPlatform = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private StreamingPlatformTypeEnum streamingPlatform = StreamingPlatformTypeEnum.Default;
-
         public bool SendAsStreamer
         {
             get { return this.sendAsStreamer; }
@@ -68,7 +57,6 @@ namespace MixItUp.Base.ViewModel.Actions
             : base(action)
         {
             this.ChatText = action.ChatText;
-            this.StreamingPlatform = action.StreamingPlatform;
             this.SendAsStreamer = action.SendAsStreamer;
             this.IsWhisper = action.IsWhisper;
             this.WhisperUserName = action.WhisperUserName;
@@ -88,7 +76,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override Task<ActionModelBase> GetActionInternal()
         {
-            return Task.FromResult<ActionModelBase>(new ChatActionModel(this.ChatText, this.StreamingPlatform, this.SendAsStreamer, this.IsWhisper, this.WhisperUserName));
+            return Task.FromResult<ActionModelBase>(new ChatActionModel(this.ChatText, this.SendAsStreamer, this.IsWhisper, this.WhisperUserName));
         }
     }
 }

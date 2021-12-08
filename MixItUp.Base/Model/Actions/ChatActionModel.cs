@@ -12,9 +12,6 @@ namespace MixItUp.Base.Model.Actions
         public string ChatText { get; set; }
 
         [DataMember]
-        public StreamingPlatformTypeEnum StreamingPlatform { get; set; } = StreamingPlatformTypeEnum.Default;
-
-        [DataMember]
         public bool SendAsStreamer { get; set; }
 
         [DataMember]
@@ -22,11 +19,10 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public string WhisperUserName { get; set; }
 
-        public ChatActionModel(string chatText, StreamingPlatformTypeEnum streamingPlatform = StreamingPlatformTypeEnum.Default, bool sendAsStreamer = false, bool isWhisper = false, string whisperUserName = null)
+        public ChatActionModel(string chatText, bool sendAsStreamer = false, bool isWhisper = false, string whisperUserName = null)
             : base(ActionTypeEnum.Chat)
         {
             this.ChatText = chatText;
-            this.StreamingPlatform = streamingPlatform;
             this.SendAsStreamer = sendAsStreamer;
             this.IsWhisper = isWhisper;
             this.WhisperUserName = whisperUserName;
@@ -36,14 +32,7 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            StreamingPlatformTypeEnum platform = this.StreamingPlatform;
-            if (this.StreamingPlatform == StreamingPlatformTypeEnum.Default)
-            {
-                platform = parameters.Platform;
-            }
-
             string message = await ReplaceStringWithSpecialModifiers(this.ChatText, parameters);
-
             if (this.IsWhisper)
             {
                 string whisperUserName = parameters.User.Username;
@@ -51,12 +40,12 @@ namespace MixItUp.Base.Model.Actions
                 {
                     whisperUserName = await ReplaceStringWithSpecialModifiers(this.WhisperUserName, parameters);
                 }
-                await ServiceManager.Get<ChatService>().Whisper(whisperUserName, platform, message, this.SendAsStreamer);
+                await ServiceManager.Get<ChatService>().Whisper(whisperUserName, parameters.Platform, message, this.SendAsStreamer);
             }
             else
             {
                 string replyMessageID = ChannelSession.Settings.TwitchReplyToCommandChatMessages ? parameters.TriggeringChatMessageID : null;
-                await ServiceManager.Get<ChatService>().SendMessage(message, platform, this.SendAsStreamer, replyMessageID: replyMessageID);
+                await ServiceManager.Get<ChatService>().SendMessage(message, parameters.Platform, this.SendAsStreamer, replyMessageID: replyMessageID);
             }
         }
     }
