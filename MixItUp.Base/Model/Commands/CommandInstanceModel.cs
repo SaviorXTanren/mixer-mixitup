@@ -3,6 +3,7 @@ using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Commands
@@ -143,7 +144,7 @@ namespace MixItUp.Base.Model.Commands
             {
                 if (command is ActionGroupCommandModel && ((ActionGroupCommandModel)command).RunOneRandomly)
                 {
-                    actions.Add(command.Actions.Random());
+                    actions.Add(command.Actions.Where(a => a.Enabled).Random());
                 }
                 else
                 {
