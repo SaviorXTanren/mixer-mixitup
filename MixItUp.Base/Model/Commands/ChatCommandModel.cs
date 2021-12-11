@@ -11,7 +11,7 @@ namespace MixItUp.Base.Model.Commands
     [DataContract]
     public class ChatCommandModel : CommandModelBase
     {
-        public const string CommandWildcardMatchingRegexFormat = "\\s?{0}\\s?";
+        public const string CommandWildcardMatchingRegexFormat = "(?:\\s+|^){0}(?:\\s+|$)";
 
         public static bool IsValidCommandTrigger(string command)
         {
