@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using System.Web;
 using Twitch.Base.Models.NewAPI.Chat;
 
 namespace MixItUp.Base.Model.Overlay
@@ -73,7 +74,7 @@ namespace MixItUp.Base.Model.Overlay
                         string imageURL = null;
                         if (messagePart is string)
                         {
-                            textParts.Add((string)messagePart);
+                            textParts.Add(HttpUtility.HtmlEncode((string)messagePart));
                         }
                         else if (messagePart is TwitchChatEmoteViewModel)
                         {
