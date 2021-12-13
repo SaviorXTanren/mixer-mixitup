@@ -316,7 +316,7 @@ namespace MixItUp.Base.Services.Trovo
 
                         GlobalEvents.FollowOccurred(user);
 
-                        await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Trovo, user, string.Format("{0} Followed", user.DisplayName), ChannelSession.Settings.AlertFollowColor));
+                        await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} Followed", user.DisplayName), ChannelSession.Settings.AlertFollowColor));
                     }
                 }
                 else if (message.type == ChatMessageTypeEnum.SubscriptionAlert)
@@ -357,7 +357,7 @@ namespace MixItUp.Base.Services.Trovo
                     }
 
                     GlobalEvents.ResubscribeOccurred(new Tuple<UserV2ViewModel, int>(user, 1));
-                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Trovo, user, string.Format("{0} Subscribed", user.DisplayName), ChannelSession.Settings.AlertSubColor));
+                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} Subscribed", user.DisplayName), ChannelSession.Settings.AlertSubColor));
                 }
                 else if (message.type == ChatMessageTypeEnum.GiftedSubscriptionSentMessage)
                 {
@@ -375,7 +375,7 @@ namespace MixItUp.Base.Services.Trovo
                         //trigger.SpecialIdentifiers["isanonymous"] = massGiftedSubEvent.IsAnonymous.ToString();
                         await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelMassSubscriptionsGifted, parameters);
                     }
-                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Trovo, user, string.Format("{0} Gifted {1} Subs", user.DisplayName, totalGifted), ChannelSession.Settings.AlertMassGiftedSubColor));
+                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} Gifted {1} Subs", user.DisplayName, totalGifted), ChannelSession.Settings.AlertMassGiftedSubColor));
                 }
                 else if (message.type == ChatMessageTypeEnum.GiftedSubscriptionMessage)
                 {
@@ -428,7 +428,7 @@ namespace MixItUp.Base.Services.Trovo
                             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelSubscriptionGifted, parameters);
                         }
 
-                        await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Trovo, user, string.Format("{0} Gifted A Subscription To {1}", user.DisplayName, giftee.DisplayName), ChannelSession.Settings.AlertGiftedSubColor));
+                        await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} Gifted A Subscription To {1}", user.DisplayName, giftee.DisplayName), ChannelSession.Settings.AlertGiftedSubColor));
 
                         GlobalEvents.SubscriptionGiftedOccurred(user, giftee);
                     }
@@ -465,7 +465,7 @@ namespace MixItUp.Base.Services.Trovo
                             parameters.SpecialIdentifiers["raidviewercount"] = raidCount.ToString();
                             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelRaided, parameters);
 
-                            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Trovo, user, string.Format("{0} raided with {1} viewers", user.DisplayName, raidCount), ChannelSession.Settings.AlertRaidColor));
+                            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} raided with {1} viewers", user.DisplayName, raidCount), ChannelSession.Settings.AlertRaidColor));
                         }
                     }
                 }

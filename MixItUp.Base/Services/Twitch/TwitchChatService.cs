@@ -723,7 +723,7 @@ namespace MixItUp.Base.Services.Twitch
                         parameters.SpecialIdentifiers["raidviewercount"] = userNotice.RaidViewerCount.ToString();
                         await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelRaided, parameters);
 
-                        await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} raided with {1} viewers", user.FullDisplayName, userNotice.RaidViewerCount), ChannelSession.Settings.AlertRaidColor));
+                        await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} raided with {1} viewers", user.FullDisplayName, userNotice.RaidViewerCount), ChannelSession.Settings.AlertRaidColor));
                     }
                 }
                 else if (SubMysteryGiftUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID) && userNotice.SubTotalGifted > 0)
@@ -772,7 +772,7 @@ namespace MixItUp.Base.Services.Twitch
 
             if (chatClear.IsClear)
             {
-                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, "Chat Cleared", ChannelSession.Settings.AlertModerationColor));
+                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, "Chat Cleared", ChannelSession.Settings.AlertModerationColor));
             }
             else if (chatClear.IsTimeout)
             {
@@ -782,7 +782,7 @@ namespace MixItUp.Base.Services.Twitch
                 parameters.SpecialIdentifiers["timeoutlength"] = chatClear.BanDuration.ToString();
                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserTimeout, parameters);
 
-                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Timed Out for {1} seconds", user.FullDisplayName, chatClear.BanDuration), ChannelSession.Settings.AlertModerationColor));
+                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} Timed Out for {1} seconds", user.FullDisplayName, chatClear.BanDuration), ChannelSession.Settings.AlertModerationColor));
             }
             else if (chatClear.IsBan)
             {
@@ -791,7 +791,7 @@ namespace MixItUp.Base.Services.Twitch
                 parameters.TargetUser = user;
                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserBan, parameters);
 
-                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Banned", user.FullDisplayName), ChannelSession.Settings.AlertModerationColor));
+                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} Banned", user.FullDisplayName), ChannelSession.Settings.AlertModerationColor));
 
                 await ServiceManager.Get<UserService>().RemoveActiveUser(user.ID);
             }
@@ -825,7 +825,7 @@ namespace MixItUp.Base.Services.Twitch
 
                                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHosted, parameters);
 
-                                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} hosted the channel", user.FullDisplayName), ChannelSession.Settings.AlertHostColor));
+                                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} hosted the channel", user.FullDisplayName), ChannelSession.Settings.AlertHostColor));
                             }
                         }
                     }

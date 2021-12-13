@@ -14,36 +14,29 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
 {
     public class TwitchChatEmoteViewModel
     {
-        public ChatEmoteModel Emote { get; set; }
+        public string ID { get; private set; }
+        public string Code { get; private set; }
+        public string LightSmallImageUrl { get; private set; }
+        public string DarkSmallImageUrl { get; private set; }
+        public string LightLargeImageUrl { get; private set; }
+        public string DarkLargeImageUrl { get; private set; }
 
-        public string SimpleEmoteID { get; set; }
-        public string SimpleEmoteCode { get; set; }
-        public string SimpleEmoteURL { get { return $"https://static-cdn.jtvnw.net/emoticons/v1/{this.SimpleEmoteID}/1.0"; } }
+        public string Name { get { return this.Code; } }
+        public string ImageURL { get { return this.DarkLargeImageUrl; } }
 
-        public bool IsFullEmote { get { return this.Emote != null; } }
-
-        public string Name { get { return this.IsFullEmote ? this.Emote.name : this.SimpleEmoteCode; } }
-
-        public string ImageURL { get { return this.IsFullEmote ? this.V2DarkImageURL : this.SimpleEmoteURL; } }
-        public string DefaultImageURL { get { return this.IsFullEmote ? this.Emote.Size1URL : this.SimpleEmoteURL; } }
-        public string V2LightImageURL { get { return this.IsFullEmote ? this.BuildV2EmoteURL("light") : this.SimpleEmoteURL; } }
-        public string V2DarkImageURL { get { return this.IsFullEmote ? this.BuildV2EmoteURL("dark") : this.SimpleEmoteURL; } }
-
-        public TwitchChatEmoteViewModel(ChatEmoteModel emote)
-        {
-            this.Emote = emote;
-        }
+        public TwitchChatEmoteViewModel(ChatEmoteModel emote) : this(emote.id, emote.name) { }
 
         public TwitchChatEmoteViewModel(string emoteID, string emoteCode)
         {
-            this.SimpleEmoteID = emoteID;
-            this.SimpleEmoteCode = emoteCode;
+            this.ID = emoteID;
+            this.Code = emoteCode;
+            this.LightSmallImageUrl = this.BuildV2EmoteURL("light", 1.0);
+            this.DarkSmallImageUrl = this.BuildV2EmoteURL("dark", 1.0);
+            this.LightLargeImageUrl = this.BuildV2EmoteURL("light", 3.0);
+            this.DarkLargeImageUrl = this.BuildV2EmoteURL("dark", 3.0);
         }
 
-        private string BuildV2EmoteURL(string theme)
-        {
-            return $"https://static-cdn.jtvnw.net/emoticons/v2/{this.Emote.id}/default/{theme}/1.0";
-        }
+        private string BuildV2EmoteURL(string theme, double size) { return $"https://static-cdn.jtvnw.net/emoticons/v2/{this.ID}/default/{theme}/{size}"; }
     }
 
     public class TwitchBitsCheerViewModel

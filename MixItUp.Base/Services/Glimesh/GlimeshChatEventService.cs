@@ -327,7 +327,7 @@ namespace MixItUp.Base.Services.Glimesh
 
                     GlobalEvents.FollowOccurred(user);
 
-                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Glimesh, user, string.Format("{0} Followed", user.DisplayName), ChannelSession.Settings.AlertFollowColor));
+                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} Followed", user.DisplayName), ChannelSession.Settings.AlertFollowColor));
                 }
             }
             catch (Exception ex)

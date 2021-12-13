@@ -20,7 +20,7 @@ namespace MixItUp.Base.ViewModel.User
         public const string UserDefaultColor = "MaterialDesignBody";
         public static readonly TimeSpan RefreshTimeSpan = TimeSpan.FromMinutes(5);
 
-        public static UserV2ViewModel CreateUnassociated(string username = null) { return new UserV2ViewModel(StreamingPlatformTypeEnum.Default, UserV2Model.CreateUnassociated(username)); }
+        public static UserV2ViewModel CreateUnassociated(string username = null) { return new UserV2ViewModel(StreamingPlatformTypeEnum.None, UserV2Model.CreateUnassociated(username)); }
 
         private StreamingPlatformTypeEnum platform;
         private UserV2Model model;
@@ -28,14 +28,14 @@ namespace MixItUp.Base.ViewModel.User
 
         private object cachePropertiesLock = new object();
 
-        public UserV2ViewModel(UserV2Model model) : this(StreamingPlatformTypeEnum.Default, model) { }
+        public UserV2ViewModel(UserV2Model model) : this(StreamingPlatformTypeEnum.None, model) { }
 
         public UserV2ViewModel(StreamingPlatformTypeEnum platform, UserV2Model model)
         {
             this.platform = platform;
             this.model = model;
 
-            if (this.platform != StreamingPlatformTypeEnum.Default)
+            if (this.platform != StreamingPlatformTypeEnum.None)
             {
                 this.platformModel = this.GetPlatformData<UserPlatformV2ModelBase>(this.platform);
             }
@@ -64,7 +64,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public HashSet<StreamingPlatformTypeEnum> AllPlatforms { get { return this.Model.GetPlatforms(); } }
 
-        public bool IsUnassociated { get { return this.Platform == StreamingPlatformTypeEnum.Default; } }
+        public bool IsUnassociated { get { return this.Platform == StreamingPlatformTypeEnum.None; } }
 
         public string PlatformID { get { return this.PlatformModel.ID; } }
 

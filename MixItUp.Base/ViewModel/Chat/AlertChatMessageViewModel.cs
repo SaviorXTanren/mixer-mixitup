@@ -7,12 +7,12 @@ namespace MixItUp.Base.ViewModel.Chat
     {
         public string Color { get; private set; }
 
-        public AlertChatMessageViewModel(string message, string color = null) : this(StreamingPlatformTypeEnum.Default, message, color) { }
+        public AlertChatMessageViewModel(string message, string color = null) : this(StreamingPlatformTypeEnum.None, message, color) { }
 
-        public AlertChatMessageViewModel(StreamingPlatformTypeEnum platform, string message, string color = null) : this(platform, ChannelSession.User, message, color) { }
+        public AlertChatMessageViewModel(StreamingPlatformTypeEnum platform, string message, string color = null) : this(ChannelSession.User, message, color) { }
 
-        public AlertChatMessageViewModel(StreamingPlatformTypeEnum platform, UserV2ViewModel user, string message, string color = null)
-            : base(string.Empty, platform, user)
+        public AlertChatMessageViewModel(UserV2ViewModel user, string message, string color = null)
+            : base(string.Empty, user.Platform, user)
         {
             this.Color = color;
 

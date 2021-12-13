@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Requirements;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
@@ -48,6 +49,19 @@ namespace MixItUp.Base.ViewModel.Requirements
     public class RoleRequirementViewModel : RequirementViewModelBase
     {
         private static PatreonBenefit NonePatreonBenefit = new PatreonBenefit() { ID = string.Empty, Title = "None" };
+
+        public IEnumerable<StreamingPlatformTypeEnum> Platforms { get { return StreamingPlatforms.SelectablePlatforms; } }
+
+        public StreamingPlatformTypeEnum SelectedPlatform
+        {
+            get { return this.selectedPlatform; }
+            set
+            {
+                this.selectedPlatform = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private StreamingPlatformTypeEnum selectedPlatform = StreamingPlatformTypeEnum.All;
 
         public bool IsAdvancedRolesSelected
         {
@@ -164,6 +178,7 @@ namespace MixItUp.Base.ViewModel.Requirements
         public RoleRequirementViewModel(RoleRequirementModel requirement)
             : this()
         {
+            this.SelectedPlatform = requirement.StreamingPlatform;
             if (requirement.UserRoleList.Count > 0)
             {
                 this.IsAdvancedRolesSelected = true;
@@ -203,11 +218,11 @@ namespace MixItUp.Base.ViewModel.Requirements
         {
             if (this.IsAdvancedRolesSelected)
             {
-                return new RoleRequirementModel(this.SelectedAdvancedRoles.Select(r => r.Role), this.SubscriberTier, this.selectedPatreonBenefit?.ID);
+                return new RoleRequirementModel(this.SelectedPlatform, this.SelectedAdvancedRoles.Select(r => r.Role), this.SubscriberTier, this.selectedPatreonBenefit?.ID);
             }
             else
             {
-                return new RoleRequirementModel(this.SelectedRole, this.SubscriberTier, this.selectedPatreonBenefit?.ID);
+                return new RoleRequirementModel(this.SelectedPlatform, this.SelectedRole, this.SubscriberTier, this.selectedPatreonBenefit?.ID);
             }
         }
     }

@@ -33,7 +33,7 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public string ID { get; set; }
         [DataMember]
-        public StreamingPlatformTypeEnum Platform { get; set; } = StreamingPlatformTypeEnum.Default;
+        public StreamingPlatformTypeEnum Platform { get; set; } = StreamingPlatformTypeEnum.None;
 
         [DataMember]
         public string Type { get; set; }

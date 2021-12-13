@@ -23,6 +23,9 @@ namespace MixItUp.Base.Model.Requirements
         public HashSet<OldUserRoleEnum> RoleList { get; set; } = new HashSet<OldUserRoleEnum>();
 
         [DataMember]
+        public StreamingPlatformTypeEnum StreamingPlatform { get; set; }
+
+        [DataMember]
         public UserRoleEnum UserRole { get; set; }
         [DataMember]
         public HashSet<UserRoleEnum> UserRoleList { get; set; } = new HashSet<UserRoleEnum>();
@@ -35,15 +38,17 @@ namespace MixItUp.Base.Model.Requirements
 
         public RoleRequirementModel() { }
 
-        public RoleRequirementModel(UserRoleEnum role, int subscriberTier = 1, string patreonBenefitID = null)
+        public RoleRequirementModel(StreamingPlatformTypeEnum streamingPlatform, UserRoleEnum role, int subscriberTier = 1, string patreonBenefitID = null)
         {
+            this.StreamingPlatform = streamingPlatform;
             this.UserRole = role;
             this.SubscriberTier = subscriberTier;
             this.PatreonBenefitID = patreonBenefitID;
         }
 
-        public RoleRequirementModel(IEnumerable<UserRoleEnum> roleList, int subscriberTier = 1, string patreonBenefitID = null)
+        public RoleRequirementModel(StreamingPlatformTypeEnum streamingPlatform, IEnumerable<UserRoleEnum> roleList, int subscriberTier = 1, string patreonBenefitID = null)
         {
+            this.StreamingPlatform = streamingPlatform;
             this.UserRoleList = new HashSet<UserRoleEnum>(roleList);
             this.SubscriberTier = subscriberTier;
             this.PatreonBenefitID = patreonBenefitID;
@@ -68,15 +73,35 @@ namespace MixItUp.Base.Model.Requirements
 
         public override Task<Result> Validate(CommandParametersModel parameters)
         {
-            if (this.UserRoleList.Count > 0)
+            if (this.StreamingPlatform == StreamingPlatformTypeEnum.All || parameters.Platform == this.StreamingPlatform)
             {
-                foreach (UserRoleEnum role in this.UserRoleList)
+                if (this.UserRoleList.Count > 0)
                 {
-                    if (parameters.User.HasRole(role))
+                    foreach (UserRoleEnum role in this.UserRoleList)
                     {
-                        if (role == UserRoleEnum.Subscriber || role == UserRoleEnum.YouTubeMember)
+                        if (parameters.User.HasRole(role))
                         {
-                            if (parameters.User.SubscriberTier >= this.SubscriberTier)
+                            if (role == UserRoleEnum.Subscriber || role == UserRoleEnum.YouTubeMember)
+                            {
+                                if (parameters.User.SubscriberTier >= this.SubscriberTier)
+                                {
+                                    return Task.FromResult(new Result());
+                                }
+                            }
+                            else
+                            {
+                                return Task.FromResult(new Result());
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (parameters.User.MeetsRole(this.UserRole))
+                    {
+                        if (this.UserRole == UserRoleEnum.Subscriber || this.UserRole == UserRoleEnum.YouTubeMember)
+                        {
+                            if (parameters.User.ExceedRole(this.UserRole) || parameters.User.SubscriberTier >= this.SubscriberTier)
                             {
                                 return Task.FromResult(new Result());
                             }
@@ -87,34 +112,17 @@ namespace MixItUp.Base.Model.Requirements
                         }
                     }
                 }
-            }
-            else
-            {
-                if (parameters.User.MeetsRole(this.UserRole))
+
+                if (!string.IsNullOrEmpty(this.PatreonBenefitID) && ServiceManager.Get<PatreonService>().IsConnected)
                 {
-                    if (this.UserRole == UserRoleEnum.Subscriber || this.UserRole == UserRoleEnum.YouTubeMember)
+                    PatreonBenefit benefit = ServiceManager.Get<PatreonService>().Campaign.GetBenefit(this.PatreonBenefitID);
+                    if (benefit != null)
                     {
-                        if (parameters.User.ExceedRole(this.UserRole) || parameters.User.SubscriberTier >= this.SubscriberTier)
+                        PatreonTier tier = parameters.User.PatreonTier;
+                        if (tier != null && tier.BenefitIDs.Contains(benefit.ID))
                         {
                             return Task.FromResult(new Result());
                         }
-                    }
-                    else
-                    {
-                        return Task.FromResult(new Result());
-                    }
-                }
-            }
-
-            if (!string.IsNullOrEmpty(this.PatreonBenefitID) && ServiceManager.Get<PatreonService>().IsConnected)
-            {
-                PatreonBenefit benefit = ServiceManager.Get<PatreonService>().Campaign.GetBenefit(this.PatreonBenefitID);
-                if (benefit != null)
-                {
-                    PatreonTier tier = parameters.User.PatreonTier;
-                    if (tier != null && tier.BenefitIDs.Contains(benefit.ID))
-                    {
-                        return Task.FromResult(new Result());
                     }
                 }
             }

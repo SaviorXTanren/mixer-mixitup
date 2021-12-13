@@ -830,7 +830,7 @@ namespace MixItUp.Base.Services.External
                 this.lastCommand = DateTimeOffset.Now;
                 return true;
             }
-            await ServiceManager.Get<ChatService>().SendMessage("The Discord action you were trying to perform was blocked due to too many requests. Please ensure you are only performing 1 Discord action every 30 seconds. You can add a custom Discord Bot under the Services page to circumvent this block.", StreamingPlatformTypeEnum.Default);
+            await ServiceManager.Get<ChatService>().SendMessage("The Discord action you were trying to perform was blocked due to too many requests. Please ensure you are only performing 1 Discord action every 30 seconds. You can add a custom Discord Bot under the Services page to circumvent this block.", StreamingPlatformTypeEnum.All);
             return false;
         }
     }

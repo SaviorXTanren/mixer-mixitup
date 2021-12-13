@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Actions;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using StreamingClient.Base.Util;
@@ -85,7 +86,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowUserRoles)
             {
-                return Task.FromResult<ActionModelBase>(new GameQueueActionModel(this.SelectedActionType, roleRequirement: new RoleRequirementModel(this.SelectedUserRole)));
+                return Task.FromResult<ActionModelBase>(new GameQueueActionModel(this.SelectedActionType, roleRequirement: new RoleRequirementModel(StreamingPlatformTypeEnum.All, this.SelectedUserRole)));
             }
             else
             {

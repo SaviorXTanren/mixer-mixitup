@@ -160,7 +160,7 @@ namespace MixItUp.Base.ViewModel.Chat
                     }
                     else
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage(this.SendMessageText, StreamingPlatformTypeEnum.Default, sendAsStreamer: this.SendAsStreamer);
+                        await ServiceManager.Get<ChatService>().SendMessage(this.SendMessageText, StreamingPlatformTypeEnum.All, sendAsStreamer: this.SendAsStreamer);
                     }
 
                     this.SentMessageHistory.Remove(this.SendMessageText);

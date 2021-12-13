@@ -26,6 +26,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -44,7 +46,7 @@
             <TextBlock Grid.Column="4" Text="{Binding Source={x:Static resx:Resources.Advanced}}" VerticalAlignment="Center" />
         </Grid>
 
-        <ComboBox Grid.Row="2" Visibility="{Binding ShowSimpleRoles, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding Roles}" SelectedItem="{Binding SelectedRole}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Role}" Width="120" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+        <ComboBox Grid.Row="2" ItemsSource="{Binding Platforms}" SelectedItem="{Binding SelectedPlatform}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StreamingPlatform}" Width="120" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -52,7 +54,15 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <Grid Grid.Row="2" Visibility="{Binding IsAdvancedRolesSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <ComboBox Grid.Row="4" Visibility="{Binding ShowSimpleRoles, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding Roles}" SelectedItem="{Binding SelectedRole}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Role}" Width="120" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <Grid Grid.Row="4" Visibility="{Binding IsAdvancedRolesSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="10" />
@@ -93,7 +103,7 @@
             </Border>
         </Grid>
 
-        <ComboBox Grid.Row="3" ItemsSource="{Binding SubscriberTiers}" SelectedItem="{Binding SubscriberTier}" Visibility="{Binding IsSubscriberRole, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Tier}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="0,10,0,0" Width="120">
+        <ComboBox Grid.Row="5" ItemsSource="{Binding SubscriberTiers}" SelectedItem="{Binding SubscriberTier}" Visibility="{Binding IsSubscriberRole, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Tier}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="0,10,0,0" Width="120">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -101,6 +111,6 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <ComboBox Grid.Row="4" ItemsSource="{Binding PatreonBenefits}" SelectedItem="{Binding SelectedPatreonBenefit}" DisplayMemberPath="Title" Visibility="{Binding IsPatreonConnected, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PatreonBenefit}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="0,10,0,0" Width="120" />
+        <ComboBox Grid.Row="5" ItemsSource="{Binding PatreonBenefits}" SelectedItem="{Binding SelectedPatreonBenefit}" DisplayMemberPath="Title" Visibility="{Binding IsPatreonConnected, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PatreonBenefit}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="0,10,0,0" Width="120" />
     </Grid>
 </UserControl>
