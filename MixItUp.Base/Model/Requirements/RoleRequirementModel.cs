@@ -132,19 +132,26 @@ namespace MixItUp.Base.Model.Requirements
 
         private Result CreateErrorMessage(CommandParametersModel parameters)
         {
-            List<string> roleNames = new List<string>();
-            if (this.UserRoleList.Count > 0)
+            if (this.StreamingPlatform != StreamingPlatformTypeEnum.All && parameters.Platform != this.StreamingPlatform)
             {
-                foreach (UserRoleEnum role in this.UserRoleList)
-                {
-                    roleNames.Add(this.GetRoleName(role));
-                }
+                return new Result(string.Format(MixItUp.Base.Resources.RoleErrorIncorrectStreamingPlatform, this.StreamingPlatform));
             }
             else
             {
-                roleNames.Add(this.GetRoleName(this.UserRole));
+                List<string> roleNames = new List<string>();
+                if (this.UserRoleList.Count > 0)
+                {
+                    foreach (UserRoleEnum role in this.UserRoleList)
+                    {
+                        roleNames.Add(this.GetRoleName(role));
+                    }
+                }
+                else
+                {
+                    roleNames.Add(this.GetRoleName(this.UserRole));
+                }
+                return new Result(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, string.Join(" / ", roleNames)));
             }
-            return new Result(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, string.Join(" / ", roleNames)));
         }
 
         private string GetRoleName(UserRoleEnum role)

@@ -46,7 +46,7 @@
             <TextBlock Grid.Column="4" Text="{Binding Source={x:Static resx:Resources.Advanced}}" VerticalAlignment="Center" />
         </Grid>
 
-        <ComboBox Grid.Row="2" ItemsSource="{Binding Platforms}" SelectedItem="{Binding SelectedPlatform}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StreamingPlatform}" Width="120" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+        <ComboBox Grid.Row="2" ItemsSource="{Binding Platforms}" SelectedItem="{Binding SelectedPlatform}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StreamingPlatform}" Width="140" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>

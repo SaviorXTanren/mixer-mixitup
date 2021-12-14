@@ -12239,6 +12239,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You must be on {0} to do this..
+        /// </summary>
+        public static string RoleErrorIncorrectStreamingPlatform {
+            get {
+                return ResourceManager.GetString("RoleErrorIncorrectStreamingPlatform", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You must be a {0} to do this..
         /// </summary>
         public static string RoleErrorInsufficientRole {
