@@ -244,7 +244,7 @@ namespace MixItUp.Base.Services.Twitch
                         List<PubSubListenTopicModel> topics = new List<PubSubListenTopicModel>();
                         foreach (PubSubTopicsEnum topic in TwitchEventService.topicTypes)
                         {
-                            topics.Add(new PubSubListenTopicModel(topic, (string)ServiceManager.Get<TwitchSessionService>().UserNewAPI.id));
+                            topics.Add(new PubSubListenTopicModel(topic, (string)ServiceManager.Get<TwitchSessionService>().User.id));
                         }
 
                         await this.pubSub.Listen(topics);
@@ -361,7 +361,7 @@ namespace MixItUp.Base.Services.Twitch
 
             if (subEvent.IsGiftedUpgrade)
             {
-                var subscription = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetUserSubscription(ServiceManager.Get<TwitchSessionService>().UserNewAPI, ((TwitchUserPlatformV2Model)subEvent.User.PlatformModel).GetTwitchNewAPIUserModel());
+                var subscription = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetUserSubscription(ServiceManager.Get<TwitchSessionService>().User, ((TwitchUserPlatformV2Model)subEvent.User.PlatformModel).GetTwitchNewAPIUserModel());
                 if (subscription != null)
                 {
                     subEvent.PlanTier = TwitchEventService.GetSubTierNameFromText(subscription.tier);
@@ -453,7 +453,7 @@ namespace MixItUp.Base.Services.Twitch
                     }
                 }
 
-                IEnumerable<UserFollowModel> followers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIFollowers(ServiceManager.Get<TwitchSessionService>().UserNewAPI, maxResult: 100);
+                IEnumerable<UserFollowModel> followers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIFollowers(ServiceManager.Get<TwitchSessionService>().User, maxResult: 100);
                 if (this.FollowCache.Count() > 0)
                 {
                     foreach (UserFollowModel follow in followers)

@@ -30,7 +30,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 string name = await DialogHelper.ShowTextEntry(MixItUp.Base.Resources.ChannelPointRewardName);
                 if (!string.IsNullOrEmpty(name))
                 {
-                    Result<CustomChannelPointRewardModel> reward = await ServiceManager.Get<TwitchSessionService>().UserConnection.CreateCustomChannelPointRewards(ServiceManager.Get<TwitchSessionService>().UserNewAPI, new UpdatableCustomChannelPointRewardModel()
+                    Result<CustomChannelPointRewardModel> reward = await ServiceManager.Get<TwitchSessionService>().UserConnection.CreateCustomChannelPointRewards(ServiceManager.Get<TwitchSessionService>().User, new UpdatableCustomChannelPointRewardModel()
                     {
                         title = name,
                         cost = 1,
@@ -73,7 +73,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 if (ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
-                    ProcessHelper.LaunchLink($"https://dashboard.twitch.tv/u/{ServiceManager.Get<TwitchSessionService>().UserNewAPI.login}/viewer-rewards/channel-points");
+                    ProcessHelper.LaunchLink($"https://dashboard.twitch.tv/u/{ServiceManager.Get<TwitchSessionService>().User.login}/viewer-rewards/channel-points");
                 }
             });
         }

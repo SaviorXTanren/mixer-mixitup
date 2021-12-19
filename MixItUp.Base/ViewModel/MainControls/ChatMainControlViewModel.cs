@@ -116,7 +116,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             if (ServiceManager.Get<TwitchSessionService>().IsConnected && ServiceManager.Get<TwitchSessionService>().StreamIsLive)
             {
-                this.ViewersCount = (int)ServiceManager.Get<TwitchSessionService>().StreamNewAPI.viewer_count;
+                this.ViewersCount = (int)ServiceManager.Get<TwitchSessionService>().Stream.viewer_count;
             }
             else if (ServiceManager.Get<GlimeshSessionService>().IsConnected && ServiceManager.Get<GlimeshSessionService>().Channel?.stream != null)
             {

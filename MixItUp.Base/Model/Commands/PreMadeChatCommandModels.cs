@@ -183,7 +183,7 @@ namespace MixItUp.Base.Model.Commands
             if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
                 await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
-                gameName = ServiceManager.Get<TwitchSessionService>().StreamNewAPI?.game_name;
+                gameName = ServiceManager.Get<TwitchSessionService>().Stream?.game_name;
             }
             else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
             {
@@ -230,7 +230,7 @@ namespace MixItUp.Base.Model.Commands
             if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
                 await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
-                title = ServiceManager.Get<TwitchSessionService>().StreamNewAPI?.title;
+                title = ServiceManager.Get<TwitchSessionService>().Stream?.title;
             }
             else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
             {
@@ -254,7 +254,7 @@ namespace MixItUp.Base.Model.Commands
                 await ServiceManager.Get<GlimeshSessionService>().RefreshChannel();
                 if (ServiceManager.Get<TwitchSessionService>().StreamIsLive)
                 {
-                    return TwitchPlatformService.GetTwitchDateTime(ServiceManager.Get<TwitchSessionService>().StreamNewAPI?.started_at);
+                    return TwitchPlatformService.GetTwitchDateTime(ServiceManager.Get<TwitchSessionService>().Stream?.started_at);
                 }
             }
             else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
@@ -662,7 +662,7 @@ namespace MixItUp.Base.Model.Commands
                 string name = string.Join(" ", parameters.Arguments);
                 if (ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
-                    await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateChannelInformation(ServiceManager.Get<TwitchSessionService>().UserNewAPI, title: name);
+                    await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateChannelInformation(ServiceManager.Get<TwitchSessionService>().User, title: name);
                     await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
                     await ServiceManager.Get<ChatService>().SendMessage("Title Updated: " + name, parameters.Platform);
                 }
@@ -696,7 +696,7 @@ namespace MixItUp.Base.Model.Commands
                     // TODO
                     if (ServiceManager.Get<TwitchSessionService>().IsConnected && game != null)
                     {
-                        await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateChannelInformation(ServiceManager.Get<TwitchSessionService>().UserNewAPI, gameID: game.id);
+                        await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateChannelInformation(ServiceManager.Get<TwitchSessionService>().User, gameID: game.id);
                         await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
                         await ServiceManager.Get<ChatService>().SendMessage("Game Updated: " + game.name, parameters.Platform);
                     }

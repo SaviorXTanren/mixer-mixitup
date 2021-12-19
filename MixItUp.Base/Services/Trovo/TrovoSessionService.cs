@@ -154,14 +154,8 @@ namespace MixItUp.Base.Services.Trovo
                             }
                         }
 
-                        TrovoChatEventService chatService = new TrovoChatEventService();
-
-                        // Adding service before connecting due to race-condition where previous chat messages will begin getting
-                        // sent in prior to full connect functionality finishing.
-                        ServiceManager.Add(chatService);
-
                         List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
-                        platformServiceTasks.Add(chatService.ConnectUser());
+                        platformServiceTasks.Add(ServiceManager.Get<TrovoChatEventService>().ConnectUser());
 
                         await Task.WhenAll(platformServiceTasks);
 

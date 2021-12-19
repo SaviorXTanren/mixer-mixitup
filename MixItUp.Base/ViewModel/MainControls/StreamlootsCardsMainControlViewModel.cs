@@ -21,7 +21,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 if (ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
-                    ProcessHelper.LaunchLink($"https://www.streamloots.com/{ServiceManager.Get<TwitchSessionService>().UserNewAPI.login}/manage/cards");
+                    ProcessHelper.LaunchLink($"https://www.streamloots.com/{ServiceManager.Get<TwitchSessionService>().User.login}/manage/cards");
                 }
             });
         }

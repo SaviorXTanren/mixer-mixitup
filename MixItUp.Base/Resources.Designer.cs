@@ -12365,6 +12365,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Run Ad Break.
+        /// </summary>
+        public static string RunAdBreak {
+            get {
+                return ResourceManager.GetString("RunAdBreak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Run Command.
         /// </summary>
         public static string RunCommand {
@@ -17645,6 +17654,15 @@ namespace MixItUp.Base {
         public static string YouTube {
             get {
                 return ResourceManager.GetString("YouTube", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ERROR: We were unable to run an ad break, please try again later.
+        /// </summary>
+        public static string YouTubeActionUnableToRunAdBreak {
+            get {
+                return ResourceManager.GetString("YouTubeActionUnableToRunAdBreak", resourceCulture);
             }
         }
         

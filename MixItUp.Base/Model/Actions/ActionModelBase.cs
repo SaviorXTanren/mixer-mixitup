@@ -49,6 +49,7 @@ namespace MixItUp.Base.Model.Actions
         PixelChat,
         VTubeStudio,
         Voicemod,
+        YouTube,
     }
 
     [DataContract]

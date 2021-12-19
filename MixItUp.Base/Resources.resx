@@ -6075,4 +6075,10 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="RoleErrorIncorrectStreamingPlatform" xml:space="preserve">
     <value>You must be on {0} to do this.</value>
   </data>
+  <data name="RunAdBreak" xml:space="preserve">
+    <value>Run Ad Break</value>
+  </data>
+  <data name="YouTubeActionUnableToRunAdBreak" xml:space="preserve">
+    <value>ERROR: We were unable to run an ad break, please try again later</value>
+  </data>
 </root>

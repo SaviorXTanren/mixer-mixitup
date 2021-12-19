@@ -217,10 +217,10 @@ namespace MixItUp.Base.ViewModel.MainControls
                     }
                 }
 
-                await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateChannelInformation(ServiceManager.Get<TwitchSessionService>().UserNewAPI, this.Title, this.currentGame?.id);
+                await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateChannelInformation(ServiceManager.Get<TwitchSessionService>().User, this.Title, this.currentGame?.id);
 
                 IEnumerable<TagModel> tags = this.CustomTags.Select(t => t.Tag);
-                await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateStreamTagsForChannel(ServiceManager.Get<TwitchSessionService>().UserNewAPI, tags);
+                await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateStreamTagsForChannel(ServiceManager.Get<TwitchSessionService>().User, tags);
 
                 await this.RefreshChannelInformation();
 
@@ -281,7 +281,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
                 else if (this.SelectedSearchFindChannelToRaidOption == SearchFindChannelToRaidTypeEnum.FollowedChannels)
                 {
-                    foreach (StreamModel stream in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetFollowedStreams(ServiceManager.Get<TwitchSessionService>().UserNewAPI, 10))
+                    foreach (StreamModel stream in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetFollowedStreams(ServiceManager.Get<TwitchSessionService>().User, 10))
                     {
                         results.Add(new SearchFindChannelToRaidItemViewModel(stream));
                     }
@@ -289,7 +289,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 else if (this.SelectedSearchFindChannelToRaidOption == SearchFindChannelToRaidTypeEnum.TeamMembers)
                 {
                     List<UserModel> users = new List<UserModel>();
-                    foreach (TeamModel team in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelTeams(ServiceManager.Get<TwitchSessionService>().UserNewAPI))
+                    foreach (TeamModel team in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelTeams(ServiceManager.Get<TwitchSessionService>().User))
                     {
                         TeamDetailsModel teamDetails = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetTeam(team.id);
                         if (teamDetails != null && teamDetails.users != null)
@@ -362,7 +362,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
-                this.ChannelInformation = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelInformation(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
+                this.ChannelInformation = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelInformation(ServiceManager.Get<TwitchSessionService>().User);
                 if (this.ChannelInformation != null)
                 {
                     if (!string.IsNullOrEmpty(this.ChannelInformation.title))
@@ -404,7 +404,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
                 List<TagViewModel> tags = new List<TagViewModel>();
-                foreach (TagModel tag in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStreamTagsForChannel(ServiceManager.Get<TwitchSessionService>().UserNewAPI))
+                foreach (TagModel tag in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStreamTagsForChannel(ServiceManager.Get<TwitchSessionService>().User))
                 {
                     if (!tag.is_auto)
                     {

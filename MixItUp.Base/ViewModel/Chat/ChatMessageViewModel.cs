@@ -72,7 +72,7 @@ namespace MixItUp.Base.ViewModel.Chat
                     {
                         return true;
                     }
-                    else if (this.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().BotNewAPI != null && string.Equals(ServiceManager.Get<TwitchSessionService>().BotNewAPI.id, this.User.PlatformID, StringComparison.InvariantCultureIgnoreCase))
+                    else if (this.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().Bot != null && string.Equals(ServiceManager.Get<TwitchSessionService>().Bot.id, this.User.PlatformID, StringComparison.InvariantCultureIgnoreCase))
                     {
                         return true;
                     }

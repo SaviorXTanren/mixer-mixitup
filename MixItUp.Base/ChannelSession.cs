@@ -85,13 +85,18 @@ namespace MixItUp.Base
             catch (Exception ex) { Logger.Log(ex); }
 
             ServiceManager.Add(new TwitchSessionService());
+            ServiceManager.Add(new TwitchChatService());
+            ServiceManager.Add(new TwitchEventService());
             ServiceManager.Add(new TwitchStatusService());
 
             ServiceManager.Add(new YouTubeSessionService());
+            ServiceManager.Add(new YouTubeChatService());
 
             ServiceManager.Add(new GlimeshSessionService());
+            ServiceManager.Add(new GlimeshChatEventService());
 
             ServiceManager.Add(new TrovoSessionService());
+            ServiceManager.Add(new TrovoChatEventService());
 
             try
             {
@@ -222,11 +227,11 @@ namespace MixItUp.Base
 
                 if (ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
-                    ChannelSession.Settings.Name = ServiceManager.Get<TwitchSessionService>()?.UserNewAPI?.display_name;
+                    ChannelSession.Settings.Name = ServiceManager.Get<TwitchSessionService>()?.User?.display_name;
                 }
                 else if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
                 {
-                    ChannelSession.Settings.Name = ServiceManager.Get<YouTubeSessionService>()?.Channel?.Snippet?.Title;
+                    ChannelSession.Settings.Name = ServiceManager.Get<YouTubeSessionService>()?.User?.Snippet?.Title;
                 }
                 else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
                 {
@@ -243,18 +248,18 @@ namespace MixItUp.Base
 
                 if (ChannelSession.User == null && ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
-                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, ServiceManager.Get<TwitchSessionService>().UserNewAPI.id);
+                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, ServiceManager.Get<TwitchSessionService>().User.id);
                     if (ChannelSession.User == null)
                     {
-                        ChannelSession.User = ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(ServiceManager.Get<TwitchSessionService>().UserNewAPI));
+                        ChannelSession.User = ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(ServiceManager.Get<TwitchSessionService>().User));
                     }
                 }
                 if (ChannelSession.User == null && ServiceManager.Get<YouTubeSessionService>().IsConnected)
                 {
-                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.YouTube, ServiceManager.Get<YouTubeSessionService>().Channel.Id);
+                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.YouTube, ServiceManager.Get<YouTubeSessionService>().User.Id);
                     if (ChannelSession.User == null)
                     {
-                        ChannelSession.User = ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(ServiceManager.Get<YouTubeSessionService>().Channel));
+                        ChannelSession.User = ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(ServiceManager.Get<YouTubeSessionService>().User));
                     }
                 }
                 if (ChannelSession.User == null && ServiceManager.Get<GlimeshSessionService>().IsConnected)
@@ -401,7 +406,7 @@ namespace MixItUp.Base
 
                     if (ServiceManager.Get<TwitchSessionService>().IsConnected)
                     {
-                        IEnumerable<ChannelEditorUserModel> channelEditors = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelEditors(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
+                        IEnumerable<ChannelEditorUserModel> channelEditors = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelEditors(ServiceManager.Get<TwitchSessionService>().User);
                         if (channelEditors != null)
                         {
                             foreach (ChannelEditorUserModel channelEditor in channelEditors)
@@ -447,7 +452,7 @@ namespace MixItUp.Base
                 AsyncRunner.RunAsyncBackground(SessionBackgroundTask, sessionBackgroundCancellationTokenSource.Token, 60000);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                ServiceManager.Get<ITelemetryService>().TrackLogin(ChannelSession.Settings.TelemetryUserID, ServiceManager.Get<TwitchSessionService>().UserNewAPI?.broadcaster_type);
+                ServiceManager.Get<ITelemetryService>().TrackLogin(ChannelSession.Settings.TelemetryUserID, ServiceManager.Get<TwitchSessionService>().User?.broadcaster_type);
 
                 return new Result();
             }
@@ -497,16 +502,16 @@ namespace MixItUp.Base
                         try
                         {
                             string type = null;
-                            if (ServiceManager.Get<TwitchSessionService>().UserNewAPI.IsPartner())
+                            if (ServiceManager.Get<TwitchSessionService>().User.IsPartner())
                             {
                                 type = "Partner";
                             }
-                            else if (ServiceManager.Get<TwitchSessionService>().UserNewAPI.IsAffiliate())
+                            else if (ServiceManager.Get<TwitchSessionService>().User.IsAffiliate())
                             {
                                 type = "Affiliate";
                             }
-                            ServiceManager.Get<ITelemetryService>().TrackChannelMetrics(type, ServiceManager.Get<TwitchSessionService>().StreamNewAPI.viewer_count, ServiceManager.Get<ChatService>().AllUsers.Count,
-                                ServiceManager.Get<TwitchSessionService>().StreamNewAPI.game_name, ServiceManager.Get<TwitchSessionService>().UserNewAPI.view_count);
+                            ServiceManager.Get<ITelemetryService>().TrackChannelMetrics(type, ServiceManager.Get<TwitchSessionService>().Stream.viewer_count, ServiceManager.Get<ChatService>().AllUsers.Count,
+                                ServiceManager.Get<TwitchSessionService>().Stream.game_name, ServiceManager.Get<TwitchSessionService>().User.view_count);
                         }
                         catch (Exception ex)
                         {

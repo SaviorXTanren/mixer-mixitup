@@ -1161,7 +1161,7 @@ namespace MixItUp.Base.ViewModel.User
         private void SetTwitchRoles()
         {
             this.TwitchUserRoles.Add(OldUserRoleEnum.User);
-            if (ServiceManager.Get<TwitchSessionService>().UserNewAPI != null && ServiceManager.Get<TwitchSessionService>().UserNewAPI.id.Equals(this.TwitchID))
+            if (ServiceManager.Get<TwitchSessionService>().User != null && ServiceManager.Get<TwitchSessionService>().User.id.Equals(this.TwitchID))
             {
                 this.TwitchUserRoles.Add(OldUserRoleEnum.Streamer);
             }
@@ -1189,7 +1189,7 @@ namespace MixItUp.Base.ViewModel.User
 
         private async Task RefreshTwitchUserFollowDate()
         {
-            UserFollowModel follow = await ServiceManager.Get<TwitchSessionService>().UserConnection.CheckIfFollowsNewAPI(ServiceManager.Get<TwitchSessionService>().UserNewAPI, this.GetTwitchNewAPIUserModel());
+            UserFollowModel follow = await ServiceManager.Get<TwitchSessionService>().UserConnection.CheckIfFollowsNewAPI(ServiceManager.Get<TwitchSessionService>().User, this.GetTwitchNewAPIUserModel());
             if (follow != null && !string.IsNullOrEmpty(follow.followed_at))
             {
                 this.FollowDate = TwitchPlatformService.GetTwitchDateTime(follow.followed_at);
@@ -1202,9 +1202,9 @@ namespace MixItUp.Base.ViewModel.User
 
         private async Task RefreshTwitchUserSubscribeDate()
         {
-            if (ServiceManager.Get<TwitchSessionService>().UserNewAPI.IsAffiliate() || ServiceManager.Get<TwitchSessionService>().UserNewAPI.IsPartner())
+            if (ServiceManager.Get<TwitchSessionService>().User.IsAffiliate() || ServiceManager.Get<TwitchSessionService>().User.IsPartner())
             {
-                SubscriptionModel subscription = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetUserSubscription(ServiceManager.Get<TwitchSessionService>().UserNewAPI, this.GetTwitchNewAPIUserModel());
+                SubscriptionModel subscription = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetUserSubscription(ServiceManager.Get<TwitchSessionService>().User, this.GetTwitchNewAPIUserModel());
                 if (subscription != null)
                 {
                     // TODO: No subscription data from this API. https://twitch.uservoice.com/forums/310213-developers/suggestions/43806120-add-subscription-date-to-subscription-apis
@@ -1245,7 +1245,7 @@ namespace MixItUp.Base.ViewModel.User
         private void SetYouTubeRoles(Google.Apis.YouTube.v3.Data.LiveChatMessage message = null)
         {
             this.YouTubeUserRoles.Add(OldUserRoleEnum.User);
-            if (ServiceManager.Get<YouTubeSessionService>().Channel != null && ServiceManager.Get<YouTubeSessionService>().Channel.Id.Equals(this.YouTubeID))
+            if (ServiceManager.Get<YouTubeSessionService>().User != null && ServiceManager.Get<YouTubeSessionService>().User.Id.Equals(this.YouTubeID))
             {
                 this.YouTubeUserRoles.Add(OldUserRoleEnum.Streamer);
             }

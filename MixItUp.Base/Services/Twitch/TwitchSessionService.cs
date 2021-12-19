@@ -17,10 +17,10 @@ namespace MixItUp.Base.Services.Twitch
         public TwitchPlatformService UserConnection { get; private set; }
         public TwitchPlatformService BotConnection { get; private set; }
         public HashSet<string> ChannelEditors { get; private set; } = new HashSet<string>();
-        public UserModel UserNewAPI { get; set; }
-        public UserModel BotNewAPI { get; set; }
-        public StreamModel StreamNewAPI { get; set; }
-        public bool StreamIsLive { get { return this.StreamNewAPI != null; } }
+        public UserModel User { get; set; }
+        public UserModel Bot { get; set; }
+        public StreamModel Stream { get; set; }
+        public bool StreamIsLive { get { return this.Stream != null; } }
 
         public bool IsConnected { get { return this.UserConnection != null; } }
 
@@ -30,8 +30,8 @@ namespace MixItUp.Base.Services.Twitch
             if (result.Success)
             {
                 this.UserConnection = result.Value;
-                this.UserNewAPI = await this.UserConnection.GetNewAPICurrentUser();
-                if (this.UserNewAPI == null)
+                this.User = await this.UserConnection.GetNewAPICurrentUser();
+                if (this.User == null)
                 {
                     return new Result("Failed to get New API Twitch user data");
                 }
@@ -45,8 +45,8 @@ namespace MixItUp.Base.Services.Twitch
             if (result.Success)
             {
                 this.BotConnection = result.Value;
-                this.BotNewAPI = await this.BotConnection.GetNewAPICurrentUser();
-                if (this.BotNewAPI == null)
+                this.Bot = await this.BotConnection.GetNewAPICurrentUser();
+                if (this.Bot == null)
                 {
                     return new Result("Failed to get Twitch bot data");
                 }
@@ -78,8 +78,8 @@ namespace MixItUp.Base.Services.Twitch
 
                 if (userResult.Success)
                 {
-                    this.UserNewAPI = await this.UserConnection.GetNewAPICurrentUser();
-                    if (this.UserNewAPI == null)
+                    this.User = await this.UserConnection.GetNewAPICurrentUser();
+                    if (this.User == null)
                     {
                         return new Result("Failed to get Twitch user data");
                     }
@@ -90,8 +90,8 @@ namespace MixItUp.Base.Services.Twitch
                         if (twitchResult.Success)
                         {
                             this.BotConnection = twitchResult.Value;
-                            this.BotNewAPI = await this.BotConnection.GetNewAPICurrentUser();
-                            if (this.BotNewAPI == null)
+                            this.Bot = await this.BotConnection.GetNewAPICurrentUser();
+                            if (this.Bot == null)
                             {
                                 return new Result("Failed to get Twitch bot data");
                             }
@@ -142,10 +142,10 @@ namespace MixItUp.Base.Services.Twitch
                     UserModel twitchChannelNew = await this.UserConnection.GetNewAPICurrentUser();
                     if (twitchChannelNew != null)
                     {
-                        this.UserNewAPI = twitchChannelNew;
-                        this.StreamNewAPI = await this.UserConnection.GetStream(this.UserNewAPI);
+                        this.User = twitchChannelNew;
+                        this.Stream = await this.UserConnection.GetStream(this.User);
 
-                        IEnumerable<ChannelEditorUserModel> channelEditors = await this.UserConnection.GetChannelEditors(this.UserNewAPI);
+                        IEnumerable<ChannelEditorUserModel> channelEditors = await this.UserConnection.GetChannelEditors(this.User);
                         if (channelEditors != null)
                         {
                             foreach (ChannelEditorUserModel channelEditor in channelEditors)
@@ -156,9 +156,9 @@ namespace MixItUp.Base.Services.Twitch
 
                         if (settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch))
                         {
-                            if (!string.IsNullOrEmpty(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID) && !string.Equals(this.UserNewAPI.id, settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID))
+                            if (!string.IsNullOrEmpty(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID) && !string.Equals(this.User.id, settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID))
                             {
-                                Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.UserNewAPI.login} - {this.UserNewAPI.id} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID}");
+                                Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.User.login} - {this.User.id} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID}");
                                 settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.accessToken = string.Empty;
                                 settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.refreshToken = string.Empty;
                                 settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.expiresIn = 0;
@@ -166,12 +166,9 @@ namespace MixItUp.Base.Services.Twitch
                             }
                         }
 
-                        TwitchChatService chatService = new TwitchChatService();
-                        TwitchEventService eventService = new TwitchEventService();
-
                         List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
-                        platformServiceTasks.Add(chatService.ConnectUser());
-                        platformServiceTasks.Add(eventService.Connect());
+                        platformServiceTasks.Add(ServiceManager.Get<TwitchChatService>().ConnectUser());
+                        platformServiceTasks.Add(ServiceManager.Get<TwitchEventService>().Connect());
 
                         await Task.WhenAll(platformServiceTasks);
 
@@ -180,9 +177,6 @@ namespace MixItUp.Base.Services.Twitch
                             string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
                             return new Result("Failed to connect to Twitch services:" + Environment.NewLine + Environment.NewLine + errors);
                         }
-
-                        ServiceManager.Add(chatService);
-                        ServiceManager.Add(eventService);
 
                         await ServiceManager.Get<TwitchChatService>().Initialize();
                     }
@@ -241,15 +235,15 @@ namespace MixItUp.Base.Services.Twitch
                 }
 
                 settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = this.UserConnection.Connection.GetOAuthTokenCopy();
-                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID = this.UserNewAPI.id;
-                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ChannelID = this.UserNewAPI.id;
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID = this.User.id;
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ChannelID = this.User.id;
 
                 if (this.BotConnection != null)
                 {
                     settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = this.BotConnection.Connection.GetOAuthTokenCopy();
-                    if (this.BotNewAPI != null)
+                    if (this.Bot != null)
                     {
-                        settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotID = this.BotNewAPI.id;
+                        settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotID = this.Bot.id;
                     }
                 }
             }
@@ -262,7 +256,7 @@ namespace MixItUp.Base.Services.Twitch
                 UserModel twitchUserNewAPI = await this.UserConnection.GetNewAPICurrentUser();
                 if (twitchUserNewAPI != null)
                 {
-                    this.UserNewAPI = twitchUserNewAPI;
+                    this.User = twitchUserNewAPI;
                 }
             }
 
@@ -271,16 +265,16 @@ namespace MixItUp.Base.Services.Twitch
                 UserModel botUserNewAPI = await this.BotConnection.GetNewAPICurrentUser();
                 if (botUserNewAPI != null)
                 {
-                    this.BotNewAPI = botUserNewAPI;
+                    this.Bot = botUserNewAPI;
                 }
             }
         }
 
         public async Task RefreshChannel()
         {
-            if (this.UserConnection != null && this.UserNewAPI != null)
+            if (this.UserConnection != null && this.User != null)
             {
-                this.StreamNewAPI = await this.UserConnection.GetStream(this.UserNewAPI);
+                this.Stream = await this.UserConnection.GetStream(this.User);
             }
         }
     }

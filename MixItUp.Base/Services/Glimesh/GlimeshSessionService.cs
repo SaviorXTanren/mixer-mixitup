@@ -154,10 +154,8 @@ namespace MixItUp.Base.Services.Glimesh
                             }
                         }
 
-                        GlimeshChatEventService chatService = new GlimeshChatEventService();
-
                         List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
-                        platformServiceTasks.Add(chatService.ConnectUser());
+                        platformServiceTasks.Add(ServiceManager.Get<GlimeshChatEventService>().ConnectUser());
 
                         await Task.WhenAll(platformServiceTasks);
 
@@ -166,8 +164,6 @@ namespace MixItUp.Base.Services.Glimesh
                             string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
                             return new Result("Failed to connect to Glimesh services:" + Environment.NewLine + Environment.NewLine + errors);
                         }
-
-                        ServiceManager.Add(chatService);
                     }
                 }
                 catch (Exception ex)

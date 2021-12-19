@@ -269,9 +269,12 @@ namespace MixItUp.Base.Model.Actions
                             await ssService.SetSourceFilterVisibility(parentName, name, this.Visible);
                         }
                     }
-                    else if (this.ActionType == StreamingSoftwareActionTypeEnum.SceneCollection && !string.IsNullOrEmpty(name))
+                    else if (this.ActionType == StreamingSoftwareActionTypeEnum.SceneCollection)
                     {
-                        await ssService.SetSceneCollection(name);
+                        if (!string.IsNullOrEmpty(name))
+                        {
+                            await ssService.SetSceneCollection(name);
+                        }
                     }
                     else if (!string.IsNullOrEmpty(name))
                     {

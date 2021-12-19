@@ -50,6 +50,8 @@ namespace MixItUp.Base.Services.YouTube
         public bool IsUserConnected { get { return this.userClient != null; } }
         public bool IsBotConnected { get { return this.botClient != null; } }
 
+        public LiveBroadcast Broadcast { get { return (this.IsUserConnected) ? this.userClient.Broadcast : null; } }
+
         public async Task<Result> ConnectUser()
         {
             if (ServiceManager.Get<YouTubeSessionService>().IsConnected)

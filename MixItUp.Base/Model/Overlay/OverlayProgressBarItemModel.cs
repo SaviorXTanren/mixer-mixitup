@@ -140,7 +140,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 if (ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
-                    this.CurrentAmount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetFollowerCount(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
+                    this.CurrentAmount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetFollowerCount(ServiceManager.Get<TwitchSessionService>().User);
                 }
                 // TODO
                 GlobalEvents.OnFollowOccurred += GlobalEvents_OnFollowOccurred;

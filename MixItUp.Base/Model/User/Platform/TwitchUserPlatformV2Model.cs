@@ -87,7 +87,7 @@ namespace MixItUp.Base.Model.User.Platform
                     this.SetUserProperties(user);
                 }
 
-                UserFollowModel follow = await ServiceManager.Get<TwitchSessionService>().UserConnection.CheckIfFollowsNewAPI(ServiceManager.Get<TwitchSessionService>().UserNewAPI, this.GetTwitchNewAPIUserModel());
+                UserFollowModel follow = await ServiceManager.Get<TwitchSessionService>().UserConnection.CheckIfFollowsNewAPI(ServiceManager.Get<TwitchSessionService>().User, this.GetTwitchNewAPIUserModel());
                 if (follow != null && !string.IsNullOrEmpty(follow.followed_at))
                 {
                     this.Roles.Add(UserRoleEnum.Follower);
@@ -99,9 +99,9 @@ namespace MixItUp.Base.Model.User.Platform
                     this.FollowDate = null;
                 }
 
-                if (ServiceManager.Get<TwitchSessionService>().UserNewAPI.IsAffiliate() || ServiceManager.Get<TwitchSessionService>().UserNewAPI.IsPartner())
+                if (ServiceManager.Get<TwitchSessionService>().User.IsAffiliate() || ServiceManager.Get<TwitchSessionService>().User.IsPartner())
                 {
-                    SubscriptionModel subscription = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetUserSubscription(ServiceManager.Get<TwitchSessionService>().UserNewAPI, this.GetTwitchNewAPIUserModel());
+                    SubscriptionModel subscription = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetUserSubscription(ServiceManager.Get<TwitchSessionService>().User, this.GetTwitchNewAPIUserModel());
                     if (subscription != null)
                     {
                         this.Roles.Add(UserRoleEnum.Subscriber);

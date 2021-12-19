@@ -14,7 +14,7 @@ namespace MixItUp.Base.Services.YouTube
     {
         public YouTubePlatformService UserConnection { get; private set; }
         public YouTubePlatformService BotConnection { get; private set; }
-        public Channel Channel { get; private set; }
+        public Channel User { get; private set; }
         public Channel Bot { get; private set; }
 
         public bool IsConnected { get { return this.UserConnection != null; } }
@@ -25,8 +25,8 @@ namespace MixItUp.Base.Services.YouTube
             if (result.Success)
             {
                 this.UserConnection = result.Value;
-                this.Channel = await this.UserConnection.GetCurrentChannel();
-                if (this.Channel == null)
+                this.User = await this.UserConnection.GetCurrentChannel();
+                if (this.User == null)
                 {
                     return new Result("Failed to get YouTube channel data");
                 }
@@ -68,8 +68,8 @@ namespace MixItUp.Base.Services.YouTube
 
                 if (userResult.Success)
                 {
-                    this.Channel = await this.UserConnection.GetCurrentChannel();
-                    if (this.Channel == null)
+                    this.User = await this.UserConnection.GetCurrentChannel();
+                    if (this.User == null)
                     {
                         return new Result("Failed to get YouTube channel data");
                     }
@@ -131,9 +131,9 @@ namespace MixItUp.Base.Services.YouTube
                 {
                     if (settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.YouTube))
                     {
-                        if (!string.IsNullOrEmpty(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserID) && !string.Equals(this.Channel.Id, settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserID))
+                        if (!string.IsNullOrEmpty(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserID) && !string.Equals(this.User.Id, settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserID))
                         {
-                            Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.Channel.Id} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserID}");
+                            Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.User.Id} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserID}");
                             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserOAuthToken.accessToken = string.Empty;
                             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserOAuthToken.refreshToken = string.Empty;
                             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserOAuthToken.expiresIn = 0;
@@ -141,10 +141,8 @@ namespace MixItUp.Base.Services.YouTube
                         }
                     }
 
-                    YouTubeChatService chatService = new YouTubeChatService();
-
                     List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
-                    platformServiceTasks.Add(chatService.ConnectUser());
+                    platformServiceTasks.Add(ServiceManager.Get<YouTubeChatService>().ConnectUser());
 
                     await Task.WhenAll(platformServiceTasks);
 
@@ -155,8 +153,6 @@ namespace MixItUp.Base.Services.YouTube
                         string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
                         return new Result("Failed to connect to YouTube services:" + Environment.NewLine + Environment.NewLine + errors);
                     }
-
-                    ServiceManager.Add(chatService);
                 }
                 catch (Exception ex)
                 {
@@ -207,15 +203,15 @@ namespace MixItUp.Base.Services.YouTube
                 }
 
                 settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserOAuthToken = this.UserConnection.Connection.GetOAuthTokenCopy();
-                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserID = this.Channel.Id;
-                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].ChannelID = this.Channel.Id;
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserID = this.User.Id;
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].ChannelID = this.User.Id;
 
                 if (this.BotConnection != null)
                 {
                     settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].BotOAuthToken = this.BotConnection.Connection.GetOAuthTokenCopy();
                     if (this.Bot != null)
                     {
-                        settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].BotID = this.Channel.Id;
+                        settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].BotID = this.User.Id;
                     }
                 }
             }
@@ -228,7 +224,7 @@ namespace MixItUp.Base.Services.YouTube
                 Channel channel = await this.UserConnection.GetCurrentChannel();
                 if (channel != null)
                 {
-                    this.Channel = channel;
+                    this.User = channel;
                 }
             }
 

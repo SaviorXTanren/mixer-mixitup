@@ -408,7 +408,7 @@ namespace MixItUp.Base.Services
                 bool showMessage = true;
                 if (ChannelSession.Settings.HideBotMessages && message.User != null)
                 {
-                    if (ServiceManager.Get<TwitchSessionService>().BotNewAPI != null && message.User.Platform == StreamingPlatformTypeEnum.Twitch && message.User.PlatformID.Equals(ServiceManager.Get<TwitchSessionService>().BotNewAPI.id))
+                    if (ServiceManager.Get<TwitchSessionService>().Bot != null && message.User.Platform == StreamingPlatformTypeEnum.Twitch && message.User.PlatformID.Equals(ServiceManager.Get<TwitchSessionService>().Bot.id))
                     {
                         showMessage = false;
                     }
@@ -527,7 +527,7 @@ namespace MixItUp.Base.Services
 
                         if (ChannelSession.Settings.IgnoreBotAccountCommands)
                         {
-                            if (ServiceManager.Get<TwitchSessionService>().BotNewAPI != null && message.User.Platform == StreamingPlatformTypeEnum.Twitch && message.User.Platform.Equals(ServiceManager.Get<TwitchSessionService>().BotNewAPI.id))
+                            if (ServiceManager.Get<TwitchSessionService>().Bot != null && message.User.Platform == StreamingPlatformTypeEnum.Twitch && message.User.Platform.Equals(ServiceManager.Get<TwitchSessionService>().Bot.id))
                             {
                                 return;
                             }

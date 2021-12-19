@@ -55,7 +55,7 @@ namespace MixItUp.Base.Services
                 int viewersCurrent = 0;
                 if (ServiceManager.Get<TwitchSessionService>().StreamIsLive)
                 {
-                    viewersCurrent = (int)ServiceManager.Get<TwitchSessionService>().StreamNewAPI.viewer_count;
+                    viewersCurrent = (int)ServiceManager.Get<TwitchSessionService>().Stream.viewer_count;
                 }
                 else if (ServiceManager.Get<GlimeshSessionService>().Channel?.stream != null)
                 {

@@ -43,7 +43,7 @@ namespace MixItUp.Base.Services.External
             this.Links = new List<string>();
         }
 
-        public bool IsStreamTweet { get { return this.Links.Any(l => l.ToLower().Contains(string.Format("twitch.tv/{0}", ServiceManager.Get<TwitchSessionService>().UserNewAPI.login.ToLower()))); } }
+        public bool IsStreamTweet { get { return this.Links.Any(l => l.ToLower().Contains(string.Format("twitch.tv/{0}", ServiceManager.Get<TwitchSessionService>().User.login.ToLower()))); } }
     }
 
     public class TwitterService : OAuthExternalServiceBase
