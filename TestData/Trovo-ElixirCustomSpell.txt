@@ -1,0 +1,33 @@
+{
+	"type": "CHAT",
+	"channel_info": {
+		"channel_id": "101251279"
+	},
+	"data": {
+		"eid": "1640070648839350_101251279_2886926515_1",
+		"chats": [
+			{
+				"type": 5009,
+				"content": "{\"gift_id\":530019129,\"gift\":\"Oplacheno\",\"num\":1,\"sid\":101251279,\"gift_value\":50,\"value_type\":\"Elixir\"}",
+				"nick_name": "SaviorXTanren",
+				"avatar": "https://headicon.trovo.live/user/ipupmbiaaaaabrlm6bfrqojjcy.jpeg?t=0",
+				"sub_tier": "0",
+				"medals": [
+					"CustomRoleMedal.101251279.CAR-200000-14"
+				],
+				"roles": [
+					"?????????",
+					"follower"
+				],
+				"message_id": "1640070648812339087_101251279_100067395_2886928915_1",
+				"sender_id": 100067395,
+				"uid": 100067395,
+				"user_name": "SaviorXTanren",
+				"content_data": {
+					"normal_emote_enabled": ""
+				},
+				"custom_role": "[{\"roleName\":\"?????????\",\"roleType\":200000},{\"roleName\":\"follower\",\"roleType\":100006}]"
+			}
+		]
+	}
+}

@@ -1,0 +1,32 @@
+{
+	"type": "CHAT",
+	"channel_info": {
+		"channel_id": "100347815"
+	},
+	"data": {
+		"eid": "1640069143373098_100347815_2886928758_1",
+		"chats": [
+			{
+				"type": 5,
+				"content": "{\"gift_id\":520010002,\"gift\":\"Stay Safe\",\"num\":1,\"gift_value\":100,\"value_type\":\"Mana\"}",
+				"nick_name": "becaaaa",
+				"avatar": "https://headicon.trovo.live/user/jbjbybqaaaaabokbvw5pewlscy.jpeg?ext=png&t=3",
+				"sub_tier": "0",
+				"medals": [
+					"ace"
+				],
+				"message_id": "1640069143342806111_100347815_102519368_2886928915_1",
+				"sender_id": 102519368,
+				"uid": 102519368,
+				"user_name": "becaaaa",
+				"content_data": {
+					"gift_display_name": "Stay Safe",
+					"gift_id": 520010002,
+					"gift_num": 1,
+					"normal_emote_enabled": ""
+				},
+				"custom_role": "null"
+			}
+		]
+	}
+}

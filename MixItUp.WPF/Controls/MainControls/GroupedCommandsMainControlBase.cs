@@ -2,6 +2,8 @@
 using MixItUp.Base.ViewModel.Commands;
 using MixItUp.Base.ViewModel.MainControls;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -50,6 +52,19 @@ namespace MixItUp.WPF.Controls.MainControls
                         group.IsMinimized = false;
                     }
                 }
+            }
+        }
+
+        protected void DataGrid_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            if (!e.Handled)
+            {
+                e.Handled = true;
+                var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
+                eventArg.RoutedEvent = UIElement.MouseWheelEvent;
+                eventArg.Source = sender;
+                var parent = ((Control)sender).Parent as UIElement;
+                parent.RaiseEvent(eventArg);
             }
         }
     }

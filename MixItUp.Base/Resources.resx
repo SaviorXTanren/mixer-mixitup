@@ -6140,4 +6140,40 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="ChannelUnfollowed" xml:space="preserve">
     <value>Channel Unfollowed</value>
   </data>
+  <data name="Glimesh" xml:space="preserve">
+    <value>Glimesh</value>
+  </data>
+  <data name="Trovo" xml:space="preserve">
+    <value>Trovo</value>
+  </data>
+  <data name="GenericDonation" xml:space="preserve">
+    <value>Generic Donation</value>
+  </data>
+  <data name="PlatformAgnostic" xml:space="preserve">
+    <value>Platform Agnostic</value>
+  </data>
+  <data name="AlertTrovoSpellFormat" xml:space="preserve">
+    <value>{0} cast the spell {1} - {2} {3}</value>
+  </data>
+  <data name="ShowTrovoSpellCast" xml:space="preserve">
+    <value>Show Trovo Spell Cast</value>
+  </data>
+  <data name="ShowTwitchBitsCheered" xml:space="preserve">
+    <value>Show Twitch Bits Cheered</value>
+  </data>
+  <data name="ShowTwitchChannelPoints" xml:space="preserve">
+    <value>Show Twitch Channel Points</value>
+  </data>
+  <data name="ShowTwitchHypeTrain" xml:space="preserve">
+    <value>Show Twitch Hype Train</value>
+  </data>
+  <data name="TrovoElixir" xml:space="preserve">
+    <value>Elixir</value>
+  </data>
+  <data name="TrovoMana" xml:space="preserve">
+    <value>Mana</value>
+  </data>
+  <data name="TrovoSpellCast" xml:space="preserve">
+    <value>Trovo Spell Cast</value>
+  </data>
 </root>

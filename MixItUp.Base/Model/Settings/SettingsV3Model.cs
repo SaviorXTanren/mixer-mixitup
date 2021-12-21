@@ -228,17 +228,29 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public string AlertMassGiftedSubColor { get; set; }
         [DataMember]
-        public string AlertBitsCheeredColor { get; set; }
+        public string AlertTwitchBitsCheeredColor { get; set; }
         [DataMember]
-        public string AlertHypeTrainColor { get; set; }
+        public string AlertTwitchChannelPointsColor { get; set; }
+        [DataMember]
+        public string AlertTwitchHypeTrainColor { get; set; }
+        [DataMember]
+        public string AlertTrovoSpellCastColor { get; set; }
         [DataMember]
         public string AlertDonationColor { get; set; }
-        [DataMember]
-        public string AlertChannelPointsColor { get; set; }
         [DataMember]
         public string AlertModerationColor { get; set; }
         [DataMember]
         public string AlertStreamlootsColor { get; set; }
+
+        [Obsolete]
+        [DataMember]
+        public string AlertBitsCheeredColor { get; set; }
+        [Obsolete]
+        [DataMember]
+        public string AlertChannelPointsColor { get; set; }
+        [Obsolete]
+        [DataMember]
+        public string AlertHypeTrainColor { get; set; }
 
         #endregion Alerts
 

@@ -565,6 +565,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} cast the spell {1} - {2} {3}.
+        /// </summary>
+        public static string AlertTrovoSpellFormat {
+            get {
+                return ResourceManager.GetString("AlertTrovoSpellFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All.
         /// </summary>
         public static string All {
@@ -7177,6 +7186,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Generic Donation.
+        /// </summary>
+        public static string GenericDonation {
+            get {
+                return ResourceManager.GetString("GenericDonation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to German.
         /// </summary>
         public static string German {
@@ -7272,6 +7290,15 @@ namespace MixItUp.Base {
         public static string GiveawayWinnerSelectedExample {
             get {
                 return ResourceManager.GetString("GiveawayWinnerSelectedExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Glimesh.
+        /// </summary>
+        public static string Glimesh {
+            get {
+                return ResourceManager.GetString("Glimesh", resourceCulture);
             }
         }
         
@@ -11049,6 +11076,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Platform Agnostic.
+        /// </summary>
+        public static string PlatformAgnostic {
+            get {
+                return ResourceManager.GetString("PlatformAgnostic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Play.
         /// </summary>
         public static string Play {
@@ -13402,6 +13438,42 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show Trovo Spell Cast.
+        /// </summary>
+        public static string ShowTrovoSpellCast {
+            get {
+                return ResourceManager.GetString("ShowTrovoSpellCast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Twitch Bits Cheered.
+        /// </summary>
+        public static string ShowTwitchBitsCheered {
+            get {
+                return ResourceManager.GetString("ShowTwitchBitsCheered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Twitch Channel Points.
+        /// </summary>
+        public static string ShowTwitchChannelPoints {
+            get {
+                return ResourceManager.GetString("ShowTwitchChannelPoints", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Twitch Hype Train.
+        /// </summary>
+        public static string ShowTwitchHypeTrain {
+            get {
+                return ResourceManager.GetString("ShowTwitchHypeTrain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show User Join/Leave.
         /// </summary>
         public static string ShowUserJoinLeave {
@@ -15601,6 +15673,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Trovo.
+        /// </summary>
+        public static string Trovo {
+            get {
+                return ResourceManager.GetString("Trovo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trovo Channel Followed.
         /// </summary>
         public static string TrovoChannelFollowed {
@@ -15651,6 +15732,33 @@ namespace MixItUp.Base {
         public static string TrovoChannelSubscriptionGifted {
             get {
                 return ResourceManager.GetString("TrovoChannelSubscriptionGifted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Elixir.
+        /// </summary>
+        public static string TrovoElixir {
+            get {
+                return ResourceManager.GetString("TrovoElixir", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mana.
+        /// </summary>
+        public static string TrovoMana {
+            get {
+                return ResourceManager.GetString("TrovoMana", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trovo Spell Cast.
+        /// </summary>
+        public static string TrovoSpellCast {
+            get {
+                return ResourceManager.GetString("TrovoSpellCast", resourceCulture);
             }
         }
         

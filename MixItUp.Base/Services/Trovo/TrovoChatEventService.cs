@@ -469,6 +469,16 @@ namespace MixItUp.Base.Services.Trovo
                         }
                     }
                 }
+                else if (message.type == ChatMessageTypeEnum.Spell || message.type == ChatMessageTypeEnum.CustomSpell)
+                {
+                    TrovoChatSpellViewModel spell = new TrovoChatSpellViewModel(message);
+
+                    CommandParametersModel parameters = new CommandParametersModel(user, spell.GetSpecialIdentifiers());
+
+                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoSpellCast, parameters);
+
+                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertTrovoSpellFormat, user.DisplayName, spell.Name, spell.ValueTotal, spell.ValueType), ChannelSession.Settings.AlertTrovoSpellCastColor));
+                }
 
                 if (TrovoChatMessageViewModel.ApplicableMessageTypes.Contains(message.type) && !string.IsNullOrEmpty(message.content))
                 {

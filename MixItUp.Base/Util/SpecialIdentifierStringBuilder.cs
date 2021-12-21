@@ -29,6 +29,8 @@ namespace MixItUp.Base.Util
         public const string SpecialIdentifierNumberRegexPattern = "\\d+";
         public const string SpecialIdentifierNumberRangeRegexPattern = "\\d+:\\d+";
 
+        public const string StreamingPlatformSpecialIdentifier = "streamingplatform";
+
         public const string TopSpecialIdentifierHeader = "top";
         public const string TopTimeSpecialIdentifier = TopSpecialIdentifierHeader + "time";
         public const string TopTimeRegexSpecialIdentifier = TopSpecialIdentifierHeader + "\\d+time";
