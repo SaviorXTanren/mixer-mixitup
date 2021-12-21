@@ -113,10 +113,6 @@ namespace MixItUp.Base.Services.Glimesh
 
         public async Task<IEnumerable<UserFollowModel>> GetUsersFollowed(string username) { return await AsyncRunner.RunAsync(this.Connection.Users.GetUsersFollowed(username)); }
 
-        public async Task<IEnumerable<UserSubscriptionModel>> GetSubscribedUsers(string username) { return await AsyncRunner.RunAsync(this.Connection.Users.GetSubscribedUsers(username)); }
-
-        public async Task<IEnumerable<UserSubscriptionModel>> GetUsersSubscribedTo(string username) { return await AsyncRunner.RunAsync(this.Connection.Users.GetUsersSubscribedTo(username)); }
-
         public async Task<ChannelModel> GetChannelByID(string channelID) { return await AsyncRunner.RunAsync(this.Connection.Channel.GetChannelByID(channelID)); }
 
         public async Task<ChannelModel> GetChannelByName(string username) { return await AsyncRunner.RunAsync(this.Connection.Channel.GetChannelByName(username)); }
