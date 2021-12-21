@@ -1439,11 +1439,38 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Channel Followed.
+        /// </summary>
+        public static string ChannelFollowed {
+            get {
+                return ResourceManager.GetString("ChannelFollowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Channel Hosted.
+        /// </summary>
+        public static string ChannelHosted {
+            get {
+                return ResourceManager.GetString("ChannelHosted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Channel Info.
         /// </summary>
         public static string ChannelInfo {
             get {
                 return ResourceManager.GetString("ChannelInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Channel Mass Subscriptions Gifted.
+        /// </summary>
+        public static string ChannelMassSubscriptionsGifted {
+            get {
+                return ResourceManager.GetString("ChannelMassSubscriptionsGifted", resourceCulture);
             }
         }
         
@@ -1534,6 +1561,69 @@ namespace MixItUp.Base {
         public static string ChannelPointsRewardMaxPerUser {
             get {
                 return ResourceManager.GetString("ChannelPointsRewardMaxPerUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Channel Raided.
+        /// </summary>
+        public static string ChannelRaided {
+            get {
+                return ResourceManager.GetString("ChannelRaided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Channel Resubscribed.
+        /// </summary>
+        public static string ChannelResubscribed {
+            get {
+                return ResourceManager.GetString("ChannelResubscribed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Channel Stream Start.
+        /// </summary>
+        public static string ChannelStreamStart {
+            get {
+                return ResourceManager.GetString("ChannelStreamStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Channel Stream Stop.
+        /// </summary>
+        public static string ChannelStreamStop {
+            get {
+                return ResourceManager.GetString("ChannelStreamStop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Channel Subscribed.
+        /// </summary>
+        public static string ChannelSubscribed {
+            get {
+                return ResourceManager.GetString("ChannelSubscribed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Channel Subscription Gifted.
+        /// </summary>
+        public static string ChannelSubscriptionGifted {
+            get {
+                return ResourceManager.GetString("ChannelSubscriptionGifted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Channel Unfollowed.
+        /// </summary>
+        public static string ChannelUnfollowed {
+            get {
+                return ResourceManager.GetString("ChannelUnfollowed", resourceCulture);
             }
         }
         
@@ -7186,6 +7276,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Glimesh Channel Followed.
+        /// </summary>
+        public static string GlimeshChannelFollowed {
+            get {
+                return ResourceManager.GetString("GlimeshChannelFollowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Glimesh Channel Stream Start.
+        /// </summary>
+        public static string GlimeshChannelStreamStart {
+            get {
+                return ResourceManager.GetString("GlimeshChannelStreamStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Glimesh Channel Stream Stop.
+        /// </summary>
+        public static string GlimeshChannelStreamStop {
+            get {
+                return ResourceManager.GetString("GlimeshChannelStreamStop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Global Mod.
         /// </summary>
         public static string GlobalMod {
@@ -8739,6 +8856,26 @@ namespace MixItUp.Base {
         public static string Map {
             get {
                 return ResourceManager.GetString("Map", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mass Gifted Subs Filter Amount.
+        /// </summary>
+        public static string MassGiftedSubsFilterAmount {
+            get {
+                return ResourceManager.GetString("MassGiftedSubsFilterAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This option helps to ensure that only the regular Subscription Gifted OR Mass Subscription Gifted event commands are run depending on what the number is set to. This is designed to help reduce the spam of subscription gifted commands and provide a better experience for your stream. Note that this will cause the processing of Subscription Gifted &amp; Mass Subscription Gifted event commands to be slightly delayed, typically less than 10 seconds.
+        ///
+        ///This setting also only applies to streaming platforms that suppo [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string MassGiftedSubsFilterAmountTooltip {
+            get {
+                return ResourceManager.GetString("MassGiftedSubsFilterAmountTooltip", resourceCulture);
             }
         }
         
@@ -15464,6 +15601,60 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Trovo Channel Followed.
+        /// </summary>
+        public static string TrovoChannelFollowed {
+            get {
+                return ResourceManager.GetString("TrovoChannelFollowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trovo Channel Mass Subscriptions Gifted.
+        /// </summary>
+        public static string TrovoChannelMassSubscriptionsGifted {
+            get {
+                return ResourceManager.GetString("TrovoChannelMassSubscriptionsGifted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trovo Channel Raided.
+        /// </summary>
+        public static string TrovoChannelRaided {
+            get {
+                return ResourceManager.GetString("TrovoChannelRaided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trovo Channel Resubscribed.
+        /// </summary>
+        public static string TrovoChannelResubscribed {
+            get {
+                return ResourceManager.GetString("TrovoChannelResubscribed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trovo Channel Subscribed.
+        /// </summary>
+        public static string TrovoChannelSubscribed {
+            get {
+                return ResourceManager.GetString("TrovoChannelSubscribed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trovo Channel Subscription Gifted.
+        /// </summary>
+        public static string TrovoChannelSubscriptionGifted {
+            get {
+                return ResourceManager.GetString("TrovoChannelSubscriptionGifted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tweet Image URL (Optional).
         /// </summary>
         public static string TweetImageURL {
@@ -15830,26 +16021,6 @@ namespace MixItUp.Base {
         public static string TwitchID {
             get {
                 return ResourceManager.GetString("TwitchID", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Twitch Mass Gifted Subs Filter Amount.
-        /// </summary>
-        public static string TwitchMassGiftedSubsFilterAmount {
-            get {
-                return ResourceManager.GetString("TwitchMassGiftedSubsFilterAmount", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to This option helps to ensure that only the regular Subscription Gifted OR Mass Subscription Gifted event command is run depending on what the number is set to. This is designed to help reduce the spam of subscription gifted commands and provide a better experience for your stream. Note that this will cause the processing of Subscription Gifted &amp; Mass Subscription Gifted event commands to be slightly delayed, typically less than 10 seconds.
-        ///
-        ///For example, if this option is enabled and amount is set to 5, the [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string TwitchMassGiftedSubsFilterAmountTooltip {
-            get {
-                return ResourceManager.GetString("TwitchMassGiftedSubsFilterAmountTooltip", resourceCulture);
             }
         }
         

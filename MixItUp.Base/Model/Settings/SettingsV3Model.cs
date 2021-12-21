@@ -182,6 +182,8 @@ namespace MixItUp.Base.Model.Settings
         public bool UnlockAllCommands { get; set; }
         [DataMember]
         public CommandServiceLockTypeEnum CommandServiceLockType { get; set; } = CommandServiceLockTypeEnum.PerCommandType;
+        [DataMember]
+        public int MassGiftedSubsFilterAmount { get; set; } = 1;
 
         [DataMember]
         public RequirementErrorCooldownTypeEnum RequirementErrorsCooldownType { get; set; } = RequirementErrorCooldownTypeEnum.Default;
@@ -190,6 +192,7 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool IncludeUsernameWithRequirementErrors { get; set; }
 
+        [Obsolete]
         [DataMember]
         public int TwitchMassGiftedSubsFilterAmount { get; set; } = 1;
         [DataMember]

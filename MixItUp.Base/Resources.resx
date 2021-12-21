@@ -2577,11 +2577,13 @@
   <data name="HideUserSubscriberBadge" xml:space="preserve">
     <value>Hide User Subscriber Badge</value>
   </data>
-  <data name="TwitchMassGiftedSubsFilterAmount" xml:space="preserve">
-    <value>Twitch Mass Gifted Subs Filter Amount</value>
+  <data name="MassGiftedSubsFilterAmount" xml:space="preserve">
+    <value>Mass Gifted Subs Filter Amount</value>
   </data>
-  <data name="TwitchMassGiftedSubsFilterAmountTooltip" xml:space="preserve">
-    <value>This option helps to ensure that only the regular Subscription Gifted OR Mass Subscription Gifted event command is run depending on what the number is set to. This is designed to help reduce the spam of subscription gifted commands and provide a better experience for your stream. Note that this will cause the processing of Subscription Gifted &amp; Mass Subscription Gifted event commands to be slightly delayed, typically less than 10 seconds.
+  <data name="MassGiftedSubsFilterAmountTooltip" xml:space="preserve">
+    <value>This option helps to ensure that only the regular Subscription Gifted OR Mass Subscription Gifted event commands are run depending on what the number is set to. This is designed to help reduce the spam of subscription gifted commands and provide a better experience for your stream. Note that this will cause the processing of Subscription Gifted &amp; Mass Subscription Gifted event commands to be slightly delayed, typically less than 10 seconds.
+
+This setting also only applies to streaming platforms that support gifting multiple subscriptions at the same time. Streaming platforms that only support gifting individual subscriptions will not take advantage of this setting and will only use the regular Subscription Gifted event command.
 
 For example, if this option is enabled and amount is set to 5, then any time 5 OR LESS subscriptions are gifted at once, it will ONLY run the regular Subscription Gifted event command for each subscription. If MORE THAN 5 are gifted, then it will ONLY run the Mass Subscriptions Gifted event command once.</value>
   </data>
@@ -6080,5 +6082,62 @@ Failure to do one of the following could effect how users rate &amp; review your
   </data>
   <data name="YouTubeActionUnableToRunAdBreak" xml:space="preserve">
     <value>ERROR: We were unable to run an ad break, please try again later</value>
+  </data>
+  <data name="GlimeshChannelFollowed" xml:space="preserve">
+    <value>Glimesh Channel Followed</value>
+  </data>
+  <data name="GlimeshChannelStreamStart" xml:space="preserve">
+    <value>Glimesh Channel Stream Start</value>
+  </data>
+  <data name="GlimeshChannelStreamStop" xml:space="preserve">
+    <value>Glimesh Channel Stream Stop</value>
+  </data>
+  <data name="TrovoChannelFollowed" xml:space="preserve">
+    <value>Trovo Channel Followed</value>
+  </data>
+  <data name="TrovoChannelMassSubscriptionsGifted" xml:space="preserve">
+    <value>Trovo Channel Mass Subscriptions Gifted</value>
+  </data>
+  <data name="TrovoChannelRaided" xml:space="preserve">
+    <value>Trovo Channel Raided</value>
+  </data>
+  <data name="TrovoChannelResubscribed" xml:space="preserve">
+    <value>Trovo Channel Resubscribed</value>
+  </data>
+  <data name="TrovoChannelSubscribed" xml:space="preserve">
+    <value>Trovo Channel Subscribed</value>
+  </data>
+  <data name="TrovoChannelSubscriptionGifted" xml:space="preserve">
+    <value>Trovo Channel Subscription Gifted</value>
+  </data>
+  <data name="ChannelFollowed" xml:space="preserve">
+    <value>Channel Followed</value>
+  </data>
+  <data name="ChannelHosted" xml:space="preserve">
+    <value>Channel Hosted</value>
+  </data>
+  <data name="ChannelMassSubscriptionsGifted" xml:space="preserve">
+    <value>Channel Mass Subscriptions Gifted</value>
+  </data>
+  <data name="ChannelRaided" xml:space="preserve">
+    <value>Channel Raided</value>
+  </data>
+  <data name="ChannelResubscribed" xml:space="preserve">
+    <value>Channel Resubscribed</value>
+  </data>
+  <data name="ChannelStreamStart" xml:space="preserve">
+    <value>Channel Stream Start</value>
+  </data>
+  <data name="ChannelStreamStop" xml:space="preserve">
+    <value>Channel Stream Stop</value>
+  </data>
+  <data name="ChannelSubscribed" xml:space="preserve">
+    <value>Channel Subscribed</value>
+  </data>
+  <data name="ChannelSubscriptionGifted" xml:space="preserve">
+    <value>Channel Subscription Gifted</value>
+  </data>
+  <data name="ChannelUnfollowed" xml:space="preserve">
+    <value>Channel Unfollowed</value>
   </data>
 </root>

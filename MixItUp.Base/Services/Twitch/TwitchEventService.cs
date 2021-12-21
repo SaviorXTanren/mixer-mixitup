@@ -414,9 +414,9 @@ namespace MixItUp.Base.Services.Twitch
         {
             massGiftedSubEvent.Gifter.TotalSubsGifted = (uint)massGiftedSubEvent.LifetimeGifted;
 
-            if (ChannelSession.Settings.TwitchMassGiftedSubsFilterAmount > 0)
+            if (ChannelSession.Settings.MassGiftedSubsFilterAmount > 0)
             {
-                if (massGiftedSubEvent.TotalGifted > ChannelSession.Settings.TwitchMassGiftedSubsFilterAmount)
+                if (massGiftedSubEvent.TotalGifted > ChannelSession.Settings.MassGiftedSubsFilterAmount)
                 {
                     lock (this.newMassGiftedSubTracker)
                     {
@@ -649,7 +649,7 @@ namespace MixItUp.Base.Services.Twitch
             }
 
             TwitchGiftedSubEventModel giftedSubEvent = new TwitchGiftedSubEventModel(gifter, receiver, packet);
-            if (ChannelSession.Settings.TwitchMassGiftedSubsFilterAmount > 0)
+            if (ChannelSession.Settings.MassGiftedSubsFilterAmount > 0)
             {
                 lock (this.newGiftedSubTracker)
                 {

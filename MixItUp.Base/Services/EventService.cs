@@ -15,21 +15,22 @@ namespace MixItUp.Base.Services
 {
     public enum EventTypeEnum
     {
-        // General Events
         None = 0,
 
         // Platform-agnostic = 1
 
-        //ChannelStreamStart = 1,
-        //ChannelStreamStop = 2,
-        //ChannelHosted = 3,
+        ChannelStreamStart = 1,
+        ChannelStreamStop = 2,
+        ChannelHosted = 3,
+        ChannelRaided = 4,
 
-        //ChannelFollowed = 10,
-        //ChannelUnfollowed = 11,
+        ChannelFollowed = 10,
+        ChannelUnfollowed = 11,
 
-        //ChannelSubscribed = 20,
-        //ChannelResubscribed = 21,
-        //ChannelSubscriptionGifted = 22,
+        ChannelSubscribed = 20,
+        ChannelResubscribed = 21,
+        ChannelSubscriptionGifted = 22,
+        ChannelMassSubscriptionsGifted = 23,
 
         ChatUserFirstJoin = 50,
         ChatUserPurge = 51,
@@ -61,14 +62,6 @@ namespace MixItUp.Base.Services
         TwitchChannelSubscriptionGifted = 222,
         TwitchChannelMassSubscriptionsGifted = 223,
 
-        //TwitchChatUserFirstJoin = 250,
-        //TwitchChatUserPurge = 251,
-        //TwitchChatUserBan = 252,
-        //TwitchChatMessageReceived = 253,
-        //TwitchChatUserJoined = 254,
-        //TwitchChatUserLeft = 255,
-        //TwitchChatMessageDeleted = 256,
-
         TwitchChannelBitsCheered = 270,
         TwitchChannelPointsRedeemed = 271,
 
@@ -81,29 +74,24 @@ namespace MixItUp.Base.Services
 
         // 400 = Trovo
 
-        [Name("Trovo Channel Raided")]
-        TrovoChannelRaided = 203,
+        TrovoChannelStreamStart = 400,
+        TrovoChannelStreamStop = 401,
+        TrovoChannelRaided = 403,
 
-        [Name("Trovo Channel Followed")]
-        TrovoChannelFollowed = 210,
+        TrovoChannelFollowed = 410,
 
-        [Name("Trovo Channel Subscribed")]
-        TrovoChannelSubscribed = 220,
-        [Name("Trovo Channel Resubscribed")]
-        TrovoChannelResubscribed = 221,
-        [Name("Trovo Channel Subscription Gifted")]
-        TrovoChannelSubscriptionGifted = 222,
-        [Name("Trovo Channel Mass Subscriptions Gifted")]
-        TrovoChannelMassSubscriptionsGifted = 223,
+        TrovoChannelSubscribed = 420,
+        TrovoChannelResubscribed = 421,
+        TrovoChannelSubscriptionGifted = 422,
+        TrovoChannelMassSubscriptionsGifted = 423,
+
+        TrovoSpellCast = 470,
 
         // 500 = Glimesh
 
-        [Name("Glimesh Channel Stream Start")]
         GlimeshChannelStreamStart = 500,
-        [Name("Glimesh Channel Stream Stop")]
         GlimeshChannelStreamStop = 501,
 
-        [Name("Glimesh Channel Followed")]
         GlimeshChannelFollowed = 510,
 
         // External Services = 1000

@@ -358,6 +358,7 @@ namespace MixItUp.Base.Services
                 }
 
 #pragma warning disable CS0612 // Type or member is obsolete
+                settings.MassGiftedSubsFilterAmount = settings.TwitchMassGiftedSubsFilterAmount;
                 settings.ModerationFilteredWordsExcemptUserRole = UserRoles.ConvertFromOldRole(settings.ModerationFilteredWordsExcempt);
                 settings.ModerationChatTextExcemptUserRole = UserRoles.ConvertFromOldRole(settings.ModerationChatTextExcempt);
                 settings.ModerationBlockLinksExcemptUserRole = UserRoles.ConvertFromOldRole(settings.ModerationBlockLinksExcempt);

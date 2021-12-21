@@ -15,13 +15,13 @@ namespace MixItUp.Base.ViewModel.Settings
         public GenericToggleSettingsOptionControlViewModel AllowCommandWhispering { get; set; }
         public GenericToggleSettingsOptionControlViewModel IgnoreBotAccount { get; set; }
         public GenericToggleSettingsOptionControlViewModel DeleteChatCommandsWhenRun { get; set; }
+        public GenericToggleNumberSettingsOptionControlViewModel MassGiftedSubsFilterAmount { get; set; }
         public GenericComboBoxSettingsOptionControlViewModel<CommandServiceLockTypeEnum> CommandLockSystem { get; set; }
 
         public GenericComboBoxSettingsOptionControlViewModel<RequirementErrorCooldownTypeEnum> RequirementErrorsCooldownType { get; set; }
         public GenericNumberSettingsOptionControlViewModel RequirementErrorsCooldownAmount { get; set; }
         public GenericToggleSettingsOptionControlViewModel IncludeUsernameWithRequirementErrors { get; set; }
 
-        public GenericToggleNumberSettingsOptionControlViewModel TwitchMassGiftedSubsFilterAmount { get; set; }
         public GenericToggleSettingsOptionControlViewModel TwitchReplyToCommandChatMessages { get; set; }
 
         public ThreadSafeObservableCollection<GenericToggleSettingsOptionControlViewModel> HideActionsList { get; set; } = new ThreadSafeObservableCollection<GenericToggleSettingsOptionControlViewModel>();
@@ -34,6 +34,8 @@ namespace MixItUp.Base.ViewModel.Settings
                 ChannelSession.Settings.IgnoreBotAccountCommands, (value) => { ChannelSession.Settings.IgnoreBotAccountCommands = value; });
             this.DeleteChatCommandsWhenRun = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.DeleteChatCommandsWhenRun,
                 ChannelSession.Settings.DeleteChatCommandsWhenRun, (value) => { ChannelSession.Settings.DeleteChatCommandsWhenRun = value; });
+            this.MassGiftedSubsFilterAmount = new GenericToggleNumberSettingsOptionControlViewModel(MixItUp.Base.Resources.MassGiftedSubsFilterAmount, ChannelSession.Settings.MassGiftedSubsFilterAmount,
+                (value) => { ChannelSession.Settings.MassGiftedSubsFilterAmount = value; }, MixItUp.Base.Resources.MassGiftedSubsFilterAmountTooltip);
             this.CommandLockSystem = new GenericComboBoxSettingsOptionControlViewModel<CommandServiceLockTypeEnum>(MixItUp.Base.Resources.CommandLockSystem, EnumHelper.GetEnumList<CommandServiceLockTypeEnum>(),
                 ChannelSession.Settings.CommandServiceLockType, (value) => { ChannelSession.Settings.CommandServiceLockType = value; }, MixItUp.Base.Resources.CommandLockSystemTooltip);
 
@@ -44,8 +46,6 @@ namespace MixItUp.Base.ViewModel.Settings
             this.IncludeUsernameWithRequirementErrors = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.IncludeUsernameWithRequirementErrors,
                 ChannelSession.Settings.IncludeUsernameWithRequirementErrors, (value) => { ChannelSession.Settings.IncludeUsernameWithRequirementErrors = value; });
 
-            this.TwitchMassGiftedSubsFilterAmount = new GenericToggleNumberSettingsOptionControlViewModel(MixItUp.Base.Resources.TwitchMassGiftedSubsFilterAmount, ChannelSession.Settings.TwitchMassGiftedSubsFilterAmount,
-                (value) => { ChannelSession.Settings.TwitchMassGiftedSubsFilterAmount = value; }, MixItUp.Base.Resources.TwitchMassGiftedSubsFilterAmountTooltip);
             this.TwitchReplyToCommandChatMessages = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.TwitchReplyToCommandChatMessages, ChannelSession.Settings.TwitchReplyToCommandChatMessages,
                 (value) => { ChannelSession.Settings.TwitchReplyToCommandChatMessages = value; });
 
