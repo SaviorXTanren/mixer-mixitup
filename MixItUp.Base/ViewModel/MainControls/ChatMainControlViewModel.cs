@@ -10,6 +10,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Model;
+using MixItUp.Base.Services.Trovo;
 
 namespace MixItUp.Base.ViewModel.MainControls
 {
@@ -91,8 +92,8 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             await base.OnLoadedInternal();
 
-            ServiceManager.Get<ChatService>().DisplayUsersUpdated += ChatService_DisplayUsersUpdated;
-            this.DisplayUsers = ServiceManager.Get<ChatService>().DisplayUsers;
+            ServiceManager.Get<UserService>().DisplayUsersUpdated += ChatService_DisplayUsersUpdated;
+            this.DisplayUsers = ServiceManager.Get<UserService>().DisplayUsers;
 
             this.Messages.CollectionChanged += Messages_CollectionChanged;
 
@@ -114,20 +115,26 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         private void RefreshNumbers()
         {
+            int viewerCount = 0;
             if (ServiceManager.Get<TwitchSessionService>().IsConnected && ServiceManager.Get<TwitchSessionService>().StreamIsLive)
             {
-                this.ViewersCount = (int)ServiceManager.Get<TwitchSessionService>().Stream.viewer_count;
+                viewerCount += (int)ServiceManager.Get<TwitchSessionService>().Stream.viewer_count;
             }
-            else if (ServiceManager.Get<GlimeshSessionService>().IsConnected && ServiceManager.Get<GlimeshSessionService>().Channel?.stream != null)
+            if (ServiceManager.Get<TrovoSessionService>().IsConnected && ServiceManager.Get<TrovoSessionService>().Channel?.is_live == true)
             {
-                this.ViewersCount = ServiceManager.Get<GlimeshSessionService>().Channel?.stream?.countViewers ?? 0;
+                viewerCount += (int)ServiceManager.Get<TrovoSessionService>().Channel.current_viewers;
             }
-            this.ChattersCount = ServiceManager.Get<ChatService>().AllUsers.Count;
+            if (ServiceManager.Get<GlimeshSessionService>().IsConnected && ServiceManager.Get<GlimeshSessionService>().Channel?.stream != null)
+            {
+                viewerCount += ServiceManager.Get<GlimeshSessionService>().Channel?.stream?.countViewers ?? 0;
+            }
+
+            this.ChattersCount = ServiceManager.Get<UserService>().ActiveUserCount;
         }
 
         private void ChatService_DisplayUsersUpdated(object sender, EventArgs e)
         {
-            this.DisplayUsers = ServiceManager.Get<ChatService>().DisplayUsers;
+            this.DisplayUsers = ServiceManager.Get<UserService>().DisplayUsers;
             this.NotifyPropertyChanged("DisplayUsers");
         }
     }

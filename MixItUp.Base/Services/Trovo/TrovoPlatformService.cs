@@ -99,7 +99,9 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task<UserModel> GetUserByName(string username) { return await AsyncRunner.RunAsync(this.Connection.Users.GetUser(username)); }
 
-        public async Task<IEnumerable<ChannelSubscriberModel>> GetSubscribers(string channelID, int maxResults = 1, int offset = 0) { return await AsyncRunner.RunAsync(this.Connection.Channels.GetSubscribers(channelID, maxResults, offset, "desc")); }
+        public async Task<IEnumerable<ChannelFollowerModel>> GetFollowers(string channelID, int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.Channels.GetFollowers(channelID, maxResults)); }
+
+        public async Task<IEnumerable<ChannelSubscriberModel>> GetSubscribers(string channelID, int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.Channels.GetSubscribers(channelID, maxResults)); }
 
         public async Task<PrivateChannelModel> GetCurrentChannel() { return await AsyncRunner.RunAsync(this.Connection.Channels.GetCurrentChannel()); }
 
@@ -114,5 +116,7 @@ namespace MixItUp.Base.Services.Trovo
         public async Task<string> GetChatToken(string channelID) { return await AsyncRunner.RunAsync(this.Connection.Chat.GetToken(channelID)); }
 
         public async Task<ChatEmotePackageModel> GetEmotes(string channelID) { return await AsyncRunner.RunAsync(this.Connection.Chat.GetEmotes(new List<string>() { channelID })); }
+
+        public async Task<ChatViewersModel> GetViewers(string channelID, int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.Chat.GetViewers(channelID)); }
     }
 }

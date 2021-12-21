@@ -33,10 +33,15 @@ namespace MixItUp.Base.Services.Trovo
         private ChatClient userClient;
         private ChatClient botClient;
 
+        private CancellationTokenSource cancellationTokenSource;
+
         private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
 
         private HashSet<string> messagesProcessed = new HashSet<string>();
         private Dictionary<Guid, int> userSubsGiftedInstanced = new Dictionary<Guid, int>();
+
+        private HashSet<string> currentViewers = new HashSet<string>();
+        private HashSet<string> previousViewers = new HashSet<string>();
 
         public TrovoChatEventService() { }
 
@@ -57,6 +62,8 @@ namespace MixItUp.Base.Services.Trovo
                 {
                     try
                     {
+                        this.cancellationTokenSource = new CancellationTokenSource();
+
                         this.userClient = new ChatClient(ServiceManager.Get<TrovoSessionService>().UserConnection.Connection);
 
                         string token = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetChatToken();
@@ -105,6 +112,10 @@ namespace MixItUp.Base.Services.Trovo
                             return new Result("Failed to connect to Trovo chat servers");
                         }
 
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        AsyncRunner.RunAsyncBackground(this.ChatterJoinLeaveBackground, this.cancellationTokenSource.Token, 5000);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
                         return new Result();
                     }
                     catch (Exception ex)
@@ -133,6 +144,12 @@ namespace MixItUp.Base.Services.Trovo
                     this.userClient.OnChatMessageReceived -= UserClient_OnChatMessageReceived;
 
                     await this.userClient.Disconnect();
+                }
+
+                if (this.cancellationTokenSource != null)
+                {
+                    this.cancellationTokenSource.Cancel();
+                    this.cancellationTokenSource = null;
                 }
             }
             catch (Exception ex)
@@ -484,6 +501,53 @@ namespace MixItUp.Base.Services.Trovo
                 {
                     await ServiceManager.Get<ChatService>().AddMessage(new TrovoChatMessageViewModel(message, user));
                 }
+            }
+        }
+
+        private async Task ChatterJoinLeaveBackground(CancellationToken cancellationToken)
+        {
+            ChatViewersModel viewers = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetViewers(ServiceManager.Get<TrovoSessionService>().Channel.channel_id);
+            if (viewers != null)
+            {
+                List<UserV2ViewModel> userJoins = new List<UserV2ViewModel>();
+                List<UserV2ViewModel> userLeaves = new List<UserV2ViewModel>();
+
+                foreach (string viewer in viewers.all.viewers)
+                {
+                    currentViewers.Add(viewer);
+
+                    if (!previousViewers.Contains(viewer))
+                    {
+                        UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Trovo, viewer);
+                        if (user != null)
+                        {
+                            userJoins.Add(user);
+                        }
+                    }
+                }
+
+                await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(userJoins);
+
+                foreach (string viewer in previousViewers)
+                {
+                    if (!currentViewers.Contains(viewer))
+                    {
+                        UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Trovo, viewer);
+                        if (user != null)
+                        {
+                            userLeaves.Add(user);
+                        }
+                    }
+                }
+
+                await ServiceManager.Get<UserService>().RemoveActiveUsers(userLeaves);
+
+                previousViewers.Clear();
+                foreach (string viewer in currentViewers)
+                {
+                    previousViewers.Add(viewer);
+                }
+                currentViewers.Clear();
             }
         }
 

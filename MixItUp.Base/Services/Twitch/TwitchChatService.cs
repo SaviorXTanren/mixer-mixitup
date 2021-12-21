@@ -213,8 +213,6 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     try
                     {
-                        this.cancellationTokenSource = new CancellationTokenSource();
-
                         this.botClient = new ChatClient(ServiceManager.Get<TwitchSessionService>().BotConnection.Connection);
 
                         if (ChannelSession.AppSettings.DiagnosticLogging)
@@ -509,11 +507,11 @@ namespace MixItUp.Base.Services.Twitch
                     UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, username, performPlatformSearch: true);
                     if (user != null)
                     {
-                        await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
                         processedUsers.Add(user);
                     }
                 }
-                await ServiceManager.Get<ChatService>().UsersJoined(processedUsers);
+
+                await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(processedUsers);
             }
 
             List<string> leavesToProcess = new List<string>();
@@ -535,14 +533,14 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     if (!string.IsNullOrEmpty(username))
                     {
-                        UserV2ViewModel user = await ServiceManager.Get<UserService>().RemoveActiveUser(StreamingPlatformTypeEnum.Twitch, username);
+                        UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, username);
                         if (user != null)
                         {
                             processedUsers.Add(user);
                         }
                     }
                 }
-                await ServiceManager.Get<ChatService>().UsersLeft(processedUsers);
+                await ServiceManager.Get<UserService>().RemoveActiveUsers(processedUsers);
             }
         }
 

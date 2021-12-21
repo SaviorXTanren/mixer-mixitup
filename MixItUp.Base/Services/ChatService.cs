@@ -53,21 +53,6 @@ namespace MixItUp.Base.Services
         public ThreadSafeObservableCollection<ChatMessageViewModel> Messages { get; private set; } = new ThreadSafeObservableCollection<ChatMessageViewModel>();
         private LockedDictionary<string, ChatMessageViewModel> messagesLookup = new LockedDictionary<string, ChatMessageViewModel>();
 
-        public LockedDictionary<Guid, UserV2ViewModel> AllUsers { get; private set; } = new LockedDictionary<Guid, UserV2ViewModel>();
-        public IEnumerable<UserV2ViewModel> DisplayUsers
-        {
-            get
-            {
-                lock (displayUsersLock)
-                {
-                    return this.displayUsers.Values.ToList().Take(ChannelSession.Settings.MaxUsersShownInChat);
-                }
-            }
-        }
-        public event EventHandler DisplayUsersUpdated = delegate { };
-        private SortedList<string, UserV2ViewModel> displayUsers = new SortedList<string, UserV2ViewModel>();
-        private object displayUsersLock = new object();
-
         public event EventHandler ChatCommandsReprocessed = delegate { };
         public IEnumerable<CommandModelBase> ChatMenuCommands { get { return this.chatMenuCommands.ToList(); } }
         private List<CommandModelBase> chatMenuCommands = new List<CommandModelBase>();
@@ -652,65 +637,6 @@ namespace MixItUp.Base.Services
             this.messagesLookup.Remove(message.ID);
             this.Messages.Remove(message);
             return Task.CompletedTask;
-        }
-
-        public async Task UsersJoined(IEnumerable<UserV2ViewModel> users)
-        {
-            List<AlertChatMessageViewModel> alerts = new List<AlertChatMessageViewModel>();
-
-            foreach (UserV2ViewModel user in users)
-            {
-                this.AllUsers[user.ID] = user;
-                lock (displayUsersLock)
-                {
-                    this.displayUsers[user.SortableID] = user;
-                }
-
-                if (users.Count() < 5)
-                {
-                    alerts.Add(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.UserJoinedChat, user.FullDisplayName), ChannelSession.Settings.AlertUserJoinLeaveColor));
-                }
-            }
-            this.DisplayUsersUpdated(this, new EventArgs());
-
-            foreach (AlertChatMessageViewModel alert in alerts)
-            {
-                await ServiceManager.Get<AlertsService>().AddAlert(alert);
-            }
-        }
-
-        public async Task UsersLeft(IEnumerable<UserV2ViewModel> users)
-        {
-            List<AlertChatMessageViewModel> alerts = new List<AlertChatMessageViewModel>();
-
-            foreach (UserV2ViewModel user in users)
-            {
-                if (this.AllUsers.Remove(user.ID))
-                {
-                    lock (displayUsersLock)
-                    {
-                        if (!this.displayUsers.Remove(user.SortableID))
-                        {
-                            int index = this.displayUsers.IndexOfValue(user);
-                            if (index >= 0)
-                            {
-                                this.displayUsers.RemoveAt(index);
-                            }
-                        }
-                    }
-
-                    if (users.Count() < 5)
-                    {
-                        alerts.Add(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.UserLeftChat, user.FullDisplayName), ChannelSession.Settings.AlertUserJoinLeaveColor));
-                    }
-                }
-            }
-            this.DisplayUsersUpdated(this, new EventArgs());
-
-            foreach (AlertChatMessageViewModel alert in alerts)
-            {
-                await ServiceManager.Get<AlertsService>().AddAlert(alert);
-            }
         }
 
         public async Task WriteToChatEventLog(ChatMessageViewModel message)

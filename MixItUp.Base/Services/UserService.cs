@@ -7,6 +7,7 @@ using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,23 @@ namespace MixItUp.Base.Services
         private Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>> platformUsernameLookups { get; set; } = new Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>>();
 
         private Dictionary<Guid, UserV2ViewModel> activeUsers = new Dictionary<Guid, UserV2ViewModel>();
+
+        public int ActiveUserCount { get { return this.activeUsers.Count; } }
+
+        public IEnumerable<UserV2ViewModel> DisplayUsers
+        {
+            get
+            {
+                lock (displayUsersLock)
+                {
+                    return this.displayUsers.Values.ToList().Take(ChannelSession.Settings.MaxUsersShownInChat);
+                }
+            }
+        }
+        private SortedList<string, UserV2ViewModel> displayUsers = new SortedList<string, UserV2ViewModel>();
+        private object displayUsersLock = new object();
+
+        public event EventHandler DisplayUsersUpdated = delegate { };
 
         private bool fullUserDataLoadOccurred = false;
 
@@ -342,37 +360,67 @@ namespace MixItUp.Base.Services
 
         public bool IsUserActive(Guid userID) { return this.GetActiveUserByID(userID) != null; }
 
+        public async Task AddOrUpdateActiveUser(IEnumerable<UserV2ViewModel> users)
+        {
+            List<AlertChatMessageViewModel> alerts = new List<AlertChatMessageViewModel>();
+
+            foreach (UserV2ViewModel user in users)
+            {
+                if (user == null || user.ID == Guid.Empty)
+                {
+                    return;
+                }
+
+                bool newUser = !this.activeUsers.ContainsKey(user.ID);
+
+                this.SetUserData(user.Model);
+                this.activeUsers[user.ID] = user;
+
+                lock (displayUsersLock)
+                {
+                    this.displayUsers[user.SortableID] = user;
+                }
+
+                // TODO
+                // Add IgnoreForQueries logic
+
+                if (newUser)
+                {
+                    if (user.OnlineViewingMinutes == 0)
+                    {
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserFirstJoin, new CommandParametersModel(user));
+                    }
+
+                    CommandParametersModel parameters = new CommandParametersModel(user);
+                    if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.ChatUserJoined, parameters))
+                    {
+                        user.UpdateLastActivity();
+                        user.Model.TotalStreamsWatched++;
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserJoined, parameters);
+                    }
+                }
+
+                if (users.Count() < 5)
+                {
+                    alerts.Add(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.UserJoinedChat, user.FullDisplayName), ChannelSession.Settings.AlertUserJoinLeaveColor));
+                }
+            }
+
+            this.DisplayUsersUpdated(this, new EventArgs());
+
+            foreach (AlertChatMessageViewModel alert in alerts)
+            {
+                await ServiceManager.Get<AlertsService>().AddAlert(alert);
+            }
+        }
+
         public async Task AddOrUpdateActiveUser(UserV2ViewModel user)
         {
             if (user == null || user.ID == Guid.Empty)
             {
                 return;
             }
-
-            bool newUser = !this.activeUsers.ContainsKey(user.ID);
-
-            this.SetUserData(user.Model);
-            this.activeUsers[user.ID] = user;
-
-            // TODO
-            // Add IgnoreForQueries logic
-
-            if (newUser)
-            {
-                if (user.OnlineViewingMinutes == 0)
-                {
-                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserFirstJoin, new CommandParametersModel(user));
-                }
-
-                // TODO
-                //CommandParametersModel parameters = new CommandParametersModel(user);
-                //if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.ChatUserJoined, parameters))
-                //{
-                //    user.UpdateLastActivity();
-                //    user.Model.TotalStreamsWatched++;
-                //    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserJoined, parameters);
-                //}
-            }
+            await this.AddOrUpdateActiveUser(new List<UserV2ViewModel>() { user });
         }
 
         public async Task<UserV2ViewModel> RemoveActiveUser(StreamingPlatformTypeEnum platform, string platformUsername)
@@ -398,11 +446,46 @@ namespace MixItUp.Base.Services
         {
             if (user != null && this.activeUsers.ContainsKey(user.ID))
             {
-                this.activeUsers.Remove(user.ID);
-
-                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserLeft, new CommandParametersModel(user));
+                await this.RemoveActiveUsers(new List<UserV2ViewModel>() { user });
             }
             return user;
+        }
+
+        public async Task RemoveActiveUsers(IEnumerable<UserV2ViewModel> users)
+        {
+            List<AlertChatMessageViewModel> alerts = new List<AlertChatMessageViewModel>();
+
+            foreach (UserV2ViewModel user in users)
+            {
+                if (this.activeUsers.Remove(user.ID))
+                {
+                    lock (displayUsersLock)
+                    {
+                        if (!this.displayUsers.Remove(user.SortableID))
+                        {
+                            int index = this.displayUsers.IndexOfValue(user);
+                            if (index >= 0)
+                            {
+                                this.displayUsers.RemoveAt(index);
+                            }
+                        }
+                    }
+
+                    if (users.Count() < 5)
+                    {
+                        alerts.Add(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.UserLeftChat, user.FullDisplayName), ChannelSession.Settings.AlertUserJoinLeaveColor));
+                    }
+
+                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserLeft, new CommandParametersModel(user));
+                }
+            }
+
+            this.DisplayUsersUpdated(this, new EventArgs());
+
+            foreach (AlertChatMessageViewModel alert in alerts)
+            {
+                await ServiceManager.Get<AlertsService>().AddAlert(alert);
+            }
         }
 
         public IEnumerable<UserV2ViewModel> GetActiveUsers(StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
