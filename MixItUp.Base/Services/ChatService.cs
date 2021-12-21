@@ -472,6 +472,10 @@ namespace MixItUp.Base.Services
                             {
                                 await ServiceManager.Get<CommandService>().Queue(message.User.EntranceCommandID, new CommandParametersModel(message.User, message.Platform, message.ToArguments()));
                             }
+                            else
+                            {
+                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatEntranceCommand, new CommandParametersModel(message.User, message.Platform, message.ToArguments()));
+                            }
                         }
 
                         if (!string.IsNullOrEmpty(message.PlainTextMessage))

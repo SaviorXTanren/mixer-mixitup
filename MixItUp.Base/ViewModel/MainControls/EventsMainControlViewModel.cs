@@ -182,6 +182,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             chatCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChatUserJoined));
             chatCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChatUserLeft));
             chatCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChatUserTimeout));
+            chatCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChatEntranceCommand));
             chatCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChatUserBan));
             chatCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChatMessageReceived));
             chatCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChatWhisperReceived));

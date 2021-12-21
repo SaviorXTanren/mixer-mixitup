@@ -40,6 +40,7 @@ namespace MixItUp.Base.Services
         ChatMessageDeleted = 56,
         ChatUserTimeout = 57,
         ChatWhisperReceived = 58,
+        ChatEntranceCommand = 59,
 
         // Twitch = 200
 

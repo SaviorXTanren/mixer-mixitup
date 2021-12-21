@@ -6176,4 +6176,7 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="TrovoSpellCast" xml:space="preserve">
     <value>Trovo Spell Cast</value>
   </data>
+  <data name="ChatEntranceCommand" xml:space="preserve">
+    <value>Chat Entrance Command</value>
+  </data>
 </root>

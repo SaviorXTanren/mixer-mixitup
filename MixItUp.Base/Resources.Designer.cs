@@ -1691,6 +1691,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chat Entrance Command.
+        /// </summary>
+        public static string ChatEntranceCommand {
+            get {
+                return ResourceManager.GetString("ChatEntranceCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chat Message.
         /// </summary>
         public static string ChatMessage {
