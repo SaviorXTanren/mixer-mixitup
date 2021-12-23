@@ -437,7 +437,7 @@ namespace MixItUp.Base.Services
             UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, followerId);
             if (user == null)
             {
-                user = ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(followerId, followerUsername, followerDisplayName));
+                user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(followerId, followerUsername, followerDisplayName));
             }
 
             await ServiceManager.Get<TwitchEventService>().AddFollow(user);

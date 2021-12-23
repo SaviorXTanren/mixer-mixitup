@@ -213,7 +213,14 @@ namespace MixItUp.Base.ViewModel.Accounts
                         }
                     }
 
-                    if (!result.Success)
+                    if (result.Success)
+                    {
+                        if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.None)
+                        {
+                            ChannelSession.Settings.DefaultStreamingPlatform = this.Platform;
+                        }
+                    }
+                    else
                     {
                         this.UserAccountAvatar = null;
                         this.UserAccountUsername = null;

@@ -6179,4 +6179,43 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="ChatEntranceCommand" xml:space="preserve">
     <value>Chat Entrance Command</value>
   </data>
+  <data name="TrovoAdmin" xml:space="preserve">
+    <value>Trovo Admin</value>
+  </data>
+  <data name="TrovoEditor" xml:space="preserve">
+    <value>Trovo Editor</value>
+  </data>
+  <data name="TrovoSuperMod" xml:space="preserve">
+    <value>Trovo Super Mod</value>
+  </data>
+  <data name="TrovoWarden" xml:space="preserve">
+    <value>Trovo Warden</value>
+  </data>
+  <data name="TwitchAffiliate" xml:space="preserve">
+    <value>Twitch Affiliate</value>
+  </data>
+  <data name="TwitchChannelEditor" xml:space="preserve">
+    <value>Twitch Channel Editor</value>
+  </data>
+  <data name="TwitchGlobalMod" xml:space="preserve">
+    <value>Twitch Global Mod</value>
+  </data>
+  <data name="TwitchPartner" xml:space="preserve">
+    <value>Twitch Partner</value>
+  </data>
+  <data name="TwitchStaff" xml:space="preserve">
+    <value>Twitch Staff</value>
+  </data>
+  <data name="TwitchTurbo" xml:space="preserve">
+    <value>Twitch Turbo</value>
+  </data>
+  <data name="TwitchVIP" xml:space="preserve">
+    <value>Twitch VIP</value>
+  </data>
+  <data name="YouTubeMember" xml:space="preserve">
+    <value>YouTube Member</value>
+  </data>
+  <data name="YouTubeSubscriber" xml:space="preserve">
+    <value>YouTube Subscriber</value>
+  </data>
 </root>

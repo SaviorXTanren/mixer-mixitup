@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;

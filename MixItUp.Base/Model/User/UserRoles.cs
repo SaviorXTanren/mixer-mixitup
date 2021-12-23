@@ -24,7 +24,7 @@ namespace MixItUp.Base.Model.User
         [GenericUserRole, TwitchUserRole, TrovoUserRole, GlimeshUserRole]
         Follower = 300,
         [YouTubeUserRole]
-        YouTubeSubscriber = 300,
+        YouTubeSubscriber = 301,
 
         [GenericUserRole, TwitchUserRole, YouTubeUserRole, TrovoUserRole, GlimeshUserRole]
         Regular = 400,
@@ -35,17 +35,17 @@ namespace MixItUp.Base.Model.User
         [GenericUserRole, TwitchUserRole, TrovoUserRole, GlimeshUserRole]
         Subscriber = 600,
         [YouTubeUserRole]
-        YouTubeMember = 600,
+        YouTubeMember = 601,
 
         [TwitchUserRole]
-        TwitchGlobalMod = 700,
+        TwitchGlobalMod = 701,
         [TrovoUserRole]
-        TrovoWarden = 700,
+        TrovoWarden = 702,
 
         [TwitchUserRole]
-        TwitchStaff = 750,
+        TwitchStaff = 751,
         [TrovoUserRole]
-        TrovoAdmin = 750,
+        TrovoAdmin = 752,
 
         [GenericUserRole, TwitchUserRole, YouTubeUserRole, TrovoUserRole, GlimeshUserRole]
         Moderator = 800,
@@ -56,7 +56,7 @@ namespace MixItUp.Base.Model.User
         [TwitchUserRole]
         TwitchChannelEditor = 850,
         [TrovoUserRole]
-        TrovoEditor = 850,
+        TrovoEditor = 851,
 
         [GenericUserRole, TwitchUserRole, YouTubeUserRole, TrovoUserRole, GlimeshUserRole]
         Streamer = 900,

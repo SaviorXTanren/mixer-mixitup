@@ -124,7 +124,7 @@
                                 </Grid>
                             </DataGridTextColumn.Header>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding ViewingMinutes}" IsReadOnly="True" Width="80">
+                        <DataGridTextColumn Binding="{Binding OnlineViewingMinutes}" IsReadOnly="True" Width="80">
                             <DataGridTextColumn.Header>
                                 <Grid HorizontalAlignment="Center" Margin="0,0,0,0">
                                     <MaterialDesign:PackIcon Kind="Clock" Height="24" Width="24" />

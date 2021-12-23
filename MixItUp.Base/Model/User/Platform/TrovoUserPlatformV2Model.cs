@@ -54,8 +54,8 @@ namespace MixItUp.Base.Model.User.Platform
         {
             if (message != null)
             {
-                this.ID = message.uid.ToString();
-                this.Username = message.user_name;
+                this.ID = message.sender_id.ToString();
+                this.Username = message.nick_name;
                 this.DisplayName = message.nick_name;
                 this.AvatarLink = message.FullAvatarURL;
 
@@ -68,6 +68,7 @@ namespace MixItUp.Base.Model.User.Platform
                     if (rolesSet.Contains(ChatMessageModel.WardenRole)) { this.Roles.Add(UserRoleEnum.TrovoWarden); } else { this.Roles.Remove(UserRoleEnum.TrovoWarden); }
                     if (rolesSet.Contains(ChatMessageModel.SuperModRole)) { this.Roles.Add(UserRoleEnum.TrovoSuperMod); } else { this.Roles.Remove(UserRoleEnum.TrovoSuperMod); }
                     if (rolesSet.Contains(ChatMessageModel.ModeratorRole)) { this.Roles.Add(UserRoleEnum.Moderator); } else { this.Roles.Remove(UserRoleEnum.Moderator); }
+                    if (rolesSet.Contains(ChatMessageModel.EditorRole)) { this.Roles.Add(UserRoleEnum.TrovoEditor); } else { this.Roles.Remove(UserRoleEnum.TrovoEditor); }
                     if (rolesSet.Contains(ChatMessageModel.FollowerRole)) { this.Roles.Add(UserRoleEnum.Follower); } else { this.Roles.Remove(UserRoleEnum.Follower); }
 
                     if (rolesSet.Contains(ChatMessageModel.SubscriberRole))

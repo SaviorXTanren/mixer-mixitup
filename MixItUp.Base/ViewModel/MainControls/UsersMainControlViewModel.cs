@@ -11,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -227,7 +226,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public bool IsCustomSettingsSearchFilterType { get { return this.SelectedSearchFilterType == UserSearchFilterTypeEnum.CustomSettings; } }
 
-        public ThreadSafeObservableCollection<UserV2Model> Users { get; private set; } = new ThreadSafeObservableCollection<UserV2Model>();
+        public ThreadSafeObservableCollection<UserV2ViewModel> Users { get; private set; } = new ThreadSafeObservableCollection<UserV2ViewModel>();
 
         public int SortColumnIndex
         {
@@ -438,7 +437,12 @@ namespace MixItUp.Base.ViewModel.MainControls
                     //else if (this.SortColumnIndex == 4) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryCurrency) : data.OrderBy(u => u.PrimaryCurrency); }
                     //else if (this.SortColumnIndex == 5) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryRankPoints) : data.OrderBy(u => u.PrimaryRankPoints); }
 
-                    this.Users.ClearAndAddRange(data);
+                    List<UserV2ViewModel> users = new List<UserV2ViewModel>();
+                    foreach (UserV2Model u in data)
+                    {
+                        users.Add(new UserV2ViewModel(u));
+                    }
+                    this.Users.ClearAndAddRange(users);
                 }
                 catch (Exception ex) { Logger.Log(ex); }
 

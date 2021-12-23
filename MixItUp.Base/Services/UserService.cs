@@ -132,7 +132,7 @@ namespace MixItUp.Base.Services
                     throw new InvalidOperationException("Trovo does not support user look-up by user ID");
                 }
 
-                return this.CreateUser(platformModel);
+                return await this.CreateUser(platformModel);
             }
 
             return null;
@@ -206,21 +206,25 @@ namespace MixItUp.Base.Services
                     }
                 }
 
-                return this.CreateUser(platformModel);
+                return await this.CreateUser(platformModel);
             }
 
             return null;
         }
 
-        public UserV2ViewModel CreateUser(UserPlatformV2ModelBase platformModel)
+        public async Task<UserV2ViewModel> CreateUser(UserPlatformV2ModelBase platformModel)
         {
-            if (platformModel != null)
+            if (platformModel != null && !string.IsNullOrEmpty(platformModel.ID))
             {
-                UserV2Model userModel = new UserV2Model();
-                userModel.AddPlatformData(platformModel);
-                UserV2ViewModel user = new UserV2ViewModel(platformModel.Platform, userModel);
+                UserV2ViewModel user = await this.GetUserByPlatformID(platformModel.Platform, platformModel.ID, performPlatformSearch: false);
+                if (user == null)
+                {
+                    UserV2Model userModel = new UserV2Model();
+                    userModel.AddPlatformData(platformModel);
+                    user = new UserV2ViewModel(platformModel.Platform, userModel);
 
-                this.SetUserData(userModel, newData: true);
+                    this.SetUserData(userModel, newData: true);
+                }
                 return user;
             }
             return null;
@@ -364,6 +368,7 @@ namespace MixItUp.Base.Services
         {
             List<AlertChatMessageViewModel> alerts = new List<AlertChatMessageViewModel>();
 
+            bool usersAdded = false;
             foreach (UserV2ViewModel user in users)
             {
                 if (user == null || user.ID == Guid.Empty)
@@ -371,46 +376,50 @@ namespace MixItUp.Base.Services
                     return;
                 }
 
-                bool newUser = !this.activeUsers.ContainsKey(user.ID);
+                lock (this.activeUsers)
+                {
+                    if (this.activeUsers.ContainsKey(user.ID))
+                    {
+                        continue;
+                    }
+                    this.activeUsers[user.ID] = user;
+                }
 
+                usersAdded = true;
                 this.SetUserData(user.Model);
-                this.activeUsers[user.ID] = user;
 
                 lock (displayUsersLock)
                 {
                     this.displayUsers[user.SortableID] = user;
                 }
 
-                // TODO
-                // Add IgnoreForQueries logic
-
-                if (newUser)
+                if (user.OnlineViewingMinutes == 0)
                 {
-                    if (user.OnlineViewingMinutes == 0)
-                    {
-                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserFirstJoin, new CommandParametersModel(user));
-                    }
-
-                    CommandParametersModel parameters = new CommandParametersModel(user);
-                    if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.ChatUserJoined, parameters))
-                    {
-                        user.UpdateLastActivity();
-                        user.Model.TotalStreamsWatched++;
-                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserJoined, parameters);
-                    }
+                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserFirstJoin, new CommandParametersModel(user));
                 }
 
-                if (users.Count() < 5)
+                CommandParametersModel parameters = new CommandParametersModel(user);
+                if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.ChatUserJoined, parameters))
                 {
+                    user.UpdateLastActivity();
+                    user.Model.TotalStreamsWatched++;
+                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserJoined, parameters);
+
                     alerts.Add(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.UserJoinedChat, user.FullDisplayName), ChannelSession.Settings.AlertUserJoinLeaveColor));
                 }
             }
 
-            this.DisplayUsersUpdated(this, new EventArgs());
-
-            foreach (AlertChatMessageViewModel alert in alerts)
+            if (usersAdded)
             {
-                await ServiceManager.Get<AlertsService>().AddAlert(alert);
+                this.DisplayUsersUpdated(this, new EventArgs());
+
+                if (alerts.Count() < 5)
+                {
+                    foreach (AlertChatMessageViewModel alert in alerts)
+                    {
+                        await ServiceManager.Get<AlertsService>().AddAlert(alert);
+                    }
+                }
             }
         }
 
@@ -455,10 +464,13 @@ namespace MixItUp.Base.Services
         {
             List<AlertChatMessageViewModel> alerts = new List<AlertChatMessageViewModel>();
 
+            bool userRemoved = false;
             foreach (UserV2ViewModel user in users)
             {
                 if (this.activeUsers.Remove(user.ID))
                 {
+                    userRemoved = true;
+
                     lock (displayUsersLock)
                     {
                         if (!this.displayUsers.Remove(user.SortableID))
@@ -471,20 +483,27 @@ namespace MixItUp.Base.Services
                         }
                     }
 
-                    if (users.Count() < 5)
+                    CommandParametersModel parameters = new CommandParametersModel(user);
+                    if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.ChatUserLeft, parameters))
                     {
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserLeft, parameters);
+
                         alerts.Add(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.UserLeftChat, user.FullDisplayName), ChannelSession.Settings.AlertUserJoinLeaveColor));
                     }
-
-                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserLeft, new CommandParametersModel(user));
                 }
             }
 
-            this.DisplayUsersUpdated(this, new EventArgs());
-
-            foreach (AlertChatMessageViewModel alert in alerts)
+            if (userRemoved)
             {
-                await ServiceManager.Get<AlertsService>().AddAlert(alert);
+                this.DisplayUsersUpdated(this, new EventArgs());
+
+                if (users.Count() < 5)
+                {
+                    foreach (AlertChatMessageViewModel alert in alerts)
+                    {
+                        await ServiceManager.Get<AlertsService>().AddAlert(alert);
+                    }
+                }
             }
         }
 

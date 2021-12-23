@@ -6,7 +6,6 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
-using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -32,7 +31,6 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserV2ViewModel(StreamingPlatformTypeEnum platform, UserV2Model model)
         {
-            this.platform = platform;
             this.model = model;
 
             if (this.platform != StreamingPlatformTypeEnum.None)
@@ -51,6 +49,15 @@ namespace MixItUp.Base.ViewModel.User
             if (this.platformModel == null)
             {
                 this.platformModel = this.GetPlatformData<UserPlatformV2ModelBase>(this.Model.GetPlatforms().First());
+            }
+
+            if (this.platformModel != null)
+            {
+                this.platform = this.platformModel.Platform;
+            }
+            else
+            {
+                this.platform = StreamingPlatformTypeEnum.None;
             }
         }
 

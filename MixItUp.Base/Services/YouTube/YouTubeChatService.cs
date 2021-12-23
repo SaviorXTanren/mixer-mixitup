@@ -207,11 +207,11 @@ namespace MixItUp.Base.Services.YouTube
                             Channel youtubeUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByID(message.AuthorDetails.ChannelId);
                             if (youtubeUser != null)
                             {
-                                user = ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(youtubeUser));
+                                user = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(youtubeUser));
                             }
                             else
                             {
-                                user = ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(message));
+                                user = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(message));
                             }
                             await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
                         }

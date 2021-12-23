@@ -102,7 +102,7 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool FeatureMe { get; set; }
         [DataMember]
-        public StreamingPlatformTypeEnum DefaultStreamingPlatform { get; set; } = StreamingPlatformTypeEnum.Twitch;
+        public StreamingPlatformTypeEnum DefaultStreamingPlatform { get; set; } = StreamingPlatformTypeEnum.None;
         [DataMember]
         public StreamingSoftwareTypeEnum DefaultStreamingSoftware { get; set; } = StreamingSoftwareTypeEnum.OBSStudio;
         [DataMember]

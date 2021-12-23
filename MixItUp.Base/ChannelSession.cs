@@ -251,7 +251,7 @@ namespace MixItUp.Base
                     ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, ServiceManager.Get<TwitchSessionService>().User.id);
                     if (ChannelSession.User == null)
                     {
-                        ChannelSession.User = ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(ServiceManager.Get<TwitchSessionService>().User));
+                        ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(ServiceManager.Get<TwitchSessionService>().User));
                     }
                 }
                 if (ChannelSession.User == null && ServiceManager.Get<YouTubeSessionService>().IsConnected)
@@ -259,7 +259,7 @@ namespace MixItUp.Base
                     ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.YouTube, ServiceManager.Get<YouTubeSessionService>().User.Id);
                     if (ChannelSession.User == null)
                     {
-                        ChannelSession.User = ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(ServiceManager.Get<YouTubeSessionService>().User));
+                        ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(ServiceManager.Get<YouTubeSessionService>().User));
                     }
                 }
                 if (ChannelSession.User == null && ServiceManager.Get<GlimeshSessionService>().IsConnected)
@@ -267,7 +267,7 @@ namespace MixItUp.Base
                     ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, ServiceManager.Get<GlimeshSessionService>().User.id);
                     if (ChannelSession.User == null)
                     {
-                        ChannelSession.User = ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(ServiceManager.Get<GlimeshSessionService>().User));
+                        ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(ServiceManager.Get<GlimeshSessionService>().User));
                     }
                 }
                 if (ChannelSession.User == null && ServiceManager.Get<TrovoSessionService>().IsConnected)
@@ -275,7 +275,7 @@ namespace MixItUp.Base
                     ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Trovo, ServiceManager.Get<TrovoSessionService>().User.userId);
                     if (ChannelSession.User == null)
                     {
-                        ChannelSession.User = ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(ServiceManager.Get<TrovoSessionService>().User));
+                        ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(ServiceManager.Get<TrovoSessionService>().User));
                     }
                 }
 

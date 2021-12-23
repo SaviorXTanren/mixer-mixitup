@@ -251,11 +251,11 @@ namespace MixItUp.Base.Services.Glimesh
                     UserModel glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByID(message.User?.id);
                     if (glimeshUser != null)
                     {
-                        user = ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(glimeshUser));
+                        user = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(glimeshUser));
                     }
                     else
                     {
-                        user = ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(message));
+                        user = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(message));
                     }
                     await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
                 }
@@ -300,7 +300,7 @@ namespace MixItUp.Base.Services.Glimesh
                 UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, follow.Follow.user.id);
                 if (user == null)
                 {
-                    user = ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(follow.Follow.user));
+                    user = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(follow.Follow.user));
                 }
 
                 CommandParametersModel parameters = new CommandParametersModel(user);

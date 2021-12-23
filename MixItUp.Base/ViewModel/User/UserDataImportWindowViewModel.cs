@@ -216,7 +216,7 @@ namespace MixItUp.Base.ViewModel.User
                                     user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, twitchID.ToString());
                                     if (user == null)
                                     {
-                                        user = ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(new Twitch.Base.Models.NewAPI.Users.UserModel()
+                                        user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(new Twitch.Base.Models.NewAPI.Users.UserModel()
                                         {
                                             id = twitchID.ToString(),
                                             login = twitchUsername,

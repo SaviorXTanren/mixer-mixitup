@@ -15691,6 +15691,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Trovo Admin.
+        /// </summary>
+        public static string TrovoAdmin {
+            get {
+                return ResourceManager.GetString("TrovoAdmin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trovo Channel Followed.
         /// </summary>
         public static string TrovoChannelFollowed {
@@ -15745,6 +15754,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Trovo Editor.
+        /// </summary>
+        public static string TrovoEditor {
+            get {
+                return ResourceManager.GetString("TrovoEditor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Elixir.
         /// </summary>
         public static string TrovoElixir {
@@ -15768,6 +15786,24 @@ namespace MixItUp.Base {
         public static string TrovoSpellCast {
             get {
                 return ResourceManager.GetString("TrovoSpellCast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trovo Super Mod.
+        /// </summary>
+        public static string TrovoSuperMod {
+            get {
+                return ResourceManager.GetString("TrovoSuperMod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trovo Warden.
+        /// </summary>
+        public static string TrovoWarden {
+            get {
+                return ResourceManager.GetString("TrovoWarden", resourceCulture);
             }
         }
         
@@ -15917,11 +15953,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twitch Affiliate.
+        /// </summary>
+        public static string TwitchAffiliate {
+            get {
+                return ResourceManager.GetString("TwitchAffiliate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Twitch Channel Bits Cheered.
         /// </summary>
         public static string TwitchChannelBitsCheered {
             get {
                 return ResourceManager.GetString("TwitchChannelBitsCheered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel Editor.
+        /// </summary>
+        public static string TwitchChannelEditor {
+            get {
+                return ResourceManager.GetString("TwitchChannelEditor", resourceCulture);
             }
         }
         
@@ -16133,11 +16187,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twitch Global Mod.
+        /// </summary>
+        public static string TwitchGlobalMod {
+            get {
+                return ResourceManager.GetString("TwitchGlobalMod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Twitch ID.
         /// </summary>
         public static string TwitchID {
             get {
                 return ResourceManager.GetString("TwitchID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Partner.
+        /// </summary>
+        public static string TwitchPartner {
+            get {
+                return ResourceManager.GetString("TwitchPartner", resourceCulture);
             }
         }
         
@@ -16178,11 +16250,38 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twitch Staff.
+        /// </summary>
+        public static string TwitchStaff {
+            get {
+                return ResourceManager.GetString("TwitchStaff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Turbo.
+        /// </summary>
+        public static string TwitchTurbo {
+            get {
+                return ResourceManager.GetString("TwitchTurbo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Twitch Username.
         /// </summary>
         public static string TwitchUsername {
             get {
                 return ResourceManager.GetString("TwitchUsername", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch VIP.
+        /// </summary>
+        public static string TwitchVIP {
+            get {
+                return ResourceManager.GetString("TwitchVIP", resourceCulture);
             }
         }
         
@@ -17951,6 +18050,24 @@ namespace MixItUp.Base {
         public static string YouTubeActionUnableToRunAdBreak {
             get {
                 return ResourceManager.GetString("YouTubeActionUnableToRunAdBreak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to YouTube Member.
+        /// </summary>
+        public static string YouTubeMember {
+            get {
+                return ResourceManager.GetString("YouTubeMember", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to YouTube Subscriber.
+        /// </summary>
+        public static string YouTubeSubscriber {
+            get {
+                return ResourceManager.GetString("YouTubeSubscriber", resourceCulture);
             }
         }
         

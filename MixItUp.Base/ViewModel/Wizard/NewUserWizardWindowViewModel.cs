@@ -6,7 +6,6 @@ using MixItUp.Base.ViewModel.Accounts;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;

@@ -290,17 +290,17 @@ namespace MixItUp.Base.Services.Trovo
                 }
                 this.messagesProcessed.Add(message.message_id);
 
-                UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Trovo, messageContainer.chats.First().sender_id.ToString());
+                UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Trovo, message.sender_id.ToString());
                 if (user == null)
                 {
-                    UserModel trovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(messageContainer.chats.First().nick_name);
+                    UserModel trovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(message.nick_name);
                     if (trovoUser != null)
                     {
-                        user = ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(trovoUser));
+                        user = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(trovoUser));
                     }
                     else
                     {
-                        user = ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(message));
+                        user = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(message));
                     }
                     await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
                 }
@@ -410,7 +410,7 @@ namespace MixItUp.Base.Services.Trovo
                             }
                             else
                             {
-                                giftee = ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(gifteeTrovoUser));
+                                giftee = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(gifteeTrovoUser));
                             }
                         }
 
