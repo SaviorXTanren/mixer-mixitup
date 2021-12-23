@@ -217,20 +217,20 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         public virtual bool SupportsRefreshUpdating { get { return false; } }
 
-        public virtual Task LoadTestData() { return Task.FromResult(0); }
+        public virtual Task LoadTestData() { return Task.CompletedTask; }
 
         public virtual Task Initialize()
         {
             this.IsInitialized = true;
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
-        public virtual Task Reset() { return Task.FromResult(0); }
+        public virtual Task Reset() { return Task.CompletedTask; }
 
         public virtual Task Enable()
         {
             this.IsEnabled = true;
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public virtual Task Disable()
@@ -240,7 +240,7 @@ namespace MixItUp.Base.Model.Overlay
                 this.IsEnabled = false;
                 this.SendChangeState(newState: false);
             }
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public virtual async Task<JObject> GetProcessedItem(CommandParametersModel parameters)
@@ -250,7 +250,7 @@ namespace MixItUp.Base.Model.Overlay
             return jobj;
         }
 
-        public virtual Task LoadCachedData() { return Task.FromResult(0); }
+        public virtual Task LoadCachedData() { return Task.CompletedTask; }
 
         protected virtual async Task PerformReplacements(JObject jobj, CommandParametersModel parameters)
         {
@@ -260,7 +260,7 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     if (jobj[key].Type == JTokenType.String)
                     {
-                        jobj[key] = await this.ReplaceStringWithSpecialModifiers(jobj[key].ToString(), parameters);
+                        jobj[key] = await ReplaceStringWithSpecialModifiers(jobj[key].ToString(), parameters);
                     }
                     else if (jobj[key].Type == JTokenType.Object)
                     {

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace MixItUp.Base.ViewModel.Dialogs
                 this.selectedCommandType = value;
                 this.NotifyPropertyChanged();
 
-                this.Commands.ClearAndAddRange(ChannelSession.Services.Command.AllCommands.Where(c => c.Type == this.SelectedCommandType).OrderBy(c => c.Name));
+                this.Commands.ClearAndAddRange(ServiceManager.Get<CommandService>().AllCommands.Where(c => c.Type == this.SelectedCommandType).OrderBy(c => c.Name));
             }
         }
         private CommandTypeEnum selectedCommandType;

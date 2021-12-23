@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -24,22 +25,12 @@ namespace MixItUp.Base.Model.Actions
             this.OutputDevice = outputDevice;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal SoundActionModel(MixItUp.Base.Actions.SoundAction action)
-            : base(ActionTypeEnum.Sound)
-        {
-            this.FilePath = action.FilePath;
-            this.VolumeScale = action.VolumeScale;
-            this.OutputDevice = action.OutputDevice;
-        }
-#pragma warning disable CS0612 // Type or member is obsolete
-
         private SoundActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            string audioFilePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
-            await ChannelSession.Services.AudioService.Play(audioFilePath, this.VolumeScale, this.OutputDevice);
+            string audioFilePath = await ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
+            await ServiceManager.Get<IAudioService>().Play(audioFilePath, this.VolumeScale, this.OutputDevice);
         }
     }
 }

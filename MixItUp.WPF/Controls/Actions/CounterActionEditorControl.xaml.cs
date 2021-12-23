@@ -1,5 +1,5 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Model.Settings;
+﻿using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System.IO;
 
@@ -17,10 +17,10 @@ namespace MixItUp.WPF.Controls.Actions
 
         private async void CounterFolderHyperlink_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            string counterFolderPath = Path.Combine(ChannelSession.Services.FileService.GetApplicationDirectory(), CounterModel.CounterFolderName);
+            string counterFolderPath = Path.Combine(ServiceManager.Get<IFileService>().GetApplicationDirectory(), CounterModel.CounterFolderName);
             if (!Directory.Exists(counterFolderPath))
             {
-                await ChannelSession.Services.FileService.CreateDirectory(counterFolderPath);
+                await ServiceManager.Get<IFileService>().CreateDirectory(counterFolderPath);
             }
             ProcessHelper.LaunchFolder(counterFolderPath);
         }

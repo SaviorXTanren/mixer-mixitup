@@ -1,4 +1,10 @@
-﻿using StreamingClient.Base.Model.OAuth;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
+using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
+using Newtonsoft.Json;
+using StreamingClient.Base.Model.OAuth;
 using System;
 using System.Runtime.Serialization;
 
@@ -23,12 +29,21 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public string ChannelID { get; set; }
 
-        [DataMember]
-        public bool IsEnabled { get; set; }
-
-        public StreamingPlatformAuthenticationSettingsModel() { }
+        private StreamingPlatformAuthenticationSettingsModel() { }
 
         public StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum type) { this.Type = type; }
+
+        [JsonIgnore]
+        public bool IsEnabled { get { return this.UserOAuthToken != null; } }
+
+        public IStreamingPlatformSessionService GetStreamingPlatformSessionService()
+        {
+            if (this.Type == StreamingPlatformTypeEnum.Twitch) { return ServiceManager.Get<TwitchSessionService>(); }
+            else if (this.Type == StreamingPlatformTypeEnum.YouTube) { return ServiceManager.Get<YouTubeSessionService>(); }
+            else if (this.Type == StreamingPlatformTypeEnum.Glimesh) { return ServiceManager.Get<GlimeshSessionService>(); }
+            else if (this.Type == StreamingPlatformTypeEnum.Trovo) { return ServiceManager.Get<TrovoSessionService>(); }
+            return null;
+        }
 
         public override bool Equals(object obj)
         {

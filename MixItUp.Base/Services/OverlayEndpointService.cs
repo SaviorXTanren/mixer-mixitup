@@ -1,8 +1,7 @@
-﻿using MixItUp.Base.Model;
-using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
@@ -32,33 +31,6 @@ namespace MixItUp.Base.Services
         public double Rate { get; set; }
     }
 
-    public interface IOverlayEndpointService
-    {
-        string Name { get; }
-        int Port { get; }
-
-        event EventHandler OnWebSocketConnectedOccurred;
-        event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectedOccurred;
-
-        Task<bool> Initialize();
-
-        Task Disconnect();
-
-        Task<int> TestConnection();
-
-        void StartBatching();
-
-        Task EndBatching();
-
-        Task ShowItem(OverlayItemModelBase item, CommandParametersModel parameters);
-        Task UpdateItem(OverlayItemModelBase item, CommandParametersModel parameters);
-        Task HideItem(OverlayItemModelBase item);
-
-        Task SendTextToSpeech(OverlayTextToSpeech textToSpeech);
-
-        void SetLocalFile(string fileID, string filePath);
-    }
-
     public class OverlayPacket : WebSocketPacket
     {
         public JObject data;
@@ -79,7 +51,7 @@ namespace MixItUp.Base.Services
         }
     }
 
-    public class OverlayEndpointService : IOverlayEndpointService
+    public class OverlayEndpointService
     {
         public const string RegularOverlayHttpListenerServerAddressFormat = "http://localhost:{0}/overlay/";
         public const string RegularOverlayWebSocketServerAddressFormat = "http://localhost:{0}/ws/";
@@ -123,28 +95,28 @@ namespace MixItUp.Base.Services
                     this.webSocketServer.OnConnectedOccurred += WebSocketServer_OnConnectedOccurred;
                     this.webSocketServer.OnDisconnectOccurred += WebSocketServer_OnDisconnectOccurred;
 
-                    if (this.Name.Equals(ChannelSession.Services.Overlay.DefaultOverlayName) && !string.IsNullOrWhiteSpace(ChannelSession.Settings.OverlaySourceName))
+                    if (this.Name.Equals(ServiceManager.Get<OverlayService>().DefaultOverlayName) && !string.IsNullOrWhiteSpace(ChannelSession.Settings.OverlaySourceName))
                     {
                         string overlayServerAddress = string.Format(OverlayEndpointService.RegularOverlayHttpListenerServerAddressFormat, this.Port);
-                        if (ChannelSession.Services.OBSStudio.IsConnected)
+                        if (ServiceManager.Get<IOBSStudioService>().IsConnected)
                         {
-                            await ChannelSession.Services.OBSStudio.SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: false);
-                            await ChannelSession.Services.OBSStudio.SetWebBrowserSourceURL(null, ChannelSession.Settings.OverlaySourceName, overlayServerAddress);
-                            await ChannelSession.Services.OBSStudio.SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: true);
+                            await ServiceManager.Get<IOBSStudioService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: false);
+                            await ServiceManager.Get<IOBSStudioService>().SetWebBrowserSourceURL(null, ChannelSession.Settings.OverlaySourceName, overlayServerAddress);
+                            await ServiceManager.Get<IOBSStudioService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: true);
                         }
 
-                        if (ChannelSession.Services.XSplit.IsConnected)
+                        if (ServiceManager.Get<XSplitService>().IsConnected)
                         {
-                            await ChannelSession.Services.XSplit.SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: false);
-                            await ChannelSession.Services.XSplit.SetWebBrowserSourceURL(null, ChannelSession.Settings.OverlaySourceName, overlayServerAddress);
-                            await ChannelSession.Services.XSplit.SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: true);
+                            await ServiceManager.Get<XSplitService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: false);
+                            await ServiceManager.Get<XSplitService>().SetWebBrowserSourceURL(null, ChannelSession.Settings.OverlaySourceName, overlayServerAddress);
+                            await ServiceManager.Get<XSplitService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: true);
                         }
 
-                        if (ChannelSession.Services.StreamlabsOBS.IsConnected)
+                        if (ServiceManager.Get<StreamlabsOBSService>().IsConnected)
                         {
-                            await ChannelSession.Services.StreamlabsOBS.SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: false);
-                            await ChannelSession.Services.StreamlabsOBS.SetWebBrowserSourceURL(null, ChannelSession.Settings.OverlaySourceName, overlayServerAddress);
-                            await ChannelSession.Services.StreamlabsOBS.SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: true);
+                            await ServiceManager.Get<StreamlabsOBSService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: false);
+                            await ServiceManager.Get<StreamlabsOBSService>().SetWebBrowserSourceURL(null, ChannelSession.Settings.OverlaySourceName, overlayServerAddress);
+                            await ServiceManager.Get<StreamlabsOBSService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: true);
                         }
                     }
                     return true;

@@ -1,6 +1,9 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -9,7 +12,6 @@ namespace MixItUp.Base.Model.Actions
 {
     public enum PixelChatActionTypeEnum
     {
-        [Obsolete]
         ShowHideSceneComponent,
         TriggerGiveaway,
         TriggerCredits,
@@ -17,21 +19,22 @@ namespace MixItUp.Base.Model.Actions
         TriggerCountdown,
         TriggerCountup,
         StartStreamathon,
-        AddStreamathonTime
+        AddStreamathonTime,
+        AddUserToGiveaway,
     }
 
     [DataContract]
     public class PixelChatActionModel : ActionModelBase
     {
-        //public static PixelChatActionModel CreateShowHideSceneComponent(string sceneID, string sceneComponentID, bool showHide)
-        //{
-        //    return new PixelChatActionModel(PixelChatActionTypeEnum.ShowHideSceneComponent)
-        //    {
-        //        SceneID = sceneID,
-        //        SceneComponentID = sceneComponentID,
-        //        ShowHideSceneComponent = showHide
-        //    };
-        //}
+        public static PixelChatActionModel CreateShowHideSceneComponent(string sceneID, string componentID, bool visible)
+        {
+            return new PixelChatActionModel(PixelChatActionTypeEnum.ShowHideSceneComponent)
+            {
+                SceneID = sceneID,
+                ComponentID = componentID,
+                SceneComponentVisible = visible,
+            };
+        }
 
         public static PixelChatActionModel CreateBasicOverlay(PixelChatActionTypeEnum actionType, string overlayID)
         {
@@ -65,10 +68,9 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public string SceneID { get; set; }
         [DataMember]
-        public string SceneComponentID { get; set; }
-
+        public string ComponentID { get; set; }
         [DataMember]
-        public bool ShowHideSceneComponent { get; set; }
+        public bool SceneComponentVisible { get; set; }
 
         [DataMember]
         public string OverlayID { get; set; }
@@ -89,33 +91,45 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (ChannelSession.Services.PixelChat.IsConnected)
+            if (ServiceManager.Get<PixelChatService>().IsConnected)
             {
                 if (this.ActionType == PixelChatActionTypeEnum.ShowHideSceneComponent)
                 {
-
+                    Result result = await ServiceManager.Get<PixelChatService>().EditSceneComponent(this.SceneID, this.ComponentID, this.SceneComponentVisible);
+                    if (!result.Success)
+                    {
+                        Logger.Log(LogLevel.Error, result.Message);
+                    }
                 }
                 else
                 {
-                    PixelChatSendMessageModel sendMessage;
-                    if (this.ActionType == PixelChatActionTypeEnum.TriggerShoutout)
+                    PixelChatSendMessageModel sendMessage = null;
+                    if (this.ActionType == PixelChatActionTypeEnum.TriggerShoutout || this.ActionType == PixelChatActionTypeEnum.AddUserToGiveaway)
                     {
-                        UserViewModel user = parameters.User;
+                        UserV2ViewModel user = parameters.User;
                         if (!string.IsNullOrEmpty(this.TargetUsername))
                         {
-                            string targetUsername = await this.ReplaceStringWithSpecialModifiers(this.TargetUsername, parameters);
-                            UserViewModel targetUser = await ChannelSession.Services.User.GetUserFullSearch(parameters.Platform, userID: null, targetUsername);
+                            string targetUsername = await ReplaceStringWithSpecialModifiers(this.TargetUsername, parameters);
+                            UserV2ViewModel targetUser = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(parameters.Platform, targetUsername, performPlatformSearch: true);
                             if (targetUser != null)
                             {
                                 user = targetUser;
                             }
                         }
-                        sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString(), user.Username, StreamingPlatformTypeEnum.Twitch);
+
+                        if (this.ActionType == PixelChatActionTypeEnum.TriggerShoutout)
+                        {
+                            sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString(), user.Username, StreamingPlatformTypeEnum.Twitch);
+                        }
+                        else if (this.ActionType == PixelChatActionTypeEnum.AddUserToGiveaway)
+                        {
+                            sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString(), user.Username);
+                        }
                     }
                     else if (this.ActionType == PixelChatActionTypeEnum.TriggerCountdown || this.ActionType == PixelChatActionTypeEnum.TriggerCountup ||
                         this.ActionType == PixelChatActionTypeEnum.AddStreamathonTime)
                     {
-                        int.TryParse(await this.ReplaceStringWithSpecialModifiers(this.TimeAmount, parameters), out int timeAmount);
+                        int.TryParse(await ReplaceStringWithSpecialModifiers(this.TimeAmount, parameters), out int timeAmount);
                         sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString(), timeAmount);
                     }
                     else
@@ -123,11 +137,18 @@ namespace MixItUp.Base.Model.Actions
                         sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString());
                     }
 
-                    char[] characters = sendMessage.type.ToCharArray();
-                    characters[0] = Char.ToLower(characters[0]);
-                    sendMessage.type = new string(characters);
+                    if (sendMessage != null)
+                    {
+                        char[] characters = sendMessage.type.ToCharArray();
+                        characters[0] = Char.ToLower(characters[0]);
+                        sendMessage.type = new string(characters);
 
-                    await ChannelSession.Services.PixelChat.SendMessageToOverlay(this.OverlayID, sendMessage);
+                        Result result = await ServiceManager.Get<PixelChatService>().SendMessageToOverlay(this.OverlayID, sendMessage);
+                        if (!result.Success)
+                        {
+                            Logger.Log(LogLevel.Error, result.Message);
+                        }
+                    }
                 }
             }
         }

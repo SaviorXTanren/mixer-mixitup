@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -43,18 +44,6 @@ namespace MixItUp.Base.Model.Actions
             this.ActionType = actionType;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal DiscordActionModel(MixItUp.Base.Actions.DiscordAction action)
-            : base(ActionTypeEnum.Discord)
-        {
-            this.ActionType = (DiscordActionTypeEnum)(int)action.DiscordType;
-            this.ChannelID = action.SendMessageChannelID;
-            this.MessageText = action.SendMessageText;
-            this.FilePath = action.FilePath;
-            this.ShouldMuteDeafen = action.ShouldMuteDeafen;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private DiscordActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
@@ -63,23 +52,23 @@ namespace MixItUp.Base.Model.Actions
             {
                 if (this.channel == null)
                 {
-                    this.channel = await ChannelSession.Services.Discord.GetChannel(this.ChannelID);
+                    this.channel = await ServiceManager.Get<DiscordService>().GetChannel(this.ChannelID);
                 }
 
                 if (this.channel != null)
                 {
-                    string message = await this.ReplaceStringWithSpecialModifiers(this.MessageText, parameters);
-                    string filePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
-                    await ChannelSession.Services.Discord.CreateMessage(this.channel, message, filePath);
+                    string message = await ReplaceStringWithSpecialModifiers(this.MessageText, parameters);
+                    string filePath = await ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
+                    await ServiceManager.Get<DiscordService>().CreateMessage(this.channel, message, filePath);
                 }
             }
             else if (this.ActionType == DiscordActionTypeEnum.MuteSelf)
             {
-                await ChannelSession.Services.Discord.MuteServerMember(ChannelSession.Services.Discord.Server, ChannelSession.Services.Discord.User, this.ShouldMuteDeafen);
+                await ServiceManager.Get<DiscordService>().MuteServerMember(ServiceManager.Get<DiscordService>().Server, ServiceManager.Get<DiscordService>().User, this.ShouldMuteDeafen);
             }
             else if (this.ActionType == DiscordActionTypeEnum.DeafenSelf)
             {
-                await ChannelSession.Services.Discord.DeafenServerMember(ChannelSession.Services.Discord.Server, ChannelSession.Services.Discord.User, this.ShouldMuteDeafen);
+                await ServiceManager.Get<DiscordService>().DeafenServerMember(ServiceManager.Get<DiscordService>().Server, ServiceManager.Get<DiscordService>().User, this.ShouldMuteDeafen);
             }
         }
     }

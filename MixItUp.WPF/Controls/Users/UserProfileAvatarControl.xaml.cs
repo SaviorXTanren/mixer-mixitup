@@ -45,9 +45,9 @@ namespace MixItUp.WPF.Controls.Users
 
         private async void UserProfileAvatarControl_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
         {
-            if (this.DataContext != null && this.DataContext is UserViewModel)
+            if (this.DataContext != null && this.DataContext is UserV2ViewModel)
             {
-                UserViewModel user = (UserViewModel)this.DataContext;
+                UserV2ViewModel user = (UserV2ViewModel)this.DataContext;
                 if (this.Size > 0)
                 {
                     this.SetSize(this.Size);
@@ -56,7 +56,7 @@ namespace MixItUp.WPF.Controls.Users
             }
         }
 
-        public async Task SetUserAvatarUrl(UserViewModel user)
+        public async Task SetUserAvatarUrl(UserV2ViewModel user)
         {
             try
             {

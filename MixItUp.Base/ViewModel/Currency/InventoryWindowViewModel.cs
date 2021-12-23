@@ -207,7 +207,7 @@ namespace MixItUp.Base.ViewModel.Currency
 
         public ICommand HelpCommand { get; private set; }
 
-        private Dictionary<UserDataModel, int> userImportData = new Dictionary<UserDataModel, int>();
+        private Dictionary<UserV2Model, int> userImportData = new Dictionary<UserV2Model, int>();
 
         public InventoryWindowViewModel(InventoryModel inventory)
             : this()

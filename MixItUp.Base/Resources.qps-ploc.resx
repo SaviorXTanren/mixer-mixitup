@@ -241,7 +241,7 @@
     <value>[!!! Â₥ôúñţ Ðôñáţèδ !!!]</value>
   </data>
   <data name="AmountPlusMinus" xml:space="preserve">
-    <value>[!!! Â₥ôúñţ (+/-) !!!]</value>
+    <value>[!!! Â₥ôúñţ !!!]</value>
   </data>
   <data name="AmountSeconds" xml:space="preserve">
     <value>[!!! Â₥ôúñţ (Šèçôñδš) !!!]</value>
@@ -4428,7 +4428,7 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
     <value>[!!! Ì₥áĝè Fïℓè Þáţĥ / ÛRĻ !!!]</value>
   </data>
   <data name="IPAddress" xml:space="preserve">
-    <value>[!!! ÌÞ Âδδřèšš (Óƥţïôñáℓ) !!!]</value>
+    <value>[!!! ÌÞ Âδδřèšš !!!]</value>
   </data>
   <data name="ItemHeight" xml:space="preserve">
     <value>[!!! Ìţè₥ Hèïĝĥţ (Þïжèℓš) !!!]</value>

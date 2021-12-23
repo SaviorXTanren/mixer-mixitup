@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Store;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.CommunityCommands;
 using SixLabors.ImageSharp;
@@ -62,7 +63,7 @@ namespace MixItUp.WPF.Windows.Commands
 
                     this.uploadCommand.SetCommands(new List<CommandModelBase>() { this.command });
 
-                    CommunityCommandDetailsModel existingCommand = await ChannelSession.Services.CommunityCommandsService.GetCommandDetails(command.ID);
+                    CommunityCommandDetailsModel existingCommand = await ServiceManager.Get<MixItUpService>().GetCommandDetails(command.ID);
                     if (existingCommand != null)
                     {
                         this.uploadCommand.ID = existingCommand.ID;
@@ -91,6 +92,7 @@ namespace MixItUp.WPF.Windows.Commands
                         case CommandTypeEnum.Game: this.uploadCommand.Tags.Add(CommunityCommandTagEnum.GameCommand); break;
                         case CommandTypeEnum.StreamlootsCard: this.uploadCommand.Tags.Add(CommunityCommandTagEnum.StreamlootsCardCommand); break;
                         case CommandTypeEnum.TwitchChannelPoints: this.uploadCommand.Tags.Add(CommunityCommandTagEnum.TwitchChannelPointsCommand); break;
+                        case CommandTypeEnum.Webhook: this.uploadCommand.Tags.Add(CommunityCommandTagEnum.Webhook); break;
                     }
                 }
                 else
@@ -125,10 +127,19 @@ namespace MixItUp.WPF.Windows.Commands
 
         private void BrowseImageFilePathButton_Click(object sender, RoutedEventArgs e)
         {
-            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.ImageFileFilter());
+            string filePath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(ServiceManager.Get<IFileService>().ImageFileFilter());
             if (!string.IsNullOrEmpty(filePath))
             {
                 this.ImageFilePathTextBox.Text = filePath;
+            }
+        }
+
+        private void BrowseScreenshotFilePathButton_Click(object sender, RoutedEventArgs e)
+        {
+            string filePath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(ServiceManager.Get<IFileService>().ImageFileFilter());
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                this.ScreenshotFilePathTextBox.Text = filePath;
             }
         }
 
@@ -168,12 +179,20 @@ namespace MixItUp.WPF.Windows.Commands
 
                     if (!string.IsNullOrEmpty(this.ImageFilePathTextBox.Text))
                     {
-                        if (!ChannelSession.Services.FileService.FileExists(this.ImageFilePathTextBox.Text))
+                        if (!ServiceManager.Get<IFileService>().FileExists(this.ImageFilePathTextBox.Text))
                         {
                             await DialogHelper.ShowMessage(MixItUp.Base.Resources.CommunityCommandsUploadInvalidImageFile);
                             return;
                         }
-                        this.uploadCommand.ImageFileData = await ChannelSession.Services.FileService.ReadFileAsBytes(this.ImageFilePathTextBox.Text);
+                    }
+
+                    if (!string.IsNullOrEmpty(this.ScreenshotFilePathTextBox.Text))
+                    {
+                        if (!ServiceManager.Get<IFileService>().FileExists(this.ScreenshotFilePathTextBox.Text))
+                        {
+                            await DialogHelper.ShowMessage(MixItUp.Base.Resources.CommunityCommandsUploadInvalidImageFile);
+                            return;
+                        }
                     }
 
                     this.uploadCommand.Name = this.NameTextBox.Text;
@@ -185,7 +204,7 @@ namespace MixItUp.WPF.Windows.Commands
                         return;
                     }
 
-                    if (!string.IsNullOrEmpty(this.ImageFilePathTextBox.Text) && ChannelSession.Services.FileService.FileExists(this.ImageFilePathTextBox.Text))
+                    if (!string.IsNullOrEmpty(this.ImageFilePathTextBox.Text) && ServiceManager.Get<IFileService>().FileExists(this.ImageFilePathTextBox.Text))
                     {
                         string imageFilePath = this.ImageFilePathTextBox.Text;
                         this.uploadCommand.ImageFileData = await Task.Run(() =>
@@ -210,7 +229,40 @@ namespace MixItUp.WPF.Windows.Commands
                         });
                     }
 
-                    await ChannelSession.Services.CommunityCommandsService.AddOrUpdateCommand(this.uploadCommand);
+                    if (!string.IsNullOrEmpty(this.ScreenshotFilePathTextBox.Text) && ServiceManager.Get<IFileService>().FileExists(this.ScreenshotFilePathTextBox.Text))
+                    {
+                        string screenshotFilePath = this.ScreenshotFilePathTextBox.Text;
+                        this.uploadCommand.ScreenshotFileData = await Task.Run(() =>
+                        {
+                            try
+                            {
+                                using (var image = Image.Load(screenshotFilePath))
+                                {
+                                    if (image.Width > 1280)
+                                    {
+                                        image.Mutate(i => i.Resize(1280, 0));
+                                    }
+                                    if (image.Height > 720)
+                                    {
+                                        image.Mutate(i => i.Resize(0, 720));
+                                    }
+
+                                    using (MemoryStream memoryStream = new MemoryStream())
+                                    {
+                                        image.SaveAsPng(memoryStream);
+                                        return memoryStream.ToArray();
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Log(ex);
+                            }
+                            return null;
+                        });
+                    }
+
+                    await ServiceManager.Get<MixItUpService>().AddOrUpdateCommand(this.uploadCommand);
 
                     this.Close();
                 }

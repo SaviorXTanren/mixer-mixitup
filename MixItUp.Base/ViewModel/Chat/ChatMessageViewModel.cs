@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
@@ -38,24 +39,28 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public string ModerationReason { get; private set; }
 
-        public UserViewModel User { get; set; }
+        public UserV2ViewModel User { get; set; }
 
         public DateTimeOffset ProcessingStartTime { get; set; }
 
         public event EventHandler OnDeleted = delegate { };
 
-        public ChatMessageViewModel(string id, StreamingPlatformTypeEnum platform, UserViewModel user)
+        public ChatMessageViewModel(string id, StreamingPlatformTypeEnum platform, UserV2ViewModel user)
         {
             this.ID = id;
             this.Platform = platform;
             this.User = user;
         }
 
+        public string PlatformImageURL { get { return StreamingPlatforms.GetPlatformImage(this.Platform); } }
+
+        public bool ShowPlatformImage { get { return ServiceManager.GetAll<IStreamingPlatformSessionService>().Count(s => s.IsConnected) > 1; } }
+
         public double ProcessingTime { get { return (DateTimeOffset.Now - this.ProcessingStartTime).TotalMilliseconds; } }
 
         public bool IsWhisper { get { return !string.IsNullOrEmpty(this.TargetUsername); } }
 
-        public bool IsStreamerTagged { get { return Regex.IsMatch(this.PlainTextMessage.ToLower(), string.Format(TaggingRegexFormat, ChannelSession.TwitchUserNewAPI.login)); } }
+        public bool IsStreamerTagged { get { return Regex.IsMatch(this.PlainTextMessage.ToLower(), string.Format(TaggingRegexFormat, ChannelSession.User.Username ?? string.Empty)); } }
 
         public virtual bool IsStreamerOrBot
         {
@@ -63,14 +68,15 @@ namespace MixItUp.Base.ViewModel.Chat
             {
                 if (this.User != null)
                 {
-                    if (this.User.ID.Equals(ChannelSession.GetCurrentUser().ID))
+                    if (this.User.ID.Equals(ChannelSession.User.ID))
                     {
                         return true;
                     }
-                    else if (ChannelSession.TwitchBotNewAPI != null && string.Equals(ChannelSession.TwitchBotNewAPI.id, this.User.TwitchID, StringComparison.InvariantCultureIgnoreCase))
+                    else if (this.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().Bot != null && string.Equals(ServiceManager.Get<TwitchSessionService>().Bot.id, this.User.PlatformID, StringComparison.InvariantCultureIgnoreCase))
                     {
                         return true;
                     }
+                    // TODO
                 }
                 return false;
             }
@@ -109,15 +115,15 @@ namespace MixItUp.Base.ViewModel.Chat
         {
             if (this.User != null && !this.IsWhisper)
             {
-                if (!ChannelSession.Services.Moderation.DoesUserMeetChatInteractiveParticipationRequirement(this.User, this))
+                if (!ServiceManager.Get<ModerationService>().DoesUserMeetChatInteractiveParticipationRequirement(this.User, this))
                 {
                     Logger.Log(LogLevel.Debug, string.Format("Deleting Message As User does not meet requirement - {0} - {1}", ChannelSession.Settings.ModerationChatInteractiveParticipation, this.PlainTextMessage));
                     await this.Delete(reason: "Chat Participation");
-                    await ChannelSession.Services.Moderation.SendChatInteractiveParticipationWhisper(this.User, isChat: true);
+                    await ServiceManager.Get<ModerationService>().SendChatInteractiveParticipationWhisper(this.User, isChat: true);
                     return true;
                 }
 
-                string moderationReason = await ChannelSession.Services.Moderation.ShouldTextBeModerated(this.User, this.PlainTextMessage, this.ContainsLink);
+                string moderationReason = await ServiceManager.Get<ModerationService>().ShouldTextBeModerated(this.User, this.PlainTextMessage, this.ContainsLink);
                 if (!string.IsNullOrEmpty(moderationReason))
                 {
                     Logger.Log(LogLevel.Debug, string.Format("Moderation Being Performed - {0}", this.ToString()));
@@ -128,7 +134,7 @@ namespace MixItUp.Base.ViewModel.Chat
             return false;
         }
 
-        public async Task Delete(UserViewModel moderator = null, string reason = null)
+        public async Task Delete(UserV2ViewModel moderator = null, string reason = null)
         {
             try
             {
@@ -147,14 +153,14 @@ namespace MixItUp.Base.ViewModel.Chat
 
                     this.OnDeleted(this, new EventArgs());
 
-                    if (moderator != null && this.User != null && !string.IsNullOrEmpty(this.PlainTextMessage))
+                    if (this.User != null && !string.IsNullOrEmpty(this.PlainTextMessage))
                     {
-                        CommandParametersModel parameters = new CommandParametersModel(moderator);
+                        CommandParametersModel parameters = new CommandParametersModel(moderator ?? this.User);
                         parameters.Arguments.Add(this.User.Username);
                         parameters.TargetUser = this.User;
                         parameters.SpecialIdentifiers["message"] = this.PlainTextMessage;
                         parameters.SpecialIdentifiers["reason"] = (!string.IsNullOrEmpty(this.ModerationReason)) ? this.ModerationReason : "Manual Deletion";
-                        await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.ChatMessageDeleted, parameters);
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatMessageDeleted, parameters);
                     }
                 }
             }

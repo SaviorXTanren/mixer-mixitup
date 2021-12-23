@@ -1,191 +1,545 @@
-﻿using MixItUp.Base.Model.API;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.API;
+using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Store;
+using MixItUp.Base.Model.User.Platform;
+using MixItUp.Base.Model.Webhooks;
+using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
+using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
+using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.User;
+using MixItUp.SignalR.Client;
+using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Services;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
-using System.Net;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace MixItUp.Base.Services
 {
-    public interface IMixItUpService
+    public interface IMixItUpService : IDisposable
     {
-        Task<MixItUpUpdateModel> GetLatestUpdate();
-        Task<MixItUpUpdateModel> GetLatestPublicUpdate();
-        Task<MixItUpUpdateModel> GetLatestPreviewUpdate();
-        Task<MixItUpUpdateModel> GetLatestTestUpdate();
+        bool IsWebhookHubConnected { get; }
+        bool IsWebhookHubAllowed { get; }
+        void BackgroundConnect();
+        Task<Result> Connect();
+        Task Disconnect();
 
-        Task SendIssueReport(IssueReportModel report);
+        Task Authenticate(string twitchAccessToken);
+
+        Task<GetWebhooksResponseModel> GetWebhooks();
+        Task<Webhook> CreateWebhook();
+        Task DeleteWebhook(Guid id);
     }
 
-    public class MixItUpService : IMixItUpService, IDisposable
+    public interface IWebhookService
     {
-        public const string MixItUpAPIEndpoint = "https://mixitupapi.azurewebsites.net/api/";
-        //public const string MixItUpAPIEndpoint = "http://localhost:33901/api/"; // Dev Endpoint
+        bool IsWebhookHubConnected { get; }
+        bool IsWebhookHubAllowed { get; }
+        void BackgroundConnect();
+        Task<Result> Connect();
+        Task Disconnect();
 
-        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        Task Authenticate(string twitchAccessToken);
 
-        public MixItUpService() { }
+        Task<GetWebhooksResponseModel> GetWebhooks();
+        Task<Webhook> CreateWebhook();
+        Task DeleteWebhook(Guid id);
+    }
 
-        public async Task<MixItUpUpdateModel> GetLatestUpdate()
+    public interface ICommunityCommandsService
+    {
+        Task<IEnumerable<CommunityCommandCategoryModel>> GetHomeCategories();
+        Task<CommunityCommandsSearchResult> SearchCommands(string query, int skip, int top);
+        Task<CommunityCommandDetailsModel> GetCommandDetails(Guid id);
+        Task<CommunityCommandDetailsModel> AddOrUpdateCommand(CommunityCommandUploadModel command);
+        Task DeleteCommand(Guid id);
+        Task ReportCommand(CommunityCommandReportModel report);
+        Task<CommunityCommandsSearchResult> GetCommandsByUser(Guid userID, int skip, int top);
+        Task<CommunityCommandsSearchResult> GetMyCommands(int skip, int top);
+        Task<CommunityCommandReviewModel> AddReview(CommunityCommandReviewModel review);
+        Task DownloadCommand(Guid id);
+    }
+
+    public class CommunityCommandsSearchResult
+    {
+        public const string PageNumberHeader = "Page-Number";
+        public const string PageSizeHeader = "Page-Size";
+        public const string TotalElementsHeader = "Total-Elements";
+        public const string TotalPagesHeader = "Total-Pages";
+
+        public static async Task<CommunityCommandsSearchResult> Create(HttpResponseMessage response)
         {
-            MixItUpUpdateModel update = await ChannelSession.Services.MixItUpService.GetLatestPublicUpdate();
-            if (update != null)
+            CommunityCommandsSearchResult result = new CommunityCommandsSearchResult();
+            if (response.IsSuccessStatusCode)
             {
-                if (ChannelSession.AppSettings.PreviewProgram)
+                result.Results.AddRange(await response.ProcessResponse<IEnumerable<CommunityCommandModel>>());
+
+                if (int.TryParse(response.GetHeaderValue(PageNumberHeader), out int pageNumber))
                 {
-                    MixItUpUpdateModel previewUpdate = await ChannelSession.Services.MixItUpService.GetLatestPreviewUpdate();
-                    if (previewUpdate != null && previewUpdate.SystemVersion >= update.SystemVersion)
-                    {
-                        update = previewUpdate;
-                    }
+                    result.PageNumber = pageNumber;
                 }
-
-                // Remove this when we wish to re-enable Test Builds
-                ChannelSession.AppSettings.TestBuild = false;
-
-                if (ChannelSession.AppSettings.TestBuild)
+                if (int.TryParse(response.GetHeaderValue(PageSizeHeader), out int pageSize))
                 {
-                    MixItUpUpdateModel testUpdate = await ChannelSession.Services.MixItUpService.GetLatestTestUpdate();
-                    if (testUpdate != null && testUpdate.SystemVersion >= update.SystemVersion)
-                    {
-                        update = testUpdate;
-                    }
+                    result.PageSize = pageSize;
+                }
+                if (int.TryParse(response.GetHeaderValue(TotalElementsHeader), out int totalElements))
+                {
+                    result.TotalElements = totalElements;
+                }
+                if (int.TryParse(response.GetHeaderValue(TotalPagesHeader), out int totalPages))
+                {
+                    result.TotalPages = totalPages;
                 }
             }
-            return update;
+            return result;
+        }
+
+        public List<CommunityCommandModel> Results { get; set; } = new List<CommunityCommandModel>();
+
+        public int PageNumber { get; set; }
+        public int PageSize { get; set; }
+
+        public int TotalElements { get; set; }
+        public int TotalPages { get; set; }
+
+        public CommunityCommandsSearchResult() { }
+
+        public bool HasPreviousResults { get { return this.PageNumber > 1; } }
+
+        public bool HasNextResults { get { return this.PageNumber < this.TotalPages; } }
+    }
+
+    public class MixItUpService : OAuthRestServiceBase, ICommunityCommandsService, IMixItUpService, IWebhookService, IDisposable
+    {
+        public const string MixItUpAPIEndpoint = "https://mixitupapi.azurewebsites.net/api/";
+        public const string MixItUpSignalRHubEndpoint = "https://mixitupapi.azurewebsites.net/webhookhub";
+
+        //public const string MixItUpAPIEndpoint = "https://localhost:44309/api/";                // Dev Endpoint
+        //public const string MixItUpSignalRHubEndpoint = "https://localhost:44309/webhookhub";   // Dev Endpoint
+
+        //public const string MixItUpAPIEndpoint = "https://9d71-98-97-49-144.ngrok.io/api/";                 // NGROK Endpoint
+        //public const string MixItUpSignalRHubEndpoint = "https://9d71-98-97-49-144.ngrok.io/webhookhub";    // NGROK Endpoint
+
+        private string accessToken = null;
+        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+        public MixItUpService()
+        {
+            this.signalRConnection = new SignalRConnection(MixItUpSignalRHubEndpoint);
+
+            this.signalRConnection.Listen("TwitchFollowEvent", (string followerId, string followerUsername, string followerDisplayName) =>
+            {
+                Logger.Log($"Webhook Event - Follow - {followerId} - {followerUsername}");
+                var _ = this.TwitchFollowEvent(followerId, followerUsername, followerDisplayName);
+            });
+
+            this.signalRConnection.Listen("TwitchStreamStartedEvent", () =>
+            {
+                Logger.Log($"Webhook Event - Stream Start");
+                var _ = this.TwitchStreamStartedEvent();
+            });
+
+            this.signalRConnection.Listen("TwitchStreamStoppedEvent", () =>
+            {
+                Logger.Log($"Webhook Event - Stream Stop");
+                var _ = this.TwitchStreamStoppedEvent();
+            });
+
+            this.signalRConnection.Listen("TwitchChannelHypeTrainBegin", (int totalPoints, int levelPoints, int levelGoal) =>
+            {
+                Logger.Log($"Webhook Event - Hype Train Begin");
+                var _ = this.TwitchChannelHypeTrainBegin(totalPoints, levelPoints, levelGoal);
+            });
+
+            //this.signalRConnection.Listen("TwitchChannelHypeTrainProgress", (int level, int totalPoints, int levelPoints, int levelGoal) =>
+            //{
+            //    var _ = this.TwitchChannelHypeTrainProgress(level, totalPoints, levelPoints, levelGoal);
+            //});
+
+            this.signalRConnection.Listen("TwitchChannelHypeTrainEnd", (int level, int totalPoints) =>
+            {
+                Logger.Log($"Webhook Event - Hype Train End - {level} - {totalPoints}");
+                var _ = this.TwitchChannelHypeTrainEnd(level, totalPoints);
+            });
+
+            this.signalRConnection.Listen("TriggerWebhook", (Guid id, string payload) =>
+            {
+                Logger.Log($"Webhook Event - Generic Webhook - {id} - {payload}");
+                var _ = this.TriggerGenericWebhook(id, payload);
+            });
+
+            this.signalRConnection.Listen("AuthenticationCompleteEvent", (bool approved) =>
+            {
+                this.IsWebhookHubAllowed = approved;
+                if (!this.IsWebhookHubAllowed)
+                {
+                    // Force disconnect is it doesn't retry
+                    var _ = this.Disconnect();
+                }
+            });
+        }
+
+        // IMixItUpService
+        public async Task<MixItUpUpdateModel> GetLatestUpdate()
+        {
+            try
+            {
+                MixItUpUpdateModel update = await ServiceManager.Get<MixItUpService>().GetLatestPublicUpdate();
+                if (update != null)
+                {
+                    if (ChannelSession.AppSettings.PreviewProgram)
+                    {
+                        MixItUpUpdateModel previewUpdate = await ServiceManager.Get<MixItUpService>().GetLatestPreviewUpdate();
+                        if (previewUpdate != null && previewUpdate.SystemVersion >= update.SystemVersion)
+                        {
+                            update = previewUpdate;
+                        }
+                    }
+
+                    // Remove this when we wish to re-enable Test Builds
+                    ChannelSession.AppSettings.TestBuild = false;
+
+                    if (ChannelSession.AppSettings.TestBuild)
+                    {
+                        MixItUpUpdateModel testUpdate = await ServiceManager.Get<MixItUpService>().GetLatestTestUpdate();
+                        if (testUpdate != null && testUpdate.SystemVersion >= update.SystemVersion)
+                        {
+                            update = testUpdate;
+                        }
+                    }
+                }
+                return update;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            return null;
         }
         public async Task<MixItUpUpdateModel> GetLatestPublicUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates"); }
         public async Task<MixItUpUpdateModel> GetLatestPreviewUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates/preview"); }
         public async Task<MixItUpUpdateModel> GetLatestTestUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates/test"); }
 
-        public async Task SendIssueReport(IssueReportModel report) { await this.PostAsync("issuereport", report); }
-
-        private async Task<T> GetAsync<T>(string endpoint)
+        public async Task SendIssueReport(IssueReportModel report)
         {
-            try
-            {
-                using (var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationTokenSource.Token))
-                {
-                    tokenSource.CancelAfter(5000);
-
-                    using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
-                    {
-                        HttpResponseMessage response = await client.GetAsync(endpoint, tokenSource.Token);
-                        if (response.StatusCode == HttpStatusCode.OK)
-                        {
-                            string content = await response.Content.ReadAsStringAsync();
-                            return JSONSerializerHelper.DeserializeFromString<T>(content);
-                        }
-                        else
-                        {
-                            await this.ProcessResponseIfError(response);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            return default(T);
-        }
-
-        private async Task PostAsync(string endpoint, object data, bool logException = true)
-        {
-            try
-            {
-                using (var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationTokenSource.Token))
-                {
-                    tokenSource.CancelAfter(5000);
-                    using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
-                    {
-                        string content = JSONSerializerHelper.SerializeToString(data);
-                        HttpResponseMessage response = await client.PostAsync(endpoint, new StringContent(content, Encoding.UTF8, "application/json"), tokenSource.Token);
-                        await this.ProcessResponseIfError(response);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                if (logException)
-                {
-                    Logger.Log(ex);
-                }
-            }
-        }
-
-        private async Task<T> PostAsyncWithResult<T>(string endpoint, object data)
-        {
-            try
-            {
-                using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
-                {
-                    string content = JSONSerializerHelper.SerializeToString(data);
-                    HttpResponseMessage response = await client.PostAsync(endpoint, new StringContent(content, Encoding.UTF8, "application/json"));
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-                        string resultContent = await response.Content.ReadAsStringAsync();
-                        return JSONSerializerHelper.DeserializeFromString<T>(resultContent);
-                    }
-                    else
-                    {
-                        await this.ProcessResponseIfError(response);
-                    }
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            return default(T);
-        }
-
-        private async Task PutAsync(string endpoint, object data)
-        {
-            try
-            {
-                using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
-                {
-                    string content = JSONSerializerHelper.SerializeToString(data);
-                    HttpResponseMessage response = await client.PutAsync(endpoint, new StringContent(content, Encoding.UTF8, "application/json"));
-                    await this.ProcessResponseIfError(response);
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-        }
-
-        private async Task PatchAsync(string endpoint, object data)
-        {
-            try
-            {
-                using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
-                {
-                    string content = JSONSerializerHelper.SerializeToString(data);
-                    HttpRequestMessage message = new HttpRequestMessage(new HttpMethod("PATCH"), endpoint);
-                    message.Content = new StringContent(content, Encoding.UTF8, "application/json");
-                    HttpResponseMessage response = await client.SendAsync(message);
-                    await this.ProcessResponseIfError(response);
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-        }
-
-        private async Task DeleteAsync(string endpoint)
-        {
-            try
-            {
-                using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
-                {
-                    await client.DeleteAsync(endpoint);
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-        }
-
-        private async Task ProcessResponseIfError(HttpResponseMessage response)
-        {
+            string content = JSONSerializerHelper.SerializeToString(report);
+            var response = await this.PostAsync("issuereport", new StringContent(content, Encoding.UTF8, "application/json"));
             if (!response.IsSuccessStatusCode)
             {
                 string resultContent = await response.Content.ReadAsStringAsync();
                 Logger.Log(resultContent);
             }
+        }
+
+        // ICommunityCommandsService
+        public async Task<IEnumerable<CommunityCommandCategoryModel>> GetHomeCategories()
+        {
+            await EnsureLogin();
+            return await GetAsync<IEnumerable<CommunityCommandCategoryModel>>("community/commands/categories");
+        }
+
+        public async Task<CommunityCommandsSearchResult> SearchCommands(string query, int skip, int top)
+        {
+            await EnsureLogin();
+            return await CommunityCommandsSearchResult.Create(await this.GetAsync($"community/commands/command/search?query={HttpUtility.UrlEncode(query)}&skip={skip}&top={top}"));
+        }
+
+        public async Task<CommunityCommandDetailsModel> GetCommandDetails(Guid id)
+        {
+            try
+            {
+                await EnsureLogin();
+                return await GetAsync<CommunityCommandDetailsModel>($"community/commands/command/{id}");
+            }
+            catch (HttpRestRequestException ex) when (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+        }
+
+        public async Task<CommunityCommandDetailsModel> AddOrUpdateCommand(CommunityCommandUploadModel command)
+        {
+            await EnsureLogin();
+            return await PostAsync<CommunityCommandDetailsModel>("community/commands/command", AdvancedHttpClient.CreateContentFromObject(command));
+        }
+
+        public async Task DeleteCommand(Guid id)
+        {
+            await EnsureLogin();
+            await DeleteAsync<CommunityCommandDetailsModel>($"community/commands/command/{id}/delete");
+        }
+
+        public async Task ReportCommand(CommunityCommandReportModel report)
+        {
+            await EnsureLogin();
+            await PostAsync($"community/commands/command/{report.CommandID}/report", AdvancedHttpClient.CreateContentFromObject(report));
+        }
+
+        public async Task<CommunityCommandsSearchResult> GetCommandsByUser(Guid userID, int skip, int top)
+        {
+            await EnsureLogin();
+            return await CommunityCommandsSearchResult.Create(await GetAsync($"community/commands/command/user/{userID}?skip={skip}&top={top}"));
+        }
+
+        public async Task<CommunityCommandsSearchResult> GetMyCommands(int skip, int top)
+        {
+            await EnsureLogin();
+            return await CommunityCommandsSearchResult.Create(await GetAsync($"community/commands/command/mine?skip={skip}&top={top}"));
+        }
+
+        public async Task<CommunityCommandReviewModel> AddReview(CommunityCommandReviewModel review)
+        {
+            await EnsureLogin();
+            return await PostAsync<CommunityCommandReviewModel>($"community/commands/command/{review.CommandID}/review", AdvancedHttpClient.CreateContentFromObject(review));
+        }
+
+        public async Task DownloadCommand(Guid id)
+        {
+            try
+            {
+                await EnsureLogin();
+                await GetAsync<IEnumerable<CommunityCommandDetailsModel>>($"community/commands/command/{id}/download");
+            }
+            catch { }
+        }
+
+        protected override Task<OAuthTokenModel> GetOAuthToken(bool autoRefreshToken = true)
+        {
+            return Task.FromResult(new OAuthTokenModel { accessToken = this.accessToken });
+        }
+
+        protected override string GetBaseAddress() => MixItUpService.MixItUpAPIEndpoint;
+
+        private async Task EnsureLogin()
+        {
+            if (accessToken == null)
+            {
+                var token = this.GetLoginToken();
+                var loginResponse = await PostAsync<CommunityCommandLoginResponseModel>("user/login", AdvancedHttpClient.CreateContentFromObject(token));
+                this.accessToken = loginResponse.AccessToken;
+            }
+        }
+
+        // IWebhookService
+        public const string AuthenticateMethodName = "Authenticate";
+        private readonly SignalRConnection signalRConnection;
+        public bool IsWebhookHubConnected { get { return this.signalRConnection.IsConnected(); } }
+        public bool IsWebhookHubAllowed { get; private set; } = false;
+
+        public void BackgroundConnect()
+        {
+            AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+            {
+                Result result = await this.Connect();
+                if (!result.Success)
+                {
+                    SignalRConnection_Disconnected(this, new Exception());
+                }
+            }, new CancellationToken());
+        }
+
+        public async Task<Result> Connect()
+        {
+            if (!this.IsWebhookHubConnected)
+            {
+                this.signalRConnection.Connected -= SignalRConnection_Connected;
+                this.signalRConnection.Disconnected -= SignalRConnection_Disconnected;
+
+                this.signalRConnection.Connected += SignalRConnection_Connected;
+                this.signalRConnection.Disconnected += SignalRConnection_Disconnected;
+
+                if (await this.signalRConnection.Connect())
+                {
+                    return new Result(this.IsWebhookHubConnected);
+                }
+                return new Result(MixItUp.Base.Resources.WebhooksServiceFailedConnection);
+            }
+            return new Result(MixItUp.Base.Resources.WebhookServiceAlreadyConnected);
+        }
+
+        public async Task Disconnect()
+        {
+            this.signalRConnection.Connected -= SignalRConnection_Connected;
+            this.signalRConnection.Disconnected -= SignalRConnection_Disconnected;
+
+            await this.signalRConnection.Disconnect();
+        }
+
+        private async void SignalRConnection_Connected(object sender, EventArgs e)
+        {
+            ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.WebhookEvents);
+
+            await this.Authenticate(JSONSerializerHelper.SerializeToString(this.GetLoginToken()));
+        }
+
+        private async void SignalRConnection_Disconnected(object sender, Exception e)
+        {
+            ChannelSession.DisconnectionOccurred(MixItUp.Base.Resources.WebhookEvents);
+
+            Result result = new Result();
+            do
+            {
+                await this.Disconnect();
+
+                await Task.Delay(5000 + RandomHelper.GenerateRandomNumber(5000));
+
+                result = await this.Connect();
+            }
+            while (!result.Success);
+        }
+
+        public async Task Authenticate(string twitchAccessToken)
+        {
+            await this.AsyncWrapper(this.signalRConnection.Send(AuthenticateMethodName, JSONSerializerHelper.SerializeToString(this.GetLoginToken())));
+        }
+
+        public async Task<GetWebhooksResponseModel> GetWebhooks()
+        {
+            await EnsureLogin();
+            return await GetAsync<GetWebhooksResponseModel>($"webhook");
+        }
+
+        public async Task<Webhook> CreateWebhook()
+        {
+            await EnsureLogin();
+            return await PostAsync<Webhook>($"webhook", AdvancedHttpClient.CreateContentFromObject(new {}));
+        }
+
+        public async Task DeleteWebhook(Guid id)
+        {
+            await EnsureLogin();
+            await DeleteAsync($"webhook/{id}");
+        }
+
+        private async Task AsyncWrapper(Task task)
+        {
+            try
+            {
+                await task;
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+        }
+
+        private async Task TwitchFollowEvent(string followerId, string followerUsername, string followerDisplayName)
+        {
+            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, followerId);
+            if (user == null)
+            {
+                user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(followerId, followerUsername, followerDisplayName));
+            }
+
+            await ServiceManager.Get<TwitchEventService>().AddFollow(user);
+        }
+
+        private async Task TwitchStreamStartedEvent()
+        {
+            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStart, new CommandParametersModel());
+        }
+
+        private async Task TwitchStreamStoppedEvent()
+        {
+            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStop, new CommandParametersModel());
+        }
+
+        private async Task TwitchChannelHypeTrainBegin(int totalPoints, int levelPoints, int levelGoal)
+        {
+            Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
+            eventCommandSpecialIdentifiers["hypetraintotalpoints"] = totalPoints.ToString();
+            eventCommandSpecialIdentifiers["hypetrainlevelpoints"] = levelPoints.ToString();
+            eventCommandSpecialIdentifiers["hypetrainlevelgoal"] = levelGoal.ToString();
+            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeTrainBegin, new CommandParametersModel(ChannelSession.User, eventCommandSpecialIdentifiers));
+
+            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, MixItUp.Base.Resources.HypeTrainStarted, ChannelSession.Settings.AlertTwitchHypeTrainColor));
+        }
+
+        //private async Task TwitchChannelHypeTrainProgress(int level, int totalPoints, int levelPoints, int levelGoal)
+        //{
+        //    Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
+        //    eventCommandSpecialIdentifiers["hypetraintotallevel"] = level.ToString();
+        //    eventCommandSpecialIdentifiers["hypetraintotalpoints"] = totalPoints.ToString();
+        //    eventCommandSpecialIdentifiers["hypetrainlevelpoints"] = levelPoints.ToString();
+        //    eventCommandSpecialIdentifiers["hypetrainlevelgoal"] = levelGoal.ToString();
+
+        //    EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelHypeTrainProgress, ChannelSession.GetCurrentUser(), eventCommandSpecialIdentifiers);
+        //    if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+        //    {
+        //        await ChannelSession.Services.Events.PerformEvent(trigger);
+        //    }
+        //}
+
+        private async Task TwitchChannelHypeTrainEnd(int level, int totalPoints)
+        {
+            Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
+            eventCommandSpecialIdentifiers["hypetraintotallevel"] = level.ToString();
+            eventCommandSpecialIdentifiers["hypetraintotalpoints"] = totalPoints.ToString();
+            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeTrainEnd, new CommandParametersModel(ChannelSession.User, eventCommandSpecialIdentifiers));
+
+            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, string.Format(MixItUp.Base.Resources.HypeTrainEndedReachedLevel, level.ToString()), ChannelSession.Settings.AlertTwitchHypeTrainColor));
+        }
+
+        private async Task TriggerGenericWebhook(Guid id, string payload)
+        {
+            try
+            {
+                var command = ServiceManager.Get<CommandService>().WebhookCommands.FirstOrDefault(c => c.ID == id);
+                if (command != null && command.IsEnabled)
+                {
+                    if (string.IsNullOrEmpty(payload))
+                    {
+                        payload = "{}";
+                    }
+
+                    Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
+                    eventCommandSpecialIdentifiers["webhookpayload"] = payload;
+
+                    // Do JSON => Special Identifier logic
+                    CommandParametersModel parameters = new CommandParametersModel(ChannelSession.User, eventCommandSpecialIdentifiers);
+                    Dictionary<string, string> jsonParameters = command.JSONParameters.ToDictionary(param => param.JSONParameterName, param => param.SpecialIdentifierName);
+                    await WebRequestActionModel.ProcessJSONToSpecialIdentifiers(payload, jsonParameters, parameters);
+
+                    await ServiceManager.Get<CommandService>().Queue(command, parameters);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
+        private CommunityCommandLoginModel GetLoginToken()
+        {
+            var login = new CommunityCommandLoginModel();
+
+            if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
+            {
+                login.TwitchAccessToken = ServiceManager.Get<TwitchSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
+            }
+            if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().IsConnected)
+            {
+                login.YouTubeAccessToken = ServiceManager.Get<YouTubeSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
+            }
+            if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
+            {
+                login.TrovoAccessToken = ServiceManager.Get<TrovoSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
+            }
+            if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().IsConnected)
+            {
+                login.GlimeshAccessToken = ServiceManager.Get<GlimeshSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
+            }
+
+            return login;
         }
 
         #region IDisposable Support

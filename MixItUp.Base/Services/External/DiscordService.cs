@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
@@ -267,46 +268,6 @@ namespace MixItUp.Base.Services.External
 
         [JsonIgnore]
         public bool IsReadyPacket { get { return ReadyPacketName.Equals(this.Name); } }
-    }
-
-    public interface IDiscordService : IOAuthExternalService
-    {
-        bool IsUsingCustomApplication { get; }
-
-        DiscordUser User { get; }
-        DiscordServer Server { get; }
-
-        string BotPermissions { get; }
-
-        Task<DiscordGateway> GetBotGateway();
-
-        Task<DiscordUser> GetCurrentUser();
-
-        Task<DiscordUser> GetUser(string userID);
-
-        Task<IEnumerable<DiscordServer>> GetCurrentUserServers();
-
-        Task<DiscordServer> GetServer(string serverID);
-
-        Task<IEnumerable<DiscordServerUser>> GetServerMembers(DiscordServer server, int maxNumbers = 1);
-
-        Task<DiscordServerUser> GetServerMember(DiscordServer server, DiscordUser user);
-
-        Task<IEnumerable<DiscordChannel>> GetServerChannels(DiscordServer server);
-
-        Task<DiscordChannel> GetChannel(string channelID);
-
-        Task<IEnumerable<DiscordEmoji>> GetEmojis(DiscordServer server);
-
-        Task<DiscordMessage> CreateMessage(DiscordChannel channel, string message, string filePath);
-
-        Task<DiscordChannelInvite> CreateChannelInvite(DiscordChannel channel, bool isTemporary = false);
-
-        Task ChangeServerMemberRole(DiscordServer server, DiscordUser user, IEnumerable<string> roles);
-
-        Task MuteServerMember(DiscordServer server, DiscordUser user, bool mute = true);
-
-        Task DeafenServerMember(DiscordServer server, DiscordUser user, bool deaf = true);
     }
 
     public class DiscordOAuthServer : LocalOAuthHttpListenerServer
@@ -592,7 +553,7 @@ namespace MixItUp.Base.Services.External
 
                 if (!string.IsNullOrEmpty(filePath))
                 {
-                    byte[] bytes = await ChannelSession.Services.FileService.ReadFileAsBytes(filePath);
+                    byte[] bytes = await ServiceManager.Get<IFileService>().ReadFileAsBytes(filePath);
                     if (bytes != null && bytes.Length > 0)
                     {
                         var fileContent = new ByteArrayContent(bytes);
@@ -628,7 +589,7 @@ namespace MixItUp.Base.Services.External
 
         protected override Task<Result> InitializeInternal() { throw new NotImplementedException(); }
 
-        protected override Task RefreshOAuthToken() { return Task.FromResult(0); }
+        protected override Task RefreshOAuthToken() { return Task.CompletedTask; }
 
         private async Task<HttpResponseMessage> ModifyServerMember(DiscordServer server, DiscordUser user, JObject content)
         {
@@ -641,7 +602,7 @@ namespace MixItUp.Base.Services.External
         }
     }
 
-    public class DiscordService : OAuthExternalServiceBase, IDiscordService, IDisposable
+    public class DiscordService : OAuthExternalServiceBase, IDisposable
     {
         /// <summary>
         /// View Channels, Send Messages, Send TTS Messages, Embed Links, Attach Files, Mention Everyone, Use External Emojis, Connect, Mute Members, Deafen Members
@@ -673,8 +634,8 @@ namespace MixItUp.Base.Services.External
 
         public bool IsUsingCustomApplication { get { return !string.IsNullOrEmpty(ChannelSession.Settings.DiscordCustomClientID); } }
         public string ClientID { get { return (this.IsUsingCustomApplication) ? ChannelSession.Settings.DiscordCustomClientID : DiscordService.DefaultClientID; } }
-        public string ClientSecret { get { return (this.IsUsingCustomApplication) ? ChannelSession.Settings.DiscordCustomClientSecret : ChannelSession.Services.Secrets.GetSecret("DiscordSecret"); } }
-        public string BotToken { get { return (this.IsUsingCustomApplication) ? ChannelSession.Settings.DiscordCustomBotToken : ChannelSession.Services.Secrets.GetSecret("DiscordBotToken"); } }
+        public string ClientSecret { get { return (this.IsUsingCustomApplication) ? ChannelSession.Settings.DiscordCustomClientSecret : ServiceManager.Get<SecretsService>().GetSecret("DiscordSecret"); } }
+        public string BotToken { get { return (this.IsUsingCustomApplication) ? ChannelSession.Settings.DiscordCustomBotToken : ServiceManager.Get<SecretsService>().GetSecret("DiscordBotToken"); } }
 
         public override async Task<Result> Connect()
         {
@@ -720,7 +681,7 @@ namespace MixItUp.Base.Services.External
         {
             this.token = null;
             this.cancellationTokenSource.Cancel();
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public async Task<DiscordGateway> GetBotGateway() { return await this.botService.GetBotGateway(); }
@@ -869,7 +830,7 @@ namespace MixItUp.Base.Services.External
                 this.lastCommand = DateTimeOffset.Now;
                 return true;
             }
-            await ChannelSession.Services.Chat.SendMessage("The Discord action you were trying to perform was blocked due to too many requests. Please ensure you are only performing 1 Discord action every 30 seconds. You can add a custom Discord Bot under the Services page to circumvent this block.");
+            await ServiceManager.Get<ChatService>().SendMessage("The Discord action you were trying to perform was blocked due to too many requests. Please ensure you are only performing 1 Discord action every 30 seconds. You can add a custom Discord Bot under the Services page to circumvent this block.", StreamingPlatformTypeEnum.All);
             return false;
         }
     }

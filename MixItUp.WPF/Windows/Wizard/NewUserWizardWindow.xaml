@@ -115,93 +115,34 @@
                         <RowDefinition Height="20" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="20" />
-                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0" TextWrapping="Wrap" Width="700" Text="{x:Static resx:Resources.AccountsWizardInstructions}"/>
 
                     <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="700" Text="{x:Static resx:Resources.AccountsDetails}"/>
 
-                    <AccountControls:StreamingPlatformAccountControl Grid.Row="4" DataContext="{Binding Twitch}" />
-                </Grid>
+                    <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Visible">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                <Grid Visibility="{Binding ScorpBotPageVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+                            <AccountControls:StreamingPlatformAccountControl Grid.Row="0" DataContext="{Binding Twitch}" />
 
-                    <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Import ScorpBot Data</TextBlock>
+                            <AccountControls:StreamingPlatformAccountControl Grid.Row="2" DataContext="{Binding YouTube}" />
 
-                    <StackPanel Grid.Row="2" Width="675">
-                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,20">If you previously used ScorpBot, we can import several things from your settings to get you ramped up faster in Mix It Up! Currently, the following features can be imported:</TextBlock>
+                            <AccountControls:StreamingPlatformAccountControl Grid.Row="4" DataContext="{Binding Trovo}" />
 
-                        <TextBlock Margin="20,10,0,0">- Chat Commands</TextBlock>
-                        <TextBlock Margin="20,0,0,0">- Timers</TextBlock>
-                        <TextBlock Margin="20,0,0,0">- Banned Words</TextBlock>
-                        <TextBlock Margin="20,0,0,0">- Quotes</TextBlock>
-                        <TextBlock Margin="20,0,0,0">- Viewer Data (Currency, Rank, &amp; Hours)</TextBlock>
-                        <TextBlock Margin="40,0,0,0" TextWrapping="Wrap">- (NOTE: If your Ranks ("points1") are based on Hours, we will create an additional Currency based on the points used in "points1")</TextBlock>
-
-                        <TextBlock TextWrapping="Wrap" Margin="0,30,0,0">To get started, use the File Dialog below to select your ScorpBot installation directory (the folder where ScorpBot.exe is located) or can you skip this by doing nothing and clicking Next:</TextBlock>
-                    </StackPanel>
-
-                    <Grid Grid.Row="4">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBox Grid.Row="2" Text="{Binding ScorpBotDirectory}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ScorpBotInstallationDirectory}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                        <Button Grid.Column="2" Grid.Row="0" Command="{Binding ScorpBotDirectoryBrowseCommand}" Content="{x:Static resx:Resources.Browse}"/>
-                    </Grid>
-                </Grid>
-
-                <Grid Visibility="{Binding StreamlabsChatbotPageVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="15" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="15" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Import Streamlabs Chat Bot Data</TextBlock>
-
-                    <StackPanel Grid.Row="2" Width="675">
-                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,0">If you previously used Streamlabs Chat Bot, we can import several things from your data to get you ramped up faster in Mix It Up! Currently, the following features can be imported:</TextBlock>
-
-                        <TextBlock Margin="20,10,0,0">- Chat Commands</TextBlock>
-                        <TextBlock Margin="20,0,0,0">- Timers</TextBlock>
-                        <TextBlock Margin="20,0,0,0">- Quotes</TextBlock>
-                        <TextBlock Margin="20,0,0,0">- User Join Events</TextBlock>
-                        <TextBlock Margin="20,0,0,0">- Viewer Data (Currency, Rank, &amp; Hours)</TextBlock>
-
-                        <TextBlock Margin="0,20,0,0" TextWrapping="Wrap">NOTE: Streamlabs Chat Bot does not export its settings, only the data. This means that you will still need to set up certain things afterwards. This includes, but is not limited to:</TextBlock>
-                        <TextBlock Margin="20,10,0,0">- Timer Frequency</TextBlock>
-                        <TextBlock Margin="20,0,0,0">- Counters</TextBlock>
-                        <TextBlock Margin="20,0,0,0">- Currency/Rank Name, Rates, &amp; Bonuses</TextBlock>
-                        <TextBlock Margin="20,0,0,0">- Moderation Rules</TextBlock>
-
-                        <TextBlock TextWrapping="Wrap" Margin="0,20,0,0">To get started, click on the person icon in the bottom-left corner of Streamlabs Chat Bot, then select the Cloud option. Pick a folder for the Cloud Service Folder option, click Save Settings, then click Create Excel Files. Navigate to the folder you just selected by clicking the Browse button below this and select the file Data.xlsx. You can also skip this by clicking Next:</TextBlock>
-                    </StackPanel>
-
-                    <Grid Grid.Row="4">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBox Grid.Row="2" Text="{Binding StreamlabsChatbotDirectory}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StreamlabsChatBotDataFile}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                        <Button Grid.Column="2" Grid.Row="0" Command="{Binding StreamlabsChatbotDirectoryBrowseCommand}">Browse</Button>
-                    </Grid>
+                            <AccountControls:StreamingPlatformAccountControl Grid.Row="6" DataContext="{Binding Glimesh}" />
+                        </Grid>
+                    </ScrollViewer>
                 </Grid>
 
                 <Grid Visibility="{Binding CommandActionsPageVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
@@ -277,7 +218,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap" Width="450">Mix It Up is a desktop-only application, so your settings and data only exist on their computer. Therefore we encourge our users to set up automatic backups for their settings to ensure you always have something to fall back to in the event of any issues:</TextBlock>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap" Width="450">Mix It Up is a desktop-only application, so your settings and data only exist on your computer. Therefore we encourge users to set up automatic backups for your settings to ensure you always have something to fall back to in the event of any issues:</TextBlock>
 
                             <Grid Grid.Column="2">
                                 <Grid.RowDefinitions>

@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -105,12 +106,7 @@ namespace MixItUp.Base.Services.External
         public string value { get; set; }
     }
 
-    public interface IStreamlootsService : IOAuthExternalService
-    {
-        event EventHandler OnStreamlootsConnectionChanged;
-    }
-
-    public class StreamlootsService : OAuthExternalServiceBase, IStreamlootsService
+    public class StreamlootsService : OAuthExternalServiceBase
     {
         private WebRequest webRequest;
         private Stream responseStream;
@@ -145,7 +141,7 @@ namespace MixItUp.Base.Services.External
 
             this.OnStreamlootsConnectionChanged(this, new EventArgs());
 
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         protected override Task<Result> InitializeInternal()
@@ -161,7 +157,7 @@ namespace MixItUp.Base.Services.External
             return Task.FromResult(new Result());
         }
 
-        protected override Task RefreshOAuthToken() { return Task.FromResult(0); }
+        protected override Task RefreshOAuthToken() { return Task.CompletedTask; }
 
         protected override void DisposeInternal()
         {
@@ -266,30 +262,30 @@ namespace MixItUp.Base.Services.External
             var purchase = jobj["data"].ToObject<StreamlootsPurchaseModel>();
             if (purchase != null)
             {
-                UserViewModel user = this.GetUser(purchase.data.Username);
-                UserViewModel giftee = (string.IsNullOrEmpty(purchase.data.Giftee)) ? null : this.GetUser(purchase.data.Giftee);
+                UserV2ViewModel user = this.GetUser(purchase.data.Username);
+                UserV2ViewModel giftee = (string.IsNullOrEmpty(purchase.data.Giftee)) ? null : this.GetUser(purchase.data.Giftee);
 
                 CommandParametersModel parameters = new CommandParametersModel(user);
                 parameters.SpecialIdentifiers["streamlootspurchasequantity"] = purchase.data.Quantity.ToString();
                 if (giftee != null)
                 {
                     parameters.Arguments.Add(giftee.Username);
-                    await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.StreamlootsPackGifted, parameters);
+                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.StreamlootsPackGifted, parameters);
                 }
                 else
                 {
-                    await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.StreamlootsPackPurchased, parameters);
+                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.StreamlootsPackPurchased, parameters);
                 }
 
-                GlobalEvents.StreamlootsPurchaseOccurred(new Tuple<UserViewModel, int>(user, purchase.data.Quantity));
+                GlobalEvents.StreamlootsPurchaseOccurred(new Tuple<UserV2ViewModel, int>(user, purchase.data.Quantity));
 
                 if (giftee != null)
                 {
-                    await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Gifted {1} Pack(s) to {2}", user.FullDisplayName, purchase.data.Quantity, giftee.Username), ChannelSession.Settings.AlertStreamlootsColor));
+                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} Gifted {1} Pack(s) to {2}", user.FullDisplayName, purchase.data.Quantity, giftee.Username), ChannelSession.Settings.AlertStreamlootsColor));
                 }
                 else
                 {
-                    await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Purchases {1} Pack(s)", user.FullDisplayName, purchase.data.Quantity), ChannelSession.Settings.AlertStreamlootsColor));
+                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} Purchases {1} Pack(s)", user.FullDisplayName, purchase.data.Quantity), ChannelSession.Settings.AlertStreamlootsColor));
                 }
             }
         }
@@ -300,7 +296,7 @@ namespace MixItUp.Base.Services.External
             StreamlootsCardModel card = jobj["data"].ToObject<StreamlootsCardModel>();
             if (card != null && !string.IsNullOrEmpty(card.data?.cardName))
             {
-                UserViewModel user = this.GetUser(card.data.Username);
+                UserV2ViewModel user = this.GetUser(card.data.Username);
 
                 Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
                 specialIdentifiers["streamlootscardname"] = card.data.cardName;
@@ -324,25 +320,25 @@ namespace MixItUp.Base.Services.External
                     arguments = new List<string>(message.Split(' '));
                 }
 
-                await ChannelSession.Services.Events.PerformEvent(EventTypeEnum.StreamlootsCardRedeemed, new CommandParametersModel(user, arguments, specialIdentifiers));
+                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.StreamlootsCardRedeemed, new CommandParametersModel(user, arguments, specialIdentifiers));
 
-                StreamlootsCardCommandModel command = ChannelSession.Services.Command.StreamlootsCardCommands.FirstOrDefault(c => string.Equals(c.Name, card.data.cardName, StringComparison.CurrentCultureIgnoreCase));
+                StreamlootsCardCommandModel command = ServiceManager.Get<CommandService>().StreamlootsCardCommands.FirstOrDefault(c => string.Equals(c.Name, card.data.cardName, StringComparison.CurrentCultureIgnoreCase));
                 if (command != null)
                 {
                     Dictionary<string, string> cardsCommandSpecialIdentifiers = new Dictionary<string, string>(specialIdentifiers);
-                    await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(user, platform: user.Platform, arguments: arguments, specialIdentifiers: cardsCommandSpecialIdentifiers));
+                    await ServiceManager.Get<CommandService>().Queue(command, new CommandParametersModel(user, platform: user.Platform, arguments: arguments, specialIdentifiers: cardsCommandSpecialIdentifiers));
                 }
 
-                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Redeemed {1} Card", user.FullDisplayName, card.data.cardName), ChannelSession.Settings.AlertStreamlootsColor));
+                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} Redeemed {1} Card", user.FullDisplayName, card.data.cardName), ChannelSession.Settings.AlertStreamlootsColor));
             }
         }
 
-        private UserViewModel GetUser(string username)
+        private UserV2ViewModel GetUser(string username)
         {
-            UserViewModel user = ChannelSession.Services.User.GetActiveUserByUsername(username);
+            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum.All, username);
             if (user == null)
             {
-                user = UserViewModel.Create(username);
+                user = UserV2ViewModel.CreateUnassociated(username);
             }
             return user;
         }

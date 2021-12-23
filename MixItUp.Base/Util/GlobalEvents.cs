@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Model.User;
-using MixItUp.Base.Model.User.Twitch;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -98,8 +98,8 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<UserViewModel> OnFollowOccurred;
-        public static void FollowOccurred(UserViewModel user)
+        public static event EventHandler<UserV2ViewModel> OnFollowOccurred;
+        public static void FollowOccurred(UserV2ViewModel user)
         {
             if (GlobalEvents.OnFollowOccurred != null)
             {
@@ -107,8 +107,8 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<UserViewModel> OnSubscribeOccurred;
-        public static void SubscribeOccurred(UserViewModel user)
+        public static event EventHandler<UserV2ViewModel> OnSubscribeOccurred;
+        public static void SubscribeOccurred(UserV2ViewModel user)
         {
             if (GlobalEvents.OnSubscribeOccurred != null)
             {
@@ -116,8 +116,8 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<Tuple<UserViewModel, int>> OnResubscribeOccurred;
-        public static void ResubscribeOccurred(Tuple<UserViewModel, int> user)
+        public static event EventHandler<Tuple<UserV2ViewModel, int>> OnResubscribeOccurred;
+        public static void ResubscribeOccurred(Tuple<UserV2ViewModel, int> user)
         {
             if (GlobalEvents.OnResubscribeOccurred != null)
             {
@@ -125,17 +125,17 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<Tuple<UserViewModel, UserViewModel>> OnSubscriptionGiftedOccurred;
-        public static void SubscriptionGiftedOccurred(UserViewModel gifter, UserViewModel receiver)
+        public static event EventHandler<Tuple<UserV2ViewModel, UserV2ViewModel>> OnSubscriptionGiftedOccurred;
+        public static void SubscriptionGiftedOccurred(UserV2ViewModel gifter, UserV2ViewModel receiver)
         {
             if (GlobalEvents.OnSubscriptionGiftedOccurred != null)
             {
-                GlobalEvents.OnSubscriptionGiftedOccurred(null, new Tuple<UserViewModel, UserViewModel>(gifter, receiver));
+                GlobalEvents.OnSubscriptionGiftedOccurred(null, new Tuple<UserV2ViewModel, UserV2ViewModel>(gifter, receiver));
             }
         }
 
-        public static event EventHandler<UserViewModel> OnHostOccurred;
-        public static void HostOccurred(UserViewModel user)
+        public static event EventHandler<UserV2ViewModel> OnHostOccurred;
+        public static void HostOccurred(UserV2ViewModel user)
         {
             if (GlobalEvents.OnHostOccurred != null)
             {
@@ -143,12 +143,12 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<Tuple<UserViewModel, int>> OnRaidOccurred;
-        public static void RaidOccurred(UserViewModel user, int viewers)
+        public static event EventHandler<Tuple<UserV2ViewModel, int>> OnRaidOccurred;
+        public static void RaidOccurred(UserV2ViewModel user, int viewers)
         {
             if (GlobalEvents.OnRaidOccurred != null)
             {
-                GlobalEvents.OnRaidOccurred(null, new Tuple<UserViewModel, int>(user, viewers));
+                GlobalEvents.OnRaidOccurred(null, new Tuple<UserV2ViewModel, int>(user, viewers));
             }
         }
 
@@ -170,8 +170,8 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<Tuple<UserViewModel, int>> OnStreamlootsPurchaseOccurred;
-        public static void StreamlootsPurchaseOccurred(Tuple<UserViewModel, int> purchase)
+        public static event EventHandler<Tuple<UserV2ViewModel, int>> OnStreamlootsPurchaseOccurred;
+        public static void StreamlootsPurchaseOccurred(Tuple<UserV2ViewModel, int> purchase)
         {
             if (GlobalEvents.OnStreamlootsPurchaseOccurred != null)
             {

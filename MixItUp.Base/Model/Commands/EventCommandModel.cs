@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat.Trovo;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,37 @@ namespace MixItUp.Base.Model.Commands
             Dictionary<string, string> specialIdentifiers = CommandModelBase.GetGeneralTestSpecialIdentifiers();
             switch (eventType)
             {
+                // Generic
+                case EventTypeEnum.ChannelRaided:
+                    specialIdentifiers["hostviewercount"] = "123";
+                    specialIdentifiers["raidviewercount"] = "123";
+                    break;
+                case EventTypeEnum.ChannelSubscribed:
+                    specialIdentifiers["message"] = "Test Message";
+                    specialIdentifiers["usersubplanname"] = "Plan Name";
+                    specialIdentifiers["usersubplan"] = "Tier 1";
+                    break;
+                case EventTypeEnum.ChannelResubscribed:
+                    specialIdentifiers["message"] = "Test Message";
+                    specialIdentifiers["usersubplanname"] = "Plan Name";
+                    specialIdentifiers["usersubplan"] = "Tier 1";
+                    specialIdentifiers["usersubmonths"] = "5";
+                    specialIdentifiers["usersubstreak"] = "3";
+                    break;
+                case EventTypeEnum.ChannelSubscriptionGifted:
+                    specialIdentifiers["usersubplanname"] = "Plan Name";
+                    specialIdentifiers["usersubplan"] = "Tier 1";
+                    specialIdentifiers["usersubmonthsgifted"] = "3";
+                    specialIdentifiers["isanonymous"] = "false";
+                    break;
+                case EventTypeEnum.ChannelMassSubscriptionsGifted:
+                    specialIdentifiers["subsgiftedamount"] = "5";
+                    specialIdentifiers["subsgiftedlifetimeamount"] = "100";
+                    specialIdentifiers["usersubplan"] = "Tier 1";
+                    specialIdentifiers["isanonymous"] = "false";
+                    break;
+
+                // Twitch
                 case EventTypeEnum.TwitchChannelRaided:
                     specialIdentifiers["hostviewercount"] = "123";
                     specialIdentifiers["raidviewercount"] = "123";
@@ -61,9 +93,44 @@ namespace MixItUp.Base.Model.Commands
                     specialIdentifiers["rewardcost"] = "100";
                     specialIdentifiers["message"] = "Test Message";
                     break;
+                case EventTypeEnum.TwitchChannelHypeTrainBegin:
+                    specialIdentifiers["hypetraintotalpoints"] = "1";
+                    specialIdentifiers["hypetrainlevelpoints"] = "123";
+                    specialIdentifiers["hypetrainlevelgoal"] = "5";
+                    break;
+                case EventTypeEnum.TwitchChannelHypeTrainEnd:
+                    specialIdentifiers["hypetraintotallevel"] = "5";
+                    specialIdentifiers["hypetraintotalpoints"] = "1234";
+                    break;
+
+                // Trovo
+                case EventTypeEnum.TrovoChannelRaided:
+                    specialIdentifiers["raidviewercount"] = "123";
+                    break;
+                case EventTypeEnum.TrovoChannelSubscribed:
+                    specialIdentifiers["message"] = "Test Message";
+                    break;
+                case EventTypeEnum.TrovoChannelResubscribed:
+                    specialIdentifiers["message"] = "Test Message";
+                    specialIdentifiers["usersubmonths"] = "5";
+                    break;
+                case EventTypeEnum.TrovoChannelMassSubscriptionsGifted:
+                    specialIdentifiers["subsgiftedamount"] = "5";
+                    break;
+                case EventTypeEnum.TrovoSpellCast:
+                    specialIdentifiers[TrovoChatSpellViewModel.SpellNameSpecialIdentifier] = "Spell Name";
+                    specialIdentifiers[TrovoChatSpellViewModel.SpellQuantitySpecialIdentifier] = "5";
+                    specialIdentifiers[TrovoChatSpellViewModel.SpellTotalValueSpecialIdentifier] = "250";
+                    specialIdentifiers[TrovoChatSpellViewModel.SpellValueTypeSpecialIdentifier] = MixItUp.Base.Resources.TrovoElixir;
+                    specialIdentifiers[TrovoChatSpellViewModel.SpellValueSpecialIdentifier] = "50";
+                    break;
+
+                // Chat
                 case EventTypeEnum.ChatUserTimeout:
                     specialIdentifiers["timeoutlength"] = "5m";
                     break;
+
+                // Donation
                 case EventTypeEnum.StreamlabsDonation:
                 case EventTypeEnum.TiltifyDonation:
                 case EventTypeEnum.ExtraLifeDonation:
@@ -114,6 +181,8 @@ namespace MixItUp.Base.Model.Commands
                     specialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierAmountSpecialIdentifier] = "12.34";
                     specialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierImageSpecialIdentifier] = genericImage;
                     break;
+
+                // Streamloots
                 case EventTypeEnum.StreamlootsCardRedeemed:
                     specialIdentifiers["streamlootscardname"] = "Test Card";
                     specialIdentifiers["streamlootscarddescription"] = "Test Description";
@@ -127,16 +196,30 @@ namespace MixItUp.Base.Model.Commands
                 case EventTypeEnum.StreamlootsPackGifted:
                     specialIdentifiers["streamlootspurchasequantity"] = "1";
                     break;
-                case EventTypeEnum.TwitchChannelHypeTrainBegin:
-                    specialIdentifiers["hypetraintotalpoints"] = "1";
-                    specialIdentifiers["hypetrainlevelpoints"] = "123";
-                    specialIdentifiers["hypetrainlevelgoal"] = "5";
-                    break;
-                case EventTypeEnum.TwitchChannelHypeTrainEnd:
-                    specialIdentifiers["hypetraintotallevel"] = "5";
-                    specialIdentifiers["hypetraintotalpoints"] = "1234";
-                    break;
             }
+
+            int eventNumber = (int)eventType;
+            if (eventNumber >= 200 && eventNumber < 300)
+            {
+                specialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = Resources.Twitch;
+            }
+            else if (eventNumber >= 300 && eventNumber < 400)
+            {
+                specialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = Resources.YouTube;
+            }
+            else if (eventNumber >= 400 && eventNumber < 500)
+            {
+                specialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = Resources.Trovo;
+            }
+            else if (eventNumber >= 500 && eventNumber < 600)
+            {
+                specialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = Resources.Glimesh;
+            }
+            else
+            {
+                specialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = Resources.Generic;
+            }
+
             return specialIdentifiers;
         }
 
@@ -144,16 +227,6 @@ namespace MixItUp.Base.Model.Commands
         public EventTypeEnum EventType { get; set; }
 
         public EventCommandModel(EventTypeEnum eventType) : base(EnumLocalizationHelper.GetLocalizedName(eventType), CommandTypeEnum.Event) { this.EventType = eventType; }
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal EventCommandModel(MixItUp.Base.Commands.EventCommand command)
-            : base(command)
-        {
-            this.Name = command.EventCommandType.ToString();
-            this.Type = CommandTypeEnum.Event;
-            this.EventType = command.EventCommandType;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
 
         protected EventCommandModel() : base() { }
 
@@ -171,7 +244,7 @@ namespace MixItUp.Base.Model.Commands
                         EventCommandModel.FollowEventsInQueue++;
                         allowFollowEvent = true;
                     }
-                    return Task.FromResult(0);
+                    return Task.CompletedTask;
                 });
 
                 if (!allowFollowEvent)
@@ -205,6 +278,6 @@ namespace MixItUp.Base.Model.Commands
             return false;
         }
 
-        public override void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type, this.EventType.ToString()); }
+        public override void TrackTelemetry() { ServiceManager.Get<ITelemetryService>().TrackCommand(this.Type, this.EventType.ToString()); }
     }
 }

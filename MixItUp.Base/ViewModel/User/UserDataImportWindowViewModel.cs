@@ -1,31 +1,21 @@
 ﻿using ExcelDataReader;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Platform;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.User
 {
     public class UserDataImportColumnViewModel : UIViewModelBase
     {
-        public const string TwitchIDColumn = "Twitch ID";
-        public const string TwitchUsernameColumn = "Twitch Username";
-        public const string MixerUsernameColumn = "Mixer Username";
-        public const string LiveViewingHoursColumn = "Live Viewing Time (Hours)";
-        public const string LiveViewingMinutesColumn = "Live Viewing Time (Mins)";
-        public const string OfflineViewingHoursColumn = "Offline Viewing Time (Hours)";
-        public const string OfflineViewingMinutesColumn = "Offline Viewing Time (Mins)";
-
         public string Name { get; private set; }
 
         public int? ColumnNumber
@@ -77,17 +67,25 @@ namespace MixItUp.Base.ViewModel.User
         }
         private string importButtonText = MixItUp.Base.Resources.ImportData;
 
+        public bool ImportButtonState
+        {
+            get { return this.importButtonState; }
+            set
+            {
+                this.importButtonState = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool importButtonState = true;
+
         public ICommand ImportButtonCommand { get; private set; }
 
         public UserDataImportWindowViewModel()
         {
-            this.Columns.Add(new UserDataImportColumnViewModel(UserDataImportColumnViewModel.TwitchIDColumn));
-            this.Columns.Add(new UserDataImportColumnViewModel(UserDataImportColumnViewModel.TwitchUsernameColumn));
-            this.Columns.Add(new UserDataImportColumnViewModel(UserDataImportColumnViewModel.MixerUsernameColumn));
-            this.Columns.Add(new UserDataImportColumnViewModel(UserDataImportColumnViewModel.LiveViewingHoursColumn));
-            this.Columns.Add(new UserDataImportColumnViewModel(UserDataImportColumnViewModel.LiveViewingMinutesColumn));
-            this.Columns.Add(new UserDataImportColumnViewModel(UserDataImportColumnViewModel.OfflineViewingHoursColumn));
-            this.Columns.Add(new UserDataImportColumnViewModel(UserDataImportColumnViewModel.OfflineViewingMinutesColumn));
+            this.Columns.Add(new UserDataImportColumnViewModel(MixItUp.Base.Resources.TwitchID));
+            this.Columns.Add(new UserDataImportColumnViewModel(MixItUp.Base.Resources.TwitchUsername));
+            this.Columns.Add(new UserDataImportColumnViewModel(MixItUp.Base.Resources.ViewingHours));
+            this.Columns.Add(new UserDataImportColumnViewModel(MixItUp.Base.Resources.ViewingMinutes));
 
             foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
             {
@@ -101,7 +99,7 @@ namespace MixItUp.Base.ViewModel.User
 
             this.UserDataFileBrowseCommand = this.CreateCommand(() =>
             {
-                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("Valid Data File Types|*.txt;*.csv;*.xls;*.xlsx");
+                string filePath = ServiceManager.Get<IFileService>().ShowOpenFileDialog("Valid Data File Types|*.txt;*.csv;*.xls;*.xlsx");
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     this.UserDataFilePath = filePath;
@@ -110,6 +108,8 @@ namespace MixItUp.Base.ViewModel.User
 
             this.ImportButtonCommand = this.CreateCommand(async () =>
             {
+                this.ImportButtonState = false;
+
                 try
                 {
                     int usersImported = 0;
@@ -146,10 +146,12 @@ namespace MixItUp.Base.ViewModel.User
 
                     List<List<string>> lines = new List<List<string>>();
 
+                    await ServiceManager.Get<UserService>().LoadAllUserData();
+
                     string extension = Path.GetExtension(this.UserDataFilePath);
                     if (extension.Equals(".txt") || extension.Equals(".csv"))
                     {
-                        string fileContents = await ChannelSession.Services.FileService.ReadFile(this.UserDataFilePath);
+                        string fileContents = await ServiceManager.Get<IFileService>().ReadFile(this.UserDataFilePath);
                         if (!string.IsNullOrEmpty(fileContents))
                         {
                             foreach (string line in fileContents.Split(new string[] { "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
@@ -197,105 +199,52 @@ namespace MixItUp.Base.ViewModel.User
                             try
                             {
                                 long twitchID = 0;
-                                if (this.columnDictionary[UserDataImportColumnViewModel.TwitchIDColumn].ArrayNumber >= 0)
+                                if (this.columnDictionary[MixItUp.Base.Resources.TwitchID].ArrayNumber >= 0)
                                 {
-                                    long.TryParse(line[this.columnDictionary[UserDataImportColumnViewModel.TwitchIDColumn].ArrayNumber], out twitchID);
+                                    long.TryParse(line[this.columnDictionary[MixItUp.Base.Resources.TwitchID].ArrayNumber], out twitchID);
                                 }
 
                                 string twitchUsername = null;
-                                if (this.columnDictionary[UserDataImportColumnViewModel.TwitchUsernameColumn].ArrayNumber >= 0)
+                                if (this.columnDictionary[MixItUp.Base.Resources.TwitchUsername].ArrayNumber >= 0)
                                 {
-                                    twitchUsername = line[this.columnDictionary[UserDataImportColumnViewModel.TwitchUsernameColumn].ArrayNumber];
+                                    twitchUsername = line[this.columnDictionary[MixItUp.Base.Resources.TwitchUsername].ArrayNumber];
                                 }
 
-                                string mixerUsername = null;
-                                if (this.columnDictionary[UserDataImportColumnViewModel.MixerUsernameColumn].ArrayNumber >= 0)
+                                UserV2ViewModel user = null;
+                                if (twitchID > 0 && !string.IsNullOrEmpty(twitchUsername))
                                 {
-                                    mixerUsername = line[this.columnDictionary[UserDataImportColumnViewModel.MixerUsernameColumn].ArrayNumber];
+                                    user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, twitchID.ToString());
+                                    if (user == null)
+                                    {
+                                        user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(new Twitch.Base.Models.NewAPI.Users.UserModel()
+                                        {
+                                            id = twitchID.ToString(),
+                                            login = twitchUsername,
+                                            display_name = twitchUsername,
+                                        }));
+                                    }
                                 }
-
-                                bool newUser = true;
-                                UserDataModel user = null;
-                                if (twitchID > 0)
+                                else if (twitchID > 0)
                                 {
-                                    // TODO
-                                    //user = ChannelSession.Settings.GetUserDataByTwitchID(twitchID.ToString());
-                                    //if (user != null)
-                                    //{
-                                    //    newUser = false;
-                                    //}
-                                    //else
-                                    //{
-                                    //    Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(twitchID.ToString());
-                                    //    if (twitchUser != null)
-                                    //    {
-                                    //        UserViewModel userViewModel = new UserViewModel(twitchUser);
-                                    //        user = userViewModel.Data;
-                                    //    }
-                                    //}
+                                    user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, twitchID.ToString(), performPlatformSearch: true);
                                 }
                                 else if (!string.IsNullOrEmpty(twitchUsername))
                                 {
-                                    // TODO
-                                    //Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(twitchUsername);
-                                    //if (twitchUser != null)
-                                    //{
-                                    //    user = ChannelSession.Settings.GetUserDataByTwitchID(twitchUser.id);
-                                    //    if (user != null)
-                                    //    {
-                                    //        newUser = false;
-                                    //    }
-                                    //    else
-                                    //    {
-                                    //        UserViewModel userViewModel = new UserViewModel(twitchUser);
-                                    //        user = userViewModel.Data;
-                                    //    }
-                                    //}
-                                }
-                                else if (!string.IsNullOrEmpty(mixerUsername))
-                                {
-                                    // TODO
-//#pragma warning disable CS0612 // Type or member is obsolete
-//                                    UserDataModel mixerUserData = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.Mixer, mixerUsername);
-//#pragma warning restore CS0612 // Type or member is obsolete
-//                                    if (mixerUserData != null)
-//                                    {
-//                                        newUser = false;
-//                                    }
-//                                    else
-//                                    {
-//                                        user = new UserDataModel()
-//                                        {
-//                                            MixerID = uint.MaxValue,
-//                                            MixerUsername = mixerUsername
-//                                        };
-//                                    }
+                                    user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, twitchUsername, performPlatformSearch: true);
                                 }
 
                                 if (user != null)
                                 {
-                                    if (newUser)
+                                    int iValue = 0;
+                                    if (this.GetIntValueFromLineColumn(MixItUp.Base.Resources.ViewingHours, line, out iValue))
                                     {
-                                        ChannelSession.Settings.SetUserData(user);
+                                        user.OnlineViewingHoursOnly = iValue;
+                                    }
+                                    if (this.GetIntValueFromLineColumn(MixItUp.Base.Resources.ViewingMinutes, line, out iValue))
+                                    {
+                                        user.OnlineViewingMinutesOnly = iValue;
                                     }
 
-                                    int iValue = 0;
-                                    if (this.GetIntValueFromLineColumn(UserDataImportColumnViewModel.LiveViewingHoursColumn, line, out iValue))
-                                    {
-                                        user.ViewingHoursPart = iValue;
-                                    }
-                                    if (this.GetIntValueFromLineColumn(UserDataImportColumnViewModel.LiveViewingMinutesColumn, line, out iValue))
-                                    {
-                                        user.ViewingMinutesPart = iValue;
-                                    }
-                                    if (this.GetIntValueFromLineColumn(UserDataImportColumnViewModel.OfflineViewingHoursColumn, line, out iValue))
-                                    {
-                                        user.OfflineViewingMinutes = iValue;
-                                    }
-                                    if (this.GetIntValueFromLineColumn(UserDataImportColumnViewModel.OfflineViewingMinutesColumn, line, out iValue))
-                                    {
-                                        user.OfflineViewingMinutes = iValue;
-                                    }
                                     foreach (var kvp in nameToCurrencies)
                                     {
                                         if (this.GetIntValueFromLineColumn(kvp.Key, line, out iValue))
@@ -304,7 +253,7 @@ namespace MixItUp.Base.ViewModel.User
                                         }
                                     }
 
-                                    ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+                                    ChannelSession.Settings.Users.ManualValueChanged(user.ID);
 
                                     usersImported++;
                                     this.ImportButtonText = string.Format("{0} {1}", usersImported, MixItUp.Base.Resources.Imported);
@@ -339,7 +288,9 @@ namespace MixItUp.Base.ViewModel.User
                     Logger.Log(ex);
                     await DialogHelper.ShowMessage(Resources.ImportFailed);
                 }
+
                 this.ImportButtonText = MixItUp.Base.Resources.ImportData;
+                this.ImportButtonState = true;
             });
         }
 

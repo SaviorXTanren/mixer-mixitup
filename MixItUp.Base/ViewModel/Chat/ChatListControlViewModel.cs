@@ -1,11 +1,13 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -30,7 +32,11 @@ namespace MixItUp.Base.ViewModel.Chat
             get
             {
                 List<string> results = new List<string>() { MixItUp.Base.Resources.Streamer };
-                if (ChannelSession.Services.Chat.TwitchChatService != null && ChannelSession.Services.Chat.TwitchChatService.IsBotConnected)
+                if (ServiceManager.Get<TwitchChatService>() != null && ServiceManager.Get<TwitchChatService>().IsBotConnected)
+                {
+                    results.Add(MixItUp.Base.Resources.Bot);
+                }
+                else if (ServiceManager.Get<GlimeshChatEventService>() != null && ServiceManager.Get<GlimeshChatEventService>().IsBotConnected)
                 {
                     results.Add(MixItUp.Base.Resources.Bot);
                 }
@@ -79,7 +85,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public string LockIconColor { get { return (this.IsScrollingLocked) ? "Green" : "Red"; } }
 
-        public IEnumerable<CommandModelBase> ContextMenuChatCommands { get { return ChannelSession.Services.Chat.ChatMenuCommands.ToList(); } }
+        public IEnumerable<CommandModelBase> ContextMenuChatCommands { get { return ServiceManager.Get<ChatService>().ChatMenuCommands.ToList(); } }
 
         public event EventHandler MessageSentOccurred = delegate { };
         public event EventHandler ScrollingLockChanged = delegate { };
@@ -103,39 +109,35 @@ namespace MixItUp.Base.ViewModel.Chat
                         string message = this.SendMessageText.Substring(whisperRegexMatch.Value.Length);
 
                         Match userNameMatch = ChatListControlViewModel.UserNameTagRegex.Match(whisperRegexMatch.Value);
-                        string username = userNameMatch.Value;
-                        username = username.Trim();
-                        username = username.Replace("@", "");
+                        string username = UserService.SanitizeUsername(userNameMatch.Value);
 
-                        await ChannelSession.Services.Chat.Whisper(StreamingPlatformTypeEnum.All, username, message, this.SendAsStreamer);
+                        await ServiceManager.Get<ChatService>().Whisper(username, StreamingPlatformTypeEnum.All, message, this.SendAsStreamer);
                     }
                     else if (ChatListControlViewModel.ClearRegex.IsMatch(this.SendMessageText))
                     {
-                        await ChannelSession.Services.Chat.ClearMessages();
+                        await ServiceManager.Get<ChatService>().ClearMessages(StreamingPlatformTypeEnum.Twitch);
                     }
                     else if (ChatListControlViewModel.TimeoutRegex.IsMatch(this.SendMessageText))
                     {
                         string[] splits = this.SendMessageText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         if (splits.Length == 3)
                         {
-                            string username = splits[1];
-                            username = username.Trim();
-                            username = username.Replace("@", "");
-                            UserViewModel user = ChannelSession.Services.User.GetActiveUserByUsername(username);
+                            string username = UserService.SanitizeUsername(splits[1]);
+                            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum.All, username);
                             if (user != null)
                             {
                                 if (uint.TryParse(splits[2], out uint amount) && amount > 0)
                                 {
-                                    await ChannelSession.Services.Chat.TimeoutUser(user, amount);
+                                    await ServiceManager.Get<ChatService>().TimeoutUser(user, amount);
                                 }
                                 else
                                 {
-                                    await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel("The timeout amount specified must be greater than 0"));
+                                    await ServiceManager.Get<ChatService>().AddMessage(new AlertChatMessageViewModel("The timeout amount specified must be greater than 0"));
                                 }
                             }
                             else
                             {
-                                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel("No user could be found with that name"));
+                                await ServiceManager.Get<ChatService>().AddMessage(new AlertChatMessageViewModel("No user could be found with that name"));
                             }
                         }
                     }
@@ -144,23 +146,21 @@ namespace MixItUp.Base.ViewModel.Chat
                         string[] splits = this.SendMessageText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         if (splits.Length == 2)
                         {
-                            string username = splits[1];
-                            username = username.Trim();
-                            username = username.Replace("@", "");
-                            UserViewModel user = ChannelSession.Services.User.GetActiveUserByUsername(username);
+                            string username = UserService.SanitizeUsername(splits[1]);
+                            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum.All, username);
                             if (user != null)
                             {
-                                await ChannelSession.Services.Chat.BanUser(user);
+                                await ServiceManager.Get<ChatService>().BanUser(user);
                             }
                         }
                         else
                         {
-                            await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel("No user could be found with that name"));
+                            await ServiceManager.Get<ChatService>().AddMessage(new AlertChatMessageViewModel("No user could be found with that name"));
                         }
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.SendMessage(this.SendMessageText, sendAsStreamer: this.SendAsStreamer);
+                        await ServiceManager.Get<ChatService>().SendMessage(this.SendMessageText, StreamingPlatformTypeEnum.All, sendAsStreamer: this.SendAsStreamer);
                     }
 
                     this.SentMessageHistory.Remove(this.SendMessageText);
@@ -179,7 +179,7 @@ namespace MixItUp.Base.ViewModel.Chat
             });
 
             GlobalEvents.OnChatVisualSettingsChanged += GlobalEvents_OnChatVisualSettingsChanged;
-            ChannelSession.Services.Chat.ChatCommandsReprocessed += Chat_ChatCommandsReprocessed;
+            ServiceManager.Get<ChatService>().ChatCommandsReprocessed += Chat_ChatCommandsReprocessed;
         }
 
         public void MoveSentMessageHistoryUp()
@@ -211,7 +211,7 @@ namespace MixItUp.Base.ViewModel.Chat
         {
             await base.OnLoadedInternal();
 
-            this.Messages = ChannelSession.Services.Chat.Messages;
+            this.Messages = ServiceManager.Get<ChatService>().Messages;
         }
 
         protected override async Task OnVisibleInternal()

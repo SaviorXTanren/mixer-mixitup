@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Windows.Controls;
@@ -28,10 +29,10 @@ namespace MixItUp.WPF.Controls.Dialogs
                 if (command.AddCommand)
                 {
                     ChannelSession.Settings.SetCommand(command.Command);
-                    ChannelSession.Services.Command.ChatCommands.Add(command.Command);
+                    ServiceManager.Get<CommandService>().ChatCommands.Add(command.Command);
                 }
             }
-            ChannelSession.Services.Chat.RebuildCommandTriggers();
+            ServiceManager.Get<ChatService>().RebuildCommandTriggers();
         }
     }
 }

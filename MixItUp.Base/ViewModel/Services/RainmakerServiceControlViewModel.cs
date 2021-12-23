@@ -1,4 +1,6 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
+using MixItUp.Base.Util;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Services
@@ -13,7 +15,7 @@ namespace MixItUp.Base.ViewModel.Services
         {
             this.LogInCommand = this.CreateCommand(async () =>
             {
-                Result result = await ChannelSession.Services.Rainmaker.Connect();
+                Result result = await ServiceManager.Get<RainmakerService>().Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;
@@ -26,14 +28,14 @@ namespace MixItUp.Base.ViewModel.Services
 
             this.LogOutCommand = this.CreateCommand(async () =>
             {
-                await ChannelSession.Services.Rainmaker.Disconnect();
+                await ServiceManager.Get<RainmakerService>().Disconnect();
 
                 ChannelSession.Settings.RainMakerOAuthToken = null;
 
                 this.IsConnected = false;
             });
 
-            this.IsConnected = ChannelSession.Services.Rainmaker.IsConnected;
+            this.IsConnected = ServiceManager.Get<RainmakerService>().IsConnected;
         }
     }
 }

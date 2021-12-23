@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
@@ -20,7 +19,7 @@ namespace MixItUp.WPF.Services
 
         public async Task Play(string filePath, int volume)
         {
-            await ChannelSession.Services.AudioService.Play(filePath, volume, null);
+            await ServiceManager.Get<IAudioService>().Play(filePath, volume, null);
         }
 
         public async Task Play(string filePath, int volume, string deviceName)
@@ -34,7 +33,7 @@ namespace MixItUp.WPF.Services
 
                 if (this.MixItUpOverlay.Equals(deviceName))
                 {
-                    IOverlayEndpointService overlay = ChannelSession.Services.Overlay.GetOverlay(ChannelSession.Services.Overlay.DefaultOverlayName);
+                    OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlay(ServiceManager.Get<OverlayService>().DefaultOverlayName);
                     if (overlay != null)
                     {
                         var overlayItem = new OverlaySoundItemModel(filePath, volume);
@@ -93,7 +92,7 @@ namespace MixItUp.WPF.Services
             List<string> audioOptions = new List<string>();
             audioOptions.Add(this.DefaultAudioDevice);
             audioOptions.Add(this.MixItUpOverlay);
-            audioOptions.AddRange(ChannelSession.Services.AudioService.GetOutputDevices());
+            audioOptions.AddRange(ServiceManager.Get<IAudioService>().GetOutputDevices());
             return audioOptions;
         }
 

@@ -1,13 +1,12 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Commands;
-using MixItUp.Base.ViewModel.MainControls;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Controls.Commands;
 using MixItUp.WPF.Windows.Commands;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -55,19 +54,19 @@ namespace MixItUp.WPF.Controls.MainControls
                 TimerCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<TimerCommandModel>();
                 if (command != null)
                 {
-                    ChannelSession.Services.Command.TimerCommands.Remove(command);
+                    ServiceManager.Get<CommandService>().TimerCommands.Remove(command);
                     ChannelSession.Settings.RemoveCommand(command);
                     this.viewModel.RemoveCommand(command);
                     await ChannelSession.SaveSettings();
 
-                    await ChannelSession.Services.Timers.RebuildTimerGroups();
+                    await ServiceManager.Get<TimerService>().RebuildTimerGroups();
                 }
             });
         }
 
         private async void CommandButtons_EnableDisableToggled(object sender, RoutedEventArgs e)
         {
-            await ChannelSession.Services.Timers.RebuildTimerGroups();
+            await ServiceManager.Get<TimerService>().RebuildTimerGroups();
         }
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
@@ -79,21 +78,8 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void TimerWindow_CommandSaved(object sender, CommandModelBase e)
         {
-            await ChannelSession.Services.Timers.RebuildTimerGroups();
+            await ServiceManager.Get<TimerService>().RebuildTimerGroups();
             Window_CommandSaved(sender, e);
-        }
-
-        private void DataGrid_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
-        {
-            if (!e.Handled)
-            {
-                e.Handled = true;
-                var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
-                eventArg.RoutedEvent = UIElement.MouseWheelEvent;
-                eventArg.Source = sender;
-                var parent = ((Control)sender).Parent as UIElement;
-                parent.RaiseEvent(eventArg);
-            }
         }
     }
 }

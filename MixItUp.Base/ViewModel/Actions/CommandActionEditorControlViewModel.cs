@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
@@ -60,11 +61,11 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 if (this.SelectedCommandType == CommandTypeEnum.PreMade)
                 {
-                    return ChannelSession.Services.Command.PreMadeChatCommands.OrderBy(c => c.Name);
+                    return ServiceManager.Get<CommandService>().PreMadeChatCommands.OrderBy(c => c.Name);
                 }
                 else
                 {
-                    return ChannelSession.Services.Command.AllCommands.Where(c => c.Type == this.SelectedCommandType).OrderBy(c => c.Name);
+                    return ServiceManager.Get<CommandService>().AllCommands.Where(c => c.Type == this.SelectedCommandType).OrderBy(c => c.Name);
                 }
             }
         }

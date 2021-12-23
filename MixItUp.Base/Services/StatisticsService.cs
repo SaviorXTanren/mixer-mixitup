@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Statistics;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Model.User.Twitch;
+using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -52,23 +53,24 @@ namespace MixItUp.Base.Services
                 TrackedNumberStatisticDataTrackerModel numberStats = (TrackedNumberStatisticDataTrackerModel)stats;
 
                 int viewersCurrent = 0;
-                if (ChannelSession.TwitchStreamV5 != null)
+                if (ServiceManager.Get<TwitchSessionService>().StreamIsLive)
                 {
-                    viewersCurrent = (int)ChannelSession.TwitchStreamV5.viewers;
+                    viewersCurrent = (int)ServiceManager.Get<TwitchSessionService>().Stream.viewer_count;
+                }
+                else if (ServiceManager.Get<GlimeshSessionService>().Channel?.stream != null)
+                {
+                    viewersCurrent = (int)ServiceManager.Get<GlimeshSessionService>().Channel?.stream?.countViewers;
                 }
 
                 numberStats.AddValue(viewersCurrent);
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
 
             this.ChatterTracker = new TrackedNumberStatisticDataTrackerModel(Resources.Chatters, "MessageTextOutline", (StatisticDataTrackerModelBase stats) =>
             {
-                if (ChannelSession.Services.User != null)
-                {
-                    TrackedNumberStatisticDataTrackerModel numberStats = (TrackedNumberStatisticDataTrackerModel)stats;
-                    numberStats.AddValue(ChannelSession.Services.User.Count());
-                }
-                return Task.FromResult(0);
+                TrackedNumberStatisticDataTrackerModel numberStats = (TrackedNumberStatisticDataTrackerModel)stats;
+                numberStats.AddValue(ServiceManager.Get<UserService>().GetActiveUserCount());
+                return Task.CompletedTask;
             });
 
             this.FollowTracker = new EventStatisticDataTrackerModel(Resources.Follows, "AccountPlus", new List<string>() { "Username", "Date & Time" });
@@ -88,11 +90,11 @@ namespace MixItUp.Base.Services
                 StaticTextStatisticDataTrackerModel staticStats = (StaticTextStatisticDataTrackerModel)stats;
                 staticStats.ClearValues();
 
-                staticStats.AddValue(Resources.Subs, ChannelSession.Services.Statistics?.SubscriberTracker?.Total.ToString() ?? "0");
-                staticStats.AddValue(Resources.Resubs, ChannelSession.Services.Statistics?.ResubscriberTracker?.Total.ToString() ?? "0");
-                staticStats.AddValue(Resources.Gifted, ChannelSession.Services.Statistics?.GiftedSubscriptionsTracker?.Total.ToString() ?? "0");
+                staticStats.AddValue(Resources.Subs, ServiceManager.Get<StatisticsService>()?.SubscriberTracker?.Total.ToString() ?? "0");
+                staticStats.AddValue(Resources.Resubs, ServiceManager.Get<StatisticsService>()?.ResubscriberTracker?.Total.ToString() ?? "0");
+                staticStats.AddValue(Resources.Gifted, ServiceManager.Get<StatisticsService>()?.GiftedSubscriptionsTracker?.Total.ToString() ?? "0");
 
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
 
             this.DonationsTracker = new EventStatisticDataTrackerModel(Resources.Donations, "CashMultiple", new List<string>() { "Username", "Amount", "Date & Time" }, (EventStatisticDataTrackerModel dataTracker) =>
@@ -118,37 +120,37 @@ namespace MixItUp.Base.Services
             this.Statistics.Add(this.BitsTracker);
         }
 
-        private void Constellation_OnFollowOccurred(object sender, UserViewModel e)
+        private void Constellation_OnFollowOccurred(object sender, UserV2ViewModel e)
         {
             this.FollowTracker.OnStatisticEventOccurred(e.Username);
         }
 
-        private void Constellation_OnUnfollowOccurred(object sender, UserViewModel e)
+        private void Constellation_OnUnfollowOccurred(object sender, UserV2ViewModel e)
         {
             this.UnfollowTracker.OnStatisticEventOccurred(e.Username);
         }
 
-        private void Constellation_OnHostedOccurred(object sender, UserViewModel e)
+        private void Constellation_OnHostedOccurred(object sender, UserV2ViewModel e)
         {
             this.HostsTracker.OnStatisticEventOccurred(e.Username);
         }
 
-        private void GlobalEvents_OnRaidOccurred(object sender, Tuple<UserViewModel, int> e)
+        private void GlobalEvents_OnRaidOccurred(object sender, Tuple<UserV2ViewModel, int> e)
         {
             this.RaidsTracker.OnStatisticEventOccurred(e.Item1.Username, e.Item2);
         }
 
-        private void Constellation_OnSubscribedOccurred(object sender, UserViewModel e)
+        private void Constellation_OnSubscribedOccurred(object sender, UserV2ViewModel e)
         {
             this.SubscriberTracker.OnStatisticEventOccurred(e.Username);
         }
 
-        private void Constellation_OnResubscribedOccurred(object sender, Tuple<UserViewModel, int> e)
+        private void Constellation_OnResubscribedOccurred(object sender, Tuple<UserV2ViewModel, int> e)
         {
             this.ResubscriberTracker.OnStatisticEventOccurred(e.Item1.Username);
         }
 
-        private void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
+        private void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserV2ViewModel, UserV2ViewModel> e)
         {
             this.GiftedSubscriptionsTracker.OnStatisticEventOccurred(e.Item1.Username, e.Item2.Username);
         }

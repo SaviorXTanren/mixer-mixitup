@@ -103,9 +103,9 @@ namespace MixItUp.WPF.Windows
             window.Show();
         }
 
-        protected virtual Task OnLoaded() { return Task.FromResult(0); }
+        protected virtual Task OnLoaded() { return Task.CompletedTask; }
 
-        protected virtual Task OnClosing() { return Task.FromResult(0); }
+        protected virtual Task OnClosing() { return Task.CompletedTask; }
 
         private async void LoadingWindowBase_Loaded(object sender, RoutedEventArgs e)
         {

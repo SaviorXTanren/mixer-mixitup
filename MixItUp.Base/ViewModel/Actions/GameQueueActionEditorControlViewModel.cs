@@ -1,7 +1,7 @@
-﻿using MixItUp.Base.Model.Actions;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.ViewModel.Requirements;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -47,7 +47,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
 
-        public IEnumerable<UserRoleEnum> UserRoles { get { return UserDataModel.GetSelectableUserRoles(); } }
+        public IEnumerable<UserRoleEnum> UserRoles { get { return MixItUp.Base.Model.User.UserRoles.All; } }
 
         public UserRoleEnum SelectedUserRole
         {
@@ -72,7 +72,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowUserRoles)
             {
-                this.SelectedUserRole = (action.RoleRequirement != null) ? action.RoleRequirement.Role : UserRoleEnum.User;
+                this.SelectedUserRole = (action.RoleRequirement != null) ? action.RoleRequirement.UserRole : UserRoleEnum.User;
             }
         }
 
@@ -86,7 +86,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowUserRoles)
             {
-                return Task.FromResult<ActionModelBase>(new GameQueueActionModel(this.SelectedActionType, roleRequirement: new RoleRequirementModel(this.SelectedUserRole)));
+                return Task.FromResult<ActionModelBase>(new GameQueueActionModel(this.SelectedActionType, roleRequirement: new RoleRequirementModel(StreamingPlatformTypeEnum.All, this.SelectedUserRole)));
             }
             else
             {

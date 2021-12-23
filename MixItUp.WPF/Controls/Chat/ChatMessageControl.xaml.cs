@@ -2,6 +2,8 @@
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Chat.Glimesh;
+using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.Twitch;
 using StreamingClient.Base.Util;
 using System;
@@ -68,9 +70,9 @@ namespace MixItUp.WPF.Controls.Chat
                         string color = alert.Color;
                         try
                         {
-                            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(color))
+                            if (ColorSchemes.HTMLColorSchemeDictionary.TryGetValue(color.Replace(" ", string.Empty), out var colorOverride))
                             {
-                                color = ColorSchemes.HTMLColorSchemeDictionary[color];
+                                color = colorOverride;
                             }
                             foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom(color));
                         }
@@ -129,6 +131,14 @@ namespace MixItUp.WPF.Controls.Chat
                             {
                                 this.MessageWrapPanel.Children.Add(new ChatImageControl((TwitchBitsCheerViewModel)messagePart));
                             }
+                            else if (messagePart is GlimeshChatEmoteViewModel)
+                            {
+                                this.MessageWrapPanel.Children.Add(new ChatImageControl((GlimeshChatEmoteViewModel)messagePart));
+                            }
+                            else if (messagePart is TrovoChatEmoteViewModel)
+                            {
+                                this.MessageWrapPanel.Children.Add(new ChatImageControl((TrovoChatEmoteViewModel)messagePart));
+                            }
                         }
                     }
                 }
@@ -148,6 +158,7 @@ namespace MixItUp.WPF.Controls.Chat
                 textBlock.Text = word + " ";
                 textBlock.FontSize = ChannelSession.Settings.ChatFontSize;
                 textBlock.VerticalAlignment = VerticalAlignment.Center;
+                textBlock.TextWrapping = TextWrapping.Wrap;
                 if (foreground != null)
                 {
                     textBlock.FontWeight = FontWeights.Bold;

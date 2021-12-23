@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
@@ -44,7 +45,7 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private CommandParametersModel runParameters;
         [JsonIgnore]
-        private Dictionary<UserViewModel, CommandParametersModel> runUsers = new Dictionary<UserViewModel, CommandParametersModel>();
+        private Dictionary<UserV2ViewModel, CommandParametersModel> runUsers = new Dictionary<UserV2ViewModel, CommandParametersModel>();
 
         public HeistGameCommandModel(string name, HashSet<string> triggers, int minimumParticipants, int timeLimit, CustomCommandModel startedCommand,
             CustomCommandModel userJoinCommand, CustomCommandModel notEnoughPlayersCommand, GameOutcomeModel userSuccessOutcome, CustomCommandModel userFailureCommand,
@@ -65,25 +66,6 @@ namespace MixItUp.Base.Model.Commands.Games
             this.LowThirdsSucceedCommand = lowThirdsSucceedCommand;
             this.NoneSucceedCommand = noneSucceedCommand;
         }
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal HeistGameCommandModel(Base.Commands.HeistGameCommand command)
-            : base(command, GameCommandTypeEnum.Heist)
-        {
-            this.MinimumParticipants = command.MinimumParticipants;
-            this.TimeLimit = command.TimeLimit;
-            this.StartedCommand = new CustomCommandModel(command.StartedCommand) { IsEmbedded = true };
-            this.UserJoinCommand = new CustomCommandModel(command.UserJoinCommand) { IsEmbedded = true };
-            this.NotEnoughPlayersCommand = new CustomCommandModel(command.NotEnoughPlayersCommand) { IsEmbedded = true };
-            this.UserSuccessOutcome = new GameOutcomeModel(command.UserSuccessOutcome);
-            this.UserFailureCommand = new CustomCommandModel(command.UserFailOutcome.Command) { IsEmbedded = true };
-            this.AllSucceedCommand = new CustomCommandModel(command.AllSucceedCommand) { IsEmbedded = true };
-            this.TopThirdsSucceedCommand = new CustomCommandModel(command.TopThirdsSucceedCommand) { IsEmbedded = true };
-            this.MiddleThirdsSucceedCommand = new CustomCommandModel(command.MiddleThirdsSucceedCommand) { IsEmbedded = true };
-            this.LowThirdsSucceedCommand = new CustomCommandModel(command.LowThirdsSucceedCommand) { IsEmbedded = true };
-            this.NoneSucceedCommand = new CustomCommandModel(command.NoneSucceedCommand) { IsEmbedded = true };
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
 
         private HeistGameCommandModel() { }
 
@@ -185,7 +167,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else
             {
-                await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandAlreadyUnderway);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandAlreadyUnderway, parameters.Platform);
             }
             await this.Requirements.Refund(parameters);
         }

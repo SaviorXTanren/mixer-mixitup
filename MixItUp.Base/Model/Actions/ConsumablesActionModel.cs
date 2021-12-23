@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -47,57 +48,44 @@ namespace MixItUp.Base.Model.Actions
         public string Amount { get; set; }
         [DataMember]
         public bool DeductFromUser { get; set; }
+        [Obsolete]
         [DataMember]
-        public UserRoleEnum UsersToApplyTo { get; set; }
+        public OldUserRoleEnum UsersToApplyTo { get; set; }
+        [DataMember]
+        public UserRoleEnum UserRoleToApplyTo { get; set; }
 
         [DataMember]
         public bool UsersMustBePresent { get; set; } = true;
 
-        public ConsumablesActionModel(CurrencyModel currency, ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount, string username = null, UserRoleEnum usersToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
-            : this(actionType, usersMustBePresent, amount, username, usersToApplyTo, deductFromUser)
+        public ConsumablesActionModel(CurrencyModel currency, ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount, string username = null, UserRoleEnum userRoleToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
+            : this(actionType, usersMustBePresent, amount, username, userRoleToApplyTo, deductFromUser)
         {
             this.CurrencyID = currency.ID;
         }
 
-        public ConsumablesActionModel(InventoryModel inventory, string itemName, ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount, string username = null, UserRoleEnum usersToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
-            : this(actionType, usersMustBePresent, amount, username, usersToApplyTo, deductFromUser)
+        public ConsumablesActionModel(InventoryModel inventory, string itemName, ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount, string username = null, UserRoleEnum userRoleToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
+            : this(actionType, usersMustBePresent, amount, username, userRoleToApplyTo, deductFromUser)
         {
             this.InventoryID = inventory.ID;
             this.ItemName = itemName;
         }
 
-        public ConsumablesActionModel(StreamPassModel streamPass, ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount, string username = null, UserRoleEnum usersToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
-            : this(actionType, usersMustBePresent, amount, username, usersToApplyTo, deductFromUser)
+        public ConsumablesActionModel(StreamPassModel streamPass, ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount, string username = null, UserRoleEnum userRoleToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
+            : this(actionType, usersMustBePresent, amount, username, userRoleToApplyTo, deductFromUser)
         {
             this.StreamPassID = streamPass.ID;
         }
 
-        private ConsumablesActionModel(ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount = null, string username = null, UserRoleEnum usersToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
+        private ConsumablesActionModel(ConsumablesActionTypeEnum actionType, bool usersMustBePresent, string amount = null, string username = null, UserRoleEnum userRoleToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
             : base(ActionTypeEnum.Consumables)
         {
             this.ActionType = actionType;
             this.Amount = amount;
             this.UsersMustBePresent = usersMustBePresent;
             this.Username = username;
-            this.UsersToApplyTo = usersToApplyTo;
+            this.UserRoleToApplyTo = userRoleToApplyTo;
             this.DeductFromUser = deductFromUser;
         }
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal ConsumablesActionModel(MixItUp.Base.Actions.CurrencyAction action)
-            : base(ActionTypeEnum.Consumables)
-        {
-            this.CurrencyID = action.CurrencyID;
-            this.InventoryID = action.InventoryID;
-            this.ItemName = action.ItemName;
-            this.StreamPassID = action.StreamPassID;
-            this.ActionType = (ConsumablesActionTypeEnum)(int)action.CurrencyActionType;
-            this.Amount = action.Amount;
-            this.Username = action.Username;
-            this.UsersToApplyTo = action.RoleRequirement;
-            this.DeductFromUser = action.DeductFromUser;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
 
         private ConsumablesActionModel() { }
 
@@ -133,7 +121,7 @@ namespace MixItUp.Base.Model.Actions
 
                 if (!string.IsNullOrEmpty(this.ItemName))
                 {
-                    string itemName = await this.ReplaceStringWithSpecialModifiers(this.ItemName, parameters);
+                    string itemName = await ReplaceStringWithSpecialModifiers(this.ItemName, parameters);
                     item = inventory.GetItem(itemName);
                     if (item == null)
                     {
@@ -171,113 +159,113 @@ namespace MixItUp.Base.Model.Actions
             {
                 if (currency != null)
                 {
-                    currency.ResetAmount(parameters.User.Data);
+                    currency.ResetAmount(parameters.User);
                 }
                 else if (inventory != null)
                 {
-                    inventory.ResetAmount(parameters.User.Data);
+                    inventory.ResetAmount(parameters.User);
                 }
                 else if (streamPass != null)
                 {
-                    streamPass.ResetAmount(parameters.User.Data);
+                    streamPass.ResetAmount(parameters.User);
                 }
             }
             else
             {
-                string amountTextValue = await this.ReplaceStringWithSpecialModifiers(this.Amount, parameters);
+                string amountTextValue = await ReplaceStringWithSpecialModifiers(this.Amount, parameters);
                 amountTextValue = MathHelper.ProcessMathEquation(amountTextValue).ToString();
 
                 if (!double.TryParse(amountTextValue, out double doubleAmount))
                 {
-                    await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.CounterActionNotAValidAmount, amountTextValue, systemName));
+                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.CounterActionNotAValidAmount, amountTextValue, systemName), parameters.Platform);
                     return;
                 }
 
                 int amountValue = (int)Math.Ceiling(doubleAmount);
                 if (amountValue < 0)
                 {
-                    await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, amountTextValue, systemName));
+                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, amountTextValue, systemName), parameters.Platform);
                     return;
                 }
 
-                HashSet<UserDataModel> receiverUserData = new HashSet<UserDataModel>();
+                HashSet<UserV2ViewModel> receiverUserData = new HashSet<UserV2ViewModel>();
                 if (this.ActionType == ConsumablesActionTypeEnum.AddToUser)
                 {
-                    receiverUserData.Add(parameters.User.Data);
+                    receiverUserData.Add(parameters.User);
                 }
                 else if (this.ActionType == ConsumablesActionTypeEnum.AddToSpecificUser || this.ActionType == ConsumablesActionTypeEnum.SubtractFromSpecificUser)
                 {
                     if (!string.IsNullOrEmpty(this.Username))
                     {
-                        string usernameString = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                        string usernameString = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
 
-                        UserViewModel receivingUser = null;
+                        UserV2ViewModel receivingUser = null;
                         if (this.UsersMustBePresent)
                         {
-                            receivingUser = ChannelSession.Services.User.GetActiveUserByUsername(usernameString, parameters.Platform);
+                            receivingUser = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(parameters.Platform, usernameString);
                         }
                         else
                         {
-                            receivingUser = await ChannelSession.Services.User.GetUserFullSearch(parameters.Platform, userID: null, usernameString);
+                            receivingUser = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(parameters.Platform, usernameString, performPlatformSearch: true);
                         }
 
                         if (receivingUser != null)
                         {
-                            receiverUserData.Add(receivingUser.Data);
+                            receiverUserData.Add(receivingUser);
                         }
                         else
                         {
-                            await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.UserNotFound);
+                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.UserNotFound, parameters.Platform);
                             return;
                         }
                     }
                 }
                 else if (this.ActionType == ConsumablesActionTypeEnum.AddToAllChatUsers || this.ActionType == ConsumablesActionTypeEnum.SubtractFromAllChatUsers)
                 {
-                    foreach (UserViewModel chatUser in ChannelSession.Services.User.GetAllWorkableUsers())
+                    foreach (UserV2ViewModel chatUser in ServiceManager.Get<UserService>().GetActiveUsers())
                     {
-                        if (chatUser.HasPermissionsTo(this.UsersToApplyTo))
+                        if (chatUser.HasRole(this.UserRoleToApplyTo))
                         {
-                            receiverUserData.Add(chatUser.Data);
+                            receiverUserData.Add(chatUser);
                         }
                     }
-                    receiverUserData.Add(ChannelSession.GetCurrentUser().Data);
+                    receiverUserData.Add(ChannelSession.User);
                 }
 
                 if ((this.DeductFromUser && receiverUserData.Count > 0) || this.ActionType == ConsumablesActionTypeEnum.SubtractFromUser)
                 {
                     if (currency != null)
                     {
-                        if (!currency.HasAmount(parameters.User.Data, amountValue))
+                        if (!currency.HasAmount(parameters.User, amountValue))
                         {
-                            await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amountValue, systemName));
+                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amountValue, systemName), parameters.Platform);
                             return;
                         }
-                        currency.SubtractAmount(parameters.User.Data, amountValue);
+                        currency.SubtractAmount(parameters.User, amountValue);
                     }
                     else if (inventory != null)
                     {
-                        if (!inventory.HasAmount(parameters.User.Data, item, amountValue))
+                        if (!inventory.HasAmount(parameters.User, item, amountValue))
                         {
-                            await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amountValue, item.Name));
+                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amountValue, item.Name), parameters.Platform);
                             return;
                         }
-                        inventory.SubtractAmount(parameters.User.Data, item, amountValue);
+                        inventory.SubtractAmount(parameters.User, item, amountValue);
                     }
                     else if (streamPass != null)
                     {
-                        if (!streamPass.HasAmount(parameters.User.Data, amountValue))
+                        if (!streamPass.HasAmount(parameters.User, amountValue))
                         {
-                            await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amountValue, systemName));
+                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amountValue, systemName), parameters.Platform);
                             return;
                         }
-                        streamPass.SubtractAmount(parameters.User.Data, amountValue);
+                        streamPass.SubtractAmount(parameters.User, amountValue);
                     }
                 }
 
                 if (receiverUserData.Count > 0)
                 {
-                    foreach (UserDataModel receiverUser in receiverUserData)
+                    foreach (UserV2ViewModel receiverUser in receiverUserData)
                     {
                         if (currency != null)
                         {

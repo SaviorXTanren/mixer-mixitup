@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services.External;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -40,7 +41,7 @@ namespace MixItUp.Base.ViewModel.Services
         {
             this.LogInCommand = this.CreateCommand(async () =>
             {
-                Result result = await ChannelSession.Services.Patreon.Connect();
+                Result result = await ServiceManager.Get<PatreonService>().Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;
@@ -54,7 +55,7 @@ namespace MixItUp.Base.ViewModel.Services
 
             this.LogOutCommand = this.CreateCommand(async () =>
             {
-                await ChannelSession.Services.Patreon.Disconnect();
+                await ServiceManager.Get<PatreonService>().Disconnect();
 
                 ChannelSession.Settings.PatreonOAuthToken = null;
                 ChannelSession.Settings.PatreonTierSubscriberEquivalent = null;
@@ -62,7 +63,7 @@ namespace MixItUp.Base.ViewModel.Services
                 this.IsConnected = false;
             });
 
-            this.IsConnected = ChannelSession.Services.Patreon.IsConnected;
+            this.IsConnected = ServiceManager.Get<PatreonService>().IsConnected;
         }
 
         protected override Task OnLoadedInternal()
@@ -72,15 +73,15 @@ namespace MixItUp.Base.ViewModel.Services
                 this.RefreshTiers();
                 this.SelectedTier = this.Tiers.FirstOrDefault(t => t.ID.Equals(ChannelSession.Settings.PatreonTierSubscriberEquivalent));
             }
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public void RefreshTiers()
         {
             List<PatreonTier> tiers = new List<PatreonTier>();
-            if (ChannelSession.Services.Patreon.Campaign != null && ChannelSession.Services.Patreon.Campaign.ActiveTiers != null)
+            if (ServiceManager.Get<PatreonService>().Campaign != null && ServiceManager.Get<PatreonService>().Campaign.ActiveTiers != null)
             {
-                tiers.AddRange(ChannelSession.Services.Patreon.Campaign.ActiveTiers);
+                tiers.AddRange(ServiceManager.Get<PatreonService>().Campaign.ActiveTiers);
             }
             this.Tiers.ClearAndAddRange(tiers);
         }

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using System.Web;
 using Twitch.Base.Models.NewAPI.Chat;
 
 namespace MixItUp.Base.Model.Overlay
@@ -37,10 +38,10 @@ namespace MixItUp.Base.Model.Overlay
 
         public override Task LoadTestData()
         {
-            ChatMessageViewModel message = new ChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.All, ChannelSession.GetCurrentUser());
+            UserChatMessageViewModel message = new UserChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.None, ChannelSession.User);
             message.AddStringMessagePart("Test Message");
             this.GlobalEvents_OnChatMessageReceived(this, message);
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public override async Task Enable()
@@ -73,7 +74,7 @@ namespace MixItUp.Base.Model.Overlay
                         string imageURL = null;
                         if (messagePart is string)
                         {
-                            textParts.Add((string)messagePart);
+                            textParts.Add(HttpUtility.HtmlEncode((string)messagePart));
                         }
                         else if (messagePart is TwitchChatEmoteViewModel)
                         {
@@ -100,7 +101,7 @@ namespace MixItUp.Base.Model.Overlay
                         }
                     }
 
-                    UserViewModel user = await item.GetUser();
+                    UserV2ViewModel user = await item.GetUser();
                     if (user != null)
                     {
                         item.TemplateReplacements.Add("MESSAGE", OverlayChatMessagesListItemModel.TextMessageHTMLTemplate);
@@ -108,8 +109,8 @@ namespace MixItUp.Base.Model.Overlay
                         item.TemplateReplacements.Add("USERNAME", user.FullDisplayName);
                         item.TemplateReplacements.Add("USER_IMAGE", user.AvatarLink);
                         item.TemplateReplacements.Add("USER_COLOR", user.Color);
-                        item.TemplateReplacements.Add("SUB_IMAGE", user.SubscriberBadgeLink);
-                        item.TemplateReplacements.Add("USER_SUB_IMAGE", user.SubscriberBadgeLink);
+                        item.TemplateReplacements.Add("SUB_IMAGE", user.PlatformSubscriberBadgeLink);
+                        item.TemplateReplacements.Add("USER_SUB_IMAGE", user.PlatformSubscriberBadgeLink);
                         item.TemplateReplacements.Add("TEXT_SIZE", this.Height.ToString());
                     }
 
@@ -117,7 +118,7 @@ namespace MixItUp.Base.Model.Overlay
                     {
                         this.Items.Add(item);
                         this.SendUpdateRequired();
-                        return Task.FromResult(0);
+                        return Task.CompletedTask;
                     });
                 }
             }
@@ -130,7 +131,7 @@ namespace MixItUp.Base.Model.Overlay
                 OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateRemoveItem(id.ToString());
                 this.Items.Add(item);
                 this.SendUpdateRequired();
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
     }

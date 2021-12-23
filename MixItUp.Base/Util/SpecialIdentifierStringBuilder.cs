@@ -4,7 +4,11 @@ using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Platform;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -24,6 +28,8 @@ namespace MixItUp.Base.Util
 
         public const string SpecialIdentifierNumberRegexPattern = "\\d+";
         public const string SpecialIdentifierNumberRangeRegexPattern = "\\d+:\\d+";
+
+        public const string StreamingPlatformSpecialIdentifier = "streamingplatform";
 
         public const string TopSpecialIdentifierHeader = "top";
         public const string TopTimeSpecialIdentifier = TopSpecialIdentifierHeader + "time";
@@ -233,18 +239,19 @@ namespace MixItUp.Base.Util
             return text;
         }
 
-        public static async Task<IEnumerable<UserDataModel>> GetUserOrderedCurrencyList(CurrencyModel currency)
+        public static async Task<IEnumerable<UserV2Model>> GetUserOrderedCurrencyList(CurrencyModel currency)
         {
-            IEnumerable<UserDataModel> applicableUsers = await SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
+            IEnumerable<UserV2Model> applicableUsers = await SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
             return applicableUsers.OrderByDescending(u => currency.GetAmount(u));
         }
 
-        public static async Task<IEnumerable<UserDataModel>> GetAllNonExemptUsers()
+        public static async Task<IEnumerable<UserV2Model>> GetAllNonExemptUsers()
         {
-            await ChannelSession.Settings.LoadAllUserData();
+            await ServiceManager.Get<UserService>().LoadAllUserData();
 
-            List<UserDataModel> exemptUsers = new List<UserDataModel>(ChannelSession.Settings.UserData.Values.Where(u => !u.IsCurrencyRankExempt));
-            exemptUsers.Remove(ChannelSession.GetCurrentUser().Data);
+            List<UserV2Model> exemptUsers = new List<UserV2Model>(ChannelSession.Settings.Users.Values.Where(u => !u.IsSpecialtyExcluded));
+            // TODO
+            //exemptUsers.Remove(ChannelSession.User);
             return exemptUsers;
         }
 
@@ -297,13 +304,13 @@ namespace MixItUp.Base.Util
                 switch (ChannelSession.Settings.DefaultStreamingSoftware)
                 {
                     case Model.Actions.StreamingSoftwareTypeEnum.OBSStudio:
-                        ssService = ChannelSession.Services.OBSStudio;
+                        ssService = ServiceManager.Get<IOBSStudioService>();
                         break;
                     case Model.Actions.StreamingSoftwareTypeEnum.XSplit:
-                        ssService = ChannelSession.Services.XSplit;
+                        ssService = ServiceManager.Get<XSplitService>();
                         break;
                     case Model.Actions.StreamingSoftwareTypeEnum.StreamlabsOBS:
-                        ssService = ChannelSession.Services.StreamlabsOBS;
+                        ssService = ServiceManager.Get<StreamlabsOBSService>();
                         break;
                 }
 
@@ -317,9 +324,9 @@ namespace MixItUp.Base.Util
             }
 
             int gameQueueCount = 0;
-            if (ChannelSession.Services.GameQueueService != null && ChannelSession.Services.GameQueueService.IsEnabled)
+            if (ServiceManager.Get<GameQueueService>().IsEnabled)
             {
-                gameQueueCount = ChannelSession.Services.GameQueueService.Queue.Count();
+                gameQueueCount = ServiceManager.Get<GameQueueService>().Queue.Count();
             }
             this.ReplaceSpecialIdentifier("gamequeuetotal", gameQueueCount.ToString());
 
@@ -347,12 +354,13 @@ namespace MixItUp.Base.Util
                 {
                     await this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeRegexSpecialIdentifier, async (total) =>
                     {
-                        IEnumerable<UserDataModel> applicableUsers = await SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
+                        IEnumerable<UserV2Model> applicableUsers = await SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
                         List<string> timeUserList = new List<string>();
                         int userPosition = 1;
-                        foreach (UserDataModel timeUser in applicableUsers.OrderByDescending(u => u.ViewingMinutes).Take(total))
+                        foreach (UserV2Model timeUser in applicableUsers.OrderByDescending(u => u.OnlineViewingMinutes).Take(total))
                         {
-                            timeUserList.Add($"#{userPosition}) {timeUser.Username} - {timeUser.ViewingTimeShortString}");
+                            UserV2ViewModel timeUserViewModel = new UserV2ViewModel(timeUser);
+                            timeUserList.Add($"#{userPosition}) {timeUserViewModel.Username} - {timeUserViewModel.OnlineViewingTimeString}");
                             userPosition++;
                         }
 
@@ -367,12 +375,12 @@ namespace MixItUp.Base.Util
 
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeSpecialIdentifier))
                 {
-                    IEnumerable<UserDataModel> applicableUsers = await SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
-                    UserDataModel topUserData = applicableUsers.Top(u => u.ViewingMinutes);
-                    UserViewModel topUser = ChannelSession.Services.User.GetActiveUserByID(topUserData.ID);
+                    IEnumerable<UserV2Model> applicableUsers = await SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
+                    UserV2Model topUserData = applicableUsers.Top(u => u.OnlineViewingMinutes);
+                    UserV2ViewModel topUser = ServiceManager.Get<UserService>().GetActiveUserByID(topUserData.ID);
                     if (topUser == null)
                     {
-                        topUser = new UserViewModel(topUserData);
+                        topUser = new UserV2ViewModel(topUserData);
                     }
                     await this.HandleUserSpecialIdentifiers(topUser, SpecialIdentifierStringBuilder.TopTimeSpecialIdentifier);
                 }
@@ -385,9 +393,10 @@ namespace MixItUp.Base.Util
                         {
                             List<string> currencyUserList = new List<string>();
                             int userPosition = 1;
-                            foreach (UserDataModel userData in (await SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency)).Take(total))
+                            foreach (UserV2Model userData in (await SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency)).Take(total))
                             {
-                                currencyUserList.Add($"#{userPosition}) {userData.Username} - {currency.GetAmount(userData)}");
+                                UserV2ViewModel userViewModel = new UserV2ViewModel(userData);
+                                currencyUserList.Add($"#{userPosition}) {userViewModel.Username} - {currency.GetAmount(userData)}");
                                 userPosition++;
                             }
 
@@ -402,12 +411,12 @@ namespace MixItUp.Base.Util
 
                     if (this.ContainsSpecialIdentifier(currency.TopUserSpecialIdentifier))
                     {
-                        IEnumerable<UserDataModel> applicableUsers = await SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
-                        UserDataModel topUserData = applicableUsers.Top(u => currency.GetAmount(u));
-                        UserViewModel topUser = ChannelSession.Services.User.GetActiveUserByID(topUserData.ID);
+                        IEnumerable<UserV2Model> applicableUsers = await SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
+                        UserV2Model topUserData = applicableUsers.Top(u => currency.GetAmount(u));
+                        UserV2ViewModel topUser = ServiceManager.Get<UserService>().GetActiveUserByID(topUserData.ID);
                         if (topUser == null)
                         {
-                            topUser = new UserViewModel(topUserData);
+                            topUser = new UserV2ViewModel(topUserData);
                         }
                         await this.HandleUserSpecialIdentifiers(topUser, currency.TopSpecialIdentifier);
                     }
@@ -436,9 +445,9 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (ChannelSession.Services.Twitter.IsConnected && this.ContainsSpecialIdentifier("tweet"))
+            if (ServiceManager.Get<TwitterService>().IsConnected && this.ContainsSpecialIdentifier("tweet"))
             {
-                IEnumerable<Tweet> tweets = await ChannelSession.Services.Twitter.GetLatestTweets();
+                IEnumerable<Tweet> tweets = await ServiceManager.Get<TwitterService>().GetLatestTweets();
                 if (tweets != null && tweets.Count() > 0)
                 {
                     Tweet latestTweet = tweets.FirstOrDefault();
@@ -463,65 +472,72 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (ChannelSession.Services.ExtraLife.IsConnected && this.ContainsSpecialIdentifier(ExtraLifeSpecialIdentifierHeader))
+            if (ServiceManager.Get<ExtraLifeService>().IsConnected && this.ContainsSpecialIdentifier(ExtraLifeSpecialIdentifierHeader))
             {
-                ExtraLifeTeam team = await ChannelSession.Services.ExtraLife.GetTeam();
+                ExtraLifeTeam team = await ServiceManager.Get<ExtraLifeService>().GetTeam();
 
                 this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "teamdonationgoal", team.fundraisingGoal.ToString());
                 this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "teamdonationcount", team.numDonations.ToString());
                 this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "teamdonationamount", team.sumDonations.ToString());
 
-                ExtraLifeTeamParticipant participant = await ChannelSession.Services.ExtraLife.GetParticipant();
+                ExtraLifeTeamParticipant participant = await ServiceManager.Get<ExtraLifeService>().GetParticipant();
 
                 this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "userdonationgoal", participant.fundraisingGoal.ToString());
                 this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "userdonationcount", participant.numDonations.ToString());
                 this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "userdonationamount", participant.sumDonations.ToString());
             }
 
-            if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader))
+            if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader) && ServiceManager.Get<TwitchSessionService>().Stream != null)
             {
-                if (ChannelSession.TwitchUserConnection != null)
+                if (this.ContainsSpecialIdentifier(StreamUptimeSpecialIdentifierHeader) || this.ContainsSpecialIdentifier(StreamStartSpecialIdentifierHeader))
                 {
-                    if (this.ContainsSpecialIdentifier(StreamUptimeSpecialIdentifierHeader) || this.ContainsSpecialIdentifier(StreamStartSpecialIdentifierHeader))
+                    DateTimeOffset startTime = await UptimePreMadeChatCommandModel.GetStartTime();
+                    if (startTime > DateTimeOffset.MinValue)
                     {
-                        DateTimeOffset startTime = await UptimePreMadeChatCommandModel.GetStartTime();
-                        if (startTime > DateTimeOffset.MinValue)
-                        {
-                            TimeSpan duration = DateTimeOffset.Now.Subtract(startTime);
+                        TimeSpan duration = DateTimeOffset.Now.Subtract(startTime);
 
-                            this.ReplaceSpecialIdentifier(StreamStartSpecialIdentifierHeader + "datetime", startTime.ToString("g"));
-                            this.ReplaceSpecialIdentifier(StreamStartSpecialIdentifierHeader + "date", startTime.ToString("d"));
-                            this.ReplaceSpecialIdentifier(StreamStartSpecialIdentifierHeader + "time", startTime.ToString("t"));
+                        this.ReplaceSpecialIdentifier(StreamStartSpecialIdentifierHeader + "datetime", startTime.ToString("g"));
+                        this.ReplaceSpecialIdentifier(StreamStartSpecialIdentifierHeader + "date", startTime.ToString("d"));
+                        this.ReplaceSpecialIdentifier(StreamStartSpecialIdentifierHeader + "time", startTime.ToString("t"));
 
-                            this.ReplaceSpecialIdentifier(StreamUptimeSpecialIdentifierHeader + "total", (int)duration.TotalHours + duration.ToString("\\:mm"));
-                            this.ReplaceSpecialIdentifier(StreamUptimeSpecialIdentifierHeader + "hours", ((int)duration.TotalHours).ToString());
-                            this.ReplaceSpecialIdentifier(StreamUptimeSpecialIdentifierHeader + "minutes", duration.ToString("mm"));
-                            this.ReplaceSpecialIdentifier(StreamUptimeSpecialIdentifierHeader + "seconds", duration.ToString("ss"));
-                        }
-                    }
-
-                    if (ChannelSession.TwitchStreamIsLive)
-                    {
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ChannelSession.TwitchStreamV5.viewers.ToString());
-                    }
-                    if (ChannelSession.TwitchUserNewAPI != null)
-                    {
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewscount", ChannelSession.TwitchUserNewAPI.view_count.ToString());
-                    }
-                    if (ChannelSession.TwitchChannelV5 != null)
-                    {
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ChannelSession.TwitchChannelV5.status);
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ChannelSession.TwitchChannelV5.game);
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", ChannelSession.TwitchChannelV5.followers.ToString());
-                        if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount"))
-                        {
-                            long subCount = await ChannelSession.TwitchUserConnection.GetSubscriberCountV5(ChannelSession.TwitchChannelV5);
-                            this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount", subCount.ToString());
-                        }
+                        this.ReplaceSpecialIdentifier(StreamUptimeSpecialIdentifierHeader + "total", (int)duration.TotalHours + duration.ToString("\\:mm"));
+                        this.ReplaceSpecialIdentifier(StreamUptimeSpecialIdentifierHeader + "hours", ((int)duration.TotalHours).ToString());
+                        this.ReplaceSpecialIdentifier(StreamUptimeSpecialIdentifierHeader + "minutes", duration.ToString("mm"));
+                        this.ReplaceSpecialIdentifier(StreamUptimeSpecialIdentifierHeader + "seconds", duration.ToString("ss"));
                     }
                 }
 
-                this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "chattercount", ChannelSession.Services.Chat.AllUsers.Count.ToString());
+                if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+                {
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<TwitchSessionService>().Stream?.viewer_count.ToString());
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewscount", ServiceManager.Get<TwitchSessionService>().User?.view_count.ToString());
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<TwitchSessionService>().Stream.title);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gameimage", ServiceManager.Get<TwitchSessionService>().Stream.thumbnail_url);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceManager.Get<TwitchSessionService>().Stream.game_name);
+
+                    if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount"))
+                    {
+                        long followCount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetFollowerCount(ServiceManager.Get<TwitchSessionService>().User);
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", followCount.ToString());
+                    }
+
+                    if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount"))
+                    {
+                        long subCount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscriberCount(ServiceManager.Get<TwitchSessionService>().User);
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount", subCount.ToString());
+                    }
+                }
+                else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
+                {
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<GlimeshSessionService>().Channel?.stream?.countViewers.ToString());
+                    if (ServiceManager.Get<GlimeshSessionService>().Channel != null)
+                    {
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<GlimeshSessionService>().Channel.title);
+                        // TODO
+                    }
+                }
+
+                this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "chattercount", ServiceManager.Get<MixItUp.Base.Services.UserService>().ActiveUserCount.ToString());
             }
 
             if (this.ContainsSpecialIdentifier(UserSpecialIdentifierHeader))
@@ -536,7 +552,7 @@ namespace MixItUp.Base.Util
                     string currentArgumentSpecialIdentifierHeader = ArgSpecialIdentifierHeader + (i + 1);
                     if (this.ContainsSpecialIdentifier(currentArgumentSpecialIdentifierHeader))
                     {
-                        UserViewModel argUser = await ChannelSession.Services.User.GetUserFullSearch(parameters.Platform, userID: null, parameters.Arguments.ElementAt(i));
+                        UserV2ViewModel argUser = await ServiceManager.Get<UserService>().GetUserByPlatformID(parameters.Platform, parameters.Arguments.ElementAt(i), performPlatformSearch: true);
                         if (argUser != null)
                         {
                             await this.HandleUserSpecialIdentifiers(argUser, currentArgumentSpecialIdentifierHeader);
@@ -591,7 +607,7 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(StreamerSpecialIdentifierHeader))
             {
-                await this.HandleUserSpecialIdentifiers(ChannelSession.GetCurrentUser(), StreamerSpecialIdentifierHeader);
+                await this.HandleUserSpecialIdentifiers(ChannelSession.User, StreamerSpecialIdentifierHeader);
             }
 
             if (this.ContainsSpecialIdentifier(StreamBossSpecialIdentifierHeader))
@@ -625,7 +641,7 @@ namespace MixItUp.Base.Util
                     });
                 }
 
-                IEnumerable<UserViewModel> workableUsers = ChannelSession.Services.User.GetAllWorkableUsers();
+                IEnumerable<UserV2ViewModel> workableUsers = ServiceManager.Get<UserService>().GetActiveUsers();
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSpecialIdentifierHeader + "user"))
                 {
                     if (workableUsers != null && workableUsers.Count() > 0)
@@ -636,7 +652,7 @@ namespace MixItUp.Base.Util
 
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomFollowerSpecialIdentifierHeader))
                 {
-                    IEnumerable<UserViewModel> users = workableUsers.Where(u => u.IsFollower);
+                    IEnumerable<UserV2ViewModel> users = workableUsers.Where(u => u.IsFollower);
                     if (users != null && users.Count() > 0)
                     {
                         await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomFollowerSpecialIdentifierHeader);
@@ -645,7 +661,7 @@ namespace MixItUp.Base.Util
 
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSubscriberSpecialIdentifierHeader))
                 {
-                    IEnumerable<UserViewModel> users = workableUsers.Where(u => u.IsSubscriber);
+                    IEnumerable<UserV2ViewModel> users = workableUsers.Where(u => u.IsSubscriber);
                     if (users != null && users.Count() > 0)
                     {
                         await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomSubscriberSpecialIdentifierHeader);
@@ -654,7 +670,7 @@ namespace MixItUp.Base.Util
 
                 if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.RandomRegularSpecialIdentifierHeader))
                 {
-                    IEnumerable<UserViewModel> users = workableUsers.Where(u => u.IsRegular);
+                    IEnumerable<UserV2ViewModel> users = workableUsers.Where(u => u.IsRegular);
                     if (users != null && users.Count() > 0)
                     {
                         await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomRegularSpecialIdentifierHeader);
@@ -713,35 +729,36 @@ namespace MixItUp.Base.Util
 
         public override string ToString() { return this.text; }
 
-        private async Task HandleUserSpecialIdentifiers(UserViewModel user, string identifierHeader)
+        private async Task HandleUserSpecialIdentifiers(UserV2ViewModel user, string identifierHeader)
         {
             if (user != null && this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader))
             {
-                await user.RefreshDetails(force: true);
+                await user.Refresh();
 
                 foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.OrderByDescending(c => c.UserAmountSpecialIdentifier))
                 {
-                    if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier))
-                    {
-                        if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier))
-                        {
-                            List<UserDataModel> sortedUsers = (await SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency)).ToList();
-                            int index = sortedUsers.IndexOf(user.Data);
-                            this.ReplaceSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier, (index + 1).ToString());
-                        }
+                    // TODO
+                    //if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier))
+                    //{
+                    //    if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier))
+                    //    {
+                    //        List<UserV2Model> sortedUsers = (await SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency)).ToList();
+                    //        int index = sortedUsers.IndexOf(user);
+                    //        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier, (index + 1).ToString());
+                    //    }
 
-                        int amount = currency.GetAmount(user.Data);
-                        RankModel rank = currency.GetRank(user.Data);
-                        RankModel nextRank = currency.GetNextRank(user.Data);
+                    //    int amount = currency.GetAmount(user);
+                    //    RankModel rank = currency.GetRank(user);
+                    //    RankModel nextRank = currency.GetNextRank(user);
 
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNextNameSpecialIdentifier, nextRank.Name);
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextDisplaySpecialIdentifier, nextRank.Amount.ToString("N0"));
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextSpecialIdentifier, nextRank.Amount.ToString());
+                    //    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNextNameSpecialIdentifier, nextRank.Name);
+                    //    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextDisplaySpecialIdentifier, nextRank.Amount.ToString("N0"));
+                    //    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextSpecialIdentifier, nextRank.Amount.ToString());
 
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNameSpecialIdentifier, rank.Name);
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountDisplaySpecialIdentifier, amount.ToString("N0"));
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier, amount.ToString());
-                    }
+                    //    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNameSpecialIdentifier, rank.Name);
+                    //    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountDisplaySpecialIdentifier, amount.ToString("N0"));
+                    //    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier, amount.ToString());
+                    //}
                 }
 
                 foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.OrderByDescending(c => c.UserAmountSpecialIdentifierHeader))
@@ -752,7 +769,7 @@ namespace MixItUp.Base.Util
 
                         foreach (InventoryItemModel item in inventory.Items.Values.OrderByDescending(i => i.Name))
                         {
-                            var quantity = inventory.GetAmount(user.Data, item);
+                            var quantity = inventory.GetAmount(user, item);
                             if (quantity > 0)
                             {
                                 userItems[item.Name] = quantity;
@@ -787,18 +804,18 @@ namespace MixItUp.Base.Util
                 {
                     if (this.ContainsSpecialIdentifier(identifierHeader + streamPass.UserAmountSpecialIdentifier))
                     {
-                        this.ReplaceSpecialIdentifier(identifierHeader + streamPass.UserLevelSpecialIdentifier, streamPass.GetLevel(user.Data).ToString());
-                        this.ReplaceSpecialIdentifier(identifierHeader + streamPass.UserPointsDisplaySpecialIdentifier, streamPass.GetAmount(user.Data).ToString("N0"));
-                        this.ReplaceSpecialIdentifier(identifierHeader + streamPass.UserAmountSpecialIdentifier, streamPass.GetAmount(user.Data).ToString());
+                        this.ReplaceSpecialIdentifier(identifierHeader + streamPass.UserLevelSpecialIdentifier, streamPass.GetLevel(user).ToString());
+                        this.ReplaceSpecialIdentifier(identifierHeader + streamPass.UserPointsDisplaySpecialIdentifier, streamPass.GetAmount(user).ToString("N0"));
+                        this.ReplaceSpecialIdentifier(identifierHeader + streamPass.UserAmountSpecialIdentifier, streamPass.GetAmount(user).ToString());
                     }
                 }
 
                 if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gamequeueposition"))
                 {
                     string gameQueuePosition = "Not In Queue";
-                    if (ChannelSession.Services.GameQueueService != null && ChannelSession.Services.GameQueueService.IsEnabled)
+                    if (ServiceManager.Get<GameQueueService>().IsEnabled)
                     {
-                        int position = ChannelSession.Services.GameQueueService.GetUserPosition(user);
+                        int position = ServiceManager.Get<GameQueueService>().GetUserPosition(user);
                         if (position > 0)
                         {
                             gameQueuePosition = position.ToString();
@@ -817,55 +834,82 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "displayroles", user.RolesLocalizedString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "primaryrole", user.PrimaryRoleString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "title", user.Title);
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "moderationstrikes", user.Data.ModerationStrikes.ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "color", UserViewModel.UserDefaultColor.Equals(user.Color) ? "#000000" : user.Color);
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "inchat", ChannelSession.Services.User.IsUserActive(user.ID).ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "moderationstrikes", user.ModerationStrikes.ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "color", UserV2ViewModel.UserDefaultColor.Equals(user.Color) ? "#000000" : user.Color);
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "inchat", ServiceManager.Get<UserService>().IsUserActive(user.ID).ToString());
 
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "twitchid", user.TwitchID);
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "twitchcolor", user.Data.TwitchColor);
+                if (user.HasPlatformData(StreamingPlatformTypeEnum.Twitch))
+                {
+                    TwitchUserPlatformV2Model twitchUser = user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch);
+                    if (twitchUser != null)
+                    {
+                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "twitchid", twitchUser.ID);
+                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "twitchcolor", twitchUser.Color);
+                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalbitscheered", twitchUser.TotalBitsCheered.ToString());
+                    }
+                }
 
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "time", user.Data.ViewingTimeString);
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "hours", user.Data.ViewingHoursString);
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "mins", user.Data.ViewingMinutesString);
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "time", user.OnlineViewingTimeString);
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "hours", user.OnlineViewingHoursOnly.ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "mins", user.OnlineViewingMinutesOnly.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "accountage", user.AccountAgeString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followage", user.FollowAgeString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "subage", user.SubscribeAgeString);
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "subtier", user.SubscribeTierString);
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "subtier", user.SubscriberTierString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "submonths", user.SubscribeMonths.ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "subbadge", user.SubscriberBadgeLink);
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "subbadge", user.PlatformSubscriberBadgeLink);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "isfollower", user.IsFollower.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "isregular", user.IsRegular.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "issubscriber", user.IsPlatformSubscriber.ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "isvip", user.UserRoles.Contains(UserRoleEnum.VIP).ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "ismod", user.UserRoles.Contains(UserRoleEnum.Mod).ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "isvip", user.HasRole(UserRoleEnum.TwitchVIP).ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "ismod", user.HasRole(UserRoleEnum.Moderator).ToString());
 
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalstreamswatched", user.Data.TotalStreamsWatched.ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalamountdonated", user.Data.TotalAmountDonated.ToCurrencyString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalsubsgifted", user.Data.TotalSubsGifted.ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalsubsreceived", user.Data.TotalSubsReceived.ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalbitscheered", user.Data.TotalBitsCheered.ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalchatmessagessent", user.Data.TotalChatMessageSent.ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totaltimestagged", user.Data.TotalTimesTagged.ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalcommandsrun", user.Data.TotalCommandsRun.ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalmonthssubbed", user.Data.TotalMonthsSubbed.ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalstreamswatched", user.TotalStreamsWatched.ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalamountdonated", user.TotalAmountDonated.ToCurrencyString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalsubsgifted", user.TotalSubsGifted.ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalsubsreceived", user.TotalSubsReceived.ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalchatmessagessent", user.TotalChatMessageSent.ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totaltimestagged", user.TotalTimesTagged.ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalcommandsrun", user.TotalCommandsRun.ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalmonthssubbed", user.TotalMonthsSubbed.ToString());
 
                 string userStreamHeader = identifierHeader + UserSpecialIdentifierHeader + "stream";
                 if (this.ContainsSpecialIdentifier(userStreamHeader))
                 {
-                    if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
+                    if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Glimesh) && ServiceManager.Get<GlimeshSessionService>().IsConnected)
                     {
-                        Twitch.Base.Models.V5.Channel.ChannelModel channel = await ChannelSession.TwitchUserConnection.GetV5APIChannel(user.TwitchID);
+                        if (ServiceManager.Get<TwitchSessionService>().Stream != null)
+                        {
+                            this.ReplaceSpecialIdentifier(userStreamHeader + "viewercount", ServiceManager.Get<TwitchSessionService>().Stream?.viewer_count.ToString());
+                            this.ReplaceSpecialIdentifier(userStreamHeader + "viewscount", ServiceManager.Get<TwitchSessionService>().User?.view_count.ToString());
+                            this.ReplaceSpecialIdentifier(userStreamHeader + "title", ServiceManager.Get<TwitchSessionService>().Stream.title);
+                            this.ReplaceSpecialIdentifier(userStreamHeader + "gameimage", ServiceManager.Get<TwitchSessionService>().Stream.thumbnail_url);
+                            this.ReplaceSpecialIdentifier(userStreamHeader + "game", ServiceManager.Get<TwitchSessionService>().Stream.game_name);
+
+                            if (this.ContainsSpecialIdentifier(userStreamHeader + "followercount"))
+                            {
+                                long followCount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetFollowerCount(ServiceManager.Get<TwitchSessionService>().User);
+                                this.ReplaceSpecialIdentifier(userStreamHeader + "followercount", followCount.ToString());
+                            }
+
+                            if (this.ContainsSpecialIdentifier(userStreamHeader + "subscribercount"))
+                            {
+                                long subCount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscriberCount(ServiceManager.Get<TwitchSessionService>().User);
+                                this.ReplaceSpecialIdentifier(userStreamHeader + "subscribercount", subCount.ToString());
+                            }
+                        }
+                    }
+                    else if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Glimesh) && ServiceManager.Get<GlimeshSessionService>().IsConnected)
+                    {
+                        Glimesh.Base.Models.Channels.ChannelModel channel = ServiceManager.Get<GlimeshSessionService>().Channel;
                         if (channel != null)
                         {
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "title", channel.status);
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "game", channel.game);
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "followercount", channel.followers.ToString());
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "viewscount", channel.views.ToString());
+                            this.ReplaceSpecialIdentifier(userStreamHeader + "title", channel.title);
                         }
                     }
                 }
 
-                if (ChannelSession.Services.Patreon.IsConnected)
+                if (ServiceManager.Get<PatreonService>().IsConnected)
                 {
                     string tierName = "Not Subscribed";
                     PatreonTier tier = user.PatreonTier;
@@ -880,12 +924,12 @@ namespace MixItUp.Base.Util
 
         private async Task HandleTopBitsCheeredRegex(BitsLeaderboardPeriodEnum period)
         {
-            if (ChannelSession.TwitchUserConnection != null && this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredRegexSpecialIdentifier + period.ToString().ToLower()))
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected && this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredRegexSpecialIdentifier + period.ToString().ToLower()))
             {
                 await this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredRegexSpecialIdentifier + period.ToString().ToLower(), async (total) =>
                 {
                     string result = "No users found.";
-                    BitsLeaderboardModel leaderboard = await ChannelSession.TwitchUserConnection.GetBitsLeaderboard(period, total);
+                    BitsLeaderboardModel leaderboard = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(period, total);
                     if (leaderboard != null && leaderboard.users != null && leaderboard.users.Count > 0)
                     {
                         IEnumerable<BitsLeaderboardUserModel> users = leaderboard.users.OrderBy(l => l.rank);
@@ -911,23 +955,19 @@ namespace MixItUp.Base.Util
 
         private async Task HandleTopBitsCheered(BitsLeaderboardPeriodEnum period)
         {
-            if (ChannelSession.TwitchUserConnection != null && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredSpecialIdentifier + period.ToString().ToLower()))
+            if (ServiceManager.Get<TwitchSessionService>().UserConnection != null && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredSpecialIdentifier + period.ToString().ToLower()))
             {
-                BitsLeaderboardModel leaderboard = await ChannelSession.TwitchUserConnection.GetBitsLeaderboard(period, 1);
+                BitsLeaderboardModel leaderboard = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(period, 1);
                 if (leaderboard != null && leaderboard.users != null && leaderboard.users.Count > 0)
                 {
                     BitsLeaderboardUserModel bitsUser = leaderboard.users.OrderBy(u => u.rank).First();
 
                     this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredSpecialIdentifier + period.ToString().ToLower() + "amount", bitsUser.score.ToString());
 
-                    UserViewModel user = ChannelSession.Services.User.GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, bitsUser.user_id);
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, bitsUser.user_id);
                     if (user == null)
                     {
-                        user = await UserViewModel.Create(new Twitch.Base.Models.NewAPI.Users.UserModel()
-                        {
-                            id = bitsUser.user_id,
-                            login = bitsUser.user_name
-                        });
+                        user = UserV2ViewModel.CreateUnassociated(bitsUser.user_name);
                     }
                     await this.HandleUserSpecialIdentifiers(user, SpecialIdentifierStringBuilder.TopBitsCheeredSpecialIdentifier + period.ToString().ToLower());
                 }
@@ -945,14 +985,10 @@ namespace MixItUp.Base.Util
             {
                 if (Guid.TryParse(ChannelSession.Settings.LatestSpecialIdentifiersData[userkey].ToString(), out Guid userID))
                 {
-                    if (!ChannelSession.Settings.UserData.TryGetValue(userID, out UserDataModel userData))
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(userID);
+                    if (user != null)
                     {
-                        userData = await ChannelSession.Settings.GetUserDataByID(userID);
-                    }
-
-                    if (userData != null)
-                    {
-                        await this.HandleUserSpecialIdentifiers(new UserViewModel(userData), userkey);
+                        await this.HandleUserSpecialIdentifiers(user, userkey);
                     }
                 }
             }

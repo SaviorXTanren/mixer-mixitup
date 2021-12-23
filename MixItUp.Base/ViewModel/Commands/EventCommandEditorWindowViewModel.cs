@@ -40,9 +40,9 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public override Task SaveCommandToSettings(CommandModelBase command)
         {
-            ChannelSession.Services.Command.EventCommands.Remove((EventCommandModel)this.existingCommand);
-            ChannelSession.Services.Command.EventCommands.Add((EventCommandModel)command);
-            return Task.FromResult(0);
+            ServiceManager.Get<CommandService>().EventCommands.Remove((EventCommandModel)this.existingCommand);
+            ServiceManager.Get<CommandService>().EventCommands.Add((EventCommandModel)command);
+            return Task.CompletedTask;
         }
 
         public override Dictionary<string, string> GetTestSpecialIdentifiers() { return EventCommandModel.GetEventTestSpecialIdentifiers(this.EventType); }

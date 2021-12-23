@@ -33,7 +33,7 @@
             <TextBlock Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Center" Text="{x:Static resx:Resources.PixelChatInfo2}"/>
 
             <TextBlock Grid.Row="4" TextWrapping="Wrap">
-                <Hyperlink NavigateUri="https://beta.pixelchat.tv/dash/profile/tokens" RequestNavigate="Hyperlink_RequestNavigate">
+                <Hyperlink NavigateUri="https://pixelchat.tv/dash/profile/tokens" RequestNavigate="Hyperlink_RequestNavigate">
                     <TextBlock Text="{x:Static resx:Resources.PixelChatDeveloperTokenPage}"/>
                 </Hyperlink>
             </TextBlock>

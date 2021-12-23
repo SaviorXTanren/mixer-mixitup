@@ -9,8 +9,6 @@
              xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
              xmlns:ChatControls="clr-namespace:MixItUp.WPF.Controls.Chat"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:CommandModels="clr-namespace:MixItUp.Base.Commands;assembly=MixItUp.Base"
-             xmlns:CommandViewModels="clr-namespace:MixItUp.Base.ViewModel.Commands;assembly=MixItUp.Base"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:util="clr-namespace:MixItUp.WPF.Util"
              mc:Ignorable="d"
@@ -132,7 +130,7 @@
             <ScrollViewer x:Name="ListCommands" Grid.Row="0" Visibility="{Binding ShowList, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
                 <DataGrid ItemsSource="{Binding DefaultGroup}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" PreviewMouseWheel="DataGrid_PreviewMouseWheel">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" MinWidth="200" Width="*" />
+                        <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                         <DataGridTextColumn Header="{x:Static resx:Resources.Commands}" Binding="{Binding TriggersString}" IsReadOnly="True" MinWidth="125" Width="125" />
                         <DataGridTextColumn Header="{x:Static resx:Resources.Permissions}" Binding="{Binding Requirements.Role.DisplayRole, Converter={StaticResource LocalizationConverter}}" IsReadOnly="True" MinWidth="115" Width="115" />
                         <DataGridTextColumn Binding="{Binding Requirements.Cooldown.IndividualAmount}" IsReadOnly="True" MinWidth="60" Width="60">
@@ -142,7 +140,7 @@
                                 </Grid>
                             </DataGridTextColumn.Header>
                         </DataGridTextColumn>
-                        <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" MinWidth="220" Width="220">
+                        <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" MinWidth="230" Width="230">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <CommandsControls:CommandListingButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" EnableDisableToggled="CommandButtonsControl_EnableDisableToggled" />
@@ -169,9 +167,9 @@
 
                                     <DataGrid ItemsSource="{Binding Commands}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" PreviewMouseWheel="DataGrid_PreviewMouseWheel">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" MinWidth="200" Width="*" />
+                                            <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                                             <DataGridTextColumn Header="{x:Static resx:Resources.Commands}" Binding="{Binding TriggersString}" IsReadOnly="True" MinWidth="125" Width="125" />
-                                            <DataGridTextColumn Header="{x:Static resx:Resources.Permissions}" Binding="{Binding Requirements.Role.Role, Converter={StaticResource LocalizationConverter}}" IsReadOnly="True" MinWidth="115" Width="115" />
+                                            <DataGridTextColumn Header="{x:Static resx:Resources.Permissions}" Binding="{Binding Requirements.Role.DisplayRole, Converter={StaticResource LocalizationConverter}}" IsReadOnly="True" MinWidth="115" Width="115" />
                                             <DataGridTextColumn Binding="{Binding Requirements.Cooldown.IndividualAmount}" IsReadOnly="True" MinWidth="60" Width="60">
                                                 <DataGridTextColumn.Header>
                                                     <Grid HorizontalAlignment="Center" Background="Transparent">
@@ -179,7 +177,7 @@
                                                     </Grid>
                                                 </DataGridTextColumn.Header>
                                             </DataGridTextColumn>
-                                            <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" MinWidth="220" Width="220">
+                                            <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" MinWidth="230" Width="230">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
                                                         <CommandsControls:CommandListingButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" EnableDisableToggled="CommandButtonsControl_EnableDisableToggled" />

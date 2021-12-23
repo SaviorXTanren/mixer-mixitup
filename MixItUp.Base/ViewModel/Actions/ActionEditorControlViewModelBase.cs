@@ -117,7 +117,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.actionEditorListControlViewModel.DeleteAction(this);
             });
 
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public void Initialize(ActionEditorListControlViewModel actionEditorListControlViewModel)

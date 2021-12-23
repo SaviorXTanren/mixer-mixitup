@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -46,8 +47,11 @@ namespace MixItUp.Base.Model.Commands.Games
     [DataContract]
     public class RoleProbabilityPayoutModel
     {
+        [Obsolete]
         [DataMember]
-        public UserRoleEnum Role { get; set; }
+        public OldUserRoleEnum Role { get; set; }
+        [DataMember]
+        public UserRoleEnum UserRole { get; set; }
 
         [DataMember]
         public int Probability { get; set; }
@@ -59,7 +63,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         public RoleProbabilityPayoutModel(UserRoleEnum role, int probability, double payout)
         {
-            this.Role = role;
+            this.UserRole = role;
             this.Probability = probability;
             this.Payout = payout;
         }
@@ -73,8 +77,11 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public string Name { get; set; }
 
+        [Obsolete]
         [DataMember]
-        public Dictionary<UserRoleEnum, RoleProbabilityPayoutModel> RoleProbabilityPayouts { get; set; } = new Dictionary<UserRoleEnum, RoleProbabilityPayoutModel>();
+        public Dictionary<OldUserRoleEnum, RoleProbabilityPayoutModel> RoleProbabilityPayouts { get; set; } = new Dictionary<OldUserRoleEnum, RoleProbabilityPayoutModel>();
+        [DataMember]
+        public Dictionary<UserRoleEnum, RoleProbabilityPayoutModel> UserRoleProbabilityPayouts { get; set; } = new Dictionary<UserRoleEnum, RoleProbabilityPayoutModel>();
 
         [DataMember]
         public CustomCommandModel Command { get; set; }
@@ -82,42 +89,15 @@ namespace MixItUp.Base.Model.Commands.Games
         public GameOutcomeModel(string name, Dictionary<UserRoleEnum, RoleProbabilityPayoutModel> roleProbabilityPayouts, CustomCommandModel command)
         {
             this.Name = name;
-            this.RoleProbabilityPayouts = roleProbabilityPayouts;
+            this.UserRoleProbabilityPayouts = roleProbabilityPayouts;
             this.Command = command;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal GameOutcomeModel(Base.Commands.GameOutcome outcome)
-        {
-            this.Name = outcome.Name;
-            this.Command = new CustomCommandModel(outcome.Command) { IsEmbedded = true };
-            foreach (var kvp in outcome.RoleProbabilities)
-            {
-                this.RoleProbabilityPayouts[kvp.Key] = new RoleProbabilityPayoutModel(kvp.Key, kvp.Value);
-            }
-
-            if (outcome.RolePayouts.Count > 0)
-            {
-                foreach (var kvp in outcome.RolePayouts)
-                {
-                    this.RoleProbabilityPayouts[kvp.Key].Payout = kvp.Value;
-                }
-            }
-            else
-            {
-                foreach (var kvp in this.RoleProbabilityPayouts)
-                {
-                    kvp.Value.Payout = outcome.Payout;
-                }
-            }
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         protected GameOutcomeModel() { }
 
-        public RoleProbabilityPayoutModel GetRoleProbabilityPayout(UserViewModel user)
+        public RoleProbabilityPayoutModel GetRoleProbabilityPayout(UserV2ViewModel user)
         {
-            var roleProbabilities = this.RoleProbabilityPayouts.Where(kvp => user.HasPermissionsTo(kvp.Key)).OrderByDescending(kvp => kvp.Key);
+            var roleProbabilities = this.UserRoleProbabilityPayouts.Where(kvp => user.MeetsRole(kvp.Key)).OrderByDescending(kvp => kvp.Key);
             if (roleProbabilities.Count() > 0)
             {
                 return roleProbabilities.FirstOrDefault().Value;
@@ -125,7 +105,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return null;
         }
 
-        public double GetPayoutMultiplier(UserViewModel user)
+        public double GetPayoutMultiplier(UserV2ViewModel user)
         {
             RoleProbabilityPayoutModel roleProbabilityPayout = this.GetRoleProbabilityPayout(user);
             if (roleProbabilityPayout != null)
@@ -158,16 +138,6 @@ namespace MixItUp.Base.Model.Commands.Games
         {
             this.GameType = gameType;
         }
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal GameCommandModelBase(Base.Commands.GameCommandBase command, GameCommandTypeEnum gameType)
-            : this(command.Name, command.Commands, gameType)
-        {
-            this.ID = command.ID;
-            this.IsEnabled = command.IsEnabled;
-            this.Requirements = new RequirementsSetModel(command.Requirements);
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
 
         protected GameCommandModelBase() : base() { }
 
@@ -216,7 +186,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     {
                         parameters.TargetUser = null;
                     }
-                    else if (!ChannelSession.Services.User.IsUserActive(parameters.TargetUser.ID))
+                    else if (!ServiceManager.Get<UserService>().IsUserActive(parameters.TargetUser.ID))
                     {
                         parameters.TargetUser = null;
                         return;
@@ -230,18 +200,18 @@ namespace MixItUp.Base.Model.Commands.Games
             }
         }
 
-        protected UserViewModel GetRandomUser(CommandParametersModel parameters)
+        protected UserV2ViewModel GetRandomUser(CommandParametersModel parameters)
         {
             CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
             int betAmount = this.GetPrimaryBetAmount(parameters);
             if (currencyRequirement != null && betAmount > 0)
             {
                 string currencyName = currencyRequirement.Currency?.Name;
-                List<UserViewModel> users = new List<UserViewModel>(ChannelSession.Services.User.GetAllWorkableUsers(parameters.Platform).Shuffle());
+                List<UserV2ViewModel> users = new List<UserV2ViewModel>(ServiceManager.Get<UserService>().GetActiveUsers(parameters.Platform).Shuffle());
                 users.Remove(parameters.User);
-                foreach (UserViewModel user in users)
+                foreach (UserV2ViewModel user in users)
                 {
-                    if (!user.Data.IsCurrencyRankExempt && currencyRequirement.Currency.HasAmount(user.Data, betAmount))
+                    if (!user.IsSpecialtyExcluded && currencyRequirement.Currency.HasAmount(user, betAmount))
                     {
                         return user;
                     }
@@ -250,7 +220,9 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else
             {
-                return ChannelSession.Services.User.GetRandomUser(parameters, excludeCurrencyRankExempt: true);
+                // TODO
+                //return ServiceManager.Get<UserService>().GetRandomActiveUser(parameters, excludeCurrencyRankExempt: true);
+                return ChannelSession.User;
             }
         }
 
@@ -261,7 +233,7 @@ namespace MixItUp.Base.Model.Commands.Games
             parameters.SpecialIdentifiers[GameCommandModelBase.GameBetSpecialIdentifier] = this.GetPrimaryBetAmount(parameters).ToString();
         }
 
-        public override void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type, this.GetType().ToString()); }
+        public override void TrackTelemetry() { ServiceManager.Get<ITelemetryService>().TrackCommand(this.Type, this.GetType().ToString()); }
 
         protected CurrencyRequirementModel GetPrimaryCurrencyRequirement() { return this.Requirements.Currency.FirstOrDefault(); }
 
@@ -287,12 +259,12 @@ namespace MixItUp.Base.Model.Commands.Games
             if (currencyRequirement != null && betAmount > 0)
             {
                 string currencyName = currencyRequirement.Currency?.Name;
-                if (currencyRequirement.Currency.HasAmount(parameters.TargetUser.Data, betAmount))
+                if (currencyRequirement.Currency.HasAmount(parameters.TargetUser, betAmount))
                 {
                     return true;
                 }
 
-                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCommandTargetUserInvalidAmount, betAmount, currencyName));
+                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCommandTargetUserInvalidAmount, betAmount, currencyName), parameters.Platform);
                 return false;
             }
             return true;
@@ -301,10 +273,10 @@ namespace MixItUp.Base.Model.Commands.Games
         protected bool ValidatePrimaryCurrencyAmount(CommandParametersModel parameters, int amount)
         {
             CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
-            return (currencyRequirement != null) ? currencyRequirement.Currency.HasAmount(parameters.User.Data, amount) : false;
+            return (currencyRequirement != null) ? currencyRequirement.Currency.HasAmount(parameters.User, amount) : false;
         }
 
-        protected GameOutcomeModel SelectRandomOutcome(UserViewModel user, IEnumerable<GameOutcomeModel> outcomes)
+        protected GameOutcomeModel SelectRandomOutcome(UserV2ViewModel user, IEnumerable<GameOutcomeModel> outcomes)
         {
             int randomNumber = this.GenerateProbability();
             int cumulativeOutcomeProbability = 0;
@@ -338,13 +310,13 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected async Task RunSubCommand(CommandModelBase command, CommandParametersModel parameters)
         {
-            await ChannelSession.Services.Command.Queue(new CommandInstanceModel(command, parameters)
+            await ServiceManager.Get<CommandService>().Queue(new CommandInstanceModel(command, parameters)
             {
                 ShowInUI = false
             });
         }
 
-        protected void PerformPrimarySetPayout(UserViewModel user, int payout)
+        protected void PerformPrimarySetPayout(UserV2ViewModel user, int payout)
         {
             CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
             if (currencyRequirement != null)
@@ -374,9 +346,9 @@ namespace MixItUp.Base.Model.Commands.Games
         protected async Task<string> GetRandomWord(string customWordsFilePath)
         {
             HashSet<string> wordsToUse = GameCommandModelBase.DefaultWords;
-            if (!string.IsNullOrEmpty(customWordsFilePath) && ChannelSession.Services.FileService.FileExists(customWordsFilePath))
+            if (!string.IsNullOrEmpty(customWordsFilePath) && ServiceManager.Get<IFileService>().FileExists(customWordsFilePath))
             {
-                string fileData = await ChannelSession.Services.FileService.ReadFile(customWordsFilePath);
+                string fileData = await ServiceManager.Get<IFileService>().ReadFile(customWordsFilePath);
                 if (!string.IsNullOrEmpty(fileData))
                 {
                     wordsToUse = new HashSet<string>();

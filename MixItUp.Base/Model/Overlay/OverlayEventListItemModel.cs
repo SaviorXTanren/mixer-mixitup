@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Model.User;
-using MixItUp.Base.Model.User.Twitch;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -113,7 +113,7 @@ namespace MixItUp.Base.Model.Overlay
             await base.Disable();
         }
 
-        private async void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
+        private async void GlobalEvents_OnFollowOccurred(object sender, UserV2ViewModel user)
         {
             if (!this.follows.Contains(user.ID))
             {
@@ -122,7 +122,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async void GlobalEvents_OnHostOccurred(object sender, UserViewModel user)
+        private async void GlobalEvents_OnHostOccurred(object sender, UserV2ViewModel user)
         {
             if (!this.hosts.Contains(user.ID))
             {
@@ -131,7 +131,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async void GlobalEvents_OnRaidOccurred(object sender, Tuple<UserViewModel, int> raid)
+        private async void GlobalEvents_OnRaidOccurred(object sender, Tuple<UserV2ViewModel, int> raid)
         {
             if (!this.raids.Contains(raid.Item1.ID))
             {
@@ -140,7 +140,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
+        private async void GlobalEvents_OnSubscribeOccurred(object sender, UserV2ViewModel user)
         {
             if (!this.subs.Contains(user.ID))
             {
@@ -149,7 +149,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
+        private async void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserV2ViewModel, int> user)
         {
             if (!this.subs.Contains(user.Item1.ID))
             {
@@ -158,7 +158,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
+        private async void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserV2ViewModel, UserV2ViewModel> e)
         {
             if (!this.subs.Contains(e.Item2.ID))
             {
@@ -169,7 +169,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { await this.AddEvent(donation.Username, string.Format("Donated {0}", donation.AmountText)); }
 
-        private async void GlobalEvents_OnStreamlootsPurchaseOccurred(object sender, Tuple<UserViewModel, int> purchase) { await this.AddEvent(purchase.Item1.FullDisplayName, string.Format("Purchased {0} Packs", purchase.Item2)); }
+        private async void GlobalEvents_OnStreamlootsPurchaseOccurred(object sender, Tuple<UserV2ViewModel, int> purchase) { await this.AddEvent(purchase.Item1.FullDisplayName, string.Format("Purchased {0} Packs", purchase.Item2)); }
 
         private async void GlobalEvents_OnBitsOccurred(object sender, TwitchUserBitsCheeredModel e) { await this.AddEvent(e.User.FullDisplayName, string.Format("Cheer {0} Bits", e.Amount)); }
 
@@ -185,7 +185,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 this.Items.Add(item);
                 this.SendUpdateRequired();
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
     }

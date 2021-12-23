@@ -25,6 +25,8 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
 
         public string ImageURL { get { return this.model.ImageURL; } }
 
+        public string ScreenshotURL { get { return this.model.ScreenshotURL; } }
+
         public HashSet<CommunityCommandTagEnum> Tags { get { return this.model.Tags; } }
 
         public Guid UserID { get { return this.model.UserId; } }
@@ -79,8 +81,12 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
 
             foreach (CommunityCommandReviewModel review in this.model.Reviews.OrderByDescending(r => r.DateTime))
             {
-                this.Reviews.Add(new CommunityCommandReviewViewModel(review));
+                if (!string.IsNullOrWhiteSpace(review.Review))
+                {
+                    this.Reviews.Add(new CommunityCommandReviewViewModel(review));
+                }
             }
+            this.NotifyPropertyChanged("HasNoReviews");
         }
 
         public virtual bool IsMyCommand { get { return false; } }
@@ -92,6 +98,8 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
         public List<CommunityCommandReviewViewModel> Reviews { get; } = new List<CommunityCommandReviewViewModel>();
 
         public CommandModelBase PrimaryCommand { get { return this.Commands.FirstOrDefault(); } }
+
+        public bool HasNoReviews { get { return this.Reviews.Count == 0; } }
     }
 
     public class MyCommunityCommandDetailsViewModel : CommunityCommandDetailsViewModel

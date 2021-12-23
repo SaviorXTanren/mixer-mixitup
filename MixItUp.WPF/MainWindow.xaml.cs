@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Store;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.CommunityCommands;
@@ -103,10 +104,10 @@ namespace MixItUp.WPF
 
         protected override async Task OnLoaded()
         {
-            ChannelSession.Services.InputService.Initialize(new WindowInteropHelper(this).Handle);
+            ServiceManager.Get<IInputService>().Initialize(new WindowInteropHelper(this).Handle);
             foreach (HotKeyConfiguration hotKeyConfiguration in ChannelSession.Settings.HotKeys.Values)
             {
-                ChannelSession.Services.InputService.RegisterHotKey(hotKeyConfiguration.Modifiers, hotKeyConfiguration.Key);
+                ServiceManager.Get<IInputService>().RegisterHotKey(hotKeyConfiguration.Modifiers, hotKeyConfiguration.Key);
             }
 
             if (!string.IsNullOrEmpty(ChannelSession.Settings.Name))
@@ -127,7 +128,7 @@ namespace MixItUp.WPF
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.CommunityCommands, new CommunityCommandsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Community-Commands");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Users, new UsersControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Users");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.CurrencyRankInventory, new CurrencyRankInventoryControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency,-Rank,-&-Inventory");
-            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.ChannelPoints, new TwitchChannelPointsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Channel-Points");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.TwitchChannelPoints, new TwitchChannelPointsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Channel-Points");
             this.streamlootsCardsMainMenuItem = await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.StreamlootsCards, new StreamlootsCardsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Streamloots-Cards");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.StreamPass, new StreamPassControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Stream-Pass");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.RedemptionStore, new RedemptionStoreControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Redemption-Store");
@@ -140,12 +141,13 @@ namespace MixItUp.WPF
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Moderation, new ModerationControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Moderation");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.CommandHistory, new CommandHistoryControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Commands");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Services, new ServicesControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Services");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Webhooks, new WebhooksControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Webhooks");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Accounts, new AccountsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Changelog, new ChangelogControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.About, new AboutControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
 
-            ChannelSession.Services.Streamloots.OnStreamlootsConnectionChanged += StreamlootsService_OnStreamlootsConnectionChanged;
-            if (!ChannelSession.Services.Streamloots.IsConnected)
+            ServiceManager.Get<StreamlootsService>().OnStreamlootsConnectionChanged += StreamlootsService_OnStreamlootsConnectionChanged;
+            if (!ServiceManager.Get<StreamlootsService>().IsConnected)
             {
                 this.MainMenu.HideMenuItem(this.streamlootsCardsMainMenuItem);
             }
@@ -185,7 +187,7 @@ namespace MixItUp.WPF
                 this.ShuttingDownGrid.Visibility = Visibility.Visible;
                 this.MainMenu.Visibility = Visibility.Collapsed;
 
-                await ChannelSession.Services.Settings.Save(ChannelSession.Settings);
+                await ServiceManager.Get<SettingsService>().Save(ChannelSession.Settings);
 
                 await ChannelSession.AppSettings.Save();
 
@@ -231,7 +233,7 @@ namespace MixItUp.WPF
 
         private void StreamlootsService_OnStreamlootsConnectionChanged(object sender, EventArgs e)
         {
-            if (ChannelSession.Services.Streamloots.IsConnected)
+            if (ServiceManager.Get<StreamlootsService>().IsConnected)
             {
                 this.MainMenu.ShowMenuItem(this.streamlootsCardsMainMenuItem);
             }
@@ -245,7 +247,7 @@ namespace MixItUp.WPF
         {
             await DispatcherHelper.Dispatcher.InvokeAsync(async () =>
             {
-                CommunityCommandDetailsModel commandDetails = await ChannelSession.Services.CommunityCommandsService.GetCommandDetails(commandID);
+                CommunityCommandDetailsModel commandDetails = await ServiceManager.Get<MixItUpService>().GetCommandDetails(commandID);
                 if (commandDetails != null)
                 {
                     await CommunityCommandsControl.ProcessDownloadedCommunityCommand(new CommunityCommandDetailsViewModel(commandDetails));

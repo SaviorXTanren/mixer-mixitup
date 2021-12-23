@@ -95,7 +95,7 @@ namespace MixItUp.WPF.Controls.Settings
                     type = CommandTypeEnum.Chat;
                 }
 
-                IEnumerable<CommandModelBase> commands = ChannelSession.Services.Command.AllCommands.Where(c => c.Type == type).OrderBy(c => c.Name);
+                IEnumerable<CommandModelBase> commands = ServiceManager.Get<CommandService>().AllCommands.Where(c => c.Type == type).OrderBy(c => c.Name);
                 if (type == CommandTypeEnum.Chat)
                 {
                     if (typeString.Equals(PreMadeCommandType))
@@ -141,7 +141,7 @@ namespace MixItUp.WPF.Controls.Settings
 
                 ChannelSession.Settings.HotKeys[hotKey.ToString()] = hotKey;
 
-                ChannelSession.Services.InputService.RegisterHotKey(hotKey.Modifiers, hotKey.Key);
+                ServiceManager.Get<IInputService>().RegisterHotKey(hotKey.Modifiers, hotKey.Key);
 
                 this.RefreshList();
             });
@@ -154,7 +154,7 @@ namespace MixItUp.WPF.Controls.Settings
             if (hotKey != null)
             {
                 ChannelSession.Settings.HotKeys.Remove(hotKey.HotKey.ToString());
-                ChannelSession.Services.InputService.UnregisterHotKey(hotKey.HotKey.Modifiers, hotKey.HotKey.Key);
+                ServiceManager.Get<IInputService>().UnregisterHotKey(hotKey.HotKey.Modifiers, hotKey.HotKey.Key);
             }
             this.RefreshList();
         }

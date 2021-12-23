@@ -12,6 +12,7 @@
         French = 6,
         Portuguese = 7,
         Russian = 8,
+        Ukrainian = 9,
 
         Pseudo = 99999,
     }

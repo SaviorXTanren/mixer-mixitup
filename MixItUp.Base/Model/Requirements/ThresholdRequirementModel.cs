@@ -40,16 +40,6 @@ namespace MixItUp.Base.Model.Requirements
             this.RunForEachUser = runForEachUser;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal ThresholdRequirementModel(MixItUp.Base.ViewModel.Requirement.ThresholdRequirementViewModel requirement)
-            : this()
-        {
-            this.Amount = requirement.Amount;
-            this.TimeSpan = requirement.TimeSpan;
-            this.RunForEachUser = false;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         protected override DateTimeOffset RequirementErrorCooldown { get { return ThresholdRequirementModel.requirementErrorCooldown; } set { ThresholdRequirementModel.requirementErrorCooldown = value; } }
 
         public bool IsEnabled { get { return this.Amount > 0; } }

@@ -21,7 +21,7 @@ namespace MixItUp.Base.ViewModel.Requirements
             this.AddItemCommand = this.CreateCommand(() =>
             {
                 this.Items.Add(new RankRequirementViewModel(this));
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
 

@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Commands;
@@ -15,12 +16,12 @@ namespace MixItUp.WPF.Windows.Users
     /// </summary>
     public partial class UserDataEditorWindow : LoadingWindowBase
     {
-        private UserViewModel user;
+        private UserV2ViewModel user;
         private UserDataEditorWindowViewModel viewModel;
 
-        public UserDataEditorWindow(UserDataModel userData)
+        public UserDataEditorWindow(UserV2Model userData)
         {
-            this.user = new UserViewModel(userData);
+            this.user = new UserV2ViewModel(userData);
             this.DataContext = this.viewModel = new UserDataEditorWindowViewModel(userData);
 
             InitializeComponent();
@@ -59,13 +60,13 @@ namespace MixItUp.WPF.Windows.Users
             {
                 this.viewModel.RemoveUserOnlyChatCommand(FrameworkElementHelpers.GetDataContext<UserOnlyChatCommandModel>(sender));
                 await ChannelSession.SaveSettings();
-                ChannelSession.Services.Chat.RebuildCommandTriggers();
+                ServiceManager.Get<ChatService>().RebuildCommandTriggers();
             });
         }
 
         private void UserOnlyChatCommandButtons_EnableDisableToggled(object sender, RoutedEventArgs e)
         {
-            ChannelSession.Services.Chat.RebuildCommandTriggers();
+            ServiceManager.Get<ChatService>().RebuildCommandTriggers();
         }
 
         private void NewEntranceCommandButton_Click(object sender, RoutedEventArgs e)
@@ -93,7 +94,7 @@ namespace MixItUp.WPF.Windows.Users
 
         private void UserDataEditorWindow_Closed(object sender, EventArgs e)
         {
-            ChannelSession.Settings.UserData.ManualValueChanged(this.user.ID);
+            ChannelSession.Settings.Users.ManualValueChanged(this.user.ID);
         }
     }
 }

@@ -28,15 +28,6 @@ namespace MixItUp.Base.Model.Commands.Games
         public string CorrectAnswer { get { return this.Answers[0]; } }
 
         public TriviaGameQuestionModel() { }
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal TriviaGameQuestionModel(Base.Commands.TriviaGameQuestion question)
-        {
-            this.Question = question.Question;
-            this.Answers.Add(question.CorrectAnswer);
-            this.Answers.AddRange(question.WrongAnswers);
-        }
-#pragma warning disable CS0612 // Type or member is obsolete
     }
 
     [DataContract]
@@ -100,9 +91,9 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private Dictionary<int, string> numbersToAnswers = new Dictionary<int, string>();
         [JsonIgnore]
-        private Dictionary<UserViewModel, CommandParametersModel> runUsers = new Dictionary<UserViewModel, CommandParametersModel>();
+        private Dictionary<UserV2ViewModel, CommandParametersModel> runUsers = new Dictionary<UserV2ViewModel, CommandParametersModel>();
         [JsonIgnore]
-        private Dictionary<UserViewModel, int> runUserSelections = new Dictionary<UserViewModel, int>();
+        private Dictionary<UserV2ViewModel, int> runUserSelections = new Dictionary<UserV2ViewModel, int>();
 
         public TriviaGameCommandModel(string name, HashSet<string> triggers, int timeLimit, bool useRandomOnlineQuestions, int winAmount, IEnumerable<TriviaGameQuestionModel> customQuestions,
             CustomCommandModel startedCommand, CustomCommandModel userJoinCommand, CustomCommandModel correctAnswerCommand, CustomCommandModel userSuccessCommand, CustomCommandModel userFailureCommand)
@@ -118,22 +109,6 @@ namespace MixItUp.Base.Model.Commands.Games
             this.UserSuccessCommand = userSuccessCommand;
             this.UserFailureCommand = userFailureCommand;
         }
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal TriviaGameCommandModel(Base.Commands.TriviaGameCommand command)
-            : base(command, GameCommandTypeEnum.Trivia)
-        {
-            this.TimeLimit = command.TimeLimit;
-            this.UseRandomOnlineQuestions = command.UseRandomOnlineQuestions;
-            this.WinAmount = command.WinAmount;
-            this.CustomQuestions = new List<TriviaGameQuestionModel>(command.CustomQuestions.Select(q => new TriviaGameQuestionModel(q)));
-            this.StartedCommand = new CustomCommandModel(command.StartedCommand) { IsEmbedded = true };
-            this.UserJoinCommand = new CustomCommandModel(command.UserJoinCommand) { IsEmbedded = true };
-            this.CorrectAnswerCommand = new CustomCommandModel(command.CorrectAnswerCommand) { IsEmbedded = true };
-            this.UserSuccessCommand = new CustomCommandModel(command.UserSuccessOutcome.Command) { IsEmbedded = true };
-            this.UserFailureCommand = new CustomCommandModel(MixItUp.Base.Resources.GameSubCommand) { IsEmbedded = true };
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
 
         private TriviaGameCommandModel() { }
 

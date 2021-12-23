@@ -33,11 +33,18 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="20" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <TextBox Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandHangmanMaxFailures}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding MaxFailures}" Width="90" />
 
                     <TextBox Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandInitialAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding InitialAmount}" Width="90" />
+
+                    <TextBlock Grid.Column="4" Text="{Binding Source={x:Static resx:Resources.GameCommandHangmanAllowWordGuess}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" Margin="0,0,0,3" />
+                    <ToggleButton Grid.Column="6" IsChecked="{Binding AllowWordGuess}" />
                 </Grid>
             </GroupBox>
 

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,7 +15,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         protected override IEnumerable<CommandModelBase> GetCommands()
         {
-            return ChannelSession.Services.Command.ActionGroupCommands.ToList();
+            return ServiceManager.Get<CommandService>().ActionGroupCommands.ToList();
         }
 
         private void GroupedCommandsMainControlViewModelBase_OnCommandAddedEdited(object sender, CommandModelBase command)

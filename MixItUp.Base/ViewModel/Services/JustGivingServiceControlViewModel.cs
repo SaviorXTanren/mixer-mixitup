@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services.External;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,7 +29,7 @@ namespace MixItUp.Base.ViewModel.Services
                 {
                     ChannelSession.Settings.JustGivingPageShortName = null;
                 }
-                ChannelSession.Services.JustGiving.SetFundraiser(this.SelectedFundraiser);
+                ServiceManager.Get<JustGivingService>().SetFundraiser(this.SelectedFundraiser);
             }
         }
         private JustGivingFundraiser selectedFundraiser;
@@ -41,7 +42,7 @@ namespace MixItUp.Base.ViewModel.Services
         {
             this.LogInCommand = this.CreateCommand(async () =>
             {
-                Result result = await ChannelSession.Services.JustGiving.Connect();
+                Result result = await ServiceManager.Get<JustGivingService>().Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;
@@ -55,7 +56,7 @@ namespace MixItUp.Base.ViewModel.Services
 
             this.LogOutCommand = this.CreateCommand(async () =>
             {
-                await ChannelSession.Services.JustGiving.Disconnect();
+                await ServiceManager.Get<JustGivingService>().Disconnect();
 
                 ChannelSession.Settings.JustGivingOAuthToken = null;
                 ChannelSession.Settings.JustGivingPageShortName = null;
@@ -63,7 +64,7 @@ namespace MixItUp.Base.ViewModel.Services
                 this.IsConnected = false;
             });
 
-            this.IsConnected = ChannelSession.Services.JustGiving.IsConnected;
+            this.IsConnected = ServiceManager.Get<JustGivingService>().IsConnected;
         }
 
         protected override async Task OnLoadedInternal()
@@ -77,7 +78,7 @@ namespace MixItUp.Base.ViewModel.Services
 
         public async Task RefreshFundraisers()
         {
-            IEnumerable<JustGivingFundraiser> fundraisers = await ChannelSession.Services.JustGiving.GetCurrentFundraisers();
+            IEnumerable<JustGivingFundraiser> fundraisers = await ServiceManager.Get<JustGivingService>().GetCurrentFundraisers();
             if (fundraisers != null)
             {
                 fundraisers = fundraisers.Where(f => f.IsActive);

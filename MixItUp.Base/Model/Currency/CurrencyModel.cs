@@ -1,5 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -255,7 +257,7 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public int GetAmount(UserDataModel user)
+        public int GetAmount(UserV2ViewModel user)
         {
             if (user.CurrencyAmounts.ContainsKey(this.ID))
             {
@@ -264,58 +266,61 @@ namespace MixItUp.Base.Model.Currency
             return 0;
         }
 
-        public bool HasAmount(UserDataModel user, int amount)
+        public int GetAmount(UserV2Model user)
         {
-            return (user.IsCurrencyRankExempt || this.GetAmount(user) >= amount);
+            if (user.CurrencyAmounts.ContainsKey(this.ID))
+            {
+                return user.CurrencyAmounts[this.ID];
+            }
+            return 0;
         }
 
-        public void SetAmount(UserDataModel user, int amount)
+        public bool HasAmount(UserV2ViewModel user, int amount)
+        {
+            return (user.IsSpecialtyExcluded || this.GetAmount(user) >= amount);
+        }
+
+        public void SetAmount(UserV2ViewModel user, int amount)
         {
             RankModel prevRank = this.GetRank(user);
 
             user.CurrencyAmounts[this.ID] = Math.Min(Math.Max(amount, 0), this.MaxAmount);
             if (ChannelSession.Settings != null)
             {
-                ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+                ChannelSession.Settings.Users.ManualValueChanged(user.ID);
             }
 
             RankModel newRank = this.GetRank(user);
 
-            UserViewModel userViewModel = ChannelSession.Services.User.GetActiveUserByID(user.ID);
-            if (userViewModel == null)
-            {
-                userViewModel = new UserViewModel(user);
-            }
-
             if (newRank.Amount > prevRank.Amount && this.RankChangedCommand != null)
             {
-                AsyncRunner.RunAsyncBackground((cancellationToken) => ChannelSession.Services.Command.Queue(this.RankChangedCommand, new CommandParametersModel(userViewModel)), new CancellationToken());
+                AsyncRunner.RunAsyncBackground((cancellationToken) => ServiceManager.Get<CommandService>().Queue(this.RankChangedCommand, new CommandParametersModel(user)), new CancellationToken());
             }
             else if (newRank.Amount < prevRank.Amount && this.RankDownCommand != null)
             {
-                AsyncRunner.RunAsyncBackground((cancellationToken) => ChannelSession.Services.Command.Queue(this.RankDownCommand, new CommandParametersModel(userViewModel)), new CancellationToken());
+                AsyncRunner.RunAsyncBackground((cancellationToken) => ServiceManager.Get<CommandService>().Queue(this.RankDownCommand, new CommandParametersModel(user)), new CancellationToken());
             }
         }
 
-        public void AddAmount(UserDataModel user, int amount)
+        public void AddAmount(UserV2ViewModel user, int amount)
         {
-            if (!user.IsCurrencyRankExempt && amount > 0)
+            if (!user.IsSpecialtyExcluded && amount > 0)
             {
                 this.SetAmount(user, this.GetAmount(user) + amount);
             }
         }
 
-        public void SubtractAmount(UserDataModel user, int amount)
+        public void SubtractAmount(UserV2ViewModel user, int amount)
         {
-            if (!user.IsCurrencyRankExempt)
+            if (!user.IsSpecialtyExcluded)
             {
                 this.SetAmount(user, this.GetAmount(user) - amount);
             }
         }
 
-        public void ResetAmount(UserDataModel user) { this.SetAmount(user, 0); }
+        public void ResetAmount(UserV2ViewModel user) { this.SetAmount(user, 0); }
 
-        public RankModel GetRank(UserDataModel user)
+        public RankModel GetRank(UserV2ViewModel user)
         {
             if (this.Ranks.Count > 0)
             {
@@ -329,7 +334,7 @@ namespace MixItUp.Base.Model.Currency
             return CurrencyModel.NoRank;
         }
 
-        public RankModel GetNextRank(UserDataModel user)
+        public RankModel GetNextRank(UserV2ViewModel user)
         {
             if (this.Ranks.Count > 0)
             {
@@ -345,47 +350,43 @@ namespace MixItUp.Base.Model.Currency
 
         public void UpdateUserData()
         {
+            // TODO
             if (this.IsActive)
             {
-                if (this.SpecialTracking == CurrencySpecialTrackingEnum.None)
+                if (this.SpecialTracking == CurrencySpecialTrackingEnum.None && ServiceManager.Get<TwitchSessionService>().StreamIsLive)
                 {
-                    int interval = ChannelSession.TwitchStreamIsLive ? this.AcquireInterval : this.OfflineAcquireInterval;
-                    if (interval > 0)
+                    DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
+                    bool bonusesCanBeApplied = (ServiceManager.Get<TwitchSessionService>().StreamIsLive || this.OfflineAcquireAmount > 0);
+                    foreach (UserV2ViewModel user in ServiceManager.Get<UserService>().GetActiveUsers())
                     {
-                        DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
-                        bool bonusesCanBeApplied = (ChannelSession.TwitchStreamIsLive || this.OfflineAcquireAmount > 0);
-                        foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
+                        if (!user.IsSpecialtyExcluded && (!this.HasMinimumActiveRate || user.LastActivity > minActiveTime))
                         {
-                            if (!user.Data.IsCurrencyRankExempt && (!this.HasMinimumActiveRate || user.LastActivity > minActiveTime))
+                            if (user.OnlineViewingMinutes % this.AcquireInterval == 0)
                             {
-                                int minutes = ChannelSession.TwitchStreamIsLive ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
-                                if (minutes % interval == 0)
+                                this.AddAmount(user, ServiceManager.Get<TwitchSessionService>().StreamIsLive ? this.AcquireAmount : this.OfflineAcquireAmount);
+                                if (bonusesCanBeApplied)
                                 {
-                                    this.AddAmount(user.Data, ChannelSession.TwitchStreamIsLive ? this.AcquireAmount : this.OfflineAcquireAmount);
-                                    if (bonusesCanBeApplied)
+                                    int bonus = 0;
+
+                                    if (this.RegularBonus > 0 && user.HasRole(UserRoleEnum.Regular))
                                     {
-                                        int bonus = 0;
-
-                                        if (this.RegularBonus > 0 && user.UserRoles.Contains(UserRoleEnum.Regular))
-                                        {
-                                            bonus = Math.Max(this.RegularBonus, bonus);
-                                        }
-                                        if (this.SubscriberBonus > 0 && user.IsSubscriber)
-                                        {
-                                            bonus = Math.Max(this.SubscriberBonus, bonus);
-                                        }
-                                        if (this.ModeratorBonus > 0 && user.HasPermissionsTo(UserRoleEnum.Mod))
-                                        {
-                                            bonus = Math.Max(this.ModeratorBonus, bonus);
-                                        }
-
-                                        if (bonus > 0)
-                                        {
-                                            this.AddAmount(user.Data, bonus);
-                                        }
+                                        bonus = Math.Max(this.RegularBonus, bonus);
                                     }
-                                    ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+                                    if (this.SubscriberBonus > 0 && user.IsSubscriber)
+                                    {
+                                        bonus = Math.Max(this.SubscriberBonus, bonus);
+                                    }
+                                    if (this.ModeratorBonus > 0 && user.MeetsRole(UserRoleEnum.Moderator))
+                                    {
+                                        bonus = Math.Max(this.ModeratorBonus, bonus);
+                                    }
+
+                                    if (bonus > 0)
+                                    {
+                                        this.AddAmount(user, bonus);
+                                    }
                                 }
+                                ChannelSession.Settings.Users.ManualValueChanged(user.ID);
                             }
                         }
                     }
@@ -450,14 +451,14 @@ namespace MixItUp.Base.Model.Currency
 
         public async Task Reset()
         {
-            await ChannelSession.Settings.LoadAllUserData();
+            await ServiceManager.Get<UserService>().LoadAllUserData();
 
-            foreach (UserDataModel user in ChannelSession.Settings.UserData.Values.ToList())
+            foreach (UserV2Model user in ChannelSession.Settings.Users.Values.ToList())
             {
-                if (this.GetAmount(user) > 0)
+                if (user.CurrencyAmounts[this.ID] > 0)
                 {
-                    this.SetAmount(user, 0);
-                    ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+                    user.CurrencyAmounts[this.ID] = 0;
+                    ChannelSession.Settings.Users.ManualValueChanged(user.ID);
                 }
             }
             this.LastReset = new DateTimeOffset(DateTimeOffset.Now.Date);

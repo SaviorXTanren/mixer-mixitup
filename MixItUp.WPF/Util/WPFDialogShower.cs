@@ -45,6 +45,16 @@ namespace MixItUp.WPF.Util
             return null;
         }
 
+        public async Task<Dictionary<string, string>> ShowEditTestSpecialIdentifiersDialog(Dictionary<string, string> specialIdentifiers)
+        {
+            EditTestSpecialIdentifiersDialogControl dialogControl = new EditTestSpecialIdentifiersDialogControl(specialIdentifiers);
+            if (bool.Equals(await DialogHelper.ShowCustom(dialogControl), true))
+            {
+                return dialogControl.GetSpecialIdentifiers();
+            }
+            return null;
+        }
+
         public async Task<object> ShowCustom(object dialog)
         {
             return await this.ShowDialogWrapper(dialog);

@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
 using System;
@@ -28,7 +30,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 string name = await DialogHelper.ShowTextEntry(MixItUp.Base.Resources.ChannelPointRewardName);
                 if (!string.IsNullOrEmpty(name))
                 {
-                    Result<CustomChannelPointRewardModel> reward = await ChannelSession.TwitchUserConnection.CreateCustomChannelPointRewards(ChannelSession.TwitchUserNewAPI, new UpdatableCustomChannelPointRewardModel()
+                    Result<CustomChannelPointRewardModel> reward = await ServiceManager.Get<TwitchSessionService>().UserConnection.CreateCustomChannelPointRewards(ServiceManager.Get<TwitchSessionService>().User, new UpdatableCustomChannelPointRewardModel()
                     {
                         title = name,
                         cost = 1,
@@ -69,16 +71,16 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.ChannelPointsEditorCommand = this.CreateCommand(() =>
             {
-                if (ChannelSession.TwitchUserConnection != null)
+                if (ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
-                    ProcessHelper.LaunchLink($"https://dashboard.twitch.tv/u/{ChannelSession.TwitchUserNewAPI.login}/viewer-rewards/channel-points");
+                    ProcessHelper.LaunchLink($"https://dashboard.twitch.tv/u/{ServiceManager.Get<TwitchSessionService>().User.login}/viewer-rewards/channel-points");
                 }
             });
         }
 
         protected override IEnumerable<CommandModelBase> GetCommands()
         {
-            return ChannelSession.Services.Command.TwitchChannelPointsCommands.ToList();
+            return ServiceManager.Get<CommandService>().TwitchChannelPointsCommands.ToList();
         }
 
         private void GroupedCommandsMainControlViewModelBase_OnCommandAddedEdited(object sender, CommandModelBase command)

@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -30,6 +31,17 @@ namespace MixItUp.Base.ViewModel.Games
             }
         }
         private int initialAmount;
+
+        public bool AllowWordGuess
+        {
+            get { return this.allowWordGuess; }
+            set
+            {
+                this.allowWordGuess = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool allowWordGuess;
 
         public string CustomWordsFilePath
         {
@@ -115,6 +127,7 @@ namespace MixItUp.Base.ViewModel.Games
         {
             this.MaxFailures = command.MaxFailures;
             this.InitialAmount = command.InitialAmount;
+            this.AllowWordGuess = command.AllowWordGuess;
             this.CustomWordsFilePath = command.CustomWordsFilePath;
             this.SuccessfulGuessCommand = command.SuccessfulGuessCommand;
             this.FailedGuessCommand = command.FailedGuessCommand;
@@ -134,6 +147,7 @@ namespace MixItUp.Base.ViewModel.Games
 
             this.MaxFailures = 5;
             this.InitialAmount = 100;
+            this.AllowWordGuess = false;
             this.SuccessfulGuessCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHangmanSuccessfulGuessExample);
             this.FailedGuessCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHangmanFailedGuessExample);
             this.GameWonCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHangmanGameWonExample, this.PrimaryCurrencyName));
@@ -148,7 +162,7 @@ namespace MixItUp.Base.ViewModel.Games
 
         public override Task<CommandModelBase> CreateNewCommand()
         {
-            return Task.FromResult<CommandModelBase>(new HangmanGameCommandModel(this.Name, this.GetChatTriggers(), this.MaxFailures, this.InitialAmount, this.CustomWordsFilePath,
+            return Task.FromResult<CommandModelBase>(new HangmanGameCommandModel(this.Name, this.GetChatTriggers(), this.MaxFailures, this.InitialAmount, this.AllowWordGuess, this.CustomWordsFilePath,
                 this.SuccessfulGuessCommand, this.FailedGuessCommand, this.GameWonCommand, this.GameLostCommand, this.StatusArgument, this.StatusCommand));
         }
 
@@ -159,6 +173,7 @@ namespace MixItUp.Base.ViewModel.Games
             HangmanGameCommandModel gCommand = (HangmanGameCommandModel)command;
             gCommand.MaxFailures = this.MaxFailures;
             gCommand.InitialAmount = this.InitialAmount;
+            gCommand.AllowWordGuess = this.AllowWordGuess;
             gCommand.CustomWordsFilePath = this.CustomWordsFilePath;
             gCommand.SuccessfulGuessCommand = this.SuccessfulGuessCommand;
             gCommand.FailedGuessCommand = this.FailedGuessCommand;
@@ -193,7 +208,7 @@ namespace MixItUp.Base.ViewModel.Games
         {
             this.BrowseCustomWordsFilePathCommand = this.CreateCommand(() =>
             {
-                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.TextFileFilter());
+                string filePath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(ServiceManager.Get<IFileService>().TextFileFilter());
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     this.CustomWordsFilePath = filePath;

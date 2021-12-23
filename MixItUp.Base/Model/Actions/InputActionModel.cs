@@ -59,45 +59,32 @@ namespace MixItUp.Base.Model.Actions
             this.Alt = alt;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal InputActionModel(MixItUp.Base.Actions.InputAction action)
-            : base(ActionTypeEnum.Input)
-        {
-            this.Key = action.Key;
-            if (action.Mouse != null) { this.Mouse = (SimpleInputMouseEnum)(int)action.Mouse; }
-            this.ActionType = (InputActionTypeEnum)(int)action.ActionType;
-            this.Shift = action.Shift;
-            this.Control = action.Control;
-            this.Alt = action.Alt;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private InputActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (this.ActionType == InputActionTypeEnum.Press || this.ActionType == InputActionTypeEnum.Click)
             {
-                if (this.Shift) { ChannelSession.Services.InputService.KeyDown(InputKeyEnum.LeftShift); }
-                if (this.Control) { ChannelSession.Services.InputService.KeyDown(InputKeyEnum.LeftControl); }
-                if (this.Alt) { ChannelSession.Services.InputService.KeyDown(InputKeyEnum.LeftAlt); }
+                if (this.Shift) { ServiceManager.Get<IInputService>().KeyDown(InputKeyEnum.LeftShift); }
+                if (this.Control) { ServiceManager.Get<IInputService>().KeyDown(InputKeyEnum.LeftControl); }
+                if (this.Alt) { ServiceManager.Get<IInputService>().KeyDown(InputKeyEnum.LeftAlt); }
             }
 
-            await ChannelSession.Services.InputService.WaitForKeyToRegister();
+            await ServiceManager.Get<IInputService>().WaitForKeyToRegister();
 
             if (this.Key != null)
             {
                 if (this.ActionType == InputActionTypeEnum.Click)
                 {
-                    await ChannelSession.Services.InputService.KeyClick(this.Key.GetValueOrDefault());
+                    await ServiceManager.Get<IInputService>().KeyClick(this.Key.GetValueOrDefault());
                 }
                 else if (this.ActionType == InputActionTypeEnum.Press)
                 {
-                    ChannelSession.Services.InputService.KeyDown(this.Key.GetValueOrDefault());
+                    ServiceManager.Get<IInputService>().KeyDown(this.Key.GetValueOrDefault());
                 }
                 else if (this.ActionType == InputActionTypeEnum.Release)
                 {
-                    ChannelSession.Services.InputService.KeyUp(this.Key.GetValueOrDefault());
+                    ServiceManager.Get<IInputService>().KeyUp(this.Key.GetValueOrDefault());
                 }
             }
             else if (this.Mouse != null)
@@ -106,56 +93,56 @@ namespace MixItUp.Base.Model.Actions
                 {
                     if (this.Mouse.GetValueOrDefault() == SimpleInputMouseEnum.LeftButton)
                     {
-                        await ChannelSession.Services.InputService.LeftMouseClick();
+                        await ServiceManager.Get<IInputService>().LeftMouseClick();
                     }
                     else if (this.Mouse.GetValueOrDefault() == SimpleInputMouseEnum.RightButton)
                     {
-                        await ChannelSession.Services.InputService.RightMouseClick();
+                        await ServiceManager.Get<IInputService>().RightMouseClick();
                     }
                     else if (this.Mouse.GetValueOrDefault() == SimpleInputMouseEnum.MiddleButton)
                     {
-                        await ChannelSession.Services.InputService.MiddleMouseClick();
+                        await ServiceManager.Get<IInputService>().MiddleMouseClick();
                     }
                 }
                 else if (this.ActionType == InputActionTypeEnum.Press)
                 {
                     if (this.Mouse.GetValueOrDefault() == SimpleInputMouseEnum.LeftButton)
                     {
-                        ChannelSession.Services.InputService.MouseEvent(InputMouseEnum.LeftDown);
+                        ServiceManager.Get<IInputService>().MouseEvent(InputMouseEnum.LeftDown);
                     }
                     else if (this.Mouse.GetValueOrDefault() == SimpleInputMouseEnum.RightButton)
                     {
-                        ChannelSession.Services.InputService.MouseEvent(InputMouseEnum.RightDown);
+                        ServiceManager.Get<IInputService>().MouseEvent(InputMouseEnum.RightDown);
                     }
                     else if (this.Mouse.GetValueOrDefault() == SimpleInputMouseEnum.MiddleButton)
                     {
-                        ChannelSession.Services.InputService.MouseEvent(InputMouseEnum.MiddleDown);
+                        ServiceManager.Get<IInputService>().MouseEvent(InputMouseEnum.MiddleDown);
                     }
                 }
                 else if (this.ActionType == InputActionTypeEnum.Release)
                 {
                     if (this.Mouse.GetValueOrDefault() == SimpleInputMouseEnum.LeftButton)
                     {
-                        ChannelSession.Services.InputService.MouseEvent(InputMouseEnum.LeftUp);
+                        ServiceManager.Get<IInputService>().MouseEvent(InputMouseEnum.LeftUp);
                     }
                     else if (this.Mouse.GetValueOrDefault() == SimpleInputMouseEnum.RightButton)
                     {
-                        ChannelSession.Services.InputService.MouseEvent(InputMouseEnum.RightUp);
+                        ServiceManager.Get<IInputService>().MouseEvent(InputMouseEnum.RightUp);
                     }
                     else if (this.Mouse.GetValueOrDefault() == SimpleInputMouseEnum.MiddleButton)
                     {
-                        ChannelSession.Services.InputService.MouseEvent(InputMouseEnum.MiddleUp);
+                        ServiceManager.Get<IInputService>().MouseEvent(InputMouseEnum.MiddleUp);
                     }
                 }
             }
 
-            await ChannelSession.Services.InputService.WaitForKeyToRegister();
+            await ServiceManager.Get<IInputService>().WaitForKeyToRegister();
 
             if (this.ActionType == InputActionTypeEnum.Release || this.ActionType == InputActionTypeEnum.Click)
             {
-                if (this.Shift) { ChannelSession.Services.InputService.KeyUp(InputKeyEnum.LeftShift); }
-                if (this.Control) { ChannelSession.Services.InputService.KeyUp(InputKeyEnum.LeftControl); }
-                if (this.Alt) { ChannelSession.Services.InputService.KeyUp(InputKeyEnum.LeftAlt); }
+                if (this.Shift) { ServiceManager.Get<IInputService>().KeyUp(InputKeyEnum.LeftShift); }
+                if (this.Control) { ServiceManager.Get<IInputService>().KeyUp(InputKeyEnum.LeftControl); }
+                if (this.Alt) { ServiceManager.Get<IInputService>().KeyUp(InputKeyEnum.LeftAlt); }
             }
         }
     }

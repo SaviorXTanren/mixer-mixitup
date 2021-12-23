@@ -1,17 +1,17 @@
-﻿using MixItUp.Base;
+﻿using MixItUp.API.Models;
+using MixItUp.Base;
+using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web.Http;
 using System.Net.Http;
 using System.Net.Http.Formatting;
-using MixItUp.Base.Model.User;
-using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace MixItUp.WPF.Services.DeveloperAPI
 {
@@ -50,8 +50,10 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
         [Route("{currencyID:guid}/top")]
         [HttpGet]
-        public IEnumerable<User> Get(Guid currencyID, int count = 10)
+        public async Task<IEnumerable<User>> Get(Guid currencyID, int count = 10)
         {
+            await ServiceManager.Get<UserService>().LoadAllUserData();
+
             if (!ChannelSession.Settings.Currency.ContainsKey(currencyID))
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -75,15 +77,15 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
             CurrencyModel currency = ChannelSession.Settings.Currency[currencyID];
 
-            Dictionary<Guid, UserDataModel> allUsersDictionary = ChannelSession.Settings.UserData.ToDictionary();
+            Dictionary<Guid, UserV2Model> allUsersDictionary = ChannelSession.Settings.Users.ToDictionary();
 
-            IEnumerable<UserDataModel> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
-            allUsers = allUsers.Where(u => !u.IsCurrencyRankExempt);
+            IEnumerable<UserV2Model> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
+            allUsers = allUsers.Where(u => !u.IsSpecialtyExcluded);
 
             List<User> currencyUserList = new List<User>();
-            foreach (UserDataModel currencyUser in allUsers.OrderByDescending(u => currency.GetAmount(u)).Take(count))
+            foreach (UserV2Model currencyUser in allUsers.OrderByDescending(u => currency.GetAmount(u)).Take(count))
             {
-                currencyUserList.Add(UserController.UserFromUserDataViewModel(currencyUser));
+                currencyUserList.Add(UserController.UserFromUserDataViewModel(new UserV2ViewModel(currencyUser)));
             }
             return currencyUserList;
         }
@@ -92,6 +94,8 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpPost]
         public async Task<IEnumerable<User>> BulkGive(Guid currencyID, [FromBody] IEnumerable<GiveUserCurrency> giveDatas)
         {
+            await ServiceManager.Get<UserService>().LoadAllUserData();
+
             if (!ChannelSession.Settings.Currency.ContainsKey(currencyID))
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -117,7 +121,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             List<User> users = new List<User>();
             foreach (var giveData in giveDatas)
             {
-                UserDataModel user = await UserController.GetUserData(giveData.UsernameOrID);
+                UserV2ViewModel user = await UserController.GetUserData(giveData.UsernameOrID);
                 if (user != null && giveData.Amount > 0)
                 {
                     currency.AddAmount(user, giveData.Amount);

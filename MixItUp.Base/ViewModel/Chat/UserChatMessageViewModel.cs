@@ -5,7 +5,7 @@ namespace MixItUp.Base.ViewModel.Chat
 {
     public class UserChatMessageViewModel : ChatMessageViewModel
     {
-        public UserChatMessageViewModel(string id, StreamingPlatformTypeEnum platform, UserViewModel user)
+        public UserChatMessageViewModel(string id, StreamingPlatformTypeEnum platform, UserV2ViewModel user)
             : base(id, platform, user)
         { }
     }

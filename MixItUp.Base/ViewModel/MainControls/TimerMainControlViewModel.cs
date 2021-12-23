@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -46,7 +47,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 ChannelSession.Settings.DisableAllTimers = value;
                 this.NotifyPropertyChanged();
 
-                ChannelSession.Services.Timers.RebuildTimerGroups().Wait();
+                ServiceManager.Get<TimerService>().RebuildTimerGroups().Wait();
             }
         }
 
@@ -58,7 +59,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         protected override IEnumerable<CommandModelBase> GetCommands()
         {
-            return ChannelSession.Services.Command.TimerCommands.ToList();
+            return ServiceManager.Get<CommandService>().TimerCommands.ToList();
         }
 
         private void CheckIfMinMessagesAndIntervalAreBothZero()

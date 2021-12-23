@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -23,14 +24,14 @@ namespace MixItUp.Base.Model.Requirements
 
         public static DateTimeOffset UpdateErrorCooldown() { return DateTimeOffset.Now.AddSeconds(ChannelSession.Settings.RequirementErrorsCooldownAmount); }
 
-        public static async Task SendRequirementErrorMessage(UserViewModel user, Result result)
+        public static async Task SendRequirementErrorMessage(UserV2ViewModel user, Result result)
         {
             string message = result.ToString();
             if (ChannelSession.Settings.IncludeUsernameWithRequirementErrors)
             {
                 message = $"@{user.Username}: {message}";
             }
-            await ChannelSession.Services.Chat.SendMessage(message);
+            await ServiceManager.Get<ChatService>().SendMessage(message, user.Platform);
         }
 
         protected DateTimeOffset individualErrorCooldown = DateTimeOffset.MinValue;
@@ -45,16 +46,16 @@ namespace MixItUp.Base.Model.Requirements
             {
                 this.individualErrorCooldown = DateTimeOffset.Now;
             }
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
-        public virtual Task Refund(CommandParametersModel parameters) { return Task.FromResult(0); }
+        public virtual Task Refund(CommandParametersModel parameters) { return Task.CompletedTask; }
 
         public virtual void Reset() { }
 
         public void SetIndividualErrorCooldown(DateTimeOffset datetime) { this.individualErrorCooldown = datetime; }
 
-        public async Task SendErrorChatMessage(UserViewModel user, Result result)
+        public async Task SendErrorChatMessage(UserV2ViewModel user, Result result)
         {
             if (ChannelSession.Settings.RequirementErrorsCooldownType != RequirementErrorCooldownTypeEnum.None)
             {

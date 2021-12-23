@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -35,28 +37,11 @@ namespace MixItUp.Base.Model.Actions
             this.Variables = variables;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal OvrStreamActionModel(MixItUp.Base.Actions.OvrStreamAction action)
-            : base(ActionTypeEnum.OvrStream)
-        {
-            switch (action.OvrStreamActionType)
-            {
-                case Base.Actions.OvrStreamActionTypeEnum.PlayTitle: this.ActionType = OvrStreamActionTypeEnum.PlayTitle; break;
-                case Base.Actions.OvrStreamActionTypeEnum.HideTitle: this.ActionType = OvrStreamActionTypeEnum.HideTitle; break;
-                case Base.Actions.OvrStreamActionTypeEnum.EnableTitle: this.ActionType = OvrStreamActionTypeEnum.EnableTitle; break;
-                case Base.Actions.OvrStreamActionTypeEnum.DisableTitle: this.ActionType = OvrStreamActionTypeEnum.DisableTitle; break;
-                case Base.Actions.OvrStreamActionTypeEnum.UpdateVariables: this.ActionType = OvrStreamActionTypeEnum.UpdateVariables; break;
-            }
-            this.TitleName = action.TitleName;
-            this.Variables = action.Variables;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private OvrStreamActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (ChannelSession.Services.OvrStream.IsConnected)
+            if (ServiceManager.Get<IOvrStreamService>().IsConnected)
             {
                 if (this.ActionType == OvrStreamActionTypeEnum.UpdateVariables ||
                     this.ActionType == OvrStreamActionTypeEnum.PlayTitle)
@@ -64,12 +49,12 @@ namespace MixItUp.Base.Model.Actions
                     Dictionary<string, string> processedVariables = new Dictionary<string, string>();
                     foreach (var kvp in this.Variables)
                     {
-                        processedVariables[kvp.Key] = await this.ReplaceStringWithSpecialModifiers(kvp.Value, parameters);
+                        processedVariables[kvp.Key] = await ReplaceStringWithSpecialModifiers(kvp.Value, parameters);
 
                         // Since OvrStream doesn't support URI based images, we need to trigger a download and get the path to those files
                         if (processedVariables[kvp.Key].StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            string path = await ChannelSession.Services.OvrStream.DownloadImage(processedVariables[kvp.Key]);
+                            string path = await ServiceManager.Get<IOvrStreamService>().DownloadImage(processedVariables[kvp.Key]);
                             if (path != null)
                             {
                                 processedVariables[kvp.Key] = path;
@@ -80,24 +65,24 @@ namespace MixItUp.Base.Model.Actions
                     switch (this.ActionType)
                     {
                         case OvrStreamActionTypeEnum.UpdateVariables:
-                            await ChannelSession.Services.OvrStream.UpdateVariables(this.TitleName, processedVariables);
+                            await ServiceManager.Get<IOvrStreamService>().UpdateVariables(this.TitleName, processedVariables);
                             break;
                         case OvrStreamActionTypeEnum.PlayTitle:
-                            await ChannelSession.Services.OvrStream.PlayTitle(this.TitleName, processedVariables);
+                            await ServiceManager.Get<IOvrStreamService>().PlayTitle(this.TitleName, processedVariables);
                             break;
                     }
                 }
                 else if (this.ActionType == OvrStreamActionTypeEnum.HideTitle)
                 {
-                    await ChannelSession.Services.OvrStream.HideTitle(this.TitleName);
+                    await ServiceManager.Get<IOvrStreamService>().HideTitle(this.TitleName);
                 }
                 else if (this.ActionType == OvrStreamActionTypeEnum.EnableTitle)
                 {
-                    await ChannelSession.Services.OvrStream.EnableTitle(this.TitleName);
+                    await ServiceManager.Get<IOvrStreamService>().EnableTitle(this.TitleName);
                 }
                 else if (this.ActionType == OvrStreamActionTypeEnum.DisableTitle)
                 {
-                    await ChannelSession.Services.OvrStream.DisableTitle(this.TitleName);
+                    await ServiceManager.Get<IOvrStreamService>().DisableTitle(this.TitleName);
                 }
             }
         }

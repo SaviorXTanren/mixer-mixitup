@@ -11,11 +11,11 @@ namespace MixItUp.WPF.Controls
             this.IsVisibleChanged += LoadingControlBase_IsVisibleChanged;
         }
 
-        protected virtual Task OnLoaded() { return Task.FromResult(0); }
+        protected virtual Task OnLoaded() { return Task.CompletedTask; }
 
         private async void LoadingControlBase_Loaded(object sender, RoutedEventArgs e) { await this.OnLoaded(); }
 
-        protected virtual Task OnVisibilityChanged() { return Task.FromResult(0); }
+        protected virtual Task OnVisibilityChanged() { return Task.CompletedTask; }
 
         private async void LoadingControlBase_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {

@@ -12,7 +12,7 @@ namespace MixItUp.Base.ViewModel.Games
 {
     public class BetGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        public IEnumerable<UserRoleEnum> StarterRoles { get { return UserDataModel.GetSelectableUserRoles(); } }
+        public IEnumerable<UserRoleEnum> StarterRoles { get { return UserRoles.All; } }
 
         public UserRoleEnum SelectedStarterRole
         {
@@ -157,7 +157,7 @@ namespace MixItUp.Base.ViewModel.Games
         public BetGameCommandEditorWindowViewModel(BetGameCommandModel command)
             : base(command)
         {
-            this.SelectedStarterRole = command.StarterRole;
+            this.SelectedStarterRole = command.StarterUserRole;
             this.MinimumParticipants = command.MinimumParticipants;
             this.TimeLimit = command.TimeLimit;
             this.StartedCommand = command.StartedCommand;
@@ -175,7 +175,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.Name = MixItUp.Base.Resources.Bet;
             this.Triggers = MixItUp.Base.Resources.Bet.Replace(" ", string.Empty).ToLower();
 
-            this.SelectedStarterRole = UserRoleEnum.Mod;
+            this.SelectedStarterRole = UserRoleEnum.Moderator;
             this.MinimumParticipants = 2;
             this.TimeLimit = 60;
             this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandBetStartedExample, this.PrimaryCurrencyName));
@@ -195,7 +195,7 @@ namespace MixItUp.Base.ViewModel.Games
         {
             await base.UpdateExistingCommand(command);
             BetGameCommandModel gCommand = (BetGameCommandModel)command;
-            gCommand.StarterRole = this.SelectedStarterRole;
+            gCommand.StarterUserRole = this.SelectedStarterRole;
             gCommand.MinimumParticipants = this.MinimumParticipants;
             gCommand.TimeLimit = this.timeLimit;
             gCommand.BetOptions = new List<GameOutcomeModel>(this.Outcomes.Select(o => o.GetModel()));

@@ -1,5 +1,7 @@
-﻿using MixItUp.Base.Model.Actions;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Settings.Generic;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
@@ -16,6 +18,7 @@ namespace MixItUp.Base.ViewModel.Settings
         public GenericToggleSettingsOptionControlViewModel PreviewProgram { get; set; }
 
         public GenericComboBoxSettingsOptionControlViewModel<LanguageOptions> Language { get; set; }
+        public GenericComboBoxSettingsOptionControlViewModel<StreamingPlatformTypeEnum> DefaultStreamingPlatform { get; set; }
         public GenericComboBoxSettingsOptionControlViewModel<StreamingSoftwareTypeEnum> DefaultStreamingSoftware { get; set; }
         public GenericComboBoxSettingsOptionControlViewModel<string> DefaultAudioOutput { get; set; }
 
@@ -44,20 +47,23 @@ namespace MixItUp.Base.ViewModel.Settings
                     ChannelSession.AppSettings.LanguageOption = value;
                 });
 
+            this.DefaultStreamingPlatform = new GenericComboBoxSettingsOptionControlViewModel<StreamingPlatformTypeEnum>(MixItUp.Base.Resources.DefaultStreamingPlatform,
+                StreamingPlatforms.SupportedPlatforms, ChannelSession.Settings.DefaultStreamingPlatform, (value) => { ChannelSession.Settings.DefaultStreamingPlatform = value; });
+
             this.DefaultStreamingSoftware = new GenericComboBoxSettingsOptionControlViewModel<StreamingSoftwareTypeEnum>(MixItUp.Base.Resources.DefaultStreamingSoftware,
                 new List<StreamingSoftwareTypeEnum>() { StreamingSoftwareTypeEnum.OBSStudio, StreamingSoftwareTypeEnum.XSplit, StreamingSoftwareTypeEnum.StreamlabsOBS },
                 ChannelSession.Settings.DefaultStreamingSoftware, (value) => { ChannelSession.Settings.DefaultStreamingSoftware = value; });
 
-            string defaultAudioOption = ChannelSession.Services.AudioService.DefaultAudioDevice;
+            string defaultAudioOption = ServiceManager.Get<IAudioService>().DefaultAudioDevice;
             if (!string.IsNullOrEmpty(ChannelSession.Settings.DefaultAudioOutput))
             {
                 defaultAudioOption = ChannelSession.Settings.DefaultAudioOutput;
             }
 
             this.DefaultAudioOutput = new GenericComboBoxSettingsOptionControlViewModel<string>(MixItUp.Base.Resources.DefaultAudioOutput,
-                ChannelSession.Services.AudioService.GetSelectableAudioDevices(), defaultAudioOption, (value) =>
+                ServiceManager.Get<IAudioService>().GetSelectableAudioDevices(), defaultAudioOption, (value) =>
                 {
-                    if (value.Equals(ChannelSession.Services.AudioService.DefaultAudioDevice))
+                    if (value.Equals(ServiceManager.Get<IAudioService>().DefaultAudioDevice))
                     {
                         ChannelSession.Settings.DefaultAudioOutput = null;
                     }

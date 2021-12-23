@@ -14,15 +14,6 @@ namespace MixItUp.Base.Model.Commands
             this.ChannelPointRewardID = channelPointRewardID;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal TwitchChannelPointsCommandModel(MixItUp.Base.Commands.TwitchChannelPointsCommand command)
-            : base(command)
-        {
-            this.Name = command.Name;
-            this.Type = CommandTypeEnum.TwitchChannelPoints;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         protected TwitchChannelPointsCommandModel() : base() { }
     }
 }

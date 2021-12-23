@@ -19,16 +19,30 @@
     <local:MainControlBase.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </local:MainControlBase.Resources>
-    
-    <Grid Margin="40">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.AccountsDetails}"/>
+    <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Visible">
+        <Grid Margin="40">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <AccountControls:StreamingPlatformAccountControl Grid.Row="2" DataContext="{Binding Twitch}" />
-    </Grid>
+            <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.AccountsDetails}"/>
+
+            <AccountControls:StreamingPlatformAccountControl Grid.Row="2" DataContext="{Binding Twitch}" />
+
+            <AccountControls:StreamingPlatformAccountControl Grid.Row="4" DataContext="{Binding YouTube}" />
+
+            <AccountControls:StreamingPlatformAccountControl Grid.Row="6" DataContext="{Binding Trovo}" />
+
+            <AccountControls:StreamingPlatformAccountControl Grid.Row="8" DataContext="{Binding Glimesh}" />
+        </Grid>
+    </ScrollViewer>
 </local:MainControlBase>

@@ -1,6 +1,6 @@
 ﻿using MixItUp.API.Models;
-using MixItUp.Base;
 using MixItUp.Base.Model;
+using MixItUp.Base.Services;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -19,10 +19,10 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         {
             List<User> users = new List<User>();
 
-            var chatUsers = ChannelSession.Services.User.GetAllWorkableUsers();
+            var chatUsers = ServiceManager.Get<UserService>().GetActiveUsers();
             foreach (var chatUser in chatUsers)
             {
-                users.Add(UserController.UserFromUserDataViewModel(chatUser.Data));
+                users.Add(UserController.UserFromUserDataViewModel(chatUser));
             }
 
             return Task.FromResult<IEnumerable<User>>(users);
@@ -32,7 +32,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpDelete]
         public async Task ClearChat()
         {
-            await ChannelSession.Services.Chat.ClearMessages();
+            await ServiceManager.Get<ChatService>().ClearMessages(StreamingPlatformTypeEnum.All);
         }
 
         [Route("message")]
@@ -49,7 +49,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            await ChannelSession.Services.Chat.SendMessage(chatMessage.Message, chatMessage.SendAsStreamer);
+            await ServiceManager.Get<ChatService>().SendMessage(chatMessage.Message, StreamingPlatformTypeEnum.All, chatMessage.SendAsStreamer);
         }
 
         [Route("whisper")]
@@ -66,7 +66,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            await ChannelSession.Services.Chat.Whisper(StreamingPlatformTypeEnum.All, chatWhisper.UserName, chatWhisper.Message, chatWhisper.SendAsStreamer);
+            await ServiceManager.Get<ChatService>().Whisper(chatWhisper.UserName, StreamingPlatformTypeEnum.All, chatWhisper.Message, chatWhisper.SendAsStreamer);
         }
     }
 }

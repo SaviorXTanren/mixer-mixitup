@@ -1,5 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Serial;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,7 +26,7 @@ namespace MixItUp.WPF.Controls.Settings
         {
             this.PortNameComboBox.ItemsSource = this.portNames;
             this.portNames.Clear();
-            this.portNames.AddRange(await ChannelSession.Services.SerialService.GetCurrentPortNames());
+            this.portNames.AddRange(await ServiceManager.Get<SerialService>().GetCurrentPortNames());
 
             this.SerialDevicesListView.ItemsSource = this.serialDevices;
             this.serialDevices.Clear();
@@ -56,7 +58,7 @@ namespace MixItUp.WPF.Controls.Settings
                 this.DTREnabledCheckBox.IsChecked = false;
                 this.RTSEnabledCheckBox.IsChecked = false;
 
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
 

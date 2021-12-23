@@ -33,9 +33,9 @@
 
         <DataGrid ItemsSource="{Binding GameCommands}" Grid.Row="1" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" MinWidth="200" Width="*" />
-                <DataGridTextColumn Header="{x:Static resx:Resources.Commands}" Binding="{Binding TriggersString}" IsReadOnly="True" MinWidth="200" Width="*" />
-                <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" MinWidth="220" Width="220">
+                <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="{x:Static resx:Resources.Commands}" Binding="{Binding TriggersString}" IsReadOnly="True" Width="*" />
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" MinWidth="230" Width="230">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <CommandsControls:CommandListingButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />

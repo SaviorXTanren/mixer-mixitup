@@ -1,5 +1,5 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Model.API;
+﻿using MixItUp.Base.Model.API;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
@@ -25,7 +25,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             try
             {
-                MixItUpUpdateModel update = await ChannelSession.Services.MixItUpService.GetLatestUpdate();
+                MixItUpUpdateModel update = await ServiceManager.Get<MixItUpService>().GetLatestUpdate();
                 if (update != null)
                 {
                     using (AdvancedHttpClient client = new AdvancedHttpClient())

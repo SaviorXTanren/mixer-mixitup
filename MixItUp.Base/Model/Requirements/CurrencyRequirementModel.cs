@@ -50,21 +50,6 @@ namespace MixItUp.Base.Model.Requirements
             this.MaxAmount = maxAmount;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal CurrencyRequirementModel(MixItUp.Base.ViewModel.Requirement.CurrencyRequirementViewModel requirement)
-        {
-            this.CurrencyID = requirement.CurrencyID;
-            this.MinAmount = requirement.RequiredAmount;
-            this.MaxAmount = requirement.MaximumAmount;
-            switch (requirement.RequirementType)
-            {
-                case ViewModel.Requirement.CurrencyRequirementTypeEnum.RequiredAmount: this.RequirementType = CurrencyRequirementTypeEnum.RequiredAmount; break;
-                case ViewModel.Requirement.CurrencyRequirementTypeEnum.MinimumOnly: this.RequirementType = CurrencyRequirementTypeEnum.MinimumOnly; break;
-                case ViewModel.Requirement.CurrencyRequirementTypeEnum.MinimumAndMaximum: this.RequirementType = CurrencyRequirementTypeEnum.MinimumAndMaximum; break;
-            }
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         protected CurrencyRequirementModel() { }
 
         protected override DateTimeOffset RequirementErrorCooldown { get { return CurrencyRequirementModel.requirementErrorCooldown; } set { CurrencyRequirementModel.requirementErrorCooldown = value; } }
@@ -152,7 +137,7 @@ namespace MixItUp.Base.Model.Requirements
             {
                 this.AddSubtractAmount(parameters.User, this.GetAmount(parameters));
             }
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public int GetAmount(CommandParametersModel parameters)
@@ -189,28 +174,28 @@ namespace MixItUp.Base.Model.Requirements
             }
         }
 
-        public Result ValidateAmount(UserViewModel user, int amount)
+        public Result ValidateAmount(UserV2ViewModel user, int amount)
         {
-            if (!user.Data.IsCurrencyRankExempt && !this.Currency.HasAmount(user.Data, amount))
+            if (!user.IsSpecialtyExcluded && !this.Currency.HasAmount(user, amount))
             {
-                int currentAmount = this.Currency.GetAmount(user.Data);
+                int currentAmount = this.Currency.GetAmount(user);
                 return new Result(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amount, this.Currency.Name) + " " + string.Format(MixItUp.Base.Resources.RequirementCurrentAmount, currentAmount));
             }
             return new Result();
         }
 
-        public void AddSubtractAmount(UserViewModel user, int amount)
+        public void AddSubtractAmount(UserV2ViewModel user, int amount)
         {
             CurrencyModel currency = this.Currency;
-            if (currency != null && !user.Data.IsCurrencyRankExempt)
+            if (currency != null && !user.IsSpecialtyExcluded)
             {
                 if (amount > 0)
                 {
-                    currency.AddAmount(user.Data, amount);
+                    currency.AddAmount(user, amount);
                 }
                 else if (amount < 0)
                 {
-                    currency.SubtractAmount(user.Data, -amount);
+                    currency.SubtractAmount(user, -amount);
                 }
             }
         }

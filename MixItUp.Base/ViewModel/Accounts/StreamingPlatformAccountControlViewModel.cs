@@ -1,7 +1,11 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
+using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
-using StreamingClient.Base.Util;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Accounts
@@ -22,17 +26,7 @@ namespace MixItUp.Base.ViewModel.Accounts
 
         public string PlatformName { get { return EnumLocalizationHelper.GetLocalizedName(this.Platform); } }
 
-        public string PlatformImage
-        {
-            get
-            {
-                if (this.Platform == StreamingPlatformTypeEnum.Twitch)
-                {
-                    return "/Assets/Images/Twitch.png";
-                }
-                return string.Empty;
-            }
-        }
+        public string PlatformImage { get { return StreamingPlatforms.GetPlatformImage(this.Platform); } }
 
         public string UserAccountAvatar
         {
@@ -57,16 +51,14 @@ namespace MixItUp.Base.ViewModel.Accounts
 
         public ICommand UserAccountCommand { get; set; }
         public string UserAccountButtonContent { get { return this.IsUserAccountConnected ? MixItUp.Base.Resources.Logout : MixItUp.Base.Resources.Login; } }
-        public bool UserAccountButtonIsEnabled { get { return !this.IsUserAccountConnected; } }
-
         public bool IsUserAccountConnected
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Twitch)
-                {
-                    return ChannelSession.TwitchUserConnection != null;
-                }
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return ServiceManager.Get<TwitchSessionService>().UserConnection != null; }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return ServiceManager.Get<YouTubeSessionService>().UserConnection != null; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return ServiceManager.Get<TrovoSessionService>().UserConnection != null; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return ServiceManager.Get<GlimeshSessionService>().UserConnection != null; }
                 return false;
             }
         }
@@ -98,10 +90,10 @@ namespace MixItUp.Base.ViewModel.Accounts
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Twitch)
-                {
-                    return ChannelSession.TwitchBotConnection != null;
-                }
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return ServiceManager.Get<TwitchSessionService>().BotConnection != null; }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return ServiceManager.Get<YouTubeSessionService>().BotConnection != null; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return ServiceManager.Get<TrovoSessionService>().BotConnection != null; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return ServiceManager.Get<GlimeshSessionService>().BotConnection != null; }
                 return false;
             }
         }
@@ -112,18 +104,49 @@ namespace MixItUp.Base.ViewModel.Accounts
 
             if (this.IsUserAccountConnected)
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Twitch && ChannelSession.TwitchUserNewAPI != null)
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().User != null)
                 {
-                    this.UserAccountAvatar = ChannelSession.TwitchUserNewAPI.profile_image_url;
-                    this.UserAccountUsername = ChannelSession.TwitchUserNewAPI.display_name;
+                    this.UserAccountAvatar = ServiceManager.Get<TwitchSessionService>().User.profile_image_url;
+                    this.UserAccountUsername = ServiceManager.Get<TwitchSessionService>().User.display_name;
+                }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().User != null)
+                {
+                    this.UserAccountAvatar = ServiceManager.Get<YouTubeSessionService>().User.Snippet.Thumbnails.Default__.Url;
+                    this.UserAccountUsername = ServiceManager.Get<YouTubeSessionService>().User.Snippet.Title;
+                }
+                else if (this.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().User != null)
+                {
+                    this.UserAccountAvatar = ServiceManager.Get<TrovoSessionService>().User.profilePic;
+                    this.UserAccountUsername = ServiceManager.Get<TrovoSessionService>().User.nickName;
+                }
+                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().User != null)
+                {
+                    this.UserAccountAvatar = ServiceManager.Get<GlimeshSessionService>().User.avatarUrl;
+                    this.UserAccountUsername = ServiceManager.Get<GlimeshSessionService>().User.displayname;
                 }
             }
+
             if (this.IsBotAccountConnected)
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Twitch && ChannelSession.TwitchBotNewAPI != null)
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().Bot != null)
                 {
-                    this.BotAccountAvatar = ChannelSession.TwitchBotNewAPI.profile_image_url;
-                    this.BotAccountUsername = ChannelSession.TwitchBotNewAPI.display_name;
+                    this.BotAccountAvatar = ServiceManager.Get<TwitchSessionService>().Bot.profile_image_url;
+                    this.BotAccountUsername = ServiceManager.Get<TwitchSessionService>().Bot.display_name;
+                }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().Bot != null)
+                {
+                    this.BotAccountAvatar = ServiceManager.Get<YouTubeSessionService>().Bot.Snippet.Thumbnails.Default__.Url;
+                    this.BotAccountUsername = ServiceManager.Get<YouTubeSessionService>().Bot.Snippet.Title;
+                }
+                else if (this.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().Bot != null)
+                {
+                    this.UserAccountAvatar = ServiceManager.Get<TrovoSessionService>().Bot.profilePic;
+                    this.UserAccountUsername = ServiceManager.Get<TrovoSessionService>().Bot.nickName;
+                }
+                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().Bot != null)
+                {
+                    this.BotAccountAvatar = ServiceManager.Get<GlimeshSessionService>().Bot.avatarUrl;
+                    this.BotAccountUsername = ServiceManager.Get<GlimeshSessionService>().Bot.displayname;
                 }
             }
 
@@ -131,27 +154,73 @@ namespace MixItUp.Base.ViewModel.Accounts
             {
                 if (this.IsUserAccountConnected)
                 {
-                    //if (this.Platform == StreamingPlatformTypeEnum.Mixer)
-                    //{
-                    //    ChannelSession.DisconnectMixerUser();
-                    //}
-                    //this.UserAccountAvatar = null;
-                    //this.UserAccountUsername = null;
+                    if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                    {
+                        await ServiceManager.Get<TwitchSessionService>().DisconnectUser(ChannelSession.Settings);
+                    }
+                    else if (this.Platform == StreamingPlatformTypeEnum.YouTube)
+                    {
+                        await ServiceManager.Get<YouTubeSessionService>().DisconnectUser(ChannelSession.Settings);
+                    }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Trovo)
+                    {
+                        await ServiceManager.Get<TrovoSessionService>().DisconnectUser(ChannelSession.Settings);
+                    }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
+                    {
+                        await ServiceManager.Get<GlimeshSessionService>().DisconnectUser(ChannelSession.Settings);
+                    }
+                    this.UserAccountAvatar = null;
+                    this.UserAccountUsername = null;
                 }
                 else
                 {
                     Result result = new Result(false);
                     if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
-                        result = await ChannelSession.ConnectTwitchUser();
-                        if (result.Success && ChannelSession.TwitchUserNewAPI != null)
+                        result = await ServiceManager.Get<TwitchSessionService>().ConnectUser();
+                        if (result.Success && ServiceManager.Get<TwitchSessionService>().User != null)
                         {
-                            this.UserAccountAvatar = ChannelSession.TwitchUserNewAPI.profile_image_url;
-                            this.UserAccountUsername = ChannelSession.TwitchUserNewAPI.display_name;
+                            this.UserAccountAvatar = ServiceManager.Get<TwitchSessionService>().User.profile_image_url;
+                            this.UserAccountUsername = ServiceManager.Get<TwitchSessionService>().User.display_name;
+                        }
+                    }
+                    else if (this.Platform == StreamingPlatformTypeEnum.YouTube)
+                    {
+                        result = await ServiceManager.Get<YouTubeSessionService>().ConnectUser();
+                        if (result.Success && ServiceManager.Get<YouTubeSessionService>().User != null)
+                        {
+                            this.UserAccountAvatar = ServiceManager.Get<YouTubeSessionService>().User.Snippet.Thumbnails.Default__.Url;
+                            this.UserAccountUsername = ServiceManager.Get<YouTubeSessionService>().User.Snippet.Title;
+                        }
+                    }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Trovo)
+                    {
+                        result = await ServiceManager.Get<TrovoSessionService>().ConnectUser();
+                        if (result.Success && ServiceManager.Get<TrovoSessionService>().User != null)
+                        {
+                            this.UserAccountAvatar = ServiceManager.Get<TrovoSessionService>().User.profilePic;
+                            this.UserAccountUsername = ServiceManager.Get<TrovoSessionService>().User.nickName;
+                        }
+                    }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
+                    {
+                        result = await ServiceManager.Get<GlimeshSessionService>().ConnectUser();
+                        if (result.Success && ServiceManager.Get<GlimeshSessionService>().User != null)
+                        {
+                            this.UserAccountAvatar = ServiceManager.Get<GlimeshSessionService>().User.avatarUrl;
+                            this.UserAccountUsername = ServiceManager.Get<GlimeshSessionService>().User.displayname;
                         }
                     }
 
-                    if (!result.Success)
+                    if (result.Success)
+                    {
+                        if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.None)
+                        {
+                            ChannelSession.Settings.DefaultStreamingPlatform = this.Platform;
+                        }
+                    }
+                    else
                     {
                         this.UserAccountAvatar = null;
                         this.UserAccountUsername = null;
@@ -168,8 +237,19 @@ namespace MixItUp.Base.ViewModel.Accounts
                 {
                     if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
-                        await ChannelSession.DisconnectTwitchBot();
-                        ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = null;
+                        await ServiceManager.Get<TwitchSessionService>().DisconnectBot(ChannelSession.Settings);
+                    }
+                    else if (this.Platform == StreamingPlatformTypeEnum.YouTube)
+                    {
+                        await ServiceManager.Get<YouTubeSessionService>().DisconnectBot(ChannelSession.Settings);
+                    }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Trovo)
+                    {
+                        await ServiceManager.Get<TrovoSessionService>().DisconnectBot(ChannelSession.Settings);
+                    }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
+                    {
+                        await ServiceManager.Get<GlimeshSessionService>().DisconnectBot(ChannelSession.Settings);
                     }
                     this.BotAccountAvatar = null;
                     this.BotAccountUsername = null;
@@ -179,18 +259,69 @@ namespace MixItUp.Base.ViewModel.Accounts
                     Result result = new Result(false);
                     if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
-                        result = await ChannelSession.ConnectTwitchBot();
+                        result = await ServiceManager.Get<TwitchSessionService>().ConnectBot();
                         if (result.Success)
                         {
-                            if (ChannelSession.TwitchBotNewAPI.id.Equals(ChannelSession.TwitchUserNewAPI?.id))
+                            if (ServiceManager.Get<TwitchSessionService>().Bot.id.Equals(ServiceManager.Get<TwitchSessionService>().User?.id))
                             {
-                                await ChannelSession.DisconnectTwitchBot();
+                                await ServiceManager.Get<TwitchSessionService>().DisconnectBot(ChannelSession.Settings);
                                 result = new Result(MixItUp.Base.Resources.BotAccountMustBeDifferent);
                             }
-                            else if (ChannelSession.TwitchBotNewAPI != null)
+                            else if (ServiceManager.Get<TwitchSessionService>().Bot != null)
                             {
-                                this.BotAccountAvatar = ChannelSession.TwitchBotNewAPI.profile_image_url;
-                                this.BotAccountUsername = ChannelSession.TwitchBotNewAPI.display_name;
+                                this.BotAccountAvatar = ServiceManager.Get<TwitchSessionService>().Bot.profile_image_url;
+                                this.BotAccountUsername = ServiceManager.Get<TwitchSessionService>().Bot.display_name;
+                            }
+                        }
+                    }
+                    else if (this.Platform == StreamingPlatformTypeEnum.YouTube)
+                    {
+                        result = await ServiceManager.Get<YouTubeSessionService>().ConnectBot();
+                        if (result.Success)
+                        {
+                            if (ServiceManager.Get<YouTubeSessionService>().Bot.Id.Equals(ServiceManager.Get<YouTubeSessionService>().User?.Id))
+                            {
+                                await ServiceManager.Get<YouTubeSessionService>().DisconnectBot(ChannelSession.Settings);
+                                result = new Result(MixItUp.Base.Resources.BotAccountMustBeDifferent);
+                            }
+                            else if (ServiceManager.Get<YouTubeSessionService>().Bot != null)
+                            {
+                                this.BotAccountAvatar = ServiceManager.Get<YouTubeSessionService>().Bot.Snippet.Thumbnails.Default__.Url;
+                                this.BotAccountUsername = ServiceManager.Get<YouTubeSessionService>().Bot.Snippet.Title;
+                            }
+                        }
+                    }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Trovo)
+                    {
+                        result = await ServiceManager.Get<TrovoSessionService>().ConnectBot();
+                        if (result.Success)
+                        {
+                            if (ServiceManager.Get<TrovoSessionService>().Bot.userId.Equals(ServiceManager.Get<TrovoSessionService>().User?.userId))
+                            {
+                                await ServiceManager.Get<TrovoSessionService>().DisconnectBot(ChannelSession.Settings);
+                                result = new Result(MixItUp.Base.Resources.BotAccountMustBeDifferent);
+                            }
+                            else if (ServiceManager.Get<TrovoSessionService>().Bot != null)
+                            {
+                                this.BotAccountAvatar = ServiceManager.Get<TrovoSessionService>().Bot.profilePic;
+                                this.BotAccountUsername = ServiceManager.Get<TrovoSessionService>().Bot.nickName;
+                            }
+                        }
+                    }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
+                    {
+                        result = await ServiceManager.Get<GlimeshSessionService>().ConnectBot();
+                        if (result.Success)
+                        {
+                            if (ServiceManager.Get<GlimeshSessionService>().Bot.id.Equals(ServiceManager.Get<GlimeshSessionService>().User?.id))
+                            {
+                                await ServiceManager.Get<GlimeshSessionService>().DisconnectBot(ChannelSession.Settings);
+                                result = new Result(MixItUp.Base.Resources.BotAccountMustBeDifferent);
+                            }
+                            else if (ServiceManager.Get<GlimeshSessionService>().Bot != null)
+                            {
+                                this.BotAccountAvatar = ServiceManager.Get<GlimeshSessionService>().Bot.avatarUrl;
+                                this.BotAccountUsername = ServiceManager.Get<GlimeshSessionService>().Bot.displayname;
                             }
                         }
                     }
@@ -212,7 +343,6 @@ namespace MixItUp.Base.ViewModel.Accounts
             this.NotifyPropertyChanged("IsUserAccountConnected");
             this.NotifyPropertyChanged("IsUserAccountNotConnected");
             this.NotifyPropertyChanged("UserAccountButtonContent");
-            this.NotifyPropertyChanged("UserAccountButtonIsEnabled");
             this.NotifyPropertyChanged("CanConnectBotAccount");
             this.NotifyPropertyChanged("IsBotAccountConnected");
             this.NotifyPropertyChanged("IsBotAccountNotConnected");

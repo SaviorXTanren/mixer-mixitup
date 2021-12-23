@@ -46,14 +46,14 @@ namespace MixItUp.WPF.Controls.Statistics
                 catch (Exception ex) { Logger.Log(ex); }
             });
 
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         protected override Task OnVisibilityChanged()
         {
             this.RefreshOverview();
 
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public void RefreshOverview()

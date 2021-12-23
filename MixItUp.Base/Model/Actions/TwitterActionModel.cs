@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Linq;
@@ -50,49 +52,38 @@ namespace MixItUp.Base.Model.Actions
             this.ActionType = actionType;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal TwitterActionModel(MixItUp.Base.Actions.TwitterAction action)
-            : base(ActionTypeEnum.Twitter)
-        {
-            this.ActionType = (TwitterActionTypeEnum)(int)action.ActionType;
-            this.TweetText = action.TweetText;
-            this.ImagePath = action.ImagePath;
-            this.NameUpdate = action.NewProfileName;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private TwitterActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (ChannelSession.Services.Twitter.IsConnected)
+            if (ServiceManager.Get<TwitterService>().IsConnected)
             {
                 if (this.ActionType == TwitterActionTypeEnum.SendTweet)
                 {
-                    string tweet = await this.ReplaceStringWithSpecialModifiers(this.TweetText, parameters);
-                    string imagePath = await this.ReplaceStringWithSpecialModifiers(this.ImagePath, parameters);
+                    string tweet = await ReplaceStringWithSpecialModifiers(this.TweetText, parameters);
+                    string imagePath = await ReplaceStringWithSpecialModifiers(this.ImagePath, parameters);
 
                     if (!string.IsNullOrEmpty(tweet))
                     {
                         if (TwitterActionModel.CheckIfTweetContainsTooManyTags(tweet))
                         {
-                            await ChannelSession.Services.Chat.SendMessage("The tweet you specified can not be sent because it contains an @mention");
+                            await ServiceManager.Get<ChatService>().SendMessage("The tweet you specified can not be sent because it contains an @mention", parameters.Platform);
                             return;
                         }
 
-                        Result result = await ChannelSession.Services.Twitter.SendTweet(tweet, imagePath);
+                        Result result = await ServiceManager.Get<TwitterService>().SendTweet(tweet, imagePath);
                         if (!result.Success)
                         {
-                            await ChannelSession.Services.Chat.SendMessage("Twitter Error: " + result.Message);
+                            await ServiceManager.Get<ChatService>().SendMessage("Twitter Error: " + result.Message, parameters.Platform);
                         }
                     }
                 }
                 else if (this.ActionType == TwitterActionTypeEnum.UpdateName)
                 {
-                    Result result = await ChannelSession.Services.Twitter.UpdateName(this.NameUpdate);
+                    Result result = await ServiceManager.Get<TwitterService>().UpdateName(this.NameUpdate);
                     if (!result.Success)
                     {
-                        await ChannelSession.Services.Chat.SendMessage("Twitter Error: " + result.Message);
+                        await ServiceManager.Get<ChatService>().SendMessage("Twitter Error: " + result.Message, parameters.Platform);
                     }
                 }
             }

@@ -1,12 +1,12 @@
-﻿using MixItUp.Base.Model.User;
-using MixItUp.Base.ViewModel.MainControls;
+﻿using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.MainControls;
+using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Windows.Users;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Threading;
-using MixItUp.Base.Util;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -62,8 +62,8 @@ namespace MixItUp.WPF.Controls.MainControls
         private void UserEditButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            UserDataModel userData = (UserDataModel)button.DataContext;
-            UserDataEditorWindow window = new UserDataEditorWindow(userData);
+            UserV2ViewModel userData = (UserV2ViewModel)button.DataContext;
+            UserDataEditorWindow window = new UserDataEditorWindow(userData.Model);
             window.Closed += Window_Closed;
             window.Show();
         }
@@ -71,8 +71,8 @@ namespace MixItUp.WPF.Controls.MainControls
         private async void UserDeleteButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            UserDataModel userData = (UserDataModel)button.DataContext;
-            await this.viewModel.DeleteUser(userData);
+            UserV2ViewModel userData = (UserV2ViewModel)button.DataContext;
+            await this.viewModel.DeleteUser(userData.Model);
         }
 
         private void UserDataGridView_Sorted(object sender, DataGridColumn column)

@@ -44,7 +44,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             this.webApp = WebApp.Start<WindowsDeveloperAPIServiceStartup>(opts);
 
             this.IsConnected = true;
-            ChannelSession.Services.Telemetry.TrackService("Developer API");
+            ServiceManager.Get<ITelemetryService>().TrackService("Developer API");
             return Task.FromResult(new Result());
         }
 
@@ -56,7 +56,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 this.webApp = null;
             }
             this.IsConnected = false;
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 

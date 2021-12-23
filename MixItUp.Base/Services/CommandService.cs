@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Actions;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Requirements;
@@ -33,6 +34,7 @@ namespace MixItUp.Base.Services
         public List<GameCommandModelBase> GameCommands { get; set; } = new List<GameCommandModelBase>();
         public List<TwitchChannelPointsCommandModel> TwitchChannelPointsCommands { get; set; } = new List<TwitchChannelPointsCommandModel>();
         public List<StreamlootsCardCommandModel> StreamlootsCardCommands { get; set; } = new List<StreamlootsCardCommandModel>();
+        public List<WebhookCommandModel> WebhookCommands { get; set; } = new List<WebhookCommandModel>();
 
         public IEnumerable<CommandModelBase> AllEnabledChatAccessibleCommands
         {
@@ -59,6 +61,7 @@ namespace MixItUp.Base.Services
                 commands.AddRange(this.ActionGroupCommands);
                 commands.AddRange(this.TwitchChannelPointsCommands);
                 commands.AddRange(this.StreamlootsCardCommands);
+                commands.AddRange(this.WebhookCommands);
                 return commands;
             }
         }
@@ -101,6 +104,7 @@ namespace MixItUp.Base.Services
             this.GameCommands.Clear();
             this.TwitchChannelPointsCommands.Clear();
             this.StreamlootsCardCommands.Clear();
+            this.WebhookCommands.Clear();
 
             foreach (CommandModelBase command in ChannelSession.Settings.Commands.Values.ToList())
             {
@@ -115,6 +119,7 @@ namespace MixItUp.Base.Services
                 else if (command is ActionGroupCommandModel) { this.ActionGroupCommands.Add((ActionGroupCommandModel)command); }
                 else if (command is TwitchChannelPointsCommandModel) { this.TwitchChannelPointsCommands.Add((TwitchChannelPointsCommandModel)command); }
                 else if (command is StreamlootsCardCommandModel) { this.StreamlootsCardCommands.Add((StreamlootsCardCommandModel)command); }
+                else if (command is WebhookCommandModel) { this.WebhookCommands.Add((WebhookCommandModel)command); }
             }
 
             foreach (PreMadeChatCommandSettingsModel commandSetting in ChannelSession.Settings.PreMadeChatCommandSettings)
@@ -126,9 +131,9 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            ChannelSession.Services.Chat.RebuildCommandTriggers();
+            ServiceManager.Get<ChatService>().RebuildCommandTriggers();
 
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public async Task Queue(Guid commandID) { await this.Queue(ChannelSession.Settings.GetCommand(commandID)); }
@@ -230,7 +235,7 @@ namespace MixItUp.Base.Services
                                 singularTask = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
                             }
                         }
-                        return Task.FromResult(0);
+                        return Task.CompletedTask;
                     });
                 }
             }
@@ -248,7 +253,7 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                if (commandInstance.State == CommandInstanceStateEnum.Canceled || commandInstance.State == CommandInstanceStateEnum.Completed)
+                if (commandInstance.State != CommandInstanceStateEnum.Pending)
                 {
                     return;
                 }
@@ -278,7 +283,7 @@ namespace MixItUp.Base.Services
 
                 foreach (CommandParametersModel p in commandInstance.RunnerParameters)
                 {
-                    p.User.Data.TotalCommandsRun++;
+                    p.User.TotalCommandsRun++;
                     await this.RunDirectlyInternal(commandInstance, p);
                 }
 
@@ -327,7 +332,7 @@ namespace MixItUp.Base.Services
                     {
                         if (!string.IsNullOrEmpty(validationResult.Message) && validationResult.DisplayMessage)
                         {
-                            await ChannelSession.Services.Chat.SendMessage(validationResult.Message);
+                            await ServiceManager.Get<ChatService>().SendMessage(validationResult.Message, commandInstance.Parameters.Platform);
                         }
                     }
                 }
@@ -441,18 +446,18 @@ namespace MixItUp.Base.Services
                     }
 
                     ActionModelBase action = actions[i];
-                    if (action is OverlayActionModel && ChannelSession.Services.Overlay.IsConnected)
+                    if (action is OverlayActionModel && ServiceManager.Get<OverlayService>().IsConnected)
                     {
-                        ChannelSession.Services.Overlay.StartBatching();
+                        ServiceManager.Get<OverlayService>().StartBatching();
                     }
 
                     await action.Perform(parameters);
 
-                    if (action is OverlayActionModel && ChannelSession.Services.Overlay.IsConnected)
+                    if (action is OverlayActionModel && ServiceManager.Get<OverlayService>().IsConnected)
                     {
                         if (i == (actions.Count - 1) || !(actions[i + 1] is OverlayActionModel))
                         {
-                            await ChannelSession.Services.Overlay.EndBatching();
+                            await ServiceManager.Get<OverlayService>().EndBatching();
                         }
                     }
                 }

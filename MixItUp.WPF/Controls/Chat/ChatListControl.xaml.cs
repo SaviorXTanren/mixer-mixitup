@@ -1,6 +1,7 @@
 ﻿using MaterialDesignThemes.Wpf;
 using MixItUp.Base;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -120,7 +121,7 @@ namespace MixItUp.WPF.Controls.Chat
                     }
                 }
 
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
 
@@ -148,7 +149,7 @@ namespace MixItUp.WPF.Controls.Chat
                     {
                         string filter = tag.Substring(1);
 
-                        IEnumerable<UserViewModel> users = ChannelSession.Services.User.GetAllActiveUsers();
+                        IEnumerable<UserV2ViewModel> users = ServiceManager.Get<UserService>().GetActiveUsers();
                         if (!string.IsNullOrEmpty(filter))
                         {
                             users = users.Where(u => !string.IsNullOrEmpty(u.Username) && u.Username.StartsWith(filter, StringComparison.InvariantCultureIgnoreCase)).ToList();
@@ -162,26 +163,26 @@ namespace MixItUp.WPF.Controls.Chat
                     }
                     else if (tag.StartsWith(":"))
                     {
-                        if (ChannelSession.Services.Chat.TwitchChatService != null)
+                        if (ServiceManager.Has<TwitchChatService>())
                         {
-                            this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, this.FindMatchingEmoticons<TwitchChatEmoteViewModel>(tag.Substring(1, tag.Length - 1), ChannelSession.Services.Chat.TwitchChatService.Emotes));
+                            this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, this.FindMatchingEmoticons<TwitchChatEmoteViewModel>(tag.Substring(1, tag.Length - 1), ServiceManager.Get<TwitchChatService>().Emotes));
                         }
                     }
                     else if (ChannelSession.Settings.ShowBetterTTVEmotes || ChannelSession.Settings.ShowFrankerFaceZEmotes)
                     {
-                        if (ChannelSession.Services.Chat.TwitchChatService != null)
+                        if (ServiceManager.Has<TwitchChatService>())
                         {
                             Dictionary<string, object> emotes = new Dictionary<string, object>();
                             if (ChannelSession.Settings.ShowBetterTTVEmotes)
                             {
-                                foreach (var kvp in ChannelSession.Services.Chat.TwitchChatService.BetterTTVEmotes)
+                                foreach (var kvp in ServiceManager.Get<TwitchChatService>().BetterTTVEmotes)
                                 {
                                     emotes[kvp.Key] = kvp.Value;
                                 }
                             }
                             if (ChannelSession.Settings.ShowFrankerFaceZEmotes)
                             {
-                                foreach (var kvp in ChannelSession.Services.Chat.TwitchChatService.FrankerFaceZEmotes)
+                                foreach (var kvp in ServiceManager.Get<TwitchChatService>().FrankerFaceZEmotes)
                                 {
                                     emotes[kvp.Key] = kvp.Value;
                                 }
@@ -313,7 +314,7 @@ namespace MixItUp.WPF.Controls.Chat
                 ChatMessageViewModel message = (ChatMessageViewModel)this.ChatList.SelectedItem;
                 if (!message.IsWhisper)
                 {
-                    await ChannelSession.Services.Chat.DeleteMessage(message);
+                    await ServiceManager.Get<ChatService>().DeleteMessage(message);
                 }
             }
         }
@@ -357,7 +358,7 @@ namespace MixItUp.WPF.Controls.Chat
                         if (menuItem.DataContext != null && menuItem.DataContext is CommandModelBase)
                         {
                             CommandModelBase command = (CommandModelBase)menuItem.DataContext;
-                            await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(platform: message.Platform, arguments: new List<string>() { message.User.Username }) { TargetUser = message.User });
+                            await ServiceManager.Get<CommandService>().Queue(command, new CommandParametersModel(platform: message.Platform, arguments: new List<string>() { message.User.Username }) { TargetUser = message.User });
                         }
                     }
                 }
@@ -418,7 +419,7 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void SelectIntellisenseUser()
         {
-            UserViewModel user = UsernameIntellisenseListBox.SelectedItem as UserViewModel;
+            UserV2ViewModel user = UsernameIntellisenseListBox.SelectedItem as UserV2ViewModel;
             if (user != null)
             {
                 this.SelectIntellisenseItem("@" + user.Username);

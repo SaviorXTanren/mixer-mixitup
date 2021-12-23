@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Dashboard;
+﻿using MixItUp.Base;
+using MixItUp.Base.ViewModel.Dashboard;
 using MixItUp.WPF.Controls.Dashboard;
 using System;
 using System.Runtime.InteropServices;
@@ -40,6 +41,51 @@ namespace MixItUp.WPF.Windows.Dashboard
             this.viewModel = (DashboardWindowViewModel)this.ViewModel;
 
             this.Initialize(this.StatusBar);
+
+            if (ChannelSession.AppSettings.DashboardWidth > 0)
+            {
+                this.WindowStartupLocation = WindowStartupLocation.Manual;
+                this.Height = ChannelSession.AppSettings.DashboardHeight;
+                this.Width = ChannelSession.AppSettings.DashboardWidth;
+                this.Top = ChannelSession.AppSettings.DashboardTop;
+                this.Left = ChannelSession.AppSettings.DashboardLeft;
+                this.viewModel.IsPinned = ChannelSession.AppSettings.IsDashboardPinned;
+                RefreshPin();
+
+                var rect = new System.Drawing.Rectangle((int)this.Left, (int)this.Top, (int)this.Width, (int)this.Height);
+                var screen = System.Windows.Forms.Screen.FromRectangle(rect);
+                if (!screen.Bounds.Contains(rect))
+                {
+                    // Off the bottom of the screen?
+                    if (this.Top + this.Height > screen.Bounds.Top + screen.Bounds.Height)
+                    {
+                        this.Top = screen.Bounds.Top + screen.Bounds.Height - this.Height;
+                    }
+
+                    // Off the right side of the screen?
+                    if (this.Left + this.Width > screen.Bounds.Left + screen.Bounds.Width)
+                    {
+                        this.Left = screen.Bounds.Left + screen.Bounds.Width - this.Width;
+                    }
+
+                    // Off the top of the screen?
+                    if (this.Top < screen.Bounds.Top)
+                    {
+                        this.Top = screen.Bounds.Top;
+                    }
+
+                    // Off the left side of the screen?
+                    if (this.Left < screen.Bounds.Left)
+                    {
+                        this.Left = screen.Bounds.Left;
+                    }
+                }
+
+                if (ChannelSession.AppSettings.IsMaximized)
+                {
+                    WindowState = WindowState.Maximized;
+                }
+            }
         }
 
         protected override async Task OnLoaded()
@@ -63,10 +109,39 @@ namespace MixItUp.WPF.Windows.Dashboard
             await base.OnLoaded();
         }
 
+        protected override Task OnClosing()
+        {
+            if (this.WindowState == WindowState.Maximized)
+            {
+                // Use the RestoreBounds as the current values will be 0, 0 and the size of the screen
+                ChannelSession.AppSettings.DashboardTop = RestoreBounds.Top;
+                ChannelSession.AppSettings.DashboardLeft = RestoreBounds.Left;
+                ChannelSession.AppSettings.DashboardHeight = RestoreBounds.Height;
+                ChannelSession.AppSettings.DashboardWidth = RestoreBounds.Width;
+                ChannelSession.AppSettings.IsDashboardMaximized = true;
+            }
+            else
+            {
+                ChannelSession.AppSettings.DashboardTop = this.Top;
+                ChannelSession.AppSettings.DashboardLeft = this.Left;
+                ChannelSession.AppSettings.DashboardHeight = this.Height;
+                ChannelSession.AppSettings.DashboardWidth = this.Width;
+                ChannelSession.AppSettings.IsDashboardMaximized = false;
+            }
+
+            ChannelSession.AppSettings.IsDashboardPinned = this.viewModel.IsPinned;
+
+            return base.OnClosing();
+        }
+
         private void TogglePin_Click(object sender, RoutedEventArgs e)
         {
             this.viewModel.IsPinned = !this.viewModel.IsPinned;
+            RefreshPin();
+        }
 
+        private void RefreshPin()
+        {
             if (this.viewModel.IsPinned)
             {
                 SetWindowPos(new WindowInteropHelper(this).Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);

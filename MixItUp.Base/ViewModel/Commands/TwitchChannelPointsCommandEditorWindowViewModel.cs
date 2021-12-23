@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using System;
 using System.Linq;
@@ -48,14 +50,14 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public override Task SaveCommandToSettings(CommandModelBase command)
         {
-            ChannelSession.Services.Command.TwitchChannelPointsCommands.Remove((TwitchChannelPointsCommandModel)this.existingCommand);
-            ChannelSession.Services.Command.TwitchChannelPointsCommands.Add((TwitchChannelPointsCommandModel)command);
-            return Task.FromResult(0);
+            ServiceManager.Get<CommandService>().TwitchChannelPointsCommands.Remove((TwitchChannelPointsCommandModel)this.existingCommand);
+            ServiceManager.Get<CommandService>().TwitchChannelPointsCommands.Add((TwitchChannelPointsCommandModel)command);
+            return Task.CompletedTask;
         }
 
         protected override async Task OnLoadedInternal()
         {
-            foreach (CustomChannelPointRewardModel channelPoint in (await ChannelSession.TwitchUserConnection.GetCustomChannelPointRewards(ChannelSession.TwitchUserNewAPI)).OrderBy(c => c.title))
+            foreach (CustomChannelPointRewardModel channelPoint in (await ServiceManager.Get<TwitchSessionService>().UserConnection.GetCustomChannelPointRewards(ServiceManager.Get<TwitchSessionService>().User)).OrderBy(c => c.title))
             {
                 this.ChannelPointRewards.Add(channelPoint);
             }

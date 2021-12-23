@@ -36,13 +36,13 @@ namespace MixItUp.WPF.Services
 
         public Task<Result> Connect()
         {
-            string key = ChannelSession.Services.Secrets.GetSecret("ApplicationInsightsKey");
+            string key = ServiceManager.Get<SecretsService>().GetSecret("ApplicationInsightsKey");
             if (!string.IsNullOrEmpty(key))
             {
                 this.telemetryClient.InstrumentationKey = key;
             }
 
-            PlayFabSettings.staticSettings.TitleId = ChannelSession.Services.Secrets.GetSecret("PlayFabTitleID");
+            PlayFabSettings.staticSettings.TitleId = ServiceManager.Get<SecretsService>().GetSecret("PlayFabTitleID");
 
             this.IsConnected = true;
             return Task.FromResult(new Result());
@@ -103,16 +103,16 @@ namespace MixItUp.WPF.Services
             this.SendPlayFabEvent("Service", "Type", type);
         }
 
-        public void TrackChannelMetrics(string type, long viewerCount, long chatterCount, string game, long viewCount, long followCount)
+        public void TrackChannelMetrics(string type, long viewerCount, long chatterCount, string game, long viewCount)
         {
             if (string.IsNullOrEmpty(type))
             {
                 type = "Normal";
             }
             this.TrySendEvent(() => this.telemetryClient.TrackEvent("Channel", new Dictionary<string, string> { { "Type", type }, { "Viewers", viewerCount.ToString() },
-                { "Chatters", chatterCount.ToString() }, { "Game", game }, { "Views", viewCount.ToString() }, { "Follows", followCount.ToString() } }));
+                { "Chatters", chatterCount.ToString() }, { "Game", game }, { "Views", viewCount.ToString() } }));
             this.SendPlayFabEvent("Channel", new Dictionary<string, object>() { { "Type", type }, { "Viewers", viewerCount.ToString() }, { "Chatters", chatterCount.ToString() },
-                { "Game", game }, { "Views", viewCount.ToString() }, { "Follows", followCount.ToString() } });
+                { "Game", game }, { "Views", viewCount.ToString() } });
         }
 
         public void TrackRemoteAuthentication(Guid clientID)

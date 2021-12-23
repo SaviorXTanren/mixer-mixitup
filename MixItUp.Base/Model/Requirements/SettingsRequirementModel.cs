@@ -17,16 +17,6 @@ namespace MixItUp.Base.Model.Requirements
 
         public SettingsRequirementModel() { }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal SettingsRequirementModel(MixItUp.Base.ViewModel.Requirement.SettingsRequirementViewModel requirement)
-            : this()
-        {
-            this.DeleteChatMessageWhenRun = requirement.DeleteChatCommandWhenRun;
-            this.DontDeleteChatMessageWhenRun = requirement.DontDeleteChatCommandWhenRun;
-            this.ShowOnChatContextMenu = requirement.ShowOnChatMenu;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         protected override DateTimeOffset RequirementErrorCooldown { get { return SettingsRequirementModel.requirementErrorCooldown; } set { SettingsRequirementModel.requirementErrorCooldown = value; } }
 
         public bool ShouldChatMessageBeDeletedWhenRun { get { return this.DeleteChatMessageWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !this.DontDeleteChatMessageWhenRun); } }

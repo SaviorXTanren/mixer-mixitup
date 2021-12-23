@@ -4,7 +4,6 @@ using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,7 +12,7 @@ namespace MixItUp.Base.ViewModel.Games
 {
     public class BidGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        public IEnumerable<UserRoleEnum> StarterRoles { get { return UserDataModel.GetSelectableUserRoles(); } }
+        public IEnumerable<UserRoleEnum> StarterRoles { get { return UserRoles.All; } }
 
         public UserRoleEnum SelectedStarterRole
         {
@@ -84,7 +83,7 @@ namespace MixItUp.Base.ViewModel.Games
         public BidGameCommandEditorWindowViewModel(BidGameCommandModel command)
             : base(command)
         {
-            this.SelectedStarterRole = command.StarterRole;
+            this.SelectedStarterRole = command.StarterUserRole;
             this.TimeLimit = command.TimeLimit;
             this.StartedCommand = command.StartedCommand;
             this.NewTopBidderCommand = command.NewTopBidderCommand;
@@ -98,7 +97,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.Name = MixItUp.Base.Resources.Bid;
             this.Triggers = MixItUp.Base.Resources.Bid.Replace(" ", string.Empty).ToLower();
 
-            this.SelectedStarterRole = UserRoleEnum.Mod;
+            this.SelectedStarterRole = UserRoleEnum.Moderator;
             this.TimeLimit = 60;
             this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandBidStartedExample, this.PrimaryCurrencyName));
             this.NewTopBidderCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandBidNewTopBidderExample, this.PrimaryCurrencyName));
@@ -123,7 +122,7 @@ namespace MixItUp.Base.ViewModel.Games
         {
             await base.UpdateExistingCommand(command);
             BidGameCommandModel gCommand = (BidGameCommandModel)command;
-            gCommand.StarterRole = this.SelectedStarterRole;
+            gCommand.StarterUserRole = this.SelectedStarterRole;
             gCommand.TimeLimit = this.timeLimit;
             gCommand.StartedCommand = this.StartedCommand;
             gCommand.NewTopBidderCommand = this.NewTopBidderCommand;

@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -50,32 +51,6 @@ namespace MixItUp.Base.Model.Commands.Games
             this.PotatoExplodeCommand = potatoExplodeCommand;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal HotPotatoGameCommandModel(Base.Commands.BeachBallGameCommand command)
-            : base(command, GameCommandTypeEnum.HotPotato)
-        {
-            this.LowerTimeLimit = command.LowerLimit;
-            this.UpperTimeLimit = command.UpperLimit;
-            this.ResetTimeOnToss = true;
-            this.PlayerSelectionType = GamePlayerSelectionType.Targeted;
-            this.StartedCommand = new CustomCommandModel(command.StartedCommand) { IsEmbedded = true };
-            this.TossPotatoCommand = new CustomCommandModel(command.BallHitCommand) { IsEmbedded = true };
-            this.PotatoExplodeCommand = new CustomCommandModel(command.BallMissedCommand) { IsEmbedded = true };
-        }
-
-        internal HotPotatoGameCommandModel(Base.Commands.HotPotatoGameCommand command)
-            : base(command, GameCommandTypeEnum.HotPotato)
-        {
-            this.LowerTimeLimit = command.LowerLimit;
-            this.UpperTimeLimit = command.UpperLimit;
-            this.ResetTimeOnToss = false;
-            this.PlayerSelectionType = GamePlayerSelectionType.Targeted;
-            this.StartedCommand = new CustomCommandModel(command.StartedCommand) { IsEmbedded = true };
-            this.TossPotatoCommand = new CustomCommandModel(command.TossPotatoCommand) { IsEmbedded = true };
-            this.PotatoExplodeCommand = new CustomCommandModel(command.PotatoExplodeCommand) { IsEmbedded = true };
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private HotPotatoGameCommandModel() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()
@@ -95,7 +70,7 @@ namespace MixItUp.Base.Model.Commands.Games
             if (this.gameActive && lastTargetUser != parameters.User)
             {
                 // The game is underway and it's not the user's turn
-                await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandAlreadyUnderway);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandAlreadyUnderway, parameters.Platform);
                 await this.Requirements.Refund(parameters);
                 return;
             }
@@ -144,7 +119,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else
             {
-                await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandCouldNotFindUser);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandCouldNotFindUser, parameters.Platform);
             }
 
             await this.Requirements.Refund(parameters);

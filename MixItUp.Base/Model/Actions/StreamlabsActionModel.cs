@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
-using StreamingClient.Base.Util;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -24,30 +25,22 @@ namespace MixItUp.Base.Model.Actions
             this.ActionType = type;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal StreamlabsActionModel(MixItUp.Base.Actions.StreamlabsAction action)
-            : base(ActionTypeEnum.Streamlabs)
-        {
-            this.ActionType = (StreamlabsActionTypeEnum)(int)action.StreamlabType;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private StreamlabsActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (ChannelSession.Services.Streamlabs.IsConnected)
+            if (ServiceManager.Get<StreamlabsService>().IsConnected)
             {
                 switch (this.ActionType)
                 {
                     case StreamlabsActionTypeEnum.SpinWheel:
-                        await ChannelSession.Services.Streamlabs.SpinWheel();
+                        await ServiceManager.Get<StreamlabsService>().SpinWheel();
                         break;
                     case StreamlabsActionTypeEnum.EmptyJar:
-                        await ChannelSession.Services.Streamlabs.EmptyJar();
+                        await ServiceManager.Get<StreamlabsService>().EmptyJar();
                         break;
                     case StreamlabsActionTypeEnum.RollCredits:
-                        await ChannelSession.Services.Streamlabs.RollCredits();
+                        await ServiceManager.Get<StreamlabsService>().RollCredits();
                         break;
                 }
             }

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Threading.Tasks;
@@ -65,13 +66,13 @@ namespace MixItUp.Base.ViewModel.Commands
 
             this.CancelCommand = this.CreateCommand(() =>
             {
-                ChannelSession.Services.Command.Cancel(this.model);
-                return Task.FromResult(0);
+                ServiceManager.Get<CommandService>().Cancel(this.model);
+                return Task.CompletedTask;
             });
 
             this.ReplayCommand = this.CreateCommand(async () =>
             {
-                await ChannelSession.Services.Command.Replay(this.model.Duplicate());
+                await ServiceManager.Get<CommandService>().Replay(this.model.Duplicate());
             });
         }
 

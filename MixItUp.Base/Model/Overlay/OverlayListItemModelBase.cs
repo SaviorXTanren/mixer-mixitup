@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -45,28 +46,28 @@ namespace MixItUp.Base.Model.Overlay
         public string Hash { get; set; } = string.Empty;
 
         [JsonIgnore]
-        private UserViewModel cachedUser;
+        private UserV2ViewModel cachedUser;
 
         public OverlayListIndividualItemModel() { }
 
-        public async Task<UserViewModel> GetUser()
+        public async Task<UserV2ViewModel> GetUser()
         {
             if (this.cachedUser == null && this.UserID != Guid.Empty)
             {
-                this.cachedUser = ChannelSession.Services.User.GetActiveUserByID(this.UserID);
+                this.cachedUser = ServiceManager.Get<UserService>().GetActiveUserByID(this.UserID);
                 if (this.cachedUser == null)
                 {
-                    UserDataModel userData = await ChannelSession.Settings.GetUserDataByID(this.UserID);
-                    if (userData != null)
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(this.UserID);
+                    if (user != null)
                     {
-                        this.cachedUser = new UserViewModel(userData);
+                        this.cachedUser = user;
                     }
                 }
             }
             return this.cachedUser;
         }
 
-        public static OverlayListIndividualItemModel CreateAddItem(string id, UserViewModel user, int position, string html)
+        public static OverlayListIndividualItemModel CreateAddItem(string id, UserV2ViewModel user, int position, string html)
         {
             return new OverlayListIndividualItemModel()
             {
@@ -177,7 +178,7 @@ namespace MixItUp.Base.Model.Overlay
             this.Items.Clear();
             this.Items.AddRange(this.cachedItems);
             this.cachedItems.Clear();
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         protected override async Task PerformReplacements(JObject jobj, CommandParametersModel parameters)

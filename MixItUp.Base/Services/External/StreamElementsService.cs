@@ -142,12 +142,7 @@ namespace MixItUp.Base.Services.External
         public JToken data { get; set; }
     }
 
-    public interface IStreamElementsService : IOAuthExternalService
-    {
-        Task<StreamElementsChannel> GetCurrentChannel();
-    }
-
-    public class StreamElementsService : OAuthExternalServiceBase, IStreamElementsService
+    public class StreamElementsService : OAuthExternalServiceBase
     {
         public const string TotalSpentSpecialIdentifier = "totalspent";
 
@@ -181,7 +176,7 @@ namespace MixItUp.Base.Services.External
                 string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(StreamElementsService.AuthorizationUrl, StreamElementsService.ClientID, Guid.NewGuid().ToString()));
                 if (!string.IsNullOrEmpty(authorizationCode))
                 {
-                    string clientSecret = ChannelSession.Services.Secrets.GetSecret("StreamElementsSecret");
+                    string clientSecret = ServiceManager.Get<SecretsService>().GetSecret("StreamElementsSecret");
 
                     List<KeyValuePair<string, string>> bodyContent = new List<KeyValuePair<string, string>>();
                     bodyContent.Add(new KeyValuePair<string, string>("grant_type", "authorization_code"));
@@ -227,7 +222,7 @@ namespace MixItUp.Base.Services.External
         {
             if (this.token != null)
             {
-                string clientSecret = ChannelSession.Services.Secrets.GetSecret("StreamElementsSecret");
+                string clientSecret = ServiceManager.Get<SecretsService>().GetSecret("StreamElementsSecret");
 
                 List<KeyValuePair<string, string>> bodyContent = new List<KeyValuePair<string, string>>();
                 bodyContent.Add(new KeyValuePair<string, string>("grant_type", "refresh_token"));
@@ -316,7 +311,7 @@ namespace MixItUp.Base.Services.External
                     {
                         if (data != null)
                         {
-                            Logger.ForceLog(LogLevel.Information, "StreamElements event: " + data.ToString());
+                            Logger.ForceLog(LogLevel.Debug, "StreamElements event: " + data.ToString());
 
                             StreamElementsWebSocketEventModel e = JSONSerializerHelper.DeserializeFromString<StreamElementsWebSocketEventModel>(data.ToString());
                             if (e.type != null && e.data != null)

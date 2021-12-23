@@ -45,7 +45,7 @@
             <DataGrid ItemsSource="{Binding DefaultGroup}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch" PreviewMouseWheel="DataGrid_PreviewMouseWheel">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="{x:Static resx:Resources.RewardName}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                    <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="220">
+                    <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="230">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <CommandsControls:CommandListingButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
@@ -73,7 +73,7 @@
                                 <DataGrid ItemsSource="{Binding Commands}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch" PreviewMouseWheel="DataGrid_PreviewMouseWheel">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="{x:Static resx:Resources.RewardName}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                                        <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="220">
+                                        <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="230">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <CommandsControls:CommandListingButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />

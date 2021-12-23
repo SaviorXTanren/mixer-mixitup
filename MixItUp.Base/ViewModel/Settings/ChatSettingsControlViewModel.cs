@@ -117,21 +117,21 @@ namespace MixItUp.Base.ViewModel.Settings
                     GlobalEvents.ChatVisualSettingsChanged();
                 });
 
-            foreach (UserRoleEnum role in UserDataModel.GetSelectableUserRoles().OrderBy(r => r))
+            foreach (UserRoleEnum role in UserRoles.All.OrderBy(r => r))
             {
                 string name = EnumHelper.GetEnumName(role);
                 name = MixItUp.Base.Resources.ResourceManager.GetSafeString(name);
                 this.CustomUsernameColorsList.Add(new GenericColorComboBoxSettingsOptionControlViewModel(name,
-                    ChannelSession.Settings.CustomUsernameColors.ContainsKey(role) ? ChannelSession.Settings.CustomUsernameColors[role] : null,
+                    ChannelSession.Settings.CustomUsernameRoleColors.ContainsKey(role) ? ChannelSession.Settings.CustomUsernameRoleColors[role] : null,
                     (value) =>
                     {
                         if (!string.IsNullOrEmpty(value) && !value.Equals(GenericColorComboBoxSettingsOptionControlViewModel.NoneOption))
                         {
-                            ChannelSession.Settings.CustomUsernameColors[role] = value;
+                            ChannelSession.Settings.CustomUsernameRoleColors[role] = value;
                         }
                         else
                         {
-                            ChannelSession.Settings.CustomUsernameColors.Remove(role);
+                            ChannelSession.Settings.CustomUsernameRoleColors.Remove(role);
                         }
                         GlobalEvents.ChatVisualSettingsChanged();
                     }));

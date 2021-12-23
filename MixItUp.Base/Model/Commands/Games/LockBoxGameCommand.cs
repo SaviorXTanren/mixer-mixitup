@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,22 +55,6 @@ namespace MixItUp.Base.Model.Commands.Games
             this.InspectionCost = inspectionCost;
             this.InspectionCommand = inspectionCommand;
         }
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal LockBoxGameCommandModel(Base.Commands.LockBoxGameCommand command)
-            : base(command, GameCommandTypeEnum.LockBox)
-        {
-            this.CombinationLength = command.CombinationLength;
-            this.InitialAmount = command.InitialAmount;
-            this.SuccessfulCommand = new CustomCommandModel(command.SuccessfulGuessCommand) { IsEmbedded = true };
-            this.FailureCommand = new CustomCommandModel(command.FailedGuessCommand) { IsEmbedded = true };
-            this.StatusArgument = command.StatusArgument;
-            this.StatusCommand = new CustomCommandModel(command.StatusCommand) { IsEmbedded = true };
-            this.InspectionArgument = command.InspectionArgument;
-            this.InspectionCost = command.InspectionCost;
-            this.InspectionCommand = new CustomCommandModel(command.InspectionCommand) { IsEmbedded = true };
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
 
         private LockBoxGameCommandModel() { }
 
@@ -157,12 +142,12 @@ namespace MixItUp.Base.Model.Commands.Games
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandLockBoxNotNumber);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandLockBoxNotNumber, parameters.Platform);
                 }
             }
             else
             {
-                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCommandLockBoxIncorrectLength, this.CombinationLength));
+                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCommandLockBoxIncorrectLength, this.CombinationLength), parameters.Platform);
             }
             await this.Requirements.Refund(parameters);
         }

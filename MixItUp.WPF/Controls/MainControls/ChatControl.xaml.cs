@@ -44,9 +44,9 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void UserList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            if (this.UserList.SelectedItem != null && this.UserList.SelectedItem is UserViewModel)
+            if (this.UserList.SelectedItem != null && this.UserList.SelectedItem is UserV2ViewModel)
             {
-                UserViewModel user = (UserViewModel)this.UserList.SelectedItem;
+                UserV2ViewModel user = (UserV2ViewModel)this.UserList.SelectedItem;
                 this.UserList.SelectedIndex = -1;
                 await ChatUserDialogControl.ShowUserDialog(user);
             }

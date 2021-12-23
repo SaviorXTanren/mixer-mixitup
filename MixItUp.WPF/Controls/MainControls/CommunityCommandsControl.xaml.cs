@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Model.Store;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.CommunityCommands;
@@ -7,6 +7,7 @@ using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Controls.Dialogs.CommunityCommands;
 using MixItUp.WPF.Windows.Commands;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -26,19 +27,26 @@ namespace MixItUp.WPF.Controls.MainControls
 
         public static async Task ProcessDownloadedCommunityCommand(CommunityCommandDetailsViewModel command)
         {
-            if (bool.Equals(await DialogHelper.ShowCustom(new CommandImporterDialogControl(command.PrimaryCommand)), true))
+            try
             {
-                if (!CommunityCommandsControl.downloadedCommandsCache.Contains(command.ID))
+                if (bool.Equals(await DialogHelper.ShowCustom(new CommandImporterDialogControl(command.PrimaryCommand)), true))
                 {
-                    CommunityCommandsControl.downloadedCommandsCache.Add(command.ID);
+                    if (!CommunityCommandsControl.downloadedCommandsCache.Contains(command.ID))
+                    {
+                        CommunityCommandsControl.downloadedCommandsCache.Add(command.ID);
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
-                    {
-                        await ChannelSession.Services.CommunityCommandsService.DownloadCommand(command.ID);
-                    }, new CancellationToken());
+                        AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                        {
+                            await ServiceManager.Get<MixItUpService>().DownloadCommand(command.ID);
+                        }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
 
@@ -105,10 +113,10 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void ReviewCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!this.viewModel.CommandDetails.Username.Equals(ChannelSession.GetCurrentUser().Username, StringComparison.CurrentCultureIgnoreCase))
+            if (!this.viewModel.CommandDetails.Username.Equals(ChannelSession.User.Username, StringComparison.CurrentCultureIgnoreCase))
             {
                 CommunityCommandsReviewCommandDialogControl dialogControl = new CommunityCommandsReviewCommandDialogControl();
-                if (bool.Equals(await DialogHelper.ShowCustom(dialogControl), true) && !string.IsNullOrEmpty(dialogControl.Review))
+                if (bool.Equals(await DialogHelper.ShowCustom(dialogControl), true))
                 {
                     if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.CommunityCommandsReviewAgreement))
                     {

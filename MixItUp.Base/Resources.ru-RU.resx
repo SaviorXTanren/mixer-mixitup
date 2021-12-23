@@ -210,7 +210,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AmountPlusMinus" xml:space="preserve">
-    <value>Сумма (+/-)</value>
+    <value>Сумма</value>
     <comment>Manual</comment>
   </data>
   <data name="AmountSeconds" xml:space="preserve">
@@ -3802,10 +3802,6 @@
     <value>JustGiving</value>
     <comment>Manual</comment>
   </data>
-  <data name="OBSStudio" xml:space="preserve">
-    <value>OBS Studio</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Patreon" xml:space="preserve">
     <value>Patreon</value>
     <comment>Manual</comment>
@@ -3828,10 +3824,6 @@
   </data>
   <data name="StreamlabsOBS" xml:space="preserve">
     <value>Streamlabs OBS</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="Streamlabs" xml:space="preserve">
-    <value>Streamlabs</value>
     <comment>Manual</comment>
   </data>
   <data name="Streamloots" xml:space="preserve">

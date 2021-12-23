@@ -38,15 +38,6 @@ namespace MixItUp.Base.Model.Requirements
             this.MatchType = matchType;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal RankRequirementModel(MixItUp.Base.ViewModel.Requirement.CurrencyRequirementViewModel requirement)
-        {
-            this.RankSystemID = requirement.CurrencyID;
-            this.RankName = requirement.RankName;
-            this.MatchType = (requirement.MustEqual) ? RankRequirementMatchTypeEnum.EqualTo : RankRequirementMatchTypeEnum.GreaterThanOrEqualTo;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         protected override DateTimeOffset RequirementErrorCooldown { get { return RankRequirementModel.requirementErrorCooldown; } set { RankRequirementModel.requirementErrorCooldown = value; } }
 
         [JsonIgnore]
@@ -94,27 +85,27 @@ namespace MixItUp.Base.Model.Requirements
                 return Task.FromResult(new Result(MixItUp.Base.Resources.RankDoesNotExist));
             }
 
-            if (!parameters.User.Data.IsCurrencyRankExempt)
+            if (!parameters.User.IsSpecialtyExcluded)
             {
-                RankModel currentRank = rankSystem.GetRank(parameters.User.Data);
+                RankModel currentRank = rankSystem.GetRank(parameters.User);
                 if (this.MatchType == RankRequirementMatchTypeEnum.GreaterThanOrEqualTo)
                 {
-                    if (!rankSystem.HasAmount(parameters.User.Data, rank.Amount))
+                    if (!rankSystem.HasAmount(parameters.User, rank.Amount))
                     {
                         return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.RankRequirementNotGreaterThanOrEqual, rank.Name, rank.Amount, rankSystem.Name) + " " + string.Format(MixItUp.Base.Resources.RequirementCurrentAmount, currentRank)));
                     }
                 }
                 else if (this.MatchType == RankRequirementMatchTypeEnum.EqualTo)
                 {
-                    if (rankSystem.GetRank(parameters.User.Data) != rank)
+                    if (rankSystem.GetRank(parameters.User) != rank)
                     {
                         return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.RankRequirementNotGreaterThanOrEqual, rank.Name, rank.Amount, rankSystem.Name) + " " + string.Format(MixItUp.Base.Resources.RequirementCurrentAmount, currentRank)));
                     }
                 }
                 else if (this.MatchType == RankRequirementMatchTypeEnum.LessThanOrEqualTo)
                 {
-                    RankModel nextRank = rankSystem.GetNextRank(parameters.User.Data);
-                    if (nextRank != CurrencyModel.NoRank && rankSystem.HasAmount(parameters.User.Data, nextRank.Amount))
+                    RankModel nextRank = rankSystem.GetNextRank(parameters.User);
+                    if (nextRank != CurrencyModel.NoRank && rankSystem.HasAmount(parameters.User, nextRank.Amount))
                     {
                         return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.RankRequirementNotLessThan, rank.Name, rank.Amount, rankSystem.Name) + " " + string.Format(MixItUp.Base.Resources.RequirementCurrentAmount, currentRank)));
                     }

@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services.External;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
@@ -43,7 +44,7 @@ namespace MixItUp.Base.ViewModel.Services
                 this.AuthorizationInProgress = true;
                 Task.Run(async () =>
                 {
-                    Result result = await ChannelSession.Services.Twitter.Connect();
+                    Result result = await ServiceManager.Get<TwitterService>().Connect();
                     await DispatcherHelper.Dispatcher.InvokeAsync(async () =>
                     {
                         if (result.Success)
@@ -63,7 +64,7 @@ namespace MixItUp.Base.ViewModel.Services
 
             this.LogOutCommand = this.CreateCommand(async () =>
             {
-                await ChannelSession.Services.Twitter.Disconnect();
+                await ServiceManager.Get<TwitterService>().Disconnect();
 
                 ChannelSession.Settings.TwitterOAuthToken = null;
 
@@ -74,11 +75,11 @@ namespace MixItUp.Base.ViewModel.Services
             {
                 if (!string.IsNullOrEmpty(this.AuthorizationPin))
                 {
-                    ChannelSession.Services.Twitter.SetAuthPin(this.AuthorizationPin);
+                    ServiceManager.Get<TwitterService>().SetAuthPin(this.AuthorizationPin);
                 }
             });
 
-            this.IsConnected = ChannelSession.Services.Twitter.IsConnected;
+            this.IsConnected = ServiceManager.Get<TwitterService>().IsConnected;
         }
     }
 }

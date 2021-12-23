@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
@@ -12,6 +14,8 @@ namespace MixItUp.Base.ViewModel.Actions
 {
     public class TwitchActionEditorControlViewModel : SubActionContainerControlViewModel
     {
+        private const int PredictionTitleMaxLength = 45;
+
         public override ActionTypeEnum Type { get { return ActionTypeEnum.Twitch; } }
 
         public IEnumerable<TwitchActionType> ActionTypes { get { return EnumHelper.GetEnumList<TwitchActionType>(); } }
@@ -481,6 +485,11 @@ namespace MixItUp.Base.ViewModel.Actions
                     return new Result(MixItUp.Base.Resources.TwitchActionCreatePredictionMissingTitle);
                 }
 
+                if (this.PredictionTitle.Length > 45)
+                {
+                    return new Result(MixItUp.Base.Resources.TwitchActionPredictionTitleTooLong);
+                }
+
                 if (this.PredictionDurationSeconds <= 0)
                 {
                     return new Result(MixItUp.Base.Resources.TwitchActionCreatePredictionInvalidDuration);
@@ -496,7 +505,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override async Task OnLoadedInternal()
         {
-            foreach (CustomChannelPointRewardModel channelPoint in (await ChannelSession.TwitchUserConnection.GetCustomChannelPointRewards(ChannelSession.TwitchUserNewAPI)).OrderBy(c => c.title))
+            foreach (CustomChannelPointRewardModel channelPoint in (await ServiceManager.Get<TwitchSessionService>().UserConnection.GetCustomChannelPointRewards(ServiceManager.Get<TwitchSessionService>().User)).OrderBy(c => c.title))
             {
                 this.ChannelPointRewards.Add(channelPoint);
             }

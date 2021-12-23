@@ -1,5 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.ViewModel.Chat.Glimesh;
+using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.WPF.Services;
 using StreamingClient.Base.Util;
@@ -10,7 +12,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -53,6 +54,10 @@ namespace MixItUp.WPF.Controls.Chat
 
         public ChatImageControl(TwitchBitsCheerViewModel bitsCheer) : this() { this.DataContext = bitsCheer; }
 
+        public ChatImageControl(GlimeshChatEmoteViewModel emote) : this() { this.DataContext = emote; }
+
+        public ChatImageControl(TrovoChatEmoteViewModel emote) : this() { this.DataContext = emote; }
+
         private void ChatEmoteControl_Loaded(object sender, RoutedEventArgs e)
         {
             this.EmoticonControl_DataContextChanged(sender, new DependencyPropertyChangedEventArgs());
@@ -68,7 +73,6 @@ namespace MixItUp.WPF.Controls.Chat
                     {
                         TwitchChatEmoteViewModel emote = (TwitchChatEmoteViewModel)this.DataContext;
                         this.ProcessGifImage(emote.Name, emote.ImageURL);
-                        this.Image.ToolTip = this.AltText.Text = emote.Name;
                     }
                     else if (this.DataContext is BetterTTVEmoteModel)
                     {
@@ -79,33 +83,51 @@ namespace MixItUp.WPF.Controls.Chat
                         }
                         else
                         {
-                            this.Image.Source = await this.DownloadImageUrl(emote.url);
+                            await this.ProcessImage(emote.code, emote.url);
                         }
-                        this.Image.ToolTip = this.AltText.Text = emote.code;
                     }
                     else if (this.DataContext is FrankerFaceZEmoteModel)
                     {
                         FrankerFaceZEmoteModel emote = (FrankerFaceZEmoteModel)this.DataContext;
-                        this.Image.Source = await this.DownloadImageUrl(emote.url);
-                        this.Image.ToolTip = this.AltText.Text = emote.name;
+                        await this.ProcessImage(emote.name, emote.url);
                     }
                     else if (this.DataContext is TwitchBitsCheerViewModel)
                     {
                         TwitchBitsCheerViewModel bitsCheer = (TwitchBitsCheerViewModel)this.DataContext;
-                        this.Image.Source = await this.DownloadImageUrl((ChannelSession.AppSettings.IsDarkBackground) ? bitsCheer.Tier.DarkImage : bitsCheer.Tier.LightImage);
-                        this.Image.ToolTip = this.AltText.Text = bitsCheer.Text;
+                        await this.ProcessImage(bitsCheer.Text, (ChannelSession.AppSettings.IsDarkBackground) ? bitsCheer.Tier.DarkImage : bitsCheer.Tier.LightImage);
                         this.Text.Visibility = Visibility.Visible;
                         this.Text.Text = bitsCheer.Amount.ToString();
+                    }
+                    else if (this.DataContext is GlimeshChatEmoteViewModel)
+                    {
+                        GlimeshChatEmoteViewModel emote = (GlimeshChatEmoteViewModel)this.DataContext;
+                        if (this.IsGifImage(emote.Url))
+                        {
+                            this.ProcessGifImage(emote.Name, emote.Url);
+                        }
+                        else
+                        {
+                            this.SVGImage.Visibility = Visibility.Visible;
+                            this.SVGImage.ToolTip = this.AltText.Text = emote.Name;
+                            this.ResizeImage(this.SVGImage);
+                        }
+                    }
+                    else if (this.DataContext is TrovoChatEmoteViewModel)
+                    {
+                        TrovoChatEmoteViewModel emote = (TrovoChatEmoteViewModel)this.DataContext;
+                        if (emote.IsGif)
+                        {
+                            this.ProcessGifImage(emote.Name, emote.Url);
+                        }
+                        else
+                        {
+                            await this.ProcessImage(emote.Name, emote.Url);
+                        }
                     }
                     else if (this.DataContext is string)
                     {
                         string imageUrl = (string)this.DataContext;
-                        this.Image.Source = await this.DownloadImageUrl(imageUrl);
-                    }
-
-                    if (this.Image.Source != null)
-                    {
-                        this.Image.MaxWidth = this.Image.MaxHeight = this.Image.Width = this.Image.Height = ChannelSession.Settings.ChatFontSize * 2;
+                        await this.ProcessImage(imageUrl, imageUrl);
                     }
                 }
             }
@@ -142,12 +164,27 @@ namespace MixItUp.WPF.Controls.Chat
             return null;
         }
 
-        private void ProcessGifImage(string code, string url)
+        private bool IsGifImage(string url) { return url.Contains(".gif"); }
+
+        private async Task ProcessImage(string name, string url)
         {
-            this.GifImage.SetSize(ChannelSession.Settings.ChatFontSize * 2);
-            this.GifImage.DataContext = url;
-            this.GifImage.ToolTip = code;
-            this.GifImage.Visibility = Visibility.Visible;
+            this.Image.Source = await this.DownloadImageUrl(url);
+            this.Image.ToolTip = name;
+            this.ResizeImage(this.Image);
+
+            this.AltText.Text = name;
         }
+
+        private void ProcessGifImage(string name, string url)
+        {
+            this.GifImage.SetSize(ChannelSession.Settings.ChatFontSize * 2);       
+            this.GifImage.DataContext = url;
+            this.GifImage.ToolTip = name;
+            this.GifImage.Visibility = Visibility.Visible;
+
+            this.AltText.Text = name;
+        }
+
+        private void ResizeImage(Image image) { image.MaxWidth = image.MaxHeight = image.Width = image.Height = ChannelSession.Settings.ChatFontSize * 2; }
     }
 }

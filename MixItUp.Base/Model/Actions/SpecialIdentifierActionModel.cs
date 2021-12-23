@@ -1,7 +1,5 @@
-﻿using Jace;
-using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Util;
 using System;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
@@ -36,22 +34,11 @@ namespace MixItUp.Base.Model.Actions
             this.ShouldProcessMath = shouldProcessMath;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal SpecialIdentifierActionModel(MixItUp.Base.Actions.SpecialIdentifierAction action)
-            : base(ActionTypeEnum.SpecialIdentifier)
-        {
-            this.SpecialIdentifierName = action.SpecialIdentifierName;
-            this.ReplacementText = action.SpecialIdentifierReplacement;
-            this.MakeGloballyUsable = action.MakeGloballyUsable;
-            this.ShouldProcessMath = action.SpecialIdentifierShouldProcessMath;
-        }
-#pragma warning disable CS0612 // Type or member is obsolete
-
         private SpecialIdentifierActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            string replacementText = await this.ReplaceStringWithSpecialModifiers(this.ReplacementText, parameters);
+            string replacementText = await ReplaceStringWithSpecialModifiers(this.ReplacementText, parameters);
 
             replacementText = await this.ProcessStringFunction(replacementText, "removespaces", (text) => { return Task.FromResult(text.Replace(" ", string.Empty)); });
             replacementText = await this.ProcessStringFunction(replacementText, "removecommas", (text) => { return Task.FromResult(text.Replace(",", string.Empty)); });
@@ -59,6 +46,7 @@ namespace MixItUp.Base.Model.Actions
             replacementText = await this.ProcessStringFunction(replacementText, "toupper", (text) => { return Task.FromResult(text.ToUpper()); });
             replacementText = await this.ProcessStringFunction(replacementText, "length", (text) => { return Task.FromResult(text.Length.ToString()); });
             replacementText = await this.ProcessStringFunction(replacementText, "urlencode", (text) => { return Task.FromResult(HttpUtility.UrlEncode(text)); });
+            replacementText = await this.ProcessStringFunction(replacementText, "uriescape", (text) => { return Task.FromResult(Uri.EscapeDataString(text)); });
 
             if (this.ShouldProcessMath)
             {

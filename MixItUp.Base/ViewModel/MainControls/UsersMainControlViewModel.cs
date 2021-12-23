@@ -1,14 +1,16 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Platform;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -118,7 +120,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public bool IsRoleSearchFilterType { get { return this.SelectedSearchFilterType == UserSearchFilterTypeEnum.Role; } }
 
-        public IEnumerable<UserRoleEnum> UserRoleSearchFilters { get { return UserDataModel.GetSelectableUserRoles(); } }
+        public IEnumerable<UserRoleEnum> UserRoleSearchFilters { get { return UserRoles.All; } }
 
         public UserRoleEnum SelectedUserRoleSearchFilter
         {
@@ -224,7 +226,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public bool IsCustomSettingsSearchFilterType { get { return this.SelectedSearchFilterType == UserSearchFilterTypeEnum.CustomSettings; } }
 
-        public ThreadSafeObservableCollection<UserDataModel> Users { get; private set; } = new ThreadSafeObservableCollection<UserDataModel>();
+        public ThreadSafeObservableCollection<UserV2ViewModel> Users { get; private set; } = new ThreadSafeObservableCollection<UserV2ViewModel>();
 
         public int SortColumnIndex
         {
@@ -249,12 +251,16 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             this.ExportDataCommand = this.CreateCommand(async () =>
             {
-                string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog("User Data.txt");
+                string filePath = ServiceManager.Get<IFileService>().ShowSaveFileDialog("User Data.txt");
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     List<List<string>> contents = new List<List<string>>();
 
-                    List<string> columns = new List<string>() { "MixItUpID", "TwitchID", "Username", "PrimaryRole", "ViewingMinutes", "OfflineViewingMinutes", "CustomTitle" };
+                    List<string> columns = new List<string>() { "MixItUpID" };
+                    StreamingPlatforms.ForEachPlatform((p) =>
+                    {
+                        columns.AddRange(new List<string>() { p.ToString() + "ID", p.ToString() + "Username" });
+                    });
                     foreach (var kvp in ChannelSession.Settings.Currency)
                     {
                         columns.Add(kvp.Value.Name.Replace(" ", ""));
@@ -263,15 +269,28 @@ namespace MixItUp.Base.ViewModel.MainControls
                     {
                         columns.Add(kvp.Value.Name.Replace(" ", ""));
                     }
-                    columns.AddRange(new List<string>() { "TotalStreamsWatched", "TotalAmountDonated", "TotalSubsGifted", "TotalSubsReceived", "TotalChatMessagesSent", "TotalTimesTagged",
+                    columns.AddRange(new List<string>() { "Minutes", "CustomTitle", "TotalStreamsWatched", "TotalAmountDonated", "TotalSubsGifted", "TotalSubsReceived", "TotalChatMessagesSent", "TotalTimesTagged",
                         "TotalCommandsRun", "TotalMonthsSubbed", "LastSeen" });
                     contents.Add(columns);
 
-                    await ChannelSession.Settings.LoadAllUserData();
-                    foreach (UserDataModel user in ChannelSession.Settings.UserData.Values.ToList())
+                    await ServiceManager.Get<UserService>().LoadAllUserData();
+                    foreach (UserV2Model u in ChannelSession.Settings.Users.Values.ToList())
                     {
-                        List<string> data = new List<string>() { user.ID.ToString(), user.TwitchID, user.Username, user.PrimaryRole.ToString(),
-                            user.ViewingMinutes.ToString(), user.OfflineViewingMinutes.ToString(), user.CustomTitle };
+                        UserV2ViewModel user = new UserV2ViewModel(u);
+
+                        List<string> data = new List<string>() { user.ID.ToString() };
+                        StreamingPlatforms.ForEachPlatform((p) =>
+                        {
+                            UserPlatformV2ModelBase platformUser = user.GetPlatformData<UserPlatformV2ModelBase>(p);
+                            if (platformUser != null)
+                            {
+                                columns.AddRange(new List<string>() { platformUser.ID, platformUser.Username });
+                            }
+                            else
+                            {
+                                columns.AddRange(new List<string>() { "", "", "" });
+                            }
+                        });
                         foreach (var kvp in ChannelSession.Settings.Currency)
                         {
                             data.Add(kvp.Value.GetAmount(user).ToString());
@@ -280,8 +299,8 @@ namespace MixItUp.Base.ViewModel.MainControls
                         {
                             data.Add(kvp.Value.GetAmount(user).ToString());
                         }
-                        data.AddRange(new List<string>() { user.TotalStreamsWatched.ToString(), user.TotalAmountDonated.ToString(), user.TotalSubsGifted.ToString(), user.TotalSubsReceived.ToString(),
-                            user.TotalChatMessageSent.ToString(), user.TotalTimesTagged.ToString(), user.TotalCommandsRun.ToString(), user.TotalMonthsSubbed.ToString(), user.LastSeen.ToFriendlyDateTimeString() });
+                        data.AddRange(new List<string>() { user.OnlineViewingMinutes.ToString(), user.CustomTitle, user.TotalStreamsWatched.ToString(), user.TotalAmountDonated.ToString(), user.TotalSubsGifted.ToString(), user.TotalSubsReceived.ToString(),
+                            user.TotalChatMessageSent.ToString(), user.TotalTimesTagged.ToString(), user.TotalCommandsRun.ToString(), user.TotalMonthsSubbed.ToString(), user.LastActivity.ToFriendlyDateTimeString() });
                         contents.Add(data);
                     }
 
@@ -318,19 +337,19 @@ namespace MixItUp.Base.ViewModel.MainControls
 
                 try
                 {
-                    await ChannelSession.Settings.LoadAllUserData();
+                    await ServiceManager.Get<UserService>().LoadAllUserData();
 
-                    IEnumerable<UserDataModel> data = ChannelSession.Settings.UserData.Values.ToList();
+                    IEnumerable<UserV2Model> data = ChannelSession.Settings.Users.Values.ToList();
                     if (!string.IsNullOrEmpty(this.UsernameFilter))
                     {
                         string filter = this.UsernameFilter.ToLower();
                         if (this.SelectedPlatform != StreamingPlatformTypeEnum.All)
                         {
-                            data = data.Where(u => u.Platform.HasFlag(this.SelectedPlatform) && u.Username != null && u.Username.Contains(filter, StringComparison.OrdinalIgnoreCase));
+                            data = data.Where(u => u.HasPlatformData(this.SelectedPlatform) && u.GetPlatformUsername(this.SelectedPlatform) != null && u.GetPlatformUsername(this.SelectedPlatform).Contains(filter, StringComparison.OrdinalIgnoreCase));
                         }
                         else
                         {
-                            data = data.Where(u => u.Username != null && u.Username.Contains(filter, StringComparison.OrdinalIgnoreCase));
+                            data = data.Where(u => u.GetPlatformUsername(ChannelSession.Settings.DefaultStreamingPlatform) != null && u.GetPlatformUsername(ChannelSession.Settings.DefaultStreamingPlatform).Contains(filter, StringComparison.OrdinalIgnoreCase));
                         }
                     }
 
@@ -338,21 +357,22 @@ namespace MixItUp.Base.ViewModel.MainControls
                     {
                         if (this.IsRoleSearchFilterType)
                         {
-                            data = data.Where(u => u.UserRoles.Contains(this.SelectedUserRoleSearchFilter));
+                            // TODO
+                            //data = data.Where(u => u.UserRoles.Contains(this.SelectedUserRoleSearchFilter));
                         }
                         else if (this.IsWatchTimeSearchFilterType && this.WatchTimeAmountSearchFilter > 0)
                         {
                             if (this.SelectedWatchTimeComparisonSearchFilter.Equals(GreaterThanAmountFilter))
                             {
-                                data = data.Where(u => u.ViewingMinutes > this.WatchTimeAmountSearchFilter);
+                                data = data.Where(u => u.OnlineViewingMinutes > this.WatchTimeAmountSearchFilter);
                             }
                             else if (this.SelectedWatchTimeComparisonSearchFilter.Equals(LessThanAmountFilter))
                             {
-                                data = data.Where(u => u.ViewingMinutes < this.WatchTimeAmountSearchFilter);
+                                data = data.Where(u => u.OnlineViewingMinutes < this.WatchTimeAmountSearchFilter);
                             }
                             else if (this.SelectedWatchTimeComparisonSearchFilter.Equals(EqualToAmountFilter))
                             {
-                                data = data.Where(u => u.ViewingMinutes == this.WatchTimeAmountSearchFilter);
+                                data = data.Where(u => u.OnlineViewingMinutes == this.WatchTimeAmountSearchFilter);
                             }
                         }
                         else if (this.IsConsumablesSearchFilterType && this.SelectedConsumablesSearchFilter != null && this.ConsumablesAmountSearchFilter > 0)
@@ -405,18 +425,24 @@ namespace MixItUp.Base.ViewModel.MainControls
                         }
                         else if (this.IsCustomSettingsSearchFilterType)
                         {
-                            data = data.Where(u => u.IsCurrencyRankExempt || u.CustomTitle != null || u.CustomCommandIDs.Count > 0 || u.EntranceCommandID != Guid.Empty);
+                            data = data.Where(u => u.IsSpecialtyExcluded || u.CustomTitle != null || u.CustomCommandIDs.Count > 0 || u.EntranceCommandID != Guid.Empty || !string.IsNullOrEmpty(u.Notes));
                         }
                     }
 
-                    if (this.SortColumnIndex == 0) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.Username) : data.OrderBy(u => u.Username); }
-                    else if (this.SortColumnIndex == 1) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.Platform) : data.OrderBy(u => u.Platform); }
-                    else if (this.SortColumnIndex == 2) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryRole) : data.OrderBy(u => u.PrimaryRole); }
-                    else if (this.SortColumnIndex == 3) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.ViewingMinutes) : data.OrderBy(u => u.ViewingMinutes); }
-                    else if (this.SortColumnIndex == 4) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryCurrency) : data.OrderBy(u => u.PrimaryCurrency); }
-                    else if (this.SortColumnIndex == 5) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryRankPoints) : data.OrderBy(u => u.PrimaryRankPoints); }
+                    // TODO
+                    //if (this.SortColumnIndex == 0) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.Username) : data.OrderBy(u => u.Username); }
+                    //else if (this.SortColumnIndex == 1) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.Platforms) : data.OrderBy(u => u.Platforms); }
+                    //else if (this.SortColumnIndex == 2) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryRole) : data.OrderBy(u => u.PrimaryRole); }
+                    //else if (this.SortColumnIndex == 3) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.OnlineViewingMinutes) : data.OrderBy(u => u.OnlineViewingMinutes); }
+                    //else if (this.SortColumnIndex == 4) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryCurrency) : data.OrderBy(u => u.PrimaryCurrency); }
+                    //else if (this.SortColumnIndex == 5) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryRankPoints) : data.OrderBy(u => u.PrimaryRankPoints); }
 
-                    this.Users.ClearAndAddRange(data);
+                    List<UserV2ViewModel> users = new List<UserV2ViewModel>();
+                    foreach (UserV2Model u in data)
+                    {
+                        users.Add(new UserV2ViewModel(u));
+                    }
+                    this.Users.ClearAndAddRange(users);
                 }
                 catch (Exception ex) { Logger.Log(ex); }
 
@@ -428,12 +454,12 @@ namespace MixItUp.Base.ViewModel.MainControls
             });
         }
 
-        public async Task DeleteUser(UserDataModel user)
+        public async Task DeleteUser(UserV2Model user)
         {
             if (await DialogHelper.ShowConfirmation(Resources.DeleteUserDataPrompt))
             {
-                ChannelSession.Settings.UserData.Remove(user.ID);
-                await ChannelSession.Services.User.RemoveActiveUserByID(user.ID);
+                ChannelSession.Settings.Users.Remove(user.ID);
+                await ServiceManager.Get<UserService>().RemoveActiveUser(user.ID);
             }
             this.RefreshUsers();
         }

@@ -55,16 +55,18 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.comparisionType = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged("IsValue2Definable");
+                this.NotifyPropertyChanged("IsNormalComparision");
                 this.NotifyPropertyChanged("IsBetweenOperatorSelected");
-                this.NotifyPropertyChanged("IsBetweenOperatorNotSelected");
+                this.NotifyPropertyChanged("IsRegexMatch");
             }
         }
         private ConditionalComparisionTypeEnum comparisionType;
 
         public bool IsValue2Definable { get { return this.ComparisionType != ConditionalComparisionTypeEnum.Replaced && this.ComparisionType != ConditionalComparisionTypeEnum.NotReplaced; } }
 
+        public bool IsNormalComparision { get { return !this.IsBetweenOperatorSelected && !this.IsRegexMatch; } }
         public bool IsBetweenOperatorSelected { get { return this.ComparisionType == ConditionalComparisionTypeEnum.Between; } }
-        public bool IsBetweenOperatorNotSelected { get { return !this.IsBetweenOperatorSelected; } }
+        public bool IsRegexMatch { get { return this.ComparisionType == ConditionalComparisionTypeEnum.RegexMatch; } }
 
         public string Value1
         {

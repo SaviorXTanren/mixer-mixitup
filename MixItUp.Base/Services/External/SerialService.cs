@@ -6,14 +6,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.External
 {
-    public interface ISerialService
-    {
-        Task<IEnumerable<string>> GetCurrentPortNames();
-
-        Task SendMessage(SerialDeviceModel serialDevice, string message);
-    }
-
-    public class SerialService : ISerialService
+    public class SerialService
     {
         public Task<IEnumerable<string>> GetCurrentPortNames()
         {

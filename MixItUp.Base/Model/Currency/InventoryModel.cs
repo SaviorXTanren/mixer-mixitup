@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -119,7 +120,7 @@ namespace MixItUp.Base.Model.Currency
 
     public class InventoryTradeModel
     {
-        public UserViewModel User { get; set; }
+        public UserV2ViewModel User { get; set; }
         public InventoryItemModel Item { get; set; }
         public int Amount { get; set; }
     }
@@ -264,7 +265,7 @@ namespace MixItUp.Base.Model.Currency
             return null;
         }
 
-        public int GetAmount(UserDataModel user, InventoryItemModel item)
+        public int GetAmount(UserV2ViewModel user, InventoryItemModel item)
         {
             if (user.InventoryAmounts.ContainsKey(this.ID) && user.InventoryAmounts[this.ID].ContainsKey(item.ID))
             {
@@ -273,7 +274,7 @@ namespace MixItUp.Base.Model.Currency
             return 0;
         }
 
-        public int GetAmount(UserDataModel user, Guid itemID)
+        public int GetAmount(UserV2ViewModel user, Guid itemID)
         {
             if (this.ItemExists(itemID))
             {
@@ -282,7 +283,25 @@ namespace MixItUp.Base.Model.Currency
             return 0;
         }
 
-        public Dictionary<Guid, int> GetAmounts(UserDataModel user)
+        public int GetAmount(UserV2Model user, InventoryItemModel item)
+        {
+            if (user.InventoryAmounts.ContainsKey(this.ID) && user.InventoryAmounts[this.ID].ContainsKey(item.ID))
+            {
+                return user.InventoryAmounts[this.ID][item.ID];
+            }
+            return 0;
+        }
+
+        public int GetAmount(UserV2Model user, Guid itemID)
+        {
+            if (this.ItemExists(itemID))
+            {
+                return this.GetAmount(user, this.GetItem(itemID));
+            }
+            return 0;
+        }
+
+        public Dictionary<Guid, int> GetAmounts(UserV2Model user)
         {
             Dictionary<Guid, int> amounts = new Dictionary<Guid, int>();
             foreach (InventoryItemModel item in this.Items.Values)
@@ -292,7 +311,17 @@ namespace MixItUp.Base.Model.Currency
             return amounts;
         }
 
-        public bool HasAmount(UserDataModel user, Guid itemID, int amount)
+        public Dictionary<Guid, int> GetAmounts(UserV2ViewModel user)
+        {
+            Dictionary<Guid, int> amounts = new Dictionary<Guid, int>();
+            foreach (InventoryItemModel item in this.Items.Values)
+            {
+                amounts[item.ID] = this.GetAmount(user, item);
+            }
+            return amounts;
+        }
+
+        public bool HasAmount(UserV2ViewModel user, Guid itemID, int amount)
         {
             if (this.ItemExists(itemID))
             {
@@ -301,12 +330,12 @@ namespace MixItUp.Base.Model.Currency
             return false;
         }
 
-        public bool HasAmount(UserDataModel user, InventoryItemModel item, int amount)
+        public bool HasAmount(UserV2ViewModel user, InventoryItemModel item, int amount)
         {
-            return (user.IsCurrencyRankExempt || this.GetAmount(user, item) >= amount);
+            return (user.IsSpecialtyExcluded || this.GetAmount(user, item) >= amount);
         }
 
-        public void SetAmount(UserDataModel user, Guid itemID, int amount)
+        public void SetAmount(UserV2ViewModel user, Guid itemID, int amount)
         {
             if (this.ItemExists(itemID))
             {
@@ -314,7 +343,7 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public void SetAmount(UserDataModel user, InventoryItemModel item, int amount)
+        public void SetAmount(UserV2ViewModel user, InventoryItemModel item, int amount)
         {
             if (!user.InventoryAmounts.ContainsKey(this.ID))
             {
@@ -324,11 +353,11 @@ namespace MixItUp.Base.Model.Currency
 
             if (ChannelSession.Settings != null)
             {
-                ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+                ChannelSession.Settings.Users.ManualValueChanged(user.ID);
             }
         }
 
-        public void AddAmount(UserDataModel user, Guid itemID, int amount)
+        public void AddAmount(UserV2ViewModel user, Guid itemID, int amount)
         {
             if (this.ItemExists(itemID))
             {
@@ -336,15 +365,15 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public void AddAmount(UserDataModel user, InventoryItemModel item, int amount)
+        public void AddAmount(UserV2ViewModel user, InventoryItemModel item, int amount)
         {
-            if (!user.IsCurrencyRankExempt && amount > 0)
+            if (!user.IsSpecialtyExcluded && amount > 0)
             {
                 this.SetAmount(user, item, this.GetAmount(user, item) + amount);
             }
         }
 
-        public void SubtractAmount(UserDataModel user, Guid itemID, int amount)
+        public void SubtractAmount(UserV2ViewModel user, Guid itemID, int amount)
         {
             if (this.ItemExists(itemID))
             {
@@ -352,40 +381,40 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public void SubtractAmount(UserDataModel user, InventoryItemModel item, int amount)
+        public void SubtractAmount(UserV2ViewModel user, InventoryItemModel item, int amount)
         {
-            if (!user.IsCurrencyRankExempt)
+            if (!user.IsSpecialtyExcluded)
             {
                 this.SetAmount(user, item, this.GetAmount(user, item) - amount);
             }
         }
 
-        public void ResetAmount(UserDataModel user)
+        public void ResetAmount(UserV2ViewModel user)
         {
             user.InventoryAmounts[this.ID] = new Dictionary<Guid, int>();
-            ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+            ChannelSession.Settings.Users.ManualValueChanged(user.ID);
         }
 
         public async Task Reset()
         {
-            await ChannelSession.Settings.LoadAllUserData();
+            await ServiceManager.Get<UserService>().LoadAllUserData();
 
-            foreach (UserDataModel user in ChannelSession.Settings.UserData.Values.ToList())
+            foreach (UserV2Model user in ChannelSession.Settings.Users.Values.ToList())
             {
                 if (user.InventoryAmounts.ContainsKey(this.ID))
                 {
                     user.InventoryAmounts[this.ID] = new Dictionary<Guid, int>();
-                    ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+                    ChannelSession.Settings.Users.ManualValueChanged(user.ID);
                 }
             }
             await ChannelSession.SaveSettings();
         }
 
-        public async Task PerformShopCommand(UserViewModel user, IEnumerable<string> arguments = null, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None)
+        public async Task PerformShopCommand(UserV2ViewModel user, IEnumerable<string> arguments = null)
         {
             try
             {
-                if (ChannelSession.Services.Chat != null && ChannelSession.Settings.Currency.ContainsKey(this.ShopCurrencyID))
+                if (ChannelSession.Settings.Currency.ContainsKey(this.ShopCurrencyID))
                 {
                     CurrencyModel currency = ChannelSession.Settings.Currency[this.ShopCurrencyID];
 
@@ -397,7 +426,7 @@ namespace MixItUp.Base.Model.Currency
                             if (this.shopListCooldown > DateTimeOffset.Now)
                             {
                                 int totalSeconds = (int)Math.Ceiling((this.shopListCooldown - DateTimeOffset.Now).TotalSeconds);
-                                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.CooldownRequirementOnCooldown, totalSeconds));
+                                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.CooldownRequirementOnCooldown, totalSeconds), user.Platform);
                                 return;
                             }
                             this.shopListCooldown = DateTimeOffset.Now.AddSeconds(10);
@@ -410,7 +439,7 @@ namespace MixItUp.Base.Model.Currency
                                     items.Add(item.Name);
                                 }
                             }
-                            await ChannelSession.Services.Chat.SendMessage("Items Available to Buy/Sell: " + string.Join(", ", items));
+                            await ServiceManager.Get<ChatService>().SendMessage("Items Available to Buy/Sell: " + string.Join(", ", items), user.Platform);
                             return;
                         }
                         else if (arguments.Count() >= 2 &&
@@ -428,7 +457,7 @@ namespace MixItUp.Base.Model.Currency
                                 {
                                     if (!int.TryParse(arguments.Last(), out amount) || amount <= 0)
                                     {
-                                        await ChannelSession.Services.Chat.SendMessage("A valid amount greater than 0 must be specified");
+                                        await ServiceManager.Get<ChatService>().SendMessage("A valid amount greater than 0 must be specified", user.Platform);
                                         return;
                                     }
                                 }
@@ -436,7 +465,7 @@ namespace MixItUp.Base.Model.Currency
 
                             if (item == null)
                             {
-                                await ChannelSession.Services.Chat.SendMessage("The item you specified does not exist");
+                                await ServiceManager.Get<ChatService>().SendMessage("The item you specified does not exist", user.Platform);
                                 return;
                             }
 
@@ -447,28 +476,28 @@ namespace MixItUp.Base.Model.Currency
                                 if (item.HasBuyAmount)
                                 {
                                     int itemMaxAmount = (item.HasMaxAmount) ? item.MaxAmount : this.DefaultMaxAmount;
-                                    if ((this.GetAmount(user.Data, item) + amount) <= itemMaxAmount)
+                                    if ((this.GetAmount(user, item) + amount) <= itemMaxAmount)
                                     {
                                         totalcost = item.BuyAmount * amount;
-                                        if (currency.HasAmount(user.Data, totalcost))
+                                        if (currency.HasAmount(user, totalcost))
                                         {
-                                            currency.SubtractAmount(user.Data, totalcost);
-                                            this.AddAmount(user.Data, item, amount);
+                                            currency.SubtractAmount(user, totalcost);
+                                            this.AddAmount(user, item, amount);
                                             command = this.ItemsBoughtCommand;
                                         }
                                         else
                                         {
-                                            await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} {1} to purchase this item", totalcost, currency.Name));
+                                            await ServiceManager.Get<ChatService>().SendMessage(string.Format("You do not have the required {0} {1} to purchase this item", totalcost, currency.Name), user.Platform);
                                         }
                                     }
                                     else
                                     {
-                                        await ChannelSession.Services.Chat.SendMessage(string.Format("You can only have {0} {1} in total", itemMaxAmount, item.Name));
+                                        await ServiceManager.Get<ChatService>().SendMessage(string.Format("You can only have {0} {1} in total", itemMaxAmount, item.Name), user.Platform);
                                     }
                                 }
                                 else
                                 {
-                                    await ChannelSession.Services.Chat.SendMessage("This item is not available for buying");
+                                    await ServiceManager.Get<ChatService>().SendMessage("This item is not available for buying", user.Platform);
                                 }
                             }
                             else if (arg1.Equals("sell", StringComparison.InvariantCultureIgnoreCase))
@@ -476,25 +505,25 @@ namespace MixItUp.Base.Model.Currency
                                 if (item.HasSellAmount)
                                 {
                                     totalcost = item.SellAmount * amount;
-                                    if (this.HasAmount(user.Data, item, amount))
+                                    if (this.HasAmount(user, item, amount))
                                     {
-                                        this.SubtractAmount(user.Data, item, amount);
-                                        currency.AddAmount(user.Data, totalcost);
+                                        this.SubtractAmount(user, item, amount);
+                                        currency.AddAmount(user, totalcost);
                                         command = this.ItemsSoldCommand;
                                     }
                                     else
                                     {
-                                        await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} {1} to sell", amount, item.Name));
+                                        await ServiceManager.Get<ChatService>().SendMessage(string.Format("You do not have the required {0} {1} to sell", amount, item.Name), user.Platform);
                                     }
                                 }
                                 else
                                 {
-                                    await ChannelSession.Services.Chat.SendMessage("This item is not available for selling");
+                                    await ServiceManager.Get<ChatService>().SendMessage("This item is not available for selling", user.Platform);
                                 }
                             }
                             else
                             {
-                                await ChannelSession.Services.Chat.SendMessage("You must specify either \"buy\" & \"sell\"");
+                                await ServiceManager.Get<ChatService>().SendMessage("You must specify either \"buy\" & \"sell\"", user.Platform);
                             }
 
                             if (command != null)
@@ -504,7 +533,7 @@ namespace MixItUp.Base.Model.Currency
                                 specialIdentifiers["itemname"] = item.Name;
                                 specialIdentifiers["itemcost"] = totalcost.ToString();
                                 specialIdentifiers["currencyname"] = currency.Name;
-                                await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(user, arguments: arguments, specialIdentifiers: specialIdentifiers));
+                                await ServiceManager.Get<CommandService>().Queue(command, new CommandParametersModel(user, arguments: arguments, specialIdentifiers: specialIdentifiers));
                             }
                             return;
                         }
@@ -530,16 +559,16 @@ namespace MixItUp.Base.Model.Currency
                                         itemInfo.Append(string.Format("Sell = {0} {1}", item.SellAmount, currency.Name));
                                     }
 
-                                    await ChannelSession.Services.Chat.SendMessage(itemInfo.ToString());
+                                    await ServiceManager.Get<ChatService>().SendMessage(itemInfo.ToString(), user.Platform);
                                 }
                                 else
                                 {
-                                    await ChannelSession.Services.Chat.SendMessage("This item is not available to buy/sell");
+                                    await ServiceManager.Get<ChatService>().SendMessage("This item is not available to buy/sell", user.Platform);
                                 }
                             }
                             else
                             {
-                                await ChannelSession.Services.Chat.SendMessage("The item you specified does not exist");
+                                await ServiceManager.Get<ChatService>().SendMessage("The item you specified does not exist", user.Platform);
                             }
                             return;
                         }
@@ -550,24 +579,24 @@ namespace MixItUp.Base.Model.Currency
                     storeHelp.Append(this.ShopCommand + " <ITEM NAME> = Lists the buying/selling price for the item ** ");
                     storeHelp.Append(this.ShopCommand + " buy <ITEM NAME> [AMOUNT] = Buys 1 or the amount specified of the item ** ");
                     storeHelp.Append(this.ShopCommand + " sell <ITEM NAME> [AMOUNT] = Sells 1 or the amount specified of the item");
-                    await ChannelSession.Services.Chat.SendMessage(storeHelp.ToString());
+                    await ServiceManager.Get<ChatService>().SendMessage(storeHelp.ToString(), user.Platform);
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
         }
 
-        public async Task PerformTradeCommand(UserViewModel user, IEnumerable<string> arguments = null, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None)
+        public async Task PerformTradeCommand(UserV2ViewModel user, IEnumerable<string> arguments = null)
         {
             try
             {
-                if (ChannelSession.Services.Chat != null && arguments != null)
+                if (arguments != null)
                 {
                     if (this.tradeReceiver == null && arguments.Count() >= 2)
                     {
-                        UserViewModel targetUser = await ChannelSession.Services.User.GetUserFullSearch(platform, userID: null, arguments.First());
+                        UserV2ViewModel targetUser = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(user.Platform, arguments.First());
                         if (targetUser == null)
                         {
-                            await ChannelSession.Services.Chat.SendMessage("The specified user does not exist");
+                            await ServiceManager.Get<ChatService>().SendMessage("The specified user does not exist", user.Platform);
                             return;
                         }
 
@@ -583,7 +612,7 @@ namespace MixItUp.Base.Model.Currency
                             {
                                 if (!int.TryParse(arguments.Last(), out amount) || amount <= 0)
                                 {
-                                    await ChannelSession.Services.Chat.SendMessage("A valid amount greater than 0 must be specified");
+                                    await ServiceManager.Get<ChatService>().SendMessage("A valid amount greater than 0 must be specified", user.Platform);
                                     return;
                                 }
                             }
@@ -591,13 +620,13 @@ namespace MixItUp.Base.Model.Currency
 
                         if (item == null)
                         {
-                            await ChannelSession.Services.Chat.SendMessage("The item you specified does not exist");
+                            await ServiceManager.Get<ChatService>().SendMessage("The item you specified does not exist", user.Platform);
                             return;
                         }
 
-                        if (!this.HasAmount(user.Data, item, amount))
+                        if (!this.HasAmount(user, item, amount))
                         {
-                            await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} {1} to trade", amount, item.Name));
+                            await ServiceManager.Get<ChatService>().SendMessage(string.Format("You do not have the required {0} {1} to trade", amount, item.Name), user.Platform);
                             return;
                         }
 
@@ -623,12 +652,12 @@ namespace MixItUp.Base.Model.Currency
                                 this.tradeSender = null;
                                 this.tradeReceiver = null;
                                 this.tradeTimeCheckToken = null;
-                                await ChannelSession.Services.Chat.SendMessage("The trade could not be completed in time and was cancelled...");
+                                await ServiceManager.Get<ChatService>().SendMessage("The trade could not be completed in time and was cancelled...", user.Platform);
                             }
                         }, this.tradeTimeCheckToken.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                        await ChannelSession.Services.Chat.SendMessage(string.Format("@{0} has started a trade with @{1} for {2} {3}. Type {4} <ITEM NAME> [AMOUNT] in chat to reply back with your offer in the next 60 seconds.", this.tradeSender.User.Username, this.tradeReceiver.User.Username, this.tradeSender.Amount, this.tradeSender.Item.Name, this.TradeCommand));
+                        await ServiceManager.Get<ChatService>().SendMessage(string.Format("@{0} has started a trade with @{1} for {2} {3}. Type {4} <ITEM NAME> [AMOUNT] in chat to reply back with your offer in the next 60 seconds.", this.tradeSender.User.Username, this.tradeReceiver.User.Username, this.tradeSender.Amount, this.tradeSender.Item.Name, this.TradeCommand), this.tradeSender.User.Platform);
                         return;
                     }
                     else if (this.tradeSender != null && this.tradeReceiver != null && this.tradeReceiver.User.Equals(user) && this.tradeReceiver.Amount == 0 && arguments.Count() >= 1)
@@ -645,7 +674,7 @@ namespace MixItUp.Base.Model.Currency
                             {
                                 if (!int.TryParse(arguments.Last(), out amount) || amount <= 0)
                                 {
-                                    await ChannelSession.Services.Chat.SendMessage("A valid amount greater than 0 must be specified");
+                                    await ServiceManager.Get<ChatService>().SendMessage("A valid amount greater than 0 must be specified", user.Platform);
                                     return;
                                 }
                             }
@@ -653,43 +682,43 @@ namespace MixItUp.Base.Model.Currency
 
                         if (item == null)
                         {
-                            await ChannelSession.Services.Chat.SendMessage("The item you specified does not exist");
+                            await ServiceManager.Get<ChatService>().SendMessage("The item you specified does not exist", user.Platform);
                             return;
                         }
 
-                        if (!this.HasAmount(user.Data, item, amount))
+                        if (!this.HasAmount(user, item, amount))
                         {
-                            await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} {1} to trade", amount, item.Name));
+                            await ServiceManager.Get<ChatService>().SendMessage(string.Format("You do not have the required {0} {1} to trade", amount, item.Name), user.Platform);
                             return;
                         }
 
                         this.tradeReceiver.Item = item;
                         this.tradeReceiver.Amount = amount;
 
-                        await ChannelSession.Services.Chat.SendMessage(string.Format("@{0} has replied back to the offer by @{1} with {2} {3}. Type {4} in chat to accept the trade.", this.tradeReceiver.User.Username, this.tradeSender.User.Username, this.tradeReceiver.Amount, this.tradeReceiver.Item.Name, this.TradeCommand));
+                        await ServiceManager.Get<ChatService>().SendMessage(string.Format("@{0} has replied back to the offer by @{1} with {2} {3}. Type {4} in chat to accept the trade.", this.tradeReceiver.User.Username, this.tradeSender.User.Username, this.tradeReceiver.Amount, this.tradeReceiver.Item.Name, this.TradeCommand), user.Platform);
                         return;
                     }
                     else if (this.tradeSender != null && this.tradeReceiver != null && this.tradeReceiver.Amount > 0 && this.tradeSender.User.Equals(user))
                     {
                         int senderItemMaxAmount = (this.tradeReceiver.Item.HasMaxAmount) ? this.tradeReceiver.Item.MaxAmount : this.DefaultMaxAmount;
-                        if ((this.GetAmount(this.tradeSender.User.Data, this.tradeReceiver.Item) + this.tradeReceiver.Amount) > senderItemMaxAmount)
+                        if ((this.GetAmount(this.tradeSender.User, this.tradeReceiver.Item) + this.tradeReceiver.Amount) > senderItemMaxAmount)
                         {
-                            await ChannelSession.Services.Chat.SendMessage(string.Format("You can only have {0} {1} in total", senderItemMaxAmount, this.tradeReceiver.Item.Name));
+                            await ServiceManager.Get<ChatService>().SendMessage(string.Format("You can only have {0} {1} in total", senderItemMaxAmount, this.tradeReceiver.Item.Name), this.tradeReceiver.User.Platform);
                             return;
                         }
 
                         int receiverItemMaxAmount = (this.tradeSender.Item.HasMaxAmount) ? this.tradeSender.Item.MaxAmount : this.DefaultMaxAmount;
-                        if ((this.GetAmount(this.tradeReceiver.User.Data, this.tradeSender.Item) + this.tradeSender.Amount) > receiverItemMaxAmount)
+                        if ((this.GetAmount(this.tradeReceiver.User, this.tradeSender.Item) + this.tradeSender.Amount) > receiverItemMaxAmount)
                         {
-                            await ChannelSession.Services.Chat.SendMessage(string.Format("You can only have {0} {1} in total", receiverItemMaxAmount, this.tradeSender.Item.Name));
+                            await ServiceManager.Get<ChatService>().SendMessage(string.Format("You can only have {0} {1} in total", receiverItemMaxAmount, this.tradeSender.Item.Name), this.tradeSender.User.Platform);
                             return;
                         }
 
-                        this.SubtractAmount(this.tradeSender.User.Data, this.tradeSender.Item, this.tradeSender.Amount);
-                        this.AddAmount(this.tradeReceiver.User.Data, this.tradeSender.Item, this.tradeSender.Amount);
+                        this.SubtractAmount(this.tradeSender.User, this.tradeSender.Item, this.tradeSender.Amount);
+                        this.AddAmount(this.tradeReceiver.User, this.tradeSender.Item, this.tradeSender.Amount);
 
-                        this.SubtractAmount(this.tradeReceiver.User.Data, this.tradeReceiver.Item, this.tradeReceiver.Amount);
-                        this.AddAmount(this.tradeSender.User.Data, this.tradeReceiver.Item, this.tradeReceiver.Amount);
+                        this.SubtractAmount(this.tradeReceiver.User, this.tradeReceiver.Item, this.tradeReceiver.Amount);
+                        this.AddAmount(this.tradeSender.User, this.tradeReceiver.Item, this.tradeReceiver.Amount);
 
                         if (this.ItemsTradedCommand != null)
                         {
@@ -698,7 +727,7 @@ namespace MixItUp.Base.Model.Currency
                             specialIdentifiers["itemname"] = this.tradeSender.Item.Name;
                             specialIdentifiers["targetitemtotal"] = this.tradeReceiver.Amount.ToString();
                             specialIdentifiers["targetitemname"] = this.tradeReceiver.Item.Name;
-                            await ChannelSession.Services.Command.Queue(this.ItemsTradedCommand, new CommandParametersModel(user, arguments: new string[] { this.tradeReceiver.User.Username }, specialIdentifiers: specialIdentifiers));
+                            await ServiceManager.Get<CommandService>().Queue(this.ItemsTradedCommand, new CommandParametersModel(user, arguments: new string[] { this.tradeReceiver.User.Username }, specialIdentifiers: specialIdentifiers));
                         }
 
                         this.tradeSender = null;
@@ -710,11 +739,11 @@ namespace MixItUp.Base.Model.Currency
                     }
                     else if (this.tradeSender != null && this.tradeReceiver != null && !this.tradeReceiver.User.Equals(user))
                     {
-                        await ChannelSession.Services.Chat.SendMessage("A trade is already underway, please wait until it is completed");
+                        await ServiceManager.Get<ChatService>().SendMessage("A trade is already underway, please wait until it is completed", user.Platform);
                         return;
                     }
                 }
-                await ChannelSession.Services.Chat.SendMessage(this.TradeCommand + " <USERNAME> <ITEM NAME> [AMOUNT] = Trades 1 or the amount specified of the item to the specified user");
+                await ServiceManager.Get<ChatService>().SendMessage(this.TradeCommand + " <USERNAME> <ITEM NAME> [AMOUNT] = Trades 1 or the amount specified of the item to the specified user", user.Platform);
             }
             catch (Exception ex) { Logger.Log(ex); }
         }

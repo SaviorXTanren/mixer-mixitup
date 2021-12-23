@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
 using StreamingClient.Base.Util;
@@ -110,7 +111,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 foreach (CommandInstanceViewModel commandInstance in this.GetSelectedCommandInstances())
                 {
-                    ChannelSession.Services.Command.Cancel(commandInstance.Model);
+                    ServiceManager.Get<CommandService>().Cancel(commandInstance.Model);
                     commandInstance.IsSelected = false;
                 }
                 this.ResetSelectedState();
@@ -120,13 +121,13 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 foreach (CommandInstanceViewModel commandInstance in this.GetSelectedCommandInstances())
                 {
-                    await ChannelSession.Services.Command.Replay(commandInstance.Model);
+                    await ServiceManager.Get<CommandService>().Replay(commandInstance.Model);
                     commandInstance.IsSelected = false;
                 }
                 this.ResetSelectedState();
             });
 
-            ChannelSession.Services.Command.OnCommandInstanceAdded += Command_OnCommandInstanceAdded;
+            ServiceManager.Get<CommandService>().OnCommandInstanceAdded += Command_OnCommandInstanceAdded;
 
             this.RefreshList();
         }
@@ -141,7 +142,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public void RefreshList()
         {
-            IEnumerable<CommandInstanceModel> commandInstances = ChannelSession.Services.Command.CommandInstances;
+            IEnumerable<CommandInstanceModel> commandInstances = ServiceManager.Get<CommandService>().CommandInstances;
 
             commandInstances = commandInstances.Where(c => c.ShowInUI);
 

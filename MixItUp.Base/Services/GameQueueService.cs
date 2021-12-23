@@ -10,44 +10,15 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public interface IGameQueueService
-    {
-        IEnumerable<UserViewModel> Queue { get; }
-
-        bool IsEnabled { get; }
-
-        Task Enable();
-        Task Disable();
-
-        Task Join(UserViewModel user);
-        Task JoinFront(UserViewModel user);
-
-        Task Leave(UserViewModel user);
-
-        Task MoveUp(UserViewModel user);
-        Task MoveDown(UserViewModel user);
-
-        Task SelectFirst();
-        Task SelectFirstType(RoleRequirementModel roleRequirement);
-        Task SelectRandom();
-
-        int GetUserPosition(UserViewModel user);
-        Task PrintUserPosition(UserViewModel user);
-
-        Task PrintStatus();
-
-        Task Clear();
-    }
-
-    public class GameQueueService : IGameQueueService
+    public class GameQueueService
     {
         private const string QueuePositionSpecialIdentifier = "queueposition";
 
-        private LockedList<UserViewModel> queue = new LockedList<UserViewModel>();
+        private LockedList<UserV2ViewModel> queue = new LockedList<UserV2ViewModel>();
 
         public GameQueueService() { }
 
-        public IEnumerable<UserViewModel> Queue { get { return this.queue.ToList(); } }
+        public IEnumerable<UserV2ViewModel> Queue { get { return this.queue.ToList(); } }
 
         public bool IsEnabled { get; private set; }
 
@@ -63,15 +34,15 @@ namespace MixItUp.Base.Services
             await this.Clear();
         }
 
-        public async Task Join(UserViewModel user)
+        public async Task Join(UserV2ViewModel user)
         {
             if (await this.ValidateJoin(user))
             {
                 if (ChannelSession.Settings.GameQueueSubPriority)
                 {
-                    if (user.HasPermissionsTo(UserRoleEnum.Subscriber))
+                    if (user.MeetsRole(UserRoleEnum.Subscriber))
                     {
-                        int totalSubs = this.Queue.Count(u => u.HasPermissionsTo(UserRoleEnum.Subscriber));
+                        int totalSubs = this.Queue.Count(u => u.MeetsRole(UserRoleEnum.Subscriber));
                         this.queue.Insert(totalSubs, user);
                     }
                     else
@@ -85,62 +56,62 @@ namespace MixItUp.Base.Services
                 }
 
                 int position = this.queue.IndexOf(user);
-                await ChannelSession.Services.Command.Queue(ChannelSession.Settings.GameQueueUserJoinedCommandID, new CommandParametersModel(user, new Dictionary<string, string>() { { QueuePositionSpecialIdentifier, this.GetUserPosition(user).ToString() } }));
+                await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GameQueueUserJoinedCommandID, new CommandParametersModel(user, new Dictionary<string, string>() { { QueuePositionSpecialIdentifier, this.GetUserPosition(user).ToString() } }));
             }
             GlobalEvents.GameQueueUpdated();
         }
 
-        public async Task JoinFront(UserViewModel user)
+        public async Task JoinFront(UserV2ViewModel user)
         {
             if (await this.ValidateJoin(user))
             {
                 this.queue.Insert(0, user);
-                await ChannelSession.Services.Command.Queue(ChannelSession.Settings.GameQueueUserJoinedCommandID, new CommandParametersModel(user, new Dictionary<string, string>() { { QueuePositionSpecialIdentifier, this.GetUserPosition(user).ToString() } }));
+                await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GameQueueUserJoinedCommandID, new CommandParametersModel(user, new Dictionary<string, string>() { { QueuePositionSpecialIdentifier, this.GetUserPosition(user).ToString() } }));
             }
             GlobalEvents.GameQueueUpdated();
         }
 
-        public Task Leave(UserViewModel user)
+        public Task Leave(UserV2ViewModel user)
         {
             this.queue.Remove(user);
             GlobalEvents.GameQueueUpdated();
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
-        public Task MoveUp(UserViewModel user)
+        public Task MoveUp(UserV2ViewModel user)
         {
             this.queue.MoveUp(user);
             GlobalEvents.GameQueueUpdated();
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
-        public Task MoveDown(UserViewModel user)
+        public Task MoveDown(UserV2ViewModel user)
         {
             this.queue.MoveDown(user);
             GlobalEvents.GameQueueUpdated();
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public async Task SelectFirst()
         {
             if (this.queue.Count > 0)
             {
-                UserViewModel user = this.queue.ElementAt(0);
+                UserV2ViewModel user = this.queue.ElementAt(0);
                 this.queue.Remove(user);
-                await ChannelSession.Services.Command.Queue(ChannelSession.Settings.GameQueueUserSelectedCommandID, new CommandParametersModel(user));
+                await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GameQueueUserSelectedCommandID, new CommandParametersModel(user));
                 GlobalEvents.GameQueueUpdated();
             }
         }
 
         public async Task SelectFirstType(RoleRequirementModel roleRequirement)
         {
-            foreach (UserViewModel user in this.queue.ToList())
+            foreach (UserV2ViewModel user in this.queue.ToList())
             {
                 Result result = await roleRequirement.Validate(new CommandParametersModel(user));
                 if (result.Success)
                 {
                     this.queue.Remove(user);
-                    await ChannelSession.Services.Command.Queue(ChannelSession.Settings.GameQueueUserSelectedCommandID, new CommandParametersModel(user));
+                    await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GameQueueUserSelectedCommandID, new CommandParametersModel(user));
                     GlobalEvents.GameQueueUpdated();
                     return;
                 }
@@ -153,33 +124,33 @@ namespace MixItUp.Base.Services
             if (this.queue.Count > 0)
             {
                 int index = RandomHelper.GenerateRandomNumber(this.queue.Count());
-                UserViewModel user = this.queue.ElementAt(index);
+                UserV2ViewModel user = this.queue.ElementAt(index);
                 this.queue.Remove(user);
-                await ChannelSession.Services.Command.Queue(ChannelSession.Settings.GameQueueUserSelectedCommandID, new CommandParametersModel(user));
+                await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GameQueueUserSelectedCommandID, new CommandParametersModel(user));
                 GlobalEvents.GameQueueUpdated();
             }
         }
 
-        public int GetUserPosition(UserViewModel user)
+        public int GetUserPosition(UserV2ViewModel user)
         {
             int position = this.queue.IndexOf(user);
             return (position != -1) ? position + 1 : position;
         }
 
-        public async Task PrintUserPosition(UserViewModel user)
+        public async Task PrintUserPosition(UserV2ViewModel user)
         {
             int position = this.GetUserPosition(user);
             if (position != -1)
             {
-                await ChannelSession.Services.Chat.SendMessage(string.Format("You are #{0} in the queue to play", position));
+                await ServiceManager.Get<ChatService>().SendMessage(string.Format("You are #{0} in the queue to play", position), user.Platform);
             }
             else
             {
-                await ChannelSession.Services.Chat.SendMessage("You are not currently in the queue to play");
+                await ServiceManager.Get<ChatService>().SendMessage("You are not currently in the queue to play", user.Platform);
             }
         }
 
-        public async Task PrintStatus()
+        public async Task PrintStatus(CommandParametersModel parameters)
         {
             StringBuilder message = new StringBuilder();
             message.Append(string.Format("There are currently {0} waiting to play.", this.queue.Count()));
@@ -198,22 +169,22 @@ namespace MixItUp.Base.Services
                 message.Append(".");
             }
 
-            await ChannelSession.Services.Chat.SendMessage(message.ToString());
+            await ServiceManager.Get<ChatService>().SendMessage(message.ToString(), parameters.Platform);
         }
 
         public Task Clear()
         {
             this.queue.Clear();
             GlobalEvents.GameQueueUpdated();
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
-        private async Task<bool> ValidateJoin(UserViewModel user)
+        private async Task<bool> ValidateJoin(UserV2ViewModel user)
         {
             int position = this.GetUserPosition(user);
             if (position != -1)
             {
-                await ChannelSession.Services.Chat.SendMessage(string.Format("You are already #{0} in the queue", position));
+                await ServiceManager.Get<ChatService>().SendMessage(string.Format("You are already #{0} in the queue", position), user.Platform);
                 return false;
             }
             return true;

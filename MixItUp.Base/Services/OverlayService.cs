@@ -12,37 +12,12 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public interface IOverlayService : IExternalService
-    {
-        event EventHandler OnOverlayConnectedOccurred;
-        event EventHandler<WebSocketCloseStatus> OnOverlayDisconnectedOccurred;
-
-        string DefaultOverlayName { get; }
-        int DefaultOverlayPort { get; }
-
-        IDictionary<string, int> AllOverlayNameAndPorts { get; }
-
-        Task<bool> AddOverlay(string name, int port);
-
-        Task RemoveOverlay(string name);
-
-        IOverlayEndpointService GetOverlay(string name);
-
-        IEnumerable<string> GetOverlayNames();
-
-        Task<int> TestConnections();
-
-        void StartBatching();
-
-        Task EndBatching();
-    }
-
-    public class OverlayService : IOverlayService, IDisposable
+    public class OverlayService : IExternalService, IDisposable
     {
         public event EventHandler OnOverlayConnectedOccurred = delegate { };
         public event EventHandler<WebSocketCloseStatus> OnOverlayDisconnectedOccurred = delegate { };
 
-        private Dictionary<string, IOverlayEndpointService> overlays = new Dictionary<string, IOverlayEndpointService>();
+        private Dictionary<string, OverlayEndpointService> overlays = new Dictionary<string, OverlayEndpointService>();
 
         private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
@@ -60,7 +35,7 @@ namespace MixItUp.Base.Services
             get
             {
                 Dictionary<string, int> results = new Dictionary<string, int>(ChannelSession.Settings.OverlayCustomNameAndPorts);
-                results.Add(ChannelSession.Services.Overlay.DefaultOverlayName, ChannelSession.Services.Overlay.DefaultOverlayPort);
+                results.Add(ServiceManager.Get<OverlayService>().DefaultOverlayName, ServiceManager.Get<OverlayService>().DefaultOverlayPort);
                 return results;
             }
         }
@@ -87,7 +62,7 @@ namespace MixItUp.Base.Services
 
                 this.IsConnected = true;
                 ChannelSession.Settings.EnableOverlay = true;
-                ChannelSession.Services.Telemetry.TrackService("Overlay");
+                ServiceManager.Get<ITelemetryService>().TrackService("Overlay");
                 return new Result();
             }
             catch (Exception ex)
@@ -110,7 +85,7 @@ namespace MixItUp.Base.Services
 
         public async Task<bool> AddOverlay(string name, int port)
         {
-            IOverlayEndpointService overlay = new OverlayEndpointService(name, port);
+            OverlayEndpointService overlay = new OverlayEndpointService(name, port);
             if (await overlay.Initialize())
             {
                 overlay.OnWebSocketConnectedOccurred += Overlay_OnWebSocketConnectedOccurred;
@@ -124,7 +99,7 @@ namespace MixItUp.Base.Services
 
         public async Task RemoveOverlay(string name)
         {
-            IOverlayEndpointService overlay = this.GetOverlay(name);
+            OverlayEndpointService overlay = this.GetOverlay(name);
             if (overlay != null)
             {
                 overlay.OnWebSocketConnectedOccurred -= Overlay_OnWebSocketConnectedOccurred;
@@ -135,7 +110,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public IOverlayEndpointService GetOverlay(string name)
+        public OverlayEndpointService GetOverlay(string name)
         {
             if (this.overlays.ContainsKey(name))
             {
@@ -152,7 +127,7 @@ namespace MixItUp.Base.Services
         public async Task<int> TestConnections()
         {
             int count = 0;
-            foreach (IOverlayEndpointService overlay in this.overlays.Values)
+            foreach (OverlayEndpointService overlay in this.overlays.Values)
             {
                 count += await overlay.TestConnection();
             }
@@ -161,7 +136,7 @@ namespace MixItUp.Base.Services
 
         public void StartBatching()
         {
-            foreach (IOverlayEndpointService overlay in this.overlays.Values)
+            foreach (OverlayEndpointService overlay in this.overlays.Values)
             {
                 overlay.StartBatching();
             }
@@ -169,7 +144,7 @@ namespace MixItUp.Base.Services
 
         public async Task EndBatching()
         {
-            foreach (IOverlayEndpointService overlay in this.overlays.Values)
+            foreach (OverlayEndpointService overlay in this.overlays.Values)
             {
                 await overlay.EndBatching();
             }
@@ -179,11 +154,11 @@ namespace MixItUp.Base.Services
         {
             token.ThrowIfCancellationRequested();
 
-            UserViewModel user = ChannelSession.GetCurrentUser();
+            UserV2ViewModel user = ChannelSession.User;
 
             foreach (var widgetGroup in ChannelSession.Settings.OverlayWidgets.GroupBy(ow => ow.OverlayName))
             {
-                IOverlayEndpointService overlay = this.GetOverlay(widgetGroup.Key);
+                OverlayEndpointService overlay = this.GetOverlay(widgetGroup.Key);
                 if (overlay != null)
                 {
                     overlay.StartBatching();
@@ -226,7 +201,7 @@ namespace MixItUp.Base.Services
 
         private async void Overlay_OnWebSocketConnectedOccurred(object sender, EventArgs e)
         {
-            IOverlayEndpointService overlay = (IOverlayEndpointService)sender;
+            OverlayEndpointService overlay = (OverlayEndpointService)sender;
             this.OnOverlayConnectedOccurred(overlay, new EventArgs());
 
             Logger.Log("Client connected to Overlay Endpoint - " + overlay.Name);
@@ -250,7 +225,7 @@ namespace MixItUp.Base.Services
 
         private void Overlay_OnWebSocketDisconnectedOccurred(object sender, WebSocketCloseStatus closeStatus)
         {
-            IOverlayEndpointService overlay = (IOverlayEndpointService)sender;
+            OverlayEndpointService overlay = (OverlayEndpointService)sender;
             this.OnOverlayDisconnectedOccurred(overlay, closeStatus);
 
             Logger.Log("Client disconnect from Overlay Endpoint - " + overlay.Name);

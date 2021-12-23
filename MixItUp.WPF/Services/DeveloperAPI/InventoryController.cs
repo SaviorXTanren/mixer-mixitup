@@ -1,15 +1,13 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.ViewModel.User;
-using MixItUp.API.Models;
+﻿using MixItUp.API.Models;
+using MixItUp.Base;
+using MixItUp.Base.Model.Currency;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web.Http;
 using System.Net.Http;
 using System.Net.Http.Formatting;
-using MixItUp.Base.Model.User;
-using MixItUp.Base.Model.Currency;
+using System.Web.Http;
 
 namespace MixItUp.WPF.Services.DeveloperAPI
 {

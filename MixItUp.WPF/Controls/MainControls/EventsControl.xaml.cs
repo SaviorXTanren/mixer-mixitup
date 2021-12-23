@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Controls.Commands;
@@ -7,6 +8,8 @@ using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Commands;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -25,7 +28,7 @@ namespace MixItUp.WPF.Controls.MainControls
         protected override Task InitializeInternal()
         {
             this.DataContext = this.viewModel = new EventsMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         private void NewEventCommandButton_Click(object sender, RoutedEventArgs e)
@@ -53,7 +56,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 EventCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<EventCommandModel>();
                 if (command != null)
                 {
-                    ChannelSession.Services.Command.EventCommands.Remove(command);
+                    ServiceManager.Get<CommandService>().EventCommands.Remove(command);
                     ChannelSession.Settings.RemoveCommand(command);
                     this.viewModel.RefreshCommands();
                     await ChannelSession.SaveSettings();
@@ -64,6 +67,19 @@ namespace MixItUp.WPF.Controls.MainControls
         private void Window_Closed(object sender, System.EventArgs e)
         {
             this.viewModel.RefreshCommands();
+        }
+
+        private void DataGrid_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            if (!e.Handled)
+            {
+                e.Handled = true;
+                var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
+                eventArg.RoutedEvent = UIElement.MouseWheelEvent;
+                eventArg.Source = sender;
+                var parent = ((Control)sender).Parent as UIElement;
+                parent.RaiseEvent(eventArg);
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using LinqToTwitter;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using StreamingClient.Base.Model.OAuth;
@@ -42,21 +43,10 @@ namespace MixItUp.Base.Services.External
             this.Links = new List<string>();
         }
 
-        public bool IsStreamTweet { get { return this.Links.Any(l => l.ToLower().Contains(string.Format("twitch.tv/{0}", ChannelSession.TwitchUserNewAPI.login.ToLower()))); } }
+        public bool IsStreamTweet { get { return this.Links.Any(l => l.ToLower().Contains(string.Format("twitch.tv/{0}", ServiceManager.Get<TwitchSessionService>().User.login.ToLower()))); } }
     }
 
-    public interface ITwitterService : IOAuthExternalService
-    {
-        void SetAuthPin(string pin);
-
-        Task<IEnumerable<Tweet>> GetLatestTweets();
-
-        Task<Result> SendTweet(string tweet, string imagePath = null);
-
-        Task<Result> UpdateName(string name);
-    }
-
-    public class TwitterService : OAuthExternalServiceBase, ITwitterService
+    public class TwitterService : OAuthExternalServiceBase
     {
         private const string ClientID = "gV0xMGKNgAaaqQ0XnR4JoX91U";
 
@@ -80,7 +70,7 @@ namespace MixItUp.Base.Services.External
                     CredentialStore = new InMemoryCredentialStore
                     {
                         ConsumerKey = TwitterService.ClientID,
-                        ConsumerSecret = ChannelSession.Services.Secrets.GetSecret("TwitterSecret"),
+                        ConsumerSecret = ServiceManager.Get<SecretsService>().GetSecret("TwitterSecret"),
                     },
                     GoToTwitterAuthorization = pageLink => ProcessHelper.LaunchLink(pageLink),
                     GetPin = () =>
@@ -116,7 +106,7 @@ namespace MixItUp.Base.Services.External
                     CredentialStore = new SingleUserInMemoryCredentialStore
                     {
                         ConsumerKey = TwitterService.ClientID,
-                        ConsumerSecret = ChannelSession.Services.Secrets.GetSecret("TwitterSecret"),
+                        ConsumerSecret = ServiceManager.Get<SecretsService>().GetSecret("TwitterSecret"),
 
                         AccessToken = token.accessToken,
                         AccessTokenSecret = token.refreshToken,
@@ -141,7 +131,7 @@ namespace MixItUp.Base.Services.External
         public override Task Disconnect()
         {
             this.token = null;
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public void SetAuthPin(string pin)
@@ -204,7 +194,7 @@ namespace MixItUp.Base.Services.External
                                 using (WebClient client = new WebClient())
                                 {
                                     var bytes = await Task.Run<byte[]>(async () => { return await client.DownloadDataTaskAsync(imagePath); });
-                                    string mediaType = $"image/" + ChannelSession.Services.Image.GetImageFormat(bytes);
+                                    string mediaType = $"image/" + ServiceManager.Get<IImageService>().GetImageFormat(bytes);
                                     Media media = await twitterCtx.UploadMediaAsync(bytes, mediaType, "tweet_image");
                                     mediaIds.Add(media.MediaID);
                                 }
@@ -274,7 +264,7 @@ namespace MixItUp.Base.Services.External
         protected override Task RefreshOAuthToken()
         {
             this.GetOAuthTokenCopy();
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         protected override void DisposeInternal()

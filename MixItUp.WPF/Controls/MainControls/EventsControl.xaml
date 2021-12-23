@@ -7,32 +7,59 @@
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <local:MainControlBase.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </local:MainControlBase.Resources>
-    
+
     <Grid Margin="10">
-        <DataGrid ItemsSource="{Binding EventCommands}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="{x:Static resx:Resources.Service}" Binding="{Binding Service}" IsReadOnly="True" Width="200" />
-                <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="240">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Grid HorizontalAlignment="Center">
-                                <Grid Visibility="{Binding IsNewCommand, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                    <Button x:Name="NewEventCommandButton" Click="NewEventCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}"/>
-                                </Grid>
-                                <Grid Visibility="{Binding IsExistingCommand, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                    <CommandsControls:CommandListingButtonsControl x:Name="CommandButtons" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
-                                </Grid>
-                            </Grid>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+        <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
+            <ItemsControl ItemsSource="{Binding EventCommandGroups}" HorizontalAlignment="Stretch">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="{StaticResource PrimaryHueDarkBrush}" BorderThickness="1">
+                            <Expander VerticalContentAlignment="Top" HorizontalContentAlignment="Stretch" Background="{StaticResource PrimaryHueMidBrush}">
+                                <Expander.Header>
+                                    <Grid Background="Transparent">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="20" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Image Grid.Column="0" Source="{Binding Image}" Visibility="{Binding ShowImage, Converter={StaticResource BooleanToVisibilityConverter}}" Height="24" Width="24" VerticalAlignment="Center" />
+                                        <MaterialDesign:PackIcon Grid.Column="0" Kind="{Binding PackIconName}" Visibility="{Binding ShowPackIcon, Converter={StaticResource BooleanToVisibilityConverter}}" Height="24" Width="24" VerticalAlignment="Center" Foreground="{StaticResource WhiteColor}" />
+
+                                        <TextBlock Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding Name}" Foreground="{StaticResource WhiteColor}" />
+                                    </Grid>
+                                </Expander.Header>
+
+                                <DataGrid ItemsSource="{Binding Commands}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" PreviewMouseWheel="DataGrid_PreviewMouseWheel">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="{x:Static resx:Resources.Service}" Binding="{Binding Service}" IsReadOnly="True" Width="200" />
+                                        <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                                        <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" MinWidth="230" Width="230">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Grid HorizontalAlignment="Center">
+                                                        <Grid Visibility="{Binding IsNewCommand, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                            <Button x:Name="NewEventCommandButton" Click="NewEventCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}"/>
+                                                        </Grid>
+                                                        <Grid Visibility="{Binding IsExistingCommand, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                            <CommandsControls:CommandListingButtonsControl x:Name="CommandButtons" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
+                                                        </Grid>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Expander>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </local:MainControlBase>

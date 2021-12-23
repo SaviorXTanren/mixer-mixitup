@@ -1,16 +1,13 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Model.Actions;
+﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Model.Store;
+using MixItUp.Base.Model.Webhooks;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
 using MixItUp.WPF.Controls.Commands;
-using MixItUp.WPF.Controls.Dialogs.CommunityCommands;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -74,6 +71,10 @@ namespace MixItUp.WPF.Windows.Commands
                 case CommandTypeEnum.StreamlootsCard:
                     this.editorDetailsControl = new StreamlootsCardCommandEditorDetailsControl();
                     this.viewModel = new StreamlootsCardCommandEditorWindowViewModel((StreamlootsCardCommandModel)existingCommand);
+                    break;
+                case CommandTypeEnum.Webhook:
+                    this.editorDetailsControl = new WebhookCommandEditorDetailsControl();
+                    this.viewModel = new WebhookCommandEditorWindowViewModel((WebhookCommandModel)existingCommand);
                     break;
                 case CommandTypeEnum.Custom:
                     this.editorDetailsControl = new CustomCommandEditorDetailsControl();
@@ -147,6 +148,16 @@ namespace MixItUp.WPF.Windows.Commands
                     break;
             }
             this.DataContext = this.ViewModel = this.viewModel;
+
+            this.ViewModel.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
+            this.ViewModel.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
+        }
+
+        public CommandEditorWindow(Webhook webhook)
+            : this()
+        {
+            this.editorDetailsControl = new WebhookCommandEditorDetailsControl();
+            this.DataContext = this.ViewModel = this.viewModel = new WebhookCommandEditorWindowViewModel(webhook);
 
             this.ViewModel.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
             this.ViewModel.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };

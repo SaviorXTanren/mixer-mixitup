@@ -1,6 +1,7 @@
 ﻿using MixItUp.API.Models;
 using MixItUp.Base;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -56,7 +57,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            AsyncRunner.RunAsyncBackground((cancellationToken) => ChannelSession.Services.Command.Queue(selectedCommand, new CommandParametersModel(user: null, arguments)), new CancellationToken());
+            AsyncRunner.RunAsyncBackground((cancellationToken) => ServiceManager.Get<CommandService>().Queue(selectedCommand, new CommandParametersModel(user: null, arguments)), new CancellationToken());
 
             return CommandFromCommandBase(selectedCommand, category);
         }
@@ -83,49 +84,49 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         private CommandModelBase FindCommand(Guid commandId, out string category)
         {
             category = null;
-            CommandModelBase command = ChannelSession.Services.Command.ChatCommands.SingleOrDefault(c => c.ID == commandId);
+            CommandModelBase command = ServiceManager.Get<CommandService>().ChatCommands.SingleOrDefault(c => c.ID == commandId);
             if (command !=null)
             {
                 category = "Chat";
                 return command;
             }
 
-            command = ChannelSession.Services.Command.EventCommands.SingleOrDefault(c => c.ID == commandId);
+            command = ServiceManager.Get<CommandService>().EventCommands.SingleOrDefault(c => c.ID == commandId);
             if (command != null)
             {
                 category = "Event";
                 return command;
             }
 
-            command = ChannelSession.Services.Command.TimerCommands.SingleOrDefault(c => c.ID == commandId);
+            command = ServiceManager.Get<CommandService>().TimerCommands.SingleOrDefault(c => c.ID == commandId);
             if (command != null)
             {
                 category = "Timer";
                 return command;
             }
 
-            command = ChannelSession.Services.Command.TwitchChannelPointsCommands.SingleOrDefault(c => c.ID == commandId);
+            command = ServiceManager.Get<CommandService>().TwitchChannelPointsCommands.SingleOrDefault(c => c.ID == commandId);
             if (command != null)
             {
                 category = "ChannelPoints";
                 return command;
             }
 
-            command = ChannelSession.Services.Command.ActionGroupCommands.SingleOrDefault(c => c.ID == commandId);
+            command = ServiceManager.Get<CommandService>().ActionGroupCommands.SingleOrDefault(c => c.ID == commandId);
             if (command != null)
             {
                 category = "ActionGroup";
                 return command;
             }
 
-            command = ChannelSession.Services.Command.GameCommands.SingleOrDefault(c => c.ID == commandId);
+            command = ServiceManager.Get<CommandService>().GameCommands.SingleOrDefault(c => c.ID == commandId);
             if (command != null)
             {
                 category = "Game";
                 return command;
             }
 
-            command = ChannelSession.Services.Command.PreMadeChatCommands.SingleOrDefault(c => c.ID == commandId);
+            command = ServiceManager.Get<CommandService>().PreMadeChatCommands.SingleOrDefault(c => c.ID == commandId);
             if (command != null)
             {
                 category = "Pre-Made";
@@ -138,13 +139,13 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         private List<Command> GetAllCommands()
         {
             List<Command> allCommands = new List<Command>();
-            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Services.Command.ChatCommands, "Chat"));
-            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Services.Command.EventCommands, "Event"));
-            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Services.Command.TimerCommands, "Timer"));
-            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Services.Command.TwitchChannelPointsCommands, "ChannelPoints"));
-            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Services.Command.ActionGroupCommands, "ActionGroup"));
-            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Services.Command.GameCommands, "Game"));
-            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Services.Command.PreMadeChatCommands, "Pre-Made"));
+            allCommands.AddRange(CommandsFromCommandBases(ServiceManager.Get<CommandService>().ChatCommands, "Chat"));
+            allCommands.AddRange(CommandsFromCommandBases(ServiceManager.Get<CommandService>().EventCommands, "Event"));
+            allCommands.AddRange(CommandsFromCommandBases(ServiceManager.Get<CommandService>().TimerCommands, "Timer"));
+            allCommands.AddRange(CommandsFromCommandBases(ServiceManager.Get<CommandService>().TwitchChannelPointsCommands, "ChannelPoints"));
+            allCommands.AddRange(CommandsFromCommandBases(ServiceManager.Get<CommandService>().ActionGroupCommands, "ActionGroup"));
+            allCommands.AddRange(CommandsFromCommandBases(ServiceManager.Get<CommandService>().GameCommands, "Game"));
+            allCommands.AddRange(CommandsFromCommandBases(ServiceManager.Get<CommandService>().PreMadeChatCommands, "Pre-Made"));
             return allCommands;
         }
 

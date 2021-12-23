@@ -123,26 +123,14 @@ namespace MixItUp.Base.Model.Actions
             this.Rate = rate;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal TextToSpeechActionModel(MixItUp.Base.Actions.TextToSpeechAction action)
-            : base(ActionTypeEnum.TextToSpeech)
-        {
-            this.Text = action.SpeechText;
-            this.Voice = action.Voice;
-            this.Volume = (int)(action.Volume * 100);
-            this.Pitch = (int)(action.Pitch * 100);
-            this.Rate = (int)(action.Rate * 100);
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private TextToSpeechActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            IOverlayEndpointService overlay = ChannelSession.Services.Overlay.GetOverlay(ChannelSession.Services.Overlay.DefaultOverlayName);
+            OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlay(ServiceManager.Get<OverlayService>().DefaultOverlayName);
             if (overlay != null)
             {
-                string message = await this.ReplaceStringWithSpecialModifiers(this.Text, parameters);
+                string message = await ReplaceStringWithSpecialModifiers(this.Text, parameters);
                 await overlay.SendTextToSpeech(new OverlayTextToSpeech() { Text = message, Voice = this.Voice, Volume = this.Volume / 100.0, Pitch = this.Pitch / 100.0, Rate = this.Rate / 100.0 });
             }
         }

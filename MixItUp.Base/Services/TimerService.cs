@@ -10,14 +10,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public interface ITimerService : IDisposable
-    {
-        Task Initialize();
-
-        Task RebuildTimerGroups();
-    }
-
-    public class TimerService : ITimerService
+    public class TimerService : IDisposable
     {
         private bool isInitialized = false;
 
@@ -59,7 +52,7 @@ namespace MixItUp.Base.Services
                     this.timerCommandGroups[kvp.Key] = new List<TimerCommandModel>();
                 }
 
-                IEnumerable<TimerCommandModel> timerCommands = ChannelSession.Services.Command.TimerCommands.ToList();
+                IEnumerable<TimerCommandModel> timerCommands = ServiceManager.Get<CommandService>().TimerCommands.ToList();
                 if (ChannelSession.Settings.RandomizeTimers)
                 {
                     timerCommands = timerCommands.Shuffle();
@@ -93,7 +86,7 @@ namespace MixItUp.Base.Services
                     this.timerCommandIndexes[kvp.Key] = 0;
                 }
 
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         }
 
@@ -140,7 +133,7 @@ namespace MixItUp.Base.Services
                         }
                     }
 
-                    return Task.FromResult(0);
+                    return Task.CompletedTask;
                 });
 
                 foreach (string timerGroupToRun in timerGroupsToRun)
@@ -159,7 +152,7 @@ namespace MixItUp.Base.Services
                     timerCommandIndexes[groupName] = 0;
                 }
 
-                await ChannelSession.Services.Command.Queue(this.timerCommandGroups[groupName].ElementAt(timerCommandIndexes[groupName]));
+                await ServiceManager.Get<CommandService>().Queue(this.timerCommandGroups[groupName].ElementAt(timerCommandIndexes[groupName]));
 
                 timerCommandIndexes[groupName]++;
             }

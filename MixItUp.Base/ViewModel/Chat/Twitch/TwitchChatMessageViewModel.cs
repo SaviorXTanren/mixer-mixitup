@@ -1,4 +1,7 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.User.Platform;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -11,36 +14,29 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
 {
     public class TwitchChatEmoteViewModel
     {
-        public ChatEmoteModel Emote { get; set; }
+        public string ID { get; private set; }
+        public string Code { get; private set; }
+        public string LightSmallImageUrl { get; private set; }
+        public string DarkSmallImageUrl { get; private set; }
+        public string LightLargeImageUrl { get; private set; }
+        public string DarkLargeImageUrl { get; private set; }
 
-        public string SimpleEmoteID { get; set; }
-        public string SimpleEmoteCode { get; set; }
-        public string SimpleEmoteURL { get { return $"https://static-cdn.jtvnw.net/emoticons/v1/{this.SimpleEmoteID}/1.0"; } }
+        public string Name { get { return this.Code; } }
+        public string ImageURL { get { return this.DarkLargeImageUrl; } }
 
-        public bool IsFullEmote { get { return this.Emote != null; } }
-
-        public string Name { get { return this.IsFullEmote ? this.Emote.name : this.SimpleEmoteCode; } }
-
-        public string ImageURL { get { return this.IsFullEmote ? this.V2DarkImageURL : this.SimpleEmoteURL; } }
-        public string DefaultImageURL { get { return this.IsFullEmote ? this.Emote.Size1URL : this.SimpleEmoteURL; } }
-        public string V2LightImageURL { get { return this.IsFullEmote ? this.BuildV2EmoteURL("light") : this.SimpleEmoteURL; } }
-        public string V2DarkImageURL { get { return this.IsFullEmote ? this.BuildV2EmoteURL("dark") : this.SimpleEmoteURL; } }
-
-        public TwitchChatEmoteViewModel(ChatEmoteModel emote)
-        {
-            this.Emote = emote;
-        }
+        public TwitchChatEmoteViewModel(ChatEmoteModel emote) : this(emote.id, emote.name) { }
 
         public TwitchChatEmoteViewModel(string emoteID, string emoteCode)
         {
-            this.SimpleEmoteID = emoteID;
-            this.SimpleEmoteCode = emoteCode;
+            this.ID = emoteID;
+            this.Code = emoteCode;
+            this.LightSmallImageUrl = this.BuildV2EmoteURL("light", 1.0);
+            this.DarkSmallImageUrl = this.BuildV2EmoteURL("dark", 1.0);
+            this.LightLargeImageUrl = this.BuildV2EmoteURL("light", 3.0);
+            this.DarkLargeImageUrl = this.BuildV2EmoteURL("dark", 3.0);
         }
 
-        private string BuildV2EmoteURL(string theme)
-        {
-            return $"https://static-cdn.jtvnw.net/emoticons/v2/{this.Emote.id}/default/{theme}/1.0";
-        }
+        private string BuildV2EmoteURL(string theme, double size) { return $"https://static-cdn.jtvnw.net/emoticons/v2/{this.ID}/default/{theme}/{size}"; }
     }
 
     public class TwitchBitsCheerViewModel
@@ -77,16 +73,19 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
         public bool IsHighlightedMessage { get; set; }
 
         public string WhisperThreadID { get; set; }
-        public UserViewModel WhisperRecipient { get; set; }
+        public UserV2ViewModel WhisperRecipient { get; set; }
 
         public string ReplyThreadID { get; set; }
 
         public string PlainTextMessageNoCheermotes { get; set; }
 
-        public TwitchChatMessageViewModel(ChatMessagePacketModel message, UserViewModel user)
+        public TwitchChatMessageViewModel(ChatMessagePacketModel message, UserV2ViewModel user)
             : base(message.ID, StreamingPlatformTypeEnum.Twitch, user)
         {
-            this.User.SetTwitchChatDetails(message);
+            if (this.User != null)
+            {
+                this.User.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).SetUserProperties(message);
+            }
 
             foreach (var kvp in message.EmotesDictionary)
             {
@@ -118,7 +117,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             }
         }
 
-        public TwitchChatMessageViewModel(PubSubWhisperEventModel whisper, UserViewModel user, UserViewModel recipient)
+        public TwitchChatMessageViewModel(PubSubWhisperEventModel whisper, UserV2ViewModel user, UserV2ViewModel recipient)
             : base(whisper.message_id, StreamingPlatformTypeEnum.Twitch, user)
         {
             this.WhisperThreadID = whisper.thread_id;
@@ -129,7 +128,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             this.ProcessMessageContents(whisper.body);
         }
 
-        public TwitchChatMessageViewModel(UserViewModel user, PubSubBitsEventV2Model bitsCheer)
+        public TwitchChatMessageViewModel(UserV2ViewModel user, PubSubBitsEventV2Model bitsCheer)
             : base(bitsCheer.message_id, StreamingPlatformTypeEnum.Twitch, user)
         {
             this.HasBits = true;
@@ -137,7 +136,13 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             this.ProcessMessageContents((!string.IsNullOrEmpty(bitsCheer.chat_message)) ? bitsCheer.chat_message : string.Empty);
         }
 
-        public TwitchChatMessageViewModel(UserViewModel user, string message, string replyMessageID = null)
+        public TwitchChatMessageViewModel(ChatClearMessagePacketModel messageDeletion, UserV2ViewModel user)
+            : base(messageDeletion.ID, StreamingPlatformTypeEnum.Twitch, user)
+        {
+            this.ProcessMessageContents(messageDeletion.Message);
+        }
+
+        public TwitchChatMessageViewModel(UserV2ViewModel user, string message, string replyMessageID = null)
             : base(string.Empty, StreamingPlatformTypeEnum.Twitch, user)
         {
             this.ReplyThreadID = replyMessageID;
@@ -155,7 +160,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                 foreach (string part in parts)
                 {
                     this.AddStringMessagePart(part);
-                    if (ChannelSession.Services.Chat.TwitchChatService != null)
+                    if (ServiceManager.Has<TwitchChatService>())
                     {
                         if (this.HasBits)
                         {
@@ -171,21 +176,21 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                             }
                         }
 
-                        if (ChannelSession.Services.Chat.TwitchChatService.Emotes.ContainsKey(part))
+                        if (ServiceManager.Get<TwitchChatService>().Emotes.ContainsKey(part))
                         {
-                            this.MessageParts[this.MessageParts.Count - 1] = ChannelSession.Services.Chat.TwitchChatService.Emotes[part];
+                            this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TwitchChatService>().Emotes[part];
                         }
                         else if (messageEmotesCache.ContainsKey(part))
                         {
                             this.MessageParts[this.MessageParts.Count - 1] = messageEmotesCache[part];
                         }
-                        else if (ChannelSession.Settings.ShowBetterTTVEmotes && ChannelSession.Services.Chat.TwitchChatService.BetterTTVEmotes.ContainsKey(part))
+                        else if (ChannelSession.Settings.ShowBetterTTVEmotes && ServiceManager.Get<TwitchChatService>().BetterTTVEmotes.ContainsKey(part))
                         {
-                            this.MessageParts[this.MessageParts.Count - 1] = ChannelSession.Services.Chat.TwitchChatService.BetterTTVEmotes[part];
+                            this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TwitchChatService>().BetterTTVEmotes[part];
                         }
-                        else if (ChannelSession.Settings.ShowFrankerFaceZEmotes && ChannelSession.Services.Chat.TwitchChatService.FrankerFaceZEmotes.ContainsKey(part))
+                        else if (ChannelSession.Settings.ShowFrankerFaceZEmotes && ServiceManager.Get<TwitchChatService>().FrankerFaceZEmotes.ContainsKey(part))
                         {
-                            this.MessageParts[this.MessageParts.Count - 1] = ChannelSession.Services.Chat.TwitchChatService.FrankerFaceZEmotes[part];
+                            this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TwitchChatService>().FrankerFaceZEmotes[part];
                         }
                     }
                 }
@@ -203,7 +208,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
 
         private TwitchBitsCheerViewModel GetBitCheermote(string part)
         {
-            foreach (TwitchBitsCheermoteViewModel cheermote in ChannelSession.Services.Chat.TwitchChatService.BitsCheermotes)
+            foreach (TwitchBitsCheermoteViewModel cheermote in ServiceManager.Get<TwitchChatService>().BitsCheermotes)
             {
                 if (part.StartsWith(cheermote.ID, StringComparison.InvariantCultureIgnoreCase) && int.TryParse(part.ToLower().Replace(cheermote.ID.ToLower(), ""), out int amount) && amount > 0)
                 {

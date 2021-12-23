@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -44,22 +45,11 @@ namespace MixItUp.Base.Model.Actions
             this.LineIndex = lineIndex;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal FileActionModel(MixItUp.Base.Actions.FileAction action)
-            : base(ActionTypeEnum.File)
-        {
-            this.ActionType = (FileActionTypeEnum)(int)action.FileActionType;
-            this.FilePath = action.FilePath;
-            this.TransferText = action.TransferText;
-            this.LineIndex = action.LineIndexToRead;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private FileActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            string filePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
+            string filePath = await ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
             filePath = filePath.ToFilePathString();
 
             string textToWrite = string.Empty;
@@ -84,7 +74,7 @@ namespace MixItUp.Base.Model.Actions
                 this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile ||
                 this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine || this.ActionType == FileActionTypeEnum.InsertInFileAtRandomLine)
             {
-                textToRead = await ChannelSession.Services.FileService.ReadFile(filePath);
+                textToRead = await ServiceManager.Get<IFileService>().ReadFile(filePath);
             }
 
             if (this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
@@ -100,7 +90,7 @@ namespace MixItUp.Base.Model.Actions
                 if (this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile ||
                     this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine)
                 {
-                    string lineToRead = await this.ReplaceStringWithSpecialModifiers(this.LineIndex, parameters);
+                    string lineToRead = await ReplaceStringWithSpecialModifiers(this.LineIndex, parameters);
                     if (!int.TryParse(lineToRead, out lineIndex))
                     {
                         return;
@@ -162,7 +152,7 @@ namespace MixItUp.Base.Model.Actions
                 this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile ||
                 this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine || this.ActionType == FileActionTypeEnum.InsertInFileAtRandomLine)
             {
-                await ChannelSession.Services.FileService.SaveFile(filePath, textToWrite);
+                await ServiceManager.Get<IFileService>().SaveFile(filePath, textToWrite);
             }
 
             if (this.ActionType == FileActionTypeEnum.AppendToFile)
@@ -171,14 +161,14 @@ namespace MixItUp.Base.Model.Actions
                 {
                     textToWrite = Environment.NewLine + textToWrite;
                 }
-                await ChannelSession.Services.FileService.AppendFile(filePath, textToWrite);
+                await ServiceManager.Get<IFileService>().AppendFile(filePath, textToWrite);
             }
         }
 
         private async Task<string> GetTextToSave(CommandParametersModel parameters)
         {
             string textToWrite = (!string.IsNullOrEmpty(this.TransferText)) ? this.TransferText : string.Empty;
-            return await this.ReplaceStringWithSpecialModifiers(textToWrite, parameters);
+            return await ReplaceStringWithSpecialModifiers(textToWrite, parameters);
         }
     }
 }

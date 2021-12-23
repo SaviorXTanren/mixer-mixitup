@@ -1,9 +1,11 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Actions
@@ -22,6 +24,7 @@ namespace MixItUp.Base.Model.Actions
         Between,
         Replaced,
         NotReplaced,
+        RegexMatch,
     }
 
     public enum ConditionalOperatorTypeEnum
@@ -87,25 +90,6 @@ namespace MixItUp.Base.Model.Actions
             this.Actions = new List<ActionModelBase>(actions);
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal ConditionalActionModel(MixItUp.Base.Actions.ConditionalAction action, ActionModelBase subAction)
-            : base(ActionTypeEnum.Conditional)
-        {
-            this.CaseSensitive = !action.IgnoreCase;
-            this.Operator = (ConditionalOperatorTypeEnum)(int)action.Operator;
-
-            foreach (var clause in action.Clauses)
-            {
-                this.Clauses.Add(new ConditionalClauseModel((ConditionalComparisionTypeEnum)(int)clause.ComparisionType, clause.Value1, clause.Value2, clause.Value3));
-            }
-
-            if (subAction != null)
-            {
-                this.Actions.Add(subAction);
-            }
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
-
         private ConditionalActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
@@ -135,15 +119,15 @@ namespace MixItUp.Base.Model.Actions
 
                 if (finalResult)
                 {
-                    await ChannelSession.Services.Command.RunDirectly(new CommandInstanceModel(this.Actions, parameters));
+                    await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(this.Actions, parameters));
                 }
             } while (this.RepeatWhileTrue && finalResult);
         }
 
         private async Task<bool> Check(ConditionalClauseModel clause, CommandParametersModel parameters)
         {
-            string v1 = await this.ReplaceStringWithSpecialModifiers(clause.Value1, parameters);
-            string v2 = await this.ReplaceStringWithSpecialModifiers(clause.Value2, parameters);
+            string v1 = await ReplaceStringWithSpecialModifiers(clause.Value1, parameters);
+            string v2 = await ReplaceStringWithSpecialModifiers(clause.Value2, parameters);
 
             if (clause.ComparisionType == ConditionalComparisionTypeEnum.Contains || clause.ComparisionType == ConditionalComparisionTypeEnum.DoesNotContain)
             {
@@ -152,7 +136,7 @@ namespace MixItUp.Base.Model.Actions
             }
             else if (clause.ComparisionType == ConditionalComparisionTypeEnum.Between)
             {
-                string v3 = await this.ReplaceStringWithSpecialModifiers(clause.Value3, parameters);
+                string v3 = await ReplaceStringWithSpecialModifiers(clause.Value3, parameters);
                 if (double.TryParse(v1, out double v1num) && double.TryParse(v2, out double v2num) && double.TryParse(v3, out double v3num))
                 {
                     return (v2num <= v1num && v1num <= v3num);
@@ -165,6 +149,10 @@ namespace MixItUp.Base.Model.Actions
             else if (clause.ComparisionType == ConditionalComparisionTypeEnum.NotReplaced)
             {
                 return clause.Value1.Equals(v1);
+            }
+            else if (clause.ComparisionType == ConditionalComparisionTypeEnum.RegexMatch)
+            {
+                return Regex.IsMatch(v1, v2, this.CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase);
             }
             else
             {

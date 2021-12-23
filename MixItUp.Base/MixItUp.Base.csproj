@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Compile Include="..\..\Mix It Up Web\MixItUpSecrets.cs" Link="MixItUpSecrets.cs" />
+    <Compile Include="..\..\Mix It Up Web\Services\External\VoicemodService.cs" Link="Services\External\VoicemodService.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,9 +41,12 @@
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
     <PackageReference Include="Jace" Version="1.0.0" />
     <PackageReference Include="linqtotwitter" Version="5.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="StreamingClientLibrary.Twitch" Version="1.0.0.28" />
-    <PackageReference Include="System.IO.Ports" Version="4.7.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="StreamingClientLibrary.Glimesh" Version="1.0.0.10" />
+    <PackageReference Include="StreamingClientLibrary.Trovo" Version="1.0.0.11" />
+    <PackageReference Include="StreamingClientLibrary.Twitch" Version="1.0.0.33" />
+    <PackageReference Include="StreamingClientLibrary.YouTube" Version="1.0.0.8" />
+    <PackageReference Include="System.IO.Ports" Version="5.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -73,6 +77,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Resources - Copy.ru.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -134,9 +141,17 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </EmbeddedResource>
 
+    <EmbeddedResource Update="Resources.uk.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
+    
+    <EmbeddedResource Update="Resources.uk-UA.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
+
     <EmbeddedResource Update="Resources.qps-ploc.resx">
       <DependentUpon>Resources.resx</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-
+  
 </Project>

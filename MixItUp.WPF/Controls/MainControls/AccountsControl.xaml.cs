@@ -19,7 +19,7 @@ namespace MixItUp.WPF.Controls.MainControls
         protected override Task InitializeInternal()
         {
             this.DataContext = this.viewModel = new AccountsMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 }

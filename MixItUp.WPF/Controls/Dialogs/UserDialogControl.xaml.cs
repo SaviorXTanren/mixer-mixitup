@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
 using System.Windows.Controls;
 
@@ -23,9 +24,9 @@ namespace MixItUp.WPF.Controls.Dialogs
     /// </summary>
     public partial class UserDialogControl : UserControl
     {
-        private UserViewModel user;
+        private UserV2ViewModel user;
 
-        public UserDialogControl(UserViewModel user)
+        public UserDialogControl(UserV2ViewModel user)
         {
             this.user = user;
 
@@ -36,19 +37,21 @@ namespace MixItUp.WPF.Controls.Dialogs
 
         private async void UserDialogControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (this.user != null && !this.user.IsAnonymous && !string.IsNullOrEmpty(this.user.Username))
+            if (this.user != null && this.user.Platform != StreamingPlatformTypeEnum.None && !string.IsNullOrEmpty(this.user.Username))
             {
-                await this.user.RefreshDetails(force: true);
+                await this.user.Refresh(force: true);
 
                 this.DataContext = this.user;
 
-                if (this.user.UserRoles.Contains(UserRoleEnum.Banned))
+#pragma warning disable CS0612 // Type or member is obsolete
+                if (this.user.HasRole(UserRoleEnum.Banned))
+#pragma warning restore CS0612 // Type or member is obsolete
                 {
                     this.UnbanButton.Visibility = System.Windows.Visibility.Visible;
                     this.BanButton.Visibility = System.Windows.Visibility.Collapsed;
                 }
 
-                if (this.user.UserRoles.Contains(UserRoleEnum.Mod))
+                if (this.user.HasRole(UserRoleEnum.Moderator))
                 {
                     this.DemoteFromModButton.Visibility = System.Windows.Visibility.Visible;
                     this.PromoteToModButton.Visibility = System.Windows.Visibility.Collapsed;

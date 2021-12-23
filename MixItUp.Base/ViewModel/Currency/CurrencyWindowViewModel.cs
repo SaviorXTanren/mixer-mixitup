@@ -1,8 +1,12 @@
-﻿using MixItUp.Base.Model.Actions;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Platform;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
@@ -528,22 +532,42 @@ namespace MixItUp.Base.ViewModel.Currency
                             return;
                         }
 
-                        await ChannelSession.Settings.LoadAllUserData();
+                        await ServiceManager.Get<UserService>().LoadAllUserData();
 
                         await this.Currency.Reset();
-                        foreach (MixItUp.Base.Model.User.UserDataModel userData in ChannelSession.Settings.UserData.Values)
+                        foreach (UserV2Model userData in ChannelSession.Settings.Users.Values.ToList())
                         {
-                            int intervalsToGive = userData.ViewingMinutes / this.Currency.AcquireInterval;
-                            this.Currency.AddAmount(userData, this.Currency.AcquireAmount * intervalsToGive);
-                            if (userData.TwitchUserRoles.Contains(UserRoleEnum.Mod) || userData.TwitchUserRoles.Contains(UserRoleEnum.ChannelEditor))
+                            int minutes = 0;
+                            bool moderatorBonus = false;
+                            bool subscriberBonus = false;
+
+                            minutes += userData.OnlineViewingMinutes;
+                            foreach (UserPlatformV2ModelBase userPlatformData in userData.GetAllPlatformData())
                             {
-                                this.Currency.AddAmount(userData, this.Currency.ModeratorBonus * intervalsToGive);
+                                if (userPlatformData.Roles.Contains(UserRoleEnum.Moderator))
+                                {
+                                    moderatorBonus = true;
+                                }
+                                if (userPlatformData.Roles.Contains(UserRoleEnum.Subscriber))
+                                {
+                                    subscriberBonus = true;
+                                }
                             }
-                            else if (userData.TwitchUserRoles.Contains(UserRoleEnum.Subscriber))
+
+                            int intervalsToGive = minutes / this.Currency.AcquireInterval;
+
+                            UserV2ViewModel user = new UserV2ViewModel(userData);
+
+                            this.Currency.AddAmount(user, this.Currency.AcquireAmount * intervalsToGive);
+                            if (moderatorBonus)
                             {
-                                this.Currency.AddAmount(userData, this.Currency.SubscriberBonus * intervalsToGive);
+                                this.Currency.AddAmount(user, this.Currency.ModeratorBonus * intervalsToGive);
                             }
-                            ChannelSession.Settings.UserData.ManualValueChanged(userData.ID);
+                            else if (subscriberBonus)
+                            {
+                                this.Currency.AddAmount(user, this.Currency.SubscriberBonus * intervalsToGive);
+                            }
+                            ChannelSession.Settings.Users.ManualValueChanged(userData.ID);
                         }
                     }
                 }
@@ -557,13 +581,15 @@ namespace MixItUp.Base.ViewModel.Currency
                 {
                     try
                     {
-                        string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog();
+                        string filePath = ServiceManager.Get<IFileService>().ShowOpenFileDialog();
                         if (!string.IsNullOrEmpty(filePath))
                         {
-                            string fileContents = await ChannelSession.Services.FileService.ReadFile(filePath);
+                            string fileContents = await ServiceManager.Get<IFileService>().ReadFile(filePath);
                             string[] lines = fileContents.Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries);
                             if (lines.Count() > 0)
                             {
+                                await ServiceManager.Get<UserService>().LoadAllUserData();
+
                                 foreach (string line in lines)
                                 {
                                     long id = 0;
@@ -600,55 +626,25 @@ namespace MixItUp.Base.ViewModel.Currency
                                         throw new InvalidOperationException("File is not in the correct format");
                                     }
 
-                                    UserViewModel user = null;
+                                    UserV2ViewModel user = null;
                                     if (amount > 0)
                                     {
-                                        // TODO
-                                        //if (id > 0)
-                                        //{
-                                        //    MixItUp.Base.Model.User.UserDataModel userData = ChannelSession.Settings.GetUserDataByTwitchID(id.ToString());
-                                        //    if (userData != null)
-                                        //    {
-                                        //        user = new UserViewModel(userData);
-                                        //    }
-                                        //    else
-                                        //    {
-                                        //        UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(id.ToString());
-                                        //        if (twitchUser != null)
-                                        //        {
-                                        //            user = new UserViewModel(twitchUser);
-                                        //        }
-                                        //    }
-                                        //}
-                                        //else if (!string.IsNullOrEmpty(username))
-                                        //{
-                                        //    UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(username);
-                                        //    if (twitchUser != null)
-                                        //    {
-                                        //        user = new UserViewModel(twitchUser);
-                                        //    }
-                                        //}
+                                        if (id > 0)
+                                        {
+                                            user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, id.ToString(), performPlatformSearch: true);
+                                        }
+                                        else if (!string.IsNullOrEmpty(username))
+                                        {
+                                            user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, username, performPlatformSearch: true);
+                                        }
                                     }
 
                                     if (user != null)
                                     {
-                                        if (!this.userImportData.ContainsKey(user.ID))
-                                        {
-                                            this.userImportData[user.ID] = amount;
-                                        }
-                                        this.userImportData[user.ID] = Math.Max(this.userImportData[user.ID], amount);
+                                        this.Currency.SetAmount(user, amount);
+                                        ChannelSession.Settings.Users.ManualValueChanged(user.ID);
+
                                         this.ImportFromFileText = string.Format("{0} {1}...", this.userImportData.Count(), MixItUp.Base.Resources.Imported);
-                                    }
-                                }
-
-                                await ChannelSession.Settings.LoadAllUserData();
-
-                                foreach (var kvp in this.userImportData)
-                                {
-                                    if (ChannelSession.Settings.UserData.ContainsKey(kvp.Key))
-                                    {
-                                        MixItUp.Base.Model.User.UserDataModel userData = ChannelSession.Settings.UserData[kvp.Key];
-                                        this.Currency.SetAmount(userData, kvp.Value);
                                     }
                                 }
 
@@ -673,17 +669,19 @@ namespace MixItUp.Base.ViewModel.Currency
 
             this.ExportToFileCommand = this.CreateCommand(async () =>
             {
-                await ChannelSession.Settings.LoadAllUserData();
+                await ServiceManager.Get<UserService>().LoadAllUserData();
 
-                string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog(this.Currency.Name + " Data.txt");
+                string filePath = ServiceManager.Get<IFileService>().ShowSaveFileDialog(this.Currency.Name + " Data.txt");
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     StringBuilder fileContents = new StringBuilder();
-                    foreach (MixItUp.Base.Model.User.UserDataModel userData in ChannelSession.Settings.UserData.Values.ToList())
+                    foreach (UserV2Model userData in ChannelSession.Settings.Users.Values.ToList())
                     {
-                        fileContents.AppendLine(string.Format("{0} {1} {2}", userData.TwitchID, userData.Username, this.Currency.GetAmount(userData)));
+                        UserV2ViewModel user = new UserV2ViewModel(userData);
+
+                        fileContents.AppendLine(string.Format("{0} {1} {2} {3} {4}", user.ID, user.Platform, user.PlatformID, user.Username, this.Currency.GetAmount(user)));
                     }
-                    await ChannelSession.Services.FileService.SaveFile(filePath, fileContents.ToString());
+                    await ServiceManager.Get<IFileService>().SaveFile(filePath, fileContents.ToString());
                 }
             });
 
@@ -874,7 +872,7 @@ namespace MixItUp.Base.ViewModel.Currency
             {
                 ChatCommandModel statusCommand = new ChatCommandModel("User " + this.Currency.Name, new HashSet<string>() { this.Currency.SpecialIdentifier });
                 statusCommand.Requirements.AddBasicRequirements();
-                statusCommand.Requirements.Role.Role = UserRoleEnum.User;
+                statusCommand.Requirements.Role.UserRole = UserRoleEnum.User;
                 statusCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                 statusCommand.Requirements.Cooldown.IndividualAmount = 5;
 
@@ -894,7 +892,7 @@ namespace MixItUp.Base.ViewModel.Currency
                 {
                     ChatCommandModel addCommand = new ChatCommandModel("Add " + this.Currency.Name, new HashSet<string>() { "add" + this.Currency.SpecialIdentifier });
                     addCommand.Requirements.AddBasicRequirements();
-                    addCommand.Requirements.Role.Role = UserRoleEnum.Mod;
+                    addCommand.Requirements.Role.UserRole = UserRoleEnum.Moderator;
                     addCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                     addCommand.Requirements.Cooldown.IndividualAmount = 5;
 
@@ -904,7 +902,7 @@ namespace MixItUp.Base.ViewModel.Currency
 
                     ChatCommandModel addAllCommand = new ChatCommandModel("Add All " + this.Currency.Name, new HashSet<string>() { "addall" + this.Currency.SpecialIdentifier });
                     addAllCommand.Requirements.AddBasicRequirements();
-                    addAllCommand.Requirements.Role.Role = UserRoleEnum.Mod;
+                    addAllCommand.Requirements.Role.UserRole = UserRoleEnum.Moderator;
                     addAllCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                     addAllCommand.Requirements.Cooldown.IndividualAmount = 5;
 
@@ -916,7 +914,7 @@ namespace MixItUp.Base.ViewModel.Currency
                     {
                         ChatCommandModel giveCommand = new ChatCommandModel("Give " + this.Currency.Name, new HashSet<string>() { "give" + this.Currency.SpecialIdentifier });
                         giveCommand.Requirements.AddBasicRequirements();
-                        giveCommand.Requirements.Role.Role = UserRoleEnum.User;
+                        giveCommand.Requirements.Role.UserRole = UserRoleEnum.User;
                         giveCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                         giveCommand.Requirements.Cooldown.IndividualAmount = 5;
 

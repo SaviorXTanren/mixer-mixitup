@@ -1,10 +1,12 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.User
 {
@@ -31,22 +33,7 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public string ID { get; set; }
         [DataMember]
-        public StreamingPlatformTypeEnum Platform { get; set; } = StreamingPlatformTypeEnum.All;
-
-        public string Username
-        {
-            get { return this.username; }
-            set
-            {
-                this.username = value;
-                if (string.IsNullOrWhiteSpace(this.username))
-                {
-                    this.username = MixItUp.Base.Resources.Anonymous;
-                }
-            }
-        }
-        [DataMember]
-        private string username { get; set; }
+        public StreamingPlatformTypeEnum Platform { get; set; } = StreamingPlatformTypeEnum.None;
 
         [DataMember]
         public string Type { get; set; }
@@ -61,25 +48,38 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public DateTimeOffset DateTime { get; set; }
 
-        [JsonIgnore]
-        public string AmountText { get { return this.Amount.ToCurrencyString(); } }
-
-        [JsonIgnore]
-        public UserViewModel User
+        public string Username
         {
             get
             {
-                lock (this)
+                if (string.IsNullOrWhiteSpace(this.username))
                 {
-                    if (this.user == null && !string.IsNullOrEmpty(this.username))
-                    {
-                        this.user = ChannelSession.Services.User.GetActiveUserByUsername(this.username, this.Platform);
-                    }
+                    return MixItUp.Base.Resources.Anonymous;
                 }
-                return this.user;
+                return this.username;
+            }
+            set { this.username = value; }
+        }
+        [DataMember]
+        private string username { get; set; }
+
+        [JsonIgnore]
+        public UserV2ViewModel User { get; private set; }
+
+        [JsonIgnore]
+        public string AmountText { get { return this.Amount.ToCurrencyString(); } }
+
+        public async Task AssignUser()
+        {
+            if (!string.IsNullOrEmpty(this.username))
+            {
+                this.User = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(this.Platform, this.username);
+                if (this.User == null)
+                {
+                    this.User = UserV2ViewModel.CreateUnassociated(this.Username);
+                }
             }
         }
-        private UserViewModel user;
 
         public Dictionary<string, string> GetSpecialIdentifiers()
         {

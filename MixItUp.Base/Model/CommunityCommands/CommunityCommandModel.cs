@@ -53,6 +53,7 @@ namespace MixItUp.Base.Model.Store
         StreamlootsCardCommand,
         TwitchChannelPointsCommand,
         GameCommand,
+        Webhook,
 
         // Extra Tags
         [Obsolete]
@@ -73,6 +74,9 @@ namespace MixItUp.Base.Model.Store
 
         [DataMember]
         public string ImageURL { get; set; }
+
+        [DataMember]
+        public string ScreenshotURL { get; set; }
 
         [DataMember]
         public HashSet<CommunityCommandTagEnum> Tags { get; set; } = new HashSet<CommunityCommandTagEnum>();
@@ -147,10 +151,16 @@ namespace MixItUp.Base.Model.Store
         public string ImageURL { get; set; }
 
         [DataMember]
+        public string ScreenshotURL { get; set; }
+
+        [DataMember]
         public HashSet<CommunityCommandTagEnum> Tags { get; set; } = new HashSet<CommunityCommandTagEnum>();
 
         [DataMember]
         public byte[] ImageFileData { get; set; }
+
+        [DataMember]
+        public byte[] ScreenshotFileData { get; set; }
 
         [DataMember]
         public string Data { get; set; }

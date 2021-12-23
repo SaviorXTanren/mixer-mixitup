@@ -10,12 +10,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.External
 {
-    public interface IIFTTTService : IOAuthExternalService
-    {
-        Task SendTrigger(string eventName, Dictionary<string, string> values);
-    }
-
-    public class IFTTTService : OAuthExternalServiceBase, IIFTTTService
+    public class IFTTTService : OAuthExternalServiceBase
     {
         private const string WebHookURLFormat = "https://maker.ifttt.com/trigger/{0}/with/key/{1}";
 
@@ -30,7 +25,7 @@ namespace MixItUp.Base.Services.External
 
         public override Task Disconnect()
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public async Task SendTrigger(string eventName, Dictionary<string, string> values)
@@ -66,7 +61,7 @@ namespace MixItUp.Base.Services.External
 
         protected override Task RefreshOAuthToken()
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 }

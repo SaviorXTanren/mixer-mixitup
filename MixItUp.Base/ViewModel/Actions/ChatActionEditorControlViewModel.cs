@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Actions;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Util;
 using System.Threading.Tasks;
 

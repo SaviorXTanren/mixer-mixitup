@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
@@ -100,7 +101,7 @@ namespace MixItUp.Base.ViewModel.Dashboard
 
         public async Task<bool> CanSelectCommands()
         {
-            if (!ChannelSession.Services.Command.AllCommands.Any(c => !(c is PreMadeChatCommandModelBase)))
+            if (!ServiceManager.Get<CommandService>().AllCommands.Any(c => !(c is PreMadeChatCommandModelBase)))
             {
                 await DialogHelper.ShowMessage(MixItUp.Base.Resources.QuickCommandSelectFail);
                 return false;
@@ -132,7 +133,7 @@ namespace MixItUp.Base.ViewModel.Dashboard
 
         private string GetCommandName(CommandModelBase command) { return (command != null) ? command.Name : MixItUp.Base.Resources.Unassigned; }
 
-        private async Task RunCommand(CommandModelBase command) { await ChannelSession.Services.Command.Queue(command); }
+        private async Task RunCommand(CommandModelBase command) { await ServiceManager.Get<CommandService>().Queue(command); }
 
         private void NotifyPropertiesChanged()
         {

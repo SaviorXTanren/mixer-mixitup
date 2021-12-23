@@ -1,6 +1,9 @@
 ﻿using MixItUp.API.Models;
 using MixItUp.Base;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -58,7 +61,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             }
 
             var quoteText = quote.QuoteText.Trim(new char[] { ' ', '\'', '\"' });
-            UserQuoteModel newQuote = new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), quoteText, DateTimeOffset.Now, ChannelSession.TwitchChannelV5?.game);
+            UserQuoteModel newQuote = new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), quoteText, DateTimeOffset.Now, await GamePreMadeChatCommandModel.GetCurrentGameName());
             ChannelSession.Settings.Quotes.Add(newQuote);
             await ChannelSession.SaveSettings();
 

@@ -1,13 +1,12 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Commands;
-using MixItUp.Base.ViewModel.MainControls;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Controls.Commands;
 using MixItUp.WPF.Windows.Commands;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -62,9 +61,9 @@ namespace MixItUp.WPF.Controls.MainControls
                 ChatCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<ChatCommandModel>();
                 if (command != null)
                 {
-                    ChannelSession.Services.Command.ChatCommands.Remove(command);
+                    ServiceManager.Get<CommandService>().ChatCommands.Remove(command);
                     ChannelSession.Settings.RemoveCommand(command);
-                    ChannelSession.Services.Chat.RebuildCommandTriggers();
+                    ServiceManager.Get<ChatService>().RebuildCommandTriggers();
                     this.viewModel.RemoveCommand(command);
                     await ChannelSession.SaveSettings();
                 }
@@ -73,7 +72,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void CommandButtonsControl_EnableDisableToggled(object sender, RoutedEventArgs e)
         {
-            ChannelSession.Services.Chat.RebuildCommandTriggers();
+            ServiceManager.Get<ChatService>().RebuildCommandTriggers();
         }
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
@@ -81,19 +80,6 @@ namespace MixItUp.WPF.Controls.MainControls
             CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.Chat);
             window.CommandSaved += Window_CommandSaved;
             window.Show();
-        }
-
-        private void DataGrid_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
-        {
-            if (!e.Handled)
-            {
-                e.Handled = true;
-                var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
-                eventArg.RoutedEvent = UIElement.MouseWheelEvent;
-                eventArg.Source = sender;
-                var parent = ((Control)sender).Parent as UIElement;
-                parent.RaiseEvent(eventArg);
-            }
         }
     }
 }

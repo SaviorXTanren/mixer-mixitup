@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -87,7 +88,7 @@ namespace MixItUp.Base.Model.Currency
     [DataContract]
     public class RedemptionStorePurchaseModel
     {
-        public static async Task Purchase(UserViewModel user, IEnumerable<string> arguments)
+        public static async Task Purchase(UserV2ViewModel user, IEnumerable<string> arguments)
         {
             if (arguments.Count() == 0)
             {
@@ -99,7 +100,7 @@ namespace MixItUp.Base.Model.Currency
                         items.Add(product.Name);
                     }
                 }
-                await ChannelSession.Services.Chat.SendMessage("Products Available to Purchase: " + string.Join(", ", items), platform: user.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage("Products Available to Purchase: " + string.Join(", ", items), platform: user.Platform);
             }
             else
             {
@@ -107,10 +108,7 @@ namespace MixItUp.Base.Model.Currency
                 RedemptionStoreProductModel product = ChannelSession.Settings.RedemptionStoreProducts.Values.ToList().FirstOrDefault(p => p.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
                 if (product == null)
                 {
-                    if (ChannelSession.Services.Chat != null)
-                    {
-                        await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.NoRedemptionStoreProductWithThatName);
-                    }
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NoRedemptionStoreProductWithThatName, user.Platform);
                     return;
                 }
 
@@ -118,20 +116,14 @@ namespace MixItUp.Base.Model.Currency
                 {
                     if (product.CurrentAmount <= 0)
                     {
-                        if (ChannelSession.Services.Chat != null)
-                        {
-                            await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.NoMoreRedemptionStoreProducts);
-                        }
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NoMoreRedemptionStoreProducts, user.Platform);
                         return;
                     }
 
                     ThresholdRequirementModel threshold = product.Requirements.Threshold;
                     if (threshold != null && threshold.IsEnabled && threshold.Amount > product.CurrentAmount)
                     {
-                        if (ChannelSession.Services.Chat != null)
-                        {
-                            await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.NotEnoughRedemptionStoreProducts);
-                        }
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NotEnoughRedemptionStoreProducts, user.Platform);
                         return;
                     }
                 }
@@ -162,7 +154,7 @@ namespace MixItUp.Base.Model.Currency
                             CommandModelBase command = ChannelSession.Settings.GetCommand(ChannelSession.Settings.RedemptionStoreManualRedeemNeededCommandID);
                             if (command != null)
                             {
-                                await ChannelSession.Services.Command.Queue(command, u);
+                                await ServiceManager.Get<CommandService>().Queue(command, u);
                             }
 
                             GlobalEvents.RedemptionStorePurchasesUpdated();
@@ -172,14 +164,11 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public static async Task Redeem(UserViewModel user, IEnumerable<string> arguments)
+        public static async Task Redeem(UserV2ViewModel user, IEnumerable<string> arguments)
         {
-            if (!user.HasPermissionsTo(UserRoleEnum.Mod))
+            if (!user.MeetsRole(UserRoleEnum.Moderator))
             {
-                if (ChannelSession.Services.Chat != null)
-                {
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.YouDoNotHavePermissions);
-                }
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.YouDoNotHavePermissions, user.Platform);
                 return;
             }
 
@@ -197,8 +186,8 @@ namespace MixItUp.Base.Model.Currency
             }
             else
             {
-                name = name.Replace("@", "");
-                UserViewModel purchaseUser = ChannelSession.Services.User.GetActiveUserByUsername(name, user.Platform);
+                name = UserService.SanitizeUsername(name);
+                UserV2ViewModel purchaseUser = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(user.Platform, name);
                 if (purchaseUser != null)
                 {
                     IEnumerable<RedemptionStorePurchaseModel> purchases = ChannelSession.Settings.RedemptionStorePurchases.ToList().Where(p => p.UserID == user.ID);
@@ -215,10 +204,7 @@ namespace MixItUp.Base.Model.Currency
             }
             else
             {
-                if (ChannelSession.Services.Chat != null)
-                {
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.NoRedemptionStorePurchasesWithThatName);
-                }
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NoRedemptionStorePurchasesWithThatName, user.Platform);
             }
         }
 
@@ -238,11 +224,11 @@ namespace MixItUp.Base.Model.Currency
         public RedemptionStorePurchaseRedemptionState State { get; set; } = RedemptionStorePurchaseRedemptionState.AutoRedeemed;
 
         [JsonIgnore]
-        public UserViewModel User { get; set; }
+        public UserV2ViewModel User { get; set; }
 
         public RedemptionStorePurchaseModel() { }
 
-        public RedemptionStorePurchaseModel(RedemptionStoreProductModel product, UserViewModel user)
+        public RedemptionStorePurchaseModel(RedemptionStoreProductModel product, UserV2ViewModel user)
         {
             this.ID = Guid.NewGuid();
             this.ProductID = product.ID;
@@ -268,7 +254,7 @@ namespace MixItUp.Base.Model.Currency
         public async Task Redeem()
         {
             RedemptionStoreProductModel product = this.Product;
-            UserViewModel user = this.User;
+            UserV2ViewModel user = this.User;
             if (product != null && user != null)
             {
                 CommandModelBase command = product.Command;
@@ -282,7 +268,7 @@ namespace MixItUp.Base.Model.Currency
                     Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
                     specialIdentifiers[RedemptionStoreProductModel.ProductNameSpecialIdentifier] = product.Name;
 
-                    await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(user, specialIdentifiers: specialIdentifiers));
+                    await ServiceManager.Get<CommandService>().Queue(command, new CommandParametersModel(user, specialIdentifiers: specialIdentifiers));
                 }
 
                 if (this.State == RedemptionStorePurchaseRedemptionState.ManualRedeemNeeded)
@@ -300,7 +286,7 @@ namespace MixItUp.Base.Model.Currency
         public async Task Refund()
         {
             RedemptionStoreProductModel product = this.Product;
-            UserViewModel user = this.User;
+            UserV2ViewModel user = this.User;
             if (product != null && user != null)
             {
                 await product.Requirements.Refund(new CommandParametersModel(user));

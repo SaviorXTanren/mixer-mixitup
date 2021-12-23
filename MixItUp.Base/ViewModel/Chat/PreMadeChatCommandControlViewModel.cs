@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.ViewModel.Requirements;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
@@ -15,13 +15,13 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public string TriggersString { get { return this.command.TriggersString; } }
 
-        public IEnumerable<UserRoleEnum> RoleValues { get { return UserDataModel.GetSelectableUserRoles(); } }
+        public IEnumerable<UserRoleEnum> RoleValues { get { return UserRoles.All; } }
         public UserRoleEnum SelectedRole
         {
-            get { return this.command.Requirements.Role.Role; }
+            get { return this.command.Requirements.Role.UserRole; }
             set
             {
-                this.command.Requirements.Role.Role = value;
+                this.command.Requirements.Role.UserRole = value;
                 this.UpdateSetting();
                 this.NotifyPropertyChanged();
             }
@@ -46,7 +46,7 @@ namespace MixItUp.Base.ViewModel.Chat
                 this.command.IsEnabled = value;
                 this.UpdateSetting();
                 this.NotifyPropertyChanged();
-                ChannelSession.Services.Chat.RebuildCommandTriggers();
+                ServiceManager.Get<ChatService>().RebuildCommandTriggers();
             }
         }
 
@@ -68,8 +68,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
             this.TestCommand = this.CreateCommand(async () =>
             {
-                UserViewModel currentUser = ChannelSession.GetCurrentUser();
-                await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(currentUser, arguments: new List<string>() { "@" + currentUser.Username }));
+                await ServiceManager.Get<CommandService>().Queue(command, new CommandParametersModel(ChannelSession.User, arguments: new List<string>() { "@" + ChannelSession.User.Username }));
             });
         }
 
@@ -77,7 +76,7 @@ namespace MixItUp.Base.ViewModel.Chat
         {
             if (this.setting != null)
             {
-                this.setting.Role = this.command.Requirements.Role.Role;
+                this.setting.UserRole = this.command.Requirements.Role.UserRole;
                 this.setting.Cooldown = this.command.Requirements.Cooldown.Amount;
                 this.setting.IsEnabled = this.command.IsEnabled;
             }

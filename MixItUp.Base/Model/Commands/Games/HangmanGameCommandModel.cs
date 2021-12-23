@@ -20,6 +20,8 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public int InitialAmount { get; set; }
         [DataMember]
+        public bool AllowWordGuess { get; set; }
+        [DataMember]
         public string CustomWordsFilePath { get; set; }
 
         [DataMember]
@@ -45,13 +47,16 @@ namespace MixItUp.Base.Model.Commands.Games
         public HashSet<char> successfulGuesses { get; set; } = new HashSet<char>();
         [JsonIgnore]
         public HashSet<char> failedGuesses { get; set; } = new HashSet<char>();
+        [JsonIgnore]
+        private int failedGuessesCount = 0;
 
-        public HangmanGameCommandModel(string name, HashSet<string> triggers, int maxFailures, int initialAmount, string customWordsFilePath, CustomCommandModel successfulGuessCommand, CustomCommandModel failedGuessCommand,
+        public HangmanGameCommandModel(string name, HashSet<string> triggers, int maxFailures, int initialAmount, bool allowWordGuess, string customWordsFilePath, CustomCommandModel successfulGuessCommand, CustomCommandModel failedGuessCommand,
             CustomCommandModel gameWonCommand, CustomCommandModel gameLostCommand, string statusArgument, CustomCommandModel statusCommand)
             : base(name, triggers, GameCommandTypeEnum.Hangman)
         {
             this.MaxFailures = maxFailures;
             this.InitialAmount = initialAmount;
+            this.AllowWordGuess = allowWordGuess;
             this.CustomWordsFilePath = customWordsFilePath;
             this.SuccessfulGuessCommand = successfulGuessCommand;
             this.FailedGuessCommand = failedGuessCommand;
@@ -60,22 +65,6 @@ namespace MixItUp.Base.Model.Commands.Games
             this.StatusArgument = statusArgument;
             this.StatusCommand = statusCommand;
         }
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal HangmanGameCommandModel(Base.Commands.HangmanGameCommand command)
-            : base(command, GameCommandTypeEnum.Hangman)
-        {
-            this.MaxFailures = command.MaxFailures;
-            this.InitialAmount = command.InitialAmount;
-            this.CustomWordsFilePath = command.CustomWordsFilePath;
-            this.SuccessfulGuessCommand = new CustomCommandModel(command.SuccessfulGuessCommand) { IsEmbedded = true };
-            this.FailedGuessCommand = new CustomCommandModel(command.FailedGuessCommand) { IsEmbedded = true };
-            this.GameWonCommand = new CustomCommandModel(command.GameWonCommand) { IsEmbedded = true };
-            this.GameLostCommand = new CustomCommandModel(command.GameLostCommand) { IsEmbedded = true };
-            this.StatusArgument = command.StatusArgument;
-            this.StatusCommand = new CustomCommandModel(command.StatusArgument) { IsEmbedded = true };
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
 
         private HangmanGameCommandModel() { }
 
@@ -107,14 +96,37 @@ namespace MixItUp.Base.Model.Commands.Games
                 return new Result(success: false);
             }
 
+            if (parameters.Arguments.Count != 1)
+            {
+                return new Result(MixItUp.Base.Resources.GameCommandHangmanMissingGuess);
+            }
+
+            if (!this.AllowWordGuess && parameters.Arguments[0].Length != 1)
+            {
+                return new Result(MixItUp.Base.Resources.GameCommandHangmanNotLetter);
+            }
+
             return new Result();
         }
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
-            if (parameters.Arguments.Count == 1 && parameters.Arguments[0].Length == 1)
+            this.totalAmount += this.GetPrimaryBetAmount(parameters);
+
+            if (parameters.Arguments[0].Length > 1)
             {
-                this.totalAmount += this.GetPrimaryBetAmount(parameters);
+                this.AddSpecialIdentifiersToParameters(parameters);
+                if (string.Equals(this.currentWord, parameters.Arguments[0], StringComparison.InvariantCultureIgnoreCase))
+                {
+                    await this.GameWon(parameters);
+                }
+                else
+                {
+                    await this.FailedGuess(parameters);
+                }
+            }
+            else
+            {
                 char letter = parameters.Arguments.ElementAt(0).ToUpper().First();
                 if (this.currentWord.Contains(letter))
                 {
@@ -123,10 +135,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     if (this.currentWord.All(c => this.successfulGuesses.Contains(c)))
                     {
-                        this.PerformPrimarySetPayout(parameters.User, this.totalAmount);
-                        this.SetGameWinners(parameters, new List<CommandParametersModel>() { parameters });
-                        await this.RunSubCommand(this.GameWonCommand, parameters);
-                        await this.ClearData();
+                        await this.GameWon(parameters);
                     }
                     else
                     {
@@ -136,26 +145,35 @@ namespace MixItUp.Base.Model.Commands.Games
                 else
                 {
                     this.failedGuesses.Add(letter);
-                    this.AddSpecialIdentifiersToParameters(parameters);
-
-                    if (this.failedGuesses.Count >= this.MaxFailures)
-                    {
-                        await this.RunSubCommand(this.GameLostCommand, parameters);
-                        await this.ClearData();
-                    }
-                    else
-                    {
-                        await this.RunSubCommand(this.FailedGuessCommand, parameters);
-                    }
+                    await this.FailedGuess(parameters);
                 }
-                await this.PerformCooldown(parameters);
-                return;
+            }
+
+            await this.PerformCooldown(parameters);
+        }
+
+        private async Task GameWon(CommandParametersModel parameters)
+        {
+            this.PerformPrimarySetPayout(parameters.User, this.totalAmount);
+            this.SetGameWinners(parameters, new List<CommandParametersModel>() { parameters });
+            await this.RunSubCommand(this.GameWonCommand, parameters);
+            await this.ClearData();
+        }
+
+        private async Task FailedGuess(CommandParametersModel parameters)
+        {
+            this.failedGuessesCount++;
+            this.AddSpecialIdentifiersToParameters(parameters);
+
+            if (this.failedGuessesCount >= this.MaxFailures)
+            {
+                await this.RunSubCommand(this.GameLostCommand, parameters);
+                await this.ClearData();
             }
             else
             {
-                await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandHangmanNotLetter);
+                await this.RunSubCommand(this.FailedGuessCommand, parameters);
             }
-            await this.Requirements.Refund(parameters);
         }
 
         private async Task ClearData()
@@ -163,6 +181,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.currentWord = await this.GetRandomWord(this.CustomWordsFilePath);
             this.successfulGuesses.Clear();
             this.failedGuesses.Clear();
+            this.failedGuessesCount = 0;
             this.totalAmount = this.InitialAmount;
         }
 

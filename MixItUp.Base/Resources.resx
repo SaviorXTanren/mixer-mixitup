@@ -241,7 +241,7 @@
     <value>Amount Donated</value>
   </data>
   <data name="AmountPlusMinus" xml:space="preserve">
-    <value>Amount (+/-)</value>
+    <value>Amount</value>
   </data>
   <data name="AmountSeconds" xml:space="preserve">
     <value>Amount (Seconds)</value>
@@ -2086,7 +2086,7 @@
     <value>StreamElements Donation</value>
   </data>
   <data name="RainmakerDonation" xml:space="preserve">
-    <value>StreamJar Donation</value>
+    <value>Rainmaker Donation</value>
   </data>
   <data name="StreamlabsDonation" xml:space="preserve">
     <value>Streamlabs Donation</value>
@@ -2577,11 +2577,13 @@
   <data name="HideUserSubscriberBadge" xml:space="preserve">
     <value>Hide User Subscriber Badge</value>
   </data>
-  <data name="TwitchMassGiftedSubsFilterAmount" xml:space="preserve">
-    <value>Twitch Mass Gifted Subs Filter Amount</value>
+  <data name="MassGiftedSubsFilterAmount" xml:space="preserve">
+    <value>Mass Gifted Subs Filter Amount</value>
   </data>
-  <data name="TwitchMassGiftedSubsFilterAmountTooltip" xml:space="preserve">
-    <value>This option helps to ensure that only the regular Subscription Gifted OR Mass Subscription Gifted event command is run depending on what the number is set to. This is designed to help reduce the spam of subscription gifted commands and provide a better experience for your stream. Note that this will cause the processing of Subscription Gifted &amp; Mass Subscription Gifted event commands to be slightly delayed, typically less than 10 seconds.
+  <data name="MassGiftedSubsFilterAmountTooltip" xml:space="preserve">
+    <value>This option helps to ensure that only the regular Subscription Gifted OR Mass Subscription Gifted event commands are run depending on what the number is set to. This is designed to help reduce the spam of subscription gifted commands and provide a better experience for your stream. Note that this will cause the processing of Subscription Gifted &amp; Mass Subscription Gifted event commands to be slightly delayed, typically less than 10 seconds.
+
+This setting also only applies to streaming platforms that support gifting multiple subscriptions at the same time. Streaming platforms that only support gifting individual subscriptions will not take advantage of this setting and will only use the regular Subscription Gifted event command.
 
 For example, if this option is enabled and amount is set to 5, then any time 5 OR LESS subscriptions are gifted at once, it will ONLY run the regular Subscription Gifted event command for each subscription. If MORE THAN 5 are gifted, then it will ONLY run the Mass Subscriptions Gifted event command once.</value>
   </data>
@@ -3354,13 +3356,13 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <value>Failed Guess</value>
   </data>
   <data name="GameCommandHangmanFailedGuessExample" xml:space="preserve">
-    <value>@$username drops their coins into the pot and try the letter $arg1text...but it was wrong! $gamehangmancurrent</value>
+    <value>@$username drops their coins into the pot and guesses "$arg1text"...but it was wrong! $gamehangmancurrent</value>
   </data>
   <data name="GameCommandHangmanGameLostExample" xml:space="preserve">
     <value>The game is lost with too many failed guesses; the correct answer was "$gamehangmananswer". There goes $gametotalamount {0}!</value>
   </data>
   <data name="GameCommandHangmanGameWonExample" xml:space="preserve">
-    <value>@$username got the last letter for "$gamehangmananswer", winning the whole pot of $gamepayout {0}!</value>
+    <value>@$username got the secret word "$gamehangmananswer", winning the whole pot of $gamepayout {0}!</value>
   </data>
   <data name="GameCommandHangmanMaxFailures" xml:space="preserve">
     <value>Max Failures</value>
@@ -3375,7 +3377,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <value>Successful Guess</value>
   </data>
   <data name="GameCommandHangmanSuccessfulGuessExample" xml:space="preserve">
-    <value>@$username drops their coins into the pot and try the letter $arg1text...and gets it right! $gamehangmancurrent</value>
+    <value>@$username drops their coins into the pot and guesses $arg1text...and gets it right! $gamehangmancurrent</value>
   </data>
   <data name="GameCommandHitmanAppearsExample" xml:space="preserve">
     <value>It's hitman $gamehitmanname! Quick, type $gamehitmanname in chat!</value>
@@ -4428,7 +4430,7 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
     <value>Image File Path / URL</value>
   </data>
   <data name="IPAddress" xml:space="preserve">
-    <value>IP Address (Optional)</value>
+    <value>IP Address</value>
   </data>
   <data name="ItemHeight" xml:space="preserve">
     <value>Item Height (Pixels)</value>
@@ -4638,9 +4640,6 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="TiltifyInfo1" xml:space="preserve">
     <value>Tiltify service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to Tiltify and approve Mix It Up to access your information. Once you have connect Tiltify, you need to select the campaign you wish to use when detecting donations.</value>
   </data>
-  <data name="TiltifyInfo2" xml:space="preserve">
-    <value>NOTE: When logging in, please us the Email option to log in to your account. It is not currently possible to log in with connected accounts.</value>
-  </data>
   <data name="TipeeeStream" xml:space="preserve">
     <value>TipeeeStream</value>
   </data>
@@ -4844,7 +4843,7 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
     <value>Font Color</value>
   </data>
   <data name="FontName" xml:space="preserve">
-    <value>FontName</value>
+    <value>Font Name</value>
   </data>
   <data name="GoalAmount" xml:space="preserve">
     <value>Goal Amount</value>
@@ -5500,7 +5499,7 @@ folder path correctly and that the folder path is accessible to Mix It Up.</valu
     <value>Command Lock System</value>
   </data>
   <data name="CommandLockSystemTooltip" xml:space="preserve">
-    <value>- Per Command Type: Each command type (Chat, Event, Timer, etc) has a lock that prevents other commands of the same time from running at the same time.
+    <value>- Per Command Type: Each command type (Chat, Event, Timer, etc) has a lock that prevents other commands of the same type from running at the same time.
 - Per Action Type: Each action type (Chat, Sound, Conditional, etc) has a lock that prevents other commands also containing those actions from running at the same time.
 - Visual/Audio Actions: Commands containing visual/audio-based actions (Sound, Overlay, etc) share 1 lock while other commands will run as soon as they are triggered.
 - Singular: All commands share the same lock only allowing one command to run at a time.
@@ -5672,6 +5671,9 @@ special users that you want to allow more control to such as a Moderator.</value
   <data name="Review" xml:space="preserve">
     <value>Review</value>
   </data>
+  <data name="StreamMarkerDescriptionMustBe140CharactersOrLess" xml:space="preserve">
+    <value>Stream Marker description must be 140 characters or less</value>
+  </data>
   <data name="AddCommandToExistingReward" xml:space="preserve">
     <value>Add Command To Existing Reward</value>
   </data>
@@ -5721,7 +5723,7 @@ special users that you want to allow more control to such as a Moderator.</value
 Failure to do one of the following could effect how users rate &amp; review your command. Do you still wish to upload this command?</value>
   </data>
   <data name="CommunityCommandsImageFilePath" xml:space="preserve">
-    <value>Image File Path (Optional)</value>
+    <value>Image File Path (Optional) (Resized to 100x100 pixels)</value>
   </data>
   <data name="CommunityCommandsUploadInvalidDescription" xml:space="preserve">
     <value>A valid description must be specified</value>
@@ -5864,5 +5866,356 @@ Failure to do one of the following could effect how users rate &amp; review your
   </data>
   <data name="Notes" xml:space="preserve">
     <value>Notes</value>
+  </data>
+  <data name="CommunityCommandsNoReviews" xml:space="preserve">
+    <value>No reviews currently, why not leave one!</value>
+  </data>
+  <data name="TwitchActionPredictionTitleTooLong" xml:space="preserve">
+    <value>Prediction titles must be 45 characters or less</value>
+  </data>
+  <data name="CommunityCommandsScreenshot" xml:space="preserve">
+    <value>Screenshot</value>
+  </data>
+  <data name="CommunityCommandsScreenshotFilePath" xml:space="preserve">
+    <value>Screenshot File Path (Optional) (Resized to 1280x720 pixels max)</value>
+  </data>
+  <data name="ShowHypeTrain" xml:space="preserve">
+    <value>Show Hype Train</value>
+  </data>
+  <data name="HypeTrainEndedReachedLevel" xml:space="preserve">
+    <value>Hype Train Ended - Reached Level {0}</value>
+  </data>
+  <data name="HypeTrainStarted" xml:space="preserve">
+    <value>Hype Train Started</value>
+  </data>
+  <data name="WebhooksServiceFailedConnection" xml:space="preserve">
+    <value>Failed to connect to Mix It Up Web Hooks service</value>
+  </data>
+  <data name="WebhookEvents" xml:space="preserve">
+    <value>Webhook Events</value>
+  </data>
+  <data name="AddUserToGiveaway" xml:space="preserve">
+    <value>Add User To Giveaway</value>
+  </data>
+  <data name="SceneComponent" xml:space="preserve">
+    <value>Scene Component</value>
+  </data>
+  <data name="PixelChatActionMissingSceneAndSceneComponent" xml:space="preserve">
+    <value>Pixel Chat Action: Missing Scene &amp; Scene Component</value>
+  </data>
+  <data name="DefaultStreamingPlatform" xml:space="preserve">
+    <value>Default Streaming Platform</value>
+  </data>
+  <data name="VTubeStudio" xml:space="preserve">
+    <value>VTube Studio</value>
+  </data>
+  <data name="VTubeStudioConnectionFailed" xml:space="preserve">
+    <value>VTube Studio connection failed, please ensure VTube Studio is running, the API is enabled on the settings menu, and you have approved access within a timely manner.</value>
+  </data>
+  <data name="VTubeStudioInfo" xml:space="preserve">
+    <value>VTube Studio connectivity allows you to control functionality in the VTube Studio software, such as changing the currently displayed model and triggering hot keys within the application. To connect to VTube Studio, please ensure the software is running and the API is enabled on the settings menu.</value>
+  </data>
+  <data name="LoadModel" xml:space="preserve">
+    <value>Load Model</value>
+  </data>
+  <data name="RunHotKey" xml:space="preserve">
+    <value>Run Hot Key</value>
+  </data>
+  <data name="VTubeStudioActionMissingHotKey" xml:space="preserve">
+    <value>VTube Studio Action: Missing Hot Key</value>
+  </data>
+  <data name="VTubeStudioActionMissingModel" xml:space="preserve">
+    <value>VTube Studio Action: Missing Model</value>
+  </data>
+  <data name="VTubeStudioCurrentModel" xml:space="preserve">
+    <value>Current Model: </value>
+  </data>
+  <data name="VTubeStudioHotKey" xml:space="preserve">
+    <value>Hot Key</value>
+  </data>
+  <data name="VTubeStudioModel" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="VTubeStudioNotConnected" xml:space="preserve">
+    <value>VTube Studio not connected, please ensure the software is running and is connected on the Services page.</value>
+  </data>
+  <data name="NotFollowing" xml:space="preserve">
+    <value>Not Following</value>
+  </data>
+  <data name="GameCommandHangmanMissingGuess" xml:space="preserve">
+    <value>A guess must be specified</value>
+  </data>
+  <data name="GameCommandHangmanAllowWordGuess" xml:space="preserve">
+    <value>Allow Word Guess</value>
+  </data>
+  <data name="VoicemodNotConnected" xml:space="preserve">
+    <value>Voicemod not connected, please ensure the software is running and is connected on the Services page.</value>
+  </data>
+  <data name="VoicemodConnectionFailed" xml:space="preserve">
+    <value>Voicemod connection failed, please ensure Voicemod is running.</value>
+  </data>
+  <data name="Voicemod" xml:space="preserve">
+    <value>Voicemod</value>
+  </data>
+  <data name="VoicemodInfo" xml:space="preserve">
+    <value>Voicemod connectivity allows you to control functionality in the Voicemod software, such as enabling/disabling voice changing and changing the voice you're using. Some functionality or features in Voicemod require a paid subscription. For more information, please visit the Voicemod website:</value>
+  </data>
+  <data name="VoiceChangerOnOff" xml:space="preserve">
+    <value>Voice Change On/Off</value>
+  </data>
+  <data name="AllVoices" xml:space="preserve">
+    <value>All Voices</value>
+  </data>
+  <data name="CustomVoices" xml:space="preserve">
+    <value>Custom Voices</value>
+  </data>
+  <data name="FavoriteVoices" xml:space="preserve">
+    <value>Favorite Voices</value>
+  </data>
+  <data name="BeepSoundOnOff" xml:space="preserve">
+    <value>Beep Sound On/Off</value>
+  </data>
+  <data name="PlaySound" xml:space="preserve">
+    <value>Play Sound</value>
+  </data>
+  <data name="RandomVoice" xml:space="preserve">
+    <value>Random Voice</value>
+  </data>
+  <data name="SelectVoice" xml:space="preserve">
+    <value>Select Voice</value>
+  </data>
+  <data name="VoicemodActionMissingSound" xml:space="preserve">
+    <value>Voicemod Action: Missing Sound</value>
+  </data>
+  <data name="VoicemodActionMissingVoice" xml:space="preserve">
+    <value>Voicemod Action: Missing Voice</value>
+  </data>
+  <data name="MoveModel" xml:space="preserve">
+    <value>Move Model</value>
+  </data>
+  <data name="RelativeToModel" xml:space="preserve">
+    <value>Relative To Model</value>
+  </data>
+  <data name="VTubeStudioActionModelSize" xml:space="preserve">
+    <value>Size (+/- 100.0)</value>
+  </data>
+  <data name="VTubeStudioActionMoveModelInvalidTime" xml:space="preserve">
+    <value>VTube Studio Action: A non-negative number must be specified for movement time</value>
+  </data>
+  <data name="VTubeStudioActionRotation" xml:space="preserve">
+    <value>Rotation (+/- 360.0)</value>
+  </data>
+  <data name="VTubeStudioActionTimeInSeconds" xml:space="preserve">
+    <value>Time Span (0.0 - 2.0 Seconds)</value>
+  </data>
+  <data name="VTubeStudioActionXMovement" xml:space="preserve">
+    <value>X Movement (+/- 5.0)</value>
+  </data>
+  <data name="VTubeStudioActionYMovement" xml:space="preserve">
+    <value>Y Movement (+/- 5.0)</value>
+  </data>
+  <data name="StopAllSounds" xml:space="preserve">
+    <value>Stop All Sounds</value>
+  </data>
+  <data name="RegexMatch" xml:space="preserve">
+    <value>Regex Match</value>
+  </data>
+  <data name="Pattern" xml:space="preserve">
+    <value>Pattern</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="EditTestSpecialIdentifierText" xml:space="preserve">
+    <value>This dialog can be used to edit the test values for the special identifiers.</value>
+  </data>
+  <data name="VoicemodWebsite" xml:space="preserve">
+    <value>Voicemod Website</value>
+  </data>
+  <data name="Webhooks" xml:space="preserve">
+    <value>Webhooks</value>
+  </data>
+  <data name="CopyURL" xml:space="preserve">
+    <value>Copy URL</value>
+  </data>
+  <data name="AddWebhook" xml:space="preserve">
+    <value>Add Webhook</value>
+  </data>
+  <data name="WebhookJSONMapPairs" xml:space="preserve">
+    <value>Webhook JSON Map Pairs</value>
+  </data>
+  <data name="AJSONParameterNameMustBeSpecified" xml:space="preserve">
+    <value>A JSON parameter name must be specified.</value>
+  </data>
+  <data name="ASpecialIdentifierNameMustBeSpecified" xml:space="preserve">
+    <value>A special identifier name must be specified.</value>
+  </data>
+  <data name="NoTitle" xml:space="preserve">
+    <value>No Title</value>
+  </data>
+  <data name="Ukrainian" xml:space="preserve">
+    <value>Ukrainian</value>
+  </data>
+  <data name="TwitchID" xml:space="preserve">
+    <value>Twitch ID</value>
+  </data>
+  <data name="TwitchUsername" xml:space="preserve">
+    <value>Twitch Username</value>
+  </data>
+  <data name="ViewingHours" xml:space="preserve">
+    <value>Viewing Hours</value>
+  </data>
+  <data name="ViewingMinutes" xml:space="preserve">
+    <value>Viewing Minutes</value>
+  </data>
+  <data name="UserWon" xml:space="preserve">
+    <value>User Won</value>
+  </data>
+  <data name="InitializeSessionUserInitializationFailed" xml:space="preserve">
+    <value>Failed to initialize user information</value>
+  </data>
+  <data name="RoleErrorIncorrectStreamingPlatform" xml:space="preserve">
+    <value>You must be on {0} to do this.</value>
+  </data>
+  <data name="RunAdBreak" xml:space="preserve">
+    <value>Run Ad Break</value>
+  </data>
+  <data name="YouTubeActionUnableToRunAdBreak" xml:space="preserve">
+    <value>ERROR: We were unable to run an ad break, please try again later</value>
+  </data>
+  <data name="GlimeshChannelFollowed" xml:space="preserve">
+    <value>Glimesh Channel Followed</value>
+  </data>
+  <data name="GlimeshChannelStreamStart" xml:space="preserve">
+    <value>Glimesh Channel Stream Start</value>
+  </data>
+  <data name="GlimeshChannelStreamStop" xml:space="preserve">
+    <value>Glimesh Channel Stream Stop</value>
+  </data>
+  <data name="TrovoChannelFollowed" xml:space="preserve">
+    <value>Trovo Channel Followed</value>
+  </data>
+  <data name="TrovoChannelMassSubscriptionsGifted" xml:space="preserve">
+    <value>Trovo Channel Mass Subscriptions Gifted</value>
+  </data>
+  <data name="TrovoChannelRaided" xml:space="preserve">
+    <value>Trovo Channel Raided</value>
+  </data>
+  <data name="TrovoChannelResubscribed" xml:space="preserve">
+    <value>Trovo Channel Resubscribed</value>
+  </data>
+  <data name="TrovoChannelSubscribed" xml:space="preserve">
+    <value>Trovo Channel Subscribed</value>
+  </data>
+  <data name="TrovoChannelSubscriptionGifted" xml:space="preserve">
+    <value>Trovo Channel Subscription Gifted</value>
+  </data>
+  <data name="ChannelFollowed" xml:space="preserve">
+    <value>Channel Followed</value>
+  </data>
+  <data name="ChannelHosted" xml:space="preserve">
+    <value>Channel Hosted</value>
+  </data>
+  <data name="ChannelMassSubscriptionsGifted" xml:space="preserve">
+    <value>Channel Mass Subscriptions Gifted</value>
+  </data>
+  <data name="ChannelRaided" xml:space="preserve">
+    <value>Channel Raided</value>
+  </data>
+  <data name="ChannelResubscribed" xml:space="preserve">
+    <value>Channel Resubscribed</value>
+  </data>
+  <data name="ChannelStreamStart" xml:space="preserve">
+    <value>Channel Stream Start</value>
+  </data>
+  <data name="ChannelStreamStop" xml:space="preserve">
+    <value>Channel Stream Stop</value>
+  </data>
+  <data name="ChannelSubscribed" xml:space="preserve">
+    <value>Channel Subscribed</value>
+  </data>
+  <data name="ChannelSubscriptionGifted" xml:space="preserve">
+    <value>Channel Subscription Gifted</value>
+  </data>
+  <data name="ChannelUnfollowed" xml:space="preserve">
+    <value>Channel Unfollowed</value>
+  </data>
+  <data name="Glimesh" xml:space="preserve">
+    <value>Glimesh</value>
+  </data>
+  <data name="Trovo" xml:space="preserve">
+    <value>Trovo</value>
+  </data>
+  <data name="GenericDonation" xml:space="preserve">
+    <value>Generic Donation</value>
+  </data>
+  <data name="PlatformAgnostic" xml:space="preserve">
+    <value>Platform Agnostic</value>
+  </data>
+  <data name="AlertTrovoSpellFormat" xml:space="preserve">
+    <value>{0} cast the spell {1} - {2} {3}</value>
+  </data>
+  <data name="ShowTrovoSpellCast" xml:space="preserve">
+    <value>Show Trovo Spell Cast</value>
+  </data>
+  <data name="ShowTwitchBitsCheered" xml:space="preserve">
+    <value>Show Twitch Bits Cheered</value>
+  </data>
+  <data name="ShowTwitchChannelPoints" xml:space="preserve">
+    <value>Show Twitch Channel Points</value>
+  </data>
+  <data name="ShowTwitchHypeTrain" xml:space="preserve">
+    <value>Show Twitch Hype Train</value>
+  </data>
+  <data name="TrovoElixir" xml:space="preserve">
+    <value>Elixir</value>
+  </data>
+  <data name="TrovoMana" xml:space="preserve">
+    <value>Mana</value>
+  </data>
+  <data name="TrovoSpellCast" xml:space="preserve">
+    <value>Trovo Spell Cast</value>
+  </data>
+  <data name="ChatEntranceCommand" xml:space="preserve">
+    <value>Chat Entrance Command</value>
+  </data>
+  <data name="TrovoAdmin" xml:space="preserve">
+    <value>Trovo Admin</value>
+  </data>
+  <data name="TrovoEditor" xml:space="preserve">
+    <value>Trovo Editor</value>
+  </data>
+  <data name="TrovoSuperMod" xml:space="preserve">
+    <value>Trovo Super Mod</value>
+  </data>
+  <data name="TrovoWarden" xml:space="preserve">
+    <value>Trovo Warden</value>
+  </data>
+  <data name="TwitchAffiliate" xml:space="preserve">
+    <value>Twitch Affiliate</value>
+  </data>
+  <data name="TwitchChannelEditor" xml:space="preserve">
+    <value>Twitch Channel Editor</value>
+  </data>
+  <data name="TwitchGlobalMod" xml:space="preserve">
+    <value>Twitch Global Mod</value>
+  </data>
+  <data name="TwitchPartner" xml:space="preserve">
+    <value>Twitch Partner</value>
+  </data>
+  <data name="TwitchStaff" xml:space="preserve">
+    <value>Twitch Staff</value>
+  </data>
+  <data name="TwitchTurbo" xml:space="preserve">
+    <value>Twitch Turbo</value>
+  </data>
+  <data name="TwitchVIP" xml:space="preserve">
+    <value>Twitch VIP</value>
+  </data>
+  <data name="YouTubeMember" xml:space="preserve">
+    <value>YouTube Member</value>
+  </data>
+  <data name="YouTubeSubscriber" xml:space="preserve">
+    <value>YouTube Subscriber</value>
   </data>
 </root>

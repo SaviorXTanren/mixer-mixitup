@@ -60,7 +60,7 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private bool collectActive = false;
         [JsonIgnore]
-        private HashSet<UserViewModel> collectUsers = new HashSet<UserViewModel>();
+        private HashSet<UserV2ViewModel> collectUsers = new HashSet<UserV2ViewModel>();
 
         public VolcanoGameCommandModel(string name, HashSet<string> triggers, string statusArgument, CustomCommandModel stage1DepositCommand, CustomCommandModel stage1StatusCommand,
             int stage2MinimumAmount, CustomCommandModel stage2DepositCommand, CustomCommandModel stage2StatusCommand,
@@ -88,31 +88,6 @@ namespace MixItUp.Base.Model.Commands.Games
             this.CollectMaximumPercentage = collectMaximumPercentage;
             this.CollectCommand = collectCommand;
         }
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        internal VolcanoGameCommandModel(Base.Commands.VolcanoGameCommand command)
-            : base(command, GameCommandTypeEnum.Volcano)
-        {
-            this.StatusArgument = command.StatusArgument;
-            this.Stage1DepositCommand = new CustomCommandModel(command.Stage1DepositCommand) { IsEmbedded = true };
-            this.Stage1StatusCommand = new CustomCommandModel(command.Stage1StatusCommand) { IsEmbedded = true };
-            this.Stage2MinimumAmount = command.Stage2MinimumAmount;
-            this.Stage2DepositCommand = new CustomCommandModel(command.Stage2DepositCommand) { IsEmbedded = true };
-            this.Stage2StatusCommand = new CustomCommandModel(command.Stage2StatusCommand) { IsEmbedded = true };
-            this.Stage3MinimumAmount = command.Stage3MinimumAmount;
-            this.Stage3DepositCommand = new CustomCommandModel(command.Stage3DepositCommand) { IsEmbedded = true };
-            this.Stage3StatusCommand = new CustomCommandModel(command.Stage3StatusCommand) { IsEmbedded = true };
-            this.PayoutProbability = command.PayoutProbability;
-            this.PayoutMinimumPercentage = command.PayoutPercentageMinimum;
-            this.PayoutMaximumPercentage = command.PayoutPercentageMaximum;
-            this.PayoutCommand = new CustomCommandModel(command.PayoutCommand) { IsEmbedded = true };
-            this.CollectArgument = command.CollectArgument;
-            this.CollectTimeLimit = command.CollectTimeLimit;
-            this.CollectMinimumPercentage = command.CollectPayoutPercentageMinimum;
-            this.CollectMaximumPercentage = command.CollectPayoutPercentageMaximum;
-            this.CollectCommand = new CustomCommandModel(command.CollectArgument) { IsEmbedded = true };
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
 
         private VolcanoGameCommandModel() { }
 

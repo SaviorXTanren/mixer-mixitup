@@ -42,7 +42,7 @@ namespace MixItUp.WPF.Services
             {
                 using (var image = SixLabors.ImageSharp.Image.Load(imageData))
                 {
-                    using (var resizedImage = image.Clone(ctx => ctx.Resize(new SixLabors.Primitives.Size(width, height))))
+                    using (var resizedImage = image.Clone(ctx => ctx.Resize(new SixLabors.ImageSharp.Size(width, height))))
                     {
                         using (MemoryStream stream = new MemoryStream())
                         {
