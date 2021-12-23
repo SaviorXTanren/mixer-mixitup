@@ -2208,7 +2208,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to - Per Command Type: Each command type (Chat, Event, Timer, etc) has a lock that prevents other commands of the same time from running at the same time.
+        ///   Looks up a localized string similar to - Per Command Type: Each command type (Chat, Event, Timer, etc) has a lock that prevents other commands of the same type from running at the same time.
         ///- Per Action Type: Each action type (Chat, Sound, Conditional, etc) has a lock that prevents other commands also containing those actions from running at the same time.
         ///- Visual/Audio Actions: Commands containing visual/audio-based actions (Sound, Overlay, etc) share 1 lock while other commands will run as soon as they are triggered.
         ///- Singular: All comma [rest of string was truncated]&quot;;.

@@ -24,8 +24,6 @@ namespace MixItUp.Base.ViewModel.Actions
 
     public class OverlayActionEditorControlViewModel : ActionEditorControlViewModelBase
     {
-        private const string ShowHideWidgetOption = "Show/Hide Widget";
-
         public override ActionTypeEnum Type { get { return ActionTypeEnum.Overlay; } }
 
         public IEnumerable<OverlayActionTypeEnum> ActionTypes { get { return EnumHelper.GetEnumList<OverlayActionTypeEnum>(); } }
@@ -45,13 +43,15 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged("ShowYouTubeItem");
                 this.NotifyPropertyChanged("ShowWebPageItem");
                 this.NotifyPropertyChanged("ShowHTMLItem");
+                this.NotifyPropertyChanged("OverlayNotEnabled");
+                this.NotifyPropertyChanged("OverlayEnabled");
             }
         }
         private OverlayActionTypeEnum selectedActionType;
 
         public bool OverlayNotEnabled { get { return !ServiceManager.Get<OverlayService>().IsConnected; } }
 
-        public bool OverlayEnabled { get { return !this.OverlayNotEnabled; } }
+        public bool OverlayEnabled { get { return !this.OverlayNotEnabled &&  SelectedActionType != OverlayActionTypeEnum.ShowHideWidget; } }
 
         public IEnumerable<string> OverlayEndpoints { get { return ServiceManager.Get<OverlayService>().GetOverlayNames(); } }
 
@@ -60,7 +60,15 @@ namespace MixItUp.Base.ViewModel.Actions
             get { return this.selectedOverlayEndpoint; }
             set
             {
-                this.selectedOverlayEndpoint = value;
+                var overlays = ServiceManager.Get<OverlayService>().GetOverlayNames();
+                if (overlays.Contains(value))
+                {
+                    this.selectedOverlayEndpoint = value;
+                }
+                else
+                {
+                    this.selectedOverlayEndpoint = ServiceManager.Get<OverlayService>().DefaultOverlayName;
+                }
                 this.NotifyPropertyChanged();
             }
         }
