@@ -21,6 +21,8 @@ namespace MixItUp.WPF.Services.DeveloperAPI
     {
         public static async Task<UserV2ViewModel> GetUserData(string usernameOrID)
         {
+            await ServiceManager.Get<UserService>().LoadAllUserData();
+
             UserV2ViewModel user = null;
             if (!string.IsNullOrEmpty(usernameOrID))
             {
@@ -61,6 +63,8 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpGet]
         public async Task<User> Get(string usernameOrID)
         {
+            await ServiceManager.Get<UserService>().LoadAllUserData();
+
             UserV2ViewModel user = await UserController.GetUserData(usernameOrID);
             if (user == null)
             {
@@ -79,6 +83,8 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpGet]
         public async Task<User> GetTwitch(string usernameOrID)
         {
+            await ServiceManager.Get<UserService>().LoadAllUserData();
+
             UserV2ViewModel user = null;
             if (!string.IsNullOrEmpty(usernameOrID))
             {
@@ -106,6 +112,8 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpPut, HttpPatch]
         public async Task<User> Update(string usernameOrID, [FromBody] User updatedUserData)
         {
+            await ServiceManager.Get<UserService>().LoadAllUserData();
+
             UserV2ViewModel user = await UserController.GetUserData(usernameOrID);
             if (user == null)
             {
@@ -117,11 +125,13 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            return UpdateUser(user, updatedUserData);
+            return await UpdateUser(user, updatedUserData);
         }
 
-        private User UpdateUser(UserV2ViewModel user, User updatedUserData)
+        private async Task<User> UpdateUser(UserV2ViewModel user, User updatedUserData)
         {
+            await ServiceManager.Get<UserService>().LoadAllUserData();
+
             if (updatedUserData == null || !updatedUserData.ID.Equals(user.ID))
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
@@ -152,6 +162,8 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpPut, HttpPatch]
         public async Task<User> AdjustUserCurrency(string usernameOrID, Guid currencyID, [FromBody] AdjustCurrency currencyUpdate)
         {
+            await ServiceManager.Get<UserService>().LoadAllUserData();
+
             UserV2ViewModel user = await UserController.GetUserData(usernameOrID);
             if (user == null)
             {
@@ -170,6 +182,8 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpPut, HttpPatch]
         public async Task<User> AdjustUserInventory(string usernameOrID, Guid inventoryID, [FromBody]AdjustInventory inventoryUpdate)
         {
+            await ServiceManager.Get<UserService>().LoadAllUserData();
+
             UserV2ViewModel user = await UserController.GetUserData(usernameOrID);
             if (user == null)
             {
@@ -185,8 +199,10 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
         [Route("top")]
         [HttpGet]
-        public IEnumerable<User> Get(int count = 10)
+        public async Task<IEnumerable<User>> Get(int count = 10)
         {
+            await ServiceManager.Get<UserService>().LoadAllUserData();
+
             if (count < 1)
             {
                 // TODO: Consider checking or a max # too? (100?)

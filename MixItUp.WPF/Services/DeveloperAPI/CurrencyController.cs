@@ -49,8 +49,10 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
         [Route("{currencyID:guid}/top")]
         [HttpGet]
-        public IEnumerable<User> Get(Guid currencyID, int count = 10)
+        public async Task<IEnumerable<User>> Get(Guid currencyID, int count = 10)
         {
+            await ServiceManager.Get<UserService>().LoadAllUserData();
+
             if (!ChannelSession.Settings.Currency.ContainsKey(currencyID))
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -91,6 +93,8 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpPost]
         public async Task<IEnumerable<User>> BulkGive(Guid currencyID, [FromBody] IEnumerable<GiveUserCurrency> giveDatas)
         {
+            await ServiceManager.Get<UserService>().LoadAllUserData();
+
             if (!ChannelSession.Settings.Currency.ContainsKey(currencyID))
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
