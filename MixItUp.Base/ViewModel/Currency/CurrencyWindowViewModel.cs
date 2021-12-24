@@ -6,19 +6,16 @@ using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.ViewModel.Currency
 {
@@ -113,8 +110,6 @@ namespace MixItUp.Base.ViewModel.Currency
                     this.OnlineRateAmount = 1;
                     this.OnlineRateInterval = 1;
 
-                    this.OfflineRate = CurrencyAcquireRateTypeEnum.Disabled;
-
                     this.RegularBonus = 0;
                     this.SubscriberBonus = 0;
                     this.ModeratorBonus = 0;
@@ -155,59 +150,6 @@ namespace MixItUp.Base.ViewModel.Currency
             }
         }
         private int onlineRateInterval = 0;
-
-        public CurrencyAcquireRateTypeEnum OfflineRate
-        {
-            get { return this.offlineRate; }
-            set
-            {
-                this.offlineRate = value;
-                this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("IsOnlineRateTimeBased");
-                this.NotifyPropertyChanged("IsCustomOfflineRate");
-
-                if (this.OfflineRate == CurrencyAcquireRateTypeEnum.Minutes || this.OfflineRate == CurrencyAcquireRateTypeEnum.Hours)
-                {
-                    this.OfflineRateAmount = 1;
-                    if (this.OfflineRate == CurrencyAcquireRateTypeEnum.Minutes)
-                    {
-                        this.OfflineRateInterval = 1;
-                    }
-                    else if (this.OfflineRate == CurrencyAcquireRateTypeEnum.Hours)
-                    {
-                        this.OfflineRateInterval = 60;
-                    }
-                }
-                else
-                {
-                    this.OfflineRateAmount = 0;
-                    this.OfflineRateInterval = 0;
-                }
-            }
-        }
-        private CurrencyAcquireRateTypeEnum offlineRate;
-        public List<CurrencyAcquireRateTypeEnum> OfflineRates { get; private set; } = new List<CurrencyAcquireRateTypeEnum>() { CurrencyAcquireRateTypeEnum.Minutes, CurrencyAcquireRateTypeEnum.Hours, CurrencyAcquireRateTypeEnum.Custom, CurrencyAcquireRateTypeEnum.Disabled };
-        public bool IsCustomOfflineRate { get { return this.OfflineRate == CurrencyAcquireRateTypeEnum.Custom; } }
-        public int OfflineRateAmount
-        {
-            get { return this.offlineRateAmount; }
-            set
-            {
-                this.offlineRateAmount = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private int offlineRateAmount = 0;
-        public int OfflineRateInterval
-        {
-            get { return this.offlineRateInterval; }
-            set
-            {
-                this.offlineRateInterval = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private int offlineRateInterval = 0;
 
         public int RegularBonus
         {
@@ -420,25 +362,6 @@ namespace MixItUp.Base.ViewModel.Currency
             this.OnlineRateAmount = this.Currency.AcquireAmount;
             this.OnlineRateInterval = this.Currency.AcquireInterval;
 
-            if (this.Currency.IsOfflineIntervalMinutes)
-            {
-                this.OfflineRate = CurrencyAcquireRateTypeEnum.Minutes;
-            }
-            else if (this.Currency.IsOfflineIntervalHours)
-            {
-                this.OfflineRate = CurrencyAcquireRateTypeEnum.Hours;
-            }
-            else if (this.Currency.IsOfflineIntervalDisabled)
-            {
-                this.OfflineRate = CurrencyAcquireRateTypeEnum.Disabled;
-            }
-            else
-            {
-                this.OfflineRate = CurrencyAcquireRateTypeEnum.Custom;
-            }
-            this.OfflineRateAmount = this.Currency.OfflineAcquireAmount;
-            this.OfflineRateInterval = this.Currency.OfflineAcquireInterval;
-
             this.RegularBonus = this.Currency.RegularBonus;
             this.SubscriberBonus = this.Currency.SubscriberBonus;
             this.ModeratorBonus = this.Currency.ModeratorBonus;
@@ -472,7 +395,6 @@ namespace MixItUp.Base.ViewModel.Currency
             }
 
             this.OnlineRate = CurrencyAcquireRateTypeEnum.Minutes;
-            this.OfflineRate = CurrencyAcquireRateTypeEnum.Disabled;
 
             this.AutomaticResetRate = CurrencyResetRateEnum.Never;
 
@@ -750,18 +672,6 @@ namespace MixItUp.Base.ViewModel.Currency
                 return false;
             }
 
-            if (this.OfflineRateAmount < 0 || this.OfflineRateInterval < 0)
-            {
-                await DialogHelper.ShowMessage(Resources.OnlineRateVsInterval2);
-                return false;
-            }
-
-            if (this.OfflineRateAmount > 0 && this.OfflineRateInterval == 0)
-            {
-                await DialogHelper.ShowMessage(Resources.OfflineRateVsInterval);
-                return false;
-            }
-
             if (this.RegularBonus < 0)
             {
                 await DialogHelper.ShowMessage(Resources.RegularBonusZeroOrMore);
@@ -830,8 +740,6 @@ namespace MixItUp.Base.ViewModel.Currency
 
             this.Currency.AcquireAmount = this.OnlineRateAmount;
             this.Currency.AcquireInterval = this.OnlineRateInterval;
-            this.Currency.OfflineAcquireAmount = this.OfflineRateAmount;
-            this.Currency.OfflineAcquireInterval = this.OfflineRateInterval;
 
             this.Currency.SpecialTracking = CurrencySpecialTrackingEnum.None;
             if (this.OnlineRate == CurrencyAcquireRateTypeEnum.Bits) { this.Currency.SpecialTracking = CurrencySpecialTrackingEnum.Bits; }

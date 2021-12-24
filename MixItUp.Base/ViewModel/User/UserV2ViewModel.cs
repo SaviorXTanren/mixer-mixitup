@@ -46,7 +46,7 @@ namespace MixItUp.Base.ViewModel.User
                 }
             }
 
-            if (this.platformModel == null)
+            if (this.platformModel == null && this.Model.GetPlatforms().Count > 0)
             {
                 this.platformModel = this.GetPlatformData<UserPlatformV2ModelBase>(this.Model.GetPlatforms().First());
             }
@@ -518,7 +518,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public void UpdateLastActivity() { this.Model.LastActivity = DateTimeOffset.Now; }
 
-        public void UpdateViewingMinutes()
+        public void UpdateViewingMinutes(Dictionary<StreamingPlatformTypeEnum, bool> liveStreams)
         {
             this.OnlineViewingMinutes++;
             ChannelSession.Settings.Users.ManualValueChanged(this.ID);

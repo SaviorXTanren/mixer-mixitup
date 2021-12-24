@@ -696,19 +696,32 @@ namespace MixItUp.Base.Services
 
         private Task ProcessHoursCurrency(CancellationToken cancellationToken)
         {
-            foreach (UserV2ViewModel user in ServiceManager.Get<UserService>().GetActiveUsers())
-            {
-                user.UpdateViewingMinutes();
-            }
+            Dictionary<StreamingPlatformTypeEnum, bool> liveStreams = new Dictionary<StreamingPlatformTypeEnum, bool>();
 
-            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
-            {
-                currency.UpdateUserData();
-            }
+            liveStreams[StreamingPlatformTypeEnum.Twitch] = ServiceManager.Get<TwitchSessionService>().StreamIsLive;
+            liveStreams[StreamingPlatformTypeEnum.YouTube] = false;
+            liveStreams[StreamingPlatformTypeEnum.Trovo] = ServiceManager.Get<TrovoSessionService>().Channel.is_live;
+            liveStreams[StreamingPlatformTypeEnum.Glimesh] = ServiceManager.Get<GlimeshSessionService>().User.channel.IsLive;
 
-            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+            if (liveStreams.Any(s => s.Value))
             {
-                streamPass.UpdateUserData();
+                foreach (UserV2ViewModel user in ServiceManager.Get<UserService>().GetActiveUsers())
+                {
+                    if (liveStreams.TryGetValue(user.Platform, out bool active) && active)
+                    {
+                        user.UpdateViewingMinutes(liveStreams);
+                    }
+                }
+
+                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
+                {
+                    currency.UpdateUserData(liveStreams);
+                }
+
+                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                {
+                    streamPass.UpdateUserData(liveStreams);
+                }
             }
 
             return Task.CompletedTask;

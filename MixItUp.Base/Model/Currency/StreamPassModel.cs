@@ -228,26 +228,29 @@ namespace MixItUp.Base.Model.Currency
 
         public void ResetAmount(UserV2ViewModel user) { this.SetAmount(user, 0); }
 
-        public void UpdateUserData()
+        public void UpdateUserData(Dictionary<StreamingPlatformTypeEnum, bool> liveStreams)
         {
             // TODO
             DateTime date = DateTimeOffset.Now.Date;
-            if (ServiceManager.Get<TwitchSessionService>().StreamIsLive && this.StartDate.Date <= date && date <= this.EndDate && this.ViewingRateMinutes > 0)
+            if (this.StartDate.Date <= date && date <= this.EndDate && this.ViewingRateMinutes > 0)
             {
                 DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
                 foreach (UserV2ViewModel user in ServiceManager.Get<UserService>().GetActiveUsers())
                 {
-                    if (!user.IsSpecialtyExcluded && user.MeetsRole(this.UserPermission) && (this.MinimumActiveRate == 0 || user.LastActivity > minActiveTime))
+                    if (liveStreams.TryGetValue(user.Platform, out bool active) && active)
                     {
-                        if (user.OnlineViewingMinutes % this.ViewingRateMinutes == 0)
+                        if (!user.IsSpecialtyExcluded && user.MeetsRole(this.UserPermission) && (this.MinimumActiveRate == 0 || user.LastActivity > minActiveTime))
                         {
-                            int amount = this.ViewingRateAmount;
-                            if (this.SubMultiplier > 1.0 && user.MeetsRole(UserRoleEnum.Subscriber))
+                            if (user.OnlineViewingMinutes % this.ViewingRateMinutes == 0)
                             {
-                                amount = (int)Math.Ceiling(((double)amount) * this.SubMultiplier);
+                                int amount = this.ViewingRateAmount;
+                                if (this.SubMultiplier > 1.0 && user.MeetsRole(UserRoleEnum.Subscriber))
+                                {
+                                    amount = (int)Math.Ceiling(((double)amount) * this.SubMultiplier);
+                                }
+                                this.AddAmount(user, amount);
+                                ChannelSession.Settings.Users.ManualValueChanged(user.ID);
                             }
-                            this.AddAmount(user, amount);
-                            ChannelSession.Settings.Users.ManualValueChanged(user.ID);
                         }
                     }
                 }

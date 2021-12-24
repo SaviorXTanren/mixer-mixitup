@@ -1,6 +1,8 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -108,11 +110,6 @@ namespace MixItUp.Base.Model.Currency
         public int MinimumActiveRate { get; set; }
 
         [DataMember]
-        public int OfflineAcquireAmount { get; set; }
-        [DataMember]
-        public int OfflineAcquireInterval { get; set; }
-
-        [DataMember]
         public int MaxAmount { get; set; }
 
         [DataMember]
@@ -160,7 +157,7 @@ namespace MixItUp.Base.Model.Currency
         }
 
         [JsonIgnore]
-        public bool IsActive { get { return !(this.IsOnlineIntervalDisabled && this.IsOfflineIntervalDisabled); } }
+        public bool IsActive { get { return !this.IsOnlineIntervalDisabled; } }
 
         [JsonIgnore]
         public bool IsRank { get { return this.Ranks.Count > 0; } }
@@ -173,15 +170,6 @@ namespace MixItUp.Base.Model.Currency
 
         [JsonIgnore]
         public bool IsOnlineIntervalDisabled { get { return this.AcquireAmount == 0 && this.AcquireInterval == 0; } }
-
-        [JsonIgnore]
-        public bool IsOfflineIntervalMinutes { get { return this.OfflineAcquireAmount == 1 && this.OfflineAcquireInterval == 1; } }
-
-        [JsonIgnore]
-        public bool IsOfflineIntervalHours { get { return this.OfflineAcquireAmount == 1 && this.OfflineAcquireInterval == 60; } }
-
-        [JsonIgnore]
-        public bool IsOfflineIntervalDisabled { get { return this.OfflineAcquireAmount == 0 && this.OfflineAcquireInterval == 0; } }
 
         [JsonIgnore]
         public bool HasMinimumActiveRate { get { return this.MinimumActiveRate > 0; } }
@@ -348,26 +336,25 @@ namespace MixItUp.Base.Model.Currency
             return CurrencyModel.NoRank;
         }
 
-        public void UpdateUserData()
+        public void UpdateUserData(Dictionary<StreamingPlatformTypeEnum, bool> liveStreams)
         {
             // TODO
             if (this.IsActive)
             {
-                if (this.SpecialTracking == CurrencySpecialTrackingEnum.None && ServiceManager.Get<TwitchSessionService>().StreamIsLive)
+                if (this.SpecialTracking == CurrencySpecialTrackingEnum.None)
                 {
                     DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
-                    bool bonusesCanBeApplied = (ServiceManager.Get<TwitchSessionService>().StreamIsLive || this.OfflineAcquireAmount > 0);
                     foreach (UserV2ViewModel user in ServiceManager.Get<UserService>().GetActiveUsers())
                     {
-                        if (!user.IsSpecialtyExcluded && (!this.HasMinimumActiveRate || user.LastActivity > minActiveTime))
+                        if (liveStreams.TryGetValue(user.Platform, out bool active) && active)
                         {
-                            if (user.OnlineViewingMinutes % this.AcquireInterval == 0)
+                            if (!user.IsSpecialtyExcluded && (!this.HasMinimumActiveRate || user.LastActivity > minActiveTime))
                             {
-                                this.AddAmount(user, ServiceManager.Get<TwitchSessionService>().StreamIsLive ? this.AcquireAmount : this.OfflineAcquireAmount);
-                                if (bonusesCanBeApplied)
+                                if (user.OnlineViewingMinutes % this.AcquireInterval == 0)
                                 {
-                                    int bonus = 0;
+                                    this.AddAmount(user, this.AcquireAmount);
 
+                                    int bonus = 0;
                                     if (this.RegularBonus > 0 && user.HasRole(UserRoleEnum.Regular))
                                     {
                                         bonus = Math.Max(this.RegularBonus, bonus);
@@ -385,8 +372,9 @@ namespace MixItUp.Base.Model.Currency
                                     {
                                         this.AddAmount(user, bonus);
                                     }
+
+                                    ChannelSession.Settings.Users.ManualValueChanged(user.ID);
                                 }
-                                ChannelSession.Settings.Users.ManualValueChanged(user.ID);
                             }
                         }
                     }
