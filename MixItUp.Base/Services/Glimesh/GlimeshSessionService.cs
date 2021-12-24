@@ -15,9 +15,12 @@ namespace MixItUp.Base.Services.Glimesh
     {
         public GlimeshPlatformService UserConnection { get; private set; }
         public GlimeshPlatformService BotConnection { get; private set; }
+
         public UserModel User { get; private set; }
-        public ChannelModel Channel { get; private set; }
         public UserModel Bot { get; private set; }
+
+        public HashSet<string> Moderators { get; private set; } = new HashSet<string>();
+        public HashSet<string> Followers { get; private set; } = new HashSet<string>();
 
         public bool IsConnected { get { return this.UserConnection != null; } }
 
@@ -31,12 +34,6 @@ namespace MixItUp.Base.Services.Glimesh
                 if (this.User == null)
                 {
                     return new Result("Failed to get Glimesh user data");
-                }
-
-                this.Channel = await this.UserConnection.GetChannelByName(this.User.username);
-                if (this.Channel == null)
-                {
-                    return new Result("Failed to get Glimesh channel data");
                 }
             }
             return result;
@@ -137,33 +134,41 @@ namespace MixItUp.Base.Services.Glimesh
             {
                 try
                 {
-                    ChannelModel channel = await this.UserConnection.GetChannelByName(this.User.username);
-                    if (channel != null)
+                    if (settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Glimesh))
                     {
-                        this.Channel = channel;
-
-                        if (settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Glimesh))
+                        if (!string.IsNullOrEmpty(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID) && !string.Equals(this.User.id, settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID))
                         {
-                            if (!string.IsNullOrEmpty(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID) && !string.Equals(this.User.id, settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID))
-                            {
-                                Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.User.username} - {this.User.id} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID}");
-                                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserOAuthToken.accessToken = string.Empty;
-                                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserOAuthToken.refreshToken = string.Empty;
-                                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserOAuthToken.expiresIn = 0;
-                                return new Result("The account you are logged in as on Glimesh does not match the account for this settings. Please log in as the correct account on Glimesh.");
-                            }
+                            Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.User.username} - {this.User.id} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID}");
+                            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserOAuthToken.accessToken = string.Empty;
+                            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserOAuthToken.refreshToken = string.Empty;
+                            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserOAuthToken.expiresIn = 0;
+                            return new Result("The account you are logged in as on Glimesh does not match the account for this settings. Please log in as the correct account on Glimesh.");
                         }
+                    }
 
-                        List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
-                        platformServiceTasks.Add(ServiceManager.Get<GlimeshChatEventService>().ConnectUser());
+                    List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
+                    platformServiceTasks.Add(ServiceManager.Get<GlimeshChatEventService>().ConnectUser());
 
-                        await Task.WhenAll(platformServiceTasks);
+                    await Task.WhenAll(platformServiceTasks);
 
-                        if (platformServiceTasks.Any(c => !c.Result.Success))
+                    if (platformServiceTasks.Any(c => !c.Result.Success))
+                    {
+                        string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
+                        return new Result("Failed to connect to Glimesh services:" + Environment.NewLine + Environment.NewLine + errors);
+                    }
+
+                    IEnumerable<UserFollowModel> followers = await this.UserConnection.GetFollowingUsers(this.User.id);
+                    if (followers != null)
+                    {
+                        foreach (UserFollowModel follow in followers)
                         {
-                            string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
-                            return new Result("Failed to connect to Glimesh services:" + Environment.NewLine + Environment.NewLine + errors);
+                            this.Followers.Add(follow.user.id);
                         }
+                    }
+
+                    foreach (ChannelModeratorModel moderator in this.User.channel.moderators.Items)
+                    {
+                        this.Moderators.Add(moderator.user.id);
                     }
                 }
                 catch (Exception ex)
@@ -216,7 +221,7 @@ namespace MixItUp.Base.Services.Glimesh
 
                 settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserOAuthToken = this.UserConnection.Connection.GetOAuthTokenCopy();
                 settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID = this.User.id;
-                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].ChannelID = this.Channel.id;
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].ChannelID = this.User.channel.id;
 
                 if (this.BotConnection != null)
                 {
@@ -250,19 +255,6 @@ namespace MixItUp.Base.Services.Glimesh
             }
         }
 
-        public async Task RefreshChannel()
-        {
-            if (this.UserConnection != null)
-            {
-                if (this.Channel != null)
-                {
-                    ChannelModel channel = await this.UserConnection.GetChannelByID(this.Channel.id);
-                    if (channel != null)
-                    {
-                        this.Channel = channel;
-                    }
-                }
-            }
-        }
+        public Task RefreshChannel() { return Task.CompletedTask; }
     }
 }

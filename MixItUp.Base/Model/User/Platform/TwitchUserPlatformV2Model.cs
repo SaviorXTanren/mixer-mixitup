@@ -153,6 +153,7 @@ namespace MixItUp.Base.Model.User.Platform
                 this.Color = color;
             }
 
+            if (string.Equals(this.ID, ServiceManager.Get<TwitchSessionService>().User?.id)) { this.Roles.Add(UserRoleEnum.Streamer); } else { this.Roles.Remove(UserRoleEnum.Streamer); }
             if (this.Badges != null)
             {
                 if (this.HasTwitchBadge("admin") || this.HasTwitchBadge("staff")) { this.Roles.Add(UserRoleEnum.TwitchStaff); } else { this.Roles.Remove(UserRoleEnum.TwitchStaff); }
@@ -195,6 +196,7 @@ namespace MixItUp.Base.Model.User.Platform
             this.AvatarLink = user.profile_image_url;
             this.AccountDate = TwitchPlatformService.GetTwitchDateTime(user.created_at);
 
+            if (string.Equals(this.ID, ServiceManager.Get<TwitchSessionService>().User?.id)) { this.Roles.Add(UserRoleEnum.Streamer); } else { this.Roles.Remove(UserRoleEnum.Streamer); }
             if (user.IsAffiliate()) { this.Roles.Add(UserRoleEnum.TwitchAffiliate); } else { this.Roles.Remove(UserRoleEnum.TwitchAffiliate); }
             if (user.IsPartner()) { this.Roles.Add(UserRoleEnum.TwitchPartner); } else { this.Roles.Remove(UserRoleEnum.TwitchPartner); }
             if (user.IsGlobalMod()) { this.Roles.Add(UserRoleEnum.TwitchGlobalMod); } else { this.Roles.Remove(UserRoleEnum.TwitchGlobalMod); }

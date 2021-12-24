@@ -5,6 +5,7 @@ using Glimesh.Base.Models.Users;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -60,12 +61,12 @@ namespace MixItUp.Base.Services.Glimesh
                             return new Result("Failed to connect to Glimesh chat servers");
                         }
 
-                        if (!await this.userClient.JoinChannelChat(ServiceManager.Get<GlimeshSessionService>().Channel?.id))
+                        if (!await this.userClient.JoinChannelChat(ServiceManager.Get<GlimeshSessionService>().User.channel?.id))
                         {
                             return new Result("Failed to join Glimesh channel chat");
                         }
 
-                        if (!await this.userClient.JoinChannelEvents(ServiceManager.Get<GlimeshSessionService>().Channel?.id, ServiceManager.Get<GlimeshSessionService>().User?.id))
+                        if (!await this.userClient.JoinChannelEvents(ServiceManager.Get<GlimeshSessionService>().User.channel?.id, ServiceManager.Get<GlimeshSessionService>().User?.id))
                         {
                             return new Result("Failed to join Glimesh channel events");
                         }
@@ -176,7 +177,7 @@ namespace MixItUp.Base.Services.Glimesh
                     do
                     {
                         message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
-                        await client.SendMessage(ServiceManager.Get<GlimeshSessionService>().Channel?.id, message);
+                        await client.SendMessage(ServiceManager.Get<GlimeshSessionService>().User.channel?.id, message);
                         message = subMessage;
                         await Task.Delay(500);
                     }
@@ -191,7 +192,7 @@ namespace MixItUp.Base.Services.Glimesh
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.ShortTimeoutUser(ServiceManager.Get<GlimeshSessionService>().Channel?.id, user.PlatformID);
+                    await this.userClient.ShortTimeoutUser(ServiceManager.Get<GlimeshSessionService>().User.channel?.id, user.PlatformID);
                 }
             });
         }
@@ -202,7 +203,7 @@ namespace MixItUp.Base.Services.Glimesh
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.LongTimeoutUser(ServiceManager.Get<GlimeshSessionService>().Channel?.id, user.PlatformID);
+                    await this.userClient.LongTimeoutUser(ServiceManager.Get<GlimeshSessionService>().User.channel?.id, user.PlatformID);
                 }
             });
         }
@@ -213,7 +214,7 @@ namespace MixItUp.Base.Services.Glimesh
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.BanUser(ServiceManager.Get<GlimeshSessionService>().Channel?.id, user.PlatformID);
+                    await this.userClient.BanUser(ServiceManager.Get<GlimeshSessionService>().User.channel?.id, user.PlatformID);
                 }
             });
         }
@@ -224,7 +225,7 @@ namespace MixItUp.Base.Services.Glimesh
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.UnbanUser(ServiceManager.Get<GlimeshSessionService>().Channel?.id, user.PlatformID);
+                    await this.userClient.UnbanUser(ServiceManager.Get<GlimeshSessionService>().User.channel?.id, user.PlatformID);
                 }
             });
         }
@@ -270,7 +271,7 @@ namespace MixItUp.Base.Services.Glimesh
         {
             try
             {
-                if (!ServiceManager.Get<GlimeshSessionService>().Channel.IsLive && channel.Channel.IsLive)
+                if (!ServiceManager.Get<GlimeshSessionService>().User.channel.IsLive && channel.Channel.IsLive)
                 {
                     CommandParametersModel parameters = new CommandParametersModel(ChannelSession.User);
                     if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.GlimeshChannelStreamStart, parameters))
@@ -278,7 +279,7 @@ namespace MixItUp.Base.Services.Glimesh
                         await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.GlimeshChannelStreamStart, parameters);
                     }
                 }
-                else if (ServiceManager.Get<GlimeshSessionService>().Channel.IsLive && !channel.Channel.IsLive)
+                else if (ServiceManager.Get<GlimeshSessionService>().User.channel.IsLive && !channel.Channel.IsLive)
                 {
                     CommandParametersModel parameters = new CommandParametersModel(ChannelSession.User);
                     if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.GlimeshChannelStreamStop, parameters))
@@ -302,6 +303,9 @@ namespace MixItUp.Base.Services.Glimesh
                 {
                     user = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(follow.Follow.user));
                 }
+
+                ServiceManager.Get<GlimeshSessionService>().Followers.Add(follow.Follow.user.id);
+                user.Roles.Add(UserRoleEnum.Follower);
 
                 CommandParametersModel parameters = new CommandParametersModel(user);
                 if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.GlimeshChannelFollowed, parameters))

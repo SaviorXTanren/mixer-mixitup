@@ -235,7 +235,7 @@ namespace MixItUp.Base.Model.Commands
             else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
             {
                 await ServiceManager.Get<GlimeshSessionService>().RefreshChannel();
-                title = ServiceManager.Get<GlimeshSessionService>().Channel?.title;
+                title = ServiceManager.Get<GlimeshSessionService>().User?.channel?.title;
             }
 
             if (!string.IsNullOrEmpty(title))
@@ -260,7 +260,7 @@ namespace MixItUp.Base.Model.Commands
             else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
             {
                 await ServiceManager.Get<GlimeshSessionService>().RefreshChannel();
-                return GlimeshPlatformService.GetGlimeshDateTime(ServiceManager.Get<GlimeshSessionService>().Channel?.stream?.startedAt);
+                return GlimeshPlatformService.GetGlimeshDateTime(ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.startedAt);
             }
             return DateTimeOffset.MinValue;
         }

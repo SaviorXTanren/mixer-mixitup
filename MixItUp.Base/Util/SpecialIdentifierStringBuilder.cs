@@ -529,10 +529,10 @@ namespace MixItUp.Base.Util
                 }
                 else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
                 {
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<GlimeshSessionService>().Channel?.stream?.countViewers.ToString());
-                    if (ServiceManager.Get<GlimeshSessionService>().Channel != null)
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.countViewers.ToString());
+                    if (ServiceManager.Get<GlimeshSessionService>().User?.channel != null)
                     {
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<GlimeshSessionService>().Channel.title);
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<GlimeshSessionService>().User?.channel.title);
                         // TODO
                     }
                 }
@@ -901,7 +901,7 @@ namespace MixItUp.Base.Util
                     }
                     else if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Glimesh) && ServiceManager.Get<GlimeshSessionService>().IsConnected)
                     {
-                        Glimesh.Base.Models.Channels.ChannelModel channel = ServiceManager.Get<GlimeshSessionService>().Channel;
+                        Glimesh.Base.Models.Channels.ChannelModel channel = ServiceManager.Get<GlimeshSessionService>().User?.channel;
                         if (channel != null)
                         {
                             this.ReplaceSpecialIdentifier(userStreamHeader + "title", channel.title);

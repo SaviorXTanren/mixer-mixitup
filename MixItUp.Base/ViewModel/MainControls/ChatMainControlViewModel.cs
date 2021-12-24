@@ -124,9 +124,9 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 viewerCount += (int)ServiceManager.Get<TrovoSessionService>().Channel.current_viewers;
             }
-            if (ServiceManager.Get<GlimeshSessionService>().IsConnected && ServiceManager.Get<GlimeshSessionService>().Channel?.stream != null)
+            if (ServiceManager.Get<GlimeshSessionService>().IsConnected && ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream != null)
             {
-                viewerCount += ServiceManager.Get<GlimeshSessionService>().Channel?.stream?.countViewers ?? 0;
+                viewerCount += ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.countViewers ?? 0;
             }
 
             this.ChattersCount = ServiceManager.Get<UserService>().ActiveUserCount;

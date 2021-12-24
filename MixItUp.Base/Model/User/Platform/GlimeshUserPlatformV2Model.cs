@@ -30,6 +30,10 @@ namespace MixItUp.Base.Model.User.Platform
                 {
                     this.SetUserProperties(user);
                 }
+
+                if (string.Equals(this.ID, ServiceManager.Get<GlimeshSessionService>().User?.id)) { this.Roles.Add(UserRoleEnum.Streamer); } else { this.Roles.Remove(UserRoleEnum.Streamer); }
+                if (ServiceManager.Get<GlimeshSessionService>().Moderators.Contains(this.ID)) { this.Roles.Add(UserRoleEnum.Moderator); } else { this.Roles.Remove(UserRoleEnum.Moderator); }
+                if (ServiceManager.Get<GlimeshSessionService>().Followers.Contains(this.ID)) { this.Roles.Add(UserRoleEnum.Follower); } else { this.Roles.Remove(UserRoleEnum.Follower); }
             }
         }
 
