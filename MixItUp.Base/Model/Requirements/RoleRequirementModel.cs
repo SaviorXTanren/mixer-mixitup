@@ -23,7 +23,7 @@ namespace MixItUp.Base.Model.Requirements
         public HashSet<OldUserRoleEnum> RoleList { get; set; } = new HashSet<OldUserRoleEnum>();
 
         [DataMember]
-        public StreamingPlatformTypeEnum StreamingPlatform { get; set; }
+        public StreamingPlatformTypeEnum StreamingPlatform { get; set; } = StreamingPlatformTypeEnum.All;
 
         [DataMember]
         public UserRoleEnum UserRole { get; set; }

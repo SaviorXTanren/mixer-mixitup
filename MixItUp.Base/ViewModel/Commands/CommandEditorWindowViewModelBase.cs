@@ -22,9 +22,11 @@ namespace MixItUp.Base.ViewModel.Commands
             return ServiceManager.Get<IFileService>().ShowOpenFileDialog(string.Format("Mix It Up Command (*{0})|*{0}|All files (*.*)|*.*", MixItUpCommandFileExtension));
         }
 
-        public static Task<CommandModelBase> ImportCommandFromFile(string filePath)
+        public static async Task<CommandModelBase> ImportCommandFromFile(string filePath)
         {
-            return ImportCommandFromFile<CommandModelBase>(filePath);
+            CommandModelBase command = await ImportCommandFromFile<CommandModelBase>(filePath);
+            SettingsV3Upgrader.MultiPlatformCommandUpgrade(command);
+            return command;
         }
 
         public static async Task<T> ImportCommandFromFile<T>(string filePath) where T : CommandModelBase

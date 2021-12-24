@@ -407,103 +407,110 @@ namespace MixItUp.Base.Services
 
                 foreach (CommandModelBase command in settings.Commands.Values)
                 {
-                    if (command is BetGameCommandModel)
-                    {
-                        BetGameCommandModel gCommand = (BetGameCommandModel)command;
-                        gCommand.StarterUserRole = UserRoles.ConvertFromOldRole(gCommand.StarterRole);
-
-                        foreach (GameOutcomeModel outcome in gCommand.BetOptions)
-                        {
-                            foreach (var kvp in outcome.RoleProbabilityPayouts)
-                            {
-                                UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
-                                outcome.UserRoleProbabilityPayouts[role] = kvp.Value;
-                            }
-                        }
-                    }
-                    else if (command is BidGameCommandModel)
-                    {
-                        BidGameCommandModel gCommand = (BidGameCommandModel)command;
-                        gCommand.StarterUserRole = UserRoles.ConvertFromOldRole(gCommand.StarterRole);
-                    }
-                    else if (command is DuelGameCommandModel)
-                    {
-                        DuelGameCommandModel gCommand = (DuelGameCommandModel)command;
-                        foreach (var kvp in gCommand.SuccessfulOutcome.RoleProbabilityPayouts)
-                        {
-                            UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
-                            gCommand.SuccessfulOutcome.UserRoleProbabilityPayouts[role] = kvp.Value;
-                        }
-                    }
-                    else if (command is HeistGameCommandModel)
-                    {
-                        HeistGameCommandModel gCommand = (HeistGameCommandModel)command;
-                        foreach (var kvp in gCommand.UserSuccessOutcome.RoleProbabilityPayouts)
-                        {
-                            UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
-                            gCommand.UserSuccessOutcome.UserRoleProbabilityPayouts[role] = kvp.Value;
-                        }
-                    }
-                    else if (command is RouletteGameCommandModel)
-                    {
-                        RouletteGameCommandModel gCommand = (RouletteGameCommandModel)command;
-                        foreach (var kvp in gCommand.UserSuccessOutcome.RoleProbabilityPayouts)
-                        {
-                            UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
-                            gCommand.UserSuccessOutcome.UserRoleProbabilityPayouts[role] = kvp.Value;
-                        }
-                    }
-                    else if (command is SpinGameCommandModel)
-                    {
-                        SpinGameCommandModel gCommand = (SpinGameCommandModel)command;
-                        foreach (GameOutcomeModel outcome in gCommand.Outcomes)
-                        {
-                            foreach (var kvp in outcome.RoleProbabilityPayouts)
-                            {
-                                UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
-                                outcome.UserRoleProbabilityPayouts[role] = kvp.Value;
-                            }
-                        }
-                    }
-                    else if (command is SlotMachineGameCommandModel)
-                    {
-                        SlotMachineGameCommandModel gCommand = (SlotMachineGameCommandModel)command;
-                        foreach (SlotMachineGameOutcomeModel outcome in gCommand.Outcomes)
-                        {
-                            foreach (var kvp in outcome.RoleProbabilityPayouts)
-                            {
-                                UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
-                                outcome.UserRoleProbabilityPayouts[role] = kvp.Value;
-                            }
-                        }
-                    }
-
-                    foreach (RequirementModelBase requirement in command.Requirements.Requirements)
-                    {
-                        if (requirement is RoleRequirementModel)
-                        {
-                            RoleRequirementModel rRequirement = (RoleRequirementModel)requirement;
-                            rRequirement.UserRole = UserRoles.ConvertFromOldRole(rRequirement.Role);
-                            foreach (OldUserRoleEnum oldRole in rRequirement.UserRoleList)
-                            {
-                                rRequirement.UserRoleList.Add(UserRoles.ConvertFromOldRole(oldRole));
-                            }
-                        }
-                    }
-
-                    foreach (ActionModelBase action in command.Actions)
-                    {
-                        if (action is ConsumablesActionModel)
-                        {
-                            ConsumablesActionModel cAction = (ConsumablesActionModel)action;
-                            cAction.UserRoleToApplyTo = UserRoles.ConvertFromOldRole(cAction.UsersToApplyTo);
-                        }
-                    }
+                    SettingsV3Upgrader.MultiPlatformCommandUpgrade(command);
                 }
 #pragma warning restore CS0612 // Type or member is obsolete
 
                 await ServiceManager.Get<SettingsService>().Save(settings);
             }
+        }
+
+        public static void MultiPlatformCommandUpgrade(CommandModelBase command)
+        {
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (command is BetGameCommandModel)
+            {
+                BetGameCommandModel gCommand = (BetGameCommandModel)command;
+                gCommand.StarterUserRole = UserRoles.ConvertFromOldRole(gCommand.StarterRole);
+
+                foreach (GameOutcomeModel outcome in gCommand.BetOptions)
+                {
+                    foreach (var kvp in outcome.RoleProbabilityPayouts)
+                    {
+                        UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
+                        outcome.UserRoleProbabilityPayouts[role] = kvp.Value;
+                    }
+                }
+            }
+            else if (command is BidGameCommandModel)
+            {
+                BidGameCommandModel gCommand = (BidGameCommandModel)command;
+                gCommand.StarterUserRole = UserRoles.ConvertFromOldRole(gCommand.StarterRole);
+            }
+            else if (command is DuelGameCommandModel)
+            {
+                DuelGameCommandModel gCommand = (DuelGameCommandModel)command;
+                foreach (var kvp in gCommand.SuccessfulOutcome.RoleProbabilityPayouts)
+                {
+                    UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
+                    gCommand.SuccessfulOutcome.UserRoleProbabilityPayouts[role] = kvp.Value;
+                }
+            }
+            else if (command is HeistGameCommandModel)
+            {
+                HeistGameCommandModel gCommand = (HeistGameCommandModel)command;
+                foreach (var kvp in gCommand.UserSuccessOutcome.RoleProbabilityPayouts)
+                {
+                    UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
+                    gCommand.UserSuccessOutcome.UserRoleProbabilityPayouts[role] = kvp.Value;
+                }
+            }
+            else if (command is RouletteGameCommandModel)
+            {
+                RouletteGameCommandModel gCommand = (RouletteGameCommandModel)command;
+                foreach (var kvp in gCommand.UserSuccessOutcome.RoleProbabilityPayouts)
+                {
+                    UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
+                    gCommand.UserSuccessOutcome.UserRoleProbabilityPayouts[role] = kvp.Value;
+                }
+            }
+            else if (command is SpinGameCommandModel)
+            {
+                SpinGameCommandModel gCommand = (SpinGameCommandModel)command;
+                foreach (GameOutcomeModel outcome in gCommand.Outcomes)
+                {
+                    foreach (var kvp in outcome.RoleProbabilityPayouts)
+                    {
+                        UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
+                        outcome.UserRoleProbabilityPayouts[role] = kvp.Value;
+                    }
+                }
+            }
+            else if (command is SlotMachineGameCommandModel)
+            {
+                SlotMachineGameCommandModel gCommand = (SlotMachineGameCommandModel)command;
+                foreach (SlotMachineGameOutcomeModel outcome in gCommand.Outcomes)
+                {
+                    foreach (var kvp in outcome.RoleProbabilityPayouts)
+                    {
+                        UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
+                        outcome.UserRoleProbabilityPayouts[role] = kvp.Value;
+                    }
+                }
+            }
+
+            foreach (RequirementModelBase requirement in command.Requirements.Requirements)
+            {
+                if (requirement is RoleRequirementModel)
+                {
+                    RoleRequirementModel rRequirement = (RoleRequirementModel)requirement;
+                    rRequirement.UserRole = UserRoles.ConvertFromOldRole(rRequirement.Role);
+                    foreach (OldUserRoleEnum oldRole in rRequirement.UserRoleList)
+                    {
+                        rRequirement.UserRoleList.Add(UserRoles.ConvertFromOldRole(oldRole));
+                    }
+                }
+            }
+
+            foreach (ActionModelBase action in command.Actions)
+            {
+                if (action is ConsumablesActionModel)
+                {
+                    ConsumablesActionModel cAction = (ConsumablesActionModel)action;
+                    cAction.UserRoleToApplyTo = UserRoles.ConvertFromOldRole(cAction.UsersToApplyTo);
+                }
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
         }
 
         public static async Task<int> GetSettingsVersion(string filePath)
