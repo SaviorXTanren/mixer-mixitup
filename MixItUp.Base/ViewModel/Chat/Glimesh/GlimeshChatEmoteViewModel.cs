@@ -11,7 +11,7 @@ namespace MixItUp.Base.ViewModel.Chat.Glimesh
         public GlimeshChatEmoteViewModel(ChatMessageTokenModel token)
         {
             this.Name = token.text;
-            this.Url = token.url;
+            this.Url = token.src;
         }
     }
 }

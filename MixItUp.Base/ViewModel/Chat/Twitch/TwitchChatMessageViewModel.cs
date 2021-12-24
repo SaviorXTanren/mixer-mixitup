@@ -30,13 +30,13 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
         {
             this.ID = emoteID;
             this.Code = emoteCode;
-            this.LightSmallImageUrl = this.BuildV2EmoteURL("light", 1.0);
-            this.DarkSmallImageUrl = this.BuildV2EmoteURL("dark", 1.0);
-            this.LightLargeImageUrl = this.BuildV2EmoteURL("light", 3.0);
-            this.DarkLargeImageUrl = this.BuildV2EmoteURL("dark", 3.0);
+            this.LightSmallImageUrl = this.BuildV2EmoteURL("light", 1);
+            this.DarkSmallImageUrl = this.BuildV2EmoteURL("dark", 1);
+            this.LightLargeImageUrl = this.BuildV2EmoteURL("light", 3);
+            this.DarkLargeImageUrl = this.BuildV2EmoteURL("dark", 3);
         }
 
-        private string BuildV2EmoteURL(string theme, double size) { return $"https://static-cdn.jtvnw.net/emoticons/v2/{this.ID}/default/{theme}/{size}"; }
+        private string BuildV2EmoteURL(string theme, double size) { return $"https://static-cdn.jtvnw.net/emoticons/v2/{this.ID}/default/{theme}/{size}.0"; }
     }
 
     public class TwitchBitsCheerViewModel
