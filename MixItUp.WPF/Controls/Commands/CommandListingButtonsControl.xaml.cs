@@ -1,13 +1,10 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
 using MixItUp.Base.ViewModel.Currency;
 using MixItUp.Base.ViewModel.Games;
 using MixItUp.Base.ViewModel.MainControls;
-using MixItUp.WPF.Controls.Dialogs;
-using System.Collections.Generic;
 using System.Windows;
 
 namespace MixItUp.WPF.Controls.Commands
@@ -101,17 +98,7 @@ namespace MixItUp.WPF.Controls.Commands
 
         public T GetCommandFromCommandButtons<T>() where T : CommandModelBase { return CommandListingButtonsControl.GetCommandFromCommandButtons<T>(this); }
 
-        private void CommandListingButtonsControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.RefreshUI();
-        }
-
-        private void CommandListingButtonsControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            this.RefreshUI();
-        }
-
-        private void RefreshUI()
+        public void RefreshUI()
         {
             if (this.EditButton != null && this.HideEditingButton)
             {
@@ -136,6 +123,23 @@ namespace MixItUp.WPF.Controls.Commands
                     this.EnableDisableToggleSwitch.IsChecked = command.IsEnabled;
                 }
             }
+            else
+            {
+                if (this.EnableDisableToggleSwitch != null)
+                {
+                    this.EnableDisableToggleSwitch.IsChecked = true;
+                }
+            }
+        }
+
+        private void CommandListingButtonsControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.RefreshUI();
+        }
+
+        private void CommandListingButtonsControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            this.RefreshUI();
         }
 
         private async void PlayButton_Click(object sender, RoutedEventArgs e)
