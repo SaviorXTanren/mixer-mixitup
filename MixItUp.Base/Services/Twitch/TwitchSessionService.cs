@@ -283,22 +283,22 @@ namespace MixItUp.Base.Services.Twitch
     {
         public static bool IsAffiliate(this UserModel twitchUser)
         {
-            return twitchUser.broadcaster_type.Equals("affiliate");
+            return string.Equals(twitchUser.broadcaster_type, "affiliate", StringComparison.OrdinalIgnoreCase);
         }
 
         public static bool IsPartner(this UserModel twitchUser)
         {
-            return twitchUser.broadcaster_type.Equals("partner");
+            return string.Equals(twitchUser.broadcaster_type, "partner", StringComparison.OrdinalIgnoreCase);
         }
 
         public static bool IsStaff(this UserModel twitchUser)
         {
-            return twitchUser.type.Equals("staff") || twitchUser.type.Equals("admin");
+            return string.Equals(twitchUser.type, "staff", StringComparison.OrdinalIgnoreCase) || string.Equals(twitchUser.type, "admin", StringComparison.OrdinalIgnoreCase);
         }
 
         public static bool IsGlobalMod(this UserModel twitchUser)
         {
-            return twitchUser.type.Equals("global_mod");
+            return string.Equals(twitchUser.type, "global_mod", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
