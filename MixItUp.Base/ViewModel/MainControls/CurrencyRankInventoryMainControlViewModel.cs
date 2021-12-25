@@ -1,12 +1,8 @@
 ﻿using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel;
-using System;
-using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace MixItUp.Base.ViewModel.MainControls
 {
@@ -100,7 +96,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                     await item.Inventory.Reset();
                     ChannelSession.Settings.Inventory.Remove(item.Inventory.ID);
                 }
-                else
+                else if (item.Currency != null)
                 {
                     await item.Currency.Reset();
                     ChannelSession.Settings.Currency.Remove(item.Currency.ID);

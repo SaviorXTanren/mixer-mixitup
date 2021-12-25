@@ -442,7 +442,7 @@ namespace MixItUp.Base.Model.Currency
 
             foreach (UserV2Model user in ChannelSession.Settings.Users.Values.ToList())
             {
-                if (user.CurrencyAmounts[this.ID] > 0)
+                if (user.CurrencyAmounts.ContainsKey(this.ID) && user.CurrencyAmounts[this.ID] > 0)
                 {
                     user.CurrencyAmounts[this.ID] = 0;
                     ChannelSession.Settings.Users.ManualValueChanged(user.ID);
