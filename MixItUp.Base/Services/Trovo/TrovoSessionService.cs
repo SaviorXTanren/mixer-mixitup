@@ -21,6 +21,11 @@ namespace MixItUp.Base.Services.Trovo
         public PrivateUserModel Bot { get; private set; }
 
         public bool IsConnected { get { return this.UserConnection != null; } }
+        public bool IsBotConnected { get { return this.BotConnection != null; } }
+
+        public string UserID { get { return this.User?.userId; } }
+        public string BotID { get { return this.Bot?.userId; } }
+        public string ChannelID { get { return this.User?.channelId; } }
 
         public async Task<Result> ConnectUser()
         {

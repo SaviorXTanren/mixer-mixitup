@@ -23,6 +23,11 @@ namespace MixItUp.Base.Services.Glimesh
         public HashSet<string> Followers { get; private set; } = new HashSet<string>();
 
         public bool IsConnected { get { return this.UserConnection != null; } }
+        public bool IsBotConnected { get { return this.BotConnection != null; } }
+
+        public string UserID { get { return this.User?.id; } }
+        public string BotID { get { return this.Bot?.id; } }
+        public string ChannelID { get { return this.User?.channel?.id; } }
 
         public async Task<Result> ConnectUser()
         {

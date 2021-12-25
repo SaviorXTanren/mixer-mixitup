@@ -18,6 +18,11 @@ namespace MixItUp.Base.Services.YouTube
         public Channel Bot { get; private set; }
 
         public bool IsConnected { get { return this.UserConnection != null; } }
+        public bool IsBotConnected { get { return this.BotConnection != null; } }
+
+        public string UserID { get { return this.User?.Id; } }
+        public string BotID { get { return this.Bot?.Id; } }
+        public string ChannelID { get { return this.User?.Id; } }
 
         public async Task<Result> ConnectUser()
         {

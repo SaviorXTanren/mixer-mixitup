@@ -514,13 +514,12 @@ namespace MixItUp.Base.Services
                             return;
                         }
 
-                        if (ChannelSession.Settings.IgnoreBotAccountCommands)
+                        if (ChannelSession.Settings.IgnoreBotAccountCommands && message.Platform != StreamingPlatformTypeEnum.None)
                         {
-                            if (ServiceManager.Get<TwitchSessionService>().Bot != null && message.User.Platform == StreamingPlatformTypeEnum.Twitch && message.User.Platform.Equals(ServiceManager.Get<TwitchSessionService>().Bot.id))
+                            if (StreamingPlatforms.GetPlatformSessionService(message.Platform).IsBotConnected && string.Equals(message.User?.ID, StreamingPlatforms.GetPlatformSessionService(message.Platform)?.BotID))
                             {
                                 return;
                             }
-                            // TODO
                         }
 
                         Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0} - {1}", message.ID, message));

@@ -7,6 +7,11 @@ namespace MixItUp.Base.Services
     public interface IStreamingPlatformSessionService
     {
         bool IsConnected { get; }
+        bool IsBotConnected { get; }
+
+        string UserID { get; }
+        string BotID { get; }
+        string ChannelID { get; }
 
         Task<Result> ConnectUser();
         Task<Result> ConnectBot();

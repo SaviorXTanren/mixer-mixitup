@@ -559,6 +559,16 @@ namespace MixItUp.Base.Services
 
         public int GetActiveUserCount() { return this.activeUsers.Count; }
 
+        public UserV2ViewModel GetRandomActiveUser(StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All, bool excludeSpecialtyExcluded = true)
+        {
+            IEnumerable<UserV2ViewModel> users = this.GetActiveUsers(platform);
+            if (excludeSpecialtyExcluded)
+            {
+                users = users.Where(u => !u.IsSpecialtyExcluded);
+            }
+            return users.Random();
+        }
+
         #endregion Active Users
     }
 }

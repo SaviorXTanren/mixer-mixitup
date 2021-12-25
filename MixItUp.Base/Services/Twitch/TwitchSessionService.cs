@@ -24,6 +24,11 @@ namespace MixItUp.Base.Services.Twitch
         public bool StreamIsLive { get { return this.Stream != null; } }
 
         public bool IsConnected { get { return this.UserConnection != null; } }
+        public bool IsBotConnected { get { return this.BotConnection != null; } }
+
+        public string UserID { get { return this.User?.id; } }
+        public string BotID { get { return this.Bot?.id; } }
+        public string ChannelID { get { return this.User?.id; } }
 
         public async Task<Result> ConnectUser()
         {

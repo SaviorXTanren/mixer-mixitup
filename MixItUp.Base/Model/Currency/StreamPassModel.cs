@@ -230,7 +230,6 @@ namespace MixItUp.Base.Model.Currency
 
         public void UpdateUserData(Dictionary<StreamingPlatformTypeEnum, bool> liveStreams)
         {
-            // TODO
             DateTime date = DateTimeOffset.Now.Date;
             if (this.StartDate.Date <= date && date <= this.EndDate && this.ViewingRateMinutes > 0)
             {
