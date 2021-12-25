@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
 using MixItUp.Base.ViewModel.Currency;
@@ -180,6 +181,11 @@ namespace MixItUp.WPF.Controls.Commands
             {
                 command.IsEnabled = this.EnableDisableToggleSwitch.IsChecked.GetValueOrDefault();
                 ChannelSession.Settings.Commands.ManualValueChanged(command.ID);
+
+                if (command is ChatCommandModel)
+                {
+                    ServiceManager.Get<ChatService>().RebuildCommandTriggers();
+                }
             }
         }
     }

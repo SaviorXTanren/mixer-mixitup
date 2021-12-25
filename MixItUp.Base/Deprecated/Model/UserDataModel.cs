@@ -413,7 +413,6 @@ namespace MixItUp.Base.Model.User
 
             this.CustomTitle = other.CustomTitle;
             this.ViewingMinutes += other.ViewingMinutes;
-            this.OfflineViewingMinutes += other.OfflineViewingMinutes;
 
             this.CustomCommandIDs = other.CustomCommandIDs;
             this.EntranceCommandID = other.EntranceCommandID;
