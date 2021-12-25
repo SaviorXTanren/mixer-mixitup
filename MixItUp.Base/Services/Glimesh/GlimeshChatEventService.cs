@@ -306,6 +306,7 @@ namespace MixItUp.Base.Services.Glimesh
 
                 ServiceManager.Get<GlimeshSessionService>().Followers.Add(follow.Follow.user.id);
                 user.Roles.Add(UserRoleEnum.Follower);
+                user.FollowDate = DateTimeOffset.Now;
 
                 CommandParametersModel parameters = new CommandParametersModel(user);
                 if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.GlimeshChannelFollowed, parameters))

@@ -25,5 +25,11 @@ namespace MixItUp.Base.Services
 
         Task RefreshUser();
         Task RefreshChannel();
+
+        Task<string> GetTitle();
+        Task<bool> SetTitle(string title);
+
+        Task<string> GetGame();
+        Task<bool> SetGame(string gameName);
     }
 }

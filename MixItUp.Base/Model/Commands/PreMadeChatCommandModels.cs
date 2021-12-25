@@ -177,25 +177,15 @@ namespace MixItUp.Base.Model.Commands
     {
         public GamePreMadeChatCommandModel() : base(MixItUp.Base.Resources.Game, "game", 5, UserRoleEnum.User) { }
 
-        public static async Task<string> GetCurrentGameName()
+        public static async Task<string> GetCurrentGameName(StreamingPlatformTypeEnum platform)
         {
-            string gameName = null;
-            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
-            {
-                await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
-                gameName = ServiceManager.Get<TwitchSessionService>().Stream?.game_name;
-            }
-            else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
-            {
-                await ServiceManager.Get<GlimeshSessionService>().RefreshChannel();
-                //gameName = ServiceManager.Get<GlimeshSessionService>().Channel?
-            }
-            return gameName;
+            await StreamingPlatforms.GetPlatformSessionService(platform).RefreshChannel();
+            return await StreamingPlatforms.GetPlatformSessionService(platform).GetGame();
         }
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
-            string gameName = await GamePreMadeChatCommandModel.GetCurrentGameName();
+            string gameName = await GamePreMadeChatCommandModel.GetCurrentGameName(parameters.Platform);
             if (!string.IsNullOrEmpty(gameName))
             {
                 GameInformation details = await XboxGamePreMadeChatCommandModel.GetXboxGameInfo(gameName);
@@ -226,18 +216,8 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
-            string title = null;
-            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
-            {
-                await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
-                title = ServiceManager.Get<TwitchSessionService>().Stream?.title;
-            }
-            else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
-            {
-                await ServiceManager.Get<GlimeshSessionService>().RefreshChannel();
-                title = ServiceManager.Get<GlimeshSessionService>().User?.channel?.title;
-            }
-
+            await StreamingPlatforms.GetPlatformSessionService(parameters.Platform).RefreshChannel();
+            string title = await StreamingPlatforms.GetPlatformSessionService(parameters.Platform).GetTitle();
             if (!string.IsNullOrEmpty(title))
             {
                 await ServiceManager.Get<ChatService>().SendMessage("Stream Title: " + title, parameters.Platform);
@@ -412,7 +392,7 @@ namespace MixItUp.Base.Model.Commands
                     string quoteText = quoteBuilder.ToString();
                     quoteText = quoteText.Trim(new char[] { ' ', '\'', '\"' });
 
-                    UserQuoteModel quote = new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), quoteText, DateTimeOffset.Now, await GamePreMadeChatCommandModel.GetCurrentGameName());
+                    UserQuoteModel quote = new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), quoteText, DateTimeOffset.Now, await GamePreMadeChatCommandModel.GetCurrentGameName(parameters.Platform));
                     ChannelSession.Settings.Quotes.Add(quote);
                     await ChannelSession.SaveSettings();
 
@@ -539,7 +519,7 @@ namespace MixItUp.Base.Model.Commands
             }
             else
             {
-                gameName = await GamePreMadeChatCommandModel.GetCurrentGameName();
+                gameName = await GamePreMadeChatCommandModel.GetCurrentGameName(parameters.Platform);
             }
 
             GameInformation details = await XboxGamePreMadeChatCommandModel.GetXboxGameInfo(gameName);
@@ -636,7 +616,7 @@ namespace MixItUp.Base.Model.Commands
             }
             else
             {
-                gameName = await GamePreMadeChatCommandModel.GetCurrentGameName();
+                gameName = await GamePreMadeChatCommandModel.GetCurrentGameName(parameters.Platform);
             }
 
             GameInformation details = await SteamGamePreMadeChatCommandModel.GetSteamGameInfo(gameName);
@@ -660,13 +640,15 @@ namespace MixItUp.Base.Model.Commands
             if (parameters.Arguments.Count() > 0)
             {
                 string name = string.Join(" ", parameters.Arguments);
-                if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+                await StreamingPlatforms.ForEachPlatform(async (p) =>
                 {
-                    await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateChannelInformation(ServiceManager.Get<TwitchSessionService>().User, title: name);
-                    await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
-                    await ServiceManager.Get<ChatService>().SendMessage("Title Updated: " + name, parameters.Platform);
-                }
-                // TODO
+                    if (StreamingPlatforms.GetPlatformSessionService(p).IsConnected)
+                    {
+                        await StreamingPlatforms.GetPlatformSessionService(p).SetTitle(name);
+                        await StreamingPlatforms.GetPlatformSessionService(p).RefreshChannel();
+                    }
+                });
+                await ServiceManager.Get<ChatService>().SendMessage("Title Updated: " + name, parameters.Platform);
             }
             else
             {
@@ -684,25 +666,15 @@ namespace MixItUp.Base.Model.Commands
             if (parameters.Arguments.Count() > 0)
             {
                 string name = string.Join(" ", parameters.Arguments).ToLower();
-                IEnumerable<Twitch.Base.Models.NewAPI.Games.GameModel> games = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIGamesByName(name);
-                if (games != null && games.Count() > 0)
+                await StreamingPlatforms.ForEachPlatform(async (p) =>
                 {
-                    Twitch.Base.Models.NewAPI.Games.GameModel game = games.FirstOrDefault(g => g.name.ToLower().Equals(name));
-                    if (game == null)
+                    if (StreamingPlatforms.GetPlatformSessionService(p).IsConnected)
                     {
-                        game = games.First();
+                        await StreamingPlatforms.GetPlatformSessionService(p).SetGame(name);
+                        await StreamingPlatforms.GetPlatformSessionService(p).RefreshChannel();
                     }
-
-                    // TODO
-                    if (ServiceManager.Get<TwitchSessionService>().IsConnected && game != null)
-                    {
-                        await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateChannelInformation(ServiceManager.Get<TwitchSessionService>().User, gameID: game.id);
-                        await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
-                        await ServiceManager.Get<ChatService>().SendMessage("Game Updated: " + game.name, parameters.Platform);
-                    }
-                    return;
-                }
-                await ServiceManager.Get<ChatService>().SendMessage("We could not find a game with that name", parameters.Platform);
+                });
+                await ServiceManager.Get<ChatService>().SendMessage("Game Updated: " + name, parameters.Platform);
             }
             else
             {

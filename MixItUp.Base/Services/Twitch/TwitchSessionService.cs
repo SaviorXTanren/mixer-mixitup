@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Channels;
+using Twitch.Base.Models.NewAPI.Games;
 using Twitch.Base.Models.NewAPI.Streams;
 using Twitch.Base.Models.NewAPI.Users;
 
@@ -276,6 +277,41 @@ namespace MixItUp.Base.Services.Twitch
             {
                 this.Stream = await this.UserConnection.GetStream(this.User);
             }
+        }
+
+        public Task<string> GetTitle()
+        {
+            return Task.FromResult(this.Stream?.title);
+        }
+
+        public async Task<bool> SetTitle(string title)
+        {
+            return await this.UserConnection.UpdateChannelInformation(this.User, title: title);
+        }
+
+        public Task<string> GetGame()
+        {
+            return Task.FromResult(this.Stream?.game_name);
+        }
+
+        public async Task<bool> SetGame(string gameName)
+        {
+            IEnumerable<GameModel> games = await this.UserConnection.GetNewAPIGamesByName(gameName);
+            if (games != null && games.Count() > 0)
+            {
+                GameModel game = games.FirstOrDefault(g => g.name.ToLower().Equals(gameName));
+                if (game == null)
+                {
+                    game = games.First();
+                }
+
+                if (this.IsConnected && game != null)
+                {
+                    await this.UserConnection.UpdateChannelInformation(this.User, gameID: game.id);
+                    return true;
+                }
+            }
+            return false;
         }
     }
 

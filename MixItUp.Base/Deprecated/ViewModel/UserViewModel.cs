@@ -1083,15 +1083,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public void UpdateMinuteData()
         {
-            // TODO
-            if (ServiceManager.Get<TwitchSessionService>().StreamIsLive)
-            {
-                this.Data.ViewingMinutes++;
-            }
-            else
-            {
-                this.Data.OfflineViewingMinutes++;
-            }
+            this.Data.ViewingMinutes++;
             ChannelSession.Settings.Users.ManualValueChanged(this.ID);
 
             if (ChannelSession.Settings.RegularUserMinimumHours > 0 && this.Data.ViewingHoursPart >= ChannelSession.Settings.RegularUserMinimumHours)

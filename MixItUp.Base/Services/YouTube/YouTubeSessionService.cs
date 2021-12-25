@@ -238,9 +238,14 @@ namespace MixItUp.Base.Services.YouTube
             }
         }
 
-        public Task RefreshChannel()
-        {
-            return Task.CompletedTask;
-        }
+        public Task RefreshChannel() { return Task.CompletedTask; }
+
+        public Task<string> GetTitle() { return Task.FromResult(string.Empty); }
+
+        public Task<bool> SetTitle(string title) { return Task.FromResult(false); }
+
+        public Task<string> GetGame() { return Task.FromResult(string.Empty); }
+
+        public Task<bool> SetGame(string gameName) { return Task.FromResult(false); }
     }
 }

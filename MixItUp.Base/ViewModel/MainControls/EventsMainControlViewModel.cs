@@ -35,7 +35,11 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public EventCommandModel Command { get; set; }
 
-        public EventCommandItemViewModel(EventTypeEnum eventType) { this.EventType = eventType; }
+        public EventCommandItemViewModel(EventTypeEnum eventType)
+        {
+            this.EventType = eventType;
+            this.RefreshCommand();
+        }
 
         public string Name { get { return EnumLocalizationHelper.GetLocalizedName(this.EventType); } }
 

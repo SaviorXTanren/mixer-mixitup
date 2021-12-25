@@ -194,8 +194,6 @@ namespace MixItUp.Base.Model.User
 
         [DataMember]
         public int ViewingMinutes { get; set; }
-        [DataMember]
-        public int OfflineViewingMinutes { get; set; }
 
         [DataMember]
         public List<Guid> CustomCommandIDs { get; set; } = new List<Guid>();

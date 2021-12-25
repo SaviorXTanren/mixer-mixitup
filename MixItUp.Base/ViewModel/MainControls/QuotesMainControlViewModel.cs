@@ -59,7 +59,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 if (!string.IsNullOrEmpty(this.AddQuoteText))
                 {
-                    ChannelSession.Settings.Quotes.Add(new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), this.AddQuoteText, DateTimeOffset.Now, await GamePreMadeChatCommandModel.GetCurrentGameName()));
+                    ChannelSession.Settings.Quotes.Add(new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), this.AddQuoteText, DateTimeOffset.Now, await GamePreMadeChatCommandModel.GetCurrentGameName(ChannelSession.Settings.DefaultStreamingPlatform)));
                     this.Refresh();
 
                     this.AddQuoteText = string.Empty;

@@ -124,10 +124,10 @@ namespace MixItUp.Base
             {
                 await StreamingPlatforms.ForEachPlatform(async (p) =>
                 {
-                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(p) && ChannelSession.Settings.StreamingPlatformAuthentications[p].GetStreamingPlatformSessionService().IsConnected)
+                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(p) && StreamingPlatforms.GetPlatformSessionService(p).IsConnected)
                     {
-                        await ChannelSession.Settings.StreamingPlatformAuthentications[p].GetStreamingPlatformSessionService().CloseUser();
-                        await ChannelSession.Settings.StreamingPlatformAuthentications[p].GetStreamingPlatformSessionService().CloseBot();
+                        await StreamingPlatforms.GetPlatformSessionService(p).CloseUser();
+                        await StreamingPlatforms.GetPlatformSessionService(p).CloseBot();
                     }
                 });
             }
@@ -146,7 +146,7 @@ namespace MixItUp.Base
             {
                 if (settings.StreamingPlatformAuthentications.ContainsKey(p) && settings.StreamingPlatformAuthentications[p].IsEnabled)
                 {
-                    result.Combine(await settings.StreamingPlatformAuthentications[p].GetStreamingPlatformSessionService().Connect(settings));
+                    result.Combine(await StreamingPlatforms.GetPlatformSessionService(p).Connect(settings));
                 }
             });
 
@@ -196,9 +196,9 @@ namespace MixItUp.Base
 
                 StreamingPlatforms.ForEachPlatform((p) =>
                 {
-                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(p) && ChannelSession.Settings.StreamingPlatformAuthentications[p].GetStreamingPlatformSessionService().IsConnected)
+                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(p) && StreamingPlatforms.GetPlatformSessionService(p).IsConnected)
                     {
-                        ChannelSession.Settings.StreamingPlatformAuthentications[p].GetStreamingPlatformSessionService().SaveSettings(ChannelSession.Settings);
+                        StreamingPlatforms.GetPlatformSessionService(p).SaveSettings(ChannelSession.Settings);
                     }
                 });
 
@@ -485,10 +485,10 @@ namespace MixItUp.Base
 
                 await StreamingPlatforms.ForEachPlatform(async (p) =>
                 {
-                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(p) && ChannelSession.Settings.StreamingPlatformAuthentications[p].GetStreamingPlatformSessionService().IsConnected)
+                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(p) && StreamingPlatforms.GetPlatformSessionService(p).IsConnected)
                     {
-                        await ChannelSession.Settings.StreamingPlatformAuthentications[p].GetStreamingPlatformSessionService().RefreshUser();
-                        await ChannelSession.Settings.StreamingPlatformAuthentications[p].GetStreamingPlatformSessionService().RefreshChannel();
+                        await StreamingPlatforms.GetPlatformSessionService(p).RefreshUser();
+                        await StreamingPlatforms.GetPlatformSessionService(p).RefreshChannel();
                     }
                 });
 

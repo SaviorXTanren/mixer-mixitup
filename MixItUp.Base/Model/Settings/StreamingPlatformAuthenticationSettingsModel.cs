@@ -36,15 +36,6 @@ namespace MixItUp.Base.Model.Settings
         [JsonIgnore]
         public bool IsEnabled { get { return this.UserOAuthToken != null; } }
 
-        public IStreamingPlatformSessionService GetStreamingPlatformSessionService()
-        {
-            if (this.Type == StreamingPlatformTypeEnum.Twitch) { return ServiceManager.Get<TwitchSessionService>(); }
-            else if (this.Type == StreamingPlatformTypeEnum.YouTube) { return ServiceManager.Get<YouTubeSessionService>(); }
-            else if (this.Type == StreamingPlatformTypeEnum.Glimesh) { return ServiceManager.Get<GlimeshSessionService>(); }
-            else if (this.Type == StreamingPlatformTypeEnum.Trovo) { return ServiceManager.Get<TrovoSessionService>(); }
-            return null;
-        }
-
         public override bool Equals(object obj)
         {
             if (obj is StreamingPlatformAuthenticationSettingsModel)

@@ -256,5 +256,19 @@ namespace MixItUp.Base.Services.Glimesh
         }
 
         public Task RefreshChannel() { return Task.CompletedTask; }
+
+        public Task<string> GetTitle()
+        {
+            return Task.FromResult(this.User?.channel?.title);
+        }
+
+        public Task<bool> SetTitle(string title) { return Task.FromResult(false); }
+
+        public Task<string> GetGame()
+        {
+            return Task.FromResult(this.User?.channel?.stream?.category?.name);
+        }
+
+        public Task<bool> SetGame(string gameName) { return Task.FromResult(false); }
     }
 }
