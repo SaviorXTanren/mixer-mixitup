@@ -70,7 +70,7 @@ namespace MixItUp.Base.Model.User
         public long TotalMonthsSubbed { get; set; }
 
         [DataMember]
-        private Dictionary<StreamingPlatformTypeEnum, UserPlatformV2ModelBase> PlatformData { get; set; } = new Dictionary<StreamingPlatformTypeEnum, UserPlatformV2ModelBase>();
+        public Dictionary<StreamingPlatformTypeEnum, UserPlatformV2ModelBase> PlatformData { get; set; } = new Dictionary<StreamingPlatformTypeEnum, UserPlatformV2ModelBase>();
 
         public UserV2Model() { }
 

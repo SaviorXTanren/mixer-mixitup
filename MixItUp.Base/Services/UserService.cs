@@ -100,6 +100,25 @@ namespace MixItUp.Base.Services
                 }
             }
 
+            string platformLookup = null;
+            switch (platform)
+            {
+                case StreamingPlatformTypeEnum.Twitch: platformLookup = "TwitchID"; break;
+                case StreamingPlatformTypeEnum.YouTube: platformLookup = "YouTubeID"; break;
+                case StreamingPlatformTypeEnum.Trovo: platformLookup = "TrovoID"; break;
+                case StreamingPlatformTypeEnum.Glimesh: platformLookup = "GlimeshID"; break;
+            }
+
+            if (!string.IsNullOrEmpty(platformLookup))
+            {
+                IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data($"SELECT * FROM Users WHERE {platformLookup} = @PlatformID", new Dictionary<string, object>() { { "PlatformID", platformID } });
+                if (results.Count() > 0)
+                {
+                    this.SetUserData(results.First());
+                    return new UserV2ViewModel(platform, results.First());
+                }
+            }
+
             if (performPlatformSearch)
             {
                 UserPlatformV2ModelBase platformModel = null;
@@ -167,6 +186,25 @@ namespace MixItUp.Base.Services
                 if (user != null)
                 {
                     return user;
+                }
+            }
+
+            string platformLookup = null;
+            switch (platform)
+            {
+                case StreamingPlatformTypeEnum.Twitch: platformLookup = "TwitchUsername"; break;
+                case StreamingPlatformTypeEnum.YouTube: platformLookup = "YouTubeUsername"; break;
+                case StreamingPlatformTypeEnum.Trovo: platformLookup = "TrovoUsername"; break;
+                case StreamingPlatformTypeEnum.Glimesh: platformLookup = "GlimeshUsername"; break;
+            }
+
+            if (!string.IsNullOrEmpty(platformLookup))
+            {
+                IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data($"SELECT * FROM Users WHERE {platformLookup} = @PlatformUsername", new Dictionary<string, object>() { { "PlatformUsername", platformUsername } });
+                if (results.Count() > 0)
+                {
+                    this.SetUserData(results.First());
+                    return new UserV2ViewModel(platform, results.First());
                 }
             }
 
