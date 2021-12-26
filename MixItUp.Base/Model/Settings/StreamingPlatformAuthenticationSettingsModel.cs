@@ -45,7 +45,7 @@ namespace MixItUp.Base.Model.Settings
             return false;
         }
 
-        public bool Equals(StreamingPlatformAuthenticationSettingsModel other) { return this.Type == other.Type; }
+        public bool Equals(StreamingPlatformAuthenticationSettingsModel other) { return this.Type == other.Type && this.UserID == other.UserID; }
 
         public override int GetHashCode() { return this.Type.GetHashCode(); }
     }

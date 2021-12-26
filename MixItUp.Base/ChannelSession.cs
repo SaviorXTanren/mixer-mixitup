@@ -208,9 +208,9 @@ namespace MixItUp.Base
                     {
                         StreamingPlatforms.ForEachPlatform((p) =>
                         {
-                            if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(p) && setting.StreamingPlatformAuthentications.ContainsKey(p))
+                            if (setting.StreamingPlatformAuthentications.ContainsKey(p) && ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(p))
                             {
-                                if (string.Equals(ChannelSession.Settings.StreamingPlatformAuthentications[p].ChannelID, setting.StreamingPlatformAuthentications[p].ChannelID))
+                                if (setting.StreamingPlatformAuthentications[p].IsEnabled && setting.StreamingPlatformAuthentications[p].Equals(ChannelSession.Settings.StreamingPlatformAuthentications[p]))
                                 {
                                     result = new Result($"There already exists settings with the same account for {p}. Please sign in with a different account or re-launch Mix It Up to select those settings from the drop-down.");
                                     return;
