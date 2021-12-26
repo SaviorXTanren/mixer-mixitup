@@ -689,7 +689,7 @@ namespace MixItUp.Base.Services.External
                         {
                             CommandParametersModel parameters = new CommandParametersModel();
 
-                            parameters.User = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(member.User.Platform, member.User.PlatformUserID);
+                            parameters.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(member.User.Platform, member.User.PlatformUserID);
                             if (parameters.User != null)
                             {
                                 parameters.User.PatreonUser = member;
