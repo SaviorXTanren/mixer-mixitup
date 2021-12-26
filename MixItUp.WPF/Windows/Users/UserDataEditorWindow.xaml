@@ -91,7 +91,7 @@
                                 <TextBox Grid.Column="4" Width="50" Text="{Binding ViewingMinutes}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Minutes}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
                             </Grid>
 
-                            <TextBox Grid.Row="4" Width="200" HorizontalAlignment="Left" Text="{Binding User.Data.CustomTitle}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CustomTitle}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                            <TextBox Grid.Row="4" Width="200" HorizontalAlignment="Left" Text="{Binding User.CustomTitle}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CustomTitle}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
                         </Grid>
 
                         <Grid Grid.Column="2">
@@ -180,13 +180,7 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <ComboBox
-                                ItemsSource="{Binding Consumables}"
-                                SelectedItem="{Binding SelectedConsumable}"
-                                IsEditable="False"
-                                Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                                MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Consumables}"
-                                DisplayMemberPath="Name" Grid.Row="0">
+                            <ComboBox ItemsSource="{Binding Consumables}" SelectedItem="{Binding SelectedConsumable}" IsEditable="False" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Consumables}" DisplayMemberPath="Name" Grid.Row="0">
                                 <ComboBox.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <VirtualizingStackPanel />
@@ -208,12 +202,7 @@
                             </Grid.RowDefinitions>
 
                             <ComboBox
-                                ItemsSource="{Binding Inventories}"
-                                SelectedItem="{Binding SelectedInventory}"
-                                IsEditable="False"
-                                Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                                MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Inventory}"
-                                DisplayMemberPath="Name" Grid.Row="0">
+                                ItemsSource="{Binding Inventories}" SelectedItem="{Binding SelectedInventory}" IsEditable="False" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Inventory}" DisplayMemberPath="Name" Grid.Row="0">
                                 <ComboBox.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <VirtualizingStackPanel />
@@ -222,13 +211,7 @@
                             </ComboBox>
 
                             <ComboBox
-                                ItemsSource="{Binding SelectedInventoryItems}"
-                                SelectedItem="{Binding SelectedItem}"
-                                IsEnabled="{Binding HasInventorySelected}"
-                                IsEditable="False"
-                                Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                                MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Item}"
-                                DisplayMemberPath="Name" Grid.Row="1">
+                                ItemsSource="{Binding SelectedInventoryItems}" SelectedItem="{Binding SelectedItem}" IsEnabled="{Binding HasInventorySelected}" IsEditable="False" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Item}" DisplayMemberPath="Name" Grid.Row="1">
                                 <ComboBox.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <VirtualizingStackPanel />
@@ -299,7 +282,7 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SpecialtyExcluded}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" ToolTip="{x:Static resx:Resources.SpecialtyExcludedTooltip}" />
-                            <ToggleButton Grid.Column="2" IsChecked="{Binding User.Data.IsSpecialtyExcluded}" ToolTip="{x:Static resx:Resources.SpecialtyExcludedTooltip}" />
+                            <ToggleButton Grid.Column="2" IsChecked="{Binding User.IsSpecialtyExcluded}" ToolTip="{x:Static resx:Resources.SpecialtyExcludedTooltip}" />
 
                         </Grid>
 

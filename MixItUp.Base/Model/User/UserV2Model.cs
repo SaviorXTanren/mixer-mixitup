@@ -73,7 +73,7 @@ namespace MixItUp.Base.Model.User
         public Dictionary<StreamingPlatformTypeEnum, UserPlatformV2ModelBase> PlatformData { get; set; } = new Dictionary<StreamingPlatformTypeEnum, UserPlatformV2ModelBase>();
 
         [Obsolete]
-        private UserV2Model() { }
+        public UserV2Model() { }
 
         public UserV2Model(UserPlatformV2ModelBase platformModel)
         {

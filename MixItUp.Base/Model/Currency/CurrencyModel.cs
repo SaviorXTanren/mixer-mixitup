@@ -386,52 +386,11 @@ namespace MixItUp.Base.Model.Currency
             if (this.ResetInterval != CurrencyResetRateEnum.Never)
             {
                 DateTimeOffset newResetDate = DateTimeOffset.MinValue;
-
-                if (this.ResetInterval == CurrencyResetRateEnum.Daily)
-                {
-                    newResetDate = this.LastReset.AddDays(1);
-                }
-                else if (this.ResetStartCadence == DateTimeOffset.MinValue)
-                {
-                    if (this.ResetInterval == CurrencyResetRateEnum.Weekly) { newResetDate = this.LastReset.AddDays(7); }
-                    else if (this.ResetInterval == CurrencyResetRateEnum.Monthly) { newResetDate = this.LastReset.AddMonths(1); }
-                    else if (this.ResetInterval == CurrencyResetRateEnum.Yearly) { newResetDate = this.LastReset.AddYears(1); }
-                    return (newResetDate < DateTimeOffset.Now);
-                }
-                else
-                {
-                    if (this.LastReset.Date != DateTimeOffset.Now.Date)
-                    {
-                        if (this.ResetInterval == CurrencyResetRateEnum.Weekly)
-                        {
-                            DateTimeOffset walkbackDate = DateTimeOffset.Now;
-                            while (walkbackDate > this.LastReset)
-                            {
-                                if (walkbackDate.DayOfWeek == this.ResetStartCadence.DayOfWeek)
-                                {
-                                    return true;
-                                }
-                                walkbackDate = walkbackDate.Subtract(TimeSpan.FromDays(1));
-                            }
-                        }
-                        else if (this.ResetInterval == CurrencyResetRateEnum.Monthly)
-                        {
-                            int resetDay = DateTime.DaysInMonth(DateTimeOffset.Now.Year, DateTimeOffset.Now.Month);
-                            resetDay = Math.Min(resetDay, this.ResetStartCadence.Day);
-
-                            DateTime newResetTime = new DateTime(DateTimeOffset.Now.Year, DateTimeOffset.Now.Month, resetDay);
-                            return (DateTimeOffset.Now.Date >= newResetTime && this.LastReset < newResetTime);
-                        }
-                        else if (this.ResetInterval == CurrencyResetRateEnum.Yearly)
-                        {
-                            int resetDay = DateTime.DaysInMonth(DateTimeOffset.Now.Year, this.ResetStartCadence.Month);
-                            resetDay = Math.Min(resetDay, this.ResetStartCadence.Day);
-
-                            DateTime newResetTime = new DateTime(DateTimeOffset.Now.Year, this.ResetStartCadence.Month, resetDay);
-                            return (DateTimeOffset.Now.Date >= newResetTime && this.LastReset < newResetTime);
-                        }
-                    }
-                }
+                if (this.ResetInterval == CurrencyResetRateEnum.Daily) { newResetDate = this.LastReset.AddDays(1); }
+                else if (this.ResetInterval == CurrencyResetRateEnum.Weekly) { newResetDate = this.LastReset.AddDays(7); }
+                else if (this.ResetInterval == CurrencyResetRateEnum.Monthly) { newResetDate = this.LastReset.AddMonths(1); }
+                else if (this.ResetInterval == CurrencyResetRateEnum.Yearly) { newResetDate = this.LastReset.AddYears(1); }
+                return (newResetDate.Date < DateTimeOffset.Now.Date);
             }
             return false;
         }
