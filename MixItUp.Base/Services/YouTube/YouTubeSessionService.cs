@@ -24,6 +24,9 @@ namespace MixItUp.Base.Services.YouTube
         public string BotID { get { return this.Bot?.Id; } }
         public string ChannelID { get { return this.User?.Id; } }
 
+        public LiveBroadcast Broadcast { get; private set; }
+        public bool StreamIsLive { get { return string.Equals(this.Broadcast?.Status?.LifeCycleStatus, "live", StringComparison.OrdinalIgnoreCase); } }
+
         public async Task<Result> ConnectUser()
         {
             Result<YouTubePlatformService> result = await YouTubePlatformService.ConnectUser();
@@ -243,7 +246,11 @@ namespace MixItUp.Base.Services.YouTube
             }
         }
 
-        public Task RefreshChannel() { return Task.CompletedTask; }
+        public Task RefreshChannel()
+        {
+            this.Broadcast = ServiceManager.Get<YouTubeChatService>().Broadcast;
+            return Task.CompletedTask;
+        }
 
         public Task<string> GetTitle() { return Task.FromResult(string.Empty); }
 

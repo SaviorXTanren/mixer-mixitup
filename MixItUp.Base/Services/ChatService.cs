@@ -697,10 +697,10 @@ namespace MixItUp.Base.Services
         {
             Dictionary<StreamingPlatformTypeEnum, bool> liveStreams = new Dictionary<StreamingPlatformTypeEnum, bool>();
 
-            liveStreams[StreamingPlatformTypeEnum.Twitch] = ServiceManager.Get<TwitchSessionService>().StreamIsLive;
-            liveStreams[StreamingPlatformTypeEnum.YouTube] = false;
-            liveStreams[StreamingPlatformTypeEnum.Trovo] = ServiceManager.Get<TrovoSessionService>().Channel.is_live;
-            liveStreams[StreamingPlatformTypeEnum.Glimesh] = ServiceManager.Get<GlimeshSessionService>().User.channel.IsLive;
+            liveStreams[StreamingPlatformTypeEnum.Twitch] = ServiceManager.Get<TwitchSessionService>().IsConnected ? ServiceManager.Get<TwitchSessionService>().StreamIsLive : false;
+            liveStreams[StreamingPlatformTypeEnum.YouTube] = ServiceManager.Get<YouTubeSessionService>().IsConnected ? ServiceManager.Get<YouTubeSessionService>().StreamIsLive : false;
+            liveStreams[StreamingPlatformTypeEnum.Trovo] = ServiceManager.Get<TrovoSessionService>().IsConnected ? ServiceManager.Get<TrovoSessionService>().Channel?.is_live ?? false : false;
+            liveStreams[StreamingPlatformTypeEnum.Glimesh] = ServiceManager.Get<GlimeshSessionService>().IsConnected ? ServiceManager.Get<GlimeshSessionService>().User?.channel?.IsLive ?? false : false;
 
             if (liveStreams.Any(s => s.Value))
             {
