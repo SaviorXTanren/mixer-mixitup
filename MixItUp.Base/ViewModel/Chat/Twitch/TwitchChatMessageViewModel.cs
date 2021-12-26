@@ -63,7 +63,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
         private const string TagMessageID = "msg-id";
         private const string MessageIDHighlightedMessage = "highlighted-message";
 
-        private static HashSet<long> messageEmotesHashSet = new HashSet<long>();
+        private static HashSet<string> messageEmotesHashSet = new HashSet<string>();
         private static Dictionary<string, TwitchChatEmoteViewModel> messageEmotesCache = new Dictionary<string, TwitchChatEmoteViewModel>();
 
         public bool IsSlashMe { get; set; }
@@ -91,12 +91,11 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             {
                 if (!messageEmotesHashSet.Contains(kvp.Key) && kvp.Value.Count > 0)
                 {
-                    long emoteID = kvp.Key;
                     Tuple<int, int> instance = kvp.Value.FirstOrDefault();
                     if (0 <= instance.Item1 && instance.Item1 < message.Message.Length && 0 <= instance.Item2 && instance.Item2 < message.Message.Length)
                     {
                         string emoteCode = message.Message.Substring(instance.Item1, instance.Item2 - instance.Item1 + 1);
-                        messageEmotesCache[emoteCode] = new TwitchChatEmoteViewModel(emoteID.ToString(), emoteCode);
+                        messageEmotesCache[emoteCode] = new TwitchChatEmoteViewModel(kvp.Key, emoteCode);
                         messageEmotesHashSet.Add(kvp.Key);
                     }
                 }
