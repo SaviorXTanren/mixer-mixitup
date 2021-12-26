@@ -151,7 +151,10 @@ namespace MixItUp.Base.Services
                     throw new InvalidOperationException("Trovo does not support user look-up by user ID");
                 }
 
-                return await this.CreateUser(platformModel);
+                if (platformModel != null)
+                {
+                    return this.CreateUserInternal(platformModel);
+                }
             }
 
             return null;
@@ -244,7 +247,10 @@ namespace MixItUp.Base.Services
                     }
                 }
 
-                return await this.CreateUser(platformModel);
+                if (platformModel != null)
+                {
+                    return this.CreateUserInternal(platformModel);
+                }
             }
 
             return null;
@@ -257,11 +263,7 @@ namespace MixItUp.Base.Services
                 UserV2ViewModel user = await this.GetUserByPlatformID(platformModel.Platform, platformModel.ID, performPlatformSearch: false);
                 if (user == null)
                 {
-                    UserV2Model userModel = new UserV2Model();
-                    userModel.AddPlatformData(platformModel);
-                    user = new UserV2ViewModel(platformModel.Platform, userModel);
-
-                    this.SetUserData(userModel, newData: true);
+                    return this.CreateUserInternal(platformModel);
                 }
                 return user;
             }
@@ -297,6 +299,22 @@ namespace MixItUp.Base.Services
             this.activeUsers.Clear();
 
             await ChannelSession.Settings.ClearUserV2Data();
+        }
+
+        public UserV2ViewModel CreateUserInternal(UserPlatformV2ModelBase platformModel)
+        {
+            if (platformModel != null && !string.IsNullOrEmpty(platformModel.ID))
+            {
+                UserV2Model userModel = new UserV2Model(platformModel);
+                UserV2ViewModel user = new UserV2ViewModel(platformModel.Platform, userModel);
+
+                if (platformModel.Platform != StreamingPlatformTypeEnum.None)
+                {
+                    this.SetUserData(userModel, newData: true);
+                }
+                return user;
+            }
+            return null;
         }
 
         private void SetUserData(UserV2Model userData, bool newData = false)
@@ -424,7 +442,6 @@ namespace MixItUp.Base.Services
                 }
 
                 usersAdded = true;
-                this.SetUserData(user.Model);
 
                 lock (displayUsersLock)
                 {

@@ -57,7 +57,7 @@ namespace MixItUp.Base.ViewModel.User
             }
             else
             {
-                this.platform = StreamingPlatformTypeEnum.None;
+                throw new InvalidOperationException($"User data does not contain any platform data - {model.ID} - {platform}");
             }
         }
 
