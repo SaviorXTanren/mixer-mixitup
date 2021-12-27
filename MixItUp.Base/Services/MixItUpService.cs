@@ -36,7 +36,7 @@ namespace MixItUp.Base.Services
         Task<Result> Connect();
         Task Disconnect();
 
-        Task Authenticate(string twitchAccessToken);
+        Task Authenticate(CommunityCommandLoginModel login);
 
         Task<GetWebhooksResponseModel> GetWebhooks();
         Task<Webhook> CreateWebhook();
@@ -51,7 +51,7 @@ namespace MixItUp.Base.Services
         Task<Result> Connect();
         Task Disconnect();
 
-        Task Authenticate(string twitchAccessToken);
+        Task Authenticate(CommunityCommandLoginModel login);
 
         Task<GetWebhooksResponseModel> GetWebhooks();
         Task<Webhook> CreateWebhook();
@@ -333,7 +333,7 @@ namespace MixItUp.Base.Services
         }
 
         // IWebhookService
-        public const string AuthenticateMethodName = "Authenticate";
+        public const string AuthenticateMethodName = "AuthenticateMany";
         private readonly SignalRConnection signalRConnection;
         public bool IsWebhookHubConnected { get { return this.signalRConnection.IsConnected(); } }
         public bool IsWebhookHubAllowed { get; private set; } = false;
@@ -381,7 +381,7 @@ namespace MixItUp.Base.Services
         {
             ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.WebhookEvents);
 
-            await this.Authenticate(JSONSerializerHelper.SerializeToString(this.GetLoginToken()));
+            await this.Authenticate(this.GetLoginToken());
         }
 
         private async void SignalRConnection_Disconnected(object sender, Exception e)
@@ -400,9 +400,9 @@ namespace MixItUp.Base.Services
             while (!result.Success);
         }
 
-        public async Task Authenticate(string twitchAccessToken)
+        public async Task Authenticate(CommunityCommandLoginModel login)
         {
-            await this.AsyncWrapper(this.signalRConnection.Send(AuthenticateMethodName, JSONSerializerHelper.SerializeToString(this.GetLoginToken())));
+            await this.AsyncWrapper(this.signalRConnection.Send(AuthenticateMethodName, login));
         }
 
         public async Task<GetWebhooksResponseModel> GetWebhooks()
@@ -522,19 +522,21 @@ namespace MixItUp.Base.Services
         {
             var login = new CommunityCommandLoginModel();
 
-            if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
                 login.TwitchAccessToken = ServiceManager.Get<TwitchSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
             }
-            if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().IsConnected)
+
+            if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
             {
                 login.YouTubeAccessToken = ServiceManager.Get<YouTubeSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
             }
-            if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
+
+            if (ServiceManager.Get<TrovoSessionService>().IsConnected)
             {
                 login.TrovoAccessToken = ServiceManager.Get<TrovoSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
             }
-            if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().IsConnected)
+            if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
             {
                 login.GlimeshAccessToken = ServiceManager.Get<GlimeshSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
             }
