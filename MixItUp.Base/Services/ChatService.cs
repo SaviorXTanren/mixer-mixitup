@@ -136,7 +136,7 @@ namespace MixItUp.Base.Services
         {
             if (user != null && !string.IsNullOrEmpty(message))
             {
-                if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceManager.Has<TwitchChatService>() && ServiceManager.Get<TwitchChatService>().IsUserConnected)
+                if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Has<TwitchChatService>() && ServiceManager.Get<TwitchChatService>().IsUserConnected)
                 {
                     await ServiceManager.Get<TwitchChatService>().SendWhisperMessage(user, message, sendAsStreamer);
                 }

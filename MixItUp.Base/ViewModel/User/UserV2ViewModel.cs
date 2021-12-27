@@ -624,7 +624,7 @@ namespace MixItUp.Base.ViewModel.User
                 }
                 else
                 {
-                    this.PatreonUser = campaignMembers.FirstOrDefault(u => this.Platform.HasFlag(u.User.Platform) && string.Equals(u.User.PlatformUserID, this.PlatformID, StringComparison.InvariantCultureIgnoreCase));
+                    this.PatreonUser = campaignMembers.FirstOrDefault(u => this.Platform == u.User.Platform && string.Equals(u.User.PlatformUserID, this.PlatformID, StringComparison.InvariantCultureIgnoreCase));
                 }
 
                 if (this.PatreonUser != null)

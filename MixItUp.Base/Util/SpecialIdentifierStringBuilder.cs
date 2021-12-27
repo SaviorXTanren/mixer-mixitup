@@ -8,7 +8,9 @@ using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -250,8 +252,7 @@ namespace MixItUp.Base.Util
             await ServiceManager.Get<UserService>().LoadAllUserData();
 
             List<UserV2Model> exemptUsers = new List<UserV2Model>(ChannelSession.Settings.Users.Values.Where(u => !u.IsSpecialtyExcluded));
-            // TODO
-            //exemptUsers.Remove(ChannelSession.User);
+            exemptUsers.Remove(ChannelSession.User.Model);
             return exemptUsers;
         }
 
@@ -487,7 +488,7 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "userdonationamount", participant.sumDonations.ToString());
             }
 
-            if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader) && ServiceManager.Get<TwitchSessionService>().Stream != null)
+            if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader))
             {
                 if (this.ContainsSpecialIdentifier(StreamUptimeSpecialIdentifierHeader) || this.ContainsSpecialIdentifier(StreamStartSpecialIdentifierHeader))
                 {
@@ -507,13 +508,13 @@ namespace MixItUp.Base.Util
                     }
                 }
 
-                if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+                if (parameters.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<TwitchSessionService>().Stream?.viewer_count.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewscount", ServiceManager.Get<TwitchSessionService>().User?.view_count.ToString());
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<TwitchSessionService>().Stream.title);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gameimage", ServiceManager.Get<TwitchSessionService>().Stream.thumbnail_url);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceManager.Get<TwitchSessionService>().Stream.game_name);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<TwitchSessionService>().Stream?.title);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gameimage", ServiceManager.Get<TwitchSessionService>().Stream?.thumbnail_url);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceManager.Get<TwitchSessionService>().Stream?.game_name);
 
                     if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount"))
                     {
@@ -527,14 +528,24 @@ namespace MixItUp.Base.Util
                         this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount", subCount.ToString());
                     }
                 }
-                else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
+                else if (parameters.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().IsConnected)
+                {
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<YouTubeSessionService>().Broadcast?.Snippet?.Title);
+                }
+                else if (parameters.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
+                {
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<TrovoSessionService>().Channel?.current_viewers.ToString());
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<TrovoSessionService>().Channel?.live_title);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceManager.Get<TrovoSessionService>().Channel?.category_name);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", ServiceManager.Get<TrovoSessionService>().Channel?.followers.ToString());
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount", ServiceManager.Get<TrovoSessionService>().Channel?.subscriber_num.ToString());
+                }
+                else if (parameters.Platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().IsConnected)
                 {
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.countViewers.ToString());
-                    if (ServiceManager.Get<GlimeshSessionService>().User?.channel != null)
-                    {
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<GlimeshSessionService>().User?.channel.title);
-                        // TODO
-                    }
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<GlimeshSessionService>().User?.channel?.title);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.category?.name);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", ServiceManager.Get<GlimeshSessionService>().User?.countFollowers);
                 }
 
                 this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "chattercount", ServiceManager.Get<MixItUp.Base.Services.UserService>().ActiveUserCount.ToString());
@@ -837,17 +848,6 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "color", UserV2ViewModel.UserDefaultColor.Equals(user.Color) ? "#000000" : user.Color);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "inchat", ServiceManager.Get<UserService>().IsUserActive(user.ID).ToString());
 
-                if (user.HasPlatformData(StreamingPlatformTypeEnum.Twitch))
-                {
-                    TwitchUserPlatformV2Model twitchUser = user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch);
-                    if (twitchUser != null)
-                    {
-                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "twitchid", twitchUser.ID);
-                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "twitchcolor", twitchUser.Color);
-                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalbitscheered", twitchUser.TotalBitsCheered.ToString());
-                    }
-                }
-
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "time", user.OnlineViewingTimeString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "hours", user.OnlineViewingHoursOnly.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "mins", user.OnlineViewingMinutesOnly.ToString());
@@ -872,38 +872,85 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalcommandsrun", user.TotalCommandsRun.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalmonthssubbed", user.TotalMonthsSubbed.ToString());
 
+                if (user.HasPlatformData(StreamingPlatformTypeEnum.Twitch))
+                {
+                    TwitchUserPlatformV2Model pUser = user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch);
+                    this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "twitchid", pUser?.ID);
+                }
+
+                if (user.HasPlatformData(StreamingPlatformTypeEnum.YouTube))
+                {
+                    YouTubeUserPlatformV2Model pUser = user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube);
+                    this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "youtubeid", pUser?.ID);
+                }
+
+                if (user.HasPlatformData(StreamingPlatformTypeEnum.Trovo))
+                {
+                    TrovoUserPlatformV2Model pUser = user.GetPlatformData<TrovoUserPlatformV2Model>(StreamingPlatformTypeEnum.Trovo);
+                    this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "trovoid", pUser?.ID);
+                }
+
+                if (user.HasPlatformData(StreamingPlatformTypeEnum.Glimesh))
+                {
+                    GlimeshUserPlatformV2Model pUser = user.GetPlatformData<GlimeshUserPlatformV2Model>(StreamingPlatformTypeEnum.Glimesh);
+                    this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "glimeshid", pUser?.ID);
+                }
+
                 string userStreamHeader = identifierHeader + UserSpecialIdentifierHeader + "stream";
                 if (this.ContainsSpecialIdentifier(userStreamHeader))
                 {
-                    if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Glimesh) && ServiceManager.Get<GlimeshSessionService>().IsConnected)
+                    if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
                     {
-                        if (ServiceManager.Get<TwitchSessionService>().Stream != null)
+                        TwitchUserPlatformV2Model twitchUser = user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch);
+                        if (twitchUser != null)
                         {
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "viewercount", ServiceManager.Get<TwitchSessionService>().Stream?.viewer_count.ToString());
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "viewscount", ServiceManager.Get<TwitchSessionService>().User?.view_count.ToString());
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "title", ServiceManager.Get<TwitchSessionService>().Stream.title);
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "gameimage", ServiceManager.Get<TwitchSessionService>().Stream.thumbnail_url);
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "game", ServiceManager.Get<TwitchSessionService>().Stream.game_name);
-
-                            if (this.ContainsSpecialIdentifier(userStreamHeader + "followercount"))
+                            Twitch.Base.Models.NewAPI.Users.UserModel tUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(twitchUser.ID);
+                            if (tUser != null)
                             {
-                                long followCount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetFollowerCount(ServiceManager.Get<TwitchSessionService>().User);
-                                this.ReplaceSpecialIdentifier(userStreamHeader + "followercount", followCount.ToString());
-                            }
+                                Twitch.Base.Models.NewAPI.Streams.StreamModel tStream = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStream(tUser);
 
-                            if (this.ContainsSpecialIdentifier(userStreamHeader + "subscribercount"))
-                            {
-                                long subCount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscriberCount(ServiceManager.Get<TwitchSessionService>().User);
-                                this.ReplaceSpecialIdentifier(userStreamHeader + "subscribercount", subCount.ToString());
+                                this.ReplaceSpecialIdentifier(userStreamHeader + "title", tStream?.title);
+                                this.ReplaceSpecialIdentifier(userStreamHeader + "gameimage", tStream?.thumbnail_url);
+                                this.ReplaceSpecialIdentifier(userStreamHeader + "game", tStream?.game_name);
                             }
                         }
                     }
-                    else if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Glimesh) && ServiceManager.Get<GlimeshSessionService>().IsConnected)
+                    else if (user.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().IsConnected)
                     {
-                        Glimesh.Base.Models.Channels.ChannelModel channel = ServiceManager.Get<GlimeshSessionService>().User?.channel;
-                        if (channel != null)
+                        YouTubeUserPlatformV2Model youtubeUser = user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube);
+                        if (youtubeUser != null)
                         {
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "title", channel.title);
+                            Google.Apis.YouTube.v3.Data.Channel yChannel = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByID(youtubeUser.ID);
+                            if (yChannel != null)
+                            {
+
+                            }
+                        }
+                    }
+                    else if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
+                    {
+                        TrovoUserPlatformV2Model trovoUser = user.GetPlatformData<TrovoUserPlatformV2Model>(StreamingPlatformTypeEnum.Trovo);
+                        if (trovoUser != null)
+                        {
+                            Trovo.Base.Models.Users.UserModel tUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(trovoUser.Username);
+                            if (tUser != null)
+                            {
+                                Trovo.Base.Models.Channels.ChannelModel tChannel = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetChannelByID(tUser.channel_id);
+
+                                this.ReplaceSpecialIdentifier(userStreamHeader + "title", tChannel?.live_title);
+                                this.ReplaceSpecialIdentifier(userStreamHeader + "game", tChannel?.category_name);
+                            }
+                        }
+                    }
+                    else if (user.Platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().IsConnected)
+                    {
+                        GlimeshUserPlatformV2Model glimeshUser = user.GetPlatformData<GlimeshUserPlatformV2Model>(StreamingPlatformTypeEnum.Glimesh);
+                        if (glimeshUser != null)
+                        {
+                            Glimesh.Base.Models.Channels.ChannelModel gChannel = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetChannelByName(glimeshUser.Username);
+
+                            this.ReplaceSpecialIdentifier(userStreamHeader + "title", gChannel?.title);
+                            this.ReplaceSpecialIdentifier(userStreamHeader + "game", gChannel?.stream?.category?.name);
                         }
                     }
                 }
