@@ -47,7 +47,7 @@ namespace MixItUp.Base.Services.YouTube
                 Logger.Log(ex);
                 return new Result<YouTubePlatformService>(ex);
             }
-            return new Result<YouTubePlatformService>("Trovo OAuth token could not be used");
+            return new Result<YouTubePlatformService>("YouTube OAuth token could not be used");
         }
 
         public static async Task<Result<YouTubePlatformService>> ConnectUser()
@@ -76,7 +76,7 @@ namespace MixItUp.Base.Services.YouTube
                 Logger.Log(ex);
                 return new Result<YouTubePlatformService>(ex);
             }
-            return new Result<YouTubePlatformService>("Failed to connect to establish connection to Glimesh");
+            return new Result<YouTubePlatformService>("Failed to connect to establish connection to YouTube");
         }
 
         public YouTubeConnection Connection { get; private set; }

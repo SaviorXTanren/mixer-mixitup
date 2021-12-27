@@ -35,6 +35,7 @@ namespace MixItUp.Base.Services.Trovo
 
         private CancellationTokenSource cancellationTokenSource;
 
+        private bool processMessages = false;
         private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
 
         private HashSet<string> messagesProcessed = new HashSet<string>();
@@ -107,13 +108,20 @@ namespace MixItUp.Base.Services.Trovo
 
                         this.userClient.OnChatMessageReceived += UserClient_OnChatMessageReceived;
 
+                        this.processMessages = false;
                         if (!await this.userClient.Connect(token))
                         {
                             return new Result("Failed to connect to Trovo chat servers");
                         }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        AsyncRunner.RunAsyncBackground(this.ChatterJoinLeaveBackground, this.cancellationTokenSource.Token, 5000);
+                        AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                        {
+                            await Task.Delay(2000);
+                            this.processMessages = true;
+                        }, this.cancellationTokenSource.Token);
+
+                        AsyncRunner.RunAsyncBackground(this.ChatterJoinLeaveBackground, this.cancellationTokenSource.Token, 60000);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                         return new Result();
@@ -151,6 +159,8 @@ namespace MixItUp.Base.Services.Trovo
                     this.cancellationTokenSource.Cancel();
                     this.cancellationTokenSource = null;
                 }
+
+                this.processMessages = false;
             }
             catch (Exception ex)
             {
@@ -282,6 +292,11 @@ namespace MixItUp.Base.Services.Trovo
 
         private async void UserClient_OnChatMessageReceived(object sender, ChatMessageContainerModel messageContainer)
         {
+            if (!this.processMessages)
+            {
+                return;
+            }
+
             foreach (ChatMessageModel message in messageContainer.chats)
             {
                 if (this.messagesProcessed.Contains(message.message_id))

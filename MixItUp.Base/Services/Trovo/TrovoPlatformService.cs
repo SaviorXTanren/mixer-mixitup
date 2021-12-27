@@ -83,7 +83,7 @@ namespace MixItUp.Base.Services.Trovo
                 Logger.Log(ex);
                 return new Result<TrovoPlatformService>(ex);
             }
-            return new Result<TrovoPlatformService>("Failed to connect to establish connection to Glimesh");
+            return new Result<TrovoPlatformService>("Failed to connect to establish connection to Trovo");
         }
 
         public TrovoConnection Connection { get; private set; }
@@ -117,6 +117,6 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task<ChatEmotePackageModel> GetEmotes(string channelID) { return await AsyncRunner.RunAsync(this.Connection.Chat.GetEmotes(new List<string>() { channelID })); }
 
-        public async Task<ChatViewersModel> GetViewers(string channelID, int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.Chat.GetViewers(channelID)); }
+        public async Task<ChatViewersModel> GetViewers(string channelID) { return await AsyncRunner.RunAsync(this.Connection.Chat.GetViewers(channelID, maxResults: 1000)); }
     }
 }
