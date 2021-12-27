@@ -118,19 +118,21 @@ namespace MixItUp.Base.Services.Glimesh
         {
             await this.DisconnectBot(settings);
 
+            await ServiceManager.Get<GlimeshChatEventService>().DisconnectUser();
+
             this.UserConnection = null;
 
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh] = null;
         }
 
-        public Task DisconnectBot(SettingsV3Model settings)
+        public async Task DisconnectBot(SettingsV3Model settings)
         {
+            await ServiceManager.Get<GlimeshChatEventService>().DisconnectBot();
+
             this.BotConnection = null;
 
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].BotOAuthToken = null;
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].BotID = null;
-
-            return Task.CompletedTask;
         }
 
         public async Task<Result> InitializeUser(SettingsV3Model settings)

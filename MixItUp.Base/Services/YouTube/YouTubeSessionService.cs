@@ -116,19 +116,21 @@ namespace MixItUp.Base.Services.YouTube
         {
             await this.DisconnectBot(settings);
 
+            await ServiceManager.Get<YouTubeChatService>().DisconnectUser();
+
             this.UserConnection = null;
 
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube] = null;
         }
 
-        public Task DisconnectBot(SettingsV3Model settings)
+        public async Task DisconnectBot(SettingsV3Model settings)
         {
+            await ServiceManager.Get<YouTubeChatService>().DisconnectBot();
+
             this.BotConnection = null;
 
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].BotOAuthToken = null;
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].BotID = null;
-
-            return Task.CompletedTask;
         }
 
         public async Task<Result> InitializeUser(SettingsV3Model settings)

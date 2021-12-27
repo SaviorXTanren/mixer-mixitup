@@ -124,19 +124,22 @@ namespace MixItUp.Base.Services.Twitch
         {
             await this.DisconnectBot(settings);
 
+            await ServiceManager.Get<TwitchChatService>().DisconnectUser();
+            await ServiceManager.Get<TwitchEventService>().Disconnect();
+
             this.UserConnection = null;
 
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = null;
         }
 
-        public Task DisconnectBot(SettingsV3Model settings)
+        public async Task DisconnectBot(SettingsV3Model settings)
         {
+            await ServiceManager.Get<TwitchChatService>().DisconnectBot();
+
             this.BotConnection = null;
 
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = null;
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotID = null;
-
-            return Task.CompletedTask;
         }
 
         public async Task<Result> InitializeUser(SettingsV3Model settings)
