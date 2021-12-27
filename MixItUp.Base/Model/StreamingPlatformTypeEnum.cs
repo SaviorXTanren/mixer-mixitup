@@ -1,4 +1,9 @@
-﻿using System;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
+using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -43,6 +48,15 @@ namespace MixItUp.Base.Model
             StreamingPlatformTypeEnum.Trovo,
             StreamingPlatformTypeEnum.Glimesh
         };
+
+        public static IStreamingPlatformSessionService GetPlatformSessionService(StreamingPlatformTypeEnum platform)
+        {
+            if (platform == StreamingPlatformTypeEnum.Twitch) { return ServiceManager.Get<TwitchSessionService>(); }
+            else if (platform == StreamingPlatformTypeEnum.YouTube) { return ServiceManager.Get<YouTubeSessionService>(); }
+            else if (platform == StreamingPlatformTypeEnum.Glimesh) { return ServiceManager.Get<GlimeshSessionService>(); }
+            else if (platform == StreamingPlatformTypeEnum.Trovo) { return ServiceManager.Get<TrovoSessionService>(); }
+            return null;
+        }
 
         public static string GetPlatformImage(StreamingPlatformTypeEnum platform)
         {

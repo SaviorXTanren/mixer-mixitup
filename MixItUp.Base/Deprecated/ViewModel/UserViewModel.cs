@@ -885,25 +885,22 @@ namespace MixItUp.Base.ViewModel.User
                     this.Data.UpdatedThisSession = true;
                     this.LastUpdated = DateTimeOffset.Now;
 
-                    if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
+                    if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
                         await this.RefreshTwitchUserDetails();
                         await this.RefreshTwitchUserAccountDate();
                         await this.RefreshTwitchUserFollowDate();
                         await this.RefreshTwitchUserSubscribeDate();
                     }
-
-                    if (this.Platform.HasFlag(StreamingPlatformTypeEnum.YouTube))
+                    else if (this.Platform == StreamingPlatformTypeEnum.YouTube)
                     {
                         await this.RefreshYouTubeUserDetails();
                     }
-                    
-                    if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Glimesh))
+                    else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
                     {
                         await this.RefreshGlimeshUserDetails();
                     }
-
-                    if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Trovo))
+                    else if (this.Platform == StreamingPlatformTypeEnum.Trovo)
                     {
                         await this.RefreshTrovoUserDetails();
                     }
@@ -1083,15 +1080,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public void UpdateMinuteData()
         {
-            // TODO
-            if (ServiceManager.Get<TwitchSessionService>().StreamIsLive)
-            {
-                this.Data.ViewingMinutes++;
-            }
-            else
-            {
-                this.Data.OfflineViewingMinutes++;
-            }
+            this.Data.ViewingMinutes++;
             ChannelSession.Settings.Users.ManualValueChanged(this.ID);
 
             if (ChannelSession.Settings.RegularUserMinimumHours > 0 && this.Data.ViewingHoursPart >= ChannelSession.Settings.RegularUserMinimumHours)
@@ -1455,7 +1444,7 @@ namespace MixItUp.Base.ViewModel.User
                 }
                 else
                 {
-                    patreonUser = campaignMembers.FirstOrDefault(u => this.Platform.HasFlag(u.User.Platform) && string.Equals(u.User.PlatformUserID, this.PlatformID, StringComparison.InvariantCultureIgnoreCase));
+                    patreonUser = campaignMembers.FirstOrDefault(u => this.Platform == u.User.Platform && string.Equals(u.User.PlatformUserID, this.PlatformID, StringComparison.InvariantCultureIgnoreCase));
                 }
 
                 this.PatreonUser = patreonUser;

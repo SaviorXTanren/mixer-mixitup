@@ -46,7 +46,7 @@ namespace MixItUp.Base.ViewModel.User
                 }
             }
 
-            if (this.platformModel == null)
+            if (this.platformModel == null && this.Model.GetPlatforms().Count > 0)
             {
                 this.platformModel = this.GetPlatformData<UserPlatformV2ModelBase>(this.Model.GetPlatforms().First());
             }
@@ -57,7 +57,7 @@ namespace MixItUp.Base.ViewModel.User
             }
             else
             {
-                this.platform = StreamingPlatformTypeEnum.None;
+                throw new InvalidOperationException($"User data does not contain any platform data - {model.ID} - {platform}");
             }
         }
 
@@ -518,7 +518,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public void UpdateLastActivity() { this.Model.LastActivity = DateTimeOffset.Now; }
 
-        public void UpdateViewingMinutes()
+        public void UpdateViewingMinutes(Dictionary<StreamingPlatformTypeEnum, bool> liveStreams)
         {
             this.OnlineViewingMinutes++;
             ChannelSession.Settings.Users.ManualValueChanged(this.ID);
@@ -624,7 +624,7 @@ namespace MixItUp.Base.ViewModel.User
                 }
                 else
                 {
-                    this.PatreonUser = campaignMembers.FirstOrDefault(u => this.Platform.HasFlag(u.User.Platform) && string.Equals(u.User.PlatformUserID, this.PlatformID, StringComparison.InvariantCultureIgnoreCase));
+                    this.PatreonUser = campaignMembers.FirstOrDefault(u => this.Platform == u.User.Platform && string.Equals(u.User.PlatformUserID, this.PlatformID, StringComparison.InvariantCultureIgnoreCase));
                 }
 
                 if (this.PatreonUser != null)

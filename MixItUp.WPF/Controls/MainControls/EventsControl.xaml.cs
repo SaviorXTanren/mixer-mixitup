@@ -33,18 +33,27 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void NewEventCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<EventCommandItemViewModel>(sender).EventType);
-            window.Closed += Window_Closed;
+            EventCommandItemViewModel item = FrameworkElementHelpers.GetDataContext<EventCommandItemViewModel>(sender);
+            CommandEditorWindow window = new CommandEditorWindow(item.EventType);
+            window.Closed += (object s, System.EventArgs ee) =>
+            {
+                this.viewModel.EventTypeItems[item.EventType].RefreshCommand();
+            };
             window.ForceShow();
         }
 
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            EventCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<EventCommandModel>();
+            CommandListingButtonsControl commandListingButtonsControl = ((CommandListingButtonsControl)sender);
+            EventCommandModel command = commandListingButtonsControl.GetCommandFromCommandButtons<EventCommandModel>();
             if (command != null)
             {
                 CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(command);
-                window.Closed += Window_Closed;
+                window.Closed += (object s, System.EventArgs ee) =>
+                {
+                    this.viewModel.EventTypeItems[command.EventType].RefreshCommand();
+                    commandListingButtonsControl.RefreshUI();
+                };
                 window.ForceShow();
             }
         }
@@ -53,20 +62,18 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                EventCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<EventCommandModel>();
+                CommandListingButtonsControl commandListingButtonsControl = ((CommandListingButtonsControl)sender);
+                EventCommandModel command = commandListingButtonsControl.GetCommandFromCommandButtons<EventCommandModel>();
                 if (command != null)
                 {
                     ServiceManager.Get<CommandService>().EventCommands.Remove(command);
                     ChannelSession.Settings.RemoveCommand(command);
-                    this.viewModel.RefreshCommands();
                     await ChannelSession.SaveSettings();
+
+                    this.viewModel.EventTypeItems[command.EventType].RefreshCommand();
+                    commandListingButtonsControl.RefreshUI();
                 }
             });
-        }
-
-        private void Window_Closed(object sender, System.EventArgs e)
-        {
-            this.viewModel.RefreshCommands();
         }
 
         private void DataGrid_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)

@@ -88,8 +88,6 @@
                 <Grid Grid.Row="2" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="40" />
-                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.OnlineRate}">
@@ -117,35 +115,6 @@
                             <TextBlock Grid.Column="4" VerticalAlignment="Center" Margin="0,20,0,0">/</TextBlock>
 
                             <TextBox Grid.Column="6" Text="{Binding OnlineRateInterval}" IsEnabled="{Binding IsCustomOnlineRate}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Minutes}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" />
-
-                        </Grid>
-                    </GroupBox>
-
-                    <GroupBox x:Name="OfflineRateGroupBox" Grid.Column="2" Header="{x:Static resx:Resources.OfflineRate}">
-                        <Grid Margin="10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="10" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="10" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <ComboBox Grid.Column="0" ItemsSource="{Binding OfflineRates}" SelectedItem="{Binding OfflineRate}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AcquireRate}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-
-                            <TextBox Grid.Column="2" Text="{Binding OfflineRateAmount}" IsEnabled="{Binding IsCustomOfflineRate}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" />
-
-                            <TextBlock Grid.Column="4" VerticalAlignment="Center" Margin="0,20,0,0">/</TextBlock>
-
-                            <TextBox Grid.Column="6" Text="{Binding OfflineRateInterval}" IsEnabled="{Binding IsCustomOfflineRate}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Minutes}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" />
 
                         </Grid>
                     </GroupBox>

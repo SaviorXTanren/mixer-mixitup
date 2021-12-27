@@ -10,8 +10,8 @@ namespace MixItUp.Base.Model.User
     {
         public static UserV2Model CreateUnassociated(string username = null)
         {
-            UserV2Model user = new UserV2Model() { ID = Guid.Empty };
-            user.AddPlatformData(new UnassociatedUserPlatformV2Model(!string.IsNullOrEmpty(username) ? username : MixItUp.Base.Resources.Anonymous));
+            UserV2Model user = new UserV2Model(new UnassociatedUserPlatformV2Model(!string.IsNullOrEmpty(username) ? username : MixItUp.Base.Resources.Anonymous));
+            user.ID = Guid.Empty;
             return user;
         }
 
@@ -70,9 +70,15 @@ namespace MixItUp.Base.Model.User
         public long TotalMonthsSubbed { get; set; }
 
         [DataMember]
-        private Dictionary<StreamingPlatformTypeEnum, UserPlatformV2ModelBase> PlatformData { get; set; } = new Dictionary<StreamingPlatformTypeEnum, UserPlatformV2ModelBase>();
+        public Dictionary<StreamingPlatformTypeEnum, UserPlatformV2ModelBase> PlatformData { get; set; } = new Dictionary<StreamingPlatformTypeEnum, UserPlatformV2ModelBase>();
 
+        [Obsolete]
         public UserV2Model() { }
+
+        public UserV2Model(UserPlatformV2ModelBase platformModel)
+        {
+            this.AddPlatformData(platformModel);
+        }
 
         public HashSet<StreamingPlatformTypeEnum> GetPlatforms() { return new HashSet<StreamingPlatformTypeEnum>(this.PlatformData.Keys); }
 

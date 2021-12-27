@@ -136,7 +136,7 @@ namespace MixItUp.Base.Services
         {
             if (user != null && !string.IsNullOrEmpty(message))
             {
-                if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceManager.Has<TwitchChatService>() && ServiceManager.Get<TwitchChatService>().IsUserConnected)
+                if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Has<TwitchChatService>() && ServiceManager.Get<TwitchChatService>().IsUserConnected)
                 {
                     await ServiceManager.Get<TwitchChatService>().SendWhisperMessage(user, message, sendAsStreamer);
                 }
@@ -391,9 +391,9 @@ namespace MixItUp.Base.Services
 
                 // Add message to chat list
                 bool showMessage = true;
-                if (ChannelSession.Settings.HideBotMessages && message.User != null)
+                if (ChannelSession.Settings.HideBotMessages && message.User != null && message.Platform != StreamingPlatformTypeEnum.None)
                 {
-                    if (ServiceManager.Get<TwitchSessionService>().Bot != null && message.User.Platform == StreamingPlatformTypeEnum.Twitch && message.User.PlatformID.Equals(ServiceManager.Get<TwitchSessionService>().Bot.id))
+                    if (StreamingPlatforms.GetPlatformSessionService(message.Platform).IsBotConnected && string.Equals(message.User?.ID, StreamingPlatforms.GetPlatformSessionService(message.Platform)?.BotID))
                     {
                         showMessage = false;
                     }
@@ -514,13 +514,12 @@ namespace MixItUp.Base.Services
                             return;
                         }
 
-                        if (ChannelSession.Settings.IgnoreBotAccountCommands)
+                        if (ChannelSession.Settings.IgnoreBotAccountCommands && message.Platform != StreamingPlatformTypeEnum.None)
                         {
-                            if (ServiceManager.Get<TwitchSessionService>().Bot != null && message.User.Platform == StreamingPlatformTypeEnum.Twitch && message.User.Platform.Equals(ServiceManager.Get<TwitchSessionService>().Bot.id))
+                            if (StreamingPlatforms.GetPlatformSessionService(message.Platform).IsBotConnected && string.Equals(message.User?.ID, StreamingPlatforms.GetPlatformSessionService(message.Platform)?.BotID))
                             {
                                 return;
                             }
-                            // TODO
                         }
 
                         Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0} - {1}", message.ID, message));
@@ -696,19 +695,32 @@ namespace MixItUp.Base.Services
 
         private Task ProcessHoursCurrency(CancellationToken cancellationToken)
         {
-            foreach (UserV2ViewModel user in ServiceManager.Get<UserService>().GetActiveUsers())
-            {
-                user.UpdateViewingMinutes();
-            }
+            Dictionary<StreamingPlatformTypeEnum, bool> liveStreams = new Dictionary<StreamingPlatformTypeEnum, bool>();
 
-            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
-            {
-                currency.UpdateUserData();
-            }
+            liveStreams[StreamingPlatformTypeEnum.Twitch] = ServiceManager.Get<TwitchSessionService>().IsConnected ? ServiceManager.Get<TwitchSessionService>().StreamIsLive : false;
+            liveStreams[StreamingPlatformTypeEnum.YouTube] = ServiceManager.Get<YouTubeSessionService>().IsConnected ? ServiceManager.Get<YouTubeSessionService>().StreamIsLive : false;
+            liveStreams[StreamingPlatformTypeEnum.Trovo] = ServiceManager.Get<TrovoSessionService>().IsConnected ? ServiceManager.Get<TrovoSessionService>().Channel?.is_live ?? false : false;
+            liveStreams[StreamingPlatformTypeEnum.Glimesh] = ServiceManager.Get<GlimeshSessionService>().IsConnected ? ServiceManager.Get<GlimeshSessionService>().User?.channel?.IsLive ?? false : false;
 
-            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+            if (liveStreams.Any(s => s.Value))
             {
-                streamPass.UpdateUserData();
+                foreach (UserV2ViewModel user in ServiceManager.Get<UserService>().GetActiveUsers())
+                {
+                    if (liveStreams.TryGetValue(user.Platform, out bool active) && active)
+                    {
+                        user.UpdateViewingMinutes(liveStreams);
+                    }
+                }
+
+                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
+                {
+                    currency.UpdateUserData(liveStreams);
+                }
+
+                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                {
+                    streamPass.UpdateUserData(liveStreams);
+                }
             }
 
             return Task.CompletedTask;

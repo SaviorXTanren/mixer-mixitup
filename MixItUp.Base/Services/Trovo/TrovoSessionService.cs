@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Trovo.Base.Models.Category;
 using Trovo.Base.Models.Channels;
 using Trovo.Base.Models.Users;
 
@@ -20,6 +21,11 @@ namespace MixItUp.Base.Services.Trovo
         public PrivateUserModel Bot { get; private set; }
 
         public bool IsConnected { get { return this.UserConnection != null; } }
+        public bool IsBotConnected { get { return this.BotConnection != null; } }
+
+        public string UserID { get { return this.User?.userId; } }
+        public string BotID { get { return this.Bot?.userId; } }
+        public string ChannelID { get { return this.User?.channelId; } }
 
         public async Task<Result> ConnectUser()
         {
@@ -116,19 +122,21 @@ namespace MixItUp.Base.Services.Trovo
         {
             await this.DisconnectBot(settings);
 
+            await ServiceManager.Get<TrovoChatEventService>().DisconnectUser();
+
             this.UserConnection = null;
 
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo] = null;
         }
 
-        public Task DisconnectBot(SettingsV3Model settings)
+        public async Task DisconnectBot(SettingsV3Model settings)
         {
+            await ServiceManager.Get<TrovoChatEventService>().DisconnectBot();
+
             this.BotConnection = null;
 
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].BotOAuthToken = null;
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].BotID = null;
-
-            return Task.CompletedTask;
         }
 
         public async Task<Result> InitializeUser(SettingsV3Model settings)
@@ -265,6 +273,35 @@ namespace MixItUp.Base.Services.Trovo
                     }
                 }
             }
+        }
+
+        public Task<string> GetTitle()
+        {
+            return Task.FromResult(this.Channel?.live_title);
+        }
+
+        public async Task<bool> SetTitle(string title)
+        {
+            return await this.UserConnection.UpdateChannel(this.Channel.channel_id, title: title);
+        }
+
+        public Task<string> GetGame()
+        {
+            return Task.FromResult(this.Channel?.category_name);
+        }
+
+        public async Task<bool> SetGame(string gameName)
+        {
+            IEnumerable<CategoryModel> categories = await this.UserConnection.SearchCategories(gameName, maxResults: 10);
+            if (categories != null && categories.Count() > 0)
+            {
+                string categoryID = categories.FirstOrDefault()?.id;
+                if (!string.IsNullOrEmpty(categoryID))
+                {
+                    return await this.UserConnection.UpdateChannel(this.Channel.channel_id, categoryID: categoryID);
+                }
+            }
+            return false;
         }
     }
 }

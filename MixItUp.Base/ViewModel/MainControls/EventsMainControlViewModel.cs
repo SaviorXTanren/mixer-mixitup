@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
 
 namespace MixItUp.Base.ViewModel.MainControls
@@ -28,19 +29,17 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
     }
 
-    public class EventCommandItemViewModel
+    public class EventCommandItemViewModel : UIViewModelBase
     {
         public EventTypeEnum EventType { get; set; }
 
         public EventCommandModel Command { get; set; }
 
-        public EventCommandItemViewModel(EventCommandModel command)
+        public EventCommandItemViewModel(EventTypeEnum eventType)
         {
-            this.Command = command;
-            this.EventType = this.Command.EventType;
+            this.EventType = eventType;
+            this.RefreshCommand();
         }
-
-        public EventCommandItemViewModel(EventTypeEnum eventType) { this.EventType = eventType; }
 
         public string Name { get { return EnumLocalizationHelper.GetLocalizedName(this.EventType); } }
 
@@ -115,116 +114,118 @@ namespace MixItUp.Base.ViewModel.MainControls
         public bool IsNewCommand { get { return this.Command == null; } }
 
         public bool IsExistingCommand { get { return this.Command != null; } }
+
+        public void RefreshCommand()
+        {
+            this.Command = ServiceManager.Get<EventService>().GetEventCommand(this.EventType);
+            this.NotifyPropertyChanged("Command");
+            this.NotifyPropertyChanged("Name");
+            this.NotifyPropertyChanged("Service");
+            this.NotifyPropertyChanged("IsNewCommand");
+            this.NotifyPropertyChanged("IsExistingCommand");
+        }
     }
 
     public class EventsMainControlViewModel : WindowControlViewModelBase
     {
         public ThreadSafeObservableCollection<EventCommandGroupViewModel> EventCommandGroups { get; set; } = new ThreadSafeObservableCollection<EventCommandGroupViewModel>();
 
+        public Dictionary<EventTypeEnum, EventCommandItemViewModel> EventTypeItems { get; set; } = new Dictionary<EventTypeEnum, EventCommandItemViewModel>();
+
         public EventsMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
-        {
-            this.RefreshCommands();
-        }
-
-        public void RefreshCommands()
         {
             this.EventCommandGroups.Clear();
 
             List<EventCommandGroupViewModel> commandGroups = new List<EventCommandGroupViewModel>();
 
             EventCommandGroupViewModel genericCommands = new EventCommandGroupViewModel(Resources.Generic, packIconName: "AlarmLight");
-            genericCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChannelStreamStart));
-            genericCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChannelStreamStop));
-            genericCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChannelFollowed));
-            genericCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChannelHosted));
-            genericCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChannelRaided));
-            genericCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChannelSubscribed));
-            genericCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChannelResubscribed));
-            genericCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChannelSubscriptionGifted));
-            genericCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChannelMassSubscriptionsGifted));
+            genericCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChannelStreamStart));
+            genericCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChannelStreamStop));
+            genericCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChannelFollowed));
+            genericCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChannelHosted));
+            genericCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChannelRaided));
+            genericCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChannelSubscribed));
+            genericCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChannelResubscribed));
+            genericCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChannelSubscriptionGifted));
+            genericCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChannelMassSubscriptionsGifted));
             commandGroups.Add(genericCommands);
 
             EventCommandGroupViewModel twitchCommands = new EventCommandGroupViewModel(Resources.Twitch, image: StreamingPlatforms.TwitchLogoImageAssetFilePath);
-            twitchCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStart));
-            twitchCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStop));
-            twitchCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelFollowed));
-            twitchCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHosted));
-            twitchCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelRaided));
-            twitchCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelSubscribed));
-            twitchCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelResubscribed));
-            twitchCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelSubscriptionGifted));
-            twitchCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelMassSubscriptionsGifted));
-            twitchCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelBitsCheered));
-            twitchCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelPointsRedeemed));
-            twitchCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainBegin));
-            twitchCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainEnd));
+            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelStreamStart));
+            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelStreamStop));
+            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelFollowed));
+            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelHosted));
+            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelRaided));
+            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelSubscribed));
+            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelResubscribed));
+            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelSubscriptionGifted));
+            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelMassSubscriptionsGifted));
+            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelBitsCheered));
+            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelPointsRedeemed));
+            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelHypeTrainBegin));
+            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelHypeTrainEnd));
             commandGroups.Add(twitchCommands);
 
             EventCommandGroupViewModel trovoCommands = new EventCommandGroupViewModel(Resources.Trovo, image: StreamingPlatforms.TrovoLogoImageAssetFilePath);
-            trovoCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TrovoChannelFollowed));
-            trovoCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TrovoChannelRaided));
-            trovoCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TrovoChannelSubscribed));
-            //trovoCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TrovoChannelResubscribed));
-            trovoCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TrovoChannelSubscriptionGifted));
-            trovoCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TrovoChannelMassSubscriptionsGifted));
-            trovoCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TrovoSpellCast));
+            trovoCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TrovoChannelFollowed));
+            trovoCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TrovoChannelRaided));
+            trovoCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TrovoChannelSubscribed));
+            //trovoCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TrovoChannelResubscribed));
+            trovoCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TrovoChannelSubscriptionGifted));
+            trovoCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TrovoChannelMassSubscriptionsGifted));
+            trovoCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TrovoSpellCast));
             commandGroups.Add(trovoCommands);
 
             EventCommandGroupViewModel glimeshCommands = new EventCommandGroupViewModel(Resources.Glimesh, image: StreamingPlatforms.GlimeshLogoImageAssetFilePath);
-            glimeshCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.GlimeshChannelStreamStart));
-            glimeshCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.GlimeshChannelStreamStop));
-            glimeshCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.GlimeshChannelFollowed));
+            glimeshCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.GlimeshChannelStreamStart));
+            glimeshCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.GlimeshChannelStreamStop));
+            glimeshCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.GlimeshChannelFollowed));
             commandGroups.Add(glimeshCommands);
 
             EventCommandGroupViewModel chatCommands = new EventCommandGroupViewModel(Resources.Chat, packIconName: "Chat");
-            chatCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChatUserFirstJoin));
-            chatCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChatUserJoined));
-            chatCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChatUserLeft));
-            chatCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChatUserTimeout));
-            chatCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChatEntranceCommand));
-            chatCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChatUserBan));
-            chatCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChatMessageReceived));
-            chatCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChatWhisperReceived));
-            chatCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ChatMessageDeleted));
+            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserFirstJoin));
+            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserJoined));
+            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserLeft));
+            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserTimeout));
+            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatEntranceCommand));
+            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserBan));
+            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatMessageReceived));
+            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatWhisperReceived));
+            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatMessageDeleted));
             commandGroups.Add(chatCommands);
 
             EventCommandGroupViewModel donationCommands = new EventCommandGroupViewModel(Resources.Donations, packIconName: "Cash");
-            donationCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.GenericDonation));
-            donationCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.StreamlabsDonation));
-            donationCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.StreamElementsDonation));
-            donationCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.StreamElementsMerchPurchase));
-            donationCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TipeeeStreamDonation));
-            donationCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TreatStreamDonation));
-            donationCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.RainmakerDonation));
-            donationCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.TiltifyDonation));
-            donationCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.ExtraLifeDonation));
-            donationCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.JustGivingDonation));
+            donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.GenericDonation));
+            donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.StreamlabsDonation));
+            donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.StreamElementsDonation));
+            donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.StreamElementsMerchPurchase));
+            donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TipeeeStreamDonation));
+            donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TreatStreamDonation));
+            donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.RainmakerDonation));
+            donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TiltifyDonation));
+            donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ExtraLifeDonation));
+            donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.JustGivingDonation));
             commandGroups.Add(donationCommands);
 
             EventCommandGroupViewModel patreonCommands = new EventCommandGroupViewModel(Resources.Patreon, packIconName: "Patreon");
-            patreonCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.PatreonSubscribed));
+            patreonCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.PatreonSubscribed));
             commandGroups.Add(patreonCommands);
 
             EventCommandGroupViewModel streamlootsCommands = new EventCommandGroupViewModel(Resources.Streamloots, packIconName: "CardsOutline");
-            streamlootsCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.StreamlootsCardRedeemed));
-            streamlootsCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.StreamlootsPackPurchased));
-            streamlootsCommands.Commands.Add(this.GetEventCommand(EventTypeEnum.StreamlootsPackGifted));
+            streamlootsCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.StreamlootsCardRedeemed));
+            streamlootsCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.StreamlootsPackPurchased));
+            streamlootsCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.StreamlootsPackGifted));
             commandGroups.Add(streamlootsCommands);
 
             this.EventCommandGroups.AddRange(commandGroups);
-        }
 
-        private EventCommandItemViewModel GetEventCommand(EventTypeEnum eventType)
-        {
-            EventCommandModel command = ServiceManager.Get<EventService>().GetEventCommand(eventType);
-            if (command != null)
+            foreach (EventCommandGroupViewModel group in this.EventCommandGroups)
             {
-                return new EventCommandItemViewModel(command);
-            }
-            else
-            {
-                return new EventCommandItemViewModel(eventType);
+                foreach (EventCommandItemViewModel item in group.Commands)
+                {
+                    this.EventTypeItems[item.EventType] = item;
+                }
             }
         }
     }

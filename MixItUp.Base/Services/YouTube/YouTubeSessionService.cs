@@ -18,6 +18,14 @@ namespace MixItUp.Base.Services.YouTube
         public Channel Bot { get; private set; }
 
         public bool IsConnected { get { return this.UserConnection != null; } }
+        public bool IsBotConnected { get { return this.BotConnection != null; } }
+
+        public string UserID { get { return this.User?.Id; } }
+        public string BotID { get { return this.Bot?.Id; } }
+        public string ChannelID { get { return this.User?.Id; } }
+
+        public LiveBroadcast Broadcast { get; private set; }
+        public bool StreamIsLive { get { return string.Equals(this.Broadcast?.Status?.LifeCycleStatus, "live", StringComparison.OrdinalIgnoreCase); } }
 
         public async Task<Result> ConnectUser()
         {
@@ -108,19 +116,21 @@ namespace MixItUp.Base.Services.YouTube
         {
             await this.DisconnectBot(settings);
 
+            await ServiceManager.Get<YouTubeChatService>().DisconnectUser();
+
             this.UserConnection = null;
 
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube] = null;
         }
 
-        public Task DisconnectBot(SettingsV3Model settings)
+        public async Task DisconnectBot(SettingsV3Model settings)
         {
+            await ServiceManager.Get<YouTubeChatService>().DisconnectBot();
+
             this.BotConnection = null;
 
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].BotOAuthToken = null;
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].BotID = null;
-
-            return Task.CompletedTask;
         }
 
         public async Task<Result> InitializeUser(SettingsV3Model settings)
@@ -240,7 +250,16 @@ namespace MixItUp.Base.Services.YouTube
 
         public Task RefreshChannel()
         {
+            this.Broadcast = ServiceManager.Get<YouTubeChatService>().Broadcast;
             return Task.CompletedTask;
         }
+
+        public Task<string> GetTitle() { return Task.FromResult(string.Empty); }
+
+        public Task<bool> SetTitle(string title) { return Task.FromResult(false); }
+
+        public Task<string> GetGame() { return Task.FromResult(string.Empty); }
+
+        public Task<bool> SetGame(string gameName) { return Task.FromResult(false); }
     }
 }

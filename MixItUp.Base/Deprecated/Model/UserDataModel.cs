@@ -194,8 +194,6 @@ namespace MixItUp.Base.Model.User
 
         [DataMember]
         public int ViewingMinutes { get; set; }
-        [DataMember]
-        public int OfflineViewingMinutes { get; set; }
 
         [DataMember]
         public List<Guid> CustomCommandIDs { get; set; } = new List<Guid>();
@@ -415,7 +413,6 @@ namespace MixItUp.Base.Model.User
 
             this.CustomTitle = other.CustomTitle;
             this.ViewingMinutes += other.ViewingMinutes;
-            this.OfflineViewingMinutes += other.OfflineViewingMinutes;
 
             this.CustomCommandIDs = other.CustomCommandIDs;
             this.EntranceCommandID = other.EntranceCommandID;
@@ -439,7 +436,9 @@ namespace MixItUp.Base.Model.User
         {
             if (!string.IsNullOrEmpty(this.TwitchID))
             {
-                UserV2Model result = new UserV2Model();
+                TwitchUserPlatformV2Model platformData = new TwitchUserPlatformV2Model(this.TwitchID, this.TwitchUsername, this.TwitchDisplayName);
+                UserV2Model result = new UserV2Model(platformData);
+
                 result.ID = this.ID;
                 result.LastActivity = this.LastActivity;
                 result.LastUpdated = this.LastUpdated;
@@ -480,7 +479,6 @@ namespace MixItUp.Base.Model.User
                 result.TotalTimesTagged = this.TotalTimesTagged;
                 result.Notes = this.Notes;
 
-                TwitchUserPlatformV2Model platformData = new TwitchUserPlatformV2Model(this.TwitchID, this.TwitchUsername, this.TwitchDisplayName);
                 platformData.AccountDate = this.TwitchAccountDate;
                 platformData.AvatarLink = this.TwitchAvatarLink;
                 platformData.BadgeInfo = this.TwitchBadgeInfo;

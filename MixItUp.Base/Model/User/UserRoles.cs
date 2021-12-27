@@ -13,9 +13,6 @@ namespace MixItUp.Base.Model.User
         User = 100,
 
         [TwitchUserRole]
-        TwitchTurbo = 150,
-
-        [TwitchUserRole]
         TwitchAffiliate = 200,
 
         [TwitchUserRole]

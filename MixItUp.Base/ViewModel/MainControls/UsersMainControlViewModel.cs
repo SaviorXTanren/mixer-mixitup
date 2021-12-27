@@ -340,102 +340,105 @@ namespace MixItUp.Base.ViewModel.MainControls
                     await ServiceManager.Get<UserService>().LoadAllUserData();
 
                     IEnumerable<UserV2Model> data = ChannelSession.Settings.Users.Values.ToList();
-                    if (!string.IsNullOrEmpty(this.UsernameFilter))
+                    if (data.Count() > 0)
                     {
-                        string filter = this.UsernameFilter.ToLower();
-                        if (this.SelectedPlatform != StreamingPlatformTypeEnum.All)
+                        if (!string.IsNullOrEmpty(this.UsernameFilter))
                         {
-                            data = data.Where(u => u.HasPlatformData(this.SelectedPlatform) && u.GetPlatformUsername(this.SelectedPlatform) != null && u.GetPlatformUsername(this.SelectedPlatform).Contains(filter, StringComparison.OrdinalIgnoreCase));
+                            string filter = this.UsernameFilter.ToLower();
+                            if (this.SelectedPlatform != StreamingPlatformTypeEnum.All)
+                            {
+                                data = data.Where(u => u.HasPlatformData(this.SelectedPlatform) && u.GetPlatformUsername(this.SelectedPlatform) != null && u.GetPlatformUsername(this.SelectedPlatform).Contains(filter, StringComparison.OrdinalIgnoreCase));
+                            }
+                            else
+                            {
+                                data = data.Where(u => u.GetPlatformUsername(ChannelSession.Settings.DefaultStreamingPlatform) != null && u.GetPlatformUsername(ChannelSession.Settings.DefaultStreamingPlatform).Contains(filter, StringComparison.OrdinalIgnoreCase));
+                            }
                         }
-                        else
-                        {
-                            data = data.Where(u => u.GetPlatformUsername(ChannelSession.Settings.DefaultStreamingPlatform) != null && u.GetPlatformUsername(ChannelSession.Settings.DefaultStreamingPlatform).Contains(filter, StringComparison.OrdinalIgnoreCase));
-                        }
-                    }
 
-                    if (this.SelectedSearchFilterType != UserSearchFilterTypeEnum.None)
-                    {
-                        if (this.IsRoleSearchFilterType)
+                        if (this.SelectedSearchFilterType != UserSearchFilterTypeEnum.None)
                         {
-                            // TODO
-                            //data = data.Where(u => u.UserRoles.Contains(this.SelectedUserRoleSearchFilter));
+                            if (this.IsRoleSearchFilterType)
+                            {
+                                // TODO
+                                //data = data.Where(u => u.UserRoles.Contains(this.SelectedUserRoleSearchFilter));
+                            }
+                            else if (this.IsWatchTimeSearchFilterType && this.WatchTimeAmountSearchFilter > 0)
+                            {
+                                if (this.SelectedWatchTimeComparisonSearchFilter.Equals(GreaterThanAmountFilter))
+                                {
+                                    data = data.Where(u => u.OnlineViewingMinutes > this.WatchTimeAmountSearchFilter);
+                                }
+                                else if (this.SelectedWatchTimeComparisonSearchFilter.Equals(LessThanAmountFilter))
+                                {
+                                    data = data.Where(u => u.OnlineViewingMinutes < this.WatchTimeAmountSearchFilter);
+                                }
+                                else if (this.SelectedWatchTimeComparisonSearchFilter.Equals(EqualToAmountFilter))
+                                {
+                                    data = data.Where(u => u.OnlineViewingMinutes == this.WatchTimeAmountSearchFilter);
+                                }
+                            }
+                            else if (this.IsConsumablesSearchFilterType && this.SelectedConsumablesSearchFilter != null && this.ConsumablesAmountSearchFilter > 0)
+                            {
+                                if (this.SelectedConsumablesSearchFilter.Currency != null)
+                                {
+                                    if (this.SelectedConsumablesComparisonSearchFilter.Equals(GreaterThanAmountFilter))
+                                    {
+                                        data = data.Where(u => this.SelectedConsumablesSearchFilter.Currency.GetAmount(u) > this.ConsumablesAmountSearchFilter);
+                                    }
+                                    else if (this.SelectedConsumablesComparisonSearchFilter.Equals(LessThanAmountFilter))
+                                    {
+                                        data = data.Where(u => this.SelectedConsumablesSearchFilter.Currency.GetAmount(u) < this.ConsumablesAmountSearchFilter);
+                                    }
+                                    else if (this.SelectedConsumablesComparisonSearchFilter.Equals(EqualToAmountFilter))
+                                    {
+                                        data = data.Where(u => this.SelectedConsumablesSearchFilter.Currency.GetAmount(u) == this.ConsumablesAmountSearchFilter);
+                                    }
+                                }
+                                else if (this.SelectedConsumablesSearchFilter.Inventory != null && this.SelectedConsumablesItemsSearchFilter != null)
+                                {
+                                    if (this.SelectedConsumablesComparisonSearchFilter.Equals(GreaterThanAmountFilter))
+                                    {
+                                        data = data.Where(u => this.SelectedConsumablesSearchFilter.Inventory.GetAmount(u, this.SelectedConsumablesItemsSearchFilter) > this.ConsumablesAmountSearchFilter);
+                                    }
+                                    else if (this.SelectedConsumablesComparisonSearchFilter.Equals(LessThanAmountFilter))
+                                    {
+                                        data = data.Where(u => this.SelectedConsumablesSearchFilter.Inventory.GetAmount(u, this.SelectedConsumablesItemsSearchFilter) < this.ConsumablesAmountSearchFilter);
+                                    }
+                                    else if (this.SelectedConsumablesComparisonSearchFilter.Equals(EqualToAmountFilter))
+                                    {
+                                        data = data.Where(u => this.SelectedConsumablesSearchFilter.Inventory.GetAmount(u, this.SelectedConsumablesItemsSearchFilter) == this.ConsumablesAmountSearchFilter);
+                                    }
+                                }
+                                else if (this.SelectedConsumablesSearchFilter.StreamPass != null)
+                                {
+                                    if (this.SelectedConsumablesComparisonSearchFilter.Equals(GreaterThanAmountFilter))
+                                    {
+                                        data = data.Where(u => this.SelectedConsumablesSearchFilter.StreamPass.GetAmount(u) > this.ConsumablesAmountSearchFilter);
+                                    }
+                                    else if (this.SelectedConsumablesComparisonSearchFilter.Equals(LessThanAmountFilter))
+                                    {
+                                        data = data.Where(u => this.SelectedConsumablesSearchFilter.StreamPass.GetAmount(u) < this.ConsumablesAmountSearchFilter);
+                                    }
+                                    else if (this.SelectedConsumablesComparisonSearchFilter.Equals(EqualToAmountFilter))
+                                    {
+                                        data = data.Where(u => this.SelectedConsumablesSearchFilter.StreamPass.GetAmount(u) == this.ConsumablesAmountSearchFilter);
+                                    }
+                                }
+                            }
+                            else if (this.IsCustomSettingsSearchFilterType)
+                            {
+                                data = data.Where(u => u.IsSpecialtyExcluded || u.CustomTitle != null || u.CustomCommandIDs.Count > 0 || u.EntranceCommandID != Guid.Empty || !string.IsNullOrEmpty(u.Notes));
+                            }
                         }
-                        else if (this.IsWatchTimeSearchFilterType && this.WatchTimeAmountSearchFilter > 0)
-                        {
-                            if (this.SelectedWatchTimeComparisonSearchFilter.Equals(GreaterThanAmountFilter))
-                            {
-                                data = data.Where(u => u.OnlineViewingMinutes > this.WatchTimeAmountSearchFilter);
-                            }
-                            else if (this.SelectedWatchTimeComparisonSearchFilter.Equals(LessThanAmountFilter))
-                            {
-                                data = data.Where(u => u.OnlineViewingMinutes < this.WatchTimeAmountSearchFilter);
-                            }
-                            else if (this.SelectedWatchTimeComparisonSearchFilter.Equals(EqualToAmountFilter))
-                            {
-                                data = data.Where(u => u.OnlineViewingMinutes == this.WatchTimeAmountSearchFilter);
-                            }
-                        }
-                        else if (this.IsConsumablesSearchFilterType && this.SelectedConsumablesSearchFilter != null && this.ConsumablesAmountSearchFilter > 0)
-                        {
-                            if (this.SelectedConsumablesSearchFilter.Currency != null)
-                            {
-                                if (this.SelectedConsumablesComparisonSearchFilter.Equals(GreaterThanAmountFilter))
-                                {
-                                    data = data.Where(u => this.SelectedConsumablesSearchFilter.Currency.GetAmount(u) > this.ConsumablesAmountSearchFilter);
-                                }
-                                else if (this.SelectedConsumablesComparisonSearchFilter.Equals(LessThanAmountFilter))
-                                {
-                                    data = data.Where(u => this.SelectedConsumablesSearchFilter.Currency.GetAmount(u) < this.ConsumablesAmountSearchFilter);
-                                }
-                                else if (this.SelectedConsumablesComparisonSearchFilter.Equals(EqualToAmountFilter))
-                                {
-                                    data = data.Where(u => this.SelectedConsumablesSearchFilter.Currency.GetAmount(u) == this.ConsumablesAmountSearchFilter);
-                                }
-                            }
-                            else if (this.SelectedConsumablesSearchFilter.Inventory != null && this.SelectedConsumablesItemsSearchFilter != null)
-                            {
-                                if (this.SelectedConsumablesComparisonSearchFilter.Equals(GreaterThanAmountFilter))
-                                {
-                                    data = data.Where(u => this.SelectedConsumablesSearchFilter.Inventory.GetAmount(u, this.SelectedConsumablesItemsSearchFilter) > this.ConsumablesAmountSearchFilter);
-                                }
-                                else if (this.SelectedConsumablesComparisonSearchFilter.Equals(LessThanAmountFilter))
-                                {
-                                    data = data.Where(u => this.SelectedConsumablesSearchFilter.Inventory.GetAmount(u, this.SelectedConsumablesItemsSearchFilter) < this.ConsumablesAmountSearchFilter);
-                                }
-                                else if (this.SelectedConsumablesComparisonSearchFilter.Equals(EqualToAmountFilter))
-                                {
-                                    data = data.Where(u => this.SelectedConsumablesSearchFilter.Inventory.GetAmount(u, this.SelectedConsumablesItemsSearchFilter) == this.ConsumablesAmountSearchFilter);
-                                }
-                            }
-                            else if (this.SelectedConsumablesSearchFilter.StreamPass != null)
-                            {
-                                if (this.SelectedConsumablesComparisonSearchFilter.Equals(GreaterThanAmountFilter))
-                                {
-                                    data = data.Where(u => this.SelectedConsumablesSearchFilter.StreamPass.GetAmount(u) > this.ConsumablesAmountSearchFilter);
-                                }
-                                else if (this.SelectedConsumablesComparisonSearchFilter.Equals(LessThanAmountFilter))
-                                {
-                                    data = data.Where(u => this.SelectedConsumablesSearchFilter.StreamPass.GetAmount(u) < this.ConsumablesAmountSearchFilter);
-                                }
-                                else if (this.SelectedConsumablesComparisonSearchFilter.Equals(EqualToAmountFilter))
-                                {
-                                    data = data.Where(u => this.SelectedConsumablesSearchFilter.StreamPass.GetAmount(u) == this.ConsumablesAmountSearchFilter);
-                                }
-                            }
-                        }
-                        else if (this.IsCustomSettingsSearchFilterType)
-                        {
-                            data = data.Where(u => u.IsSpecialtyExcluded || u.CustomTitle != null || u.CustomCommandIDs.Count > 0 || u.EntranceCommandID != Guid.Empty || !string.IsNullOrEmpty(u.Notes));
-                        }
-                    }
 
-                    // TODO
-                    //if (this.SortColumnIndex == 0) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.Username) : data.OrderBy(u => u.Username); }
-                    //else if (this.SortColumnIndex == 1) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.Platforms) : data.OrderBy(u => u.Platforms); }
-                    //else if (this.SortColumnIndex == 2) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryRole) : data.OrderBy(u => u.PrimaryRole); }
-                    //else if (this.SortColumnIndex == 3) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.OnlineViewingMinutes) : data.OrderBy(u => u.OnlineViewingMinutes); }
-                    //else if (this.SortColumnIndex == 4) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryCurrency) : data.OrderBy(u => u.PrimaryCurrency); }
-                    //else if (this.SortColumnIndex == 5) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryRankPoints) : data.OrderBy(u => u.PrimaryRankPoints); }
+                        // TODO
+                        //if (this.SortColumnIndex == 0) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.Username) : data.OrderBy(u => u.Username); }
+                        //else if (this.SortColumnIndex == 1) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.Platforms) : data.OrderBy(u => u.Platforms); }
+                        //else if (this.SortColumnIndex == 2) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryRole) : data.OrderBy(u => u.PrimaryRole); }
+                        //else if (this.SortColumnIndex == 3) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.OnlineViewingMinutes) : data.OrderBy(u => u.OnlineViewingMinutes); }
+                        //else if (this.SortColumnIndex == 4) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryCurrency) : data.OrderBy(u => u.PrimaryCurrency); }
+                        //else if (this.SortColumnIndex == 5) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryRankPoints) : data.OrderBy(u => u.PrimaryRankPoints); }
+                    }
 
                     List<UserV2ViewModel> users = new List<UserV2ViewModel>();
                     foreach (UserV2Model u in data)

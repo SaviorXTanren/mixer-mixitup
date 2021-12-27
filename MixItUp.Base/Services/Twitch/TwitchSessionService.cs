@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Channels;
+using Twitch.Base.Models.NewAPI.Games;
 using Twitch.Base.Models.NewAPI.Streams;
 using Twitch.Base.Models.NewAPI.Users;
 
@@ -23,6 +24,11 @@ namespace MixItUp.Base.Services.Twitch
         public bool StreamIsLive { get { return this.Stream != null; } }
 
         public bool IsConnected { get { return this.UserConnection != null; } }
+        public bool IsBotConnected { get { return this.BotConnection != null; } }
+
+        public string UserID { get { return this.User?.id; } }
+        public string BotID { get { return this.Bot?.id; } }
+        public string ChannelID { get { return this.User?.id; } }
 
         public async Task<Result> ConnectUser()
         {
@@ -118,19 +124,22 @@ namespace MixItUp.Base.Services.Twitch
         {
             await this.DisconnectBot(settings);
 
+            await ServiceManager.Get<TwitchChatService>().DisconnectUser();
+            await ServiceManager.Get<TwitchEventService>().Disconnect();
+
             this.UserConnection = null;
 
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = null;
         }
 
-        public Task DisconnectBot(SettingsV3Model settings)
+        public async Task DisconnectBot(SettingsV3Model settings)
         {
+            await ServiceManager.Get<TwitchChatService>().DisconnectBot();
+
             this.BotConnection = null;
 
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = null;
             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotID = null;
-
-            return Task.CompletedTask;
         }
 
         public async Task<Result> InitializeUser(SettingsV3Model settings)
@@ -277,28 +286,63 @@ namespace MixItUp.Base.Services.Twitch
                 this.Stream = await this.UserConnection.GetStream(this.User);
             }
         }
+
+        public Task<string> GetTitle()
+        {
+            return Task.FromResult(this.Stream?.title);
+        }
+
+        public async Task<bool> SetTitle(string title)
+        {
+            return await this.UserConnection.UpdateChannelInformation(this.User, title: title);
+        }
+
+        public Task<string> GetGame()
+        {
+            return Task.FromResult(this.Stream?.game_name);
+        }
+
+        public async Task<bool> SetGame(string gameName)
+        {
+            IEnumerable<GameModel> games = await this.UserConnection.GetNewAPIGamesByName(gameName);
+            if (games != null && games.Count() > 0)
+            {
+                GameModel game = games.FirstOrDefault(g => g.name.ToLower().Equals(gameName));
+                if (game == null)
+                {
+                    game = games.First();
+                }
+
+                if (this.IsConnected && game != null)
+                {
+                    await this.UserConnection.UpdateChannelInformation(this.User, gameID: game.id);
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     public static class TwitchNewAPIUserModelExtensions
     {
         public static bool IsAffiliate(this UserModel twitchUser)
         {
-            return twitchUser.broadcaster_type.Equals("affiliate");
+            return string.Equals(twitchUser.broadcaster_type, "affiliate", StringComparison.OrdinalIgnoreCase);
         }
 
         public static bool IsPartner(this UserModel twitchUser)
         {
-            return twitchUser.broadcaster_type.Equals("partner");
+            return string.Equals(twitchUser.broadcaster_type, "partner", StringComparison.OrdinalIgnoreCase);
         }
 
         public static bool IsStaff(this UserModel twitchUser)
         {
-            return twitchUser.type.Equals("staff") || twitchUser.type.Equals("admin");
+            return string.Equals(twitchUser.type, "staff", StringComparison.OrdinalIgnoreCase) || string.Equals(twitchUser.type, "admin", StringComparison.OrdinalIgnoreCase);
         }
 
         public static bool IsGlobalMod(this UserModel twitchUser)
         {
-            return twitchUser.type.Equals("global_mod");
+            return string.Equals(twitchUser.type, "global_mod", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

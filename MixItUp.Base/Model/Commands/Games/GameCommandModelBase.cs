@@ -220,9 +220,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else
             {
-                // TODO
-                //return ServiceManager.Get<UserService>().GetRandomActiveUser(parameters, excludeCurrencyRankExempt: true);
-                return ChannelSession.User;
+                return ServiceManager.Get<UserService>().GetRandomActiveUser(parameters.Platform);
             }
         }
 
