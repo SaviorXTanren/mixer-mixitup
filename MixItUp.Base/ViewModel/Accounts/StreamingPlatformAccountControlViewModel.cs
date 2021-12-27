@@ -172,6 +172,8 @@ namespace MixItUp.Base.ViewModel.Accounts
                     }
                     this.UserAccountAvatar = null;
                     this.UserAccountUsername = null;
+                    this.BotAccountAvatar = null;
+                    this.BotAccountUsername = null;
                 }
                 else
                 {
@@ -224,6 +226,8 @@ namespace MixItUp.Base.ViewModel.Accounts
                     {
                         this.UserAccountAvatar = null;
                         this.UserAccountUsername = null;
+                        this.BotAccountAvatar = null;
+                        this.BotAccountUsername = null;
 
                         await DialogHelper.ShowMessage(result.Message);
                     }
