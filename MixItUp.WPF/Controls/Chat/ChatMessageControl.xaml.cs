@@ -5,6 +5,7 @@ using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Glimesh;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.Twitch;
+using MixItUp.Base.ViewModel.Chat.YouTube;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -138,6 +139,10 @@ namespace MixItUp.WPF.Controls.Chat
                             else if (messagePart is TrovoChatEmoteViewModel)
                             {
                                 this.MessageWrapPanel.Children.Add(new ChatImageControl((TrovoChatEmoteViewModel)messagePart));
+                            }
+                            else if (messagePart is YouTubeChatEmoteViewModel)
+                            {
+                                this.MessageWrapPanel.Children.Add(new ChatImageControl((YouTubeChatEmoteViewModel)messagePart));
                             }
                         }
                     }

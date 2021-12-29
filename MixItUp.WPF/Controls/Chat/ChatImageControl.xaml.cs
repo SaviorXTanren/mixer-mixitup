@@ -3,6 +3,7 @@ using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.ViewModel.Chat.Glimesh;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.Twitch;
+using MixItUp.Base.ViewModel.Chat.YouTube;
 using MixItUp.WPF.Services;
 using StreamingClient.Base.Util;
 using System;
@@ -57,6 +58,8 @@ namespace MixItUp.WPF.Controls.Chat
         public ChatImageControl(GlimeshChatEmoteViewModel emote) : this() { this.DataContext = emote; }
 
         public ChatImageControl(TrovoChatEmoteViewModel emote) : this() { this.DataContext = emote; }
+
+        public ChatImageControl(YouTubeChatEmoteViewModel emote) : this() { this.DataContext = emote; }
 
         private void ChatEmoteControl_Loaded(object sender, RoutedEventArgs e)
         {
@@ -123,6 +126,11 @@ namespace MixItUp.WPF.Controls.Chat
                         {
                             await this.ProcessImage(emote.Name, emote.Url);
                         }
+                    }
+                    else if (this.DataContext is YouTubeChatEmoteViewModel)
+                    {
+                        YouTubeChatEmoteViewModel emote = (YouTubeChatEmoteViewModel)this.DataContext;
+                        await this.ProcessImage(emote.Name, emote.ImageURL);
                     }
                     else if (this.DataContext is string)
                     {

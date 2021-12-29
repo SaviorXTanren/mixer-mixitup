@@ -9,7 +9,6 @@ using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using YouTube.Base.Clients;
@@ -27,9 +26,7 @@ namespace MixItUp.Base.Services.YouTube
         public List<string> searchTerms { get; set; } = new List<string>();
         public List<string> shortcuts { get; set; } = new List<string>();
 
-        private YouTubeChatEmoteImageModel image = null;
-
-        public string ImageURL { get { return this.image?.thumbnails?.FirstOrDefault(); } }
+        public YouTubeChatEmoteImageModel image { get; set; } = null;
     }
 
     public class YouTubeChatService : StreamingPlatformServiceBase
@@ -44,6 +41,7 @@ namespace MixItUp.Base.Services.YouTube
         public YouTubeChatService() { }
 
         public IEnumerable<YouTubeChatEmoteModel> Emotes { get; private set; } = new List<YouTubeChatEmoteModel>();
+        public Dictionary<string, YouTubeChatEmoteModel> EmoteDictionary { get; private set; } = new Dictionary<string, YouTubeChatEmoteModel>();
 
         public override string Name { get { return "YouTube Chat"; } }
 
@@ -69,7 +67,18 @@ namespace MixItUp.Base.Services.YouTube
                             return new Result("Failed to connect to YouTube chat servers");
                         }
 
+                        this.EmoteDictionary.Clear();
                         this.Emotes = await this.GetChatEmotes();
+                        if (this.Emotes != null)
+                        {
+                            foreach (YouTubeChatEmoteModel emote in this.Emotes)
+                            {
+                                foreach (string shortcut in emote.shortcuts)
+                                {
+                                    this.EmoteDictionary[shortcut] = emote;
+                                }
+                            }
+                        }
 
                         return new Result();
                     }

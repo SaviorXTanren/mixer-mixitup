@@ -180,8 +180,6 @@ namespace MixItUp.Base.Services.YouTube
 
                     if (platformServiceTasks.Any(c => !c.Result.Success))
                     {
-                        ServiceManager.Remove<YouTubeChatService>();
-
                         string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
                         return new Result("Failed to connect to YouTube services:" + Environment.NewLine + Environment.NewLine + errors);
                     }
