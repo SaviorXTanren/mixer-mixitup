@@ -6218,4 +6218,7 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="YouTubeSubscriber" xml:space="preserve">
     <value>YouTube Subscriber</value>
   </data>
+  <data name="AccountsChangesRequireRestart" xml:space="preserve">
+    <value>All changes to signed-in accounts require a full restart of Mix It Up!</value>
+  </data>
 </root>

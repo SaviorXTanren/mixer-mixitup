@@ -73,25 +73,34 @@ namespace MixItUp.Base.Services.Trovo
                             return new Result("Failed to get chat token from Trovo chat servers");
                         }
 
-                        ChatEmotePackageModel emotePackage = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetEmotes(ServiceManager.Get<TrovoSessionService>().Channel.channel_id);
+                        ChatEmotePackageModel emotePackage = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetPlatformAndChannelEmotes(ServiceManager.Get<TrovoSessionService>().ChannelID);
                         if (emotePackage != null)
                         {
-                            foreach (ChannelChatEmotesModel channel in emotePackage.customizedEmotes.channel)
+                            if (emotePackage.customizedEmotes?.channel != null)
                             {
-                                foreach (ChatEmoteModel emote in channel.emotes)
+                                foreach (ChannelChatEmotesModel channel in emotePackage.customizedEmotes.channel)
                                 {
-                                    this.ChannelEmotes[emote.name] = emote;
+                                    foreach (ChatEmoteModel emote in channel.emotes)
+                                    {
+                                        this.ChannelEmotes[emote.name] = emote;
+                                    }
                                 }
                             }
 
-                            foreach (EventChatEmoteModel emote in emotePackage.eventEmotes)
+                            if (emotePackage.eventEmotes != null)
                             {
-                                this.EventEmotes[emote.name] = emote;
+                                foreach (EventChatEmoteModel emote in emotePackage.eventEmotes)
+                                {
+                                    this.EventEmotes[emote.name] = emote;
+                                }
                             }
 
-                            foreach (GlobalChatEmoteModel emote in emotePackage.globalEmotes)
+                            if (emotePackage.globalEmotes != null)
                             {
-                                this.GlobalEmotes[emote.name] = emote;
+                                foreach (GlobalChatEmoteModel emote in emotePackage.globalEmotes)
+                                {
+                                    this.GlobalEmotes[emote.name] = emote;
+                                }
                             }
                         }
                         else
@@ -179,7 +188,7 @@ namespace MixItUp.Base.Services.Trovo
                     {
                         this.botClient = new ChatClient(ServiceManager.Get<TrovoSessionService>().BotConnection.Connection);
 
-                        string token = await ServiceManager.Get<TrovoSessionService>().BotConnection.GetChatToken(ServiceManager.Get<TrovoSessionService>().Channel.channel_id);
+                        string token = await ServiceManager.Get<TrovoSessionService>().BotConnection.GetChatToken(ServiceManager.Get<TrovoSessionService>().ChannelID);
                         if (string.IsNullOrEmpty(token))
                         {
                             return new Result("Failed to get chat token from Trovo chat servers");
@@ -188,6 +197,7 @@ namespace MixItUp.Base.Services.Trovo
                         if (ChannelSession.AppSettings.DiagnosticLogging)
                         {
                             this.botClient.OnSentOccurred += Client_OnSentOccurred;
+                            this.botClient.OnTextReceivedOccurred += BotClient_OnTextReceivedOccurred;
                         }
                         this.botClient.OnDisconnectOccurred += BotClient_OnDisconnectOccurred;
 
@@ -217,6 +227,7 @@ namespace MixItUp.Base.Services.Trovo
                     if (ChannelSession.AppSettings.DiagnosticLogging)
                     {
                         this.botClient.OnSentOccurred -= Client_OnSentOccurred;
+                        this.botClient.OnTextReceivedOccurred -= BotClient_OnTextReceivedOccurred;
                     }
                     this.botClient.OnDisconnectOccurred -= BotClient_OnDisconnectOccurred;
 
@@ -241,7 +252,14 @@ namespace MixItUp.Base.Services.Trovo
                     do
                     {
                         message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
-                        await client.SendMessage(message);
+                        if (client == this.botClient)
+                        {
+                            await client.SendMessage(ServiceManager.Get<TrovoSessionService>().ChannelID, message);
+                        }
+                        else
+                        {
+                            await client.SendMessage(message);
+                        }
                         message = subMessage;
                         await Task.Delay(500);
                     }
@@ -252,7 +270,7 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task<bool> DeleteMessage(ChatMessageViewModel message)
         {
-            return await this.GetChatClient(sendAsStreamer: true).DeleteMessage(ServiceManager.Get<TrovoSessionService>().Channel.channel_id, message.ID, message.User?.PlatformID);
+            return await this.GetChatClient(sendAsStreamer: true).DeleteMessage(ServiceManager.Get<TrovoSessionService>().ChannelID, message.ID, message.User?.PlatformID);
         }
 
         public async Task<bool> ClearChat() { return await this.PerformChatCommand("clear"); }
@@ -269,7 +287,7 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task<bool> PerformChatCommand(string command)
         {
-            string result = await this.GetChatClient(sendAsStreamer: true).PerformChatCommand(ServiceManager.Get<TrovoSessionService>().Channel.channel_id, command);
+            string result = await this.GetChatClient(sendAsStreamer: true).PerformChatCommand(ServiceManager.Get<TrovoSessionService>().ChannelID, command);
             if (!string.IsNullOrEmpty(result))
             {
                 await ServiceManager.Get<ChatService>().SendMessage(result, StreamingPlatformTypeEnum.Trovo);
@@ -288,6 +306,11 @@ namespace MixItUp.Base.Services.Trovo
         private void UserClient_OnTextReceivedOccurred(object sender, string packet)
         {
             Logger.Log(LogLevel.Debug, string.Format("Trovo Chat Packet Received: {0}", packet));
+        }
+
+        private void BotClient_OnTextReceivedOccurred(object sender, string packet)
+        {
+            Logger.Log(LogLevel.Debug, string.Format("Trovo Bot Chat Packet Received: {0}", packet));
         }
 
         private async void UserClient_OnChatMessageReceived(object sender, ChatMessageContainerModel messageContainer)
@@ -521,7 +544,7 @@ namespace MixItUp.Base.Services.Trovo
 
         private async Task ChatterJoinLeaveBackground(CancellationToken cancellationToken)
         {
-            ChatViewersModel viewers = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetViewers(ServiceManager.Get<TrovoSessionService>().Channel.channel_id);
+            ChatViewersModel viewers = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetViewers(ServiceManager.Get<TrovoSessionService>().ChannelID);
             if (viewers != null)
             {
                 List<UserV2ViewModel> userJoins = new List<UserV2ViewModel>();

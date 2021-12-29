@@ -35,6 +35,7 @@ namespace MixItUp.Base.Services.Trovo
         {
             OAuthClientScopeEnum.chat_connect,
             OAuthClientScopeEnum.chat_send_self,
+            OAuthClientScopeEnum.send_to_my_channel,
             OAuthClientScopeEnum.manage_messages,
 
             OAuthClientScopeEnum.user_details_self,
@@ -115,7 +116,9 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task<string> GetChatToken(string channelID) { return await AsyncRunner.RunAsync(this.Connection.Chat.GetToken(channelID)); }
 
-        public async Task<ChatEmotePackageModel> GetEmotes(string channelID) { return await AsyncRunner.RunAsync(this.Connection.Chat.GetEmotes(new List<string>() { channelID })); }
+        public async Task<ChatEmotePackageModel> GetPlatformEmotes() { return await AsyncRunner.RunAsync(this.Connection.Chat.GetEmotes()); }
+
+        public async Task<ChatEmotePackageModel> GetPlatformAndChannelEmotes(string channelID) { return await AsyncRunner.RunAsync(this.Connection.Chat.GetEmotes(new List<string>() { channelID })); }
 
         public async Task<ChatViewersModel> GetViewers(string channelID) { return await AsyncRunner.RunAsync(this.Connection.Chat.GetViewers(channelID, maxResults: 1000)); }
     }

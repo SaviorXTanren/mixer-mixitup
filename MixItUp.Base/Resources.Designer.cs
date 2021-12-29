@@ -205,6 +205,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All changes to signed-in accounts require a full restart of Mix It Up!.
+        /// </summary>
+        public static string AccountsChangesRequireRestart {
+            get {
+                return ResourceManager.GetString("AccountsChangesRequireRestart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Streamer accounts are your actual account that you are streaming from. Bot accounts are separate, optional accounts that you can use to send messages from in your channel. Bots accounts must be manually created by you and you must make sure to be signed in to them before you try connecting them in Mix It Up..
         /// </summary>
         public static string AccountsDetails {
