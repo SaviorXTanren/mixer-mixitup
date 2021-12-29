@@ -205,6 +205,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All changes to signed-in accounts require a full restart of Mix It Up!.
+        /// </summary>
+        public static string AccountsChangesRequireRestart {
+            get {
+                return ResourceManager.GetString("AccountsChangesRequireRestart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Streamer accounts are your actual account that you are streaming from. Bot accounts are separate, optional accounts that you can use to send messages from in your channel. Bots accounts must be manually created by you and you must make sure to be signed in to them before you try connecting them in Mix It Up..
         /// </summary>
         public static string AccountsDetails {
@@ -15754,6 +15763,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Custom Spells Editor.
+        /// </summary>
+        public static string TrovoCustomSpellsEditor {
+            get {
+                return ResourceManager.GetString("TrovoCustomSpellsEditor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trovo Editor.
         /// </summary>
         public static string TrovoEditor {
@@ -15781,11 +15799,38 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Trovo Spell.
+        /// </summary>
+        public static string TrovoSpell {
+            get {
+                return ResourceManager.GetString("TrovoSpell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trovo Spell Cast.
         /// </summary>
         public static string TrovoSpellCast {
             get {
                 return ResourceManager.GetString("TrovoSpellCast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spell Name.
+        /// </summary>
+        public static string TrovoSpellName {
+            get {
+                return ResourceManager.GetString("TrovoSpellName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trovo Spells.
+        /// </summary>
+        public static string TrovoSpells {
+            get {
+                return ResourceManager.GetString("TrovoSpells", resourceCulture);
             }
         }
         
@@ -15849,6 +15894,15 @@ namespace MixItUp.Base {
         public static string TwitchAccountMismatch {
             get {
                 return ResourceManager.GetString("TwitchAccountMismatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A Twitch account must be connected to use this feature.
+        /// </summary>
+        public static string TwitchAccountMustBeConnectedToUseThisFeature {
+            get {
+                return ResourceManager.GetString("TwitchAccountMustBeConnectedToUseThisFeature", resourceCulture);
             }
         }
         

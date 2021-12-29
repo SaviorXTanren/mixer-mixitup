@@ -505,16 +505,18 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override async Task OnLoadedInternal()
         {
-            foreach (CustomChannelPointRewardModel channelPoint in (await ServiceManager.Get<TwitchSessionService>().UserConnection.GetCustomChannelPointRewards(ServiceManager.Get<TwitchSessionService>().User)).OrderBy(c => c.title))
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
-                this.ChannelPointRewards.Add(channelPoint);
-            }
+                foreach (CustomChannelPointRewardModel channelPoint in (await ServiceManager.Get<TwitchSessionService>().UserConnection.GetCustomChannelPointRewards(ServiceManager.Get<TwitchSessionService>().User)).OrderBy(c => c.title))
+                {
+                    this.ChannelPointRewards.Add(channelPoint);
+                }
 
-            if (this.ShowUpdateChannelPointRewardGrid)
-            {
-                this.ChannelPointReward = this.ChannelPointRewards.FirstOrDefault(c => c.id.Equals(this.existingChannelPointRewardID));
+                if (this.ShowUpdateChannelPointRewardGrid)
+                {
+                    this.ChannelPointReward = this.ChannelPointRewards.FirstOrDefault(c => c.id.Equals(this.existingChannelPointRewardID));
+                }
             }
-
             await base.OnLoadedInternal();
         }
 

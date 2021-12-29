@@ -35,6 +35,7 @@ namespace MixItUp.Base.Services
         public List<TwitchChannelPointsCommandModel> TwitchChannelPointsCommands { get; set; } = new List<TwitchChannelPointsCommandModel>();
         public List<StreamlootsCardCommandModel> StreamlootsCardCommands { get; set; } = new List<StreamlootsCardCommandModel>();
         public List<WebhookCommandModel> WebhookCommands { get; set; } = new List<WebhookCommandModel>();
+        public List<TrovoSpellCommandModel> TrovoSpellCommands { get; set; } = new List<TrovoSpellCommandModel>();
 
         public IEnumerable<CommandModelBase> AllEnabledChatAccessibleCommands
         {
@@ -62,6 +63,7 @@ namespace MixItUp.Base.Services
                 commands.AddRange(this.TwitchChannelPointsCommands);
                 commands.AddRange(this.StreamlootsCardCommands);
                 commands.AddRange(this.WebhookCommands);
+                commands.AddRange(this.TrovoSpellCommands);
                 return commands;
             }
         }
@@ -105,6 +107,7 @@ namespace MixItUp.Base.Services
             this.TwitchChannelPointsCommands.Clear();
             this.StreamlootsCardCommands.Clear();
             this.WebhookCommands.Clear();
+            this.TrovoSpellCommands.Clear();
 
             foreach (CommandModelBase command in ChannelSession.Settings.Commands.Values.ToList())
             {
@@ -120,6 +123,7 @@ namespace MixItUp.Base.Services
                 else if (command is TwitchChannelPointsCommandModel) { this.TwitchChannelPointsCommands.Add((TwitchChannelPointsCommandModel)command); }
                 else if (command is StreamlootsCardCommandModel) { this.StreamlootsCardCommands.Add((StreamlootsCardCommandModel)command); }
                 else if (command is WebhookCommandModel) { this.WebhookCommands.Add((WebhookCommandModel)command); }
+                else if (command is TrovoSpellCommandModel) { this.TrovoSpellCommands.Add((TrovoSpellCommandModel)command); }
             }
 
             foreach (PreMadeChatCommandSettingsModel commandSetting in ChannelSession.Settings.PreMadeChatCommandSettings)

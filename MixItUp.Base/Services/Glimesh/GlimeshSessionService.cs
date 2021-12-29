@@ -29,6 +29,31 @@ namespace MixItUp.Base.Services.Glimesh
         public string BotID { get { return this.Bot?.id; } }
         public string ChannelID { get { return this.User?.channel?.id; } }
 
+        public StreamingPlatformAccountModel UserAccount
+        {
+            get
+            {
+                return new StreamingPlatformAccountModel()
+                {
+                    ID = this.UserID,
+                    Username = this.User?.username,
+                    AvatarURL = this.User?.avatarUrl
+                };
+            }
+        }
+        public StreamingPlatformAccountModel BotAccount
+        {
+            get
+            {
+                return new StreamingPlatformAccountModel()
+                {
+                    ID = this.BotID,
+                    Username = this.Bot?.username,
+                    AvatarURL = this.Bot?.avatarUrl
+                };
+            }
+        }
+
         public async Task<Result> ConnectUser()
         {
             Result<GlimeshPlatformService> result = await GlimeshPlatformService.ConnectUser();
@@ -105,7 +130,7 @@ namespace MixItUp.Base.Services.Glimesh
                 }
                 else
                 {
-                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh] = null;
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].ClearUserData();
                     return userResult;
                 }
 
@@ -122,7 +147,7 @@ namespace MixItUp.Base.Services.Glimesh
 
             this.UserConnection = null;
 
-            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh] = null;
+            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].ClearUserData();
         }
 
         public async Task DisconnectBot(SettingsV3Model settings)
@@ -131,8 +156,7 @@ namespace MixItUp.Base.Services.Glimesh
 
             this.BotConnection = null;
 
-            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].BotOAuthToken = null;
-            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].BotID = null;
+            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].ClearBotData();
         }
 
         public async Task<Result> InitializeUser(SettingsV3Model settings)
@@ -146,9 +170,7 @@ namespace MixItUp.Base.Services.Glimesh
                         if (!string.IsNullOrEmpty(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID) && !string.Equals(this.User.id, settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID))
                         {
                             Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.User.username} - {this.User.id} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID}");
-                            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserOAuthToken.accessToken = string.Empty;
-                            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserOAuthToken.refreshToken = string.Empty;
-                            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserOAuthToken.expiresIn = 0;
+                            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserOAuthToken.ResetToken();
                             return new Result("The account you are logged in as on Glimesh does not match the account for this settings. Please log in as the correct account on Glimesh.");
                         }
                     }

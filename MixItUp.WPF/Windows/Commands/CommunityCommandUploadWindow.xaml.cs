@@ -93,6 +93,7 @@ namespace MixItUp.WPF.Windows.Commands
                         case CommandTypeEnum.StreamlootsCard: this.uploadCommand.Tags.Add(CommunityCommandTagEnum.StreamlootsCardCommand); break;
                         case CommandTypeEnum.TwitchChannelPoints: this.uploadCommand.Tags.Add(CommunityCommandTagEnum.TwitchChannelPointsCommand); break;
                         case CommandTypeEnum.Webhook: this.uploadCommand.Tags.Add(CommunityCommandTagEnum.Webhook); break;
+                        case CommandTypeEnum.TrovoSpell: this.uploadCommand.Tags.Add(CommunityCommandTagEnum.TrovoSpell); break;
                     }
                 }
                 else

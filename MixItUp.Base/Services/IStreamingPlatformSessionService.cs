@@ -4,6 +4,15 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
+    public class StreamingPlatformAccountModel
+    {
+        public string ID { get; set; }
+
+        public string Username { get; set; }
+
+        public string AvatarURL { get; set; }
+    }
+
     public interface IStreamingPlatformSessionService
     {
         bool IsConnected { get; }
@@ -12,6 +21,9 @@ namespace MixItUp.Base.Services
         string UserID { get; }
         string BotID { get; }
         string ChannelID { get; }
+
+        StreamingPlatformAccountModel UserAccount { get; }
+        StreamingPlatformAccountModel BotAccount { get; }
 
         Task<Result> ConnectUser();
         Task<Result> ConnectBot();

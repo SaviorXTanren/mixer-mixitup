@@ -649,6 +649,10 @@ namespace MixItUp.Base.Model.Settings
                 {
                     command = JSONSerializerHelper.DeserializeFromString<WebhookCommandModel>(commandData);
                 }
+                else if (type == CommandTypeEnum.TrovoSpell)
+                {
+                    command = JSONSerializerHelper.DeserializeFromString<TrovoSpellCommandModel>(commandData);
+                }
 
                 if (command != null)
                 {
