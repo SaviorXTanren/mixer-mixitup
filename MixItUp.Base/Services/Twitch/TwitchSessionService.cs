@@ -136,7 +136,7 @@ namespace MixItUp.Base.Services.Twitch
                 }
                 else
                 {
-                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = null;
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ClearUserData();
                     return userResult;
                 }
 
@@ -154,7 +154,7 @@ namespace MixItUp.Base.Services.Twitch
 
             this.UserConnection = null;
 
-            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = null;
+            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ClearUserData();
         }
 
         public async Task DisconnectBot(SettingsV3Model settings)
@@ -163,8 +163,7 @@ namespace MixItUp.Base.Services.Twitch
 
             this.BotConnection = null;
 
-            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = null;
-            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotID = null;
+            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ClearBotData();
         }
 
         public async Task<Result> InitializeUser(SettingsV3Model settings)
@@ -193,9 +192,7 @@ namespace MixItUp.Base.Services.Twitch
                             if (!string.IsNullOrEmpty(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID) && !string.Equals(this.User.id, settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID))
                             {
                                 Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.User.login} - {this.User.id} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID}");
-                                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.accessToken = string.Empty;
-                                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.refreshToken = string.Empty;
-                                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.expiresIn = 0;
+                                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.ResetToken();
                                 return new Result("The account you are logged in as on Twitch does not match the account for this settings. Please log in as the correct account on Twitch.");
                             }
                         }

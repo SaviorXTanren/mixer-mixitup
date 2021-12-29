@@ -128,7 +128,7 @@ namespace MixItUp.Base.Services.YouTube
                 }
                 else
                 {
-                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube] = null;
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].ClearUserData();
                     return userResult;
                 }
 
@@ -145,7 +145,7 @@ namespace MixItUp.Base.Services.YouTube
 
             this.UserConnection = null;
 
-            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube] = null;
+            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].ClearUserData();
         }
 
         public async Task DisconnectBot(SettingsV3Model settings)
@@ -154,8 +154,7 @@ namespace MixItUp.Base.Services.YouTube
 
             this.BotConnection = null;
 
-            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].BotOAuthToken = null;
-            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].BotID = null;
+            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].ClearBotData();
         }
 
         public async Task<Result> InitializeUser(SettingsV3Model settings)
@@ -169,9 +168,7 @@ namespace MixItUp.Base.Services.YouTube
                         if (!string.IsNullOrEmpty(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserID) && !string.Equals(this.User.Id, settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserID))
                         {
                             Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.User.Id} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserID}");
-                            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserOAuthToken.accessToken = string.Empty;
-                            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserOAuthToken.refreshToken = string.Empty;
-                            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserOAuthToken.expiresIn = 0;
+                            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserOAuthToken.ResetToken();
                             return new Result("The account you are logged in as on YouTube does not match the account for this settings. Please log in as the correct account on YouTube.");
                         }
                     }
