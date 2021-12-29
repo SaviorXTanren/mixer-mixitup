@@ -191,8 +191,6 @@ namespace MixItUp.Base.Services.Trovo
 
                         if (platformServiceTasks.Any(c => !c.Result.Success))
                         {
-                            ServiceManager.Remove<TrovoChatEventService>();
-
                             string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
                             return new Result("Failed to connect to Trovo services:" + Environment.NewLine + Environment.NewLine + errors);
                         }
