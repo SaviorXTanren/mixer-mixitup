@@ -140,8 +140,8 @@ namespace MixItUp.Base.ViewModel.Accounts
                 }
                 else if (this.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().Bot != null)
                 {
-                    this.UserAccountAvatar = ServiceManager.Get<TrovoSessionService>().Bot.profilePic;
-                    this.UserAccountUsername = ServiceManager.Get<TrovoSessionService>().Bot.nickName;
+                    this.BotAccountAvatar = ServiceManager.Get<TrovoSessionService>().Bot.profilePic;
+                    this.BotAccountUsername = ServiceManager.Get<TrovoSessionService>().Bot.nickName;
                 }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().Bot != null)
                 {
