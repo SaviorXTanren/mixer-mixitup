@@ -15862,6 +15862,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A Twitch account must be connected to use this feature.
+        /// </summary>
+        public static string TwitchAccountMustBeConnectedToUseThisFeature {
+            get {
+                return ResourceManager.GetString("TwitchAccountMustBeConnectedToUseThisFeature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ERROR: Could not update Channel Point Reward, please try again later. If this reward was not created through the Mix It Up UI, you will need to delete it and re-add it on the Channel Points page as they must be created through Mix It Up to allow the app to be able to update them..
         /// </summary>
         public static string TwitchActionChannelPointRewardCouldNotBeUpdated {

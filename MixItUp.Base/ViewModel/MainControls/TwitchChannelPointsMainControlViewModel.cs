@@ -27,6 +27,12 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.CreateChannelPointRewardCommand = this.CreateCommand(async () =>
             {
+                if (!ServiceManager.Get<TwitchSessionService>().IsConnected)
+                {
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.TwitchAccountMustBeConnectedToUseThisFeature);
+                    return;
+                }
+
                 string name = await DialogHelper.ShowTextEntry(MixItUp.Base.Resources.ChannelPointRewardName);
                 if (!string.IsNullOrEmpty(name))
                 {

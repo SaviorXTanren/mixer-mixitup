@@ -6221,4 +6221,7 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="AccountsChangesRequireRestart" xml:space="preserve">
     <value>All changes to signed-in accounts require a full restart of Mix It Up!</value>
   </data>
+  <data name="TwitchAccountMustBeConnectedToUseThisFeature" xml:space="preserve">
+    <value>A Twitch account must be connected to use this feature</value>
+  </data>
 </root>
