@@ -29,6 +29,31 @@ namespace MixItUp.Base.Services.Glimesh
         public string BotID { get { return this.Bot?.id; } }
         public string ChannelID { get { return this.User?.channel?.id; } }
 
+        public StreamingPlatformAccountModel UserAccount
+        {
+            get
+            {
+                return new StreamingPlatformAccountModel()
+                {
+                    ID = this.UserID,
+                    Username = this.User?.username,
+                    AvatarURL = this.User?.avatarUrl
+                };
+            }
+        }
+        public StreamingPlatformAccountModel BotAccount
+        {
+            get
+            {
+                return new StreamingPlatformAccountModel()
+                {
+                    ID = this.BotID,
+                    Username = this.Bot?.username,
+                    AvatarURL = this.Bot?.avatarUrl
+                };
+            }
+        }
+
         public async Task<Result> ConnectUser()
         {
             Result<GlimeshPlatformService> result = await GlimeshPlatformService.ConnectUser();

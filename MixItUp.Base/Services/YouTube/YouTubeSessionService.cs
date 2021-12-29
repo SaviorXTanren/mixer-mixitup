@@ -24,6 +24,31 @@ namespace MixItUp.Base.Services.YouTube
         public string BotID { get { return this.Bot?.Id; } }
         public string ChannelID { get { return this.User?.Id; } }
 
+        public StreamingPlatformAccountModel UserAccount
+        {
+            get
+            {
+                return new StreamingPlatformAccountModel()
+                {
+                    ID = this.UserID,
+                    Username = this.User?.Snippet.Title,
+                    AvatarURL = this.User?.Snippet.Thumbnails?.Medium?.Url
+                };
+            }
+        }
+        public StreamingPlatformAccountModel BotAccount
+        {
+            get
+            {
+                return new StreamingPlatformAccountModel()
+                {
+                    ID = this.BotID,
+                    Username = this.Bot?.Snippet.Title,
+                    AvatarURL = this.Bot?.Snippet.Thumbnails?.Medium?.Url
+                };
+            }
+        }
+
         public LiveBroadcast Broadcast { get; private set; }
         public bool StreamIsLive { get { return string.Equals(this.Broadcast?.Status?.LifeCycleStatus, "live", StringComparison.OrdinalIgnoreCase); } }
 

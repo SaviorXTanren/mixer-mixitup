@@ -30,6 +30,31 @@ namespace MixItUp.Base.Services.Twitch
         public string BotID { get { return this.Bot?.id; } }
         public string ChannelID { get { return this.User?.id; } }
 
+        public StreamingPlatformAccountModel UserAccount
+        {
+            get
+            {
+                return new StreamingPlatformAccountModel()
+                {
+                    ID = this.UserID,
+                    Username = this.User?.login,
+                    AvatarURL = this.User?.profile_image_url
+                };
+            }
+        }
+        public StreamingPlatformAccountModel BotAccount
+        {
+            get
+            {
+                return new StreamingPlatformAccountModel()
+                {
+                    ID = this.BotID,
+                    Username = this.Bot?.login,
+                    AvatarURL = this.Bot?.profile_image_url
+                };
+            }
+        }
+
         public async Task<Result> ConnectUser()
         {
             Result<TwitchPlatformService> result = await TwitchPlatformService.ConnectUser();

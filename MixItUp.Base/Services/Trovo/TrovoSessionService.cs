@@ -27,6 +27,31 @@ namespace MixItUp.Base.Services.Trovo
         public string BotID { get { return this.Bot?.userId; } }
         public string ChannelID { get { return this.User?.channelId; } }
 
+        public StreamingPlatformAccountModel UserAccount
+        {
+            get
+            {
+                return new StreamingPlatformAccountModel()
+                {
+                    ID = this.UserID,
+                    Username = this.User?.userName,
+                    AvatarURL = this.User?.profilePic
+                };
+            }
+        }
+        public StreamingPlatformAccountModel BotAccount
+        {
+            get
+            {
+                return new StreamingPlatformAccountModel()
+                {
+                    ID = this.BotID,
+                    Username = this.Bot?.userName,
+                    AvatarURL = this.Bot?.profilePic
+                };
+            }
+        }
+
         public async Task<Result> ConnectUser()
         {
             Result<TrovoPlatformService> result = await TrovoPlatformService.ConnectUser();
