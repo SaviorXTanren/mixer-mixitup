@@ -25,6 +25,7 @@ namespace MixItUp.Base.Model.Commands
         PreMade = 8,
         StreamlootsCard = 9,
         Webhook = 10,
+        TrovoSpell = 11,
 
         // Specialty Command Types
         UserOnlyChat = 1000,

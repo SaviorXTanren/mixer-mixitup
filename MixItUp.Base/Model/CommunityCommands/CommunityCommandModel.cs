@@ -54,6 +54,7 @@ namespace MixItUp.Base.Model.Store
         TwitchChannelPointsCommand,
         GameCommand,
         Webhook,
+        TrovoSpell,
 
         // Extra Tags
         [Obsolete]

@@ -527,10 +527,15 @@ namespace MixItUp.Base.Services.Trovo
                 else if (message.type == ChatMessageTypeEnum.Spell || message.type == ChatMessageTypeEnum.CustomSpell)
                 {
                     TrovoChatSpellViewModel spell = new TrovoChatSpellViewModel(message);
-
                     CommandParametersModel parameters = new CommandParametersModel(user, spell.GetSpecialIdentifiers());
 
                     await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoSpellCast, parameters);
+
+                    TrovoSpellCommandModel command = ServiceManager.Get<CommandService>().TrovoSpellCommands.FirstOrDefault(c => string.Equals(c.Name, spell.Name, StringComparison.CurrentCultureIgnoreCase));
+                    if (command != null)
+                    {
+                        await ServiceManager.Get<CommandService>().Queue(command, parameters);
+                    }
 
                     await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertTrovoSpellFormat, user.DisplayName, spell.Name, spell.ValueTotal, spell.ValueType), ChannelSession.Settings.AlertTrovoSpellCastColor));
                 }

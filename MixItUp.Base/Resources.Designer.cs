@@ -15763,6 +15763,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Custom Spells Editor.
+        /// </summary>
+        public static string TrovoCustomSpellsEditor {
+            get {
+                return ResourceManager.GetString("TrovoCustomSpellsEditor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trovo Editor.
         /// </summary>
         public static string TrovoEditor {
@@ -15790,11 +15799,38 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Trovo Spell.
+        /// </summary>
+        public static string TrovoSpell {
+            get {
+                return ResourceManager.GetString("TrovoSpell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trovo Spell Cast.
         /// </summary>
         public static string TrovoSpellCast {
             get {
                 return ResourceManager.GetString("TrovoSpellCast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spell Name.
+        /// </summary>
+        public static string TrovoSpellName {
+            get {
+                return ResourceManager.GetString("TrovoSpellName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trovo Spells.
+        /// </summary>
+        public static string TrovoSpells {
+            get {
+                return ResourceManager.GetString("TrovoSpells", resourceCulture);
             }
         }
         
