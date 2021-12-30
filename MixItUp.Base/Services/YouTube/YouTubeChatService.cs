@@ -19,7 +19,12 @@ namespace MixItUp.Base.Services.YouTube
     {
         public class YouTubeChatEmoteImageModel
         {
-            public List<string> thumbnails { get; set; } = new List<string>();
+            public class YouTubeChatEmoteImageURLModel
+            {
+                public string url { get; set; }
+            }
+
+            public List<YouTubeChatEmoteImageURLModel> thumbnails { get; set; } = new List<YouTubeChatEmoteImageURLModel>();
         }
 
         public string emojiId { get; set; }

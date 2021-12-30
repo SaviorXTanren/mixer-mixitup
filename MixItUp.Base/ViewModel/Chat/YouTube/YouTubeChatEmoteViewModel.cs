@@ -9,7 +9,7 @@ namespace MixItUp.Base.ViewModel.Chat.YouTube
 
         public string Name { get { return this.Emote.shortcuts?.FirstOrDefault(); } }
 
-        public string ImageURL { get { return this.Emote.image?.thumbnails?.FirstOrDefault(); } }
+        public string ImageURL { get { return this.Emote.image?.thumbnails?.FirstOrDefault()?.url; } }
 
         public YouTubeChatEmoteViewModel(YouTubeChatEmoteModel emote)
         {
