@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
+using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -44,7 +45,8 @@ namespace MixItUp.Base.Model.Actions
             this.ActionType = actionType;
         }
 
-        private DiscordActionModel() { }
+        [Obsolete]
+        public DiscordActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

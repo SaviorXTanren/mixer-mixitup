@@ -34,7 +34,8 @@ namespace MixItUp.Base.Model.Actions
             this.ShouldProcessMath = shouldProcessMath;
         }
 
-        private SpecialIdentifierActionModel() { }
+        [Obsolete]
+        public SpecialIdentifierActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

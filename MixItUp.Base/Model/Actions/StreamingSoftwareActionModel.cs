@@ -193,7 +193,8 @@ namespace MixItUp.Base.Model.Actions
             this.ActionType = actionType;
         }
 
-        private StreamingSoftwareActionModel() { }
+        [Obsolete]
+        public StreamingSoftwareActionModel() { }
 
         public StreamingSoftwareTypeEnum SelectedStreamingSoftware { get { return (this.StreamingSoftwareType == StreamingSoftwareTypeEnum.DefaultSetting) ? ChannelSession.Settings.DefaultStreamingSoftware : this.StreamingSoftwareType; } }
 

@@ -45,7 +45,8 @@ namespace MixItUp.Base.Model.Actions
             this.LineIndex = lineIndex;
         }
 
-        private FileActionModel() { }
+        [Obsolete]
+        public FileActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

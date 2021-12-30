@@ -66,7 +66,8 @@ namespace MixItUp.Base.Model.Commands.Games
             this.StatusCommand = statusCommand;
         }
 
-        private HangmanGameCommandModel() { }
+        [Obsolete]
+        public HangmanGameCommandModel() : base() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()
         {

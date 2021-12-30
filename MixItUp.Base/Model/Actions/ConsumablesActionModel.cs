@@ -87,7 +87,8 @@ namespace MixItUp.Base.Model.Actions
             this.DeductFromUser = deductFromUser;
         }
 
-        private ConsumablesActionModel() { }
+        [Obsolete]
+        public ConsumablesActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

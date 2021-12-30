@@ -228,7 +228,8 @@ namespace MixItUp.Base.Model.Commands
 
         public EventCommandModel(EventTypeEnum eventType) : base(EnumLocalizationHelper.GetLocalizedName(eventType), CommandTypeEnum.Event) { this.EventType = eventType; }
 
-        protected EventCommandModel() : base() { }
+        [Obsolete]
+        public EventCommandModel() : base() { }
 
         public override Dictionary<string, string> GetTestSpecialIdentifiers() { return EventCommandModel.GetEventTestSpecialIdentifiers(this.EventType); }
 

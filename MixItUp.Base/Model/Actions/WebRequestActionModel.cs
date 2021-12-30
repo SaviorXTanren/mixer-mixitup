@@ -48,7 +48,8 @@ namespace MixItUp.Base.Model.Actions
             this.JSONToSpecialIdentifiers = jsonToSpecialIdentifiers;
         }
 
-        private WebRequestActionModel() { }
+        [Obsolete]
+        public WebRequestActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.Trovo;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -34,7 +35,8 @@ namespace MixItUp.Base.Model.User.Platform
             this.SetUserProperties(message);
         }
 
-        private TrovoUserPlatformV2Model() { }
+        [Obsolete]
+        public TrovoUserPlatformV2Model() : base() { }
 
         public override async Task Refresh()
         {

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.User;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -22,7 +23,8 @@ namespace MixItUp.Base.Model.Commands.Games
             this.AnyOrder = anyOrder;
         }
 
-        private SlotMachineGameOutcomeModel() { }
+        [Obsolete]
+        public SlotMachineGameOutcomeModel() : base() { }
 
         public bool ValidateSymbols(List<string> inputSymbols)
         {
@@ -75,7 +77,8 @@ namespace MixItUp.Base.Model.Commands.Games
             this.Outcomes = new List<SlotMachineGameOutcomeModel>(outcomes);
         }
 
-        private SlotMachineGameCommandModel() { }
+        [Obsolete]
+        public SlotMachineGameCommandModel() : base() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()
         {

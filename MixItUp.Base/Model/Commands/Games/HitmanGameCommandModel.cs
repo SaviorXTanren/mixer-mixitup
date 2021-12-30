@@ -73,7 +73,8 @@ namespace MixItUp.Base.Model.Commands.Games
             this.UserFailureCommand = userFailureCommand;
         }
 
-        private HitmanGameCommandModel() { }
+        [Obsolete]
+        public HitmanGameCommandModel() : base() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()
         {

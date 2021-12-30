@@ -14,9 +14,9 @@ namespace MixItUp.Base.Model.Requirements
         [DataMember]
         public List<RequirementModelBase> Requirements { get; set; } = new List<RequirementModelBase>();
 
-        public RequirementsSetModel() { }
-
         public RequirementsSetModel(IEnumerable<RequirementModelBase> requirements) { this.Requirements.AddRange(requirements); }
+
+        public RequirementsSetModel() { }
 
         public RoleRequirementModel Role { get { return (RoleRequirementModel)this.Requirements.FirstOrDefault(r => r is RoleRequirementModel); } }
 

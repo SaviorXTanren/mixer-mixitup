@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -123,7 +124,8 @@ namespace MixItUp.Base.Model.Actions
             this.Rate = rate;
         }
 
-        private TextToSpeechActionModel() { }
+        [Obsolete]
+        public TextToSpeechActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

@@ -76,7 +76,8 @@ namespace MixItUp.Base.Model.Commands.Games
             this.UserFailureCommand = userFailCommand;
         }
 
-        private WordScrambleGameCommandModel() { }
+        [Obsolete]
+        public WordScrambleGameCommandModel() : base() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()
         {

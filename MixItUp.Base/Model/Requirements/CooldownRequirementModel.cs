@@ -39,14 +39,14 @@ namespace MixItUp.Base.Model.Requirements
         [JsonIgnore]
         private LockedDictionary<Guid, DateTimeOffset> individualCooldowns = new LockedDictionary<Guid, DateTimeOffset>();
 
-        public CooldownRequirementModel() { }
-
         public CooldownRequirementModel(CooldownTypeEnum type, int amount, string groupName = null)
         {
             this.Type = type;
             this.IndividualAmount = amount;
             this.GroupName = groupName;
         }
+
+        public CooldownRequirementModel() { }
 
         protected override DateTimeOffset RequirementErrorCooldown { get { return CooldownRequirementModel.requirementErrorCooldown; } set { CooldownRequirementModel.requirementErrorCooldown = value; } }
 

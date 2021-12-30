@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
+using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -32,7 +33,8 @@ namespace MixItUp.Base.Model.Actions
             this.Amount = amount;
         }
 
-        private CounterActionModel() { }
+        [Obsolete]
+        public CounterActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

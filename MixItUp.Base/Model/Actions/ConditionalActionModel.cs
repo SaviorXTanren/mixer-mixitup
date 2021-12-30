@@ -90,7 +90,8 @@ namespace MixItUp.Base.Model.Actions
             this.Actions = new List<ActionModelBase>(actions);
         }
 
-        private ConditionalActionModel() { }
+        [Obsolete]
+        public ConditionalActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

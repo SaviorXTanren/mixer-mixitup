@@ -22,14 +22,15 @@ namespace MixItUp.Base.Model.Requirements
         [DataMember]
         public int Amount { get; set; }
 
-        public InventoryRequirementModel() { }
-
         public InventoryRequirementModel(InventoryModel inventory, InventoryItemModel item, int amount)
         {
             this.InventoryID = inventory.ID;
             this.ItemID = item.ID;
             this.Amount = amount;
         }
+
+        [Obsolete]
+        public InventoryRequirementModel() { }
 
         protected override DateTimeOffset RequirementErrorCooldown { get { return InventoryRequirementModel.requirementErrorCooldown; } set { InventoryRequirementModel.requirementErrorCooldown = value; } }
 

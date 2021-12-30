@@ -48,7 +48,8 @@ namespace MixItUp.Base.Model.Commands.Games
             this.FailedCommand = failedCommand;
         }
 
-        private DuelGameCommandModel() { }
+        [Obsolete]
+        public DuelGameCommandModel() : base() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()
         {
