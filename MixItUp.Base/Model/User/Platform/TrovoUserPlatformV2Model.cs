@@ -59,7 +59,10 @@ namespace MixItUp.Base.Model.User.Platform
                 this.ID = message.sender_id.ToString();
                 this.Username = message.nick_name;
                 this.DisplayName = message.nick_name;
-                this.AvatarLink = message.FullAvatarURL;
+                if (!string.IsNullOrEmpty(message.avatar))
+                {
+                    this.AvatarLink = message.FullAvatarURL;
+                }
 
                 if (message.roles != null)
                 {
