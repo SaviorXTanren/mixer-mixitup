@@ -50,6 +50,7 @@ namespace MixItUp.Base.Model.Actions
         VTubeStudio,
         Voicemod,
         YouTube,
+        Trovo,
     }
 
     [DataContract]
