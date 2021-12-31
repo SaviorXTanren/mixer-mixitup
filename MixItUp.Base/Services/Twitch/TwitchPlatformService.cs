@@ -70,6 +70,7 @@ namespace MixItUp.Base.Services.Twitch
 
             OAuthClientScopeEnum.user__read__broadcast,
             OAuthClientScopeEnum.user__read__follows,
+            OAuthClientScopeEnum.user__read__subscriptions,
 
             OAuthClientScopeEnum.whispers__read,
             OAuthClientScopeEnum.whispers__edit,
