@@ -6263,4 +6263,10 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="TrovoActionUsernameMissing" xml:space="preserve">
     <value>Trovo Action: A valid username must be specified</value>
   </data>
+  <data name="ApplicationExit" xml:space="preserve">
+    <value>Application Exit</value>
+  </data>
+  <data name="ApplicationLaunch" xml:space="preserve">
+    <value>Application Launch</value>
+  </data>
 </root>

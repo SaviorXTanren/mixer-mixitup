@@ -763,11 +763,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Application Exit.
+        /// </summary>
+        public static string ApplicationExit {
+            get {
+                return ResourceManager.GetString("ApplicationExit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Application Info.
         /// </summary>
         public static string ApplicationInfo {
             get {
                 return ResourceManager.GetString("ApplicationInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application Launch.
+        /// </summary>
+        public static string ApplicationLaunch {
+            get {
+                return ResourceManager.GetString("ApplicationLaunch", resourceCulture);
             }
         }
         

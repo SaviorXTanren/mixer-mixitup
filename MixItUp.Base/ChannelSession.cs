@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User.Platform;
@@ -115,6 +116,12 @@ namespace MixItUp.Base
 
         public static async Task Close()
         {
+            if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ApplicationExit, new CommandParametersModel()))
+            {
+                // Adding artificial 3 second delay to allow application exit command to finish executing
+                await Task.Delay(3000);
+            }
+
             foreach (IExternalService service in ServiceManager.GetAll<IExternalService>())
             {
                 await service.Disconnect();
@@ -453,6 +460,8 @@ namespace MixItUp.Base
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                 ServiceManager.Get<ITelemetryService>().TrackLogin(ChannelSession.Settings.TelemetryUserID, ServiceManager.Get<TwitchSessionService>().User?.broadcaster_type);
+
+                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ApplicationLaunch, new CommandParametersModel());
 
                 return new Result();
             }
