@@ -68,7 +68,8 @@ namespace MixItUp.Base.Model.Commands.Games
             this.Payout = payout;
         }
 
-        private RoleProbabilityPayoutModel() { }
+        [Obsolete]
+        public RoleProbabilityPayoutModel() { }
     }
 
     [DataContract]
@@ -93,7 +94,8 @@ namespace MixItUp.Base.Model.Commands.Games
             this.Command = command;
         }
 
-        protected GameOutcomeModel() { }
+        [Obsolete]
+        public GameOutcomeModel() { }
 
         public RoleProbabilityPayoutModel GetRoleProbabilityPayout(UserV2ViewModel user)
         {
@@ -139,7 +141,8 @@ namespace MixItUp.Base.Model.Commands.Games
             this.GameType = gameType;
         }
 
-        protected GameCommandModelBase() : base() { }
+        [Obsolete]
+        public GameCommandModelBase() : base() { }
 
         public override bool HasCustomRun { get { return true; } }
 

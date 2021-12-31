@@ -96,14 +96,20 @@ namespace MixItUp.Base.Model.Commands
         {
             if (this.TargetUser == null)
             {
-                string username = UserService.SanitizeUsername(this.Arguments.ElementAt(0));
-
-                if (this.Arguments.Count > 0)
+                if (this.Arguments != null && this.Arguments.Count > 0)
                 {
-                    this.TargetUser = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(this.Platform, username, performPlatformSearch: true);
+                    string username = UserService.SanitizeUsername(this.Arguments.ElementAt(0));
+                    if (this.Arguments.Count > 0)
+                    {
+                        this.TargetUser = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(this.Platform, username, performPlatformSearch: true);
+                        if (this.TargetUser != null && !string.Equals(username, this.TargetUser.Username, StringComparison.OrdinalIgnoreCase))
+                        {
+                            this.TargetUser = null;
+                        }
+                    }
                 }
 
-                if (this.TargetUser == null || !string.Equals(username, this.TargetUser.Username, StringComparison.OrdinalIgnoreCase))
+                if (this.TargetUser == null)
                 {
                     this.TargetUser = this.User;
                 }

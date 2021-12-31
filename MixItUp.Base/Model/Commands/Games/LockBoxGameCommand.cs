@@ -56,7 +56,8 @@ namespace MixItUp.Base.Model.Commands.Games
             this.InspectionCommand = inspectionCommand;
         }
 
-        private LockBoxGameCommandModel() { }
+        [Obsolete]
+        public LockBoxGameCommandModel() : base() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()
         {

@@ -147,7 +147,10 @@ namespace MixItUp.Base.Services.Glimesh
 
             this.UserConnection = null;
 
-            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].ClearUserData();
+            if (settings.StreamingPlatformAuthentications.TryGetValue(StreamingPlatformTypeEnum.Glimesh, out var streamingPlatform))
+            {
+                streamingPlatform.ClearUserData();
+            }
         }
 
         public async Task DisconnectBot(SettingsV3Model settings)
@@ -156,7 +159,10 @@ namespace MixItUp.Base.Services.Glimesh
 
             this.BotConnection = null;
 
-            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].ClearBotData();
+            if (settings.StreamingPlatformAuthentications.TryGetValue(StreamingPlatformTypeEnum.Glimesh, out var streamingPlatform))
+            {
+                streamingPlatform.ClearBotData();
+            }
         }
 
         public async Task<Result> InitializeUser(SettingsV3Model settings)

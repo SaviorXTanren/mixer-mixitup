@@ -70,7 +70,8 @@ namespace MixItUp.Base.Model.Commands.Games
             this.GameCompleteCommand = gameCompleteCommand;
         }
 
-        private RouletteGameCommandModel() { }
+        [Obsolete]
+        public RouletteGameCommandModel() : base() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()
         {

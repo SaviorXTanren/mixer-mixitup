@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Commands
 {
@@ -7,6 +8,7 @@ namespace MixItUp.Base.Model.Commands
     {
         public StreamlootsCardCommandModel(string name) : base(name, CommandTypeEnum.StreamlootsCard) { }
 
-        protected StreamlootsCardCommandModel() : base() { }
+        [Obsolete]
+        public StreamlootsCardCommandModel() : base() { }
     }
 }

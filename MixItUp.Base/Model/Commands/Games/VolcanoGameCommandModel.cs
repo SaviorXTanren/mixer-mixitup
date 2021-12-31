@@ -89,7 +89,8 @@ namespace MixItUp.Base.Model.Commands.Games
             this.CollectCommand = collectCommand;
         }
 
-        private VolcanoGameCommandModel() { }
+        [Obsolete]
+        public VolcanoGameCommandModel() : base() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()
         {

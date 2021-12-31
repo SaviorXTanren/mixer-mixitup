@@ -106,7 +106,8 @@ namespace MixItUp.Base.Model.Commands
             this.Type = type;
         }
 
-        protected CommandModelBase() { }
+        [Obsolete]
+        public CommandModelBase() { }
 
         public string TriggersString { get { return string.Join(" ", this.Triggers); } }
 

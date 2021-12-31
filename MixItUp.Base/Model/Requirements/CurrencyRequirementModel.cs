@@ -50,7 +50,8 @@ namespace MixItUp.Base.Model.Requirements
             this.MaxAmount = maxAmount;
         }
 
-        protected CurrencyRequirementModel() { }
+        [Obsolete]
+        public CurrencyRequirementModel() { }
 
         protected override DateTimeOffset RequirementErrorCooldown { get { return CurrencyRequirementModel.requirementErrorCooldown; } set { CurrencyRequirementModel.requirementErrorCooldown = value; } }
 

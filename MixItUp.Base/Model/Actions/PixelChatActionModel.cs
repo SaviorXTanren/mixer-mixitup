@@ -87,7 +87,8 @@ namespace MixItUp.Base.Model.Actions
             this.ActionType = actionType;
         }
 
-        private PixelChatActionModel() { }
+        [Obsolete]
+        public PixelChatActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

@@ -37,7 +37,8 @@ namespace MixItUp.Base.Model.Requirements
             this.Optional = optional;
         }
 
-        private ArgumentsRequirementItemModel() { }
+        [Obsolete]
+        public ArgumentsRequirementItemModel() { }
 
         public string DisplayName
         {

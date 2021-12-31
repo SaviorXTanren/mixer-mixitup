@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
+using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -43,7 +44,8 @@ namespace MixItUp.Base.Model.Actions
             this.ModerationReason = moderationReason;
         }
 
-        private ModerationActionModel() { }
+        [Obsolete]
+        public ModerationActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

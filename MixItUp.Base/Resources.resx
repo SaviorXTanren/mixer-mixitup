@@ -6236,4 +6236,31 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="TrovoSpells" xml:space="preserve">
     <value>Trovo Spells</value>
   </data>
+  <data name="AddUserRole" xml:space="preserve">
+    <value>Add User Role</value>
+  </data>
+  <data name="DisableFollowerMode" xml:space="preserve">
+    <value>Disable Follower Mode</value>
+  </data>
+  <data name="DisableSlowMode" xml:space="preserve">
+    <value>Disable Slow Mode</value>
+  </data>
+  <data name="EnableFollowerMode" xml:space="preserve">
+    <value>Enable Follower Mode</value>
+  </data>
+  <data name="EnableSlowMode" xml:space="preserve">
+    <value>Enable Slow Mode</value>
+  </data>
+  <data name="RemoveUserRole" xml:space="preserve">
+    <value>Remove User Role</value>
+  </data>
+  <data name="TrovoActionAmountMissing" xml:space="preserve">
+    <value>Trovo Action: An valid amount must be specified</value>
+  </data>
+  <data name="TrovoActionRoleNameMissing" xml:space="preserve">
+    <value>Trovo Action: A valid role name must be specified</value>
+  </data>
+  <data name="TrovoActionUsernameMissing" xml:space="preserve">
+    <value>Trovo Action: A valid username must be specified</value>
+  </data>
 </root>

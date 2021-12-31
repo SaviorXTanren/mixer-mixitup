@@ -72,7 +72,8 @@ namespace MixItUp.Base.Model.Commands
             this.Wildcards = wildcards;
         }
 
-        protected ChatCommandModel() : base() { }
+        [Obsolete]
+        public ChatCommandModel() : base() { }
 
         public override IEnumerable<string> GetFullTriggers() { return this.IncludeExclamation ? this.Triggers.Select(t => "!" + t) : this.Triggers; }
 
@@ -93,7 +94,8 @@ namespace MixItUp.Base.Model.Commands
             this.UserID = userID;
         }
 
-        private UserOnlyChatCommandModel() { }
+        [Obsolete]
+        public UserOnlyChatCommandModel() : base() { }
     }
 
     public class NewAutoChatCommandModel

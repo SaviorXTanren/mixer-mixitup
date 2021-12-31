@@ -145,7 +145,10 @@ namespace MixItUp.Base.Services.YouTube
 
             this.UserConnection = null;
 
-            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].ClearUserData();
+            if (settings.StreamingPlatformAuthentications.TryGetValue(StreamingPlatformTypeEnum.YouTube, out var streamingPlatform))
+            {
+                streamingPlatform.ClearUserData();
+            }
         }
 
         public async Task DisconnectBot(SettingsV3Model settings)
@@ -154,7 +157,10 @@ namespace MixItUp.Base.Services.YouTube
 
             this.BotConnection = null;
 
-            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].ClearBotData();
+            if (settings.StreamingPlatformAuthentications.TryGetValue(StreamingPlatformTypeEnum.YouTube, out var streamingPlatform))
+            {
+                streamingPlatform.ClearBotData();
+            }
         }
 
         public async Task<Result> InitializeUser(SettingsV3Model settings)

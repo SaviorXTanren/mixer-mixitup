@@ -73,7 +73,8 @@ namespace MixItUp.Base.Model.User.Platform
             this.Username = this.DisplayName = username;
         }
 
-        private UnassociatedUserPlatformV2Model() { }
+        [Obsolete]
+        public UnassociatedUserPlatformV2Model() { }
 
         public override Task Refresh() { return Task.CompletedTask; }
     }

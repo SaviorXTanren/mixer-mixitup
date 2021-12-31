@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Commands
 {
@@ -7,6 +8,7 @@ namespace MixItUp.Base.Model.Commands
     {
         public TimerCommandModel(string name) : base(name, CommandTypeEnum.Timer) { }
 
-        protected TimerCommandModel() : base() { }
+        [Obsolete]
+        public TimerCommandModel() : base() { }
     }
 }

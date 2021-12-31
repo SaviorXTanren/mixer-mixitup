@@ -36,8 +36,6 @@ namespace MixItUp.Base.Model.Requirements
         [DataMember]
         public string PatreonBenefitID { get; set; }
 
-        public RoleRequirementModel() { }
-
         public RoleRequirementModel(StreamingPlatformTypeEnum streamingPlatform, UserRoleEnum role, int subscriberTier = 1, string patreonBenefitID = null)
         {
             this.StreamingPlatform = streamingPlatform;
@@ -53,6 +51,8 @@ namespace MixItUp.Base.Model.Requirements
             this.SubscriberTier = subscriberTier;
             this.PatreonBenefitID = patreonBenefitID;
         }
+
+        public RoleRequirementModel() { }
 
         public string DisplayRole
         {

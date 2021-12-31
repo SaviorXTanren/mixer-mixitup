@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -69,7 +70,8 @@ namespace MixItUp.Base.Model.User.Platform
             this.DisplayName = displayName;
         }
 
-        private TwitchUserPlatformV2Model() { }
+        [Obsolete]
+        public TwitchUserPlatformV2Model() : base() { }
 
         public bool HasTwitchSubscriberBadge { get { return this.HasTwitchBadge("subscriber"); } }
 

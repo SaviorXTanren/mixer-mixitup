@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Services;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -35,7 +36,8 @@ namespace MixItUp.Base.Model.Commands
 
         public CustomCommandModel(string name) : base(name, CommandTypeEnum.Custom) { }
 
-        protected CustomCommandModel() : base() { }
+        [Obsolete]
+        public CustomCommandModel() : base() { }
 
         public override Dictionary<string, string> GetTestSpecialIdentifiers() { return CustomCommandModel.GetCustomTestSpecialIdentifiers(this.Name); }
     }

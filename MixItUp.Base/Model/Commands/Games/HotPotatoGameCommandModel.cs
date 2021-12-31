@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -51,7 +52,8 @@ namespace MixItUp.Base.Model.Commands.Games
             this.PotatoExplodeCommand = potatoExplodeCommand;
         }
 
-        private HotPotatoGameCommandModel() { }
+        [Obsolete]
+        public HotPotatoGameCommandModel() : base() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()
         {

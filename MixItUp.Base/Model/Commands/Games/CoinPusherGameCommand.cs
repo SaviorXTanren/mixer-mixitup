@@ -45,7 +45,8 @@ namespace MixItUp.Base.Model.Commands.Games
             this.StatusCommand = statusCommand;
         }
 
-        private CoinPusherGameCommandModel() { }
+        [Obsolete]
+        public CoinPusherGameCommandModel() : base() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()
         {

@@ -110,7 +110,8 @@ namespace MixItUp.Base.Model.Commands.Games
             this.UserFailureCommand = userFailureCommand;
         }
 
-        private TriviaGameCommandModel() { }
+        [Obsolete]
+        public TriviaGameCommandModel() : base() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()
         {

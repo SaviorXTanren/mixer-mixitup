@@ -45,7 +45,8 @@ namespace MixItUp.Base.Model.Actions
             this.ShowWidget = showWidget;
         }
 
-        private OverlayActionModel() { }
+        [Obsolete]
+        public OverlayActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

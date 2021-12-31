@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.YouTube;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -38,7 +39,8 @@ namespace MixItUp.Base.Model.Actions
             this.ActionType = type;
         }
 
-        private YouTubeActionModel() { }
+        [Obsolete]
+        public YouTubeActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

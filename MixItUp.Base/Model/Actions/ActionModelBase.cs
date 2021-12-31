@@ -50,6 +50,7 @@ namespace MixItUp.Base.Model.Actions
         VTubeStudio,
         Voicemod,
         YouTube,
+        Trovo,
     }
 
     [DataContract]
@@ -75,7 +76,8 @@ namespace MixItUp.Base.Model.Actions
             this.Enabled = true;
         }
 
-        protected ActionModelBase() { }
+        [Obsolete]
+        public ActionModelBase() { }
 
         public virtual async Task TestPerform(Dictionary<string, string> specialIdentifiers)
         {

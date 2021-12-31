@@ -14,6 +14,7 @@ namespace MixItUp.Base.Model.Commands
             this.ChannelPointRewardID = channelPointRewardID;
         }
 
-        protected TwitchChannelPointsCommandModel() : base() { }
+        [Obsolete]
+        public TwitchChannelPointsCommandModel() : base() { }
     }
 }

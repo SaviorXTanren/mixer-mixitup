@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
+using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -59,7 +60,8 @@ namespace MixItUp.Base.Model.Actions
             this.Alt = alt;
         }
 
-        private InputActionModel() { }
+        [Obsolete]
+        public InputActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

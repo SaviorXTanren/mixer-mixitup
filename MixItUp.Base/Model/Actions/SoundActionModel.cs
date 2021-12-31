@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
+using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -25,7 +26,8 @@ namespace MixItUp.Base.Model.Actions
             this.OutputDevice = outputDevice;
         }
 
-        private SoundActionModel() { }
+        [Obsolete]
+        public SoundActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
