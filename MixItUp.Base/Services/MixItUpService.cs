@@ -529,7 +529,7 @@ namespace MixItUp.Base.Services
 
             if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
             {
-                login.YouTubeAccessToken = ServiceManager.Get<YouTubeSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
+                login.YouTubeOAuthToken = ServiceManager.Get<YouTubeSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy();
             }
 
             if (ServiceManager.Get<TrovoSessionService>().IsConnected)
