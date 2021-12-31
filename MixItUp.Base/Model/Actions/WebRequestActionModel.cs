@@ -65,14 +65,14 @@ namespace MixItUp.Base.Model.Actions
                 using (AdvancedHttpClient httpClient = new AdvancedHttpClient())
                 {
                     httpClient.DefaultRequestHeaders.Add("User-Agent", $"MixItUp/{Assembly.GetEntryAssembly().GetName().Version.ToString()} (Web call from Mix It Up; https://mixitupapp.com; support@mixitupapp.com)");
-                    httpClient.DefaultRequestHeaders.Add("Twitch-UserID", ServiceManager.Get<TwitchSessionService>()?.User?.id ?? string.Empty);
-                    httpClient.DefaultRequestHeaders.Add("Twitch-UserLogin", ServiceManager.Get<TwitchSessionService>().User?.login ?? string.Empty);
-                    httpClient.DefaultRequestHeaders.Add("Glimesh-UserID", ServiceManager.Get<GlimeshSessionService>()?.User?.id ?? string.Empty);
-                    httpClient.DefaultRequestHeaders.Add("Glimesh-UserLogin", ServiceManager.Get<GlimeshSessionService>().User?.username ?? string.Empty);
-                    httpClient.DefaultRequestHeaders.Add("YouTube-UserID", ServiceManager.Get<YouTubeSessionService>()?.User?.Id ?? string.Empty);
-                    httpClient.DefaultRequestHeaders.Add("YouTube-UserLogin", ServiceManager.Get<YouTubeSessionService>().User?.Snippet?.Title ?? string.Empty);
-                    httpClient.DefaultRequestHeaders.Add("Trovo-UserID", ServiceManager.Get<TrovoSessionService>()?.User?.userId ?? string.Empty);
-                    httpClient.DefaultRequestHeaders.Add("Trovo-UserLogin", ServiceManager.Get<TrovoSessionService>().User?.userName ?? string.Empty);
+                    httpClient.DefaultRequestHeaders.Add("Twitch-UserID", ServiceManager.Get<TwitchSessionService>()?.UserID ?? string.Empty);
+                    httpClient.DefaultRequestHeaders.Add("Twitch-UserLogin", ServiceManager.Get<TwitchSessionService>().Username ?? string.Empty);
+                    httpClient.DefaultRequestHeaders.Add("Glimesh-UserID", ServiceManager.Get<GlimeshSessionService>()?.UserID ?? string.Empty);
+                    httpClient.DefaultRequestHeaders.Add("Glimesh-UserLogin", ServiceManager.Get<GlimeshSessionService>().Username ?? string.Empty);
+                    httpClient.DefaultRequestHeaders.Add("YouTube-UserID", ServiceManager.Get<YouTubeSessionService>()?.UserID ?? string.Empty);
+                    httpClient.DefaultRequestHeaders.Add("YouTube-UserLogin", ServiceManager.Get<YouTubeSessionService>().Username ?? string.Empty);
+                    httpClient.DefaultRequestHeaders.Add("Trovo-UserID", ServiceManager.Get<TrovoSessionService>()?.UserID ?? string.Empty);
+                    httpClient.DefaultRequestHeaders.Add("Trovo-UserLogin", ServiceManager.Get<TrovoSessionService>().Username ?? string.Empty);
 
                     using (HttpResponseMessage response = await httpClient.GetAsync(await ReplaceStringWithSpecialModifiers(this.Url, parameters, encode: true)))
                     {
