@@ -182,7 +182,8 @@ namespace MixItUp.Base.Model.Actions
             this.ActionType = type;
         }
 
-        private TwitchActionModel() { }
+        [Obsolete]
+        public TwitchActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

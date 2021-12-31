@@ -54,7 +54,8 @@ namespace MixItUp.Base.Model.Commands.Games
             this.GameCompleteCommand = gameCompleteCommand;
         }
 
-        private BidGameCommandModel() { }
+        [Obsolete]
+        public BidGameCommandModel() : base() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()
         {

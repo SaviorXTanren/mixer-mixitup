@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -16,7 +17,8 @@ namespace MixItUp.Base.Model.Actions
             this.Amount = amount;
         }
 
-        private WaitActionModel() { }
+        [Obsolete]
+        public WaitActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

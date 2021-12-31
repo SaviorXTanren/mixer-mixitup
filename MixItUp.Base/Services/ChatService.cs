@@ -159,7 +159,7 @@ namespace MixItUp.Base.Services
                 message = existingMessage;
             }
 
-            if (!string.IsNullOrEmpty(message.ID))
+            if (!externalDeletion && !string.IsNullOrEmpty(message.ID))
             {
                 if (message.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Has<TwitchChatService>() && ServiceManager.Get<TwitchChatService>().IsUserConnected)
                 {
@@ -241,7 +241,7 @@ namespace MixItUp.Base.Services
 
             if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Has<TrovoChatEventService>() && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
             {
-                await ServiceManager.Get<TrovoChatEventService>().TimeoutUser(user, (int)durationInSeconds);
+                await ServiceManager.Get<TrovoChatEventService>().TimeoutUser(user.Username, (int)durationInSeconds);
             }
         }
 
@@ -259,7 +259,7 @@ namespace MixItUp.Base.Services
 
             if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Has<TrovoChatEventService>() && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
             {
-                await ServiceManager.Get<TrovoChatEventService>().ModUser(user);
+                await ServiceManager.Get<TrovoChatEventService>().ModUser(user.Username);
             }
         }
 
@@ -272,7 +272,7 @@ namespace MixItUp.Base.Services
 
             if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Has<TrovoChatEventService>() && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
             {
-                await ServiceManager.Get<TrovoChatEventService>().UnmodUser(user);
+                await ServiceManager.Get<TrovoChatEventService>().UnmodUser(user.Username);
             }
         }
 
@@ -295,7 +295,7 @@ namespace MixItUp.Base.Services
 
             if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Has<TrovoChatEventService>() && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
             {
-                await ServiceManager.Get<TrovoChatEventService>().BanUser(user);
+                await ServiceManager.Get<TrovoChatEventService>().BanUser(user.Username);
             }
         }
 
@@ -313,7 +313,7 @@ namespace MixItUp.Base.Services
 
             if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Has<TrovoChatEventService>() && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
             {
-                await ServiceManager.Get<TrovoChatEventService>().UnbanUser(user);
+                await ServiceManager.Get<TrovoChatEventService>().UnbanUser(user.Username);
             }
         }
 

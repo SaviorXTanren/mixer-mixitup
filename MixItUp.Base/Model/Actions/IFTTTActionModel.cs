@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -29,7 +30,8 @@ namespace MixItUp.Base.Model.Actions
             this.EventValue3 = eventValue3;
         }
 
-        private IFTTTActionModel() { }
+        [Obsolete]
+        public IFTTTActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

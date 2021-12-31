@@ -1,6 +1,7 @@
 ﻿using Google.Apis.YouTube.v3.Data;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.YouTube;
+using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -26,7 +27,8 @@ namespace MixItUp.Base.Model.User.Platform
             this.SetMessageProperties(message);
         }
 
-        private YouTubeUserPlatformV2Model() { }
+        [Obsolete]
+        public YouTubeUserPlatformV2Model() : base() { }
 
         public override async Task Refresh()
         {

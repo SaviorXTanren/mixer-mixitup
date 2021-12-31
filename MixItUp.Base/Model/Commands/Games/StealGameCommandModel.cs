@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Services;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -25,7 +26,8 @@ namespace MixItUp.Base.Model.Commands.Games
             this.FailedCommand = failedCommand;
         }
 
-        private StealGameCommandModel() { }
+        [Obsolete]
+        public StealGameCommandModel() : base() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()
         {

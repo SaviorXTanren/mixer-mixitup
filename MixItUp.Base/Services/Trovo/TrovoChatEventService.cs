@@ -275,15 +275,45 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task<bool> ClearChat() { return await this.PerformChatCommand("clear"); }
 
-        public async Task<bool> ModUser(UserV2ViewModel user) { return await this.PerformChatCommand("mod @" + user.Username); }
+        public async Task<bool> ModUser(string username) { return await this.PerformChatCommand("mod " + username); }
 
-        public async Task<bool> UnmodUser(UserV2ViewModel user) { return await this.PerformChatCommand("unmod @" + user.Username); }
+        public async Task<bool> UnmodUser(string username) { return await this.PerformChatCommand("unmod " + username); }
 
-        public async Task<bool> TimeoutUser(UserV2ViewModel user, int duration) { return await this.PerformChatCommand($"ban @{user.Username} {duration}"); }
+        public async Task<bool> TimeoutUser(string username, int duration) { return await this.PerformChatCommand($"ban {username} {duration}"); }
 
-        public async Task<bool> BanUser(UserV2ViewModel user) { return await this.PerformChatCommand("ban @" + user.Username); }
+        public async Task<bool> BanUser(string username) { return await this.PerformChatCommand("ban " + username); }
 
-        public async Task<bool> UnbanUser(UserV2ViewModel user) { return await this.PerformChatCommand("unban @" + user.Username); }
+        public async Task<bool> UnbanUser(string username) { return await this.PerformChatCommand("unban " + username); }
+
+        public async Task<bool> HostUser(string username) { return await this.PerformChatCommand("host " + username); }
+
+        public async Task<bool> SlowMode(int seconds = 0)
+        {
+            if (seconds > 0)
+            {
+                return await this.PerformChatCommand("slow " + seconds);
+            }
+            else
+            {
+                return await this.PerformChatCommand("slowoff");
+            }
+        }
+
+        public async Task<bool> FollowersMode(bool enable)
+        {
+            if (enable)
+            {
+                return await this.PerformChatCommand("followers");
+            }
+            else
+            {
+                return await this.PerformChatCommand("followersoff");
+            }
+        }
+
+        public async Task<bool> AddRole(string username, string role) { return await this.PerformChatCommand($"addrole {role} {username}"); }
+
+        public async Task<bool> RemoveRole(string username, string role) { return await this.PerformChatCommand($"removerole {role} {username}"); }
 
         public async Task<bool> PerformChatCommand(string command)
         {

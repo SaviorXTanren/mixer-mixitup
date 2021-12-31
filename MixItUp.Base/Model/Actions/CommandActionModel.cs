@@ -66,7 +66,8 @@ namespace MixItUp.Base.Model.Actions
             this.ActionType = commandActionType;
         }
 
-        private CommandActionModel() { }
+        [Obsolete]
+        public CommandActionModel() { }
 
         public CommandModelBase Command
         {

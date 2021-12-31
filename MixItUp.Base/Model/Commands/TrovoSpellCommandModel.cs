@@ -1,14 +1,14 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Commands
 {
     [DataContract]
     public class TrovoSpellCommandModel : CommandModelBase
     {
-        public TrovoSpellCommandModel(string name)
-            : base(name, CommandTypeEnum.TrovoSpell)
-        { }
+        public TrovoSpellCommandModel(string name) : base(name, CommandTypeEnum.TrovoSpell) { }
 
-        protected TrovoSpellCommandModel() : base() { }
+        [Obsolete]
+        public TrovoSpellCommandModel() : base() { }
     }
 }

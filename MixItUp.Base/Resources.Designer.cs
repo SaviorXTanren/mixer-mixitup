@@ -520,6 +520,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add User Role.
+        /// </summary>
+        public static string AddUserRole {
+            get {
+                return ResourceManager.GetString("AddUserRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add User To Giveaway.
         /// </summary>
         public static string AddUserToGiveaway {
@@ -3787,11 +3796,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disable Follower Mode.
+        /// </summary>
+        public static string DisableFollowerMode {
+            get {
+                return ResourceManager.GetString("DisableFollowerMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disable Queue.
         /// </summary>
         public static string DisableQueue {
             get {
                 return ResourceManager.GetString("DisableQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable Slow Mode.
+        /// </summary>
+        public static string DisableSlowMode {
+            get {
+                return ResourceManager.GetString("DisableSlowMode", resourceCulture);
             }
         }
         
@@ -4174,6 +4201,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable Follower Mode.
+        /// </summary>
+        public static string EnableFollowerMode {
+            get {
+                return ResourceManager.GetString("EnableFollowerMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please enable IFTTT connection on the Services page!.
         /// </summary>
         public static string EnableIFTTT {
@@ -4215,6 +4251,15 @@ namespace MixItUp.Base {
         public static string EnableQueue {
             get {
                 return ResourceManager.GetString("EnableQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable Slow Mode.
+        /// </summary>
+        public static string EnableSlowMode {
+            get {
+                return ResourceManager.GetString("EnableSlowMode", resourceCulture);
             }
         }
         
@@ -12030,6 +12075,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove User Role.
+        /// </summary>
+        public static string RemoveUserRole {
+            get {
+                return ResourceManager.GetString("RemoveUserRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Repeat While True.
         /// </summary>
         public static string RepeatWhileTrue {
@@ -15696,6 +15750,33 @@ namespace MixItUp.Base {
         public static string Trovo {
             get {
                 return ResourceManager.GetString("Trovo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trovo Action: An valid amount must be specified.
+        /// </summary>
+        public static string TrovoActionAmountMissing {
+            get {
+                return ResourceManager.GetString("TrovoActionAmountMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trovo Action: A valid role name must be specified.
+        /// </summary>
+        public static string TrovoActionRoleNameMissing {
+            get {
+                return ResourceManager.GetString("TrovoActionRoleNameMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trovo Action: A valid username must be specified.
+        /// </summary>
+        public static string TrovoActionUsernameMissing {
+            get {
+                return ResourceManager.GetString("TrovoActionUsernameMissing", resourceCulture);
             }
         }
         

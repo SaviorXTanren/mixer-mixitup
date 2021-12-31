@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Commands
 {
@@ -14,6 +15,7 @@ namespace MixItUp.Base.Model.Commands
             this.RunOneRandomly = runOneRandomly;
         }
 
-        protected ActionGroupCommandModel() : base() { }
+        [Obsolete]
+        public ActionGroupCommandModel() : base() { }
     }
 }

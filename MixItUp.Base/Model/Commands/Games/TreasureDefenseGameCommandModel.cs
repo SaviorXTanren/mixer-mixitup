@@ -81,7 +81,8 @@ namespace MixItUp.Base.Model.Commands.Games
             this.ThiefSelectedCommand = thiefSelectedCommand;
         }
 
-        private TreasureDefenseGameCommandModel() { }
+        [Obsolete]
+        public TreasureDefenseGameCommandModel() : base() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()
         {

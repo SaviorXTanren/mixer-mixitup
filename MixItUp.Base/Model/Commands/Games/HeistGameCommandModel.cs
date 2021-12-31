@@ -67,7 +67,8 @@ namespace MixItUp.Base.Model.Commands.Games
             this.NoneSucceedCommand = noneSucceedCommand;
         }
 
-        private HeistGameCommandModel() { }
+        [Obsolete]
+        public HeistGameCommandModel() : base() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()
         {

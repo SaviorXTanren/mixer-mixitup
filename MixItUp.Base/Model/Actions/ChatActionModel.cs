@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
+using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -28,7 +29,8 @@ namespace MixItUp.Base.Model.Actions
             this.WhisperUserName = whisperUserName;
         }
 
-        private ChatActionModel() { }
+        [Obsolete]
+        public ChatActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

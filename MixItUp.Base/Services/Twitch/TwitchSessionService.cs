@@ -154,7 +154,10 @@ namespace MixItUp.Base.Services.Twitch
 
             this.UserConnection = null;
 
-            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ClearUserData();
+            if (settings.StreamingPlatformAuthentications.TryGetValue(StreamingPlatformTypeEnum.Twitch, out var streamingPlatform))
+            {
+                streamingPlatform.ClearUserData();
+            }
         }
 
         public async Task DisconnectBot(SettingsV3Model settings)
@@ -163,7 +166,10 @@ namespace MixItUp.Base.Services.Twitch
 
             this.BotConnection = null;
 
-            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ClearBotData();
+            if (settings.StreamingPlatformAuthentications.TryGetValue(StreamingPlatformTypeEnum.Twitch, out var streamingPlatform))
+            {
+                streamingPlatform.ClearBotData();
+            }
         }
 
         public async Task<Result> InitializeUser(SettingsV3Model settings)

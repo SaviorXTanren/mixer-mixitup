@@ -39,9 +39,10 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public string ChannelID { get; set; }
 
-        private StreamingPlatformAuthenticationSettingsModel() { }
-
         public StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum type) { this.Type = type; }
+
+        [Obsolete]
+        public StreamingPlatformAuthenticationSettingsModel() { }
 
         [JsonIgnore]
         public bool IsEnabled { get { return this.UserOAuthToken != null; } }

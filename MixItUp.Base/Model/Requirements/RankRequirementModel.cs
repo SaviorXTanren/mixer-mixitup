@@ -29,14 +29,15 @@ namespace MixItUp.Base.Model.Requirements
         [DataMember]
         public RankRequirementMatchTypeEnum MatchType { get; set; }
 
-        public RankRequirementModel() { }
-
         public RankRequirementModel(CurrencyModel rankSystem, RankModel rank, RankRequirementMatchTypeEnum matchType = RankRequirementMatchTypeEnum.GreaterThanOrEqualTo)
         {
             this.RankSystemID = rankSystem.ID;
             this.RankName = rank.Name;
             this.MatchType = matchType;
         }
+
+        [Obsolete]
+        public RankRequirementModel() { }
 
         protected override DateTimeOffset RequirementErrorCooldown { get { return RankRequirementModel.requirementErrorCooldown; } set { RankRequirementModel.requirementErrorCooldown = value; } }
 

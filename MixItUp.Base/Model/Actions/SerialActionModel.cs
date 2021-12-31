@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
+using System;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -24,7 +25,8 @@ namespace MixItUp.Base.Model.Actions
             this.Message = message;
         }
 
-        private SerialActionModel() { }
+        [Obsolete]
+        public SerialActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

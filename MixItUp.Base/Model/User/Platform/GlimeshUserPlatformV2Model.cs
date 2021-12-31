@@ -2,6 +2,7 @@
 using Glimesh.Base.Models.Users;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Glimesh;
+using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -19,7 +20,8 @@ namespace MixItUp.Base.Model.User.Platform
 
         public GlimeshUserPlatformV2Model(ChatMessagePacketModel message) : this(message.User) { }
 
-        private GlimeshUserPlatformV2Model() { }
+        [Obsolete]
+        public GlimeshUserPlatformV2Model() : base() { }
 
         public override async Task Refresh()
         {

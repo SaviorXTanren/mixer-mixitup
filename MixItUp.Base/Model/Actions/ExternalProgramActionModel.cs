@@ -35,7 +35,8 @@ namespace MixItUp.Base.Model.Actions
             this.SaveOutput = saveOutput;
         }
 
-        private ExternalProgramActionModel() { }
+        [Obsolete]
+        public ExternalProgramActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

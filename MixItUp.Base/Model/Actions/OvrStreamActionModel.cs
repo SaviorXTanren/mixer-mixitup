@@ -37,7 +37,8 @@ namespace MixItUp.Base.Model.Actions
             this.Variables = variables;
         }
 
-        private OvrStreamActionModel() { }
+        [Obsolete]
+        public OvrStreamActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

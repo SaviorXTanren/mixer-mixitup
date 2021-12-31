@@ -31,14 +31,14 @@ namespace MixItUp.Base.Model.Requirements
         [JsonIgnore]
         private List<CommandParametersModel> applicablePerformParameters = new List<CommandParametersModel>();
 
-        public ThresholdRequirementModel() { }
-
         public ThresholdRequirementModel(int amount, int timespan, bool runForEachUser = false)
         {
             this.Amount = amount;
             this.TimeSpan = timespan;
             this.RunForEachUser = runForEachUser;
         }
+
+        public ThresholdRequirementModel() { }
 
         protected override DateTimeOffset RequirementErrorCooldown { get { return ThresholdRequirementModel.requirementErrorCooldown; } set { ThresholdRequirementModel.requirementErrorCooldown = value; } }
 

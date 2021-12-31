@@ -3,6 +3,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
+using System;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -52,7 +53,8 @@ namespace MixItUp.Base.Model.Actions
             this.ActionType = actionType;
         }
 
-        private TwitterActionModel() { }
+        [Obsolete]
+        public TwitterActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

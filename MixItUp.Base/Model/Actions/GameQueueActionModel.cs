@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
+using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -43,7 +44,8 @@ namespace MixItUp.Base.Model.Actions
             this.TargetUsername = targetUsername;
         }
 
-        private GameQueueActionModel() { }
+        [Obsolete]
+        public GameQueueActionModel() { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
