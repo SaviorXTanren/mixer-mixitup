@@ -159,7 +159,7 @@ namespace MixItUp.Base.Services
                 message = existingMessage;
             }
 
-            if (!string.IsNullOrEmpty(message.ID))
+            if (!externalDeletion && !string.IsNullOrEmpty(message.ID))
             {
                 if (message.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Has<TwitchChatService>() && ServiceManager.Get<TwitchChatService>().IsUserConnected)
                 {
