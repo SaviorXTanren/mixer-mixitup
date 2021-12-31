@@ -1150,7 +1150,7 @@ namespace MixItUp.Base.ViewModel.User
         private void SetTwitchRoles()
         {
             this.TwitchUserRoles.Add(OldUserRoleEnum.User);
-            if (ServiceManager.Get<TwitchSessionService>().User != null && ServiceManager.Get<TwitchSessionService>().User.id.Equals(this.TwitchID))
+            if (string.Equals(ServiceManager.Get<TwitchSessionService>().UserID, this.TwitchID, StringComparison.OrdinalIgnoreCase))
             {
                 this.TwitchUserRoles.Add(OldUserRoleEnum.Streamer);
             }
@@ -1234,7 +1234,7 @@ namespace MixItUp.Base.ViewModel.User
         private void SetYouTubeRoles(Google.Apis.YouTube.v3.Data.LiveChatMessage message = null)
         {
             this.YouTubeUserRoles.Add(OldUserRoleEnum.User);
-            if (ServiceManager.Get<YouTubeSessionService>().User != null && ServiceManager.Get<YouTubeSessionService>().User.Id.Equals(this.YouTubeID))
+            if (string.Equals(ServiceManager.Get<YouTubeSessionService>().UserID, this.YouTubeID, StringComparison.OrdinalIgnoreCase))
             {
                 this.YouTubeUserRoles.Add(OldUserRoleEnum.Streamer);
             }
@@ -1297,7 +1297,7 @@ namespace MixItUp.Base.ViewModel.User
         private void SetGlimeshRoles()
         {
             this.GlimeshUserRoles.Add(OldUserRoleEnum.User);
-            if (ServiceManager.Get<GlimeshSessionService>().User != null && ServiceManager.Get<GlimeshSessionService>().User.id.Equals(this.GlimeshID))
+            if (string.Equals(ServiceManager.Get<GlimeshSessionService>().UserID, this.GlimeshID, StringComparison.OrdinalIgnoreCase))
             {
                 this.GlimeshUserRoles.Add(OldUserRoleEnum.Streamer);
             }
