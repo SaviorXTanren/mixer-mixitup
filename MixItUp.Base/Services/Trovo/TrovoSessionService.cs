@@ -151,7 +151,10 @@ namespace MixItUp.Base.Services.Trovo
 
             this.UserConnection = null;
 
-            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].ClearUserData();
+            if (settings.StreamingPlatformAuthentications.TryGetValue(StreamingPlatformTypeEnum.Trovo, out var streamingPlatform))
+            {
+                streamingPlatform.ClearUserData();
+            }
         }
 
         public async Task DisconnectBot(SettingsV3Model settings)
@@ -160,7 +163,10 @@ namespace MixItUp.Base.Services.Trovo
 
             this.BotConnection = null;
 
-            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].ClearBotData();
+            if (settings.StreamingPlatformAuthentications.TryGetValue(StreamingPlatformTypeEnum.Trovo, out var streamingPlatform))
+            {
+                streamingPlatform.ClearBotData();
+            }
         }
 
         public async Task<Result> InitializeUser(SettingsV3Model settings)
