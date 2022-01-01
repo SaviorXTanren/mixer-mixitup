@@ -2103,6 +2103,7 @@
   <ItemGroup>
     <Resource Include="Assets\Images\YoutubeMonochrome.png" />
     <Resource Include="Assets\Images\TwitchMonochrome.png" />
+    <Resource Include="Assets\Images\TrovoMonochrome.png" />
     <Content Include="Assets\OBS\obs-websocket-4.9.1-Windows-Installer.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
