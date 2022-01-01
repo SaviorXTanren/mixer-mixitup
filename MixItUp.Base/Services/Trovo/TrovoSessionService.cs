@@ -24,7 +24,9 @@ namespace MixItUp.Base.Services.Trovo
         public bool IsBotConnected { get { return this.BotConnection != null; } }
 
         public string UserID { get { return this.User?.userId; } }
+        public string Username { get { return this.User?.userName; } }
         public string BotID { get { return this.Bot?.userId; } }
+        public string Botname { get { return this.Bot?.userName; } }
         public string ChannelID { get { return this.User?.channelId; } }
 
         public StreamingPlatformAccountModel UserAccount
@@ -34,7 +36,7 @@ namespace MixItUp.Base.Services.Trovo
                 return new StreamingPlatformAccountModel()
                 {
                     ID = this.UserID,
-                    Username = this.User?.userName,
+                    Username = this.Username,
                     AvatarURL = this.User?.profilePic
                 };
             }
@@ -46,7 +48,7 @@ namespace MixItUp.Base.Services.Trovo
                 return new StreamingPlatformAccountModel()
                 {
                     ID = this.BotID,
-                    Username = this.Bot?.userName,
+                    Username = this.Botname,
                     AvatarURL = this.Bot?.profilePic
                 };
             }
@@ -182,9 +184,9 @@ namespace MixItUp.Base.Services.Trovo
 
                         if (settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Trovo))
                         {
-                            if (!string.IsNullOrEmpty(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].UserID) && !string.Equals(this.User.userId, settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].UserID))
+                            if (!string.IsNullOrEmpty(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].UserID) && !string.Equals(this.UserID, settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].UserID))
                             {
-                                Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.User.userName} - {this.User.userId} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].UserID}");
+                                Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.Username} - {this.UserID} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].UserID}");
                                 settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].UserOAuthToken.ResetToken();
                                 return new Result("The account you are logged in as on Trovo does not match the account for this settings. Please log in as the correct account on Trovo.");
                             }
@@ -251,15 +253,15 @@ namespace MixItUp.Base.Services.Trovo
                 }
 
                 settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].UserOAuthToken = this.UserConnection.Connection.GetOAuthTokenCopy();
-                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].UserID = this.User.userId;
-                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].ChannelID = this.Channel.channel_id;
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].UserID = this.UserID;
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].ChannelID = this.ChannelID;
 
                 if (this.BotConnection != null)
                 {
                     settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].BotOAuthToken = this.BotConnection.Connection.GetOAuthTokenCopy();
                     if (this.Bot != null)
                     {
-                        settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].BotID = this.Bot.userId;
+                        settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].BotID = this.BotID;
                     }
                 }
             }

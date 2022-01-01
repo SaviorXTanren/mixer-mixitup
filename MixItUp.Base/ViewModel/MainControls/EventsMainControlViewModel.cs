@@ -140,6 +140,8 @@ namespace MixItUp.Base.ViewModel.MainControls
             List<EventCommandGroupViewModel> commandGroups = new List<EventCommandGroupViewModel>();
 
             EventCommandGroupViewModel genericCommands = new EventCommandGroupViewModel(Resources.Generic, packIconName: "AlarmLight");
+            genericCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ApplicationLaunch));
+            genericCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ApplicationExit));
             genericCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChannelStreamStart));
             genericCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChannelStreamStop));
             genericCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChannelFollowed));

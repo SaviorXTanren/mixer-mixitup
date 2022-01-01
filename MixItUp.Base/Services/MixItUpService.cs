@@ -526,12 +526,10 @@ namespace MixItUp.Base.Services
             {
                 login.TwitchAccessToken = ServiceManager.Get<TwitchSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
             }
-
             if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
             {
-                login.YouTubeAccessToken = ServiceManager.Get<YouTubeSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
+                login.YouTubeOAuthToken = ServiceManager.Get<YouTubeSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy();
             }
-
             if (ServiceManager.Get<TrovoSessionService>().IsConnected)
             {
                 login.TrovoAccessToken = ServiceManager.Get<TrovoSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;

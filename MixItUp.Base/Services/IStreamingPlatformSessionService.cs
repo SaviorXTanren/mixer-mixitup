@@ -19,7 +19,9 @@ namespace MixItUp.Base.Services
         bool IsBotConnected { get; }
 
         string UserID { get; }
+        string Username { get; }
         string BotID { get; }
+        string Botname { get; }
         string ChannelID { get; }
 
         StreamingPlatformAccountModel UserAccount { get; }

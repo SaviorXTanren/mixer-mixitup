@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User.Platform;
@@ -115,6 +116,12 @@ namespace MixItUp.Base
 
         public static async Task Close()
         {
+            if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ApplicationExit, new CommandParametersModel()))
+            {
+                // Adding artificial 3 second delay to allow application exit command to finish executing
+                await Task.Delay(3000);
+            }
+
             foreach (IExternalService service in ServiceManager.GetAll<IExternalService>())
             {
                 await service.Disconnect();
@@ -227,19 +234,19 @@ namespace MixItUp.Base
 
                 if (ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
-                    ChannelSession.Settings.Name = ServiceManager.Get<TwitchSessionService>()?.User?.display_name;
+                    ChannelSession.Settings.Name = ServiceManager.Get<TwitchSessionService>().Username;
                 }
                 else if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
                 {
-                    ChannelSession.Settings.Name = ServiceManager.Get<YouTubeSessionService>()?.User?.Snippet?.Title;
+                    ChannelSession.Settings.Name = ServiceManager.Get<YouTubeSessionService>().Username;
                 }
                 else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
                 {
-                    ChannelSession.Settings.Name = ServiceManager.Get<GlimeshSessionService>()?.User?.displayname;
+                    ChannelSession.Settings.Name = ServiceManager.Get<GlimeshSessionService>().Username;
                 }
                 else if (ServiceManager.Get<TrovoSessionService>().IsConnected)
                 {
-                    ChannelSession.Settings.Name = ServiceManager.Get<TrovoSessionService>()?.User?.nickName;
+                    ChannelSession.Settings.Name = ServiceManager.Get<TrovoSessionService>().Username;
                 }
                 else
                 {
@@ -248,7 +255,7 @@ namespace MixItUp.Base
 
                 if (ChannelSession.User == null && ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
-                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, ServiceManager.Get<TwitchSessionService>().User.id);
+                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, ServiceManager.Get<TwitchSessionService>().UserID);
                     if (ChannelSession.User == null)
                     {
                         ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(ServiceManager.Get<TwitchSessionService>().User));
@@ -256,7 +263,7 @@ namespace MixItUp.Base
                 }
                 if (ChannelSession.User == null && ServiceManager.Get<YouTubeSessionService>().IsConnected)
                 {
-                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.YouTube, ServiceManager.Get<YouTubeSessionService>().User.Id);
+                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.YouTube, ServiceManager.Get<YouTubeSessionService>().UserID);
                     if (ChannelSession.User == null)
                     {
                         ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(ServiceManager.Get<YouTubeSessionService>().User));
@@ -264,7 +271,7 @@ namespace MixItUp.Base
                 }
                 if (ChannelSession.User == null && ServiceManager.Get<GlimeshSessionService>().IsConnected)
                 {
-                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, ServiceManager.Get<GlimeshSessionService>().User.id);
+                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, ServiceManager.Get<GlimeshSessionService>().UserID);
                     if (ChannelSession.User == null)
                     {
                         ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(ServiceManager.Get<GlimeshSessionService>().User));
@@ -272,7 +279,7 @@ namespace MixItUp.Base
                 }
                 if (ChannelSession.User == null && ServiceManager.Get<TrovoSessionService>().IsConnected)
                 {
-                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Trovo, ServiceManager.Get<TrovoSessionService>().User.userId);
+                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Trovo, ServiceManager.Get<TrovoSessionService>().UserID);
                     if (ChannelSession.User == null)
                     {
                         ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(ServiceManager.Get<TrovoSessionService>().User));
@@ -453,6 +460,8 @@ namespace MixItUp.Base
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                 ServiceManager.Get<ITelemetryService>().TrackLogin(ChannelSession.Settings.TelemetryUserID, ServiceManager.Get<TwitchSessionService>().User?.broadcaster_type);
+
+                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ApplicationLaunch, new CommandParametersModel());
 
                 return new Result();
             }

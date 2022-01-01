@@ -21,7 +21,9 @@ namespace MixItUp.Base.Services.YouTube
         public bool IsBotConnected { get { return this.BotConnection != null; } }
 
         public string UserID { get { return this.User?.Id; } }
+        public string Username { get { return this.User?.Snippet?.Title; } }
         public string BotID { get { return this.Bot?.Id; } }
+        public string Botname { get { return this.Bot?.Snippet?.Title; } }
         public string ChannelID { get { return this.User?.Id; } }
 
         public StreamingPlatformAccountModel UserAccount
@@ -31,8 +33,8 @@ namespace MixItUp.Base.Services.YouTube
                 return new StreamingPlatformAccountModel()
                 {
                     ID = this.UserID,
-                    Username = this.User?.Snippet.Title,
-                    AvatarURL = this.User?.Snippet.Thumbnails?.Medium?.Url
+                    Username = this.Username,
+                    AvatarURL = this.User?.Snippet?.Thumbnails?.Medium?.Url
                 };
             }
         }
@@ -43,8 +45,8 @@ namespace MixItUp.Base.Services.YouTube
                 return new StreamingPlatformAccountModel()
                 {
                     ID = this.BotID,
-                    Username = this.Bot?.Snippet.Title,
-                    AvatarURL = this.Bot?.Snippet.Thumbnails?.Medium?.Url
+                    Username = this.Botname,
+                    AvatarURL = this.Bot?.Snippet?.Thumbnails?.Medium?.Url
                 };
             }
         }
@@ -171,9 +173,9 @@ namespace MixItUp.Base.Services.YouTube
                 {
                     if (settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.YouTube))
                     {
-                        if (!string.IsNullOrEmpty(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserID) && !string.Equals(this.User.Id, settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserID))
+                        if (!string.IsNullOrEmpty(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserID) && !string.Equals(this.UserID, settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserID))
                         {
-                            Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.User.Id} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserID}");
+                            Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.UserID} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserID}");
                             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserOAuthToken.ResetToken();
                             return new Result("The account you are logged in as on YouTube does not match the account for this settings. Please log in as the correct account on YouTube.");
                         }
@@ -239,15 +241,15 @@ namespace MixItUp.Base.Services.YouTube
                 }
 
                 settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserOAuthToken = this.UserConnection.Connection.GetOAuthTokenCopy();
-                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserID = this.User.Id;
-                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].ChannelID = this.User.Id;
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserID = this.UserID;
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].ChannelID = this.ChannelID;
 
                 if (this.BotConnection != null)
                 {
                     settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].BotOAuthToken = this.BotConnection.Connection.GetOAuthTokenCopy();
                     if (this.Bot != null)
                     {
-                        settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].BotID = this.User.Id;
+                        settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].BotID = this.BotID;
                     }
                 }
             }

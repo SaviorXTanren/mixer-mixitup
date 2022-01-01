@@ -13,7 +13,7 @@ namespace MixItUp.Base.ViewModel.Commands
         public string GroupName { get { return (this.GroupSettings != null) ? this.GroupSettings.Name : null; } }
         public string DisplayName { get { return (!string.IsNullOrEmpty(this.GroupName)) ? this.GroupName : MixItUp.Base.Resources.Ungrouped; } }
 
-        public bool HasCommands { get { return this.Commands.Count > 0; } }
+        public bool HasCommands { get { return this.commandLookup.Count > 0; } }
 
         public bool IsMinimized
         {
@@ -68,7 +68,7 @@ namespace MixItUp.Base.ViewModel.Commands
             this.RefreshCommands();
         }
 
-        public bool HasCommand(CommandModelBase command) { return this.Commands.Contains(command); }
+        public bool HasCommand(CommandModelBase command) { return this.commandLookup.ContainsKey(command.ID); }
 
         public void AddCommand(CommandModelBase command)
         {

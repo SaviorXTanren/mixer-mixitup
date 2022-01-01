@@ -380,7 +380,7 @@ namespace MixItUp.Base.Model.Actions
 
                 PollModel poll = await ServiceManager.Get<TwitchSessionService>().UserConnection.CreatePoll(new CreatePollModel()
                 {
-                    broadcaster_id = ServiceManager.Get<TwitchSessionService>().User.id,
+                    broadcaster_id = ServiceManager.Get<TwitchSessionService>().UserID,
                     title = await ReplaceStringWithSpecialModifiers(this.PollTitle, parameters),
                     duration = this.PollDurationSeconds,
                     channel_points_voting_enabled = this.PollChannelPointsCost > 0,
@@ -444,7 +444,7 @@ namespace MixItUp.Base.Model.Actions
 
                 PredictionModel prediction = await ServiceManager.Get<TwitchSessionService>().UserConnection.CreatePrediction(new CreatePredictionModel()
                 {
-                    broadcaster_id = ServiceManager.Get<TwitchSessionService>().User.id,
+                    broadcaster_id = ServiceManager.Get<TwitchSessionService>().UserID,
                     title = await ReplaceStringWithSpecialModifiers(this.PredictionTitle, parameters),
                     prediction_window = this.PredictionDurationSeconds,
                     outcomes = outcomes

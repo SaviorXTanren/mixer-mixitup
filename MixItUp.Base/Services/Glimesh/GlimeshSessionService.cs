@@ -26,7 +26,9 @@ namespace MixItUp.Base.Services.Glimesh
         public bool IsBotConnected { get { return this.BotConnection != null; } }
 
         public string UserID { get { return this.User?.id; } }
+        public string Username { get { return this.User?.username; } }
         public string BotID { get { return this.Bot?.id; } }
+        public string Botname { get { return this.Bot?.username; } }
         public string ChannelID { get { return this.User?.channel?.id; } }
 
         public StreamingPlatformAccountModel UserAccount
@@ -36,7 +38,7 @@ namespace MixItUp.Base.Services.Glimesh
                 return new StreamingPlatformAccountModel()
                 {
                     ID = this.UserID,
-                    Username = this.User?.username,
+                    Username = this.Username,
                     AvatarURL = this.User?.avatarUrl
                 };
             }
@@ -48,7 +50,7 @@ namespace MixItUp.Base.Services.Glimesh
                 return new StreamingPlatformAccountModel()
                 {
                     ID = this.BotID,
-                    Username = this.Bot?.username,
+                    Username = this.Botname,
                     AvatarURL = this.Bot?.avatarUrl
                 };
             }
@@ -173,9 +175,9 @@ namespace MixItUp.Base.Services.Glimesh
                 {
                     if (settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Glimesh))
                     {
-                        if (!string.IsNullOrEmpty(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID) && !string.Equals(this.User.id, settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID))
+                        if (!string.IsNullOrEmpty(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID) && !string.Equals(this.UserID, settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID))
                         {
-                            Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.User.username} - {this.User.id} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID}");
+                            Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.Username} - {this.UserID} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID}");
                             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserOAuthToken.ResetToken();
                             return new Result("The account you are logged in as on Glimesh does not match the account for this settings. Please log in as the correct account on Glimesh.");
                         }
@@ -192,7 +194,7 @@ namespace MixItUp.Base.Services.Glimesh
                         return new Result("Failed to connect to Glimesh services:" + Environment.NewLine + Environment.NewLine + errors);
                     }
 
-                    IEnumerable<UserFollowModel> followers = await this.UserConnection.GetFollowingUsers(this.User.id);
+                    IEnumerable<UserFollowModel> followers = await this.UserConnection.GetFollowingUsers(this.UserID);
                     if (followers != null)
                     {
                         foreach (UserFollowModel follow in followers)
@@ -255,15 +257,15 @@ namespace MixItUp.Base.Services.Glimesh
                 }
 
                 settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserOAuthToken = this.UserConnection.Connection.GetOAuthTokenCopy();
-                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID = this.User.id;
-                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].ChannelID = this.User.channel.id;
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID = this.UserID;
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].ChannelID = this.ChannelID;
 
                 if (this.BotConnection != null)
                 {
                     settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].BotOAuthToken = this.BotConnection.Connection.GetOAuthTokenCopy();
                     if (this.Bot != null)
                     {
-                        settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].BotID = this.Bot.id;
+                        settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].BotID = this.BotID;
                     }
                 }
             }

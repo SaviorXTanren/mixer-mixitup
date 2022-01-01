@@ -28,7 +28,7 @@ namespace MixItUp.Base.Model
     public static class StreamingPlatforms
     {
         public const string TwitchLogoImageAssetFilePath = "/Assets/Images/Twitch.png";
-        public const string YouTubeLogoImageAssetFilePath = "/Assets/Images/Youtube.png";
+        public const string YouTubeLogoImageAssetFilePath = "/Assets/Images/YouTube.png";
         public const string TrovoLogoImageAssetFilePath = "/Assets/Images/Trovo.png";
         public const string GlimeshLogoImageAssetFilePath = "/Assets/Images/Glimesh.png";
 
