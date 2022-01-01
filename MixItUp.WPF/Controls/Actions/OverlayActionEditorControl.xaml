@@ -135,7 +135,7 @@
                                 <TextBlock>
                                 <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Windows-Settings:-Overlay-Animation-Issue" RequestNavigate="Hyperlink_RequestNavigate">
                                     <TextBlock Text="{x:Static resx:Resources.OverlayWarning3}"/>
-s                                </Hyperlink>
+                                </Hyperlink>
                             </TextBlock>
                             </StackPanel>
 
