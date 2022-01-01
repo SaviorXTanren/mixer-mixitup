@@ -6269,4 +6269,28 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="ApplicationLaunch" xml:space="preserve">
     <value>Application Launch</value>
   </data>
+  <data name="LogInWithGlimesh" xml:space="preserve">
+    <value>Log in with Glimesh</value>
+  </data>
+  <data name="LogInWithTrovo" xml:space="preserve">
+    <value>Log in with Trovo</value>
+  </data>
+  <data name="LogInWithTwitch" xml:space="preserve">
+    <value>Log in with Twitch</value>
+  </data>
+  <data name="LogInWithYouTube" xml:space="preserve">
+    <value>Log in with YouTube</value>
+  </data>
+  <data name="LogOutOfGlimesh" xml:space="preserve">
+    <value>Log out of Glimesh</value>
+  </data>
+  <data name="LogOutOfTrovo" xml:space="preserve">
+    <value>Log out of Trovo</value>
+  </data>
+  <data name="LogOutOfTwitch" xml:space="preserve">
+    <value>Log out of Twitch</value>
+  </data>
+  <data name="LogOutOfYouTube" xml:space="preserve">
+    <value>Log out of YouTube</value>
+  </data>
 </root>

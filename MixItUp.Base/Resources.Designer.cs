@@ -8887,11 +8887,83 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Log in with Glimesh.
+        /// </summary>
+        public static string LogInWithGlimesh {
+            get {
+                return ResourceManager.GetString("LogInWithGlimesh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log in with Trovo.
+        /// </summary>
+        public static string LogInWithTrovo {
+            get {
+                return ResourceManager.GetString("LogInWithTrovo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log in with Twitch.
+        /// </summary>
+        public static string LogInWithTwitch {
+            get {
+                return ResourceManager.GetString("LogInWithTwitch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log in with YouTube.
+        /// </summary>
+        public static string LogInWithYouTube {
+            get {
+                return ResourceManager.GetString("LogInWithYouTube", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Log Out.
         /// </summary>
         public static string Logout {
             get {
                 return ResourceManager.GetString("Logout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log out of Glimesh.
+        /// </summary>
+        public static string LogOutOfGlimesh {
+            get {
+                return ResourceManager.GetString("LogOutOfGlimesh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log out of Trovo.
+        /// </summary>
+        public static string LogOutOfTrovo {
+            get {
+                return ResourceManager.GetString("LogOutOfTrovo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log out of Twitch.
+        /// </summary>
+        public static string LogOutOfTwitch {
+            get {
+                return ResourceManager.GetString("LogOutOfTwitch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log out of YouTube.
+        /// </summary>
+        public static string LogOutOfYouTube {
+            get {
+                return ResourceManager.GetString("LogOutOfYouTube", resourceCulture);
             }
         }
         

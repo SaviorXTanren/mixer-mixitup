@@ -2101,6 +2101,8 @@
     <Resource Include="Assets\Images\Twitter.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Assets\Images\YoutubeMonochrome.png" />
+    <Resource Include="Assets\Images\TwitchMonochrome.png" />
     <Content Include="Assets\OBS\obs-websocket-4.9.1-Windows-Installer.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -2131,7 +2133,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Images\Discord.png" />
-    <Resource Include="Assets\Images\Youtube.png" />
+    <Resource Include="Assets\Images\YouTube.png" />
     <Resource Include="Assets\Images\Wiki.png" />
     <Resource Include="..\MixPlay\fortnite-drop-map\src\map.png">
       <Link>Assets\Images\FortniteDropMap\map.png</Link>
