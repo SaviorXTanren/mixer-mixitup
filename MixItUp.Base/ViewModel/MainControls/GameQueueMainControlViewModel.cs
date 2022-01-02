@@ -5,8 +5,6 @@ using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.MainControls
@@ -18,6 +16,8 @@ namespace MixItUp.Base.ViewModel.MainControls
         public int QueuePosition { get; set; }
 
         public string Username { get { return this.user.FullDisplayName; } }
+
+        public string Platform { get { return EnumLocalizationHelper.GetLocalizedName(this.user.Platform); } }
 
         public string PrimaryRole { get { return EnumHelper.GetEnumName(this.user.PrimaryRole); } }
 
