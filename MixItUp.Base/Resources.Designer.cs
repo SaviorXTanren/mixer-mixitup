@@ -1808,7 +1808,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Viewers.
+        ///   Looks up a localized string similar to Chatters.
         /// </summary>
         public static string Chatters {
             get {

@@ -4052,7 +4052,7 @@ This setting will change all role requirements to be explicit and require that t
     <value>Center</value>
   </data>
   <data name="Chatters" xml:space="preserve">
-    <value>Viewers</value>
+    <value>Chatters</value>
   </data>
   <data name="Day" xml:space="preserve">
     <value>Day</value>
