@@ -6293,4 +6293,19 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="LogOutOfYouTube" xml:space="preserve">
     <value>Log out of YouTube</value>
   </data>
+  <data name="LinkAccountCommandAccountsLinkedSuccessfully" xml:space="preserve">
+    <value>Account linking process successful.</value>
+  </data>
+  <data name="LinkAccountCommandErrorUnsupportedPlatform" xml:space="preserve">
+    <value>ERROR: The platform specified is not supported: {0}</value>
+  </data>
+  <data name="LinkAccountCommandErrorUserNotFound" xml:space="preserve">
+    <value>ERROR: Could not find user with the following username: {0}</value>
+  </data>
+  <data name="LinkAccountCommandPleaseConfirmLink" xml:space="preserve">
+    <value>Account linking process started. Please re-run command on the other platform with your current user's information: "!linkaccount {0} {1}"</value>
+  </data>
+  <data name="LinkAccountCommandUsage" xml:space="preserve">
+    <value>Usage: !linkaccount &lt;PLATFORM&gt; &lt;PLATFORM USERNAME&gt;</value>
+  </data>
 </root>

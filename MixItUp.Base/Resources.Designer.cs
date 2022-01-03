@@ -8806,6 +8806,51 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Account linking process successful..
+        /// </summary>
+        public static string LinkAccountCommandAccountsLinkedSuccessfully {
+            get {
+                return ResourceManager.GetString("LinkAccountCommandAccountsLinkedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ERROR: The platform specified is not supported: {0}.
+        /// </summary>
+        public static string LinkAccountCommandErrorUnsupportedPlatform {
+            get {
+                return ResourceManager.GetString("LinkAccountCommandErrorUnsupportedPlatform", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ERROR: Could not find user with the following username: {0}.
+        /// </summary>
+        public static string LinkAccountCommandErrorUserNotFound {
+            get {
+                return ResourceManager.GetString("LinkAccountCommandErrorUserNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account linking process started. Please re-run command on the other platform with your current user&apos;s information: &quot;!linkaccount {0} {1}&quot;.
+        /// </summary>
+        public static string LinkAccountCommandPleaseConfirmLink {
+            get {
+                return ResourceManager.GetString("LinkAccountCommandPleaseConfirmLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usage: !linkaccount &lt;PLATFORM&gt; &lt;PLATFORM USERNAME&gt;.
+        /// </summary>
+        public static string LinkAccountCommandUsage {
+            get {
+                return ResourceManager.GetString("LinkAccountCommandUsage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Link Blocking.
         /// </summary>
         public static string LinkBlocking {
