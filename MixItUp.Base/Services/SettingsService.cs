@@ -356,6 +356,7 @@ namespace MixItUp.Base.Services
                         settings.StreamingPlatformAuthentications.Remove(type);
                     }
                 }
+                settings.DefaultStreamingPlatform = StreamingPlatformTypeEnum.Twitch;
 
 #pragma warning disable CS0612 // Type or member is obsolete
                 settings.MassGiftedSubsFilterAmount = settings.TwitchMassGiftedSubsFilterAmount;
@@ -408,6 +409,7 @@ namespace MixItUp.Base.Services
                 foreach (CommandModelBase command in settings.Commands.Values)
                 {
                     SettingsV3Upgrader.MultiPlatformCommandUpgrade(command);
+                    settings.Commands.ManualValueChanged(command.ID);
                 }
 #pragma warning restore CS0612 // Type or member is obsolete
 
