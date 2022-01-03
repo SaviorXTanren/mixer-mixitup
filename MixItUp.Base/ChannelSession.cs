@@ -232,7 +232,11 @@ namespace MixItUp.Base
                     }
                 }
 
-                if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+                if (StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).IsConnected)
+                {
+                    ChannelSession.Settings.Name = StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).Username;
+                }
+                else if (ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
                     ChannelSession.Settings.Name = ServiceManager.Get<TwitchSessionService>().Username;
                 }
@@ -253,6 +257,10 @@ namespace MixItUp.Base
                     ChannelSession.Settings.Name = "Test";
                 }
 
+                if (StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).IsConnected)
+                {
+                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(ChannelSession.Settings.DefaultStreamingPlatform, StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).UserID);
+                }
                 if (ChannelSession.User == null && ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
                     ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, ServiceManager.Get<TwitchSessionService>().UserID);
