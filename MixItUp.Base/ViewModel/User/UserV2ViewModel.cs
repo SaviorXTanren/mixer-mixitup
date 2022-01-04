@@ -106,6 +106,8 @@ namespace MixItUp.Base.ViewModel.User
 
         public bool ShowUserAvatar { get { return !ChannelSession.Settings.HideUserAvatar; } }
 
+        public string LastSeenString { get { return (this.LastActivity != DateTimeOffset.MinValue) ? this.LastActivity.ToFriendlyDateTimeString() : "Unknown"; } }
+
         public HashSet<UserRoleEnum> Roles { get { return this.PlatformModel.Roles; } }
 
         public string RolesString
@@ -366,12 +368,27 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                CurrencyModel currency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => c.IsRank && c.IsPrimary);
-                if (currency != null)
+
+                CurrencyModel rank = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => c.IsRank && c.IsPrimary);
+                if (rank != null)
                 {
-                    return currency.GetAmount(this);
+                    return rank.GetAmount(this);
                 }
                 return 0;
+            }
+        }
+
+        public string PrimaryRankNameAndPoints
+        {
+            get
+            {
+                CurrencyModel rank = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => c.IsRank && c.IsPrimary);
+                if (rank != null)
+                {
+                    return string.Format("{0} - {1}", rank.Name, rank.GetAmount(this));
+                }
+
+                return string.Empty;
             }
         }
 

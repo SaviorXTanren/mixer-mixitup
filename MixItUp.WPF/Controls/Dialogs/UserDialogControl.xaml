@@ -82,7 +82,7 @@
                 <TextBlock Grid.Column="2" Grid.Row="4" Text="{Binding AccountAgeString}" />
 
                 <TextBlock Grid.Column="0" Grid.Row="6" Text="{Binding Source={x:Static resx:Resources.WatchTime}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
-                <TextBlock Grid.Column="2" Grid.Row="6" Text="{Binding Data.ViewingTimeString}" />
+                <TextBlock Grid.Column="2" Grid.Row="6" Text="{Binding OnlineViewingTimeString}" />
 
                 <TextBlock Grid.Column="0" Grid.Row="8" Text="{Binding Source={x:Static resx:Resources.FollowAge}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                 <TextBlock Grid.Column="2" Grid.Row="8" Text="{Binding FollowAgeString}" />
@@ -108,13 +108,13 @@
             </Grid.ColumnDefinitions>
 
             <MaterialDesign:PackIcon Kind="Cash100" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Grid.Column="0" ToolTip="{x:Static resx:Resources.PrimaryCurrency}" />
-            <TextBlock Grid.Column="2" Text="{Binding Data.PrimaryCurrency}" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="2" Text="{Binding PrimaryCurrency}" VerticalAlignment="Center" />
 
             <MaterialDesign:PackIcon Kind="ShieldStar" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Grid.Column="4" ToolTip="{x:Static resx:Resources.PrimaryRank}" />
-            <TextBlock Grid.Column="6" Text="{Binding Data.PrimaryRankNameAndPoints}" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="6" Text="{Binding PrimaryRankNameAndPoints}" VerticalAlignment="Center" />
 
             <MaterialDesign:PackIcon Kind="Biohazard" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Grid.Column="8" Margin="0,-1,0,0" ToolTip="{x:Static resx:Resources.ModerationStrikes}" />
-            <TextBlock Grid.Column="10" Text="{Binding Data.ModerationStrikes}" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="10" Text="{Binding ModerationStrikes}" VerticalAlignment="Center" />
         </Grid>
 
         <Grid Grid.Row="4" HorizontalAlignment="Center">
