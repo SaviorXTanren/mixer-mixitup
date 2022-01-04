@@ -220,6 +220,14 @@
             </Grid>
         </Grid>
 
+        <Grid Grid.Row="2" Visibility="{Binding ShowFollowersGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TextBox Text="{Binding TimeLength}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Minutes}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
+
+        <Grid Grid.Row="2" Visibility="{Binding ShowSlowChatGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TextBox Text="{Binding TimeLength}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Seconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
+
         <ActionControls:SubActionContainerControl Grid.Row="3" Visibility="{Binding ShowSubActions, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,20,0,0" />
     </Grid>
 </local:ActionEditorControlBase>

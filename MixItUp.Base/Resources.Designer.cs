@@ -3814,11 +3814,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disable Emote Only.
+        /// </summary>
+        public static string DisableEmoteOnly {
+            get {
+                return ResourceManager.GetString("DisableEmoteOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disable Follower Mode.
         /// </summary>
         public static string DisableFollowerMode {
             get {
                 return ResourceManager.GetString("DisableFollowerMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable Followers Only.
+        /// </summary>
+        public static string DisableFollowersOnly {
+            get {
+                return ResourceManager.GetString("DisableFollowersOnly", resourceCulture);
             }
         }
         
@@ -3832,11 +3850,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disable Slow Chat.
+        /// </summary>
+        public static string DisableSlowChat {
+            get {
+                return ResourceManager.GetString("DisableSlowChat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disable Slow Mode.
         /// </summary>
         public static string DisableSlowMode {
             get {
                 return ResourceManager.GetString("DisableSlowMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable Subscriber Chat.
+        /// </summary>
+        public static string DisableSubscriberChat {
+            get {
+                return ResourceManager.GetString("DisableSubscriberChat", resourceCulture);
             }
         }
         
@@ -4219,11 +4255,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable Emote Only.
+        /// </summary>
+        public static string EnableEmoteOnly {
+            get {
+                return ResourceManager.GetString("EnableEmoteOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enable Follower Mode.
         /// </summary>
         public static string EnableFollowerMode {
             get {
                 return ResourceManager.GetString("EnableFollowerMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable Followers Only.
+        /// </summary>
+        public static string EnableFollowersOnly {
+            get {
+                return ResourceManager.GetString("EnableFollowersOnly", resourceCulture);
             }
         }
         
@@ -4273,6 +4327,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable Slow Chat.
+        /// </summary>
+        public static string EnableSlowChat {
+            get {
+                return ResourceManager.GetString("EnableSlowChat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enable Slow Mode.
         /// </summary>
         public static string EnableSlowMode {
@@ -4296,6 +4359,15 @@ namespace MixItUp.Base {
         public static string EnableStreamlabsOBS {
             get {
                 return ResourceManager.GetString("EnableStreamlabsOBS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable Subscribers Chat.
+        /// </summary>
+        public static string EnableSubscribersChat {
+            get {
+                return ResourceManager.GetString("EnableSubscribersChat", resourceCulture);
             }
         }
         
@@ -16219,6 +16291,24 @@ namespace MixItUp.Base {
         public static string TwitchActionStreamMarkerDescriptionMustBe140CharactersOrLess {
             get {
                 return ResourceManager.GetString("TwitchActionStreamMarkerDescriptionMustBe140CharactersOrLess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Action: A valid time length must be specified.
+        /// </summary>
+        public static string TwitchActionTimeLengthMissing {
+            get {
+                return ResourceManager.GetString("TwitchActionTimeLengthMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Action: A valid username must be specified.
+        /// </summary>
+        public static string TwitchActionUsernameMissing {
+            get {
+                return ResourceManager.GetString("TwitchActionUsernameMissing", resourceCulture);
             }
         }
         

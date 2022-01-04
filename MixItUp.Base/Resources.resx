@@ -6308,4 +6308,34 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="LinkAccountCommandUsage" xml:space="preserve">
     <value>Usage: !linkaccount &lt;PLATFORM&gt; &lt;PLATFORM USERNAME&gt;</value>
   </data>
+  <data name="DisableEmoteOnly" xml:space="preserve">
+    <value>Disable Emote Only</value>
+  </data>
+  <data name="DisableFollowersOnly" xml:space="preserve">
+    <value>Disable Followers Only</value>
+  </data>
+  <data name="DisableSlowChat" xml:space="preserve">
+    <value>Disable Slow Chat</value>
+  </data>
+  <data name="DisableSubscriberChat" xml:space="preserve">
+    <value>Disable Subscriber Chat</value>
+  </data>
+  <data name="EnableEmoteOnly" xml:space="preserve">
+    <value>Enable Emote Only</value>
+  </data>
+  <data name="EnableFollowersOnly" xml:space="preserve">
+    <value>Enable Followers Only</value>
+  </data>
+  <data name="EnableSlowChat" xml:space="preserve">
+    <value>Enable Slow Chat</value>
+  </data>
+  <data name="EnableSubscribersChat" xml:space="preserve">
+    <value>Enable Subscribers Chat</value>
+  </data>
+  <data name="TwitchActionTimeLengthMissing" xml:space="preserve">
+    <value>Twitch Action: A valid time length must be specified</value>
+  </data>
+  <data name="TwitchActionUsernameMissing" xml:space="preserve">
+    <value>Twitch Action: A valid username must be specified</value>
+  </data>
 </root>
