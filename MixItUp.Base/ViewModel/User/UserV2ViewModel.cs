@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
@@ -347,6 +348,32 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public string OnlineViewingTimeString { get { return string.Format("{0} Hours & {1} Mins", this.OnlineViewingHoursOnly, this.OnlineViewingMinutesOnly); } }
+
+        public int PrimaryCurrency
+        {
+            get
+            {
+                CurrencyModel currency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => !c.IsRank && c.IsPrimary);
+                if (currency != null)
+                {
+                    return currency.GetAmount(this);
+                }
+                return 0;
+            }
+        }
+
+        public int PrimaryRankPoints
+        {
+            get
+            {
+                CurrencyModel currency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => c.IsRank && c.IsPrimary);
+                if (currency != null)
+                {
+                    return currency.GetAmount(this);
+                }
+                return 0;
+            }
+        }
 
         public long TotalStreamsWatched
         {
