@@ -135,62 +135,6 @@ namespace MixItUp.Base.Services
         private string accessToken = null;
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-        public MixItUpService()
-        {
-            this.signalRConnection = new SignalRConnection(MixItUpSignalRHubEndpoint);
-
-            this.signalRConnection.Listen("TwitchFollowEvent", (string followerId, string followerUsername, string followerDisplayName) =>
-            {
-                Logger.Log($"Webhook Event - Follow - {followerId} - {followerUsername}");
-                var _ = this.TwitchFollowEvent(followerId, followerUsername, followerDisplayName);
-            });
-
-            this.signalRConnection.Listen("TwitchStreamStartedEvent", () =>
-            {
-                Logger.Log($"Webhook Event - Stream Start");
-                var _ = this.TwitchStreamStartedEvent();
-            });
-
-            this.signalRConnection.Listen("TwitchStreamStoppedEvent", () =>
-            {
-                Logger.Log($"Webhook Event - Stream Stop");
-                var _ = this.TwitchStreamStoppedEvent();
-            });
-
-            this.signalRConnection.Listen("TwitchChannelHypeTrainBegin", (int totalPoints, int levelPoints, int levelGoal) =>
-            {
-                Logger.Log($"Webhook Event - Hype Train Begin");
-                var _ = this.TwitchChannelHypeTrainBegin(totalPoints, levelPoints, levelGoal);
-            });
-
-            //this.signalRConnection.Listen("TwitchChannelHypeTrainProgress", (int level, int totalPoints, int levelPoints, int levelGoal) =>
-            //{
-            //    var _ = this.TwitchChannelHypeTrainProgress(level, totalPoints, levelPoints, levelGoal);
-            //});
-
-            this.signalRConnection.Listen("TwitchChannelHypeTrainEnd", (int level, int totalPoints) =>
-            {
-                Logger.Log($"Webhook Event - Hype Train End - {level} - {totalPoints}");
-                var _ = this.TwitchChannelHypeTrainEnd(level, totalPoints);
-            });
-
-            this.signalRConnection.Listen("TriggerWebhook", (Guid id, string payload) =>
-            {
-                Logger.Log($"Webhook Event - Generic Webhook - {id} - {payload}");
-                var _ = this.TriggerGenericWebhook(id, payload);
-            });
-
-            this.signalRConnection.Listen("AuthenticationCompleteEvent", (bool approved) =>
-            {
-                this.IsWebhookHubAllowed = approved;
-                if (!this.IsWebhookHubAllowed)
-                {
-                    // Force disconnect is it doesn't retry
-                    var _ = this.Disconnect();
-                }
-            });
-        }
-
         // IMixItUpService
         public async Task<MixItUpUpdateModel> GetLatestUpdate()
         {
@@ -334,8 +278,8 @@ namespace MixItUp.Base.Services
 
         // IWebhookService
         public const string AuthenticateMethodName = "AuthenticateMany";
-        private readonly SignalRConnection signalRConnection;
-        public bool IsWebhookHubConnected { get { return this.signalRConnection.IsConnected(); } }
+        private SignalRConnection signalRConnection = null;
+        public bool IsWebhookHubConnected { get { return this.signalRConnection?.IsConnected() ?? false; } }
         public bool IsWebhookHubAllowed { get; private set; } = false;
 
         public void BackgroundConnect()
@@ -354,6 +298,62 @@ namespace MixItUp.Base.Services
         {
             if (!this.IsWebhookHubConnected)
             {
+                if (this.signalRConnection == null)
+                {
+                    this.signalRConnection = new SignalRConnection(MixItUpSignalRHubEndpoint);
+
+                    this.signalRConnection.Listen("TwitchFollowEvent", (string followerId, string followerUsername, string followerDisplayName) =>
+                    {
+                        Logger.Log($"Webhook Event - Follow - {followerId} - {followerUsername}");
+                        var _ = this.TwitchFollowEvent(followerId, followerUsername, followerDisplayName);
+                    });
+
+                    this.signalRConnection.Listen("TwitchStreamStartedEvent", () =>
+                    {
+                        Logger.Log($"Webhook Event - Stream Start");
+                        var _ = this.TwitchStreamStartedEvent();
+                    });
+
+                    this.signalRConnection.Listen("TwitchStreamStoppedEvent", () =>
+                    {
+                        Logger.Log($"Webhook Event - Stream Stop");
+                        var _ = this.TwitchStreamStoppedEvent();
+                    });
+
+                    this.signalRConnection.Listen("TwitchChannelHypeTrainBegin", (int totalPoints, int levelPoints, int levelGoal) =>
+                    {
+                        Logger.Log($"Webhook Event - Hype Train Begin");
+                        var _ = this.TwitchChannelHypeTrainBegin(totalPoints, levelPoints, levelGoal);
+                    });
+
+                    //this.signalRConnection.Listen("TwitchChannelHypeTrainProgress", (int level, int totalPoints, int levelPoints, int levelGoal) =>
+                    //{
+                    //    var _ = this.TwitchChannelHypeTrainProgress(level, totalPoints, levelPoints, levelGoal);
+                    //});
+
+                    this.signalRConnection.Listen("TwitchChannelHypeTrainEnd", (int level, int totalPoints) =>
+                    {
+                        Logger.Log($"Webhook Event - Hype Train End - {level} - {totalPoints}");
+                        var _ = this.TwitchChannelHypeTrainEnd(level, totalPoints);
+                    });
+
+                    this.signalRConnection.Listen("TriggerWebhook", (Guid id, string payload) =>
+                    {
+                        Logger.Log($"Webhook Event - Generic Webhook - {id} - {payload}");
+                        var _ = this.TriggerGenericWebhook(id, payload);
+                    });
+
+                    this.signalRConnection.Listen("AuthenticationCompleteEvent", (bool approved) =>
+                    {
+                        this.IsWebhookHubAllowed = approved;
+                        if (!this.IsWebhookHubAllowed)
+                        {
+                            // Force disconnect is it doesn't retry
+                            var _ = this.Disconnect();
+                        }
+                    });
+                }
+
                 this.signalRConnection.Connected -= SignalRConnection_Connected;
                 this.signalRConnection.Disconnected -= SignalRConnection_Disconnected;
 
@@ -371,10 +371,13 @@ namespace MixItUp.Base.Services
 
         public async Task Disconnect()
         {
-            this.signalRConnection.Connected -= SignalRConnection_Connected;
-            this.signalRConnection.Disconnected -= SignalRConnection_Disconnected;
+            if (this.signalRConnection != null)
+            {
+                this.signalRConnection.Connected -= SignalRConnection_Connected;
+                this.signalRConnection.Disconnected -= SignalRConnection_Disconnected;
 
-            await this.signalRConnection.Disconnect();
+                await this.signalRConnection.Disconnect();
+            }
         }
 
         private async void SignalRConnection_Connected(object sender, EventArgs e)

@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
@@ -104,6 +105,8 @@ namespace MixItUp.Base.ViewModel.User
         public string AvatarLink { get { return this.PlatformModel.AvatarLink; } }
 
         public bool ShowUserAvatar { get { return !ChannelSession.Settings.HideUserAvatar; } }
+
+        public string LastSeenString { get { return (this.LastActivity != DateTimeOffset.MinValue) ? this.LastActivity.ToFriendlyDateTimeString() : "Unknown"; } }
 
         public HashSet<UserRoleEnum> Roles { get { return this.PlatformModel.Roles; } }
 
@@ -347,6 +350,47 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public string OnlineViewingTimeString { get { return string.Format("{0} Hours & {1} Mins", this.OnlineViewingHoursOnly, this.OnlineViewingMinutesOnly); } }
+
+        public int PrimaryCurrency
+        {
+            get
+            {
+                CurrencyModel currency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => !c.IsRank && c.IsPrimary);
+                if (currency != null)
+                {
+                    return currency.GetAmount(this);
+                }
+                return 0;
+            }
+        }
+
+        public int PrimaryRankPoints
+        {
+            get
+            {
+
+                CurrencyModel rank = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => c.IsRank && c.IsPrimary);
+                if (rank != null)
+                {
+                    return rank.GetAmount(this);
+                }
+                return 0;
+            }
+        }
+
+        public string PrimaryRankNameAndPoints
+        {
+            get
+            {
+                CurrencyModel rank = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => c.IsRank && c.IsPrimary);
+                if (rank != null)
+                {
+                    return string.Format("{0} - {1}", rank.Name, rank.GetAmount(this));
+                }
+
+                return string.Empty;
+            }
+        }
 
         public long TotalStreamsWatched
         {
