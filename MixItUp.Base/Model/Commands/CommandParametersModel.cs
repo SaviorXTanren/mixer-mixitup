@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -81,6 +82,8 @@ namespace MixItUp.Base.Model.Commands
             {
                 this.Platform = this.User.Platform;
             }
+
+            this.SpecialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = this.Platform.ToString();
         }
 
         public bool IsTargetUserSelf { get { return this.TargetUser == this.User; } }

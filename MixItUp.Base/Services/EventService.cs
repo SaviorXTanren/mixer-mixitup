@@ -276,8 +276,6 @@ namespace MixItUp.Base.Services
 
                     if (genericCommand != null)
                     {
-                        parameters.SpecialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = parameters.Platform.ToString();
-
                         Logger.Log(LogLevel.Debug, $"Performing event trigger: {genericCommand.EventType}");
 
                         await ServiceManager.Get<CommandService>().Queue(genericCommand, parameters);

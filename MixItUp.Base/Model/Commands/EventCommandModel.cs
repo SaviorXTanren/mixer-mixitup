@@ -201,23 +201,23 @@ namespace MixItUp.Base.Model.Commands
             int eventNumber = (int)eventType;
             if (eventNumber >= 200 && eventNumber < 300)
             {
-                specialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = Resources.Twitch;
+                specialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = StreamingPlatformTypeEnum.Twitch.ToString();
             }
             else if (eventNumber >= 300 && eventNumber < 400)
             {
-                specialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = Resources.YouTube;
+                specialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = StreamingPlatformTypeEnum.YouTube.ToString();
             }
             else if (eventNumber >= 400 && eventNumber < 500)
             {
-                specialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = Resources.Trovo;
+                specialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = StreamingPlatformTypeEnum.Trovo.ToString();
             }
             else if (eventNumber >= 500 && eventNumber < 600)
             {
-                specialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = Resources.Glimesh;
+                specialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = StreamingPlatformTypeEnum.Glimesh.ToString();
             }
             else
             {
-                specialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = Resources.Generic;
+                specialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = ChannelSession.Settings.DefaultStreamingPlatform.ToString();
             }
 
             return specialIdentifiers;
