@@ -11,7 +11,6 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Trovo.Base.Clients;
@@ -22,8 +21,7 @@ namespace MixItUp.Base.Services.Trovo
 {
     public class TrovoChatEventService : StreamingPlatformServiceBase
     {
-        private const string RaidMessageRegexFormat = " is carrying \\d+ raiders to this channel.";
-        private const string OnlyDigitsRegexReplacementFormat = "[^0-9]";
+        private const string TreasureBoxUnleashedActivityTopic = "item_drop_box_unleash";
 
         private const int MaxMessageLength = 250;
 
@@ -567,6 +565,16 @@ namespace MixItUp.Base.Services.Trovo
                     }
 
                     await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertTrovoSpellFormat, user.DisplayName, spell.Name, spell.ValueTotal, spell.ValueType), ChannelSession.Settings.AlertTrovoSpellCastColor));
+                }
+                else if (message.type == ChatMessageTypeEnum.ActivityEventMessage)
+                {
+                    if (message.content_data != null && message.content_data.TryGetValue("activity_topic", out JToken activity_topic))
+                    {
+                        if (string.Equals(activity_topic.ToString(), TreasureBoxUnleashedActivityTopic, StringComparison.OrdinalIgnoreCase))
+                        {
+                            // TODO: https://trello.com/c/iwEcqHvG/1199-trovo-treasure-chest-messages-require-formatting
+                        }
+                    }
                 }
 
                 if (TrovoChatMessageViewModel.ApplicableMessageTypes.Contains(message.type) && !string.IsNullOrEmpty(message.content))
