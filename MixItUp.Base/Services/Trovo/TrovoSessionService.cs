@@ -63,13 +63,13 @@ namespace MixItUp.Base.Services.Trovo
                 this.User = await this.UserConnection.GetCurrentUser();
                 if (this.User == null)
                 {
-                    return new Result("Failed to get Glimesh user data");
+                    return new Result("Failed to get Trovo user data");
                 }
 
                 this.Channel = await this.UserConnection.GetCurrentChannel();
                 if (this.Channel == null)
                 {
-                    return new Result("Failed to get Glimesh channel data");
+                    return new Result("Failed to get Trovo channel data");
                 }
             }
             return result;
@@ -84,7 +84,7 @@ namespace MixItUp.Base.Services.Trovo
                 this.Bot = await this.BotConnection.GetCurrentUser();
                 if (this.Bot == null)
                 {
-                    return new Result("Failed to get Glimesh bot data");
+                    return new Result("Failed to get Trovo bot data");
                 }
             }
             return result;
