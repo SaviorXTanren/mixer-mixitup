@@ -66,7 +66,7 @@ namespace MixItUp.Base.ViewModel.Services
             this.IsConnected = ServiceManager.Get<PatreonService>().IsConnected;
         }
 
-        protected override Task OnLoadedInternal()
+        protected override Task OnOpenInternal()
         {
             if (this.IsConnected)
             {

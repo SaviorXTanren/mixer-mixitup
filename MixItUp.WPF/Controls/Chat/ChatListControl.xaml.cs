@@ -49,7 +49,7 @@ namespace MixItUp.WPF.Controls.Chat
             this.viewModel.ScrollingLockChanged += ViewModel_ScrollingLockChanged;
             this.viewModel.ContextMenuCommandsChanged += ViewModel_ContextMenuCommandsChanged;
 
-            await this.viewModel.OnLoaded();
+            await this.viewModel.OnOpen();
             this.DataContext = this.viewModel;
 
             BindingOperations.EnableCollectionSynchronization(this.viewModel.Messages, itemsLock);

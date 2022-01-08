@@ -133,7 +133,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public OvrStreamActionEditorControlViewModel() : base() { }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             this.AddVariableCommand = this.CreateCommand(() =>
             {
@@ -148,7 +148,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.Titles.AddRange(titles);
                 }
             }
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
         }
 
         public override Task<Result> Validate()

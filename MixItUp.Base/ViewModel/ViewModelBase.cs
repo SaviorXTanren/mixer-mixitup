@@ -153,7 +153,7 @@ namespace MixItUp.Base.ViewModels
 
         private int loadingOperations = 0;
 
-        public async Task OnLoaded() { await this.RunAsync(async () => await this.OnLoadedInternal()); }
+        public async Task OnOpen() { await this.RunAsync(async () => await this.OnOpenInternal()); }
 
         public async Task OnVisible() { await this.RunAsync(async () => await this.OnVisibleInternal()); }
 
@@ -179,7 +179,7 @@ namespace MixItUp.Base.ViewModels
             }
         }
 
-        protected virtual Task OnLoadedInternal() { return Task.CompletedTask; }
+        protected virtual Task OnOpenInternal() { return Task.CompletedTask; }
 
         protected virtual Task OnVisibleInternal() { return Task.CompletedTask; }
 

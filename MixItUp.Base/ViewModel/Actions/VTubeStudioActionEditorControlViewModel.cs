@@ -248,7 +248,7 @@ namespace MixItUp.Base.ViewModel.Actions
             return Task.FromResult<ActionModelBase>(null);
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             this.GetCurrentModelMovementCommand = this.CreateCommand(async () =>
             {
@@ -287,7 +287,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 await this.LoadHotKeysForCurrentModel();
                 this.SelectedHotKey = this.HotKeys.FirstOrDefault(hk => string.Equals(hk.hotkeyID, this.hotKeyID));
             }
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
         }
 
         private async Task LoadHotKeysForCurrentModel()

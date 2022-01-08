@@ -538,7 +538,7 @@ namespace MixItUp.Base.ViewModel.Actions
             return await base.Validate();
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
@@ -552,7 +552,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.ChannelPointReward = this.ChannelPointRewards.FirstOrDefault(c => c.id.Equals(this.existingChannelPointRewardID));
                 }
             }
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
         }
 
         protected override async Task<ActionModelBase> GetActionInternal()

@@ -105,10 +105,10 @@ namespace MixItUp.Base.ViewModel.MainControls
             }
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             this.RefreshList();
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
         }
 
         protected override async Task OnVisibleInternal()

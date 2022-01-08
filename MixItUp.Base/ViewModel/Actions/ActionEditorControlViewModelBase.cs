@@ -81,7 +81,7 @@ namespace MixItUp.Base.ViewModel.Actions
             this.Enabled = true;
         }
 
-        protected override Task OnLoadedInternal()
+        protected override Task OnOpenInternal()
         {
             this.PlayCommand = this.CreateCommand(async () =>
             {

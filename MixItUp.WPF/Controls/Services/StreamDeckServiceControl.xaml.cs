@@ -16,7 +16,7 @@ namespace MixItUp.WPF.Controls.Services
 
         protected override async Task OnLoaded()
         {
-            await this.viewModel.OnLoaded();
+            await this.viewModel.OnOpen();
         }
     }
 }

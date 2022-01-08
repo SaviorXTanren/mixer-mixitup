@@ -192,7 +192,7 @@ namespace MixItUp.WPF.Windows.Commands
         protected override async Task OnLoaded()
         {
             this.viewModel.CommandSaved += ViewModel_CommandSaved;
-            await this.viewModel.OnLoaded();
+            await this.viewModel.OnOpen();
 
             if (this.importedActions != null)
             {

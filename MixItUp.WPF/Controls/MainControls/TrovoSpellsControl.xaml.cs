@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             this.DataContext = this.viewModel = new TrovoSpellsMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
             this.SetViewModel(this.viewModel);
-            await this.viewModel.OnLoaded();
+            await this.viewModel.OnOpen();
 
             await base.InitializeInternal();
         }

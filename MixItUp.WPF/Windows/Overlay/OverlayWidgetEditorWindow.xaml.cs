@@ -44,7 +44,7 @@ namespace MixItUp.WPF.Windows.Overlay
         {
             this.DataContext = this.viewModel;
             this.viewModel.OverlayTypeSelected += ViewModel_OverlayTypeSelected;
-            await this.viewModel.OnLoaded();
+            await this.viewModel.OnOpen();
 
             if (this.viewModel.OverlayWidget != null)
             {

@@ -34,7 +34,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.NotifyPropertyChanged("NoCurrenciesExist");
         }
 
-        protected override Task OnLoadedInternal()
+        protected override Task OnOpenInternal()
         {
             this.Refresh();
             return base.OnVisibleInternal();

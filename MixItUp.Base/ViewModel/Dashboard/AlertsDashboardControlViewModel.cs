@@ -20,9 +20,9 @@ namespace MixItUp.Base.ViewModel.Dashboard
 
         public AlertsDashboardControlViewModel(UIViewModelBase windowViewModel) : base(windowViewModel) { }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
 
             this.Messages = ServiceManager.Get<AlertsService>().Alerts;
             ServiceManager.Get<ChatService>().ChatCommandsReprocessed += Chat_ChatCommandsReprocessed;

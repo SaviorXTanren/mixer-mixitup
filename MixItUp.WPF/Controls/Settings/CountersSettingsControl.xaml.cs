@@ -18,7 +18,7 @@ namespace MixItUp.WPF.Controls.Settings
         protected override async Task InitializeInternal()
         {
             this.DataContext = this.viewModel = new CountersSettingsControlViewModel();
-            await this.viewModel.OnLoaded();
+            await this.viewModel.OnOpen();
 
             await base.InitializeInternal();
         }

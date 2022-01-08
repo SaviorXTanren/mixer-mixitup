@@ -45,7 +45,7 @@ namespace MixItUp.WPF.Controls
             });
         }
 
-        protected override Task OnLoadedInternal()
+        protected override Task OnOpenInternal()
         {
             Task.Run(async () =>
             {
@@ -122,7 +122,7 @@ namespace MixItUp.WPF.Controls
 
         private async void StreamingPlatformStatusAlertControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            await this.viewModel.OnLoaded();
+            await this.viewModel.OnOpen();
         }
     }
 }

@@ -38,7 +38,7 @@ namespace MixItUp.WPF.Controls.Overlay
 
             if (this.ViewModel != null)
             {
-                await this.ViewModel.OnLoaded();
+                await this.ViewModel.OnOpen();
             }
         }
 
@@ -46,7 +46,7 @@ namespace MixItUp.WPF.Controls.Overlay
         {
             if (this.IsLoaded && this.ViewModel != null)
             {
-                await this.ViewModel.OnLoaded();
+                await this.ViewModel.OnOpen();
             }
         }
     }

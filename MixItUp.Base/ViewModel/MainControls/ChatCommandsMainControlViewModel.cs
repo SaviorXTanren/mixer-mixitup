@@ -47,9 +47,9 @@ namespace MixItUp.Base.ViewModel.MainControls
             });
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
 
             foreach (PreMadeChatCommandModelBase command in ServiceManager.Get<CommandService>().PreMadeChatCommands.OrderBy(c => c.Name))
             {

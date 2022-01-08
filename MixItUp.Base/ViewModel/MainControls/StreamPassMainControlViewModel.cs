@@ -34,7 +34,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             }
         }
 
-        protected override Task OnLoadedInternal()
+        protected override Task OnOpenInternal()
         {
             this.Refresh();
             return base.OnVisibleInternal();

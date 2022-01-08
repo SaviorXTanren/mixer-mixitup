@@ -264,7 +264,7 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public abstract Task SaveCommandToSettings(CommandModelBase command);
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             if (this.existingCommand != null)
             {

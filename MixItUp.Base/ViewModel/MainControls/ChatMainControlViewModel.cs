@@ -88,9 +88,9 @@ namespace MixItUp.Base.ViewModel.MainControls
             });
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
 
             ServiceManager.Get<UserService>().DisplayUsersUpdated += ChatService_DisplayUsersUpdated;
             this.DisplayUsers = ServiceManager.Get<UserService>().DisplayUsers;

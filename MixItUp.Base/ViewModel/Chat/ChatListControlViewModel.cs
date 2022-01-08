@@ -207,9 +207,9 @@ namespace MixItUp.Base.ViewModel.Chat
             }
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
 
             this.Messages = ServiceManager.Get<ChatService>().Messages;
         }

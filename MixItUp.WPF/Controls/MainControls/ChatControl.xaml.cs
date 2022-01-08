@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.viewModel = new ChatMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
 
-            await this.viewModel.OnLoaded();
+            await this.viewModel.OnOpen();
             this.DataContext = this.viewModel;
         }
 
