@@ -84,7 +84,7 @@ namespace MixItUp.Base.Services.Trovo
                 Logger.Log(ex);
                 return new Result<TrovoPlatformService>(ex);
             }
-            return new Result<TrovoPlatformService>("Failed to connect to establish connection to Trovo");
+            return new Result<TrovoPlatformService>("Failed to establish connection to Trovo");
         }
 
         public TrovoConnection Connection { get; private set; }

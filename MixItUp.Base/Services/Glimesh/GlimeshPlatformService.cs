@@ -91,7 +91,7 @@ namespace MixItUp.Base.Services.Glimesh
                 Logger.Log(ex);
                 return new Result<GlimeshPlatformService>(ex);
             }
-            return new Result<GlimeshPlatformService>("Failed to connect to establish connection to Glimesh");
+            return new Result<GlimeshPlatformService>("Failed to establish connection to Glimesh");
         }
 
         public GlimeshConnection Connection { get; private set; }

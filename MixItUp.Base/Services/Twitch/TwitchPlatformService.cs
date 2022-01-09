@@ -138,7 +138,7 @@ namespace MixItUp.Base.Services.Twitch
                 Logger.Log(ex);
                 return new Result<TwitchPlatformService>(ex);
             }
-            return new Result<TwitchPlatformService>("Failed to connect to establish connection to Twitch");
+            return new Result<TwitchPlatformService>("Failed to establish connection to Twitch");
         }
 
         public static DateTimeOffset GetTwitchDateTime(string dateTime)
