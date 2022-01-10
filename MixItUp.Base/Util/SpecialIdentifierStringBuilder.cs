@@ -58,6 +58,8 @@ namespace MixItUp.Base.Util
         public const string StreamUptimeSpecialIdentifierHeader = StreamSpecialIdentifierHeader + "uptime";
         public const string StreamStartSpecialIdentifierHeader = StreamSpecialIdentifierHeader + "start";
 
+        public const string TwitchSpecialIdentifierHeader = "twitch";
+
         public const string QuoteSpecialIdentifierHeader = "quote";
 
         public const string DonationSourceSpecialIdentifier = "donationsource";
@@ -686,6 +688,14 @@ namespace MixItUp.Base.Util
                     {
                         await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomRegularSpecialIdentifierHeader);
                     }
+                }
+            }
+
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TwitchSpecialIdentifierHeader))
+            {
+                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TwitchSpecialIdentifierHeader + "subpoints"))
+                {
+                    this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.TwitchSpecialIdentifierHeader + "subpoints", (await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscriberCount(ServiceManager.Get<TwitchSessionService>().User)).ToString());
                 }
             }
 
