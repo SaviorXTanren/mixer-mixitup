@@ -907,11 +907,10 @@ namespace MixItUp.Base.Util
                             Twitch.Base.Models.NewAPI.Users.UserModel tUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(twitchUser.ID);
                             if (tUser != null)
                             {
-                                Twitch.Base.Models.NewAPI.Streams.StreamModel tStream = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStream(tUser);
+                                Twitch.Base.Models.NewAPI.Channels.ChannelInformationModel tChannel = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelInformation(tUser);
 
-                                this.ReplaceSpecialIdentifier(userStreamHeader + "title", tStream?.title);
-                                this.ReplaceSpecialIdentifier(userStreamHeader + "gameimage", tStream?.thumbnail_url);
-                                this.ReplaceSpecialIdentifier(userStreamHeader + "game", tStream?.game_name);
+                                this.ReplaceSpecialIdentifier(userStreamHeader + "title", tChannel?.title);
+                                this.ReplaceSpecialIdentifier(userStreamHeader + "game", tChannel?.game_name);
                             }
                         }
                     }
