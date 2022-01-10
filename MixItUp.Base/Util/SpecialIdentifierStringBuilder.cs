@@ -730,22 +730,55 @@ namespace MixItUp.Base.Util
             {
                 replacement = HttpUtility.UrlEncode(replacement);
             }
-            this.text = this.text.Replace(((includeSpecialIdentifierHeader) ? SpecialIdentifierHeader : string.Empty) + identifier, replacement);
+            this.text = Regex.Replace(this.text, (includeSpecialIdentifierHeader ? "\\" + SpecialIdentifierHeader : string.Empty) + identifier, replacement, RegexOptions.IgnoreCase);
         }
 
         public bool ContainsSpecialIdentifier(string identifier)
         {
-            return this.text.Contains(SpecialIdentifierHeader + identifier);
-        }
-
-        public bool ContainsRegexSpecialIdentifier(string identifier)
-        {
-            return Regex.IsMatch(this.text, "\\" + SpecialIdentifierHeader + identifier);
+            return this.text.Contains(SpecialIdentifierHeader + identifier, StringComparison.OrdinalIgnoreCase);
         }
 
         public int GetFirstInstanceOfSpecialIdentifier(string identifier, int startIndex)
         {
-            return this.text.IndexOf(SpecialIdentifierHeader + identifier, startIndex);
+            return this.text.IndexOf(SpecialIdentifierHeader + identifier, startIndex, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public bool ContainsRegexSpecialIdentifier(string identifier)
+        {
+            return Regex.IsMatch(this.text, "\\" + SpecialIdentifierHeader + identifier, RegexOptions.IgnoreCase);
+        }
+
+        public async Task ReplaceNumberBasedRegexSpecialIdentifier(string regex, Func<int, Task<string>> replacer)
+        {
+            foreach (Match match in Regex.Matches(this.text, "\\" + SpecialIdentifierHeader + regex))
+            {
+                string text = new String(match.Value.Where(c => char.IsDigit(c)).ToArray());
+                if (int.TryParse(text, out int number))
+                {
+                    string replacement = await replacer(number);
+                    if (replacement != null)
+                    {
+                        this.ReplaceSpecialIdentifier(match.Value, replacement, includeSpecialIdentifierHeader: false);
+                    }
+                }
+            }
+        }
+
+        public async Task ReplaceNumberRangeBasedRegexSpecialIdentifier(string regex, Func<int, int, Task<string>> replacer)
+        {
+            foreach (Match match in Regex.Matches(this.text, "\\" + SpecialIdentifierHeader + regex))
+            {
+                string text = new String(match.Value.Where(c => char.IsDigit(c) || c == ':').ToArray());
+                string[] splits = text.Split(':');
+                if (splits.Length == 2 && int.TryParse(splits[0], out int min) && int.TryParse(splits[1], out int max) && max >= min)
+                {
+                    string replacement = await replacer(min, max);
+                    if (replacement != null)
+                    {
+                        this.ReplaceSpecialIdentifier(match.Value, replacement, includeSpecialIdentifierHeader: false);
+                    }
+                }
+            }
         }
 
         public override string ToString() { return this.text; }
@@ -1044,39 +1077,6 @@ namespace MixItUp.Base.Util
                     if (user != null)
                     {
                         await this.HandleUserSpecialIdentifiers(user, userkey);
-                    }
-                }
-            }
-        }
-
-        private async Task ReplaceNumberBasedRegexSpecialIdentifier(string regex, Func<int, Task<string>> replacer)
-        {
-            foreach (Match match in Regex.Matches(this.text, "\\" + SpecialIdentifierHeader + regex))
-            {
-                string text = new String(match.Value.Where(c => char.IsDigit(c)).ToArray());
-                if (int.TryParse(text, out int number))
-                {
-                    string replacement = await replacer(number);
-                    if (replacement != null)
-                    {
-                        this.ReplaceSpecialIdentifier(match.Value, replacement, includeSpecialIdentifierHeader: false);
-                    }
-                }
-            }
-        }
-
-        private async Task ReplaceNumberRangeBasedRegexSpecialIdentifier(string regex, Func<int, int, Task<string>> replacer)
-        {
-            foreach (Match match in Regex.Matches(this.text, "\\" + SpecialIdentifierHeader + regex))
-            {
-                string text = new String(match.Value.Where(c => char.IsDigit(c) || c == ':').ToArray());
-                string[] splits = text.Split(':');
-                if (splits.Length == 2 && int.TryParse(splits[0], out int min) && int.TryParse(splits[1], out int max) && max >= min)
-                {
-                    string replacement = await replacer(min, max);
-                    if (replacement != null)
-                    {
-                        this.ReplaceSpecialIdentifier(match.Value, replacement, includeSpecialIdentifierHeader: false);
                     }
                 }
             }
