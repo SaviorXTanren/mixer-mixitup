@@ -55,7 +55,7 @@ namespace MixItUp.Base.Services.Twitch
 
     public class TwitchChatService : StreamingPlatformServiceBase
     {
-        private const int MaxMessageLength = 400;
+        private const int MaxMessageLength = 500;
 
         private static List<string> ExcludedDiagnosticPacketLogging = new List<string>() { "PING", ChatMessagePacketModel.CommandID, ChatUserJoinPacketModel.CommandID, ChatUserLeavePacketModel.CommandID };
 
@@ -293,13 +293,13 @@ namespace MixItUp.Base.Services.Twitch
             if (ChannelSession.Settings.ShowBetterTTVEmotes)
             {
                 initializationTasks.Add(this.DownloadBetterTTVEmotes());
-                initializationTasks.Add(this.DownloadBetterTTVEmotes(ServiceManager.Get<TwitchSessionService>().User.id));
+                initializationTasks.Add(this.DownloadBetterTTVEmotes(ServiceManager.Get<TwitchSessionService>().UserID));
             }
 
             if (ChannelSession.Settings.ShowFrankerFaceZEmotes)
             {
                 initializationTasks.Add(this.DownloadFrankerFaceZEmotes());
-                initializationTasks.Add(this.DownloadFrankerFaceZEmotes(ServiceManager.Get<TwitchSessionService>().User.login));
+                initializationTasks.Add(this.DownloadFrankerFaceZEmotes(ServiceManager.Get<TwitchSessionService>().Username));
             }
 
             Task<IEnumerable<BitsCheermoteModel>> cheermotesTask = ServiceManager.Get<TwitchSessionService>().UserConnection.GetBitsCheermotes(ServiceManager.Get<TwitchSessionService>().User);

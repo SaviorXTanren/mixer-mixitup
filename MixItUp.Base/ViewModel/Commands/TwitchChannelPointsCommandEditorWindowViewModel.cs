@@ -55,7 +55,7 @@ namespace MixItUp.Base.ViewModel.Commands
             return Task.CompletedTask;
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             foreach (CustomChannelPointRewardModel channelPoint in (await ServiceManager.Get<TwitchSessionService>().UserConnection.GetCustomChannelPointRewards(ServiceManager.Get<TwitchSessionService>().User)).OrderBy(c => c.title))
             {
@@ -71,7 +71,7 @@ namespace MixItUp.Base.ViewModel.Commands
                 this.ChannelPointReward = this.ChannelPointRewards.FirstOrDefault(c => c.title.Equals(this.Name));
             }
 
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
         }
     }
 }

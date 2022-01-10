@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using StreamingClient.Base.Util;
@@ -152,7 +153,8 @@ namespace MixItUp.Base.Services
                     timerCommandIndexes[groupName] = 0;
                 }
 
-                await ServiceManager.Get<CommandService>().Queue(this.timerCommandGroups[groupName].ElementAt(timerCommandIndexes[groupName]));
+                CommandParametersModel parameters = new CommandParametersModel(ChannelSession.User, platform: StreamingPlatformTypeEnum.All);
+                await ServiceManager.Get<CommandService>().Queue(this.timerCommandGroups[groupName].ElementAt(timerCommandIndexes[groupName]), parameters);
 
                 timerCommandIndexes[groupName]++;
             }

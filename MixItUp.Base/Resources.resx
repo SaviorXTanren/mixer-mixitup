@@ -4052,7 +4052,7 @@ This setting will change all role requirements to be explicit and require that t
     <value>Center</value>
   </data>
   <data name="Chatters" xml:space="preserve">
-    <value>Viewers</value>
+    <value>Chatters</value>
   </data>
   <data name="Day" xml:space="preserve">
     <value>Day</value>
@@ -6262,5 +6262,80 @@ Failure to do one of the following could effect how users rate &amp; review your
   </data>
   <data name="TrovoActionUsernameMissing" xml:space="preserve">
     <value>Trovo Action: A valid username must be specified</value>
+  </data>
+  <data name="ApplicationExit" xml:space="preserve">
+    <value>Application Exit</value>
+  </data>
+  <data name="ApplicationLaunch" xml:space="preserve">
+    <value>Application Launch</value>
+  </data>
+  <data name="LogInWithGlimesh" xml:space="preserve">
+    <value>Log in with Glimesh</value>
+  </data>
+  <data name="LogInWithTrovo" xml:space="preserve">
+    <value>Log in with Trovo</value>
+  </data>
+  <data name="LogInWithTwitch" xml:space="preserve">
+    <value>Log in with Twitch</value>
+  </data>
+  <data name="LogInWithYouTube" xml:space="preserve">
+    <value>Log in with YouTube</value>
+  </data>
+  <data name="LogOutOfGlimesh" xml:space="preserve">
+    <value>Log out of Glimesh</value>
+  </data>
+  <data name="LogOutOfTrovo" xml:space="preserve">
+    <value>Log out of Trovo</value>
+  </data>
+  <data name="LogOutOfTwitch" xml:space="preserve">
+    <value>Log out of Twitch</value>
+  </data>
+  <data name="LogOutOfYouTube" xml:space="preserve">
+    <value>Log out of YouTube</value>
+  </data>
+  <data name="LinkAccountCommandAccountsLinkedSuccessfully" xml:space="preserve">
+    <value>Account linking process successful.</value>
+  </data>
+  <data name="LinkAccountCommandErrorUnsupportedPlatform" xml:space="preserve">
+    <value>ERROR: The platform specified is not supported: {0}</value>
+  </data>
+  <data name="LinkAccountCommandErrorUserNotFound" xml:space="preserve">
+    <value>ERROR: Could not find user with the following username: {0}</value>
+  </data>
+  <data name="LinkAccountCommandPleaseConfirmLink" xml:space="preserve">
+    <value>Account linking process started. Please re-run command on the other platform with your current user's information: "!linkaccount {0} {1}"</value>
+  </data>
+  <data name="LinkAccountCommandUsage" xml:space="preserve">
+    <value>Usage: !linkaccount &lt;PLATFORM&gt; &lt;PLATFORM USERNAME&gt;</value>
+  </data>
+  <data name="DisableEmoteOnly" xml:space="preserve">
+    <value>Disable Emote Only</value>
+  </data>
+  <data name="DisableFollowersOnly" xml:space="preserve">
+    <value>Disable Followers Only</value>
+  </data>
+  <data name="DisableSlowChat" xml:space="preserve">
+    <value>Disable Slow Chat</value>
+  </data>
+  <data name="DisableSubscriberChat" xml:space="preserve">
+    <value>Disable Subscriber Chat</value>
+  </data>
+  <data name="EnableEmoteOnly" xml:space="preserve">
+    <value>Enable Emote Only</value>
+  </data>
+  <data name="EnableFollowersOnly" xml:space="preserve">
+    <value>Enable Followers Only</value>
+  </data>
+  <data name="EnableSlowChat" xml:space="preserve">
+    <value>Enable Slow Chat</value>
+  </data>
+  <data name="EnableSubscribersChat" xml:space="preserve">
+    <value>Enable Subscribers Chat</value>
+  </data>
+  <data name="TwitchActionTimeLengthMissing" xml:space="preserve">
+    <value>Twitch Action: A valid time length must be specified</value>
+  </data>
+  <data name="TwitchActionUsernameMissing" xml:space="preserve">
+    <value>Twitch Action: A valid username must be specified</value>
   </data>
 </root>

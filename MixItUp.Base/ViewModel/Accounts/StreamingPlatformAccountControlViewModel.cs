@@ -25,12 +25,65 @@ namespace MixItUp.Base.ViewModel.Accounts
 
         public string PlatformImage { get { return StreamingPlatforms.GetPlatformImage(this.Platform); } }
 
+        public string LoginWithButtonColor
+        {
+            get
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return "#9146FF"; }
+                if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return "#FF0000"; }
+                if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return "#19D66B"; }
+                if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return "#060818"; }
+                return "#3f51b5";
+            }
+        }
+        public string LoginWithButtonImage
+        {
+            get
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return "/Assets/Images/TwitchMonochrome.png"; }
+                if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return "/Assets/Images/YouTubeMonochrome.png"; }
+                if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return "/Assets/Images/TrovoMonochrome.png"; }
+                return StreamingPlatforms.GetPlatformImage(this.Platform);
+            }
+        }
+        public string LoginWithButtonTextForeground
+        {
+            get
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return "#FFFFFF"; }
+                if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return "#FFFFFF"; }
+                if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return "#FFFFFF"; }
+                if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return "#FFFFFF"; }
+                return "#000000";
+            }
+        }
+
         public StreamingPlatformAccountModel UserAccount { get; set; }
         public string UserAccountUsername { get { return this.UserAccount?.Username; } }
         public string UserAccountAvatar { get { return this.UserAccount?.AvatarURL; } }
 
         public ICommand UserAccountCommand { get; set; }
-        public string UserAccountButtonContent { get { return this.IsUserAccountConnected ? MixItUp.Base.Resources.Logout : MixItUp.Base.Resources.Login; } }
+        public string UserAccountButtonContent
+        {
+            get
+            {
+                if (this.IsUserAccountConnected)
+                {
+                    if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return MixItUp.Base.Resources.LogOutOfTwitch; }
+                    else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return MixItUp.Base.Resources.LogOutOfYouTube; }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return MixItUp.Base.Resources.LogOutOfTrovo; }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return MixItUp.Base.Resources.LogOutOfGlimesh; }
+                }
+                else
+                {
+                    if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return MixItUp.Base.Resources.LogInWithTwitch; }
+                    else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return MixItUp.Base.Resources.LogInWithYouTube; }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return MixItUp.Base.Resources.LogInWithTrovo; }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return MixItUp.Base.Resources.LogInWithGlimesh; }
+                }
+                return string.Empty;
+            }
+        }
         public bool IsUserAccountConnected { get { return StreamingPlatforms.GetPlatformSessionService(this.Platform).IsConnected; } }
 
         public StreamingPlatformAccountModel BotAccount { get; set; }
@@ -38,7 +91,27 @@ namespace MixItUp.Base.ViewModel.Accounts
         public string BotAccountAvatar { get { return this.BotAccount?.AvatarURL; } }
 
         public ICommand BotAccountCommand { get; set; }
-        public string BotAccountButtonContent { get { return this.IsBotAccountConnected ? MixItUp.Base.Resources.Logout : MixItUp.Base.Resources.Login; } }
+        public string BotAccountButtonContent
+        {
+            get
+            {
+                if (this.IsBotAccountConnected)
+                {
+                    if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return MixItUp.Base.Resources.LogOutOfTwitch; }
+                    else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return MixItUp.Base.Resources.LogOutOfYouTube; }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return MixItUp.Base.Resources.LogOutOfTrovo; }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return MixItUp.Base.Resources.LogOutOfGlimesh; }
+                }
+                else
+                {
+                    if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return MixItUp.Base.Resources.LogInWithTwitch; }
+                    else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return MixItUp.Base.Resources.LogInWithYouTube; }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return MixItUp.Base.Resources.LogInWithTrovo; }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return MixItUp.Base.Resources.LogInWithGlimesh; }
+                }
+                return string.Empty;
+            }
+        }
         public bool IsBotAccountConnected { get { return StreamingPlatforms.GetPlatformSessionService(this.Platform).IsBotConnected; } }
 
         public StreamingPlatformAccountControlViewModel(StreamingPlatformTypeEnum platform)

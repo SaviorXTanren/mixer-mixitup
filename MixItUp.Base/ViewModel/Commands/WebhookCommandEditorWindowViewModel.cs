@@ -60,13 +60,13 @@ namespace MixItUp.Base.ViewModel.Commands
             return JSONParameters.ToDictionary(j => j.SpecialIdentifierName, j => "Test Value");
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             this.AddJSONParameterCommand = this.CreateCommand(() =>
             {
                 this.JSONParameters.Add(new WebhookJSONParameterViewModel(this));
             });
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
         }
 
         public override Task<Result> Validate()

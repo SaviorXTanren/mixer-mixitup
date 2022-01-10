@@ -58,6 +58,8 @@ namespace MixItUp.Base.Util
         public const string StreamUptimeSpecialIdentifierHeader = StreamSpecialIdentifierHeader + "uptime";
         public const string StreamStartSpecialIdentifierHeader = StreamSpecialIdentifierHeader + "start";
 
+        public const string TwitchSpecialIdentifierHeader = "twitch";
+
         public const string QuoteSpecialIdentifierHeader = "quote";
 
         public const string DonationSourceSpecialIdentifier = "donationsource";
@@ -689,6 +691,14 @@ namespace MixItUp.Base.Util
                 }
             }
 
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TwitchSpecialIdentifierHeader))
+            {
+                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TwitchSpecialIdentifierHeader + "subpoints"))
+                {
+                    this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.TwitchSpecialIdentifierHeader + "subpoints", (await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscriberCount(ServiceManager.Get<TwitchSessionService>().User)).ToString());
+                }
+            }
+
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestFollowerUserData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestRaidUserData, SpecialIdentifierStringBuilder.LatestRaidViewerCountData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestSubscriberUserData, SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData);
@@ -720,22 +730,55 @@ namespace MixItUp.Base.Util
             {
                 replacement = HttpUtility.UrlEncode(replacement);
             }
-            this.text = this.text.Replace(((includeSpecialIdentifierHeader) ? SpecialIdentifierHeader : string.Empty) + identifier, replacement);
+            this.text = Regex.Replace(this.text, (includeSpecialIdentifierHeader ? "\\" + SpecialIdentifierHeader : string.Empty) + identifier, replacement, RegexOptions.IgnoreCase);
         }
 
         public bool ContainsSpecialIdentifier(string identifier)
         {
-            return this.text.Contains(SpecialIdentifierHeader + identifier);
-        }
-
-        public bool ContainsRegexSpecialIdentifier(string identifier)
-        {
-            return Regex.IsMatch(this.text, "\\" + SpecialIdentifierHeader + identifier);
+            return this.text.Contains(SpecialIdentifierHeader + identifier, StringComparison.OrdinalIgnoreCase);
         }
 
         public int GetFirstInstanceOfSpecialIdentifier(string identifier, int startIndex)
         {
-            return this.text.IndexOf(SpecialIdentifierHeader + identifier, startIndex);
+            return this.text.IndexOf(SpecialIdentifierHeader + identifier, startIndex, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public bool ContainsRegexSpecialIdentifier(string identifier)
+        {
+            return Regex.IsMatch(this.text, "\\" + SpecialIdentifierHeader + identifier, RegexOptions.IgnoreCase);
+        }
+
+        public async Task ReplaceNumberBasedRegexSpecialIdentifier(string regex, Func<int, Task<string>> replacer)
+        {
+            foreach (Match match in Regex.Matches(this.text, "\\" + SpecialIdentifierHeader + regex))
+            {
+                string text = new String(match.Value.Where(c => char.IsDigit(c)).ToArray());
+                if (int.TryParse(text, out int number))
+                {
+                    string replacement = await replacer(number);
+                    if (replacement != null)
+                    {
+                        this.ReplaceSpecialIdentifier(match.Value, replacement, includeSpecialIdentifierHeader: false);
+                    }
+                }
+            }
+        }
+
+        public async Task ReplaceNumberRangeBasedRegexSpecialIdentifier(string regex, Func<int, int, Task<string>> replacer)
+        {
+            foreach (Match match in Regex.Matches(this.text, "\\" + SpecialIdentifierHeader + regex))
+            {
+                string text = new String(match.Value.Where(c => char.IsDigit(c) || c == ':').ToArray());
+                string[] splits = text.Split(':');
+                if (splits.Length == 2 && int.TryParse(splits[0], out int min) && int.TryParse(splits[1], out int max) && max >= min)
+                {
+                    string replacement = await replacer(min, max);
+                    if (replacement != null)
+                    {
+                        this.ReplaceSpecialIdentifier(match.Value, replacement, includeSpecialIdentifierHeader: false);
+                    }
+                }
+            }
         }
 
         public override string ToString() { return this.text; }
@@ -907,11 +950,10 @@ namespace MixItUp.Base.Util
                             Twitch.Base.Models.NewAPI.Users.UserModel tUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(twitchUser.ID);
                             if (tUser != null)
                             {
-                                Twitch.Base.Models.NewAPI.Streams.StreamModel tStream = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStream(tUser);
+                                Twitch.Base.Models.NewAPI.Channels.ChannelInformationModel tChannel = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelInformation(tUser);
 
-                                this.ReplaceSpecialIdentifier(userStreamHeader + "title", tStream?.title);
-                                this.ReplaceSpecialIdentifier(userStreamHeader + "gameimage", tStream?.thumbnail_url);
-                                this.ReplaceSpecialIdentifier(userStreamHeader + "game", tStream?.game_name);
+                                this.ReplaceSpecialIdentifier(userStreamHeader + "title", tChannel?.title);
+                                this.ReplaceSpecialIdentifier(userStreamHeader + "game", tChannel?.game_name);
                             }
                         }
                     }
@@ -950,7 +992,7 @@ namespace MixItUp.Base.Util
                             Glimesh.Base.Models.Channels.ChannelModel gChannel = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetChannelByName(glimeshUser.Username);
 
                             this.ReplaceSpecialIdentifier(userStreamHeader + "title", gChannel?.title);
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "game", gChannel?.stream?.category?.name);
+                            this.ReplaceSpecialIdentifier(userStreamHeader + "game", gChannel?.stream?.category?.name ?? MixItUp.Base.Resources.Unknown);
                         }
                     }
                 }
@@ -1035,39 +1077,6 @@ namespace MixItUp.Base.Util
                     if (user != null)
                     {
                         await this.HandleUserSpecialIdentifiers(user, userkey);
-                    }
-                }
-            }
-        }
-
-        private async Task ReplaceNumberBasedRegexSpecialIdentifier(string regex, Func<int, Task<string>> replacer)
-        {
-            foreach (Match match in Regex.Matches(this.text, "\\" + SpecialIdentifierHeader + regex))
-            {
-                string text = new String(match.Value.Where(c => char.IsDigit(c)).ToArray());
-                if (int.TryParse(text, out int number))
-                {
-                    string replacement = await replacer(number);
-                    if (replacement != null)
-                    {
-                        this.ReplaceSpecialIdentifier(match.Value, replacement, includeSpecialIdentifierHeader: false);
-                    }
-                }
-            }
-        }
-
-        private async Task ReplaceNumberRangeBasedRegexSpecialIdentifier(string regex, Func<int, int, Task<string>> replacer)
-        {
-            foreach (Match match in Regex.Matches(this.text, "\\" + SpecialIdentifierHeader + regex))
-            {
-                string text = new String(match.Value.Where(c => char.IsDigit(c) || c == ':').ToArray());
-                string[] splits = text.Split(':');
-                if (splits.Length == 2 && int.TryParse(splits[0], out int min) && int.TryParse(splits[1], out int max) && max >= min)
-                {
-                    string replacement = await replacer(min, max);
-                    if (replacement != null)
-                    {
-                        this.ReplaceSpecialIdentifier(match.Value, replacement, includeSpecialIdentifierHeader: false);
                     }
                 }
             }

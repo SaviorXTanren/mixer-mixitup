@@ -1,5 +1,6 @@
 ﻿using MixItUp.API.Models;
 using MixItUp.Base;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
@@ -57,7 +58,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            AsyncRunner.RunAsyncBackground((cancellationToken) => ServiceManager.Get<CommandService>().Queue(selectedCommand, new CommandParametersModel(user: null, arguments)), new CancellationToken());
+            AsyncRunner.RunAsyncBackground((cancellationToken) => ServiceManager.Get<CommandService>().Queue(selectedCommand, new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.All, arguments)), new CancellationToken());
 
             return CommandFromCommandBase(selectedCommand, category);
         }

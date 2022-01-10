@@ -292,16 +292,34 @@ namespace MixItUp.Base.Services
             }
         }
 
+        public void DeleteUserData(Guid id)
+        {
+            if (ChannelSession.Settings.Users.TryGetValue(id, out UserV2Model user))
+            {
+                foreach (UserPlatformV2ModelBase pUser in user.GetAllPlatformData())
+                {
+                    this.platformUserIDLookups[pUser.Platform].Remove(pUser.ID);
+                    this.platformUsernameLookups[pUser.Platform].Remove(pUser.Username);
+                }
+                this.activeUsers.Remove(user.ID);
+
+                ChannelSession.Settings.Users.Remove(user.ID);
+            }
+        }
+
         public async Task ClearAllUserData()
         {
             this.platformUserIDLookups.Clear();
             this.platformUsernameLookups.Clear();
             this.activeUsers.Clear();
 
-            await ChannelSession.Settings.ClearUserV2Data();
+            ChannelSession.Settings.Users.Clear();
+            ChannelSession.Settings.Users.ClearTracking();
+
+            await ServiceManager.Get<IDatabaseService>().Write(ChannelSession.Settings.DatabaseFilePath, "DELETE FROM Users");
         }
 
-        public UserV2ViewModel CreateUserInternal(UserPlatformV2ModelBase platformModel)
+        private UserV2ViewModel CreateUserInternal(UserPlatformV2ModelBase platformModel)
         {
             if (platformModel != null && !string.IsNullOrEmpty(platformModel.ID))
             {

@@ -12,16 +12,18 @@ namespace MixItUp.Base.ViewModel.Chat.Trovo
     {
         public static readonly HashSet<ChatMessageTypeEnum> ApplicableMessageTypes = new HashSet<ChatMessageTypeEnum>()
         {
-            ChatMessageTypeEnum.Normal, ChatMessageTypeEnum.MagicChatSuperCapChat, ChatMessageTypeEnum.MagicChatColorfulChat, ChatMessageTypeEnum.MagicChatSpellChat, ChatMessageTypeEnum.MagicChatBulletScreenChat,
-            ChatMessageTypeEnum.SubscriptionAlert, ChatMessageTypeEnum.FollowAlert, ChatMessageTypeEnum.WelcomeMessage, ChatMessageTypeEnum.ActivityEventMessage, ChatMessageTypeEnum.WelcomeMessageFromRaid
+            ChatMessageTypeEnum.Normal, ChatMessageTypeEnum.MagicChatSuperCapChat, ChatMessageTypeEnum.MagicChatColorfulChat, ChatMessageTypeEnum.MagicChatSpellChat, ChatMessageTypeEnum.MagicChatBulletScreenChat
         };
 
         public ChatMessageTypeEnum MessageType { get; set; }
+
+        public ChatMessageModel TrovoMessage { get; set; }
 
         public TrovoChatMessageViewModel(ChatMessageModel message, UserV2ViewModel user = null)
             : base(message.message_id, StreamingPlatformTypeEnum.Trovo, user)
         {
             this.MessageType = message.type;
+            this.TrovoMessage = message;
 
             string[] parts = message.content.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string part in parts)

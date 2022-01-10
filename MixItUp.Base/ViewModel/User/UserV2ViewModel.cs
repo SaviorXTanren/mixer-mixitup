@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
@@ -104,6 +105,8 @@ namespace MixItUp.Base.ViewModel.User
         public string AvatarLink { get { return this.PlatformModel.AvatarLink; } }
 
         public bool ShowUserAvatar { get { return !ChannelSession.Settings.HideUserAvatar; } }
+
+        public string LastSeenString { get { return (this.LastActivity != DateTimeOffset.MinValue) ? this.LastActivity.ToFriendlyDateTimeString() : "Unknown"; } }
 
         public HashSet<UserRoleEnum> Roles { get { return this.PlatformModel.Roles; } }
 
@@ -277,7 +280,7 @@ namespace MixItUp.Base.ViewModel.User
         public bool ShowPlatformBadge { get { return true; } }
 
         public DateTimeOffset? AccountDate { get { return this.PlatformModel.AccountDate; } set { this.PlatformModel.AccountDate = value; } }
-        public string AccountAgeString { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.NotSubscribed; } }
+        public string AccountAgeString { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.Unknown; } }
 
         public DateTimeOffset? FollowDate { get { return this.PlatformModel.FollowDate; } set { this.PlatformModel.FollowDate = value; } }
         public string FollowAgeString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.NotFollowing; } }
@@ -347,6 +350,47 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public string OnlineViewingTimeString { get { return string.Format("{0} Hours & {1} Mins", this.OnlineViewingHoursOnly, this.OnlineViewingMinutesOnly); } }
+
+        public int PrimaryCurrency
+        {
+            get
+            {
+                CurrencyModel currency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => !c.IsRank && c.IsPrimary);
+                if (currency != null)
+                {
+                    return currency.GetAmount(this);
+                }
+                return 0;
+            }
+        }
+
+        public int PrimaryRankPoints
+        {
+            get
+            {
+
+                CurrencyModel rank = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => c.IsRank && c.IsPrimary);
+                if (rank != null)
+                {
+                    return rank.GetAmount(this);
+                }
+                return 0;
+            }
+        }
+
+        public string PrimaryRankNameAndPoints
+        {
+            get
+            {
+                CurrencyModel rank = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => c.IsRank && c.IsPrimary);
+                if (rank != null)
+                {
+                    return string.Format("{0} - {1}", rank.Name, rank.GetAmount(this));
+                }
+
+                return string.Empty;
+            }
+        }
 
         public long TotalStreamsWatched
         {
@@ -636,6 +680,78 @@ namespace MixItUp.Base.ViewModel.User
                     this.model.PatreonUserID = null;
                 }
             }
+        }
+
+        public void MergeUserData(UserV2ViewModel other)
+        {
+            this.model.AddPlatformData(other.platformModel);
+            this.model.OnlineViewingMinutes += other.model.OnlineViewingMinutes;
+            
+            foreach (var kvp in other.model.CurrencyAmounts)
+            {
+                if (!this.model.CurrencyAmounts.ContainsKey(kvp.Key))
+                {
+                    this.model.CurrencyAmounts[kvp.Key] = 0;
+                }
+                this.model.CurrencyAmounts[kvp.Key] += kvp.Value;
+            }
+
+            foreach (var kvp in other.model.InventoryAmounts)
+            {
+                if (!this.model.InventoryAmounts.ContainsKey(kvp.Key))
+                {
+                    this.model.InventoryAmounts[kvp.Key] = new Dictionary<Guid, int>();
+                }
+
+                foreach (var itemKVP in kvp.Value)
+                {
+                    if (!this.model.InventoryAmounts[kvp.Key].ContainsKey(itemKVP.Key))
+                    {
+                        this.model.InventoryAmounts[kvp.Key][itemKVP.Key] = 0;
+                    }
+                    this.model.InventoryAmounts[kvp.Key][itemKVP.Key] += itemKVP.Value;
+                }
+            }
+
+            foreach (var kvp in other.model.StreamPassAmounts)
+            {
+                if (!this.model.StreamPassAmounts.ContainsKey(kvp.Key))
+                {
+                    this.model.StreamPassAmounts[kvp.Key] = 0;
+                }
+                this.model.StreamPassAmounts[kvp.Key] += kvp.Value;
+            }
+
+            if (string.IsNullOrEmpty(this.model.CustomTitle)) { this.model.CustomTitle = other.model.CustomTitle; }
+            if (!this.model.IsSpecialtyExcluded) { this.model.IsSpecialtyExcluded = other.model.IsSpecialtyExcluded; }
+            if (this.model.EntranceCommandID == Guid.Empty) { this.model.EntranceCommandID = other.model.EntranceCommandID; }
+            
+            foreach (Guid id in other.model.CustomCommandIDs)
+            {
+                this.model.CustomCommandIDs.Add(id);
+            }
+
+            if (string.IsNullOrEmpty(this.model.PatreonUserID)) { this.model.PatreonUserID = other.model.PatreonUserID; }
+
+            if (string.IsNullOrEmpty(this.model.Notes))
+            {
+                this.model.Notes = other.model.Notes;
+            }
+            else if (!string.IsNullOrEmpty(other.model.Notes))
+            {
+                this.model.Notes += Environment.NewLine + Environment.NewLine + other.model.Notes;
+            }
+
+            this.model.TotalStreamsWatched += other.Model.TotalStreamsWatched;
+            this.model.TotalAmountDonated += other.Model.TotalAmountDonated;
+            this.model.TotalSubsGifted += other.Model.TotalSubsGifted;
+            this.model.TotalSubsReceived += other.Model.TotalSubsReceived;
+            this.model.TotalChatMessageSent += other.Model.TotalChatMessageSent;
+            this.model.TotalTimesTagged += other.Model.TotalTimesTagged;
+            this.model.TotalCommandsRun += other.Model.TotalCommandsRun;
+            this.model.TotalMonthsSubbed += other.Model.TotalMonthsSubbed;
+
+            ServiceManager.Get<UserService>().DeleteUserData(other.ID);
         }
 
         private void ClearCachedProperties()

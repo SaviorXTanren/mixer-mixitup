@@ -29,7 +29,15 @@ namespace MixItUp.Base.Model.Actions
         StreamMarker,
         UpdateChannelPointReward,
         CreatePoll,
-        CreatePrediction
+        CreatePrediction,
+        EnableEmoteOnly,
+        DisableEmoteOnly,
+        EnableFollowersOnly,
+        DisableFollowersOnly,
+        EnableSlowChat,
+        DisableSlowChat,
+        EnableSubscribersChat,
+        DisableSubscriberChat,
     }
 
     [DataContract]
@@ -111,6 +119,18 @@ namespace MixItUp.Base.Model.Actions
             return action;
         }
 
+        public static TwitchActionModel CreateTimeAction(TwitchActionType type, string timeLength)
+        {
+            TwitchActionModel action = new TwitchActionModel(type);
+            action.TimeLength = timeLength;
+            return action;
+        }
+
+        public static TwitchActionModel CreateAction(TwitchActionType type)
+        {
+            return new TwitchActionModel(type);
+        }
+
         [DataMember]
         public TwitchActionType ActionType { get; set; }
         [DataMember]
@@ -172,6 +192,9 @@ namespace MixItUp.Base.Model.Actions
         public int PredictionDurationSeconds { get; set; }
         [DataMember]
         public List<string> PredictionOutcomes { get; set; } = new List<string>();
+
+        [DataMember]
+        public string TimeLength { get; set; }
 
         [DataMember]
         public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
@@ -380,7 +403,7 @@ namespace MixItUp.Base.Model.Actions
 
                 PollModel poll = await ServiceManager.Get<TwitchSessionService>().UserConnection.CreatePoll(new CreatePollModel()
                 {
-                    broadcaster_id = ServiceManager.Get<TwitchSessionService>().User.id,
+                    broadcaster_id = ServiceManager.Get<TwitchSessionService>().UserID,
                     title = await ReplaceStringWithSpecialModifiers(this.PollTitle, parameters),
                     duration = this.PollDurationSeconds,
                     channel_points_voting_enabled = this.PollChannelPointsCost > 0,
@@ -444,7 +467,7 @@ namespace MixItUp.Base.Model.Actions
 
                 PredictionModel prediction = await ServiceManager.Get<TwitchSessionService>().UserConnection.CreatePrediction(new CreatePredictionModel()
                 {
-                    broadcaster_id = ServiceManager.Get<TwitchSessionService>().User.id,
+                    broadcaster_id = ServiceManager.Get<TwitchSessionService>().UserID,
                     title = await ReplaceStringWithSpecialModifiers(this.PredictionTitle, parameters),
                     prediction_window = this.PredictionDurationSeconds,
                     outcomes = outcomes
@@ -488,6 +511,44 @@ namespace MixItUp.Base.Model.Actions
                     }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
+            }
+            else if (this.ActionType == TwitchActionType.EnableSlowChat || this.ActionType == TwitchActionType.EnableFollowersOnly)
+            {
+                if (int.TryParse(await ReplaceStringWithSpecialModifiers(this.TimeLength, parameters), out int timeLength) && timeLength > 0)
+                {
+                    if (this.ActionType == TwitchActionType.EnableSlowChat)
+                    {
+                        await ServiceManager.Get<ChatService>().SendMessage("/slow " + timeLength, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                    }
+                    else if (this.ActionType == TwitchActionType.EnableFollowersOnly)
+                    {
+                        await ServiceManager.Get<ChatService>().SendMessage("/followers " + timeLength, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                    }
+                }
+            }
+            else if (this.ActionType == TwitchActionType.EnableEmoteOnly)
+            {
+                await ServiceManager.Get<ChatService>().SendMessage("/emoteonly", sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+            }
+            else if (this.ActionType == TwitchActionType.DisableEmoteOnly)
+            {
+                await ServiceManager.Get<ChatService>().SendMessage("/emoteonlyoff", sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+            }
+            else if (this.ActionType == TwitchActionType.DisableFollowersOnly)
+            {
+                await ServiceManager.Get<ChatService>().SendMessage("/followersoff", sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+            }
+            else if (this.ActionType == TwitchActionType.DisableSlowChat)
+            {
+                await ServiceManager.Get<ChatService>().SendMessage("/slowoff", sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+            }
+            else if (this.ActionType == TwitchActionType.EnableSubscribersChat)
+            {
+                await ServiceManager.Get<ChatService>().SendMessage("/subscribers", sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+            }
+            else if (this.ActionType == TwitchActionType.DisableSubscriberChat)
+            {
+                await ServiceManager.Get<ChatService>().SendMessage("/subscribersoff", sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
             }
         }
     }

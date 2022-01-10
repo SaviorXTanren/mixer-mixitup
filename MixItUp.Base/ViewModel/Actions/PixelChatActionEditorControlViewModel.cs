@@ -284,7 +284,7 @@ namespace MixItUp.Base.ViewModel.Actions
             return await base.Validate();
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             if (ServiceManager.Get<PixelChatService>().IsConnected)
             {
@@ -309,7 +309,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.SelectedOverlay = this.allOverlays.FirstOrDefault(o => o.id.Equals(this.overlayID));
                 }
             }
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
         }
 
         protected override Task<ActionModelBase> GetActionInternal()

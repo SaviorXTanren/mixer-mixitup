@@ -191,7 +191,7 @@ namespace MixItUp.Base.ViewModel.Actions
             if (editorViewModel != null)
             {
                 editorViewModel.Initialize(this);
-                await editorViewModel.OnLoaded();
+                await editorViewModel.OnOpen();
                 this.Actions.Add(editorViewModel);
             }
         }

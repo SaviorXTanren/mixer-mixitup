@@ -36,7 +36,7 @@ namespace MixItUp.WPF.Controls.Dashboard
 
             this.viewModel.ContextMenuCommandsChanged += ViewModel_ContextMenuCommandsChanged;
 
-            await this.viewModel.OnLoaded();
+            await this.viewModel.OnOpen();
 
             await base.InitializeInternal();
 

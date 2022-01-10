@@ -763,11 +763,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Application Exit.
+        /// </summary>
+        public static string ApplicationExit {
+            get {
+                return ResourceManager.GetString("ApplicationExit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Application Info.
         /// </summary>
         public static string ApplicationInfo {
             get {
                 return ResourceManager.GetString("ApplicationInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application Launch.
+        /// </summary>
+        public static string ApplicationLaunch {
+            get {
+                return ResourceManager.GetString("ApplicationLaunch", resourceCulture);
             }
         }
         
@@ -1790,7 +1808,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Viewers.
+        ///   Looks up a localized string similar to Chatters.
         /// </summary>
         public static string Chatters {
             get {
@@ -3796,11 +3814,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disable Emote Only.
+        /// </summary>
+        public static string DisableEmoteOnly {
+            get {
+                return ResourceManager.GetString("DisableEmoteOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disable Follower Mode.
         /// </summary>
         public static string DisableFollowerMode {
             get {
                 return ResourceManager.GetString("DisableFollowerMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable Followers Only.
+        /// </summary>
+        public static string DisableFollowersOnly {
+            get {
+                return ResourceManager.GetString("DisableFollowersOnly", resourceCulture);
             }
         }
         
@@ -3814,11 +3850,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disable Slow Chat.
+        /// </summary>
+        public static string DisableSlowChat {
+            get {
+                return ResourceManager.GetString("DisableSlowChat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disable Slow Mode.
         /// </summary>
         public static string DisableSlowMode {
             get {
                 return ResourceManager.GetString("DisableSlowMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable Subscriber Chat.
+        /// </summary>
+        public static string DisableSubscriberChat {
+            get {
+                return ResourceManager.GetString("DisableSubscriberChat", resourceCulture);
             }
         }
         
@@ -4201,11 +4255,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable Emote Only.
+        /// </summary>
+        public static string EnableEmoteOnly {
+            get {
+                return ResourceManager.GetString("EnableEmoteOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enable Follower Mode.
         /// </summary>
         public static string EnableFollowerMode {
             get {
                 return ResourceManager.GetString("EnableFollowerMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable Followers Only.
+        /// </summary>
+        public static string EnableFollowersOnly {
+            get {
+                return ResourceManager.GetString("EnableFollowersOnly", resourceCulture);
             }
         }
         
@@ -4255,6 +4327,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable Slow Chat.
+        /// </summary>
+        public static string EnableSlowChat {
+            get {
+                return ResourceManager.GetString("EnableSlowChat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enable Slow Mode.
         /// </summary>
         public static string EnableSlowMode {
@@ -4278,6 +4359,15 @@ namespace MixItUp.Base {
         public static string EnableStreamlabsOBS {
             get {
                 return ResourceManager.GetString("EnableStreamlabsOBS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable Subscribers Chat.
+        /// </summary>
+        public static string EnableSubscribersChat {
+            get {
+                return ResourceManager.GetString("EnableSubscribersChat", resourceCulture);
             }
         }
         
@@ -8788,6 +8878,51 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Account linking process successful..
+        /// </summary>
+        public static string LinkAccountCommandAccountsLinkedSuccessfully {
+            get {
+                return ResourceManager.GetString("LinkAccountCommandAccountsLinkedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ERROR: The platform specified is not supported: {0}.
+        /// </summary>
+        public static string LinkAccountCommandErrorUnsupportedPlatform {
+            get {
+                return ResourceManager.GetString("LinkAccountCommandErrorUnsupportedPlatform", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ERROR: Could not find user with the following username: {0}.
+        /// </summary>
+        public static string LinkAccountCommandErrorUserNotFound {
+            get {
+                return ResourceManager.GetString("LinkAccountCommandErrorUserNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account linking process started. Please re-run command on the other platform with your current user&apos;s information: &quot;!linkaccount {0} {1}&quot;.
+        /// </summary>
+        public static string LinkAccountCommandPleaseConfirmLink {
+            get {
+                return ResourceManager.GetString("LinkAccountCommandPleaseConfirmLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usage: !linkaccount &lt;PLATFORM&gt; &lt;PLATFORM USERNAME&gt;.
+        /// </summary>
+        public static string LinkAccountCommandUsage {
+            get {
+                return ResourceManager.GetString("LinkAccountCommandUsage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Link Blocking.
         /// </summary>
         public static string LinkBlocking {
@@ -8869,11 +9004,83 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Log in with Glimesh.
+        /// </summary>
+        public static string LogInWithGlimesh {
+            get {
+                return ResourceManager.GetString("LogInWithGlimesh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log in with Trovo.
+        /// </summary>
+        public static string LogInWithTrovo {
+            get {
+                return ResourceManager.GetString("LogInWithTrovo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log in with Twitch.
+        /// </summary>
+        public static string LogInWithTwitch {
+            get {
+                return ResourceManager.GetString("LogInWithTwitch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log in with YouTube.
+        /// </summary>
+        public static string LogInWithYouTube {
+            get {
+                return ResourceManager.GetString("LogInWithYouTube", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Log Out.
         /// </summary>
         public static string Logout {
             get {
                 return ResourceManager.GetString("Logout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log out of Glimesh.
+        /// </summary>
+        public static string LogOutOfGlimesh {
+            get {
+                return ResourceManager.GetString("LogOutOfGlimesh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log out of Trovo.
+        /// </summary>
+        public static string LogOutOfTrovo {
+            get {
+                return ResourceManager.GetString("LogOutOfTrovo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log out of Twitch.
+        /// </summary>
+        public static string LogOutOfTwitch {
+            get {
+                return ResourceManager.GetString("LogOutOfTwitch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log out of YouTube.
+        /// </summary>
+        public static string LogOutOfYouTube {
+            get {
+                return ResourceManager.GetString("LogOutOfYouTube", resourceCulture);
             }
         }
         
@@ -16084,6 +16291,24 @@ namespace MixItUp.Base {
         public static string TwitchActionStreamMarkerDescriptionMustBe140CharactersOrLess {
             get {
                 return ResourceManager.GetString("TwitchActionStreamMarkerDescriptionMustBe140CharactersOrLess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Action: A valid time length must be specified.
+        /// </summary>
+        public static string TwitchActionTimeLengthMissing {
+            get {
+                return ResourceManager.GetString("TwitchActionTimeLengthMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Action: A valid username must be specified.
+        /// </summary>
+        public static string TwitchActionUsernameMissing {
+            get {
+                return ResourceManager.GetString("TwitchActionUsernameMissing", resourceCulture);
             }
         }
         

@@ -93,15 +93,15 @@
         <Grid Grid.Row="4" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="Auto" />

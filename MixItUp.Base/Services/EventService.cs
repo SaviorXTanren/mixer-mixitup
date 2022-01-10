@@ -42,6 +42,11 @@ namespace MixItUp.Base.Services
         ChatWhisperReceived = 58,
         ChatEntranceCommand = 59,
 
+        // Application = 100
+
+        ApplicationLaunch = 100,
+        ApplicationExit = 101,
+
         // Twitch = 200
 
         TwitchChannelStreamStart = 200,
@@ -114,6 +119,8 @@ namespace MixItUp.Base.Services
         private static HashSet<EventTypeEnum> singleUseTracking = new HashSet<EventTypeEnum>()
         {
             EventTypeEnum.ChatUserFirstJoin, EventTypeEnum.ChatUserJoined, EventTypeEnum.ChatUserLeft,
+
+            EventTypeEnum.ApplicationLaunch, EventTypeEnum.ApplicationExit,
 
             EventTypeEnum.TwitchChannelStreamStart, EventTypeEnum.TwitchChannelStreamStop, EventTypeEnum.TwitchChannelFollowed, EventTypeEnum.TwitchChannelHosted, EventTypeEnum.TwitchChannelRaided, EventTypeEnum.TwitchChannelSubscribed, EventTypeEnum.TwitchChannelResubscribed,
 
@@ -199,7 +206,7 @@ namespace MixItUp.Base.Services
             return true;
         }
 
-        public async Task PerformEvent(EventTypeEnum type, CommandParametersModel parameters)
+        public async Task<bool> PerformEvent(EventTypeEnum type, CommandParametersModel parameters)
         {
             if (this.CanPerformEvent(type, parameters))
             {
@@ -269,14 +276,15 @@ namespace MixItUp.Base.Services
 
                     if (genericCommand != null)
                     {
-                        parameters.SpecialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = parameters.Platform.ToString();
-
                         Logger.Log(LogLevel.Debug, $"Performing event trigger: {genericCommand.EventType}");
 
                         await ServiceManager.Get<CommandService>().Queue(genericCommand, parameters);
                     }
+
+                    return true;
                 }
             }
+            return false;
         }
     }
 }

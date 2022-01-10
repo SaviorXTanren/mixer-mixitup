@@ -87,13 +87,13 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public WebRequestActionEditorControlViewModel() : base() {  }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             this.AddJSONParameterCommand = this.CreateCommand(() =>
             {
                 this.JSONParameters.Add(new WebRequestActionJSONToSpecialIdentifierViewModel(this));
             });
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
         }
 
         public override Task<Result> Validate()

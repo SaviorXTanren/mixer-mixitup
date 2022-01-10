@@ -173,7 +173,7 @@ namespace MixItUp.Base.ViewModel.Actions
             return Task.FromResult<ActionModelBase>(null);
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             if (ChannelSession.Settings.EnableVoicemodStudio && !ServiceManager.Get<IVoicemodService>().IsConnected)
             {
@@ -206,7 +206,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.SelectedSound = this.Sounds.FirstOrDefault(v => string.Equals(this.soundFileName, v.FileName));
                 }
             }
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
         }
     }
 }

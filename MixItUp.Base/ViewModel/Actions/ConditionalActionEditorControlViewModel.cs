@@ -179,14 +179,14 @@ namespace MixItUp.Base.ViewModel.Actions
             this.Clauses.Add(new ConditionalClauseViewModel(this));
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             this.AddClauseCommand = this.CreateCommand(() =>
             {
                 this.Clauses.Add(new ConditionalClauseViewModel(this));
             });
 
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
         }
 
         public override async Task<Result> Validate()

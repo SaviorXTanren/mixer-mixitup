@@ -21,7 +21,7 @@ namespace MixItUp.WPF.Controls.Dashboard
         protected override async Task InitializeInternal()
         {
             this.DataContext = this.viewModel = new QuickCommandsDashboardControlViewModel(this.Window.ViewModel);
-            await this.viewModel.OnLoaded();
+            await this.viewModel.OnOpen();
 
             await base.InitializeInternal();
         }

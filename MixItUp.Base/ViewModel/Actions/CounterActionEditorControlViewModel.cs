@@ -112,13 +112,13 @@ namespace MixItUp.Base.ViewModel.Actions
             return Task.FromResult(new Result());
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             foreach (var kvp in ChannelSession.Settings.Counters.ToList())
             {
                 this.Counters.Add(kvp.Key);
             }
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
         }
 
         protected override Task<ActionModelBase> GetActionInternal()

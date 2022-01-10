@@ -104,7 +104,7 @@ namespace MixItUp.WPF.Windows.Dashboard
             this.viewModel.QuickCommandsControl = this.quickCommandsControl;
             this.viewModel.RedemptionStoreControl = this.redemptionStoreControl;
 
-            await this.viewModel.OnLoaded();
+            await this.viewModel.OnOpen();
 
             await base.OnLoaded();
         }

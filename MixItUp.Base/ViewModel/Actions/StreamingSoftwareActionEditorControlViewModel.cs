@@ -324,7 +324,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public StreamingSoftwareActionEditorControlViewModel() : base() { }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             this.SourceGetCurrentDimensionsCommand = this.CreateCommand(async () =>
             {
@@ -341,7 +341,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     }
                 }
             });
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
         }
 
         public override Task<Result> Validate()

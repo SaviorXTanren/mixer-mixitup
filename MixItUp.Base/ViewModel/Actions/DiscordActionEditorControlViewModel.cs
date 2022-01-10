@@ -151,7 +151,7 @@ namespace MixItUp.Base.ViewModel.Actions
             return Task.FromResult<ActionModelBase>(null);
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             if (ServiceManager.Get<DiscordService>().IsConnected)
             {
@@ -163,7 +163,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.SelectedChannel = this.Channels.FirstOrDefault(c => c.ID.Equals(this.existingSelectedChannel));
                 }
             }
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
         }
     }
 }

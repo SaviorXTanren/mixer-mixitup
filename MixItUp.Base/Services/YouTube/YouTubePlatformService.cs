@@ -76,7 +76,7 @@ namespace MixItUp.Base.Services.YouTube
                 Logger.Log(ex);
                 return new Result<YouTubePlatformService>(ex);
             }
-            return new Result<YouTubePlatformService>("Failed to connect to establish connection to YouTube");
+            return new Result<YouTubePlatformService>("Failed to establish connection to YouTube");
         }
 
         public YouTubeConnection Connection { get; private set; }

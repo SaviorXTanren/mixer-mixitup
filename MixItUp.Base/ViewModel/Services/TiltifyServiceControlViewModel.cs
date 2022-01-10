@@ -67,7 +67,7 @@ namespace MixItUp.Base.ViewModel.Services
             this.IsConnected = ServiceManager.Get<TiltifyService>().IsConnected;
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             if (this.IsConnected)
             {

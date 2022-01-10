@@ -200,7 +200,7 @@ namespace MixItUp.WPF.Windows.Commands
             if (this.viewModel != null)
             {
                 this.viewModel.CommandSaved += ViewModel_CommandSaved;
-                await this.viewModel.OnLoaded();
+                await this.viewModel.OnOpen();
 
                 this.DetailsContentControl.Content = this.editorDetailsControl;
             }

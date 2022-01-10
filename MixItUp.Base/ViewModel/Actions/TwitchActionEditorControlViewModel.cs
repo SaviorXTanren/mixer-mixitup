@@ -35,6 +35,8 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged("ShowPollGrid");
                 this.NotifyPropertyChanged("ShowPredictionGrid");
                 this.NotifyPropertyChanged("ShowSubActions");
+                this.NotifyPropertyChanged("ShowFollowersGrid");
+                this.NotifyPropertyChanged("ShowSlowChatGrid");
             }
         }
         private TwitchActionType selectedActionType;
@@ -364,6 +366,21 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string predictionOutcome2;
 
+        public bool ShowFollowersGrid { get { return this.SelectedActionType == TwitchActionType.EnableFollowersOnly; } }
+
+        public bool ShowSlowChatGrid { get { return this.SelectedActionType == TwitchActionType.EnableSlowChat; } }
+
+        public string TimeLength
+        {
+            get { return this.timeLength; }
+            set
+            {
+                this.timeLength = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string timeLength;
+
         public TwitchActionEditorControlViewModel(TwitchActionModel action)
             : base(action, action.Actions)
         {
@@ -441,13 +458,24 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.PredictionOutcome1 = action.PredictionOutcomes[0];
                 this.PredictionOutcome2 = action.PredictionOutcomes[1];
             }
+            else if (this.ShowFollowersGrid || this.ShowSlowChatGrid)
+            {
+                this.TimeLength = action.TimeLength;
+            }
         }
 
         public TwitchActionEditorControlViewModel() : base() { }
 
         public override async Task<Result> Validate()
         {
-            if (this.ShowStreamMarkerGrid)
+            if (this.ShowUsernameGrid)
+            {
+                if (string.IsNullOrEmpty(this.Username))
+                {
+                    return new Result(MixItUp.Base.Resources.TwitchActionUsernameMissing);
+                }
+            }
+            else if (this.ShowStreamMarkerGrid)
             {
                 if (!string.IsNullOrEmpty(this.StreamMarkerDescription) && this.StreamMarkerDescription.Length > TwitchActionModel.StreamMarkerMaxDescriptionLength)
                 {
@@ -500,10 +528,17 @@ namespace MixItUp.Base.ViewModel.Actions
                     return new Result(MixItUp.Base.Resources.TwitchActionCreatePredictionTwoChoices);
                 }
             }
+            else if (this.ShowFollowersGrid || this.ShowSlowChatGrid)
+            {
+                if (string.IsNullOrEmpty(this.TimeLength))
+                {
+                    return new Result(MixItUp.Base.Resources.TwitchActionTimeLengthMissing);
+                }
+            }
             return await base.Validate();
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
@@ -517,7 +552,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.ChannelPointReward = this.ChannelPointRewards.FirstOrDefault(c => c.id.Equals(this.existingChannelPointRewardID));
                 }
             }
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
         }
 
         protected override async Task<ActionModelBase> GetActionInternal()
@@ -556,7 +591,18 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 return TwitchActionModel.CreatePredictionAction(this.PredictionTitle, this.PredictionDurationSeconds, new List<string>() { this.PredictionOutcome1, this.PredictionOutcome2 }, await this.ActionEditorList.GetActions());
             }
-            return null;
+            else if (this.ShowFollowersGrid)
+            {
+                return TwitchActionModel.CreateTimeAction(TwitchActionType.EnableFollowersOnly, this.TimeLength);
+            }
+            else if (this.ShowSlowChatGrid)
+            {
+                return TwitchActionModel.CreateTimeAction(TwitchActionType.EnableSlowChat, this.TimeLength);
+            }
+            else
+            {
+                return TwitchActionModel.CreateAction(this.SelectedActionType);
+            }
         }
     }
 }

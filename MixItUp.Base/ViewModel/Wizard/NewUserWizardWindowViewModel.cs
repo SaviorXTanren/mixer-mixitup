@@ -252,13 +252,13 @@ namespace MixItUp.Base.ViewModel.Wizard
             });
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             if (ChannelSession.Settings == null)
             {
                 await ChannelSession.Connect(new SettingsV3Model());
             }
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
         }
     }
 }

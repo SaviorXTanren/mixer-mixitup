@@ -21,7 +21,7 @@ namespace MixItUp.WPF.Controls.Accounts
             this.viewModel = (StreamingPlatformAccountControlViewModel)this.DataContext;
             if (this.viewModel != null)
             {
-                await this.viewModel.OnLoaded();
+                await this.viewModel.OnOpen();
             }
         }
     }

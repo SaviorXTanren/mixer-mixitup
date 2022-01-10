@@ -23,7 +23,7 @@ namespace MixItUp.WPF.Controls.MainControls
         protected override async Task InitializeInternal()
         {
             this.DataContext = this.viewModel = new CurrencyRankInventoryMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
-            await this.viewModel.OnLoaded();
+            await this.viewModel.OnOpen();
             await base.InitializeInternal();
         }
 

@@ -27,7 +27,7 @@ namespace MixItUp.WPF.Windows.Currency
         protected override async Task OnLoaded()
         {
             this.DataContext = this.viewModel = new RedemptionStoreWindowViewModel();
-            await this.viewModel.OnLoaded();
+            await this.viewModel.OnOpen();
             await base.OnLoaded();
         }
 
