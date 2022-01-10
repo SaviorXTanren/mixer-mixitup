@@ -55,7 +55,7 @@ namespace MixItUp.Base.Services.Twitch
 
     public class TwitchChatService : StreamingPlatformServiceBase
     {
-        private const int MaxMessageLength = 400;
+        private const int MaxMessageLength = 500;
 
         private static List<string> ExcludedDiagnosticPacketLogging = new List<string>() { "PING", ChatMessagePacketModel.CommandID, ChatUserJoinPacketModel.CommandID, ChatUserLeavePacketModel.CommandID };
 

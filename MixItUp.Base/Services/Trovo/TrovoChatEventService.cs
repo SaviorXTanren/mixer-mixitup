@@ -23,7 +23,7 @@ namespace MixItUp.Base.Services.Trovo
     {
         private const string TreasureBoxUnleashedActivityTopic = "item_drop_box_unleash";
 
-        private const int MaxMessageLength = 250;
+        private const int MaxMessageLength = 500;
 
         private Dictionary<string, ChatEmoteModel> channelEmotes = new Dictionary<string, ChatEmoteModel>();
         private Dictionary<string, EventChatEmoteModel> eventEmotes = new Dictionary<string, EventChatEmoteModel>();
