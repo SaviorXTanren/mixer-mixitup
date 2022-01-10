@@ -48,7 +48,15 @@ namespace MixItUp.Base.Services.Trovo
                 TrovoConnection connection = await TrovoConnection.ConnectViaOAuthToken(token);
                 if (connection != null)
                 {
-                    return new Result<TrovoPlatformService>(new TrovoPlatformService(connection));
+                    var service = new TrovoPlatformService(connection);
+
+                    // Attempt to load the user data, this will 401 if the token has been revoked
+                    // Then we'll re-prompt to log in
+                    var currentUser = await service.GetCurrentUser();
+                    if (currentUser != null)
+                    {
+                        return new Result<TrovoPlatformService>(service);
+                    }
                 }
             }
             catch (Exception ex)
