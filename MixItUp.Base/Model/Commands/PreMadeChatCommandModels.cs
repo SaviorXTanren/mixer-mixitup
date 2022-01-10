@@ -888,7 +888,7 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
-            if (parameters.Arguments != null && parameters.Arguments.Count() > 2)
+            if (parameters.Arguments != null && parameters.Arguments.Count() == 2)
             {
                 string platformName = parameters.Arguments.First();
                 StreamingPlatformTypeEnum platform = EnumHelper.GetEnumValueFromString<StreamingPlatformTypeEnum>(platformName);
