@@ -167,6 +167,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             GlobalEvents.OnGiveawaysChangedOccurred += GlobalEvents_OnGiveawaysChangedOccurred;
 
             this.Requirements = new RequirementsSetViewModel(ChannelSession.Settings.GiveawayRequirementsSet);
+            this.Requirements.Currency.RestrictToRequiredAmountOnly = true;
 
             this.GiveawayStartedReminderCommand = ChannelSession.Settings.GetCommand(ChannelSession.Settings.GiveawayStartedReminderCommandID);
             this.GiveawayUserJoinedCommand = ChannelSession.Settings.GetCommand(ChannelSession.Settings.GiveawayUserJoinedCommandID);

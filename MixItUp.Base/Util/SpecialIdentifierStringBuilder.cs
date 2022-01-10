@@ -949,7 +949,7 @@ namespace MixItUp.Base.Util
                             Glimesh.Base.Models.Channels.ChannelModel gChannel = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetChannelByName(glimeshUser.Username);
 
                             this.ReplaceSpecialIdentifier(userStreamHeader + "title", gChannel?.title);
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "game", gChannel?.stream?.category?.name);
+                            this.ReplaceSpecialIdentifier(userStreamHeader + "game", gChannel?.stream?.category?.name ?? MixItUp.Base.Resources.Unknown);
                         }
                     }
                 }
