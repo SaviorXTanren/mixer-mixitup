@@ -43,13 +43,13 @@ namespace MixItUp.Base.Services.External
                 <link rel=""shortcut icon"" type=""image/x-icon"" href=""https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUp-Logo-Base-TransparentSM.png"" />
                 <style>
                     body {
-                        background-image: url('https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/Star-Background.png');
+                        background: #0e162a
                     }
                 </style>
             </head>
             <body>
                 <img src=""https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUp-Logo-Base-WhiteSM.png"" width=""150"" height=""150"" style=""position: absolute; left: 50%; top: 25%; transform: translate(-50%, -50%);"" />
-                <div style='background-color:rgba(12, 4, 52, 0.5); position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 20px'>
+                <div style='background-color:#232841; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 20px'>
                     <h1 style=""text-align:center;color:white;margin-top:10px"">Mix It Up</h1>
                     <h3 style=""text-align:center;color:white;"">Logged In Successfully</h3>
                     <p style=""text-align:center;color:white;"">You have been logged in, you may now close this webpage</p>
