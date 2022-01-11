@@ -2,6 +2,7 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -26,6 +27,9 @@ namespace MixItUp.Base.Model.Overlay
 
         [DataMember]
         public int RefreshTime { get; set; }
+
+        [Obsolete]
+        public OverlayWidgetModel() { }
 
         public OverlayWidgetModel(string name, string overlayName, OverlayItemModelBase item, int refreshTime)
         {
