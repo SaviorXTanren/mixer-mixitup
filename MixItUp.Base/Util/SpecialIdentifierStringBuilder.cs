@@ -730,7 +730,7 @@ namespace MixItUp.Base.Util
             {
                 replacement = HttpUtility.UrlEncode(replacement);
             }
-            this.text = Regex.Replace(this.text, (includeSpecialIdentifierHeader ? "\\" + SpecialIdentifierHeader : string.Empty) + identifier, replacement, RegexOptions.IgnoreCase);
+            this.text = Regex.Replace(this.text, "\\" + (includeSpecialIdentifierHeader ? SpecialIdentifierHeader : string.Empty) + identifier, replacement, RegexOptions.IgnoreCase);
         }
 
         public bool ContainsSpecialIdentifier(string identifier)
