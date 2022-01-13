@@ -399,7 +399,7 @@ namespace MixItUp.Base.Util
                             foreach (UserV2Model userData in (await SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency)).Take(total))
                             {
                                 UserV2ViewModel userViewModel = new UserV2ViewModel(userData);
-                                currencyUserList.Add($"#{userPosition}) {userViewModel.Username} - {currency.GetAmount(userData)}");
+                                currencyUserList.Add($"#{userPosition}) {userViewModel.Username} - {currency.GetAmount(userData).ToString("N0")}");
                                 userPosition++;
                             }
 
@@ -730,7 +730,7 @@ namespace MixItUp.Base.Util
             {
                 replacement = HttpUtility.UrlEncode(replacement);
             }
-            this.text = Regex.Replace(this.text, (includeSpecialIdentifierHeader ? "\\" + SpecialIdentifierHeader : string.Empty) + identifier, replacement, RegexOptions.IgnoreCase);
+            this.text = Regex.Replace(this.text, "\\" + (includeSpecialIdentifierHeader ? SpecialIdentifierHeader : string.Empty) + identifier, replacement, RegexOptions.IgnoreCase);
         }
 
         public bool ContainsSpecialIdentifier(string identifier)
