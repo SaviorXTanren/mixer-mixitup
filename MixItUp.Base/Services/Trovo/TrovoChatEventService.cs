@@ -504,7 +504,7 @@ namespace MixItUp.Base.Services.Trovo
                         }
 
                         this.userSubsGiftedInstanced.TryGetValue(user.ID, out int totalGifted);
-                        if (ChannelSession.Settings.MassGiftedSubsFilterAmount == 0 || this.userSubsGiftedInstanced[user.ID] <= ChannelSession.Settings.MassGiftedSubsFilterAmount)
+                        if (ChannelSession.Settings.MassGiftedSubsFilterAmount == 0 || totalGifted <= ChannelSession.Settings.MassGiftedSubsFilterAmount)
                         {
                             CommandParametersModel parameters = new CommandParametersModel(user);
                             parameters.Arguments.Add(giftee.Username);
