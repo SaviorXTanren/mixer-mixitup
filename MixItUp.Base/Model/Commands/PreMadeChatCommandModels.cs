@@ -891,7 +891,6 @@ namespace MixItUp.Base.Model.Commands
             if (parameters.Arguments != null && parameters.Arguments.Count() == 2)
             {
                 string platformName = parameters.Arguments.First();
-                platformName = platformName.Substring(0, 1).ToUpper() + platformName.Substring(1, platformName.Length - 1).ToLower();
                 StreamingPlatformTypeEnum platform = EnumHelper.GetEnumValueFromString<StreamingPlatformTypeEnum>(platformName);
                 
                 if (!StreamingPlatforms.SupportedPlatforms.Contains(platform) || platform == parameters.Platform || !StreamingPlatforms.GetPlatformSessionService(platform).IsConnected)
