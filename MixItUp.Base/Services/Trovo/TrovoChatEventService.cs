@@ -11,6 +11,7 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Trovo.Base.Clients;
@@ -22,12 +23,14 @@ namespace MixItUp.Base.Services.Trovo
     public class TrovoSubscriptionMessageModel
     {
         private const string SubscriptionRenewedMessageText = "has renewed subscription";
+        private const string SubscriptionTierMessageFormatText = "Tier \\d+";
+        private const string SubscriptionMonthsMessageFormatText = "\\d+ months";
 
-        public bool IsResub { get; private set; }
+        public bool IsResub { get; private set; } = false;
 
-        public int Months { get; private set; }
+        public int Months { get; private set; } = 1;
 
-        public int Tier { get; private set; }
+        public int Tier { get; private set; } = 1;
 
         public ChatMessageModel Message { get; private set; }
 
@@ -35,13 +38,34 @@ namespace MixItUp.Base.Services.Trovo
         {
             this.Message = message;
 
-            
+            if (!string.IsNullOrEmpty(message.sub_lv) && int.TryParse(message.sub_lv.Replace("L", string.Empty), out int tier))
+            {
+                this.Tier = tier;
+
+                Match match = Regex.Match(message.content, SubscriptionTierMessageFormatText);
+                if (match != null && match.Success)
+                {
+                    string[] splits = match.Value.Split(new char[] { ' ' });
+                    if (splits != null && splits.Length > 1 && int.TryParse(splits[1], out tier))
+                    {
+                        this.Months = tier;
+                    }
+                }
+            }
 
             this.IsResub = message.content.Contains(SubscriptionRenewedMessageText, StringComparison.OrdinalIgnoreCase);
 
             if (this.IsResub)
             {
-
+                Match match = Regex.Match(message.content, SubscriptionMonthsMessageFormatText);
+                if (match != null && match.Success)
+                {
+                    string[] splits = match.Value.Split(new char[] { ' ' });
+                    if (splits != null && splits.Length > 0 && int.TryParse(splits[0], out int months))
+                    {
+                        this.Months = months;
+                    }
+                }
             }
             else
             {
@@ -497,9 +521,6 @@ namespace MixItUp.Base.Services.Trovo
                     {
                         CommandParametersModel parameters = new CommandParametersModel(user);
                         parameters.SpecialIdentifiers["subsgiftedamount"] = totalGifted.ToString();
-                        //trigger.SpecialIdentifiers["subsgiftedlifetimeamount"] = massGiftedSubEvent.LifetimeGifted.ToString();
-                        //trigger.SpecialIdentifiers["usersubplan"] = massGiftedSubEvent.PlanTier;
-                        //trigger.SpecialIdentifiers["isanonymous"] = massGiftedSubEvent.IsAnonymous.ToString();
                         await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelMassSubscriptionsGifted, parameters);
                     }
                     await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} Gifted {1} Subs", user.DisplayName, totalGifted), ChannelSession.Settings.AlertMassGiftedSubColor));
@@ -525,7 +546,7 @@ namespace MixItUp.Base.Services.Trovo
                         }
 
                         ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = giftee.ID;
-                        //ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = giftedSubEvent.MonthsGifted;
+                        ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
                         giftee.SubscribeDate = DateTimeOffset.Now;
                         //giftedSubEvent.Receiver.Data.TwitchSubscriberTier = giftedSubEvent.PlanTierNumber;

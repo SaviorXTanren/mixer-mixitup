@@ -6338,4 +6338,10 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="TwitchActionUsernameMissing" xml:space="preserve">
     <value>Twitch Action: A valid username must be specified</value>
   </data>
+  <data name="AlertUserResubscribedFormat" xml:space="preserve">
+    <value>{0} Re-Subscribed for {1} Months</value>
+  </data>
+  <data name="AlertUserSubscribedFormat" xml:space="preserve">
+    <value>{0} Subscribed</value>
+  </data>
 </root>

@@ -592,6 +592,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} Re-Subscribed for {1} Months.
+        /// </summary>
+        public static string AlertUserResubscribedFormat {
+            get {
+                return ResourceManager.GetString("AlertUserResubscribedFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} Subscribed.
+        /// </summary>
+        public static string AlertUserSubscribedFormat {
+            get {
+                return ResourceManager.GetString("AlertUserSubscribedFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All.
         /// </summary>
         public static string All {
