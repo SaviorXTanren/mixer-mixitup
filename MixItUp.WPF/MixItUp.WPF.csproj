@@ -1054,6 +1054,9 @@
     <Compile Include="Services\DeveloperAPI\V1\InventoryController.cs" />
     <Compile Include="Services\DeveloperAPI\NoCacheHeader.cs" />
     <Compile Include="Services\DeveloperAPI\V1\UserController.cs" />
+    <Compile Include="Services\DeveloperAPI\V2\ChatController.cs" />
+    <Compile Include="Services\DeveloperAPI\V2\CommandsController.cs" />
+    <Compile Include="Services\DeveloperAPI\V2\UsersController.cs" />
     <Compile Include="Services\DeveloperAPI\WindowsDeveloperAPIService.cs" />
     <Compile Include="Services\WindowsSocketIOConnection.cs" />
     <Compile Include="Services\WindowsOvrStreamService.cs" />
@@ -2232,9 +2235,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\DeveloperAPI\V2\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>del $(TargetDir)ApplicationSettings.json
