@@ -1047,13 +1047,13 @@
       <DependentUpon>ConfirmationDialogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
-    <Compile Include="Services\DeveloperAPI\ChatController.cs" />
-    <Compile Include="Services\DeveloperAPI\QuotesController.cs" />
-    <Compile Include="Services\DeveloperAPI\CommandController.cs" />
-    <Compile Include="Services\DeveloperAPI\CurrencyController.cs" />
-    <Compile Include="Services\DeveloperAPI\InventoryController.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\ChatController.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\QuotesController.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\CommandController.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\CurrencyController.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\InventoryController.cs" />
     <Compile Include="Services\DeveloperAPI\NoCacheHeader.cs" />
-    <Compile Include="Services\DeveloperAPI\UserController.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\UserController.cs" />
     <Compile Include="Services\DeveloperAPI\WindowsDeveloperAPIService.cs" />
     <Compile Include="Services\WindowsSocketIOConnection.cs" />
     <Compile Include="Services\WindowsOvrStreamService.cs" />
@@ -2232,7 +2232,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Services\DeveloperAPI\V2\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>del $(TargetDir)ApplicationSettings.json

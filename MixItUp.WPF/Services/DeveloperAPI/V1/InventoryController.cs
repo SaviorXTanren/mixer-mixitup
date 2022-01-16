@@ -9,7 +9,7 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Web.Http;
 
-namespace MixItUp.WPF.Services.DeveloperAPI
+namespace MixItUp.WPF.Services.DeveloperAPI.V1
 {
     [RoutePrefix("api/inventory")]
     public class InventoryController : ApiController

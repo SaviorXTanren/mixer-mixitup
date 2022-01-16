@@ -13,7 +13,7 @@ using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 using System.Web.Http;
 
-namespace MixItUp.WPF.Services.DeveloperAPI
+namespace MixItUp.WPF.Services.DeveloperAPI.V1
 {
     [RoutePrefix("api/currency")]
     public class CurrencyController : ApiController

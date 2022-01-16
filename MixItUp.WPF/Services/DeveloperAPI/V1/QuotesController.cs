@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using WebSocketSharp;
 
-namespace MixItUp.WPF.Services.DeveloperAPI
+namespace MixItUp.WPF.Services.DeveloperAPI.V1
 {
     [RoutePrefix("api/quotes")]
     public class QuotesController : ApiController
