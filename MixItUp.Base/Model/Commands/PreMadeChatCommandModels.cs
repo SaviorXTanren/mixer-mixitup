@@ -390,7 +390,13 @@ namespace MixItUp.Base.Model.Commands
                     }
 
                     string quoteText = quoteBuilder.ToString();
-                    quoteText = quoteText.Trim(new char[] { ' ', '\'', '\"' });
+                    quoteText = quoteText.Trim();
+
+                    char[] quoteCharacters = new char[] { '\'', '\"' };
+                    if (quoteText.First() == quoteText.Last() && quoteCharacters.Contains(quoteText.First()) && quoteCharacters.Contains(quoteText.Last()))
+                    {
+                        quoteText = quoteText.Trim(quoteCharacters);
+                    }
 
                     UserQuoteModel quote = new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), quoteText, DateTimeOffset.Now, await GamePreMadeChatCommandModel.GetCurrentGameName(parameters.Platform));
                     ChannelSession.Settings.Quotes.Add(quote);
