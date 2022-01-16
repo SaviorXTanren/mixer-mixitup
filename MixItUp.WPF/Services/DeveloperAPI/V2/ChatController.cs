@@ -2,7 +2,7 @@
 
 namespace MixItUp.WPF.Services.DeveloperAPI.V2
 {
-    [RoutePrefix("api/v2/commands")]
+    [RoutePrefix("api/v2/chat")]
     public class ChatController : ApiController
     {
     }
