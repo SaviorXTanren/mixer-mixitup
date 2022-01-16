@@ -11094,6 +11094,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pause All Commands.
+        /// </summary>
+        public static string PauseAllCommands {
+            get {
+                return ResourceManager.GetString("PauseAllCommands", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Payout.
         /// </summary>
         public static string Payout {
@@ -16880,6 +16889,15 @@ namespace MixItUp.Base {
         public static string UnmodUser {
             get {
                 return ResourceManager.GetString("UnmodUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unpause All Commands.
+        /// </summary>
+        public static string UnpauseAllCommands {
+            get {
+                return ResourceManager.GetString("UnpauseAllCommands", resourceCulture);
             }
         }
         

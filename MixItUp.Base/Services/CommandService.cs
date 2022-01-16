@@ -24,6 +24,8 @@ namespace MixItUp.Base.Services
 
     public class CommandService
     {
+        public bool IsPaused { get; private set; }
+
         public event EventHandler<CommandInstanceModel> OnCommandInstanceAdded = delegate { };
 
         public List<PreMadeChatCommandModelBase> PreMadeChatCommands { get; private set; } = new List<PreMadeChatCommandModelBase>();
@@ -67,6 +69,8 @@ namespace MixItUp.Base.Services
                 return commands;
             }
         }
+
+        private List<CommandInstanceModel> pauseQueue = new List<CommandInstanceModel>();
 
         public IEnumerable<CommandInstanceModel> CommandInstances { get { return this.commandInstances.ToList(); } }
         private List<CommandInstanceModel> commandInstances = new List<CommandInstanceModel>();
@@ -182,69 +186,19 @@ namespace MixItUp.Base.Services
             {
                 this.commandInstances.Insert(0, commandInstance);
             }
+            this.OnCommandInstanceAdded(this, commandInstance);
 
             if (commandInstance.State == CommandInstanceStateEnum.Pending)
             {
-                CommandTypeEnum type = commandInstance.QueueCommandType;
-                if (commandInstance.DontQueue)
+                if (this.IsPaused)
                 {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    AsyncRunner.RunAsync(() => this.RunDirectly(commandInstance));
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    this.pauseQueue.Add(commandInstance);
                 }
                 else
                 {
-                    await this.commandQueueLock.WaitAndRelease(() =>
-                    {
-                        if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.PerCommandType)
-                        {
-                            perCommandTypeInstances[type].Add(commandInstance);
-                            if (perCommandTypeTasks[type] == null)
-                            {
-                                perCommandTypeTasks[type] = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
-                            }
-                        }
-                        else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.PerActionType)
-                        {
-                            this.perActionTypeInstances.Add(commandInstance);
-                            if (this.CanCommandBeRunBasedOnActions(commandInstance))
-                            {
-                                this.perActionTypeTasks.Add(AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type)));
-                            }
-                        }
-                        else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.VisualAudioActions)
-                        {
-                            HashSet<ActionTypeEnum> actionTypes = commandInstance.GetActionTypes();
-                            if (actionTypes.Contains(ActionTypeEnum.Overlay) || actionTypes.Contains(ActionTypeEnum.OvrStream) || actionTypes.Contains(ActionTypeEnum.Sound) ||
-                                actionTypes.Contains(ActionTypeEnum.StreamingSoftware) || actionTypes.Contains(ActionTypeEnum.TextToSpeech))
-                            {
-                                singularInstances.Add(commandInstance);
-                                if (singularTask == null)
-                                {
-                                    singularTask = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
-                                }
-                            }
-                            else
-                            {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                                AsyncRunner.RunAsync(() => this.RunDirectly(commandInstance));
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                            }
-                        }
-                        else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.Singular)
-                        {
-                            singularInstances.Add(commandInstance);
-                            if (singularTask == null)
-                            {
-                                singularTask = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
-                            }
-                        }
-                        return Task.CompletedTask;
-                    });
+                    await this.QueueInternal(commandInstance);
                 }
             }
-
-            this.OnCommandInstanceAdded(this, commandInstance);
         }
 
         public async Task RunDirectlyWithValidation(CommandInstanceModel commandInstance)
@@ -315,6 +269,30 @@ namespace MixItUp.Base.Services
             await this.Queue(commandInstance.Duplicate());
         }
 
+        public async Task Pause()
+        {
+            await this.commandQueueLock.WaitAndRelease(() =>
+            {
+                this.IsPaused = true;
+                return Task.CompletedTask;
+            });
+        }
+
+        public async Task Unpause()
+        {
+            await this.commandQueueLock.WaitAndRelease(() =>
+            {
+                this.IsPaused = false;
+                return Task.CompletedTask;
+            });
+
+            foreach (CommandInstanceModel commandInstance in this.pauseQueue)
+            {
+                await this.QueueInternal(commandInstance);
+            }
+            this.pauseQueue.Clear();
+        }
+
         private async Task<Result> ValidateCommand(CommandInstanceModel commandInstance)
         {
             Result validationResult = new Result();
@@ -363,6 +341,67 @@ namespace MixItUp.Base.Services
                 }
             }
             return validationResult;
+        }
+
+        private async Task QueueInternal(CommandInstanceModel commandInstance)
+        {
+            CommandTypeEnum type = commandInstance.QueueCommandType;
+            if (commandInstance.DontQueue)
+            {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                AsyncRunner.RunAsync(() => this.RunDirectly(commandInstance));
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            }
+            else
+            {
+                await this.commandQueueLock.WaitAndRelease(() =>
+                {
+                    if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.PerCommandType)
+                    {
+                        perCommandTypeInstances[type].Add(commandInstance);
+                        if (perCommandTypeTasks[type] == null)
+                        {
+                            perCommandTypeTasks[type] = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
+                        }
+                    }
+                    else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.PerActionType)
+                    {
+                        this.perActionTypeInstances.Add(commandInstance);
+                        if (this.CanCommandBeRunBasedOnActions(commandInstance))
+                        {
+                            this.perActionTypeTasks.Add(AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type)));
+                        }
+                    }
+                    else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.VisualAudioActions)
+                    {
+                        HashSet<ActionTypeEnum> actionTypes = commandInstance.GetActionTypes();
+                        if (actionTypes.Contains(ActionTypeEnum.Overlay) || actionTypes.Contains(ActionTypeEnum.OvrStream) || actionTypes.Contains(ActionTypeEnum.Sound) ||
+                            actionTypes.Contains(ActionTypeEnum.StreamingSoftware) || actionTypes.Contains(ActionTypeEnum.TextToSpeech))
+                        {
+                            singularInstances.Add(commandInstance);
+                            if (singularTask == null)
+                            {
+                                singularTask = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
+                            }
+                        }
+                        else
+                        {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                            AsyncRunner.RunAsync(() => this.RunDirectly(commandInstance));
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        }
+                    }
+                    else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.Singular)
+                    {
+                        singularInstances.Add(commandInstance);
+                        if (singularTask == null)
+                        {
+                            singularTask = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
+                        }
+                    }
+                    return Task.CompletedTask;
+                });
+            }
         }
 
         private async Task BackgroundCommandTypeRunner(CommandTypeEnum type)
@@ -421,7 +460,14 @@ namespace MixItUp.Base.Services
 
                 if (instance != null && instance.State == CommandInstanceStateEnum.Pending)
                 {
-                    await this.RunDirectly(instance);
+                    if (this.IsPaused)
+                    {
+                        this.pauseQueue.Add(instance);
+                    }
+                    else
+                    {
+                        await this.RunDirectly(instance);
+                    }
                 }
 
             } while (instance != null);
