@@ -1,9 +1,7 @@
-﻿using MixItUp.API.Models;
+﻿using MixItUp.API.V1.Models;
 using MixItUp.Base;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Services;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;

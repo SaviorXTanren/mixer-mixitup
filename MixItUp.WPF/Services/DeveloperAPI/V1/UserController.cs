@@ -1,4 +1,4 @@
-﻿using MixItUp.API.Models;
+﻿using MixItUp.API.V1.Models;
 using MixItUp.Base;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Currency;
