@@ -682,7 +682,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public void MergeUserData(UserV2ViewModel other)
+        public async Task MergeUserData(UserV2ViewModel other)
         {
             this.model.AddPlatformData(other.platformModel);
             this.model.OnlineViewingMinutes += other.model.OnlineViewingMinutes;
@@ -751,7 +751,13 @@ namespace MixItUp.Base.ViewModel.User
             this.model.TotalCommandsRun += other.Model.TotalCommandsRun;
             this.model.TotalMonthsSubbed += other.Model.TotalMonthsSubbed;
 
+            await ServiceManager.Get<UserService>().RemoveActiveUser(this.ID);
+            await ServiceManager.Get<UserService>().RemoveActiveUser(other.ID);
+
             ServiceManager.Get<UserService>().DeleteUserData(other.ID);
+            ServiceManager.Get<UserService>().SetUserData(other.model);
+
+            await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(this);
         }
 
         private void ClearCachedProperties()

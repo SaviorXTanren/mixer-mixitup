@@ -916,7 +916,7 @@ namespace MixItUp.Base.Model.Commands
                 if (LinkedAccounts.ContainsKey(user.ID) && LinkedAccounts[user.ID] == parameters.User.ID)
                 {
                     LinkedAccounts.Remove(user.ID);
-                    parameters.User.MergeUserData(user);
+                    await parameters.User.MergeUserData(user);
                     await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.LinkAccountCommandAccountsLinkedSuccessfully, parameters.Platform);
                 }
                 else

@@ -319,23 +319,7 @@ namespace MixItUp.Base.Services
             await ServiceManager.Get<IDatabaseService>().Write(ChannelSession.Settings.DatabaseFilePath, "DELETE FROM Users");
         }
 
-        private UserV2ViewModel CreateUserInternal(UserPlatformV2ModelBase platformModel)
-        {
-            if (platformModel != null && !string.IsNullOrEmpty(platformModel.ID))
-            {
-                UserV2Model userModel = new UserV2Model(platformModel);
-                UserV2ViewModel user = new UserV2ViewModel(platformModel.Platform, userModel);
-
-                if (platformModel.Platform != StreamingPlatformTypeEnum.None)
-                {
-                    this.SetUserData(userModel, newData: true);
-                }
-                return user;
-            }
-            return null;
-        }
-
-        private void SetUserData(UserV2Model userData, bool newData = false)
+        public void SetUserData(UserV2Model userData)
         {
             if (userData != null && userData.ID != Guid.Empty && userData.GetPlatforms().Count() > 0 && !userData.HasPlatformData(StreamingPlatformTypeEnum.None))
             {
@@ -360,6 +344,22 @@ namespace MixItUp.Base.Services
                     }
                 }
             }
+        }
+
+        private UserV2ViewModel CreateUserInternal(UserPlatformV2ModelBase platformModel)
+        {
+            if (platformModel != null && !string.IsNullOrEmpty(platformModel.ID))
+            {
+                UserV2Model userModel = new UserV2Model(platformModel);
+                UserV2ViewModel user = new UserV2ViewModel(platformModel.Platform, userModel);
+
+                if (platformModel.Platform != StreamingPlatformTypeEnum.None)
+                {
+                    this.SetUserData(userModel);
+                }
+                return user;
+            }
+            return null;
         }
 
         #endregion Users
