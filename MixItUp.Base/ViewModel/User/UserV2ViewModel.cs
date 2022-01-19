@@ -754,11 +754,11 @@ namespace MixItUp.Base.ViewModel.User
             this.model.TotalCommandsRun += other.Model.TotalCommandsRun;
             this.model.TotalMonthsSubbed += other.Model.TotalMonthsSubbed;
 
-            await ServiceManager.Get<UserService>().RemoveActiveUser(this.ID);
             await ServiceManager.Get<UserService>().RemoveActiveUser(other.ID);
+            await ServiceManager.Get<UserService>().RemoveActiveUser(this.ID);
 
             ServiceManager.Get<UserService>().DeleteUserData(other.ID);
-            ServiceManager.Get<UserService>().SetUserData(other.model);
+            ServiceManager.Get<UserService>().SetUserData(this.model);
 
             await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(this);
         }
