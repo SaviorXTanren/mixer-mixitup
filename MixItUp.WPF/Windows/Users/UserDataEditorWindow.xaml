@@ -115,7 +115,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.Roles}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
-                                <TextBlock Grid.Column="2" Text="{Binding User.RolesString}" />
+                                <TextBlock Grid.Column="2" Text="{Binding User.DisplayRolesString}" />
                             </Grid>
 
                             <Grid Grid.Row="2">

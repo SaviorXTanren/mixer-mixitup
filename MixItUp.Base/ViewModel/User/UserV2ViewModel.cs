@@ -110,6 +110,37 @@ namespace MixItUp.Base.ViewModel.User
 
         public HashSet<UserRoleEnum> Roles { get { return this.PlatformModel.Roles; } }
 
+        public HashSet<UserRoleEnum> DisplayRoles
+        {
+            get
+            {
+                HashSet<UserRoleEnum> roles = new HashSet<UserRoleEnum>(this.Roles);
+                if (roles.Count > 1)
+                {
+                    roles.Remove(UserRoleEnum.User);
+                }
+                if (roles.Contains(UserRoleEnum.Subscriber) || roles.Contains(UserRoleEnum.YouTubeSubscriber))
+                {
+                    roles.Remove(UserRoleEnum.Follower);
+                }
+                if (roles.Contains(UserRoleEnum.YouTubeMember))
+                {
+                    roles.Remove(UserRoleEnum.Subscriber);
+                }
+                if (roles.Contains(UserRoleEnum.TrovoSuperMod))
+                {
+                    roles.Remove(UserRoleEnum.Moderator);
+                }
+                if (roles.Contains(UserRoleEnum.Streamer))
+                {
+                    roles.Remove(UserRoleEnum.Subscriber);
+                }    
+                roles.Remove(UserRoleEnum.TwitchAffiliate);
+                roles.Remove(UserRoleEnum.TwitchPartner);
+                return roles;
+            }
+        }
+
         public string RolesString
         {
             get
@@ -136,31 +167,31 @@ namespace MixItUp.Base.ViewModel.User
         private string rolesString = null;
         private object rolesStringLock = new object();
 
-        public string RolesLocalizedString
+        public string DisplayRolesString
         {
             get
             {
-                lock (this.rolesLocalizedStringLock)
+                lock (this.displayRolesStringLock)
                 {
-                    if (this.rolesLocalizedString == null)
+                    if (this.displayRolesString == null)
                     {
-                        List<string> displayRoles = new List<string>(this.Roles.OrderByDescending(r => r).Select(r => EnumLocalizationHelper.GetLocalizedName(r)));
+                        List<string> displayRoles = new List<string>(this.DisplayRoles.OrderByDescending(r => r).Select(r => EnumLocalizationHelper.GetLocalizedName(r)));
                         //displayRoles.AddRange(this.CustomRoles);
-                        this.rolesLocalizedString = string.Join(", ", displayRoles);
+                        this.displayRolesString = string.Join(", ", displayRoles);
                     }
-                    return this.rolesLocalizedString;
+                    return this.displayRolesString;
                 }
             }
             private set
             {
-                lock (this.rolesLocalizedStringLock)
+                lock (this.displayRolesStringLock)
                 {
-                    this.rolesLocalizedString = value;
+                    this.displayRolesString = value;
                 }
             }
         }
-        private string rolesLocalizedString = null;
-        private object rolesLocalizedStringLock = new object();
+        private string displayRolesString = null;
+        private object displayRolesStringLock = new object();
 
         public UserRoleEnum PrimaryRole
         {
@@ -519,7 +550,7 @@ namespace MixItUp.Base.ViewModel.User
                         {
                             role = UserRoleEnum.User;
                         }
-                        this.sortableID = (999 - role) + "-" + this.Username + "-" + this.Platform.ToString();
+                        this.sortableID = (99999 - role) + "-" + this.Username + "-" + this.Platform.ToString();
                     }
                     return this.sortableID;
                 }
@@ -768,7 +799,7 @@ namespace MixItUp.Base.ViewModel.User
             lock (cachePropertiesLock)
             {
                 this.rolesString = null;
-                this.rolesLocalizedString = null;
+                this.displayRolesString = null;
                 this.color = null;
                 this.sortableID = null;
 #pragma warning disable CS0612 // Type or member is obsolete
@@ -796,7 +827,7 @@ namespace MixItUp.Base.ViewModel.User
             return this.ID.GetHashCode();
         }
 
-        public int CompareTo(UserV2ViewModel other) { return this.Username.CompareTo(other.Username); }
+        public int CompareTo(UserV2ViewModel other) { return this.SortableID.CompareTo(other.SortableID); }
 
         public override string ToString() { return this.Username; }
     }
