@@ -105,9 +105,33 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="10" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
                             <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.Platforms}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
+                                <ItemsControl Grid.Column="2" ItemsSource="{Binding PlatformImages}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Image Source="{Binding}" Width="18" Height="18" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+
+                            <Grid Grid.Row="2">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="10" />
@@ -118,7 +142,7 @@
                                 <TextBlock Grid.Column="2" Text="{Binding User.DisplayRolesString}" />
                             </Grid>
 
-                            <Grid Grid.Row="2">
+                            <Grid Grid.Row="4">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="10" />
@@ -129,7 +153,7 @@
                                 <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding User.AccountAgeString}" />
                             </Grid>
 
-                            <Grid Grid.Row="4">
+                            <Grid Grid.Row="6">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="10" />
@@ -140,7 +164,7 @@
                                 <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding User.FollowAgeString}" />
                             </Grid>
 
-                            <Grid Grid.Row="6">
+                            <Grid Grid.Row="8">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="10" />
@@ -151,7 +175,7 @@
                                 <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding User.SubscribeAgeString}" />
                             </Grid>
 
-                            <Grid Grid.Row="8">
+                            <Grid Grid.Row="10">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="10" />

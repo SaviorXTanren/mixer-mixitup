@@ -11382,6 +11382,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Platforms.
+        /// </summary>
+        public static string Platforms {
+            get {
+                return ResourceManager.GetString("Platforms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Play.
         /// </summary>
         public static string Play {
