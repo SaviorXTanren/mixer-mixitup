@@ -794,6 +794,19 @@ namespace MixItUp.Base.ViewModel.User
             await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(this);
         }
 
+        public void MergeUserData(UserImportModel import)
+        {
+            this.OnlineViewingMinutes += import.OnlineViewingMinutes;
+            foreach (var kvp in import.CurrencyAmounts)
+            {
+                if (!this.CurrencyAmounts.ContainsKey(kvp.Key))
+                {
+                    this.CurrencyAmounts[kvp.Key] = 0;
+                }
+                this.CurrencyAmounts[kvp.Key] += kvp.Value;
+            }
+        }
+
         private void ClearCachedProperties()
         {
             lock (cachePropertiesLock)

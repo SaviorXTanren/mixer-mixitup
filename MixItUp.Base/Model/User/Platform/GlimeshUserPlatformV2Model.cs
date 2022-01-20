@@ -20,6 +20,14 @@ namespace MixItUp.Base.Model.User.Platform
 
         public GlimeshUserPlatformV2Model(ChatMessagePacketModel message) : this(message.User) { }
 
+        public GlimeshUserPlatformV2Model(string id, string username, string displayName)
+        {
+            this.Platform = StreamingPlatformTypeEnum.Glimesh;
+            this.Username = id;
+            this.DisplayName = username;
+            this.AvatarLink = displayName;
+        }
+
         [Obsolete]
         public GlimeshUserPlatformV2Model() : base() { }
 

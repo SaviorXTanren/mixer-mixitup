@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Requirements"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
-             xmlns:util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              
@@ -16,7 +16,7 @@
              
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+        <Util:LocalizationConverter x:Key="LocalizationConverter"/>
 
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>

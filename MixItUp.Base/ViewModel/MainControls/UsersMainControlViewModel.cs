@@ -288,7 +288,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                             }
                             else
                             {
-                                columns.AddRange(new List<string>() { "", "", "" });
+                                columns.AddRange(new List<string>() { "", "" });
                             }
                         });
                         foreach (var kvp in ChannelSession.Settings.Currency)
@@ -359,8 +359,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                         {
                             if (this.IsRoleSearchFilterType)
                             {
-                                // TODO
-                                //data = data.Where(u => u.UserRoles.Contains(this.SelectedUserRoleSearchFilter));
+                                data = data.Where(u => u.GetAllPlatformData().Any(p => p.Roles.Contains(this.SelectedUserRoleSearchFilter)));
                             }
                             else if (this.IsWatchTimeSearchFilterType && this.WatchTimeAmountSearchFilter > 0)
                             {
@@ -431,7 +430,6 @@ namespace MixItUp.Base.ViewModel.MainControls
                             }
                         }
 
-                        // TODO
                         //if (this.SortColumnIndex == 0) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.Username) : data.OrderBy(u => u.Username); }
                         //else if (this.SortColumnIndex == 1) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.Platforms) : data.OrderBy(u => u.Platforms); }
                         //else if (this.SortColumnIndex == 2) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryRole) : data.OrderBy(u => u.PrimaryRole); }
