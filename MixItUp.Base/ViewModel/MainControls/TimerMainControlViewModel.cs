@@ -29,6 +29,16 @@ namespace MixItUp.Base.ViewModel.MainControls
             }
         }
 
+        public bool RunTimersOnlyWhenLive
+        {
+            get { return ChannelSession.Settings.RunTimersOnlyWhenLive; }
+            set
+            {
+                ChannelSession.Settings.RunTimersOnlyWhenLive = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+
         public bool RandomizeTimers
         {
             get { return ChannelSession.Settings.RandomizeTimers; }

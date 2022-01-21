@@ -15691,6 +15691,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Run Only When Live.
+        /// </summary>
+        public static string TimersRunOnlyWhenLive {
+            get {
+                return ResourceManager.GetString("TimersRunOnlyWhenLive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Timer Complete.
         /// </summary>
         public static string TimerTimerComplete {

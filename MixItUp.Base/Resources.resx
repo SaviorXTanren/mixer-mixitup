@@ -6387,4 +6387,7 @@ Users who have not visited your channel yet while Mix It Up is running have thei
 Failed imports could be due to invalid data or failure to find their information on the platform. Please contact support for further help with this if needed.</value>
     <comment>{0} is the number of successes, {1} is the number of pending, {2} is the number of failures</comment>
   </data>
+  <data name="TimersRunOnlyWhenLive" xml:space="preserve">
+    <value>Run Only When Live</value>
+  </data>
 </root>

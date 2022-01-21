@@ -232,7 +232,7 @@ namespace MixItUp.Base.Model.Commands
             if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
                 await ServiceManager.Get<GlimeshSessionService>().RefreshChannel();
-                if (ServiceManager.Get<TwitchSessionService>().StreamIsLive)
+                if (ServiceManager.Get<TwitchSessionService>().IsLive)
                 {
                     return TwitchPlatformService.GetTwitchDateTime(ServiceManager.Get<TwitchSessionService>().Stream?.started_at);
                 }
