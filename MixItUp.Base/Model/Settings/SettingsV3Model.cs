@@ -846,7 +846,7 @@ namespace MixItUp.Base.Model.Settings
             UserImportModel userImport = null;
 
             await ServiceManager.Get<IDatabaseService>().Read(ChannelSession.Settings.DatabaseFilePath,
-                $"SELECT * FROM Users WHERE Platform = @Platform AND ({platform}ID = @PlatformID OR {platform}Username = @PlatformUsername)",
+                $"SELECT * FROM ImportedUsers WHERE Platform = @Platform AND (PlatformID = @PlatformID OR PlatformUsername = @PlatformUsername)",
                 new Dictionary<string, object>()
                 {
                     { "Platform", (int)platform },
