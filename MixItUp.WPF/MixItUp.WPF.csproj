@@ -2052,6 +2052,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Installer.nsi">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Mix It Up.link">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
