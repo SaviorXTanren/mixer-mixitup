@@ -954,9 +954,11 @@ namespace MixItUp.Base.Util
                             if (tUser != null)
                             {
                                 Twitch.Base.Models.NewAPI.Channels.ChannelInformationModel tChannel = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelInformation(tUser);
+                                Twitch.Base.Models.NewAPI.Streams.StreamModel stream = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStream(tUser);
 
                                 this.ReplaceSpecialIdentifier(userStreamHeader + "title", tChannel?.title);
                                 this.ReplaceSpecialIdentifier(userStreamHeader + "game", tChannel?.game_name);
+                                this.ReplaceSpecialIdentifier(userStreamHeader + "islive", (stream != null).ToString());
                             }
                         }
                     }
@@ -984,6 +986,7 @@ namespace MixItUp.Base.Util
 
                                 this.ReplaceSpecialIdentifier(userStreamHeader + "title", tChannel?.live_title);
                                 this.ReplaceSpecialIdentifier(userStreamHeader + "game", tChannel?.category_name);
+                                this.ReplaceSpecialIdentifier(userStreamHeader + "islive", tChannel?.is_live.ToString());
                             }
                         }
                     }
@@ -995,7 +998,8 @@ namespace MixItUp.Base.Util
                             Glimesh.Base.Models.Channels.ChannelModel gChannel = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetChannelByName(glimeshUser.Username);
 
                             this.ReplaceSpecialIdentifier(userStreamHeader + "title", gChannel?.title);
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "game", gChannel?.stream?.category?.name ?? MixItUp.Base.Resources.Unknown);
+                            this.ReplaceSpecialIdentifier(userStreamHeader + "game", gChannel?.stream?.category?.name);
+                            this.ReplaceSpecialIdentifier(userStreamHeader + "islive", gChannel?.IsLive.ToString());
                         }
                     }
                 }
