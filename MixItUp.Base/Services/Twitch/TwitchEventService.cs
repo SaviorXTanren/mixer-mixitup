@@ -311,11 +311,11 @@ namespace MixItUp.Base.Services.Twitch
 
             if (subEvent.IsGiftedUpgrade)
             {
-                var subscription = await ChannelSession.TwitchUserConnection.CheckIfSubscribedV5(ChannelSession.TwitchChannelV5, subEvent.User.GetTwitchV5APIUserModel());
-                if (subscription != null && !string.IsNullOrEmpty(subscription.created_at))
+                var subscription = await ChannelSession.TwitchUserConnection.GetUserSubscription(ChannelSession.TwitchUserNewAPI, subEvent.User.GetTwitchNewAPIUserModel());
+                if (subscription != null)
                 {
-                    subEvent.PlanTier = TwitchEventService.GetSubTierNameFromText(subscription.sub_plan);
-                    subEvent.PlanName = subscription.sub_plan_name;
+                    subEvent.PlanTier = TwitchEventService.GetSubTierNameFromText(subscription.tier);
+                    subEvent.PlanName = subscription.plan_name;
                 }
             }
 

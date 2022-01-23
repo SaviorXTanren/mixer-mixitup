@@ -15,8 +15,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Twitch.Base.Models.NewAPI.Channels;
 using TwitchNewAPI = Twitch.Base.Models.NewAPI;
-using TwitchV5API = Twitch.Base.Models.V5;
 
 namespace MixItUp.Base
 {
@@ -24,14 +24,12 @@ namespace MixItUp.Base
     {
         public static TwitchPlatformService TwitchUserConnection { get; private set; }
         public static TwitchPlatformService TwitchBotConnection { get; private set; }
-        public static TwitchV5API.Users.UserModel TwitchUserV5 { get; private set; }
-        public static TwitchV5API.Channel.ChannelModel TwitchChannelV5 { get; private set; }
-        public static TwitchV5API.Streams.StreamModel TwitchStreamV5 { get; private set; }
-        public static HashSet<string> TwitchChannelEditorsV5 { get; private set; } = new HashSet<string>();
+        public static HashSet<string> TwitchChannelEditors { get; private set; } = new HashSet<string>();
         public static TwitchNewAPI.Users.UserModel TwitchUserNewAPI { get; set; }
         public static TwitchNewAPI.Users.UserModel TwitchBotNewAPI { get; set; }
+        public static TwitchNewAPI.Channels.ChannelInformationModel TwitchChannelInformation { get; set; }
         public static TwitchNewAPI.Streams.StreamModel TwitchStreamNewAPI { get; set; }
-        public static bool TwitchStreamIsLive { get { return ChannelSession.TwitchStreamV5 != null && ChannelSession.TwitchStreamV5.IsLive; } }
+        public static bool TwitchStreamIsLive { get { return ChannelSession.TwitchStreamNewAPI != null; } }
 
         public static ApplicationSettingsV2Model AppSettings { get; private set; }
         public static SettingsV3Model Settings { get; private set; }
@@ -89,12 +87,6 @@ namespace MixItUp.Base
                 if (ChannelSession.TwitchUserNewAPI == null)
                 {
                     return new Result(Resources.TwitchFailedNewAPIUserData);
-                }
-
-                ChannelSession.TwitchUserV5 = await ChannelSession.TwitchUserConnection.GetV5APIUserByLogin(ChannelSession.TwitchUserNewAPI.login);
-                if (ChannelSession.TwitchUserV5 == null)
-                {
-                    return new Result(Resources.TwitchFailedV5APIUserData);
                 }
             }
             return result;
@@ -168,12 +160,6 @@ namespace MixItUp.Base
                     if (ChannelSession.TwitchUserNewAPI == null)
                     {
                         return new Result(Resources.TwitchFailedNewAPIUserData);
-                    }
-
-                    ChannelSession.TwitchUserV5 = await ChannelSession.TwitchUserConnection.GetV5APIUserByLogin(ChannelSession.TwitchUserNewAPI.login);
-                    if (ChannelSession.TwitchUserV5 == null)
-                    {
-                        return new Result(Resources.TwitchFailedV5APIUserData);
                     }
 
                     try
@@ -251,30 +237,15 @@ namespace MixItUp.Base
                 if (twitchUserNewAPI != null)
                 {
                     ChannelSession.TwitchUserNewAPI = twitchUserNewAPI;
-
-                    TwitchV5API.Users.UserModel twitchUserV5 = await ChannelSession.TwitchUserConnection.GetV5APIUserByLogin(ChannelSession.TwitchUserNewAPI.login);
-                    if (twitchUserV5 != null)
-                    {
-                        ChannelSession.TwitchUserV5 = twitchUserV5;
-                    }
                 }
             }
         }
 
         public static async Task RefreshChannel()
         {
-            if (ChannelSession.TwitchChannelV5 != null)
-            {
-                TwitchV5API.Channel.ChannelModel twitchChannel = await ChannelSession.TwitchUserConnection.GetV5APIChannel(ChannelSession.TwitchChannelV5.id);
-                if (twitchChannel != null)
-                {
-                    ChannelSession.TwitchChannelV5 = twitchChannel;
-                    ChannelSession.TwitchStreamV5 = await ChannelSession.TwitchUserConnection.GetV5LiveStream(ChannelSession.TwitchChannelV5);
-                }
-            }
-
             if (ChannelSession.TwitchUserNewAPI != null)
             {
+                ChannelSession.TwitchChannelInformation = await ChannelSession.TwitchUserConnection.GetChannelInformation(ChannelSession.TwitchUserNewAPI);
                 ChannelSession.TwitchStreamNewAPI = await ChannelSession.TwitchUserConnection.GetStream(ChannelSession.TwitchUserNewAPI);
             }
         }
@@ -315,15 +286,12 @@ namespace MixItUp.Base
             try
             {
                 TwitchNewAPI.Users.UserModel twitchChannelNew = await ChannelSession.TwitchUserConnection.GetNewAPICurrentUser();
-                TwitchV5API.Channel.ChannelModel twitchChannelv5 = await ChannelSession.TwitchUserConnection.GetCurrentV5APIChannel();
-                if (twitchChannelNew != null && twitchChannelv5 != null)
+                if (twitchChannelNew != null)
                 {
                     try
                     {
                         ChannelSession.TwitchUserNewAPI = twitchChannelNew;
-                        ChannelSession.TwitchChannelV5 = twitchChannelv5;
                         ChannelSession.TwitchStreamNewAPI = await ChannelSession.TwitchUserConnection.GetStream(ChannelSession.TwitchUserNewAPI);
-                        ChannelSession.TwitchStreamV5 = await ChannelSession.TwitchUserConnection.GetV5LiveStream(ChannelSession.TwitchChannelV5);
 
                         if (ChannelSession.Settings == null)
                         {
@@ -546,12 +514,12 @@ namespace MixItUp.Base
                         await ChannelSession.Services.Timers.Initialize();
                         await ChannelSession.Services.Moderation.Initialize();
 
-                        IEnumerable<TwitchV5API.Users.UserModel> channelEditors = await ChannelSession.TwitchUserConnection.GetV5APIChannelEditors(ChannelSession.TwitchChannelV5);
+                        IEnumerable<ChannelEditorUserModel> channelEditors = await ChannelSession.TwitchUserConnection.GetChannelEditors(ChannelSession.TwitchUserNewAPI);
                         if (channelEditors != null)
                         {
-                            foreach (TwitchV5API.Users.UserModel channelEditor in channelEditors)
+                            foreach (ChannelEditorUserModel channelEditor in channelEditors)
                             {
-                                ChannelSession.TwitchChannelEditorsV5.Add(channelEditor.id);
+                                ChannelSession.TwitchChannelEditors.Add(channelEditor.user_id);
                             }
                         }
                     }
@@ -660,8 +628,8 @@ namespace MixItUp.Base
                             {
                                 type = "Affiliate";
                             }
-                            ChannelSession.Services.Telemetry.TrackChannelMetrics(type, ChannelSession.TwitchStreamV5.viewers, ChannelSession.Services.Chat.AllUsers.Count,
-                                ChannelSession.TwitchStreamV5.game, ChannelSession.TwitchChannelV5.views, ChannelSession.TwitchChannelV5.followers);
+                            ChannelSession.Services.Telemetry.TrackChannelMetrics(type, ChannelSession.TwitchStreamNewAPI?.viewer_count ?? 0, ChannelSession.Services.Chat.AllUsers.Count,
+                                ChannelSession.TwitchStreamNewAPI?.game_name, ChannelSession.TwitchUserNewAPI.view_count, 0);
                         }
                         catch (Exception ex)
                         {

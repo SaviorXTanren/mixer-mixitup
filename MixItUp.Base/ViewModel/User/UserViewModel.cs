@@ -15,9 +15,9 @@ using System.Threading.Tasks;
 using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.Clients.PubSub.Messages;
 using Twitch.Base.Models.NewAPI.Chat;
+using Twitch.Base.Models.NewAPI.Subscriptions;
 using Twitch.Base.Models.NewAPI.Users;
 using TwitchNewAPI = Twitch.Base.Models.NewAPI;
-using TwitchV5API = Twitch.Base.Models.V5;
 
 namespace MixItUp.Base.ViewModel.User
 {
@@ -73,14 +73,12 @@ namespace MixItUp.Base.ViewModel.User
             return user;
         }
 
-        public static async Task<UserViewModel> Create(TwitchV5API.Users.UserModel twitchUser)
+        public static async Task<UserViewModel> Create(TwitchNewAPI.Subscriptions.SubscriptionModel twitchUser)
         {
-            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, twitchUser.id);
+            UserViewModel user = await UserViewModel.Create(StreamingPlatformTypeEnum.Twitch, twitchUser.user_id);
 
-            user.TwitchID = twitchUser.id;
-            user.TwitchUsername = twitchUser.name;
-            user.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : user.TwitchUsername;
-            user.TwitchAvatarLink = twitchUser.logo;
+            user.TwitchID = twitchUser.user_id;
+            user.TwitchDisplayName = user.TwitchUsername = twitchUser.user_name;
 
             user.SetTwitchRoles();
 
@@ -959,16 +957,6 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public TwitchV5API.Users.UserModel GetTwitchV5APIUserModel()
-        {
-            return new TwitchV5API.Users.UserModel()
-            {
-                id = this.TwitchID,
-                name = this.TwitchUsername,
-                display_name = this.TwitchDisplayName,
-            };
-        }
-
         public TwitchNewAPI.Users.UserModel GetTwitchNewAPIUserModel()
         {
             return new TwitchNewAPI.Users.UserModel()
@@ -1028,7 +1016,7 @@ namespace MixItUp.Base.ViewModel.User
                 this.TwitchUserRoles.Add(UserRoleEnum.Streamer);
             }
 
-            if (ChannelSession.TwitchChannelEditorsV5.Contains(this.TwitchID))
+            if (ChannelSession.TwitchChannelEditors.Contains(this.TwitchID))
             {
                 this.TwitchUserRoles.Add(UserRoleEnum.ChannelEditor);
             }
@@ -1042,7 +1030,7 @@ namespace MixItUp.Base.ViewModel.User
 
         private async Task RefreshTwitchUserAccountDate()
         {
-            TwitchV5API.Users.UserModel twitchV5User = await ChannelSession.TwitchUserConnection.GetV5APIUserByLogin(this.TwitchUsername);
+            UserModel twitchV5User = await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(this.TwitchID);
             if (twitchV5User != null && !string.IsNullOrEmpty(twitchV5User.created_at))
             {
                 this.AccountDate = TwitchPlatformService.GetTwitchDateTime(twitchV5User.created_at);
@@ -1066,16 +1054,16 @@ namespace MixItUp.Base.ViewModel.User
         {
             if (ChannelSession.TwitchUserNewAPI.IsAffiliate() || ChannelSession.TwitchUserNewAPI.IsPartner())
             {
-                TwitchV5API.Users.UserSubscriptionModel subscription = await ChannelSession.TwitchUserConnection.CheckIfSubscribedV5(ChannelSession.TwitchChannelV5, this.GetTwitchV5APIUserModel());
-                if (subscription != null && !string.IsNullOrEmpty(subscription.created_at))
+                SubscriptionModel subscription = await ChannelSession.TwitchUserConnection.GetUserSubscription(ChannelSession.TwitchUserNewAPI, this.GetTwitchNewAPIUserModel());
+                if (subscription != null)
                 {
-                    this.SubscribeDate = TwitchPlatformService.GetTwitchDateTime(subscription.created_at);
-                    this.Data.TwitchSubscriberTier = TwitchEventService.GetSubTierNumberFromText(subscription.sub_plan);
+                    this.Data.TwitchSubscriberTier = TwitchEventService.GetSubTierNumberFromText(subscription.tier);
+                    this.UserRoles.Add(UserRoleEnum.Subscriber);
                 }
                 else
                 {
-                    this.SubscribeDate = null;
                     this.Data.TwitchSubscriberTier = 0;
+                    this.UserRoles.Remove(UserRoleEnum.Subscriber);
                 }
             }
         }

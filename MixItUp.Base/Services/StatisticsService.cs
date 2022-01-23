@@ -52,9 +52,9 @@ namespace MixItUp.Base.Services
                 TrackedNumberStatisticDataTrackerModel numberStats = (TrackedNumberStatisticDataTrackerModel)stats;
 
                 int viewersCurrent = 0;
-                if (ChannelSession.TwitchStreamV5 != null)
+                if (ChannelSession.TwitchStreamNewAPI != null)
                 {
-                    viewersCurrent = (int)ChannelSession.TwitchStreamV5.viewers;
+                    viewersCurrent = (int)ChannelSession.TwitchStreamNewAPI.viewer_count;
                 }
 
                 numberStats.AddValue(viewersCurrent);

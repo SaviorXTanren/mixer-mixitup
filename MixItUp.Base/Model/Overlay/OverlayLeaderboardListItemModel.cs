@@ -14,7 +14,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Bits;
-using Twitch.Base.Models.V5.Users;
+using Twitch.Base.Models.NewAPI.Subscriptions;
 using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.Model.Overlay
@@ -162,16 +162,11 @@ namespace MixItUp.Base.Model.Overlay
             if (this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Subscribers)
             {
                 this.userSubDates.Clear();
-                IEnumerable<UserSubscriptionModel> subscribers = await ChannelSession.TwitchUserConnection.GetSubscribersV5(ChannelSession.TwitchChannelV5, int.MaxValue);
+                IEnumerable<SubscriptionModel> subscribers = await ChannelSession.TwitchUserConnection.GetSubscriptions(ChannelSession.TwitchUserNewAPI, int.MaxValue);
 
-                foreach (UserSubscriptionModel subscriber in subscribers)
+                foreach (SubscriptionModel subscriber in subscribers)
                 {
-                    UserViewModel user = await UserViewModel.Create(subscriber.user);
-                    DateTimeOffset? subDate = TwitchPlatformService.GetTwitchDateTime(subscriber.created_at);
-                    if (subDate.HasValue && this.ShouldIncludeUser(user))
-                    {
-                        this.userSubDates[user.ID] = subDate.GetValueOrDefault();
-                    }
+                    UserViewModel user = await UserViewModel.Create(subscriber);
                 }
 
                 await this.UpdateSubscribers();

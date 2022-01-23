@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using Twitch.Base.Models.NewAPI.Bits;
+using Twitch.Base.Models.NewAPI.Channels;
 using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.Util
@@ -502,20 +503,24 @@ namespace MixItUp.Base.Util
 
                     if (ChannelSession.TwitchStreamIsLive)
                     {
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ChannelSession.TwitchStreamV5.viewers.ToString());
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ChannelSession.TwitchStreamNewAPI.viewer_count.ToString());
                     }
                     if (ChannelSession.TwitchUserNewAPI != null)
                     {
                         this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewscount", ChannelSession.TwitchUserNewAPI.view_count.ToString());
                     }
-                    if (ChannelSession.TwitchChannelV5 != null)
+                    if (ChannelSession.TwitchChannelInformation != null)
                     {
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ChannelSession.TwitchChannelV5.status);
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ChannelSession.TwitchChannelV5.game);
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", ChannelSession.TwitchChannelV5.followers.ToString());
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ChannelSession.TwitchChannelInformation.title);
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ChannelSession.TwitchChannelInformation.game_name);
+                        if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount"))
+                        {
+                            long followCount = await ChannelSession.TwitchUserConnection.GetFollowerCount(ChannelSession.TwitchUserNewAPI);
+                            this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", followCount.ToString());
+                        }
                         if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount"))
                         {
-                            long subCount = await ChannelSession.TwitchUserConnection.GetSubscriberCountV5(ChannelSession.TwitchChannelV5);
+                            long subCount = await ChannelSession.TwitchUserConnection.GetSubscriberCount(ChannelSession.TwitchUserNewAPI);
                             this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount", subCount.ToString());
                         }
                     }
@@ -854,13 +859,11 @@ namespace MixItUp.Base.Util
                 {
                     if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
                     {
-                        Twitch.Base.Models.V5.Channel.ChannelModel channel = await ChannelSession.TwitchUserConnection.GetV5APIChannel(user.TwitchID);
+                        ChannelInformationModel channel = await ChannelSession.TwitchUserConnection.GetChannelInformation(user.GetTwitchNewAPIUserModel());
                         if (channel != null)
                         {
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "title", channel.status);
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "game", channel.game);
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "followercount", channel.followers.ToString());
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "viewscount", channel.views.ToString());
+                            this.ReplaceSpecialIdentifier(userStreamHeader + "title", channel.title);
+                            this.ReplaceSpecialIdentifier(userStreamHeader + "game", channel.game_name);
                         }
                     }
                 }

@@ -176,12 +176,12 @@ namespace MixItUp.Base.Model.Commands
         public override async Task CustomRun(CommandParametersModel parameters)
         {
             await ChannelSession.RefreshChannel();
-            if (ChannelSession.TwitchChannelV5 != null)
+            if (ChannelSession.TwitchChannelInformation != null)
             {
-                GameInformation details = await XboxGamePreMadeChatCommandModel.GetXboxGameInfo(ChannelSession.TwitchChannelV5.game);
+                GameInformation details = await XboxGamePreMadeChatCommandModel.GetXboxGameInfo(ChannelSession.TwitchChannelInformation?.game_name);
                 if (details == null)
                 {
-                    details = await SteamGamePreMadeChatCommandModel.GetSteamGameInfo(ChannelSession.TwitchChannelV5.game);
+                    details = await SteamGamePreMadeChatCommandModel.GetSteamGameInfo(ChannelSession.TwitchChannelInformation?.game_name);
                 }
 
                 if (details != null)
@@ -190,7 +190,7 @@ namespace MixItUp.Base.Model.Commands
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.SendMessage("Game: " + ChannelSession.TwitchChannelV5.game);
+                    await ChannelSession.Services.Chat.SendMessage("Game: " + ChannelSession.TwitchChannelInformation?.game_name);
                 }
             }
         }
@@ -203,7 +203,7 @@ namespace MixItUp.Base.Model.Commands
         public override async Task CustomRun(CommandParametersModel parameters)
         {
             await ChannelSession.RefreshChannel();
-            await ChannelSession.Services.Chat.SendMessage("Stream Title: " + ChannelSession.TwitchChannelV5.status);
+            await ChannelSession.Services.Chat.SendMessage("Stream Title: " + ChannelSession.TwitchChannelInformation?.title);
         }
     }
 
@@ -214,7 +214,7 @@ namespace MixItUp.Base.Model.Commands
             DateTimeOffset startTime = DateTimeOffset.MinValue;
             if (ChannelSession.TwitchStreamIsLive)
             {
-                startTime = TwitchPlatformService.GetTwitchDateTime(ChannelSession.TwitchStreamV5.created_at).GetValueOrDefault();
+                startTime = TwitchPlatformService.GetTwitchDateTime(ChannelSession.TwitchStreamNewAPI?.started_at).GetValueOrDefault();
             }
             return Task.FromResult(startTime);
         }
@@ -366,7 +366,7 @@ namespace MixItUp.Base.Model.Commands
                     string quoteText = quoteBuilder.ToString();
                     quoteText = quoteText.Trim(new char[] { ' ', '\'', '\"' });
 
-                    UserQuoteModel quote = new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), quoteText, DateTimeOffset.Now, ChannelSession.TwitchChannelV5?.game);
+                    UserQuoteModel quote = new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), quoteText, DateTimeOffset.Now, ChannelSession.TwitchChannelInformation?.game_name);
                     ChannelSession.Settings.Quotes.Add(quote);
                     await ChannelSession.SaveSettings();
 
@@ -497,9 +497,9 @@ namespace MixItUp.Base.Model.Commands
             else
             {
                 await ChannelSession.RefreshChannel();
-                if (ChannelSession.TwitchChannelV5 != null)
+                if (ChannelSession.TwitchChannelInformation != null)
                 {
-                    gameName = ChannelSession.TwitchChannelV5.game;
+                    gameName = ChannelSession.TwitchChannelInformation.game_name;
                 }
             }
 
@@ -598,9 +598,9 @@ namespace MixItUp.Base.Model.Commands
             else
             {
                 await ChannelSession.RefreshChannel();
-                if (ChannelSession.TwitchChannelV5 != null)
+                if (ChannelSession.TwitchChannelInformation != null)
                 {
-                    gameName = ChannelSession.TwitchChannelV5.game;
+                    gameName = ChannelSession.TwitchChannelInformation.game_name;
                 }
             }
 
@@ -625,7 +625,7 @@ namespace MixItUp.Base.Model.Commands
             if (parameters.Arguments.Count() > 0)
             {
                 string name = string.Join(" ", parameters.Arguments);
-                await ChannelSession.TwitchUserConnection.UpdateV5Channel(ChannelSession.TwitchChannelV5, status: name);
+                await ChannelSession.TwitchUserConnection.UpdateChannelInformation(ChannelSession.TwitchUserNewAPI, title: name);
                 await ChannelSession.RefreshChannel();
                 await ChannelSession.Services.Chat.SendMessage("Title Updated: " + name);
                 return;
@@ -654,7 +654,7 @@ namespace MixItUp.Base.Model.Commands
                     {
                         game = games.First();
                     }
-                    await ChannelSession.TwitchUserConnection.UpdateV5Channel(ChannelSession.TwitchChannelV5, game: game);
+                    await ChannelSession.TwitchUserConnection.UpdateChannelInformation(ChannelSession.TwitchUserNewAPI, gameID: game.id);
                     await ChannelSession.RefreshChannel();
                     await ChannelSession.Services.Chat.SendMessage("Game Updated: " + game.name);
                     return;
