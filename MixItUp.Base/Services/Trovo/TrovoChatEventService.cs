@@ -95,7 +95,6 @@ namespace MixItUp.Base.Services.Trovo
         private HashSet<string> messagesProcessed = new HashSet<string>();
         private Dictionary<Guid, int> userSubsGiftedInstanced = new Dictionary<Guid, int>();
 
-        private HashSet<string> currentViewers = new HashSet<string>();
         private HashSet<string> previousViewers = new HashSet<string>();
 
         public TrovoChatEventService() { }
@@ -658,10 +657,10 @@ namespace MixItUp.Base.Services.Trovo
                 List<UserV2ViewModel> userJoins = new List<UserV2ViewModel>();
                 List<UserV2ViewModel> userLeaves = new List<UserV2ViewModel>();
 
+                HashSet<string> currentViewers = new HashSet<string>();
                 foreach (string viewer in viewers.all.viewers)
                 {
                     currentViewers.Add(viewer);
-
                     if (!previousViewers.Contains(viewer))
                     {
                         UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Trovo, viewer);
@@ -693,7 +692,6 @@ namespace MixItUp.Base.Services.Trovo
                 {
                     previousViewers.Add(viewer);
                 }
-                currentViewers.Clear();
             }
         }
 
