@@ -171,7 +171,7 @@ namespace MixItUp.Base.Services
                 return user;
             }
 
-            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id))
+            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername.ToLower(), out Guid id))
             {
                 user = await this.GetUserByID(id);
                 if (user != null)
@@ -266,7 +266,7 @@ namespace MixItUp.Base.Services
                 foreach (UserPlatformV2ModelBase pUser in user.GetAllPlatformData())
                 {
                     this.platformUserIDLookups[pUser.Platform].Remove(pUser.ID);
-                    this.platformUsernameLookups[pUser.Platform].Remove(pUser.Username);
+                    this.platformUsernameLookups[pUser.Platform].Remove(pUser.Username.ToLower());
                 }
                 this.activeUsers.Remove(user.ID);
 
@@ -307,7 +307,7 @@ namespace MixItUp.Base.Services
                     {
                         UserPlatformV2ModelBase platformModel = userData.GetPlatformData<UserPlatformV2ModelBase>(platform);
                         this.platformUserIDLookups[platform][platformModel.ID] = userData.ID;
-                        this.platformUsernameLookups[platform][platformModel.Username] = userData.ID;
+                        this.platformUsernameLookups[platform][platformModel.Username.ToLower()] = userData.ID;
                     }
                 }
             }
@@ -398,7 +398,7 @@ namespace MixItUp.Base.Services
                 return user;
             }
 
-            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id))
+            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername.ToLower(), out Guid id))
             {
                 user = this.GetActiveUserByID(id);
                 if (user != null)
@@ -481,7 +481,7 @@ namespace MixItUp.Base.Services
 
         public async Task<UserV2ViewModel> RemoveActiveUser(StreamingPlatformTypeEnum platform, string platformUsername)
         {
-            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id))
+            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername.ToLower(), out Guid id))
             {
                 return await this.RemoveActiveUser(id);
             }
