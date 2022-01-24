@@ -9166,6 +9166,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Manual Deletion.
+        /// </summary>
+        public static string ManualDeletion {
+            get {
+                return ResourceManager.GetString("ManualDeletion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Manual Redeem.
         /// </summary>
         public static string ManualRedeem {

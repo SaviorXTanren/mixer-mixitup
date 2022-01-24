@@ -6393,4 +6393,7 @@ Failed imports could be due to invalid data or failure to find their information
   <data name="FastClip90Seconds" xml:space="preserve">
     <value>Fast Clip (90 Seconds)</value>
   </data>
+  <data name="ManualDeletion" xml:space="preserve">
+    <value>Manual Deletion</value>
+  </data>
 </root>

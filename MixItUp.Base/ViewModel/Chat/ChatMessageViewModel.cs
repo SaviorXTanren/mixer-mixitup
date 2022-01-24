@@ -144,23 +144,25 @@ namespace MixItUp.Base.ViewModel.Chat
                     {
                         this.DeletedBy = moderator.FullDisplayName;
                     }
-                    this.ModerationReason = reason;
+                    this.ModerationReason = (!string.IsNullOrEmpty(reason)) ? reason : MixItUp.Base.Resources.ManualDeletion;
 
                     this.NotifyPropertyChanged("IsDeleted");
                     this.NotifyPropertyChanged("DeletedBy");
                     this.NotifyPropertyChanged("ModerationReason");
 
                     this.OnDeleted(this, new EventArgs());
-
+                    
                     if (this.User != null && !string.IsNullOrEmpty(this.PlainTextMessage))
                     {
                         CommandParametersModel parameters = new CommandParametersModel(moderator ?? this.User);
                         parameters.Arguments.Add(this.User.Username);
                         parameters.TargetUser = this.User;
                         parameters.SpecialIdentifiers["message"] = this.PlainTextMessage;
-                        parameters.SpecialIdentifiers["reason"] = (!string.IsNullOrEmpty(this.ModerationReason)) ? this.ModerationReason : "Manual Deletion";
+                        parameters.SpecialIdentifiers["reason"] = this.ModerationReason;
                         await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatMessageDeleted, parameters);
                     }
+
+                    await ServiceManager.Get<ChatService>().WriteToChatEventLog(this, $"{MixItUp.Base.Resources.ChatMessageDeleted} - {this.ModerationReason} - ");
                 }
             }
             catch (Exception ex)
