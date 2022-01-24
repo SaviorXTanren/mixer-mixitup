@@ -687,6 +687,17 @@ namespace MixItUp.Base.Services.Trovo
 
                 await ServiceManager.Get<UserService>().RemoveActiveUsers(userLeaves);
 
+                userLeaves.Clear();
+                foreach (UserV2ViewModel user in ServiceManager.Get<UserService>().GetActiveUsers(StreamingPlatformTypeEnum.Trovo))
+                {
+                    if (!currentViewers.Contains(user.Username))
+                    {
+                        userLeaves.Add(user);
+                    }
+                }
+
+                await ServiceManager.Get<UserService>().RemoveActiveUsers(userLeaves);
+
                 previousViewers.Clear();
                 foreach (string viewer in currentViewers)
                 {
