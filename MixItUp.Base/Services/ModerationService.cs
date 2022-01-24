@@ -142,7 +142,7 @@ namespace MixItUp.Base.Services
                     {
                         if (Regex.IsMatch(text, word, RegexOptions.IgnoreCase))
                         {
-                            return "The previous message was deleted due to a filtered word";
+                            return $"The previous message was deleted due to a filtered word: {word}";
                         }
                     }
                 }
@@ -151,7 +151,7 @@ namespace MixItUp.Base.Services
                 {
                     if (Regex.IsMatch(text, word, RegexOptions.IgnoreCase))
                     {
-                        return "The previous message was deleted due to a filtered word";
+                        return $"The previous message was deleted due to a filtered word: {word}";
                     }
                 }
 
@@ -160,7 +160,7 @@ namespace MixItUp.Base.Services
                     if (Regex.IsMatch(text, word, RegexOptions.IgnoreCase))
                     {
                         await ServiceManager.Get<ChatService>().BanUser(user);
-                        return "The previous message was deleted due to a banned Word";
+                        return $"The previous message was deleted due to a banned Word: {word}";
                     }
                 }
             }
