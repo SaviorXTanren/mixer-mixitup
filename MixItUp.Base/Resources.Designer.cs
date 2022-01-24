@@ -4932,6 +4932,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fast Clip (90 Seconds).
+        /// </summary>
+        public static string FastClip90Seconds {
+            get {
+                return ResourceManager.GetString("FastClip90Seconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Favorite Voices.
         /// </summary>
         public static string FavoriteVoices {

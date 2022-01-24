@@ -369,6 +369,8 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task<bool> RemoveRole(string username, string role) { return await this.PerformChatCommand($"removerole {role} {username}"); }
 
+        public async Task<bool> FastClip() { return await this.PerformChatCommand("fastclip"); }
+
         public async Task<bool> PerformChatCommand(string command)
         {
             string result = await this.GetChatClient(sendAsStreamer: true).PerformChatCommand(ServiceManager.Get<TrovoSessionService>().ChannelID, command);

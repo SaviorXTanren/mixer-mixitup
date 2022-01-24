@@ -6390,4 +6390,7 @@ Failed imports could be due to invalid data or failure to find their information
   <data name="TimersRunOnlyWhenLive" xml:space="preserve">
     <value>Run Only When Live</value>
   </data>
+  <data name="FastClip90Seconds" xml:space="preserve">
+    <value>Fast Clip (90 Seconds)</value>
+  </data>
 </root>

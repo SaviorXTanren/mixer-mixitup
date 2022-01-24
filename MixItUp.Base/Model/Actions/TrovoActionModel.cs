@@ -17,6 +17,7 @@ namespace MixItUp.Base.Model.Actions
         DisableFollowerMode,
         AddUserRole,
         RemoveUserRole,
+        FastClip90Seconds,
     }
 
     [DataContract]
@@ -36,35 +37,17 @@ namespace MixItUp.Base.Model.Actions
             return action;
         }
 
-        public static TrovoActionModel CreateDisableSlowModeAction()
+        public static TrovoActionModel CreateUserRoleAction(TrovoActionType actionType, string username, string roleName)
         {
-            return new TrovoActionModel(TrovoActionType.DisableSlowMode);
-        }
-
-        public static TrovoActionModel CreateEnableFollowerModeAction()
-        {
-            return new TrovoActionModel(TrovoActionType.EnableFollowerMode);
-        }
-
-        public static TrovoActionModel CreateDisableFollowerModeAction()
-        {
-            return new TrovoActionModel(TrovoActionType.DisableFollowerMode);
-        }
-
-        public static TrovoActionModel CreateAddUserRoleAction(string username, string roleName)
-        {
-            TrovoActionModel action = new TrovoActionModel(TrovoActionType.AddUserRole);
+            TrovoActionModel action = new TrovoActionModel(actionType);
             action.Username = username;
             action.RoleName = roleName;
             return action;
         }
 
-        public static TrovoActionModel CreateRemoveUserRoleAction(string username, string roleName)
+        public static TrovoActionModel CreateBasicAction(TrovoActionType actionType)
         {
-            TrovoActionModel action = new TrovoActionModel(TrovoActionType.RemoveUserRole);
-            action.Username = username;
-            action.RoleName = roleName;
-            return action;
+            return new TrovoActionModel(actionType);
         }
 
         [DataMember]
@@ -125,6 +108,10 @@ namespace MixItUp.Base.Model.Actions
                 else if (this.ActionType == TrovoActionType.RemoveUserRole)
                 {
                     await ServiceManager.Get<TrovoChatEventService>().RemoveRole(username, roleName);
+                }
+                else if (this.ActionType == TrovoActionType.FastClip90Seconds)
+                {
+                    await ServiceManager.Get<TrovoChatEventService>().FastClip();
                 }
             }
         }
