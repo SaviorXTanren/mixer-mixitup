@@ -504,6 +504,10 @@ namespace MixItUp.Base.Services
                         return;
                     }
 
+                    GlobalEvents.ChatMessageReceived(message);
+
+                    await this.WriteToChatEventLog(message);
+
                     IEnumerable<string> arguments = null;
 #pragma warning disable CS0612 // Type or member is obsolete
                     if (!string.IsNullOrEmpty(message.PlainTextMessage) && message.User != null && !message.User.HasRole(UserRoleEnum.Banned))
@@ -609,10 +613,6 @@ namespace MixItUp.Base.Services
                             await RedemptionStorePurchaseModel.Redeem(message.User, arguments);
                         }
                     }
-
-                    GlobalEvents.ChatMessageReceived(message);
-
-                    await this.WriteToChatEventLog(message);
                 }
 
                 Logger.Log(LogLevel.Debug, string.Format("Message Processing Complete: {0} - {1} ms", message.ID, message.ProcessingTime));
@@ -642,13 +642,14 @@ namespace MixItUp.Base.Services
             return Task.CompletedTask;
         }
 
-        public async Task WriteToChatEventLog(ChatMessageViewModel message)
+        public async Task WriteToChatEventLog(ChatMessageViewModel message, string prepend = null)
         {
             if (ChannelSession.Settings.SaveChatEventLogs)
             {
                 try
                 {
-                    await ServiceManager.Get<IFileService>().AppendFile(this.currentChatEventLogFilePath, string.Format($"{message} ({DateTime.Now.ToString("HH:mm", CultureInfo.InvariantCulture)})" + Environment.NewLine));
+                    prepend = prepend ?? string.Empty;
+                    await ServiceManager.Get<IFileService>().AppendFile(this.currentChatEventLogFilePath, string.Format($"{prepend}{message} ({DateTime.Now.ToString("HH:mm", CultureInfo.InvariantCulture)})" + Environment.NewLine));
                 }
                 catch (Exception) { }
             }
@@ -697,10 +698,10 @@ namespace MixItUp.Base.Services
         {
             Dictionary<StreamingPlatformTypeEnum, bool> liveStreams = new Dictionary<StreamingPlatformTypeEnum, bool>();
 
-            liveStreams[StreamingPlatformTypeEnum.Twitch] = ServiceManager.Get<TwitchSessionService>().IsConnected ? ServiceManager.Get<TwitchSessionService>().StreamIsLive : false;
-            liveStreams[StreamingPlatformTypeEnum.YouTube] = ServiceManager.Get<YouTubeSessionService>().IsConnected ? ServiceManager.Get<YouTubeSessionService>().StreamIsLive : false;
-            liveStreams[StreamingPlatformTypeEnum.Trovo] = ServiceManager.Get<TrovoSessionService>().IsConnected ? ServiceManager.Get<TrovoSessionService>().Channel?.is_live ?? false : false;
-            liveStreams[StreamingPlatformTypeEnum.Glimesh] = ServiceManager.Get<GlimeshSessionService>().IsConnected ? ServiceManager.Get<GlimeshSessionService>().User?.channel?.IsLive ?? false : false;
+            StreamingPlatforms.ForEachPlatform(p =>
+            {
+                liveStreams[p] = StreamingPlatforms.GetPlatformSessionService(p).IsConnected && StreamingPlatforms.GetPlatformSessionService(p).IsLive;
+            });
 
             if (liveStreams.Any(s => s.Value))
             {

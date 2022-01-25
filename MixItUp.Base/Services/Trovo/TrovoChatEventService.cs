@@ -11,6 +11,7 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Trovo.Base.Clients;
@@ -19,6 +20,60 @@ using Trovo.Base.Models.Users;
 
 namespace MixItUp.Base.Services.Trovo
 {
+    public class TrovoSubscriptionMessageModel
+    {
+        private const string SubscriptionRenewedMessageText = "has renewed subscription";
+        private const string SubscriptionTierMessageFormatText = "Tier \\d+";
+        private const string SubscriptionMonthsMessageFormatText = "\\d+ months";
+
+        public bool IsResub { get; private set; } = false;
+
+        public int Months { get; private set; } = 1;
+
+        public int Tier { get; private set; } = 1;
+
+        public ChatMessageModel Message { get; private set; }
+
+        public TrovoSubscriptionMessageModel(ChatMessageModel message)
+        {
+            this.Message = message;
+
+            if (!string.IsNullOrEmpty(message.sub_lv) && int.TryParse(message.sub_lv.Replace("L", string.Empty), out int tier))
+            {
+                this.Tier = tier;
+
+                Match match = Regex.Match(message.content, SubscriptionTierMessageFormatText);
+                if (match != null && match.Success)
+                {
+                    string[] splits = match.Value.Split(new char[] { ' ' });
+                    if (splits != null && splits.Length > 1 && int.TryParse(splits[1], out tier))
+                    {
+                        this.Months = tier;
+                    }
+                }
+            }
+
+            this.IsResub = message.content.Contains(SubscriptionRenewedMessageText, StringComparison.OrdinalIgnoreCase);
+
+            if (this.IsResub)
+            {
+                Match match = Regex.Match(message.content, SubscriptionMonthsMessageFormatText);
+                if (match != null && match.Success)
+                {
+                    string[] splits = match.Value.Split(new char[] { ' ' });
+                    if (splits != null && splits.Length > 0 && int.TryParse(splits[0], out int months))
+                    {
+                        this.Months = months;
+                    }
+                }
+            }
+            else
+            {
+                this.Months = 1;
+            }
+        }
+    }
+
     public class TrovoChatEventService : StreamingPlatformServiceBase
     {
         private const string TreasureBoxUnleashedActivityTopic = "item_drop_box_unleash";
@@ -40,7 +95,6 @@ namespace MixItUp.Base.Services.Trovo
         private HashSet<string> messagesProcessed = new HashSet<string>();
         private Dictionary<Guid, int> userSubsGiftedInstanced = new Dictionary<Guid, int>();
 
-        private HashSet<string> currentViewers = new HashSet<string>();
         private HashSet<string> previousViewers = new HashSet<string>();
 
         public TrovoChatEventService() { }
@@ -314,6 +368,8 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task<bool> RemoveRole(string username, string role) { return await this.PerformChatCommand($"removerole {role} {username}"); }
 
+        public async Task<bool> FastClip() { return await this.PerformChatCommand("fastclip"); }
+
         public async Task<bool> PerformChatCommand(string command)
         {
             string result = await this.GetChatClient(sendAsStreamer: true).PerformChatCommand(ServiceManager.Get<TrovoSessionService>().ChannelID, command);
@@ -405,21 +461,28 @@ namespace MixItUp.Base.Services.Trovo
                 }
                 else if (message.type == ChatMessageTypeEnum.SubscriptionAlert)
                 {
+                    TrovoSubscriptionMessageModel subMessage = new TrovoSubscriptionMessageModel(message);
+
+                    EventTypeEnum subEventType = EventTypeEnum.TrovoChannelSubscribed;
+                    if (subMessage.IsResub)
+                    {
+                        subEventType = EventTypeEnum.TrovoChannelResubscribed;
+                    }
+
                     CommandParametersModel parameters = new CommandParametersModel(user);
-                    if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TrovoChannelSubscribed, parameters))
+                    if (ServiceManager.Get<EventService>().CanPerformEvent(subEventType, parameters))
                     {
                         parameters.SpecialIdentifiers["message"] = message.content;
-                        //trigger.SpecialIdentifiers["usersubmonths"] = months.ToString();
-                        //trigger.SpecialIdentifiers["usersubplanname"] = !string.IsNullOrEmpty(packet.sub_plan_name) ? packet.sub_plan_name : TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
-                        //trigger.SpecialIdentifiers["usersubplan"] = planTier;
-                        //trigger.SpecialIdentifiers["usersubstreak"] = packet.streak_months.ToString();
+                        parameters.SpecialIdentifiers["usersubmonths"] = subMessage.Months.ToString();
+                        parameters.SpecialIdentifiers["usersubplan"] = $"{MixItUp.Base.Resources.Tier} {subMessage.Tier}";
 
                         ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
-                        //ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = months;
+                        ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = subMessage.Months;
 
-                        user.SubscribeDate = DateTimeOffset.Now;
-                        //user.Data.TwitchSubscriberTier = TwitchEventService.GetSubTierNumberFromText(packet.sub_plan);
-                        //user.Data.TotalMonthsSubbed++;
+                        if (!subMessage.IsResub)
+                        {
+                            user.SubscribeDate = DateTimeOffset.Now;
+                        }
 
                         foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                         {
@@ -434,14 +497,19 @@ namespace MixItUp.Base.Services.Trovo
                             }
                         }
 
-                        if (string.IsNullOrEmpty(await ServiceManager.Get<ModerationService>().ShouldTextBeModerated(user, message.content)))
+                        await ServiceManager.Get<EventService>().PerformEvent(subEventType, parameters);
+
+                        if (subMessage.IsResub)
                         {
-                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelSubscribed, parameters);
+                            GlobalEvents.ResubscribeOccurred(new Tuple<UserV2ViewModel, int>(user, 1));
+                            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertUserResubscribedFormat, user.DisplayName, subMessage.Months), ChannelSession.Settings.AlertSubColor));
+                        }
+                        else
+                        {
+                            GlobalEvents.SubscribeOccurred(user);
+                            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertUserSubscribedFormat, user.DisplayName), ChannelSession.Settings.AlertSubColor));
                         }
                     }
-
-                    GlobalEvents.ResubscribeOccurred(new Tuple<UserV2ViewModel, int>(user, 1));
-                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} Subscribed", user.DisplayName), ChannelSession.Settings.AlertSubColor));
                 }
                 else if (message.type == ChatMessageTypeEnum.GiftedSubscriptionSentMessage)
                 {
@@ -454,9 +522,6 @@ namespace MixItUp.Base.Services.Trovo
                     {
                         CommandParametersModel parameters = new CommandParametersModel(user);
                         parameters.SpecialIdentifiers["subsgiftedamount"] = totalGifted.ToString();
-                        //trigger.SpecialIdentifiers["subsgiftedlifetimeamount"] = massGiftedSubEvent.LifetimeGifted.ToString();
-                        //trigger.SpecialIdentifiers["usersubplan"] = massGiftedSubEvent.PlanTier;
-                        //trigger.SpecialIdentifiers["isanonymous"] = massGiftedSubEvent.IsAnonymous.ToString();
                         await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelMassSubscriptionsGifted, parameters);
                     }
                     await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} Gifted {1} Subs", user.DisplayName, totalGifted), ChannelSession.Settings.AlertMassGiftedSubColor));
@@ -482,7 +547,7 @@ namespace MixItUp.Base.Services.Trovo
                         }
 
                         ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = giftee.ID;
-                        //ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = giftedSubEvent.MonthsGifted;
+                        ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
                         giftee.SubscribeDate = DateTimeOffset.Now;
                         //giftedSubEvent.Receiver.Data.TwitchSubscriberTier = giftedSubEvent.PlanTierNumber;
@@ -592,10 +657,10 @@ namespace MixItUp.Base.Services.Trovo
                 List<UserV2ViewModel> userJoins = new List<UserV2ViewModel>();
                 List<UserV2ViewModel> userLeaves = new List<UserV2ViewModel>();
 
+                HashSet<string> currentViewers = new HashSet<string>();
                 foreach (string viewer in viewers.all.viewers)
                 {
                     currentViewers.Add(viewer);
-
                     if (!previousViewers.Contains(viewer))
                     {
                         UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Trovo, viewer);
@@ -622,12 +687,22 @@ namespace MixItUp.Base.Services.Trovo
 
                 await ServiceManager.Get<UserService>().RemoveActiveUsers(userLeaves);
 
+                userLeaves.Clear();
+                foreach (UserV2ViewModel user in ServiceManager.Get<UserService>().GetActiveUsers(StreamingPlatformTypeEnum.Trovo))
+                {
+                    if (!currentViewers.Contains(user.Username))
+                    {
+                        userLeaves.Add(user);
+                    }
+                }
+
+                await ServiceManager.Get<UserService>().RemoveActiveUsers(userLeaves);
+
                 previousViewers.Clear();
                 foreach (string viewer in currentViewers)
                 {
                     previousViewers.Add(viewer);
                 }
-                currentViewers.Clear();
             }
         }
 

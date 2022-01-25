@@ -6,6 +6,7 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.MainControls
@@ -99,8 +100,13 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private bool selectAll;
 
+        public bool ShowPauseAllCommands { get { return !ServiceManager.Get<CommandService>().IsPaused; } }
+        public bool ShowUnpauseAllCommands { get { return ServiceManager.Get<CommandService>().IsPaused; } }
+
         public ICommand CancelSelectedCommand { get; set; }
         public ICommand ReplaySelectedCommand { get; set; }
+        public ICommand PauseAllCommandsCommand { get; set; }
+        public ICommand UnpauseAllCommandsCommand { get; set; }
 
         private bool filterApplied = false;
 
@@ -127,9 +133,31 @@ namespace MixItUp.Base.ViewModel.MainControls
                 this.ResetSelectedState();
             });
 
+            this.PauseAllCommandsCommand = this.CreateCommand(async () =>
+            {
+                await ServiceManager.Get<CommandService>().Pause();
+                this.NotifyPropertyChanged("ShowPauseAllCommands");
+                this.NotifyPropertyChanged("ShowUnpauseAllCommands");
+            });
+
+            this.UnpauseAllCommandsCommand = this.CreateCommand(async () =>
+            {
+                await ServiceManager.Get<CommandService>().Unpause();
+                this.NotifyPropertyChanged("ShowPauseAllCommands");
+                this.NotifyPropertyChanged("ShowUnpauseAllCommands");
+            });
+
             ServiceManager.Get<CommandService>().OnCommandInstanceAdded += Command_OnCommandInstanceAdded;
 
             this.RefreshList();
+        }
+
+        protected override Task OnVisibleInternal()
+        {
+            this.NotifyPropertyChanged("ShowPauseAllCommands");
+            this.NotifyPropertyChanged("ShowUnpauseAllCommands");
+
+            return base.OnVisibleInternal();
         }
 
         public void SetSelectedStateForAll(bool state)

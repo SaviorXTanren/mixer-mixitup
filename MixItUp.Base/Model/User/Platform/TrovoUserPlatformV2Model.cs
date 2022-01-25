@@ -35,6 +35,14 @@ namespace MixItUp.Base.Model.User.Platform
             this.SetUserProperties(message);
         }
 
+        public TrovoUserPlatformV2Model(string id, string username, string displayName)
+        {
+            this.Platform = StreamingPlatformTypeEnum.Trovo;
+            this.ID = id;
+            this.Username = username;
+            this.DisplayName = displayName;
+        }
+
         [Obsolete]
         public TrovoUserPlatformV2Model() : base() { }
 

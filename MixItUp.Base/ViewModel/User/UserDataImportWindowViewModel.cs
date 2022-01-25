@@ -1,7 +1,7 @@
 ﻿using ExcelDataReader;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.User.Platform;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
@@ -50,6 +50,19 @@ namespace MixItUp.Base.ViewModel.User
         }
         private string userDataFilePath;
 
+        public IEnumerable<StreamingPlatformTypeEnum> Platforms { get { return StreamingPlatforms.SupportedPlatforms; } }
+
+        public StreamingPlatformTypeEnum SelectedPlatform
+        {
+            get { return this.selectedPlatform; }
+            set
+            {
+                this.selectedPlatform = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private StreamingPlatformTypeEnum selectedPlatform = StreamingPlatformTypeEnum.Twitch;
+
         public ICommand UserDataFileBrowseCommand { get; private set; }
 
         public ThreadSafeObservableCollection<UserDataImportColumnViewModel> Columns { get; private set; } = new ThreadSafeObservableCollection<UserDataImportColumnViewModel>();
@@ -82,8 +95,8 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserDataImportWindowViewModel()
         {
-            this.Columns.Add(new UserDataImportColumnViewModel(MixItUp.Base.Resources.TwitchID));
-            this.Columns.Add(new UserDataImportColumnViewModel(MixItUp.Base.Resources.TwitchUsername));
+            this.Columns.Add(new UserDataImportColumnViewModel(MixItUp.Base.Resources.PlatformID));
+            this.Columns.Add(new UserDataImportColumnViewModel(MixItUp.Base.Resources.PlatformUsername));
             this.Columns.Add(new UserDataImportColumnViewModel(MixItUp.Base.Resources.ViewingHours));
             this.Columns.Add(new UserDataImportColumnViewModel(MixItUp.Base.Resources.ViewingMinutes));
 
@@ -112,8 +125,9 @@ namespace MixItUp.Base.ViewModel.User
 
                 try
                 {
-                    int usersImported = 0;
-                    int failedImports = 0;
+                    int successes = 0;
+                    int pending = 0;
+                    int failures = 0;
 
                     if (string.IsNullOrEmpty(this.UserDataFilePath) || !File.Exists(this.UserDataFilePath))
                     {
@@ -121,7 +135,7 @@ namespace MixItUp.Base.ViewModel.User
                         return;
                     }
 
-                    if (!this.Columns[0].ColumnNumber.HasValue && !this.Columns[1].ColumnNumber.HasValue)
+                    if (this.Columns.Take(2).All(c => !c.ColumnNumber.HasValue))
                     {
                         await DialogHelper.ShowMessage(Resources.DataFileRequiredColumns);
                         return;
@@ -198,90 +212,106 @@ namespace MixItUp.Base.ViewModel.User
                         {
                             try
                             {
-                                long twitchID = 0;
-                                if (this.columnDictionary[MixItUp.Base.Resources.TwitchID].ArrayNumber >= 0)
+                                string platformID = null;
+                                if (this.columnDictionary[MixItUp.Base.Resources.PlatformID].ArrayNumber >= 0)
                                 {
-                                    long.TryParse(line[this.columnDictionary[MixItUp.Base.Resources.TwitchID].ArrayNumber], out twitchID);
+                                    platformID = line[this.columnDictionary[MixItUp.Base.Resources.PlatformID].ArrayNumber];
                                 }
 
-                                string twitchUsername = null;
-                                if (this.columnDictionary[MixItUp.Base.Resources.TwitchUsername].ArrayNumber >= 0)
+                                string platformUsername = null;
+                                if (this.columnDictionary[MixItUp.Base.Resources.PlatformUsername].ArrayNumber >= 0)
                                 {
-                                    twitchUsername = line[this.columnDictionary[MixItUp.Base.Resources.TwitchUsername].ArrayNumber];
+                                    platformUsername = line[this.columnDictionary[MixItUp.Base.Resources.PlatformUsername].ArrayNumber];
                                 }
 
                                 UserV2ViewModel user = null;
-                                if (twitchID > 0 && !string.IsNullOrEmpty(twitchUsername))
+                                UserImportModel userImport = null;
+
+                                if (user == null && !string.IsNullOrEmpty(platformID))
                                 {
-                                    user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, twitchID.ToString());
-                                    if (user == null)
+                                    user = await ServiceManager.Get<UserService>().GetUserByPlatformID(this.SelectedPlatform, platformID);
+                                }
+                                if (user == null && !string.IsNullOrEmpty(platformUsername))
+                                {
+                                    user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(this.SelectedPlatform, platformUsername);
+                                }
+
+                                int hours = 0;
+                                this.GetIntValueFromLineColumn(MixItUp.Base.Resources.ViewingHours, line, out hours);
+
+                                int minutes = 0;
+                                this.GetIntValueFromLineColumn(MixItUp.Base.Resources.ViewingMinutes, line, out minutes);
+
+                                Dictionary<Guid, int> currencies = new Dictionary<Guid, int>();
+                                foreach (var kvp in nameToCurrencies)
+                                {
+                                    if (this.GetIntValueFromLineColumn(kvp.Key, line, out int iValue))
                                     {
-                                        user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(new Twitch.Base.Models.NewAPI.Users.UserModel()
-                                        {
-                                            id = twitchID.ToString(),
-                                            login = twitchUsername,
-                                            display_name = twitchUsername,
-                                        }));
+                                        currencies[kvp.Value.ID] = iValue;
                                     }
-                                }
-                                else if (twitchID > 0)
-                                {
-                                    user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, twitchID.ToString(), performPlatformSearch: true);
-                                }
-                                else if (!string.IsNullOrEmpty(twitchUsername))
-                                {
-                                    user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, twitchUsername, performPlatformSearch: true);
                                 }
 
                                 if (user != null)
                                 {
-                                    int iValue = 0;
-                                    if (this.GetIntValueFromLineColumn(MixItUp.Base.Resources.ViewingHours, line, out iValue))
+                                    if (hours > 0)
                                     {
-                                        user.OnlineViewingHoursOnly = iValue;
+                                        user.OnlineViewingHoursOnly = hours;
                                     }
-                                    if (this.GetIntValueFromLineColumn(MixItUp.Base.Resources.ViewingMinutes, line, out iValue))
+                                    if (minutes > 0)
                                     {
-                                        user.OnlineViewingMinutesOnly = iValue;
+                                        user.OnlineViewingMinutesOnly = minutes;
                                     }
 
-                                    foreach (var kvp in nameToCurrencies)
+                                    foreach (var kvp in currencies)
                                     {
-                                        if (this.GetIntValueFromLineColumn(kvp.Key, line, out iValue))
+                                        if (ChannelSession.Settings.Currency.ContainsKey(kvp.Key))
                                         {
-                                            kvp.Value.SetAmount(user, iValue);
+                                            ChannelSession.Settings.Currency[kvp.Key].SetAmount(user, kvp.Value);
                                         }
                                     }
 
                                     ChannelSession.Settings.Users.ManualValueChanged(user.ID);
-
-                                    usersImported++;
-                                    this.ImportButtonText = string.Format("{0} {1}", usersImported, MixItUp.Base.Resources.Imported);
                                 }
                                 else
                                 {
-                                    failedImports++;
+                                    userImport = new UserImportModel()
+                                    {
+                                        Platform = this.SelectedPlatform,
+                                        PlatformID = platformID,
+                                        PlatformUsername = platformUsername,
+                                        OnlineViewingMinutes = hours + (minutes * 60),
+                                        CurrencyAmounts = currencies
+                                    };
+
+                                    ChannelSession.Settings.ImportedUsers[userImport.ID] = userImport;
                                 }
+
+                                if (user != null)
+                                {
+                                    successes++;
+                                }
+                                else if (userImport != null)
+                                {
+                                    pending++;
+                                }
+                                else
+                                {
+                                    failures++;
+                                }
+                                this.ImportButtonText = string.Format("{0} {1}", successes + pending, MixItUp.Base.Resources.Imported);
                             }
                             catch (Exception ex)
                             {
                                 Logger.Log(LogLevel.Error, "User Data Import Failure - " + line);
                                 Logger.Log(ex);
-                                failedImports++;
+                                failures++;
                             }
                         }
                     }
 
                     await ChannelSession.SaveSettings();
 
-                    if (failedImports > 0)
-                    {
-                        await DialogHelper.ShowMessage(string.Format(Resources.ImportWithFailures, usersImported, failedImports));
-                    }
-                    else
-                    {
-                        await DialogHelper.ShowMessage(string.Format(Resources.ImportSuccess, usersImported));
-                    }
+                    await DialogHelper.ShowMessage(string.Format(Resources.UserImportResults, successes, pending, failures));
                 }
                 catch (Exception ex)
                 {

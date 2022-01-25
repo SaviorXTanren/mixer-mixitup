@@ -56,6 +56,15 @@ namespace MixItUp.Base.Services.Glimesh
             }
         }
 
+        public bool IsLive
+        {
+            get
+            {
+                bool? isLive = this.User?.channel?.IsLive;
+                return isLive.GetValueOrDefault();
+            }
+        }
+
         public async Task<Result> ConnectUser()
         {
             Result<GlimeshPlatformService> result = await GlimeshPlatformService.ConnectUser();

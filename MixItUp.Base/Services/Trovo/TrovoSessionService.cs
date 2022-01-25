@@ -54,6 +54,15 @@ namespace MixItUp.Base.Services.Trovo
             }
         }
 
+        public bool IsLive
+        {
+            get
+            {
+                bool? isLive = this.Channel?.is_live;
+                return isLive.GetValueOrDefault();
+            }
+        }
+
         public async Task<Result> ConnectUser()
         {
             Result<TrovoPlatformService> result = await TrovoPlatformService.ConnectUser();

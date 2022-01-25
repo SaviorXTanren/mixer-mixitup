@@ -232,7 +232,7 @@ namespace MixItUp.Base.Model.Commands
             if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
                 await ServiceManager.Get<GlimeshSessionService>().RefreshChannel();
-                if (ServiceManager.Get<TwitchSessionService>().StreamIsLive)
+                if (ServiceManager.Get<TwitchSessionService>().IsLive)
                 {
                     return TwitchPlatformService.GetTwitchDateTime(ServiceManager.Get<TwitchSessionService>().Stream?.started_at);
                 }
@@ -390,7 +390,13 @@ namespace MixItUp.Base.Model.Commands
                     }
 
                     string quoteText = quoteBuilder.ToString();
-                    quoteText = quoteText.Trim(new char[] { ' ', '\'', '\"' });
+                    quoteText = quoteText.Trim();
+
+                    char[] quoteCharacters = new char[] { '\'', '\"' };
+                    if (quoteText.First() == quoteText.Last() && quoteCharacters.Contains(quoteText.First()) && quoteCharacters.Contains(quoteText.Last()))
+                    {
+                        quoteText = quoteText.Trim(quoteCharacters);
+                    }
 
                     UserQuoteModel quote = new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), quoteText, DateTimeOffset.Now, await GamePreMadeChatCommandModel.GetCurrentGameName(parameters.Platform));
                     ChannelSession.Settings.Quotes.Add(quote);
@@ -893,7 +899,7 @@ namespace MixItUp.Base.Model.Commands
                 string platformName = parameters.Arguments.First();
                 StreamingPlatformTypeEnum platform = EnumHelper.GetEnumValueFromString<StreamingPlatformTypeEnum>(platformName);
                 
-                if (!StreamingPlatforms.SupportedPlatforms.Contains(platform) || platform == parameters.Platform)
+                if (!StreamingPlatforms.SupportedPlatforms.Contains(platform) || platform == parameters.Platform || !StreamingPlatforms.GetPlatformSessionService(platform).IsConnected)
                 {
                     await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.LinkAccountCommandErrorUnsupportedPlatform, platformName), parameters.Platform);
                     return;
@@ -910,7 +916,7 @@ namespace MixItUp.Base.Model.Commands
                 if (LinkedAccounts.ContainsKey(user.ID) && LinkedAccounts[user.ID] == parameters.User.ID)
                 {
                     LinkedAccounts.Remove(user.ID);
-                    parameters.User.MergeUserData(user);
+                    await parameters.User.MergeUserData(user);
                     await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.LinkAccountCommandAccountsLinkedSuccessfully, parameters.Platform);
                 }
                 else

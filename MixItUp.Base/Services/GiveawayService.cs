@@ -330,7 +330,8 @@ namespace MixItUp.Base.Services
             {
                 { "giveawayitem", this.Item },
                 { "giveawaycommand", "!" + ChannelSession.Settings.GiveawayCommand },
-                { "giveawaytimelimit", (this.TimeLeft / 60).ToString() }
+                { "giveawaytimelimit", (this.TimeLeft / 60).ToString() },
+                { "giveawaymaximumentries", ChannelSession.Settings.GiveawayMaximumEntries.ToString() }
             };
         }
     }

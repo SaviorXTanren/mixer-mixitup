@@ -16,6 +16,8 @@ namespace MixItUp.Base.Model.Actions
         DisableCommandGroup,
         EnableCommandGroup,
         CancelAllCommands,
+        PauseAllCommands,
+        UnpauseAllCommands,
     }
 
     [DataContract]
@@ -177,6 +179,14 @@ namespace MixItUp.Base.Model.Actions
                 {
                     ServiceManager.Get<CommandService>().Cancel(commandInstance);
                 }
+            }
+            else if (this.ActionType == CommandActionTypeEnum.PauseAllCommands)
+            {
+                await ServiceManager.Get<CommandService>().Pause();
+            }
+            else if (this.ActionType == CommandActionTypeEnum.UnpauseAllCommands)
+            {
+                await ServiceManager.Get<CommandService>().Unpause();
             }
         }
     }

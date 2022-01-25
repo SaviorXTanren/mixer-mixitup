@@ -195,3 +195,4 @@ FakesAssemblies/
 /Releases
 *.sqlite3-journal
 /Wiki/Videos
+/MixItUp.WPF/Installer.nsi.bak

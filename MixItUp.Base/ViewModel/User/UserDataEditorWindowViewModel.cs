@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
@@ -148,6 +149,19 @@ namespace MixItUp.Base.ViewModel.User
         public const string UserEntranceCommandName = "Entrance Command";
 
         public UserV2ViewModel User { get; private set; }
+
+        public IEnumerable<string> PlatformImages
+        {
+            get
+            {
+                List<string> results = new List<string>();
+                foreach (StreamingPlatformTypeEnum platform in this.User.AllPlatforms)
+                {
+                    results.Add(StreamingPlatforms.GetPlatformImage(platform));
+                }
+                return results;
+            }
+        }
 
         public int ViewingHours
         {

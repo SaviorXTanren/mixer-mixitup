@@ -21,7 +21,6 @@ namespace MixItUp.Base.Services.Twitch
         public UserModel User { get; set; }
         public UserModel Bot { get; set; }
         public StreamModel Stream { get; set; }
-        public bool StreamIsLive { get { return this.Stream != null; } }
 
         public bool IsConnected { get { return this.UserConnection != null; } }
         public bool IsBotConnected { get { return this.BotConnection != null; } }
@@ -54,6 +53,14 @@ namespace MixItUp.Base.Services.Twitch
                     Username = this.Botname,
                     AvatarURL = this.Bot?.profile_image_url
                 };
+            }
+        }
+
+        public bool IsLive
+        {
+            get
+            {
+                return this.Stream != null;
             }
         }
 

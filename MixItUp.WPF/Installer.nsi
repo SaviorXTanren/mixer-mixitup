@@ -1,17 +1,7 @@
-; example2.nsi
-;
-; This script is based on example1.nsi, but it remember the directory, 
-; has uninstall support and (optionally) installs start menu shortcuts.
-;
-; It will install example2.nsi into a directory that the user selects.
-;
-; See install-shared.nsi for a more robust way of checking for administrator rights.
-; See install-per-user.nsi for a file association example.
-
 ;--------------------------------
 ;Include Modern UI
 
-  !include "MUI2.nsh"
+!include "MUI2.nsh"
 
 ;--------------------------------
 
@@ -19,7 +9,7 @@
 Name "Mix It Up"
 
 ; The file to write
-OutFile "MixItUp-Install.exe"
+OutFile "MixItUp-Installer.exe"
 
 ; Request application privileges for Windows Vista and higher
 RequestExecutionLevel admin
@@ -38,22 +28,18 @@ InstallDirRegKey HKLM "Software\MixItUp" "Install_Dir"
 
 ; Pages
 
-Page license
-Page components
-Page directory
-Page instfiles
+!insertmacro MUI_PAGE_LICENSE "License.txt"
+!insertmacro MUI_PAGE_COMPONENTS
+!insertmacro MUI_PAGE_DIRECTORY
+!insertmacro MUI_PAGE_INSTFILES
 
-UninstPage uninstConfirm
-UninstPage instfiles
+!insertmacro MUI_UNPAGE_CONFIRM
+!insertmacro MUI_UNPAGE_INSTFILES
 
 ;--------------------------------
 
-Section "Installer Section"
-
-SectionEnd
-
 ; The stuff to install
-Section "Mix It Up"
+Section "Mix It Up (required)"
 
   SectionIn RO
   
@@ -61,13 +47,14 @@ Section "Mix It Up"
   SetOutPath $INSTDIR
   
   ; Put file there
-  File "example2.nsi"
+  File /r *.*
   
   ; Write the installation path into the registry
   WriteRegStr HKLM SOFTWARE\MixItUp "Install_Dir" "$INSTDIR"
   
   ; Write the uninstall keys for Windows
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MixItUp" "DisplayName" "Mix It Up"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MixItUp" "DisplayIcon" '"$INSTDIR\MixItUp.exe,0"'
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MixItUp" "UninstallString" '"$INSTDIR\uninstall.exe"'
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MixItUp" "NoModify" 1
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MixItUp" "NoRepair" 1
@@ -80,7 +67,7 @@ Section "Start Menu Shortcuts"
 
   CreateDirectory "$SMPROGRAMS\MixItUp"
   CreateShortcut "$SMPROGRAMS\MixItUp\Uninstall.lnk" "$INSTDIR\uninstall.exe"
-  CreateShortcut "$SMPROGRAMS\MixItUp\MixItUp.lnk" "$INSTDIR\MixItUp.exe"
+  CreateShortcut "$SMPROGRAMS\MixItUp\Mix It Up.lnk" "$INSTDIR\MixItUp.exe"
 
 SectionEnd
 
@@ -95,8 +82,7 @@ Section "Uninstall"
   DeleteRegKey HKLM SOFTWARE\MixItUp
 
   ; Remove files and uninstaller
-  Delete $INSTDIR\example2.nsi
-  Delete $INSTDIR\uninstall.exe
+  Delete $INSTDIR\*.*
 
   ; Remove shortcuts, if any
   Delete "$SMPROGRAMS\MixItUp\*.lnk"

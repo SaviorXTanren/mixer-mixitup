@@ -514,7 +514,7 @@ namespace MixItUp.Base
                     await ChannelSession.SaveSettings();
                     sessionBackgroundTimer = 0;
 
-                    if (ServiceManager.Get<TwitchSessionService>().IsConnected && ServiceManager.Get<TwitchSessionService>().StreamIsLive)
+                    if (ServiceManager.Get<TwitchSessionService>().IsConnected && ServiceManager.Get<TwitchSessionService>().IsLive)
                     {
                         try
                         {

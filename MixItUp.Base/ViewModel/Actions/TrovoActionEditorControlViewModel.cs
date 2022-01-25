@@ -132,23 +132,27 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.SelectedActionType == TrovoActionType.DisableSlowMode)
             {
-                return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateDisableSlowModeAction());
+                return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateBasicAction(TrovoActionType.DisableSlowMode));
             }
             else if (this.SelectedActionType == TrovoActionType.EnableFollowerMode)
             {
-                return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateEnableFollowerModeAction());
+                return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateBasicAction(TrovoActionType.EnableFollowerMode));
             }
             else if (this.SelectedActionType == TrovoActionType.DisableFollowerMode)
             {
-                return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateDisableFollowerModeAction());
+                return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateBasicAction(TrovoActionType.DisableFollowerMode));
             }
             else if (this.SelectedActionType == TrovoActionType.AddUserRole)
             {
-                return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateAddUserRoleAction(this.Username, this.RoleName));
+                return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateUserRoleAction(TrovoActionType.AddUserRole, this.Username, this.RoleName));
             }
             else if (this.SelectedActionType == TrovoActionType.RemoveUserRole)
             {
-                return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateRemoveUserRoleAction(this.Username, this.RoleName));
+                return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateUserRoleAction(TrovoActionType.RemoveUserRole, this.Username, this.RoleName));
+            }
+            else if (this.SelectedActionType == TrovoActionType.FastClip90Seconds)
+            {
+                return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateBasicAction(TrovoActionType.FastClip90Seconds));
             }
             return Task.FromResult<ActionModelBase>(null);
         }

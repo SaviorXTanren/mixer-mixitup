@@ -82,7 +82,9 @@ namespace MixItUp.Base.Model.Actions
                 }
                 else if (this.ActionType == TwitterActionTypeEnum.UpdateName)
                 {
-                    Result result = await ServiceManager.Get<TwitterService>().UpdateName(this.NameUpdate);
+                    string nameUpdate = await ReplaceStringWithSpecialModifiers(this.NameUpdate, parameters);
+
+                    Result result = await ServiceManager.Get<TwitterService>().UpdateName(nameUpdate);
                     if (!result.Success)
                     {
                         await ServiceManager.Get<ChatService>().SendMessage("Twitter Error: " + result.Message, parameters.Platform);

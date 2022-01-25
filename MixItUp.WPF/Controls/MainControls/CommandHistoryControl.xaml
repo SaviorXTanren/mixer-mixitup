@@ -116,11 +116,16 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" Command="{Binding CancelSelectedCommand}" Content="{x:Static resx:Resources.CancelSelected}" />
 
             <Button Grid.Column="2" Command="{Binding ReplaySelectedCommand}" Content="{x:Static resx:Resources.ReplaySelected}" />
+
+            <Button Grid.Column="4" Visibility="{Binding ShowPauseAllCommands, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding PauseAllCommandsCommand}" Content="{x:Static resx:Resources.PauseAllCommands}" />
+            <Button Grid.Column="4" Visibility="{Binding ShowUnpauseAllCommands, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding UnpauseAllCommandsCommand}" Content="{x:Static resx:Resources.UnpauseAllCommands}" />
         </Grid>
     </Grid>
 </local:MainControlBase>

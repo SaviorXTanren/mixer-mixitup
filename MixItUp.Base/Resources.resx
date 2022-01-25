@@ -6338,4 +6338,62 @@ Failure to do one of the following could effect how users rate &amp; review your
   <data name="TwitchActionUsernameMissing" xml:space="preserve">
     <value>Twitch Action: A valid username must be specified</value>
   </data>
+  <data name="AlertUserResubscribedFormat" xml:space="preserve">
+    <value>{0} Re-Subscribed for {1} Months</value>
+  </data>
+  <data name="AlertUserSubscribedFormat" xml:space="preserve">
+    <value>{0} Subscribed</value>
+  </data>
+  <data name="PauseAllCommands" xml:space="preserve">
+    <value>Pause All Commands</value>
+  </data>
+  <data name="UnpauseAllCommands" xml:space="preserve">
+    <value>Unpause All Commands</value>
+  </data>
+  <data name="Platforms" xml:space="preserve">
+    <value>Platforms</value>
+  </data>
+  <data name="GlimeshID" xml:space="preserve">
+    <value>Glimesh ID</value>
+  </data>
+  <data name="GlimeshUsername" xml:space="preserve">
+    <value>Glimesh Username</value>
+  </data>
+  <data name="TrovoID" xml:space="preserve">
+    <value>Trovo ID</value>
+  </data>
+  <data name="TrovoUsername" xml:space="preserve">
+    <value>Trovo Username</value>
+  </data>
+  <data name="YouTubeID" xml:space="preserve">
+    <value>YouTube ID</value>
+  </data>
+  <data name="YouTubeUsername" xml:space="preserve">
+    <value>YouTube Username</value>
+  </data>
+  <data name="PlatformID" xml:space="preserve">
+    <value>Platform ID</value>
+  </data>
+  <data name="PlatformUsername" xml:space="preserve">
+    <value>Platform Username</value>
+  </data>
+  <data name="UserImportResults" xml:space="preserve">
+    <value>Successful Imports: {0}
+Pending Imports: {1}
+Failed Imports: {2}
+
+Users who have not visited your channel yet while Mix It Up is running have their data import pending and will be successfully imported when they first visit.
+
+Failed imports could be due to invalid data or failure to find their information on the platform. Please contact support for further help with this if needed.</value>
+    <comment>{0} is the number of successes, {1} is the number of pending, {2} is the number of failures</comment>
+  </data>
+  <data name="TimersRunOnlyWhenLive" xml:space="preserve">
+    <value>Run Only When Live</value>
+  </data>
+  <data name="FastClip90Seconds" xml:space="preserve">
+    <value>Fast Clip (90 Seconds)</value>
+  </data>
+  <data name="ManualDeletion" xml:space="preserve">
+    <value>Manual Deletion</value>
+  </data>
 </root>
