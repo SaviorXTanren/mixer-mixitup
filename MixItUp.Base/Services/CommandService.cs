@@ -478,6 +478,11 @@ namespace MixItUp.Base.Services
             CommandModelBase command = commandInstance.Command;
             if (command != null)
             {
+                if (parameters.InitialCommandID == Guid.Empty)
+                {
+                    parameters.InitialCommandID = command.ID;
+                }
+
                 await command.PreRun(parameters);
             }
 
