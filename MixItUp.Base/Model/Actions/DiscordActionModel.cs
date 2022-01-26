@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
+using StreamingClient.Base.Util;
 using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -61,6 +62,13 @@ namespace MixItUp.Base.Model.Actions
                 {
                     string message = await ReplaceStringWithSpecialModifiers(this.MessageText, parameters);
                     string filePath = await ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
+
+                    if (!string.IsNullOrEmpty(filePath) && !ServiceManager.Get<IFileService>().FileExists(filePath))
+                    {
+                        Logger.Log(LogLevel.Error, $"Discord Action - File does not exist: {filePath}");
+                        return;
+                    }
+
                     await ServiceManager.Get<DiscordService>().CreateMessage(this.channel, message, filePath);
                 }
             }
