@@ -4660,7 +4660,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ESC.
+        ///   Looks up a localized string similar to Escape.
         /// </summary>
         public static string Escape {
             get {

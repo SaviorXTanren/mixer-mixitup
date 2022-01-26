@@ -6454,7 +6454,7 @@ Failed imports could be due to invalid data or failure to find their information
     <value>Equal</value>
   </data>
   <data name="Escape" xml:space="preserve">
-    <value>ESC</value>
+    <value>Escape</value>
   </data>
   <data name="F1" xml:space="preserve">
     <value>F1</value>
