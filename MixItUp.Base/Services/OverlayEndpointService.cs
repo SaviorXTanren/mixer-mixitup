@@ -163,6 +163,12 @@ namespace MixItUp.Base.Services
                     {
                         if (item is OverlayImageItemModel || item is OverlayVideoItemModel || item is OverlaySoundItemModel)
                         {
+                            if (!ServiceManager.Get<IFileService>().FileExists(jobj["FilePath"].ToString()))
+                            {
+                                Logger.Log(LogLevel.Error, $"Overlay Action - File does not exist: {jobj["FilePath"].ToString()}");
+                                return;
+                            }
+
                             this.SetLocalFile(jobj["FileID"].ToString(), jobj["FilePath"].ToString());
                             jobj["FullLink"] = OverlayItemModelBase.GetFileFullLink(jobj["FileID"].ToString(), jobj["FileType"].ToString(), jobj["FilePath"].ToString());
                         }

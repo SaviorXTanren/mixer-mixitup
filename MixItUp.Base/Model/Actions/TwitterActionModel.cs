@@ -65,6 +65,12 @@ namespace MixItUp.Base.Model.Actions
                     string tweet = await ReplaceStringWithSpecialModifiers(this.TweetText, parameters);
                     string imagePath = await ReplaceStringWithSpecialModifiers(this.ImagePath, parameters);
 
+                    if (!ServiceManager.Get<IFileService>().FileExists(imagePath))
+                    {
+                        Logger.Log(LogLevel.Error, $"Twitter Action - File does not exist: {imagePath}");
+                        return;
+                    }
+
                     if (!string.IsNullOrEmpty(tweet))
                     {
                         if (TwitterActionModel.CheckIfTweetContainsTooManyTags(tweet))

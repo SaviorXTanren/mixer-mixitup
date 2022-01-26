@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
+using StreamingClient.Base.Util;
 using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -32,6 +33,13 @@ namespace MixItUp.Base.Model.Actions
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             string audioFilePath = await ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
+
+            if (!ServiceManager.Get<IFileService>().FileExists(audioFilePath))
+            {
+                Logger.Log(LogLevel.Error, $"Sound Action - File does not exist: {audioFilePath}");
+                return;
+            }
+
             await ServiceManager.Get<IAudioService>().Play(audioFilePath, this.VolumeScale, this.OutputDevice);
         }
     }
