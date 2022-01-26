@@ -34,7 +34,7 @@ namespace MixItUp.WPF.Controls.Settings
             return -1;
         }
 
-        public int CompareTo(HotKeyUI other) { return this.HotKey.Key.CompareTo(other.HotKey.Key); }
+        public int CompareTo(HotKeyUI other) { return this.HotKey.VirtualKey.CompareTo(other.HotKey.VirtualKey); }
 
         public override bool Equals(object obj)
         {
@@ -55,6 +55,8 @@ namespace MixItUp.WPF.Controls.Settings
     /// </summary>
     public partial class HotKeysSettingsControl : SettingsControlBase
     {
+        private static IEnumerable<VirtualKeyEnum> keyboardKeys = EnumHelper.GetEnumList<VirtualKeyEnum>().OrderBy(k => EnumLocalizationHelper.GetLocalizedName(k));
+
         private const string PreMadeCommandType = "Pre-Made";
 
         private ObservableCollection<HotKeyUI> hotKeys = new ThreadSafeObservableCollection<HotKeyUI>();
@@ -66,6 +68,7 @@ namespace MixItUp.WPF.Controls.Settings
 
         protected override async Task InitializeInternal()
         {
+            this.KeyComboBox.ItemsSource = keyboardKeys;
             this.HotKeysDataGrid.ItemsSource = this.hotKeys;
 
             this.RefreshList();
@@ -75,9 +78,7 @@ namespace MixItUp.WPF.Controls.Settings
 
         protected override async Task OnVisibilityChanged()
         {
-            // TODO: Fix this to not use GetEnumNames, that doens't support localization.
             this.CommandTypeComboBox.ItemsSource = EnumHelper.GetEnumNames(CommandModelBase.GetSelectableCommandTypes());
-            this.KeyComboBox.ItemsSource = EnumHelper.GetEnumNames<InputKeyEnum>().OrderBy(s => s);
 
             this.RefreshList();
 
@@ -137,11 +138,11 @@ namespace MixItUp.WPF.Controls.Settings
                 if (this.ShiftCheckBox.IsChecked.GetValueOrDefault()) { modifiers |= HotKeyModifiersEnum.Shift; }
                 if (this.ControlCheckBox.IsChecked.GetValueOrDefault()) { modifiers |= HotKeyModifiersEnum.Control; }
                 if (this.AltCheckBox.IsChecked.GetValueOrDefault()) { modifiers |= HotKeyModifiersEnum.Alt; }
-                HotKeyConfiguration hotKey = new HotKeyConfiguration(modifiers, EnumHelper.GetEnumValueFromString<InputKeyEnum>((string)this.KeyComboBox.SelectedItem), command.ID);
+                HotKeyConfiguration hotKey = new HotKeyConfiguration(modifiers, (VirtualKeyEnum)this.KeyComboBox.SelectedItem, command.ID);
 
                 ChannelSession.Settings.HotKeys[hotKey.ToString()] = hotKey;
 
-                ServiceManager.Get<IInputService>().RegisterHotKey(hotKey.Modifiers, hotKey.Key);
+                ServiceManager.Get<IInputService>().RegisterHotKey(hotKey.Modifiers, hotKey.VirtualKey);
 
                 this.RefreshList();
             });
@@ -154,7 +155,7 @@ namespace MixItUp.WPF.Controls.Settings
             if (hotKey != null)
             {
                 ChannelSession.Settings.HotKeys.Remove(hotKey.HotKey.ToString());
-                ServiceManager.Get<IInputService>().UnregisterHotKey(hotKey.HotKey.Modifiers, hotKey.HotKey.Key);
+                ServiceManager.Get<IInputService>().UnregisterHotKey(hotKey.HotKey.Modifiers, hotKey.HotKey.VirtualKey);
             }
             this.RefreshList();
         }
@@ -168,7 +169,7 @@ namespace MixItUp.WPF.Controls.Settings
             this.KeyComboBox.SelectedIndex = -1;
 
             this.hotKeys.Clear();
-            foreach (HotKeyConfiguration hotKey in ChannelSession.Settings.HotKeys.Values.OrderBy(hotKey => hotKey.Key))
+            foreach (HotKeyConfiguration hotKey in ChannelSession.Settings.HotKeys.Values.OrderBy(hotKey => EnumLocalizationHelper.GetLocalizedName(hotKey.VirtualKey)))
             {
                 CommandModelBase command = ChannelSession.Settings.GetCommand(hotKey.CommandID);
                 if (command != null)

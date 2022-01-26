@@ -316,7 +316,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V2
                 ActionType = action.ActionType.ToString(),
                 Alt = action.Alt,
                 Control = action.Control,
-                Key = action.Key?.ToString(),
+                Key = action.VirtualKey?.ToString(),
                 Mouse = action.Mouse?.ToString(),
                 Shift = action.Shift,
             };

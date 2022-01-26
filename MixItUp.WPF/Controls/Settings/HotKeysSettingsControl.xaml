@@ -73,7 +73,13 @@
                 <TextBlock Grid.Column="8" Margin="0,5,0,0" VerticalAlignment="Center">Alt:</TextBlock>
                 <CheckBox x:Name="AltCheckBox" Margin="0,5,0,0" Grid.Column="10" />
 
-                <ComboBox x:Name="KeyComboBox" Grid.Column="12" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.KeyboardKey}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" Visibility="Visible" />
+                <ComboBox x:Name="KeyComboBox" Grid.Column="12" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.KeyboardKey}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
             </Grid>
 
             <Button x:Name="AddHotKeyButton" Grid.Column="2" MinWidth="60" Click="AddHotKeyButton_Click" Content="{x:Static resx:Resources.Add}"/>

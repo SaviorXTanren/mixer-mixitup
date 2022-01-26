@@ -24,7 +24,7 @@ namespace MixItUp.Base.Model.Actions
     public class InputActionModel : ActionModelBase
     {
         [DataMember]
-        public InputKeyEnum? Key { get; set; }
+        public VirtualKeyEnum? VirtualKey { get; set; }
 
         [DataMember]
         public SimpleInputMouseEnum? Mouse { get; set; }
@@ -39,10 +39,14 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public bool Alt { get; set; }
 
-        public InputActionModel(InputKeyEnum key, InputActionTypeEnum actionType, bool shift, bool control, bool alt)
+        [DataMember]
+        [Obsolete]
+        public InputKeyEnum? Key { get; set; }
+
+        public InputActionModel(VirtualKeyEnum key, InputActionTypeEnum actionType, bool shift, bool control, bool alt)
             : this(actionType, shift, control, alt)
         {
-            this.Key = key;
+            this.VirtualKey = key;
         }
 
         public InputActionModel(SimpleInputMouseEnum mouse, InputActionTypeEnum actionType, bool shift, bool control, bool alt)
@@ -67,26 +71,26 @@ namespace MixItUp.Base.Model.Actions
         {
             if (this.ActionType == InputActionTypeEnum.Press || this.ActionType == InputActionTypeEnum.Click)
             {
-                if (this.Shift) { ServiceManager.Get<IInputService>().KeyDown(InputKeyEnum.LeftShift); }
-                if (this.Control) { ServiceManager.Get<IInputService>().KeyDown(InputKeyEnum.LeftControl); }
-                if (this.Alt) { ServiceManager.Get<IInputService>().KeyDown(InputKeyEnum.LeftAlt); }
+                if (this.Shift) { ServiceManager.Get<IInputService>().KeyDown(VirtualKeyEnum.LeftShift); }
+                if (this.Control) { ServiceManager.Get<IInputService>().KeyDown(VirtualKeyEnum.LeftControl); }
+                if (this.Alt) { ServiceManager.Get<IInputService>().KeyDown(VirtualKeyEnum.LeftAlt); }
             }
 
             await ServiceManager.Get<IInputService>().WaitForKeyToRegister();
 
-            if (this.Key != null)
+            if (this.VirtualKey != null)
             {
                 if (this.ActionType == InputActionTypeEnum.Click)
                 {
-                    await ServiceManager.Get<IInputService>().KeyClick(this.Key.GetValueOrDefault());
+                    await ServiceManager.Get<IInputService>().KeyClick(this.VirtualKey.GetValueOrDefault());
                 }
                 else if (this.ActionType == InputActionTypeEnum.Press)
                 {
-                    ServiceManager.Get<IInputService>().KeyDown(this.Key.GetValueOrDefault());
+                    ServiceManager.Get<IInputService>().KeyDown(this.VirtualKey.GetValueOrDefault());
                 }
                 else if (this.ActionType == InputActionTypeEnum.Release)
                 {
-                    ServiceManager.Get<IInputService>().KeyUp(this.Key.GetValueOrDefault());
+                    ServiceManager.Get<IInputService>().KeyUp(this.VirtualKey.GetValueOrDefault());
                 }
             }
             else if (this.Mouse != null)
@@ -142,9 +146,9 @@ namespace MixItUp.Base.Model.Actions
 
             if (this.ActionType == InputActionTypeEnum.Release || this.ActionType == InputActionTypeEnum.Click)
             {
-                if (this.Shift) { ServiceManager.Get<IInputService>().KeyUp(InputKeyEnum.LeftShift); }
-                if (this.Control) { ServiceManager.Get<IInputService>().KeyUp(InputKeyEnum.LeftControl); }
-                if (this.Alt) { ServiceManager.Get<IInputService>().KeyUp(InputKeyEnum.LeftAlt); }
+                if (this.Shift) { ServiceManager.Get<IInputService>().KeyUp(VirtualKeyEnum.LeftShift); }
+                if (this.Control) { ServiceManager.Get<IInputService>().KeyUp(VirtualKeyEnum.LeftControl); }
+                if (this.Alt) { ServiceManager.Get<IInputService>().KeyUp(VirtualKeyEnum.LeftAlt); }
             }
         }
     }

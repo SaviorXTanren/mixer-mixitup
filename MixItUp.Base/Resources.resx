@@ -2170,7 +2170,7 @@
     <value>Details</value>
   </data>
   <data name="End" xml:space="preserve">
-    <value>End:</value>
+    <value>End</value>
   </data>
   <data name="Level" xml:space="preserve">
     <value>Level</value>
@@ -2185,7 +2185,7 @@
     <value>Points for Level Up</value>
   </data>
   <data name="Start" xml:space="preserve">
-    <value>Start:</value>
+    <value>Start</value>
   </data>
   <data name="StreamPass" xml:space="preserve">
     <value>Stream Pass</value>
@@ -6395,5 +6395,284 @@ Failed imports could be due to invalid data or failure to find their information
   </data>
   <data name="ManualDeletion" xml:space="preserve">
     <value>Manual Deletion</value>
+  </data>
+  <data name="Accent" xml:space="preserve">
+    <value>Accent</value>
+  </data>
+  <data name="Apostrophe" xml:space="preserve">
+    <value>Apostrophe</value>
+  </data>
+  <data name="Backslash" xml:space="preserve">
+    <value>Backslash</value>
+  </data>
+  <data name="Backspace" xml:space="preserve">
+    <value>Backspace</value>
+  </data>
+  <data name="CapsLock" xml:space="preserve">
+    <value>Caps Lock</value>
+  </data>
+  <data name="Comma" xml:space="preserve">
+    <value>Comma</value>
+  </data>
+  <data name="Digit0" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="Digit1" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="Digit2" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="Digit3" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="Digit4" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="Digit5" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="Digit6" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="Digit7" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="Digit8" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="Digit9" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="DownArrow" xml:space="preserve">
+    <value>Down Arrow</value>
+  </data>
+  <data name="Enter" xml:space="preserve">
+    <value>Enter</value>
+  </data>
+  <data name="Equal" xml:space="preserve">
+    <value>Equal</value>
+  </data>
+  <data name="Escape" xml:space="preserve">
+    <value>ESC</value>
+  </data>
+  <data name="F1" xml:space="preserve">
+    <value>F1</value>
+  </data>
+  <data name="F10" xml:space="preserve">
+    <value>F10</value>
+  </data>
+  <data name="F11" xml:space="preserve">
+    <value>F11</value>
+  </data>
+  <data name="F12" xml:space="preserve">
+    <value>F12</value>
+  </data>
+  <data name="F13" xml:space="preserve">
+    <value>F13</value>
+  </data>
+  <data name="F14" xml:space="preserve">
+    <value>F14</value>
+  </data>
+  <data name="F15" xml:space="preserve">
+    <value>F15</value>
+  </data>
+  <data name="F16" xml:space="preserve">
+    <value>F16</value>
+  </data>
+  <data name="F17" xml:space="preserve">
+    <value>F17</value>
+  </data>
+  <data name="F18" xml:space="preserve">
+    <value>F18</value>
+  </data>
+  <data name="F19" xml:space="preserve">
+    <value>F19</value>
+  </data>
+  <data name="F2" xml:space="preserve">
+    <value>F2</value>
+  </data>
+  <data name="F20" xml:space="preserve">
+    <value>F20</value>
+  </data>
+  <data name="F21" xml:space="preserve">
+    <value>F21</value>
+  </data>
+  <data name="F22" xml:space="preserve">
+    <value>F22</value>
+  </data>
+  <data name="F23" xml:space="preserve">
+    <value>F23</value>
+  </data>
+  <data name="F24" xml:space="preserve">
+    <value>F24</value>
+  </data>
+  <data name="F3" xml:space="preserve">
+    <value>F3</value>
+  </data>
+  <data name="F4" xml:space="preserve">
+    <value>F4</value>
+  </data>
+  <data name="F5" xml:space="preserve">
+    <value>F5</value>
+  </data>
+  <data name="F6" xml:space="preserve">
+    <value>F6</value>
+  </data>
+  <data name="F7" xml:space="preserve">
+    <value>F7</value>
+  </data>
+  <data name="F8" xml:space="preserve">
+    <value>F8</value>
+  </data>
+  <data name="F9" xml:space="preserve">
+    <value>F9</value>
+  </data>
+  <data name="ForwardSlash" xml:space="preserve">
+    <value>Forward Slash</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Insert" xml:space="preserve">
+    <value>Insert</value>
+  </data>
+  <data name="LeftAlt" xml:space="preserve">
+    <value>Left Alt</value>
+  </data>
+  <data name="LeftArrow" xml:space="preserve">
+    <value>Left Arrow</value>
+  </data>
+  <data name="LeftBracket" xml:space="preserve">
+    <value>Left Bracket</value>
+  </data>
+  <data name="LeftControl" xml:space="preserve">
+    <value>Left Control</value>
+  </data>
+  <data name="LeftShift" xml:space="preserve">
+    <value>Left Shift</value>
+  </data>
+  <data name="LeftWindows" xml:space="preserve">
+    <value>Left Windows</value>
+  </data>
+  <data name="Minus" xml:space="preserve">
+    <value>Minus</value>
+  </data>
+  <data name="NumPad0" xml:space="preserve">
+    <value>Num Pad 0</value>
+  </data>
+  <data name="NumPad1" xml:space="preserve">
+    <value>Num Pad 1</value>
+  </data>
+  <data name="NumPad2" xml:space="preserve">
+    <value>Num Pad 2</value>
+  </data>
+  <data name="NumPad3" xml:space="preserve">
+    <value>Num Pad 3</value>
+  </data>
+  <data name="NumPad4" xml:space="preserve">
+    <value>Num Pad 4 </value>
+  </data>
+  <data name="NumPad5" xml:space="preserve">
+    <value>Num Pad 5</value>
+  </data>
+  <data name="NumPad6" xml:space="preserve">
+    <value>Num Pad 6</value>
+  </data>
+  <data name="NumPad7" xml:space="preserve">
+    <value>Num Pad 7</value>
+  </data>
+  <data name="NumPad8" xml:space="preserve">
+    <value>Num Pad 8</value>
+  </data>
+  <data name="NumPad9" xml:space="preserve">
+    <value>Num Pad 9</value>
+  </data>
+  <data name="NumPadAdd" xml:space="preserve">
+    <value>Num Pad Add</value>
+  </data>
+  <data name="NumPadDecimal" xml:space="preserve">
+    <value>Num Pad Decimal</value>
+  </data>
+  <data name="NumPadDivide" xml:space="preserve">
+    <value>Num Pad Divide</value>
+  </data>
+  <data name="NumPadEnter" xml:space="preserve">
+    <value>Num Pad Enter</value>
+  </data>
+  <data name="NumPadMultiply" xml:space="preserve">
+    <value>Num Pad Multiply</value>
+  </data>
+  <data name="NumPadSubtract" xml:space="preserve">
+    <value>Num Pad Subtract</value>
+  </data>
+  <data name="PageDown" xml:space="preserve">
+    <value>Page Down</value>
+  </data>
+  <data name="PageUp" xml:space="preserve">
+    <value>Page Up</value>
+  </data>
+  <data name="Period" xml:space="preserve">
+    <value>Period</value>
+  </data>
+  <data name="RightAlt" xml:space="preserve">
+    <value>Right Alt</value>
+  </data>
+  <data name="RightArrow" xml:space="preserve">
+    <value>Right Arrow</value>
+  </data>
+  <data name="RightBracket" xml:space="preserve">
+    <value>Right Bracket</value>
+  </data>
+  <data name="RightControl" xml:space="preserve">
+    <value>Right Control</value>
+  </data>
+  <data name="RightShift" xml:space="preserve">
+    <value>Right Shift</value>
+  </data>
+  <data name="RightWindows" xml:space="preserve">
+    <value>Right Windows</value>
+  </data>
+  <data name="Semicolon" xml:space="preserve">
+    <value>Semicolon</value>
+  </data>
+  <data name="Space" xml:space="preserve">
+    <value>Space</value>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Tab" xml:space="preserve">
+    <value>Tab</value>
+  </data>
+  <data name="UpArrow" xml:space="preserve">
+    <value>Up Arrow</value>
+  </data>
+  <data name="MediaNext" xml:space="preserve">
+    <value>Media Next</value>
+  </data>
+  <data name="MediaPlayPause" xml:space="preserve">
+    <value>Media Play/Pause</value>
+  </data>
+  <data name="MediaPrevious" xml:space="preserve">
+    <value>Media Previous</value>
+  </data>
+  <data name="MediaStop" xml:space="preserve">
+    <value>Media Stop</value>
+  </data>
+  <data name="PrintScreen" xml:space="preserve">
+    <value>Print Screen</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="VolumeDown" xml:space="preserve">
+    <value>Volume Down</value>
+  </data>
+  <data name="VolumeMute" xml:space="preserve">
+    <value>Volume Mute</value>
+  </data>
+  <data name="VolumeUp" xml:space="preserve">
+    <value>Volume Up</value>
   </data>
 </root>
