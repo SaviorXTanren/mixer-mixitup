@@ -65,7 +65,7 @@ namespace MixItUp.Base.Model.User.Platform
             if (message != null)
             {
                 this.ID = message.sender_id.ToString();
-                this.Username = message.nick_name;
+                this.Username = message.user_name;
                 this.DisplayName = message.nick_name;
                 if (!string.IsNullOrEmpty(message.avatar))
                 {
