@@ -147,9 +147,9 @@ namespace MixItUp.Base.Model.Commands.Games
                         {
                             await this.RunSubCommand(this.ThiefUserCommand, participant);
                         }
-                        else if (this.runUserTypes[participant.User] == WinLosePlayerType.Thief)
+                        else if (this.runUserTypes[participant.User] == WinLosePlayerType.Knight)
                         {
-                            await this.RunSubCommand(this.ThiefUserCommand, participant);
+                            await this.RunSubCommand(this.KnightUserCommand, participant);
                         }
                     }
                     await this.RunSubCommand(this.KingUserCommand, shuffledParticipants.ElementAt(0));
