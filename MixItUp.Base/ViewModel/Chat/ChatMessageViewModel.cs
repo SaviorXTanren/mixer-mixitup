@@ -68,11 +68,11 @@ namespace MixItUp.Base.ViewModel.Chat
             {
                 if (this.User != null && this.Platform != StreamingPlatformTypeEnum.None)
                 {
-                    if (StreamingPlatforms.GetPlatformSessionService(this.Platform).IsConnected && string.Equals(this.User?.ID, StreamingPlatforms.GetPlatformSessionService(this.Platform)?.UserID))
+                    if (StreamingPlatforms.GetPlatformSessionService(this.Platform).IsConnected && string.Equals(this.User?.PlatformID, StreamingPlatforms.GetPlatformSessionService(this.Platform)?.UserID))
                     {
                         return true;
                     }
-                    else if (StreamingPlatforms.GetPlatformSessionService(this.Platform).IsBotConnected && string.Equals(this.User?.ID, StreamingPlatforms.GetPlatformSessionService(this.Platform)?.BotID))
+                    else if (StreamingPlatforms.GetPlatformSessionService(this.Platform).IsBotConnected && string.Equals(this.User?.PlatformID, StreamingPlatforms.GetPlatformSessionService(this.Platform)?.BotID))
                     {
                         return true;
                     }

@@ -120,7 +120,7 @@ namespace MixItUp.Base.Model.Actions
 
                         if (this.ActionType == PixelChatActionTypeEnum.TriggerShoutout)
                         {
-                            sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString(), user.Username, StreamingPlatformTypeEnum.Twitch);
+                            sendMessage = new PixelChatSendMessageModel(this.ActionType.ToString(), user.Username, parameters.Platform);
                         }
                         else if (this.ActionType == PixelChatActionTypeEnum.AddUserToGiveaway)
                         {

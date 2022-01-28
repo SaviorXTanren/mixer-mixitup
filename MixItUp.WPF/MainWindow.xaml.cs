@@ -107,7 +107,7 @@ namespace MixItUp.WPF
             ServiceManager.Get<IInputService>().Initialize(new WindowInteropHelper(this).Handle);
             foreach (HotKeyConfiguration hotKeyConfiguration in ChannelSession.Settings.HotKeys.Values)
             {
-                ServiceManager.Get<IInputService>().RegisterHotKey(hotKeyConfiguration.Modifiers, hotKeyConfiguration.Key);
+                ServiceManager.Get<IInputService>().RegisterHotKey(hotKeyConfiguration.Modifiers, hotKeyConfiguration.VirtualKey);
             }
 
             if (!string.IsNullOrEmpty(ChannelSession.Settings.Name))

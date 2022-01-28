@@ -96,6 +96,7 @@ namespace MixItUp.Base.Model.Actions
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             bool finalResult = false;
+            int totalLoops = 0;
             do
             {
                 List<bool> results = new List<bool>();
@@ -121,6 +122,12 @@ namespace MixItUp.Base.Model.Actions
                 if (finalResult)
                 {
                     await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(this.Actions, parameters));
+                }
+
+                totalLoops++;
+                if (totalLoops == 10)
+                {
+                    Logger.Log(LogLevel.Error, "Conditional Action repeated 10 times, possible endless loop - Command ID: " + parameters.InitialCommandID);
                 }
             } while (this.RepeatWhileTrue && finalResult);
         }

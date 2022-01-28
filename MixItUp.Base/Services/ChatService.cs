@@ -520,7 +520,7 @@ namespace MixItUp.Base.Services
 
                         if (ChannelSession.Settings.IgnoreBotAccountCommands && message.Platform != StreamingPlatformTypeEnum.None)
                         {
-                            if (StreamingPlatforms.GetPlatformSessionService(message.Platform).IsBotConnected && string.Equals(message.User?.ID, StreamingPlatforms.GetPlatformSessionService(message.Platform)?.BotID))
+                            if (StreamingPlatforms.GetPlatformSessionService(message.Platform).IsBotConnected && string.Equals(message.User?.PlatformID, StreamingPlatforms.GetPlatformSessionService(message.Platform)?.BotID))
                             {
                                 return;
                             }

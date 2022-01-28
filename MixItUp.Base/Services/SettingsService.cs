@@ -377,6 +377,14 @@ namespace MixItUp.Base.Services
                     title.UserRole = UserRoles.ConvertFromOldRole(title.Role);
                 }
 
+                List<HotKeyConfiguration> hotKeyConfigurations = settings.HotKeys.Values.ToList();
+                settings.HotKeys.Clear();
+                foreach (HotKeyConfiguration hotKey in hotKeyConfigurations)
+                {
+                    hotKey.VirtualKey = ServiceManager.Get<IInputService>().ConvertOldKeyEnum(hotKey.Key);
+                    settings.HotKeys[hotKey.ToString()] = hotKey;
+                }
+
                 foreach (var kvp in settings.CustomUsernameColors)
                 {
                     UserRoleEnum newRole = UserRoles.ConvertFromOldRole(kvp.Key);
@@ -512,6 +520,14 @@ namespace MixItUp.Base.Services
                 {
                     ConsumablesActionModel cAction = (ConsumablesActionModel)action;
                     cAction.UserRoleToApplyTo = UserRoles.ConvertFromOldRole(cAction.UsersToApplyTo);
+                }
+                else if (action is InputActionModel)
+                {
+                    InputActionModel iAction = (InputActionModel)action;
+                    if (iAction.Key.HasValue)
+                    {
+                        iAction.VirtualKey = ServiceManager.Get<IInputService>().ConvertOldKeyEnum(iAction.Key.GetValueOrDefault());
+                    }
                 }
             }
 #pragma warning restore CS0612 // Type or member is obsolete

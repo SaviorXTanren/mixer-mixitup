@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace MixItUp.WPF.Services.DeveloperAPI.V2
@@ -55,17 +56,47 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V2
             return Ok(result);
         }
 
+        [Route("{commandId:guid}/state/{state:int}")]
+        [HttpPatch]
+        public async Task<IHttpActionResult> UpdateCommandState(Guid commandId, CommandStateOptions state)
+        {
+            if (!ChannelSession.Settings.Commands.TryGetValue(commandId, out var command) || command == null)
+            {
+                return NotFound();
+            }
+
+            if (state == CommandStateOptions.Disable)
+            {
+                command.IsEnabled = false;
+            }
+            else if (state == CommandStateOptions.Enable)
+            {
+                command.IsEnabled = true;
+            }
+            else if (state == CommandStateOptions.Toggle)
+            {
+                command.IsEnabled = !command.IsEnabled;
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+            if (command is ChatCommandModel)
+            {
+                ServiceManager.Get<ChatService>().RebuildCommandTriggers();
+            }
+            else if (command is TimerCommandModel)
+            {
+                await ServiceManager.Get<TimerService>().RebuildTimerGroups();
+            }
+
+            return Ok(new GetSingleCommandResponse { Command = CommandMapper.ToCommand(command) });
+        }
+
         private List<CommandModelBase> GetAllCommands()
         {
-            List<CommandModelBase> allCommands = new List<CommandModelBase>();
-            allCommands.AddRange(ServiceManager.Get<CommandService>().ChatCommands);
-            allCommands.AddRange(ServiceManager.Get<CommandService>().EventCommands);
-            allCommands.AddRange(ServiceManager.Get<CommandService>().TimerCommands);
-            allCommands.AddRange(ServiceManager.Get<CommandService>().TwitchChannelPointsCommands);
-            allCommands.AddRange(ServiceManager.Get<CommandService>().ActionGroupCommands);
-            allCommands.AddRange(ServiceManager.Get<CommandService>().GameCommands);
-            allCommands.AddRange(ServiceManager.Get<CommandService>().PreMadeChatCommands);
-            return allCommands;
+            return new List<CommandModelBase>(ServiceManager.Get<CommandService>().AllCommands);
         }
     }
 
@@ -316,7 +347,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V2
                 ActionType = action.ActionType.ToString(),
                 Alt = action.Alt,
                 Control = action.Control,
-                Key = action.Key?.ToString(),
+                Key = action.VirtualKey?.ToString(),
                 Mouse = action.Mouse?.ToString(),
                 Shift = action.Shift,
             };
