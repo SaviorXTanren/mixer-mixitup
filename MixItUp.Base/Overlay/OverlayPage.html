@@ -6,6 +6,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUp-Logo-Base-WhiteXS.png" />
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"><\/script>')</script>
 
     <script src="webSocketWrapper.js"></script>
 
@@ -119,50 +120,59 @@
             left: 0;
             top: 0;
         }
-        #titles div#the-end {
-            font-size: 60px;
-            font-weight: bold;
-            color: #ffffff;
-            text-shadow: 0 0 12px #ffffff;
-            width: 100%;
-            text-align: center;
-        }
+
+            #titles div#the-end {
+                font-size: 60px;
+                font-weight: bold;
+                color: #ffffff;
+                text-shadow: 0 0 12px #ffffff;
+                width: 100%;
+                text-align: center;
+            }
+
         #credits {
             color: #ffffff;
         }
-        #credits h1 {
-            width: 100%;
-            height: 100%;
-            margin-top: 30px;
-	        margin-bottom: 45px;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 10px;
-        }
-        #credits dl {
-        }
-        #credits dt {
-            width: 50%;
-            transform: translate(25%, 0%);
-        }
-        #credits dd {
-            width: 50%;
-            transform: translate(125%, -100%);
-        }
-        #credits p {
-            width: 100%;
-            margin-top: 5px;
-            margin-bottom: 5px;
-            text-align: center;
-        }
-        #credits .fineprint {
-            color: #888888;
-            width: 100%;
-            margin: 80px 0 0 50px;
-            text-align: center;
-            font-size: 10px;
-            font-family: sans-serif;
-        }
+
+            #credits h1 {
+                width: 100%;
+                height: 100%;
+                margin-top: 30px;
+                margin-bottom: 45px;
+                text-align: center;
+                text-transform: uppercase;
+                letter-spacing: 10px;
+            }
+
+            #credits dl {
+            }
+
+            #credits dt {
+                width: 50%;
+                transform: translate(25%, 0%);
+            }
+
+            #credits dd {
+                width: 50%;
+                transform: translate(125%, -100%);
+            }
+
+            #credits p {
+                width: 100%;
+                margin-top: 5px;
+                margin-bottom: 5px;
+                text-align: center;
+            }
+
+            #credits .fineprint {
+                color: #888888;
+                width: 100%;
+                margin: 80px 0 0 50px;
+                text-align: center;
+                font-size: 10px;
+                font-family: sans-serif;
+            }
+
         .clearfix after {
             visibility: hidden;
             display: block;
@@ -171,10 +181,10 @@
             clear: both;
             height: 0;
         }
+
         .clearfix {
             display: inline-block;
         }
-
     </style>
 </head>
     <body style="background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;">
