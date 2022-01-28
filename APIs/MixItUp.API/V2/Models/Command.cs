@@ -3,6 +3,13 @@ using System.Collections.Generic;
 
 namespace MixItUp.API.V2.Models
 {
+    public enum CommandStateOptions
+    {
+        Disable = 0,
+        Enable = 1,
+        Toggle = 2,
+    }
+
     public class Command
     {
         public Guid ID { get; set; }
