@@ -413,6 +413,11 @@ namespace MixItUp.Base.Services.Trovo
                 }
                 this.messagesProcessed.Add(message.message_id);
 
+                if (message.sender_id == 0 || string.IsNullOrEmpty(message.nick_name))
+                {
+                    continue;
+                }
+
                 UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Trovo, message.sender_id.ToString());
                 if (user == null)
                 {
