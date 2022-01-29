@@ -1,4 +1,5 @@
 ﻿using LinqToTwitter;
+using MixItUp.Base.Model;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
@@ -43,8 +44,21 @@ namespace MixItUp.Base.Services.External
             this.Links = new List<string>();
         }
 
-        // TODO
-        public bool IsStreamTweet { get { return this.Links.Any(l => l.ToLower().Contains(string.Format("twitch.tv/{0}", ServiceManager.Get<TwitchSessionService>().Username.ToLower()))); } }
+        public bool IsStreamTweet
+        {
+            get
+            {
+                bool result = false;
+                StreamingPlatforms.ForEachPlatform(p =>
+                {
+                    if (StreamingPlatforms.GetPlatformSessionService(p).IsConnected && this.Links.Any(l => l.ToLower().Contains(StreamingPlatforms.GetPlatformSessionService(p).ChannelLink)))
+                    {
+                        result = true;
+                    }
+                });
+                return result;
+            }
+        }
     }
 
     public class TwitterService : OAuthExternalServiceBase

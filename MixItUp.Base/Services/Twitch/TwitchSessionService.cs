@@ -30,6 +30,7 @@ namespace MixItUp.Base.Services.Twitch
         public string BotID { get { return this.Bot?.id; } }
         public string Botname { get { return this.Bot?.login; } }
         public string ChannelID { get { return this.User?.id; } }
+        public string ChannelLink { get { return string.Format("twitch.tv/{0}", this.Username?.ToLower()); } }
 
         public StreamingPlatformAccountModel UserAccount
         {

@@ -23,6 +23,7 @@ namespace MixItUp.Base.Services
         string BotID { get; }
         string Botname { get; }
         string ChannelID { get; }
+        string ChannelLink { get; }
 
         StreamingPlatformAccountModel UserAccount { get; }
         StreamingPlatformAccountModel BotAccount { get; }

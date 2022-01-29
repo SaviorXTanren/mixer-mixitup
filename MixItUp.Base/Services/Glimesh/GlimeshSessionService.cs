@@ -30,6 +30,7 @@ namespace MixItUp.Base.Services.Glimesh
         public string BotID { get { return this.Bot?.id; } }
         public string Botname { get { return this.Bot?.username; } }
         public string ChannelID { get { return this.User?.channel?.id; } }
+        public string ChannelLink { get { return string.Format("glimesh.tv/{0}", this.Username?.ToLower()); } }
 
         public StreamingPlatformAccountModel UserAccount
         {

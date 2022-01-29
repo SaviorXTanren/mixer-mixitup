@@ -26,6 +26,7 @@ namespace MixItUp.Base.Services.YouTube
         public string BotID { get { return this.Bot?.Id; } }
         public string Botname { get { return this.Bot?.Snippet?.Title; } }
         public string ChannelID { get { return this.User?.Id; } }
+        public string ChannelLink { get { return this.User?.Snippet?.CustomUrl; } }
 
         public StreamingPlatformAccountModel UserAccount
         {
