@@ -28,6 +28,7 @@ namespace MixItUp.Base.Services.Trovo
         public string BotID { get { return this.Bot?.userId; } }
         public string Botname { get { return this.Bot?.userName; } }
         public string ChannelID { get { return this.User?.channelId; } }
+        public string ChannelLink { get { return string.Format("trovo.live/{0}", this.Username?.ToLower()); } }
 
         public StreamingPlatformAccountModel UserAccount
         {
