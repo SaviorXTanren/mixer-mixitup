@@ -8716,6 +8716,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There already exists another inventory with the same Shop command.
+        /// </summary>
+        public static string InventoryShopDuplicateCommand {
+            get {
+                return ResourceManager.GetString("InventoryShopDuplicateCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to IP Address.
         /// </summary>
         public static string IPAddress {
