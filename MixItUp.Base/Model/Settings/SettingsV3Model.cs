@@ -877,7 +877,7 @@ namespace MixItUp.Base.Model.Settings
 
         private void InitializeMissingData()
         {
-            StreamingPlatforms.ForEachPlatform((p) =>
+            StreamingPlatforms.ForEachPlatform(p =>
             {
                 if (!this.StreamingPlatformAuthentications.ContainsKey(p))
                 {

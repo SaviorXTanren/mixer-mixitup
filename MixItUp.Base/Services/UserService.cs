@@ -46,7 +46,7 @@ namespace MixItUp.Base.Services
 
         public UserService()
         {
-            StreamingPlatforms.ForEachPlatform((p) =>
+            StreamingPlatforms.ForEachPlatform(p =>
             {
                 this.platformUserIDLookups[p] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
                 this.platformUsernameLookups[p] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
@@ -162,10 +162,9 @@ namespace MixItUp.Base.Services
             {
                 await StreamingPlatforms.ForEachPlatform(async (p) =>
                 {
-                    user = await this.GetUserByPlatformUsername(p, platformUsername, performPlatformSearch);
-                    if (user != null)
+                    if (user == null)
                     {
-                        return;
+                        user = await this.GetUserByPlatformUsername(p, platformUsername, performPlatformSearch);
                     }
                 });
                 return user;
@@ -387,12 +386,11 @@ namespace MixItUp.Base.Services
 
             if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
             {
-                StreamingPlatforms.ForEachPlatform((p) =>
+                StreamingPlatforms.ForEachPlatform(p =>
                 {
-                    user = this.GetActiveUserByPlatformUsername(p, platformUsername);
-                    if (user != null)
+                    if (user == null)
                     {
-                        return;
+                        user = this.GetActiveUserByPlatformUsername(p, platformUsername);
                     }
                 });
                 return user;

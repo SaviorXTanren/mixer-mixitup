@@ -565,10 +565,13 @@ namespace MixItUp.Base.Util
                     string currentArgumentSpecialIdentifierHeader = ArgSpecialIdentifierHeader + (i + 1);
                     if (this.ContainsSpecialIdentifier(currentArgumentSpecialIdentifierHeader))
                     {
-                        UserV2ViewModel argUser = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(parameters.Platform, parameters.Arguments.ElementAt(i), performPlatformSearch: true);
-                        if (argUser != null)
+                        if (this.ContainsSpecialIdentifier(currentArgumentSpecialIdentifierHeader + UserSpecialIdentifierHeader))
                         {
-                            await this.HandleUserSpecialIdentifiers(argUser, currentArgumentSpecialIdentifierHeader);
+                            UserV2ViewModel argUser = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(parameters.Platform, parameters.Arguments.ElementAt(i), performPlatformSearch: true);
+                            if (argUser != null)
+                            {
+                                await this.HandleUserSpecialIdentifiers(argUser, currentArgumentSpecialIdentifierHeader);
+                            }
                         }
 
                         this.ReplaceSpecialIdentifier(currentArgumentSpecialIdentifierHeader + "text", parameters.Arguments.ElementAt(i));

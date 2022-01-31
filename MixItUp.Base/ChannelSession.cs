@@ -201,7 +201,7 @@ namespace MixItUp.Base
                     }
                 }
 
-                StreamingPlatforms.ForEachPlatform((p) =>
+                StreamingPlatforms.ForEachPlatform(p =>
                 {
                     if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(p) && StreamingPlatforms.GetPlatformSessionService(p).IsConnected)
                     {
@@ -213,7 +213,7 @@ namespace MixItUp.Base
                 {
                     if (ChannelSession.Settings.ID != setting.ID)
                     {
-                        StreamingPlatforms.ForEachPlatform((p) =>
+                        StreamingPlatforms.ForEachPlatform(p =>
                         {
                             if (setting.StreamingPlatformAuthentications.ContainsKey(p) && ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(p))
                             {

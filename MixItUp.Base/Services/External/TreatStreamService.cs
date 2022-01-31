@@ -42,7 +42,7 @@ namespace MixItUp.Base.Services.External
         public UserDonationModel ToGenericDonation()
         {
             StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None;
-            StreamingPlatforms.ForEachPlatform((p) =>
+            StreamingPlatforms.ForEachPlatform(p =>
             {
                 if (string.Equals(p.ToString(), this.SenderType, StringComparison.InvariantCultureIgnoreCase))
                 {
