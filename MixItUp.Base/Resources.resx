@@ -6675,4 +6675,7 @@ Failed imports could be due to invalid data or failure to find their information
   <data name="VolumeUp" xml:space="preserve">
     <value>Volume Up</value>
   </data>
+  <data name="InventoryShopDuplicateCommand" xml:space="preserve">
+    <value>There already exists another inventory with the same Shop command</value>
+  </data>
 </root>

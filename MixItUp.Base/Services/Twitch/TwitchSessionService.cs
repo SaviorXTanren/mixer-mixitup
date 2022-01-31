@@ -26,7 +26,7 @@ namespace MixItUp.Base.Services.Twitch
         public bool IsBotConnected { get { return this.BotConnection != null; } }
 
         public string UserID { get { return this.User?.id; } }
-        public string Username { get { return this.User.login; } }
+        public string Username { get { return this.User?.login; } }
         public string BotID { get { return this.Bot?.id; } }
         public string Botname { get { return this.Bot?.login; } }
         public string ChannelID { get { return this.User?.id; } }

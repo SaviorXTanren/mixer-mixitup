@@ -360,6 +360,18 @@ namespace MixItUp.Base.ViewModel.Currency
                     await DialogHelper.ShowMessage(Resources.ShopCurrencyRequired);
                     return false;
                 }
+
+                foreach (InventoryModel otherInventory in ChannelSession.Settings.Inventory.Values)
+                {
+                    if (this.inventory == null || !this.inventory.ID.Equals(otherInventory.ID))
+                    {
+                        if (otherInventory.ShopEnabled && string.Equals(this.shopCommandText, otherInventory.ShopCommand, StringComparison.OrdinalIgnoreCase))
+                        {
+                            await DialogHelper.ShowMessage(Resources.InventoryShopDuplicateCommand);
+                            return false;
+                        }
+                    }
+                }
             }
 
             if (this.TradeEnabled)
