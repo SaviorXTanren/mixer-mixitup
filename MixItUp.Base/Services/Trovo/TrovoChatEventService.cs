@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -484,6 +485,7 @@ namespace MixItUp.Base.Services.Trovo
                         ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
                         ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = subMessage.Months;
 
+                        user.Roles.Add(UserRoleEnum.Subscriber);
                         if (!subMessage.IsResub)
                         {
                             user.SubscribeDate = DateTimeOffset.Now;
@@ -554,6 +556,7 @@ namespace MixItUp.Base.Services.Trovo
                         ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = giftee.ID;
                         ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
+                        giftee.Roles.Add(UserRoleEnum.Subscriber);
                         giftee.SubscribeDate = DateTimeOffset.Now;
                         //giftedSubEvent.Receiver.Data.TwitchSubscriberTier = giftedSubEvent.PlanTierNumber;
                         user.TotalSubsGifted++;

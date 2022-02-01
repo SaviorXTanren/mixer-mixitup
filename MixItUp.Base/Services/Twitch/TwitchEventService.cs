@@ -378,6 +378,7 @@ namespace MixItUp.Base.Services.Twitch
                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = subEvent.User.ID;
                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
+                subEvent.User.Roles.Add(UserRoleEnum.Subscriber);
                 subEvent.User.SubscribeDate = DateTimeOffset.Now;
                 subEvent.User.SubscriberTier = subEvent.PlanTierNumber;
                 subEvent.User.TotalMonthsSubbed++;
@@ -601,6 +602,7 @@ namespace MixItUp.Base.Services.Twitch
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = months;
 
+                    user.Roles.Add(UserRoleEnum.Subscriber);
                     user.SubscribeDate = DateTimeOffset.Now.SubtractMonths(months - 1);
                     user.SubscriberTier = TwitchEventService.GetSubTierNumberFromText(packet.sub_plan);
                     user.TotalMonthsSubbed++;
@@ -736,6 +738,7 @@ namespace MixItUp.Base.Services.Twitch
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = giftedSubEvent.Receiver.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = giftedSubEvent.MonthsGifted;
 
+            giftedSubEvent.Receiver.Roles.Add(UserRoleEnum.Subscriber);
             giftedSubEvent.Receiver.SubscribeDate = DateTimeOffset.Now;
             giftedSubEvent.Receiver.SubscriberTier = giftedSubEvent.PlanTierNumber;
             giftedSubEvent.Receiver.TotalSubsReceived += (uint)giftedSubEvent.MonthsGifted;
