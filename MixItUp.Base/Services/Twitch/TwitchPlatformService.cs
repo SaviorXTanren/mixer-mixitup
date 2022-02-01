@@ -279,7 +279,11 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<IEnumerable<SubscriptionModel>> GetSubscriptions(UserModel broadcaster, int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Subscriptions.GetAllSubscriptions(broadcaster, maxResults)); }
 
-        public async Task<SubscriptionModel> GetUserSubscription(UserModel broadcaster, UserModel user) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Subscriptions.GetSubscription(broadcaster, user)); }
+        public async Task<SubscriptionModel> GetUserSubscription(UserModel broadcaster, UserModel user)
+        {
+            IEnumerable<SubscriptionModel> subscriptions = await AsyncRunner.RunAsync(this.Connection.NewAPI.Subscriptions.GetSubscriptions(broadcaster, new List<string>() { user.id }));
+            return (subscriptions != null) ? subscriptions.FirstOrDefault() : null;
+        }
 
         public async Task<IEnumerable<TeamModel>> GetChannelTeams(UserModel broadcaster) { return await this.RunAsync(this.Connection.NewAPI.Teams.GetChannelTeams(broadcaster)); }
 
