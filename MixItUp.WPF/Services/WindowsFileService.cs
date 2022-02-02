@@ -77,6 +77,11 @@ namespace MixItUp.WPF.Services
             return File.Exists(filePath);
         }
 
+        public bool IsURLPath(string filePath)
+        {
+            return Uri.IsWellFormedUriString(filePath, UriKind.RelativeOrAbsolute);
+        }
+
         public long GetFileSize(string filePath)
         {
             if (this.FileExists(filePath))

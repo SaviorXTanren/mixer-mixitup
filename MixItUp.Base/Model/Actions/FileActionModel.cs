@@ -58,10 +58,9 @@ namespace MixItUp.Base.Model.Actions
                 this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
                 this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile)
             {
-                if (!ServiceManager.Get<IFileService>().FileExists(filePath))
+                if (!ServiceManager.Get<IFileService>().IsURLPath(filePath) && !ServiceManager.Get<IFileService>().FileExists(filePath))
                 {
                     Logger.Log(LogLevel.Error, $"File Action - File does not exist: {filePath}");
-                    return;
                 }
             }
 
