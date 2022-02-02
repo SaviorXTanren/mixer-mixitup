@@ -1,8 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
-using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -30,19 +29,14 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayWidgetModel(string name, string overlayName, OverlayItemModelBase item, int refreshTime)
         {
             this.Name = name;
-            var overlays = ChannelSession.Services.Overlay.GetOverlayNames();
-            if (overlays.Contains(overlayName))
-            {
-                this.OverlayName = overlayName;
-            }
-            else
-            {
-                this.OverlayName = ChannelSession.Services.Overlay.DefaultOverlayName;
-            }
+            this.OverlayName = overlayName;
             this.Item = item;
             this.RefreshTime = refreshTime;
             this.IsEnabled = true;
         }
+
+        [Obsolete]
+        public OverlayWidgetModel() { }
 
         [JsonIgnore]
         public virtual bool SupportsTestData { get { return (this.Item != null) ? this.Item.SupportsTestData : false; } }
