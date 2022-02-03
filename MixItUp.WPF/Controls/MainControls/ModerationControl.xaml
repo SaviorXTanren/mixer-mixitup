@@ -131,8 +131,8 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="30" />
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="200" />
                         </Grid.ColumnDefinitions>
 
                         <Grid Grid.Column="0">
@@ -150,7 +150,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <Slider x:Name="MaxCapsSlider" Grid.Column="0" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" LostFocus="Slider_LostFocus" />
+                                <Slider x:Name="MaxCapsSlider" Grid.Column="0" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" Margin="0,15,0,0" LostFocus="Slider_LostFocus" />
 
                                 <ComboBox x:Name="MaxCapsTypeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Width="50" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                                     <ComboBox.ItemTemplate>
@@ -177,7 +177,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <Slider x:Name="MaxPunctuationSymbolsEmotesSlider" Grid.Column="0" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" LostFocus="Slider_LostFocus" />
+                                <Slider x:Name="MaxPunctuationSymbolsEmotesSlider" Grid.Column="0" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" Margin="0,15,0,0" LostFocus="Slider_LostFocus" />
 
                                 <ComboBox x:Name="MaxPunctuationSymbolsEmotesTypeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Width="50" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                                     <ComboBox.ItemTemplate>
@@ -247,7 +247,7 @@
                                 <ToggleButton x:Name="BlockLinksToggleButton" Grid.Column="2" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
                             </Grid>
 
-                            <ComboBox x:Name="BlockLinksExemptComboBox" Grid.Row="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ExemptFromRuleAndStrikes}" Width="150" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                            <ComboBox x:Name="BlockLinksExemptComboBox" Grid.Row="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ExemptFromRuleAndStrikes}" Width="200" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -277,7 +277,7 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
 
-                            <ComboBox x:Name="ChatParticipationExemptComboBox" Grid.Row="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ExemptFromRule}" Width="110" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                            <ComboBox x:Name="ChatParticipationExemptComboBox" Grid.Row="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ExemptFromRule}" Width="200" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>

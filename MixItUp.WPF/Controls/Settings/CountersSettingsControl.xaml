@@ -27,19 +27,19 @@
             </Grid.RowDefinitions>
 
             <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="0" BorderThickness="1" Width="525">
-                <ListView x:Name="SerialDevicesListView" HorizontalAlignment="Center" ItemsSource="{Binding Counters}">
-                    <ListView.ItemTemplate>
+                <ItemsControl x:Name="SerialDevicesListView" HorizontalAlignment="Center" ItemsSource="{Binding Counters}">
+                    <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Grid Margin="10">
+                            <Grid Margin="20">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="140" />
                                     <ColumnDefinition Width="20" />
                                     <ColumnDefinition Width="50" />
-                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="15" />
                                     <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="15" />
                                     <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="15" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
@@ -69,13 +69,13 @@
                                     <ToggleButton Grid.Row="2" IsChecked="{Binding ResetOnLoad}" HorizontalAlignment="Center" />
                                 </Grid>
 
-                                <Button Grid.Column="8" Margin="10,0,0,0" Width="40" Command="{Binding DeleteCommand}" ToolTip="{x:Static resx:Resources.Delete}">
-                                    <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                <Button Grid.Column="8" Command="{Binding DeleteCommand}" ToolTip="{x:Static resx:Resources.Delete}">
+                                    <MaterialDesign:PackIcon Style="{StaticResource ButtonIcon}" Kind="Delete" />
                                 </Button>
                             </Grid>
                         </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </Border>
 
             <Grid Grid.Row="2" HorizontalAlignment="Center">

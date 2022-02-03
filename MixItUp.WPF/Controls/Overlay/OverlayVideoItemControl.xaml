@@ -33,9 +33,9 @@
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="Auto" />
@@ -45,12 +45,12 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" Text="{Binding WidthString}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Width}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" />
+            <TextBox Grid.Column="0" Text="{Binding WidthString}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Width}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
 
-            <TextBox Grid.Column="2" Text="{Binding HeightString}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Height}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" />
+            <TextBox Grid.Column="2" Text="{Binding HeightString}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Height}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
 
-            <TextBlock Grid.Column="4" VerticalAlignment="Center" Margin="0,20,0,0" Text="{x:Static resx:Resources.VolumeHeader}"/>
-            <Slider Value="{Binding Volume}" VerticalAlignment="Center" Grid.Column="6" Width="120" Minimum="0" Maximum="100" Margin="0,-18,0,0" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="{x:Static resx:Resources.Volume}" />
+            <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{x:Static resx:Resources.VolumeHeader}"/>
+            <Slider Value="{Binding Volume}" VerticalAlignment="Center" Grid.Column="6" Width="120" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="{x:Static resx:Resources.Volume}" />
 
             <TextBlock Grid.Column="8" VerticalAlignment="Center" Text="{x:Static resx:Resources.LoopHeader}"/>
             <ToggleButton Grid.Column="10" IsChecked="{Binding Loop}" />

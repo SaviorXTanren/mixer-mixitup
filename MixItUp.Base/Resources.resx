@@ -6678,4 +6678,7 @@ Failed imports could be due to invalid data or failure to find their information
   <data name="InventoryShopDuplicateCommand" xml:space="preserve">
     <value>There already exists another inventory with the same Shop command</value>
   </data>
+  <data name="SerialDevicesAlreadyExistDeviceWithPortName" xml:space="preserve">
+    <value>ERROR: There already exists a device with the selected port name.</value>
+  </data>
 </root>

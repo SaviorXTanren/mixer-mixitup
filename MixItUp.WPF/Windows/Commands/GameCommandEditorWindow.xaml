@@ -46,9 +46,7 @@
 
                 <ContentControl x:Name="DetailsContentControl" Grid.Row="2" />
 
-                <Button Grid.Row="4" Command="{Binding SaveCommand}" HorizontalAlignment="Center" Width="80">
-                    <MaterialDesign:PackIcon Kind="ContentSave" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                </Button>
+                <Controls:IconButton Grid.Row="4" Command="{Binding SaveCommand}" HorizontalAlignment="Center" Width="80" Icon="ContentSave" />
             </Grid>
         </ScrollViewer>
 

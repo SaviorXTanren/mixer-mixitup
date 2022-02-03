@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Requirements"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              mc:Ignorable="d"
@@ -56,9 +57,7 @@
 
                         <ComboBox Grid.Column="4" ItemsSource="{Binding Ranks}" SelectedItem="{Binding SelectedRank}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Rank}" Width="120" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-                        <Button Grid.Column="6" Command="{Binding DeleteCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}" Style="{StaticResource MaterialDesignRaisedButton}">
-                            <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                        </Button>
+                        <Controls:IconButton Grid.Column="6" Command="{Binding DeleteCommand}" HorizontalAlignment="Center" Icon="Delete" ToolTip="{x:Static resx:Resources.Delete}" />
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

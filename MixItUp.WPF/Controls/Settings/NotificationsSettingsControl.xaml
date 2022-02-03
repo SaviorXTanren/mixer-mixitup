@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Settings"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:GenericSettingsControls="clr-namespace:MixItUp.WPF.Controls.Settings.Generic"
              mc:Ignorable="d" 
@@ -38,9 +39,7 @@
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Name, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-                        <Button Grid.Column="2" Command="{Binding PlayCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Play}">
-                            <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                        </Button>
+                        <Controls:IconButton Grid.Column="2" Command="{Binding PlayCommand}" HorizontalAlignment="Center" Icon="Play" ToolTip="{x:Static resx:Resources.Play}" />
                         <ComboBox Grid.Column="4" ItemsSource="{Binding Sounds}" SelectedItem="{Binding Sound}" />
                         <Slider Grid.Column="6" Value="{Binding Volume}" Minimum="0" Maximum="100" Width="100" VerticalAlignment="Center" />
                     </Grid>

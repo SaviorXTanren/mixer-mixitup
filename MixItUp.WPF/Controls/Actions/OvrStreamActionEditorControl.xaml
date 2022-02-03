@@ -55,20 +55,22 @@
             <ItemsControl Grid.Row="2" ItemsSource="{Binding Variables}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Grid Margin="0,5">
+                        <Grid Margin="5,5" HorizontalAlignment="Center">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="10" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="20" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <ComboBox Grid.Column="0" ItemsSource="{Binding KnownVariables}" Text="{Binding Name}" Width="300" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VariableName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" />
+                            <ComboBox Grid.Column="0" ItemsSource="{Binding KnownVariables}" Text="{Binding Name}" Width="600" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VariableName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" />
 
-                            <TextBox Grid.Column="2" Text="{Binding Value}" Width="320" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VariableValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox Grid.Column="2" Text="{Binding Value}" Width="600" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VariableValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                            <Button Grid.Column="4" Command="{Binding DeleteVariableCommand}" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" ToolTip="{x:Static resx:Resources.Delete}" />
+                            <Button Grid.Column="4" Command="{Binding DeleteVariableCommand}" ToolTip="{x:Static resx:Resources.Delete}">
+                                <MaterialDesign:PackIcon Style="{StaticResource ButtonIcon}" Kind="Delete" />
+                            </Button>
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

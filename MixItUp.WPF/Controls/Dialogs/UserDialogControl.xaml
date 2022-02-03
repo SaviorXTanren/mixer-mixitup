@@ -40,7 +40,7 @@
             <Button.CommandParameter>
                 <system:String>Close</system:String>
             </Button.CommandParameter>
-            <MaterialDesign:PackIcon Kind="Close" Height="24" Width="24" Margin="-13,-10" Style="{StaticResource DefaultPackIcon}" />
+            <MaterialDesign:PackIcon Kind="Close" Style="{StaticResource ButtonIcon}" />
         </Button>
 
         <Grid Grid.Row="0" HorizontalAlignment="Center">
@@ -150,7 +150,7 @@
                     <system:String>PromoteToMod</system:String>
                 </Button.CommandParameter>
                 <StackPanel Orientation="Horizontal">
-                    <MaterialDesign:PackIcon Kind="SecurityAccount" Height="24" Width="24" Margin="-13,-10" Style="{StaticResource DefaultPackIcon}" />
+                    <MaterialDesign:PackIcon Kind="SecurityAccount" Style="{StaticResource ButtonIcon}" />
                 </StackPanel>
             </Button>
             <Button x:Name="DemoteFromModButton" Visibility="Collapsed" Grid.Column="0" ToolTip="{x:Static resx:Resources.DemoteFromMod}" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
@@ -158,7 +158,7 @@
                     <system:String>DemoteFromMod</system:String>
                 </Button.CommandParameter>
                 <StackPanel Orientation="Horizontal">
-                    <MaterialDesign:PackIcon Kind="ShieldOff" Height="24" Width="24" Margin="-13,-10" Style="{StaticResource DefaultPackIcon}" />
+                    <MaterialDesign:PackIcon Kind="ShieldOff" Style="{StaticResource ButtonIcon}" />
                 </StackPanel>
             </Button>
 
@@ -167,7 +167,7 @@
                     <system:String>ChannelPage</system:String>
                 </Button.CommandParameter>
                 <StackPanel Orientation="Horizontal">
-                    <MaterialDesign:PackIcon Kind="Link" Height="24" Width="24" Margin="-13,-10" Style="{StaticResource DefaultPackIcon}" />
+                    <MaterialDesign:PackIcon Kind="Link" Style="{StaticResource ButtonIcon}" />
                 </StackPanel>
             </Button>
 
@@ -176,7 +176,7 @@
                     <system:String>EditUser</system:String>
                 </Button.CommandParameter>
                 <StackPanel Orientation="Horizontal">
-                    <MaterialDesign:PackIcon Kind="AccountEdit" Height="24" Width="24" Margin="-13,-10" Style="{StaticResource DefaultPackIcon}" />
+                    <MaterialDesign:PackIcon Kind="AccountEdit" Style="{StaticResource ButtonIcon}" />
                 </StackPanel>
             </Button>
 
@@ -186,20 +186,20 @@
                 <Button.CommandParameter>
                     <system:String>Purge</system:String>
                 </Button.CommandParameter>
-                <MaterialDesign:PackIcon Kind="Broom" Height="24" Width="24" Margin="-13,-10" Style="{StaticResource DefaultPackIcon}" />
+                <MaterialDesign:PackIcon Kind="Broom" Style="{StaticResource ButtonIcon}" />
             </Button>
 
             <Button Grid.Column="10" ToolTip="{x:Static resx:Resources.TimeoutOneMin}" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
                 <Button.CommandParameter>
                     <system:String>Timeout1</system:String>
                 </Button.CommandParameter>
-                <Grid Margin="-13,-10">
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <MaterialDesign:PackIcon Grid.Column="0" Kind="Timer" Height="24" Width="24" Style="{StaticResource DefaultPackIcon}" />
+                    <MaterialDesign:PackIcon Grid.Column="0" Kind="Timer" Style="{StaticResource ButtonIcon}" />
                     <TextBlock Grid.Column="1" Foreground="{StaticResource MaterialDesignBody}">1</TextBlock>
                 </Grid>
             </Button>
@@ -208,13 +208,13 @@
                 <Button.CommandParameter>
                     <system:String>Timeout5</system:String>
                 </Button.CommandParameter>
-                <Grid Margin="-13,-10">
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <MaterialDesign:PackIcon Grid.Column="0" Kind="Timer" Height="24" Width="24" Style="{StaticResource DefaultPackIcon}" />
+                    <MaterialDesign:PackIcon Grid.Column="0" Kind="Timer" Style="{StaticResource ButtonIcon}" />
                     <TextBlock Grid.Column="5" Foreground="{StaticResource MaterialDesignBody}">5</TextBlock>
                 </Grid>
             </Button>
@@ -223,13 +223,13 @@
                 <Button.CommandParameter>
                     <system:String>Ban</system:String>
                 </Button.CommandParameter>
-                <MaterialDesign:PackIcon Kind="BlockHelper" Height="24" Width="24" Margin="-13,-10" Style="{StaticResource DefaultPackIcon}" />
+                <MaterialDesign:PackIcon Kind="BlockHelper" Style="{StaticResource ButtonIcon}" />
             </Button>
             <Button x:Name="UnbanButton" Visibility="Collapsed" Grid.Column="14" ToolTip="{x:Static resx:Resources.Unban}" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
                 <Button.CommandParameter>
                     <system:String>Unban</system:String>
                 </Button.CommandParameter>
-                <MaterialDesign:PackIcon Kind="HumanHandsup" Height="24" Width="24" Margin="-13,-10" Style="{StaticResource DefaultPackIcon}" />
+                <MaterialDesign:PackIcon Kind="HumanHandsup" Style="{StaticResource ButtonIcon}" />
             </Button>
         </Grid>
     </Grid>

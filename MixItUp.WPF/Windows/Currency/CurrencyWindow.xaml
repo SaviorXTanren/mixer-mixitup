@@ -57,7 +57,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Button x:Name="HelpButton" HorizontalAlignment="Right" VerticalAlignment="Top" Content="{MaterialDesign:PackIcon Help}" Command="{Binding HelpCommand}" ToolTip="{x:Static resx:Resources.Help}" />
+                <Controls:IconButton x:Name="HelpButton" HorizontalAlignment="Right" VerticalAlignment="Top" Icon="Help" Command="{Binding HelpCommand}" ToolTip="{x:Static resx:Resources.Help}" />
 
                 <Grid Grid.Row="0" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
@@ -174,17 +174,15 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Visible" MinHeight="200" Width="375" MaxHeight="300">
+                            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Visible" MinHeight="200" Width="380" MaxHeight="300">
                                 <DataGrid ItemsSource="{Binding Ranks}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="{x:Static resx:Resources.RankName}" Binding="{Binding Name}" IsReadOnly="True" Width="190" />
-                                        <DataGridTextColumn Header="{x:Static resx:Resources.MinPoints}" Binding="{Binding Amount}" IsReadOnly="True" Width="90" />
-                                        <DataGridTemplateColumn Width="65">
+                                        <DataGridTextColumn Header="{x:Static resx:Resources.RankName}" Binding="{Binding Name}" IsReadOnly="True" Width="180" />
+                                        <DataGridTextColumn Header="{x:Static resx:Resources.MinPoints}" Binding="{Binding Amount}" IsReadOnly="True" Width="100" />
+                                        <DataGridTemplateColumn Width="80">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <Button x:Name="DeleteRankButton" Click="DeleteRankButton_Click" Width="40" HorizontalAlignment="Center">
-                                                        <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                                    </Button>
+                                                    <Controls:IconButton x:Name="DeleteRankButton" Click="DeleteRankButton_Click" HorizontalAlignment="Center" Icon="Delete" />
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
@@ -275,9 +273,7 @@
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
 
-                                <Button Grid.Column="4" x:Name="DateButton" IsEnabled="{Binding AutomaticResetStartTimeSelectable}" Click="DateButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.ResetDate}">
-                                    <MaterialDesign:PackIcon Kind="Calendar" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                </Button>
+                                <Controls:IconButton Grid.Column="4" x:Name="DateButton" IsEnabled="{Binding AutomaticResetStartTimeSelectable}" Click="DateButton_Click" HorizontalAlignment="Center" Icon="Calendar" ToolTip="{x:Static resx:Resources.ResetDate}" />
 
                                 <Button Grid.Column="6" Command="{Binding ManualResetCommand}" IsEnabled="{Binding IsExisting}" Content="{x:Static resx:Resources.ManualReset}" />
 
@@ -302,9 +298,7 @@
                     </GroupBox>
                 </Grid>
 
-                <Button x:Name="SaveButton" Grid.Row="10" HorizontalAlignment="Center" Click="SaveButton_Click" Width="80">
-                    <MaterialDesign:PackIcon Kind="ContentSave" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                </Button>
+                <Controls:IconButton x:Name="SaveButton" Grid.Row="10" HorizontalAlignment="Center" Click="SaveButton_Click" Width="80" Icon="ContentSave" />
             </Grid>
         </ScrollViewer>
 

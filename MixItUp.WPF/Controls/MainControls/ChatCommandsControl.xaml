@@ -107,9 +107,7 @@
 
                                 <TextBox Grid.Column="3" Text="{Binding CooldownString}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" Margin="5,0,0,0" />
 
-                                <Button Grid.Column="4" Command="{Binding TestCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.TestCommand}">
-                                    <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                </Button>
+                                <Controls:IconButton Grid.Column="4" Command="{Binding TestCommand}" HorizontalAlignment="Center" Icon="Play" ToolTip="{x:Static resx:Resources.TestCommand}" />
 
                                 <ToggleButton Grid.Column="5" IsChecked="{Binding IsEnabled}" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.EnableDisableCommand}" />
                             </Grid>

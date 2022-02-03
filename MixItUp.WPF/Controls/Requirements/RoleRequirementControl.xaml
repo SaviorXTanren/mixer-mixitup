@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Requirements"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              
@@ -84,7 +85,7 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <Button Grid.Column="2" Command="{Binding AddAdvancedRoleCommand}" Content="{MaterialDesign:PackIcon Add}" Style="{StaticResource MaterialDesignRaisedButton}" Padding="10,0" />
+                <Controls:IconButton Grid.Column="2" Command="{Binding AddAdvancedRoleCommand}" Icon="Add" Style="{StaticResource MaterialDesignRaisedButton}" Padding="10,0" />
             </Grid>
 
             <Border Grid.Row="2" Style="{StaticResource DefaultBorder}">

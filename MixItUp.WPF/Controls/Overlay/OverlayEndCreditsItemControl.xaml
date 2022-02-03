@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:DragDrop="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
              mc:Ignorable="d" 
@@ -112,7 +113,7 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-            <Button Grid.Column="2" Command="{Binding AddItemCommand}" Content="{MaterialDesign:PackIcon Plus}" />
+            <Controls:IconButton Grid.Column="2" Command="{Binding AddItemCommand}" Icon="Plus" />
         </Grid>
 
         <GroupBox Grid.Row="10" Width="700" Header="Sections">
@@ -136,7 +137,7 @@
 
                             <TextBox Text="{Binding UserHTML}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserHTMLStyle}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="300" Height="75" VerticalAlignment="Top" HorizontalAlignment="Center" />
 
-                            <Button Grid.Column="6" VerticalAlignment="Center" Command="{Binding DeleteItemCommand}" Content="{MaterialDesign:PackIcon Trash}" />
+                            <Controls:IconButton Grid.Column="6" VerticalAlignment="Center" Command="{Binding DeleteItemCommand}" Icon="Delete" />
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

@@ -105,10 +105,7 @@
                 <TextBox Grid.Column="5" Text="{Binding ConsumablesAmountSearchFilter}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" />
             </Grid>
 
-            <Button Grid.Column="10" x:Name="FilterUsersButton" Click="FilterUsersButton_Click" VerticalAlignment="Center" Width="40" ToolTip="{x:Static resx:Resources.Filter}" Margin="0,10,0,0">
-                <MaterialDesign:PackIcon Kind="Search" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-            </Button>
-
+            <Controls:IconButton Grid.Column="10" x:Name="FilterUsersButton" Click="FilterUsersButton_Click" VerticalAlignment="Center" ToolTip="{x:Static resx:Resources.Filter}" Icon="Search" Margin="0,10,0,0" />
         </Grid>
 
         <Grid Grid.Row="2" Margin="10,0">
@@ -145,7 +142,7 @@
                                 </Grid>
                             </DataGridTextColumn.Header>
                         </DataGridTextColumn>
-                        <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="120">
+                        <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="130">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -155,13 +152,9 @@
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
 
-                                        <Button x:Name="UserEditButton" Grid.Column="0" Click="UserEditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Edit}">
-                                            <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                        </Button>
+                                        <Controls:IconButton x:Name="UserEditButton" Grid.Column="0" Click="UserEditButton_Click" HorizontalAlignment="Center" Icon="TooltipEdit" ToolTip="{x:Static resx:Resources.Edit}" />
 
-                                        <Button x:Name="UserDeleteButton" Grid.Column="2" Click="UserDeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}">
-                                            <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                        </Button>
+                                        <Controls:IconButton x:Name="UserDeleteButton" Grid.Column="2" Click="UserDeleteButton_Click" HorizontalAlignment="Center" Icon="Delete" ToolTip="{x:Static resx:Resources.Delete}" />
                                     </Grid>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

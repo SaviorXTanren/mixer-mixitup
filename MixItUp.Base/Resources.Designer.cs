@@ -14176,6 +14176,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ERROR: There already exists a device with the selected port name..
+        /// </summary>
+        public static string SerialDevicesAlreadyExistDeviceWithPortName {
+            get {
+                return ResourceManager.GetString("SerialDevicesAlreadyExistDeviceWithPortName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Service.
         /// </summary>
         public static string Service {
