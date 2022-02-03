@@ -1,9 +1,18 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:MixItUp.WPF.Themes">
+                    xmlns:local="clr-namespace:MixItUp.WPF.Themes"
+                    xmlns:FeatureTour="clr-namespace:ThinkSharp.FeatureTouring.Controls;assembly=ThinkSharp.FeatureTour">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="MixItUpTheme.Common.xaml" />
     </ResourceDictionary.MergedDictionaries>
+
+    <Style TargetType="FeatureTour:TourControl">
+        <Setter Property="Background" Value="#000000"/>
+        <Setter Property="Foreground" Value="#FFFFFF"/>
+        <Setter Property="BorderBrush" Value="#FFFFFF" />
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="BorderThickness" Value="3"/>
+    </Style>
 
 </ResourceDictionary>

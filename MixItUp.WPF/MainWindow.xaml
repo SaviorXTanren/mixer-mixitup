@@ -35,7 +35,6 @@
             <RowDefinition Height="0" />
         </Grid.RowDefinitions>
 
-
         <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
 
         <MainControls:MainMenuControl x:Name="MainMenu" Grid.Row="0" />
