@@ -38,9 +38,6 @@ namespace MixItUp.Base.Model.Overlay
             this.IsEnabled = true;
         }
 
-        [Obsolete]
-        public OverlayWidgetModel() { }
-
         [JsonIgnore]
         public virtual bool SupportsTestData { get { return (this.Item != null) ? this.Item.SupportsTestData : false; } }
 
