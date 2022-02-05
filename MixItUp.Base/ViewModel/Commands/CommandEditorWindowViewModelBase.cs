@@ -107,7 +107,7 @@ namespace MixItUp.Base.ViewModel.Commands
         }
         private string name;
 
-        public IEnumerable<string> CommandGroups { get { return ChannelSession.Settings.CommandGroups.Keys.ToList(); } }
+        public IEnumerable<string> CommandGroups { get { return ChannelSession.Settings.CommandGroups.Keys.ToList().OrderBy(cg => cg); } }
 
         public string SelectedCommandGroup
         {
