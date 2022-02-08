@@ -60,7 +60,7 @@
             <ToggleButton Grid.Column="10" IsChecked="{Binding RepeatWhileTrue}" />
 
             <TextBlock Grid.Column="12" VerticalAlignment="Center">
-                <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">
+                <Hyperlink NavigateUri="{x:Static resx:Resources.WikiLinkSpecialIdentifiers}" RequestNavigate="Hyperlink_RequestNavigate">
                     <TextBlock Text="{x:Static resx:Resources.SpecialIdentifiers}"/>
                 </Hyperlink>
             </TextBlock>

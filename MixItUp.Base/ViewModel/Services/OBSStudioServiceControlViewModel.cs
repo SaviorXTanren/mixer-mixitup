@@ -27,6 +27,8 @@ namespace MixItUp.Base.ViewModel.Services
 
         public Func<string> Password { get; set; }
 
+        public override string WikiPageName { get { return "obs-studio"; } }
+
         public OBSStudioServiceControlViewModel()
             : base(Resources.OBSStudio)
         {

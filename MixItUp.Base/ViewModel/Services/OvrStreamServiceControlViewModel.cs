@@ -23,6 +23,8 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand ConnectCommand { get; set; }
         public ICommand DisconnectCommand { get; set; }
 
+        public override string WikiPageName { get { return "ovrstream"; } }
+
         public OvrStreamServiceControlViewModel()
             : base(Resources.OvrStream)
         {

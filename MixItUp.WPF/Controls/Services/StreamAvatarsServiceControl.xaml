@@ -23,7 +23,7 @@
             <TextBlock Grid.Row="2" TextWrapping="Wrap" Text="{x:Static resx:Resources.StreamAvatarsInfo2}"/>
 
             <TextBlock Grid.Row="4" TextWrapping="Wrap">
-                <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Services#stream-avatars" RequestNavigate="Hyperlink_RequestNavigate">
+                <Hyperlink NavigateUri="https://wiki.mixitupapp.com/services/stream-avatars" RequestNavigate="Hyperlink_RequestNavigate">
                     <TextBlock Text="{x:Static resx:Resources.StreamAvatarsWikiSection}"/>
                 </Hyperlink>
             </TextBlock>

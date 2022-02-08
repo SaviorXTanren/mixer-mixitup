@@ -169,7 +169,7 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
-            await ServiceManager.Get<ChatService>().SendMessage("All common, Mix It Up chat commands can be found here: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Pre-Made-Chat-Commands. For commands specific to this stream, ask your streamer/moderator.", parameters.Platform);
+            await ServiceManager.Get<ChatService>().SendMessage("All common, Mix It Up chat commands can be found here: https://wiki.mixitupapp.com/commands/pre-made-chat-commands. For commands specific to this stream, ask your streamer/moderator.", parameters.Platform);
         }
     }
 

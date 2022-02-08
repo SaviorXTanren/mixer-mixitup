@@ -609,7 +609,14 @@ namespace MixItUp.Base.ViewModel.Currency
 
             this.HelpCommand = this.CreateCommand(() =>
             {
-                ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency,-Rank,-&-Inventory");
+                if (this.IsRank)
+                {
+                    ProcessHelper.LaunchLink("https://wiki.mixitupapp.com/consumables/rank");
+                }
+                else
+                {
+                    ProcessHelper.LaunchLink("https://wiki.mixitupapp.com/consumables/currency");
+                }
             });
         }
 

@@ -43,7 +43,7 @@
             
             <ComboBox Grid.Column="2" Visibility="{Binding OverlayEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding OverlayEndpoints}" SelectedItem="{Binding SelectedOverlayEndpoint}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayEndpoints}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
             <TextBlock Grid.Column="3" Visibility="{Binding OverlayEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center">
-                <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">
+                <Hyperlink NavigateUri="{x:Static resx:Resources.WikiLinkSpecialIdentifiers}" RequestNavigate="Hyperlink_RequestNavigate">
                     <TextBlock Text="{x:Static resx:Resources.SpecialIdentifiersReference}"/>
                 </Hyperlink>
             </TextBlock>
@@ -133,7 +133,7 @@
                                 <TextBlock Foreground="Red" HorizontalAlignment="Center" Text="{x:Static resx:Resources.OverlayWarning1}"/>
                                 <TextBlock Foreground="Red" HorizontalAlignment="Center" Text="{x:Static resx:Resources.OverlayWarning2}"/>
                                 <TextBlock>
-                                <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Windows-Settings:-Overlay-Animation-Issue" RequestNavigate="Hyperlink_RequestNavigate">
+                                <Hyperlink NavigateUri="https://wiki.mixitupapp.com/services/overlay#windows-settings-overlay-animation-issue" RequestNavigate="Hyperlink_RequestNavigate">
                                     <TextBlock Text="{x:Static resx:Resources.OverlayWarning3}"/>
                                 </Hyperlink>
                             </TextBlock>
