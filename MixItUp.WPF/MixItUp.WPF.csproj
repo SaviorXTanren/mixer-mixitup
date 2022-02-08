@@ -1057,6 +1057,7 @@
     <Compile Include="Services\DeveloperAPI\V1\InventoryController.cs" />
     <Compile Include="Services\DeveloperAPI\NoCacheHeader.cs" />
     <Compile Include="Services\DeveloperAPI\V1\UserController.cs" />
+    <Compile Include="Services\DeveloperAPI\V2\StatusController.cs" />
     <Compile Include="Services\DeveloperAPI\V2\ChatController.cs" />
     <Compile Include="Services\DeveloperAPI\V2\CommandsController.cs" />
     <Compile Include="Services\DeveloperAPI\V2\UsersController.cs" />
