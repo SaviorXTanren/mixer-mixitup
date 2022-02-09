@@ -8491,6 +8491,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Import Quotes.
+        /// </summary>
+        public static string ImportQuotes {
+            get {
+                return ResourceManager.GetString("ImportQuotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} users were imported successfully..
         /// </summary>
         public static string ImportSuccess {
@@ -12579,11 +12588,68 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Quote ID.
+        /// </summary>
+        public static string QuoteID {
+            get {
+                return ResourceManager.GetString("QuoteID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Quotes.
         /// </summary>
         public static string Quotes {
             get {
                 return ResourceManager.GetString("Quotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your data file must include at least the Quote column..
+        /// </summary>
+        public static string QuotesDataFileRequiredColumns {
+            get {
+                return ResourceManager.GetString("QuotesDataFileRequiredColumns", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quotes Data Import.
+        /// </summary>
+        public static string QuotesDataImport {
+            get {
+                return ResourceManager.GetString("QuotesDataImport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This will allow you to import your quotes data from either a plain-text or spreadsheet file. To import a spreadsheet file, you must have some form of Microsoft Excel installed. Note that if there already exists a quote with the same ID in Mix It Up, the quote ID will be updated to the highest number. First, specify the file that you want to import the User data from:.
+        /// </summary>
+        public static string QuotesDataImportStep1 {
+            get {
+                return ResourceManager.GetString("QuotesDataImportStep1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next, you&apos;ll need to specify the column number for each value in your data file or leave it blank if that value is not present..
+        /// </summary>
+        public static string QuotesDataImportStep2 {
+            get {
+                return ResourceManager.GetString("QuotesDataImportStep2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successful Imports: {0}
+        ///Failed Imports: {1}
+        ///
+        ///Imported quotes with IDs that match existing quotes will altered to the next maximum number. Failed imports could be due to invalid data or formatting. Please contact support for further help with this if needed..
+        /// </summary>
+        public static string QuotesImportResults {
+            get {
+                return ResourceManager.GetString("QuotesImportResults", resourceCulture);
             }
         }
         

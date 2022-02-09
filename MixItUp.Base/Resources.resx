@@ -6684,4 +6684,29 @@ Failed imports could be due to invalid data or failure to find their information
   <data name="WikiLinkSpecialIdentifiers" xml:space="preserve">
     <value>https://wiki.mixitupapp.com/special-identifiers</value>
   </data>
+  <data name="QuoteID" xml:space="preserve">
+    <value>Quote ID</value>
+  </data>
+  <data name="QuotesDataFileRequiredColumns" xml:space="preserve">
+    <value>Your data file must include at least the Quote column.</value>
+  </data>
+  <data name="ImportQuotes" xml:space="preserve">
+    <value>Import Quotes</value>
+  </data>
+  <data name="QuotesDataImport" xml:space="preserve">
+    <value>Quotes Data Import</value>
+  </data>
+  <data name="QuotesDataImportStep1" xml:space="preserve">
+    <value>This will allow you to import your quotes data from either a plain-text or spreadsheet file. To import a spreadsheet file, you must have some form of Microsoft Excel installed. Note that if there already exists a quote with the same ID in Mix It Up, the quote ID will be updated to the highest number. First, specify the file that you want to import the User data from:</value>
+  </data>
+  <data name="QuotesDataImportStep2" xml:space="preserve">
+    <value>Next, you'll need to specify the column number for each value in your data file or leave it blank if that value is not present.</value>
+  </data>
+  <data name="QuotesImportResults" xml:space="preserve">
+    <value>Successful Imports: {0}
+Failed Imports: {1}
+
+Imported quotes with IDs that match existing quotes will altered to the next maximum number. Failed imports could be due to invalid data or formatting. Please contact support for further help with this if needed.</value>
+    <comment>{0} is the number of successes, {1} is the number of failures</comment>
+  </data>
 </root>
