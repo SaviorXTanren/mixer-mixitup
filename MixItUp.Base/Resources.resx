@@ -6709,4 +6709,7 @@ Failed Imports: {1}
 Imported quotes with IDs that match existing quotes will altered to the next maximum number. Failed imports could be due to invalid data or formatting. Please contact support for further help with this if needed.</value>
     <comment>{0} is the number of successes, {1} is the number of failures</comment>
   </data>
+  <data name="HearMyselfOnOff" xml:space="preserve">
+    <value>Hear Myself On/Off</value>
+  </data>
 </root>

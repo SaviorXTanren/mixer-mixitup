@@ -8059,6 +8059,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hear Myself On/Off.
+        /// </summary>
+        public static string HearMyselfOnOff {
+            get {
+                return ResourceManager.GetString("HearMyselfOnOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Height (Pixels).
         /// </summary>
         public static string Height {
