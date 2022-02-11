@@ -4660,6 +4660,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ERROR: .
+        /// </summary>
+        public static string ErrorHeader {
+            get {
+                return ResourceManager.GetString("ErrorHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Escape.
         /// </summary>
         public static string Escape {
@@ -7690,6 +7699,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The game queue is not currently enabled.
+        /// </summary>
+        public static string GameQueueNotEnabled {
+            get {
+                return ResourceManager.GetString("GameQueueNotEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Game Queue Used Joined.
         /// </summary>
         public static string GameQueueUserJoinedCommandName {
@@ -9675,6 +9693,15 @@ namespace MixItUp.Base {
         public static string ManualDeletion {
             get {
                 return ResourceManager.GetString("ManualDeletion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manual Moderation Strike.
+        /// </summary>
+        public static string ManualModerationStrike {
+            get {
+                return ResourceManager.GetString("ManualModerationStrike", resourceCulture);
             }
         }
         
@@ -17324,6 +17351,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ERROR: We were unable to run an ad, please try again later.
+        /// </summary>
+        public static string TwitchAdUnableToRun {
+            get {
+                return ResourceManager.GetString("TwitchAdUnableToRun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Twitch Affiliate.
         /// </summary>
         public static string TwitchAffiliate {
@@ -17716,6 +17752,15 @@ namespace MixItUp.Base {
         public static string TwitterRateLimited {
             get {
                 return ResourceManager.GetString("TwitterRateLimited", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The tweet you specified can not be sent because it contains an @mention.
+        /// </summary>
+        public static string TwitterTweetCanNotContainMention {
+            get {
+                return ResourceManager.GetString("TwitterTweetCanNotContainMention", resourceCulture);
             }
         }
         

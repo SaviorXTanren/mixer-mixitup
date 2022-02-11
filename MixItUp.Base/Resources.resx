@@ -6712,4 +6712,19 @@ Imported quotes with IDs that match existing quotes will altered to the next max
   <data name="HearMyselfOnOff" xml:space="preserve">
     <value>Hear Myself On/Off</value>
   </data>
+  <data name="GameQueueNotEnabled" xml:space="preserve">
+    <value>The game queue is not currently enabled</value>
+  </data>
+  <data name="ManualModerationStrike" xml:space="preserve">
+    <value>Manual Moderation Strike</value>
+  </data>
+  <data name="ErrorHeader" xml:space="preserve">
+    <value>ERROR: </value>
+  </data>
+  <data name="TwitchAdUnableToRun" xml:space="preserve">
+    <value>ERROR: We were unable to run an ad, please try again later</value>
+  </data>
+  <data name="TwitterTweetCanNotContainMention" xml:space="preserve">
+    <value>The tweet you specified can not be sent because it contains an @mention</value>
+  </data>
 </root>
