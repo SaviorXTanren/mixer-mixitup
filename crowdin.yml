@@ -1,3 +1,0 @@
-files:
-  - source: /MixItUp.Base/*.resx
-    translation: /MixItUp.Base/Translated/Resources.%language%
