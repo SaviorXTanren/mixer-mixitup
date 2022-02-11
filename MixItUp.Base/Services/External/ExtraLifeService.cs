@@ -130,7 +130,7 @@ namespace MixItUp.Base.Services.External
 
         public ExtraLifeService() : base(ExtraLifeService.BaseAddress) { }
 
-        public override string Name { get { return "ExtraLife"; } }
+        public override string Name { get { return MixItUp.Base.Resources.ExtraLife; } }
 
         public override bool IsConnected { get { return ChannelSession.Settings.ExtraLifeTeamID > 0 && ChannelSession.Settings.ExtraLifeParticipantID > 0; } }
 

@@ -66,7 +66,7 @@ namespace MixItUp.Base.Services.YouTube
 
                         if (!await this.userClient.Connect())
                         {
-                            return new Result("Failed to connect to YouTube chat servers");
+                            return new Result(MixItUp.Base.Resources.YouTubeFailedToConnectToChat);
                         }
 
                         this.Emotes = await this.GetChatEmotes();
@@ -80,7 +80,7 @@ namespace MixItUp.Base.Services.YouTube
                     }
                 }));
             }
-            return new Result("YouTube chat connection has not been established");
+            return new Result(MixItUp.Base.Resources.YouTubeCouldNotEstablishChatConnection);
         }
 
         public async Task DisconnectUser()
@@ -112,14 +112,14 @@ namespace MixItUp.Base.Services.YouTube
                         LiveBroadcast broadcast = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetMyActiveBroadcast();
                         if (broadcast != null)
                         {
-                            return new Result("No live broadcast currently");
+                            return new Result(MixItUp.Base.Resources.YouTubeNoLiveBroadcast);
                         }
 
                         this.botClient = new ChatClient(ServiceManager.Get<YouTubeSessionService>().BotConnection.Connection);
 
                         if (!await this.botClient.Connect(broadcast, listenForMessage: false))
                         {
-                            return new Result("Failed to connect to YouTube chat servers");
+                            return new Result(MixItUp.Base.Resources.YouTubeFailedToConnectToChat);
                         }
 
                         return new Result();
@@ -131,7 +131,7 @@ namespace MixItUp.Base.Services.YouTube
                     }
                 }));
             }
-            return new Result("YouTube chat connection has not been established");
+            return new Result(MixItUp.Base.Resources.YouTubeCouldNotEstablishChatConnection);
         }
 
         public async Task DisconnectBot()

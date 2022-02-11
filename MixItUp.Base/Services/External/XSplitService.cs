@@ -91,7 +91,7 @@ namespace MixItUp.Base.Services.External
             base.OnDisconnectOccurred += XSplitService_OnDisconnectOccurred;
         }
 
-        public string Name { get { return "XSplit"; } }
+        public string Name { get { return MixItUp.Base.Resources.XSplit; } }
 
         public bool IsEnabled { get { return ChannelSession.Settings.EnableXSplitConnection; } }
 
@@ -106,7 +106,7 @@ namespace MixItUp.Base.Services.External
                 ServiceManager.Get<ITelemetryService>().TrackService("XSplit");
                 return Task.FromResult(new Result());
             }
-            return Task.FromResult(new Result("Failed to start web socket listening server"));
+            return Task.FromResult(new Result(MixItUp.Base.Resources.XSplitFailedToStartServer));
         }
 
         public async Task Disconnect()
@@ -162,13 +162,13 @@ namespace MixItUp.Base.Services.External
 
         private void XSplitService_OnConnectedOccurred(object sender, EventArgs e)
         {
-            ChannelSession.ReconnectionOccurred("XSplit");
+            ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.XSplit);
             this.Connected(sender, e);
         }
 
         private void XSplitService_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
-            ChannelSession.DisconnectionOccurred("XSplit");
+            ChannelSession.DisconnectionOccurred(MixItUp.Base.Resources.XSplit);
             this.Disconnected(sender, new EventArgs());
         }
     }

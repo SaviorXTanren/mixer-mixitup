@@ -100,7 +100,7 @@ namespace MixItUp.Base.Services.Trovo
 
         public TrovoChatEventService() { }
 
-        public override string Name { get { return "Trovo Chat"; } }
+        public override string Name { get { return MixItUp.Base.Resources.TrovoChat; } }
 
         public IDictionary<string, ChatEmoteModel> ChannelEmotes { get { return this.channelEmotes; } }
         public IDictionary<string, EventChatEmoteModel> EventEmotes { get { return this.eventEmotes; } }
@@ -124,7 +124,7 @@ namespace MixItUp.Base.Services.Trovo
                         string token = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetChatToken();
                         if (string.IsNullOrEmpty(token))
                         {
-                            return new Result("Failed to get chat token from Trovo chat servers");
+                            return new Result(MixItUp.Base.Resources.TrovoFailedToGetChatToken);
                         }
 
                         ChatEmotePackageModel emotePackage = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetPlatformAndChannelEmotes(ServiceManager.Get<TrovoSessionService>().ChannelID);
@@ -174,7 +174,7 @@ namespace MixItUp.Base.Services.Trovo
                         this.processMessages = false;
                         if (!await this.userClient.Connect(token))
                         {
-                            return new Result("Failed to connect to Trovo chat servers");
+                            return new Result(MixItUp.Base.Resources.TrovoFailedToConnectToChat);
                         }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -196,7 +196,7 @@ namespace MixItUp.Base.Services.Trovo
                     }
                 }));
             }
-            return new Result("Trovo chat connection has not been established");
+            return new Result(MixItUp.Base.Resources.TrovoChatConnectionCouldNotBeEstablished);
         }
 
         public async Task DisconnectUser()
@@ -245,7 +245,7 @@ namespace MixItUp.Base.Services.Trovo
                         string token = await ServiceManager.Get<TrovoSessionService>().BotConnection.GetChatToken(ServiceManager.Get<TrovoSessionService>().ChannelID);
                         if (string.IsNullOrEmpty(token))
                         {
-                            return new Result("Failed to get chat token from Trovo chat servers");
+                            return new Result(MixItUp.Base.Resources.TrovoFailedToGetChatToken);
                         }
 
                         if (ChannelSession.AppSettings.DiagnosticLogging)
@@ -257,7 +257,7 @@ namespace MixItUp.Base.Services.Trovo
 
                         if (!await this.botClient.Connect(token))
                         {
-                            return new Result("Failed to connect to Trovo chat servers");
+                            return new Result(MixItUp.Base.Resources.TrovoFailedToConnectToChat);
                         }
 
                         return new Result();
@@ -269,7 +269,7 @@ namespace MixItUp.Base.Services.Trovo
                     }
                 }));
             }
-            return new Result("Trovo chat connection has not been established");
+            return new Result(MixItUp.Base.Resources.TrovoChatConnectionCouldNotBeEstablished);
         }
 
         public async Task DisconnectBot()
@@ -462,7 +462,7 @@ namespace MixItUp.Base.Services.Trovo
 
                         GlobalEvents.FollowOccurred(user);
 
-                        await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} Followed", user.DisplayName), ChannelSession.Settings.AlertFollowColor));
+                        await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertFollow, user.DisplayName), ChannelSession.Settings.AlertFollowColor));
                     }
                 }
                 else if (message.type == ChatMessageTypeEnum.SubscriptionAlert)
@@ -509,12 +509,12 @@ namespace MixItUp.Base.Services.Trovo
                         if (subMessage.IsResub)
                         {
                             GlobalEvents.ResubscribeOccurred(new Tuple<UserV2ViewModel, int>(user, 1));
-                            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertUserResubscribedFormat, user.DisplayName, subMessage.Months), ChannelSession.Settings.AlertSubColor));
+                            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertResubscribed, user.DisplayName, subMessage.Months), ChannelSession.Settings.AlertSubColor));
                         }
                         else
                         {
                             GlobalEvents.SubscribeOccurred(user);
-                            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertUserSubscribedFormat, user.DisplayName), ChannelSession.Settings.AlertSubColor));
+                            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertSubscribed, user.DisplayName), ChannelSession.Settings.AlertSubColor));
                         }
                     }
                 }
@@ -531,7 +531,7 @@ namespace MixItUp.Base.Services.Trovo
                         parameters.SpecialIdentifiers["subsgiftedamount"] = totalGifted.ToString();
                         await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelMassSubscriptionsGifted, parameters);
                     }
-                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} Gifted {1} Subs", user.DisplayName, totalGifted), ChannelSession.Settings.AlertMassGiftedSubColor));
+                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertMassSubscriptionsGifted, user.DisplayName, totalGifted), ChannelSession.Settings.AlertMassGiftedSubColor));
                 }
                 else if (message.type == ChatMessageTypeEnum.GiftedSubscriptionMessage)
                 {
@@ -585,7 +585,7 @@ namespace MixItUp.Base.Services.Trovo
                             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelSubscriptionGifted, parameters);
                         }
 
-                        await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} Gifted A Subscription To {1}", user.DisplayName, giftee.DisplayName), ChannelSession.Settings.AlertGiftedSubColor));
+                        await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertSubscriptionGifted, user.DisplayName, giftee.DisplayName), ChannelSession.Settings.AlertGiftedSubColor));
 
                         GlobalEvents.SubscriptionGiftedOccurred(user, giftee);
                     }
@@ -620,7 +620,7 @@ namespace MixItUp.Base.Services.Trovo
 
                             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelRaided, parameters);
 
-                            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} raided with {1} viewers", user.DisplayName, raidCount), ChannelSession.Settings.AlertRaidColor));
+                            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertRaid, user.DisplayName, raidCount), ChannelSession.Settings.AlertRaidColor));
                         }
                     }
                 }
@@ -716,7 +716,7 @@ namespace MixItUp.Base.Services.Trovo
 
         private async void UserClient_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
         {
-            ChannelSession.DisconnectionOccurred("Trovo User Chat");
+            ChannelSession.DisconnectionOccurred(MixItUp.Base.Resources.TrovoUserChat);
 
             Result result;
             await this.DisconnectUser();
@@ -728,12 +728,12 @@ namespace MixItUp.Base.Services.Trovo
             }
             while (!result.Success);
 
-            ChannelSession.ReconnectionOccurred("Trovo User Chat");
+            ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.TrovoUserChat);
         }
 
         private async void BotClient_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
         {
-            ChannelSession.DisconnectionOccurred("Trovo Bot Chat");
+            ChannelSession.DisconnectionOccurred(MixItUp.Base.Resources.TrovoBotChat);
 
             Result result;
             await this.DisconnectBot();
@@ -745,7 +745,7 @@ namespace MixItUp.Base.Services.Trovo
             }
             while (!result.Success);
 
-            ChannelSession.ReconnectionOccurred("Trovo Bot Chat");
+            ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.TrovoBotChat);
         }
     }
 }

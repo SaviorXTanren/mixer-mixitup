@@ -118,7 +118,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.follows.Contains(user.ID))
             {
                 this.follows.Add(user.ID);
-                await this.AddEvent(user.FullDisplayName, "Followed");
+                await this.AddEvent(user.FullDisplayName, MixItUp.Base.Resources.Followed);
             }
         }
 
@@ -127,7 +127,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.hosts.Contains(user.ID))
             {
                 this.hosts.Add(user.ID);
-                await this.AddEvent(user.FullDisplayName, "Hosted");
+                await this.AddEvent(user.FullDisplayName, MixItUp.Base.Resources.Hosted);
             }
         }
 
@@ -136,7 +136,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.raids.Contains(raid.Item1.ID))
             {
                 this.raids.Add(raid.Item1.ID);
-                await this.AddEvent(raid.Item1.FullDisplayName, string.Format("Raided ({0})", raid.Item2));
+                await this.AddEvent(raid.Item1.FullDisplayName, string.Format(MixItUp.Base.Resources.RaidedAmount, raid.Item2));
             }
         }
 
@@ -145,7 +145,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.subs.Contains(user.ID))
             {
                 this.subs.Add(user.ID);
-                await this.AddEvent(user.FullDisplayName, "Subscribed");
+                await this.AddEvent(user.FullDisplayName, MixItUp.Base.Resources.Subscribed);
             }
         }
 
@@ -154,7 +154,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.subs.Contains(user.Item1.ID))
             {
                 this.subs.Add(user.Item1.ID);
-                await this.AddEvent(user.Item1.FullDisplayName, string.Format("Resubscribed ({0} months)", user.Item2));
+                await this.AddEvent(user.Item1.FullDisplayName, string.Format(MixItUp.Base.Resources.ResubscribedAmount, user.Item2));
             }
         }
 
@@ -163,7 +163,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.subs.Contains(e.Item2.ID))
             {
                 this.subs.Add(e.Item2.ID);
-                await this.AddEvent(e.Item2.FullDisplayName, "Gifted Sub");
+                await this.AddEvent(e.Item2.FullDisplayName, MixItUp.Base.Resources.GiftedSub);
             }
         }
 

@@ -74,7 +74,7 @@ namespace MixItUp.Base.Services.External
 
         public TwitterService() : base("") { }
 
-        public override string Name { get { return "Twitter"; } }
+        public override string Name { get { return MixItUp.Base.Resources.Twitter; } }
 
         public override async Task<Result> Connect()
         {

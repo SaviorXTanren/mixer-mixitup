@@ -72,7 +72,7 @@ namespace MixItUp.Base.Services.External
             this.socket = socket;
         }
 
-        public override string Name { get { return "Streamlabs"; } }
+        public override string Name { get { return MixItUp.Base.Resources.Streamlabs; } }
 
         public override async Task<Result> Connect()
         {
@@ -154,7 +154,7 @@ namespace MixItUp.Base.Services.External
 
         private async void Socket_OnDisconnected(object sender, EventArgs e)
         {
-            ChannelSession.DisconnectionOccurred("Streamlabs");
+            ChannelSession.DisconnectionOccurred(MixItUp.Base.Resources.Streamlabs);
 
             do
             {
@@ -162,7 +162,7 @@ namespace MixItUp.Base.Services.External
             }
             while (!await this.ConnectSocket());
 
-            ChannelSession.ReconnectionOccurred("Streamlabs");
+            ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.Streamlabs);
         }
 
         private async Task<bool> ConnectSocket()

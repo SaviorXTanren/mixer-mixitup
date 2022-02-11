@@ -92,12 +92,12 @@ namespace MixItUp.Base.Services.Trovo
                 Logger.Log(ex);
                 return new Result<TrovoPlatformService>(ex);
             }
-            return new Result<TrovoPlatformService>("Failed to establish connection to Trovo");
+            return new Result<TrovoPlatformService>(MixItUp.Base.Resources.TrovoFailedToConnect);
         }
 
         public TrovoConnection Connection { get; private set; }
 
-        public override string Name { get { return "Trovo Connection"; } }
+        public override string Name { get { return MixItUp.Base.Resources.TrovoConnection; } }
 
         public TrovoPlatformService(TrovoConnection connection)
         {

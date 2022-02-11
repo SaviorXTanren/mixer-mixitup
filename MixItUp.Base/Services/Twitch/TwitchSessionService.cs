@@ -74,7 +74,7 @@ namespace MixItUp.Base.Services.Twitch
                 this.User = await this.UserConnection.GetNewAPICurrentUser();
                 if (this.User == null)
                 {
-                    return new Result("Failed to get New API Twitch user data");
+                    return new Result(MixItUp.Base.Resources.TwitchFailedToGetUserData);
                 }
             }
             return result;
@@ -89,7 +89,7 @@ namespace MixItUp.Base.Services.Twitch
                 this.Bot = await this.BotConnection.GetNewAPICurrentUser();
                 if (this.Bot == null)
                 {
-                    return new Result("Failed to get Twitch bot data");
+                    return new Result(MixItUp.Base.Resources.TwitchFailedToGetBotData);
                 }
 
                 if (ServiceManager.Has<TwitchChatService>() && ServiceManager.Get<TwitchChatService>().IsUserConnected)
@@ -122,7 +122,7 @@ namespace MixItUp.Base.Services.Twitch
                     this.User = await this.UserConnection.GetNewAPICurrentUser();
                     if (this.User == null)
                     {
-                        return new Result("Failed to get Twitch user data");
+                        return new Result(MixItUp.Base.Resources.TwitchFailedToGetUserData);
                     }
 
                     if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken != null)
@@ -134,13 +134,13 @@ namespace MixItUp.Base.Services.Twitch
                             this.Bot = await this.BotConnection.GetNewAPICurrentUser();
                             if (this.Bot == null)
                             {
-                                return new Result("Failed to get Twitch bot data");
+                                return new Result(MixItUp.Base.Resources.TwitchFailedToGetBotData);
                             }
                         }
                         else
                         {
 
-                            return new Result(success: true, message: "Failed to connect Twitch bot account, please manually reconnect");
+                            return new Result(success: true, message: MixItUp.Base.Resources.TwitchFailedToConnectBotAccount);
                         }
                     }
                 }
@@ -209,7 +209,7 @@ namespace MixItUp.Base.Services.Twitch
                             {
                                 Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.Username} - {this.UserID} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID}");
                                 settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.ResetToken();
-                                return new Result("The account you are logged in as on Twitch does not match the account for this settings. Please log in as the correct account on Twitch.");
+                                return new Result(string.Format(MixItUp.Base.Resources.StreamingPlatformIncorrectAccount, StreamingPlatformTypeEnum.Twitch));
                             }
                         }
 
@@ -222,7 +222,7 @@ namespace MixItUp.Base.Services.Twitch
                         if (platformServiceTasks.Any(c => !c.Result.Success))
                         {
                             string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
-                            return new Result("Failed to connect to Twitch services:" + Environment.NewLine + Environment.NewLine + errors);
+                            return new Result(MixItUp.Base.Resources.TwitchFailedToConnectHeader + Environment.NewLine + Environment.NewLine + errors);
                         }
 
                         await ServiceManager.Get<TwitchChatService>().Initialize();
@@ -231,8 +231,8 @@ namespace MixItUp.Base.Services.Twitch
                 catch (Exception ex)
                 {
                     Logger.Log(ex);
-                    return new Result("Failed to connect to Twitch services. If this continues, please visit the Mix It Up Discord for assistance." +
-                        Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
+                    return new Result(MixItUp.Base.Resources.TwitchFailedToConnect +
+                        Environment.NewLine + Environment.NewLine + MixItUp.Base.Resources.ErrorHeader + ex.Message);
                 }
             }
             return new Result();

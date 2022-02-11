@@ -370,7 +370,7 @@ namespace MixItUp.Base.Services.External
 
         public PatreonService() : base(PatreonService.BaseAddress) { }
 
-        public override string Name { get { return "Patreon"; } }
+        public override string Name { get { return MixItUp.Base.Resources.Patreon; } }
 
         public override async Task<Result> Connect()
         {

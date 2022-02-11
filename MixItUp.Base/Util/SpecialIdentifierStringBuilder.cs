@@ -367,7 +367,7 @@ namespace MixItUp.Base.Util
                             userPosition++;
                         }
 
-                        string result = "No users found.";
+                        string result = MixItUp.Base.Resources.NoUsersFound;
                         if (timeUserList.Count > 0)
                         {
                             result = string.Join(", ", timeUserList);
@@ -403,7 +403,7 @@ namespace MixItUp.Base.Util
                                 userPosition++;
                             }
 
-                            string result = "No users found.";
+                            string result = MixItUp.Base.Resources.NoUsersFound;
                             if (currencyUserList.Count > 0)
                             {
                                 result = string.Join(", ", currencyUserList);
@@ -868,7 +868,7 @@ namespace MixItUp.Base.Util
 
                 if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gamequeueposition"))
                 {
-                    string gameQueuePosition = "Not In Queue";
+                    string gameQueuePosition = MixItUp.Base.Resources.QueueNotIn;
                     if (ServiceManager.Get<GameQueueService>().IsEnabled)
                     {
                         int position = ServiceManager.Get<GameQueueService>().GetUserPosition(user);
@@ -1009,7 +1009,7 @@ namespace MixItUp.Base.Util
 
                 if (ServiceManager.Get<PatreonService>().IsConnected)
                 {
-                    string tierName = "Not Subscribed";
+                    string tierName = MixItUp.Base.Resources.NotSubscribed;
                     PatreonTier tier = user.PatreonTier;
                     if (tier != null)
                     {
@@ -1026,7 +1026,7 @@ namespace MixItUp.Base.Util
             {
                 await this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredRegexSpecialIdentifier + period.ToString().ToLower(), async (total) =>
                 {
-                    string result = "No users found.";
+                    string result = MixItUp.Base.Resources.NoUsersFound;
                     BitsLeaderboardModel leaderboard = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(period, total);
                     if (leaderboard != null && leaderboard.users != null && leaderboard.users.Count > 0)
                     {

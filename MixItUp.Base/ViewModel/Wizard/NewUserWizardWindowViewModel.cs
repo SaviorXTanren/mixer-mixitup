@@ -197,7 +197,7 @@ namespace MixItUp.Base.ViewModel.Wizard
                 {
                     if (!this.Twitch.IsUserAccountConnected && !this.YouTube.IsUserAccountConnected && !this.Trovo.IsUserAccountConnected && !this.Glimesh.IsUserAccountConnected)
                     {
-                        this.StatusMessage = "At least 1 Streamer account must be signed in.";
+                        this.StatusMessage = MixItUp.Base.Resources.NewUserWizardAtLeastOneAccountMustBeSignedIn;
                         return;
                     }
 

@@ -52,7 +52,7 @@ namespace MixItUp.WPF.Services
             {
                 await this.StartReplayBuffer();
                 this.Connected(this, new EventArgs());
-                ChannelSession.ReconnectionOccurred("OBS");
+                ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.OBSStudio);
                 ServiceManager.Get<ITelemetryService>().TrackService("OBS Studio");
                 return new Result();
             }
@@ -69,7 +69,7 @@ namespace MixItUp.WPF.Services
                     this.OBSWebsocket.Disconnected -= OBSWebsocket_Disconnected;
                     this.OBSWebsocket.Disconnect();
                     this.Disconnected(this, new EventArgs());
-                    ChannelSession.DisconnectionOccurred("OBS");
+                    ChannelSession.DisconnectionOccurred(MixItUp.Base.Resources.OBSStudio);
                 }
                 return true;
             }, ConnectTimeoutInMilliseconds);

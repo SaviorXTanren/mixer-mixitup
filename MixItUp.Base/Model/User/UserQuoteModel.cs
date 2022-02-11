@@ -53,7 +53,7 @@ namespace MixItUp.Base.Model.User
             {
                 StringBuilder result = new StringBuilder();
 
-                result.Append("Quote #" + this.ID + ": ");
+                result.Append(MixItUp.Base.Resources.Quote + " #" + this.ID + ": ");
                 result.Append("\"" + this.Quote + "\"");
 
                 if (!string.IsNullOrEmpty(this.GameName))

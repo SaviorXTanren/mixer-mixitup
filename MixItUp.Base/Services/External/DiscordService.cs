@@ -419,7 +419,7 @@ namespace MixItUp.Base.Services.External
     {
         private string botToken;
 
-        public override string Name { get { return "Discord Bot Service"; } }
+        public override string Name { get { return MixItUp.Base.Resources.DiscordBot; } }
 
         public DiscordBotService(string baseAddress, string botToken)
             : base(baseAddress)
@@ -630,7 +630,7 @@ namespace MixItUp.Base.Services.External
 
         public DiscordService() : base(DiscordService.BaseAddress) { }
 
-        public override string Name { get { return "Discord"; } }
+        public override string Name { get { return MixItUp.Base.Resources.Discord; } }
 
         public bool IsUsingCustomApplication { get { return !string.IsNullOrEmpty(ChannelSession.Settings.DiscordCustomClientID); } }
         public string ClientID { get { return (this.IsUsingCustomApplication) ? ChannelSession.Settings.DiscordCustomClientID : DiscordService.DefaultClientID; } }
@@ -830,7 +830,7 @@ namespace MixItUp.Base.Services.External
                 this.lastCommand = DateTimeOffset.Now;
                 return true;
             }
-            await ServiceManager.Get<ChatService>().SendMessage("The Discord action you were trying to perform was blocked due to too many requests. Please ensure you are only performing 1 Discord action every 30 seconds. You can add a custom Discord Bot under the Services page to circumvent this block.", StreamingPlatformTypeEnum.All);
+            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.DiscordActionBlockedDueToRateLimiting, StreamingPlatformTypeEnum.All);
             return false;
         }
     }

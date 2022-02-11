@@ -64,7 +64,7 @@ namespace MixItUp.Base.Services.YouTube
                 this.User = await this.UserConnection.GetCurrentChannel();
                 if (this.User == null)
                 {
-                    return new Result("Failed to get YouTube channel data");
+                    return new Result(MixItUp.Base.Resources.YouTubeFailedToGetUserData);
                 }
             }
             return result;
@@ -79,7 +79,7 @@ namespace MixItUp.Base.Services.YouTube
                 this.Bot = await this.BotConnection.GetCurrentChannel();
                 if (this.Bot == null)
                 {
-                    return new Result("Failed to get YouTube bot data");
+                    return new Result(MixItUp.Base.Resources.YouTubeFailedToGetBotData);
                 }
             }
             return result;
@@ -107,7 +107,7 @@ namespace MixItUp.Base.Services.YouTube
                     this.User = await this.UserConnection.GetCurrentChannel();
                     if (this.User == null)
                     {
-                        return new Result("Failed to get YouTube channel data");
+                        return new Result(MixItUp.Base.Resources.YouTubeFailedToGetUserData);
                     }
 
                     if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].BotOAuthToken != null)
@@ -119,13 +119,13 @@ namespace MixItUp.Base.Services.YouTube
                             this.Bot = await this.BotConnection.GetCurrentChannel();
                             if (this.Bot == null)
                             {
-                                return new Result("Failed to get YouTube bot data");
+                                return new Result(MixItUp.Base.Resources.YouTubeFailedToGetBotData);
                             }
                         }
                         else
                         {
 
-                            return new Result(success: true, message: "Failed to connect YouTube bot account, please manually reconnect");
+                            return new Result(success: true, message: MixItUp.Base.Resources.YouTubeFailedToConnectBotAccount);
                         }
                     }
                 }
@@ -178,7 +178,7 @@ namespace MixItUp.Base.Services.YouTube
                         {
                             Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.UserID} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserID}");
                             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserOAuthToken.ResetToken();
-                            return new Result("The account you are logged in as on YouTube does not match the account for this settings. Please log in as the correct account on YouTube.");
+                            return new Result(string.Format(MixItUp.Base.Resources.StreamingPlatformIncorrectAccount, StreamingPlatformTypeEnum.YouTube));
                         }
                     }
 
@@ -192,14 +192,14 @@ namespace MixItUp.Base.Services.YouTube
                         ServiceManager.Remove<YouTubeChatService>();
 
                         string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
-                        return new Result("Failed to connect to YouTube services:" + Environment.NewLine + Environment.NewLine + errors);
+                        return new Result(MixItUp.Base.Resources.YouTubeFailedToConnectHeader + Environment.NewLine + Environment.NewLine + errors);
                     }
                 }
                 catch (Exception ex)
                 {
                     Logger.Log(ex);
-                    return new Result("Failed to connect to YouTube services. If this continues, please visit the Mix It Up Discord for assistance." +
-                        Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
+                    return new Result(MixItUp.Base.Resources.YouTubeFailedToConnect +
+                        Environment.NewLine + Environment.NewLine + MixItUp.Base.Resources.ErrorHeader + ex.Message);
                 }
             }
             return new Result();

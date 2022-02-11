@@ -235,14 +235,14 @@ namespace MixItUp.Base.ViewModel.Currency
             this.DefaultItemMaxAmount = 99;
 
             CustomCommandModel buyCommand = new CustomCommandModel(MixItUp.Base.Resources.InventoryItemsBoughtCommandName);
-            buyCommand.Actions.Add(new ChatActionModel("You bought $itemtotal $itemname for $itemcost $currencyname", sendAsStreamer: false));
+            buyCommand.Actions.Add(new ChatActionModel(MixItUp.Base.Resources.InventoryBuyCommandDefault, sendAsStreamer: false));
             this.ShopBuyCommand = buyCommand;
             CustomCommandModel sellCommand = new CustomCommandModel(MixItUp.Base.Resources.InventoryItemsSoldCommandName);
-            sellCommand.Actions.Add(new ChatActionModel("You sold $itemtotal $itemname for $itemcost $currencyname", sendAsStreamer: false));
+            sellCommand.Actions.Add(new ChatActionModel(MixItUp.Base.Resources.InventorySellCommandDefault, sendAsStreamer: false));
             this.ShopSellCommand = sellCommand;
 
             CustomCommandModel tradeCommand = new CustomCommandModel(MixItUp.Base.Resources.InventoryItemsTradedCommandName);
-            tradeCommand.Actions.Add(new ChatActionModel("@$username traded $itemtotal $itemname to @$targetusername for $targetitemtotal $targetitemname", sendAsStreamer: false));
+            tradeCommand.Actions.Add(new ChatActionModel(MixItUp.Base.Resources.InventoryTradeCommandDefault, sendAsStreamer: false));
             this.TradeCommand = tradeCommand;
 
             this.SaveItemCommand = this.CreateCommand(async () =>

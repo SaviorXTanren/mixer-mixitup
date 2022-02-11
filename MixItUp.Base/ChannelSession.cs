@@ -168,7 +168,7 @@ namespace MixItUp.Base
         {
             if (ChannelSession.Settings == null)
             {
-                return new Result("No settings file has been loaded");
+                return new Result(MixItUp.Base.Resources.SettingsNoFileHasBeenLoaded);
             }
 
             try
@@ -219,7 +219,7 @@ namespace MixItUp.Base
                             {
                                 if (setting.StreamingPlatformAuthentications[p].IsEnabled && setting.StreamingPlatformAuthentications[p].Equals(ChannelSession.Settings.StreamingPlatformAuthentications[p]))
                                 {
-                                    result = new Result($"There already exists settings with the same account for {p}. Please sign in with a different account or re-launch Mix It Up to select those settings from the drop-down.");
+                                    result = new Result(string.Format(MixItUp.Base.Resources.SettingsAlreadyExistForAccount, p));
                                     return;
                                 }
                             }
@@ -333,7 +333,7 @@ namespace MixItUp.Base
                     Dictionary<IExternalService, Task<Result>> externalServiceTasks = new Dictionary<IExternalService, Task<Result>>();
                     foreach (var kvp in externalServiceToConnect)
                     {
-                        Logger.Log(LogLevel.Debug, "Trying automatic OAuth service connection: " + kvp.Key.Name);
+                        Logger.Log(LogLevel.Debug, "Trying automatic OAuth service connection: " + nameof(kvp.Key));
 
                         try
                         {
@@ -348,7 +348,7 @@ namespace MixItUp.Base
                         }
                         catch (Exception sex)
                         {
-                            Logger.Log(LogLevel.Error, "Error in external service initial connection: " + kvp.Key.Name);
+                            Logger.Log(LogLevel.Error, "Error in external service initial connection: " + nameof(kvp.Key));
                             Logger.Log(sex);
                         }
                     }
@@ -370,7 +370,7 @@ namespace MixItUp.Base
                         {
                             if (kvp.Value.Result != null && !kvp.Value.Result.Success && kvp.Key is IOAuthExternalService)
                             {
-                                Logger.Log(LogLevel.Debug, "Automatic OAuth token connection failed, trying manual connection: " + kvp.Key.Name);
+                                Logger.Log(LogLevel.Debug, "Automatic OAuth token connection failed, trying manual connection: " + nameof(kvp.Key));
                                 result = await kvp.Key.Connect();
                                 if (!result.Success)
                                 {
@@ -380,7 +380,7 @@ namespace MixItUp.Base
                         }
                         catch (Exception sex)
                         {
-                            Logger.Log(LogLevel.Error, "Error in external service failed re-connection: " + kvp.Key.Name);
+                            Logger.Log(LogLevel.Error, "Error in external service failed re-connection: " + nameof(kvp.Key));
                             Logger.Log(sex);
                             failedServices.Add(kvp.Key);
                         }
@@ -388,18 +388,14 @@ namespace MixItUp.Base
 
                     if (failedServices.Count > 0)
                     {
-                        Logger.Log(LogLevel.Debug, "Connection failed for services: " + string.Join(", ", failedServices.Select(s => s.Name)));
+                        Logger.Log(LogLevel.Debug, "Connection failed for services: " + string.Join(", ", failedServices.Select(s => nameof(s))));
 
-                        StringBuilder message = new StringBuilder();
-                        message.AppendLine("The following services could not be connected:");
-                        message.AppendLine();
+                        StringBuilder failedServiceMessage = new StringBuilder();
                         foreach (IExternalService service in failedServices)
                         {
-                            message.AppendLine(" - " + service.Name);
+                            failedServiceMessage.AppendLine(" - " + service.Name);
                         }
-                        message.AppendLine();
-                        message.Append("We will attempt to re-connect with the service when possible. If this continues, please go to the Services page to reconnect them manually.");
-                        await DialogHelper.ShowMessage(message.ToString());
+                        await DialogHelper.ShowMessage(string.Format(MixItUp.Base.Resources.ConnectedServicesFailed, failedServiceMessage.ToString()));
                     }
                 }
 
@@ -477,8 +473,7 @@ namespace MixItUp.Base
             {
                 Logger.Log(ex);
                 Logger.Log(LogLevel.Error, "Session Initialization - " + JSONSerializerHelper.SerializeToString(ex));
-                return new Result("Failed to get channel information. If this continues, please visit the Mix It Up Discord for assistance." +
-                        Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
+                return new Result(MixItUp.Base.Resources.FailedToInitializeSession + Environment.NewLine + Environment.NewLine + MixItUp.Base.Resources.ErrorHeader + ex.Message);
             }
         }
 
