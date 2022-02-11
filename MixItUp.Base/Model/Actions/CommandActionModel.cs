@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,6 +102,11 @@ namespace MixItUp.Base.Model.Actions
             {
                 if (command != null)
                 {
+                    if (this.Command.ID == parameters.InitialCommandID)
+                    {
+                        Logger.Log(LogLevel.Error, "Command Action calling in to itself, possible endless loop - Command ID: " + parameters.InitialCommandID);
+                    }
+
                     List<string> newArguments = new List<string>();
                     if (!string.IsNullOrEmpty(this.Arguments))
                     {
