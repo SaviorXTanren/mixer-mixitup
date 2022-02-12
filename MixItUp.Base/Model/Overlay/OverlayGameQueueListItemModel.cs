@@ -76,7 +76,7 @@ namespace MixItUp.Base.Model.Overlay
                     UserV2ViewModel user = users.ElementAt(i);
 
                     OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(user.ID.ToString(), user, i + 1, this.HTML);
-                    item.TemplateReplacements.Add("USERNAME", (string)user.FullDisplayName);
+                    item.TemplateReplacements.Add("USERNAME", (string)user.DisplayName);
                     item.TemplateReplacements.Add("POSITION", (i + 1).ToString());
 
                     this.Items.Add(item);

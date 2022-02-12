@@ -628,6 +628,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} Donated {1}.
+        /// </summary>
+        public static string AlertDonated {
+            get {
+                return ResourceManager.GetString("AlertDonated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} Followed.
         /// </summary>
         public static string AlertFollow {
@@ -4493,6 +4502,15 @@ namespace MixItUp.Base {
         public static string DoesNotContain {
             get {
                 return ResourceManager.GetString("DoesNotContain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Donated {0}.
+        /// </summary>
+        public static string DonatedAmount {
+            get {
+                return ResourceManager.GetString("DonatedAmount", resourceCulture);
             }
         }
         
@@ -17144,6 +17162,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Purchased {0} Pack(s).
+        /// </summary>
+        public static string StreamlootsPacksPurchasedAmount {
+            get {
+                return ResourceManager.GetString("StreamlootsPacksPurchasedAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} Purchases {1} Pack(s).
         /// </summary>
         public static string StreamlootsPurchasedPacksAlert {
@@ -18932,6 +18959,15 @@ namespace MixItUp.Base {
         public static string TwitchAffiliate {
             get {
                 return ResourceManager.GetString("TwitchAffiliate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cheer {0} Bits.
+        /// </summary>
+        public static string TwitchBitsCheeredAmount {
+            get {
+                return ResourceManager.GetString("TwitchBitsCheeredAmount", resourceCulture);
             }
         }
         

@@ -74,7 +74,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="{Binding User.Username}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="0" Text="{Binding User.FullDisplayName}" VerticalAlignment="Center" />
                             </Grid>
 
                             <Grid Grid.Row="2">

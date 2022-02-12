@@ -52,11 +52,17 @@ namespace MixItUp.Base.Model.User
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(this.username))
+                if (this.User != null)
                 {
-                    return MixItUp.Base.Resources.Anonymous;
+                    return this.User.DisplayName;
                 }
-                return this.username;
+
+                if (!string.IsNullOrWhiteSpace(this.username))
+                {
+                    return this.username;
+                }
+
+                return MixItUp.Base.Resources.Anonymous;
             }
             set { this.username = value; }
         }
@@ -76,7 +82,7 @@ namespace MixItUp.Base.Model.User
                 this.User = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(this.Platform, this.username);
                 if (this.User == null)
                 {
-                    this.User = UserV2ViewModel.CreateUnassociated(this.Username);
+                    this.User = UserV2ViewModel.CreateUnassociated(this.username);
                 }
             }
         }

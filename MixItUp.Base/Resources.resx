@@ -7417,4 +7417,21 @@ We will attempt to re-connect with the service when possible. If this continues,
   <data name="ShowsUsersAmount" xml:space="preserve">
     <value>Shows User's Amount</value>
   </data>
+  <data name="DonatedAmount" xml:space="preserve">
+    <value>Donated {0}</value>
+    <comment>{0} is the amount donated</comment>
+  </data>
+  <data name="StreamlootsPacksPurchasedAmount" xml:space="preserve">
+    <value>Purchased {0} Pack(s)</value>
+    <comment>{0} is the amount of packs</comment>
+  </data>
+  <data name="TwitchBitsCheeredAmount" xml:space="preserve">
+    <value>Cheer {0} Bits</value>
+    <comment>{0} is the amount of bits</comment>
+  </data>
+  <data name="AlertDonated" xml:space="preserve">
+    <value>{0} Donated {1}</value>
+    <comment>{0} is the name of the user
+{1} is the amount donated</comment>
+  </data>
 </root>
