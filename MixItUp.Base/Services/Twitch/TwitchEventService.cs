@@ -27,7 +27,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public string PlanTier { get; set; }
 
-        public int PlanTierNumber { get; set; }
+        public int PlanTierNumber { get; set; } = 1;
 
         public string PlanName { get; set; }
 
@@ -60,6 +60,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 this.PlanTier = this.PlanName = MixItUp.Base.Resources.Tier1;
             }
+            this.PlanTierNumber = 1;
 
             this.IsGiftedUpgrade = true;
         }

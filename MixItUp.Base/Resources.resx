@@ -6687,9 +6687,6 @@ Failed imports could be due to invalid data or failure to find their information
   <data name="SerialDevicesAlreadyExistDeviceWithPortName" xml:space="preserve">
     <value>ERROR: There already exists a device with the selected port name.</value>
   </data>
-  <data name="WikiLinkSpecialIdentifiers" xml:space="preserve">
-    <value>https://wiki.mixitupapp.com/special-identifiers</value>
-  </data>
   <data name="QuoteID" xml:space="preserve">
     <value>Quote ID</value>
   </data>

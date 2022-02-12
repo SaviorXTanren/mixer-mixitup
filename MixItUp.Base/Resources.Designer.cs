@@ -20989,15 +20989,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://wiki.mixitupapp.com/special-identifiers.
-        /// </summary>
-        public static string WikiLinkSpecialIdentifiers {
-            get {
-                return ResourceManager.GetString("WikiLinkSpecialIdentifiers", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Wildcards.
         /// </summary>
         public static string Wildcards {

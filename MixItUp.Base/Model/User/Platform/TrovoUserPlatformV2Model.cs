@@ -92,7 +92,6 @@ namespace MixItUp.Base.Model.User.Platform
                     else
                     {
                         this.Roles.Remove(UserRoleEnum.Subscriber);
-                        this.SubscriberTier = 0;
                     }
                 }
             }

@@ -486,6 +486,7 @@ namespace MixItUp.Base.Services.Trovo
                         ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = subMessage.Months;
 
                         user.Roles.Add(UserRoleEnum.Subscriber);
+                        user.SubscriberTier = 1;
                         if (!subMessage.IsResub)
                         {
                             user.SubscribeDate = DateTimeOffset.Now;
@@ -557,6 +558,7 @@ namespace MixItUp.Base.Services.Trovo
                         ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
                         giftee.Roles.Add(UserRoleEnum.Subscriber);
+                        giftee.SubscriberTier = 1;
                         giftee.SubscribeDate = DateTimeOffset.Now;
                         //giftedSubEvent.Receiver.Data.TwitchSubscriberTier = giftedSubEvent.PlanTierNumber;
                         user.TotalSubsGifted++;

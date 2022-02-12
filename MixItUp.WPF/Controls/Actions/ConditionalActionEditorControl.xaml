@@ -60,7 +60,7 @@
             <ToggleButton Grid.Column="10" IsChecked="{Binding RepeatWhileTrue}" />
 
             <TextBlock Grid.Column="12" VerticalAlignment="Center">
-                <Hyperlink NavigateUri="{x:Static resx:Resources.WikiLinkSpecialIdentifiers}" RequestNavigate="Hyperlink_RequestNavigate">
+                <Hyperlink NavigateUri="https://wiki.mixitupapp.com/special-identifiers" RequestNavigate="Hyperlink_RequestNavigate">
                     <TextBlock Text="{x:Static resx:Resources.SpecialIdentifiers}"/>
                 </Hyperlink>
             </TextBlock>
