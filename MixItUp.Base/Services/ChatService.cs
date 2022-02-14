@@ -426,6 +426,8 @@ namespace MixItUp.Base.Services
 
                 if (message is UserChatMessageViewModel && message.User != null)
                 {
+                    await message.User.Refresh();
+
                     if (message.IsWhisper)
                     {
                         if (!message.IsStreamerOrBot)
@@ -449,9 +451,17 @@ namespace MixItUp.Base.Services
                     }
                     else
                     {
+                        message.User.TotalChatMessageSent++;
+
                         if (this.DisableChat)
                         {
                             Logger.Log(LogLevel.Debug, string.Format("Deleting Message As Chat Disabled - {0} - {1}", message.ID, message));
+                            await this.DeleteMessage(message);
+                            return;
+                        }
+
+                        if (await message.CheckForModeration())
+                        {
                             await this.DeleteMessage(message);
                             return;
                         }
@@ -465,7 +475,7 @@ namespace MixItUp.Base.Services
                             await ServiceManager.Get<IAudioService>().Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, ChannelSession.Settings.NotificationChatMessageSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
                         }
 
-                        if (message.User != null && !this.userEntranceCommands.Contains(message.User.ID))
+                        if (!this.userEntranceCommands.Contains(message.User.ID))
                         {
                             this.userEntranceCommands.Add(message.User.ID);
                             if (ChannelSession.Settings.GetCommand(message.User.EntranceCommandID) != null)
@@ -483,8 +493,6 @@ namespace MixItUp.Base.Services
                             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatMessageReceived, new CommandParametersModel(message));
                         }
 
-                        message.User.TotalChatMessageSent++;
-
                         string primaryTaggedUsername = message.PrimaryTaggedUsername;
                         if (!string.IsNullOrEmpty(primaryTaggedUsername))
                         {
@@ -496,21 +504,13 @@ namespace MixItUp.Base.Services
                         }
                     }
 
-                    await message.User.Refresh();
-
-                    if (!message.IsWhisper && await message.CheckForModeration())
-                    {
-                        await this.DeleteMessage(message);
-                        return;
-                    }
-
                     GlobalEvents.ChatMessageReceived(message);
 
                     await this.WriteToChatEventLog(message);
 
                     IEnumerable<string> arguments = null;
 #pragma warning disable CS0612 // Type or member is obsolete
-                    if (!string.IsNullOrEmpty(message.PlainTextMessage) && message.User != null && !message.User.HasRole(UserRoleEnum.Banned))
+                    if (!string.IsNullOrEmpty(message.PlainTextMessage) && !message.User.HasRole(UserRoleEnum.Banned))
 #pragma warning restore CS0612 // Type or member is obsolete
                     {
                         if (!ChannelSession.Settings.AllowCommandWhispering && message.IsWhisper)
