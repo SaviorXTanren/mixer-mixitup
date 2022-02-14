@@ -19,6 +19,7 @@ namespace MixItUp.Base.Model.Actions
         CancelAllCommands,
         PauseAllCommands,
         UnpauseAllCommands,
+        ToggleCommand,
     }
 
     [DataContract]
@@ -132,11 +133,20 @@ namespace MixItUp.Base.Model.Actions
                     }
                 }
             }
-            else if (this.ActionType == CommandActionTypeEnum.DisableCommand || this.ActionType == CommandActionTypeEnum.EnableCommand)
+            else if (this.ActionType == CommandActionTypeEnum.DisableCommand || this.ActionType == CommandActionTypeEnum.EnableCommand ||
+                this.ActionType == CommandActionTypeEnum.ToggleCommand)
             {
                 if (command != null)
                 {
-                    command.IsEnabled = (this.ActionType == CommandActionTypeEnum.EnableCommand) ? true : false;
+                    if (this.ActionType == CommandActionTypeEnum.ToggleCommand)
+                    {
+                        command.IsEnabled = !command.IsEnabled;
+                    }
+                    else
+                    {
+                        command.IsEnabled = (this.ActionType == CommandActionTypeEnum.EnableCommand) ? true : false;
+                    }
+
                     if (command is ChatCommandModel)
                     {
                         ServiceManager.Get<ChatService>().RebuildCommandTriggers();

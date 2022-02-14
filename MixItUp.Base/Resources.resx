@@ -7434,4 +7434,7 @@ We will attempt to re-connect with the service when possible. If this continues,
     <comment>{0} is the name of the user
 {1} is the amount donated</comment>
   </data>
+  <data name="ToggleCommand" xml:space="preserve">
+    <value>Toggle Command</value>
+  </data>
 </root>

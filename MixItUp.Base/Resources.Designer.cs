@@ -18224,6 +18224,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Toggle Command.
+        /// </summary>
+        public static string ToggleCommand {
+            get {
+                return ResourceManager.GetString("ToggleCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Top.
         /// </summary>
         public static string Top {
