@@ -15,7 +15,11 @@
         <Setter Property="Margin" Value="-7, -10" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="Foreground" Value="{StaticResource WhiteColor}" />
+        <Setter Property="Foreground" Value="{StaticResource MaterialDesignPaper}" />
+    </Style>
+
+    <Style x:Key="DefaultPackIcon" TargetType="MaterialDesign:PackIcon">
+        <Setter Property="Foreground" Value="{StaticResource MaterialDesignBody}" />
     </Style>
 
     <Style x:Key="TextBlockSortingHeader" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MaterialDesignTextBlock}">
@@ -91,10 +95,6 @@
     <Style x:Key="DefaultBorder" TargetType="Border">
         <Setter Property="BorderBrush" Value="{StaticResource PrimaryHueMidBrush}" />
         <Setter Property="BorderThickness" Value="1" />
-    </Style>
-
-    <Style x:Key="DefaultPackIcon" TargetType="MaterialDesign:PackIcon">
-        <Setter Property="Foreground" Value="{StaticResource MaterialDesignBody}" />
     </Style>
 
     <Style x:Key="MaterialDesignFlatButtonDefaultColor" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">

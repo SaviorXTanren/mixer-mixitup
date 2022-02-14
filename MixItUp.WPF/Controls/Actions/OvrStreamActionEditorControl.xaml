@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -68,9 +69,7 @@
 
                             <TextBox Grid.Column="2" Text="{Binding Value}" Width="600" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VariableValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                            <Button Grid.Column="4" Command="{Binding DeleteVariableCommand}" ToolTip="{x:Static resx:Resources.Delete}">
-                                <MaterialDesign:PackIcon Style="{StaticResource ButtonIcon}" Kind="Delete" />
-                            </Button>
+                            <Controls:IconButton Grid.Column="4" Command="{Binding DeleteVariableCommand}" Icon="Delete" ToolTip="{x:Static resx:Resources.Delete}" />
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
