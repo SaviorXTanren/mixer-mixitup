@@ -13298,6 +13298,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Port Number.
+        /// </summary>
+        public static string PortNumber {
+            get {
+                return ResourceManager.GetString("PortNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Portuguese.
         /// </summary>
         public static string Portuguese {

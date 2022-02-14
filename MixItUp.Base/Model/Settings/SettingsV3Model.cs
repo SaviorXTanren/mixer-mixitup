@@ -491,6 +491,9 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public List<SerialDeviceModel> SerialDevices { get; set; } = new List<SerialDeviceModel>();
 
+        [DataMember]
+        public int VTubeStudioPortNumber { get; set; } = VTubeStudioService.DefaultPortNumber;
+
         #endregion Services
 
         #region Dashboard

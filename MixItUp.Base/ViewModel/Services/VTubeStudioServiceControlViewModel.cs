@@ -7,6 +7,17 @@ namespace MixItUp.Base.ViewModel.Services
 {
     public class VTubeStudioServiceControlViewModel : ServiceControlViewModelBase
     {
+        public int PortNumber
+        {
+            get { return this.portNumber; }
+            set
+            {
+                this.portNumber = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int portNumber;
+
         public ICommand ConnectCommand { get; set; }
         public ICommand DisconnectCommand { get; set; }
 
@@ -15,8 +26,12 @@ namespace MixItUp.Base.ViewModel.Services
         public VTubeStudioServiceControlViewModel()
             : base(Resources.VTubeStudio)
         {
+            this.PortNumber = ChannelSession.Settings.VTubeStudioPortNumber;
+
             this.ConnectCommand = this.CreateCommand(async () =>
             {
+                ChannelSession.Settings.VTubeStudioPortNumber = this.PortNumber;
+
                 Result result = await ServiceManager.Get<VTubeStudioService>().Connect();
                 if (result.Success)
                 {

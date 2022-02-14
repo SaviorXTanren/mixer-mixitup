@@ -7437,4 +7437,7 @@ We will attempt to re-connect with the service when possible. If this continues,
   <data name="ToggleCommand" xml:space="preserve">
     <value>Toggle Command</value>
   </data>
+  <data name="PortNumber" xml:space="preserve">
+    <value>Port Number</value>
+  </data>
 </root>
