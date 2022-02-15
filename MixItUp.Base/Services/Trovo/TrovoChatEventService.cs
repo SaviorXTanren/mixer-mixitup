@@ -414,7 +414,7 @@ namespace MixItUp.Base.Services.Trovo
                 }
                 this.messagesProcessed.Add(message.message_id);
 
-                if (message.sender_id == 0 || string.IsNullOrEmpty(message.nick_name))
+                if (message.sender_id == 0 || string.IsNullOrEmpty(message.user_name))
                 {
                     continue;
                 }
@@ -422,7 +422,7 @@ namespace MixItUp.Base.Services.Trovo
                 UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Trovo, message.sender_id.ToString());
                 if (user == null)
                 {
-                    UserModel trovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(message.nick_name);
+                    UserModel trovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(message.user_name);
                     if (trovoUser != null)
                     {
                         user = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(trovoUser));
