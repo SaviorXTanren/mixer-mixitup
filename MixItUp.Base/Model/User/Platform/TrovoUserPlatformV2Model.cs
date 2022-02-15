@@ -12,6 +12,8 @@ namespace MixItUp.Base.Model.User.Platform
     [DataContract]
     public class TrovoUserPlatformV2Model : UserPlatformV2ModelBase
     {
+        public HashSet<string> CustomRoles { get; set; } = new HashSet<string>();
+
         public TrovoUserPlatformV2Model(UserModel user)
         {
             this.Platform = StreamingPlatformTypeEnum.Trovo;
@@ -76,15 +78,15 @@ namespace MixItUp.Base.Model.User.Platform
                 {
                     HashSet<string> rolesSet = new HashSet<string>(message.roles);
 
-                    if (rolesSet.Contains(ChatMessageModel.StreamerRole)) { this.Roles.Add(UserRoleEnum.Streamer); } else { this.Roles.Remove(UserRoleEnum.Streamer); }
-                    if (rolesSet.Contains(ChatMessageModel.AdminRole)) { this.Roles.Add(UserRoleEnum.TrovoAdmin); } else { this.Roles.Remove(UserRoleEnum.TrovoAdmin); }
-                    if (rolesSet.Contains(ChatMessageModel.WardenRole)) { this.Roles.Add(UserRoleEnum.TrovoWarden); } else { this.Roles.Remove(UserRoleEnum.TrovoWarden); }
-                    if (rolesSet.Contains(ChatMessageModel.SuperModRole)) { this.Roles.Add(UserRoleEnum.TrovoSuperMod); } else { this.Roles.Remove(UserRoleEnum.TrovoSuperMod); }
-                    if (rolesSet.Contains(ChatMessageModel.ModeratorRole)) { this.Roles.Add(UserRoleEnum.Moderator); } else { this.Roles.Remove(UserRoleEnum.Moderator); }
-                    if (rolesSet.Contains(ChatMessageModel.EditorRole)) { this.Roles.Add(UserRoleEnum.TrovoEditor); } else { this.Roles.Remove(UserRoleEnum.TrovoEditor); }
-                    if (rolesSet.Contains(ChatMessageModel.FollowerRole)) { this.Roles.Add(UserRoleEnum.Follower); } else { this.Roles.Remove(UserRoleEnum.Follower); }
+                    if (rolesSet.Remove(ChatMessageModel.StreamerRole)){ this.Roles.Add(UserRoleEnum.Streamer); } else { this.Roles.Remove(UserRoleEnum.Streamer); }
+                    if (rolesSet.Remove(ChatMessageModel.AdminRole)) { this.Roles.Add(UserRoleEnum.TrovoAdmin); } else { this.Roles.Remove(UserRoleEnum.TrovoAdmin); }
+                    if (rolesSet.Remove(ChatMessageModel.WardenRole)) { this.Roles.Add(UserRoleEnum.TrovoWarden); } else { this.Roles.Remove(UserRoleEnum.TrovoWarden); }
+                    if (rolesSet.Remove(ChatMessageModel.SuperModRole)) { this.Roles.Add(UserRoleEnum.TrovoSuperMod); } else { this.Roles.Remove(UserRoleEnum.TrovoSuperMod); }
+                    if (rolesSet.Remove(ChatMessageModel.ModeratorRole)) { this.Roles.Add(UserRoleEnum.Moderator); } else { this.Roles.Remove(UserRoleEnum.Moderator); }
+                    if (rolesSet.Remove(ChatMessageModel.EditorRole)) { this.Roles.Add(UserRoleEnum.TrovoEditor); } else { this.Roles.Remove(UserRoleEnum.TrovoEditor); }
+                    if (rolesSet.Remove(ChatMessageModel.FollowerRole)) { this.Roles.Add(UserRoleEnum.Follower); } else { this.Roles.Remove(UserRoleEnum.Follower); }
 
-                    if (rolesSet.Contains(ChatMessageModel.SubscriberRole))
+                    if (rolesSet.Remove(ChatMessageModel.SubscriberRole))
                     {
                         this.Roles.Add(UserRoleEnum.Subscriber);
                         this.SubscriberTier = 1;
@@ -92,6 +94,12 @@ namespace MixItUp.Base.Model.User.Platform
                     else
                     {
                         this.Roles.Remove(UserRoleEnum.Subscriber);
+                    }
+
+                    this.CustomRoles.Clear();
+                    foreach (string role in rolesSet)
+                    {
+                        this.CustomRoles.Add(role);
                     }
                 }
             }
