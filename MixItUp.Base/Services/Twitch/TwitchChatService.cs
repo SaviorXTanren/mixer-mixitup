@@ -814,6 +814,8 @@ namespace MixItUp.Base.Services.Twitch
                             CommandParametersModel parameters = new CommandParametersModel(user);
                             if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TwitchChannelHosted, parameters))
                             {
+                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostUserData] = user.ID;
+
                                 foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
                                 {
                                     currency.AddAmount(user, currency.OnHostBonus);
