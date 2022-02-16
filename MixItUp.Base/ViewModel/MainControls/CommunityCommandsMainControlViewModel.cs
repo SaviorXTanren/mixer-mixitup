@@ -28,6 +28,8 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public ThreadSafeObservableCollection<CommunityCommandCategoryViewModel> Categories { get; set; } = new ThreadSafeObservableCollection<CommunityCommandCategoryViewModel>();
 
+        public ICommand CategorySeeMoreCommand { get; set; }
+
         public string SearchText
         {
             get { return this.searchText; }
@@ -215,6 +217,20 @@ namespace MixItUp.Base.ViewModel.MainControls
                 try
                 {
                     this.CurrentResultsPage = 0;
+                    await this.PerformSearch();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+            });
+
+            this.CategorySeeMoreCommand = this.CreateCommand(async (searchTag) =>
+            {
+                try
+                {
+                    this.CurrentResultsPage = 0;
+                    this.SearchText = searchTag.ToString();
                     await this.PerformSearch();
                 }
                 catch (Exception ex)

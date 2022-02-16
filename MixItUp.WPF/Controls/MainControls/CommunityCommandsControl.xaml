@@ -69,6 +69,8 @@
                                     <TextBlock Grid.Row="2" Text="{Binding Name}" FontSize="24" TextDecorations="Underline" FontWeight="Bold" />
                                     <TextBlock Grid.Row="4" Text="{Binding Description}" VerticalAlignment="Center" />
 
+                                    <Controls:IconButton Grid.Row="2" Grid.RowSpan="3" x:Name="CategorySeeMoreButton" HorizontalAlignment="Right" Icon="ArrowRightBold" Visibility="{Binding ShouldShowSeeMoreButton, Converter={StaticResource BooleanToVisibilityConverter}}" Click="CategorySeeMoreButton_Click" />
+
                                     <ListView x:Name="CommandsList" Grid.Row="6" ItemsSource="{Binding Commands}" SelectionChanged="CommandsList_SelectionChanged" PreviewMouseWheel="CommandsList_PreviewMouseWheel">
                                         <ListView.ItemsPanel>
                                             <ItemsPanelTemplate>

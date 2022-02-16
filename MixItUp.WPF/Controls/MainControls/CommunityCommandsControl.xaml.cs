@@ -88,6 +88,16 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
+        private void CategorySeeMoreButton_Click(object sender, RoutedEventArgs e)
+        {
+            Control control = (Control)sender;
+            if (control.DataContext is CommunityCommandCategoryViewModel)
+            {
+                CommunityCommandCategoryViewModel category = (CommunityCommandCategoryViewModel)control.DataContext;
+                this.viewModel.CategorySeeMoreCommand.Execute(category.Tag.ToString());
+            }
+        }
+
         private void UserCommandsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count > 0 && e.AddedItems[0] is CommunityCommandViewModel)
