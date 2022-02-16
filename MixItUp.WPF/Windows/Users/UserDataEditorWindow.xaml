@@ -19,7 +19,7 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
         Icon="./../../Logo.ico"
-        Title="User Editing" Height="600" Width="600">
+        Title="{x:Static resx:Resources.UserEditor}" Height="600" Width="600">
     <Windows:LoadingWindowBase.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Windows:LoadingWindowBase.Resources>

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MixItUp.WPF"
+        xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -15,7 +16,7 @@
         TextElement.FontSize="14"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"      
 
-        Title="Mix It Up - Update Available" Height="650" Width="600">
+        Title="{x:Static resx:Resources.MixItUpUpdateAvailable}" Height="650" Width="600">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -37,7 +38,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" HorizontalAlignment="Center">A new update is available for Mix It Up!</TextBlock>
+            <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.ANewUpdateIsAvailableForMixItUp}" />
 
             <Grid Grid.Row="2" HorizontalAlignment="Center">
                 <Grid.RowDefinitions>
@@ -56,10 +57,10 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" VerticalAlignment="Center">New Version:</TextBlock>
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.NewVersion}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                     <TextBlock Grid.Column="2" x:Name="NewVersionTextBlock" VerticalAlignment="Center" />
 
-                    <TextBlock Grid.Column="4" VerticalAlignment="Center">Current Version:</TextBlock>
+                    <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.CurrentVersion}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                     <TextBlock Grid.Column="6" x:Name="CurrentVersionTextBlock" VerticalAlignment="Center" />
                 </Grid>
 
@@ -70,15 +71,15 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" TextWrapping="Wrap" Foreground="Red">IMPORTANT NOTICE: Preview updates are an opportunity to help test features early and report issues. They receive some amount of testing before they are released, but not the same amount given to public updates.</TextBlock>
+                    <TextBlock Grid.Row="0" TextWrapping="Wrap" Foreground="Red" Text="{x:Static resx:Resources.PreviewUpdateWarning1}" />
 
-                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Foreground="Red">We encourage you to backup your settings first by clicking Skip below and then going to Settings -> Advanced. If you do not want to take this update, please click Skip below and optionally disable Preview Program under Settings -> General.</TextBlock>
+                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Foreground="Red" Text="{x:Static resx:Resources.PreviewUpdateWarning2}" />
                 </Grid>
             </Grid>
 
             <WebBrowser Grid.Row="4" x:Name="UpdateChangelogWebBrowser" Margin="20,0" ScrollViewer.VerticalScrollBarVisibility="Visible" />
 
-            <TextBlock Grid.Row="6" HorizontalAlignment="Center" TextWrapping="Wrap" Width="500">If the update does not complete successfully and you are prompted to update again, restart your computer first &amp; then try again.</TextBlock>
+            <TextBlock Grid.Row="6" HorizontalAlignment="Center" TextWrapping="Wrap" Width="500" Text="{x:Static resx:Resources.IfUpdateDoesNotCompleteRestartComputer}" />
             
             <Grid Grid.Row="8" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
@@ -89,11 +90,11 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center">Would you like to download this update?</TextBlock>
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{x:Static resx:Resources.WouldYouLikeToDownloadThisUpdate}" />
 
-                <Button Grid.Column="2" x:Name="DownloadUpdateButton" Click="DownloadUpdateButton_Click">Update</Button>
+                <Button Grid.Column="2" x:Name="DownloadUpdateButton" Click="DownloadUpdateButton_Click" Content="{x:Static resx:Resources.Update}" />
 
-                <Button Grid.Column="4" x:Name="SkipUpdateButton" Click="SkipUpdateButton_Click">Skip</Button>
+                <Button Grid.Column="4" x:Name="SkipUpdateButton" Click="SkipUpdateButton_Click" Content="{x:Static resx:Resources.Skip}" />
 
             </Grid>
 

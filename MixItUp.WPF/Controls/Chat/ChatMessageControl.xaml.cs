@@ -197,20 +197,20 @@ namespace MixItUp.WPF.Controls.Chat
                 {
                     if (!string.IsNullOrEmpty(this.Message.ModerationReason))
                     {
-                        this.AddStringMessage(" (" + this.Message.ModerationReason + " By: " + this.Message.DeletedBy + ")");
+                        this.AddStringMessage($" ({this.Message.ModerationReason} {MixItUp.Base.Resources.By}: {this.Message.DeletedBy})");
                     }
                     else
                     {
-                        this.AddStringMessage(" (Deleted By: " + this.Message.DeletedBy + ")");
+                        this.AddStringMessage($" ({MixItUp.Base.Resources.DeletedBy}: {this.Message.DeletedBy})");
                     }
                 }
                 else if (!string.IsNullOrEmpty(this.Message.ModerationReason))
                 {
-                    this.AddStringMessage(" (Auto-Moderated: " + this.Message.ModerationReason + ")");
+                    this.AddStringMessage($" ({MixItUp.Base.Resources.AutoModerated}: {this.Message.ModerationReason})");
                 }
                 else
                 {
-                    this.AddStringMessage(" (Manual Deletion)");
+                    this.AddStringMessage($" ({MixItUp.Base.Resources.ManualDeletion})");
                 }
             });
         }

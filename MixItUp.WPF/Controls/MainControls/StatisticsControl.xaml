@@ -23,7 +23,7 @@
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0" Style="{StaticResource DefaultBorder}">
-            <ListView x:Name="StatisticsOverviewListView" Visibility="Visible" ItemContainerStyle="{StaticResource BorderedListViewItem}" HorizontalContentAlignment="Stretch" SelectionChanged="StatisticsOverviewListView_SelectionChanged" />
+            <ListView x:Name="StatisticsOverviewListView" Visibility="Visible" ItemContainerStyle="{StaticResource BorderedListViewItem}" HorizontalContentAlignment="Stretch" />
         </Border>
 
         <!--<Grid Grid.Row="2" HorizontalAlignment="Center">
