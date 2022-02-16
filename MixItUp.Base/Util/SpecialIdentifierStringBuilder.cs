@@ -927,6 +927,7 @@ namespace MixItUp.Base.Util
                 {
                     TwitchUserPlatformV2Model pUser = user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch);
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "twitchid", pUser?.ID);
+                    this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "twitchcolor", pUser?.Color);
                 }
 
                 if (user.HasPlatformData(StreamingPlatformTypeEnum.YouTube))
@@ -939,6 +940,10 @@ namespace MixItUp.Base.Util
                 {
                     TrovoUserPlatformV2Model pUser = user.GetPlatformData<TrovoUserPlatformV2Model>(StreamingPlatformTypeEnum.Trovo);
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "trovoid", pUser?.ID);
+                    if (pUser != null)
+                    {
+                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "trovocustomroles", string.Join(", ", pUser?.CustomRoles));
+                    }
                 }
 
                 if (user.HasPlatformData(StreamingPlatformTypeEnum.Glimesh))
