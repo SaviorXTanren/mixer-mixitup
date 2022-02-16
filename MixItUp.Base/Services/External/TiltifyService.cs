@@ -203,7 +203,7 @@ namespace MixItUp.Base.Services.External
 
         public TiltifyService() : base(TiltifyService.BaseAddress) { }
 
-        public override string Name { get { return "Tiltify"; } }
+        public override string Name { get { return MixItUp.Base.Resources.Tiltify; } }
 
         public override async Task<Result> Connect()
         {

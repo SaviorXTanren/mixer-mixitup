@@ -153,7 +153,7 @@ namespace MixItUp.Base.Services.External
 
         public PixelChatService() : base(PixelChatService.BaseAddress) { }
 
-        public override string Name { get { return "PixelChat"; } }
+        public override string Name { get { return MixItUp.Base.Resources.PixelChat; } }
 
         public override Task<Result> Connect()
         {

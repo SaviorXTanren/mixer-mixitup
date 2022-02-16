@@ -75,7 +75,7 @@ namespace MixItUp.Base.Services.Glimesh
                 this.User = await this.UserConnection.GetCurrentUser();
                 if (this.User == null)
                 {
-                    return new Result("Failed to get Glimesh user data");
+                    return new Result(MixItUp.Base.Resources.GlimeshFailedToGetUserData);
                 }
             }
             return result;
@@ -90,7 +90,7 @@ namespace MixItUp.Base.Services.Glimesh
                 this.Bot = await this.BotConnection.GetCurrentUser();
                 if (this.Bot == null)
                 {
-                    return new Result("Failed to get Glimesh bot data");
+                    return new Result(MixItUp.Base.Resources.GlimeshFailedToGetBotData);
                 }
             }
             return result;
@@ -118,7 +118,7 @@ namespace MixItUp.Base.Services.Glimesh
                     this.User = await this.UserConnection.GetCurrentUser();
                     if (this.User == null)
                     {
-                        return new Result("Failed to get Glimesh user data");
+                        return new Result(MixItUp.Base.Resources.GlimeshFailedToGetUserData);
                     }
 
                     if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].BotOAuthToken != null)
@@ -130,13 +130,13 @@ namespace MixItUp.Base.Services.Glimesh
                             this.Bot = await this.BotConnection.GetCurrentUser();
                             if (this.Bot == null)
                             {
-                                return new Result("Failed to get Glimesh bot data");
+                                return new Result(MixItUp.Base.Resources.GlimeshFailedToGetBotData);
                             }
                         }
                         else
                         {
 
-                            return new Result(success: true, message: "Failed to connect Glimesh bot account, please manually reconnect");
+                            return new Result(success: true, message: MixItUp.Base.Resources.GlimeshFailedToConnectBotAccount);
                         }
                     }
                 }
@@ -189,7 +189,7 @@ namespace MixItUp.Base.Services.Glimesh
                         {
                             Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.Username} - {this.UserID} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID}");
                             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserOAuthToken.ResetToken();
-                            return new Result("The account you are logged in as on Glimesh does not match the account for this settings. Please log in as the correct account on Glimesh.");
+                            return new Result(string.Format(MixItUp.Base.Resources.StreamingPlatformIncorrectAccount, StreamingPlatformTypeEnum.Glimesh));
                         }
                     }
 
@@ -201,7 +201,7 @@ namespace MixItUp.Base.Services.Glimesh
                     if (platformServiceTasks.Any(c => !c.Result.Success))
                     {
                         string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
-                        return new Result("Failed to connect to Glimesh services:" + Environment.NewLine + Environment.NewLine + errors);
+                        return new Result(MixItUp.Base.Resources.GlimeshFailedToConnectHeader + Environment.NewLine + Environment.NewLine + errors);
                     }
 
                     IEnumerable<UserFollowModel> followers = await this.UserConnection.GetFollowingUsers(this.UserID);
@@ -221,8 +221,8 @@ namespace MixItUp.Base.Services.Glimesh
                 catch (Exception ex)
                 {
                     Logger.Log(ex);
-                    return new Result("Failed to connect to Glimesh services. If this continues, please visit the Mix It Up Discord for assistance." +
-                        Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
+                    return new Result(MixItUp.Base.Resources.GlimeshFailedToConnect +
+                        Environment.NewLine + Environment.NewLine + MixItUp.Base.Resources.ErrorHeader + ex.Message);
                 }
             }
             return new Result();

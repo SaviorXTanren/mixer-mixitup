@@ -3,6 +3,7 @@ using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
@@ -134,6 +135,19 @@ namespace MixItUp.Base.ViewModel.Requirements
         }
         private int subscriberTier = 1;
 
+        public bool IsTrovoConnected { get { return ServiceManager.Get<TrovoSessionService>().IsConnected; } }
+
+        public string TrovoCustomRole
+        {
+            get { return this.trovoCustomRole; }
+            set
+            {
+                this.trovoCustomRole = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string trovoCustomRole;
+
         public bool IsPatreonConnected { get { return ServiceManager.Get<PatreonService>().IsConnected; } }
 
         public IEnumerable<PatreonBenefit> PatreonBenefits
@@ -191,7 +205,11 @@ namespace MixItUp.Base.ViewModel.Requirements
             {
                 this.SelectedRole = requirement.UserRole;
             }
+
             this.SubscriberTier = requirement.SubscriberTier;
+
+            this.TrovoCustomRole = requirement.TrovoCustomRole;
+
             if (this.IsPatreonConnected && !string.IsNullOrEmpty(requirement.PatreonBenefitID))
             {
                 this.SelectedPatreonBenefit = this.PatreonBenefits.FirstOrDefault(b => b.ID.Equals(requirement.PatreonBenefitID));
@@ -218,11 +236,11 @@ namespace MixItUp.Base.ViewModel.Requirements
         {
             if (this.IsAdvancedRolesSelected)
             {
-                return new RoleRequirementModel(this.SelectedPlatform, this.SelectedAdvancedRoles.Select(r => r.Role), this.SubscriberTier, this.selectedPatreonBenefit?.ID);
+                return new RoleRequirementModel(this.SelectedPlatform, this.SelectedAdvancedRoles.Select(r => r.Role), this.SubscriberTier, this.TrovoCustomRole, this.selectedPatreonBenefit?.ID);
             }
             else
             {
-                return new RoleRequirementModel(this.SelectedPlatform, this.SelectedRole, this.SubscriberTier, this.selectedPatreonBenefit?.ID);
+                return new RoleRequirementModel(this.SelectedPlatform, this.SelectedRole, this.SubscriberTier, this.TrovoCustomRole, this.selectedPatreonBenefit?.ID);
             }
         }
     }

@@ -204,10 +204,7 @@ namespace MixItUp.Base.Model.Overlay
                     string customAmount = await ReplaceStringWithSpecialModifiers(this.CurrentAmountCustom, parameters);
                     if (double.TryParse(customAmount, out amount))
                     {
-                        if (this.StartAmount <= 0)
-                        {
-                            this.StartAmount = amount;
-                        }
+                        this.StartAmount = amount;
                         this.CurrentAmount = amount;
                     }
                 }
@@ -225,8 +222,8 @@ namespace MixItUp.Base.Model.Overlay
             double percentage = 0.0;
             if (goal != 0.0)
             {
-                percentage = (amount / (goal - this.StartAmount));
-                if (!this.GoalReached && amount >= goal)
+                percentage = amount / goal;
+                if (!this.GoalReached && percentage >= 1.0)
                 {
                     this.GoalReached = true;
                     if (this.ProgressGoalReachedCommand != null)

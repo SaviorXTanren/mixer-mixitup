@@ -73,13 +73,13 @@ namespace MixItUp.Base.Services.Trovo
                 this.User = await this.UserConnection.GetCurrentUser();
                 if (this.User == null)
                 {
-                    return new Result("Failed to get Trovo user data");
+                    return new Result(MixItUp.Base.Resources.TrovoFailedToGetUserData);
                 }
 
                 this.Channel = await this.UserConnection.GetCurrentChannel();
                 if (this.Channel == null)
                 {
-                    return new Result("Failed to get Trovo channel data");
+                    return new Result(MixItUp.Base.Resources.TrovoFailedToGetChannelData);
                 }
             }
             return result;
@@ -94,7 +94,7 @@ namespace MixItUp.Base.Services.Trovo
                 this.Bot = await this.BotConnection.GetCurrentUser();
                 if (this.Bot == null)
                 {
-                    return new Result("Failed to get Trovo bot data");
+                    return new Result(MixItUp.Base.Resources.TrovoFailedToGetBotData);
                 }
             }
             return result;
@@ -122,7 +122,7 @@ namespace MixItUp.Base.Services.Trovo
                     this.User = await this.UserConnection.GetCurrentUser();
                     if (this.User == null)
                     {
-                        return new Result("Failed to get Trovo user data");
+                        return new Result(MixItUp.Base.Resources.TrovoFailedToGetUserData);
                     }
 
                     if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].BotOAuthToken != null)
@@ -134,13 +134,13 @@ namespace MixItUp.Base.Services.Trovo
                             this.Bot = await this.BotConnection.GetCurrentUser();
                             if (this.Bot == null)
                             {
-                                return new Result("Failed to get Trovo bot data");
+                                return new Result(MixItUp.Base.Resources.TrovoFailedToGetBotData);
                             }
                         }
                         else
                         {
 
-                            return new Result(success: true, message: "Failed to connect Trovo bot account, please manually reconnect");
+                            return new Result(success: true, message: MixItUp.Base.Resources.TrovoFailedToConnectBotAccount);
                         }
                     }
                 }
@@ -198,7 +198,7 @@ namespace MixItUp.Base.Services.Trovo
                             {
                                 Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.Username} - {this.UserID} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].UserID}");
                                 settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].UserOAuthToken.ResetToken();
-                                return new Result("The account you are logged in as on Trovo does not match the account for this settings. Please log in as the correct account on Trovo.");
+                                return new Result(string.Format(MixItUp.Base.Resources.StreamingPlatformIncorrectAccount, StreamingPlatformTypeEnum.Trovo));
                             }
                         }
 
@@ -210,15 +210,15 @@ namespace MixItUp.Base.Services.Trovo
                         if (platformServiceTasks.Any(c => !c.Result.Success))
                         {
                             string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
-                            return new Result("Failed to connect to Trovo services:" + Environment.NewLine + Environment.NewLine + errors);
+                            return new Result(MixItUp.Base.Resources.TrovoFailedToConnectHeader + Environment.NewLine + Environment.NewLine + errors);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                     Logger.Log(ex);
-                    return new Result("Failed to connect to Trovo services. If this continues, please visit the Mix It Up Discord for assistance." +
-                        Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
+                    return new Result(MixItUp.Base.Resources.TrovoFailedToConnect +
+                        Environment.NewLine + Environment.NewLine + MixItUp.Base.Resources.ErrorHeader + ex.Message);
                 }
             }
             return new Result();

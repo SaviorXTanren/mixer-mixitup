@@ -34,10 +34,9 @@ namespace MixItUp.Base.Model.Actions
         {
             string audioFilePath = await ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
 
-            if (!ServiceManager.Get<IFileService>().FileExists(audioFilePath))
+            if (!ServiceManager.Get<IFileService>().IsURLPath(audioFilePath) && !ServiceManager.Get<IFileService>().FileExists(audioFilePath))
             {
                 Logger.Log(LogLevel.Error, $"Sound Action - File does not exist: {audioFilePath}");
-                return;
             }
 
             await ServiceManager.Get<IAudioService>().Play(audioFilePath, this.VolumeScale, this.OutputDevice);

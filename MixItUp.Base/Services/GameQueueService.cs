@@ -142,22 +142,22 @@ namespace MixItUp.Base.Services
             int position = this.GetUserPosition(user);
             if (position != -1)
             {
-                await ServiceManager.Get<ChatService>().SendMessage(string.Format("You are #{0} in the queue to play", position), user.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.QueueYouAreInPosition, position), user.Platform);
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage("You are not currently in the queue to play", user.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.QueueYouAreNotCurrentlyIn, user.Platform);
             }
         }
 
         public async Task PrintStatus(CommandParametersModel parameters)
         {
             StringBuilder message = new StringBuilder();
-            message.Append(string.Format("There are currently {0} waiting to play.", this.queue.Count()));
+            message.Append(string.Format(MixItUp.Base.Resources.QueueCurrentCount, this.queue.Count()));
 
             if (this.queue.Count() > 0)
             {
-                message.Append(" The following users are next up to play: ");
+                message.Append(" " + MixItUp.Base.Resources.QueueUserListHeader);
 
                 List<string> users = new List<string>();
                 for (int i = 0; i < this.queue.Count() && i < 5; i++)
@@ -184,7 +184,7 @@ namespace MixItUp.Base.Services
             int position = this.GetUserPosition(user);
             if (position != -1)
             {
-                await ServiceManager.Get<ChatService>().SendMessage(string.Format("You are already #{0} in the queue", position), user.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.QueueYouAreInPosition, position), user.Platform);
                 return false;
             }
             return true;

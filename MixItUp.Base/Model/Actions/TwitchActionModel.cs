@@ -227,11 +227,11 @@ namespace MixItUp.Base.Model.Actions
                     AdResponseModel response = await ServiceManager.Get<TwitchSessionService>().UserConnection.RunAd(ServiceManager.Get<TwitchSessionService>().User, this.AdLength);
                     if (response == null)
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage("ERROR: We were unable to run an ad, please try again later");
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.TwitchAdUnableToRun);
                     }
-                    else if (!string.IsNullOrEmpty(response.message) && !response.message.Contains(StartinCommercialBreakMessage, System.StringComparison.OrdinalIgnoreCase))
+                    else if (!string.IsNullOrEmpty(response.message) && !response.message.Contains(StartinCommercialBreakMessage, StringComparison.OrdinalIgnoreCase))
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage("ERROR: " + response.message);
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorHeader + response.message);
                     }
                 }
                 else if (this.ActionType == TwitchActionType.VIPUser || this.ActionType == TwitchActionType.UnVIPUser)

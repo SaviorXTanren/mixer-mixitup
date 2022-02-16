@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -168,7 +169,7 @@ namespace MixItUp.Base.Model.Overlay
     {
         public static string GetFileFullLink(string fileID, string fileType, string filePath)
         {
-            if (!Uri.IsWellFormedUriString(filePath, UriKind.RelativeOrAbsolute))
+            if (!ServiceManager.Get<IFileService>().IsURLPath(filePath))
             {
                 return string.Format("/overlay/files/{0}/{1}?nonce={2}", fileType, fileID, Guid.NewGuid());
             }

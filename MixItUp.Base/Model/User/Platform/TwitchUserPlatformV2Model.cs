@@ -114,7 +114,6 @@ namespace MixItUp.Base.Model.User.Platform
                     else
                     {
                         this.Roles.Remove(UserRoleEnum.Subscriber);
-                        this.SubscriberTier = 0;
                         this.SubscribeDate = null;
                     }
                 }
@@ -161,7 +160,15 @@ namespace MixItUp.Base.Model.User.Platform
                 if (this.HasTwitchBadge("admin") || this.HasTwitchBadge("staff")) { this.Roles.Add(UserRoleEnum.TwitchStaff); } else { this.Roles.Remove(UserRoleEnum.TwitchStaff); }
                 if (this.HasTwitchBadge("global_mod")) { this.Roles.Add(UserRoleEnum.TwitchGlobalMod); } else { this.Roles.Remove(UserRoleEnum.TwitchGlobalMod); }
                 if (this.HasTwitchBadge("moderator")) { this.Roles.Add(UserRoleEnum.Moderator); } else { this.Roles.Remove(UserRoleEnum.Moderator); }
-                if (this.IsTwitchSubscriber) { this.Roles.Add(UserRoleEnum.Subscriber); } else { this.Roles.Remove(UserRoleEnum.Subscriber); }
+                if (this.IsTwitchSubscriber)
+                {
+                    this.Roles.Add(UserRoleEnum.Subscriber);
+                    this.SubscriberTier = 1;
+                }
+                else
+                {
+                    this.Roles.Remove(UserRoleEnum.Subscriber);
+                }
                 if (this.HasTwitchBadge("vip")) { this.Roles.Add(UserRoleEnum.TwitchVIP); } else { this.Roles.Remove(UserRoleEnum.TwitchVIP); }
 
                 if (ServiceManager.Get<TwitchChatService>() != null)

@@ -90,7 +90,7 @@ namespace MixItUp.Base.Model.Actions
                     }
                     else if (this.ActionType == ModerationActionTypeEnum.AddModerationStrike)
                     {
-                        string moderationReason = "Manual Moderation Strike";
+                        string moderationReason = MixItUp.Base.Resources.ManualModerationStrike;
                         if (!string.IsNullOrEmpty(this.ModerationReason))
                         {
                             moderationReason = await ReplaceStringWithSpecialModifiers(this.ModerationReason, parameters);

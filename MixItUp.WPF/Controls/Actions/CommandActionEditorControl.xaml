@@ -6,6 +6,7 @@
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
@@ -47,9 +48,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" x:Name="AddCommandButton" ToolTip="{x:Static resx:Resources.CreateNewCommand}" Click="AddCommandButton_Click">
-                    <MaterialDesign:PackIcon Kind="AddBox" Height="24" Width="24" Margin="-7,-10" Foreground="{StaticResource WhiteColor}" />
-                </Button>
+                <Controls:IconButton Grid.Column="0" x:Name="AddCommandButton" ToolTip="{x:Static resx:Resources.CreateNewCommand}" Icon="AddBox" Click="AddCommandButton_Click" />
 
                 <ComboBox Grid.Column="2" ItemsSource="{Binding CommandTypes}" SelectedItem="{Binding SelectedCommandType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandType}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                     <ComboBox.ItemTemplate>
@@ -61,9 +60,7 @@
 
                 <ComboBox Grid.Column="4" ItemsSource="{Binding Commands}" SelectedItem="{Binding SelectedCommand}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Command}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-                <Button Grid.Column="6" x:Name="EditCommandButton" ToolTip="{x:Static resx:Resources.EditCommand}" Click="EditCommandButton_Click">
-                    <MaterialDesign:PackIcon Kind="Edit" Height="24" Width="24" Margin="-7,-10" Foreground="{StaticResource WhiteColor}" />
-                </Button>
+                <Controls:IconButton Grid.Column="6" x:Name="EditCommandButton" Icon="Edit" ToolTip="{x:Static resx:Resources.EditCommand}" Click="EditCommandButton_Click" />
             </Grid>
 
             <Grid Grid.Row="1" Visibility="{Binding ShowCommandRunSection, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,20,0,0">

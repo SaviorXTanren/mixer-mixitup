@@ -2,7 +2,6 @@
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -36,6 +35,8 @@ namespace MixItUp.Base.ViewModel.Services
 
         public ICommand LogInCommand { get; set; }
         public ICommand LogOutCommand { get; set; }
+
+        public override string WikiPageName { get { return "justgiving"; } }
 
         public JustGivingServiceControlViewModel()
             : base(Resources.JustGiving)

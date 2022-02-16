@@ -17,6 +17,7 @@ namespace MixItUp.Base.Model.Actions
         DisableFollowerMode,
         AddUserRole,
         RemoveUserRole,
+        [Obsolete]
         FastClip90Seconds,
     }
 

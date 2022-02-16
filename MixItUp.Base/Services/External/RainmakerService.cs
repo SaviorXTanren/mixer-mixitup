@@ -100,7 +100,7 @@ namespace MixItUp.Base.Services.External
             this.socket = socket;
         }
 
-        public override string Name { get { return "Rainmaker"; } }
+        public override string Name { get { return MixItUp.Base.Resources.Rainmaker; } }
 
         public override async Task<Result> Connect()
         {
@@ -198,14 +198,14 @@ namespace MixItUp.Base.Services.External
 
         private async void Socket_OnDisconnected(object sender, EventArgs e)
         {
-            ChannelSession.DisconnectionOccurred("Rainmaker");
+            ChannelSession.DisconnectionOccurred(MixItUp.Base.Resources.Rainmaker);
 
             do
             {
                 await Task.Delay(5000);
             } while (!await this.ConnectSocket());
 
-            ChannelSession.ReconnectionOccurred("Rainmaker");
+            ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.Rainmaker);
         }
 
         private async Task<bool> ConnectSocket()

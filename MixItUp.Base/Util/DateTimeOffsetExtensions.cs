@@ -23,7 +23,7 @@ namespace MixItUp.Base.Util
         {
             if (start == DateTimeOffset.MinValue || start == DateTimeOffset.MaxValue || end == DateTimeOffset.MinValue || end == DateTimeOffset.MaxValue)
             {
-                return "Unknown";
+                return MixItUp.Base.Resources.Unknown;
             }
 
             DateTimeOffset valid = end;
@@ -87,31 +87,31 @@ namespace MixItUp.Base.Util
 
                     if (hours > 0)
                     {
-                        dateSegments.Add(hours + " Hours(s)");
+                        dateSegments.Add(hours + " " + MixItUp.Base.Resources.TimeHours);
                     }
                     if (minutes > 0)
                     {
-                        dateSegments.Add(minutes + " Minute(s)");
+                        dateSegments.Add(minutes + " " + MixItUp.Base.Resources.TimeMinutes);
                     }
                 }
                 else
                 {
-                    dateSegments.Add("<1 Day");
+                    dateSegments.Add("<1 " + MixItUp.Base.Resources.Day);
                 }
             }
             else
             {
                 if (years > 0)
                 {
-                    dateSegments.Add(years + " Year(s)");
+                    dateSegments.Add(years + " " + MixItUp.Base.Resources.TimeYears);
                 }
                 if (months > 0)
                 {
-                    dateSegments.Add(months + " Month(s)");
+                    dateSegments.Add(months + " " + MixItUp.Base.Resources.TimeMonths);
                 }
                 if (days > 0)
                 {
-                    dateSegments.Add(days + " Day(s)");
+                    dateSegments.Add(days + " " + MixItUp.Base.Resources.TimeDays);
                 }
             }
 

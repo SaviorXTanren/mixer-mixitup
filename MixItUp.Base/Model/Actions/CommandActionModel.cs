@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace MixItUp.Base.Model.Actions
         CancelAllCommands,
         PauseAllCommands,
         UnpauseAllCommands,
+        ToggleCommand,
     }
 
     [DataContract]
@@ -101,6 +103,11 @@ namespace MixItUp.Base.Model.Actions
             {
                 if (command != null)
                 {
+                    if (this.Command.ID == parameters.InitialCommandID)
+                    {
+                        Logger.Log(LogLevel.Error, "Command Action calling in to itself, possible endless loop - Command ID: " + parameters.InitialCommandID);
+                    }
+
                     List<string> newArguments = new List<string>();
                     if (!string.IsNullOrEmpty(this.Arguments))
                     {
@@ -126,11 +133,20 @@ namespace MixItUp.Base.Model.Actions
                     }
                 }
             }
-            else if (this.ActionType == CommandActionTypeEnum.DisableCommand || this.ActionType == CommandActionTypeEnum.EnableCommand)
+            else if (this.ActionType == CommandActionTypeEnum.DisableCommand || this.ActionType == CommandActionTypeEnum.EnableCommand ||
+                this.ActionType == CommandActionTypeEnum.ToggleCommand)
             {
                 if (command != null)
                 {
-                    command.IsEnabled = (this.ActionType == CommandActionTypeEnum.EnableCommand) ? true : false;
+                    if (this.ActionType == CommandActionTypeEnum.ToggleCommand)
+                    {
+                        command.IsEnabled = !command.IsEnabled;
+                    }
+                    else
+                    {
+                        command.IsEnabled = (this.ActionType == CommandActionTypeEnum.EnableCommand) ? true : false;
+                    }
+
                     if (command is ChatCommandModel)
                     {
                         ServiceManager.Get<ChatService>().RebuildCommandTriggers();

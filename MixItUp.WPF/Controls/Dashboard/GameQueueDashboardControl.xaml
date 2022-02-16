@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Dashboard"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -30,17 +31,11 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <Button x:Name="MoveUpButton" Grid.Column="0" Click="MoveUpButton_Click" Width="40" HorizontalAlignment="Center">
-                                    <MaterialDesign:PackIcon Kind="ArrowUp" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                </Button>
+                                <Controls:IconButton x:Name="MoveUpButton" Grid.Column="0" Click="MoveUpButton_Click" HorizontalAlignment="Center" Icon="ArrowUp" />
 
-                                <Button x:Name="MoveDownButton" Grid.Column="2" Click="MoveDownButton_Click" Width="40" HorizontalAlignment="Center">
-                                    <MaterialDesign:PackIcon Kind="ArrowDown" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                </Button>
+                                <Controls:IconButton x:Name="MoveDownButton" Grid.Column="2" Click="MoveDownButton_Click" HorizontalAlignment="Center" Icon="ArrowDown" />
 
-                                <Button x:Name="DeleteButton" Grid.Column="4" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center">
-                                    <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                </Button>
+                                <Controls:IconButton x:Name="DeleteButton" Grid.Column="4" Click="DeleteButton_Click" HorizontalAlignment="Center" Icon="Delete" />
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

@@ -523,7 +523,7 @@ namespace MixItUp.Base.ViewModel.Currency
                                     {
                                         if (!int.TryParse(segments[1], out amount))
                                         {
-                                            throw new InvalidOperationException("File is not in the correct format");
+                                            throw new InvalidOperationException(MixItUp.Base.Resources.FileIsNotInCorrectFormat);
                                         }
 
                                         if (!long.TryParse(segments[0], out id))
@@ -535,17 +535,17 @@ namespace MixItUp.Base.ViewModel.Currency
                                     {
                                         if (!long.TryParse(segments[0], out id))
                                         {
-                                            throw new InvalidOperationException("File is not in the correct format");
+                                            throw new InvalidOperationException(MixItUp.Base.Resources.FileIsNotInCorrectFormat);
                                         }
 
                                         if (!int.TryParse(segments[2], out amount))
                                         {
-                                            throw new InvalidOperationException("File is not in the correct format");
+                                            throw new InvalidOperationException(MixItUp.Base.Resources.FileIsNotInCorrectFormat);
                                         }
                                     }
                                     else
                                     {
-                                        throw new InvalidOperationException("File is not in the correct format");
+                                        throw new InvalidOperationException(MixItUp.Base.Resources.FileIsNotInCorrectFormat);
                                     }
 
                                     UserV2ViewModel user = null;
@@ -580,10 +580,7 @@ namespace MixItUp.Base.ViewModel.Currency
                         Logger.Log(ex);
                     }
 
-                    await DialogHelper.ShowMessage(Resources.CurrencyImportFailed +
-                        Environment.NewLine + Environment.NewLine + "<USERNAME> <AMOUNT>" +
-                        Environment.NewLine + Environment.NewLine + "<USER ID> <AMOUNT>" +
-                        Environment.NewLine + Environment.NewLine + "<USER ID> <USERNAME> <AMOUNT>");
+                    await DialogHelper.ShowMessage(Resources.CurrencyImportFailed);
 
                     this.ImportFromFileText = MixItUp.Base.Resources.ImportFromFile;
                 }
@@ -609,7 +606,14 @@ namespace MixItUp.Base.ViewModel.Currency
 
             this.HelpCommand = this.CreateCommand(() =>
             {
-                ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency,-Rank,-&-Inventory");
+                if (this.IsRank)
+                {
+                    ProcessHelper.LaunchLink("https://wiki.mixitupapp.com/consumables/rank");
+                }
+                else
+                {
+                    ProcessHelper.LaunchLink("https://wiki.mixitupapp.com/consumables/currency");
+                }
             });
         }
 
@@ -778,7 +782,7 @@ namespace MixItUp.Base.ViewModel.Currency
             List<NewAutoChatCommandModel> commandsToAdd = new List<NewAutoChatCommandModel>();
             if (this.Currency != null)
             {
-                ChatCommandModel statusCommand = new ChatCommandModel("User " + this.Currency.Name, new HashSet<string>() { this.Currency.SpecialIdentifier });
+                ChatCommandModel statusCommand = new ChatCommandModel($"{MixItUp.Base.Resources.User} {this.Currency.Name}", new HashSet<string>() { this.Currency.SpecialIdentifier });
                 statusCommand.Requirements.AddBasicRequirements();
                 statusCommand.Requirements.Role.UserRole = UserRoleEnum.User;
                 statusCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
@@ -787,48 +791,48 @@ namespace MixItUp.Base.ViewModel.Currency
                 string statusChatText = string.Empty;
                 if (this.Currency.IsRank)
                 {
-                    statusChatText = string.Format("@$username is a ${0} with ${1} {2}!", this.Currency.UserRankNameSpecialIdentifier, this.Currency.UserAmountSpecialIdentifier, this.Currency.Name);
+                    statusChatText = string.Format(MixItUp.Base.Resources.ConsumablesCurrencyCommandDefault, this.Currency.UserRankNameSpecialIdentifier, this.Currency.UserAmountSpecialIdentifier, this.Currency.Name);
                 }
                 else
                 {
-                    statusChatText = string.Format("@$username has ${0} {1}!", this.Currency.UserAmountSpecialIdentifier, this.Currency.Name);
+                    statusChatText = string.Format(MixItUp.Base.Resources.ConsumablesCurrencyCommandDefault, this.Currency.UserAmountSpecialIdentifier, this.Currency.Name);
                 }
                 statusCommand.Actions.Add(new ChatActionModel(statusChatText));
-                commandsToAdd.Add(new NewAutoChatCommandModel(string.Format("!{0} - {1}", statusCommand.Triggers.First(), "Shows User's Amount"), statusCommand));
+                commandsToAdd.Add(new NewAutoChatCommandModel(string.Format("!{0} - {1}", statusCommand.Triggers.First(), MixItUp.Base.Resources.ShowsUsersAmount), statusCommand));
 
                 if (this.Currency.SpecialTracking == CurrencySpecialTrackingEnum.None)
                 {
-                    ChatCommandModel addCommand = new ChatCommandModel("Add " + this.Currency.Name, new HashSet<string>() { "add" + this.Currency.SpecialIdentifier });
+                    ChatCommandModel addCommand = new ChatCommandModel($"{MixItUp.Base.Resources.Add} {this.Currency.Name}", new HashSet<string>() { MixItUp.Base.Resources.Add.ToLower() + this.Currency.SpecialIdentifier });
                     addCommand.Requirements.AddBasicRequirements();
                     addCommand.Requirements.Role.UserRole = UserRoleEnum.Moderator;
                     addCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                     addCommand.Requirements.Cooldown.IndividualAmount = 5;
 
                     addCommand.Actions.Add(new ConsumablesActionModel(this.Currency, ConsumablesActionTypeEnum.AddToSpecificUser, usersMustBePresent: true, "$arg2text", username: "$targetusername"));
-                    addCommand.Actions.Add(new ChatActionModel(string.Format("@$targetusername received $arg2text {0}!", this.Currency.Name)));
-                    commandsToAdd.Add(new NewAutoChatCommandModel(string.Format("!{0} - {1}", addCommand.Triggers.First(), "Adds Amount To Specified User"), addCommand));
+                    addCommand.Actions.Add(new ChatActionModel(string.Format(MixItUp.Base.Resources.ConsumablesCurrencyRankAddCommandDefault, this.Currency.Name)));
+                    commandsToAdd.Add(new NewAutoChatCommandModel(string.Format("!{0} - {1}", addCommand.Triggers.First(), MixItUp.Base.Resources.AddsAmountToSpecifiedUser), addCommand));
 
-                    ChatCommandModel addAllCommand = new ChatCommandModel("Add All " + this.Currency.Name, new HashSet<string>() { "addall" + this.Currency.SpecialIdentifier });
+                    ChatCommandModel addAllCommand = new ChatCommandModel($"{MixItUp.Base.Resources.AddAll} {this.Currency.Name}", new HashSet<string>() { MixItUp.Base.Resources.AddAll.ToLower() + this.Currency.SpecialIdentifier });
                     addAllCommand.Requirements.AddBasicRequirements();
                     addAllCommand.Requirements.Role.UserRole = UserRoleEnum.Moderator;
                     addAllCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                     addAllCommand.Requirements.Cooldown.IndividualAmount = 5;
 
                     addAllCommand.Actions.Add(new ConsumablesActionModel(this.Currency, ConsumablesActionTypeEnum.AddToAllChatUsers, usersMustBePresent: true, "$arg1text"));
-                    addAllCommand.Actions.Add(new ChatActionModel(string.Format("Everyone got $arg1text {0}!", this.Currency.Name)));
-                    commandsToAdd.Add(new NewAutoChatCommandModel(string.Format("!{0} - {1}", addAllCommand.Triggers.First(), "Adds Amount To All Chat Users"), addAllCommand));
+                    addAllCommand.Actions.Add(new ChatActionModel(string.Format(MixItUp.Base.Resources.ConsumablesCurrencyRankAddAllCommandDefault, this.Currency.Name)));
+                    commandsToAdd.Add(new NewAutoChatCommandModel(string.Format("!{0} - {1}", addAllCommand.Triggers.First(), MixItUp.Base.Resources.AddsAmountToAllChatUsers), addAllCommand));
 
                     if (!this.Currency.IsRank)
                     {
-                        ChatCommandModel giveCommand = new ChatCommandModel("Give " + this.Currency.Name, new HashSet<string>() { "give" + this.Currency.SpecialIdentifier });
+                        ChatCommandModel giveCommand = new ChatCommandModel($"{MixItUp.Base.Resources.Give} {this.Currency.Name}", new HashSet<string>() { MixItUp.Base.Resources.Give.ToLower() + this.Currency.SpecialIdentifier });
                         giveCommand.Requirements.AddBasicRequirements();
                         giveCommand.Requirements.Role.UserRole = UserRoleEnum.User;
                         giveCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                         giveCommand.Requirements.Cooldown.IndividualAmount = 5;
 
                         giveCommand.Actions.Add(new ConsumablesActionModel(this.Currency, ConsumablesActionTypeEnum.AddToSpecificUser, usersMustBePresent: true, "$arg2text", username: "$targetusername", deductFromUser: true));
-                        giveCommand.Actions.Add(new ChatActionModel(string.Format("@$username gave @$targetusername $arg2text {0}!", this.Currency.Name)));
-                        commandsToAdd.Add(new NewAutoChatCommandModel(string.Format("!{0} - {1}", giveCommand.Triggers.First(), "Gives Amount To Specified User"), giveCommand));
+                        giveCommand.Actions.Add(new ChatActionModel(string.Format(MixItUp.Base.Resources.ConsumablesCurrencyRankGiveCommandDefault, this.Currency.Name)));
+                        commandsToAdd.Add(new NewAutoChatCommandModel(string.Format("!{0} - {1}", giveCommand.Triggers.First(), MixItUp.Base.Resources.GivesAmountToSpecifiedUser), giveCommand));
                     }
                 }
             }

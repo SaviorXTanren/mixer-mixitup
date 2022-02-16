@@ -250,13 +250,12 @@ namespace MixItUp.Base.Services
 
                 if (currentVersion == -1)
                 {
-                    return new Result<SettingsV3Model>("The backup file selected does not appear to contain Mix It Up settings.");
+                    return new Result<SettingsV3Model>(MixItUp.Base.Resources.SettingsBackupNotValid);
                 }
 
                 if (currentVersion > SettingsV3Model.LatestVersion)
                 {
-                    return new Result<SettingsV3Model>("The backup file is valid, but is from a newer version of Mix It Up.  Be sure to upgrade to the latest version." +
-                        Environment.NewLine + Environment.NewLine + "NOTE: This may require you to opt-in to the Preview build from the General tab in Settings if this was made in a Preview build.");
+                    return new Result<SettingsV3Model>(MixItUp.Base.Resources.SettingsBackupTooNew);
                 }
 
                 return new Result<SettingsV3Model>(await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(settingsFile));

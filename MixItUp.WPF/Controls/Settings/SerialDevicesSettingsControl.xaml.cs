@@ -42,23 +42,25 @@ namespace MixItUp.WPF.Controls.Settings
 
         private async void AddSerialDeviceButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            await this.Window.RunAsyncOperation(() =>
+            await this.Window.RunAsyncOperation(async () =>
             {
                 if (!string.IsNullOrEmpty(this.PortNameComboBox.Text) && !string.IsNullOrEmpty(this.BaudRateTextBox.Text) && int.TryParse(this.BaudRateTextBox.Text, out int baudRate) && baudRate >= 0)
                 {
-                    if (!ChannelSession.Settings.SerialDevices.Any(p => p.PortName.Equals(this.PortNameComboBox.Text)))
+                    if (ChannelSession.Settings.SerialDevices.Any(p => p.PortName.Equals(this.PortNameComboBox.Text)))
                     {
-                        SerialDeviceModel serialDevice = new SerialDeviceModel(this.PortNameComboBox.Text, baudRate, this.DTREnabledCheckBox.IsChecked.GetValueOrDefault(), this.RTSEnabledCheckBox.IsChecked.GetValueOrDefault());
-                        ChannelSession.Settings.SerialDevices.Add(serialDevice);
-                        this.serialDevices.Add(serialDevice);
+                        await DialogHelper.ShowMessage(MixItUp.Base.Resources.SerialDevicesAlreadyExistDeviceWithPortName);
+                        return;
                     }
-                }
-                this.PortNameComboBox.Text = string.Empty;
-                this.BaudRateTextBox.Text = string.Empty;
-                this.DTREnabledCheckBox.IsChecked = false;
-                this.RTSEnabledCheckBox.IsChecked = false;
 
-                return Task.CompletedTask;
+                    SerialDeviceModel serialDevice = new SerialDeviceModel(this.PortNameComboBox.Text, baudRate, this.DTREnabledCheckBox.IsChecked.GetValueOrDefault(), this.RTSEnabledCheckBox.IsChecked.GetValueOrDefault());
+                    ChannelSession.Settings.SerialDevices.Add(serialDevice);
+                    this.serialDevices.Add(serialDevice);
+
+                    this.PortNameComboBox.Text = string.Empty;
+                    this.BaudRateTextBox.Text = string.Empty;
+                    this.DTREnabledCheckBox.IsChecked = false;
+                    this.RTSEnabledCheckBox.IsChecked = false;
+                }
             });
         }
 

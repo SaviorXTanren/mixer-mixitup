@@ -230,9 +230,6 @@
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
-    <Reference Include="PlayFabAllSDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\PlayFabAllSDK.1.95.210629\lib\net45\PlayFabAllSDK.dll</HintPath>
-    </Reference>
     <Reference Include="SharpVectors.Converters.Wpf, Version=1.7.5.0, Culture=neutral, PublicKeyToken=b532964b8548be77, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpVectors.1.7.5\lib\net46\SharpVectors.Converters.Wpf.dll</HintPath>
     </Reference>
@@ -719,6 +716,9 @@
     <Compile Include="Controls\GifImageControl.xaml.cs">
       <DependentUpon>GifImageControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\IconButton.xaml.cs">
+      <DependentUpon>IconButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\LicenseControl.xaml.cs">
       <DependentUpon>LicenseControl.xaml</DependentUpon>
     </Compile>
@@ -1054,6 +1054,7 @@
     <Compile Include="Services\DeveloperAPI\V1\InventoryController.cs" />
     <Compile Include="Services\DeveloperAPI\NoCacheHeader.cs" />
     <Compile Include="Services\DeveloperAPI\V1\UserController.cs" />
+    <Compile Include="Services\DeveloperAPI\V2\StatusController.cs" />
     <Compile Include="Services\DeveloperAPI\V2\ChatController.cs" />
     <Compile Include="Services\DeveloperAPI\V2\CommandsController.cs" />
     <Compile Include="Services\DeveloperAPI\V2\UsersController.cs" />
@@ -1121,6 +1122,9 @@
     </Compile>
     <Compile Include="Windows\PopOut\PopOutWindow.xaml.cs">
       <DependentUpon>PopOutWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Quotes\QuotesDataImportWindow.xaml.cs">
+      <DependentUpon>QuotesDataImportWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\Users\UserDataEditorWindow.xaml.cs">
       <DependentUpon>UserDataEditorWindow.xaml</DependentUpon>
@@ -1464,6 +1468,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\GifImageControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\IconButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -2018,6 +2026,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\PopOut\PopOutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Quotes\QuotesDataImportWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -257,7 +257,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                     List<List<string>> contents = new List<List<string>>();
 
                     List<string> columns = new List<string>() { "MixItUpID" };
-                    StreamingPlatforms.ForEachPlatform((p) =>
+                    StreamingPlatforms.ForEachPlatform(p =>
                     {
                         columns.AddRange(new List<string>() { p.ToString() + "ID", p.ToString() + "Username" });
                     });
@@ -279,7 +279,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                         UserV2ViewModel user = new UserV2ViewModel(u);
 
                         List<string> data = new List<string>() { user.ID.ToString() };
-                        StreamingPlatforms.ForEachPlatform((p) =>
+                        StreamingPlatforms.ForEachPlatform(p =>
                         {
                             UserPlatformV2ModelBase platformUser = user.GetPlatformData<UserPlatformV2ModelBase>(p);
                             if (platformUser != null)

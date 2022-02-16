@@ -163,14 +163,14 @@ namespace MixItUp.Base.Services
                     {
                         if (item is OverlayImageItemModel || item is OverlayVideoItemModel || item is OverlaySoundItemModel)
                         {
-                            if (!ServiceManager.Get<IFileService>().FileExists(jobj["FilePath"].ToString()))
+                            string filepath = jobj["FilePath"].ToString();
+                            if (!ServiceManager.Get<IFileService>().IsURLPath(filepath) && !ServiceManager.Get<IFileService>().FileExists(filepath))
                             {
-                                Logger.Log(LogLevel.Error, $"Overlay Action - File does not exist: {jobj["FilePath"].ToString()}");
-                                return;
+                                Logger.Log(LogLevel.Error, $"Overlay Action - File does not exist: {filepath}");
                             }
 
-                            this.SetLocalFile(jobj["FileID"].ToString(), jobj["FilePath"].ToString());
-                            jobj["FullLink"] = OverlayItemModelBase.GetFileFullLink(jobj["FileID"].ToString(), jobj["FileType"].ToString(), jobj["FilePath"].ToString());
+                            this.SetLocalFile(jobj["FileID"].ToString(), filepath);
+                            jobj["FullLink"] = OverlayItemModelBase.GetFileFullLink(jobj["FileID"].ToString(), jobj["FileType"].ToString(), filepath);
                         }
                         await this.SendPacket("Show", jobj);
                     }
@@ -267,7 +267,7 @@ namespace MixItUp.Base.Services
 
         public void SetLocalFile(string id, string filepath)
         {
-            if (!Uri.IsWellFormedUriString(filepath, UriKind.RelativeOrAbsolute))
+            if (!ServiceManager.Get<IFileService>().IsURLPath(filepath))
             {
                 this.localFiles[id] = filepath;
             }

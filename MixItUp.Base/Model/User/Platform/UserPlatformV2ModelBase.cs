@@ -35,7 +35,7 @@ namespace MixItUp.Base.Model.User.Platform
         [DataMember]
         public DateTimeOffset? SubscribeDate { get; set; }
         [DataMember]
-        public int SubscriberTier { get; set; } = 0;
+        public int SubscriberTier { get; set; } = 1;
 
         protected UserPlatformV2ModelBase() { }
 

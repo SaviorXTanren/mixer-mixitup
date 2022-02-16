@@ -63,10 +63,9 @@ namespace MixItUp.Base.Model.Actions
                     string message = await ReplaceStringWithSpecialModifiers(this.MessageText, parameters);
                     string filePath = await ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
 
-                    if (!string.IsNullOrEmpty(filePath) && !ServiceManager.Get<IFileService>().FileExists(filePath))
+                    if (!string.IsNullOrEmpty(filePath) && !ServiceManager.Get<IFileService>().IsURLPath(filePath) && !ServiceManager.Get<IFileService>().FileExists(filePath))
                     {
                         Logger.Log(LogLevel.Error, $"Discord Action - File does not exist: {filePath}");
-                        return;
                     }
 
                     await ServiceManager.Get<DiscordService>().CreateMessage(this.channel, message, filePath);

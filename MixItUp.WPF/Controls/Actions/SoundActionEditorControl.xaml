@@ -45,7 +45,7 @@
             <ComboBox Grid.Column="0" ItemsSource="{Binding AudioDevices}" SelectedItem="{Binding SelectedAudioDevice}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AudioOutputDevice}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" />
 
             <TextBlock Grid.Column="2" Text="{Binding Source={x:Static resx:Resources.Volume}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
-            <Slider Grid.Column="4" Value="{Binding Volume}" VerticalAlignment="Center" Margin="0,-40,0,0" Width="200" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" />
+            <Slider Grid.Column="4" Value="{Binding Volume}" VerticalAlignment="Center" Width="200" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" />
         </Grid>
     </Grid>
 </local:ActionEditorControlBase>

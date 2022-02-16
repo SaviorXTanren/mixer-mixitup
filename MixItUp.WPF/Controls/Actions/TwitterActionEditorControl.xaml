@@ -38,7 +38,7 @@
             </ComboBox>
 
             <TextBlock Grid.Column="2" HorizontalAlignment="Right">
-                <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">
+                <Hyperlink NavigateUri="https://wiki.mixitupapp.com/special-identifiers" RequestNavigate="Hyperlink_RequestNavigate">
                     <TextBlock Text="{x:Static resx:Resources.SpecialIdentifiersReference}"/>
                 </Hyperlink>
             </TextBlock>

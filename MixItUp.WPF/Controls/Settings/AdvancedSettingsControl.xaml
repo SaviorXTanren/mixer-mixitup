@@ -20,11 +20,11 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.AutomaticBackupsFolder}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-                <TextBlock Grid.Column="2" Text="{Binding AutomaticBackupLocationFolderPath}" />
+                <TextBlock Grid.Column="2" Text="{Binding AutomaticBackupLocationFolderPath}" HorizontalAlignment="Right" />
             </Grid>
 
             <Separator Margin="10" />

@@ -158,7 +158,7 @@ namespace MixItUp.Base.Services.External
         private int currentID = 1;
         private SemaphoreSlim idSempahoreLock = new SemaphoreSlim(1);
 
-        public string Name { get { return "Streamlabs OBS"; } }
+        public string Name { get { return MixItUp.Base.Resources.StreamlabsDesktop; } }
 
         public bool IsEnabled { get { return ChannelSession.Settings.EnableStreamlabsOBSConnection; } }
 
@@ -175,7 +175,7 @@ namespace MixItUp.Base.Services.External
                     await this.StartReplayBuffer();
 
                     this.Connected(this, new EventArgs());
-                    ChannelSession.ReconnectionOccurred("Streamlabs OBS");
+                    ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.StreamlabsDesktop);
                     this.IsConnected = true;
                     ServiceManager.Get<ITelemetryService>().TrackService("Streamlabs OBS");
                     return new Result();
@@ -196,7 +196,7 @@ namespace MixItUp.Base.Services.External
             this.IsConnected = false;
 
             this.Disconnected(this, new EventArgs());
-            ChannelSession.DisconnectionOccurred("Streamlabs OBS");
+            ChannelSession.DisconnectionOccurred(MixItUp.Base.Resources.StreamlabsDesktop);
 
             return Task.CompletedTask;
         }

@@ -84,9 +84,9 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                if (!string.IsNullOrEmpty(this.PlatformModel.DisplayName))
                 {
-                    if (!string.IsNullOrEmpty(this.PlatformModel.DisplayName) && !string.Equals(this.DisplayName, this.Username, StringComparison.OrdinalIgnoreCase))
+                    if (!string.Equals(this.DisplayName, this.Username, StringComparison.OrdinalIgnoreCase))
                     {
                         return $"{this.DisplayName} ({this.Username})";
                     }
@@ -97,7 +97,7 @@ namespace MixItUp.Base.ViewModel.User
                 }
                 else
                 {
-                    return this.DisplayName;
+                    return this.Username;
                 }
             }
         }

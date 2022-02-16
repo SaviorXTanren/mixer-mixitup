@@ -36,7 +36,7 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                     <DataGridTextColumn Header="{x:Static resx:Resources.Overlay}" Binding="{Binding OverlayName}" IsReadOnly="True" Width="*" />
-                    <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="240">
+                    <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="260">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Right" Margin="0,0,15,0">
@@ -50,17 +50,11 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
-                                    <Button x:Name="PlayButton" Grid.Column="0" Click="PlayButton_Click" Width="40" HorizontalAlignment="Center" Visibility="{Binding SupportsTestData, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}" ToolTip="{x:Static resx:Resources.TestCommand}">
-                                        <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                    </Button>
+                                    <Controls:IconButton x:Name="PlayButton" Grid.Column="0" Click="PlayButton_Click" HorizontalAlignment="Center" Visibility="{Binding SupportsTestData, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}" Icon="Play" ToolTip="{x:Static resx:Resources.TestCommand}" />
 
-                                    <Button x:Name="EditButton" Grid.Column="2" Click="EditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.EditCommand}">
-                                        <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                    </Button>
+                                    <Controls:IconButton x:Name="EditButton" Grid.Column="2" Click="EditButton_Click" HorizontalAlignment="Center" Icon="TooltipEdit" ToolTip="{x:Static resx:Resources.EditCommand}" />
 
-                                    <Button x:Name="DeleteButton" Grid.Column="4" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.DeleteCommand}">
-                                        <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                    </Button>
+                                    <Controls:IconButton x:Name="DeleteButton" Grid.Column="4" Click="DeleteButton_Click" HorizontalAlignment="Center" Icon="Delete" ToolTip="{x:Static resx:Resources.DeleteCommand}" />
 
                                     <ToggleButton x:Name="EnableDisableToggleSwitch" Grid.Column="6" IsChecked="{Binding IsEnabled}" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.EnableDisableCommand}" Checked="EnableDisableToggleSwitch_Checked" Unchecked="EnableDisableToggleSwitch_Unchecked" />
                                 </Grid>

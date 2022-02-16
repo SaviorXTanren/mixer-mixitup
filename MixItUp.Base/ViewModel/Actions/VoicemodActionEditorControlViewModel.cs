@@ -34,7 +34,14 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private VoicemodActionTypeEnum selectedActionType;
 
-        public bool ShowStateGrid { get { return this.SelectedActionType == VoicemodActionTypeEnum.VoiceChangerOnOff || this.SelectedActionType == VoicemodActionTypeEnum.BeepSoundOnOff; } }
+        public bool ShowStateGrid
+        {
+            get
+            {
+                return this.SelectedActionType == VoicemodActionTypeEnum.VoiceChangerOnOff || this.SelectedActionType == VoicemodActionTypeEnum.BeepSoundOnOff ||
+                    this.SelectedActionType == VoicemodActionTypeEnum.HearMyselfOnOff;
+            }
+        }
 
         public bool State
         {
@@ -169,6 +176,10 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.SelectedActionType == VoicemodActionTypeEnum.StopAllSounds)
             {
                 return Task.FromResult<ActionModelBase>(VoicemodActionModel.CreateForStopAllSounds());
+            }
+            else if (this.SelectedActionType == VoicemodActionTypeEnum.HearMyselfOnOff)
+            {
+                return Task.FromResult<ActionModelBase>(VoicemodActionModel.CreateForHearMyselfOnOff(this.State));
             }
             return Task.FromResult<ActionModelBase>(null);
         }

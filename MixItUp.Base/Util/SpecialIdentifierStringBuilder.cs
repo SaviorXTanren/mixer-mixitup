@@ -79,6 +79,7 @@ namespace MixItUp.Base.Util
         public const string UnicodeRegexSpecialIdentifier = "unicode";
 
         public const string LatestFollowerUserData = "latestfollower";
+        public const string LatestHostUserData = "latesthost";
         public const string LatestRaidUserData = "latestraid";
         public const string LatestRaidViewerCountData = "latestraidviewercount";
         public const string LatestSubscriberUserData = "latestsubscriber";
@@ -367,7 +368,7 @@ namespace MixItUp.Base.Util
                             userPosition++;
                         }
 
-                        string result = "No users found.";
+                        string result = MixItUp.Base.Resources.NoUsersFound;
                         if (timeUserList.Count > 0)
                         {
                             result = string.Join(", ", timeUserList);
@@ -403,7 +404,7 @@ namespace MixItUp.Base.Util
                                 userPosition++;
                             }
 
-                            string result = "No users found.";
+                            string result = MixItUp.Base.Resources.NoUsersFound;
                             if (currencyUserList.Count > 0)
                             {
                                 result = string.Join(", ", currencyUserList);
@@ -565,10 +566,13 @@ namespace MixItUp.Base.Util
                     string currentArgumentSpecialIdentifierHeader = ArgSpecialIdentifierHeader + (i + 1);
                     if (this.ContainsSpecialIdentifier(currentArgumentSpecialIdentifierHeader))
                     {
-                        UserV2ViewModel argUser = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(parameters.Platform, parameters.Arguments.ElementAt(i), performPlatformSearch: true);
-                        if (argUser != null)
+                        if (this.ContainsSpecialIdentifier(currentArgumentSpecialIdentifierHeader + UserSpecialIdentifierHeader))
                         {
-                            await this.HandleUserSpecialIdentifiers(argUser, currentArgumentSpecialIdentifierHeader);
+                            UserV2ViewModel argUser = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(parameters.Platform, parameters.Arguments.ElementAt(i), performPlatformSearch: true);
+                            if (argUser != null)
+                            {
+                                await this.HandleUserSpecialIdentifiers(argUser, currentArgumentSpecialIdentifierHeader);
+                            }
                         }
 
                         this.ReplaceSpecialIdentifier(currentArgumentSpecialIdentifierHeader + "text", parameters.Arguments.ElementAt(i));
@@ -700,6 +704,7 @@ namespace MixItUp.Base.Util
             }
 
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestFollowerUserData);
+            await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestHostUserData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestRaidUserData, SpecialIdentifierStringBuilder.LatestRaidViewerCountData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestSubscriberUserData, SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestBitsCheeredUserData, SpecialIdentifierStringBuilder.LatestBitsCheeredAmountData);
@@ -865,7 +870,7 @@ namespace MixItUp.Base.Util
 
                 if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gamequeueposition"))
                 {
-                    string gameQueuePosition = "Not In Queue";
+                    string gameQueuePosition = MixItUp.Base.Resources.QueueNotIn;
                     if (ServiceManager.Get<GameQueueService>().IsEnabled)
                     {
                         int position = ServiceManager.Get<GameQueueService>().GetUserPosition(user);
@@ -1006,7 +1011,7 @@ namespace MixItUp.Base.Util
 
                 if (ServiceManager.Get<PatreonService>().IsConnected)
                 {
-                    string tierName = "Not Subscribed";
+                    string tierName = MixItUp.Base.Resources.NotSubscribed;
                     PatreonTier tier = user.PatreonTier;
                     if (tier != null)
                     {
@@ -1023,7 +1028,7 @@ namespace MixItUp.Base.Util
             {
                 await this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredRegexSpecialIdentifier + period.ToString().ToLower(), async (total) =>
                 {
-                    string result = "No users found.";
+                    string result = MixItUp.Base.Resources.NoUsersFound;
                     BitsLeaderboardModel leaderboard = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(period, total);
                     if (leaderboard != null && leaderboard.users != null && leaderboard.users.Count > 0)
                     {

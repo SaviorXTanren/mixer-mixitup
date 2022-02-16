@@ -78,7 +78,7 @@ namespace MixItUp.Base.Services
 
             this.RaidsTracker = new EventStatisticDataTrackerModel(Resources.Raids, "AccountMultipleMinus", new List<string>() { "Username", "Viewers", "Date & Time" }, (EventStatisticDataTrackerModel dataTracker) =>
             {
-                return string.Format("Raids: {0},    Total Viewers: {1},    Average Viewers: {2}", dataTracker.UniqueIdentifiers, dataTracker.TotalValue, dataTracker.AverageValueString);
+                return $"{MixItUp.Base.Resources.Raids}: {dataTracker.UniqueIdentifiers},    {MixItUp.Base.Resources.TotalViewers}: {dataTracker.TotalValue},    {MixItUp.Base.Resources.AverageViewers}: {dataTracker.AverageValueString}";
             });
 
             this.SubscriberTracker = new EventStatisticDataTrackerModel(Resources.Subscribes, "AccountStar", new List<string>() { "Username", "Date & Time" });

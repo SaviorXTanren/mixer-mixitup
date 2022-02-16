@@ -24,6 +24,8 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand LogInCommand { get; set; }
         public ICommand LogOutCommand { get; set; }
 
+        public override string WikiPageName { get { return "streamloots"; } }
+
         public StreamlootsServiceControlViewModel()
             : base(Resources.Streamloots)
         {

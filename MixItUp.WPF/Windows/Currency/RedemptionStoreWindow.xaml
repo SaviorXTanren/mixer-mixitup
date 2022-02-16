@@ -71,14 +71,14 @@
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
-                                        <DataGridTemplateColumn Header="{x:Static resx:Resources.Quantity}" Width="80">
+                                        <DataGridTemplateColumn Header="{x:Static resx:Resources.Quantity}" Width="90">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <TextBlock Text="{Binding Quantity}" />
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
-                                        <DataGridTemplateColumn Header="{x:Static resx:Resources.CustomRedemption}" Width="175">
+                                        <DataGridTemplateColumn Header="{x:Static resx:Resources.CustomRedemption}" Width="190">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <Grid>
@@ -91,7 +91,7 @@
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
-                                        <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="120">
+                                        <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="130">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <Grid>
@@ -99,17 +99,11 @@
                                                             <ColumnDefinition Width="Auto" />
                                                             <ColumnDefinition Width="10" />
                                                             <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="10" />
-                                                            <ColumnDefinition Width="Auto" />
                                                         </Grid.ColumnDefinitions>
 
-                                                        <Button Grid.Column="0" Command="{Binding EditProductCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Edit}">
-                                                            <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                                        </Button>
+                                                        <Controls:IconButton Grid.Column="0" Command="{Binding EditProductCommand}" HorizontalAlignment="Center" Icon="TooltipEdit" ToolTip="{x:Static resx:Resources.Edit}" />
 
-                                                        <Button Grid.Column="2" Command="{Binding DeleteProductCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}">
-                                                            <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                                        </Button>
+                                                        <Controls:IconButton Grid.Column="2" Command="{Binding DeleteProductCommand}" HorizontalAlignment="Center" Icon="Delete" ToolTip="{x:Static resx:Resources.Delete}" />
                                                     </Grid>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -164,7 +158,7 @@
                                 </Grid>
                             </Grid>
 
-                            <RequirementsControls:RequirementsSetControl Grid.Column="2" DataContext="{Binding ProductRequirements}" ShowArguments="False" ShowSettings="False" />
+                            <RequirementsControls:RequirementsSetControl Grid.Column="2" DataContext="{Binding ProductRequirements}" ShowArguments="False" ShowSettings="False" Width="300" />
                         </Grid>
 
                         <!-- Usage Requirements -->
@@ -205,9 +199,7 @@
                     </Grid>
                 </GroupBox>
 
-                <Button x:Name="SaveButton" Grid.Row="4" HorizontalAlignment="Center" Click="SaveButton_Click" Width="80">
-                    <MaterialDesign:PackIcon Kind="ContentSave" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                </Button>
+                <Controls:IconButton x:Name="SaveButton" Grid.Row="4" HorizontalAlignment="Center" Click="SaveButton_Click" Width="80" Icon="ContentSave" />
             </Grid>
         </ScrollViewer>
 

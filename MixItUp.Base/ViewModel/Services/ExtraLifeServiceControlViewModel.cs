@@ -59,6 +59,8 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand LogOutCommand { get; set; }
         public ICommand GetTeamParticipantsCommand { get; set; }
 
+        public override string WikiPageName { get { return "extra-life"; } }
+
         public ExtraLifeServiceControlViewModel()
             : base(Resources.ExtraLife)
         {

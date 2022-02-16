@@ -1,7 +1,9 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -34,21 +36,26 @@ namespace MixItUp.Base.Model.Requirements
         public int SubscriberTier { get; set; } = 1;
 
         [DataMember]
+        public string TrovoCustomRole { get; set; }
+
+        [DataMember]
         public string PatreonBenefitID { get; set; }
 
-        public RoleRequirementModel(StreamingPlatformTypeEnum streamingPlatform, UserRoleEnum role, int subscriberTier = 1, string patreonBenefitID = null)
+        public RoleRequirementModel(StreamingPlatformTypeEnum streamingPlatform, UserRoleEnum role, int subscriberTier = 1, string trovoCustomRole = null, string patreonBenefitID = null)
         {
             this.StreamingPlatform = streamingPlatform;
             this.UserRole = role;
             this.SubscriberTier = subscriberTier;
+            this.TrovoCustomRole = trovoCustomRole;
             this.PatreonBenefitID = patreonBenefitID;
         }
 
-        public RoleRequirementModel(StreamingPlatformTypeEnum streamingPlatform, IEnumerable<UserRoleEnum> roleList, int subscriberTier = 1, string patreonBenefitID = null)
+        public RoleRequirementModel(StreamingPlatformTypeEnum streamingPlatform, IEnumerable<UserRoleEnum> roleList, int subscriberTier = 1, string trovoCustomRole = null, string patreonBenefitID = null)
         {
             this.StreamingPlatform = streamingPlatform;
             this.UserRoleList = new HashSet<UserRoleEnum>(roleList);
             this.SubscriberTier = subscriberTier;
+            this.TrovoCustomRole = trovoCustomRole;
             this.PatreonBenefitID = patreonBenefitID;
         }
 
@@ -83,7 +90,7 @@ namespace MixItUp.Base.Model.Requirements
                         {
                             if (role == UserRoleEnum.Subscriber || role == UserRoleEnum.YouTubeMember)
                             {
-                                if (parameters.User.SubscriberTier >= this.SubscriberTier)
+                                if (this.SubscriberTier == 1 || parameters.User.SubscriberTier >= this.SubscriberTier)
                                 {
                                     return Task.FromResult(new Result());
                                 }
@@ -101,7 +108,7 @@ namespace MixItUp.Base.Model.Requirements
                     {
                         if (this.UserRole == UserRoleEnum.Subscriber || this.UserRole == UserRoleEnum.YouTubeMember)
                         {
-                            if (parameters.User.ExceedRole(this.UserRole) || parameters.User.SubscriberTier >= this.SubscriberTier)
+                            if (parameters.User.ExceedRole(this.UserRole) || this.SubscriberTier == 1 || parameters.User.SubscriberTier >= this.SubscriberTier)
                             {
                                 return Task.FromResult(new Result());
                             }
@@ -110,6 +117,15 @@ namespace MixItUp.Base.Model.Requirements
                         {
                             return Task.FromResult(new Result());
                         }
+                    }
+                }
+
+                if (parameters.Platform == StreamingPlatformTypeEnum.Trovo && !string.IsNullOrEmpty(this.TrovoCustomRole) && ServiceManager.Get<TrovoSessionService>().IsConnected)
+                {
+                    TrovoUserPlatformV2Model trovoUser = parameters.User.GetPlatformData<TrovoUserPlatformV2Model>(StreamingPlatformTypeEnum.Trovo);
+                    if (trovoUser != null && trovoUser.CustomRoles.Contains(this.TrovoCustomRole))
+                    {
+                        return Task.FromResult(new Result());
                     }
                 }
 

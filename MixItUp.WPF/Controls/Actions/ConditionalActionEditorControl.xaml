@@ -8,6 +8,7 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:ActionControls="clr-namespace:MixItUp.WPF.Controls.Actions"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -59,7 +60,7 @@
             <ToggleButton Grid.Column="10" IsChecked="{Binding RepeatWhileTrue}" />
 
             <TextBlock Grid.Column="12" VerticalAlignment="Center">
-                <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">
+                <Hyperlink NavigateUri="https://wiki.mixitupapp.com/special-identifiers" RequestNavigate="Hyperlink_RequestNavigate">
                     <TextBlock Text="{x:Static resx:Resources.SpecialIdentifiers}"/>
                 </Hyperlink>
             </TextBlock>
@@ -76,7 +77,7 @@
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="20" />
-                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
                         <Grid Grid.Column="0" Visibility="{Binding IsNormalComparision, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -118,7 +119,7 @@
                             <TextBox Text="{Binding Value2}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Pattern}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         </Grid>
 
-                        <Button Grid.Column="6" Visibility="{Binding CanBeRemoved, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Command="{Binding DeleteCommand}" />
+                        <Controls:IconButton Grid.Column="6" Visibility="{Binding CanBeRemoved, Converter={StaticResource BooleanToVisibilityConverter}}" Icon="Delete" Command="{Binding DeleteCommand}" />
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

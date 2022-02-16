@@ -113,7 +113,7 @@ namespace MixItUp.WPF.Windows.Overlay
 
                     overlayItem.Position = position;
 
-                    OverlayWidgetModel widget = new OverlayWidgetModel(this.viewModel.Name, this.viewModel.SelectedOverlayEndpoint, overlayItem, (int)this.viewModel.RefreshTime);
+                    OverlayWidgetModel widget = new OverlayWidgetModel(this.viewModel.Name, this.viewModel.SelectedOverlayEndpoint ?? string.Empty, overlayItem, (int)this.viewModel.RefreshTime);
                     if (this.viewModel.OverlayWidget != null)
                     {
                         await this.viewModel.OverlayWidget.Disable();
