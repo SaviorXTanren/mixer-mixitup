@@ -7440,4 +7440,7 @@ We will attempt to re-connect with the service when possible. If this continues,
   <data name="PortNumber" xml:space="preserve">
     <value>Port Number</value>
   </data>
+  <data name="TrovoCustomRole" xml:space="preserve">
+    <value>Trovo Custom Role</value>
+  </data>
 </root>

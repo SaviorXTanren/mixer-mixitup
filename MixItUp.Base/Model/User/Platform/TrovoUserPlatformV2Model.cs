@@ -12,6 +12,7 @@ namespace MixItUp.Base.Model.User.Platform
     [DataContract]
     public class TrovoUserPlatformV2Model : UserPlatformV2ModelBase
     {
+        [DataMember]
         public HashSet<string> CustomRoles { get; set; } = new HashSet<string>();
 
         public TrovoUserPlatformV2Model(UserModel user)

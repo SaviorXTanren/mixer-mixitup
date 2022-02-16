@@ -18602,6 +18602,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Trovo Custom Role.
+        /// </summary>
+        public static string TrovoCustomRole {
+            get {
+                return ResourceManager.GetString("TrovoCustomRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Custom Spells Editor.
         /// </summary>
         public static string TrovoCustomSpellsEditor {
