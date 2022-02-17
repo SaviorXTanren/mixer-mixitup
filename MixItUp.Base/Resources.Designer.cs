@@ -21259,7 +21259,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &amp;lt; Back.
+        ///   Looks up a localized string similar to &lt; Back.
         /// </summary>
         public static string WizardBack {
             get {
@@ -21394,7 +21394,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Next &amp;gt;.
+        ///   Looks up a localized string similar to Next &gt;.
         /// </summary>
         public static string WizardNext {
             get {

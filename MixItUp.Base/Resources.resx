@@ -7475,7 +7475,7 @@ We will attempt to re-connect with the service when possible. If this continues,
     <value>User Editor</value>
   </data>
   <data name="WizardBack" xml:space="preserve">
-    <value>&amp;lt; Back</value>
+    <value>&lt; Back</value>
   </data>
   <data name="WizardCommands1" xml:space="preserve">
     <value>Mix It Up uses a Command &amp;amp; Action structure for everything throughout the app. Think of it similar to a recipe that you would follow to make food.</value>
@@ -7520,7 +7520,7 @@ We will attempt to re-connect with the service when possible. If this continues,
     <value>Our Wiki pages contain detailed information about many of the different features available throughout the entire app.</value>
   </data>
   <data name="WizardNext" xml:space="preserve">
-    <value>Next &amp;gt;</value>
+    <value>Next &gt;</value>
   </data>
   <data name="MixItUpLogin" xml:space="preserve">
     <value>Mix It Up - Login</value>
