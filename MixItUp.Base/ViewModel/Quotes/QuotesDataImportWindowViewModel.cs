@@ -134,7 +134,7 @@ namespace MixItUp.Base.ViewModel.Quotes
                     List<List<string>> lines = new List<List<string>>();
 
                     string extension = Path.GetExtension(this.QuotesDataFilePath);
-                    if (extension.Equals(".txt") || extension.Equals(".csv"))
+                    if (extension.Equals(".txt"))
                     {
                         string fileContents = await ServiceManager.Get<IFileService>().ReadFile(this.QuotesDataFilePath);
                         if (!string.IsNullOrEmpty(fileContents))
@@ -142,7 +142,7 @@ namespace MixItUp.Base.ViewModel.Quotes
                             foreach (string line in fileContents.Split(new string[] { "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                             {
                                 List<string> splits = new List<string>();
-                                foreach (string split in line.Split(new char[] { ' ', '\t', ',', ';' }))
+                                foreach (string split in line.Split(new char[] { '\t' }))
                                 {
                                     splits.Add(split);
                                 }
@@ -154,11 +154,12 @@ namespace MixItUp.Base.ViewModel.Quotes
                             await DialogHelper.ShowMessage(Resources.DataFileImportFailed);
                         }
                     }
-                    else if (extension.Equals(".xls") || extension.Equals(".xlsx"))
+                    else if (extension.Equals(".xls") || extension.Equals(".xlsx") || extension.Equals(".csv"))
                     {
+                        bool isCSV = extension.Equals(".csv");
                         using (var stream = File.Open(this.QuotesDataFilePath, FileMode.Open, FileAccess.Read))
                         {
-                            using (var reader = ExcelReaderFactory.CreateReader(stream))
+                            using (var reader = (isCSV) ? ExcelReaderFactory.CreateCsvReader(stream) : ExcelReaderFactory.CreateReader(stream))
                             {
                                 var result = reader.AsDataSet();
                                 if (result.Tables.Count > 0)
