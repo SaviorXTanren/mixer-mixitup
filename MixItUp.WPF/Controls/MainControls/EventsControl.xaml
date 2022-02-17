@@ -29,9 +29,9 @@
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
                                         <Image Grid.Column="0" Source="{Binding Image}" Visibility="{Binding ShowImage, Converter={StaticResource BooleanToVisibilityConverter}}" Height="24" Width="24" VerticalAlignment="Center" />
-                                        <MaterialDesign:PackIcon Grid.Column="0" Kind="{Binding PackIconName}" Visibility="{Binding ShowPackIcon, Converter={StaticResource BooleanToVisibilityConverter}}" Height="24" Width="24" VerticalAlignment="Center" Foreground="{StaticResource WhiteColor}" />
+                                        <MaterialDesign:PackIcon Grid.Column="0" Kind="{Binding PackIconName}" Visibility="{Binding ShowPackIcon, Converter={StaticResource BooleanToVisibilityConverter}}" Height="24" Width="24" VerticalAlignment="Center" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" />
 
-                                        <TextBlock Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding Name}" Foreground="{StaticResource WhiteColor}" />
+                                        <TextBlock Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding Name}" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" />
                                     </Grid>
                                 </Expander.Header>
 

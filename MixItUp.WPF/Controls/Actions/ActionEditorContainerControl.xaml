@@ -43,8 +43,8 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" Text="{Binding Name}" TextDecorations="{Binding Disabled, Converter={StaticResource StrikethroughConverter}}" Visibility="{Binding ShowNameTextBlock, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="{StaticResource WhiteColor}" Width="Auto"  />
-                    <TextBox Grid.Column="0" Text="{Binding Name}" TextDecorations="{Binding Disabled, Converter={StaticResource StrikethroughConverter}}" Visibility="{Binding ShowNameTextBox, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="{StaticResource WhiteColor}" Width="250" Style="{StaticResource LabelHeaderTextBox}" />
+                    <TextBlock Grid.Column="0" Text="{Binding Name}" TextDecorations="{Binding Disabled, Converter={StaticResource StrikethroughConverter}}" Visibility="{Binding ShowNameTextBlock, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Width="Auto"  />
+                    <TextBox Grid.Column="0" Text="{Binding Name}" TextDecorations="{Binding Disabled, Converter={StaticResource StrikethroughConverter}}" Visibility="{Binding ShowNameTextBox, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Width="250" Style="{StaticResource LabelHeaderTextBox}" />
 
                     <Rectangle Grid.Column="1" Fill="{StaticResource PrimaryHueMidBrush}" Margin="0,-9" />
 

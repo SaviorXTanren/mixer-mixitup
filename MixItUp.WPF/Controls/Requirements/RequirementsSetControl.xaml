@@ -45,7 +45,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" Foreground="{StaticResource WhiteColor}" Text="{x:Static resx:Resources.UsageRequirements}" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="0" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Text="{x:Static resx:Resources.UsageRequirements}" VerticalAlignment="Center" />
 
             <Controls:IconButton Grid.Column="2" Command="{Binding HelpCommand}" Icon="Help" Margin="-10" />
         </Grid>

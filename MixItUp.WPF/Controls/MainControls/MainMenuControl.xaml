@@ -57,7 +57,7 @@
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
 
                                         <Button x:Name="DisconnectionAlertButton" Style="{StaticResource MaterialDesignFlatButton}" Visibility="Collapsed" Width="40" HorizontalAlignment="Center" Margin="5,0">
-                                            <MaterialDesign:PackIcon Style="{StaticResource ButtonIcon}" Kind="LanDisconnect" Foreground="{StaticResource AlertColor}" />
+                                            <MaterialDesign:PackIcon Style="{StaticResource ButtonIcon}" Kind="LanDisconnect" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" />
                                         </Button>
 
                                         <Controls:StreamingPlatformStatusAlertControl />
