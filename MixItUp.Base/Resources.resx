@@ -7134,7 +7134,7 @@ Imported quotes with IDs that match existing quotes will altered to the next max
     <value>The giveaway reminder must be 0 or greater</value>
   </data>
   <data name="GiveawayWonTypeClaim" xml:space="preserve">
-    <value>@{0} you've won the giveaway; type \"!claim\" in chat!</value>
+    <value>@{0} you've won the giveaway; type "!claim" in chat!</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="GiveawayYouHaveAlreadyWon" xml:space="preserve">

@@ -8445,7 +8445,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to @{0} you&apos;ve won the giveaway; type \&quot;!claim\&quot; in chat!.
+        ///   Looks up a localized string similar to @{0} you&apos;ve won the giveaway; type &quot;!claim&quot; in chat!.
         /// </summary>
         public static string GiveawayWonTypeClaim {
             get {
