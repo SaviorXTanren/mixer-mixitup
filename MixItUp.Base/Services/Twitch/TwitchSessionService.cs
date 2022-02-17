@@ -20,6 +20,7 @@ namespace MixItUp.Base.Services.Twitch
         public HashSet<string> ChannelEditors { get; private set; } = new HashSet<string>();
         public UserModel User { get; set; }
         public UserModel Bot { get; set; }
+        public ChannelInformationModel Channel { get; set; }
         public StreamModel Stream { get; set; }
 
         public bool IsConnected { get { return this.UserConnection != null; } }
@@ -321,13 +322,15 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (this.UserConnection != null && this.User != null)
             {
+                this.Channel = await this.UserConnection.GetChannelInformation(this.User);
+
                 this.Stream = await this.UserConnection.GetStream(this.User);
             }
         }
 
         public Task<string> GetTitle()
         {
-            return Task.FromResult(this.Stream?.title);
+            return Task.FromResult(this.Channel?.title);
         }
 
         public async Task<bool> SetTitle(string title)
@@ -337,7 +340,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public Task<string> GetGame()
         {
-            return Task.FromResult(this.Stream?.game_name);
+            return Task.FromResult(this.Channel?.game_name);
         }
 
         public async Task<bool> SetGame(string gameName)
