@@ -101,7 +101,19 @@ namespace MixItUp.Base.Model.User
 
         public string GetPlatformUsername(StreamingPlatformTypeEnum platform) { return this.HasPlatformData(platform) ? this.GetPlatformData<UserPlatformV2ModelBase>(platform).Username : null; }
 
+        public string GetPlatformDisplayName(StreamingPlatformTypeEnum platform)
+        {
+            if (this.HasPlatformData(platform))
+            {
+                UserPlatformV2ModelBase platformData = this.GetPlatformData<UserPlatformV2ModelBase>(platform);
+                return platformData.DisplayName ?? platformData.Username;
+            }
+            return null;
+        }
+
         public IEnumerable<string> GetAllPlatformUsernames() { return (this.PlatformData.Count > 0) ? this.PlatformData.Select(p => p.Value.Username) : new List<string>(); }
+
+        public IEnumerable<string> GetAllPlatformDisplayNames() { return (this.PlatformData.Count > 0) ? this.PlatformData.Select(p => p.Value.DisplayName ?? p.Value.Username) : new List<string>(); }
 
         public override bool Equals(object obj)
         {

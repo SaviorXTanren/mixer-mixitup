@@ -26,25 +26,5 @@ namespace MixItUp.WPF.Controls.Dashboard
         {
             await this.viewModel.OnVisible();
         }
-
-        private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-
-        }
-
-        private void ManualRedeemButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-
-        }
-
-        private void RefundButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-
-        }
-
-        private void DeleteButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-
-        }
     }
 }

@@ -1,11 +1,8 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Model.Statistics;
-using MixItUp.Base.Services;
+﻿using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.Statistics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -27,11 +24,6 @@ namespace MixItUp.WPF.Controls.MainControls
             this.statisticOverviewControls.AddRange(ServiceManager.Get<StatisticsService>().Statistics.Select(s => new StatisticsOverviewControl(s)));
 
             return base.InitializeInternal();
-        }
-
-        private void StatisticsOverviewListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
         }
 
         //private void AutoExportCheckBox_Checked(object sender, RoutedEventArgs e) { ChannelSession.Settings.AutoExportStatistics = this.AutoExportCheckBox.IsChecked.GetValueOrDefault(); }

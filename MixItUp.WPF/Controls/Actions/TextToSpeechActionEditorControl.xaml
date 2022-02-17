@@ -49,6 +49,15 @@
 
         <TextBox Grid.Row="3" Text="{Binding Text}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SpeechMessage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-        <TextBlock Grid.Row="5" VerticalAlignment="Center" HorizontalAlignment="Center">Text-To-Speech functionality provided by <Hyperlink NavigateUri="https://responsivevoice.org/" RequestNavigate="Hyperlink_RequestNavigate">https://responsivevoice.org/</Hyperlink></TextBlock>
+        <Grid Grid.Row="5" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="{x:Static resx:Resources.TextToSpeechFunctionalityProvidedBy}" />
+            <TextBlock Grid.Column="2"><Hyperlink NavigateUri="https://responsivevoice.org/" RequestNavigate="Hyperlink_RequestNavigate">https://responsivevoice.org/</Hyperlink></TextBlock>
+        </Grid>
     </Grid>
 </local:ActionEditorControlBase>

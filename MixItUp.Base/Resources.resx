@@ -7443,4 +7443,113 @@ We will attempt to re-connect with the service when possible. If this continues,
   <data name="TrovoCustomRole" xml:space="preserve">
     <value>Trovo Custom Role</value>
   </data>
+  <data name="TextToSpeechFunctionalityProvidedBy" xml:space="preserve">
+    <value>Text-To-Speech functionality provided by</value>
+  </data>
+  <data name="AutoModerated" xml:space="preserve">
+    <value>Auto-Moderated</value>
+  </data>
+  <data name="By" xml:space="preserve">
+    <value>By</value>
+  </data>
+  <data name="DeletedBy" xml:space="preserve">
+    <value>Deleted By</value>
+  </data>
+  <data name="WhisperNumberFormat" xml:space="preserve">
+    <value>Whisperer #{0}</value>
+    <comment>{0} is the whisper number</comment>
+  </data>
+  <data name="AutoCommandsExplanation" xml:space="preserve">
+    <value>The following commands can be automatically created for you to get started with using this feature. Would you like us to automatically add the following commands for you?</value>
+  </data>
+  <data name="MixItUp" xml:space="preserve">
+    <value>Mix It Up</value>
+  </data>
+  <data name="MixItUpPopOut" xml:space="preserve">
+    <value>Mix It Up - Pop Out</value>
+  </data>
+  <data name="MixItUpNewUserWizard" xml:space="preserve">
+    <value>Mix It Up - New User Wizard</value>
+  </data>
+  <data name="UserEditor" xml:space="preserve">
+    <value>User Editor</value>
+  </data>
+  <data name="WizardBack" xml:space="preserve">
+    <value>&lt; Back</value>
+  </data>
+  <data name="WizardCommands1" xml:space="preserve">
+    <value>Mix It Up uses a Command &amp;amp; Action structure for everything throughout the app. Think of it similar to a recipe that you would follow to make food.</value>
+  </data>
+  <data name="WizardCommands2" xml:space="preserve">
+    <value>Let's say you wanted to make some pasta; you would follow the steps in the recipe one after the other until you're done. You also would follow every step in the order they are specified. For example, you need to heat the water before you can add the pasta.</value>
+  </data>
+  <data name="WizardCommands3" xml:space="preserve">
+    <value>Commands are like a recipe and actions are the steps in that recipe. Let's say you make a shout out command, what are the things it should do? Each of those "things" can be thought of as an action.</value>
+  </data>
+  <data name="WizardCommands4" xml:space="preserve">
+    <value>In this example, our shout out command sends a message to chat, plays a sound, waits 10 seconds, and then shows an image. Each of those correspond to a different action type (Chat, Sound, Wait, and Overlay).</value>
+  </data>
+  <data name="WizardFinal1" xml:space="preserve">
+    <value>Mix It Up is a desktop-only application, so your settings and data only exist on your computer. Therefore we encourge users to set up automatic backups for your settings to ensure you always have something to fall back to in the event of any issues:</value>
+  </data>
+  <data name="WizardFinal2" xml:space="preserve">
+    <value>Don't know how a feature works or want more info? Simply click on the Help icon on the top bar of the main window to find out more!</value>
+  </data>
+  <data name="WizardFinal3" xml:space="preserve">
+    <value>Don't forget the following resources available to you for questions &amp;amp; support:</value>
+  </data>
+  <data name="WizardFinal4" xml:space="preserve">
+    <value>Thanks for using Mix It Up and we hope it meets all your needs!</value>
+  </data>
+  <data name="WizardIntro1" xml:space="preserve">
+    <value>This wizard will help get started with Mix It Up by logging you into your streaming platform accounts, help you import your existing data from some bots, and walk you through some of the ropes of how things work.</value>
+  </data>
+  <data name="WizardIntro2" xml:space="preserve">
+    <value>Before we get started, we want to let you know about some great resources you can use to help you with problems or give you ideas of things to create. Click any of the buttons below to go to that resource:</value>
+  </data>
+  <data name="WizardIntro3" xml:space="preserve">
+    <value>Our Discord is our main point for support &amp;amp; questions. This should be your first place to go to for any issues you might be encountering.</value>
+  </data>
+  <data name="WizardIntro4" xml:space="preserve">
+    <value>Our Twitter account is a great way to stay up to date on important announcements or major updates.</value>
+  </data>
+  <data name="WizardIntro5" xml:space="preserve">
+    <value>Our YouTube account features many tutorials create by us and our community to help ramp you up or show off cool creations.</value>
+  </data>
+  <data name="WizardIntro6" xml:space="preserve">
+    <value>Our Wiki pages contain detailed information about many of the different features available throughout the entire app.</value>
+  </data>
+  <data name="WizardNext" xml:space="preserve">
+    <value>Next &gt;</value>
+  </data>
+  <data name="MixItUpLogin" xml:space="preserve">
+    <value>Mix It Up - Login</value>
+  </data>
+  <data name="ANewUpdateIsAvailableForMixItUp" xml:space="preserve">
+    <value>A new update is available for Mix It Up!</value>
+  </data>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>Current Version</value>
+  </data>
+  <data name="IfUpdateDoesNotCompleteRestartComputer" xml:space="preserve">
+    <value>If the update does not complete successfully and you are prompted to update again, restart your computer first &amp;amp; then try again.</value>
+  </data>
+  <data name="MixItUpUpdateAvailable" xml:space="preserve">
+    <value>Mix It Up - Update Available</value>
+  </data>
+  <data name="NewVersion" xml:space="preserve">
+    <value>New Version</value>
+  </data>
+  <data name="PreviewUpdateWarning1" xml:space="preserve">
+    <value>IMPORTANT NOTICE: Preview updates are an opportunity to help test features early and report issues. They receive some amount of testing before they are released, but not the same amount given to public updates.</value>
+  </data>
+  <data name="PreviewUpdateWarning2" xml:space="preserve">
+    <value>We encourage you to backup your settings first by clicking Skip below and then going to Settings -&gt; Advanced. If you do not want to take this update, please click Skip below and optionally disable Preview Program under Settings -&gt; General.</value>
+  </data>
+  <data name="Skip" xml:space="preserve">
+    <value>Skip</value>
+  </data>
+  <data name="WouldYouLikeToDownloadThisUpdate" xml:space="preserve">
+    <value>Would you like to download this update?</value>
+  </data>
 </root>

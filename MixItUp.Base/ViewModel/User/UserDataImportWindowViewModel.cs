@@ -163,7 +163,7 @@ namespace MixItUp.Base.ViewModel.User
                     await ServiceManager.Get<UserService>().LoadAllUserData();
 
                     string extension = Path.GetExtension(this.UserDataFilePath);
-                    if (extension.Equals(".txt") || extension.Equals(".csv"))
+                    if (extension.Equals(".txt"))
                     {
                         string fileContents = await ServiceManager.Get<IFileService>().ReadFile(this.UserDataFilePath);
                         if (!string.IsNullOrEmpty(fileContents))
@@ -183,11 +183,12 @@ namespace MixItUp.Base.ViewModel.User
                             await DialogHelper.ShowMessage(Resources.DataFileImportFailed);
                         }
                     }
-                    else if (extension.Equals(".xls") || extension.Equals(".xlsx"))
+                    else if (extension.Equals(".xls") || extension.Equals(".xlsx") || extension.Equals(".csv"))
                     {
+                        bool isCSV = extension.Equals(".csv");
                         using (var stream = File.Open(this.UserDataFilePath, FileMode.Open, FileAccess.Read))
                         {
-                            using (var reader = ExcelReaderFactory.CreateReader(stream))
+                            using (var reader = (isCSV) ? ExcelReaderFactory.CreateCsvReader(stream) : ExcelReaderFactory.CreateReader(stream))
                             {
                                 var result = reader.AsDataSet();
                                 if (result.Tables.Count > 0)

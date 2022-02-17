@@ -17,7 +17,7 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
         Icon="./Logo.ico"
-        Title="Mix It Up" Height="600" Width="800">
+        Title="{x:Static resx:Resources.MixItUp}" Height="600" Width="800">
     <Windows:LoadingWindowBase.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -34,7 +34,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="0" />
         </Grid.RowDefinitions>
-
 
         <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
 

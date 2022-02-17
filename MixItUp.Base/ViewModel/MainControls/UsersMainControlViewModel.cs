@@ -347,11 +347,14 @@ namespace MixItUp.Base.ViewModel.MainControls
                             string filter = this.UsernameFilter.ToLower();
                             if (this.SelectedPlatform != StreamingPlatformTypeEnum.All)
                             {
-                                data = data.Where(u => u.GetPlatformUsername(this.SelectedPlatform) != null && u.GetPlatformUsername(this.SelectedPlatform).Contains(filter, StringComparison.OrdinalIgnoreCase));
+                                data = data.Where(u => u.GetPlatformUsername(this.SelectedPlatform) != null &&
+                                    (u.GetPlatformUsername(this.SelectedPlatform).Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                                    u.GetPlatformDisplayName(this.SelectedPlatform).Contains(filter, StringComparison.OrdinalIgnoreCase)));
                             }
                             else
                             {
-                                data = data.Where(u => u.GetAllPlatformUsernames().Any(username => (username != null) ? username.Contains(filter, StringComparison.OrdinalIgnoreCase) : false));
+                                data = data.Where(u => u.GetAllPlatformUsernames().Any(username => (username != null) ? username.Contains(filter, StringComparison.OrdinalIgnoreCase) : false) ||
+                                    u.GetAllPlatformDisplayNames().Any(username => (username != null) ? username.Contains(filter, StringComparison.OrdinalIgnoreCase) : false));
                             }
                         }
 

@@ -14,7 +14,7 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
         xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
         Icon="./Logo.ico"
-        Title="{Binding Source={x:Static resx:Resources.Login}, StringFormat='Mix It Up - {0}'}"
+        Title="{x:Static resx:Resources.MixItUpLogin}"
         Height="250"
         Width="420">
     <Windows:LoadingWindowBase.Resources>
