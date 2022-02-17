@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Settings"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
-             xmlns:MainControls="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -49,13 +49,9 @@
 
                                 <TextBlock Grid.Column="2" VerticalAlignment="Center"><Hyperlink NavigateUri="{Binding Address}" RequestNavigate="Hyperlink_RequestNavigate"><TextBlock Text="{Binding Address}"/></Hyperlink></TextBlock>
 
-                                <Button Grid.Column="4" x:Name="CopyEndpointURLButton" Click="CopyEndpointURLButton_Click" ToolTip="{x:Static resx:Resources.Copy}">
-                                    <MaterialDesign:PackIcon Style="{StaticResource ButtonIcon}" Kind="ContentCopy" />
-                                </Button>
+                                <Controls:IconButton Grid.Column="4" x:Name="CopyEndpointURLButton" Click="CopyEndpointURLButton_Click" Icon="ContentCopy" ToolTip="{x:Static resx:Resources.Copy}" />
 
-                                <Button Grid.Column="6" Command="{Binding DeleteCommand}" IsEnabled="{Binding CanDelete}" ToolTip="{x:Static resx:Resources.Delete}">
-                                    <MaterialDesign:PackIcon Style="{StaticResource ButtonIcon}" Kind="Delete" />
-                                </Button>
+                                <Controls:IconButton Grid.Column="6" Command="{Binding DeleteCommand}" IsEnabled="{Binding CanDelete}" Icon="Delete" ToolTip="{x:Static resx:Resources.Delete}" />
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

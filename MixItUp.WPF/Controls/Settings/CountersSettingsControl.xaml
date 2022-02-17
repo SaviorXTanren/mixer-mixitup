@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Settings"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
-             xmlns:MainControls="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -69,9 +69,7 @@
                                     <ToggleButton Grid.Row="2" IsChecked="{Binding ResetOnLoad}" HorizontalAlignment="Center" />
                                 </Grid>
 
-                                <Button Grid.Column="8" Command="{Binding DeleteCommand}" ToolTip="{x:Static resx:Resources.Delete}">
-                                    <MaterialDesign:PackIcon Style="{StaticResource ButtonIcon}" Kind="Delete" />
-                                </Button>
+                                <Controls:IconButton Grid.Column="8" Command="{Binding DeleteCommand}" Icon="Delete" ToolTip="{x:Static resx:Resources.Delete}" />
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

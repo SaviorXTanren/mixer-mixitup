@@ -77,7 +77,7 @@
                             <StackPanel Orientation="Horizontal" ToolTip="{Binding ErrorMessage}">
                                 <TextBlock Text="{Binding State, Converter={StaticResource LocalizationConverter}}" HorizontalAlignment="Left" VerticalAlignment="Center" />
 
-                                <MaterialDesign:PackIcon Visibility="{Binding HasErrorMessage, Converter={StaticResource BooleanToVisibilityConverter}}" Kind="MessageText" Height="24" Width="24" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                <MaterialDesign:PackIcon Visibility="{Binding HasErrorMessage, Converter={StaticResource BooleanToVisibilityConverter}}" Kind="MessageText" Height="24" Width="24" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource DarkLightBackgroundPackIcon}" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

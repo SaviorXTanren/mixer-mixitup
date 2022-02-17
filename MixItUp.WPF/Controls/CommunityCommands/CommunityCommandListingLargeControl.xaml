@@ -45,10 +45,10 @@
                 <Image Grid.Column="2" Source="{Binding UserAvatarURL}" Width="20" Height="20" VerticalAlignment="Center" />
                 <TextBlock Grid.Column="4" Text="{Binding Username}" VerticalAlignment="Center" />
 
-                <MaterialDesign:PackIcon Grid.Column="6" Kind="Star" VerticalAlignment="Center" Margin="0,0,0,1" />
+                <MaterialDesign:PackIcon Grid.Column="6" Kind="Star" VerticalAlignment="Center" Margin="0,0,0,1" Style="{StaticResource DarkLightBackgroundPackIcon}" />
                 <TextBlock Grid.Column="8" Text="{Binding AverageRating}" VerticalAlignment="Center" />
 
-                <MaterialDesign:PackIcon Grid.Column="10" Kind="Download" VerticalAlignment="Center" />
+                <MaterialDesign:PackIcon Grid.Column="10" Kind="Download" VerticalAlignment="Center" Style="{StaticResource DarkLightBackgroundPackIcon}" />
                 <TextBlock Grid.Column="12" Text="{Binding DownloadsString}" VerticalAlignment="Center" />
             </Grid>
 

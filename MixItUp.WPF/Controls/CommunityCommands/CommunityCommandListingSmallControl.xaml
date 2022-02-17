@@ -29,10 +29,10 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <MaterialDesign:PackIcon Grid.Column="0" Kind="Star" VerticalAlignment="Center" Margin="0,0,0,1" />
+            <MaterialDesign:PackIcon Grid.Column="0" Kind="Star" VerticalAlignment="Center" Margin="0,0,0,1" Style="{StaticResource DarkLightBackgroundPackIcon}" />
             <TextBlock Grid.Column="2" Text="{Binding AverageRating}" VerticalAlignment="Center" />
 
-            <MaterialDesign:PackIcon Grid.Column="4" Kind="Download" VerticalAlignment="Center" />
+            <MaterialDesign:PackIcon Grid.Column="4" Kind="Download" VerticalAlignment="Center" Style="{StaticResource DarkLightBackgroundPackIcon}" />
             <TextBlock Grid.Column="6" Text="{Binding DownloadsString}" VerticalAlignment="Center" />
         </Grid>
 

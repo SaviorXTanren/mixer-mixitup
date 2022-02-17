@@ -105,7 +105,7 @@
             <Button x:Name="ChannelPointsEditorButton" Grid.Column="4" Command="{Binding ChannelPointsEditorCommand}" Width="195">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{x:Static resx:Resources.ChannelPointsEditor}" />
-                    <MaterialDesign:PackIcon Kind="OpenInNew" Height="20" Width="20" Margin="5,-2,0,0" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" />
+                    <MaterialDesign:PackIcon Kind="OpenInNew" Height="20" Width="20" Margin="5,-2,0,0" Style="{StaticResource ColoredBackgroundPackIcon}" />
                 </StackPanel>
             </Button>
         </Grid>

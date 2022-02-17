@@ -27,7 +27,7 @@
             <ColumnDefinition Width="5*" />
         </Grid.ColumnDefinitions>
 
-        <MaterialDesign:PackIcon Kind="{Binding IconName}" Style="{StaticResource DefaultPackIcon}" Grid.Column="0" Height="24" Width="24" VerticalAlignment="Center" />
+        <MaterialDesign:PackIcon Kind="{Binding IconName}" Style="{StaticResource DarkLightBackgroundPackIcon}" Grid.Column="0" Height="24" Width="24" VerticalAlignment="Center" />
 
         <TextBlock x:Name="StatisticNameTextBlock" Text="{Binding Name}" Grid.Column="1" Margin="20,0,0,0" Width="90" VerticalAlignment="Center" TextDecorations="Underline" />
 

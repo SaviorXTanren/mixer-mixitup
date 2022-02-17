@@ -12,8 +12,12 @@
         <Setter Property="Foreground" Value="{StaticResource PrimaryHueMidForegroundBrush}" />
     </Style>
 
-    <Style x:Key="DefaultPackIcon" TargetType="MaterialDesign:PackIcon">
+    <Style x:Key="ColoredBackgroundPackIcon" TargetType="MaterialDesign:PackIcon">
         <Setter Property="Foreground" Value="{StaticResource PrimaryHueMidForegroundBrush}" />
+    </Style>
+
+    <Style x:Key="DarkLightBackgroundPackIcon" TargetType="MaterialDesign:PackIcon">
+        <Setter Property="Foreground" Value="{StaticResource MaterialDesignBody}" />
     </Style>
 
     <Style x:Key="TextBlockSortingHeader" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MaterialDesignTextBlock}">

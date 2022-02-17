@@ -58,7 +58,7 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <MaterialDesign:PackIcon Kind="AccessPoint" Style="{StaticResource DefaultPackIcon}" Grid.Column="0" VerticalAlignment="Center" />
+                    <MaterialDesign:PackIcon Kind="AccessPoint" Style="{StaticResource DarkLightBackgroundPackIcon}" Grid.Column="0" VerticalAlignment="Center" />
                     <TextBox Grid.Column="2" Text="{Binding OvrStreamAddress}" Width="130" VerticalAlignment="Center" />
                 </Grid>
 

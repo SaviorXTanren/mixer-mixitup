@@ -67,10 +67,10 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <MaterialDesign:PackIcon Kind="Eye" Grid.Column="0" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" />
+                        <MaterialDesign:PackIcon Kind="Eye" Grid.Column="0" Style="{StaticResource ColoredBackgroundPackIcon}" />
                         <TextBlock Grid.Column="2" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Text="{Binding ViewersCount}" />
 
-                        <MaterialDesign:PackIcon Kind="Message" Grid.Column="4" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" />
+                        <MaterialDesign:PackIcon Kind="Message" Grid.Column="4" Style="{StaticResource ColoredBackgroundPackIcon}" />
                         <TextBlock Grid.Column="6" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Text="{Binding ChattersCount}" />
                     </Grid>
                 </Grid>

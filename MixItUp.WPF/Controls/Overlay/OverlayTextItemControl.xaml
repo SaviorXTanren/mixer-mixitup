@@ -63,13 +63,13 @@
 
             <ListBox Grid.Column="6" SelectionMode="Extended" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
                 <ListBoxItem x:Name="TextBoldCheckBox" IsSelected="{Binding Bold}">
-                    <MaterialDesign:PackIcon Kind="FormatBold"/>
+                    <MaterialDesign:PackIcon Kind="FormatBold" Style="{StaticResource DarkLightBackgroundPackIcon}" />
                 </ListBoxItem>
                 <ListBoxItem x:Name="TextItalicCheckBox" IsSelected="{Binding Italic}">
-                    <MaterialDesign:PackIcon Kind="FormatItalic"/>
+                    <MaterialDesign:PackIcon Kind="FormatItalic" Style="{StaticResource DarkLightBackgroundPackIcon}" />
                 </ListBoxItem>
                 <ListBoxItem x:Name="TextUnderlineCheckBox" IsSelected="{Binding Underline}">
-                    <MaterialDesign:PackIcon Kind="FormatUnderline"/>
+                    <MaterialDesign:PackIcon Kind="FormatUnderline" Style="{StaticResource DarkLightBackgroundPackIcon}" />
                 </ListBoxItem>
             </ListBox>
         </Grid>

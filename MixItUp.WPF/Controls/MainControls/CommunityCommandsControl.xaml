@@ -254,10 +254,10 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
-                                    <MaterialDesign:PackIcon Grid.Column="0" Kind="Star" VerticalAlignment="Center" />
+                                    <MaterialDesign:PackIcon Grid.Column="0" Kind="Star" VerticalAlignment="Center" Style="{StaticResource DarkLightBackgroundPackIcon}" />
                                     <TextBlock Grid.Column="2" Text="{Binding CommandDetails.AverageRating}" VerticalAlignment="Center" />
 
-                                    <MaterialDesign:PackIcon Grid.Column="4" Kind="Download" VerticalAlignment="Center" />
+                                    <MaterialDesign:PackIcon Grid.Column="4" Kind="Download" VerticalAlignment="Center" Style="{StaticResource DarkLightBackgroundPackIcon}" />
                                     <TextBlock Grid.Column="6" Text="{Binding CommandDetails.Downloads}" VerticalAlignment="Center" />
 
                                     <TextBlock Grid.Column="8" Text="{Binding Source={x:Static resx:Resources.LastUpdated}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
@@ -306,7 +306,7 @@
                                                 </ItemsControl.ItemsPanel>
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
-                                                        <MaterialDesign:PackIcon Kind="Star" VerticalAlignment="Center" />
+                                                        <MaterialDesign:PackIcon Kind="Star" VerticalAlignment="Center" Style="{StaticResource DarkLightBackgroundPackIcon}" />
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
                                             </ItemsControl>
