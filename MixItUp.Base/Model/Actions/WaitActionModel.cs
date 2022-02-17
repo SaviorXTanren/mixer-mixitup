@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using StreamingClient.Base.Util;
 using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -25,6 +26,11 @@ namespace MixItUp.Base.Model.Actions
             string amountText = await ReplaceStringWithSpecialModifiers(this.Amount, parameters);
             if (double.TryParse(amountText, out double amount) && amount > 0.0)
             {
+                if (amount > 30)
+                {
+                    Logger.Log(LogLevel.Error, $"Command: {parameters.InitialCommandID} - Wait Action - Wait for longer than 30 seconds detected.");
+                }
+
                 await Task.Delay((int)(1000 * amount));
             }
         }

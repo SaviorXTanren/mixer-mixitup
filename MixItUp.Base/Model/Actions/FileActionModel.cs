@@ -60,7 +60,7 @@ namespace MixItUp.Base.Model.Actions
             {
                 if (!ServiceManager.Get<IFileService>().IsURLPath(filePath) && !ServiceManager.Get<IFileService>().FileExists(filePath))
                 {
-                    Logger.Log(LogLevel.Error, $"File Action - File does not exist: {filePath}");
+                    Logger.Log(LogLevel.Error, $"Command: {parameters.InitialCommandID} - File Action - File does not exist: {filePath}");
                 }
             }
 
