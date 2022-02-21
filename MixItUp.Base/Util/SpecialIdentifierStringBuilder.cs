@@ -12,6 +12,7 @@ using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -529,6 +530,30 @@ namespace MixItUp.Base.Util
                     {
                         long subCount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscriberCount(ServiceManager.Get<TwitchSessionService>().User);
                         this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount", subCount.ToString());
+                    }
+
+                    if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "twitchtags"))
+                    {
+                        var tags = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStreamTagsForChannel(ServiceManager.Get<TwitchSessionService>().User);
+                        if (tags != null && tags.Count() > 0)
+                        {
+                            string locale = Languages.GetLanguageLocale().ToLower();
+
+                            List<string> tagNames = new List<string>();
+                            foreach (var tag in tags)
+                            {
+                                if (tag.localization_names.TryGetValue(locale, out JToken tagName))
+                                {
+                                    tagNames.Add(tagName.ToString());
+                                }
+                                else if (tag.localization_names.TryGetValue("en-us", out tagName))
+                                {
+                                    tagNames.Add(tagName.ToString());
+                                }
+                            }
+
+                            this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "twitchtags", string.Join(", ", tagNames));
+                        }
                     }
                 }
                 else if (parameters.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().IsConnected)
