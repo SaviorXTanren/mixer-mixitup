@@ -173,10 +173,6 @@
     <value>StreamElements</value>
     <comment>Manual</comment>
   </data>
-  <data name="StreamJar" xml:space="preserve">
-    <value>StreamJar</value>
-    <comment>Manual</comment>
-  </data>
   <data name="StreamlabsOBS" xml:space="preserve">
     <value>Streamlabs OBS</value>
     <comment>Manual</comment>

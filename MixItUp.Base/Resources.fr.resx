@@ -151,7 +151,7 @@
     <value>Les comptes Streamer sont votre compte réel à partir duquel vous diffusez en continu. Les comptes de bot sont des comptes distincts et facultatifs que vous pouvez utiliser pour envoyer des messages à partir de votre canal. Les comptes de bots doivent être créés manuellement par vous et vous devez vous assurer d’y être connecté avant d’essayer de les connecter dans Mix It Up.</value>
   </data>
   <data name="AccountsWizardInstructions" xml:space="preserve">
-    <value>Commençons par vous connecter aux comptes que vous utilisez sur chaque plateforme de streaming. Sélectionnez les options ci-dessous pour chaque compte chaque compte près duquel vous souhaitez vous connecter. Vous pouvez revoir ces options ultérieurement en vous rendant sur la page Comptes.</value>
+    <value>Commençons par vous connecter aux comptes que vous utilisez sur chaque plateforme de streaming. Sélectionnez les options ci-dessous pour chaque compte auquel vous souhaitez vous connecter. Vous pouvez revoir ces options ultérieurement en accédant à la page Comptes.</value>
   </data>
   <data name="AccountWeek" xml:space="preserve">
     <value>Le compte a 1 semaine</value>
@@ -988,7 +988,7 @@
     <value>S'identifier</value>
   </data>
   <data name="LoginErrorNoStreamerAccount" xml:space="preserve">
-    <value>Vous devez sélectionner un compte Streamer 1 15 fois pour vous connecter.</value>
+    <value>Vous devez sélectionner un compte Streamer auquel vous connecter.</value>
   </data>
   <data name="Logout" xml:space="preserve">
     <value>Se déconnecter</value>
@@ -1906,7 +1906,7 @@
     <value>Utilisateurs</value>
   </data>
   <data name="UsersToApplyTo" xml:space="preserve">
-    <value>Utilisateurs à qui postuler</value>
+    <value>Utilisateurs auxquels postuler</value>
   </data>
   <data name="UserThreshold" xml:space="preserve">
     <value>Seuil d’utilisateur</value>
@@ -2170,7 +2170,7 @@
     <value>Détails</value>
   </data>
   <data name="End" xml:space="preserve">
-    <value>Fin:</value>
+    <value>Fin</value>
   </data>
   <data name="Level" xml:space="preserve">
     <value>Niveau</value>
@@ -2185,7 +2185,7 @@
     <value>Points pour le niveau supérieur</value>
   </data>
   <data name="Start" xml:space="preserve">
-    <value>Commencer:</value>
+    <value>Commencer</value>
   </data>
   <data name="StreamPass" xml:space="preserve">
     <value>Pass de flux</value>
@@ -2506,10 +2506,10 @@
     <value>Ne pas supprimer le message de chat lors de l’exécution</value>
   </data>
   <data name="UnlockAllCommandTypesTooltip" xml:space="preserve">
-    <value>Mix It Up dispose d’une fonctionnalité de verrouillage de commande qui garantit que seul 1 type de commande (Chat, Interactive, etc.) peut s’exécuter en même temps et garantit que chaque commande se termine dans l’ordre dans lequel elle a été exécutée. Cette option vous permettra de désactiver le verrouillage sur TOUTES les commandes. Sachez que cela pourrait causer des problèmes imprévus, alors veuillez utiliser avec prudence.</value>
+    <value>Mix It Up dispose d’une fonctionnalité de verrouillage de commande intégrée qui garantit que seul 1 type de commande (Chat, Interactive, etc.) peut s’exécuter en même temps et garantit que chaque commande se termine dans l’ordre dans lequel elle a été exécutée. Cette option vous permettra de désactiver le verrouillage sur TOUTES les commandes. Sachez que cela pourrait causer des problèmes imprévus, alors veuillez utiliser avec prudence.</value>
   </data>
   <data name="ClearAllUserDataWarning" xml:space="preserve">
-    <value>Cela effacera toutes les données de vos utilisateurs, y compris leurs heures, leur devise, leur rang et leurs commandes utilisateur personnalisées, puis redémarrera Mix It Up. Cela NE PEUT PAS être dé-fait! Êtes-vous sûr de vouloir le faire?</value>
+    <value>Cela effacera toutes les données de vos utilisateurs, y compris leurs heures, leur devise, leur rang et leurs commandes utilisateur personnalisées, puis redémarrera Mix It Up. Cela NE PEUT PAS être annulé! Êtes-vous sûr de vouloir le faire?</value>
   </data>
   <data name="ShowBitsCheered" xml:space="preserve">
     <value>Show Bits acclamé</value>
@@ -2577,11 +2577,13 @@
   <data name="HideUserSubscriberBadge" xml:space="preserve">
     <value>Masquer le badge d’abonné de l’utilisateur</value>
   </data>
-  <data name="TwitchMassGiftedSubsFilterAmount" xml:space="preserve">
-    <value>Twitch Mass Gifted Subs Filter Montant</value>
+  <data name="MassGiftedSubsFilterAmount" xml:space="preserve">
+    <value>Quantité de filtre Mass Gifted Subs</value>
   </data>
-  <data name="TwitchMassGiftedSubsFilterAmountTooltip" xml:space="preserve">
-    <value>Cette option permet de s’assurer que seule la commande d’événement Subscription Gifted OU Mass Subscription Gifted est exécutée en fonction de la valeur définie sur le numéro. Ceci est conçu pour aider à réduire le spam des commandes offertes par abonnement et fournir une meilleure expérience pour votre flux. Notez que cela entraînera un léger retard dans le traitement des commandes d’événement Subscription Gifted et Mass Subscription Gifted, généralement moins de 10 secondes.
+  <data name="MassGiftedSubsFilterAmountTooltip" xml:space="preserve">
+    <value>Cette option permet de s’assurer que seules les commandes d’événement Subscription Gifted OU Mass Subscription Gifted sont exécutées en fonction de la valeur définie sur le numéro. Ceci est conçu pour aider à réduire le spam des commandes offertes par abonnement et fournir une meilleure expérience pour votre flux. Notez que cela entraînera un léger retard dans le traitement des commandes d’événement Subscription Gifted et Mass Subscription Gifted, généralement moins de 10 secondes.
+
+Ce paramètre s’applique également uniquement aux plateformes de streaming qui prennent en charge l’offre simultanée de plusieurs abonnements. Les plateformes de streaming qui ne prennent en charge que l’offre d’abonnements individuels ne tireront pas parti de ce paramètre et n’utiliseront que la commande d’événement Subscription Gifted régulière.
 
 Par exemple, si cette option est activée et que le montant est défini sur 5, chaque fois que 5 abonnements OU MOINS sont offerts à la fois, elle exécutera UNIQUEMENT la commande d’événement Subscription Gifted standard pour chaque abonnement. Si PLUS DE 5 sont offerts, il n’exécutera la commande d’événement Mass Subscriptions Gifted qu’une seule fois.</value>
   </data>
@@ -2592,10 +2594,10 @@ Par exemple, si cette option est activée et que le montant est défini sur 5, c
     <value>Utiliser des couleurs d’arrière-plan alternées</value>
   </data>
   <data name="ShowSubsResubs" xml:space="preserve">
-    <value>Afficher les sous-titres/resoussons</value>
+    <value>Afficher les sous-marins/resoussus</value>
   </data>
   <data name="ClearAllMixerUserDataWarning" xml:space="preserve">
-    <value>Cela effacera toutes les données de vos anciens utilisateurs de Mixer, y compris leurs heures, leur devise, leur rang et leurs commandes utilisateur personnalisées, puis redémarrera Mix It Up. Ce processus prendra un certain temps à compléter en fonction du nombre d’utilisateurs que vous aviez et NE PEUT PAS être défaire! Êtes-vous sûr de vouloir le faire?</value>
+    <value>Cela effacera toutes les données de vos anciens utilisateurs de Mixer, y compris leurs heures, leur devise, leur rang et leurs commandes utilisateur personnalisées, puis redémarrera Mix It Up. Ce processus prendra un certain temps à compléter en fonction du nombre d’utilisateurs que vous aviez et NE PEUT PAS être annulé! Êtes-vous sûr de vouloir le faire?</value>
   </data>
   <data name="ClearMixerUserData" xml:space="preserve">
     <value>Effacer les données du mélangeur</value>
@@ -3017,7 +3019,7 @@ Par exemple, si cette option est activée et que le montant est défini sur 5, c
     <value>Patate chaude</value>
   </data>
   <data name="GameCommandHotPotatoDescription" xml:space="preserve">
-    <value>Le jeu Hot Potato donne une bombe de patate à cocher à un joueur, qui doit ensuite la transmettre à quelqu’un d’autre avant qu’elle n’explose. L’utilisateur qui a passé la bombe de pomme de terre en dernier est surnommé le gagnant ($username) et l’utilisateur qui a eu la bombe de pomme de terre quand elle a explosé est surnommé le perdant ($targetusername). Par défaut, le passage de la bombe de pomme de terre se fait de manière aléatoire à un nouvel utilisateur, mais vous pouvez éventuellement autoriser le passant à spécifier à qui elle est jeinée. Vous pouvez également définir si la limite de temps sur la patate chaude se réinitialise à chaque toss.</value>
+    <value>Le jeu Hot Potato donne une bombe de patate à cocher à un joueur, qui doit ensuite la transmettre à quelqu’un d’autre avant qu’elle n’explose. L’utilisateur qui a passé la bombe de pomme de terre en dernier est surnommé le gagnant ($username) et l’utilisateur qui a eu la bombe de pomme de terre quand elle a explosé est surnommé le perdant ($targetusername). Par défaut, le passage de la bombe de pomme de terre se fait de manière aléatoire à un nouvel utilisateur, mais vous pouvez éventuellement autoriser le passant à spécifier à qui elle est lancée. Vous pouvez également définir si la limite de temps sur la patate chaude se réinitialise à chaque lancer.</value>
   </data>
   <data name="LockBox" xml:space="preserve">
     <value>Boîte de verrouillage</value>
@@ -3070,7 +3072,7 @@ Par exemple, si cette option est activée et que le montant est défini sur 5, c
   <data name="GameCommandTreasureDefenseDescription" xml:space="preserve">
     <value>Le jeu Treasure Defense permet à un utilisateur de commencer un pari gagnant-prend-tout parmi tous les utilisateurs inscrits. Par défaut, l’utilisateur qui démarre le jeu spécifie le montant de la mise et tous les utilisateurs suivants doivent miser ce montant pour rejoindre, tous les gagnants du jeu se partageant le paiement total à parts égales.
 
-Une fois la limite de temps passée, un utilisateur des participants est sélectionné pour être Roi. Tous les autres utilisateurs sont alors sélectionnés pour être des chevaliers ou des voleurs. C’est le travail du roi de choisir un participant dans l’espoir qu’il soit un chevalier pour défendre le trésor qu’il a trouvé. Si le roi sélectionne un chevalier, alors le roi et les chevaliers partagent les gains. Si le roi sélectionne un voleur, les voleurs partagent les gains.</value>
+Une fois la limite de temps écoulée, un utilisateur des participants est sélectionné pour être Roi. Tous les autres utilisateurs sont alors sélectionnés pour être des chevaliers ou des voleurs. C’est le travail du roi de choisir un participant dans l’espoir qu’il soit un chevalier pour défendre le trésor qu’il a trouvé. Si le roi sélectionne un chevalier, alors le roi et les chevaliers partagent les gains. Si le roi sélectionne un voleur, les voleurs partagent les gains.</value>
   </data>
   <data name="Trivia" xml:space="preserve">
     <value>Trivia</value>
@@ -3177,7 +3179,7 @@ Une fois que le volcan atteint le stade 3, chaque dépôt ultérieur a une chanc
     <value>Un résultat contient un symbole introuvable dans l’ensemble de tous les symboles d’emplacement</value>
   </data>
   <data name="GameCommandSlotMachineWinExample" xml:space="preserve">
-    <value>Résultat : $gameslotsoutcome - @$username ressais avec $gamepayout {0} !</value>
+    <value>Résultat : $gameslotsoutcome - @$username repart avec $gamepayout {0} !</value>
   </data>
   <data name="Outcome" xml:space="preserve">
     <value>Résultat</value>
@@ -3201,10 +3203,10 @@ Une fois que le volcan atteint le stade 3, chaque dépôt ultérieur a une chanc
     <value>Nouveau meilleur enchérisseur</value>
   </data>
   <data name="GameCommandBidNewTopBidderExample" xml:space="preserve">
-    <value>@$username est devenu le meilleur enchérisseur avec $gamebet {0}! Tapez !bid &lt;AMOUNT&gt;in chat pour les surenchérir !</value>
+    <value>@$username est devenu le meilleur enchérisseur avec $gamebet {0}! Tapez !bid &lt;AMOUNT&gt; dans le chat pour les surenchérir !</value>
   </data>
   <data name="GameCommandBidStartedExample" xml:space="preserve">
-    <value>@$username a commencé une guerre d’enchères à partir de $gamebet {0} for...______________! Tapez !bid &lt;AMOUNT&gt;in chat pour les surenchérir !</value>
+    <value>@$username a commencé une guerre d’enchères à partir de $gamebet {0} for...______________! Tapez !bid &lt;AMOUNT&gt; dans le chat pour les surenchérir !</value>
   </data>
   <data name="GameCommandCoinPusherLoseExample" xml:space="preserve">
     <value>@$username déposent leurs pièces dans la machine... et rien ne se passe. Tout $gametotalamount {0} vous regarde.</value>
@@ -3219,7 +3221,7 @@ Une fois que le volcan atteint le stade 3, chaque dépôt ultérieur a une chanc
     <value>Après avoir passé quelques minutes, vous comptez $gametotalamount {0} à l’intérieur de la machine.</value>
   </data>
   <data name="GameCommandCoinPusherWinExample" xml:space="preserve">
-    <value>@$username déposent leurs pièces dans la machine... et touche le jackpot, repartir avec $gamepayout {0}!</value>
+    <value>@$username déposent leurs pièces dans la machine... et touche le jackpot, repartant avec $gamepayout {0}!</value>
   </data>
   <data name="GameCommandDuelFailureExample" xml:space="preserve">
     <value>@$targetusername a battu @$username, gagnant $gamepayout {0}!</value>
@@ -3243,7 +3245,7 @@ Une fois que le volcan atteint le stade 3, chaque dépôt ultérieur a une chanc
     <value>La pomme de terre a explosé entre les mains de @$targetusername! @$username gagne {0} {1}!</value>
   </data>
   <data name="GameCommandHotPotatoPassedExample" xml:space="preserve">
-    <value>@$username a mis la pomme de terre à @$targetusername. Vite, tapez !hotpotato pour le passer à quelqu’un d’autre!</value>
+    <value>@$username a jeté la pomme de terre à @$targetusername. Vite, tapez !hotpotato pour le passer à quelqu’un d’autre!</value>
   </data>
   <data name="GameCommandHotPotatoPotatoExploded" xml:space="preserve">
     <value>Pomme de terre explosée</value>
@@ -3252,10 +3254,10 @@ Une fois que le volcan atteint le stade 3, chaque dépôt ultérieur a une chanc
     <value>Réinitialiser l’heure sur Toss</value>
   </data>
   <data name="GameCommandHotPotatoStartedExample" xml:space="preserve">
-    <value>@$username a commencé une partie de patate chaude et a lancé la pomme de terre à @$targetusername. Vite, tapez !hotpotato pour le passer à quelqu’un d’autre!</value>
+    <value>@$username a commencé une partie de patate chaude et a jeté la pomme de terre à @$targetusername. Vite, tapez !hotpotato pour le passer à quelqu’un d’autre!</value>
   </data>
   <data name="GameCommandHotPotatoTossedPotato" xml:space="preserve">
-    <value>Pomme de terre jessée</value>
+    <value>Pomme de terre jetée</value>
   </data>
   <data name="GameCommandInitialAmount" xml:space="preserve">
     <value>Montant initial</value>
@@ -3354,13 +3356,13 @@ Une fois que le volcan atteint le stade 3, chaque dépôt ultérieur a une chanc
     <value>Supposition ratée</value>
   </data>
   <data name="GameCommandHangmanFailedGuessExample" xml:space="preserve">
-    <value>@$username dépose ses pièces dans le pot et essaie la lettre $arg 1text... mais c’était faux! $gamehangmancurrent</value>
+    <value>@$username dépose ses pièces dans le pot et devine « $arg 1text »... mais c’était faux! $gamehangmancurrent</value>
   </data>
   <data name="GameCommandHangmanGameLostExample" xml:space="preserve">
     <value>Le jeu est perdu avec trop de suppositions ratées; la bonne réponse était « $gamehangmananswer ». Voilà $gametotalamount {0} !</value>
   </data>
   <data name="GameCommandHangmanGameWonExample" xml:space="preserve">
-    <value>@$username reçu la dernière lettre pour « $gamehangmananswer », gagnant tout le pot de $gamepayout {0}!</value>
+    <value>@$username a eu le mot secret « $gamehangmananswer », gagnant tout le pot de $gamepayout {0}!</value>
   </data>
   <data name="GameCommandHangmanMaxFailures" xml:space="preserve">
     <value>Nombre maximal d’échecs</value>
@@ -3375,7 +3377,7 @@ Une fois que le volcan atteint le stade 3, chaque dépôt ultérieur a une chanc
     <value>Guess réussie</value>
   </data>
   <data name="GameCommandHangmanSuccessfulGuessExample" xml:space="preserve">
-    <value>@$username dépose ses pièces dans le pot et essaie la lettre $arg 1text... et bien faire les choses! $gamehangmancurrent</value>
+    <value>@$username dépose ses pièces dans le pot et devine $arg 1text... et bien faire les choses! $gamehangmancurrent</value>
   </data>
   <data name="GameCommandHitmanAppearsExample" xml:space="preserve">
     <value>C’est hitman $gamehitmanname ! Vite, tapez $gamehitmanname dans le chat!</value>
@@ -3462,7 +3464,7 @@ Une fois que le volcan atteint le stade 3, chaque dépôt ultérieur a une chanc
     <value>$gamebetwinningoption’était le choix gagnant!</value>
   </data>
   <data name="GameCommandBetStartedExample" xml:space="preserve">
-    <value>@$username a commencé un pari sur _____________! Tapez !bet &lt;OPTION #&gt; &lt;AMOUNT&gt;in chat pour participer! Options: $gamebetoptions</value>
+    <value>@$username a commencé un pari sur _____________! Tapez !bet &lt;OPTION #&gt; &lt;AMOUNT&gt; dans le chat pour participer ! Options: $gamebetoptions</value>
   </data>
   <data name="GameCommandHeistAllSucceed" xml:space="preserve">
     <value>Tous réussissent</value>
@@ -3486,7 +3488,7 @@ Une fois que le volcan atteint le stade 3, chaque dépôt ultérieur a une chanc
     <value>Aucun ne réussit</value>
   </data>
   <data name="GameCommandHeistNoneSucceedExample" xml:space="preserve">
-    <value>Quelqu’un était un espion ! Les flics vous attendaient dès que vous vous présentiez et que vous obteniez tout le monde!</value>
+    <value>Quelqu’un était un espion ! Les flics vous attendaient dès que vous vous présentiez et que vous receviez tout le monde!</value>
   </data>
   <data name="GameCommandHeistStartedExample" xml:space="preserve">
     <value>@$username a commencé une partie de Heist! Tapez !heist pour participer!</value>
@@ -3495,7 +3497,7 @@ Une fois que le volcan atteint le stade 3, chaque dépôt ultérieur a une chanc
     <value>99 % - 66 % réussissent</value>
   </data>
   <data name="GameCommandHeistTopThirdsSucceedExample" xml:space="preserve">
-    <value>Les flics sont arrivés à la dernière seconde et ont accroché quelques-uns d’entre vous, mais la plupart s’en sont sortis avec le bon! Montant total: $gameallpayout {0}! Gagnants: $gamewinners</value>
+    <value>Les flics sont arrivés à la dernière seconde et ont attrapé quelques-uns d’entre vous, mais la plupart s’en sont sortis avec le bon! Montant total: $gameallpayout {0}! Gagnants: $gamewinners</value>
   </data>
   <data name="GameCommandPayout" xml:space="preserve">
     <value>Paiement</value>
@@ -3528,7 +3530,7 @@ Une fois que le volcan atteint le stade 3, chaque dépôt ultérieur a une chanc
     <value>Utilisateur King</value>
   </data>
   <data name="GameCommandTreasureDefenseKingUserExample" xml:space="preserve">
-    <value>Le roi @$username a découvert le trésor mais a besoin de quelqu’un pour le défendre ! Les voleurs doivent travailler pour convaincre le roi de les cueillir, tout le monde doit empêcher cela. Le roi doit taper « !treasure &lt;PLAYER&gt; » dans le chat pour choisir qui défendra le trésor!</value>
+    <value>Le roi @$username a découvert le trésor mais a besoin de quelqu’un pour le défendre ! Les voleurs doivent travailler pour convaincre le roi de les cueillir, tout le monde doit empêcher cela. Le roi doit taper « !treasure&lt;PLAYER&gt; » dans le chat pour choisir qui défendra le trésor!</value>
   </data>
   <data name="GameCommandTreasureDefenseKnightSelected" xml:space="preserve">
     <value>Chevalier Sélectionné</value>
@@ -3654,7 +3656,7 @@ Une fois que le volcan atteint le stade 3, chaque dépôt ultérieur a une chanc
     <value>Étape 3</value>
   </data>
   <data name="GameCommandVolcanoStage3DepositExample" xml:space="preserve">
-    <value>@$username place soigneusement son dépôt dans le volcan, en essayant de ne pas renverser la quantité débordante qui s’y insait déjà.</value>
+    <value>@$username place soigneusement son dépôt dans le volcan, en essayant de ne pas renverser la quantité débordante qui s’y trouve déjà.</value>
   </data>
   <data name="GameCommandVolcanoStage3StatusExample" xml:space="preserve">
     <value>Les choses commencent à déborder du haut du volcan. Montant total: $gametotalamount</value>
@@ -3885,7 +3887,7 @@ Une fois que le volcan atteint le stade 3, chaque dépôt ultérieur a une chanc
     <value>Cette commande nécessite {0} plus d’utilisateurs à déclencher</value>
   </data>
   <data name="UnlockCommandHelpText" xml:space="preserve">
-    <value>Mix It Up a une fonctionnalité de verrouillage de commande construite qui garantit
+    <value>Mix It Up a intégré la fonctionnalité de verrouillage de commande qui garantit
 seul 1 type de commande (Chat, Interactif, etc.) peut s’exécuter en même temps
 et s’assure que chaque commande se termine dans l’ordre dans lequel elle a été exécutée.
 Cette option vous permettra de désactiver le verrouillage sur cette commande. Soyez conscient
@@ -3931,10 +3933,10 @@ que cela pourrait causer des problèmes imprévus, alors s’il vous plaît util
     <value>Marqueur de flux créé : {0}</value>
   </data>
   <data name="TwitchActionStreamMarkerDescriptionMustBe140CharactersOrLess" xml:space="preserve">
-    <value>Action Twitch : la description du marqueur de flux doit être de 140 caractères ou moins</value>
+    <value>Action Twitch : la description du marqueur de flux doit comporter 140 caractères ou moins</value>
   </data>
   <data name="RandomizeTimers" xml:space="preserve">
-    <value>Randomiser les minuteurs</value>
+    <value>Randomiser les minuteries</value>
   </data>
   <data name="FilterName" xml:space="preserve">
     <value>Nom du filtre</value>
@@ -3984,7 +3986,7 @@ Ce paramètre modifiera toutes les exigences de rôle pour qu’elles soient exp
     <value>Erreurs d’exigence Montant de refroidissement</value>
   </data>
   <data name="WaitUntilComplete" xml:space="preserve">
-    <value>Attendre jusqu’à ce que vous s’en a</value>
+    <value>Attendre jusqu’à ce que vous ayez terminé</value>
   </data>
   <data name="GameCommandTriviaCorrectAnswerExample" xml:space="preserve">
     <value>La bonne réponse était $gamecorrectanswer! Tous ceux qui l’ont deviné ont gagné $gamepayout {0}!</value>
@@ -4050,7 +4052,7 @@ Ce paramètre modifiera toutes les exigences de rôle pour qu’elles soient exp
     <value>Centre</value>
   </data>
   <data name="Chatters" xml:space="preserve">
-    <value>Téléspectateurs</value>
+    <value>Chatteurs</value>
   </data>
   <data name="Day" xml:space="preserve">
     <value>Jour</value>
@@ -4137,9 +4139,9 @@ Ce paramètre modifiera toutes les exigences de rôle pour qu’elles soient exp
     <value>Pour que l’action de commande attende que la sous-commande sélectionnée soit terminée, la sous-commande N’UTILISERA PAS le
 système de verrouillage de commande intégré pour cette période spécifique où il est exécuté. Ceci afin d’éviter ce que l’on appelle une impasse de se produire
 (la commande est bloquée et ne peut pas se terminer). Cela signifie également que d’autres commandes du même type que les commandes sélectionnées
-la sous-commande pourra s’exécuter en même temps si elle est différente de la commande actuelle. Par exemple, si l’entreprise sélectionnée
+la sous-commande pourra s’exécuter en même temps si elle est différente de la commande actuelle. Par exemple, si l’option sélectionnée
 la sous-commande est un groupe d’actions, alors il sera toujours possible pour un autre groupe d’action de s’exécuter en même temps si c’est
-Activé. Vous pouvez penser que cela ressemble à l’option « Déverrouiller la commande », mais cela ne s’applique qu’à cette heure spécifique.</value>
+Activé. Vous pouvez penser que cela ressemble à basculer l’option « Déverrouiller la commande », mais cela ne s’applique qu’à cette heure spécifique.</value>
   </data>
   <data name="Russian" xml:space="preserve">
     <value>Russe</value>
@@ -4196,7 +4198,7 @@ Activé. Vous pouvez penser que cela ressemble à l’option « Déverrouiller 
     <value>Abonnement à la chaîne Twitch offert</value>
   </data>
   <data name="TwitchChannelUnfollowed" xml:space="preserve">
-    <value>Chaîne Twitch non suivi</value>
+    <value>Chaîne Twitch non suivie</value>
   </data>
   <data name="ChatTimeout" xml:space="preserve">
     <value>Délai d’expiration du chat</value>
@@ -4355,7 +4357,7 @@ Activé. Vous pouvez penser que cela ressemble à l’option « Déverrouiller 
     <value>La connectivité du service Extra Life vous permet de déclencher des événements à partir du moment où vous ou votre équipe recevez un don.</value>
   </data>
   <data name="ExtraLifeInfo2" xml:space="preserve">
-    <value>Tout d’abord, visitez la page de votre équipe sur le site Web Extra Life et vers la fin de l’URL Web, il sera dit « teamID =_____ ». Tapez ce numéro dans la première zone, cliquez sur Rechercher, sélectionnez votre nom dans la liste, puis cliquez sur le bouton Connexion.</value>
+    <value>Tout d’abord, visitez la page de votre équipe sur le site Web Extra Life et vers la fin de l’URL Web, il sera écrit « teamID=_____ ». Tapez ce numéro dans la première zone, cliquez sur Rechercher, sélectionnez votre nom dans la liste, puis cliquez sur le bouton Connexion.</value>
   </data>
   <data name="ExtraLifeInvalidParticipant" xml:space="preserve">
     <value>Veuillez sélectionner un participant Extra Life valide.</value>
@@ -4718,7 +4720,11 @@ Activé. Vous pouvez penser que cela ressemble à l’option « Déverrouiller 
     <value>Une commande doit être sélectionnée.</value>
   </data>
   <data name="CurrencyImportFailed" xml:space="preserve">
-    <value>Nous n’avons pas pu importer les données. Veuillez vous assurer que votre fichier est dans l’un des formats suivants :</value>
+    <value>Nous n’avons pas pu importer les données. Veuillez vous assurer que votre fichier est dans l’un des formats suivants :
+
+&lt;USERNAME&gt; &lt;AMOUNT&gt;
+&lt;ID UTILISATEUR &gt; &lt;AMOUNT&gt;
+&lt;ID UTILISATEUR &gt; &lt;USERNAME&gt; &lt;AMOUNT&gt;</value>
   </data>
   <data name="CurrencyRankInventoryNameNotEmpty" xml:space="preserve">
     <value>Le nom doit comporter au moins 1 lettre.</value>
@@ -4808,7 +4814,7 @@ Activé. Vous pouvez penser que cela ressemble à l’option « Déverrouiller 
     <value>La date de fin doit être postérieure à la date de début.</value>
   </data>
   <data name="ErrorDetailsHeader" xml:space="preserve">
-    <value>Détails de l’erreur :</value>
+    <value>Détails de l’erreur : </value>
   </data>
   <data name="FailedToConnectToTwitch" xml:space="preserve">
     <value>Impossible de se connecter aux services Twitch. Si cela continue, veuillez visiter le Mix It Up Discord pour obtenir de l’aide.</value>
@@ -4925,7 +4931,7 @@ Activé. Vous pouvez penser que cela ressemble à l’option « Déverrouiller 
     <value>Le niveau maximal doit être supérieur à 0.</value>
   </data>
   <data name="MinimumActivityRateZeroOrMore" xml:space="preserve">
-    <value>Le taux d’activité minimum doit être de 0 ou plus.</value>
+    <value>Le taux d’activité minimum doit être égal ou supérieur à 0.</value>
   </data>
   <data name="MinimumAmount" xml:space="preserve">
     <value>Montant minimum</value>
@@ -4937,7 +4943,7 @@ Activé. Vous pouvez penser que cela ressemble à l’option « Déverrouiller 
     <value>Min secondes à afficher</value>
   </data>
   <data name="ModeratorBonusZeroOrMore" xml:space="preserve">
-    <value>Le bonus du modérateur doit être de 0 ou plus.</value>
+    <value>Le bonus du modérateur doit être égal ou supérieur à 0.</value>
   </data>
   <data name="NameRequired" xml:space="preserve">
     <value>Un nom doit être spécifié.</value>
@@ -4949,7 +4955,7 @@ Activé. Vous pouvez penser que cela ressemble à l’option « Déverrouiller 
     <value>Nouveau leader</value>
   </data>
   <data name="OfflineRateVsInterval" xml:space="preserve">
-    <value>Les minutes hors connexion ne peuvent pas être 0 si le montant hors connexion est supérieur à 0.</value>
+    <value>Les minutes hors connexion ne peuvent pas être égales à 0 si le montant hors connexion est supérieur à 0.</value>
   </data>
   <data name="OneCustomLevelCommand" xml:space="preserve">
     <value>Il ne peut y avoir que 1 commande de niveau supérieur personnalisée par niveau individuel.</value>
@@ -4961,7 +4967,7 @@ Activé. Vous pouvez penser que cela ressemble à l’option « Déverrouiller 
     <value>Au moins un rang doit être créé.</value>
   </data>
   <data name="OnFollowBonusZeroOrMore" xml:space="preserve">
-    <value>Le bonus On Follow doit être de 0 ou plus.</value>
+    <value>Le bonus On Follow doit être égal ou supérieur à 0.</value>
   </data>
   <data name="OnGoalReached" xml:space="preserve">
     <value>Sur l’objectif atteint</value>
@@ -4973,7 +4979,7 @@ Activé. Vous pouvez penser que cela ressemble à l’option « Déverrouiller 
     <value>Le montant en ligne et les minutes doivent être de 0 ou plus.</value>
   </data>
   <data name="OnlineRateVsInterval1" xml:space="preserve">
-    <value>Les minutes en ligne ne peuvent pas être 0 si le montant en ligne est supérieur à 0.</value>
+    <value>Les minutes en ligne ne peuvent pas être égales à 0 si le montant en ligne est supérieur à 0.</value>
   </data>
   <data name="OnlineRateVsInterval2" xml:space="preserve">
     <value>Le montant hors ligne et les minutes doivent être de 0 ou plus.</value>
@@ -5019,7 +5025,7 @@ Activé. Vous pouvez penser que cela ressemble à l’option « Déverrouiller 
     <value>Un nom de rang doit être spécifié.</value>
   </data>
   <data name="RegularBonusZeroOrMore" xml:space="preserve">
-    <value>Le bonus régulier doit être de 0 ou plus.</value>
+    <value>Le bonus régulier doit être égal ou supérieur à 0.</value>
   </data>
   <data name="RemoteFailed" xml:space="preserve">
     <value>Impossible de se connecter au service Remote, veuillez réessayer.</value>
@@ -5044,7 +5050,7 @@ Activé. Vous pouvez penser que cela ressemble à l’option « Déverrouiller 
     <comment>{0} is the rank/currency name</comment>
   </data>
   <data name="RetroactivelyGivePointsPrompt1" xml:space="preserve">
-    <value>Cette option réinitialisera tous les points {0} pour cette {0} et attribuera à chaque utilisateur un montant qui est directement égal au taux en ligne SAVED, et non au taux en ligne actuellement modifié. Avant d’utiliser cette option, enregistrez toutes les modifications apportées à ce {0}, réédévez-le, puis sélectionnez cette option.</value>
+    <value>Cette option réinitialisera tous les points {0} pour cette {0} et attribuera à chaque utilisateur un montant qui correspond directement au taux en ligne SAVED, et non au taux en ligne actuellement modifié. Avant d’utiliser cette option, enregistrez toutes les modifications apportées à ce {0}, rééditez-le, puis sélectionnez cette option.</value>
     <comment>{0} is the rank/currency name</comment>
   </data>
   <data name="RetroactivelyGivePointsPrompt2" xml:space="preserve">
@@ -5055,7 +5061,7 @@ Activé. Vous pouvez penser que cela ressemble à l’option « Déverrouiller 
     <value>Ce processus peut prendre un certain temps; Êtes-vous sûr de vouloir le faire?</value>
   </data>
   <data name="RetroactiveUnsupported" xml:space="preserve">
-    <value>Le type de taux pour cette devise ne prend pas en charge l’échange rétroactif de points.</value>
+    <value>Le type de taux pour cette devise ne prend pas en charge l’attribution rétroactive de points.</value>
   </data>
   <data name="ScorpBotInstallationDirectory" xml:space="preserve">
     <value>Répertoire d’installation de ScorpBot</value>
@@ -5076,7 +5082,7 @@ Activé. Vous pouvez penser que cela ressemble à l’option « Déverrouiller 
     <value>Certains des paramètres que vous avez modifiés nécessitent un redémarrage pour prendre effet. Voulez-vous redémarrer Mix It Up maintenant?</value>
   </data>
   <data name="SettingsLoadFailure" xml:space="preserve">
-    <value>Un ou plusieurs fichiers de paramètres n’ont pas pu être chargés. Veuillez visiter le Discord Mix It Up pour obtenir de l’aide sur cette question.</value>
+    <value>Un ou plusieurs fichiers de paramètres n’ont pas pu être chargés. Veuillez visiter le discord Mix It Up pour obtenir de l’aide sur cette question.</value>
   </data>
   <data name="Shadow" xml:space="preserve">
     <value>Ombre (facultatif)</value>
@@ -5115,7 +5121,7 @@ Activé. Vous pouvez penser que cela ressemble à l’option « Déverrouiller 
     <value>Sous-titres/Resubs :</value>
   </data>
   <data name="SubscriberBonusZeroOrMore" xml:space="preserve">
-    <value>Le bonus d’abonné doit être de 0 ou plus.</value>
+    <value>Le bonus d’abonné doit être égal ou supérieur à 0.</value>
   </data>
   <data name="SwitchToDarkTheme" xml:space="preserve">
     <value>Passer au thème sombre</value>
@@ -5137,7 +5143,7 @@ Activé. Vous pouvez penser que cela ressemble à l’option « Déverrouiller 
     <comment>{0} is the username</comment>
   </data>
   <data name="TwitchAccountMismatch" xml:space="preserve">
-    <value>Le compte esso m. étant connecté comme sur Twitch ne correspond pas au compte correspondant à ces paramètres. Veuillez vous connecter en tant que compte correct sur Twitch.</value>
+    <value>Le compte auquel vous êtes connecté comme sur Twitch ne correspond pas au compte de ces paramètres. Veuillez vous connecter en tant que compte correct sur Twitch.</value>
   </data>
   <data name="TwitchFailed" xml:space="preserve">
     <value>Impossible de se connecter aux services Twitch :</value>
@@ -5303,10 +5309,10 @@ Activé. Vous pouvez penser que cela ressemble à l’option « Déverrouiller 
     <value>Affiche une liste déroulante du texte des X derniers utilisateurs qui ont provoqué l’apparition d’un événement spécifié. Les utilisateurs sont ajoutés à la liste au fur et à mesure que l’événement se produit.</value>
   </data>
   <data name="OverlayWidgetTimerDescription" xml:space="preserve">
-    <value>Affiche une minuterie qui compte à compte à compte d’au-compte à vue. Le masquage de la minuterie réinitialise le montant.</value>
+    <value>Affiche une minuterie qui compte à rebours lorsqu’elle est visible. Le masquage de la minuterie réinitialise le montant.</value>
   </data>
   <data name="OverlayWidgetTimerTrainDescription" xml:space="preserve">
-    <value>Affiche une minuterie qui compte à compte à compte à effet et qui peut être augmentée en effectuant certaines actions dans votre chaîne. Il n’est affiché que lorsque le temps total dépasse la valeur Minimum de secondes à afficher. Mises à jour de l’heure au fur et à mesure que des événements se produisent.</value>
+    <value>Affiche une minuterie qui compte à rebours et qui peut être augmentée en effectuant certaines actions dans votre chaîne. Il n’est affiché que lorsque le temps total dépasse la valeur Minimum de secondes à afficher. Mises à jour de l’heure au fur et à mesure que des événements se produisent.</value>
   </data>
   <data name="OverlayWidgetVideoDescription" xml:space="preserve">
     <value>Affiche une vidéo. Actualise en fonction de l’intervalle d’actualisation défini par l’utilisateur.</value>
@@ -5497,7 +5503,7 @@ chemin du dossier correctement et que le chemin du dossier est accessible à Mix
     <value>Système de verrouillage de commande</value>
   </data>
   <data name="CommandLockSystemTooltip" xml:space="preserve">
-    <value>- Par type de commande: Chaque type de commande (Chat, Événement, Minuterie, etc.) a un verrou qui empêche les autres commandes du même temps de s’exécuter en même temps.
+    <value>- Par type de commande: Chaque type de commande (Chat, Événement, Minuterie, etc.) a un verrou qui empêche les autres commandes du même type de s’exécuter en même temps.
 - Par type d’action: Chaque type d’action (Chat, Son, Conditionnel, etc.) a un verrou qui empêche d’autres commandes contenant également ces actions de s’exécuter en même temps.
 - Actions visuelles / audio: Les commandes contenant des actions visuelles / audio (son, superposition, etc.) partagent 1 verrou tandis que d’autres commandes s’exécuteront dès qu’elles seront déclenchées.
 - Singulier : Toutes les commandes partagent le même verrou ne permettant qu’une seule commande de s’exécuter à la fois.
@@ -5669,6 +5675,9 @@ les utilisateurs spéciaux auxquels vous souhaitez accorder plus de contrôle, t
   <data name="Review" xml:space="preserve">
     <value>Révision</value>
   </data>
+  <data name="StreamMarkerDescriptionMustBe140CharactersOrLess" xml:space="preserve">
+    <value>La description du marqueur de flux doit comporter 140 caractères ou moins</value>
+  </data>
   <data name="AddCommandToExistingReward" xml:space="preserve">
     <value>Ajouter une commande à une récompense existante</value>
   </data>
@@ -5715,7 +5724,7 @@ les utilisateurs spéciaux auxquels vous souhaitez accorder plus de contrôle, t
 
 - Téléchargez ces ressources quelque part en ligne et utilisez des liens vers elles dans les actions elles-mêmes ou incluez un lien dans la description pour savoir où les télécharger toutes.
 
-Si vous ne parvez pas effectuer l’une des opérations suivantes, les utilisateurs évaluent et examinent votre commande. Souhaitez-vous toujours télécharger cette commande ?</value>
+Si vous ne parvenez pas à effectuer l’une des opérations suivantes, les utilisateurs évaluent et examinent votre commande. Souhaitez-vous toujours télécharger cette commande ?</value>
   </data>
   <data name="CommunityCommandsImageFilePath" xml:space="preserve">
     <value>Chemin du fichier image (facultatif) (redimensionné à 100x100 pixels)</value>
@@ -5836,13 +5845,13 @@ Si vous ne respectez pas ce qui précède, votre commande peut être supprimée 
   <data name="CommunityCommandsOtherCommandReferencedDetected" xml:space="preserve">
     <value>La commande suivante contient des actions qui font référence à d’autres commandes à l’intérieur de celle-ci (EX : La commande A exécute la commande B à l’aide d’une action de commande). Lorsque cette commande est téléchargée, elle n’inclura PAS ces autres commandes référencées, mais uniquement la commande actuelle. Nous encourageons les créateurs à effectuer l’une des opérations suivantes :
 
-- Combinez vos autres commandes référencées dans cette commande afin que les utilisateurs n’ent besoin que de celle-ci pour utiliser pleinement votre configuration.
+- Combinez vos autres commandes référencées dans cette commande afin que les utilisateurs n’aient besoin que de celle-ci pour utiliser pleinement votre configuration.
 
 - Téléchargez les autres commandes nécessaires pour que cette commande fonctionne également et référencez leurs noms dans la description de chaque commande.
 
 - Expliquez quelle est l’intention de votre commande afin que les utilisateurs puissent comprendre comment ils peuvent y incorporer leurs propres commandes.
 
-Si vous ne parvez pas effectuer l’une des opérations suivantes, les utilisateurs évaluent et examinent votre commande. Souhaitez-vous toujours télécharger cette commande ?</value>
+Si vous ne parvenez pas à effectuer l’une des opérations suivantes, les utilisateurs évaluent et examinent votre commande. Souhaitez-vous toujours télécharger cette commande ?</value>
   </data>
   <data name="CommunityCommandsUploadToCommunity" xml:space="preserve">
     <value>Télécharger vers la communauté</value>
@@ -5866,7 +5875,7 @@ Si vous ne parvez pas effectuer l’une des opérations suivantes, les utilisate
     <value>Pas d’avis actuellement, pourquoi ne pas en laisser un!</value>
   </data>
   <data name="TwitchActionPredictionTitleTooLong" xml:space="preserve">
-    <value>Les titres de prédiction doivent être de 45 caractères ou moins</value>
+    <value>Les titres de prédiction doivent comporter 45 caractères ou moins</value>
   </data>
   <data name="CommunityCommandsScreenshot" xml:space="preserve">
     <value>Capture d’écran</value>
@@ -5897,6 +5906,9 @@ Si vous ne parvez pas effectuer l’une des opérations suivantes, les utilisate
   </data>
   <data name="PixelChatActionMissingSceneAndSceneComponent" xml:space="preserve">
     <value>Pixel Chat Action: Scène manquante et composant de scène</value>
+  </data>
+  <data name="DefaultStreamingPlatform" xml:space="preserve">
+    <value>Plateforme de streaming par défaut</value>
   </data>
   <data name="VTubeStudio" xml:space="preserve">
     <value>VTube Studio</value>
@@ -5930,6 +5942,15 @@ Si vous ne parvez pas effectuer l’une des opérations suivantes, les utilisate
   </data>
   <data name="VTubeStudioNotConnected" xml:space="preserve">
     <value>VTube Studio n’est pas connecté, veuillez vous assurer que le logiciel est en cours d’exécution et qu’il est connecté sur la page Services.</value>
+  </data>
+  <data name="NotFollowing" xml:space="preserve">
+    <value>Ne pas suivre</value>
+  </data>
+  <data name="GameCommandHangmanMissingGuess" xml:space="preserve">
+    <value>Une supposition doit être spécifiée</value>
+  </data>
+  <data name="GameCommandHangmanAllowWordGuess" xml:space="preserve">
+    <value>Autoriser Word Guess</value>
   </data>
   <data name="VoicemodNotConnected" xml:space="preserve">
     <value>Voicemod n’est pas connecté, veuillez vous assurer que le logiciel est en cours d’exécution et connecté sur la page Services.</value>
@@ -6033,7 +6054,1502 @@ Si vous ne parvez pas effectuer l’une des opérations suivantes, les utilisate
   <data name="ASpecialIdentifierNameMustBeSpecified" xml:space="preserve">
     <value>Un nom d’identificateur spécial doit être spécifié.</value>
   </data>
+  <data name="NoTitle" xml:space="preserve">
+    <value>Pas de titre</value>
+  </data>
   <data name="Ukrainian" xml:space="preserve">
     <value>Ukrainien</value>
+  </data>
+  <data name="TwitchID" xml:space="preserve">
+    <value>Identifiant Twitch</value>
+  </data>
+  <data name="TwitchUsername" xml:space="preserve">
+    <value>Nom d’utilisateur Twitch</value>
+  </data>
+  <data name="ViewingHours" xml:space="preserve">
+    <value>Heures d’affichage</value>
+  </data>
+  <data name="ViewingMinutes" xml:space="preserve">
+    <value>Affichage des minutes</value>
+  </data>
+  <data name="UserWon" xml:space="preserve">
+    <value>Utilisateur gagné</value>
+  </data>
+  <data name="InitializeSessionUserInitializationFailed" xml:space="preserve">
+    <value>Impossible d’initialiser les informations utilisateur</value>
+  </data>
+  <data name="RoleErrorIncorrectStreamingPlatform" xml:space="preserve">
+    <value>Vous devez être sur {0} pour le faire.</value>
+  </data>
+  <data name="RunAdBreak" xml:space="preserve">
+    <value>Exécuter Ad Break</value>
+  </data>
+  <data name="YouTubeActionUnableToRunAdBreak" xml:space="preserve">
+    <value>ERREUR : Nous n’avons pas pu diffuser de pause publicitaire, veuillez réessayer plus tard</value>
+  </data>
+  <data name="GlimeshChannelFollowed" xml:space="preserve">
+    <value>Canal Glimesh suivi</value>
+  </data>
+  <data name="GlimeshChannelStreamStart" xml:space="preserve">
+    <value>Démarrage du flux de la chaîne Glimesh</value>
+  </data>
+  <data name="GlimeshChannelStreamStop" xml:space="preserve">
+    <value>Arrêt du flux du canal Glimesh</value>
+  </data>
+  <data name="TrovoChannelFollowed" xml:space="preserve">
+    <value>Canal Trovo suivi</value>
+  </data>
+  <data name="TrovoChannelMassSubscriptionsGifted" xml:space="preserve">
+    <value>Abonnements de masse à Trovo Channel offerts</value>
+  </data>
+  <data name="TrovoChannelRaided" xml:space="preserve">
+    <value>Raid sur le canal de Trovo</value>
+  </data>
+  <data name="TrovoChannelResubscribed" xml:space="preserve">
+    <value>Chaîne trovo réabonnée</value>
+  </data>
+  <data name="TrovoChannelSubscribed" xml:space="preserve">
+    <value>Chaîne Trovo abonnée</value>
+  </data>
+  <data name="TrovoChannelSubscriptionGifted" xml:space="preserve">
+    <value>Abonnement à la chaîne Trovo offert</value>
+  </data>
+  <data name="ChannelFollowed" xml:space="preserve">
+    <value>Canal suivi</value>
+  </data>
+  <data name="ChannelHosted" xml:space="preserve">
+    <value>Chaîne hébergée</value>
+  </data>
+  <data name="ChannelMassSubscriptionsGifted" xml:space="preserve">
+    <value>Abonnements de masse de chaînes offerts</value>
+  </data>
+  <data name="ChannelRaided" xml:space="preserve">
+    <value>Canal attaqué</value>
+  </data>
+  <data name="ChannelResubscribed" xml:space="preserve">
+    <value>Chaîne resouscrite</value>
+  </data>
+  <data name="ChannelStreamStart" xml:space="preserve">
+    <value>Début du flux de chaînes</value>
+  </data>
+  <data name="ChannelStreamStop" xml:space="preserve">
+    <value>Arrêt du flux de chaînes</value>
+  </data>
+  <data name="ChannelSubscribed" xml:space="preserve">
+    <value>Chaîne abonnée</value>
+  </data>
+  <data name="ChannelSubscriptionGifted" xml:space="preserve">
+    <value>Abonnement à la chaîne offert</value>
+  </data>
+  <data name="ChannelUnfollowed" xml:space="preserve">
+    <value>Chaîne non suivie</value>
+  </data>
+  <data name="Glimesh" xml:space="preserve">
+    <value>Glimesh</value>
+  </data>
+  <data name="Trovo" xml:space="preserve">
+    <value>Trovo</value>
+  </data>
+  <data name="GenericDonation" xml:space="preserve">
+    <value>Don générique</value>
+  </data>
+  <data name="PlatformAgnostic" xml:space="preserve">
+    <value>Plate-forme agnostique</value>
+  </data>
+  <data name="AlertTrovoSpellFormat" xml:space="preserve">
+    <value>{0} Lancer le sort {1} - {2} {3}</value>
+  </data>
+  <data name="ShowTrovoSpellCast" xml:space="preserve">
+    <value>Afficher Trovo Spell Cast</value>
+  </data>
+  <data name="ShowTwitchBitsCheered" xml:space="preserve">
+    <value>Afficher Twitch Bits cheered</value>
+  </data>
+  <data name="ShowTwitchChannelPoints" xml:space="preserve">
+    <value>Afficher les points de chaîne Twitch</value>
+  </data>
+  <data name="ShowTwitchHypeTrain" xml:space="preserve">
+    <value>Afficher Twitch Hype Train</value>
+  </data>
+  <data name="TrovoElixir" xml:space="preserve">
+    <value>Élixir</value>
+  </data>
+  <data name="TrovoMana" xml:space="preserve">
+    <value>Mana</value>
+  </data>
+  <data name="TrovoSpellCast" xml:space="preserve">
+    <value>Trovo Spell Lancé</value>
+  </data>
+  <data name="ChatEntranceCommand" xml:space="preserve">
+    <value>Commande d’entrée de chat</value>
+  </data>
+  <data name="TrovoAdmin" xml:space="preserve">
+    <value>Administrateur Trovo</value>
+  </data>
+  <data name="TrovoEditor" xml:space="preserve">
+    <value>Trovo Éditeur</value>
+  </data>
+  <data name="TrovoSuperMod" xml:space="preserve">
+    <value>Trovo Super Mod</value>
+  </data>
+  <data name="TrovoWarden" xml:space="preserve">
+    <value>Gardien de Trovo</value>
+  </data>
+  <data name="TwitchAffiliate" xml:space="preserve">
+    <value>Affilié Twitch</value>
+  </data>
+  <data name="TwitchChannelEditor" xml:space="preserve">
+    <value>Éditeur de chaîne Twitch</value>
+  </data>
+  <data name="TwitchGlobalMod" xml:space="preserve">
+    <value>Twitch Global Mod</value>
+  </data>
+  <data name="TwitchPartner" xml:space="preserve">
+    <value>Partenaire Twitch</value>
+  </data>
+  <data name="TwitchStaff" xml:space="preserve">
+    <value>Personnel Twitch</value>
+  </data>
+  <data name="TwitchTurbo" xml:space="preserve">
+    <value>Twitch Turbo</value>
+  </data>
+  <data name="TwitchVIP" xml:space="preserve">
+    <value>Twitch VIP</value>
+  </data>
+  <data name="YouTubeMember" xml:space="preserve">
+    <value>Membre YouTube</value>
+  </data>
+  <data name="YouTubeSubscriber" xml:space="preserve">
+    <value>Abonné YouTube</value>
+  </data>
+  <data name="AccountsChangesRequireRestart" xml:space="preserve">
+    <value>Toutes les modifications apportées aux comptes connectés nécessitent un redémarrage complet de Mix It Up!</value>
+  </data>
+  <data name="TwitchAccountMustBeConnectedToUseThisFeature" xml:space="preserve">
+    <value>Un compte Twitch doit être connecté pour utiliser cette fonctionnalité</value>
+  </data>
+  <data name="TrovoCustomSpellsEditor" xml:space="preserve">
+    <value>Éditeur de sorts personnalisés</value>
+  </data>
+  <data name="TrovoSpell" xml:space="preserve">
+    <value>Sort Trovo</value>
+  </data>
+  <data name="TrovoSpellName" xml:space="preserve">
+    <value>Nom de l’orthographe</value>
+  </data>
+  <data name="TrovoSpells" xml:space="preserve">
+    <value>Sorts Trovo</value>
+  </data>
+  <data name="AddUserRole" xml:space="preserve">
+    <value>Ajouter un rôle d’utilisateur</value>
+  </data>
+  <data name="DisableFollowerMode" xml:space="preserve">
+    <value>Désactiver le mode Abonné</value>
+  </data>
+  <data name="DisableSlowMode" xml:space="preserve">
+    <value>Désactiver le mode lent</value>
+  </data>
+  <data name="EnableFollowerMode" xml:space="preserve">
+    <value>Activer le mode Abonné</value>
+  </data>
+  <data name="EnableSlowMode" xml:space="preserve">
+    <value>Activer le mode lent</value>
+  </data>
+  <data name="RemoveUserRole" xml:space="preserve">
+    <value>Supprimer le rôle d’utilisateur</value>
+  </data>
+  <data name="TrovoActionAmountMissing" xml:space="preserve">
+    <value>Action Trovo : Un montant valide doit être spécifié</value>
+  </data>
+  <data name="TrovoActionRoleNameMissing" xml:space="preserve">
+    <value>Action Trovo : un nom de rôle valide doit être spécifié</value>
+  </data>
+  <data name="TrovoActionUsernameMissing" xml:space="preserve">
+    <value>Trovo Action : Un nom d’utilisateur valide doit être spécifié</value>
+  </data>
+  <data name="ApplicationExit" xml:space="preserve">
+    <value>Sortie de l’application</value>
+  </data>
+  <data name="ApplicationLaunch" xml:space="preserve">
+    <value>Lancement de l’application</value>
+  </data>
+  <data name="LogInWithGlimesh" xml:space="preserve">
+    <value>Connectez-vous avec Glimesh</value>
+  </data>
+  <data name="LogInWithTrovo" xml:space="preserve">
+    <value>Connectez-vous avec Trovo</value>
+  </data>
+  <data name="LogInWithTwitch" xml:space="preserve">
+    <value>Connectez-vous avec Twitch</value>
+  </data>
+  <data name="LogInWithYouTube" xml:space="preserve">
+    <value>Connectez-vous avec YouTube</value>
+  </data>
+  <data name="LogOutOfGlimesh" xml:space="preserve">
+    <value>Déconnectez-vous de Glimesh</value>
+  </data>
+  <data name="LogOutOfTrovo" xml:space="preserve">
+    <value>Déconnectez-vous de Trovo</value>
+  </data>
+  <data name="LogOutOfTwitch" xml:space="preserve">
+    <value>Déconnectez-vous de Twitch</value>
+  </data>
+  <data name="LogOutOfYouTube" xml:space="preserve">
+    <value>Déconnectez-vous de YouTube</value>
+  </data>
+  <data name="LinkAccountCommandAccountsLinkedSuccessfully" xml:space="preserve">
+    <value>Processus de liaison de compte réussi.</value>
+  </data>
+  <data name="LinkAccountCommandErrorUnsupportedPlatform" xml:space="preserve">
+    <value>ERREUR : La plate-forme spécifiée n’est pas prise en charge : {0}</value>
+  </data>
+  <data name="LinkAccountCommandErrorUserNotFound" xml:space="preserve">
+    <value>ERREUR : Impossible de trouver l’utilisateur avec le nom d’utilisateur suivant : {0}</value>
+  </data>
+  <data name="LinkAccountCommandPleaseConfirmLink" xml:space="preserve">
+    <value>Le processus de liaison de compte a commencé. Veuillez réexécuter la commande sur l’autre plate-forme avec les informations de votre utilisateur actuel: « !linkaccount {0} {1} »</value>
+  </data>
+  <data name="LinkAccountCommandUsage" xml:space="preserve">
+    <value>Utilisation : !linkaccount &lt;PLATFORM&gt; &lt;NOM D’UTILISATEUR STANDARD&gt;</value>
+  </data>
+  <data name="DisableEmoteOnly" xml:space="preserve">
+    <value>Désactiver Emote uniquement</value>
+  </data>
+  <data name="DisableFollowersOnly" xml:space="preserve">
+    <value>Désactiver uniquement les abonnés</value>
+  </data>
+  <data name="DisableSlowChat" xml:space="preserve">
+    <value>Désactiver le chat lent</value>
+  </data>
+  <data name="DisableSubscriberChat" xml:space="preserve">
+    <value>Désactiver le chat de l’abonné</value>
+  </data>
+  <data name="EnableEmoteOnly" xml:space="preserve">
+    <value>Activer Emote uniquement</value>
+  </data>
+  <data name="EnableFollowersOnly" xml:space="preserve">
+    <value>Activer uniquement les abonnés</value>
+  </data>
+  <data name="EnableSlowChat" xml:space="preserve">
+    <value>Activer le chat lent</value>
+  </data>
+  <data name="EnableSubscribersChat" xml:space="preserve">
+    <value>Activer le chat des abonnés</value>
+  </data>
+  <data name="TwitchActionTimeLengthMissing" xml:space="preserve">
+    <value>Action Twitch : une durée valide doit être spécifiée</value>
+  </data>
+  <data name="TwitchActionUsernameMissing" xml:space="preserve">
+    <value>Action Twitch : un nom d’utilisateur valide doit être spécifié</value>
+  </data>
+  <data name="AlertResubscribed" xml:space="preserve">
+    <value>{0} réinscrit pendant {1} mois</value>
+    <comment>{0} is the name of the user
+{1} is the number of months</comment>
+  </data>
+  <data name="AlertSubscribed" xml:space="preserve">
+    <value>{0} Abonné</value>
+  </data>
+  <data name="PauseAllCommands" xml:space="preserve">
+    <value>Suspendre toutes les commandes</value>
+  </data>
+  <data name="UnpauseAllCommands" xml:space="preserve">
+    <value>Annuler la suspension de toutes les commandes</value>
+  </data>
+  <data name="Platforms" xml:space="preserve">
+    <value>Plates-formes</value>
+  </data>
+  <data name="GlimeshID" xml:space="preserve">
+    <value>Glimesh ID</value>
+  </data>
+  <data name="GlimeshUsername" xml:space="preserve">
+    <value>Nom d’utilisateur Glimesh</value>
+  </data>
+  <data name="TrovoID" xml:space="preserve">
+    <value>Trovo ID</value>
+  </data>
+  <data name="TrovoUsername" xml:space="preserve">
+    <value>Nom d’utilisateur Trovo</value>
+  </data>
+  <data name="YouTubeID" xml:space="preserve">
+    <value>Identifiant YouTube</value>
+  </data>
+  <data name="YouTubeUsername" xml:space="preserve">
+    <value>Nom d’utilisateur YouTube</value>
+  </data>
+  <data name="PlatformID" xml:space="preserve">
+    <value>ID de plate-forme</value>
+  </data>
+  <data name="PlatformUsername" xml:space="preserve">
+    <value>Nom d’utilisateur de la plateforme</value>
+  </data>
+  <data name="UserImportResults" xml:space="preserve">
+    <value>Importations réussies : {0}
+Importations en attente : {1}
+Importations ayant échoué : {2}
+
+Les utilisateurs qui n’ont pas encore visité votre chaîne pendant que Mix It Up est en cours d’exécution ont leur importation de données en attente et seront importés avec succès lors de leur première visite.
+
+Les importations échouées peuvent être dues à des données non valides ou à l’incapacité de trouver leurs informations sur la plate-forme. Veuillez contacter le support pour obtenir de l’aide supplémentaire à ce sujet si nécessaire.</value>
+    <comment>{0} is the number of successes, {1} is the number of pending, {2} is the number of failures</comment>
+  </data>
+  <data name="TimersRunOnlyWhenLive" xml:space="preserve">
+    <value>Exécuter uniquement en direct</value>
+  </data>
+  <data name="FastClip90Seconds" xml:space="preserve">
+    <value>Clip rapide (90 secondes)</value>
+  </data>
+  <data name="ManualDeletion" xml:space="preserve">
+    <value>Suppression manuelle</value>
+  </data>
+  <data name="Accent" xml:space="preserve">
+    <value>Accent</value>
+  </data>
+  <data name="Apostrophe" xml:space="preserve">
+    <value>Apostrophe</value>
+  </data>
+  <data name="Backslash" xml:space="preserve">
+    <value>Backslash</value>
+  </data>
+  <data name="Backspace" xml:space="preserve">
+    <value>Backspace</value>
+  </data>
+  <data name="CapsLock" xml:space="preserve">
+    <value>Verr. Maj</value>
+  </data>
+  <data name="Comma" xml:space="preserve">
+    <value>Virgule</value>
+  </data>
+  <data name="Digit0" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="Digit1" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="Digit2" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="Digit3" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="Digit4" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="Digit5" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="Digit6" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="Digit7" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="Digit8" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="Digit9" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="DownArrow" xml:space="preserve">
+    <value>Flèche vers le bas</value>
+  </data>
+  <data name="Enter" xml:space="preserve">
+    <value>Entrer</value>
+  </data>
+  <data name="Equal" xml:space="preserve">
+    <value>Égal</value>
+  </data>
+  <data name="Escape" xml:space="preserve">
+    <value>Échapper</value>
+  </data>
+  <data name="F1" xml:space="preserve">
+    <value>F1</value>
+  </data>
+  <data name="F10" xml:space="preserve">
+    <value>F10</value>
+  </data>
+  <data name="F11" xml:space="preserve">
+    <value>F11</value>
+  </data>
+  <data name="F12" xml:space="preserve">
+    <value>F12</value>
+  </data>
+  <data name="F13" xml:space="preserve">
+    <value>F13</value>
+  </data>
+  <data name="F14" xml:space="preserve">
+    <value>F14</value>
+  </data>
+  <data name="F15" xml:space="preserve">
+    <value>F15</value>
+  </data>
+  <data name="F16" xml:space="preserve">
+    <value>F16</value>
+  </data>
+  <data name="F17" xml:space="preserve">
+    <value>F17</value>
+  </data>
+  <data name="F18" xml:space="preserve">
+    <value>F18</value>
+  </data>
+  <data name="F19" xml:space="preserve">
+    <value>F19</value>
+  </data>
+  <data name="F2" xml:space="preserve">
+    <value>F2</value>
+  </data>
+  <data name="F20" xml:space="preserve">
+    <value>F20</value>
+  </data>
+  <data name="F21" xml:space="preserve">
+    <value>F21</value>
+  </data>
+  <data name="F22" xml:space="preserve">
+    <value>F22</value>
+  </data>
+  <data name="F23" xml:space="preserve">
+    <value>F23</value>
+  </data>
+  <data name="F24" xml:space="preserve">
+    <value>F24</value>
+  </data>
+  <data name="F3" xml:space="preserve">
+    <value>F3</value>
+  </data>
+  <data name="F4" xml:space="preserve">
+    <value>F4</value>
+  </data>
+  <data name="F5" xml:space="preserve">
+    <value>F5</value>
+  </data>
+  <data name="F6" xml:space="preserve">
+    <value>F6</value>
+  </data>
+  <data name="F7" xml:space="preserve">
+    <value>F7</value>
+  </data>
+  <data name="F8" xml:space="preserve">
+    <value>F8</value>
+  </data>
+  <data name="F9" xml:space="preserve">
+    <value>F9</value>
+  </data>
+  <data name="ForwardSlash" xml:space="preserve">
+    <value>Barre oblique</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Domicile</value>
+  </data>
+  <data name="Insert" xml:space="preserve">
+    <value>Insérer</value>
+  </data>
+  <data name="LeftAlt" xml:space="preserve">
+    <value>Alt gauche</value>
+  </data>
+  <data name="LeftArrow" xml:space="preserve">
+    <value>Flèche gauche</value>
+  </data>
+  <data name="LeftBracket" xml:space="preserve">
+    <value>Crochet gauche</value>
+  </data>
+  <data name="LeftControl" xml:space="preserve">
+    <value>Contrôle gauche</value>
+  </data>
+  <data name="LeftShift" xml:space="preserve">
+    <value>Décalage à gauche</value>
+  </data>
+  <data name="LeftWindows" xml:space="preserve">
+    <value>Fenêtres de gauche</value>
+  </data>
+  <data name="Minus" xml:space="preserve">
+    <value>Moins</value>
+  </data>
+  <data name="NumPad0" xml:space="preserve">
+    <value>Pavé numérique 0</value>
+  </data>
+  <data name="NumPad1" xml:space="preserve">
+    <value>Pavé numérique 1</value>
+  </data>
+  <data name="NumPad2" xml:space="preserve">
+    <value>Pavé numérique 2</value>
+  </data>
+  <data name="NumPad3" xml:space="preserve">
+    <value>Num Pad 3</value>
+  </data>
+  <data name="NumPad4" xml:space="preserve">
+    <value>Pavé numérique 4 </value>
+  </data>
+  <data name="NumPad5" xml:space="preserve">
+    <value>Num Pad 5</value>
+  </data>
+  <data name="NumPad6" xml:space="preserve">
+    <value>Pavé numérique 6</value>
+  </data>
+  <data name="NumPad7" xml:space="preserve">
+    <value>Pavé numérique 7</value>
+  </data>
+  <data name="NumPad8" xml:space="preserve">
+    <value>Num Pad 8</value>
+  </data>
+  <data name="NumPad9" xml:space="preserve">
+    <value>Pavé numérique 9</value>
+  </data>
+  <data name="NumPadAdd" xml:space="preserve">
+    <value>Num Pad Ajouter</value>
+  </data>
+  <data name="NumPadDecimal" xml:space="preserve">
+    <value>Num Pad Décimal</value>
+  </data>
+  <data name="NumPadDivide" xml:space="preserve">
+    <value>Num Pad Divide</value>
+  </data>
+  <data name="NumPadEnter" xml:space="preserve">
+    <value>Num Pad Entrez</value>
+  </data>
+  <data name="NumPadMultiply" xml:space="preserve">
+    <value>Multiplication du pavé numérique</value>
+  </data>
+  <data name="NumPadSubtract" xml:space="preserve">
+    <value>Soustraction du pavé numérique</value>
+  </data>
+  <data name="PageDown" xml:space="preserve">
+    <value>Page vers le bas</value>
+  </data>
+  <data name="PageUp" xml:space="preserve">
+    <value>Page précédente</value>
+  </data>
+  <data name="Period" xml:space="preserve">
+    <value>Période</value>
+  </data>
+  <data name="RightAlt" xml:space="preserve">
+    <value>Alt droite</value>
+  </data>
+  <data name="RightArrow" xml:space="preserve">
+    <value>Flèche droite</value>
+  </data>
+  <data name="RightBracket" xml:space="preserve">
+    <value>Crochet droit</value>
+  </data>
+  <data name="RightControl" xml:space="preserve">
+    <value>Contrôle correct</value>
+  </data>
+  <data name="RightShift" xml:space="preserve">
+    <value>Décalage à droite</value>
+  </data>
+  <data name="RightWindows" xml:space="preserve">
+    <value>Fenêtres droites</value>
+  </data>
+  <data name="Semicolon" xml:space="preserve">
+    <value>Point-virgule</value>
+  </data>
+  <data name="Space" xml:space="preserve">
+    <value>Espace</value>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="Tab" xml:space="preserve">
+    <value>Onglet</value>
+  </data>
+  <data name="UpArrow" xml:space="preserve">
+    <value>Flèche vers le haut</value>
+  </data>
+  <data name="MediaNext" xml:space="preserve">
+    <value>Média Suivant</value>
+  </data>
+  <data name="MediaPlayPause" xml:space="preserve">
+    <value>Lecture/pause multimédia</value>
+  </data>
+  <data name="MediaPrevious" xml:space="preserve">
+    <value>Médias Précédent</value>
+  </data>
+  <data name="MediaStop" xml:space="preserve">
+    <value>Arrêt des médias</value>
+  </data>
+  <data name="PrintScreen" xml:space="preserve">
+    <value>Impr écran</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Choisir</value>
+  </data>
+  <data name="VolumeDown" xml:space="preserve">
+    <value>Volume vers le bas</value>
+  </data>
+  <data name="VolumeMute" xml:space="preserve">
+    <value>Volume Muet</value>
+  </data>
+  <data name="VolumeUp" xml:space="preserve">
+    <value>Augmenter le volume</value>
+  </data>
+  <data name="InventoryShopDuplicateCommand" xml:space="preserve">
+    <value>Il existe déjà un autre inventaire avec la même commande Boutique</value>
+  </data>
+  <data name="SerialDevicesAlreadyExistDeviceWithPortName" xml:space="preserve">
+    <value>ERREUR : Il existe déjà un périphérique avec le nom de port sélectionné.</value>
+  </data>
+  <data name="QuoteID" xml:space="preserve">
+    <value>ID de devis</value>
+  </data>
+  <data name="QuotesDataFileRequiredColumns" xml:space="preserve">
+    <value>Votre fichier de données doit inclure au moins la colonne Devis.</value>
+  </data>
+  <data name="ImportQuotes" xml:space="preserve">
+    <value>Importer des devis</value>
+  </data>
+  <data name="QuotesDataImport" xml:space="preserve">
+    <value>Importation de données de devis</value>
+  </data>
+  <data name="QuotesDataImportStep1" xml:space="preserve">
+    <value>Cela vous permettra d’importer vos données de devis à partir d’un fichier texte brut ou d’une feuille de calcul. Pour importer un fichier de feuille de calcul, vous devez avoir installé une forme de Microsoft Excel. Notez que s’il existe déjà un devis avec le même ID dans Mix It Up, l’ID de devis sera mis à jour au nombre le plus élevé. Tout d’abord, spécifiez le fichier à partir duquel vous souhaitez importer les données utilisateur :</value>
+  </data>
+  <data name="QuotesDataImportStep2" xml:space="preserve">
+    <value>Ensuite, vous devez spécifier le numéro de colonne pour chaque valeur de votre fichier de données ou le laisser vide si cette valeur n’est pas présente.</value>
+  </data>
+  <data name="QuotesImportResults" xml:space="preserve">
+    <value>Importations réussies : {0}
+Importations ayant échoué : {1}
+
+Les guillemets importés avec des ID qui correspondent aux guillemets existants seront modifiés au nombre maximal suivant. L’échec des importations peut être dû à des données ou à un formatage non valides. Veuillez contacter le support pour obtenir de l’aide supplémentaire à ce sujet si nécessaire.</value>
+    <comment>{0} is the number of successes, {1} is the number of failures</comment>
+  </data>
+  <data name="HearMyselfOnOff" xml:space="preserve">
+    <value>Écoutez-moi on/off</value>
+  </data>
+  <data name="GameQueueNotEnabled" xml:space="preserve">
+    <value>La file d’attente du jeu n’est pas activée actuellement</value>
+  </data>
+  <data name="ManualModerationStrike" xml:space="preserve">
+    <value>Grève de modération manuelle</value>
+  </data>
+  <data name="ErrorHeader" xml:space="preserve">
+    <value>ERREUR: </value>
+  </data>
+  <data name="TwitchAdUnableToRun" xml:space="preserve">
+    <value>ERREUR : Nous n’avons pas pu diffuser d’annonce, veuillez réessayer plus tard</value>
+  </data>
+  <data name="TwitterTweetCanNotContainMention" xml:space="preserve">
+    <value>Le tweet que vous avez spécifié ne peut pas être envoyé car il contient un @mention</value>
+  </data>
+  <data name="AlertBanned" xml:space="preserve">
+    <value>{0} Interdit</value>
+    <comment>{0} is the name of the user</comment>
+  </data>
+  <data name="AlertContinuedGiftedSubscriptionTier" xml:space="preserve">
+    <value>{0} ont continué leur sous-marin surdoué à {1}</value>
+    <comment>{0} is the name of the user
+{1} is the tier of the subscription</comment>
+  </data>
+  <data name="AlertFollow" xml:space="preserve">
+    <value>{0} Suivi</value>
+    <comment>{0} is the name of the user</comment>
+  </data>
+  <data name="AlertHosted" xml:space="preserve">
+    <value>{0} hébergé la chaîne</value>
+    <comment>{0} is the name of the user</comment>
+  </data>
+  <data name="AlertMassSubscriptionsGifted" xml:space="preserve">
+    <value>{0} Sous-marins {1} doués</value>
+    <comment>{0} is the name of the user
+{1} is the number of subs gifted</comment>
+  </data>
+  <data name="AlertRaid" xml:space="preserve">
+    <value>{0} Raided avec des téléspectateurs {1}</value>
+    <comment>{0} is the name of the user
+{1} is the number of viewers</comment>
+  </data>
+  <data name="AlertSubscribedTier" xml:space="preserve">
+    <value>{0} Abonné sur {1}</value>
+    <comment>{0} is the name of the user
+{1} is the tier of the subscription</comment>
+  </data>
+  <data name="AlertSubscriptionGifted" xml:space="preserve">
+    <value>{0} offert un abonnement à {1}</value>
+    <comment>{0} is the gifter
+{1} is the receiver</comment>
+  </data>
+  <data name="AlertTimedOut" xml:space="preserve">
+    <value>{0} expiré pendant {1} secondes</value>
+    <comment>{0} is the name of the user
+{1} is the amount of seconds</comment>
+  </data>
+  <data name="AlertTwitchBitsCheered" xml:space="preserve">
+    <value>{0} {1} a applaudi</value>
+    <comment>{0} is the name of the user
+{1} is the amount of bits</comment>
+  </data>
+  <data name="ChatCleared" xml:space="preserve">
+    <value>Chat effacé</value>
+  </data>
+  <data name="CommandAddedHeader" xml:space="preserve">
+    <value>Commande ajoutée: !</value>
+  </data>
+  <data name="CouldNotFindCommand" xml:space="preserve">
+    <value>Impossible de trouver une commande avec ce déclencheur</value>
+  </data>
+  <data name="DisabledCommandHeader" xml:space="preserve">
+    <value>Commande désactivée : !</value>
+  </data>
+  <data name="DiscordActionBlockedDueToRateLimiting" xml:space="preserve">
+    <value>L’action Discord que vous essayiez d’effectuer a été bloquée en raison d’un trop grand nombre de demandes. Assurez-vous que vous n’effectuez qu'1 action Discord toutes les 30 secondes. Vous pouvez ajouter un bot Discord personnalisé sous la page Services pour contourner ce blocage.</value>
+  </data>
+  <data name="ErrorCouldNotFindGame" xml:space="preserve">
+    <value>Impossible de trouver le jeu spécifié</value>
+  </data>
+  <data name="Followed" xml:space="preserve">
+    <value>Suivi</value>
+  </data>
+  <data name="GameHeader" xml:space="preserve">
+    <value>Jeu: </value>
+  </data>
+  <data name="GameUpdatedHeader" xml:space="preserve">
+    <value>Jeu mis à jour: </value>
+  </data>
+  <data name="GiftedSub" xml:space="preserve">
+    <value>Sous-marin doué</value>
+  </data>
+  <data name="GlimeshChatConnectionCouldNotBeEstablished" xml:space="preserve">
+    <value>La connexion au chat Glimesh n’a pas été établie</value>
+  </data>
+  <data name="GlimeshFailedToConnect" xml:space="preserve">
+    <value>Impossible d’établir la connexion à Glimesh</value>
+  </data>
+  <data name="GlimeshFailedToConnectBotAccount" xml:space="preserve">
+    <value>Impossible de connecter le compte de bot Glimesh, veuillez vous reconnecter manuellement</value>
+  </data>
+  <data name="GlimeshFailedToConnectHeader" xml:space="preserve">
+    <value>Impossible de se connecter aux services Glimesh :</value>
+  </data>
+  <data name="GlimeshFailedToConnectToChat" xml:space="preserve">
+    <value>Impossible de se connecter aux serveurs de chat Glimesh</value>
+  </data>
+  <data name="GlimeshFailedToGetBotData" xml:space="preserve">
+    <value>Impossible d’obtenir les données du bot Glimesh</value>
+  </data>
+  <data name="GlimeshFailedToGetUserData" xml:space="preserve">
+    <value>Impossible d’obtenir les données utilisateur Glimesh</value>
+  </data>
+  <data name="GlimeshFailedToJoinChat" xml:space="preserve">
+    <value>Impossible de rejoindre le chat de la chaîne Glimesh</value>
+  </data>
+  <data name="GlimeshFailedToJoinEvents" xml:space="preserve">
+    <value>Impossible de joindre les événements de la chaîne Glimesh</value>
+  </data>
+  <data name="Hosted" xml:space="preserve">
+    <value>Hébergé</value>
+  </data>
+  <data name="InventoryDoNotHaveRequiredCurrencyToPurchase" xml:space="preserve">
+    <value>Vous n’avez pas les {0} {1} requises pour acheter cet article</value>
+    <comment>{0} is the amount of currency
+{1} is the name of the currency</comment>
+  </data>
+  <data name="InventoryDoNotHaveRequiredItemsToSell" xml:space="preserve">
+    <value>Vous n’avez pas les {0} {1} requises pour vendre</value>
+    <comment>{0} is the amount of the item
+{1} is the name of the item</comment>
+  </data>
+  <data name="InventoryDoNotHaveRequiredItemsToTrade" xml:space="preserve">
+    <value>Vous n’avez pas le {0} {1} requis pour trader</value>
+    <comment>{0} is the amount of the item
+{1} is the name of the item</comment>
+  </data>
+  <data name="InventoryItemBuyPrice" xml:space="preserve">
+    <value>Acheter = {0} {1}</value>
+    <comment>{0} is the amount of currency
+{1} is the name of the currency</comment>
+  </data>
+  <data name="InventoryItemBuySellAvailableHeader" xml:space="preserve">
+    <value>Objets disponibles à l’achat/à la vente : </value>
+  </data>
+  <data name="InventoryItemNotAvailableForBuying" xml:space="preserve">
+    <value>Cet objet n’est pas disponible à l’achat</value>
+  </data>
+  <data name="InventoryItemNotAvailableForBuyingSelling" xml:space="preserve">
+    <value>Cet objet n’est pas disponible à l’achat/à la vente</value>
+  </data>
+  <data name="InventoryItemNotAvailableForSelling" xml:space="preserve">
+    <value>Cet objet n’est pas disponible à la vente</value>
+  </data>
+  <data name="InventoryItemSellPrice" xml:space="preserve">
+    <value>Vendre = {0} {1}</value>
+    <comment>{0} is the amount of currency
+{1} is the name of the currency</comment>
+  </data>
+  <data name="InventoryItemSpecifiedDoesNotExist" xml:space="preserve">
+    <value>L’élément que vous avez spécifié n’existe pas</value>
+  </data>
+  <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
+    <value>Vous devez spécifier « acheter » ou « vendre »</value>
+  </data>
+  <data name="InventoryShopUsage" xml:space="preserve">
+    <value>UTILISATION: liste {0} = Répertorie tous les articles disponibles à l’achat / vente ** {0} &lt;NOM DE L’ARTICLE&gt; = Répertorie le prix d’achat / vente de l’article ** {0} acheter &lt; NOM DE L’article&gt; [MONTANT] = Achète 1 ou le montant spécifié de l’article ** {0} vendre &lt;NOM DE L’article&gt; [MONTANT] = Vend 1 ou le montant spécifié de l’article</value>
+    <comment>{0} is the shop command</comment>
+  </data>
+  <data name="InventoryTradeAlreadyUnderway" xml:space="preserve">
+    <value>Une transaction est déjà en cours, veuillez attendre qu’elle soit terminée</value>
+  </data>
+  <data name="InventoryTradeCancelled" xml:space="preserve">
+    <value>L’échange n’a pas pu être complété à temps et a été annulé...</value>
+  </data>
+  <data name="InventoryTradeReplied" xml:space="preserve">
+    <value>@{0} a répondu à l’offre de @{1} avec {2} {3}. Tapez {4} dans le chat pour accepter la transaction.</value>
+    <comment>{0} is the trade receiver
+{1} is the trader sender
+{2} is the amount of the item
+{3} is the name of the item
+{4} is the shop command</comment>
+  </data>
+  <data name="InventoryTradeStarted" xml:space="preserve">
+    <value>@{0} a commencé un échange avec @{1} pour {2} {3}. Tapez {4} &lt; NOM DE L’ARTICLE&gt; [MONTANT] dans le chat pour répondre à votre offre dans les 60 secondes suivantes.</value>
+    <comment>{0} is the trade sender
+{1} is the trader receiver
+{2} is the amount of the item
+{3} is the name of the item
+{4} is the shop command</comment>
+  </data>
+  <data name="InventoryTradeUsage" xml:space="preserve">
+    <value>{0} &lt;USERNAME&gt; &lt; NOM DE L’ARTICLE&gt; [MONTANT] = Trades 1 ou le montant spécifié de l’article à l’utilisateur spécifié</value>
+    <comment>{0} is the shop command</comment>
+  </data>
+  <data name="InventoryYouCanOnlyHaveTotal" xml:space="preserve">
+    <value>Vous ne pouvez avoir que {0} {1} au total</value>
+    <comment>{0} is the amount of the item
+{1} is the name of the item</comment>
+  </data>
+  <data name="List" xml:space="preserve">
+    <value>Liste</value>
+  </data>
+  <data name="NoGameFound" xml:space="preserve">
+    <value>Aucun jeu trouvé</value>
+  </data>
+  <data name="NoRank" xml:space="preserve">
+    <value>Pas de rang</value>
+  </data>
+  <data name="PreMadeChatCommandAddCommandUsage" xml:space="preserve">
+    <value>Utilisation : !addcommand &lt;COMMAND TRIGGER, NO !&gt; &lt;COOLDOWN&gt; &lt;TEXTE DE MESSAGE DE COMMANDE COMPLET&gt;</value>
+  </data>
+  <data name="PreMadeChatCommandAddQuoteUsage" xml:space="preserve">
+    <value>Utilisation: !addquote &lt;TEXTE DE CITATION COMPLET&gt;</value>
+  </data>
+  <data name="PreMadeChatCommandCommandsHeader" xml:space="preserve">
+    <value>Commandes disponibles : </value>
+  </data>
+  <data name="PreMadeChatCommandDisableCommandUsage" xml:space="preserve">
+    <value>Utilisation : !disablecommand &lt;COMMAND TRIGGER, NO !&gt;</value>
+  </data>
+  <data name="PreMadeChatCommandGamesHeader" xml:space="preserve">
+    <value>Jeux disponibles: </value>
+  </data>
+  <data name="PreMadeChatCommandMixItUp" xml:space="preserve">
+    <value>Cette chaîne utilise l’application Mix It Up pour améliorer son flux. Consultez http://mixitupapp.com pour plus d’informations!</value>
+  </data>
+  <data name="PreMadeChatCommandMixItUpCommands" xml:space="preserve">
+    <value>Toutes les commandes de chat Mix It Up prédéfinies peuvent être trouvées ici: https://wiki.mixitupapp.com/commands/pre-made-chat-commands. Pour les commandes spécifiques à ce flux, demandez à votre streamer/modérateur.</value>
+  </data>
+  <data name="PreMadeChatCommandQuotesNotEnabled" xml:space="preserve">
+    <value>Les guillemets doivent être activés et au moins un devis doit être ajouté pour que cette fonctionnalité fonctionne.</value>
+  </data>
+  <data name="PreMadeChatCommandQuoteUnableToFind" xml:space="preserve">
+    <value>Impossible de trouver le numéro de devis {0}.</value>
+    <comment>{0} is the ID number of the quote</comment>
+  </data>
+  <data name="PreMadeChatCommandQuoteUsage" xml:space="preserve">
+    <value>UTILISATION: !quote [NUMÉRO DE CITATION]</value>
+  </data>
+  <data name="PreMadeChatCommandSetGameUsage" xml:space="preserve">
+    <value>Utilisation: !setgame &lt;NOM DU JEU&gt;</value>
+  </data>
+  <data name="PreMadeChatCommandSetTitleUsage" xml:space="preserve">
+    <value>Utilisation : !settitle &lt;TITLE NAME&gt;</value>
+  </data>
+  <data name="PreMadeChatCommandSetUserTitleUsage" xml:space="preserve">
+    <value>Utilisation : !setusertitle &lt;USERNAME&gt; &lt;TITLE NAME&gt;</value>
+  </data>
+  <data name="PreMadeChatCommandStartGiveawayUsage" xml:space="preserve">
+    <value>Utilisation: !startgiveaway &lt;GIVEAWAY ITEM&gt;</value>
+  </data>
+  <data name="PreMadeChatCommandUpdateCommandUsage" xml:space="preserve">
+    <value>Utilisation : !updatecommand &lt;COMMAND TRIGGER, NO !&gt; &lt;COOLDOWN&gt; [TEXTE FACULTATIF DU MESSAGE DE COMMANDE COMPLET]</value>
+  </data>
+  <data name="QuoteAddedHeader" xml:space="preserve">
+    <value>Citation ajoutée : </value>
+  </data>
+  <data name="RaidedAmount" xml:space="preserve">
+    <value>Raided ({0})</value>
+    <comment>{0} is the size of the raid</comment>
+  </data>
+  <data name="RedemptionStoreProductsAvailableForPurchaseHeader" xml:space="preserve">
+    <value>Produits disponibles à l’achat: </value>
+  </data>
+  <data name="ResubscribedAmount" xml:space="preserve">
+    <value>Resouscrit ({0})</value>
+    <comment>{0} is the amount of months</comment>
+  </data>
+  <data name="Sell" xml:space="preserve">
+    <value>Vendre</value>
+  </data>
+  <data name="StartTimeHeader" xml:space="preserve">
+    <value>Heure de début : </value>
+  </data>
+  <data name="StreamerAgeHeader" xml:space="preserve">
+    <value>L’âge du streamer de {0}: </value>
+    <comment>{0} is the name of the user</comment>
+  </data>
+  <data name="StreamingPlatformIncorrectAccount" xml:space="preserve">
+    <value>Le compte auquel vous êtes connecté comme sur {0} ne correspond pas au compte pour ces paramètres. Veuillez vous connecter en tant que compte correct sur {0}.</value>
+    <comment>{0} is the name of the streaming platform</comment>
+  </data>
+  <data name="StreamIsCurrentlyOffline" xml:space="preserve">
+    <value>Stream est actuellement hors ligne</value>
+  </data>
+  <data name="StreamLengthHeader" xml:space="preserve">
+    <value>Longueur du flux: </value>
+  </data>
+  <data name="StreamlootsGiftedPacksAlert" xml:space="preserve">
+    <value>{0} Pack(s) de {1} surdoué(s) à {2}</value>
+    <comment>{0} is the gifter
+{1} is the amount of packs
+{2} is the receiver</comment>
+  </data>
+  <data name="StreamlootsPurchasedPacksAlert" xml:space="preserve">
+    <value>{0} Achats {1} Pack(s)</value>
+    <comment>{0} is the name of the user
+{1} is the amount of packs</comment>
+  </data>
+  <data name="StreamlootsRedeemedCardAlert" xml:space="preserve">
+    <value>{0} Carte {1} échangée</value>
+    <comment>{0} is the name of the user
+{1} is the name of the card</comment>
+  </data>
+  <data name="StreamTitleHeader" xml:space="preserve">
+    <value>Titre du flux : </value>
+  </data>
+  <data name="Subscribed" xml:space="preserve">
+    <value>Souscrit</value>
+  </data>
+  <data name="TitleUpdatedHeader" xml:space="preserve">
+    <value>Titre mis à jour : </value>
+  </data>
+  <data name="TrovoChatConnectionCouldNotBeEstablished" xml:space="preserve">
+    <value>La connexion au chat Trovo n’a pas été établie</value>
+  </data>
+  <data name="TrovoFailedToConnect" xml:space="preserve">
+    <value>Impossible d’établir la connexion à Trovo</value>
+  </data>
+  <data name="TrovoFailedToConnectHeader" xml:space="preserve">
+    <value>Impossible de se connecter aux services Trovo :</value>
+  </data>
+  <data name="TrovoFailedToConnectToChat" xml:space="preserve">
+    <value>Impossible de se connecter aux serveurs de chat Trovo</value>
+  </data>
+  <data name="TrovoFailedToGetBotData" xml:space="preserve">
+    <value>Impossible d’obtenir les données du bot Trovo</value>
+  </data>
+  <data name="TrovoFailedToGetChannelData" xml:space="preserve">
+    <value>Impossible d’obtenir les données du canal Trovo</value>
+  </data>
+  <data name="TrovoFailedToGetChatToken" xml:space="preserve">
+    <value>Impossible d’obtenir le jeton de chat des serveurs de chat Trovo</value>
+  </data>
+  <data name="TrovoFailedToGetUserData" xml:space="preserve">
+    <value>Impossible d’obtenir les données utilisateur Trovo</value>
+  </data>
+  <data name="UpdatedCommandHeader" xml:space="preserve">
+    <value>Commande mise à jour: !</value>
+  </data>
+  <data name="UserFollowAgeHeader" xml:space="preserve">
+    <value>{0}'âge de suivi: </value>
+    <comment>{0} is the name of the user</comment>
+  </data>
+  <data name="UserSubscribeAgeHeader" xml:space="preserve">
+    <value>Âge d’abonnement de {0} : </value>
+    <comment>{0} is the name of the user</comment>
+  </data>
+  <data name="ValidAmountGreaterThan0MustBeSpecified" xml:space="preserve">
+    <value>Un montant valide supérieur à 0 doit être spécifié</value>
+  </data>
+  <data name="XSplitFailedToStartServer" xml:space="preserve">
+    <value>Échec du démarrage du serveur d’écoute de socket Web</value>
+  </data>
+  <data name="AlertResubscribedTier" xml:space="preserve">
+    <value>{0} réinscrit pour {1} mois chez {2}</value>
+    <comment>{0} is the name of the user
+{1} is the number of months
+{2} is the tier of the subscription</comment>
+  </data>
+  <data name="AlertSubscriptionGiftedTier" xml:space="preserve">
+    <value>{0} a offert un abonnement {1} à {2}</value>
+    <comment>{0} is the gifter
+{1} is the tier of the subscription
+{2} is the receiver</comment>
+  </data>
+  <data name="AlertMassSubscriptionsGiftedTier" xml:space="preserve">
+    <value>{0} Sous-marins {1} {2} doués</value>
+    <comment>{0} is the name of the user
+{1} is the number of subs gifted
+{1} is the tier of the subscription</comment>
+  </data>
+  <data name="AlertTwitchChannelPointRedeemed" xml:space="preserve">
+    <value>{0} {1} rachetés</value>
+    <comment>{0} is the name of the user
+{1} is the name of the channel point reward</comment>
+  </data>
+  <data name="AverageViewers" xml:space="preserve">
+    <value>Spectateurs moyens</value>
+  </data>
+  <data name="ChatTimeoutAmountMustBeGreaterThanZero" xml:space="preserve">
+    <value>Le délai d’expiration spécifié doit être supérieur à 0</value>
+  </data>
+  <data name="ChatWhisperNumberResponse" xml:space="preserve">
+    <value>Vous êtes chuchoteur #{0}</value>
+    <comment>{0} is the number of the whisper</comment>
+  </data>
+  <data name="DiscordBot" xml:space="preserve">
+    <value>Discord Bot</value>
+  </data>
+  <data name="GiveawayAlreadyUnderway" xml:space="preserve">
+    <value>Un concours est déjà en cours</value>
+  </data>
+  <data name="GiveawayCommand" xml:space="preserve">
+    <value>Commande Giveaway</value>
+  </data>
+  <data name="GiveawayCommandMustBeSpecified" xml:space="preserve">
+    <value>La commande Giveaway doit être spécifiée</value>
+  </data>
+  <data name="GiveawayCommandOnlyLettersAndNumbers" xml:space="preserve">
+    <value>La commande Giveaway ne peut contenir que des lettres et des chiffres</value>
+  </data>
+  <data name="GiveawayItemNotSpecified" xml:space="preserve">
+    <value>Le nom de l’élément du cadeau doit être spécifié</value>
+  </data>
+  <data name="GiveawayLengthMustBeGreaterThanZero" xml:space="preserve">
+    <value>La durée du cadeau doit être supérieure à 0</value>
+  </data>
+  <data name="GiveawayMaxEntriesMustBeGreaterThanZero" xml:space="preserve">
+    <value>Les entrées maximales doivent être supérieures à 0</value>
+  </data>
+  <data name="GiveawayNoUsersLeft" xml:space="preserve">
+    <value>Aucun utilisateur n’est entré/laissé dans le cadeau</value>
+  </data>
+  <data name="GiveawayReminderMustBeZeroOrGreater" xml:space="preserve">
+    <value>Le rappel du cadeau doit être égal ou supérieur à 0</value>
+  </data>
+  <data name="GiveawayWonTypeClaim" xml:space="preserve">
+    <value>@{0} vous avez gagné le cadeau; tapez « !claim » dans le chat!</value>
+    <comment>{0} is the name of the user</comment>
+  </data>
+  <data name="GiveawayYouHaveAlreadyWon" xml:space="preserve">
+    <value>Vous avez déjà gagné un cadeau et ne pouvez pas participer à celui-ci</value>
+  </data>
+  <data name="GiveawayYouMayOnlyEnterSoManyTimes" xml:space="preserve">
+    <value>Vous ne pouvez entrer que {0}(s) heure(s) que vous avez actuellement saisie(s) {1}(s)</value>
+    <comment>{0} is the maximum amount of entries
+{1} is the current number of entries</comment>
+  </data>
+  <data name="GlimeshBotChat" xml:space="preserve">
+    <value>Glimesh Bot Chat</value>
+  </data>
+  <data name="GlimeshChat" xml:space="preserve">
+    <value>Glimesh Chat</value>
+  </data>
+  <data name="GlimeshConnection" xml:space="preserve">
+    <value>Connexion Glimesh</value>
+  </data>
+  <data name="GlimeshUserChat" xml:space="preserve">
+    <value>Chat utilisateur Glimesh</value>
+  </data>
+  <data name="ModerationAccountsOlderThanOneDay" xml:space="preserve">
+    <value>comptes de plus de 1 jour</value>
+  </data>
+  <data name="ModerationAccountsOlderThanOneHour" xml:space="preserve">
+    <value>comptes de plus de 1 heure</value>
+  </data>
+  <data name="ModerationAccountsOlderThanOneMonth" xml:space="preserve">
+    <value>comptes de plus de 1 mois</value>
+  </data>
+  <data name="ModerationAccountsOlderThanOneWeek" xml:space="preserve">
+    <value>comptes de plus de 1 semaine</value>
+  </data>
+  <data name="ModerationBannedWord" xml:space="preserve">
+    <value>Mot interdit : {0}</value>
+    <comment>{0} is the banned word</comment>
+  </data>
+  <data name="ModerationChatParticipation" xml:space="preserve">
+    <value>Chat Participation</value>
+  </data>
+  <data name="ModerationFilteredWord" xml:space="preserve">
+    <value>Mot filtré : {0}</value>
+    <comment>{0} is the filtered word</comment>
+  </data>
+  <data name="ModerationNoLinks" xml:space="preserve">
+    <value>Aucun lien</value>
+  </data>
+  <data name="ModerationParticipationMessageDeleted" xml:space="preserve">
+    <value>@{0} : Votre message a été supprimé car seul {1} pouvez participer actuellement.</value>
+    <comment>{0} is the name of the user
+{1} is the participation requirement</comment>
+  </data>
+  <data name="ModerationTooManyCaps" xml:space="preserve">
+    <value>Trop de bouchons</value>
+  </data>
+  <data name="ModerationTooManyPunctuationSymbolsEmotes" xml:space="preserve">
+    <value>Trop de ponctuation/symboles/émoticônes</value>
+  </data>
+  <data name="ModerationViewingMoreThanOneHour" xml:space="preserve">
+    <value>téléspectateurs qui ont regardé pendant 1 heure</value>
+  </data>
+  <data name="ModerationViewingMoreThanTenHours" xml:space="preserve">
+    <value>téléspectateurs qui ont regardé pendant 10 heures</value>
+  </data>
+  <data name="ModerationViewingMoreThanTenMinutes" xml:space="preserve">
+    <value>téléspectateurs qui ont regardé pendant 10 minutes</value>
+  </data>
+  <data name="ModerationViewingMoreThanThirtyMinutes" xml:space="preserve">
+    <value>téléspectateurs qui ont regardé pendant 30 minutes</value>
+  </data>
+  <data name="ModerationViewingMoreThanTwoHours" xml:space="preserve">
+    <value>téléspectateurs qui ont regardé pendant 2 heures</value>
+  </data>
+  <data name="NoUsersFound" xml:space="preserve">
+    <value>Aucun utilisateur trouvé</value>
+  </data>
+  <data name="QueueCurrentCount" xml:space="preserve">
+    <value>Il y a actuellement {0} qui attendent de jouer.</value>
+    <comment>{0} is the number of people</comment>
+  </data>
+  <data name="QueueNotIn" xml:space="preserve">
+    <value>Pas dans la file d’attente</value>
+  </data>
+  <data name="QueueUserListHeader" xml:space="preserve">
+    <value>Les utilisateurs suivants sont les prochains à jouer : </value>
+  </data>
+  <data name="QueueYouAreInPosition" xml:space="preserve">
+    <value>Vous êtes #{0} dans la file d’attente pour jouer</value>
+    <comment>{0} is the position</comment>
+  </data>
+  <data name="QueueYouAreNotCurrentlyIn" xml:space="preserve">
+    <value>Vous n’êtes pas actuellement dans la file d’attente pour jouer</value>
+  </data>
+  <data name="SettingsBackupNotValid" xml:space="preserve">
+    <value>Le fichier de sauvegarde sélectionné ne semble pas contenir les paramètres Mix It Up.</value>
+  </data>
+  <data name="SettingsBackupTooNew" xml:space="preserve">
+    <value>Le fichier de sauvegarde est valide, mais provient d’une version plus récente de Mix It Up. Assurez-vous de mettre à niveau vers la dernière version.
+
+REMARQUE : cela peut vous obliger à activer la version d’aperçu à partir de l’onglet Général dans Paramètres si cela a été fait dans une version d’aperçu.</value>
+  </data>
+  <data name="StreamlabsDesktop" xml:space="preserve">
+    <value>Bureau Streamlabs</value>
+  </data>
+  <data name="TimeDays" xml:space="preserve">
+    <value>Jour(s)</value>
+  </data>
+  <data name="TimeHours" xml:space="preserve">
+    <value>Heure(s)</value>
+  </data>
+  <data name="TimeMinutes" xml:space="preserve">
+    <value>Minute(s)</value>
+  </data>
+  <data name="TimeMonths" xml:space="preserve">
+    <value>Mois(s)</value>
+  </data>
+  <data name="TimeYears" xml:space="preserve">
+    <value>Année(s)</value>
+  </data>
+  <data name="TotalViewers" xml:space="preserve">
+    <value>Nombre total de téléspectateurs</value>
+  </data>
+  <data name="TrovoBotChat" xml:space="preserve">
+    <value>Trovo Bot Chat</value>
+  </data>
+  <data name="TrovoChat" xml:space="preserve">
+    <value>Trovo Chat</value>
+  </data>
+  <data name="TrovoConnection" xml:space="preserve">
+    <value>Connexion Trovo</value>
+  </data>
+  <data name="TrovoFailedToConnectBotAccount" xml:space="preserve">
+    <value>Impossible de connecter le compte de bot Trovo, veuillez vous reconnecter manuellement</value>
+  </data>
+  <data name="TrovoUserChat" xml:space="preserve">
+    <value>Chat utilisateur Trovo</value>
+  </data>
+  <data name="TwitchBotChat" xml:space="preserve">
+    <value>Twitch Bot Chat</value>
+  </data>
+  <data name="TwitchChat" xml:space="preserve">
+    <value>Twitch Chat</value>
+  </data>
+  <data name="TwitchConnection" xml:space="preserve">
+    <value>Connexion Twitch</value>
+  </data>
+  <data name="TwitchEvents" xml:space="preserve">
+    <value>Événements Twitch</value>
+  </data>
+  <data name="TwitchFailedToConnect" xml:space="preserve">
+    <value>Impossible d’établir la connexion à Twitch</value>
+  </data>
+  <data name="TwitchFailedToConnectBotAccount" xml:space="preserve">
+    <value>Impossible de connecter le compte de bot Twitch, veuillez vous reconnecter manuellement</value>
+  </data>
+  <data name="TwitchFailedToConnectHeader" xml:space="preserve">
+    <value>Impossible de se connecter aux services Twitch :</value>
+  </data>
+  <data name="TwitchFailedToGetBotData" xml:space="preserve">
+    <value>Impossible d’obtenir les données du bot Twitch</value>
+  </data>
+  <data name="TwitchFailedToGetUserData" xml:space="preserve">
+    <value>Impossible d’obtenir les données utilisateur Twitch</value>
+  </data>
+  <data name="TwitchPubSub" xml:space="preserve">
+    <value>Twitch PubSub</value>
+  </data>
+  <data name="TwitchUserChat" xml:space="preserve">
+    <value>Chat utilisateur Twitch</value>
+  </data>
+  <data name="YouTubeCouldNotEstablishChatConnection" xml:space="preserve">
+    <value>La connexion au chat YouTube n’a pas été établie</value>
+  </data>
+  <data name="YouTubeFailedToConnect" xml:space="preserve">
+    <value>Impossible d’établir la connexion à YouTube</value>
+  </data>
+  <data name="YouTubeFailedToConnectBotAccount" xml:space="preserve">
+    <value>Impossible de connecter le compte de bot YouTube, veuillez vous reconnecter manuellement</value>
+  </data>
+  <data name="YouTubeFailedToConnectHeader" xml:space="preserve">
+    <value>Impossible de se connecter aux services YouTube :</value>
+  </data>
+  <data name="YouTubeFailedToConnectToChat" xml:space="preserve">
+    <value>Impossible de se connecter aux serveurs de chat YouTube</value>
+  </data>
+  <data name="YouTubeFailedToGetBotData" xml:space="preserve">
+    <value>Impossible d’obtenir les données du bot YouTube</value>
+  </data>
+  <data name="YouTubeFailedToGetUserData" xml:space="preserve">
+    <value>Impossible d’obtenir les données utilisateur YouTube</value>
+  </data>
+  <data name="YouTubeNoLiveBroadcast" xml:space="preserve">
+    <value>Aucune diffusion en direct actuellement</value>
+  </data>
+  <data name="AddAll" xml:space="preserve">
+    <value>Ajouter tout</value>
+  </data>
+  <data name="AddsAmountToAllChatUsers" xml:space="preserve">
+    <value>Ajoute un montant à tous les utilisateurs du chat</value>
+  </data>
+  <data name="AddsAmountToSpecifiedUser" xml:space="preserve">
+    <value>Ajoute un montant à l’utilisateur spécifié</value>
+  </data>
+  <data name="ConnectedServicesFailed" xml:space="preserve">
+    <value>Les services suivants n’ont pas pu être connectés :
+
+{0}
+
+Nous tenterons de nous reconnecter au service lorsque cela sera possible. Si cela continue, veuillez vous rendre sur la page Services pour les reconnecter manuellement.</value>
+    <comment>{0} is the list of failed services</comment>
+  </data>
+  <data name="ConsumablesCurrencyCommandDefault" xml:space="preserve">
+    <value>@$username a {0} {1} $</value>
+    <comment>{0} is the amount of currency
+{1} is the name of the currency</comment>
+  </data>
+  <data name="ConsumablesCurrencyRankAddAllCommandDefault" xml:space="preserve">
+    <value>Tout le monde a eu $arg 1text {0}!</value>
+    <comment>{0} is the name of the currency/rank</comment>
+  </data>
+  <data name="ConsumablesCurrencyRankAddCommandDefault" xml:space="preserve">
+    <value>@$targetusername a reçu $arg 2text {0}</value>
+    <comment>{0} is the name of the currency/rank</comment>
+  </data>
+  <data name="ConsumablesCurrencyRankGiveCommandDefault" xml:space="preserve">
+    <value>@$username a donné @$targetusername $arg 2text {0}</value>
+    <comment>{0} is the name of the currency/rank</comment>
+  </data>
+  <data name="ConsumablesRankCommandDefault" xml:space="preserve">
+    <value>@$username est un {0} $ avec {1} {2} $</value>
+    <comment>{0} is rank name
+{1} is the amount of rank points
+{2} is the name of the rank</comment>
+  </data>
+  <data name="ConsumablesStreamPassAddAllCommandDefault" xml:space="preserve">
+    <value>Tout le monde a obtenu des points $arg 1text pour {0}!</value>
+    <comment>{0} is the name of the stream pass</comment>
+  </data>
+  <data name="ConsumablesStreamPassAddCommandDefault" xml:space="preserve">
+    <value>@$targetusername a reçu des points $arg 2text pour {0}</value>
+    <comment>{0} is the name of the stream pass</comment>
+  </data>
+  <data name="ConsumablesStreamPassCommandDefault" xml:space="preserve">
+    <value>@$username est de niveau {0} $ avec des points de {1} $!</value>
+    <comment>{0} is the level number
+{1} is the number of points</comment>
+  </data>
+  <data name="FailedToInitializeSession" xml:space="preserve">
+    <value>Impossible d’initialiser la session. Si cela continue, veuillez visiter le Mix It Up Discord pour obtenir de l’aide.</value>
+  </data>
+  <data name="FileIsNotInCorrectFormat" xml:space="preserve">
+    <value>Le fichier n’est pas au format correct</value>
+  </data>
+  <data name="Give" xml:space="preserve">
+    <value>Donner</value>
+  </data>
+  <data name="GivesAmountToSpecifiedUser" xml:space="preserve">
+    <value>Donne le montant à l’utilisateur spécifié</value>
+  </data>
+  <data name="InventoryBuyCommandDefault" xml:space="preserve">
+    <value>Vous avez acheté $itemtotal $itemname pour $itemcost $currencyname</value>
+  </data>
+  <data name="InventorySellCommandDefault" xml:space="preserve">
+    <value>Vous avez vendu $itemtotal $itemname pour $itemcost $currencyname</value>
+  </data>
+  <data name="InventoryTradeCommandDefault" xml:space="preserve">
+    <value>@$username a échangé $itemtotal $itemname à @$targetusername contre $targetitemtotal $targetitemname</value>
+  </data>
+  <data name="NewUserWizardAtLeastOneAccountMustBeSignedIn" xml:space="preserve">
+    <value>Au moins 1 compte Streamer doit être connecté</value>
+  </data>
+  <data name="SettingsAlreadyExistForAccount" xml:space="preserve">
+    <value>Il existe déjà des paramètres avec le même compte pour {0}. Veuillez vous connecter avec un autre compte ou relancer Mix It Up pour sélectionner ces paramètres dans la liste déroulante.</value>
+    <comment>{0} is the name of the streaming platform</comment>
+  </data>
+  <data name="SettingsNoFileHasBeenLoaded" xml:space="preserve">
+    <value>Aucun fichier de paramètres n’a été chargé</value>
+  </data>
+  <data name="ShowsUsersAmount" xml:space="preserve">
+    <value>Affiche le montant de l’utilisateur</value>
+  </data>
+  <data name="DonatedAmount" xml:space="preserve">
+    <value>{0} donnés</value>
+    <comment>{0} is the amount donated</comment>
+  </data>
+  <data name="StreamlootsPacksPurchasedAmount" xml:space="preserve">
+    <value>Pack(s) de {0} acheté(s)</value>
+    <comment>{0} is the amount of packs</comment>
+  </data>
+  <data name="TwitchBitsCheeredAmount" xml:space="preserve">
+    <value>Cheer {0} Bits</value>
+    <comment>{0} is the amount of bits</comment>
+  </data>
+  <data name="AlertDonated" xml:space="preserve">
+    <value>{0} {1} donnés</value>
+    <comment>{0} is the name of the user
+{1} is the amount donated</comment>
+  </data>
+  <data name="ToggleCommand" xml:space="preserve">
+    <value>Basculer, commande</value>
+  </data>
+  <data name="PortNumber" xml:space="preserve">
+    <value>Numéro de port</value>
+  </data>
+  <data name="TrovoCustomRole" xml:space="preserve">
+    <value>Rôle personnalisé Trovo</value>
+  </data>
+  <data name="TextToSpeechFunctionalityProvidedBy" xml:space="preserve">
+    <value>Fonctionnalité de synthèse vocale fournie par</value>
+  </data>
+  <data name="AutoModerated" xml:space="preserve">
+    <value>Auto-modéré</value>
+  </data>
+  <data name="By" xml:space="preserve">
+    <value>Par</value>
+  </data>
+  <data name="DeletedBy" xml:space="preserve">
+    <value>Supprimé par</value>
+  </data>
+  <data name="WhisperNumberFormat" xml:space="preserve">
+    <value>Chuchoteur #{0}</value>
+    <comment>{0} is the whisper number</comment>
+  </data>
+  <data name="AutoCommandsExplanation" xml:space="preserve">
+    <value>Les commandes suivantes peuvent être créées automatiquement pour que vous puissiez commencer à utiliser cette fonctionnalité. Souhaitez-vous que nous ajoutions automatiquement les commandes suivantes pour vous?</value>
+  </data>
+  <data name="MixItUp" xml:space="preserve">
+    <value>Mélangez-le</value>
+  </data>
+  <data name="MixItUpPopOut" xml:space="preserve">
+    <value>Mélangez-le - Pop Out</value>
+  </data>
+  <data name="MixItUpNewUserWizard" xml:space="preserve">
+    <value>Mix It Up - Assistant Nouvel utilisateur</value>
+  </data>
+  <data name="UserEditor" xml:space="preserve">
+    <value>Éditeur utilisateur</value>
+  </data>
+  <data name="WizardBack" xml:space="preserve">
+    <value>&lt; Retour</value>
+  </data>
+  <data name="WizardCommands1" xml:space="preserve">
+    <value>Mix It Up utilise une structure de commande et d’action pour tout dans l’application. Pensez-y comme à une recette que vous suivriez pour faire de la nourriture.</value>
+  </data>
+  <data name="WizardCommands2" xml:space="preserve">
+    <value>Disons que vous vouliez faire des pâtes; vous suivrez les étapes de la recette l’une après l’autre jusqu’à ce que vous ayez terminé. Vous devez également suivre chaque étape dans l’ordre dans lequel elles sont spécifiées. Par exemple, vous devez chauffer l’eau avant de pouvoir ajouter les pâtes.</value>
+  </data>
+  <data name="WizardCommands3" xml:space="preserve">
+    <value>Les commandes sont comme une recette et les actions sont les étapes de cette recette. Disons que vous faites un ordre de cri, quelles sont les choses qu’il devrait faire? Chacune de ces « choses » peut être considérée comme une action.</value>
+  </data>
+  <data name="WizardCommands4" xml:space="preserve">
+    <value>Dans cet exemple, notre commande shout out envoie un message au chat, émet un son, attend 10 secondes, puis affiche une image. Chacun d’entre eux correspond à un type d’action différent (Chat, Son, Attente et Superposition).</value>
+  </data>
+  <data name="WizardFinal1" xml:space="preserve">
+    <value>Mix It Up est une application de bureau uniquement, de sorte que vos paramètres et données n’existent que sur votre ordinateur. Par conséquent, nous encourageons les utilisateurs à configurer des sauvegardes automatiques pour vos paramètres afin de vous assurer que vous avez toujours quelque chose à quoi vous rabattre en cas de problème:</value>
+  </data>
+  <data name="WizardFinal2" xml:space="preserve">
+    <value>Vous ne savez pas comment fonctionne une fonctionnalité ou vous voulez plus d’informations ? Cliquez simplement sur l’icône Aide dans la barre supérieure de la fenêtre principale pour en savoir plus!</value>
+  </data>
+  <data name="WizardFinal3" xml:space="preserve">
+    <value>N’oubliez pas les ressources suivantes à votre disposition pour toute question ou assistance :</value>
+  </data>
+  <data name="WizardFinal4" xml:space="preserve">
+    <value>Merci d’utiliser Mix It Up et nous espérons qu’il répondra à tous vos besoins!</value>
+  </data>
+  <data name="WizardIntro1" xml:space="preserve">
+    <value>Cet assistant vous aidera à démarrer avec Mix It Up en vous connectant à vos comptes de plateforme de streaming, en vous aidant à importer vos données existantes à partir de certains robots et en vous guidant à travers certaines des ficelles du fonctionnement.</value>
+  </data>
+  <data name="WizardIntro2" xml:space="preserve">
+    <value>Avant de commencer, nous voulons vous faire part de certaines excellentes ressources que vous pouvez utiliser pour vous aider à résoudre des problèmes ou vous donner des idées de choses à créer. Cliquez sur l’un des boutons ci-dessous pour accéder à cette ressource :</value>
+  </data>
+  <data name="WizardIntro3" xml:space="preserve">
+    <value>Notre Discord est notre point principal pour le support et les questions. Cela devrait être votre premier endroit où aller pour tous les problèmes que vous pourriez rencontrer.</value>
+  </data>
+  <data name="WizardIntro4" xml:space="preserve">
+    <value>Notre compte Twitter est un excellent moyen de rester à jour sur les annonces importantes ou les mises à jour majeures.</value>
+  </data>
+  <data name="WizardIntro5" xml:space="preserve">
+    <value>Notre compte YouTube propose de nombreux tutoriels créés par nous et notre communauté pour vous aider à vous développer ou à montrer des créations cool.</value>
+  </data>
+  <data name="WizardIntro6" xml:space="preserve">
+    <value>Nos pages Wiki contiennent des informations détaillées sur de nombreuses fonctionnalités disponibles dans l’ensemble de l’application.</value>
+  </data>
+  <data name="WizardNext" xml:space="preserve">
+    <value>Suivant &gt;</value>
+  </data>
+  <data name="MixItUpLogin" xml:space="preserve">
+    <value>Mix It Up - Connexion</value>
+  </data>
+  <data name="ANewUpdateIsAvailableForMixItUp" xml:space="preserve">
+    <value>Une nouvelle mise à jour est disponible pour Mix It Up!</value>
+  </data>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>Version actuelle</value>
+  </data>
+  <data name="IfUpdateDoesNotCompleteRestartComputer" xml:space="preserve">
+    <value>Si la mise à jour ne se termine pas correctement et que vous êtes invité à effectuer à nouveau la mise à jour, redémarrez d’abord votre ordinateur, puis réessayez.</value>
+  </data>
+  <data name="MixItUpUpdateAvailable" xml:space="preserve">
+    <value>Mix It Up - Mise à jour disponible</value>
+  </data>
+  <data name="NewVersion" xml:space="preserve">
+    <value>Nouvelle version</value>
+  </data>
+  <data name="PreviewUpdateWarning1" xml:space="preserve">
+    <value>AVIS IMPORTANT : Les mises à jour en version préliminaire sont l’occasion de tester les fonctionnalités à un stade précoce et de signaler les problèmes. Ils reçoivent une certaine quantité de tests avant d’être publiés, mais pas la même quantité donnée aux mises à jour publiques.</value>
+  </data>
+  <data name="PreviewUpdateWarning2" xml:space="preserve">
+    <value>Nous vous encourageons à sauvegarder vos paramètres en cliquant d’abord sur Ignorer ci-dessous, puis en accédant à Paramètres -&gt; Avancé. Si vous ne souhaitez pas prendre cette mise à jour, veuillez cliquer sur Ignorer ci-dessous et éventuellement désactiver le programme d’aperçu sous Paramètres -&gt; Général.</value>
+  </data>
+  <data name="Skip" xml:space="preserve">
+    <value>Sautiller</value>
+  </data>
+  <data name="WouldYouLikeToDownloadThisUpdate" xml:space="preserve">
+    <value>Souhaitez-vous télécharger cette mise à jour ?</value>
   </data>
 </root>
