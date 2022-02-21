@@ -60,45 +60,45 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -2085,9 +2085,6 @@
   <data name="StreamElementsDonation" xml:space="preserve">
     <value>StreamElements донат</value>
   </data>
-  <data name="StreamJarDonation" xml:space="preserve">
-    <value>StreamJar донати</value>
-  </data>
   <data name="StreamlabsDonation" xml:space="preserve">
     <value>Streamlabs Donation</value>
   </data>
@@ -2576,14 +2573,6 @@
   </data>
   <data name="HideUserSubscriberBadge" xml:space="preserve">
     <value>Приховати значок підписки користувача</value>
-  </data>
-  <data name="TwitchMassGiftedSubsFilterAmount" xml:space="preserve">
-    <value>Фільтр кількості масових подарункових підписок Twitch</value>
-  </data>
-  <data name="TwitchMassGiftedSubsFilterAmountTooltip" xml:space="preserve">
-    <value>Ця опція допомагає гарантувати, що виконується лише звичайна команда події "Подарункова підписка" АБО "Масові подарункові підписки", залежно від того, для чого встановлено номер. Це розроблено, щоб допомогти зменшити спам команд, подарункових підписок, та покращити якість роботи вашого потоку. Зауважте, що це призведе до невеликої затримки обробки команд події, подарункової підписки та масових подарункових підписок, зазвичай до 10 секунд.
-
-Наприклад, якщо цей параметр увімкнено, а сума встановлена на 5, то кожного разу, коли буде подаровано одночасно 5 АБО МЕНШЕ підписок, вона ТІЛЬКИ запустить звичайну команду події «Подарункова підписка» для кожної підписки. Якщо подаровано БІЛЬШЕ, ніж 5, то він ТІЛЬКИ один раз запустить команду події «Масові подарункові підписки».</value>
   </data>
   <data name="AddSeparatorsBetweenMessages" xml:space="preserve">
     <value>Додавання роздільників між повідомленнями</value>
@@ -4575,12 +4564,6 @@
   <data name="StreamingSoftwareSourceName" xml:space="preserve">
     <value>Ім'я джерела потокового ПЗ</value>
   </data>
-  <data name="StreamJar" xml:space="preserve">
-    <value>StreamJar</value>
-  </data>
-  <data name="StreamJarInfo1" xml:space="preserve">
-    <value>Підключення до служби StreamJar дозволяє виконувати дії під час отримання донатів. Коли ви входите, відкриється веб-сторінка автентифікації з проханням увійти в StreamJar і затвердити Mix It Up для доступу до вашої інформації.</value>
-  </data>
   <data name="StreamlabsInfo1" xml:space="preserve">
     <value>Підключення до служби Streamlabs дозволяє виконувати дії під час отримання донатів. Коли ви входите, відкриється веб-сторінка автентифікації з проханням увійти в Streamlabs і затвердити Mix It Up для доступу до вашої інформації.</value>
   </data>
@@ -4626,9 +4609,6 @@
   </data>
   <data name="TiltifyInfo1" xml:space="preserve">
     <value>Підключення до служби Tiltify дозволяє виконувати дії під час отримання донатів. Коли ви входите, відкриється веб-сторінка автентифікації з проханням увійти в Tiltify і затвердити Mix It Up для доступу до вашої інформації. Після того як ви під’єднаєте Tiltify, вам потрібно вибрати кампанію, яку ви хочете використовувати під час виявлення донатів.</value>
-  </data>
-  <data name="TiltifyInfo2" xml:space="preserve">
-    <value>ПРИМІТКА: Під час входу, будь ласка, використовуйте скриньку електронної пошти, щоб увійти до свого облікового запису. Наразі неможливо увійти з підключеними обліковими записами.</value>
   </data>
   <data name="TipeeeStream" xml:space="preserve">
     <value>TipeeeStream</value>
@@ -5210,9 +5190,6 @@
   <data name="StreamElementsUserDataFailed" xml:space="preserve">
     <value>Не вдалося отримати інформацію про користувача</value>
   </data>
-  <data name="StreamJarChannelDataFailed" xml:space="preserve">
-    <value>Не вдалося отримати дані каналу</value>
-  </data>
   <data name="StreamlabsOBSAdminMaybe" xml:space="preserve">
     <value>Streamlabs OBS може працювати від адміністратора, а Mix It Up - ні. Спробуйте запустити Mix It Up від адміністратора перед підключенням.</value>
   </data>
@@ -5380,9 +5357,6 @@
   </data>
   <data name="ChannelPointRewardUpdateCooldownAndLimits" xml:space="preserve">
     <value>Оновити час оновлення та обмеження</value>
-  </data>
-  <data name="CreateChannelPointReward" xml:space="preserve">
-    <value>Створити винагороду за бали каналу</value>
   </data>
   <data name="ChannelPointRewardName" xml:space="preserve">
     <value>Ім'я винагороди за бали каналу</value>

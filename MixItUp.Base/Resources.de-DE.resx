@@ -1823,9 +1823,6 @@
   <data name="StreamElementsDonation" xml:space="preserve">
     <value>StreamElements Spende</value>
   </data>
-  <data name="StreamJarDonation" xml:space="preserve">
-    <value>StreamJar Spende</value>
-  </data>
   <data name="StreamlabsDonation" xml:space="preserve">
     <value>Streamlabs Spende</value>
   </data>
@@ -1898,10 +1895,6 @@
   </data>
   <data name="StreamElements" xml:space="preserve">
     <value>StreamElements</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="StreamJar" xml:space="preserve">
-    <value>StreamJar</value>
     <comment>Manual</comment>
   </data>
   <data name="StreamlabsOBS" xml:space="preserve">
@@ -2008,7 +2001,7 @@
     <value>Abo-Priorität:</value>
     <comment>Manual</comment>
   </data>
-   <data name="UserSelection" xml:space="preserve">
+  <data name="UserSelection" xml:space="preserve">
     <value>Benutzer ausgewählt</value>
     <comment>Manual</comment>
   </data>
@@ -2016,7 +2009,7 @@
     <value>Dashboard</value>
     <comment>Manual</comment>
   </data>
-    <data name="LastSeen" xml:space="preserve">
+  <data name="LastSeen" xml:space="preserve">
     <value>Zuletzt gesehen</value>
     <comment>Manual</comment>
   </data>
@@ -2051,15 +2044,15 @@
     </value>
     <comment>Manual</comment>
   </data>
-   <data name="CommandEditor" xml:space="preserve">
+  <data name="CommandEditor" xml:space="preserve">
     <value>Kommando anpassen</value>
     <comment>Manual</comment>
   </data>
-    <data name="AutoReplenish" xml:space="preserve">
+  <data name="AutoReplenish" xml:space="preserve">
     <value>Automatisch Aufstocken</value>
     <comment>Manual</comment>
   </data>
-   <data name="BitsCheered" xml:space="preserve">
+  <data name="BitsCheered" xml:space="preserve">
     <value>Bits bejubelt</value>
     <comment>Manual</comment>
   </data>
@@ -2123,7 +2116,7 @@
     <value>max. Warteschlange</value>
     <comment>Manual</comment>
   </data>
-   <data name="CommandHistory" xml:space="preserve">
+  <data name="CommandHistory" xml:space="preserve">
     <value>Befehlshistorie</value>
     <comment>Manual</comment>
   </data>
