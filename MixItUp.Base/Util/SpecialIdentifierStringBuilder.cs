@@ -112,94 +112,6 @@ namespace MixItUp.Base.Util
             SpecialIdentifierStringBuilder.GlobalSpecialIdentifiers.Remove(specialIdentifier);
         }
 
-        public static string ConvertScorpBotText(string text)
-        {
-            text = text.Replace("$user", "@$username");
-            text = text.Replace("$url", "$userurl");
-            text = text.Replace("$hours", "$userhours");
-            text = text.Replace("$game", "$usergame");
-
-            for (int i = 1; i < 10; i++)
-            {
-                text = text.Replace("$target" + i, "@$arg" + i + "username");
-            }
-            text = text.Replace("$target", "@$targetusername");
-
-            text = text.Replace("$randuser", "@$randomusername");
-
-            text = text.Replace("$msg", "$allargs");
-
-            text = text.Replace("$mygame", "$streamerusergame");
-            text = text.Replace("$title", "$streamtitle");
-            text = text.Replace("$status", "$streamtitle");
-
-            if (text.Contains("$randnum("))
-            {
-                text = ReplaceParameterVariablesEntries(text, "$randnum(", "$randomnumber");
-            }
-
-            if (text.Contains("$tophours("))
-            {
-                text = ReplaceParameterVariablesEntries(text, "$tophours(", "$top", "time");
-            }
-
-            return text;
-        }
-
-        public static string ConvertStreamlabsChatBotText(string text)
-        {
-            text = text.Replace("$targetid", "$targetuserid");
-            text = text.Replace("$targetname", "$targetusername");
-            text = text.Replace("$touserid", "$targetuserid");
-            text = text.Replace("$tousername", "$targetusername");
-
-            text = text.Replace("$randuserid", "$randomuserid");
-            text = text.Replace("$randusername", "$randomusername");
-
-            text = text.Replace("$mychannel", "$streameruserid");
-            text = text.Replace("$mychannelname", "$streamerusername");
-
-            for (int i = 1; i < 10; i++)
-            {
-                text = text.Replace("$arg" + i, "$arg" + i + "text");
-                text = text.Replace("$argl" + i, "$arg" + i + "text");
-                text = text.Replace("$num" + i, "$arg" + i + "text");
-            }
-
-            text = text.Replace("$points", "$userpoints");
-            text = text.Replace("$pointstext", "$userpoints");
-
-            if (text.Contains("$randnum("))
-            {
-                text = ReplaceParameterVariablesEntries(text, "$randnum(", "$randomnumber");
-            }
-
-            if (text.Contains("$toppoints("))
-            {
-                text = ReplaceParameterVariablesEntries(text, "$toppoints(", "$top", "points");
-            }
-
-            if (text.Contains("$tophours("))
-            {
-                text = ReplaceParameterVariablesEntries(text, "$tophours(", "$top", "time");
-            }
-
-            text = text.Replace("$rank", "$userrankname");
-            text = text.Replace("$hours", "$userhours");
-
-            text = text.Replace("$url", "$targetuserurl");
-            text = text.Replace("$game", "$targetusergame");
-
-            text = text.Replace("$myurl", "$streameruserurl");
-            text = text.Replace("$mygame", "$streamerusergame");
-
-            text = text.Replace("$uptime", "$uptimetotal");
-            text = text.Replace("$followercount", "$streameruserfollowers");
-            text = text.Replace("$subcount", "$streamsubcount");
-
-            return text;
-        }
-
         public static bool IsValidSpecialIdentifier(string text)
         {
             return !string.IsNullOrEmpty(text) && text.All(c => Char.IsLetterOrDigit(c));
@@ -271,6 +183,12 @@ namespace MixItUp.Base.Util
 
         public async Task ReplaceCommonSpecialModifiers(CommandParametersModel parameters)
         {
+            StreamingPlatformTypeEnum platform = parameters.Platform;
+            if (platform == StreamingPlatformTypeEnum.All)
+            {
+                platform = ChannelSession.Settings.DefaultStreamingPlatform;
+            }
+
             if (!this.text.Contains(SpecialIdentifierHeader))
             {
                 return;
@@ -512,7 +430,7 @@ namespace MixItUp.Base.Util
                     }
                 }
 
-                if (parameters.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
+                if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<TwitchSessionService>().Stream?.viewer_count.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewscount", ServiceManager.Get<TwitchSessionService>().User?.view_count.ToString());
@@ -556,11 +474,11 @@ namespace MixItUp.Base.Util
                         }
                     }
                 }
-                else if (parameters.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().IsConnected)
+                else if (platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().IsConnected)
                 {
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<YouTubeSessionService>().Broadcast?.Snippet?.Title);
                 }
-                else if (parameters.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
+                else if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
                 {
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<TrovoSessionService>().Channel?.current_viewers.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<TrovoSessionService>().Channel?.live_title);
@@ -568,7 +486,7 @@ namespace MixItUp.Base.Util
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", ServiceManager.Get<TrovoSessionService>().Channel?.followers.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount", ServiceManager.Get<TrovoSessionService>().Channel?.subscriber_num.ToString());
                 }
-                else if (parameters.Platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().IsConnected)
+                else if (platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().IsConnected)
                 {
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.countViewers.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<GlimeshSessionService>().User?.channel?.title);
@@ -593,7 +511,7 @@ namespace MixItUp.Base.Util
                     {
                         if (this.ContainsSpecialIdentifier(currentArgumentSpecialIdentifierHeader + UserSpecialIdentifierHeader))
                         {
-                            UserV2ViewModel argUser = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(parameters.Platform, parameters.Arguments.ElementAt(i), performPlatformSearch: true);
+                            UserV2ViewModel argUser = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(platform, parameters.Arguments.ElementAt(i), performPlatformSearch: true);
                             if (argUser != null)
                             {
                                 await this.HandleUserSpecialIdentifiers(argUser, currentArgumentSpecialIdentifierHeader);
