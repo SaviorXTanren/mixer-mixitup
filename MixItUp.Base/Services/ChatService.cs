@@ -243,6 +243,18 @@ namespace MixItUp.Base.Services
             {
                 await ServiceManager.Get<TrovoChatEventService>().TimeoutUser(user.Username, (int)durationInSeconds);
             }
+
+            if (user.Platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Has<GlimeshChatEventService>() && ServiceManager.Get<GlimeshChatEventService>().IsUserConnected)
+            {
+                if (durationInSeconds > 300)
+                {
+                    await ServiceManager.Get<GlimeshChatEventService>().LongTimeoutUser(user);
+                }
+                else
+                {
+                    await ServiceManager.Get<GlimeshChatEventService>().ShortTimeoutUser(user);
+                }
+            }
         }
 
         public async Task ModUser(UserV2ViewModel user)
