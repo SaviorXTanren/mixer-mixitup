@@ -5,6 +5,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Glimesh;
@@ -172,17 +173,17 @@ namespace MixItUp.WPF.Controls.Chat
                             List<IChatEmoteViewModel> emotes = new List<IChatEmoteViewModel>();
 
                             string tagText = tag.Substring(1, tag.Length - 1);
-                            if (ServiceManager.Has<TwitchChatService>())
+                            if (ServiceManager.Get<TwitchChatService>().IsUserConnected)
                             {
                                 emotes.AddRange(this.FindMatchingEmoticons<TwitchChatEmoteViewModel>(tagText, ServiceManager.Get<TwitchChatService>().Emotes));
                             }
-                            if (ServiceManager.Has<TrovoChatEventService>())
+                            if (ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
                             {
                                 //emotes.AddRange(this.FindMatchingEmoticons<TrovoChatEmoteViewModel>(tagText, ServiceManager.Get<TrovoChatEventService>().ChannelEmotes));
                                 //emotes.AddRange(this.FindMatchingEmoticons<TrovoChatEmoteViewModel>(tagText, ServiceManager.Get<TrovoChatEventService>().EventEmotes));
                                 //emotes.AddRange(this.FindMatchingEmoticons<TrovoChatEmoteViewModel>(tagText, ServiceManager.Get<TrovoChatEventService>().GlobalEmotes));
                             }
-                            if (ServiceManager.Has<GlimeshChatEventService>())
+                            if (ServiceManager.Get<GlimeshChatEventService>().IsUserConnected)
                             {
                                 //emotes.AddRange(this.FindMatchingEmoticons<GlimeshChatEmoteViewModel>(tagText, ServiceManager.Get<GlimeshChatEventService>().Emotes));
                             }
@@ -192,7 +193,7 @@ namespace MixItUp.WPF.Controls.Chat
                     }
                     else if (ChannelSession.Settings.ShowBetterTTVEmotes || ChannelSession.Settings.ShowFrankerFaceZEmotes)
                     {
-                        if (ServiceManager.Has<TwitchChatService>())
+                        if (ServiceManager.Get<TwitchChatService>().IsUserConnected || ServiceManager.Get<YouTubeChatService>().IsUserConnected)
                         {
                             Dictionary<string, object> emotes = new Dictionary<string, object>();
                             if (ChannelSession.Settings.ShowBetterTTVEmotes)
