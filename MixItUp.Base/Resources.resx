@@ -7552,4 +7552,13 @@ We will attempt to re-connect with the service when possible. If this continues,
   <data name="WouldYouLikeToDownloadThisUpdate" xml:space="preserve">
     <value>Would you like to download this update?</value>
   </data>
+  <data name="DeleteQuote" xml:space="preserve">
+    <value>Delete Quote</value>
+  </data>
+  <data name="PreMadeChatCommandDeleteQuoteUsage" xml:space="preserve">
+    <value>USAGE: !deletequote [QUOTE NUMBER]</value>
+  </data>
+  <data name="QuoteDeletedHeader" xml:space="preserve">
+    <value>Quote Deleted: </value>
+  </data>
 </root>
