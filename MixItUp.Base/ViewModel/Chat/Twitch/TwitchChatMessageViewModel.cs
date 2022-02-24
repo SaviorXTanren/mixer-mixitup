@@ -12,7 +12,7 @@ using Twitch.Base.Models.NewAPI.Chat;
 
 namespace MixItUp.Base.ViewModel.Chat.Twitch
 {
-    public class TwitchChatEmoteViewModel
+    public class TwitchChatEmoteViewModel : IChatEmoteViewModel
     {
         public string ID { get; private set; }
         public string Code { get; private set; }

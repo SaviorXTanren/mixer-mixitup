@@ -36,15 +36,15 @@ namespace MixItUp.Base.ViewModel.Chat.Trovo
                     {
                         if (ServiceManager.Get<TrovoChatEventService>().ChannelEmotes.ContainsKey(emote))
                         {
-                            this.MessageParts[this.MessageParts.Count - 1] = new TrovoChatEmoteViewModel(ServiceManager.Get<TrovoChatEventService>().ChannelEmotes[emote]);
+                            this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TrovoChatEventService>().ChannelEmotes[emote];
                         }
                         else if (ServiceManager.Get<TrovoChatEventService>().EventEmotes.ContainsKey(emote))
                         {
-                            this.MessageParts[this.MessageParts.Count - 1] = new TrovoChatEmoteViewModel(ServiceManager.Get<TrovoChatEventService>().EventEmotes[emote]);
+                            this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TrovoChatEventService>().EventEmotes[emote];
                         }
                         else if (ServiceManager.Get<TrovoChatEventService>().GlobalEmotes.ContainsKey(emote))
                         {
-                            this.MessageParts[this.MessageParts.Count - 1] = new TrovoChatEmoteViewModel(ServiceManager.Get<TrovoChatEventService>().GlobalEmotes[emote]);
+                            this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TrovoChatEventService>().GlobalEmotes[emote];
                         }
                     }
                 }

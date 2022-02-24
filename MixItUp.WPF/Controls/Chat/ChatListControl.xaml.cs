@@ -2,9 +2,13 @@
 using MixItUp.Base;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Chat.Glimesh;
+using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
@@ -17,7 +21,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using Twitch.Base.Models.NewAPI.Chat;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -163,9 +166,28 @@ namespace MixItUp.WPF.Controls.Chat
                     }
                     else if (tag.StartsWith(":"))
                     {
-                        if (ServiceManager.Has<TwitchChatService>())
+                        // Short circuit for very short searches that start with letters or digits
+                        if (tag.Length > 2)
                         {
-                            this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, this.FindMatchingEmoticons<TwitchChatEmoteViewModel>(tag.Substring(1, tag.Length - 1), ServiceManager.Get<TwitchChatService>().Emotes));
+                            List<IChatEmoteViewModel> emotes = new List<IChatEmoteViewModel>();
+
+                            string tagText = tag.Substring(1, tag.Length - 1);
+                            if (ServiceManager.Has<TwitchChatService>())
+                            {
+                                emotes.AddRange(this.FindMatchingEmoticons<TwitchChatEmoteViewModel>(tagText, ServiceManager.Get<TwitchChatService>().Emotes));
+                            }
+                            if (ServiceManager.Has<TrovoChatEventService>())
+                            {
+                                //emotes.AddRange(this.FindMatchingEmoticons<TrovoChatEmoteViewModel>(tagText, ServiceManager.Get<TrovoChatEventService>().ChannelEmotes));
+                                //emotes.AddRange(this.FindMatchingEmoticons<TrovoChatEmoteViewModel>(tagText, ServiceManager.Get<TrovoChatEventService>().EventEmotes));
+                                //emotes.AddRange(this.FindMatchingEmoticons<TrovoChatEmoteViewModel>(tagText, ServiceManager.Get<TrovoChatEventService>().GlobalEmotes));
+                            }
+                            if (ServiceManager.Has<GlimeshChatEventService>())
+                            {
+                                //emotes.AddRange(this.FindMatchingEmoticons<GlimeshChatEmoteViewModel>(tagText, ServiceManager.Get<GlimeshChatEventService>().Emotes));
+                            }
+
+                            this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, emotes);
                         }
                     }
                     else if (ChannelSession.Settings.ShowBetterTTVEmotes || ChannelSession.Settings.ShowFrankerFaceZEmotes)
@@ -197,11 +219,6 @@ namespace MixItUp.WPF.Controls.Chat
 
         public IEnumerable<T> FindMatchingEmoticons<T>(string text, IDictionary<string, T> emoticons)
         {
-            if (text.Length == 1 && char.IsLetterOrDigit(text[0]))
-            {
-                // Short circuit for very short searches that start with letters or digits
-                return new List<T>();
-            }
             return emoticons.Where(v => v.Key.StartsWith(text, StringComparison.InvariantCultureIgnoreCase)).Select(v => v.Value).Distinct().Reverse().Take(5);
         }
 
@@ -369,6 +386,9 @@ namespace MixItUp.WPF.Controls.Chat
         {
             if (items.Count() > 0)
             {
+                // Only take 5 emotes max
+                items = items.Take(5);
+
                 this.indexOfLastIntellisenseText = this.ChatMessageTextBox.Text.LastIndexOf(text);
                 listBox.ItemsSource = items;
                 listBox.SelectedIndex = items.Count() - 1;
@@ -396,6 +416,14 @@ namespace MixItUp.WPF.Controls.Chat
                 if (emoticon != null)
                 {
                     this.SelectIntellisenseItem(emoticon.Name);
+                }
+            }
+            if (this.EmoticonIntellisenseListBox.SelectedItem is TrovoChatEmoteViewModel)
+            {
+                TrovoChatEmoteViewModel emoticon = this.EmoticonIntellisenseListBox.SelectedItem as TrovoChatEmoteViewModel;
+                if (emoticon != null)
+                {
+                    this.SelectIntellisenseItem(":" + emoticon.Name);
                 }
             }
             else if (this.EmoticonIntellisenseListBox.SelectedItem is BetterTTVEmoteModel)
