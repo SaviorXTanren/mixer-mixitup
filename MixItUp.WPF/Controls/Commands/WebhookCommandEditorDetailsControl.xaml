@@ -14,7 +14,7 @@
     <local:CommandEditorDetailsControlBase.Resources>
         <Util:LocalizationConverter x:Key="LocalizationConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <MaterialDesign:PackIcon Kind="CodeJson" x:Key="JSONPopupIcon" Style="{StaticResource ButtonIcon}" x:Shared="False" ToolTip="{x:Static resx:Resources.JSONToSpecialIdentifiers}" />
+        <MaterialDesign:PackIcon Kind="CodeJson" x:Key="JSONPopupIcon" Style="{StaticResource DarkLightBackgroundPackIcon}" Width="24" Height="24" x:Shared="False" ToolTip="{x:Static resx:Resources.JSONToSpecialIdentifiers}" />
     </local:CommandEditorDetailsControlBase.Resources>
 
     <Grid>

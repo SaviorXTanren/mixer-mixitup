@@ -58,7 +58,7 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <MaterialDesign:PackIcon Grid.Row="0" Kind="Import" Height="80" Width="80" Margin="-7,-10" Foreground="{StaticResource PrimaryHueMidBrush}" HorizontalAlignment="Center" />
+                        <MaterialDesign:PackIcon Grid.Row="0" Kind="Import" Height="80" Width="80" Margin="-7,-10" Style="{StaticResource DarkLightBackgroundPackIcon}" HorizontalAlignment="Center" />
 
                         <TextBlock Grid.Row="2" FontSize="40" Text="{x:Static resx:Resources.ImportActions}" HorizontalAlignment="Center" />
                     </Grid>

@@ -127,7 +127,7 @@ namespace MixItUp.Base.Model.Actions
                 totalLoops++;
                 if (totalLoops == 10)
                 {
-                    Logger.Log(LogLevel.Error, "Conditional Action repeated 10 times, possible endless loop - Command ID: " + parameters.InitialCommandID);
+                    Logger.Log(LogLevel.Error, $"Command: {parameters.InitialCommandID} - Conditional Action - Repeated 10 times, possible endless loop");
                 }
             } while (this.RepeatWhileTrue && finalResult);
         }

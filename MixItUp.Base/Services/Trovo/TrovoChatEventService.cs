@@ -81,9 +81,9 @@ namespace MixItUp.Base.Services.Trovo
 
         private const int MaxMessageLength = 500;
 
-        private Dictionary<string, ChatEmoteModel> channelEmotes = new Dictionary<string, ChatEmoteModel>();
-        private Dictionary<string, EventChatEmoteModel> eventEmotes = new Dictionary<string, EventChatEmoteModel>();
-        private Dictionary<string, GlobalChatEmoteModel> globalEmotes = new Dictionary<string, GlobalChatEmoteModel>();
+        private Dictionary<string, TrovoChatEmoteViewModel> channelEmotes = new Dictionary<string, TrovoChatEmoteViewModel>();
+        private Dictionary<string, TrovoChatEmoteViewModel> eventEmotes = new Dictionary<string, TrovoChatEmoteViewModel>();
+        private Dictionary<string, TrovoChatEmoteViewModel> globalEmotes = new Dictionary<string, TrovoChatEmoteViewModel>();
 
         private ChatClient userClient;
         private ChatClient botClient;
@@ -102,9 +102,9 @@ namespace MixItUp.Base.Services.Trovo
 
         public override string Name { get { return MixItUp.Base.Resources.TrovoChat; } }
 
-        public IDictionary<string, ChatEmoteModel> ChannelEmotes { get { return this.channelEmotes; } }
-        public IDictionary<string, EventChatEmoteModel> EventEmotes { get { return this.eventEmotes; } }
-        public IDictionary<string, GlobalChatEmoteModel> GlobalEmotes { get { return this.globalEmotes; } }
+        public IDictionary<string, TrovoChatEmoteViewModel> ChannelEmotes { get { return this.channelEmotes; } }
+        public IDictionary<string, TrovoChatEmoteViewModel> EventEmotes { get { return this.eventEmotes; } }
+        public IDictionary<string, TrovoChatEmoteViewModel> GlobalEmotes { get { return this.globalEmotes; } }
 
         public bool IsUserConnected { get { return this.userClient != null && this.userClient.IsOpen(); } }
         public bool IsBotConnected { get { return this.botClient != null && this.botClient.IsOpen(); } }
@@ -136,7 +136,7 @@ namespace MixItUp.Base.Services.Trovo
                                 {
                                     foreach (ChatEmoteModel emote in channel.emotes)
                                     {
-                                        this.ChannelEmotes[emote.name] = emote;
+                                        this.ChannelEmotes[emote.name] = new TrovoChatEmoteViewModel(emote);
                                     }
                                 }
                             }
@@ -145,7 +145,7 @@ namespace MixItUp.Base.Services.Trovo
                             {
                                 foreach (EventChatEmoteModel emote in emotePackage.eventEmotes)
                                 {
-                                    this.EventEmotes[emote.name] = emote;
+                                    this.EventEmotes[emote.name] = new TrovoChatEmoteViewModel(emote);
                                 }
                             }
 
@@ -153,7 +153,7 @@ namespace MixItUp.Base.Services.Trovo
                             {
                                 foreach (GlobalChatEmoteModel emote in emotePackage.globalEmotes)
                                 {
-                                    this.GlobalEmotes[emote.name] = emote;
+                                    this.GlobalEmotes[emote.name] = new TrovoChatEmoteViewModel(emote);
                                 }
                             }
                         }

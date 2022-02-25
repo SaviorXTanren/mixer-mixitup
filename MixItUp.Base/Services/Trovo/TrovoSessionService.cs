@@ -226,7 +226,7 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task<Result> InitializeBot(SettingsV3Model settings)
         {
-            if (this.BotConnection != null && ServiceManager.Has<TrovoChatEventService>())
+            if (this.BotConnection != null)
             {
                 Result result = await ServiceManager.Get<TrovoChatEventService>().ConnectBot();
                 if (!result.Success)
@@ -239,18 +239,12 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task CloseUser()
         {
-            if (ServiceManager.Has<TrovoChatEventService>())
-            {
-                await ServiceManager.Get<TrovoChatEventService>().DisconnectUser();
-            }
+            await ServiceManager.Get<TrovoChatEventService>().DisconnectUser();
         }
 
         public async Task CloseBot()
         {
-            if (ServiceManager.Has<TrovoChatEventService>())
-            {
-                await ServiceManager.Get<TrovoChatEventService>().DisconnectBot();
-            }
+            await ServiceManager.Get<TrovoChatEventService>().DisconnectBot();
         }
 
         public void SaveSettings(SettingsV3Model settings)

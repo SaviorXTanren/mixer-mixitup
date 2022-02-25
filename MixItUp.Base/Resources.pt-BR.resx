@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-	<!-- 
+  <!-- 
 Microsoft ResX Schema 
     
 Version 2.0
@@ -47,217 +47,257 @@ value   : The object must be serialized into a byte array
 : using a System.ComponentModel.TypeConverter
 : and then encoded with base64 encoding.
 -->
-	<xsd:schema id="root"
-		xmlns=""
-		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-		xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-		<xsd:element name="root" msdata:IsDataSet="true">
-			<xsd:complexType>
-				<xsd:choice maxOccurs="unbounded">
-					<xsd:element name="metadata">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" />
-							</xsd:sequence>
-							<xsd:attribute name="name" use="required" type="xsd:string" />
-							<xsd:attribute name="type" type="xsd:string" />
-							<xsd:attribute name="mimetype" type="xsd:string" />
-							<xsd:attribute ref="xml:space" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="assembly">
-						<xsd:complexType>
-							<xsd:attribute name="alias" type="xsd:string" />
-							<xsd:attribute name="name" type="xsd:string" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="data">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-							<xsd:attribute ref="xml:space" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="resheader">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" use="required" />
-						</xsd:complexType>
-					</xsd:element>
-				</xsd:choice>
-			</xsd:complexType>
-		</xsd:element>
-	</xsd:schema>
-	<resheader name="resmimetype">
-		<value>text/microsoft-resx</value>
-	</resheader>
-	<resheader name="version">
-		<value>2.0</value>
-	</resheader>
-	<resheader name="reader">
-		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<resheader name="writer">
-		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<data name="Discord" xml:space="preserve">
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Discord" xml:space="preserve">
 		<value>Discord</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="HTML" xml:space="preserve">
+  <data name="HTML" xml:space="preserve">
 		<value>HTML</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="IFTTT" xml:space="preserve">
+  <data name="IFTTT" xml:space="preserve">
 		<value>IFTTT</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="Login" xml:space="preserve">
+  <data name="Login" xml:space="preserve">
 		<value>Iniciar sessão</value>
 		<comment>Google</comment>
 	</data>
-	<data name="OvrStream" xml:space="preserve">
+  <data name="OvrStream" xml:space="preserve">
 		<value>OvrStream</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="RTS" xml:space="preserve">
+  <data name="RTS" xml:space="preserve">
 		<value>RTS</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="ExtraLife" xml:space="preserve">
+  <data name="ExtraLife" xml:space="preserve">
 		<value>Extra Life</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="Twitch" xml:space="preserve">
+  <data name="Twitch" xml:space="preserve">
 		<value>Twitch</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="JustGiving" xml:space="preserve">
+  <data name="JustGiving" xml:space="preserve">
 		<value>JustGiving</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="OBSStudio" xml:space="preserve">
+  <data name="OBSStudio" xml:space="preserve">
 		<value>OBS Studio</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="Patreon" xml:space="preserve">
+  <data name="Patreon" xml:space="preserve">
 		<value>Patreon</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="StreamAvatars" xml:space="preserve">
+  <data name="StreamAvatars" xml:space="preserve">
 		<value>Stream Avatars</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="StreamDeck" xml:space="preserve">
+  <data name="StreamDeck" xml:space="preserve">
 		<value>Stream Deck</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="StreamElements" xml:space="preserve">
+  <data name="StreamElements" xml:space="preserve">
 		<value>StreamElements</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="StreamJar" xml:space="preserve">
-		<value>StreamJar</value>
-		<comment>Manual</comment>
-	</data>
-	<data name="StreamlabsOBS" xml:space="preserve">
+  <data name="StreamlabsOBS" xml:space="preserve">
 		<value>Streamlabs OBS</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="Streamlabs" xml:space="preserve">
+  <data name="Streamlabs" xml:space="preserve">
 		<value>Streamlabs</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="Streamloots" xml:space="preserve">
+  <data name="Streamloots" xml:space="preserve">
 		<value>Streamloots</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="Tiltify" xml:space="preserve">
+  <data name="Tiltify" xml:space="preserve">
 		<value>Tiltify</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="TipeeeStream" xml:space="preserve">
+  <data name="TipeeeStream" xml:space="preserve">
 		<value>TipeeeStream</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="TreatStream" xml:space="preserve">
+  <data name="TreatStream" xml:space="preserve">
 		<value>TreatStream</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="Twitter" xml:space="preserve">
+  <data name="Twitter" xml:space="preserve">
 		<value>Twitter</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="XSplit" xml:space="preserve">
+  <data name="XSplit" xml:space="preserve">
 		<value>XSplit</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="Streamer" xml:space="preserve">
+  <data name="Streamer" xml:space="preserve">
 		<value>Streamer</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="StreamerAccount" xml:space="preserve">
+  <data name="StreamerAccount" xml:space="preserve">
 		<value>Conta do streamer</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="StreamerAge" xml:space="preserve">
+  <data name="StreamerAge" xml:space="preserve">
 		<value>Idade do Streamer</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="StreamingPlatform" xml:space="preserve">
+  <data name="StreamingPlatform" xml:space="preserve">
 		<value>Plataforma de Streaming</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="StreamingSoftware" xml:space="preserve">
+  <data name="StreamingSoftware" xml:space="preserve">
 		<value>Software de Streaming</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="ClearChat" xml:space="preserve">
+  <data name="ClearChat" xml:space="preserve">
 		<value>Limpar bate-papo</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="ClearChatConfirmation" xml:space="preserve">
+  <data name="ClearChatConfirmation" xml:space="preserve">
 		<value>Isso limpará todas as mensagens do bate-papo. Tem certeza?</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="CommunityCommands" xml:space="preserve">
+  <data name="CommunityCommands" xml:space="preserve">
 		<value>Comandos da comunidade</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="Role" xml:space="preserve">
+  <data name="Role" xml:space="preserve">
 		<value>Cargo</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="WatchTime" xml:space="preserve">
+  <data name="WatchTime" xml:space="preserve">
 		<value>Tempo Assistido</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="StreamPass" xml:space="preserve">
+  <data name="StreamPass" xml:space="preserve">
 		<value>Passe da Stream</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="RedemptionStore" xml:space="preserve">
+  <data name="RedemptionStore" xml:space="preserve">
 		<value>Loja de Resgates</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="Giveaway" xml:space="preserve">
+  <data name="Giveaway" xml:space="preserve">
 		<value>Sorteios</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="Changelog" xml:space="preserve">
+  <data name="Changelog" xml:space="preserve">
 		<value>Notas de Atualização</value>
 		<comment>Manual</comment>
 	</data>
-	<data name="HotKeys" xml:space="preserve">
+  <data name="HotKeys" xml:space="preserve">
 		<value>Teclas de Atalho</value>
 		<comment>Manual</comment>
 	</data>
+  <data name="Roles" xml:space="preserve">
+    <value>Cargos</value>
+	<comment>Manual</comment>
+  </data>
+  <data name="WaitForFinish" xml:space="preserve">
+    <value>Aguarde a finalização</value>
+  </data>
+  <data name="Platform" xml:space="preserve">
+    <value>Plataforma</value>
+	<comment>Manual</comment>
+  </data>
+  <data name="LastSeen" xml:space="preserve">
+    <value>Última sessão</value>
+	<comment>Manual</comment>
+  </data>
+  <data name="FollowAge" xml:space="preserve">
+    <value>Seguidor a</value>
+	<comment>Manual</comment>
+  </data>
+  <data name="AddStreamPass" xml:space="preserve">
+    <value>Adicionar passe de stream</value>
+	<comment>Manual</comment>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>Minutos</value>
+	<comment>Manual</comment>
+  </data>
+  <data name="ChatUserBan" xml:space="preserve">
+    <value>Usuário de bate-papo banido</value>
+	<comment>Manual</comment>
+  </data>
+  <data name="ChatUserFirstJoin" xml:space="preserve">
+    <value>Usuário entrou pela primeira vez no Bate-papo</value>
+	<comment>Manual</comment>
+  </data>
+  <data name="ChatUserJoined" xml:space="preserve">
+    <value>Usuário de bate-papo entrou</value>
+	<comment>Manual</comment>
+  </data>
+  <data name="ChatUserLeft" xml:space="preserve">
+    <value>Usuário de bate-papo saiu</value>
+	<comment>Manual</comment>
+  </data>
+  <data name="FollowBonus" xml:space="preserve">
+    <value>Bônus de Follow</value>
+	<comment>Manual</comment>
+  </data>
 </root>

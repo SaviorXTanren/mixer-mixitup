@@ -1,16 +1,15 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
+using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Base.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using MixItUp.Base.Services;
-using MixItUp.Base.Services.Twitch;
-using MixItUp.Base.Services.Glimesh;
-using MixItUp.Base.Model;
-using MixItUp.Base.Services.Trovo;
 
 namespace MixItUp.Base.ViewModel.MainControls
 {

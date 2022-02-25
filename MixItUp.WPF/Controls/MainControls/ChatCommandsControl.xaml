@@ -75,7 +75,7 @@
                 <TextBlock Grid.Column="1" FontWeight="Bold" HorizontalAlignment="Center" Margin="-50,0,0,0" Text="{x:Static resx:Resources.Commands}"/>
                 <TextBlock Grid.Column="2" FontWeight="Bold" HorizontalAlignment="Center" Margin="-55,0,0,0" Text="{x:Static resx:Resources.Permissions}"/>
                 <Grid Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="-40,-4,0,0">
-                    <MaterialDesign:PackIcon Kind="Timer" Height="24" Width="24" />
+                    <MaterialDesign:PackIcon Kind="Timer" Height="24" Width="24" Style="{StaticResource DarkLightBackgroundPackIcon}" />
                 </Grid>
             </Grid>
 
@@ -134,7 +134,7 @@
                         <DataGridTextColumn Binding="{Binding Requirements.Cooldown.IndividualAmount}" IsReadOnly="True" MinWidth="60" Width="60">
                             <DataGridTextColumn.Header>
                                 <Grid HorizontalAlignment="Center" Background="Transparent">
-                                    <MaterialDesign:PackIcon Kind="Timer" Height="24" Width="24" />
+                                    <MaterialDesign:PackIcon Kind="Timer" Height="24" Width="24" Style="{StaticResource DarkLightBackgroundPackIcon}" />
                                 </Grid>
                             </DataGridTextColumn.Header>
                         </DataGridTextColumn>
@@ -157,7 +157,7 @@
                                 <Expander VerticalContentAlignment="Top" HorizontalContentAlignment="Stretch" Visibility="{Binding HasCommands, Converter={StaticResource BooleanToVisibilityConverter}}" Background="{StaticResource PrimaryHueMidBrush}">
                                     <Expander.Header>
                                         <Grid Background="Transparent">
-                                            <TextBlock HorizontalAlignment="Left" Text="{Binding DisplayName}" Foreground="{StaticResource WhiteColor}" />
+                                            <TextBlock HorizontalAlignment="Left" Text="{Binding DisplayName}" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" />
 
                                             <ToggleButton Visibility="{Binding IsEnableSwitchToggable, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource MaterialDesignSwitchLightToggleButton}" HorizontalAlignment="Right" IsChecked="{Binding Path=IsEnabled}" />
                                         </Grid>
@@ -171,7 +171,7 @@
                                             <DataGridTextColumn Binding="{Binding Requirements.Cooldown.IndividualAmount}" IsReadOnly="True" MinWidth="60" Width="60">
                                                 <DataGridTextColumn.Header>
                                                     <Grid HorizontalAlignment="Center" Background="Transparent">
-                                                        <MaterialDesign:PackIcon Kind="Timer" Height="24" Width="24" />
+                                                        <MaterialDesign:PackIcon Kind="Timer" Height="24" Width="24" Style="{StaticResource DarkLightBackgroundPackIcon}" />
                                                     </Grid>
                                                 </DataGridTextColumn.Header>
                                             </DataGridTextColumn>

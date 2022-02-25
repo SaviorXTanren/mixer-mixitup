@@ -3983,6 +3983,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete Quote.
+        /// </summary>
+        public static string DeleteQuote {
+            get {
+                return ResourceManager.GetString("DeleteQuote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to delete this quote?.
         /// </summary>
         public static string DeleteQuotePrompt {
@@ -8445,7 +8454,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to @{0} you&apos;ve won the giveaway; type \&quot;!claim\&quot; in chat!.
+        ///   Looks up a localized string similar to @{0} you&apos;ve won the giveaway; type &quot;!claim&quot; in chat!.
         /// </summary>
         public static string GiveawayWonTypeClaim {
             get {
@@ -13496,6 +13505,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to USAGE: !deletequote [QUOTE NUMBER].
+        /// </summary>
+        public static string PreMadeChatCommandDeleteQuoteUsage {
+            get {
+                return ResourceManager.GetString("PreMadeChatCommandDeleteQuoteUsage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Usage: !disablecommand &lt;COMMAND TRIGGER, NO !&gt;.
         /// </summary>
         public static string PreMadeChatCommandDisableCommandUsage {
@@ -13978,6 +13996,15 @@ namespace MixItUp.Base {
         public static string QuoteAddedHeader {
             get {
                 return ResourceManager.GetString("QuoteAddedHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quote Deleted: .
+        /// </summary>
+        public static string QuoteDeletedHeader {
+            get {
+                return ResourceManager.GetString("QuoteDeletedHeader", resourceCulture);
             }
         }
         

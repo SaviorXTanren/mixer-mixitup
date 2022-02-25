@@ -65,7 +65,7 @@ namespace MixItUp.Base.Model.Actions
 
                     if (!string.IsNullOrEmpty(filePath) && !ServiceManager.Get<IFileService>().IsURLPath(filePath) && !ServiceManager.Get<IFileService>().FileExists(filePath))
                     {
-                        Logger.Log(LogLevel.Error, $"Discord Action - File does not exist: {filePath}");
+                        Logger.Log(LogLevel.Error, $"Command: {parameters.InitialCommandID} - Discord Action - File does not exist: {filePath}");
                     }
 
                     await ServiceManager.Get<DiscordService>().CreateMessage(this.channel, message, filePath);

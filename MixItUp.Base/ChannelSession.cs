@@ -539,7 +539,7 @@ namespace MixItUp.Base
             if (ChannelSession.Settings.HotKeys.ContainsKey(hotKey.ToString()))
             {
                 HotKeyConfiguration hotKeyConfiguration = ChannelSession.Settings.HotKeys[hotKey.ToString()];
-                await ServiceManager.Get<CommandService>().Queue(hotKeyConfiguration.CommandID);
+                await ServiceManager.Get<CommandService>().Queue(hotKeyConfiguration.CommandID, new CommandParametersModel(platform: StreamingPlatformTypeEnum.All));
             }
         }
     }

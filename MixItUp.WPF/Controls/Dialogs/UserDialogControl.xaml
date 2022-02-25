@@ -25,8 +25,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <Style x:Key="FlatPackIcon" TargetType="MaterialDesign:PackIcon">
-                <Setter Property="Foreground" Value="{StaticResource MaterialDesignBody}" />
+            <Style x:Key="FlatPackIcon" TargetType="MaterialDesign:PackIcon" BasedOn="{StaticResource DarkLightBackgroundPackIcon}">
                 <Setter Property="Width" Value="24" />
                 <Setter Property="Height" Value="24" />
             </Style>

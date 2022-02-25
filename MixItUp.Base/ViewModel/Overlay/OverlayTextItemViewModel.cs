@@ -99,6 +99,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             this.Font = "Arial";
             this.size = 24;
+            this.Color = ColorSchemes.GetColorName("Black");
         }
 
         public OverlayTextItemViewModel(OverlayTextItemModel item)

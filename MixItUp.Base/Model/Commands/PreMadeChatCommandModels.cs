@@ -411,6 +411,38 @@ namespace MixItUp.Base.Model.Commands
         }
     }
 
+    public class DeleteQuotePreMadeChatCommandModel : PreMadeChatCommandModelBase
+    {
+        public DeleteQuotePreMadeChatCommandModel() : base(MixItUp.Base.Resources.DeleteQuote, new HashSet<string>() { "deletequote", "quotedelete" }, 5, UserRoleEnum.Moderator) { }
+
+        public override async Task CustomRun(CommandParametersModel parameters)
+        {
+            if (!ChannelSession.Settings.QuotesEnabled || ChannelSession.Settings.Quotes.Count == 0)
+            {
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandQuotesNotEnabled, parameters.Platform);
+                return;
+            }
+
+            int quoteNumber = 0;
+            if (parameters.Arguments.Count() != 1 || !int.TryParse(parameters.Arguments.ElementAt(0), out quoteNumber))
+            {
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandDeleteQuoteUsage, parameters.Platform);
+                return;
+            }
+
+            UserQuoteModel quote = ChannelSession.Settings.Quotes.SingleOrDefault(q => q.ID == quoteNumber);
+            if (quote == null)
+            {
+                await ServiceManager.Get<ChatService>().SendMessage(String.Format(MixItUp.Base.Resources.PreMadeChatCommandQuoteUnableToFind, quoteNumber), parameters.Platform);
+                return;
+            }
+
+            ChannelSession.Settings.Quotes.Remove(quote);
+
+            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.QuoteDeletedHeader + quote.ToString(), parameters.Platform);
+        }
+    }
+
     public class Magic8BallPreMadeChatCommandModel : PreMadeChatCommandModelBase
     {
         private List<String> responses = new List<string>()

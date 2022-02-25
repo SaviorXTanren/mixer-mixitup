@@ -32,10 +32,10 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Foreground="{StaticResource WhiteColor}" Text="{Binding Name}" />
+                <TextBlock Grid.Column="0" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Text="{Binding Name}" />
                 <Rectangle Grid.Column="1" Fill="{StaticResource PrimaryHueMidBrush}" />
 
-                <MaterialDesign:PackIcon Grid.Column="2" Kind="CheckboxMarkedCircle" Foreground="White" Visibility="{Binding IsConnected, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <MaterialDesign:PackIcon Grid.Column="2" Kind="CheckboxMarkedCircle" Foreground="White" Visibility="{Binding IsConnected, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource ColoredBackgroundPackIcon}" />
 
                 <Controls:IconButton Grid.Column="4" Margin="-10" Command="{Binding HelpCommand}" Icon="Help" ToolTip="{x:Static resx:Resources.Help}" />
 

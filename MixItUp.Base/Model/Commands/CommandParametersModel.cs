@@ -48,15 +48,17 @@ namespace MixItUp.Base.Model.Commands
             this.TriggeringChatMessageID = message.ID;
         }
 
-        public CommandParametersModel(Dictionary<string, string> specialIdentifiers) : this(ChannelSession.User, specialIdentifiers) { }
+        public CommandParametersModel(StreamingPlatformTypeEnum platform, Dictionary<string, string> specialIdentifiers) : this(null, platform, null, specialIdentifiers) { }
 
-        public CommandParametersModel(UserV2ViewModel user, StreamingPlatformTypeEnum platform) : this(user, platform, null) { }
+        public CommandParametersModel(UserV2ViewModel user, StreamingPlatformTypeEnum platform) : this(user, platform, null, null) { }
 
         public CommandParametersModel(UserV2ViewModel user, IEnumerable<string> arguments) : this(user, (user != null) ? user.Platform : StreamingPlatformTypeEnum.None, arguments, null) { }
 
         public CommandParametersModel(UserV2ViewModel user, Dictionary<string, string> specialIdentifiers) : this(user, null, specialIdentifiers) { }
 
         public CommandParametersModel(UserV2ViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments) : this(user, platform, arguments, null) { }
+
+        public CommandParametersModel(UserV2ViewModel user, StreamingPlatformTypeEnum platform, Dictionary<string, string> specialIdentifiers) : this(user, platform, null, specialIdentifiers) { }
 
         public CommandParametersModel(UserV2ViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers) : this(user, (user != null) ? user.Platform : StreamingPlatformTypeEnum.None, arguments, specialIdentifiers) { }
 

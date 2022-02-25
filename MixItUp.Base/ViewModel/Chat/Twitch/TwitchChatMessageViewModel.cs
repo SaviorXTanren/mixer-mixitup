@@ -12,7 +12,7 @@ using Twitch.Base.Models.NewAPI.Chat;
 
 namespace MixItUp.Base.ViewModel.Chat.Twitch
 {
-    public class TwitchChatEmoteViewModel
+    public class TwitchChatEmoteViewModel : IChatEmoteViewModel
     {
         public string ID { get; private set; }
         public string Code { get; private set; }
@@ -159,38 +159,35 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                 foreach (string part in parts)
                 {
                     this.AddStringMessagePart(part);
-                    if (ServiceManager.Has<TwitchChatService>())
+                    if (this.HasBits)
                     {
-                        if (this.HasBits)
+                        TwitchBitsCheerViewModel bitCheermote = this.GetBitCheermote(part);
+                        if (bitCheermote != null)
                         {
-                            TwitchBitsCheerViewModel bitCheermote = this.GetBitCheermote(part);
-                            if (bitCheermote != null)
-                            {
-                                this.MessageParts[this.MessageParts.Count - 1] = bitCheermote;
-                                continue;
-                            }
-                            else
-                            {
-                                messageNoCheermotes.Add(part);
-                            }
+                            this.MessageParts[this.MessageParts.Count - 1] = bitCheermote;
+                            continue;
                         }
+                        else
+                        {
+                            messageNoCheermotes.Add(part);
+                        }
+                    }
 
-                        if (ServiceManager.Get<TwitchChatService>().Emotes.ContainsKey(part))
-                        {
-                            this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TwitchChatService>().Emotes[part];
-                        }
-                        else if (messageEmotesCache.ContainsKey(part))
-                        {
-                            this.MessageParts[this.MessageParts.Count - 1] = messageEmotesCache[part];
-                        }
-                        else if (ChannelSession.Settings.ShowBetterTTVEmotes && ServiceManager.Get<TwitchChatService>().BetterTTVEmotes.ContainsKey(part))
-                        {
-                            this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TwitchChatService>().BetterTTVEmotes[part];
-                        }
-                        else if (ChannelSession.Settings.ShowFrankerFaceZEmotes && ServiceManager.Get<TwitchChatService>().FrankerFaceZEmotes.ContainsKey(part))
-                        {
-                            this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TwitchChatService>().FrankerFaceZEmotes[part];
-                        }
+                    if (ServiceManager.Get<TwitchChatService>().Emotes.ContainsKey(part))
+                    {
+                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TwitchChatService>().Emotes[part];
+                    }
+                    else if (messageEmotesCache.ContainsKey(part))
+                    {
+                        this.MessageParts[this.MessageParts.Count - 1] = messageEmotesCache[part];
+                    }
+                    else if (ChannelSession.Settings.ShowBetterTTVEmotes && ServiceManager.Get<TwitchChatService>().BetterTTVEmotes.ContainsKey(part))
+                    {
+                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TwitchChatService>().BetterTTVEmotes[part];
+                    }
+                    else if (ChannelSession.Settings.ShowFrankerFaceZEmotes && ServiceManager.Get<TwitchChatService>().FrankerFaceZEmotes.ContainsKey(part))
+                    {
+                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TwitchChatService>().FrankerFaceZEmotes[part];
                     }
                 }
             }

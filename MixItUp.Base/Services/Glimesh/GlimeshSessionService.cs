@@ -230,7 +230,7 @@ namespace MixItUp.Base.Services.Glimesh
 
         public async Task<Result> InitializeBot(SettingsV3Model settings)
         {
-            if (this.BotConnection != null && ServiceManager.Has<GlimeshChatEventService>())
+            if (this.BotConnection != null)
             {
                 Result result = await ServiceManager.Get<GlimeshChatEventService>().ConnectBot();
                 if (!result.Success)
@@ -243,18 +243,12 @@ namespace MixItUp.Base.Services.Glimesh
 
         public async Task CloseUser()
         {
-            if (ServiceManager.Has<GlimeshChatEventService>())
-            {
-                await ServiceManager.Get<GlimeshChatEventService>().DisconnectUser();
-            }
+            await ServiceManager.Get<GlimeshChatEventService>().DisconnectUser();
         }
 
         public async Task CloseBot()
         {
-            if (ServiceManager.Has<GlimeshChatEventService>())
-            {
-                await ServiceManager.Get<GlimeshChatEventService>().DisconnectBot();
-            }
+            await ServiceManager.Get<GlimeshChatEventService>().DisconnectBot();
         }
 
         public void SaveSettings(SettingsV3Model settings)

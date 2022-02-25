@@ -58,7 +58,7 @@
                             <Expander VerticalContentAlignment="Top" HorizontalContentAlignment="Stretch" Visibility="{Binding HasCommands, Converter={StaticResource BooleanToVisibilityConverter}}" Background="{StaticResource PrimaryHueMidBrush}">
                                 <Expander.Header>
                                     <Grid Background="Transparent">
-                                        <TextBlock HorizontalAlignment="Left" Text="{Binding DisplayName}" Foreground="{StaticResource WhiteColor}" />
+                                        <TextBlock HorizontalAlignment="Left" Text="{Binding DisplayName}" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" />
 
                                         <ToggleButton Visibility="{Binding IsEnableSwitchToggable, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource MaterialDesignSwitchLightToggleButton}" HorizontalAlignment="Right" IsChecked="{Binding Path=IsEnabled}" />
                                     </Grid>
@@ -95,7 +95,7 @@
             <Button x:Name="ChannelPointsEditorButton" Grid.Column="2" Command="{Binding StreamlootsManageCollectionCommand}" Width="195">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{x:Static resx:Resources.StreamlootsManageCollection}" />
-                    <MaterialDesign:PackIcon Kind="OpenInNew" Height="20" Width="20" Margin="5,0,0,0" Foreground="{StaticResource WhiteColor}" />
+                    <MaterialDesign:PackIcon Kind="OpenInNew" Height="20" Width="20" Margin="5,0,0,0" Style="{StaticResource ColoredBackgroundPackIcon}" />
                 </StackPanel>
             </Button>
         </Grid>

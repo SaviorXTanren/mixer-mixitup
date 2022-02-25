@@ -55,7 +55,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <MaterialDesign:PackIcon Kind="AccessPoint" Style="{StaticResource DefaultPackIcon}" Grid.Column="0" VerticalAlignment="Center" Margin="0,10,0,0" />
+                <MaterialDesign:PackIcon Kind="AccessPoint" Style="{StaticResource DarkLightBackgroundPackIcon}" Grid.Column="0" VerticalAlignment="Center" Margin="0,10,0,0" />
                 <TextBox Grid.Column="2" Text="{Binding IPAddress}" Width="130" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.IPAddress}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             </Grid>
 
@@ -66,7 +66,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <MaterialDesign:PackIcon Kind="KeyVariant" Style="{StaticResource DefaultPackIcon}" Grid.Column="0" VerticalAlignment="Center" />
+                <MaterialDesign:PackIcon Kind="KeyVariant" Style="{StaticResource DarkLightBackgroundPackIcon}" Grid.Column="0" VerticalAlignment="Center" />
                 <PasswordBox Grid.Column="2" x:Name="PasswordBox" Style="{StaticResource MaterialDesignPasswordBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Password}" />
             </Grid>
         </Grid>

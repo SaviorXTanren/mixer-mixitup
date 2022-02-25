@@ -207,7 +207,7 @@ namespace MixItUp.Base.Services.YouTube
 
         public async Task<Result> InitializeBot(SettingsV3Model settings)
         {
-            if (this.BotConnection != null && ServiceManager.Has<YouTubeChatService>())
+            if (this.BotConnection != null)
             {
                 Result result = await ServiceManager.Get<YouTubeChatService>().ConnectBot();
                 if (!result.Success)
@@ -220,18 +220,12 @@ namespace MixItUp.Base.Services.YouTube
 
         public async Task CloseUser()
         {
-            if (ServiceManager.Has<YouTubeChatService>())
-            {
-                await ServiceManager.Get<YouTubeChatService>().DisconnectUser();
-            }
+            await ServiceManager.Get<YouTubeChatService>().DisconnectUser();
         }
 
         public async Task CloseBot()
         {
-            if (ServiceManager.Has<YouTubeChatService>())
-            {
-                await ServiceManager.Get<YouTubeChatService>().DisconnectBot();
-            }
+            await ServiceManager.Get<YouTubeChatService>().DisconnectBot();
         }
 
         public void SaveSettings(SettingsV3Model settings)

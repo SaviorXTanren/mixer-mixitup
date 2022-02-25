@@ -7134,7 +7134,7 @@ Imported quotes with IDs that match existing quotes will altered to the next max
     <value>The giveaway reminder must be 0 or greater</value>
   </data>
   <data name="GiveawayWonTypeClaim" xml:space="preserve">
-    <value>@{0} you've won the giveaway; type \"!claim\" in chat!</value>
+    <value>@{0} you've won the giveaway; type "!claim" in chat!</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="GiveawayYouHaveAlreadyWon" xml:space="preserve">
@@ -7551,5 +7551,14 @@ We will attempt to re-connect with the service when possible. If this continues,
   </data>
   <data name="WouldYouLikeToDownloadThisUpdate" xml:space="preserve">
     <value>Would you like to download this update?</value>
+  </data>
+  <data name="DeleteQuote" xml:space="preserve">
+    <value>Delete Quote</value>
+  </data>
+  <data name="PreMadeChatCommandDeleteQuoteUsage" xml:space="preserve">
+    <value>USAGE: !deletequote [QUOTE NUMBER]</value>
+  </data>
+  <data name="QuoteDeletedHeader" xml:space="preserve">
+    <value>Quote Deleted: </value>
   </data>
 </root>
