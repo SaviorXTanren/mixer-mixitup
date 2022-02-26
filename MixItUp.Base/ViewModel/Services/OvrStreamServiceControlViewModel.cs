@@ -34,7 +34,7 @@ namespace MixItUp.Base.ViewModel.Services
             {
                 ChannelSession.Settings.OvrStreamServerIP = this.OvrStreamAddress;
 
-                Result result = await ServiceManager.Get<IOvrStreamService>().Connect();
+                Result result = await ServiceManager.Get<PolyPopService>().Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;
@@ -47,11 +47,11 @@ namespace MixItUp.Base.ViewModel.Services
 
             this.DisconnectCommand = this.CreateCommand(async () =>
             {
-                await ServiceManager.Get<IOvrStreamService>().Disconnect();
+                await ServiceManager.Get<PolyPopService>().Disconnect();
                 this.IsConnected = false;
             });
 
-            this.IsConnected = ServiceManager.Get<IOvrStreamService>().IsConnected;
+            this.IsConnected = ServiceManager.Get<PolyPopService>().IsConnected;
         }
     }
 }

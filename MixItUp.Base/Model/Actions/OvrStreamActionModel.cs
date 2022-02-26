@@ -42,50 +42,59 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (ServiceManager.Get<IOvrStreamService>().IsConnected)
+            Dictionary<string, string> processedVariables = new Dictionary<string, string>();
+            foreach (var kvp in this.Variables)
             {
-                if (this.ActionType == OvrStreamActionTypeEnum.UpdateVariables ||
-                    this.ActionType == OvrStreamActionTypeEnum.PlayTitle)
-                {
-                    Dictionary<string, string> processedVariables = new Dictionary<string, string>();
-                    foreach (var kvp in this.Variables)
-                    {
-                        processedVariables[kvp.Key] = await ReplaceStringWithSpecialModifiers(kvp.Value, parameters);
-
-                        // Since OvrStream doesn't support URI based images, we need to trigger a download and get the path to those files
-                        if (processedVariables[kvp.Key].StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            string path = await ServiceManager.Get<IOvrStreamService>().DownloadImage(processedVariables[kvp.Key]);
-                            if (path != null)
-                            {
-                                processedVariables[kvp.Key] = path;
-                            }
-                        }
-                    }
-
-                    switch (this.ActionType)
-                    {
-                        case OvrStreamActionTypeEnum.UpdateVariables:
-                            await ServiceManager.Get<IOvrStreamService>().UpdateVariables(this.TitleName, processedVariables);
-                            break;
-                        case OvrStreamActionTypeEnum.PlayTitle:
-                            await ServiceManager.Get<IOvrStreamService>().PlayTitle(this.TitleName, processedVariables);
-                            break;
-                    }
-                }
-                else if (this.ActionType == OvrStreamActionTypeEnum.HideTitle)
-                {
-                    await ServiceManager.Get<IOvrStreamService>().HideTitle(this.TitleName);
-                }
-                else if (this.ActionType == OvrStreamActionTypeEnum.EnableTitle)
-                {
-                    await ServiceManager.Get<IOvrStreamService>().EnableTitle(this.TitleName);
-                }
-                else if (this.ActionType == OvrStreamActionTypeEnum.DisableTitle)
-                {
-                    await ServiceManager.Get<IOvrStreamService>().DisableTitle(this.TitleName);
-                }
+                processedVariables[kvp.Key] = await ReplaceStringWithSpecialModifiers(kvp.Value, parameters);
             }
+
+            await ServiceManager.Get<PolyPopService>().TriggerAlert(this.TitleName, processedVariables);
+
+
+            //if (ServiceManager.Get<IOvrStreamService>().IsConnected)
+            //{
+            //    if (this.ActionType == OvrStreamActionTypeEnum.UpdateVariables ||
+            //        this.ActionType == OvrStreamActionTypeEnum.PlayTitle)
+            //    {
+            //        Dictionary<string, string> processedVariables = new Dictionary<string, string>();
+            //        foreach (var kvp in this.Variables)
+            //        {
+            //            processedVariables[kvp.Key] = await ReplaceStringWithSpecialModifiers(kvp.Value, parameters);
+
+            //            // Since OvrStream doesn't support URI based images, we need to trigger a download and get the path to those files
+            //            if (processedVariables[kvp.Key].StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
+            //            {
+            //                string path = await ServiceManager.Get<IOvrStreamService>().DownloadImage(processedVariables[kvp.Key]);
+            //                if (path != null)
+            //                {
+            //                    processedVariables[kvp.Key] = path;
+            //                }
+            //            }
+            //        }
+
+            //        switch (this.ActionType)
+            //        {
+            //            case OvrStreamActionTypeEnum.UpdateVariables:
+            //                await ServiceManager.Get<IOvrStreamService>().UpdateVariables(this.TitleName, processedVariables);
+            //                break;
+            //            case OvrStreamActionTypeEnum.PlayTitle:
+            //                await ServiceManager.Get<IOvrStreamService>().PlayTitle(this.TitleName, processedVariables);
+            //                break;
+            //        }
+            //    }
+            //    else if (this.ActionType == OvrStreamActionTypeEnum.HideTitle)
+            //    {
+            //        await ServiceManager.Get<IOvrStreamService>().HideTitle(this.TitleName);
+            //    }
+            //    else if (this.ActionType == OvrStreamActionTypeEnum.EnableTitle)
+            //    {
+            //        await ServiceManager.Get<IOvrStreamService>().EnableTitle(this.TitleName);
+            //    }
+            //    else if (this.ActionType == OvrStreamActionTypeEnum.DisableTitle)
+            //    {
+            //        await ServiceManager.Get<IOvrStreamService>().DisableTitle(this.TitleName);
+            //    }
+            //}
         }
     }
 }
