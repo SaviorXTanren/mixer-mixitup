@@ -258,7 +258,7 @@ namespace MixItUp.Base.Services
                     return new Result<SettingsV3Model>(MixItUp.Base.Resources.SettingsBackupTooNew);
                 }
 
-                return new Result<SettingsV3Model>(await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(settingsFile));
+                return new Result<SettingsV3Model>(await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(settingsFile, ignoreErrors: true));
             }
             catch (Exception ex)
             {
@@ -345,6 +345,9 @@ namespace MixItUp.Base.Services
         {
             if (version < 5)
             {
+                string fileData = await ServiceManager.Get<IFileService>().ReadFile(filePath);
+                fileData = fileData.Replace("MixItUp.Base.Model.User.UserRoleEnum", "MixItUp.Base.Model.User.OldUserRoleEnum");
+
                 SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
                 await settings.Initialize();
                 
