@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
@@ -365,7 +366,12 @@ namespace MixItUp.Base.ViewModel.User
 
             this.Metrics2.Add(new UserMetricViewModel(MixItUp.Base.Resources.TaggedInChat, this.User.TotalTimesTagged.ToString()));
             this.Metrics2.Add(new UserMetricViewModel(MixItUp.Base.Resources.AmountDonated, this.User.TotalAmountDonated.ToCurrencyString()));
-            //this.Metrics2.Add(new UserMetricViewModel(MixItUp.Base.Resources.BitsCheered, this.User.TotalBitsCheered.ToString()));
+
+            if (this.User.HasPlatformData(StreamingPlatformTypeEnum.Twitch))
+            {
+                TwitchUserPlatformV2Model pUser = this.User.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch);
+                this.Metrics2.Add(new UserMetricViewModel(MixItUp.Base.Resources.BitsCheered, pUser.TotalBitsCheered.ToString()));
+            }
         }
 
         public void AddUserOnlyChatCommand(UserOnlyChatCommandModel command)
