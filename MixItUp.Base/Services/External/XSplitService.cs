@@ -81,11 +81,12 @@ namespace MixItUp.Base.Services.External
 
     public class XSplitService : WebSocketHttpListenerServerBase, IStreamingSoftwareService
     {
+        public const string XSplitHttpListenerServerAddress = "http://localhost:8211/";
+
         public event EventHandler Connected = delegate { };
         public event EventHandler Disconnected = delegate { };
 
-        public XSplitService(string address)
-            : base(address)
+        public XSplitService()
         {
             base.OnConnectedOccurred += XSplitService_OnConnectedOccurred;
             base.OnDisconnectOccurred += XSplitService_OnDisconnectOccurred;
@@ -100,7 +101,7 @@ namespace MixItUp.Base.Services.External
         public Task<Result> Connect()
         {
             this.IsConnected = false;
-            if (this.Start())
+            if (this.Start(XSplitHttpListenerServerAddress))
             {
                 this.IsConnected = true;
                 ServiceManager.Get<ITelemetryService>().TrackService("XSplit");

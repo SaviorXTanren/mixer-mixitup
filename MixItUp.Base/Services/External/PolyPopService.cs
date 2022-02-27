@@ -29,7 +29,7 @@ namespace MixItUp.Base.Services.External
 
     public class PolyPopWebSocketServer : WebSocketServerBase
     {
-        public PolyPopWebSocketServer(HttpListenerContext listenerContext) : base(listenerContext) { this.OnDisconnectOccurred += XSplitWebServer_OnDisconnectOccurred; }
+        public PolyPopWebSocketServer(HttpListenerContext listenerContext) : base(listenerContext) { this.OnDisconnectOccurred += PolyPopWebServer_OnDisconnectOccurred; }
 
         public event EventHandler Connected { add { this.OnConnectedOccurred += value; } remove { this.OnConnectedOccurred -= value; } }
         public event EventHandler Disconnected = delegate { };
@@ -41,7 +41,7 @@ namespace MixItUp.Base.Services.External
             await base.ProcessReceivedPacket(packetJSON);
         }
 
-        private void XSplitWebServer_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
+        private void PolyPopWebServer_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
             Logger.Log(LogLevel.Debug, "PolyPop Disconnected");
 
@@ -51,17 +51,18 @@ namespace MixItUp.Base.Services.External
 
     public class PolyPopService : WebSocketHttpListenerServerBase, IExternalService
     {
+        public const string PolyPopWebSocketServerAddressFormat = "http://127.0.0.1:{0}/";
+
         public event EventHandler Connected = delegate { };
         public event EventHandler Disconnected = delegate { };
 
-        public PolyPopService(string address)
-            : base(address)
+        public PolyPopService()
         {
             base.OnConnectedOccurred += PolyPopService_OnConnectedOccurred;
             base.OnDisconnectOccurred += PolyPopService_OnDisconnectOccurred;
         }
 
-        public string Name { get { return MixItUp.Base.Resources.XSplit; } }
+        public string Name { get { return MixItUp.Base.Resources.PolyPop; } }
 
         public bool IsEnabled { get { return ChannelSession.Settings.PolyPopPortNumber > 0; } }
 
@@ -70,13 +71,13 @@ namespace MixItUp.Base.Services.External
         public Task<Result> Connect()
         {
             this.IsConnected = false;
-            if (this.Start())
+            if (this.Start(string.Format(PolyPopWebSocketServerAddressFormat, ChannelSession.Settings.PolyPopPortNumber)))
             {
                 this.IsConnected = true;
                 ServiceManager.Get<ITelemetryService>().TrackService("PolyPop");
                 return Task.FromResult(new Result());
             }
-            return Task.FromResult(new Result(MixItUp.Base.Resources.XSplitFailedToStartServer));
+            return Task.FromResult(new Result(MixItUp.Base.Resources.PolyPopFailedToConnect));
         }
 
         public async Task Disconnect()
@@ -97,13 +98,13 @@ namespace MixItUp.Base.Services.External
 
         private void PolyPopService_OnConnectedOccurred(object sender, EventArgs e)
         {
-            ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.XSplit);
+            ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.PolyPop);
             this.Connected(sender, e);
         }
 
         private void PolyPopService_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
-            ChannelSession.DisconnectionOccurred(MixItUp.Base.Resources.XSplit);
+            ChannelSession.DisconnectionOccurred(MixItUp.Base.Resources.PolyPop);
             this.Disconnected(sender, new EventArgs());
         }
     }

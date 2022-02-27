@@ -7561,4 +7561,19 @@ We will attempt to re-connect with the service when possible. If this continues,
   <data name="QuoteDeletedHeader" xml:space="preserve">
     <value>Quote Deleted: </value>
   </data>
+  <data name="AlertName" xml:space="preserve">
+    <value>Alert Name</value>
+  </data>
+  <data name="EnablePolyPop" xml:space="preserve">
+    <value>Please enable PolyPop on the Services page!</value>
+  </data>
+  <data name="PolyPop" xml:space="preserve">
+    <value>PolyPop</value>
+  </data>
+  <data name="PolyPopActionMissingVariableName" xml:space="preserve">
+    <value>PolyPop Action: Missing variable name</value>
+  </data>
+  <data name="PolyPopFailedToConnect" xml:space="preserve">
+    <value>Failed to start web socket listening server for PolyPop</value>
+  </data>
 </root>

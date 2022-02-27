@@ -673,6 +673,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alert Name.
+        /// </summary>
+        public static string AlertName {
+            get {
+                return ResourceManager.GetString("AlertName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} Raided with {1} viewers.
         /// </summary>
         public static string AlertRaid {
@@ -4889,6 +4898,15 @@ namespace MixItUp.Base {
         public static string EnableOvrStream {
             get {
                 return ResourceManager.GetString("EnableOvrStream", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enable PolyPop on the Services page!.
+        /// </summary>
+        public static string EnablePolyPop {
+            get {
+                return ResourceManager.GetString("EnablePolyPop", resourceCulture);
             }
         }
         
@@ -13411,6 +13429,33 @@ namespace MixItUp.Base {
         public static string Poll {
             get {
                 return ResourceManager.GetString("Poll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PolyPop.
+        /// </summary>
+        public static string PolyPop {
+            get {
+                return ResourceManager.GetString("PolyPop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PolyPop Action: Missing variable name.
+        /// </summary>
+        public static string PolyPopActionMissingVariableName {
+            get {
+                return ResourceManager.GetString("PolyPopActionMissingVariableName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to start web socket listening server for PolyPop.
+        /// </summary>
+        public static string PolyPopFailedToConnect {
+            get {
+                return ResourceManager.GetString("PolyPopFailedToConnect", resourceCulture);
             }
         }
         

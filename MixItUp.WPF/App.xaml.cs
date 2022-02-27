@@ -52,7 +52,6 @@ namespace MixItUp.WPF
                 ServiceManager.Add(new StreamElementsService(new WindowsSocketIOConnection()));
                 ServiceManager.Add(new TipeeeStreamService(new WindowsSocketIOConnection()));
                 ServiceManager.Add(new TreatStreamService(new WindowsSocketIOConnection()));
-                ServiceManager.Add<IOvrStreamService>(new WindowsOvrStreamService());
 
                 ServiceManager.Add<IOBSStudioService>(new WindowsOBSService());
 

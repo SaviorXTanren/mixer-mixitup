@@ -444,6 +444,7 @@ namespace MixItUp.Base.Model.Settings
 
         #region Services
 
+        [Obsolete]
         [DataMember]
         public string OvrStreamServerIP { get; set; }
 

@@ -375,7 +375,7 @@ namespace MixItUp.Base.Services
                     else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.VisualAudioActions)
                     {
                         HashSet<ActionTypeEnum> actionTypes = commandInstance.GetActionTypes();
-                        if (actionTypes.Contains(ActionTypeEnum.Overlay) || actionTypes.Contains(ActionTypeEnum.OvrStream) || actionTypes.Contains(ActionTypeEnum.Sound) ||
+                        if (actionTypes.Contains(ActionTypeEnum.Overlay) || actionTypes.Contains(ActionTypeEnum.PolyPop) || actionTypes.Contains(ActionTypeEnum.Sound) ||
                             actionTypes.Contains(ActionTypeEnum.StreamingSoftware) || actionTypes.Contains(ActionTypeEnum.TextToSpeech))
                         {
                             singularInstances.Add(commandInstance);

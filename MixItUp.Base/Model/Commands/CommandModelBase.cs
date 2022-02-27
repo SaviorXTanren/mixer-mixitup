@@ -166,7 +166,7 @@ namespace MixItUp.Base.Model.Commands
                 {
                     actionTypes.Add(ActionTypeEnum.Sound);
                 }
-                else if (action.Type == ActionTypeEnum.OvrStream)
+                else if (action.Type == ActionTypeEnum.PolyPop)
                 {
                     actionTypes.Add(ActionTypeEnum.Sound);
                     actionTypes.Add(ActionTypeEnum.Overlay);

@@ -4,15 +4,15 @@ using System.Threading.Tasks;
 namespace MixItUp.WPF.Controls.Services
 {
     /// <summary>
-    /// Interaction logic for OvrStreamServiceControl.xaml
+    /// Interaction logic for PolyPopServiceControl.xaml
     /// </summary>
-    public partial class OvrStreamServiceControl : ServiceControlBase
+    public partial class PolyPopServiceControl : ServiceControlBase
     {
-        private OvrStreamServiceControlViewModel viewModel;
+        private PolyPopServiceControlViewModel viewModel;
 
-        public OvrStreamServiceControl()
+        public PolyPopServiceControl()
         {
-            this.DataContext = this.ViewModel = this.viewModel = new OvrStreamServiceControlViewModel();
+            this.DataContext = this.ViewModel = this.viewModel = new PolyPopServiceControlViewModel();
 
             InitializeComponent();
         }

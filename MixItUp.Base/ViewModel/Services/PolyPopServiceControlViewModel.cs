@@ -5,34 +5,38 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Services
 {
-    public class OvrStreamServiceControlViewModel : ServiceControlViewModelBase
+    public class PolyPopServiceControlViewModel : ServiceControlViewModelBase
     {
-        public const string DefaultOvrStreamConnection = "ws://127.0.0.1:8023";
+        public const int DefaultPolyPopPortNumber = 38031;
 
-        public string OvrStreamAddress
+        public int PolyPopPortNumber
         {
-            get { return this.ovrStreamAddress; }
+            get { return this.polyPopPortNumber; }
             set
             {
-                this.ovrStreamAddress = value;
+                this.polyPopPortNumber = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private string ovrStreamAddress;
+        private int polyPopPortNumber;
 
         public ICommand ConnectCommand { get; set; }
         public ICommand DisconnectCommand { get; set; }
 
-        public override string WikiPageName { get { return "ovrstream"; } }
+        public override string WikiPageName { get { return "polypop"; } }
 
-        public OvrStreamServiceControlViewModel()
-            : base(Resources.OvrStream)
+        public PolyPopServiceControlViewModel()
+            : base(Resources.PolyPop)
         {
-            this.OvrStreamAddress = OvrStreamServiceControlViewModel.DefaultOvrStreamConnection;
+            this.PolyPopPortNumber = PolyPopServiceControlViewModel.DefaultPolyPopPortNumber;
+            if (ChannelSession.Settings.PolyPopPortNumber > 0)
+            {
+                this.PolyPopPortNumber = ChannelSession.Settings.PolyPopPortNumber;
+            }
 
             this.ConnectCommand = this.CreateCommand(async () =>
             {
-                ChannelSession.Settings.OvrStreamServerIP = this.OvrStreamAddress;
+                ChannelSession.Settings.PolyPopPortNumber = this.PolyPopPortNumber;
 
                 Result result = await ServiceManager.Get<PolyPopService>().Connect();
                 if (result.Success)
@@ -48,6 +52,7 @@ namespace MixItUp.Base.ViewModel.Services
             this.DisconnectCommand = this.CreateCommand(async () =>
             {
                 await ServiceManager.Get<PolyPopService>().Disconnect();
+                ChannelSession.Settings.PolyPopPortNumber = 0;
                 this.IsConnected = false;
             });
 
