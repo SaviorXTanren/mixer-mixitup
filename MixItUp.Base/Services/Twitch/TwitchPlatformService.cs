@@ -259,7 +259,7 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
-        public async Task<IEnumerable<CustomChannelPointRewardModel>> GetCustomChannelPointRewards(UserModel broadcaster) { return await this.RunAsync(this.Connection.NewAPI.ChannelPoints.GetCustomRewards(broadcaster)); }
+        public async Task<IEnumerable<CustomChannelPointRewardModel>> GetCustomChannelPointRewards(UserModel broadcaster, bool managableRewardsOnly = false) { return await this.RunAsync(this.Connection.NewAPI.ChannelPoints.GetCustomRewards(broadcaster, managableRewardsOnly)); }
 
         public async Task<CustomChannelPointRewardModel> UpdateCustomChannelPointReward(UserModel broadcaster, Guid id, JObject jobj) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.ChannelPoints.UpdateCustomReward(broadcaster, id, jobj)); }
 
