@@ -39,12 +39,9 @@ namespace MixItUp.Base.ViewModel.User
                 this.platformModel = this.GetPlatformData<UserPlatformV2ModelBase>(this.platform);
             }
 
-            if (this.platformModel == null)
+            if (this.platformModel == null && this.HasPlatformData(ChannelSession.Settings.DefaultStreamingPlatform))
             {
-                if (this.HasPlatformData(ChannelSession.Settings.DefaultStreamingPlatform))
-                {
-                    this.platformModel = this.GetPlatformData<UserPlatformV2ModelBase>(ChannelSession.Settings.DefaultStreamingPlatform);
-                }
+                this.platformModel = this.GetPlatformData<UserPlatformV2ModelBase>(ChannelSession.Settings.DefaultStreamingPlatform);
             }
 
             if (this.platformModel == null && this.Model.GetPlatforms().Count > 0)
