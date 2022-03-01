@@ -154,6 +154,11 @@ namespace MixItUp.Base.Services
 
         public async Task DeleteMessage(ChatMessageViewModel message, bool externalDeletion = false)
         {
+            if (message == null)
+            {
+                return;
+            }
+
             if (externalDeletion && !this.messagesLookup.TryGetValue(message.ID, out ChatMessageViewModel existingMessage))
             {
                 message = existingMessage;
