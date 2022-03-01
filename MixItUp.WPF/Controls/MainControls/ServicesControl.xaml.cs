@@ -47,6 +47,7 @@ namespace MixItUp.WPF.Controls.MainControls
             services.Add(new ServiceContainerControl(this.Window, new StreamDeckServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new IFTTTServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new StreamAvatarsServiceControl()));
+            services.Add(new ServiceContainerControl(this.Window, new OvrStreamServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new DeveloperAPIServiceControl()));
 
             this.services.ClearAndAddRange(services);

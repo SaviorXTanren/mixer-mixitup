@@ -42,7 +42,6 @@ namespace MixItUp.Base.Model.Actions
         Command,
         Serial,
         Moderation,
-        [Obsolete]
         OvrStream,
         IFTTT,
         Twitch,

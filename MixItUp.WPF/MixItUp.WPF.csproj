@@ -511,6 +511,9 @@
     <Compile Include="Controls\Actions\OverlayActionEditorControl.xaml.cs">
       <DependentUpon>OverlayActionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\OvrStreamActionEditorControl.xaml.cs">
+      <DependentUpon>OvrStreamActionEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\PolyPopActionEditorControl.xaml.cs">
       <DependentUpon>PolyPopActionEditorControl.xaml</DependentUpon>
     </Compile>
@@ -896,6 +899,9 @@
     <Compile Include="Controls\Services\JustGivingServiceControl.xaml.cs">
       <DependentUpon>JustGivingServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\OvrStreamServiceControl.xaml.cs">
+      <DependentUpon>OvrStreamServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\PolyPopServiceControl.xaml.cs">
       <DependentUpon>PolyPopServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1059,6 +1065,7 @@
     <Compile Include="Services\DeveloperAPI\V2\CommandsController.cs" />
     <Compile Include="Services\DeveloperAPI\V2\UsersController.cs" />
     <Compile Include="Services\DeveloperAPI\WindowsDeveloperAPIService.cs" />
+    <Compile Include="Services\WindowsOvrStreamService.cs" />
     <Compile Include="Services\WindowsSocketIOConnection.cs" />
     <Compile Include="Services\WindowsOBSService.cs" />
     <Compile Include="Services\WindowsDatabaseService.cs" />
@@ -1199,6 +1206,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\OverlayActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\OvrStreamActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1707,6 +1718,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\JustGivingServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\OvrStreamServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
