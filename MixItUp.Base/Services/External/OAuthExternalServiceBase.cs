@@ -40,7 +40,7 @@ namespace MixItUp.Base.Services.External
             <head>
                 <meta charset=""utf-8"" />
                 <title>Mix It Up - Logged In</title>
-                <link rel=""shortcut icon"" type=""image/x-icon"" href=""https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUp-Logo-Base-TransparentSM.png"" />
+                <link rel=""shortcut icon"" type=""image/x-icon"" href=""https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUp-Logo-Base-WhiteXS.png"" />
                 <style>
                     body {
                         background: #0e162a

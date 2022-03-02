@@ -678,6 +678,10 @@ namespace MixItUp.Base.Util
             {
                 replacement = HttpUtility.UrlEncode(replacement);
             }
+            if (replacement.StartsWith("$"))
+            {
+                replacement = "$" + replacement;
+            }
             this.text = Regex.Replace(this.text, "\\" + (includeSpecialIdentifierHeader ? SpecialIdentifierHeader : string.Empty) + identifier, replacement, RegexOptions.IgnoreCase);
         }
 
@@ -855,7 +859,7 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "isregular", user.IsRegular.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "issubscriber", user.IsPlatformSubscriber.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "isvip", user.HasRole(UserRoleEnum.TwitchVIP).ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "ismod", user.HasRole(UserRoleEnum.Moderator).ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "ismod", user.MeetsRole(UserRoleEnum.Moderator).ToString());
 
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalstreamswatched", user.TotalStreamsWatched.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalamountdonated", user.TotalAmountDonated.ToCurrencyString());
@@ -871,6 +875,7 @@ namespace MixItUp.Base.Util
                     TwitchUserPlatformV2Model pUser = user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch);
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "twitchid", pUser?.ID);
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "twitchcolor", pUser?.Color);
+                    this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalbitscheered", pUser?.TotalBitsCheered.ToString());
                 }
 
                 if (user.HasPlatformData(StreamingPlatformTypeEnum.YouTube))

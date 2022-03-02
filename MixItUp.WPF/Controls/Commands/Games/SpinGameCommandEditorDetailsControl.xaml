@@ -53,11 +53,11 @@
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="80" />
+                                    <ColumnDefinition Width="100" />
                                     <ColumnDefinition Width="20" />
-                                    <ColumnDefinition Width="80" />
+                                    <ColumnDefinition Width="100" />
                                     <ColumnDefinition Width="20" />
-                                    <ColumnDefinition Width="80" />
+                                    <ColumnDefinition Width="100" />
                                 </Grid.ColumnDefinitions>
 
                                 <TextBox Grid.Column="0" Grid.Row="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserChancePercentage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding UserChance}" />

@@ -167,8 +167,19 @@ namespace MixItUp.Base.ViewModel.Games
         public GameOutcomeViewModel(GameOutcomeModel model)
         {
             this.Name = model.Name;
-            this.RoleProbabilityPayouts.AddRange(model.UserRoleProbabilityPayouts.Select(kvp => new RoleProbabilityPayoutViewModel(kvp.Value)));
             this.Command = model.Command;
+
+            foreach (var kvp in model.UserRoleProbabilityPayouts)
+            {
+#pragma warning disable CS0612 // Type or member is obsolete
+                if (kvp.Key != kvp.Value.UserRole)
+                {
+                    kvp.Value.UserRole = kvp.Key;
+                }
+#pragma warning restore CS0612 // Type or member is obsolete
+                this.RoleProbabilityPayouts.Add(new RoleProbabilityPayoutViewModel(kvp.Value));
+            }
+
             this.SetRoleProbabilityPayoutProperties();
         }
         

@@ -67,7 +67,7 @@ namespace MixItUp.Base.Services
                 return new UserV2ViewModel(ChannelSession.Settings.DefaultStreamingPlatform, ChannelSession.Settings.Users[id]);
             }
 
-            IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data("SELECT * FROM Users WHERE ID = @ID", new Dictionary<string, object>() { { "ID", id } });
+            IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data("SELECT * FROM Users WHERE ID = $ID", new Dictionary<string, object>() { { "$ID", id.ToString() } });
             if (results.Count() > 0)
             {
                 this.SetUserData(results.First());
@@ -100,7 +100,7 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data($"SELECT * FROM Users WHERE {platform.ToString()}ID = @PlatformID", new Dictionary<string, object>() { { "PlatformID", platformID } });
+            IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data($"SELECT * FROM Users WHERE {platform.ToString()}ID = $PlatformID", new Dictionary<string, object>() { { "$PlatformID", platformID } });
             if (results.Count() > 0)
             {
                 this.SetUserData(results.First());
@@ -179,7 +179,7 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data($"SELECT * FROM Users WHERE {platform}Username = @PlatformUsername", new Dictionary<string, object>() { { "PlatformUsername", platformUsername } });
+            IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data($"SELECT * FROM Users WHERE {platform}Username = $PlatformUsername", new Dictionary<string, object>() { { "$PlatformUsername", platformUsername } });
             if (results.Count() > 0)
             {
                 this.SetUserData(results.First());

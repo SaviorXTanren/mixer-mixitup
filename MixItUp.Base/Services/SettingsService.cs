@@ -442,6 +442,8 @@ namespace MixItUp.Base.Services
                     foreach (var kvp in outcome.RoleProbabilityPayouts)
                     {
                         UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
+                        kvp.Value.Role = OldUserRoleEnum.Banned;
+                        kvp.Value.UserRole = role;
                         outcome.UserRoleProbabilityPayouts[role] = kvp.Value;
                     }
                 }
@@ -457,6 +459,8 @@ namespace MixItUp.Base.Services
                 foreach (var kvp in gCommand.SuccessfulOutcome.RoleProbabilityPayouts)
                 {
                     UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
+                    kvp.Value.Role = OldUserRoleEnum.Banned;
+                    kvp.Value.UserRole = role;
                     gCommand.SuccessfulOutcome.UserRoleProbabilityPayouts[role] = kvp.Value;
                 }
             }
@@ -466,6 +470,8 @@ namespace MixItUp.Base.Services
                 foreach (var kvp in gCommand.UserSuccessOutcome.RoleProbabilityPayouts)
                 {
                     UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
+                    kvp.Value.Role = OldUserRoleEnum.Banned;
+                    kvp.Value.UserRole = role;
                     gCommand.UserSuccessOutcome.UserRoleProbabilityPayouts[role] = kvp.Value;
                 }
             }
@@ -475,6 +481,8 @@ namespace MixItUp.Base.Services
                 foreach (var kvp in gCommand.UserSuccessOutcome.RoleProbabilityPayouts)
                 {
                     UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
+                    kvp.Value.Role = OldUserRoleEnum.Banned;
+                    kvp.Value.UserRole = role;
                     gCommand.UserSuccessOutcome.UserRoleProbabilityPayouts[role] = kvp.Value;
                 }
             }
@@ -486,6 +494,8 @@ namespace MixItUp.Base.Services
                     foreach (var kvp in outcome.RoleProbabilityPayouts)
                     {
                         UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
+                        kvp.Value.Role = OldUserRoleEnum.Banned;
+                        kvp.Value.UserRole = role;
                         outcome.UserRoleProbabilityPayouts[role] = kvp.Value;
                     }
                 }
@@ -498,6 +508,8 @@ namespace MixItUp.Base.Services
                     foreach (var kvp in outcome.RoleProbabilityPayouts)
                     {
                         UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
+                        kvp.Value.Role = OldUserRoleEnum.Banned;
+                        kvp.Value.UserRole = role;
                         outcome.UserRoleProbabilityPayouts[role] = kvp.Value;
                     }
                 }
