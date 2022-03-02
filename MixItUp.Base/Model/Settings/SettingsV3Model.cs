@@ -633,8 +633,19 @@ namespace MixItUp.Base.Model.Settings
                 }
                 else if (type == CommandTypeEnum.Game)
                 {
-                    commandData = commandData.Replace("MixItUp.Base.ViewModel.User.UserRoleEnum", "MixItUp.Base.Model.User.UserRoleEnum");
-                    command = JSONSerializerHelper.DeserializeFromString<GameCommandModelBase>(commandData);
+                    try
+                    {
+                        command = JSONSerializerHelper.DeserializeFromString<GameCommandModelBase>(commandData);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                        if (ex.Message.Contains("MixItUp.Base.Model.User.UserRoleEnum"))
+                        {
+                            commandData = commandData.Replace("MixItUp.Base.Model.User.UserRoleEnum", "MixItUp.Base.Model.User.OldUserRoleEnum");
+                            command = JSONSerializerHelper.DeserializeFromString<GameCommandModelBase>(commandData);
+                        }
+                    }
                 }
                 else if (type == CommandTypeEnum.TwitchChannelPoints)
                 {
