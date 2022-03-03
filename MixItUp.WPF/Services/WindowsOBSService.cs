@@ -129,15 +129,15 @@ namespace MixItUp.WPF.Services
             });
         }
 
-        public async Task SetWebBrowserSourceURL(string sourceName, string url)
+        public async Task SetWebBrowserSourceURL(string sceneName, string sourceName, string url)
         {
             Logger.Log(LogLevel.Debug, "Setting web browser URL - " + sourceName);
 
-            await this.SetSourceVisibility(sceneName: null, sourceName: sourceName, visibility: false);
+            await this.SetSourceVisibility(sceneName, sourceName, visibility: false);
 
             await this.OBSCommandTimeoutWrapper((cancellationToken) =>
             {
-                SourceSettings properties = this.OBSWebsocket.GetSourceSettings(sourceName);
+                SourceSettings properties = this.OBSWebsocket.GetSourceSettings(sourceName, sceneName);
                 properties.Settings["is_local_file"] = false;
                 properties.Settings["url"] = url;
                 this.OBSWebsocket.SetSourceSettings(sourceName, properties.Settings);

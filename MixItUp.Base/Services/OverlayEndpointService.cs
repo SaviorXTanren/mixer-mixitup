@@ -101,21 +101,21 @@ namespace MixItUp.Base.Services
                         if (ServiceManager.Get<IOBSStudioService>().IsConnected)
                         {
                             await ServiceManager.Get<IOBSStudioService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: false);
-                            await ServiceManager.Get<IOBSStudioService>().SetWebBrowserSourceURL(ChannelSession.Settings.OverlaySourceName, overlayServerAddress);
+                            await ServiceManager.Get<IOBSStudioService>().SetWebBrowserSourceURL(null, ChannelSession.Settings.OverlaySourceName, overlayServerAddress);
                             await ServiceManager.Get<IOBSStudioService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: true);
                         }
 
                         if (ServiceManager.Get<XSplitService>().IsConnected)
                         {
                             await ServiceManager.Get<XSplitService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: false);
-                            await ServiceManager.Get<XSplitService>().SetWebBrowserSourceURL(ChannelSession.Settings.OverlaySourceName, overlayServerAddress);
+                            await ServiceManager.Get<XSplitService>().SetWebBrowserSourceURL(null, ChannelSession.Settings.OverlaySourceName, overlayServerAddress);
                             await ServiceManager.Get<XSplitService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: true);
                         }
 
                         if (ServiceManager.Get<StreamlabsOBSService>().IsConnected)
                         {
                             await ServiceManager.Get<StreamlabsOBSService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: false);
-                            await ServiceManager.Get<StreamlabsOBSService>().SetWebBrowserSourceURL(ChannelSession.Settings.OverlaySourceName, overlayServerAddress);
+                            await ServiceManager.Get<StreamlabsOBSService>().SetWebBrowserSourceURL(null, ChannelSession.Settings.OverlaySourceName, overlayServerAddress);
                             await ServiceManager.Get<StreamlabsOBSService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: true);
                         }
                     }

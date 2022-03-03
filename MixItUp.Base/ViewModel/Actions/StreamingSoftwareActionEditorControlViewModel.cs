@@ -43,16 +43,10 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged("ShowSceneCollectionGrid");
                 this.NotifyPropertyChanged("ShowSceneGrid");
                 this.NotifyPropertyChanged("ShowSourceGrid");
-                this.NotifyPropertyChanged("CanSpecifySceneName");
                 this.NotifyPropertyChanged("ShowTextSourceGrid");
                 this.NotifyPropertyChanged("ShowWebBrowserSourceGrid");
                 this.NotifyPropertyChanged("ShowSourceDimensionsGrid");
                 this.NotifyPropertyChanged("ShowSourceFilterGrid");
-
-                if (!this.CanSpecifySceneName)
-                {
-                    this.SceneName = null;
-                }
             }
         }
         private StreamingSoftwareActionTypeEnum selectedActionType;
@@ -141,8 +135,6 @@ namespace MixItUp.Base.ViewModel.Actions
         private string sceneName;
 
         public bool ShowSourceGrid { get { return this.SelectedActionType == StreamingSoftwareActionTypeEnum.SourceVisibility || this.ShowTextSourceGrid || this.ShowWebBrowserSourceGrid || this.ShowSourceDimensionsGrid; } }
-
-        public bool CanSpecifySceneName { get { return !this.ShowWebBrowserSourceGrid; } }
 
         public string SourceName
         {

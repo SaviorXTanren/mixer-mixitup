@@ -281,7 +281,7 @@ namespace MixItUp.Base.Model.Actions
                     {
                         if (this.ActionType == StreamingSoftwareActionTypeEnum.WebBrowserSource && !string.IsNullOrEmpty(this.SourceURL))
                         {
-                            await ssService.SetWebBrowserSourceURL(name, await ReplaceStringWithSpecialModifiers(this.SourceURL, parameters));
+                            await ssService.SetWebBrowserSourceURL(parentName, name, await ReplaceStringWithSpecialModifiers(this.SourceURL, parameters));
                         }
                         else if (this.ActionType == StreamingSoftwareActionTypeEnum.TextSource && !string.IsNullOrEmpty(this.SourceText) && !string.IsNullOrEmpty(this.SourceTextFilePath))
                         {
