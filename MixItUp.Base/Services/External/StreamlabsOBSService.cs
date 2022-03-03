@@ -236,9 +236,9 @@ namespace MixItUp.Base.Services.External
 
         public Task SetSourceFilterVisibility(string sourceName, string filterName, bool visibility) { return Task.CompletedTask; }
 
-        public async Task SetWebBrowserSourceURL(string sceneName, string sourceName, string url)
+        public async Task SetWebBrowserSourceURL(string sourceName, string url)
         {
-            StreamlabsOBSSceneItem sceneItem = await this.GetSceneItem(sceneName, sourceName);
+            StreamlabsOBSSceneItem sceneItem = await this.GetSceneItem(sceneName: null, sourceName: sourceName);
             if (sceneItem != null)
             {
                 StreamlabsOBSRequest getSourceRequest = new StreamlabsOBSRequest("getSource", sceneItem.ResourceID);

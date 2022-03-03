@@ -137,9 +137,9 @@ namespace MixItUp.Base.Services.External
 
         public Task SetSourceFilterVisibility(string sourceName, string filterName, bool visibility) { return Task.CompletedTask; }
 
-        public async Task SetWebBrowserSourceURL(string sceneName, string sourceName, string url)
+        public async Task SetWebBrowserSourceURL(string sourceName, string url)
         {
-            await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitWebBrowserSource() { sceneName = sceneName, sourceName = sourceName, webBrowserUrl = url })));
+            await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitWebBrowserSource() { sceneName = null, sourceName = sourceName, webBrowserUrl = url })));
         }
 
         public Task SetSourceDimensions(string sceneName, string sourceName, StreamingSoftwareSourceDimensionsModel dimensions) { return Task.CompletedTask; }
