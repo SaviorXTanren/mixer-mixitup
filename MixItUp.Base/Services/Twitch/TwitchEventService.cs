@@ -137,6 +137,8 @@ namespace MixItUp.Base.Services.Twitch
 
         public TwitchChatMessageViewModel Message { get; set; }
 
+        public bool IsAnonymous { get { return this.User.Platform == StreamingPlatformTypeEnum.None; } }
+
         public TwitchUserBitsCheeredModel(UserV2ViewModel user, PubSubBitsEventV2Model bitsEvent)
         {
             this.User = user;
@@ -541,23 +543,29 @@ namespace MixItUp.Base.Services.Twitch
 
             TwitchUserBitsCheeredModel bitsCheered = new TwitchUserBitsCheeredModel(user, packet);
 
-            foreach (CurrencyModel bitsCurrency in ChannelSession.Settings.Currency.Values.Where(c => c.SpecialTracking == CurrencySpecialTrackingEnum.Bits))
+            if (!bitsCheered.IsAnonymous)
             {
-                bitsCurrency.AddAmount(user, bitsCheered.Amount);
-            }
-
-            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
-            {
-                if (user.MeetsRole(streamPass.UserPermission))
+                foreach (CurrencyModel bitsCurrency in ChannelSession.Settings.Currency.Values.Where(c => c.SpecialTracking == CurrencySpecialTrackingEnum.Bits))
                 {
-                    streamPass.AddAmount(user, (int)Math.Ceiling(streamPass.BitsBonus * bitsCheered.Amount));
+                    bitsCurrency.AddAmount(user, bitsCheered.Amount);
                 }
+
+                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                {
+                    if (user.MeetsRole(streamPass.UserPermission))
+                    {
+                        streamPass.AddAmount(user, (int)Math.Ceiling(streamPass.BitsBonus * bitsCheered.Amount));
+                    }
+                }
+
+                if (user.HasPlatformData(StreamingPlatformTypeEnum.Twitch))
+                {
+                    ((TwitchUserPlatformV2Model)user.PlatformModel).TotalBitsCheered = (uint)packet.total_bits_used;
+                }
+
+                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheeredUserData] = user.ID;
+                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheeredAmountData] = bitsCheered.Amount;
             }
-
-            ((TwitchUserPlatformV2Model)user.PlatformModel).TotalBitsCheered = (uint)packet.total_bits_used;
-
-            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheeredUserData] = user.ID;
-            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheeredAmountData] = bitsCheered.Amount;
 
             if (string.IsNullOrEmpty(await ServiceManager.Get<ModerationService>().ShouldTextBeModerated(user, bitsCheered.Message.PlainTextMessage)))
             {
@@ -566,6 +574,7 @@ namespace MixItUp.Base.Services.Twitch
                 parameters.SpecialIdentifiers["bitslifetimeamount"] = packet.total_bits_used.ToString();
                 parameters.SpecialIdentifiers["messagenocheermotes"] = bitsCheered.Message.PlainTextMessageNoCheermotes;
                 parameters.SpecialIdentifiers["message"] = bitsCheered.Message.PlainTextMessage;
+                parameters.SpecialIdentifiers["isanonymous"] = bitsCheered.IsAnonymous.ToString();
                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelBitsCheered, parameters);
             }
             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertTwitchBitsCheered, user.FullDisplayName, bitsCheered.Amount), ChannelSession.Settings.AlertTwitchBitsCheeredColor));
