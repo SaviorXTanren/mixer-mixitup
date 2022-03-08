@@ -5921,6 +5921,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Find User.
+        /// </summary>
+        public static string FindUser {
+            get {
+                return ResourceManager.GetString("FindUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to First Value.
         /// </summary>
         public static string FirstValue {
@@ -20269,6 +20278,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The user {0} was successfully found and added in to Mix It Up.
+        /// </summary>
+        public static string UsersSuccessfullyFoundUser {
+            get {
+                return ResourceManager.GetString("UsersSuccessfullyFoundUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Users To Apply To.
         /// </summary>
         public static string UsersToApplyTo {
@@ -20283,6 +20301,15 @@ namespace MixItUp.Base {
         public static string UserSubscribeAgeHeader {
             get {
                 return ResourceManager.GetString("UserSubscribeAgeHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable find the user &quot;{0}&quot;.
+        /// </summary>
+        public static string UsersUnableToFindUser {
+            get {
+                return ResourceManager.GetString("UsersUnableToFindUser", resourceCulture);
             }
         }
         
