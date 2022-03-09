@@ -88,9 +88,9 @@ namespace MixItUp.WPF.Controls.MainControls
             window.Show();
         }
 
-        private async void FindUserDataButton_Click(object sender, RoutedEventArgs e)
+        private async void AddUserDataButton_Click(object sender, RoutedEventArgs e)
         {
-            FindUserDialogControl dialog = new FindUserDialogControl();
+            AddUserDialogControl dialog = new AddUserDialogControl();
             if (bool.Equals(await DialogHelper.ShowCustom(dialog), true))
             {
                 await this.viewModel.FindAndAddUser(dialog.ViewModel.SelectedStreamingPlatform, dialog.ViewModel.Username);

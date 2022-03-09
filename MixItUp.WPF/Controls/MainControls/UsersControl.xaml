@@ -189,7 +189,7 @@
 
             <Button Grid.Column="2" Command="{Binding ExportDataCommand}" MinWidth="120" Content="{x:Static resx:Resources.ExportData}"/>
 
-            <Button x:Name="FindUserDataButton" Grid.Column="4" MinWidth="120" Click="FindUserDataButton_Click" Content="{x:Static resx:Resources.FindUser}"/>
+            <Button x:Name="AddUserDataButton" Grid.Column="4" MinWidth="120" Click="AddUserDataButton_Click" Content="{x:Static resx:Resources.AddUser}"/>
         </Grid>
     </Grid>
 </local:MainControlBase>

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="MixItUp.WPF.Controls.Dialogs.FindUserDialogControl"
+﻿<UserControl x:Class="MixItUp.WPF.Controls.Dialogs.AddUserDialogControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -22,9 +22,13 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ComboBox Grid.Row="0" ItemsSource="{Binding StreamingPlatforms}" SelectedItem="{Binding SelectedStreamingPlatform}" Width="300" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StreamingPlatform}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+        <TextBlock Grid.Row="0" Text="{x:Static resx:Resources.AddUserDescription}" TextWrapping="Wrap" />
+
+        <ComboBox Grid.Row="2" ItemsSource="{Binding StreamingPlatforms}" SelectedItem="{Binding SelectedStreamingPlatform}" Width="300" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StreamingPlatform}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -32,9 +36,9 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <TextBox Grid.Row="2" Text="{Binding Username}" Width="300" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Username}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        <TextBox Grid.Row="4" Text="{Binding Username}" Width="300" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Username}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-        <Grid Grid.Row="4" HorizontalAlignment="Center">
+        <Grid Grid.Row="6" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="40" />

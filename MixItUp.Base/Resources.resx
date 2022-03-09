@@ -7561,8 +7561,8 @@ We will attempt to re-connect with the service when possible. If this continues,
   <data name="QuoteDeletedHeader" xml:space="preserve">
     <value>Quote Deleted: </value>
   </data>
-  <data name="FindUser" xml:space="preserve">
-    <value>Find User</value>
+  <data name="AddUser" xml:space="preserve">
+    <value>Add User</value>
   </data>
   <data name="UsersUnableToFindUser" xml:space="preserve">
     <value>Unable find the user "{0}"</value>
@@ -7571,5 +7571,8 @@ We will attempt to re-connect with the service when possible. If this continues,
   <data name="UsersSuccessfullyFoundUser" xml:space="preserve">
     <value>The user {0} was successfully found and added in to Mix It Up</value>
     <comment>{0} is the name of the user</comment>
+  </data>
+  <data name="AddUserDescription" xml:space="preserve">
+    <value>Select the streaming platform and the name of the user to find on there. If the user is found successfully, their user data will be added in to Mix It Up for you to be able to use.</value>
   </data>
 </root>

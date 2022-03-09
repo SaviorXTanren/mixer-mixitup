@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MixItUp.Base.ViewModel.Dialogs
 {
-    public class FindUserDialogControlViewModel : UIViewModelBase
+    public class AddUserDialogControlViewModel : UIViewModelBase
     {
         public IEnumerable<StreamingPlatformTypeEnum> StreamingPlatforms { get { return MixItUp.Base.Model.StreamingPlatforms.SupportedPlatforms; } }
 

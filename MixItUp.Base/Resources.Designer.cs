@@ -556,6 +556,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add User.
+        /// </summary>
+        public static string AddUser {
+            get {
+                return ResourceManager.GetString("AddUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the streaming platform and the name of the user to find on there. If the user is found successfully, their user data will be added in to Mix It Up for you to be able to use..
+        /// </summary>
+        public static string AddUserDescription {
+            get {
+                return ResourceManager.GetString("AddUserDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add User Role.
         /// </summary>
         public static string AddUserRole {
@@ -5917,15 +5935,6 @@ namespace MixItUp.Base {
         public static string FindChannelToRaid {
             get {
                 return ResourceManager.GetString("FindChannelToRaid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Find User.
-        /// </summary>
-        public static string FindUser {
-            get {
-                return ResourceManager.GetString("FindUser", resourceCulture);
             }
         }
         
