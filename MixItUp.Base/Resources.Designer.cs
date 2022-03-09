@@ -556,6 +556,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add User.
+        /// </summary>
+        public static string AddUser {
+            get {
+                return ResourceManager.GetString("AddUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the streaming platform and the name of the user to find on there. If the user is found successfully, their user data will be added in to Mix It Up for you to be able to use..
+        /// </summary>
+        public static string AddUserDescription {
+            get {
+                return ResourceManager.GetString("AddUserDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add User Role.
         /// </summary>
         public static string AddUserRole {
@@ -20269,6 +20287,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The user {0} was successfully found and added in to Mix It Up.
+        /// </summary>
+        public static string UsersSuccessfullyFoundUser {
+            get {
+                return ResourceManager.GetString("UsersSuccessfullyFoundUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Users To Apply To.
         /// </summary>
         public static string UsersToApplyTo {
@@ -20283,6 +20310,15 @@ namespace MixItUp.Base {
         public static string UserSubscribeAgeHeader {
             get {
                 return ResourceManager.GetString("UserSubscribeAgeHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable find the user &quot;{0}&quot;.
+        /// </summary>
+        public static string UsersUnableToFindUser {
+            get {
+                return ResourceManager.GetString("UsersUnableToFindUser", resourceCulture);
             }
         }
         

@@ -707,6 +707,9 @@
     <Compile Include="Controls\Dialogs\EditTestSpecialIdentifiersDialogControl.xaml.cs">
       <DependentUpon>EditTestSpecialIdentifiersDialogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Dialogs\AddUserDialogControl.xaml.cs">
+      <DependentUpon>AddUserDialogControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Dialogs\GameTypeSelectorDialogControl.xaml.cs">
       <DependentUpon>GameTypeSelectorDialogControl.xaml</DependentUpon>
     </Compile>
@@ -1456,6 +1459,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\EditTestSpecialIdentifiersDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\AddUserDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

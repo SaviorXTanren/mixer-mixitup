@@ -137,6 +137,8 @@ namespace MixItUp.Base.Model.Actions
             string v1 = await ReplaceStringWithSpecialModifiers(clause.Value1, parameters);
             string v2 = await ReplaceStringWithSpecialModifiers(clause.Value2, parameters);
 
+            Logger.Log(LogLevel.Debug, $"Conditional Action: Checking clause - {v1} {clause.ComparisionType} {v2}");
+
             if (clause.ComparisionType == ConditionalComparisionTypeEnum.Contains || clause.ComparisionType == ConditionalComparisionTypeEnum.DoesNotContain)
             {
                 bool contains = v1.IndexOf(v2, this.CaseSensitive ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase) >= 0;

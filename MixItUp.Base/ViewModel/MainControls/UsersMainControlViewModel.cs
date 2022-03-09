@@ -3,6 +3,9 @@ using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
@@ -465,6 +468,54 @@ namespace MixItUp.Base.ViewModel.MainControls
                 ServiceManager.Get<UserService>().DeleteUserData(user.ID);
             }
             this.RefreshUsers();
+        }
+
+        public async Task FindAndAddUser(StreamingPlatformTypeEnum platform, string username)
+        {
+            if (!StreamingPlatforms.GetPlatformSessionService(platform).IsConnected)
+            {
+                return;
+            }
+
+            UserV2ViewModel user = null;
+            if (platform == StreamingPlatformTypeEnum.Twitch)
+            {
+                Twitch.Base.Models.NewAPI.Users.UserModel tUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
+                if (tUser != null)
+                {
+                    user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(tUser));
+                }
+            }
+            else if (platform == StreamingPlatformTypeEnum.YouTube)
+            {
+                // TODO
+            }
+            else if (platform == StreamingPlatformTypeEnum.Trovo)
+            {
+                Trovo.Base.Models.Users.UserModel tUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(username);
+                if (tUser != null)
+                {
+                    user = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(tUser));
+                }
+            }
+            else if (platform == StreamingPlatformTypeEnum.Glimesh)
+            {
+                Glimesh.Base.Models.Users.UserModel gUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByName(username);
+                if (gUser != null)
+                {
+                    user = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(gUser));
+                }
+            }
+
+            if (user != null)
+            {
+                await DialogHelper.ShowMessage(string.Format(MixItUp.Base.Resources.UsersSuccessfullyFoundUser, user.DisplayName));
+                await this.RefreshUsersAsync();
+            }
+            else
+            {
+                await DialogHelper.ShowMessage(string.Format(MixItUp.Base.Resources.UsersUnableToFindUser, username));
+            }
         }
 
         protected override Task OnVisibleInternal()

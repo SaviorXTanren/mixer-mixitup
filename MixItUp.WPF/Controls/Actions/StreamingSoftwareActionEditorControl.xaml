@@ -79,7 +79,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" Text="{Binding SceneName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SceneNameOptional}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="0" Text="{Binding SceneName}" IsEnabled="{Binding CanSpecifySceneName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SceneNameOptional}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                 <TextBox Grid.Column="2" Text="{Binding SourceName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SourceName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 

@@ -78,13 +78,13 @@ namespace MixItUp.Base.Services
             this.filteredWords.Clear();
             foreach (string word in ChannelSession.Settings.FilteredWords)
             {
-                this.filteredWords.Add(string.Format(WordRegexFormat, Regex.Escape(word).Replace(WordWildcardRegexEscaped, WordWildcardRegex)));
+                this.filteredWords.Add(word);
             }
 
             this.bannedWords.Clear();
             foreach (string word in ChannelSession.Settings.BannedWords)
             {
-                this.bannedWords.Add(string.Format(WordRegexFormat, Regex.Escape(word).Replace(WordWildcardRegexEscaped, WordWildcardRegex)));
+                this.bannedWords.Add(word);
             }
         }
 
@@ -149,7 +149,7 @@ namespace MixItUp.Base.Services
 
                 foreach (string word in this.filteredWords)
                 {
-                    if (Regex.IsMatch(text, word, RegexOptions.IgnoreCase))
+                    if (Regex.IsMatch(text, string.Format(WordRegexFormat, Regex.Escape(word).Replace(WordWildcardRegexEscaped, WordWildcardRegex)), RegexOptions.IgnoreCase))
                     {
                         return string.Format(MixItUp.Base.Resources.ModerationFilteredWord, word);
                     }
@@ -157,7 +157,7 @@ namespace MixItUp.Base.Services
 
                 foreach (string word in this.bannedWords)
                 {
-                    if (Regex.IsMatch(text, word, RegexOptions.IgnoreCase))
+                    if (Regex.IsMatch(text, string.Format(WordRegexFormat, Regex.Escape(word).Replace(WordWildcardRegexEscaped, WordWildcardRegex)), RegexOptions.IgnoreCase))
                     {
                         await ServiceManager.Get<ChatService>().BanUser(user);
                         return string.Format(MixItUp.Base.Resources.ModerationBannedWord, word);

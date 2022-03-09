@@ -26,6 +26,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged("OBSStudioNotEnabled");
                 this.NotifyPropertyChanged("XSplitNotEnabled");
                 this.NotifyPropertyChanged("StreamlabsOBSNotEnabled");
+                this.NotifyPropertyChanged("CanSpecifySceneName");
             }
         }
         private StreamingSoftwareTypeEnum selectedStreamingSoftwareType;
@@ -43,6 +44,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged("ShowSceneCollectionGrid");
                 this.NotifyPropertyChanged("ShowSceneGrid");
                 this.NotifyPropertyChanged("ShowSourceGrid");
+                this.NotifyPropertyChanged("CanSpecifySceneName");
                 this.NotifyPropertyChanged("ShowTextSourceGrid");
                 this.NotifyPropertyChanged("ShowWebBrowserSourceGrid");
                 this.NotifyPropertyChanged("ShowSourceDimensionsGrid");
@@ -135,6 +137,20 @@ namespace MixItUp.Base.ViewModel.Actions
         private string sceneName;
 
         public bool ShowSourceGrid { get { return this.SelectedActionType == StreamingSoftwareActionTypeEnum.SourceVisibility || this.ShowTextSourceGrid || this.ShowWebBrowserSourceGrid || this.ShowSourceDimensionsGrid; } }
+
+        public bool CanSpecifySceneName
+        {
+            get
+            {
+                StreamingSoftwareTypeEnum streamingSoftware = this.GetCurrentlySelectedStreamingSoftwareType();
+                if (streamingSoftware == StreamingSoftwareTypeEnum.OBSStudio && this.ShowWebBrowserSourceGrid)
+                {
+                    this.SceneName = null;
+                    return false;
+                }
+                return true;
+            }
+        }
 
         public string SourceName
         {

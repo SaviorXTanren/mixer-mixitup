@@ -2,6 +2,7 @@
 using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Windows.Users;
 using System.Threading;
 using System.Threading.Tasks;
@@ -85,6 +86,15 @@ namespace MixItUp.WPF.Controls.MainControls
             UserDataImportWindow window = new UserDataImportWindow();
             window.Closed += Window_Closed;
             window.Show();
+        }
+
+        private async void AddUserDataButton_Click(object sender, RoutedEventArgs e)
+        {
+            AddUserDialogControl dialog = new AddUserDialogControl();
+            if (bool.Equals(await DialogHelper.ShowCustom(dialog), true))
+            {
+                await this.viewModel.FindAndAddUser(dialog.ViewModel.SelectedStreamingPlatform, dialog.ViewModel.Username);
+            }
         }
 
         private void Window_Closed(object sender, System.EventArgs e)

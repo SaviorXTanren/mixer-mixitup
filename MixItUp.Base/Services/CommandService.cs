@@ -228,14 +228,14 @@ namespace MixItUp.Base.Services
                     commandInstance.Parameters.SpecialIdentifiers[CommandModelBase.CommandNameSpecialIdentifier] = command.Name;
 
                     command.TrackTelemetry();
+
+                    Logger.Log(LogLevel.Debug, $"Starting command performing: {command.ID} - {command.Name}");
                 }
 
                 if (commandInstance.RunnerParameters.Count == 0)
                 {
                     commandInstance.RunnerParameters = new List<CommandParametersModel>() { commandInstance.Parameters };
                 }
-
-                Logger.Log(LogLevel.Debug, $"Starting command performing: {this}");
 
                 commandInstance.State = CommandInstanceStateEnum.Running;
 

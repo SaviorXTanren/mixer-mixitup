@@ -137,7 +137,7 @@ namespace MixItUp.WPF.Services
 
             await this.OBSCommandTimeoutWrapper((cancellationToken) =>
             {
-                SourceSettings properties = this.OBSWebsocket.GetSourceSettings(sourceName, sceneName);
+                SourceSettings properties = this.OBSWebsocket.GetSourceSettings(sourceName);
                 properties.Settings["is_local_file"] = false;
                 properties.Settings["url"] = url;
                 this.OBSWebsocket.SetSourceSettings(sourceName, properties.Settings);

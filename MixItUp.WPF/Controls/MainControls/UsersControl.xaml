@@ -181,11 +181,15 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <Button x:Name="ImportUserDataButton" Grid.Column="0" MinWidth="120" Click="ImportUserDataButton_Click" Content="{x:Static resx:Resources.ImportData}"/>
 
             <Button Grid.Column="2" Command="{Binding ExportDataCommand}" MinWidth="120" Content="{x:Static resx:Resources.ExportData}"/>
+
+            <Button x:Name="AddUserDataButton" Grid.Column="4" MinWidth="120" Click="AddUserDataButton_Click" Content="{x:Static resx:Resources.AddUser}"/>
         </Grid>
     </Grid>
 </local:MainControlBase>
