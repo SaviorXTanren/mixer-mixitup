@@ -287,11 +287,11 @@ namespace MixItUp.Base.ViewModel.MainControls
                             UserPlatformV2ModelBase platformUser = user.GetPlatformData<UserPlatformV2ModelBase>(p);
                             if (platformUser != null)
                             {
-                                columns.AddRange(new List<string>() { platformUser.ID, platformUser.Username });
+                                data.AddRange(new List<string>() { platformUser.ID, platformUser.Username });
                             }
                             else
                             {
-                                columns.AddRange(new List<string>() { "", "" });
+                                data.AddRange(new List<string>() { "", "" });
                             }
                         });
                         foreach (var kvp in ChannelSession.Settings.Currency)
