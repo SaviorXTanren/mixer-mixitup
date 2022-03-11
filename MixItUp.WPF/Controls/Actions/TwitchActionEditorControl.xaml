@@ -62,7 +62,7 @@
             <ToggleButton Grid.Column="6" VerticalAlignment="Center" IsChecked="{Binding ShowInfoInChat}" />
 
             <TextBlock Grid.Column="8" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Result}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-            <TextBlock Grid.Column="10" VerticalAlignment="Center" Text="$clipurl" />
+            <TextBox Grid.Column="10" VerticalAlignment="Center" Text="$clipurl" Style="{StaticResource TextBoxReadOnlySelectable}" />
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowStreamMarkerGrid, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center">

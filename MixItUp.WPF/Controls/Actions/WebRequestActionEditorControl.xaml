@@ -42,7 +42,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Result}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="$webrequestresult" />
+            <TextBox Grid.Column="2" VerticalAlignment="Center" Text="$webrequestresult" Style="{StaticResource TextBoxReadOnlySelectable}" />
         </Grid>
 
         <Grid Grid.Row="3" Visibility="{Binding ShowJSONGrid, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,10,0,0">
