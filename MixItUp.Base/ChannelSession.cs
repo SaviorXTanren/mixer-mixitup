@@ -333,7 +333,7 @@ namespace MixItUp.Base
                     Dictionary<IExternalService, Task<Result>> externalServiceTasks = new Dictionary<IExternalService, Task<Result>>();
                     foreach (var kvp in externalServiceToConnect)
                     {
-                        Logger.Log(LogLevel.Debug, "Trying automatic OAuth service connection: " + nameof(kvp.Key));
+                        Logger.Log(LogLevel.Debug, "Trying automatic OAuth service connection: " + kvp.Key.GetType().ToString());
 
                         try
                         {
@@ -348,7 +348,7 @@ namespace MixItUp.Base
                         }
                         catch (Exception sex)
                         {
-                            Logger.Log(LogLevel.Error, "Error in external service initial connection: " + nameof(kvp.Key));
+                            Logger.Log(LogLevel.Error, "Error in external service initial connection: " + kvp.Key.GetType().ToString());
                             Logger.Log(sex);
                         }
                     }
@@ -370,7 +370,7 @@ namespace MixItUp.Base
                         {
                             if (kvp.Value.Result != null && !kvp.Value.Result.Success && kvp.Key is IOAuthExternalService)
                             {
-                                Logger.Log(LogLevel.Debug, "Automatic OAuth token connection failed, trying manual connection: " + nameof(kvp.Key));
+                                Logger.Log(LogLevel.Debug, "Automatic OAuth token connection failed, trying manual connection: " + kvp.Key.GetType().ToString());
                                 result = await kvp.Key.Connect();
                                 if (!result.Success)
                                 {
@@ -380,7 +380,7 @@ namespace MixItUp.Base
                         }
                         catch (Exception sex)
                         {
-                            Logger.Log(LogLevel.Error, "Error in external service failed re-connection: " + nameof(kvp.Key));
+                            Logger.Log(LogLevel.Error, "Error in external service failed re-connection: " + kvp.Key.GetType().ToString());
                             Logger.Log(sex);
                             failedServices.Add(kvp.Key);
                         }
@@ -388,7 +388,7 @@ namespace MixItUp.Base
 
                     if (failedServices.Count > 0)
                     {
-                        Logger.Log(LogLevel.Debug, "Connection failed for services: " + string.Join(", ", failedServices.Select(s => nameof(s))));
+                        Logger.Log(LogLevel.Debug, "Connection failed for services: " + string.Join(", ", failedServices.Select(s => s.GetType().ToString())));
 
                         StringBuilder failedServiceMessage = new StringBuilder();
                         foreach (IExternalService service in failedServices)
