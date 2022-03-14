@@ -569,6 +569,11 @@ namespace MixItUp.Base.Services
                                 }
                             }
 
+                            if (!commandTriggered && userOnlyTriggersToCommands.Count > 0)
+                            {
+                                commandTriggered = await this.CheckForChatCommandAndRun(message, userOnlyTriggersToCommands);
+                            }
+
                             if (!commandTriggered && userOnlyWildcardCommands.Count > 0)
                             {
                                 foreach (ChatCommandModel command in userOnlyWildcardCommands)
@@ -581,11 +586,11 @@ namespace MixItUp.Base.Services
                                     }
                                 }
                             }
+                        }
 
-                            if (!commandTriggered && userOnlyTriggersToCommands.Count > 0)
-                            {
-                                commandTriggered = await this.CheckForChatCommandAndRun(message, userOnlyTriggersToCommands);
-                            }
+                        if (!commandTriggered)
+                        {
+                            commandTriggered = await this.CheckForChatCommandAndRun(message, this.triggersToCommands);
                         }
 
                         if (!commandTriggered)
@@ -599,11 +604,6 @@ namespace MixItUp.Base.Services
                                     break;
                                 }
                             }
-                        }
-
-                        if (!commandTriggered)
-                        {
-                            commandTriggered = await this.CheckForChatCommandAndRun(message, this.triggersToCommands);
                         }
                     }
 
