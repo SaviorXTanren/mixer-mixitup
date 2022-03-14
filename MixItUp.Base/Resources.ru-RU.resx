@@ -1701,10 +1701,6 @@
     <value>Пожертвование StreamElements</value>
     <comment>Manual</comment>
   </data>
-  <data name="StreamJarDonation" xml:space="preserve">
-    <value>Пожертвование StreamJar</value>
-    <comment>Manual</comment>
-  </data>
   <data name="StreamlootsCardRedeemed" xml:space="preserve">
     <value>Карта на Streamloots выкуплена</value>
     <comment>Manual</comment>
@@ -2159,16 +2155,6 @@
   </data>
   <data name="HideUserSubscriberBadge" xml:space="preserve">
     <value>Скрывать значок подписчика</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="TwitchMassGiftedSubsFilterAmount" xml:space="preserve">
-    <value>Фильтр количества массовык подарочных подписок Twitch</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="TwitchMassGiftedSubsFilterAmountTooltip" xml:space="preserve">
-    <value>Эта опция помогает гарантировать, что только команда для обычной подарочной подписки ИЛИ массовой подарочной подписки будет работать в зависимости от указанного числа. Это сделано, чтобы помочь уменьшить спам оповещениями о подаренных подписках и обеспечить лучшие решения для вашего стрима. Обратите внимание, что это приведет к тому, что обработка событий о дарении подписки и массовом дарении подписок будет немного задержана, в среднем на 10 секунд.
-
-Например, если эта опция включена и количество установлено на 5, то, когда 5 или МЕНЕЕ подписок подарены сразу, будет запущено ТОЛЬКО обычное оповещение для подарочной подписки. Если же подарено БОЛЕЕ 5 подписок, то будет запущено ТОЛЬКО оповещение о массовом дарении подписок.</value>
     <comment>Manual</comment>
   </data>
   <data name="AddSeparatorsBetweenMessages" xml:space="preserve">
@@ -3816,10 +3802,6 @@
   </data>
   <data name="StreamElements" xml:space="preserve">
     <value>StreamElements</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="StreamJar" xml:space="preserve">
-    <value>StreamJar</value>
     <comment>Manual</comment>
   </data>
   <data name="StreamlabsOBS" xml:space="preserve">

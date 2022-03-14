@@ -16,7 +16,7 @@ namespace MixItUp.Base.Services.External
 
         public IFTTTService() : base("") { }
 
-        public override string Name { get { return "IFTTT"; } }
+        public override string Name { get { return MixItUp.Base.Resources.IFTTT; } }
 
         public override Task<Result> Connect()
         {

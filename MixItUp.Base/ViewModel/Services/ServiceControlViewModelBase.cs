@@ -1,16 +1,23 @@
-﻿using MixItUp.Base.Services.External;
-using MixItUp.Base.Util;
+﻿using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Services
 {
     public abstract class ServiceControlViewModelBase : UIViewModelBase
     {
+        public ICommand HelpCommand { get; set; }
+
         public ServiceControlViewModelBase(string name)
         {
             this.Name = name;
+
+            this.HelpCommand = this.CreateCommand(() =>
+            {
+                ProcessHelper.LaunchLink("https://wiki.mixitupapp.com/services/" + this.WikiPageName);
+            });
         }
 
         public string Name { get; private set; }
@@ -28,6 +35,8 @@ namespace MixItUp.Base.ViewModel.Services
         private bool isConnected;
 
         public bool IsNotConnected { get { return !this.IsConnected; } }
+
+        public abstract string WikiPageName { get; }
 
         protected async Task ShowConnectFailureMessage(Result result)
         {

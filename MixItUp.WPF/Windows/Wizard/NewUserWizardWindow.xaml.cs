@@ -32,7 +32,7 @@ namespace MixItUp.WPF.Windows.Wizard
 
         protected override async Task OnLoaded()
         {
-            await this.viewModel.OnLoaded();
+            await this.viewModel.OnOpen();
 
             await base.OnLoaded();
         }

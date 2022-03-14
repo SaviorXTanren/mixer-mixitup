@@ -20,6 +20,7 @@ namespace MixItUp.Base.Services
         Task<IEnumerable<string>> GetFilesInDirectory(string directoryPath);
 
         bool FileExists(string filePath);
+        bool IsURLPath(string filePath);
         long GetFileSize(string filePath);
         Task<string> ReadFile(string filePath);
         Task<byte[]> ReadFileAsBytes(string filePath);

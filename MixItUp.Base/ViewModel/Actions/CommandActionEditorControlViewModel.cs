@@ -29,7 +29,14 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private CommandActionTypeEnum selectedActionType;
 
-        public bool ShowCommandsSection { get { return this.SelectedActionType == CommandActionTypeEnum.RunCommand || this.SelectedActionType == CommandActionTypeEnum.EnableCommand || this.SelectedActionType == CommandActionTypeEnum.DisableCommand; } }
+        public bool ShowCommandsSection
+        {
+            get
+            {
+                return this.SelectedActionType == CommandActionTypeEnum.RunCommand || this.SelectedActionType == CommandActionTypeEnum.EnableCommand ||
+                    this.SelectedActionType == CommandActionTypeEnum.DisableCommand || this.SelectedActionType == CommandActionTypeEnum.ToggleCommand;
+            }
+        }
 
         public IEnumerable<CommandTypeEnum> CommandTypes
         {

@@ -116,10 +116,10 @@ namespace MixItUp.Base.ViewModel.Settings
             this.RefreshList();
         }
 
-        protected override Task OnLoadedInternal()
+        protected override Task OnOpenInternal()
         {
             this.RefreshList();
-            return base.OnLoadedInternal();
+            return base.OnOpenInternal();
         }
 
         protected override Task OnVisibleInternal()

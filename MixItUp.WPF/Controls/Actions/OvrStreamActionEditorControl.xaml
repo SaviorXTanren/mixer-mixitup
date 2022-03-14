@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -55,20 +56,20 @@
             <ItemsControl Grid.Row="2" ItemsSource="{Binding Variables}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Grid Margin="0,5">
+                        <Grid Margin="5,5" HorizontalAlignment="Center">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="10" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="20" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <ComboBox Grid.Column="0" ItemsSource="{Binding KnownVariables}" Text="{Binding Name}" Width="300" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VariableName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" />
+                            <ComboBox Grid.Column="0" ItemsSource="{Binding KnownVariables}" Text="{Binding Name}" Width="600" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VariableName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" />
 
-                            <TextBox Grid.Column="2" Text="{Binding Value}" Width="320" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VariableValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox Grid.Column="2" Text="{Binding Value}" Width="600" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VariableValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                            <Button Grid.Column="4" Command="{Binding DeleteVariableCommand}" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" ToolTip="{x:Static resx:Resources.Delete}" />
+                            <Controls:IconButton Grid.Column="4" Command="{Binding DeleteVariableCommand}" Icon="Delete" ToolTip="{x:Static resx:Resources.Delete}" />
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

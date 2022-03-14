@@ -114,7 +114,7 @@ namespace MixItUp.Base.Services.External
 
         public JustGivingService() : base(JustGivingService.BaseAddress) { }
 
-        public override string Name { get { return "JustGiving"; } }
+        public override string Name { get { return MixItUp.Base.Resources.JustGiving; } }
 
         public override async Task<Result> Connect()
         {

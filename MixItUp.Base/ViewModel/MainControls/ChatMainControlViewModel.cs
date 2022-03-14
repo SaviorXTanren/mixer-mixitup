@@ -1,16 +1,15 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
+using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Base.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using MixItUp.Base.Services;
-using MixItUp.Base.Services.Twitch;
-using MixItUp.Base.Services.Glimesh;
-using MixItUp.Base.Model;
-using MixItUp.Base.Services.Trovo;
 
 namespace MixItUp.Base.ViewModel.MainControls
 {
@@ -88,9 +87,9 @@ namespace MixItUp.Base.ViewModel.MainControls
             });
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
 
             ServiceManager.Get<UserService>().DisplayUsersUpdated += ChatService_DisplayUsersUpdated;
             this.DisplayUsers = ServiceManager.Get<UserService>().DisplayUsers;
@@ -116,18 +115,19 @@ namespace MixItUp.Base.ViewModel.MainControls
         private void RefreshNumbers()
         {
             int viewerCount = 0;
-            if (ServiceManager.Get<TwitchSessionService>().IsConnected && ServiceManager.Get<TwitchSessionService>().StreamIsLive)
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected && ServiceManager.Get<TwitchSessionService>().IsLive)
             {
-                viewerCount += (int)ServiceManager.Get<TwitchSessionService>().Stream.viewer_count;
+                viewerCount += (int)ServiceManager.Get<TwitchSessionService>().Stream?.viewer_count;
             }
-            if (ServiceManager.Get<TrovoSessionService>().IsConnected && ServiceManager.Get<TrovoSessionService>().Channel?.is_live == true)
+            if (ServiceManager.Get<TrovoSessionService>().IsConnected && ServiceManager.Get<TrovoSessionService>().IsLive)
             {
-                viewerCount += (int)ServiceManager.Get<TrovoSessionService>().Channel.current_viewers;
+                viewerCount += (int)ServiceManager.Get<TrovoSessionService>().Channel?.current_viewers;
             }
-            if (ServiceManager.Get<GlimeshSessionService>().IsConnected && ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream != null)
+            if (ServiceManager.Get<GlimeshSessionService>().IsConnected && ServiceManager.Get<GlimeshSessionService>().IsLive)
             {
                 viewerCount += ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.countViewers ?? 0;
             }
+            this.ViewersCount = viewerCount;
 
             this.ChattersCount = ServiceManager.Get<UserService>().ActiveUserCount;
         }

@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Requirements"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
-             xmlns:util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              
@@ -16,7 +17,7 @@
              
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+        <Util:LocalizationConverter x:Key="LocalizationConverter"/>
 
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
@@ -24,9 +25,10 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
+            <RowDefinition Height="15" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
+            <RowDefinition Height="15" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -84,7 +86,7 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <Button Grid.Column="2" Command="{Binding AddAdvancedRoleCommand}" Content="{MaterialDesign:PackIcon Add}" Style="{StaticResource MaterialDesignRaisedButton}" Padding="10,0" />
+                <Controls:IconButton Grid.Column="2" Command="{Binding AddAdvancedRoleCommand}" Icon="Add" Style="{StaticResource MaterialDesignRaisedButton}" Padding="10,0" />
             </Grid>
 
             <Border Grid.Row="2" Style="{StaticResource DefaultBorder}">
@@ -103,7 +105,7 @@
             </Border>
         </Grid>
 
-        <ComboBox Grid.Row="5" ItemsSource="{Binding SubscriberTiers}" SelectedItem="{Binding SubscriberTier}" Visibility="{Binding IsSubscriberRole, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Tier}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="0,10,0,0" Width="120">
+        <ComboBox Grid.Row="5" ItemsSource="{Binding SubscriberTiers}" SelectedItem="{Binding SubscriberTier}" Visibility="{Binding IsSubscriberRole, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Tier}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="0,15,0,0" Width="120">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -111,6 +113,8 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <ComboBox Grid.Row="5" ItemsSource="{Binding PatreonBenefits}" SelectedItem="{Binding SelectedPatreonBenefit}" DisplayMemberPath="Title" Visibility="{Binding IsPatreonConnected, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PatreonBenefit}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="0,10,0,0" Width="120" />
+        <TextBox Grid.Row="6" Text="{Binding TrovoCustomRole}" Visibility="{Binding IsTrovoConnected, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TrovoCustomRole}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="0,15,0,0" Width="140" />
+
+        <ComboBox Grid.Row="7" ItemsSource="{Binding PatreonBenefits}" SelectedItem="{Binding SelectedPatreonBenefit}" DisplayMemberPath="Title" Visibility="{Binding IsPatreonConnected, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PatreonBenefit}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="0,15,0,0" Width="120" />
     </Grid>
 </UserControl>

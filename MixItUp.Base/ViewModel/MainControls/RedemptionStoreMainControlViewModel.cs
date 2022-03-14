@@ -108,7 +108,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.Purchases.ClearAndAddRange(purchases.OrderByDescending(p => p.ManualRedeemNeeded).ThenBy(p => p.Purchase.PurchaseDate));
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             this.Refresh();
             await base.OnVisibleInternal();

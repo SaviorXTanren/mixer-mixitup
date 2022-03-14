@@ -104,9 +104,9 @@ namespace MixItUp.WPF.Controls.Chat
                     else if (this.DataContext is GlimeshChatEmoteViewModel)
                     {
                         GlimeshChatEmoteViewModel emote = (GlimeshChatEmoteViewModel)this.DataContext;
-                        if (this.IsGifImage(emote.Url))
+                        if (this.IsGifImage(emote.ImageURL))
                         {
-                            this.ProcessGifImage(emote.Name, emote.Url);
+                            this.ProcessGifImage(emote.Name, emote.ImageURL);
                         }
                         else
                         {
@@ -120,11 +120,11 @@ namespace MixItUp.WPF.Controls.Chat
                         TrovoChatEmoteViewModel emote = (TrovoChatEmoteViewModel)this.DataContext;
                         if (emote.IsGif)
                         {
-                            this.ProcessGifImage(emote.Name, emote.Url);
+                            this.ProcessGifImage(emote.Name, emote.ImageURL);
                         }
                         else
                         {
-                            await this.ProcessImage(emote.Name, emote.Url);
+                            await this.ProcessImage(emote.Name, emote.ImageURL);
                         }
                     }
                     else if (this.DataContext is YouTubeChatEmoteViewModel)

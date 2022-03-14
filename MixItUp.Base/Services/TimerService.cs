@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using StreamingClient.Base.Util;
@@ -14,7 +15,7 @@ namespace MixItUp.Base.Services
     {
         private bool isInitialized = false;
 
-        private SemaphoreSlim timerCommandGroupSemaphpre = new SemaphoreSlim(1);
+        private SemaphoreSlim timerCommandGroupSemaphore = new SemaphoreSlim(1);
         private Dictionary<string, List<TimerCommandModel>> timerCommandGroups = new Dictionary<string, List<TimerCommandModel>>();
         private Dictionary<string, int> timerCommandIndexes = new Dictionary<string, int>();
 
@@ -43,7 +44,7 @@ namespace MixItUp.Base.Services
 
         public async Task RebuildTimerGroups()
         {
-            await this.timerCommandGroupSemaphpre.WaitAndRelease(() =>
+            await this.timerCommandGroupSemaphore.WaitAndRelease(() =>
             {
                 this.timerCommandGroups.Clear();
                 this.timerCommandGroups[string.Empty] = new List<TimerCommandModel>();
@@ -100,46 +101,65 @@ namespace MixItUp.Base.Services
 
         private async Task TimerCommandsBackground(CancellationToken cancellationToken)
         {
-            if (!ChannelSession.Settings.DisableAllTimers)
+            if (ChannelSession.Settings.DisableAllTimers)
             {
-                List<string> timerGroupsToRun = new List<string>();
-                await this.timerCommandGroupSemaphpre.WaitAndRelease(() =>
+                return;
+            }
+
+            if (ChannelSession.Settings.RunTimersOnlyWhenLive)
+            {
+                bool isLive = false;
+                StreamingPlatforms.ForEachPlatform(p =>
                 {
-                    groupTotalTime++;
-                    foreach (var kvp in ChannelSession.Settings.CommandGroups)
+                    if (StreamingPlatforms.GetPlatformSessionService(p).IsConnected && StreamingPlatforms.GetPlatformSessionService(p).IsLive)
                     {
-                        if (kvp.Value.TimerInterval > 0 && groupTotalTime % kvp.Value.TimerInterval == 0)
-                        {
-                            if (!timerCommandIndexes.ContainsKey(kvp.Key))
-                            {
-                                timerCommandIndexes[kvp.Key] = 0;
-                            }
-
-                            if (this.timerCommandGroups.ContainsKey(kvp.Key))
-                            {
-                                timerGroupsToRun.Add(kvp.Key);
-                            }
-                        }
+                        isLive = true;
                     }
-
-                    nonGroupTotalTime++;
-                    if (nonGroupTotalTime >= ChannelSession.Settings.TimerCommandsInterval)
-                    {
-                        if (totalMessages >= ChannelSession.Settings.TimerCommandsMinimumMessages)
-                        {
-                            timerGroupsToRun.Add(string.Empty);
-                            totalMessages = 0;
-                            nonGroupTotalTime = 0;
-                        }
-                    }
-
-                    return Task.CompletedTask;
                 });
 
-                foreach (string timerGroupToRun in timerGroupsToRun)
+                if (!isLive)
                 {
-                    await this.RunTimerFromGroup(timerGroupToRun);
+                    return;
                 }
+            }
+
+            List<string> timerGroupsToRun = new List<string>();
+            await this.timerCommandGroupSemaphore.WaitAndRelease(() =>
+            {
+                groupTotalTime++;
+                foreach (var kvp in ChannelSession.Settings.CommandGroups)
+                {
+                    if (kvp.Value.TimerInterval > 0 && groupTotalTime % kvp.Value.TimerInterval == 0)
+                    {
+                        if (!timerCommandIndexes.ContainsKey(kvp.Key))
+                        {
+                            timerCommandIndexes[kvp.Key] = 0;
+                        }
+
+                        if (this.timerCommandGroups.ContainsKey(kvp.Key))
+                        {
+                            timerGroupsToRun.Add(kvp.Key);
+                        }
+                    }
+                }
+
+                nonGroupTotalTime++;
+                if (nonGroupTotalTime >= ChannelSession.Settings.TimerCommandsInterval)
+                {
+                    if (totalMessages >= ChannelSession.Settings.TimerCommandsMinimumMessages)
+                    {
+                        timerGroupsToRun.Add(string.Empty);
+                        totalMessages = 0;
+                        nonGroupTotalTime = 0;
+                    }
+                }
+
+                return Task.CompletedTask;
+            });
+
+            foreach (string timerGroupToRun in timerGroupsToRun)
+            {
+                await this.RunTimerFromGroup(timerGroupToRun);
             }
         }
 
@@ -152,7 +172,8 @@ namespace MixItUp.Base.Services
                     timerCommandIndexes[groupName] = 0;
                 }
 
-                await ServiceManager.Get<CommandService>().Queue(this.timerCommandGroups[groupName].ElementAt(timerCommandIndexes[groupName]));
+                CommandParametersModel parameters = new CommandParametersModel(ChannelSession.User, platform: StreamingPlatformTypeEnum.All);
+                await ServiceManager.Get<CommandService>().Queue(this.timerCommandGroups[groupName].ElementAt(timerCommandIndexes[groupName]), parameters);
 
                 timerCommandIndexes[groupName]++;
             }

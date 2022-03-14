@@ -60,7 +60,7 @@ namespace MixItUp.WPF.Controls.MainControls
         protected override async Task InitializeInternal()
         {
             this.DataContext = this.viewModel = new CommunityCommandsMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
-            await this.viewModel.OnLoaded();
+            await this.viewModel.OnOpen();
             await base.InitializeInternal();
         }
 
@@ -85,6 +85,16 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.viewModel.GetCommandDetailsCommand.Execute(((CommunityCommandViewModel)e.AddedItems[0]).ID);
                 ((ListView)sender).SelectedItem = null;
+            }
+        }
+
+        private void CategorySeeMoreButton_Click(object sender, RoutedEventArgs e)
+        {
+            Control control = (Control)sender;
+            if (control.DataContext is CommunityCommandCategoryViewModel)
+            {
+                CommunityCommandCategoryViewModel category = (CommunityCommandCategoryViewModel)control.DataContext;
+                this.viewModel.CategorySeeMoreCommand.Execute(category.Tag.ToString());
             }
         }
 

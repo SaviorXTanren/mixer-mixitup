@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Commands.Games"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
@@ -96,7 +97,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" Text="{x:Static resx:Resources.Outcomes}" Foreground="{StaticResource WhiteColor}" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16" />
+                    <TextBlock Grid.Column="0" Text="{x:Static resx:Resources.Outcomes}" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16" />
 
                     <Button Grid.Column="2" Content="{x:Static resx:Resources.AddOutcome}" Command="{Binding AddOutcomeCommand}" Style="{StaticResource MaterialDesignRaisedLightButton}" MinWidth="130" HorizontalAlignment="Center" />
                 </Grid>
@@ -136,9 +137,7 @@
 
                             <CommandsControls:CommandListingButtonsControl x:Name="CommandButtons" Grid.Column="4" HorizontalAlignment="Center" EditClicked="OutcomeCommandButtons_CommandButtons" HideDeleteButton="True" HideEnableDisableToggle="True" />
 
-                            <Button x:Name="DeleteOutcomeButton" Grid.Column="6" Click="DeleteOutcomeButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.DeleteCommand}">
-                                <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                            </Button>
+                            <Controls:IconButton x:Name="DeleteOutcomeButton" Grid.Column="6" Click="DeleteOutcomeButton_Click" HorizontalAlignment="Center" Icon="Delete" ToolTip="{x:Static resx:Resources.DeleteCommand}" />
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

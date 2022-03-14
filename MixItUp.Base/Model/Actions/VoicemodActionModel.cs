@@ -16,6 +16,7 @@ namespace MixItUp.Base.Model.Actions
         BeepSoundOnOff,
         PlaySound,
         StopAllSounds,
+        HearMyselfOnOff,
     }
 
     [DataContract]
@@ -32,6 +33,8 @@ namespace MixItUp.Base.Model.Actions
         public static VoicemodActionModel CreateForPlaySound(string soundFileName) { return new VoicemodActionModel(VoicemodActionTypeEnum.PlaySound) { SoundFileName = soundFileName }; }
 
         public static VoicemodActionModel CreateForStopAllSounds() { return new VoicemodActionModel(VoicemodActionTypeEnum.StopAllSounds); }
+
+        public static VoicemodActionModel CreateForHearMyselfOnOff(bool state) { return new VoicemodActionModel(VoicemodActionTypeEnum.HearMyselfOnOff) { State = state }; }
 
         [DataMember]
         public VoicemodActionTypeEnum ActionType { get; set; }
@@ -93,6 +96,10 @@ namespace MixItUp.Base.Model.Actions
                 else if (this.ActionType == VoicemodActionTypeEnum.StopAllSounds)
                 {
                     await ServiceManager.Get<IVoicemodService>().StopAllMemeSounds();
+                }
+                else if (this.ActionType == VoicemodActionTypeEnum.HearMyselfOnOff)
+                {
+                    await ServiceManager.Get<IVoicemodService>().HearMyselfOnOff(this.State);
                 }
             }
         }

@@ -66,29 +66,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.SelectedSceneComponent = null;
                 this.SceneComponents.Clear();
 
-                this.SelectedOverlay = null;
-                this.Overlays.Clear();
-
-                if (this.SelectedActionType == PixelChatActionTypeEnum.TriggerShoutout)
-                {
-                    this.Overlays.AddRange(this.allOverlays.Where(o => o.type.Equals(PixelChatOverlayModel.ShoutoutOverlayType)));
-                }
-                else if (this.SelectedActionType == PixelChatActionTypeEnum.TriggerCountdown || this.SelectedActionType == PixelChatActionTypeEnum.TriggerCountup)
-                {
-                    this.Overlays.AddRange(this.allOverlays.Where(o => o.type.Equals(PixelChatOverlayModel.TimerOverlayType)));
-                }
-                else if (this.SelectedActionType == PixelChatActionTypeEnum.StartStreamathon || this.SelectedActionType == PixelChatActionTypeEnum.AddStreamathonTime)
-                {
-                    this.Overlays.AddRange(this.allOverlays.Where(o => o.type.Equals(PixelChatOverlayModel.StreamathonOverlayType)));
-                }
-                else if (this.SelectedActionType == PixelChatActionTypeEnum.TriggerCredits)
-                {
-                    this.Overlays.AddRange(this.allOverlays.Where(o => o.type.Equals(PixelChatOverlayModel.CreditsOverlayType)));
-                }
-                else if (this.SelectedActionType == PixelChatActionTypeEnum.TriggerGiveaway || this.SelectedActionType == PixelChatActionTypeEnum.AddUserToGiveaway)
-                {
-                    this.Overlays.AddRange(this.allOverlays.Where(o => o.type.Equals(PixelChatOverlayModel.GiveawayOverlayType)));
-                }
+                this.UpdateOverlayList();
             }
         }
         private PixelChatActionTypeEnum selectedActionType;
@@ -284,7 +262,7 @@ namespace MixItUp.Base.ViewModel.Actions
             return await base.Validate();
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             if (ServiceManager.Get<PixelChatService>().IsConnected)
             {
@@ -298,6 +276,8 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.allOverlays.Add(overlay);
                 }
 
+                this.UpdateOverlayList();
+
                 if (this.ShowScenes)
                 {
                     this.SelectedScene = this.Scenes.FirstOrDefault(s => s.id.Equals(this.sceneID));
@@ -309,7 +289,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.SelectedOverlay = this.allOverlays.FirstOrDefault(o => o.id.Equals(this.overlayID));
                 }
             }
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
         }
 
         protected override Task<ActionModelBase> GetActionInternal()
@@ -334,6 +314,33 @@ namespace MixItUp.Base.ViewModel.Actions
                 }
             }
             return Task.FromResult<ActionModelBase>(null);
+        }
+
+        private void UpdateOverlayList()
+        {
+            this.SelectedOverlay = null;
+            this.Overlays.Clear();
+
+            if (this.SelectedActionType == PixelChatActionTypeEnum.TriggerShoutout)
+            {
+                this.Overlays.AddRange(this.allOverlays.Where(o => o.type.Equals(PixelChatOverlayModel.ShoutoutOverlayType)));
+            }
+            else if (this.SelectedActionType == PixelChatActionTypeEnum.TriggerCountdown || this.SelectedActionType == PixelChatActionTypeEnum.TriggerCountup)
+            {
+                this.Overlays.AddRange(this.allOverlays.Where(o => o.type.Equals(PixelChatOverlayModel.TimerOverlayType)));
+            }
+            else if (this.SelectedActionType == PixelChatActionTypeEnum.StartStreamathon || this.SelectedActionType == PixelChatActionTypeEnum.AddStreamathonTime)
+            {
+                this.Overlays.AddRange(this.allOverlays.Where(o => o.type.Equals(PixelChatOverlayModel.StreamathonOverlayType)));
+            }
+            else if (this.SelectedActionType == PixelChatActionTypeEnum.TriggerCredits)
+            {
+                this.Overlays.AddRange(this.allOverlays.Where(o => o.type.Equals(PixelChatOverlayModel.CreditsOverlayType)));
+            }
+            else if (this.SelectedActionType == PixelChatActionTypeEnum.TriggerGiveaway || this.SelectedActionType == PixelChatActionTypeEnum.AddUserToGiveaway)
+            {
+                this.Overlays.AddRange(this.allOverlays.Where(o => o.type.Equals(PixelChatOverlayModel.GiveawayOverlayType)));
+            }
         }
     }
 }

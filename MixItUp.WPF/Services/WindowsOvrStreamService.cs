@@ -36,7 +36,7 @@ namespace MixItUp.WPF.Services
                     await this.connection.ConnectAsync(CancellationToken.None);
 
                     this.connection.OnDisconnected += Connection_OnDisconnected;
-                    GlobalEvents.ServiceReconnect("OvrStream");
+                    ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.OvrStream);
 
                     this.IsConnected = true;
                     ServiceManager.Get<ITelemetryService>().TrackService("OvrStream");
@@ -131,7 +131,7 @@ namespace MixItUp.WPF.Services
 
         private async void Connection_OnDisconnected(object sender, EventArgs e)
         {
-            GlobalEvents.ServiceDisconnect("OvrStream");
+            ChannelSession.DisconnectionOccurred(MixItUp.Base.Resources.OvrStream);
 
             Result result;
             do
@@ -142,7 +142,7 @@ namespace MixItUp.WPF.Services
             }
             while (!result.Success);
 
-            GlobalEvents.ServiceReconnect("OvrStream");
+            ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.OvrStream);
         }
     }
 }

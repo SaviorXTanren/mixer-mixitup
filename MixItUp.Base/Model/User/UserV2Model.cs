@@ -101,6 +101,20 @@ namespace MixItUp.Base.Model.User
 
         public string GetPlatformUsername(StreamingPlatformTypeEnum platform) { return this.HasPlatformData(platform) ? this.GetPlatformData<UserPlatformV2ModelBase>(platform).Username : null; }
 
+        public string GetPlatformDisplayName(StreamingPlatformTypeEnum platform)
+        {
+            if (this.HasPlatformData(platform))
+            {
+                UserPlatformV2ModelBase platformData = this.GetPlatformData<UserPlatformV2ModelBase>(platform);
+                return platformData.DisplayName ?? platformData.Username;
+            }
+            return null;
+        }
+
+        public IEnumerable<string> GetAllPlatformUsernames() { return (this.PlatformData.Count > 0) ? this.PlatformData.Select(p => p.Value.Username) : new List<string>(); }
+
+        public IEnumerable<string> GetAllPlatformDisplayNames() { return (this.PlatformData.Count > 0) ? this.PlatformData.Select(p => p.Value.DisplayName ?? p.Value.Username) : new List<string>(); }
+
         public override bool Equals(object obj)
         {
             if (obj is UserV2Model)
@@ -118,61 +132,6 @@ namespace MixItUp.Base.Model.User
         public override int GetHashCode()
         {
             return this.ID.GetHashCode();
-        }
-
-        public void MergeData(UserV2Model other)
-        {
-            foreach (StreamingPlatformTypeEnum platform in other.GetPlatforms())
-            {
-                if (!this.HasPlatformData(platform))
-                {
-                    this.PlatformData[platform] = other.GetPlatformData<UserPlatformV2ModelBase>(platform);
-                }
-            }
-
-            foreach (var kvp in other.CurrencyAmounts)
-            {
-                if (!this.CurrencyAmounts.ContainsKey(kvp.Key))
-                {
-                    this.CurrencyAmounts[kvp.Key] = 0;
-                }
-                this.CurrencyAmounts[kvp.Key] += other.CurrencyAmounts[kvp.Key];
-            }
-
-            foreach (var kvp in other.InventoryAmounts)
-            {
-                if (!this.InventoryAmounts.ContainsKey(kvp.Key))
-                {
-                    this.InventoryAmounts[kvp.Key] = new Dictionary<Guid, int>();
-                }
-                foreach (var itemKVP in other.InventoryAmounts[kvp.Key])
-                {
-                    if (!this.InventoryAmounts[kvp.Key].ContainsKey(itemKVP.Key))
-                    {
-                        this.InventoryAmounts[kvp.Key][itemKVP.Key] = 0;
-                    }
-                    this.InventoryAmounts[kvp.Key][itemKVP.Key] += other.InventoryAmounts[kvp.Key][itemKVP.Key];
-                }
-            }
-
-            foreach (var kvp in other.StreamPassAmounts)
-            {
-                if (!this.StreamPassAmounts.ContainsKey(kvp.Key))
-                {
-                    this.StreamPassAmounts[kvp.Key] = 0;
-                }
-                this.StreamPassAmounts[kvp.Key] += other.StreamPassAmounts[kvp.Key];
-            }
-
-            this.CustomTitle = other.CustomTitle;
-
-            this.CustomCommandIDs = other.CustomCommandIDs;
-            this.EntranceCommandID = other.EntranceCommandID;
-
-            this.IsSpecialtyExcluded = other.IsSpecialtyExcluded;
-            this.PatreonUserID = other.PatreonUserID;
-
-            this.Notes += other.Notes;
         }
     }
 }

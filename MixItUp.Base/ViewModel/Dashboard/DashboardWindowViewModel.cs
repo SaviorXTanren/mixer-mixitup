@@ -190,11 +190,11 @@ namespace MixItUp.Base.ViewModel.Dashboard
 
         public IEnumerable<DashboardItemTypeEnum> ItemTypes { get { return EnumHelper.GetEnumList<DashboardItemTypeEnum>(); } }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             this.NotifyItemPropertiesChanged();
 
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
         }
 
         protected override async Task OnVisibleInternal()

@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:MixItUp.WPF.Windows.Currency"
         xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+        xmlns:Util="clr-namespace:MixItUp.WPF.Util"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
@@ -18,6 +19,12 @@
                   
         Icon="./../../Logo.ico"
         Title="{x:Static resx:Resources.UserDataImport}" Height="600" Width="600">
+    <Windows:LoadingWindowBase.Resources>
+        <Util:LocalizationConverter x:Key="LocalizationConverter"/>
+
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </Windows:LoadingWindowBase.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -28,6 +35,8 @@
 
         <Grid Grid.Row="0" Margin="10">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
@@ -54,7 +63,25 @@
 
             <TextBlock Grid.Row="4" TextWrapping="Wrap" Margin="20,0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.UserDataStep2}"/>
 
-            <ScrollViewer Grid.Row="6" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
+            <Grid Grid.Row="6" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="{x:Static resx:Resources.Platform}" VerticalAlignment="Bottom" Margin="0,0,0,5" />
+
+                <ComboBox Grid.Column="2" ItemsSource="{Binding Platforms}" SelectedItem="{Binding SelectedPlatform}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StreamingPlatform}" Width="140" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </Grid>
+
+            <ScrollViewer Grid.Row="8" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
                 <ItemsControl ItemsSource="{Binding Columns}" HorizontalAlignment="Center">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -74,7 +101,7 @@
                 </ItemsControl>
             </ScrollViewer>
 
-            <Button Grid.Row="8" Width="160" IsEnabled="{Binding ImportButtonState}" Content="{Binding ImportButtonText}" Command="{Binding ImportButtonCommand}" />
+            <Button Grid.Row="10" Width="160" IsEnabled="{Binding ImportButtonState}" Content="{Binding ImportButtonText}" Command="{Binding ImportButtonCommand}" />
 
         </Grid>
 

@@ -65,7 +65,7 @@
                 <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Username}" IsReadOnly="True" Width="3*" />
                 <DataGridTextColumn Header="{x:Static resx:Resources.Platform}" Binding="{Binding Platform}" IsReadOnly="True" Width="2*" />
                 <DataGridTextColumn Header="{x:Static resx:Resources.Role}" Binding="{Binding PrimaryRole}" IsReadOnly="True" Width="2*" />
-                <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="160">
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="170">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid HorizontalAlignment="Center">
@@ -77,17 +77,11 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <Button x:Name="MoveUpButton" Grid.Column="0" Click="MoveUpButton_Click" Width="40" HorizontalAlignment="Center">
-                                    <MaterialDesign:PackIcon Kind="ArrowUp" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                </Button>
+                                <Controls:IconButton x:Name="MoveUpButton" Grid.Column="0" Click="MoveUpButton_Click" Icon="ArrowUp" HorizontalAlignment="Center" />
 
-                                <Button x:Name="MoveDownButton" Grid.Column="2" Click="MoveDownButton_Click" Width="40" HorizontalAlignment="Center">
-                                    <MaterialDesign:PackIcon Kind="ArrowDown" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                </Button>
+                                <Controls:IconButton x:Name="MoveDownButton" Grid.Column="2" Click="MoveDownButton_Click" Icon="ArrowDown" HorizontalAlignment="Center" />
 
-                                <Button x:Name="DeleteButton" Grid.Column="4"  Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center">
-                                    <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                </Button>
+                                <Controls:IconButton x:Name="DeleteButton" Grid.Column="4"  Click="DeleteButton_Click" Icon="Delete" HorizontalAlignment="Center" />
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

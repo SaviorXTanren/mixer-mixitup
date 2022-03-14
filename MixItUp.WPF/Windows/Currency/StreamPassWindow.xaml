@@ -128,20 +128,16 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <Button Grid.Column="0" Grid.Row="0" x:Name="StartDateButton" Click="StartDateButton_Click" Width="40" HorizontalAlignment="Center">
-                                <MaterialDesign:PackIcon Kind="Calendar" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                            </Button>
+                            <Controls:IconButton Grid.Column="0" Grid.Row="0" x:Name="StartDateButton" Click="StartDateButton_Click" HorizontalAlignment="Center" Icon="Calendar" />
 
-                            <TextBlock Grid.Column="2" Grid.Row="0" VerticalAlignment="Bottom" Margin="0,0,0,5" Text="{x:Static resx:Resources.Start}" />
+                            <TextBlock Grid.Column="2" Grid.Row="0" VerticalAlignment="Bottom" Margin="0,0,0,5" Text="{Binding Source={x:Static resx:Resources.Start}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
                             <TextBlock Grid.Column="4" Grid.Row="0" VerticalAlignment="Bottom" Margin="0,0,0,5" Text="{Binding StartDateString}" />
 
 
-                            <Button Grid.Column="0" Grid.Row="2" x:Name="EndDateButton" Click="EndDateButton_Click" Width="40" HorizontalAlignment="Center">
-                                <MaterialDesign:PackIcon Kind="Calendar" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                            </Button>
+                            <Controls:IconButton Grid.Column="0" Grid.Row="2" x:Name="EndDateButton" Click="EndDateButton_Click" HorizontalAlignment="Center" Icon="Calendar" />
 
-                            <TextBlock Grid.Column="2" Grid.Row="2" VerticalAlignment="Bottom" Margin="0,0,0,5" Text="{x:Static resx:Resources.End}" />
+                            <TextBlock Grid.Column="2" Grid.Row="2" VerticalAlignment="Bottom" Margin="0,0,0,5" Text="{Binding Source={x:Static resx:Resources.End}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
                             <TextBlock Grid.Column="4" Grid.Row="2" VerticalAlignment="Bottom" Margin="0,0,0,5" Text="{Binding EndDateString}" />
                         </Grid>
@@ -266,9 +262,7 @@
                     </Grid>
                 </GroupBox>
 
-                <Button x:Name="SaveButton" Grid.Row="6" HorizontalAlignment="Center" Click="SaveButton_Click" Width="80">
-                    <MaterialDesign:PackIcon Kind="ContentSave" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                </Button>
+                <Controls:IconButton x:Name="SaveButton" Grid.Row="6" HorizontalAlignment="Center" Click="SaveButton_Click" Width="80" Icon="ContentSave" />
             </Grid>
         </ScrollViewer>
         

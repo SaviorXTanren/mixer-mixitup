@@ -28,6 +28,8 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" HorizontalAlignment="Center">
@@ -65,7 +67,7 @@
                             <Expander VerticalContentAlignment="Top" HorizontalContentAlignment="Stretch" Visibility="{Binding HasCommands, Converter={StaticResource BooleanToVisibilityConverter}}" Background="{StaticResource PrimaryHueMidBrush}">
                                 <Expander.Header>
                                     <Grid Background="Transparent">
-                                        <TextBlock HorizontalAlignment="Left" Text="{Binding DisplayName}" Foreground="{StaticResource WhiteColor}" />
+                                        <TextBlock HorizontalAlignment="Left" Text="{Binding DisplayName}" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" />
 
                                         <ToggleButton Visibility="{Binding IsEnableSwitchToggable, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource MaterialDesignSwitchLightToggleButton}" HorizontalAlignment="Right" IsChecked="{Binding Path=IsEnabled}" />
                                     </Grid>
@@ -97,6 +99,20 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click" Content="{x:Static resx:Resources.NewCommand}"/>
+
+            <TextBox Grid.Column="2" Text="{Binding TimeIntervalString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TimerInterval}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBox Grid.Column="4" Text="{Binding MinimumMessagesString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinMessages}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
+
+        <Grid Grid.Row="6" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="5" />
@@ -107,17 +123,14 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click" Content="{x:Static resx:Resources.NewCommand}"/>
+            <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.TimersRunOnlyWhenLive}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center"/>
+            <ToggleButton Grid.Column="2" IsChecked="{Binding RunTimersOnlyWhenLive}" />
 
-            <TextBox Grid.Column="2" Text="{Binding TimeIntervalString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TimerInterval}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBlock Grid.Column="4" Text="{Binding Source={x:Static resx:Resources.RandomizeTimers}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center"/>
+            <ToggleButton Grid.Column="6" IsChecked="{Binding RandomizeTimers}" />
 
-            <TextBox Grid.Column="4" Text="{Binding MinimumMessagesString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinMessages}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-            <TextBlock Grid.Column="6" Text="{Binding Source={x:Static resx:Resources.RandomizeTimers}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center"/>
-            <ToggleButton Grid.Column="8" IsChecked="{Binding RandomizeTimers}" />
-
-            <TextBlock Grid.Column="10" Text="{Binding Source={x:Static resx:Resources.DisableAllTimers}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center"/>
-            <ToggleButton Grid.Column="12" IsChecked="{Binding DisableAllTimers}" />
+            <TextBlock Grid.Column="8" Text="{Binding Source={x:Static resx:Resources.DisableAllTimers}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center"/>
+            <ToggleButton Grid.Column="10" IsChecked="{Binding DisableAllTimers}" />
         </Grid>
     </Grid>
 </local:GroupedCommandsMainControlBase>

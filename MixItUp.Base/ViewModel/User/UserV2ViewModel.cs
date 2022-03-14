@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
@@ -38,12 +39,9 @@ namespace MixItUp.Base.ViewModel.User
                 this.platformModel = this.GetPlatformData<UserPlatformV2ModelBase>(this.platform);
             }
 
-            if (this.platformModel == null)
+            if (this.platformModel == null && this.HasPlatformData(ChannelSession.Settings.DefaultStreamingPlatform))
             {
-                if (this.HasPlatformData(ChannelSession.Settings.DefaultStreamingPlatform))
-                {
-                    this.platformModel = this.GetPlatformData<UserPlatformV2ModelBase>(ChannelSession.Settings.DefaultStreamingPlatform);
-                }
+                this.platformModel = this.GetPlatformData<UserPlatformV2ModelBase>(ChannelSession.Settings.DefaultStreamingPlatform);
             }
 
             if (this.platformModel == null && this.Model.GetPlatforms().Count > 0)
@@ -83,9 +81,9 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                if (!string.IsNullOrEmpty(this.PlatformModel.DisplayName))
                 {
-                    if (!string.IsNullOrEmpty(this.PlatformModel.DisplayName) && !string.Equals(this.DisplayName, this.Username, StringComparison.OrdinalIgnoreCase))
+                    if (!string.Equals(this.DisplayName, this.Username, StringComparison.OrdinalIgnoreCase))
                     {
                         return $"{this.DisplayName} ({this.Username})";
                     }
@@ -96,7 +94,7 @@ namespace MixItUp.Base.ViewModel.User
                 }
                 else
                 {
-                    return this.DisplayName;
+                    return this.Username;
                 }
             }
         }
@@ -105,7 +103,40 @@ namespace MixItUp.Base.ViewModel.User
 
         public bool ShowUserAvatar { get { return !ChannelSession.Settings.HideUserAvatar; } }
 
+        public string LastSeenString { get { return (this.LastActivity != DateTimeOffset.MinValue) ? this.LastActivity.ToFriendlyDateTimeString() : "Unknown"; } }
+
         public HashSet<UserRoleEnum> Roles { get { return this.PlatformModel.Roles; } }
+
+        public HashSet<UserRoleEnum> DisplayRoles
+        {
+            get
+            {
+                HashSet<UserRoleEnum> roles = new HashSet<UserRoleEnum>(this.Roles);
+                if (roles.Count > 1)
+                {
+                    roles.Remove(UserRoleEnum.User);
+                }
+                if (roles.Contains(UserRoleEnum.Subscriber) || roles.Contains(UserRoleEnum.YouTubeSubscriber))
+                {
+                    roles.Remove(UserRoleEnum.Follower);
+                }
+                if (roles.Contains(UserRoleEnum.YouTubeMember))
+                {
+                    roles.Remove(UserRoleEnum.Subscriber);
+                }
+                if (roles.Contains(UserRoleEnum.TrovoSuperMod))
+                {
+                    roles.Remove(UserRoleEnum.Moderator);
+                }
+                if (roles.Contains(UserRoleEnum.Streamer))
+                {
+                    roles.Remove(UserRoleEnum.Subscriber);
+                }    
+                roles.Remove(UserRoleEnum.TwitchAffiliate);
+                roles.Remove(UserRoleEnum.TwitchPartner);
+                return roles;
+            }
+        }
 
         public string RolesString
         {
@@ -133,31 +164,31 @@ namespace MixItUp.Base.ViewModel.User
         private string rolesString = null;
         private object rolesStringLock = new object();
 
-        public string RolesLocalizedString
+        public string DisplayRolesString
         {
             get
             {
-                lock (this.rolesLocalizedStringLock)
+                lock (this.displayRolesStringLock)
                 {
-                    if (this.rolesLocalizedString == null)
+                    if (this.displayRolesString == null)
                     {
-                        List<string> displayRoles = new List<string>(this.Roles.OrderByDescending(r => r).Select(r => EnumLocalizationHelper.GetLocalizedName(r)));
+                        List<string> displayRoles = new List<string>(this.DisplayRoles.OrderByDescending(r => r).Select(r => EnumLocalizationHelper.GetLocalizedName(r)));
                         //displayRoles.AddRange(this.CustomRoles);
-                        this.rolesLocalizedString = string.Join(", ", displayRoles);
+                        this.displayRolesString = string.Join(", ", displayRoles);
                     }
-                    return this.rolesLocalizedString;
+                    return this.displayRolesString;
                 }
             }
             private set
             {
-                lock (this.rolesLocalizedStringLock)
+                lock (this.displayRolesStringLock)
                 {
-                    this.rolesLocalizedString = value;
+                    this.displayRolesString = value;
                 }
             }
         }
-        private string rolesLocalizedString = null;
-        private object rolesLocalizedStringLock = new object();
+        private string displayRolesString = null;
+        private object displayRolesStringLock = new object();
 
         public UserRoleEnum PrimaryRole
         {
@@ -277,14 +308,17 @@ namespace MixItUp.Base.ViewModel.User
         public bool ShowPlatformBadge { get { return true; } }
 
         public DateTimeOffset? AccountDate { get { return this.PlatformModel.AccountDate; } set { this.PlatformModel.AccountDate = value; } }
-        public string AccountAgeString { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.NotSubscribed; } }
+        public string AccountAgeString { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.Unknown; } }
+        public int AccountDays { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().TotalDaysFromNow() : 0; } }
 
         public DateTimeOffset? FollowDate { get { return this.PlatformModel.FollowDate; } set { this.PlatformModel.FollowDate = value; } }
         public string FollowAgeString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.NotFollowing; } }
+        public int FollowDays { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().TotalDaysFromNow() : 0; } }
         public int FollowMonths { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().TotalMonthsFromNow() : 0; } }
 
         public DateTimeOffset? SubscribeDate { get { return this.PlatformModel.SubscribeDate; } set { this.PlatformModel.SubscribeDate = value; } }
         public string SubscribeAgeString { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.NotSubscribed; } }
+        public int SubscribeDays { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().TotalDaysFromNow() : 0; } }
         public int SubscribeMonths { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow() : 0; } }
 
         public int SubscriberTier { get { return this.PlatformModel.SubscriberTier; } set { this.PlatformModel.SubscriberTier = value; } }
@@ -347,6 +381,47 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public string OnlineViewingTimeString { get { return string.Format("{0} Hours & {1} Mins", this.OnlineViewingHoursOnly, this.OnlineViewingMinutesOnly); } }
+
+        public int PrimaryCurrency
+        {
+            get
+            {
+                CurrencyModel currency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => !c.IsRank && c.IsPrimary);
+                if (currency != null)
+                {
+                    return currency.GetAmount(this);
+                }
+                return 0;
+            }
+        }
+
+        public int PrimaryRankPoints
+        {
+            get
+            {
+
+                CurrencyModel rank = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => c.IsRank && c.IsPrimary);
+                if (rank != null)
+                {
+                    return rank.GetAmount(this);
+                }
+                return 0;
+            }
+        }
+
+        public string PrimaryRankNameAndPoints
+        {
+            get
+            {
+                CurrencyModel rank = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => c.IsRank && c.IsPrimary);
+                if (rank != null)
+                {
+                    return string.Format("{0} - {1}", rank.Name, rank.GetAmount(this));
+                }
+
+                return string.Empty;
+            }
+        }
 
         public long TotalStreamsWatched
         {
@@ -472,7 +547,7 @@ namespace MixItUp.Base.ViewModel.User
                         {
                             role = UserRoleEnum.User;
                         }
-                        this.sortableID = (999 - role) + "-" + this.Username + "-" + this.Platform.ToString();
+                        this.sortableID = (99999 - role) + "-" + this.Username + "-" + this.Platform.ToString();
                     }
                     return this.sortableID;
                 }
@@ -638,7 +713,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public void MergeUserData(UserV2ViewModel other)
+        public async Task MergeUserData(UserV2ViewModel other)
         {
             this.model.AddPlatformData(other.platformModel);
             this.model.OnlineViewingMinutes += other.model.OnlineViewingMinutes;
@@ -707,7 +782,26 @@ namespace MixItUp.Base.ViewModel.User
             this.model.TotalCommandsRun += other.Model.TotalCommandsRun;
             this.model.TotalMonthsSubbed += other.Model.TotalMonthsSubbed;
 
+            await ServiceManager.Get<UserService>().RemoveActiveUser(other.ID);
+            await ServiceManager.Get<UserService>().RemoveActiveUser(this.ID);
+
             ServiceManager.Get<UserService>().DeleteUserData(other.ID);
+            ServiceManager.Get<UserService>().SetUserData(this.model);
+
+            await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(this);
+        }
+
+        public void MergeUserData(UserImportModel import)
+        {
+            this.OnlineViewingMinutes += import.OnlineViewingMinutes;
+            foreach (var kvp in import.CurrencyAmounts)
+            {
+                if (!this.CurrencyAmounts.ContainsKey(kvp.Key))
+                {
+                    this.CurrencyAmounts[kvp.Key] = 0;
+                }
+                this.CurrencyAmounts[kvp.Key] += kvp.Value;
+            }
         }
 
         private void ClearCachedProperties()
@@ -715,7 +809,7 @@ namespace MixItUp.Base.ViewModel.User
             lock (cachePropertiesLock)
             {
                 this.rolesString = null;
-                this.rolesLocalizedString = null;
+                this.displayRolesString = null;
                 this.color = null;
                 this.sortableID = null;
 #pragma warning disable CS0612 // Type or member is obsolete
@@ -743,7 +837,7 @@ namespace MixItUp.Base.ViewModel.User
             return this.ID.GetHashCode();
         }
 
-        public int CompareTo(UserV2ViewModel other) { return this.Username.CompareTo(other.Username); }
+        public int CompareTo(UserV2ViewModel other) { return this.SortableID.CompareTo(other.SortableID); }
 
         public override string ToString() { return this.Username; }
     }

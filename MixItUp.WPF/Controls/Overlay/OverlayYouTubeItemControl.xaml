@@ -13,29 +13,35 @@
         <Util:LocalizationConverter x:Key="LocalizationConverter"/>
     </local:OverlayItemControl.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250" />
-            <ColumnDefinition Width="15" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="15" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="15" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="15" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="5" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-        <TextBox Text="{Binding VideoID}" Grid.Row="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.YoutubeVideoURLID}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+        <TextBox Text="{Binding VideoID}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.YoutubeVideoURLID}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
 
-        <TextBox Text="{Binding StartTimeString}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StartTime}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" VerticalAlignment="Center" />
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-        <TextBox Text="{Binding WidthString}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Width}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" VerticalAlignment="Center" />
+            <TextBox Text="{Binding StartTimeString}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StartTime}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" VerticalAlignment="Center" />
 
-        <TextBox Text="{Binding HeightString}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Height}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" VerticalAlignment="Center" />
+            <TextBox Text="{Binding WidthString}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Width}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" VerticalAlignment="Center" />
 
-        <TextBlock Grid.Column="8" VerticalAlignment="Center" Margin="0,20,0,0" Text="{x:Static resx:Resources.VolumeHeader}"/>
-        <Slider Value="{Binding Volume}" VerticalAlignment="Center" Grid.Column="10" Width="120" Minimum="0" Maximum="100" Margin="0,-18,0,0" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="{x:Static resx:Resources.Volume}" />
+            <TextBox Text="{Binding HeightString}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Height}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" VerticalAlignment="Center" />
+
+            <TextBlock Grid.Column="6" VerticalAlignment="Center" Text="{x:Static resx:Resources.VolumeHeader}"/>
+            <Slider Value="{Binding Volume}" VerticalAlignment="Center" Grid.Column="8" Width="120" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="{x:Static resx:Resources.Volume}" />
+        </Grid>
     </Grid>
 </local:OverlayItemControl>

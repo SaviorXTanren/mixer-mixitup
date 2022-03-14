@@ -11,6 +11,8 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand DisconnectCommand { get; set; }
         public ICommand TestConnectionCommand { get; set; }
 
+        public override string WikiPageName { get { return "xsplit"; } }
+
         public XSplitServiceControlViewModel()
             : base(Resources.XSplit)
         {

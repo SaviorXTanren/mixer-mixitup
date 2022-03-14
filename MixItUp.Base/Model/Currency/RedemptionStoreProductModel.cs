@@ -100,7 +100,7 @@ namespace MixItUp.Base.Model.Currency
                         items.Add(product.Name);
                     }
                 }
-                await ServiceManager.Get<ChatService>().SendMessage("Products Available to Purchase: " + string.Join(", ", items), platform: user.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.RedemptionStoreProductsAvailableForPurchaseHeader + string.Join(", ", items), platform: user.Platform);
             }
             else
             {

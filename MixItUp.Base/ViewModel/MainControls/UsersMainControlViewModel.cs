@@ -3,6 +3,9 @@ using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
@@ -257,7 +260,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                     List<List<string>> contents = new List<List<string>>();
 
                     List<string> columns = new List<string>() { "MixItUpID" };
-                    StreamingPlatforms.ForEachPlatform((p) =>
+                    StreamingPlatforms.ForEachPlatform(p =>
                     {
                         columns.AddRange(new List<string>() { p.ToString() + "ID", p.ToString() + "Username" });
                     });
@@ -279,16 +282,16 @@ namespace MixItUp.Base.ViewModel.MainControls
                         UserV2ViewModel user = new UserV2ViewModel(u);
 
                         List<string> data = new List<string>() { user.ID.ToString() };
-                        StreamingPlatforms.ForEachPlatform((p) =>
+                        StreamingPlatforms.ForEachPlatform(p =>
                         {
                             UserPlatformV2ModelBase platformUser = user.GetPlatformData<UserPlatformV2ModelBase>(p);
                             if (platformUser != null)
                             {
-                                columns.AddRange(new List<string>() { platformUser.ID, platformUser.Username });
+                                data.AddRange(new List<string>() { platformUser.ID, platformUser.Username });
                             }
                             else
                             {
-                                columns.AddRange(new List<string>() { "", "", "" });
+                                data.AddRange(new List<string>() { "", "" });
                             }
                         });
                         foreach (var kvp in ChannelSession.Settings.Currency)
@@ -347,11 +350,14 @@ namespace MixItUp.Base.ViewModel.MainControls
                             string filter = this.UsernameFilter.ToLower();
                             if (this.SelectedPlatform != StreamingPlatformTypeEnum.All)
                             {
-                                data = data.Where(u => u.HasPlatformData(this.SelectedPlatform) && u.GetPlatformUsername(this.SelectedPlatform) != null && u.GetPlatformUsername(this.SelectedPlatform).Contains(filter, StringComparison.OrdinalIgnoreCase));
+                                data = data.Where(u => u.GetPlatformUsername(this.SelectedPlatform) != null &&
+                                    (u.GetPlatformUsername(this.SelectedPlatform).Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                                    u.GetPlatformDisplayName(this.SelectedPlatform).Contains(filter, StringComparison.OrdinalIgnoreCase)));
                             }
                             else
                             {
-                                data = data.Where(u => u.GetPlatformUsername(ChannelSession.Settings.DefaultStreamingPlatform) != null && u.GetPlatformUsername(ChannelSession.Settings.DefaultStreamingPlatform).Contains(filter, StringComparison.OrdinalIgnoreCase));
+                                data = data.Where(u => u.GetAllPlatformUsernames().Any(username => (username != null) ? username.Contains(filter, StringComparison.OrdinalIgnoreCase) : false) ||
+                                    u.GetAllPlatformDisplayNames().Any(username => (username != null) ? username.Contains(filter, StringComparison.OrdinalIgnoreCase) : false));
                             }
                         }
 
@@ -359,8 +365,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                         {
                             if (this.IsRoleSearchFilterType)
                             {
-                                // TODO
-                                //data = data.Where(u => u.UserRoles.Contains(this.SelectedUserRoleSearchFilter));
+                                data = data.Where(u => u.GetAllPlatformData().Any(p => p.Roles.Contains(this.SelectedUserRoleSearchFilter)));
                             }
                             else if (this.IsWatchTimeSearchFilterType && this.WatchTimeAmountSearchFilter > 0)
                             {
@@ -431,7 +436,6 @@ namespace MixItUp.Base.ViewModel.MainControls
                             }
                         }
 
-                        // TODO
                         //if (this.SortColumnIndex == 0) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.Username) : data.OrderBy(u => u.Username); }
                         //else if (this.SortColumnIndex == 1) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.Platforms) : data.OrderBy(u => u.Platforms); }
                         //else if (this.SortColumnIndex == 2) { data = this.IsDescendingSort ? data.OrderByDescending(u => u.PrimaryRole) : data.OrderBy(u => u.PrimaryRole); }
@@ -464,6 +468,54 @@ namespace MixItUp.Base.ViewModel.MainControls
                 ServiceManager.Get<UserService>().DeleteUserData(user.ID);
             }
             this.RefreshUsers();
+        }
+
+        public async Task FindAndAddUser(StreamingPlatformTypeEnum platform, string username)
+        {
+            if (!StreamingPlatforms.GetPlatformSessionService(platform).IsConnected)
+            {
+                return;
+            }
+
+            UserV2ViewModel user = null;
+            if (platform == StreamingPlatformTypeEnum.Twitch)
+            {
+                Twitch.Base.Models.NewAPI.Users.UserModel tUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
+                if (tUser != null)
+                {
+                    user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(tUser));
+                }
+            }
+            else if (platform == StreamingPlatformTypeEnum.YouTube)
+            {
+                // TODO
+            }
+            else if (platform == StreamingPlatformTypeEnum.Trovo)
+            {
+                Trovo.Base.Models.Users.UserModel tUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(username);
+                if (tUser != null)
+                {
+                    user = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(tUser));
+                }
+            }
+            else if (platform == StreamingPlatformTypeEnum.Glimesh)
+            {
+                Glimesh.Base.Models.Users.UserModel gUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByName(username);
+                if (gUser != null)
+                {
+                    user = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(gUser));
+                }
+            }
+
+            if (user != null)
+            {
+                await DialogHelper.ShowMessage(string.Format(MixItUp.Base.Resources.UsersSuccessfullyFoundUser, user.DisplayName));
+                await this.RefreshUsersAsync();
+            }
+            else
+            {
+                await DialogHelper.ShowMessage(string.Format(MixItUp.Base.Resources.UsersUnableToFindUser, username));
+            }
         }
 
         protected override Task OnVisibleInternal()

@@ -1,8 +1,6 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Util;
-using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -35,6 +33,8 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand LogInCommand { get; set; }
         public ICommand LogOutCommand { get; set; }
         public ICommand AuthorizePinCommand { get; set; }
+
+        public override string WikiPageName { get { return "twitter"; } }
 
         public TwitterServiceControlViewModel()
             : base(Resources.Twitter)

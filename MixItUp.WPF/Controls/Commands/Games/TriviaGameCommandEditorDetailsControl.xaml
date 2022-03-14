@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Commands.Games"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
@@ -88,7 +89,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" Text="{x:Static resx:Resources.GameCommandTriviaCustomQuestions}" Foreground="{StaticResource WhiteColor}" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16" />
+                    <TextBlock Grid.Column="0" Text="{x:Static resx:Resources.GameCommandTriviaCustomQuestions}" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16" />
 
                     <Button Grid.Column="2" Content="{x:Static resx:Resources.GameCommandTriviaAddQuestion}" Command="{Binding AddQuestionCommand}" Style="{StaticResource MaterialDesignRaisedLightButton}" MinWidth="130" HorizontalAlignment="Center" />
                 </Grid>
@@ -129,9 +130,7 @@
                                 <TextBox Grid.Column="2" Grid.Row="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandTriviaWrongAnswer3}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding WrongAnswer3}" Width="120" />
                             </Grid>
 
-                            <Button x:Name="DeleteQuestionButton" Grid.Column="4" Click="DeleteQuestionButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.DeleteCommand}">
-                                <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                            </Button>
+                            <Controls:IconButton x:Name="DeleteQuestionButton" Grid.Column="4" Click="DeleteQuestionButton_Click" HorizontalAlignment="Center" Icon="Delete" ToolTip="{x:Static resx:Resources.DeleteCommand}" />
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

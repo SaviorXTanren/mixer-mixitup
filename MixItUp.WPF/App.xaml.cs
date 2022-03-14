@@ -20,6 +20,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
 
@@ -32,26 +33,11 @@ namespace MixItUp.WPF
     {
         private bool crashObtained = false;
 
-        private static readonly Dictionary<LanguageOptions, string> LanguageMaps = new Dictionary<LanguageOptions, string>
-        {
-            { LanguageOptions.Default, "en-US" },
-
-            { LanguageOptions.Dutch, "nl-NL" },
-            { LanguageOptions.English, "en-US" },
-            { LanguageOptions.German, "de-DE" },
-            { LanguageOptions.Spanish, "es-ES" },
-            { LanguageOptions.Japanese, "ja-JP" },
-            { LanguageOptions.French, "fr-FR" },
-            { LanguageOptions.Portuguese, "pt-BR" },
-            { LanguageOptions.Russian, "ru-RU" },
-            { LanguageOptions.Ukrainian, "uk-UA" },
-
-            { LanguageOptions.Pseudo, "qps-ploc" },
-        };
-
         public App()
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
+            ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(Int32.MaxValue));
 
             try
             {
@@ -75,12 +61,7 @@ namespace MixItUp.WPF
 
                 ChannelSession.Initialize().Wait();
 
-                var culture = System.Threading.Thread.CurrentThread.CurrentCulture;
-                if (LanguageMaps.TryGetValue(ChannelSession.AppSettings.LanguageOption, out string locale))
-                {
-                    culture = new System.Globalization.CultureInfo(locale);
-                }
-
+                var culture = new System.Globalization.CultureInfo(Languages.GetLanguageLocale());
                 System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
             }
             catch { }

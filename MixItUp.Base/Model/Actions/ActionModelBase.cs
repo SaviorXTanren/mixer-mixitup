@@ -4,7 +4,6 @@ using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -49,6 +48,7 @@ namespace MixItUp.Base.Model.Actions
         PixelChat,
         VTubeStudio,
         Voicemod,
+        [Obsolete]
         YouTube,
         Trovo,
     }

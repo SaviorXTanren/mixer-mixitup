@@ -29,35 +29,35 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="25" />
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="25" />
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="25" />
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="25" />
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="25" />
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="25" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" Text="{Binding Name}" TextDecorations="{Binding Disabled, Converter={StaticResource StrikethroughConverter}}" Visibility="{Binding ShowNameTextBlock, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="{StaticResource WhiteColor}" Width="Auto"  />
-                    <TextBox Grid.Column="0" Text="{Binding Name}" TextDecorations="{Binding Disabled, Converter={StaticResource StrikethroughConverter}}" Visibility="{Binding ShowNameTextBox, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="{StaticResource WhiteColor}" Width="250" Style="{StaticResource LabelHeaderTextBox}" />
+                    <TextBlock Grid.Column="0" Text="{Binding Name}" TextDecorations="{Binding Disabled, Converter={StaticResource StrikethroughConverter}}" Visibility="{Binding ShowNameTextBlock, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Width="Auto"  />
+                    <TextBox Grid.Column="0" Text="{Binding Name}" TextDecorations="{Binding Disabled, Converter={StaticResource StrikethroughConverter}}" Visibility="{Binding ShowNameTextBox, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Width="250" Style="{StaticResource LabelHeaderTextBox}" />
 
                     <Rectangle Grid.Column="1" Fill="{StaticResource PrimaryHueMidBrush}" Margin="0,-9" />
 
-                    <Button Grid.Column="2" Margin="-10" Command="{Binding PlayCommand}" Content="{MaterialDesign:PackIcon Play}" ToolTip="{x:Static resx:Resources.TestCommand}" />
+                    <Controls:IconButton Grid.Column="2" Margin="-10" Command="{Binding PlayCommand}" Icon="Play" ToolTip="{x:Static resx:Resources.TestCommand}" />
 
-                    <Button Grid.Column="4" Margin="-10" Command="{Binding MoveUpCommand}" Content="{MaterialDesign:PackIcon ArrowUpBold}" ToolTip="{x:Static resx:Resources.MoveUp}" />
-                    <Button Grid.Column="6" Margin="-10" Command="{Binding MoveDownCommand}" Content="{MaterialDesign:PackIcon ArrowDownBold}" ToolTip="{x:Static resx:Resources.MoveDown}" />
+                    <Controls:IconButton Grid.Column="4" Margin="-10" Command="{Binding MoveUpCommand}" Icon="ArrowUpBold" ToolTip="{x:Static resx:Resources.MoveUp}" />
+                    <Controls:IconButton Grid.Column="6" Margin="-10" Command="{Binding MoveDownCommand}" Icon="ArrowDownBold" ToolTip="{x:Static resx:Resources.MoveDown}" />
 
-                    <Button Grid.Column="8" Margin="-10" Command="{Binding CopyCommand}" Content="{MaterialDesign:PackIcon ContentCopy}" ToolTip="{x:Static resx:Resources.Duplicate}" />
+                    <Controls:IconButton Grid.Column="8" Margin="-10" Command="{Binding CopyCommand}" Icon="ContentCopy" ToolTip="{x:Static resx:Resources.Duplicate}" />
 
-                    <Button Grid.Column="10" Margin="-10" Command="{Binding HelpCommand}" Content="{MaterialDesign:PackIcon Help}" ToolTip="{x:Static resx:Resources.Help}" />
+                    <Controls:IconButton Grid.Column="10" Margin="-10" Command="{Binding HelpCommand}" Icon="Help" ToolTip="{x:Static resx:Resources.Help}" />
 
-                    <Button Grid.Column="12" Margin="-10" Command="{Binding DeleteCommand}" Content="{MaterialDesign:PackIcon Delete}" ToolTip="{x:Static resx:Resources.Delete}" />
+                    <Controls:IconButton Grid.Column="12" Margin="-10" Command="{Binding DeleteCommand}" Icon="Delete" ToolTip="{x:Static resx:Resources.Delete}" />
 
                     <ToggleButton Grid.Column="14" IsChecked="{Binding Enabled}" ToolTip="{x:Static resx:Resources.EnableDisable}" />
                 </Grid>

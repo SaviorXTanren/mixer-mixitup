@@ -18,33 +18,13 @@ namespace MixItUp.WPF.Controls.Dashboard
         protected override async Task InitializeInternal()
         {
             this.DataContext = this.viewModel = new RedemptionStoreMainControlViewModel(this.Window.ViewModel);
-            await this.viewModel.OnLoaded();
+            await this.viewModel.OnOpen();
             await base.InitializeInternal();
         }
 
         protected override async Task OnVisibilityChanged()
         {
             await this.viewModel.OnVisible();
-        }
-
-        private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-
-        }
-
-        private void ManualRedeemButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-
-        }
-
-        private void RefundButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-
-        }
-
-        private void DeleteButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-
         }
     }
 }

@@ -20,17 +20,18 @@ namespace MixItUp.Base.Services.Twitch
         public HashSet<string> ChannelEditors { get; private set; } = new HashSet<string>();
         public UserModel User { get; set; }
         public UserModel Bot { get; set; }
+        public ChannelInformationModel Channel { get; set; }
         public StreamModel Stream { get; set; }
-        public bool StreamIsLive { get { return this.Stream != null; } }
 
         public bool IsConnected { get { return this.UserConnection != null; } }
         public bool IsBotConnected { get { return this.BotConnection != null; } }
 
         public string UserID { get { return this.User?.id; } }
-        public string Username { get { return this.User.login; } }
+        public string Username { get { return this.User?.login; } }
         public string BotID { get { return this.Bot?.id; } }
         public string Botname { get { return this.Bot?.login; } }
         public string ChannelID { get { return this.User?.id; } }
+        public string ChannelLink { get { return string.Format("twitch.tv/{0}", this.Username?.ToLower()); } }
 
         public StreamingPlatformAccountModel UserAccount
         {
@@ -57,6 +58,14 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
+        public bool IsLive
+        {
+            get
+            {
+                return this.Stream != null;
+            }
+        }
+
         public async Task<Result> ConnectUser()
         {
             Result<TwitchPlatformService> result = await TwitchPlatformService.ConnectUser();
@@ -66,7 +75,7 @@ namespace MixItUp.Base.Services.Twitch
                 this.User = await this.UserConnection.GetNewAPICurrentUser();
                 if (this.User == null)
                 {
-                    return new Result("Failed to get New API Twitch user data");
+                    return new Result(MixItUp.Base.Resources.TwitchFailedToGetUserData);
                 }
             }
             return result;
@@ -81,10 +90,10 @@ namespace MixItUp.Base.Services.Twitch
                 this.Bot = await this.BotConnection.GetNewAPICurrentUser();
                 if (this.Bot == null)
                 {
-                    return new Result("Failed to get Twitch bot data");
+                    return new Result(MixItUp.Base.Resources.TwitchFailedToGetBotData);
                 }
 
-                if (ServiceManager.Has<TwitchChatService>() && ServiceManager.Get<TwitchChatService>().IsUserConnected)
+                if (ServiceManager.Get<TwitchChatService>().IsUserConnected)
                 {
                     return await ServiceManager.Get<TwitchChatService>().ConnectBot();
                 }
@@ -114,7 +123,7 @@ namespace MixItUp.Base.Services.Twitch
                     this.User = await this.UserConnection.GetNewAPICurrentUser();
                     if (this.User == null)
                     {
-                        return new Result("Failed to get Twitch user data");
+                        return new Result(MixItUp.Base.Resources.TwitchFailedToGetUserData);
                     }
 
                     if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken != null)
@@ -126,13 +135,13 @@ namespace MixItUp.Base.Services.Twitch
                             this.Bot = await this.BotConnection.GetNewAPICurrentUser();
                             if (this.Bot == null)
                             {
-                                return new Result("Failed to get Twitch bot data");
+                                return new Result(MixItUp.Base.Resources.TwitchFailedToGetBotData);
                             }
                         }
                         else
                         {
 
-                            return new Result(success: true, message: "Failed to connect Twitch bot account, please manually reconnect");
+                            return new Result(success: true, message: MixItUp.Base.Resources.TwitchFailedToConnectBotAccount);
                         }
                     }
                 }
@@ -201,7 +210,7 @@ namespace MixItUp.Base.Services.Twitch
                             {
                                 Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.Username} - {this.UserID} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID}");
                                 settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.ResetToken();
-                                return new Result("The account you are logged in as on Twitch does not match the account for this settings. Please log in as the correct account on Twitch.");
+                                return new Result(string.Format(MixItUp.Base.Resources.StreamingPlatformIncorrectAccount, StreamingPlatformTypeEnum.Twitch));
                             }
                         }
 
@@ -214,7 +223,7 @@ namespace MixItUp.Base.Services.Twitch
                         if (platformServiceTasks.Any(c => !c.Result.Success))
                         {
                             string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
-                            return new Result("Failed to connect to Twitch services:" + Environment.NewLine + Environment.NewLine + errors);
+                            return new Result(MixItUp.Base.Resources.TwitchFailedToConnectHeader + Environment.NewLine + Environment.NewLine + errors);
                         }
 
                         await ServiceManager.Get<TwitchChatService>().Initialize();
@@ -223,8 +232,8 @@ namespace MixItUp.Base.Services.Twitch
                 catch (Exception ex)
                 {
                     Logger.Log(ex);
-                    return new Result("Failed to connect to Twitch services. If this continues, please visit the Mix It Up Discord for assistance." +
-                        Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
+                    return new Result(MixItUp.Base.Resources.TwitchFailedToConnect +
+                        Environment.NewLine + Environment.NewLine + MixItUp.Base.Resources.ErrorHeader + ex.Message);
                 }
             }
             return new Result();
@@ -232,7 +241,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<Result> InitializeBot(SettingsV3Model settings)
         {
-            if (this.BotConnection != null && ServiceManager.Has<TwitchChatService>())
+            if (this.BotConnection != null)
             {
                 Result result = await ServiceManager.Get<TwitchChatService>().ConnectBot();
                 if (!result.Success)
@@ -245,23 +254,14 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task CloseUser()
         {
-            if (ServiceManager.Has<TwitchChatService>())
-            {
-                await ServiceManager.Get<TwitchChatService>().DisconnectUser();
-            }
+            await ServiceManager.Get<TwitchChatService>().DisconnectUser();
 
-            if (ServiceManager.Has<TwitchEventService>())
-            {
-                await ServiceManager.Get<TwitchEventService>().Disconnect();
-            }
+            await ServiceManager.Get<TwitchEventService>().Disconnect();
         }
 
         public async Task CloseBot()
         {
-            if (ServiceManager.Has<TwitchChatService>())
-            {
-                await ServiceManager.Get<TwitchChatService>().DisconnectBot();
-            }
+            await ServiceManager.Get<TwitchChatService>().DisconnectBot();
         }
 
         public void SaveSettings(SettingsV3Model settings)
@@ -313,13 +313,15 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (this.UserConnection != null && this.User != null)
             {
+                this.Channel = await this.UserConnection.GetChannelInformation(this.User);
+
                 this.Stream = await this.UserConnection.GetStream(this.User);
             }
         }
 
         public Task<string> GetTitle()
         {
-            return Task.FromResult(this.Stream?.title);
+            return Task.FromResult(this.Channel?.title);
         }
 
         public async Task<bool> SetTitle(string title)
@@ -329,7 +331,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public Task<string> GetGame()
         {
-            return Task.FromResult(this.Stream?.game_name);
+            return Task.FromResult(this.Channel?.game_name);
         }
 
         public async Task<bool> SetGame(string gameName)

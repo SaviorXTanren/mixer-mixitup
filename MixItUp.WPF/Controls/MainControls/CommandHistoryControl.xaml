@@ -77,30 +77,30 @@
                             <StackPanel Orientation="Horizontal" ToolTip="{Binding ErrorMessage}">
                                 <TextBlock Text="{Binding State, Converter={StaticResource LocalizationConverter}}" HorizontalAlignment="Left" VerticalAlignment="Center" />
 
-                                <MaterialDesign:PackIcon Visibility="{Binding HasErrorMessage, Converter={StaticResource BooleanToVisibilityConverter}}" Kind="MessageText" Height="24" Width="24" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                <MaterialDesign:PackIcon Visibility="{Binding HasErrorMessage, Converter={StaticResource BooleanToVisibilityConverter}}" Kind="MessageText" Height="24" Width="24" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource DarkLightBackgroundPackIcon}" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="{x:Static resx:Resources.Time}" Binding="{Binding DateTime, Converter={StaticResource TimeConverter}}" IsReadOnly="True" Width="90" />
-                <DataGridTemplateColumn Width="50">
+                <DataGridTextColumn Header="{x:Static resx:Resources.Time}" Binding="{Binding DateTime, Converter={StaticResource TimeConverter}}" IsReadOnly="True" Width="100" />
+                <DataGridTemplateColumn Width="70">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid Visibility="{Binding ShowActionButtons, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Button Visibility="{Binding ShowCancelButton, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding CancelCommand}" Height="25" Width="25" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Cancel}">
-                                    <MaterialDesign:PackIcon Kind="Cancel" Height="14" Width="14" Margin="-11,-8" Foreground="{StaticResource WhiteColor}" />
+                                <Button Visibility="{Binding ShowCancelButton, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding CancelCommand}" Height="25" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Cancel}">
+                                    <MaterialDesign:PackIcon Style="{StaticResource ButtonIcon}" Kind="Cancel" Height="14" Width="14"/>
                                 </Button>
 
-                                <Button Visibility="{Binding ShowReplayButton, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding ReplayCommand}" Height="25" Width="25" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Replay}">
-                                    <MaterialDesign:PackIcon Kind="Replay" Height="14" Width="14" Margin="-11,-8" Foreground="{StaticResource WhiteColor}" />
+                                <Button Visibility="{Binding ShowReplayButton, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding ReplayCommand}" Height="25" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Replay}">
+                                    <MaterialDesign:PackIcon Style="{StaticResource ButtonIcon}" Kind="Replay" Height="14" Width="14"  />
                                 </Button>
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Width="50">
+                <DataGridTemplateColumn Width="60">
                     <DataGridTemplateColumn.Header>
-                        <CheckBox x:Name="SelectAllCheckBox" Checked="SelectAllCheckBox_Checked" Unchecked="SelectAllCheckBox_Unchecked" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2,0,0,0" />
+                        <CheckBox x:Name="SelectAllCheckBox" Checked="SelectAllCheckBox_Checked" Unchecked="SelectAllCheckBox_Unchecked" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,0,0" />
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -116,11 +116,16 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" Command="{Binding CancelSelectedCommand}" Content="{x:Static resx:Resources.CancelSelected}" />
 
             <Button Grid.Column="2" Command="{Binding ReplaySelectedCommand}" Content="{x:Static resx:Resources.ReplaySelected}" />
+
+            <Button Grid.Column="4" Visibility="{Binding ShowPauseAllCommands, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding PauseAllCommandsCommand}" Content="{x:Static resx:Resources.PauseAllCommands}" />
+            <Button Grid.Column="4" Visibility="{Binding ShowUnpauseAllCommands, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding UnpauseAllCommandsCommand}" Content="{x:Static resx:Resources.UnpauseAllCommands}" />
         </Grid>
     </Grid>
 </local:MainControlBase>

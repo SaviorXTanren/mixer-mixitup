@@ -320,6 +320,8 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public int TimerCommandsMinimumMessages { get; set; } = 10;
         [DataMember]
+        public bool RunTimersOnlyWhenLive { get; set; } = true;
+        [DataMember]
         public bool RandomizeTimers { get; set; }
         [DataMember]
         public bool DisableAllTimers { get; set; }
@@ -489,6 +491,9 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public List<SerialDeviceModel> SerialDevices { get; set; } = new List<SerialDeviceModel>();
 
+        [DataMember]
+        public int VTubeStudioPortNumber { get; set; } = VTubeStudioService.DefaultPortNumber;
+
         #endregion Services
 
         #region Dashboard
@@ -560,6 +565,8 @@ namespace MixItUp.Base.Model.Settings
 
         [JsonIgnore]
         public DatabaseDictionary<Guid, UserV2Model> Users { get; set; } = new DatabaseDictionary<Guid, UserV2Model>();
+        [JsonIgnore]
+        public DatabaseDictionary<Guid, UserImportModel> ImportedUsers { get; set; } = new DatabaseDictionary<Guid, UserImportModel>();
 
         #endregion Database Data
 
@@ -626,8 +633,19 @@ namespace MixItUp.Base.Model.Settings
                 }
                 else if (type == CommandTypeEnum.Game)
                 {
-                    commandData = commandData.Replace("MixItUp.Base.ViewModel.User.UserRoleEnum", "MixItUp.Base.Model.User.UserRoleEnum");
-                    command = JSONSerializerHelper.DeserializeFromString<GameCommandModelBase>(commandData);
+                    try
+                    {
+                        command = JSONSerializerHelper.DeserializeFromString<GameCommandModelBase>(commandData);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                        if (ex.Message.Contains("MixItUp.Base.Model.User.UserRoleEnum"))
+                        {
+                            commandData = commandData.Replace("MixItUp.Base.Model.User.UserRoleEnum", "MixItUp.Base.Model.User.OldUserRoleEnum");
+                            command = JSONSerializerHelper.DeserializeFromString<GameCommandModelBase>(commandData);
+                        }
+                    }
                 }
                 else if (type == CommandTypeEnum.TwitchChannelPoints)
                 {
@@ -802,6 +820,19 @@ namespace MixItUp.Base.Model.Settings
 
             await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "REPLACE INTO Quotes(ID, Quote, GameName, DateTime) VALUES($ID, $Quote, $GameName, $DateTime)",
                 this.Quotes.GetAddedChangedValues().Select(q => new Dictionary<string, object>() { { "$ID", q.ID.ToString() }, { "$Quote", q.Quote }, { "$GameName", q.GameName }, { "$DateTime", q.DateTime.ToString() } }));
+
+            await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "DELETE FROM ImportedUsers WHERE ID = $ID",
+                this.ImportedUsers.GetRemovedValues().Select(u => new Dictionary<string, object>() { { "$ID", u.ToString() } }));
+
+            await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "REPLACE INTO ImportedUsers(ID, Platform, PlatformID, PlatformUsername, Data) VALUES($ID, $Platform, $PlatformID, $PlatformUsername, $Data)",
+                this.ImportedUsers.GetAddedChangedValues().Select(u => new Dictionary<string, object>()
+                {
+                    { "$ID", u.ID.ToString() },
+                    { "$Platform", (int)u.Platform },
+                    { "$PlatformID", u.PlatformID },
+                    { "$PlatformUsername", u.PlatformUsername },
+                    { "$Data", JSONSerializerHelper.SerializeToString(u) }
+                }));
         }
 
         public async Task<IEnumerable<UserV2Model>> LoadUserV2Data(string query, Dictionary<string, object> parameters)
@@ -826,6 +857,28 @@ namespace MixItUp.Base.Model.Settings
             return results;
         }
 
+        public async Task<UserImportModel> LoadUserImportData(StreamingPlatformTypeEnum platform, string platformID, string platformUsername)
+        {
+            UserImportModel userImport = null;
+
+            await ServiceManager.Get<IDatabaseService>().Read(ChannelSession.Settings.DatabaseFilePath,
+                $"SELECT * FROM ImportedUsers WHERE Platform = @Platform AND (PlatformID = @PlatformID OR PlatformUsername = @PlatformUsername)",
+                new Dictionary<string, object>()
+                {
+                    { "Platform", (int)platform },
+                    { "PlatformID", platformID },
+                    { "PlatformUsername", platformUsername }
+                },
+                (Dictionary<string, object> data) =>
+            {
+                userImport = JSONSerializerHelper.DeserializeFromString<UserImportModel>(data["Data"].ToString());
+                this.ImportedUsers[userImport.ID] = userImport;
+                this.ImportedUsers.ClearTracking(userImport.ID);
+            });
+
+            return userImport;
+        }
+
         public CommandModelBase GetCommand(Guid id) { return this.Commands.ContainsKey(id) ? this.Commands[id] : null; }
 
         public T GetCommand<T>(Guid id) where T : CommandModelBase { return (T)this.GetCommand(id); }
@@ -838,7 +891,7 @@ namespace MixItUp.Base.Model.Settings
 
         private void InitializeMissingData()
         {
-            StreamingPlatforms.ForEachPlatform((p) =>
+            StreamingPlatforms.ForEachPlatform(p =>
             {
                 if (!this.StreamingPlatformAuthentications.ContainsKey(p))
                 {

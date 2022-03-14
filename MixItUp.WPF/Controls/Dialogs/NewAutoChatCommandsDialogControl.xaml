@@ -18,7 +18,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="The following commands can be automatically created for you to get started with using this feature. Would you like us to automatically add the following commands for you?" />
+        <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.AutoCommandsExplanation}" />
 
         <ItemsControl x:Name="NewCommandsItemsControl" Grid.Row="2" HorizontalAlignment="Center">
             <ItemsControl.ItemTemplate>

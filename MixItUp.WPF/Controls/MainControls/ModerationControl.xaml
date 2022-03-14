@@ -45,9 +45,9 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" Foreground="{StaticResource WhiteColor}" Text="{x:Static resx:Resources.FilteredBannedWords}"/>
+                            <TextBlock Grid.Column="0" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Text="{x:Static resx:Resources.FilteredBannedWords}"/>
 
-                            <TextBlock Grid.Column="2" Foreground="{StaticResource WhiteColor}" Text="{Binding Source={x:Static resx:Resources.ApplyStrikes}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                            <TextBlock Grid.Column="2" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Text="{Binding Source={x:Static resx:Resources.ApplyStrikes}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                             <ToggleButton x:Name="FilteredWordsApplyStrikesToggleButton" Grid.Column="4" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
 
                         </Grid>
@@ -119,9 +119,9 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Foreground="{StaticResource WhiteColor}" Text="{x:Static resx:Resources.ChatTextModeration}"/>
+                            <TextBlock Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Text="{x:Static resx:Resources.ChatTextModeration}"/>
 
-                            <TextBlock Grid.Column="2" Foreground="{StaticResource WhiteColor}" Text="{Binding Source={x:Static resx:Resources.ApplyStrikes}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                            <TextBlock Grid.Column="2" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Text="{Binding Source={x:Static resx:Resources.ApplyStrikes}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                             <ToggleButton x:Name="ChatTextApplyStrikesToggleButton" Grid.Column="4" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
                         </Grid>
                     </GroupBox.Header>
@@ -131,8 +131,8 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="30" />
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="200" />
                         </Grid.ColumnDefinitions>
 
                         <Grid Grid.Column="0">
@@ -150,7 +150,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <Slider x:Name="MaxCapsSlider" Grid.Column="0" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" LostFocus="Slider_LostFocus" />
+                                <Slider x:Name="MaxCapsSlider" Grid.Column="0" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" Margin="0,15,0,0" LostFocus="Slider_LostFocus" />
 
                                 <ComboBox x:Name="MaxCapsTypeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Width="50" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                                     <ComboBox.ItemTemplate>
@@ -177,7 +177,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <Slider x:Name="MaxPunctuationSymbolsEmotesSlider" Grid.Column="0" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" LostFocus="Slider_LostFocus" />
+                                <Slider x:Name="MaxPunctuationSymbolsEmotesSlider" Grid.Column="0" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" Margin="0,15,0,0" LostFocus="Slider_LostFocus" />
 
                                 <ComboBox x:Name="MaxPunctuationSymbolsEmotesTypeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Width="50" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                                     <ComboBox.ItemTemplate>
@@ -222,9 +222,9 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Foreground="{StaticResource WhiteColor}" Text="{x:Static resx:Resources.LinkBlocking}"/>
+                                <TextBlock Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Text="{x:Static resx:Resources.LinkBlocking}"/>
 
-                                <TextBlock Grid.Column="2" Foreground="{StaticResource WhiteColor}" Text="{Binding Source={x:Static resx:Resources.ApplyStrikes}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                                <TextBlock Grid.Column="2" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Text="{Binding Source={x:Static resx:Resources.ApplyStrikes}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                                 <ToggleButton x:Name="BlockLinksApplyStrikesToggleButton" Grid.Column="4" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
                             </Grid>
                         </GroupBox.Header>
@@ -247,7 +247,7 @@
                                 <ToggleButton x:Name="BlockLinksToggleButton" Grid.Column="2" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
                             </Grid>
 
-                            <ComboBox x:Name="BlockLinksExemptComboBox" Grid.Row="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ExemptFromRuleAndStrikes}" Width="150" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                            <ComboBox x:Name="BlockLinksExemptComboBox" Grid.Row="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ExemptFromRuleAndStrikes}" Width="200" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -259,7 +259,7 @@
 
                     <GroupBox Grid.Column="2">
                         <GroupBox.Header>
-                            <TextBlock Foreground="{StaticResource WhiteColor}" Text="{x:Static resx:Resources.ChatParticipation}"/>
+                            <TextBlock Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Text="{x:Static resx:Resources.ChatParticipation}"/>
                         </GroupBox.Header>
 
                         <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5">
@@ -277,7 +277,7 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
 
-                            <ComboBox x:Name="ChatParticipationExemptComboBox" Grid.Row="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ExemptFromRule}" Width="110" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                            <ComboBox x:Name="ChatParticipationExemptComboBox" Grid.Row="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ExemptFromRule}" Width="200" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -289,7 +289,7 @@
 
                     <GroupBox Grid.Column="4">
                         <GroupBox.Header>
-                            <TextBlock Foreground="{StaticResource WhiteColor}" Text="{x:Static resx:Resources.FollowEventModeration}"/>
+                            <TextBlock Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Text="{x:Static resx:Resources.FollowEventModeration}"/>
                         </GroupBox.Header>
 
                         <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5">
@@ -317,7 +317,7 @@
 
                 <GroupBox Grid.Row="6">
                     <GroupBox.Header>
-                        <TextBlock Foreground="{StaticResource WhiteColor}" Text="{x:Static resx:Resources.StrikeCommands}"/>
+                        <TextBlock Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Text="{x:Static resx:Resources.StrikeCommands}"/>
                     </GroupBox.Header>
 
                     <Grid HorizontalAlignment="Center" Margin="5">

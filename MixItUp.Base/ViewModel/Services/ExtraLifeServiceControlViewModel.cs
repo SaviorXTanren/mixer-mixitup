@@ -59,6 +59,8 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand LogOutCommand { get; set; }
         public ICommand GetTeamParticipantsCommand { get; set; }
 
+        public override string WikiPageName { get { return "extra-life"; } }
+
         public ExtraLifeServiceControlViewModel()
             : base(Resources.ExtraLife)
         {
@@ -105,7 +107,7 @@ namespace MixItUp.Base.ViewModel.Services
             this.IsConnected = ServiceManager.Get<ExtraLifeService>().IsConnected;
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             if (this.IsConnected)
             {

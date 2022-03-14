@@ -28,6 +28,7 @@ namespace MixItUp.Base.Services.Trovo
         public string BotID { get { return this.Bot?.userId; } }
         public string Botname { get { return this.Bot?.userName; } }
         public string ChannelID { get { return this.User?.channelId; } }
+        public string ChannelLink { get { return string.Format("trovo.live/{0}", this.Username?.ToLower()); } }
 
         public StreamingPlatformAccountModel UserAccount
         {
@@ -54,6 +55,15 @@ namespace MixItUp.Base.Services.Trovo
             }
         }
 
+        public bool IsLive
+        {
+            get
+            {
+                bool? isLive = this.Channel?.is_live;
+                return isLive.GetValueOrDefault();
+            }
+        }
+
         public async Task<Result> ConnectUser()
         {
             Result<TrovoPlatformService> result = await TrovoPlatformService.ConnectUser();
@@ -63,13 +73,13 @@ namespace MixItUp.Base.Services.Trovo
                 this.User = await this.UserConnection.GetCurrentUser();
                 if (this.User == null)
                 {
-                    return new Result("Failed to get Glimesh user data");
+                    return new Result(MixItUp.Base.Resources.TrovoFailedToGetUserData);
                 }
 
                 this.Channel = await this.UserConnection.GetCurrentChannel();
                 if (this.Channel == null)
                 {
-                    return new Result("Failed to get Glimesh channel data");
+                    return new Result(MixItUp.Base.Resources.TrovoFailedToGetChannelData);
                 }
             }
             return result;
@@ -84,7 +94,7 @@ namespace MixItUp.Base.Services.Trovo
                 this.Bot = await this.BotConnection.GetCurrentUser();
                 if (this.Bot == null)
                 {
-                    return new Result("Failed to get Glimesh bot data");
+                    return new Result(MixItUp.Base.Resources.TrovoFailedToGetBotData);
                 }
             }
             return result;
@@ -112,7 +122,7 @@ namespace MixItUp.Base.Services.Trovo
                     this.User = await this.UserConnection.GetCurrentUser();
                     if (this.User == null)
                     {
-                        return new Result("Failed to get Trovo user data");
+                        return new Result(MixItUp.Base.Resources.TrovoFailedToGetUserData);
                     }
 
                     if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].BotOAuthToken != null)
@@ -124,13 +134,13 @@ namespace MixItUp.Base.Services.Trovo
                             this.Bot = await this.BotConnection.GetCurrentUser();
                             if (this.Bot == null)
                             {
-                                return new Result("Failed to get Trovo bot data");
+                                return new Result(MixItUp.Base.Resources.TrovoFailedToGetBotData);
                             }
                         }
                         else
                         {
 
-                            return new Result(success: true, message: "Failed to connect Trovo bot account, please manually reconnect");
+                            return new Result(success: true, message: MixItUp.Base.Resources.TrovoFailedToConnectBotAccount);
                         }
                     }
                 }
@@ -188,7 +198,7 @@ namespace MixItUp.Base.Services.Trovo
                             {
                                 Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.Username} - {this.UserID} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].UserID}");
                                 settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].UserOAuthToken.ResetToken();
-                                return new Result("The account you are logged in as on Trovo does not match the account for this settings. Please log in as the correct account on Trovo.");
+                                return new Result(string.Format(MixItUp.Base.Resources.StreamingPlatformIncorrectAccount, StreamingPlatformTypeEnum.Trovo));
                             }
                         }
 
@@ -200,15 +210,15 @@ namespace MixItUp.Base.Services.Trovo
                         if (platformServiceTasks.Any(c => !c.Result.Success))
                         {
                             string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
-                            return new Result("Failed to connect to Trovo services:" + Environment.NewLine + Environment.NewLine + errors);
+                            return new Result(MixItUp.Base.Resources.TrovoFailedToConnectHeader + Environment.NewLine + Environment.NewLine + errors);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                     Logger.Log(ex);
-                    return new Result("Failed to connect to Trovo services. If this continues, please visit the Mix It Up Discord for assistance." +
-                        Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
+                    return new Result(MixItUp.Base.Resources.TrovoFailedToConnect +
+                        Environment.NewLine + Environment.NewLine + MixItUp.Base.Resources.ErrorHeader + ex.Message);
                 }
             }
             return new Result();
@@ -216,7 +226,7 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task<Result> InitializeBot(SettingsV3Model settings)
         {
-            if (this.BotConnection != null && ServiceManager.Has<TrovoChatEventService>())
+            if (this.BotConnection != null)
             {
                 Result result = await ServiceManager.Get<TrovoChatEventService>().ConnectBot();
                 if (!result.Success)
@@ -229,18 +239,12 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task CloseUser()
         {
-            if (ServiceManager.Has<TrovoChatEventService>())
-            {
-                await ServiceManager.Get<TrovoChatEventService>().DisconnectUser();
-            }
+            await ServiceManager.Get<TrovoChatEventService>().DisconnectUser();
         }
 
         public async Task CloseBot()
         {
-            if (ServiceManager.Has<TrovoChatEventService>())
-            {
-                await ServiceManager.Get<TrovoChatEventService>().DisconnectBot();
-            }
+            await ServiceManager.Get<TrovoChatEventService>().DisconnectBot();
         }
 
         public void SaveSettings(SettingsV3Model settings)

@@ -144,13 +144,16 @@ namespace MixItUp.Base.Services.External
         }
     }
 
+    /// <summary>
+    /// https://docs.pixelchat.tv/
+    /// </summary>
     public class PixelChatService : OAuthExternalServiceBase
     {
         private const string BaseAddress = "https://api2.pixelchat.tv/public/";
 
         public PixelChatService() : base(PixelChatService.BaseAddress) { }
 
-        public override string Name { get { return "PixelChat"; } }
+        public override string Name { get { return MixItUp.Base.Resources.PixelChat; } }
 
         public override Task<Result> Connect()
         {

@@ -12,6 +12,6 @@
     </UserControl.Resources>
 
     <Button Visibility="{Binding Show, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="{Binding ToolTipText}" Command="{Binding LaunchStatusPageCommand}" Style="{StaticResource MaterialDesignFlatButton}" Width="40" HorizontalAlignment="Center" Margin="5,0">
-        <MaterialDesign:PackIcon Kind="AlertOutline" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WarningColor}" />
+        <MaterialDesign:PackIcon Kind="AlertOutline" Style="{StaticResource ColoredBackgroundPackIcon}" />
     </Button>
 </UserControl>

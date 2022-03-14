@@ -37,6 +37,8 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand LogInCommand { get; set; }
         public ICommand LogOutCommand { get; set; }
 
+        public override string WikiPageName { get { return "tiltify"; } }
+
         public TiltifyServiceControlViewModel()
             : base(Resources.Tiltify)
         {
@@ -67,7 +69,7 @@ namespace MixItUp.Base.ViewModel.Services
             this.IsConnected = ServiceManager.Get<TiltifyService>().IsConnected;
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             if (this.IsConnected)
             {

@@ -24,7 +24,7 @@ namespace MixItUp.WPF.Controls.MainControls
         protected override async Task InitializeInternal()
         {
             this.DataContext = this.viewModel = new GameQueueMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
-            await this.viewModel.OnLoaded();
+            await this.viewModel.OnOpen();
         }
 
         private void UserJoinedCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)

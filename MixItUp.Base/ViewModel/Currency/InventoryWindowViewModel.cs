@@ -235,14 +235,14 @@ namespace MixItUp.Base.ViewModel.Currency
             this.DefaultItemMaxAmount = 99;
 
             CustomCommandModel buyCommand = new CustomCommandModel(MixItUp.Base.Resources.InventoryItemsBoughtCommandName);
-            buyCommand.Actions.Add(new ChatActionModel("You bought $itemtotal $itemname for $itemcost $currencyname", sendAsStreamer: false));
+            buyCommand.Actions.Add(new ChatActionModel(MixItUp.Base.Resources.InventoryBuyCommandDefault, sendAsStreamer: false));
             this.ShopBuyCommand = buyCommand;
             CustomCommandModel sellCommand = new CustomCommandModel(MixItUp.Base.Resources.InventoryItemsSoldCommandName);
-            sellCommand.Actions.Add(new ChatActionModel("You sold $itemtotal $itemname for $itemcost $currencyname", sendAsStreamer: false));
+            sellCommand.Actions.Add(new ChatActionModel(MixItUp.Base.Resources.InventorySellCommandDefault, sendAsStreamer: false));
             this.ShopSellCommand = sellCommand;
 
             CustomCommandModel tradeCommand = new CustomCommandModel(MixItUp.Base.Resources.InventoryItemsTradedCommandName);
-            tradeCommand.Actions.Add(new ChatActionModel("@$username traded $itemtotal $itemname to @$targetusername for $targetitemtotal $targetitemname", sendAsStreamer: false));
+            tradeCommand.Actions.Add(new ChatActionModel(MixItUp.Base.Resources.InventoryTradeCommandDefault, sendAsStreamer: false));
             this.TradeCommand = tradeCommand;
 
             this.SaveItemCommand = this.CreateCommand(async () =>
@@ -309,7 +309,7 @@ namespace MixItUp.Base.ViewModel.Currency
 
             this.HelpCommand = this.CreateCommand(() =>
             {
-                ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency,-Rank,-&-Inventory");
+                ProcessHelper.LaunchLink("https://wiki.mixitupapp.com/consumables/inventory");
             });
         }
 
@@ -359,6 +359,18 @@ namespace MixItUp.Base.ViewModel.Currency
                 {
                     await DialogHelper.ShowMessage(Resources.ShopCurrencyRequired);
                     return false;
+                }
+
+                foreach (InventoryModel otherInventory in ChannelSession.Settings.Inventory.Values)
+                {
+                    if (this.inventory == null || !this.inventory.ID.Equals(otherInventory.ID))
+                    {
+                        if (otherInventory.ShopEnabled && string.Equals(this.shopCommandText, otherInventory.ShopCommand, StringComparison.OrdinalIgnoreCase))
+                        {
+                            await DialogHelper.ShowMessage(Resources.InventoryShopDuplicateCommand);
+                            return false;
+                        }
+                    }
                 }
             }
 

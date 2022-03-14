@@ -48,7 +48,7 @@ namespace MixItUp.Base.ViewModel.Requirements
         {
             this.HelpCommand = this.CreateCommand(() =>
             {
-                ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Usage-Requirements");
+                ProcessHelper.LaunchLink("https://wiki.mixitupapp.com/usage-requirements");
             });
         }
 

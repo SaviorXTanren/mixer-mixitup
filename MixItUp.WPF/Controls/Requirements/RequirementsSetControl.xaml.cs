@@ -6,7 +6,7 @@ namespace MixItUp.WPF.Controls.Requirements
     /// <summary>
     /// Interaction logic for RequirementsSetControl.xaml
     /// </summary>
-    public partial class RequirementsSetControl : UserControl
+    public partial class RequirementsSetControl : GroupBox
     {
         public static readonly DependencyProperty ShowRoleProperty = DependencyProperty.Register("ShowRole", typeof(bool), typeof(RequirementsSetControl), new PropertyMetadata(true));
         public static readonly DependencyProperty ShowCooldownProperty = DependencyProperty.Register("ShowCooldown", typeof(bool), typeof(RequirementsSetControl), new PropertyMetadata(true));

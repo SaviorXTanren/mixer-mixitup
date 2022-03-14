@@ -40,7 +40,7 @@ namespace MixItUp.Base.Services
         ChatMessageDeleted = 56,
         ChatUserTimeout = 57,
         ChatWhisperReceived = 58,
-        ChatEntranceCommand = 59,
+        ChatUserEntranceCommand = 59,
 
         // Application = 100
 
@@ -165,7 +165,7 @@ namespace MixItUp.Base.Services
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestDonationUserData] = parameters.User.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestDonationAmountData] = donation.AmountText;
 
-            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(parameters.User, string.Format("{0} Donated {1}", parameters.User.FullDisplayName, donation.AmountText), ChannelSession.Settings.AlertDonationColor));
+            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(parameters.User, string.Format(MixItUp.Base.Resources.AlertDonated, parameters.User.FullDisplayName, donation.AmountText), ChannelSession.Settings.AlertDonationColor));
 
             await ServiceManager.Get<EventService>().PerformEvent(type, parameters);
 
@@ -276,8 +276,6 @@ namespace MixItUp.Base.Services
 
                     if (genericCommand != null)
                     {
-                        parameters.SpecialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = parameters.Platform.ToString();
-
                         Logger.Log(LogLevel.Debug, $"Performing event trigger: {genericCommand.EventType}");
 
                         await ServiceManager.Get<CommandService>().Queue(genericCommand, parameters);

@@ -156,7 +156,7 @@ namespace MixItUp.Base.ViewModel.Wizard
             this.DiscordCommand = this.CreateCommand(() => { ProcessHelper.LaunchLink("https://mixitupapp.com/discord"); });
             this.TwitterCommand = this.CreateCommand(() => { ProcessHelper.LaunchLink("https://twitter.com/MixItUpApp"); });
             this.YouTubeCommand = this.CreateCommand(() => { ProcessHelper.LaunchLink("https://www.youtube.com/c/MixItUpApp"); });
-            this.WikiCommand = this.CreateCommand(() => { ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki"); });
+            this.WikiCommand = this.CreateCommand(() => { ProcessHelper.LaunchLink("https://wiki.mixitupapp.com/"); });
 
             this.Twitch.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
             this.Twitch.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
@@ -197,7 +197,7 @@ namespace MixItUp.Base.ViewModel.Wizard
                 {
                     if (!this.Twitch.IsUserAccountConnected && !this.YouTube.IsUserAccountConnected && !this.Trovo.IsUserAccountConnected && !this.Glimesh.IsUserAccountConnected)
                     {
-                        this.StatusMessage = "At least 1 Streamer account must be signed in.";
+                        this.StatusMessage = MixItUp.Base.Resources.NewUserWizardAtLeastOneAccountMustBeSignedIn;
                         return;
                     }
 
@@ -252,13 +252,13 @@ namespace MixItUp.Base.ViewModel.Wizard
             });
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             if (ChannelSession.Settings == null)
             {
                 await ChannelSession.Connect(new SettingsV3Model());
             }
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
         }
     }
 }

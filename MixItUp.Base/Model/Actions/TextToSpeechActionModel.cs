@@ -52,7 +52,7 @@ namespace MixItUp.Base.Model.Actions
             "Hindi Female",
             "Hindi Male",
             "Hungarian Female",
-            "Icelandic Male",
+            "Icelandic Female",
             "Indonesian Female",
             "Indonesian Male",
             "Italian Female",

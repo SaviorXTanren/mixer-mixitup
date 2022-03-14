@@ -32,7 +32,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public SubActionContainerControlViewModel() : base() { }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             this.ImportActionsCommand = this.CreateCommand(async () =>
             {
@@ -80,7 +80,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             subActions.Clear();
 
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
         }
 
         public override async Task<Result> Validate()

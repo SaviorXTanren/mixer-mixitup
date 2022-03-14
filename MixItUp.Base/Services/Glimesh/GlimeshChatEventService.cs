@@ -29,7 +29,7 @@ namespace MixItUp.Base.Services.Glimesh
 
         public GlimeshChatEventService() { }
 
-        public override string Name { get { return "Glimesh Chat"; } }
+        public override string Name { get { return MixItUp.Base.Resources.GlimeshChat; } }
 
         public bool IsUserConnected { get { return this.userClient != null && this.userClient.IsOpen(); } }
         public bool IsBotConnected { get { return this.botClient != null && this.botClient.IsOpen(); } }
@@ -58,17 +58,17 @@ namespace MixItUp.Base.Services.Glimesh
 
                         if (!await this.userClient.Connect())
                         {
-                            return new Result("Failed to connect to Glimesh chat servers");
+                            return new Result(MixItUp.Base.Resources.GlimeshFailedToConnectToChat);
                         }
 
                         if (!await this.userClient.JoinChannelChat(ServiceManager.Get<GlimeshSessionService>().ChannelID))
                         {
-                            return new Result("Failed to join Glimesh channel chat");
+                            return new Result(MixItUp.Base.Resources.GlimeshFailedToJoinChat);
                         }
 
                         if (!await this.userClient.JoinChannelEvents(ServiceManager.Get<GlimeshSessionService>().ChannelID, ServiceManager.Get<GlimeshSessionService>().UserID))
                         {
-                            return new Result("Failed to join Glimesh channel events");
+                            return new Result(MixItUp.Base.Resources.GlimeshFailedToJoinEvents);
                         }
 
                         return new Result();
@@ -80,7 +80,7 @@ namespace MixItUp.Base.Services.Glimesh
                     }
                 }));
             }
-            return new Result("Glimesh chat connection has not been established");
+            return new Result(MixItUp.Base.Resources.GlimeshChatConnectionCouldNotBeEstablished);
         }
 
         public async Task DisconnectUser()
@@ -129,7 +129,7 @@ namespace MixItUp.Base.Services.Glimesh
 
                         if (!await this.botClient.Connect())
                         {
-                            return new Result("Failed to connect to Glimesh chat servers");
+                            return new Result(MixItUp.Base.Resources.GlimeshFailedToConnectToChat);
                         }
 
                         return new Result();
@@ -141,7 +141,7 @@ namespace MixItUp.Base.Services.Glimesh
                     }
                 }));
             }
-            return new Result("Glimesh chat connection has not been established");
+            return new Result(MixItUp.Base.Resources.GlimeshChatConnectionCouldNotBeEstablished);
         }
 
         public async Task DisconnectBot()
@@ -343,7 +343,7 @@ namespace MixItUp.Base.Services.Glimesh
 
         private async void UserClient_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
         {
-            ChannelSession.DisconnectionOccurred("Glimesh User Chat");
+            ChannelSession.DisconnectionOccurred(MixItUp.Base.Resources.GlimeshUserChat);
 
             Result result;
             await this.DisconnectUser();
@@ -355,12 +355,12 @@ namespace MixItUp.Base.Services.Glimesh
             }
             while (!result.Success);
 
-            ChannelSession.ReconnectionOccurred("Glimesh User Chat");
+            ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.GlimeshUserChat);
         }
 
         private async void BotClient_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
         {
-            ChannelSession.DisconnectionOccurred("Glimesh Bot Chat");
+            ChannelSession.DisconnectionOccurred(MixItUp.Base.Resources.GlimeshBotChat);
 
             Result result;
             await this.DisconnectBot();
@@ -372,7 +372,7 @@ namespace MixItUp.Base.Services.Glimesh
             }
             while (!result.Success);
 
-            ChannelSession.ReconnectionOccurred("Glimesh Bot Chat");
+            ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.GlimeshBotChat);
         }
     }
 }

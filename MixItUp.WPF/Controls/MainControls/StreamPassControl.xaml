@@ -34,17 +34,11 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <Button Grid.Column="0" x:Name="EditButton" Click="EditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Edit}">
-                                    <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                </Button>
+                                <Controls:IconButton Grid.Column="0" x:Name="EditButton" Click="EditButton_Click" HorizontalAlignment="Center" Icon="TooltipEdit" ToolTip="{x:Static resx:Resources.Edit}" />
 
-                                <Button Grid.Column="2" x:Name="CopyButton" Click="CopyButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Copy}">
-                                    <MaterialDesign:PackIcon Kind="ContentCopy" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                </Button>
+                                <Controls:IconButton Grid.Column="2" x:Name="CopyButton" Click="CopyButton_Click" HorizontalAlignment="Center" Icon="ContentCopy" ToolTip="{x:Static resx:Resources.Copy}" />
 
-                                <Button Grid.Column="4" x:Name="DeleteButton" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}">
-                                    <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                </Button>
+                                <Controls:IconButton Grid.Column="4" x:Name="DeleteButton" Click="DeleteButton_Click" HorizontalAlignment="Center" Icon="Delete" ToolTip="{x:Static resx:Resources.Delete}" />
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

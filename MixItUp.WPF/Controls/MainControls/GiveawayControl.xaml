@@ -159,7 +159,21 @@
 
             <DataGrid ItemsSource="{Binding EnteredUsers}" Grid.Row="2" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding User.Username}" IsReadOnly="True" Width="*" />
+                    <DataGridTemplateColumn Header="{x:Static resx:Resources.Name}" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid DataContext="{Binding User}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image Grid.Column="0" Source="{Binding PlatformImageURL}" Visibility="{Binding ShowPlatformImage, Converter={StaticResource BooleanToVisibilityConverter}}" Width="14" Height="14" Margin="0,0,3,0" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Column="1" Text="{Binding FullDisplayName}" VerticalAlignment="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTextColumn Header="{x:Static resx:Resources.Total}" Binding="{Binding Entries}" IsReadOnly="True" Width="75" />
                 </DataGrid.Columns>
             </DataGrid>

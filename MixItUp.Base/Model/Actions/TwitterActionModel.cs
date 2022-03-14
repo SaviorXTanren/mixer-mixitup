@@ -69,23 +69,25 @@ namespace MixItUp.Base.Model.Actions
                     {
                         if (TwitterActionModel.CheckIfTweetContainsTooManyTags(tweet))
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage("The tweet you specified can not be sent because it contains an @mention", parameters.Platform);
+                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.TwitterTweetCanNotContainMention, parameters.Platform);
                             return;
                         }
 
                         Result result = await ServiceManager.Get<TwitterService>().SendTweet(tweet, imagePath);
                         if (!result.Success)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage("Twitter Error: " + result.Message, parameters.Platform);
+                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorHeader + result.Message, parameters.Platform);
                         }
                     }
                 }
                 else if (this.ActionType == TwitterActionTypeEnum.UpdateName)
                 {
-                    Result result = await ServiceManager.Get<TwitterService>().UpdateName(this.NameUpdate);
+                    string nameUpdate = await ReplaceStringWithSpecialModifiers(this.NameUpdate, parameters);
+
+                    Result result = await ServiceManager.Get<TwitterService>().UpdateName(nameUpdate);
                     if (!result.Success)
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage("Twitter Error: " + result.Message, parameters.Platform);
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorHeader + result.Message, parameters.Platform);
                     }
                 }
             }

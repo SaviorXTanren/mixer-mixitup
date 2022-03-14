@@ -59,7 +59,7 @@ namespace MixItUp.Base.Model.Currency
                 {
                     return this.MaxAmount.ToString();
                 }
-                return "Default";
+                return MixItUp.Base.Resources.Default;
             }
         }
 
@@ -421,7 +421,7 @@ namespace MixItUp.Base.Model.Currency
                     if (arguments != null && arguments.Count() > 0)
                     {
                         string arg1 = arguments.ElementAt(0);
-                        if (arguments.Count() == 1 && arg1.Equals("list", StringComparison.InvariantCultureIgnoreCase))
+                        if (arguments.Count() == 1 && arg1.Equals(MixItUp.Base.Resources.List, StringComparison.InvariantCultureIgnoreCase))
                         {
                             if (this.shopListCooldown > DateTimeOffset.Now)
                             {
@@ -439,11 +439,11 @@ namespace MixItUp.Base.Model.Currency
                                     items.Add(item.Name);
                                 }
                             }
-                            await ServiceManager.Get<ChatService>().SendMessage("Items Available to Buy/Sell: " + string.Join(", ", items), user.Platform);
+                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.InventoryItemBuySellAvailableHeader + string.Join(", ", items), user.Platform);
                             return;
                         }
                         else if (arguments.Count() >= 2 &&
-                            (arg1.Equals("buy", StringComparison.InvariantCultureIgnoreCase) || arg1.Equals("sell", StringComparison.InvariantCultureIgnoreCase)))
+                            (arg1.Equals("buy", StringComparison.InvariantCultureIgnoreCase) || arg1.Equals(MixItUp.Base.Resources.Sell, StringComparison.InvariantCultureIgnoreCase)))
                         {
                             int amount = 1;
 
@@ -457,7 +457,7 @@ namespace MixItUp.Base.Model.Currency
                                 {
                                     if (!int.TryParse(arguments.Last(), out amount) || amount <= 0)
                                     {
-                                        await ServiceManager.Get<ChatService>().SendMessage("A valid amount greater than 0 must be specified", user.Platform);
+                                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ValidAmountGreaterThan0MustBeSpecified, user.Platform);
                                         return;
                                     }
                                 }
@@ -465,7 +465,7 @@ namespace MixItUp.Base.Model.Currency
 
                             if (item == null)
                             {
-                                await ServiceManager.Get<ChatService>().SendMessage("The item you specified does not exist", user.Platform);
+                                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.InventoryItemSpecifiedDoesNotExist, user.Platform);
                                 return;
                             }
 
@@ -487,17 +487,17 @@ namespace MixItUp.Base.Model.Currency
                                         }
                                         else
                                         {
-                                            await ServiceManager.Get<ChatService>().SendMessage(string.Format("You do not have the required {0} {1} to purchase this item", totalcost, currency.Name), user.Platform);
+                                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.InventoryDoNotHaveRequiredCurrencyToPurchase, totalcost, currency.Name), user.Platform);
                                         }
                                     }
                                     else
                                     {
-                                        await ServiceManager.Get<ChatService>().SendMessage(string.Format("You can only have {0} {1} in total", itemMaxAmount, item.Name), user.Platform);
+                                        await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.InventoryYouCanOnlyHaveTotal, itemMaxAmount, item.Name), user.Platform);
                                     }
                                 }
                                 else
                                 {
-                                    await ServiceManager.Get<ChatService>().SendMessage("This item is not available for buying", user.Platform);
+                                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.InventoryItemNotAvailableForBuying, user.Platform);
                                 }
                             }
                             else if (arg1.Equals("sell", StringComparison.InvariantCultureIgnoreCase))
@@ -513,17 +513,17 @@ namespace MixItUp.Base.Model.Currency
                                     }
                                     else
                                     {
-                                        await ServiceManager.Get<ChatService>().SendMessage(string.Format("You do not have the required {0} {1} to sell", amount, item.Name), user.Platform);
+                                        await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.InventoryDoNotHaveRequiredItemsToSell, amount, item.Name), user.Platform);
                                     }
                                 }
                                 else
                                 {
-                                    await ServiceManager.Get<ChatService>().SendMessage("This item is not available for selling", user.Platform);
+                                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.InventoryItemNotAvailableForSelling, user.Platform);
                                 }
                             }
                             else
                             {
-                                await ServiceManager.Get<ChatService>().SendMessage("You must specify either \"buy\" & \"sell\"", user.Platform);
+                                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.InventoryMustSpecifyEitherBuyOrSell, user.Platform);
                             }
 
                             if (command != null)
@@ -548,7 +548,7 @@ namespace MixItUp.Base.Model.Currency
                                     itemInfo.Append(item.Name + ": ");
                                     if (item.HasBuyAmount)
                                     {
-                                        itemInfo.Append(string.Format("Buy = {0} {1}", item.BuyAmount, currency.Name));
+                                        itemInfo.Append(string.Format(MixItUp.Base.Resources.InventoryItemBuyPrice, item.BuyAmount, currency.Name));
                                     }
                                     if (item.HasBuyAmount && item.HasSellAmount)
                                     {
@@ -556,30 +556,25 @@ namespace MixItUp.Base.Model.Currency
                                     }
                                     if (item.HasSellAmount)
                                     {
-                                        itemInfo.Append(string.Format("Sell = {0} {1}", item.SellAmount, currency.Name));
+                                        itemInfo.Append(string.Format(MixItUp.Base.Resources.InventoryItemSellPrice, item.SellAmount, currency.Name));
                                     }
 
                                     await ServiceManager.Get<ChatService>().SendMessage(itemInfo.ToString(), user.Platform);
                                 }
                                 else
                                 {
-                                    await ServiceManager.Get<ChatService>().SendMessage("This item is not available to buy/sell", user.Platform);
+                                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.InventoryItemNotAvailableForBuyingSelling, user.Platform);
                                 }
                             }
                             else
                             {
-                                await ServiceManager.Get<ChatService>().SendMessage("The item you specified does not exist", user.Platform);
+                                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.InventoryItemSpecifiedDoesNotExist, user.Platform);
                             }
                             return;
                         }
                     }
 
-                    StringBuilder storeHelp = new StringBuilder();
-                    storeHelp.Append("USAGE: " + this.ShopCommand + " list = Lists all the items available for buying/selling ** ");
-                    storeHelp.Append(this.ShopCommand + " <ITEM NAME> = Lists the buying/selling price for the item ** ");
-                    storeHelp.Append(this.ShopCommand + " buy <ITEM NAME> [AMOUNT] = Buys 1 or the amount specified of the item ** ");
-                    storeHelp.Append(this.ShopCommand + " sell <ITEM NAME> [AMOUNT] = Sells 1 or the amount specified of the item");
-                    await ServiceManager.Get<ChatService>().SendMessage(storeHelp.ToString(), user.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.InventoryShopUsage, this.ShopCommand), user.Platform);
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
@@ -596,7 +591,7 @@ namespace MixItUp.Base.Model.Currency
                         UserV2ViewModel targetUser = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(user.Platform, arguments.First());
                         if (targetUser == null)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage("The specified user does not exist", user.Platform);
+                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.UserNotFound, user.Platform);
                             return;
                         }
 
@@ -612,7 +607,7 @@ namespace MixItUp.Base.Model.Currency
                             {
                                 if (!int.TryParse(arguments.Last(), out amount) || amount <= 0)
                                 {
-                                    await ServiceManager.Get<ChatService>().SendMessage("A valid amount greater than 0 must be specified", user.Platform);
+                                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ValidAmountGreaterThan0MustBeSpecified, user.Platform);
                                     return;
                                 }
                             }
@@ -620,13 +615,13 @@ namespace MixItUp.Base.Model.Currency
 
                         if (item == null)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage("The item you specified does not exist", user.Platform);
+                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.InventoryItemSpecifiedDoesNotExist, user.Platform);
                             return;
                         }
 
                         if (!this.HasAmount(user, item, amount))
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(string.Format("You do not have the required {0} {1} to trade", amount, item.Name), user.Platform);
+                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.InventoryDoNotHaveRequiredItemsToTrade, amount, item.Name), user.Platform);
                             return;
                         }
 
@@ -652,12 +647,12 @@ namespace MixItUp.Base.Model.Currency
                                 this.tradeSender = null;
                                 this.tradeReceiver = null;
                                 this.tradeTimeCheckToken = null;
-                                await ServiceManager.Get<ChatService>().SendMessage("The trade could not be completed in time and was cancelled...", user.Platform);
+                                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.InventoryTradeCancelled, user.Platform);
                             }
                         }, this.tradeTimeCheckToken.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                        await ServiceManager.Get<ChatService>().SendMessage(string.Format("@{0} has started a trade with @{1} for {2} {3}. Type {4} <ITEM NAME> [AMOUNT] in chat to reply back with your offer in the next 60 seconds.", this.tradeSender.User.Username, this.tradeReceiver.User.Username, this.tradeSender.Amount, this.tradeSender.Item.Name, this.TradeCommand), this.tradeSender.User.Platform);
+                        await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.InventoryTradeStarted, this.tradeSender.User.Username, this.tradeReceiver.User.Username, this.tradeSender.Amount, this.tradeSender.Item.Name, this.TradeCommand), this.tradeSender.User.Platform);
                         return;
                     }
                     else if (this.tradeSender != null && this.tradeReceiver != null && this.tradeReceiver.User.Equals(user) && this.tradeReceiver.Amount == 0 && arguments.Count() >= 1)
@@ -674,7 +669,7 @@ namespace MixItUp.Base.Model.Currency
                             {
                                 if (!int.TryParse(arguments.Last(), out amount) || amount <= 0)
                                 {
-                                    await ServiceManager.Get<ChatService>().SendMessage("A valid amount greater than 0 must be specified", user.Platform);
+                                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ValidAmountGreaterThan0MustBeSpecified, user.Platform);
                                     return;
                                 }
                             }
@@ -682,20 +677,20 @@ namespace MixItUp.Base.Model.Currency
 
                         if (item == null)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage("The item you specified does not exist", user.Platform);
+                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.InventoryItemSpecifiedDoesNotExist, user.Platform);
                             return;
                         }
 
                         if (!this.HasAmount(user, item, amount))
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(string.Format("You do not have the required {0} {1} to trade", amount, item.Name), user.Platform);
+                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.InventoryDoNotHaveRequiredItemsToTrade, amount, item.Name), user.Platform);
                             return;
                         }
 
                         this.tradeReceiver.Item = item;
                         this.tradeReceiver.Amount = amount;
 
-                        await ServiceManager.Get<ChatService>().SendMessage(string.Format("@{0} has replied back to the offer by @{1} with {2} {3}. Type {4} in chat to accept the trade.", this.tradeReceiver.User.Username, this.tradeSender.User.Username, this.tradeReceiver.Amount, this.tradeReceiver.Item.Name, this.TradeCommand), user.Platform);
+                        await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.InventoryTradeReplied, this.tradeReceiver.User.Username, this.tradeSender.User.Username, this.tradeReceiver.Amount, this.tradeReceiver.Item.Name, this.TradeCommand), user.Platform);
                         return;
                     }
                     else if (this.tradeSender != null && this.tradeReceiver != null && this.tradeReceiver.Amount > 0 && this.tradeSender.User.Equals(user))
@@ -703,14 +698,14 @@ namespace MixItUp.Base.Model.Currency
                         int senderItemMaxAmount = (this.tradeReceiver.Item.HasMaxAmount) ? this.tradeReceiver.Item.MaxAmount : this.DefaultMaxAmount;
                         if ((this.GetAmount(this.tradeSender.User, this.tradeReceiver.Item) + this.tradeReceiver.Amount) > senderItemMaxAmount)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(string.Format("You can only have {0} {1} in total", senderItemMaxAmount, this.tradeReceiver.Item.Name), this.tradeReceiver.User.Platform);
+                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.InventoryYouCanOnlyHaveTotal, senderItemMaxAmount, this.tradeReceiver.Item.Name), this.tradeReceiver.User.Platform);
                             return;
                         }
 
                         int receiverItemMaxAmount = (this.tradeSender.Item.HasMaxAmount) ? this.tradeSender.Item.MaxAmount : this.DefaultMaxAmount;
                         if ((this.GetAmount(this.tradeReceiver.User, this.tradeSender.Item) + this.tradeSender.Amount) > receiverItemMaxAmount)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(string.Format("You can only have {0} {1} in total", receiverItemMaxAmount, this.tradeSender.Item.Name), this.tradeSender.User.Platform);
+                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.InventoryYouCanOnlyHaveTotal, receiverItemMaxAmount, this.tradeSender.Item.Name), this.tradeSender.User.Platform);
                             return;
                         }
 
@@ -739,11 +734,11 @@ namespace MixItUp.Base.Model.Currency
                     }
                     else if (this.tradeSender != null && this.tradeReceiver != null && !this.tradeReceiver.User.Equals(user))
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage("A trade is already underway, please wait until it is completed", user.Platform);
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.InventoryTradeAlreadyUnderway, user.Platform);
                         return;
                     }
                 }
-                await ServiceManager.Get<ChatService>().SendMessage(this.TradeCommand + " <USERNAME> <ITEM NAME> [AMOUNT] = Trades 1 or the amount specified of the item to the specified user", user.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.InventoryTradeUsage, this.TradeCommand), user.Platform);
             }
             catch (Exception ex) { Logger.Log(ex); }
         }

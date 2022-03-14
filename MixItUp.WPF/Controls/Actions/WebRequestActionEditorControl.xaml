@@ -7,6 +7,7 @@
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -41,7 +42,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Result}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="$webrequestresult" />
+            <TextBox Grid.Column="2" VerticalAlignment="Center" Text="$webrequestresult" Style="{StaticResource TextBoxReadOnlySelectable}" />
         </Grid>
 
         <Grid Grid.Row="3" Visibility="{Binding ShowJSONGrid, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,10,0,0">
@@ -61,7 +62,7 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="10" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="10" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
@@ -69,7 +70,7 @@
 
                             <TextBox Grid.Column="2" Text="{Binding SpecialIdentifierName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SpecialIdentifierName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                            <Button Grid.Column="4" Command="{Binding DeleteJSONParameterCommand}" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" ToolTip="{x:Static resx:Resources.Delete}" />
+                            <Controls:IconButton Grid.Column="4" Command="{Binding DeleteJSONParameterCommand}" Icon="Delete"  ToolTip="{x:Static resx:Resources.Delete}" />
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

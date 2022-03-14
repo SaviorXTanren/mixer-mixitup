@@ -29,7 +29,15 @@ namespace MixItUp.Base.Model.Actions
         StreamMarker,
         UpdateChannelPointReward,
         CreatePoll,
-        CreatePrediction
+        CreatePrediction,
+        EnableEmoteOnly,
+        DisableEmoteOnly,
+        EnableFollowersOnly,
+        DisableFollowersOnly,
+        EnableSlowChat,
+        DisableSlowChat,
+        EnableSubscribersChat,
+        DisableSubscriberChat,
     }
 
     [DataContract]
@@ -111,6 +119,18 @@ namespace MixItUp.Base.Model.Actions
             return action;
         }
 
+        public static TwitchActionModel CreateTimeAction(TwitchActionType type, string timeLength)
+        {
+            TwitchActionModel action = new TwitchActionModel(type);
+            action.TimeLength = timeLength;
+            return action;
+        }
+
+        public static TwitchActionModel CreateAction(TwitchActionType type)
+        {
+            return new TwitchActionModel(type);
+        }
+
         [DataMember]
         public TwitchActionType ActionType { get; set; }
         [DataMember]
@@ -174,6 +194,9 @@ namespace MixItUp.Base.Model.Actions
         public List<string> PredictionOutcomes { get; set; } = new List<string>();
 
         [DataMember]
+        public string TimeLength { get; set; }
+
+        [DataMember]
         public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
 
         private TwitchActionModel(TwitchActionType type)
@@ -204,11 +227,11 @@ namespace MixItUp.Base.Model.Actions
                     AdResponseModel response = await ServiceManager.Get<TwitchSessionService>().UserConnection.RunAd(ServiceManager.Get<TwitchSessionService>().User, this.AdLength);
                     if (response == null)
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage("ERROR: We were unable to run an ad, please try again later");
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.TwitchAdUnableToRun);
                     }
-                    else if (!string.IsNullOrEmpty(response.message) && !response.message.Contains(StartinCommercialBreakMessage, System.StringComparison.OrdinalIgnoreCase))
+                    else if (!string.IsNullOrEmpty(response.message) && !response.message.Contains(StartinCommercialBreakMessage, StringComparison.OrdinalIgnoreCase))
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage("ERROR: " + response.message);
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorHeader + response.message);
                     }
                 }
                 else if (this.ActionType == TwitchActionType.VIPUser || this.ActionType == TwitchActionType.UnVIPUser)
@@ -281,212 +304,250 @@ namespace MixItUp.Base.Model.Actions
                     }
                     await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StreamMarkerCreationFailed, parameters.Platform);
                 }
-            }
-            else if (this.ActionType == TwitchActionType.UpdateChannelPointReward)
-            {
-                JObject jobj = new JObject()
+                else if (this.ActionType == TwitchActionType.UpdateChannelPointReward)
                 {
-                    { "is_enabled", this.ChannelPointRewardState },
-                };
+                    JObject jobj = new JObject()
+                    {
+                        { "is_enabled", this.ChannelPointRewardState },
+                    };
 
 #pragma warning disable CS0612 // Type or member is obsolete
-                if (this.ChannelPointRewardCost >= 0)
-                {
-                    this.ChannelPointRewardCostString = this.ChannelPointRewardCost.ToString();
-                    this.ChannelPointRewardMaxPerStreamString = this.ChannelPointRewardMaxPerStream.ToString();
-                    this.ChannelPointRewardMaxPerUserString = this.ChannelPointRewardMaxPerUser.ToString();
-                    this.ChannelPointRewardGlobalCooldownString = this.ChannelPointRewardGlobalCooldown.ToString();
+                    if (this.ChannelPointRewardCost >= 0)
+                    {
+                        this.ChannelPointRewardCostString = this.ChannelPointRewardCost.ToString();
+                        this.ChannelPointRewardMaxPerStreamString = this.ChannelPointRewardMaxPerStream.ToString();
+                        this.ChannelPointRewardMaxPerUserString = this.ChannelPointRewardMaxPerUser.ToString();
+                        this.ChannelPointRewardGlobalCooldownString = this.ChannelPointRewardGlobalCooldown.ToString();
 
-                    this.ChannelPointRewardCost = -1;
-                    this.ChannelPointRewardMaxPerStream = -1;
-                    this.ChannelPointRewardMaxPerUser = -1;
-                    this.ChannelPointRewardGlobalCooldown = -1;
-                }
+                        this.ChannelPointRewardCost = -1;
+                        this.ChannelPointRewardMaxPerStream = -1;
+                        this.ChannelPointRewardMaxPerUser = -1;
+                        this.ChannelPointRewardGlobalCooldown = -1;
+                    }
 #pragma warning restore CS0612 // Type or member is obsolete
 
-                int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardCostString, parameters), out int cost);
-                if (cost > 0) { jobj["cost"] = cost; }
+                    int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardCostString, parameters), out int cost);
+                    if (cost > 0) { jobj["cost"] = cost; }
 
-                if (this.ChannelPointRewardUpdateCooldownsAndLimits)
-                {
-                    int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardMaxPerStreamString, parameters), out int maxPerStream);
-                    if (maxPerStream > 0)
+                    if (this.ChannelPointRewardUpdateCooldownsAndLimits)
                     {
-                        jobj["max_per_stream_setting"] = new JObject()
+                        int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardMaxPerStreamString, parameters), out int maxPerStream);
+                        if (maxPerStream > 0)
+                        {
+                            jobj["max_per_stream_setting"] = new JObject()
                         {
                             { "is_enabled", true },
                             { "max_per_stream", maxPerStream}
                         };
-                    }
-                    else
-                    {
-                        jobj["max_per_stream_setting"] = new JObject()
+                        }
+                        else
+                        {
+                            jobj["max_per_stream_setting"] = new JObject()
                         {
                             { "is_enabled", false },
                         };
-                    }
+                        }
 
-                    int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardMaxPerUserString, parameters), out int maxPerUser);
-                    if (maxPerUser > 0)
-                    {
-                        jobj["max_per_user_per_stream_setting"] = new JObject()
+                        int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardMaxPerUserString, parameters), out int maxPerUser);
+                        if (maxPerUser > 0)
+                        {
+                            jobj["max_per_user_per_stream_setting"] = new JObject()
                         {
                             { "is_enabled", true },
                             { "max_per_user_per_stream", maxPerUser }
                         };
-                    }
-                    else
-                    {
-                        jobj["max_per_user_per_stream_setting"] = new JObject()
+                        }
+                        else
+                        {
+                            jobj["max_per_user_per_stream_setting"] = new JObject()
                         {
                             { "is_enabled", false },
                         };
-                    }
+                        }
 
-                    int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardGlobalCooldownString, parameters), out int globalCooldown);
-                    if (globalCooldown > 0)
-                    {
-                        jobj["global_cooldown_setting"] = new JObject()
+                        int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardGlobalCooldownString, parameters), out int globalCooldown);
+                        if (globalCooldown > 0)
+                        {
+                            jobj["global_cooldown_setting"] = new JObject()
                         {
                             { "is_enabled", true },
                             { "global_cooldown_seconds", globalCooldown * 60 }
                         };
-                    }
-                    else
-                    {
-                        jobj["global_cooldown_setting"] = new JObject()
+                        }
+                        else
+                        {
+                            jobj["global_cooldown_setting"] = new JObject()
                         {
                             { "is_enabled", false },
                         };
+                        }
+                    }
+
+                    CustomChannelPointRewardModel reward = await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateCustomChannelPointReward(ServiceManager.Get<TwitchSessionService>().User, this.ChannelPointRewardID, jobj);
+                    if (reward == null)
+                    {
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.TwitchActionChannelPointRewardCouldNotBeUpdated, StreamingPlatformTypeEnum.Twitch);
                     }
                 }
-
-                CustomChannelPointRewardModel reward = await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateCustomChannelPointReward(ServiceManager.Get<TwitchSessionService>().User, this.ChannelPointRewardID, jobj);
-                if (reward == null)
+                else if (this.ActionType == TwitchActionType.CreatePoll)
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.TwitchActionChannelPointRewardCouldNotBeUpdated, StreamingPlatformTypeEnum.Twitch);
-                }
-            }
-            else if (this.ActionType == TwitchActionType.CreatePoll)
-            {
-                List<CreatePollChoiceModel> choices = new List<CreatePollChoiceModel>();
-                foreach (string choice in this.PollChoices)
-                {
-                    choices.Add(new CreatePollChoiceModel()
+                    List<CreatePollChoiceModel> choices = new List<CreatePollChoiceModel>();
+                    foreach (string choice in this.PollChoices)
                     {
-                        title = await ReplaceStringWithSpecialModifiers(choice, parameters)
-                    });
-                }
-
-                PollModel poll = await ServiceManager.Get<TwitchSessionService>().UserConnection.CreatePoll(new CreatePollModel()
-                {
-                    broadcaster_id = ServiceManager.Get<TwitchSessionService>().UserID,
-                    title = await ReplaceStringWithSpecialModifiers(this.PollTitle, parameters),
-                    duration = this.PollDurationSeconds,
-                    channel_points_voting_enabled = this.PollChannelPointsCost > 0,
-                    channel_points_per_vote = this.PollChannelPointsCost,
-                    bits_voting_enabled = this.PollBitsCost > 0,
-                    bits_per_vote = this.PollBitsCost,
-                    choices = choices
-                });
-
-                if (poll == null)
-                {
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.TwitchPollFailedToCreate);
-                    return;
-                }
-
-                if (this.Actions.Count > 0)
-                {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
-                    {
-                        await Task.Delay(1000 * (this.PollDurationSeconds + 2));
-
-                        for (int i = 0; i < 5; i++)
+                        choices.Add(new CreatePollChoiceModel()
                         {
-                            PollModel results = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetPoll(ServiceManager.Get<TwitchSessionService>().User, poll.id);
-                            if (results != null)
-                            {
-                                if (string.Equals(results.status, "COMPLETED", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    int maxVotes = results.choices.Max(c => c.votes);
-                                    IEnumerable<PollChoiceModel> winningChoices = results.choices.Where(c => c.votes == maxVotes);
-                                    parameters.SpecialIdentifiers[PollChoiceSpecialIdentifier] = string.Join(" & ", winningChoices.Select(c => c.title));
+                            title = await ReplaceStringWithSpecialModifiers(choice, parameters)
+                        });
+                    }
 
-                                    await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(this.Actions, parameters));
-                                    return;
-                                }
-                                else if (!string.Equals(results.status, "ACTIVE", StringComparison.OrdinalIgnoreCase))
+                    PollModel poll = await ServiceManager.Get<TwitchSessionService>().UserConnection.CreatePoll(new CreatePollModel()
+                    {
+                        broadcaster_id = ServiceManager.Get<TwitchSessionService>().UserID,
+                        title = await ReplaceStringWithSpecialModifiers(this.PollTitle, parameters),
+                        duration = this.PollDurationSeconds,
+                        channel_points_voting_enabled = this.PollChannelPointsCost > 0,
+                        channel_points_per_vote = this.PollChannelPointsCost,
+                        bits_voting_enabled = this.PollBitsCost > 0,
+                        bits_per_vote = this.PollBitsCost,
+                        choices = choices
+                    });
+
+                    if (poll == null)
+                    {
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.TwitchPollFailedToCreate);
+                        return;
+                    }
+
+                    if (this.Actions.Count > 0)
+                    {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                        {
+                            await Task.Delay(1000 * (this.PollDurationSeconds + 2));
+
+                            for (int i = 0; i < 5; i++)
+                            {
+                                PollModel results = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetPoll(ServiceManager.Get<TwitchSessionService>().User, poll.id);
+                                if (results != null)
                                 {
-                                    return;
+                                    if (string.Equals(results.status, "COMPLETED", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        int maxVotes = results.choices.Max(c => c.votes);
+                                        IEnumerable<PollChoiceModel> winningChoices = results.choices.Where(c => c.votes == maxVotes);
+                                        parameters.SpecialIdentifiers[PollChoiceSpecialIdentifier] = string.Join(" & ", winningChoices.Select(c => c.title));
+
+                                        await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(this.Actions, parameters));
+                                        return;
+                                    }
+                                    else if (!string.Equals(results.status, "ACTIVE", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        return;
+                                    }
                                 }
+
+                                await Task.Delay(2000);
                             }
 
-                            await Task.Delay(2000);
-                        }
-
-                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.TwitchPollFailedToGetResults);
-                    }, new CancellationToken());
+                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.TwitchPollFailedToGetResults);
+                        }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    }
                 }
-            }
-            else if (this.ActionType == TwitchActionType.CreatePrediction)
-            {
-                List<CreatePredictionOutcomeModel> outcomes = new List<CreatePredictionOutcomeModel>();
-                foreach (string outcome in this.PredictionOutcomes)
+                else if (this.ActionType == TwitchActionType.CreatePrediction)
                 {
-                    outcomes.Add(new CreatePredictionOutcomeModel()
+                    List<CreatePredictionOutcomeModel> outcomes = new List<CreatePredictionOutcomeModel>();
+                    foreach (string outcome in this.PredictionOutcomes)
                     {
-                        title = await ReplaceStringWithSpecialModifiers(outcome, parameters)
-                    });
-                }
-
-                PredictionModel prediction = await ServiceManager.Get<TwitchSessionService>().UserConnection.CreatePrediction(new CreatePredictionModel()
-                {
-                    broadcaster_id = ServiceManager.Get<TwitchSessionService>().UserID,
-                    title = await ReplaceStringWithSpecialModifiers(this.PredictionTitle, parameters),
-                    prediction_window = this.PredictionDurationSeconds,
-                    outcomes = outcomes
-                });
-
-                if (prediction == null)
-                {
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.TwitchPredictionFailedToCreate);
-                    return;
-                }
-
-                if (this.Actions.Count > 0)
-                {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
-                    {
-                        await Task.Delay(1000 * this.PredictionDurationSeconds);
-
-                        while (true)
+                        outcomes.Add(new CreatePredictionOutcomeModel()
                         {
-                            await Task.Delay(10000);
+                            title = await ReplaceStringWithSpecialModifiers(outcome, parameters)
+                        });
+                    }
 
-                            PredictionModel results = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetPrediction(ServiceManager.Get<TwitchSessionService>().User, prediction.id);
-                            if (results != null)
+                    PredictionModel prediction = await ServiceManager.Get<TwitchSessionService>().UserConnection.CreatePrediction(new CreatePredictionModel()
+                    {
+                        broadcaster_id = ServiceManager.Get<TwitchSessionService>().UserID,
+                        title = await ReplaceStringWithSpecialModifiers(this.PredictionTitle, parameters),
+                        prediction_window = this.PredictionDurationSeconds,
+                        outcomes = outcomes
+                    });
+
+                    if (prediction == null)
+                    {
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.TwitchPredictionFailedToCreate);
+                        return;
+                    }
+
+                    if (this.Actions.Count > 0)
+                    {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                        {
+                            await Task.Delay(1000 * this.PredictionDurationSeconds);
+
+                            while (true)
                             {
-                                if (string.Equals(results.status, "RESOLVED", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    PredictionOutcomeModel outcome = results.outcomes.FirstOrDefault(o => string.Equals(o.id, results.winning_outcome_id));
+                                await Task.Delay(10000);
 
-                                    parameters.SpecialIdentifiers[PredictionOutcomeSpecialIdentifier] = outcome?.title;
-
-                                    await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(this.Actions, parameters));
-                                    return;
-                                }
-                                else if (string.Equals(results.status, "CANCELED", StringComparison.OrdinalIgnoreCase))
+                                PredictionModel results = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetPrediction(ServiceManager.Get<TwitchSessionService>().User, prediction.id);
+                                if (results != null)
                                 {
-                                    return;
+                                    if (string.Equals(results.status, "RESOLVED", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        PredictionOutcomeModel outcome = results.outcomes.FirstOrDefault(o => string.Equals(o.id, results.winning_outcome_id));
+
+                                        parameters.SpecialIdentifiers[PredictionOutcomeSpecialIdentifier] = outcome?.title;
+
+                                        await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(this.Actions, parameters));
+                                        return;
+                                    }
+                                    else if (string.Equals(results.status, "CANCELED", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        return;
+                                    }
                                 }
                             }
-                        }
-                    }, new CancellationToken());
+                        }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    }
+                }
+                else if (this.ActionType == TwitchActionType.EnableSlowChat || this.ActionType == TwitchActionType.EnableFollowersOnly)
+                {
+                    if (int.TryParse(await ReplaceStringWithSpecialModifiers(this.TimeLength, parameters), out int timeLength) && timeLength > 0)
+                    {
+                        if (this.ActionType == TwitchActionType.EnableSlowChat)
+                        {
+                            await ServiceManager.Get<ChatService>().SendMessage("/slow " + timeLength, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                        }
+                        else if (this.ActionType == TwitchActionType.EnableFollowersOnly)
+                        {
+                            await ServiceManager.Get<ChatService>().SendMessage("/followers " + timeLength, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                        }
+                    }
+                }
+                else if (this.ActionType == TwitchActionType.EnableEmoteOnly)
+                {
+                    await ServiceManager.Get<ChatService>().SendMessage("/emoteonly", sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                }
+                else if (this.ActionType == TwitchActionType.DisableEmoteOnly)
+                {
+                    await ServiceManager.Get<ChatService>().SendMessage("/emoteonlyoff", sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                }
+                else if (this.ActionType == TwitchActionType.DisableFollowersOnly)
+                {
+                    await ServiceManager.Get<ChatService>().SendMessage("/followersoff", sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                }
+                else if (this.ActionType == TwitchActionType.DisableSlowChat)
+                {
+                    await ServiceManager.Get<ChatService>().SendMessage("/slowoff", sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                }
+                else if (this.ActionType == TwitchActionType.EnableSubscribersChat)
+                {
+                    await ServiceManager.Get<ChatService>().SendMessage("/subscribers", sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                }
+                else if (this.ActionType == TwitchActionType.DisableSubscriberChat)
+                {
+                    await ServiceManager.Get<ChatService>().SendMessage("/subscribersoff", sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
                 }
             }
         }

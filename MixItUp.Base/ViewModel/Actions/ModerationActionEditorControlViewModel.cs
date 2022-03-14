@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Model;
-using MixItUp.Base.Model.Actions;
+﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
@@ -27,7 +26,16 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private ModerationActionTypeEnum selectedActionType;
 
-        public bool ShowTargetUserGrid { get { return this.SelectedActionType != ModerationActionTypeEnum.ClearChat; } }
+        public bool ShowTargetUserGrid
+        {
+            get
+            {
+                return this.SelectedActionType == ModerationActionTypeEnum.TimeoutUser || this.SelectedActionType == ModerationActionTypeEnum.PurgeUser ||
+                    this.SelectedActionType == ModerationActionTypeEnum.BanUser || this.SelectedActionType == ModerationActionTypeEnum.UnbanUser ||
+                    this.SelectedActionType == ModerationActionTypeEnum.ModUser || this.SelectedActionType == ModerationActionTypeEnum.UnmodUser ||
+                    this.SelectedActionType == ModerationActionTypeEnum.AddModerationStrike || this.SelectedActionType == ModerationActionTypeEnum.RemoveModerationStrike;
+            }
+        }
 
         public string TargetUsername
         {

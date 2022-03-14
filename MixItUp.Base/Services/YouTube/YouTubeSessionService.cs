@@ -16,6 +16,7 @@ namespace MixItUp.Base.Services.YouTube
         public YouTubePlatformService BotConnection { get; private set; }
         public Channel User { get; private set; }
         public Channel Bot { get; private set; }
+        public LiveBroadcast Broadcast { get; private set; }
 
         public bool IsConnected { get { return this.UserConnection != null; } }
         public bool IsBotConnected { get { return this.BotConnection != null; } }
@@ -25,6 +26,7 @@ namespace MixItUp.Base.Services.YouTube
         public string BotID { get { return this.Bot?.Id; } }
         public string Botname { get { return this.Bot?.Snippet?.Title; } }
         public string ChannelID { get { return this.User?.Id; } }
+        public string ChannelLink { get { return this.User?.Snippet?.CustomUrl; } }
 
         public StreamingPlatformAccountModel UserAccount
         {
@@ -51,8 +53,7 @@ namespace MixItUp.Base.Services.YouTube
             }
         }
 
-        public LiveBroadcast Broadcast { get; private set; }
-        public bool StreamIsLive { get { return string.Equals(this.Broadcast?.Status?.LifeCycleStatus, "live", StringComparison.OrdinalIgnoreCase); } }
+        public bool IsLive { get { return string.Equals(this.Broadcast?.Status?.LifeCycleStatus, "live", StringComparison.OrdinalIgnoreCase); } }
 
         public async Task<Result> ConnectUser()
         {
@@ -63,7 +64,7 @@ namespace MixItUp.Base.Services.YouTube
                 this.User = await this.UserConnection.GetCurrentChannel();
                 if (this.User == null)
                 {
-                    return new Result("Failed to get YouTube channel data");
+                    return new Result(MixItUp.Base.Resources.YouTubeFailedToGetUserData);
                 }
             }
             return result;
@@ -78,7 +79,7 @@ namespace MixItUp.Base.Services.YouTube
                 this.Bot = await this.BotConnection.GetCurrentChannel();
                 if (this.Bot == null)
                 {
-                    return new Result("Failed to get YouTube bot data");
+                    return new Result(MixItUp.Base.Resources.YouTubeFailedToGetBotData);
                 }
             }
             return result;
@@ -106,7 +107,7 @@ namespace MixItUp.Base.Services.YouTube
                     this.User = await this.UserConnection.GetCurrentChannel();
                     if (this.User == null)
                     {
-                        return new Result("Failed to get YouTube channel data");
+                        return new Result(MixItUp.Base.Resources.YouTubeFailedToGetUserData);
                     }
 
                     if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].BotOAuthToken != null)
@@ -118,13 +119,13 @@ namespace MixItUp.Base.Services.YouTube
                             this.Bot = await this.BotConnection.GetCurrentChannel();
                             if (this.Bot == null)
                             {
-                                return new Result("Failed to get YouTube bot data");
+                                return new Result(MixItUp.Base.Resources.YouTubeFailedToGetBotData);
                             }
                         }
                         else
                         {
 
-                            return new Result(success: true, message: "Failed to connect YouTube bot account, please manually reconnect");
+                            return new Result(success: true, message: MixItUp.Base.Resources.YouTubeFailedToConnectBotAccount);
                         }
                     }
                 }
@@ -177,7 +178,7 @@ namespace MixItUp.Base.Services.YouTube
                         {
                             Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.UserID} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserID}");
                             settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserOAuthToken.ResetToken();
-                            return new Result("The account you are logged in as on YouTube does not match the account for this settings. Please log in as the correct account on YouTube.");
+                            return new Result(string.Format(MixItUp.Base.Resources.StreamingPlatformIncorrectAccount, StreamingPlatformTypeEnum.YouTube));
                         }
                     }
 
@@ -189,14 +190,14 @@ namespace MixItUp.Base.Services.YouTube
                     if (platformServiceTasks.Any(c => !c.Result.Success))
                     {
                         string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
-                        return new Result("Failed to connect to YouTube services:" + Environment.NewLine + Environment.NewLine + errors);
+                        return new Result(MixItUp.Base.Resources.YouTubeFailedToConnectHeader + Environment.NewLine + Environment.NewLine + errors);
                     }
                 }
                 catch (Exception ex)
                 {
                     Logger.Log(ex);
-                    return new Result("Failed to connect to YouTube services. If this continues, please visit the Mix It Up Discord for assistance." +
-                        Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
+                    return new Result(MixItUp.Base.Resources.YouTubeFailedToConnect +
+                        Environment.NewLine + Environment.NewLine + MixItUp.Base.Resources.ErrorHeader + ex.Message);
                 }
             }
             return new Result();
@@ -204,7 +205,7 @@ namespace MixItUp.Base.Services.YouTube
 
         public async Task<Result> InitializeBot(SettingsV3Model settings)
         {
-            if (this.BotConnection != null && ServiceManager.Has<YouTubeChatService>())
+            if (this.BotConnection != null)
             {
                 Result result = await ServiceManager.Get<YouTubeChatService>().ConnectBot();
                 if (!result.Success)
@@ -217,18 +218,12 @@ namespace MixItUp.Base.Services.YouTube
 
         public async Task CloseUser()
         {
-            if (ServiceManager.Has<YouTubeChatService>())
-            {
-                await ServiceManager.Get<YouTubeChatService>().DisconnectUser();
-            }
+            await ServiceManager.Get<YouTubeChatService>().DisconnectUser();
         }
 
         public async Task CloseBot()
         {
-            if (ServiceManager.Has<YouTubeChatService>())
-            {
-                await ServiceManager.Get<YouTubeChatService>().DisconnectBot();
-            }
+            await ServiceManager.Get<YouTubeChatService>().DisconnectBot();
         }
 
         public void SaveSettings(SettingsV3Model settings)

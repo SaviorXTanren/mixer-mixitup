@@ -168,7 +168,7 @@ namespace MixItUp.Base
         {
             if (ChannelSession.Settings == null)
             {
-                return new Result("No settings file has been loaded");
+                return new Result(MixItUp.Base.Resources.SettingsNoFileHasBeenLoaded);
             }
 
             try
@@ -201,7 +201,7 @@ namespace MixItUp.Base
                     }
                 }
 
-                StreamingPlatforms.ForEachPlatform((p) =>
+                StreamingPlatforms.ForEachPlatform(p =>
                 {
                     if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(p) && StreamingPlatforms.GetPlatformSessionService(p).IsConnected)
                     {
@@ -213,13 +213,13 @@ namespace MixItUp.Base
                 {
                     if (ChannelSession.Settings.ID != setting.ID)
                     {
-                        StreamingPlatforms.ForEachPlatform((p) =>
+                        StreamingPlatforms.ForEachPlatform(p =>
                         {
                             if (setting.StreamingPlatformAuthentications.ContainsKey(p) && ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(p))
                             {
                                 if (setting.StreamingPlatformAuthentications[p].IsEnabled && setting.StreamingPlatformAuthentications[p].Equals(ChannelSession.Settings.StreamingPlatformAuthentications[p]))
                                 {
-                                    result = new Result($"There already exists settings with the same account for {p}. Please sign in with a different account or re-launch Mix It Up to select those settings from the drop-down.");
+                                    result = new Result(string.Format(MixItUp.Base.Resources.SettingsAlreadyExistForAccount, p));
                                     return;
                                 }
                             }
@@ -232,7 +232,11 @@ namespace MixItUp.Base
                     }
                 }
 
-                if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+                if (StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).IsConnected)
+                {
+                    ChannelSession.Settings.Name = StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).Username;
+                }
+                else if (ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
                     ChannelSession.Settings.Name = ServiceManager.Get<TwitchSessionService>().Username;
                 }
@@ -253,6 +257,10 @@ namespace MixItUp.Base
                     ChannelSession.Settings.Name = "Test";
                 }
 
+                if (StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).IsConnected)
+                {
+                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(ChannelSession.Settings.DefaultStreamingPlatform, StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).UserID);
+                }
                 if (ChannelSession.User == null && ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
                     ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, ServiceManager.Get<TwitchSessionService>().UserID);
@@ -325,7 +333,7 @@ namespace MixItUp.Base
                     Dictionary<IExternalService, Task<Result>> externalServiceTasks = new Dictionary<IExternalService, Task<Result>>();
                     foreach (var kvp in externalServiceToConnect)
                     {
-                        Logger.Log(LogLevel.Debug, "Trying automatic OAuth service connection: " + kvp.Key.Name);
+                        Logger.Log(LogLevel.Debug, "Trying automatic OAuth service connection: " + kvp.Key.GetType().ToString());
 
                         try
                         {
@@ -340,7 +348,7 @@ namespace MixItUp.Base
                         }
                         catch (Exception sex)
                         {
-                            Logger.Log(LogLevel.Error, "Error in external service initial connection: " + kvp.Key.Name);
+                            Logger.Log(LogLevel.Error, "Error in external service initial connection: " + kvp.Key.GetType().ToString());
                             Logger.Log(sex);
                         }
                     }
@@ -362,7 +370,7 @@ namespace MixItUp.Base
                         {
                             if (kvp.Value.Result != null && !kvp.Value.Result.Success && kvp.Key is IOAuthExternalService)
                             {
-                                Logger.Log(LogLevel.Debug, "Automatic OAuth token connection failed, trying manual connection: " + kvp.Key.Name);
+                                Logger.Log(LogLevel.Debug, "Automatic OAuth token connection failed, trying manual connection: " + kvp.Key.GetType().ToString());
                                 result = await kvp.Key.Connect();
                                 if (!result.Success)
                                 {
@@ -372,7 +380,7 @@ namespace MixItUp.Base
                         }
                         catch (Exception sex)
                         {
-                            Logger.Log(LogLevel.Error, "Error in external service failed re-connection: " + kvp.Key.Name);
+                            Logger.Log(LogLevel.Error, "Error in external service failed re-connection: " + kvp.Key.GetType().ToString());
                             Logger.Log(sex);
                             failedServices.Add(kvp.Key);
                         }
@@ -380,18 +388,14 @@ namespace MixItUp.Base
 
                     if (failedServices.Count > 0)
                     {
-                        Logger.Log(LogLevel.Debug, "Connection failed for services: " + string.Join(", ", failedServices.Select(s => s.Name)));
+                        Logger.Log(LogLevel.Debug, "Connection failed for services: " + string.Join(", ", failedServices.Select(s => s.GetType().ToString())));
 
-                        StringBuilder message = new StringBuilder();
-                        message.AppendLine("The following services could not be connected:");
-                        message.AppendLine();
+                        StringBuilder failedServiceMessage = new StringBuilder();
                         foreach (IExternalService service in failedServices)
                         {
-                            message.AppendLine(" - " + service.Name);
+                            failedServiceMessage.AppendLine(" - " + service.Name);
                         }
-                        message.AppendLine();
-                        message.Append("We will attempt to re-connect with the service when possible. If this continues, please go to the Services page to reconnect them manually.");
-                        await DialogHelper.ShowMessage(message.ToString());
+                        await DialogHelper.ShowMessage(string.Format(MixItUp.Base.Resources.ConnectedServicesFailed, failedServiceMessage.ToString()));
                     }
                 }
 
@@ -469,8 +473,7 @@ namespace MixItUp.Base
             {
                 Logger.Log(ex);
                 Logger.Log(LogLevel.Error, "Session Initialization - " + JSONSerializerHelper.SerializeToString(ex));
-                return new Result("Failed to get channel information. If this continues, please visit the Mix It Up Discord for assistance." +
-                        Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
+                return new Result(MixItUp.Base.Resources.FailedToInitializeSession + Environment.NewLine + Environment.NewLine + MixItUp.Base.Resources.ErrorHeader + ex.Message);
             }
         }
 
@@ -506,7 +509,7 @@ namespace MixItUp.Base
                     await ChannelSession.SaveSettings();
                     sessionBackgroundTimer = 0;
 
-                    if (ServiceManager.Get<TwitchSessionService>().IsConnected && ServiceManager.Get<TwitchSessionService>().StreamIsLive)
+                    if (ServiceManager.Get<TwitchSessionService>().IsConnected && ServiceManager.Get<TwitchSessionService>().IsLive)
                     {
                         try
                         {
@@ -520,7 +523,7 @@ namespace MixItUp.Base
                                 type = "Affiliate";
                             }
                             ServiceManager.Get<ITelemetryService>().TrackChannelMetrics(type, ServiceManager.Get<TwitchSessionService>().Stream.viewer_count, ServiceManager.Get<UserService>().ActiveUserCount,
-                                ServiceManager.Get<TwitchSessionService>().Stream.game_name, ServiceManager.Get<TwitchSessionService>().User.view_count);
+                                ServiceManager.Get<TwitchSessionService>().Channel.game_name, ServiceManager.Get<TwitchSessionService>().User.view_count);
                         }
                         catch (Exception ex)
                         {
@@ -536,7 +539,7 @@ namespace MixItUp.Base
             if (ChannelSession.Settings.HotKeys.ContainsKey(hotKey.ToString()))
             {
                 HotKeyConfiguration hotKeyConfiguration = ChannelSession.Settings.HotKeys[hotKey.ToString()];
-                await ServiceManager.Get<CommandService>().Queue(hotKeyConfiguration.CommandID);
+                await ServiceManager.Get<CommandService>().Queue(hotKeyConfiguration.CommandID, new CommandParametersModel(platform: StreamingPlatformTypeEnum.All));
             }
         }
     }

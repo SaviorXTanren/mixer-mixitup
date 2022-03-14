@@ -46,7 +46,7 @@ namespace MixItUp.Base.Services
 
         public UserService()
         {
-            StreamingPlatforms.ForEachPlatform((p) =>
+            StreamingPlatforms.ForEachPlatform(p =>
             {
                 this.platformUserIDLookups[p] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
                 this.platformUsernameLookups[p] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
@@ -67,7 +67,7 @@ namespace MixItUp.Base.Services
                 return new UserV2ViewModel(ChannelSession.Settings.DefaultStreamingPlatform, ChannelSession.Settings.Users[id]);
             }
 
-            IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data("SELECT * FROM Users WHERE ID = @ID", new Dictionary<string, object>() { { "ID", id } });
+            IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data("SELECT * FROM Users WHERE ID = $ID", new Dictionary<string, object>() { { "$ID", id.ToString() } });
             if (results.Count() > 0)
             {
                 this.SetUserData(results.First());
@@ -100,23 +100,11 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            string platformLookup = null;
-            switch (platform)
+            IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data($"SELECT * FROM Users WHERE {platform.ToString()}ID = $PlatformID", new Dictionary<string, object>() { { "$PlatformID", platformID } });
+            if (results.Count() > 0)
             {
-                case StreamingPlatformTypeEnum.Twitch: platformLookup = "TwitchID"; break;
-                case StreamingPlatformTypeEnum.YouTube: platformLookup = "YouTubeID"; break;
-                case StreamingPlatformTypeEnum.Trovo: platformLookup = "TrovoID"; break;
-                case StreamingPlatformTypeEnum.Glimesh: platformLookup = "GlimeshID"; break;
-            }
-
-            if (!string.IsNullOrEmpty(platformLookup))
-            {
-                IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data($"SELECT * FROM Users WHERE {platformLookup} = @PlatformID", new Dictionary<string, object>() { { "PlatformID", platformID } });
-                if (results.Count() > 0)
-                {
-                    this.SetUserData(results.First());
-                    return new UserV2ViewModel(platform, results.First());
-                }
+                this.SetUserData(results.First());
+                return new UserV2ViewModel(platform, results.First());
             }
 
             if (performPlatformSearch)
@@ -153,7 +141,7 @@ namespace MixItUp.Base.Services
 
                 if (platformModel != null)
                 {
-                    return this.CreateUserInternal(platformModel);
+                    return await this.CreateUserInternal(platformModel);
                 }
             }
 
@@ -174,16 +162,15 @@ namespace MixItUp.Base.Services
             {
                 await StreamingPlatforms.ForEachPlatform(async (p) =>
                 {
-                    user = await this.GetUserByPlatformUsername(p, platformUsername, performPlatformSearch);
-                    if (user != null)
+                    if (user == null)
                     {
-                        return;
+                        user = await this.GetUserByPlatformUsername(p, platformUsername, performPlatformSearch);
                     }
                 });
                 return user;
             }
 
-            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id))
+            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername.ToLower(), out Guid id))
             {
                 user = await this.GetUserByID(id);
                 if (user != null)
@@ -192,23 +179,11 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            string platformLookup = null;
-            switch (platform)
+            IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data($"SELECT * FROM Users WHERE {platform}Username = $PlatformUsername", new Dictionary<string, object>() { { "$PlatformUsername", platformUsername } });
+            if (results.Count() > 0)
             {
-                case StreamingPlatformTypeEnum.Twitch: platformLookup = "TwitchUsername"; break;
-                case StreamingPlatformTypeEnum.YouTube: platformLookup = "YouTubeUsername"; break;
-                case StreamingPlatformTypeEnum.Trovo: platformLookup = "TrovoUsername"; break;
-                case StreamingPlatformTypeEnum.Glimesh: platformLookup = "GlimeshUsername"; break;
-            }
-
-            if (!string.IsNullOrEmpty(platformLookup))
-            {
-                IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data($"SELECT * FROM Users WHERE {platformLookup} = @PlatformUsername", new Dictionary<string, object>() { { "PlatformUsername", platformUsername } });
-                if (results.Count() > 0)
-                {
-                    this.SetUserData(results.First());
-                    return new UserV2ViewModel(platform, results.First());
-                }
+                this.SetUserData(results.First());
+                return new UserV2ViewModel(platform, results.First());
             }
 
             if (performPlatformSearch)
@@ -249,7 +224,7 @@ namespace MixItUp.Base.Services
 
                 if (platformModel != null)
                 {
-                    return this.CreateUserInternal(platformModel);
+                    return await this.CreateUserInternal(platformModel);
                 }
             }
 
@@ -263,18 +238,9 @@ namespace MixItUp.Base.Services
                 UserV2ViewModel user = await this.GetUserByPlatformID(platformModel.Platform, platformModel.ID, performPlatformSearch: false);
                 if (user == null)
                 {
-                    return this.CreateUserInternal(platformModel);
+                    return await this.CreateUserInternal(platformModel);
                 }
                 return user;
-            }
-            return null;
-        }
-
-        public static UserV2ViewModel CreateUserViewModel(UserV2Model user)
-        {
-            if (user != null)
-            {
-                return new UserV2ViewModel(ChannelSession.Settings.DefaultStreamingPlatform, user);
             }
             return null;
         }
@@ -299,7 +265,7 @@ namespace MixItUp.Base.Services
                 foreach (UserPlatformV2ModelBase pUser in user.GetAllPlatformData())
                 {
                     this.platformUserIDLookups[pUser.Platform].Remove(pUser.ID);
-                    this.platformUsernameLookups[pUser.Platform].Remove(pUser.Username);
+                    this.platformUsernameLookups[pUser.Platform].Remove(pUser.Username.ToLower());
                 }
                 this.activeUsers.Remove(user.ID);
 
@@ -319,23 +285,7 @@ namespace MixItUp.Base.Services
             await ServiceManager.Get<IDatabaseService>().Write(ChannelSession.Settings.DatabaseFilePath, "DELETE FROM Users");
         }
 
-        private UserV2ViewModel CreateUserInternal(UserPlatformV2ModelBase platformModel)
-        {
-            if (platformModel != null && !string.IsNullOrEmpty(platformModel.ID))
-            {
-                UserV2Model userModel = new UserV2Model(platformModel);
-                UserV2ViewModel user = new UserV2ViewModel(platformModel.Platform, userModel);
-
-                if (platformModel.Platform != StreamingPlatformTypeEnum.None)
-                {
-                    this.SetUserData(userModel, newData: true);
-                }
-                return user;
-            }
-            return null;
-        }
-
-        private void SetUserData(UserV2Model userData, bool newData = false)
+        public void SetUserData(UserV2Model userData)
         {
             if (userData != null && userData.ID != Guid.Empty && userData.GetPlatforms().Count() > 0 && !userData.HasPlatformData(StreamingPlatformTypeEnum.None))
             {
@@ -356,10 +306,33 @@ namespace MixItUp.Base.Services
                     {
                         UserPlatformV2ModelBase platformModel = userData.GetPlatformData<UserPlatformV2ModelBase>(platform);
                         this.platformUserIDLookups[platform][platformModel.ID] = userData.ID;
-                        this.platformUsernameLookups[platform][platformModel.Username] = userData.ID;
+                        this.platformUsernameLookups[platform][platformModel.Username.ToLower()] = userData.ID;
                     }
                 }
             }
+        }
+
+        private async Task<UserV2ViewModel> CreateUserInternal(UserPlatformV2ModelBase platformModel)
+        {
+            if (platformModel != null && !string.IsNullOrEmpty(platformModel.ID))
+            {
+                UserV2Model userModel = new UserV2Model(platformModel);
+                UserV2ViewModel user = new UserV2ViewModel(platformModel.Platform, userModel);
+
+                if (platformModel.Platform != StreamingPlatformTypeEnum.None)
+                {
+                    this.SetUserData(userModel);
+
+                    UserImportModel import = await ChannelSession.Settings.LoadUserImportData(platformModel.Platform, platformModel.ID, platformModel.Username);
+                    if (import != null)
+                    {
+                        user.MergeUserData(import);
+                        ChannelSession.Settings.ImportedUsers.Remove(import.ID);
+                    }
+                }
+                return user;
+            }
+            return null;
         }
 
         #endregion Users
@@ -413,18 +386,17 @@ namespace MixItUp.Base.Services
 
             if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
             {
-                StreamingPlatforms.ForEachPlatform((p) =>
+                StreamingPlatforms.ForEachPlatform(p =>
                 {
-                    user = this.GetActiveUserByPlatformUsername(p, platformUsername);
-                    if (user != null)
+                    if (user == null)
                     {
-                        return;
+                        user = this.GetActiveUserByPlatformUsername(p, platformUsername);
                     }
                 });
                 return user;
             }
 
-            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id))
+            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername.ToLower(), out Guid id))
             {
                 user = this.GetActiveUserByID(id);
                 if (user != null)
@@ -507,7 +479,7 @@ namespace MixItUp.Base.Services
 
         public async Task<UserV2ViewModel> RemoveActiveUser(StreamingPlatformTypeEnum platform, string platformUsername)
         {
-            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id))
+            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername.ToLower(), out Guid id))
             {
                 return await this.RemoveActiveUser(id);
             }

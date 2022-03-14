@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Chat"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:UsersControls="clr-namespace:MixItUp.WPF.Controls.Users"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              mc:Ignorable="d" 
@@ -33,7 +34,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="1" Visibility="{Binding User.HasWhisperNumber, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{Binding User.WhispererNumber, StringFormat=[Whisperer #{0}]}" FontSize="{Binding FontSize}" />
+            <TextBlock Grid.Column="1" Visibility="{Binding User.HasWhisperNumber, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{Binding Source=User.WhispererNumber, StringFormat={x:Static resx:Resources.WhisperNumberFormat}}" FontSize="{Binding FontSize}" />
 
             <TextBlock Grid.Column="3" Text="&#x2794;" FontSize="{Binding FontSize}" />
 

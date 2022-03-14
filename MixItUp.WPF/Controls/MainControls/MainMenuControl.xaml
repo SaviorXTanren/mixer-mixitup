@@ -57,18 +57,14 @@
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
 
                                         <Button x:Name="DisconnectionAlertButton" Style="{StaticResource MaterialDesignFlatButton}" Visibility="Collapsed" Width="40" HorizontalAlignment="Center" Margin="5,0">
-                                            <MaterialDesign:PackIcon Kind="LanDisconnect" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource AlertColor}" />
+                                            <MaterialDesign:PackIcon Kind="LanDisconnect" Style="{StaticResource ColoredBackgroundPackIcon}" />
                                         </Button>
 
                                         <Controls:StreamingPlatformStatusAlertControl />
 
-                                        <Button x:Name="SectionHelpButton" Style="{StaticResource MaterialDesignFlatButton}" Click="SectionHelpButton_Click" Visibility="{Binding HelpLinkVisibility}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Help}" Margin="5,0">
-                                            <MaterialDesign:PackIcon Kind="Help" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                        </Button>
+                                        <Controls:IconButton x:Name="SectionHelpButton" Style="{StaticResource MaterialDesignFlatButton}" Click="SectionHelpButton_Click" Visibility="{Binding HelpLinkVisibility}" HorizontalAlignment="Center" Icon="Help" ToolTip="{x:Static resx:Resources.Help}" Margin="5,0" />
 
-                                        <Button x:Name="SettingsButton" Style="{StaticResource MaterialDesignFlatButton}" Click="SettingsButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Settings}">
-                                            <MaterialDesign:PackIcon Kind="Settings" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                        </Button>
+                                        <Controls:IconButton x:Name="SettingsButton" Style="{StaticResource MaterialDesignFlatButton}" Click="SettingsButton_Click" HorizontalAlignment="Center" Icon="Settings" ToolTip="{x:Static resx:Resources.Settings}" />
 
                                     </StackPanel>
                                 </Grid>
@@ -92,9 +88,7 @@
                     <Grid>
                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" FontSize="22">Settings</TextBlock>
 
-                        <Button x:Name="CloseSettingsButton" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFlatButton}" Click="CloseSettingsButton_Click" Width="40" ToolTip="{x:Static resx:Resources.Close}">
-                            <MaterialDesign:PackIcon Kind="CloseCircleOutline" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                        </Button>
+                        <Controls:IconButton x:Name="CloseSettingsButton" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFlatButton}" Click="CloseSettingsButton_Click" Icon="CloseCircleOutline" ToolTip="{x:Static resx:Resources.Close}" />
                     </Grid>
                 </MaterialDesign:ColorZone>
             </DockPanel>

@@ -27,7 +27,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public string PlanTier { get; set; }
 
-        public int PlanTierNumber { get; set; }
+        public int PlanTierNumber { get; set; } = 1;
 
         public string PlanName { get; set; }
 
@@ -60,6 +60,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 this.PlanTier = this.PlanName = MixItUp.Base.Resources.Tier1;
             }
+            this.PlanTierNumber = 1;
 
             this.IsGiftedUpgrade = true;
         }
@@ -136,6 +137,8 @@ namespace MixItUp.Base.Services.Twitch
 
         public TwitchChatMessageViewModel Message { get; set; }
 
+        public bool IsAnonymous { get { return this.User.Platform == StreamingPlatformTypeEnum.None; } }
+
         public TwitchUserBitsCheeredModel(UserV2ViewModel user, PubSubBitsEventV2Model bitsEvent)
         {
             this.User = user;
@@ -203,7 +206,7 @@ namespace MixItUp.Base.Services.Twitch
         private List<TwitchMassGiftedSubEventModel> newMassGiftedSubTracker = new List<TwitchMassGiftedSubEventModel>();
         private Task giftedSubProcessorTask = null;
 
-        public override string Name { get { return "Twitch Events"; } }
+        public override string Name { get { return MixItUp.Base.Resources.TwitchEvents; } }
 
         public bool IsConnected { get; private set; }
 
@@ -350,7 +353,7 @@ namespace MixItUp.Base.Services.Twitch
 
                     GlobalEvents.FollowOccurred(user);
 
-                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} Followed", user.FullDisplayName), ChannelSession.Settings.AlertFollowColor));
+                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertFollow, user.FullDisplayName), ChannelSession.Settings.AlertFollowColor));
                 }
             }
         }
@@ -378,6 +381,7 @@ namespace MixItUp.Base.Services.Twitch
                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = subEvent.User.ID;
                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
+                subEvent.User.Roles.Add(UserRoleEnum.Subscriber);
                 subEvent.User.SubscribeDate = DateTimeOffset.Now;
                 subEvent.User.SubscriberTier = subEvent.PlanTierNumber;
                 subEvent.User.TotalMonthsSubbed++;
@@ -402,11 +406,11 @@ namespace MixItUp.Base.Services.Twitch
 
             if (subEvent.IsGiftedUpgrade)
             {
-                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(subEvent.User, string.Format("{0} Continued Their Gifted Sub at {1}", subEvent.User.FullDisplayName, subEvent.PlanTier), ChannelSession.Settings.AlertSubColor));
+                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(subEvent.User, string.Format(MixItUp.Base.Resources.AlertContinuedGiftedSubscriptionTier, subEvent.User.FullDisplayName, subEvent.PlanTier), ChannelSession.Settings.AlertSubColor));
             }
             else
             {
-                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(subEvent.User, string.Format("{0} Subscribed at {1}", subEvent.User.FullDisplayName, subEvent.PlanTier), ChannelSession.Settings.AlertSubColor));
+                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(subEvent.User, string.Format(MixItUp.Base.Resources.AlertSubscribedTier, subEvent.User.FullDisplayName, subEvent.PlanTier), ChannelSession.Settings.AlertSubColor));
             }
         }
 
@@ -479,7 +483,7 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void PubSub_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
         {
-            ChannelSession.DisconnectionOccurred("Twitch PubSub");
+            ChannelSession.DisconnectionOccurred(MixItUp.Base.Resources.TwitchPubSub);
 
             Result result;
             await this.Disconnect();
@@ -491,12 +495,12 @@ namespace MixItUp.Base.Services.Twitch
             }
             while (!result.Success);
 
-            ChannelSession.ReconnectionOccurred("Twitch PubSub");
+            ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.TwitchPubSub);
         }
 
         private void PubSub_OnReconnectReceived(object sender, System.EventArgs e)
         {
-            ChannelSession.ReconnectionOccurred("Twitch PubSub");
+            ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.TwitchPubSub);
         }
 
         private void PubSub_OnSentOccurred(object sender, string packet)
@@ -539,23 +543,29 @@ namespace MixItUp.Base.Services.Twitch
 
             TwitchUserBitsCheeredModel bitsCheered = new TwitchUserBitsCheeredModel(user, packet);
 
-            foreach (CurrencyModel bitsCurrency in ChannelSession.Settings.Currency.Values.Where(c => c.SpecialTracking == CurrencySpecialTrackingEnum.Bits))
+            if (!bitsCheered.IsAnonymous)
             {
-                bitsCurrency.AddAmount(user, bitsCheered.Amount);
-            }
-
-            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
-            {
-                if (user.MeetsRole(streamPass.UserPermission))
+                foreach (CurrencyModel bitsCurrency in ChannelSession.Settings.Currency.Values.Where(c => c.SpecialTracking == CurrencySpecialTrackingEnum.Bits))
                 {
-                    streamPass.AddAmount(user, (int)Math.Ceiling(streamPass.BitsBonus * bitsCheered.Amount));
+                    bitsCurrency.AddAmount(user, bitsCheered.Amount);
                 }
+
+                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                {
+                    if (user.MeetsRole(streamPass.UserPermission))
+                    {
+                        streamPass.AddAmount(user, (int)Math.Ceiling(streamPass.BitsBonus * bitsCheered.Amount));
+                    }
+                }
+
+                if (user.HasPlatformData(StreamingPlatformTypeEnum.Twitch))
+                {
+                    ((TwitchUserPlatformV2Model)user.PlatformModel).TotalBitsCheered = (uint)packet.total_bits_used;
+                }
+
+                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheeredUserData] = user.ID;
+                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheeredAmountData] = bitsCheered.Amount;
             }
-
-            ((TwitchUserPlatformV2Model)user.PlatformModel).TotalBitsCheered = (uint)packet.total_bits_used;
-
-            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheeredUserData] = user.ID;
-            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheeredAmountData] = bitsCheered.Amount;
 
             if (string.IsNullOrEmpty(await ServiceManager.Get<ModerationService>().ShouldTextBeModerated(user, bitsCheered.Message.PlainTextMessage)))
             {
@@ -564,9 +574,10 @@ namespace MixItUp.Base.Services.Twitch
                 parameters.SpecialIdentifiers["bitslifetimeamount"] = packet.total_bits_used.ToString();
                 parameters.SpecialIdentifiers["messagenocheermotes"] = bitsCheered.Message.PlainTextMessageNoCheermotes;
                 parameters.SpecialIdentifiers["message"] = bitsCheered.Message.PlainTextMessage;
+                parameters.SpecialIdentifiers["isanonymous"] = bitsCheered.IsAnonymous.ToString();
                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelBitsCheered, parameters);
             }
-            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} Cheered {1} Bits", user.FullDisplayName, bitsCheered.Amount), ChannelSession.Settings.AlertTwitchBitsCheeredColor));
+            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertTwitchBitsCheered, user.FullDisplayName, bitsCheered.Amount), ChannelSession.Settings.AlertTwitchBitsCheeredColor));
             GlobalEvents.BitsOccurred(bitsCheered);
         }
 
@@ -601,6 +612,7 @@ namespace MixItUp.Base.Services.Twitch
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = months;
 
+                    user.Roles.Add(UserRoleEnum.Subscriber);
                     user.SubscribeDate = DateTimeOffset.Now.SubtractMonths(months - 1);
                     user.SubscriberTier = TwitchEventService.GetSubTierNumberFromText(packet.sub_plan);
                     user.TotalMonthsSubbed++;
@@ -625,7 +637,7 @@ namespace MixItUp.Base.Services.Twitch
                 }
 
                 GlobalEvents.ResubscribeOccurred(new Tuple<UserV2ViewModel, int>(user, months));
-                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} Re-Subscribed For {1} Months at {2}", user.FullDisplayName, months, planTier), ChannelSession.Settings.AlertSubColor));
+                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertResubscribedTier, user.FullDisplayName, months, planTier), ChannelSession.Settings.AlertSubColor));
             }
         }
 
@@ -736,6 +748,7 @@ namespace MixItUp.Base.Services.Twitch
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = giftedSubEvent.Receiver.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = giftedSubEvent.MonthsGifted;
 
+            giftedSubEvent.Receiver.Roles.Add(UserRoleEnum.Subscriber);
             giftedSubEvent.Receiver.SubscribeDate = DateTimeOffset.Now;
             giftedSubEvent.Receiver.SubscriberTier = giftedSubEvent.PlanTierNumber;
             giftedSubEvent.Receiver.TotalSubsReceived += (uint)giftedSubEvent.MonthsGifted;
@@ -768,7 +781,7 @@ namespace MixItUp.Base.Services.Twitch
                 parameters.TargetUser = giftedSubEvent.Receiver;
                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelSubscriptionGifted, parameters);
 
-                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(giftedSubEvent.Gifter, string.Format("{0} Gifted A {1} Subscription To {2}", giftedSubEvent.Gifter.FullDisplayName, giftedSubEvent.PlanTier, giftedSubEvent.Receiver.FullDisplayName), ChannelSession.Settings.AlertGiftedSubColor));
+                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(giftedSubEvent.Gifter, string.Format(MixItUp.Base.Resources.AlertSubscriptionGiftedTier, giftedSubEvent.Gifter.FullDisplayName, giftedSubEvent.PlanTier, giftedSubEvent.Receiver.FullDisplayName), ChannelSession.Settings.AlertGiftedSubColor));
             }
 
             GlobalEvents.SubscriptionGiftedOccurred(giftedSubEvent.Gifter, giftedSubEvent.Receiver);
@@ -789,7 +802,7 @@ namespace MixItUp.Base.Services.Twitch
 
             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelMassSubscriptionsGifted, parameters);
 
-            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(massGiftedSubEvent.Gifter, string.Format("{0} Gifted {1} {2} Subs", massGiftedSubEvent.Gifter.FullDisplayName, massGiftedSubEvent.TotalGifted, massGiftedSubEvent.PlanTier), ChannelSession.Settings.AlertMassGiftedSubColor));
+            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(massGiftedSubEvent.Gifter, string.Format(MixItUp.Base.Resources.AlertMassSubscriptionsGiftedTier, massGiftedSubEvent.Gifter.FullDisplayName, massGiftedSubEvent.TotalGifted, massGiftedSubEvent.PlanTier), ChannelSession.Settings.AlertMassGiftedSubColor));
         }
 
         private async void PubSub_OnChannelPointsRedeemed(object sender, PubSubChannelPointsRedemptionEventModel packet)
@@ -828,7 +841,7 @@ namespace MixItUp.Base.Services.Twitch
                     await ServiceManager.Get<CommandService>().Queue(command, new CommandParametersModel(user, platform: StreamingPlatformTypeEnum.Twitch, arguments: arguments, specialIdentifiers: channelPointSpecialIdentifiers));
                 }
             }
-            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} Redeemed {1}", user.FullDisplayName, redemption.reward.title), ChannelSession.Settings.AlertTwitchChannelPointsColor));
+            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertTwitchChannelPointRedeemed, user.FullDisplayName, redemption.reward.title), ChannelSession.Settings.AlertTwitchChannelPointsColor));
         }
 
         private async void PubSub_OnWhisperReceived(object sender, PubSubWhisperEventModel packet)

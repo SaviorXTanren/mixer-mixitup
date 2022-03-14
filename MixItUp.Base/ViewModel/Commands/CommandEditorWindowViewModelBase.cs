@@ -107,7 +107,7 @@ namespace MixItUp.Base.ViewModel.Commands
         }
         private string name;
 
-        public IEnumerable<string> CommandGroups { get { return ChannelSession.Settings.CommandGroups.Keys.ToList(); } }
+        public IEnumerable<string> CommandGroups { get { return ChannelSession.Settings.CommandGroups.Keys.ToList().OrderBy(cg => cg); } }
 
         public string SelectedCommandGroup
         {
@@ -264,7 +264,7 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public abstract Task SaveCommandToSettings(CommandModelBase command);
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             if (this.existingCommand != null)
             {

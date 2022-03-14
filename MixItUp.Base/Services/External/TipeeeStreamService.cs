@@ -178,7 +178,7 @@ namespace MixItUp.Base.Services.External
             this.socket = socket;
         }
 
-        public override string Name { get { return "TipeeeStream"; } }
+        public override string Name { get { return MixItUp.Base.Resources.TipeeeStream; } }
 
         public override async Task<Result> Connect()
         {
@@ -330,13 +330,13 @@ namespace MixItUp.Base.Services.External
 
         public void WebSocketConnectedOccurred()
         {
-            ChannelSession.ReconnectionOccurred("TipeeeStream");
+            ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.TipeeeStream);
             this.OnWebSocketConnectedOccurred(this, new EventArgs());
         }
 
         public void WebSocketDisconnectedOccurred()
         {
-            ChannelSession.DisconnectionOccurred("TipeeeStream");
+            ChannelSession.DisconnectionOccurred(MixItUp.Base.Resources.TipeeeStream);
             this.OnWebSocketDisconnectedOccurred(this, new EventArgs());
         }
 

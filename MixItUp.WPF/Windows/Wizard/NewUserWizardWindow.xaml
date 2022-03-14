@@ -19,7 +19,7 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
                      
         Icon="./../../Logo.ico"                        
-        Title="Mix It Up - New User Wizard" Height="600" Width="800">
+        Title="{x:Static resx:Resources.MixItUpNewUserWizard}" Height="600" Width="800">
     <Windows:LoadingWindowBase.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Windows:LoadingWindowBase.Resources>
@@ -56,9 +56,9 @@
 
                     <Image Source="/Assets/Images/MixItUp-Logo-Name.png" Width="500" Grid.Row="0" HorizontalAlignment="Center" Margin="-15,0,0,0" />
 
-                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="700">This wizard will help get started with Mix It Up by logging you into your streaming platform accounts, help you import your existing data from some bots, and walk you through some of the ropes of how things work.</TextBlock>
+                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="700" Text="{x:Static resx:Resources.WizardIntro1}" />
 
-                    <TextBlock Grid.Row="4" TextWrapping="Wrap" Width="700">Before we get started, we want to let you know about some great resources you can use to help you with problems or give you ideas of things to create. Click any of the buttons below to go to that resource:</TextBlock>
+                    <TextBlock Grid.Row="4" TextWrapping="Wrap" Width="700" Text="{x:Static resx:Resources.WizardIntro2}" />
 
                     <Grid Grid.Row="6" HorizontalAlignment="Center">
                         <Grid.ColumnDefinitions>
@@ -75,13 +75,13 @@
                             <Image Source="/Assets/Images/Discord.png" Width="50" Height="50" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Button>
 
-                        <TextBlock Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center">Our Discord is our main point for support &amp; questions. This should be your first place to go to for any issues you might be encountering.</TextBlock>
+                        <TextBlock Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Text="{x:Static resx:Resources.WizardIntro3}" />
 
                         <Button Grid.Column="4" Command="{Binding TwitterCommand}" Height="60" Width="60" Background="Transparent">
                             <Image Source="/Assets/Images/Twitter.png" Width="45" Height="45" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Button>
 
-                        <TextBlock Grid.Column="6" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Left" Width="230">Our Twitter account is a great way to stay up to date on important announcements or major updates.</TextBlock>
+                        <TextBlock Grid.Column="6" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Left" Width="230" Text="{x:Static resx:Resources.WizardIntro4}" />
                     </Grid>
 
                     <Grid Grid.Row="8" HorizontalAlignment="Center">
@@ -99,13 +99,13 @@
                             <Image Source="/Assets/Images/YouTube.png" Width="45" Height="45" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Button>
 
-                        <TextBlock Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Width="220" HorizontalAlignment="Left">Our YouTube account features many tutorials create by us and our community to help ramp you up or show off cool creations.</TextBlock>
+                        <TextBlock Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Width="220" HorizontalAlignment="Left" Text="{x:Static resx:Resources.WizardIntro5}" />
 
                         <Button Grid.Column="4" Command="{Binding WikiCommand}" Height="60" Width="60" Background="Transparent">
                             <Image Source="/Assets/Images/Wiki.png" Width="50" Height="50" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Button>
 
-                        <TextBlock Grid.Column="6" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Left" Width="240">Our Wiki pages contain detailed information about many of the different features available throughout the entire app.</TextBlock>
+                        <TextBlock Grid.Column="6" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Left" Width="240" Text="{x:Static resx:Resources.WizardIntro6}" />
                     </Grid>
                 </Grid>
 
@@ -166,9 +166,9 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Row="0" TextWrapping="Wrap">Mix It Up uses a Command &amp; Action structure for everything throughout the app. Think of it similar to a recipe that you would follow to make food.</TextBlock>
+                            <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.WizardCommands1}" />
 
-                            <TextBlock Grid.Row="2" TextWrapping="Wrap">Let's say you wanted to make some pasta; you would follow the steps in the recipe one after the other until you're done. You also would follow every step in the order they are specified. For example, you need to heat the water before you can add the pasta.</TextBlock>
+                            <TextBlock Grid.Row="2" TextWrapping="Wrap" Text="{x:Static resx:Resources.WizardCommands2}" />
                         </Grid>
 
                         <Image Grid.Row="2" Source="/Assets/Images/CommandExample.png" Width="200" VerticalAlignment="Bottom" />
@@ -190,9 +190,9 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Row="0" TextWrapping="Wrap">Commands are like a recipe and actions are the steps in that recipe. Let's say you make a shout out command, what are the things it should do? Each of those "things" can be thought of as an action.</TextBlock>
+                            <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.WizardCommands3}" />
 
-                            <TextBlock Grid.Row="2" TextWrapping="Wrap">In this example, our shout out command sends a message to chat, plays a sound, waits 10 seconds, and then shows an image. Each of those correspond to a different action type (Chat, Sound, Wait, and Overlay).</TextBlock>
+                            <TextBlock Grid.Row="2" TextWrapping="Wrap" Text="{x:Static resx:Resources.WizardCommands4}" />
                         </Grid>
                     </Grid>
                 </Grid>
@@ -218,7 +218,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap" Width="450">Mix It Up is a desktop-only application, so your settings and data only exist on your computer. Therefore we encourge users to set up automatic backups for your settings to ensure you always have something to fall back to in the event of any issues:</TextBlock>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap" Width="450" Text="{x:Static resx:Resources.WizardFinal1}" />
 
                             <Grid Grid.Column="2">
                                 <Grid.RowDefinitions>
@@ -240,14 +240,12 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" TextWrapping="Wrap" Width="450">Don't know how a feature works or want more info? Simply click on the Help icon on the top bar of the main window to find out more!</TextBlock>
+                            <TextBlock Grid.Column="0" TextWrapping="Wrap" Width="450" Text="{x:Static resx:Resources.WizardFinal2}" />
 
-                            <Button Grid.Column="2" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Help}">
-                                <MaterialDesign:PackIcon Kind="Help" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                            </Button>
+                            <Controls:IconButton Grid.Column="2" HorizontalAlignment="Center" Icon="Help" ToolTip="{x:Static resx:Resources.Help}" />
                         </Grid>
 
-                        <TextBlock Grid.Row="4" TextWrapping="Wrap" Width="500">Don't forget the following resources available to you for questions &amp; support:</TextBlock>
+                        <TextBlock Grid.Row="4" TextWrapping="Wrap" Width="500" Text="{x:Static resx:Resources.WizardFinal3}" />
 
                         <Grid Grid.Row="6" HorizontalAlignment="Center">
                             <Grid.ColumnDefinitions>
@@ -277,7 +275,7 @@
                             </Button>
                         </Grid>
 
-                        <TextBlock TextWrapping="Wrap" Grid.Row="8" HorizontalAlignment="Center">Thanks for using Mix It Up and we hope it meets all your needs!</TextBlock>
+                        <TextBlock TextWrapping="Wrap" Grid.Row="8" HorizontalAlignment="Center" Text="{x:Static resx:Resources.WizardFinal4}" />
                     </Grid>
                 </Grid>
             </Grid>
@@ -293,9 +291,9 @@
 
                 <TextBlock Grid.Column="0" Text="{Binding StatusMessage}" VerticalAlignment="Center" Width="550" TextWrapping="Wrap" />
 
-                <Button Grid.Column="2" Command="{Binding BackCommand}" IsEnabled="{Binding CanBack}">&lt; Back</Button>
+                <Button Grid.Column="2" Command="{Binding BackCommand}" IsEnabled="{Binding CanBack}" Content="{x:Static resx:Resources.WizardBack}" />
 
-                <Button Grid.Column="4" Command="{Binding NextCommand}" IsEnabled="{Binding CanNext}">Next &gt;</Button>
+                <Button Grid.Column="4" Command="{Binding NextCommand}" IsEnabled="{Binding CanNext}" Content="{x:Static resx:Resources.WizardNext}" />
             </Grid>
         </Grid>
 

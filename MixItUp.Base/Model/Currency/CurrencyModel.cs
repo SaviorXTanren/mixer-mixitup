@@ -91,7 +91,7 @@ namespace MixItUp.Base.Model.Currency
     [DataContract]
     public class CurrencyModel : IEquatable<CurrencyModel>
     {
-        public static RankModel NoRank = new RankModel("No Rank", 0);
+        public static RankModel NoRank = new RankModel(MixItUp.Base.Resources.NoRank, 0);
 
         [DataMember]
         public Guid ID { get; set; }

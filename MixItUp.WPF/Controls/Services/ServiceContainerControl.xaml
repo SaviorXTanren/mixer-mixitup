@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -27,12 +28,16 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Foreground="{StaticResource WhiteColor}" Text="{Binding Name}" />
+                <TextBlock Grid.Column="0" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Text="{Binding Name}" />
                 <Rectangle Grid.Column="1" Fill="{StaticResource PrimaryHueMidBrush}" />
 
-                <MaterialDesign:PackIcon Grid.Column="2" Kind="CheckboxMarkedCircle" Foreground="White" Visibility="{Binding IsConnected, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <MaterialDesign:PackIcon Grid.Column="2" Kind="CheckboxMarkedCircle" Foreground="White" Visibility="{Binding IsConnected, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource ColoredBackgroundPackIcon}" />
+
+                <Controls:IconButton Grid.Column="4" Margin="-10" Command="{Binding HelpCommand}" Icon="Help" ToolTip="{x:Static resx:Resources.Help}" />
 
             </Grid>
         </GroupBox.Header>

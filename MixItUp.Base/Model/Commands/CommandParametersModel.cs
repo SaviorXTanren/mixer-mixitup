@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -32,6 +33,9 @@ namespace MixItUp.Base.Model.Commands
         [DataMember]
         public string TriggeringChatMessageID { get; set; }
 
+        [DataMember]
+        public Guid InitialCommandID { get; set; } = Guid.Empty;
+
         public CommandParametersModel() : this(ChannelSession.User) { }
 
         public CommandParametersModel(UserV2ViewModel user) : this(user, user.Platform) { }
@@ -44,17 +48,19 @@ namespace MixItUp.Base.Model.Commands
             this.TriggeringChatMessageID = message.ID;
         }
 
-        public CommandParametersModel(Dictionary<string, string> specialIdentifiers) : this(ChannelSession.User, specialIdentifiers) { }
+        public CommandParametersModel(StreamingPlatformTypeEnum platform, Dictionary<string, string> specialIdentifiers) : this(null, platform, null, specialIdentifiers) { }
 
-        public CommandParametersModel(UserV2ViewModel user, StreamingPlatformTypeEnum platform) : this(user, platform, null) { }
+        public CommandParametersModel(UserV2ViewModel user, StreamingPlatformTypeEnum platform) : this(user, platform, null, null) { }
 
-        public CommandParametersModel(UserV2ViewModel user, IEnumerable<string> arguments) : this(user, user.Platform, arguments, null) { }
+        public CommandParametersModel(UserV2ViewModel user, IEnumerable<string> arguments) : this(user, (user != null) ? user.Platform : StreamingPlatformTypeEnum.None, arguments, null) { }
 
         public CommandParametersModel(UserV2ViewModel user, Dictionary<string, string> specialIdentifiers) : this(user, null, specialIdentifiers) { }
 
         public CommandParametersModel(UserV2ViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments) : this(user, platform, arguments, null) { }
 
-        public CommandParametersModel(UserV2ViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers) : this(user, user.Platform, arguments, specialIdentifiers) { }
+        public CommandParametersModel(UserV2ViewModel user, StreamingPlatformTypeEnum platform, Dictionary<string, string> specialIdentifiers) : this(user, platform, null, specialIdentifiers) { }
+
+        public CommandParametersModel(UserV2ViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers) : this(user, (user != null) ? user.Platform : StreamingPlatformTypeEnum.None, arguments, specialIdentifiers) { }
 
         public CommandParametersModel(UserV2ViewModel user = null, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> specialIdentifiers = null)
         {
@@ -81,6 +87,8 @@ namespace MixItUp.Base.Model.Commands
             {
                 this.Platform = this.User.Platform;
             }
+
+            this.SpecialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = this.Platform.ToString();
         }
 
         public bool IsTargetUserSelf { get { return this.TargetUser == this.User; } }

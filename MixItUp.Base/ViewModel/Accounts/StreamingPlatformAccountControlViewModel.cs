@@ -95,7 +95,7 @@ namespace MixItUp.Base.ViewModel.Accounts
         {
             get
             {
-                if (this.IsUserAccountConnected)
+                if (this.IsBotAccountConnected)
                 {
                     if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return MixItUp.Base.Resources.LogOutOfTwitch; }
                     else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return MixItUp.Base.Resources.LogOutOfYouTube; }

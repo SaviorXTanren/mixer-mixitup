@@ -1,8 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
-using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -27,18 +26,13 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int RefreshTime { get; set; }
 
+        [Obsolete]
+        public OverlayWidgetModel() { }
+
         public OverlayWidgetModel(string name, string overlayName, OverlayItemModelBase item, int refreshTime)
         {
             this.Name = name;
-            var overlays = ServiceManager.Get<OverlayService>().GetOverlayNames();
-            if (overlays.Contains(overlayName))
-            {
-                this.OverlayName = overlayName;
-            }
-            else
-            {
-                this.OverlayName = ServiceManager.Get<OverlayService>().DefaultOverlayName;
-            }
+            this.OverlayName = overlayName;
             this.Item = item;
             this.RefreshTime = refreshTime;
             this.IsEnabled = true;

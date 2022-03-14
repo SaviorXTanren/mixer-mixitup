@@ -40,38 +40,38 @@ namespace MixItUp.Base.Services
         {
             if (this.IsRunning)
             {
-                return "A giveaway is already underway";
+                return MixItUp.Base.Resources.GiveawayAlreadyUnderway;
             }
 
             if (string.IsNullOrEmpty(item))
             {
-                return "The name of the giveaway item must be specified";
+                return MixItUp.Base.Resources.GiveawayItemNotSpecified;
             }
             this.Item = item;
 
             if (ChannelSession.Settings.GiveawayTimer <= 0)
             {
-                return "The giveaway length must be greater than 0";
+                return MixItUp.Base.Resources.GiveawayLengthMustBeGreaterThanZero;
             }
 
             if (ChannelSession.Settings.GiveawayReminderInterval < 0)
             {
-                return "The giveaway reminder must be 0 or greater";
+                return MixItUp.Base.Resources.GiveawayReminderMustBeZeroOrGreater;
             }
 
             if (ChannelSession.Settings.GiveawayMaximumEntries <= 0)
             {
-                return "The maximum entries must be greater than 0";
+                return MixItUp.Base.Resources.GiveawayMaxEntriesMustBeGreaterThanZero;
             }
 
             if (string.IsNullOrEmpty(ChannelSession.Settings.GiveawayCommand))
             {
-                return "Giveaway command must be specified";
+                return MixItUp.Base.Resources.GiveawayCommandMustBeSpecified;
             }
 
             if (ChannelSession.Settings.GiveawayCommand.Any(c => !Char.IsLetterOrDigit(c)))
             {
-                return "Giveaway Command can only contain letters and numbers";
+                return MixItUp.Base.Resources.GiveawayCommandOnlyLettersAndNumbers;
             }
 
             await ChannelSession.SaveSettings();
@@ -79,7 +79,7 @@ namespace MixItUp.Base.Services
             this.IsRunning = true;
             this.Winner = null;
 
-            this.giveawayCommand = new ChatCommandModel("Giveaway Command", new HashSet<string>() { ChannelSession.Settings.GiveawayCommand });
+            this.giveawayCommand = new ChatCommandModel(MixItUp.Base.Resources.GiveawayCommand, new HashSet<string>() { ChannelSession.Settings.GiveawayCommand });
             if (ChannelSession.Settings.GiveawayAllowPastWinners)
             {
                 this.pastWinners.Clear();
@@ -95,7 +95,7 @@ namespace MixItUp.Base.Services
             Task.Run(async () => { await this.GiveawayTimerBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-            await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayStartedReminderCommandID, new CommandParametersModel(this.GetSpecialIdentifiers()));
+            await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayStartedReminderCommandID, new CommandParametersModel(platform: ChannelSession.Settings.GiveawayRequirementsSet.Role.StreamingPlatform, specialIdentifiers: this.GetSpecialIdentifiers()));
 
             return null;
         }
@@ -139,7 +139,7 @@ namespace MixItUp.Base.Services
 
                     if (reminderTime > 0 && this.TimeLeft > 0 && (totalTime - this.TimeLeft) % reminderTime == 0)
                     {
-                        await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayStartedReminderCommandID, new CommandParametersModel(this.GetSpecialIdentifiers()));
+                        await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayStartedReminderCommandID, new CommandParametersModel(ChannelSession.Settings.GiveawayRequirementsSet.Role.StreamingPlatform, this.GetSpecialIdentifiers()));
                     }
 
                     if (this.backgroundThreadCancellationTokenSource.Token.IsCancellationRequested)
@@ -178,13 +178,13 @@ namespace MixItUp.Base.Services
 
                         if (!ChannelSession.Settings.GiveawayRequireClaim)
                         {
-                            await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayWinnerSelectedCommandID, new CommandParametersModel(this.Winner, this.GetSpecialIdentifiers()));
+                            await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayWinnerSelectedCommandID, new CommandParametersModel(this.Winner, ChannelSession.Settings.GiveawayRequirementsSet.Role.StreamingPlatform, this.GetSpecialIdentifiers()));
                             await this.End();
                             return;
                         }
                         else
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(string.Format("@{0} you've won the giveaway; type \"!claim\" in chat!.", this.Winner.Username));
+                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GiveawayWonTypeClaim, this.Winner.Username));
 
                             this.TimeLeft = 60;
                             while (this.TimeLeft > 0)
@@ -204,7 +204,7 @@ namespace MixItUp.Base.Services
                     }
                     else
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage("There are no users that entered/left in the giveaway");
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GiveawayNoUsersLeft);
                         await this.End();
                         return;
                     }
@@ -228,7 +228,7 @@ namespace MixItUp.Base.Services
 
                     if (pastWinners.Contains(message.User.ID))
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage("You have already won a giveaway and can not enter this one", message.Platform);
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GiveawayYouHaveAlreadyWon, message.Platform);
                         return;
                     }
 
@@ -248,7 +248,7 @@ namespace MixItUp.Base.Services
 
                     if ((entries + currentEntries) > ChannelSession.Settings.GiveawayMaximumEntries)
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage(string.Format("You may only enter {0} time(s), you currently have entered {1} time(s)", ChannelSession.Settings.GiveawayMaximumEntries, currentEntries), message.Platform);
+                        await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GiveawayYouMayOnlyEnterSoManyTimes, ChannelSession.Settings.GiveawayMaximumEntries, currentEntries), message.Platform);
                         return;
                     }
 
@@ -314,7 +314,7 @@ namespace MixItUp.Base.Services
                 }
                 else if (this.Winner != null && this.Winner.Equals(message.User) && message.PlainTextMessage.Equals("!claim", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayWinnerSelectedCommandID, new CommandParametersModel(this.Winner, this.GetSpecialIdentifiers()));
+                    await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GiveawayWinnerSelectedCommandID, new CommandParametersModel(this.Winner, ChannelSession.Settings.GiveawayRequirementsSet.Role.StreamingPlatform, this.GetSpecialIdentifiers()));
                     await this.End();
                 }
             }
@@ -330,7 +330,8 @@ namespace MixItUp.Base.Services
             {
                 { "giveawayitem", this.Item },
                 { "giveawaycommand", "!" + ChannelSession.Settings.GiveawayCommand },
-                { "giveawaytimelimit", (this.TimeLeft / 60).ToString() }
+                { "giveawaytimelimit", (this.TimeLeft / 60).ToString() },
+                { "giveawaymaximumentries", ChannelSession.Settings.GiveawayMaximumEntries.ToString() }
             };
         }
     }

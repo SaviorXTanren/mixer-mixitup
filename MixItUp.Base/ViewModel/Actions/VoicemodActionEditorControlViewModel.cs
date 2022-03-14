@@ -34,7 +34,14 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private VoicemodActionTypeEnum selectedActionType;
 
-        public bool ShowStateGrid { get { return this.SelectedActionType == VoicemodActionTypeEnum.VoiceChangerOnOff || this.SelectedActionType == VoicemodActionTypeEnum.BeepSoundOnOff; } }
+        public bool ShowStateGrid
+        {
+            get
+            {
+                return this.SelectedActionType == VoicemodActionTypeEnum.VoiceChangerOnOff || this.SelectedActionType == VoicemodActionTypeEnum.BeepSoundOnOff ||
+                    this.SelectedActionType == VoicemodActionTypeEnum.HearMyselfOnOff;
+            }
+        }
 
         public bool State
         {
@@ -170,10 +177,14 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 return Task.FromResult<ActionModelBase>(VoicemodActionModel.CreateForStopAllSounds());
             }
+            else if (this.SelectedActionType == VoicemodActionTypeEnum.HearMyselfOnOff)
+            {
+                return Task.FromResult<ActionModelBase>(VoicemodActionModel.CreateForHearMyselfOnOff(this.State));
+            }
             return Task.FromResult<ActionModelBase>(null);
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
             if (ChannelSession.Settings.EnableVoicemodStudio && !ServiceManager.Get<IVoicemodService>().IsConnected)
             {
@@ -206,7 +217,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.SelectedSound = this.Sounds.FirstOrDefault(v => string.Equals(this.soundFileName, v.FileName));
                 }
             }
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
         }
     }
 }

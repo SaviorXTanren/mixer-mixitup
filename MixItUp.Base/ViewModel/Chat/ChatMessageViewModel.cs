@@ -68,11 +68,11 @@ namespace MixItUp.Base.ViewModel.Chat
             {
                 if (this.User != null && this.Platform != StreamingPlatformTypeEnum.None)
                 {
-                    if (StreamingPlatforms.GetPlatformSessionService(this.Platform).IsConnected && string.Equals(this.User?.ID, StreamingPlatforms.GetPlatformSessionService(this.Platform)?.UserID))
+                    if (StreamingPlatforms.GetPlatformSessionService(this.Platform).IsConnected && string.Equals(this.User?.PlatformID, StreamingPlatforms.GetPlatformSessionService(this.Platform)?.UserID))
                     {
                         return true;
                     }
-                    else if (StreamingPlatforms.GetPlatformSessionService(this.Platform).IsBotConnected && string.Equals(this.User?.ID, StreamingPlatforms.GetPlatformSessionService(this.Platform)?.BotID))
+                    else if (StreamingPlatforms.GetPlatformSessionService(this.Platform).IsBotConnected && string.Equals(this.User?.PlatformID, StreamingPlatforms.GetPlatformSessionService(this.Platform)?.BotID))
                     {
                         return true;
                     }
@@ -117,7 +117,7 @@ namespace MixItUp.Base.ViewModel.Chat
                 if (!ServiceManager.Get<ModerationService>().DoesUserMeetChatInteractiveParticipationRequirement(this.User, this))
                 {
                     Logger.Log(LogLevel.Debug, string.Format("Deleting Message As User does not meet requirement - {0} - {1}", ChannelSession.Settings.ModerationChatInteractiveParticipation, this.PlainTextMessage));
-                    await this.Delete(reason: "Chat Participation");
+                    await this.Delete(reason: MixItUp.Base.Resources.ModerationChatParticipation);
                     await ServiceManager.Get<ModerationService>().SendChatInteractiveParticipationWhisper(this.User, isChat: true);
                     return true;
                 }
@@ -140,27 +140,29 @@ namespace MixItUp.Base.ViewModel.Chat
                 if (!this.IsDeleted)
                 {
                     this.IsDeleted = true;
-                    if (moderator != null && !string.IsNullOrEmpty(moderator.FullDisplayName))
+                    if (moderator != null && !string.IsNullOrEmpty(moderator.Username))
                     {
-                        this.DeletedBy = moderator.FullDisplayName;
+                        this.DeletedBy = moderator.Username;
                     }
-                    this.ModerationReason = reason;
+                    this.ModerationReason = (!string.IsNullOrEmpty(reason)) ? reason : MixItUp.Base.Resources.ManualDeletion;
 
                     this.NotifyPropertyChanged("IsDeleted");
                     this.NotifyPropertyChanged("DeletedBy");
                     this.NotifyPropertyChanged("ModerationReason");
 
                     this.OnDeleted(this, new EventArgs());
-
+                    
                     if (this.User != null && !string.IsNullOrEmpty(this.PlainTextMessage))
                     {
                         CommandParametersModel parameters = new CommandParametersModel(moderator ?? this.User);
                         parameters.Arguments.Add(this.User.Username);
                         parameters.TargetUser = this.User;
                         parameters.SpecialIdentifiers["message"] = this.PlainTextMessage;
-                        parameters.SpecialIdentifiers["reason"] = (!string.IsNullOrEmpty(this.ModerationReason)) ? this.ModerationReason : "Manual Deletion";
+                        parameters.SpecialIdentifiers["reason"] = this.ModerationReason;
                         await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatMessageDeleted, parameters);
                     }
+
+                    await ServiceManager.Get<ChatService>().WriteToChatEventLog(this, $"{MixItUp.Base.Resources.ChatMessageDeleted} - {this.ModerationReason} - ");
                 }
             }
             catch (Exception ex)

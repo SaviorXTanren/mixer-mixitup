@@ -30,6 +30,8 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Enable}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
@@ -40,7 +42,9 @@
 
             <Button Grid.Column="6" Content="{x:Static resx:Resources.AddQuote}" Command="{Binding AddQuoteCommand}" />
 
-            <Button Grid.Column="8" Content="{x:Static resx:Resources.ExportQuotes}" Command="{Binding ExportQuotesCommand}" />
+            <Button Grid.Column="8" x:Name="ImportQuotesButton" Content="{x:Static resx:Resources.ImportQuotes}" Click="ImportQuotesButton_Click" />
+
+            <Button Grid.Column="10" Content="{x:Static resx:Resources.ExportQuotes}" Command="{Binding ExportQuotesCommand}" />
         </Grid>
 
         <DataGrid Grid.Row="2" ItemsSource="{Binding Quotes}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
@@ -66,7 +70,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="{x:Static resx:Resources.DateTime}" IsReadOnly="True" Width="115">
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" IsReadOnly="True" Width="180">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
@@ -74,25 +78,16 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="10" />
                                     <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <Button x:Name="DateButton" Grid.Column="0" Click="DateButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Date}">
-                                    <MaterialDesign:PackIcon Kind="Calendar" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                </Button>
+                                <Controls:IconButton x:Name="DateButton" Grid.Column="0" Click="DateButton_Click" HorizontalAlignment="Center" Icon="Calendar" ToolTip="{x:Static resx:Resources.Date}" />
 
-                                <Button x:Name="TimeButton" Grid.Column="2" Click="TimeButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Time}">
-                                    <MaterialDesign:PackIcon Kind="Clock" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                </Button>
+                                <Controls:IconButton x:Name="TimeButton" Grid.Column="2" Click="TimeButton_Click" HorizontalAlignment="Center" Icon="Clock" ToolTip="{x:Static resx:Resources.Time}" />
+
+                                <Controls:IconButton x:Name="DeleteButton" Grid.Column="4" Click="DeleteButton_Click" HorizontalAlignment="Center" Icon="Delete" ToolTip="{x:Static resx:Resources.DeleteCommand}" />
                             </Grid>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Width="65">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button x:Name="DeleteButton" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.DeleteCommand}">
-                                <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                            </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

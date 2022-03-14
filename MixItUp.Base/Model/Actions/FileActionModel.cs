@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -52,6 +53,16 @@ namespace MixItUp.Base.Model.Actions
         {
             string filePath = await ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
             filePath = filePath.ToFilePathString();
+
+            if (this.ActionType == FileActionTypeEnum.ReadFromFile ||
+                this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
+                this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile)
+            {
+                if (!ServiceManager.Get<IFileService>().IsURLPath(filePath) && !ServiceManager.Get<IFileService>().FileExists(filePath))
+                {
+                    Logger.Log(LogLevel.Error, $"Command: {parameters.InitialCommandID} - File Action - File does not exist: {filePath}");
+                }
+            }
 
             string textToWrite = string.Empty;
             string textToRead = string.Empty;

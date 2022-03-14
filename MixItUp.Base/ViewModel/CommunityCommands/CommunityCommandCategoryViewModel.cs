@@ -20,6 +20,10 @@ namespace MixItUp.Base.ViewModel.CommunityCommands
 
         public string Name { get { return this.model.Name; } }
 
+        public CommunityCommandTagEnum Tag { get { return this.model.Tag; } }
+
+        public bool ShouldShowSeeMoreButton { get { return this.Tag != CommunityCommandTagEnum.Custom; } }
+
         public string Description { get { return this.model.Description; } }
 
         public List<CommunityCommandViewModel> Commands { get; } = new List<CommunityCommandViewModel>();

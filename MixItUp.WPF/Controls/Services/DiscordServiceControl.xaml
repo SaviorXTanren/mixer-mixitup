@@ -39,7 +39,7 @@
                 <TextBlock Grid.Row="2" TextWrapping="Wrap" Text="{x:Static resx:Resources.DiscordInfo2}"/>
                 
                 <TextBlock Grid.Row="4" TextWrapping="Wrap">
-                    <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Services#discord" RequestNavigate="Hyperlink_RequestNavigate">
+                    <Hyperlink NavigateUri="https://wiki.mixitupapp.com/services/discord" RequestNavigate="Hyperlink_RequestNavigate">
                          <TextBlock TextWrapping="Wrap" Text="{x:Static resx:Resources.CreatingCustomDiscordApplication}"/>
                     </Hyperlink>
                 </TextBlock>

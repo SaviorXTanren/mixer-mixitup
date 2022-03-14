@@ -116,6 +116,18 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             return 0;
         }
+
+        [Obsolete]
+        public void UpgradeProbabilitySettings()
+        {
+            foreach (var kvp in this.RoleProbabilityPayouts)
+            {
+                UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
+                kvp.Value.Role = OldUserRoleEnum.Banned;
+                kvp.Value.UserRole = role;
+                this.UserRoleProbabilityPayouts[role] = kvp.Value;
+            }
+        }
     }
 
     [DataContract]

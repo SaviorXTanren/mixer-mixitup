@@ -96,6 +96,7 @@ namespace MixItUp.Base.Model.Actions
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             bool finalResult = false;
+            int totalLoops = 0;
             do
             {
                 List<bool> results = new List<bool>();
@@ -122,6 +123,12 @@ namespace MixItUp.Base.Model.Actions
                 {
                     await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(this.Actions, parameters));
                 }
+
+                totalLoops++;
+                if (totalLoops == 10)
+                {
+                    Logger.Log(LogLevel.Error, $"Command: {parameters.InitialCommandID} - Conditional Action - Repeated 10 times, possible endless loop");
+                }
             } while (this.RepeatWhileTrue && finalResult);
         }
 
@@ -129,6 +136,8 @@ namespace MixItUp.Base.Model.Actions
         {
             string v1 = await ReplaceStringWithSpecialModifiers(clause.Value1, parameters);
             string v2 = await ReplaceStringWithSpecialModifiers(clause.Value2, parameters);
+
+            Logger.Log(LogLevel.Debug, $"Conditional Action: Checking clause - {v1} {clause.ComparisionType} {v2}");
 
             if (clause.ComparisionType == ConditionalComparisionTypeEnum.Contains || clause.ComparisionType == ConditionalComparisionTypeEnum.DoesNotContain)
             {

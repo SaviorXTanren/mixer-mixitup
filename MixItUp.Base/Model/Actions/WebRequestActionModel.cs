@@ -56,9 +56,10 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (ServiceManager.Get<IFileService>().FileExists(this.Url))
+            string url = await ReplaceStringWithSpecialModifiers(this.Url, parameters);
+            if (ServiceManager.Get<IFileService>().FileExists(url))
             {
-                await this.ProcessContents(parameters, await ServiceManager.Get<IFileService>().ReadFile(this.Url));
+                await this.ProcessContents(parameters, await ServiceManager.Get<IFileService>().ReadFile(url));
             }
             else
             {

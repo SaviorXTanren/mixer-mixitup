@@ -4,6 +4,7 @@ using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Dialogs;
+using MixItUp.WPF.Windows.Quotes;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -28,13 +29,20 @@ namespace MixItUp.WPF.Controls.MainControls
         protected override async Task InitializeInternal()
         {
             this.DataContext = this.viewModel = new QuotesMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
-            await this.viewModel.OnLoaded();
+            await this.viewModel.OnOpen();
             await base.InitializeInternal();
         }
 
         protected override async Task OnVisibilityChanged()
         {
             await this.viewModel.OnVisible();
+        }
+
+        private void ImportQuotesButton_Click(object sender, RoutedEventArgs e)
+        {
+            QuotesDataImportWindow window = new QuotesDataImportWindow();
+            window.Closed += Window_Closed;
+            window.Show();
         }
 
         private async void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -86,6 +94,11 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.viewModel.Refresh();
             }));
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            this.viewModel.Refresh();
         }
     }
 }

@@ -163,8 +163,14 @@ namespace MixItUp.Base.Services
                     {
                         if (item is OverlayImageItemModel || item is OverlayVideoItemModel || item is OverlaySoundItemModel)
                         {
-                            this.SetLocalFile(jobj["FileID"].ToString(), jobj["FilePath"].ToString());
-                            jobj["FullLink"] = OverlayItemModelBase.GetFileFullLink(jobj["FileID"].ToString(), jobj["FileType"].ToString(), jobj["FilePath"].ToString());
+                            string filepath = jobj["FilePath"].ToString();
+                            if (!ServiceManager.Get<IFileService>().IsURLPath(filepath) && !ServiceManager.Get<IFileService>().FileExists(filepath))
+                            {
+                                Logger.Log(LogLevel.Error, $"Overlay Action - File does not exist: {filepath}");
+                            }
+
+                            this.SetLocalFile(jobj["FileID"].ToString(), filepath);
+                            jobj["FullLink"] = OverlayItemModelBase.GetFileFullLink(jobj["FileID"].ToString(), jobj["FileType"].ToString(), filepath);
                         }
                         await this.SendPacket("Show", jobj);
                     }
@@ -261,7 +267,7 @@ namespace MixItUp.Base.Services
 
         public void SetLocalFile(string id, string filepath)
         {
-            if (!Uri.IsWellFormedUriString(filepath, UriKind.RelativeOrAbsolute))
+            if (!ServiceManager.Get<IFileService>().IsURLPath(filepath))
             {
                 this.localFiles[id] = filepath;
             }
@@ -292,9 +298,52 @@ namespace MixItUp.Base.Services
                             listenerContext.Response.StatusCode = (int)HttpStatusCode.OK;
                             listenerContext.Response.StatusDescription = HttpStatusCode.OK.ToString();
                             listenerContext.Response.ContentType = fileType + "/" + Path.GetExtension(this.localFiles[fileID]).Replace(".", "");
+                            listenerContext.Response.Headers["Accept-Ranges"] = "bytes";
 
-                            byte[] fileData = File.ReadAllBytes(this.localFiles[fileID]);
-                            await listenerContext.Response.OutputStream.WriteAsync(fileData, 0, fileData.Length);
+                            // If they overlay requests a range, let's chunk this file
+                            string range = listenerContext.Request.Headers["Range"];
+                            if (range != null)
+                            {
+                                // The total file size
+                                long filesize = new FileInfo(this.localFiles[fileID]).Length;
+
+                                // Format is: bytes=0-123
+                                //  0  : start byte
+                                //  123: end byte (can be empty, means to give me what you want)
+                                range = range.Replace("bytes=", string.Empty);
+                                string[] markers = range.Split('-');
+                                long startByte = long.Parse(markers[0]);
+                                // Max of 1MB past startByte
+                                long endByte = Math.Min(filesize, startByte + 1024 * 1024);
+                                if (markers.Length > 1 && !string.IsNullOrEmpty(markers[1]))
+                                {
+                                    // If they requested less bytes, then provide less instead
+                                    endByte = Math.Min(long.Parse(markers[1]), endByte);
+                                }
+
+                                int byteRange = (int)(endByte - startByte);
+
+                                // Write out necessary headers
+                                listenerContext.Response.Headers["Content-Range"] = $"bytes {startByte}-{endByte - 1}/{filesize}";
+                                listenerContext.Response.StatusCode = (int)HttpStatusCode.PartialContent;
+                                listenerContext.Response.StatusDescription = HttpStatusCode.PartialContent.ToString();
+                                listenerContext.Response.ContentLength64 = byteRange;
+
+                                // Only read/write the range of bytes requested
+                                byte[] fileData = new byte[byteRange];
+                                using (BinaryReader reader = new BinaryReader(new FileStream(this.localFiles[fileID], FileMode.Open)))
+                                {
+                                    reader.BaseStream.Seek(startByte, SeekOrigin.Begin);
+                                    reader.Read(fileData, 0, byteRange);
+                                }
+                                await listenerContext.Response.OutputStream.WriteAsync(fileData, 0, fileData.Length);
+                            }
+                            else
+                            {
+                                byte[] fileData = File.ReadAllBytes(this.localFiles[fileID]);
+                                listenerContext.Response.ContentLength64 = fileData.Length;
+                                await listenerContext.Response.OutputStream.WriteAsync(fileData, 0, fileData.Length);
+                            }
                         }
                     }
                 }

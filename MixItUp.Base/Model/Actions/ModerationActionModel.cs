@@ -18,6 +18,8 @@ namespace MixItUp.Base.Model.Actions
         UnmodUser,
         AddModerationStrike,
         RemoveModerationStrike,
+        EnableChat,
+        DisableChat,
     }
 
     [DataContract]
@@ -90,7 +92,7 @@ namespace MixItUp.Base.Model.Actions
                     }
                     else if (this.ActionType == ModerationActionTypeEnum.AddModerationStrike)
                     {
-                        string moderationReason = "Manual Moderation Strike";
+                        string moderationReason = MixItUp.Base.Resources.ManualModerationStrike;
                         if (!string.IsNullOrEmpty(this.ModerationReason))
                         {
                             moderationReason = await ReplaceStringWithSpecialModifiers(this.ModerationReason, parameters);
@@ -111,6 +113,14 @@ namespace MixItUp.Base.Model.Actions
                                 await ServiceManager.Get<ChatService>().TimeoutUser(targetUser, timeAmount);
                             }
                         }
+                    }
+                    else if (this.ActionType == ModerationActionTypeEnum.EnableChat)
+                    {
+                        ServiceManager.Get<ChatService>().DisableChat = false;
+                    }
+                    else if (this.ActionType == ModerationActionTypeEnum.DisableChat)
+                    {
+                        ServiceManager.Get<ChatService>().DisableChat = true;
                     }
                 }
             }

@@ -42,9 +42,9 @@
     <PackageReference Include="Jace" Version="1.0.0" />
     <PackageReference Include="linqtotwitter" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="StreamingClientLibrary.Glimesh" Version="1.0.0.12" />
-    <PackageReference Include="StreamingClientLibrary.Trovo" Version="1.0.0.13" />
-    <PackageReference Include="StreamingClientLibrary.Twitch" Version="1.0.0.35" />
+    <PackageReference Include="StreamingClientLibrary.Glimesh" Version="1.0.0.13" />
+    <PackageReference Include="StreamingClientLibrary.Trovo" Version="1.0.0.15" />
+    <PackageReference Include="StreamingClientLibrary.Twitch" Version="1.0.0.36" />
     <PackageReference Include="StreamingClientLibrary.YouTube" Version="1.0.0.8" />
     <PackageReference Include="System.IO.Ports" Version="5.0.1" />
   </ItemGroup>
@@ -77,9 +77,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Resources - Copy.ru.resx">
-      <DependentUpon>Resources.resx</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

@@ -31,13 +31,11 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="14" />
-                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="130" />
                 <ColumnDefinition Width="14" />
-                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="115" />
                 <ColumnDefinition Width="14" />
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="14" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="115" />
             </Grid.ColumnDefinitions>
 
             <ComboBox Grid.Column="0" ItemsSource="{Binding Voices}" SelectedItem="{Binding SelectedVoice}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Voice}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
@@ -47,16 +45,19 @@
             <TextBox Grid.Column="4" Text="{Binding Pitch}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Pitch}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <TextBox Grid.Column="6" Text="{Binding Rate}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Rate}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-            <TextBlock Grid.Column="8" VerticalAlignment="Center">
-                <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">
-                    <TextBlock Text="{x:Static resx:Resources.SpecialIdentifiersReference}"/>
-                </Hyperlink>
-            </TextBlock>
         </Grid>
 
         <TextBox Grid.Row="3" Text="{Binding Text}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SpeechMessage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-        <TextBlock Grid.Row="5" VerticalAlignment="Center" HorizontalAlignment="Center">Text-To-Speech functionality provided by <Hyperlink NavigateUri="https://responsivevoice.org/" RequestNavigate="Hyperlink_RequestNavigate">https://responsivevoice.org/</Hyperlink></TextBlock>
+        <Grid Grid.Row="5" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="{x:Static resx:Resources.TextToSpeechFunctionalityProvidedBy}" />
+            <TextBlock Grid.Column="2"><Hyperlink NavigateUri="https://responsivevoice.org/" RequestNavigate="Hyperlink_RequestNavigate">https://responsivevoice.org/</Hyperlink></TextBlock>
+        </Grid>
     </Grid>
 </local:ActionEditorControlBase>

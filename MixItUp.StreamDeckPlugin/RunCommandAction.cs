@@ -1,15 +1,11 @@
 ﻿using MixItUp.API;
-using MixItUp.API.Models;
+using MixItUp.API.V1.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using streamdeck_client_csharp;
 using streamdeck_client_csharp.Events;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MixItUp.StreamDeckPlugin

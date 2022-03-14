@@ -132,12 +132,12 @@ namespace MixItUp.Base.ViewModel.Chat
                                 }
                                 else
                                 {
-                                    await ServiceManager.Get<ChatService>().AddMessage(new AlertChatMessageViewModel("The timeout amount specified must be greater than 0"));
+                                    await ServiceManager.Get<ChatService>().AddMessage(new AlertChatMessageViewModel(MixItUp.Base.Resources.ChatTimeoutAmountMustBeGreaterThanZero));
                                 }
                             }
                             else
                             {
-                                await ServiceManager.Get<ChatService>().AddMessage(new AlertChatMessageViewModel("No user could be found with that name"));
+                                await ServiceManager.Get<ChatService>().AddMessage(new AlertChatMessageViewModel(MixItUp.Base.Resources.UserNotFound));
                             }
                         }
                     }
@@ -155,7 +155,7 @@ namespace MixItUp.Base.ViewModel.Chat
                         }
                         else
                         {
-                            await ServiceManager.Get<ChatService>().AddMessage(new AlertChatMessageViewModel("No user could be found with that name"));
+                            await ServiceManager.Get<ChatService>().AddMessage(new AlertChatMessageViewModel(MixItUp.Base.Resources.UserNotFound));
                         }
                     }
                     else
@@ -207,9 +207,9 @@ namespace MixItUp.Base.ViewModel.Chat
             }
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override async Task OnOpenInternal()
         {
-            await base.OnLoadedInternal();
+            await base.OnOpenInternal();
 
             this.Messages = ServiceManager.Get<ChatService>().Messages;
         }

@@ -51,7 +51,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Button Command="{Binding HelpCommand}" HorizontalAlignment="Right" VerticalAlignment="Top" Content="{MaterialDesign:PackIcon Help}" ToolTip="{x:Static resx:Resources.Help}" />
+                <Controls:IconButton Command="{Binding HelpCommand}" HorizontalAlignment="Right" VerticalAlignment="Top" Icon="Help" ToolTip="{x:Static resx:Resources.Help}" />
 
                 <Grid Grid.Row="0" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
@@ -96,13 +96,9 @@
                                                             <ColumnDefinition Width="Auto" />
                                                         </Grid.ColumnDefinitions>
 
-                                                        <Button x:Name="EditItemButton" Grid.Column="0" Click="EditItemButton_Click" Width="40" HorizontalAlignment="Center">
-                                                            <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                                        </Button>
+                                                        <Controls:IconButton x:Name="EditItemButton" Grid.Column="0" Click="EditItemButton_Click" HorizontalAlignment="Center" Icon="TooltipEdit" />
 
-                                                        <Button x:Name="DeleteItemButton" Grid.Column="2" Click="DeleteItemButton_Click" Width="40" HorizontalAlignment="Center">
-                                                            <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                                        </Button>
+                                                        <Controls:IconButton x:Name="DeleteItemButton" Grid.Column="2" Click="DeleteItemButton_Click" HorizontalAlignment="Center" Icon="Delete" />
                                                     </Grid>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -221,9 +217,7 @@
                     </GroupBox>
                 </Grid>
 
-                <Button x:Name="SaveButton" Grid.Row="6" HorizontalAlignment="Center" Click="SaveButton_Click" Width="80">
-                    <MaterialDesign:PackIcon Kind="ContentSave" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                </Button>
+                <Controls:IconButton x:Name="SaveButton" Grid.Row="6" HorizontalAlignment="Center" Click="SaveButton_Click" Width="80" Icon="ContentSave" />
             </Grid>
         </ScrollViewer>
 

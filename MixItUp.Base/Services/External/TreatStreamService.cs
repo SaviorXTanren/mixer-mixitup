@@ -42,7 +42,7 @@ namespace MixItUp.Base.Services.External
         public UserDonationModel ToGenericDonation()
         {
             StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None;
-            StreamingPlatforms.ForEachPlatform((p) =>
+            StreamingPlatforms.ForEachPlatform(p =>
             {
                 if (string.Equals(p.ToString(), this.SenderType, StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -97,7 +97,7 @@ namespace MixItUp.Base.Services.External
             this.socket = socket;
         }
 
-        public override string Name { get { return "TreatStream"; } }
+        public override string Name { get { return MixItUp.Base.Resources.TreatStream; } }
 
         public override async Task<Result> Connect()
         {
@@ -176,13 +176,13 @@ namespace MixItUp.Base.Services.External
 
         public void WebSocketConnectedOccurred()
         {
-            ChannelSession.ReconnectionOccurred("TreatStream");
+            ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.TreatStream);
             this.OnWebSocketConnectedOccurred(this, new EventArgs());
         }
 
         public void WebSocketDisconnectedOccurred()
         {
-            ChannelSession.DisconnectionOccurred("TreatStream");
+            ChannelSession.DisconnectionOccurred(MixItUp.Base.Resources.TreatStream);
             this.OnWebSocketDisconnectedOccurred(this, new EventArgs());
         }
 
