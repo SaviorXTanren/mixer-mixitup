@@ -21259,6 +21259,19 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Whispers are supported on Twitch, but are highly discouraged from being used. Twitch does not intend
+        ///whispers to be used as a form of automated communication. There are severe restrictions placed on the
+        ///amount of whispers that can be sent in a timeline that make it very impractical for use, as well as spam
+        ///preventative measures if the user is not on your friends list on Twitch. So although you can send whispers
+        ///via Twitch, it&apos;s a &quot;your mileage may very&quot; situation..
+        /// </summary>
+        public static string WhisperTooltip {
+            get {
+                return ResourceManager.GetString("WhisperTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Whisper User (Optional).
         /// </summary>
         public static string WhisperUserOptional {

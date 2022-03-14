@@ -7578,4 +7578,11 @@ We will attempt to re-connect with the service when possible. If this continues,
   <data name="ChatUserEntranceCommand" xml:space="preserve">
     <value>Chat User Entrance Command</value>
   </data>
+  <data name="WhisperTooltip" xml:space="preserve">
+    <value>Whispers are supported on Twitch, but are highly discouraged from being used. Twitch does not intend
+whispers to be used as a form of automated communication. There are severe restrictions placed on the
+amount of whispers that can be sent in a timeline that make it very impractical for use, as well as spam
+preventative measures if the user is not on your friends list on Twitch. So although you can send whispers
+via Twitch, it's a "your mileage may very" situation.</value>
+  </data>
 </root>
