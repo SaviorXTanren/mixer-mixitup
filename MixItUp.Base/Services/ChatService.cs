@@ -501,7 +501,7 @@ namespace MixItUp.Base.Services
                             }
                             else
                             {
-                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatEntranceCommand, new CommandParametersModel(message.User, message.Platform, message.ToArguments()));
+                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserEntranceCommand, new CommandParametersModel(message.User, message.Platform, message.ToArguments()));
                             }
                         }
 

@@ -2168,6 +2168,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chat User Entrance Command.
+        /// </summary>
+        public static string ChatUserEntranceCommand {
+            get {
+                return ResourceManager.GetString("ChatUserEntranceCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chat New User Joined.
         /// </summary>
         public static string ChatUserFirstJoin {
@@ -3059,7 +3068,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Currency/Rank/Inventory.
+        ///   Looks up a localized string similar to Consumables (Currency/Rank/etc).
         /// </summary>
         public static string ConsumablesCurrencyRankEtc {
             get {

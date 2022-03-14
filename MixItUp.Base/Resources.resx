@@ -2639,7 +2639,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
     <value>Consumables</value>
   </data>
   <data name="ConsumablesCurrencyRankEtc" xml:space="preserve">
-    <value>Currency/Rank/Inventory</value>
+    <value>Consumables (Currency/Rank/etc)</value>
   </data>
   <data name="Item" xml:space="preserve">
     <value>Item</value>
@@ -7574,5 +7574,8 @@ We will attempt to re-connect with the service when possible. If this continues,
   </data>
   <data name="AddUserDescription" xml:space="preserve">
     <value>Select the streaming platform and the name of the user to find on there. If the user is found successfully, their user data will be added in to Mix It Up for you to be able to use.</value>
+  </data>
+  <data name="ChatUserEntranceCommand" xml:space="preserve">
+    <value>Chat User Entrance Command</value>
   </data>
 </root>
