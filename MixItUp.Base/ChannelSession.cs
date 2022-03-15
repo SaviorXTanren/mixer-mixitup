@@ -63,7 +63,7 @@ namespace MixItUp.Base
             ServiceManager.Add(new OverlayService());
 
             ServiceManager.Add(new StreamlabsOBSService());
-            ServiceManager.Add(new XSplitService("http://localhost:8211/"));
+            ServiceManager.Add(new XSplitService());
 
             ServiceManager.Add(new StreamlootsService());
             ServiceManager.Add(new JustGivingService());

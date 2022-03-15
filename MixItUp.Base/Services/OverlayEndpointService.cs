@@ -81,16 +81,16 @@ namespace MixItUp.Base.Services
             this.Name = name;
             this.Port = port;
 
-            this.httpListenerServer = new OverlayHttpListenerServer(this.HttpListenerServerAddress);
-            this.webSocketServer = new OverlayWebSocketHttpListenerServer(this.WebSocketServerAddress);
+            this.httpListenerServer = new OverlayHttpListenerServer();
+            this.webSocketServer = new OverlayWebSocketHttpListenerServer();
         }
 
         public async Task<bool> Initialize()
         {
             try
             {
-                this.httpListenerServer.Start();
-                if (this.webSocketServer.Start())
+                this.httpListenerServer.Start(this.HttpListenerServerAddress);
+                if (this.webSocketServer.Start(this.WebSocketServerAddress))
                 {
                     this.webSocketServer.OnConnectedOccurred += WebSocketServer_OnConnectedOccurred;
                     this.webSocketServer.OnDisconnectOccurred += WebSocketServer_OnDisconnectOccurred;
@@ -256,8 +256,7 @@ namespace MixItUp.Base.Services
 
         private Dictionary<string, string> localFiles = new Dictionary<string, string>();
 
-        public OverlayHttpListenerServer(string address)
-            : base(address)
+        public OverlayHttpListenerServer()
         {
             this.webPageInstance = File.ReadAllText(OverlayWebpageFilePath);
 
@@ -359,7 +358,7 @@ namespace MixItUp.Base.Services
 
     public class OverlayWebSocketHttpListenerServer : WebSocketHttpListenerServerBase
     {
-        public OverlayWebSocketHttpListenerServer(string address) : base(address) { }
+        public OverlayWebSocketHttpListenerServer() : base() { }
 
         protected override WebSocketServerBase CreateWebSocketServer(HttpListenerContext listenerContext)
         {

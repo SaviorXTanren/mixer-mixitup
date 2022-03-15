@@ -84,8 +84,8 @@ namespace MixItUp.Base.Services.External
         public event EventHandler Connected = delegate { };
         public event EventHandler Disconnected = delegate { };
 
-        public XSplitService(string address)
-            : base(address)
+        public XSplitService()
+            : base()
         {
             base.OnConnectedOccurred += XSplitService_OnConnectedOccurred;
             base.OnDisconnectOccurred += XSplitService_OnDisconnectOccurred;
@@ -100,7 +100,7 @@ namespace MixItUp.Base.Services.External
         public Task<Result> Connect()
         {
             this.IsConnected = false;
-            if (this.Start())
+            if (this.Start("http://localhost:8211/"))
             {
                 this.IsConnected = true;
                 ServiceManager.Get<ITelemetryService>().TrackService("XSplit");
