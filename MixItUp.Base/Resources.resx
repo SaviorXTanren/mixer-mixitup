@@ -7615,4 +7615,7 @@ via Twitch, it's a "your mileage may very" situation.</value>
   <data name="TwitchActionNameMissing" xml:space="preserve">
     <value>Twitch Action: A valid name must be specified</value>
   </data>
+  <data name="SetCustomTags" xml:space="preserve">
+    <value>Set Custom Tags</value>
+  </data>
 </root>

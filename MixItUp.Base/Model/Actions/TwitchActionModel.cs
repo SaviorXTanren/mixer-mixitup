@@ -15,6 +15,7 @@ using Twitch.Base.Models.NewAPI.Clips;
 using Twitch.Base.Models.NewAPI.Polls;
 using Twitch.Base.Models.NewAPI.Predictions;
 using Twitch.Base.Models.NewAPI.Streams;
+using Twitch.Base.Models.NewAPI.Tags;
 
 namespace MixItUp.Base.Model.Actions
 {
@@ -39,7 +40,8 @@ namespace MixItUp.Base.Model.Actions
         EnableSubscribersChat,
         DisableSubscriberChat,
         SetTitle,
-        SetGame
+        SetGame,
+        SetCustomTags
     }
 
     [DataContract]
@@ -67,6 +69,13 @@ namespace MixItUp.Base.Model.Actions
         {
             TwitchActionModel action = new TwitchActionModel(type);
             action.Text = text;
+            return action;
+        }
+
+        public static TwitchActionModel CreateSetCustomTagsAction(IEnumerable<string> customTags)
+        {
+            TwitchActionModel action = new TwitchActionModel(TwitchActionType.SetCustomTags);
+            action.CustomTags.AddRange(customTags);
             return action;
         }
 
@@ -150,6 +159,9 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public string Text { get; set; }
+
+        [DataMember]
+        public List<string> CustomTags { get; set; } = new List<string>();
 
         [DataMember]
         public int AdLength { get; set; } = 60;
@@ -570,6 +582,10 @@ namespace MixItUp.Base.Model.Actions
                 {
                     string text = await ReplaceStringWithSpecialModifiers(this.Text, parameters);
                     await ServiceManager.Get<TwitchSessionService>().SetGame(text);
+                }
+                else if (this.ActionType == TwitchActionType.SetCustomTags)
+                {
+                    await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateStreamTagsForChannel(ServiceManager.Get<TwitchSessionService>().User, this.CustomTags.Select(t => new TagModel() { tag_id = t }));
                 }
             }
         }

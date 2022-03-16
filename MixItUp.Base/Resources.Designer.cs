@@ -15897,6 +15897,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set Custom Tags.
+        /// </summary>
+        public static string SetCustomTags {
+            get {
+                return ResourceManager.GetString("SetCustomTags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set Game.
         /// </summary>
         public static string SetGame {

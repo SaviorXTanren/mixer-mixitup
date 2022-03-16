@@ -55,5 +55,14 @@ namespace MixItUp.Base.Model.Settings
             }
             return Languages.LanguageMaps[LanguageOptions.Default];
         }
+
+        public static string GetLanguageLocale(LanguageOptions language)
+        {
+            if (Languages.LanguageMaps.TryGetValue(language, out string locale))
+            {
+                return locale;
+            }
+            return null;
+        }
     }
 }
