@@ -26,7 +26,7 @@
         </Grid.RowDefinitions>
 
         <TextBox Grid.Row="0" Text="{Binding AlertName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AlertName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" HorizontalAlignment="Left" Width="200" />
-        <TextBlock Grid.Column="0" Visibility="{Binding PolyPopNotEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Foreground="Red" HorizontalAlignment="Right" Text="{x:Static resx:Resources.EnableOvrStream}"/>
+        <TextBlock Grid.Column="0" Visibility="{Binding PolyPopNotEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Foreground="Red" HorizontalAlignment="Right" Text="{x:Static resx:Resources.EnablePolyPop}"/>
 
         <Button Grid.Row="2" Command="{Binding AddVariableCommand}" Content="{x:Static resx:Resources.AddNewVariable}" HorizontalAlignment="Center" Width="150" />
 
