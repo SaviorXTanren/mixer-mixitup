@@ -38,6 +38,8 @@ namespace MixItUp.Base.Model.Actions
         DisableSlowChat,
         EnableSubscribersChat,
         DisableSubscriberChat,
+        SetTitle,
+        SetGame
     }
 
     [DataContract]
@@ -58,6 +60,13 @@ namespace MixItUp.Base.Model.Actions
         {
             TwitchActionModel action = new TwitchActionModel(type);
             action.Username = username;
+            return action;
+        }
+
+        public static TwitchActionModel CreateTextAction(TwitchActionType type, string text)
+        {
+            TwitchActionModel action = new TwitchActionModel(type);
+            action.Text = text;
             return action;
         }
 
@@ -138,6 +147,9 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public string Username { get; set; }
+
+        [DataMember]
+        public string Text { get; set; }
 
         [DataMember]
         public int AdLength { get; set; } = 60;
@@ -548,6 +560,16 @@ namespace MixItUp.Base.Model.Actions
                 else if (this.ActionType == TwitchActionType.DisableSubscriberChat)
                 {
                     await ServiceManager.Get<ChatService>().SendMessage("/subscribersoff", sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                }
+                else if (this.ActionType == TwitchActionType.SetTitle)
+                {
+                    string text = await ReplaceStringWithSpecialModifiers(this.Text, parameters);
+                    await ServiceManager.Get<TwitchSessionService>().SetTitle(text);
+                }
+                else if (this.ActionType == TwitchActionType.SetGame)
+                {
+                    string text = await ReplaceStringWithSpecialModifiers(this.Text, parameters);
+                    await ServiceManager.Get<TwitchSessionService>().SetGame(text);
                 }
             }
         }

@@ -7609,4 +7609,10 @@ via Twitch, it's a "your mileage may very" situation.</value>
   <data name="WikiPage" xml:space="preserve">
     <value>Wiki Page</value>
   </data>
+  <data name="TrovoActionNameMissing" xml:space="preserve">
+    <value>Trovo Action: A valid name must be specified</value>
+  </data>
+  <data name="TwitchActionNameMissing" xml:space="preserve">
+    <value>Twitch Action: A valid name must be specified</value>
+  </data>
 </root>

@@ -19,6 +19,8 @@ namespace MixItUp.Base.Model.Actions
         RemoveUserRole,
         [Obsolete]
         FastClip90Seconds,
+        SetTitle,
+        SetGame,
     }
 
     [DataContract]
@@ -28,6 +30,13 @@ namespace MixItUp.Base.Model.Actions
         {
             TrovoActionModel action = new TrovoActionModel(TrovoActionType.Host);
             action.Username = username;
+            return action;
+        }
+
+        public static TrovoActionModel CreateTextAction(TrovoActionType actionType, string text)
+        {
+            TrovoActionModel action = new TrovoActionModel(actionType);
+            action.Text = text;
             return action;
         }
 
@@ -58,6 +67,9 @@ namespace MixItUp.Base.Model.Actions
         public string Username { get; set; }
 
         [DataMember]
+        public string Text { get; set; }
+
+        [DataMember]
         public string RoleName { get; set; }
 
         [DataMember]
@@ -80,6 +92,7 @@ namespace MixItUp.Base.Model.Actions
             if (ServiceManager.Get<TrovoSessionService>().IsConnected && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
             {
                 string username = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                string text = await ReplaceStringWithSpecialModifiers(this.Text, parameters);
                 string roleName = await ReplaceStringWithSpecialModifiers(this.RoleName, parameters);
 
                 if (this.ActionType == TrovoActionType.Host)
@@ -113,6 +126,14 @@ namespace MixItUp.Base.Model.Actions
                 else if (this.ActionType == TrovoActionType.FastClip90Seconds)
                 {
                     await ServiceManager.Get<TrovoChatEventService>().FastClip();
+                }
+                else if (this.ActionType == TrovoActionType.SetTitle)
+                {
+                    await ServiceManager.Get<TrovoSessionService>().SetTitle(text);
+                }
+                else if (this.ActionType == TrovoActionType.SetGame)
+                {
+                    await ServiceManager.Get<TrovoSessionService>().SetGame(text);
                 }
             }
         }

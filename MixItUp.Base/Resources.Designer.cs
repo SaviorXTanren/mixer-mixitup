@@ -18755,6 +18755,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Trovo Action: A valid name must be specified.
+        /// </summary>
+        public static string TrovoActionNameMissing {
+            get {
+                return ResourceManager.GetString("TrovoActionNameMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trovo Action: A valid role name must be specified.
         /// </summary>
         public static string TrovoActionRoleNameMissing {
@@ -19202,6 +19211,15 @@ namespace MixItUp.Base {
         public static string TwitchActionCreatePredictionTwoChoices {
             get {
                 return ResourceManager.GetString("TwitchActionCreatePredictionTwoChoices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Action: A valid name must be specified.
+        /// </summary>
+        public static string TwitchActionNameMissing {
+            get {
+                return ResourceManager.GetString("TwitchActionNameMissing", resourceCulture);
             }
         }
         

@@ -20,6 +20,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.selectedActionType = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged("ShowUsernameGrid");
+                this.NotifyPropertyChanged("ShowTextGrid");
                 this.NotifyPropertyChanged("ShowAmountGrid");
                 this.NotifyPropertyChanged("ShowRoleGrid");
             }
@@ -44,6 +45,19 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private string username;
+
+        public bool ShowTextGrid { get { return this.SelectedActionType == TrovoActionType.SetTitle || this.SelectedActionType == TrovoActionType.SetGame; } }
+
+        public string Text
+        {
+            get { return this.text; }
+            set
+            {
+                this.text = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string text;
 
         public bool ShowAmountGrid
         {
@@ -87,6 +101,26 @@ namespace MixItUp.Base.ViewModel.Actions
             : base(action, action.Actions)
         {
             this.SelectedActionType = action.ActionType;
+
+            if (this.ShowUsernameGrid)
+            {
+                this.Username = action.Username;
+            }
+
+            if (this.ShowTextGrid)
+            {
+                this.Text = action.Text;
+            }
+
+            if (this.ShowAmountGrid)
+            {
+                this.Amount = action.Amount;
+            }
+
+            if (this.ShowRoleGrid)
+            {
+                this.RoleName = action.RoleName;
+            }
         }
 
         public TrovoActionEditorControlViewModel() : base() { }
@@ -98,6 +132,14 @@ namespace MixItUp.Base.ViewModel.Actions
                 if (string.IsNullOrEmpty(this.Username))
                 {
                     return new Result(MixItUp.Base.Resources.TrovoActionUsernameMissing);
+                }
+            }
+
+            if (this.ShowTextGrid)
+            {
+                if (string.IsNullOrEmpty(this.Text))
+                {
+                    return new Result(MixItUp.Base.Resources.TrovoActionNameMissing);
                 }
             }
 
@@ -153,6 +195,14 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.SelectedActionType == TrovoActionType.FastClip90Seconds)
             {
                 return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateBasicAction(TrovoActionType.FastClip90Seconds));
+            }
+            else if (this.SelectedActionType == TrovoActionType.SetTitle)
+            {
+                return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateTextAction(TrovoActionType.SetTitle, this.Text));
+            }
+            else if (this.SelectedActionType == TrovoActionType.SetGame)
+            {
+                return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateTextAction(TrovoActionType.SetGame, this.Text));
             }
             return Task.FromResult<ActionModelBase>(null);
         }

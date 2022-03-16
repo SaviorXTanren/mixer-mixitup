@@ -28,6 +28,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.selectedActionType = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged("ShowUsernameGrid");
+                this.NotifyPropertyChanged("ShowNameGrid");
                 this.NotifyPropertyChanged("ShowAdGrid");
                 this.NotifyPropertyChanged("ShowClipsGrid");
                 this.NotifyPropertyChanged("ShowStreamMarkerGrid");
@@ -73,6 +74,19 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private string username;
+
+        public bool ShowTextGrid { get { return this.SelectedActionType == TwitchActionType.SetTitle || this.SelectedActionType == TwitchActionType.SetGame; } }
+
+        public string Text
+        {
+            get { return this.text; }
+            set
+            {
+                this.text = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string text;
 
         public bool ShowAdGrid { get { return this.SelectedActionType == TwitchActionType.RunAd; } }
 
@@ -389,6 +403,10 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.Username = action.Username;
             }
+            else if (this.ShowTextGrid)
+            {
+                this.Text = action.Text;
+            }
             else if (this.ShowAdGrid)
             {
                 this.SelectedAdLength = action.AdLength;
@@ -473,6 +491,13 @@ namespace MixItUp.Base.ViewModel.Actions
                 if (string.IsNullOrEmpty(this.Username))
                 {
                     return new Result(MixItUp.Base.Resources.TwitchActionUsernameMissing);
+                }
+            }
+            else if (this.ShowTextGrid)
+            {
+                if (string.IsNullOrEmpty(this.Text))
+                {
+                    return new Result(MixItUp.Base.Resources.TwitchActionNameMissing);
                 }
             }
             else if (this.ShowStreamMarkerGrid)
@@ -560,6 +585,10 @@ namespace MixItUp.Base.ViewModel.Actions
             if (this.ShowUsernameGrid)
             {
                 return TwitchActionModel.CreateUserAction(this.SelectedActionType, this.Username);
+            }
+            else if (this.ShowTextGrid)
+            {
+                return TwitchActionModel.CreateTextAction(this.SelectedActionType, this.Username);
             }
             else if (this.ShowAdGrid)
             {
