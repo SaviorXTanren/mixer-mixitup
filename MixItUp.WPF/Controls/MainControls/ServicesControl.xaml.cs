@@ -28,7 +28,7 @@ namespace MixItUp.WPF.Controls.MainControls
             services.Add(new ServiceContainerControl(this.Window, new OBSStudioServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new StreamlabsOBSServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new XSplitServiceControl()));
-            services.Add(new ServiceContainerControl(this.Window, new OvrStreamServiceControl()));
+            services.Add(new ServiceContainerControl(this.Window, new PolyPopServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new StreamlabsServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new StreamElementsServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new TipeeeStreamServiceControl()));
@@ -47,6 +47,7 @@ namespace MixItUp.WPF.Controls.MainControls
             services.Add(new ServiceContainerControl(this.Window, new StreamDeckServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new IFTTTServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new StreamAvatarsServiceControl()));
+            services.Add(new ServiceContainerControl(this.Window, new OvrStreamServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new DeveloperAPIServiceControl()));
 
             this.services.ClearAndAddRange(services);

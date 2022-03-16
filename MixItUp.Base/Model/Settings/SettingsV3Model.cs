@@ -494,6 +494,9 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public int VTubeStudioPortNumber { get; set; } = VTubeStudioService.DefaultPortNumber;
 
+        [DataMember]
+        public int PolyPopPortNumber { get; set; }
+
         #endregion Services
 
         #region Dashboard

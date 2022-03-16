@@ -514,6 +514,9 @@
     <Compile Include="Controls\Actions\OvrStreamActionEditorControl.xaml.cs">
       <DependentUpon>OvrStreamActionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\PolyPopActionEditorControl.xaml.cs">
+      <DependentUpon>PolyPopActionEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\PixelChatActionEditorControl.xaml.cs">
       <DependentUpon>PixelChatActionEditorControl.xaml</DependentUpon>
     </Compile>
@@ -902,6 +905,9 @@
     <Compile Include="Controls\Services\OvrStreamServiceControl.xaml.cs">
       <DependentUpon>OvrStreamServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\PolyPopServiceControl.xaml.cs">
+      <DependentUpon>PolyPopServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\PixelChatServiceControl.xaml.cs">
       <DependentUpon>PixelChatServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1062,8 +1068,8 @@
     <Compile Include="Services\DeveloperAPI\V2\CommandsController.cs" />
     <Compile Include="Services\DeveloperAPI\V2\UsersController.cs" />
     <Compile Include="Services\DeveloperAPI\WindowsDeveloperAPIService.cs" />
-    <Compile Include="Services\WindowsSocketIOConnection.cs" />
     <Compile Include="Services\WindowsOvrStreamService.cs" />
+    <Compile Include="Services\WindowsSocketIOConnection.cs" />
     <Compile Include="Services\WindowsOBSService.cs" />
     <Compile Include="Services\WindowsDatabaseService.cs" />
     <Compile Include="Services\WindowsFileService.cs" />
@@ -1207,6 +1213,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\OvrStreamActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\PolyPopActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1719,6 +1729,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\OvrStreamServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\PolyPopServiceControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

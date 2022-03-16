@@ -42,7 +42,7 @@
             <TextBlock Grid.Column="2" Visibility="{Binding OvrStreamNotEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Foreground="Red" HorizontalAlignment="Center" Text="{x:Static resx:Resources.EnableOvrStream}"/>
         </Grid>
 
-        <ComboBox Grid.Row="2" ItemsSource="{Binding Titles}" SelectedItem="{Binding SelectedTitle}" Text="{Binding TitleName}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TitleName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+        <TextBox Grid.Row="2" Text="{Binding TitleName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TitleName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
         <Grid Grid.Row="3" Visibility="{Binding ShowVariablesGrid, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,10,0,0">
             <Grid.RowDefinitions>

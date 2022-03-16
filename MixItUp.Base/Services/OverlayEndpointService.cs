@@ -358,7 +358,7 @@ namespace MixItUp.Base.Services
 
     public class OverlayWebSocketHttpListenerServer : WebSocketHttpListenerServerBase
     {
-        public OverlayWebSocketHttpListenerServer() : base() { }
+        public OverlayWebSocketHttpListenerServer() { }
 
         protected override WebSocketServerBase CreateWebSocketServer(HttpListenerContext listenerContext)
         {

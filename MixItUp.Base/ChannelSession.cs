@@ -64,6 +64,7 @@ namespace MixItUp.Base
 
             ServiceManager.Add(new StreamlabsOBSService());
             ServiceManager.Add(new XSplitService());
+            ServiceManager.Add(new PolyPopService());
 
             ServiceManager.Add(new StreamlootsService());
             ServiceManager.Add(new JustGivingService());
@@ -325,6 +326,7 @@ namespace MixItUp.Base
                 if (ServiceManager.Get<StreamlabsOBSService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<StreamlabsOBSService>()] = null; }
                 if (ServiceManager.Get<XSplitService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<XSplitService>()] = null; }
                 if (!string.IsNullOrEmpty(ChannelSession.Settings.OvrStreamServerIP)) { externalServiceToConnect[ServiceManager.Get<IOvrStreamService>()] = null; }
+                if (ChannelSession.Settings.PolyPopPortNumber > 0) { externalServiceToConnect[ServiceManager.Get<PolyPopService>()] = null; }
                 if (ChannelSession.Settings.EnableOverlay) { externalServiceToConnect[ServiceManager.Get<OverlayService>()] = null; }
                 if (ChannelSession.Settings.EnableDeveloperAPI) { externalServiceToConnect[ServiceManager.Get<IDeveloperAPIService>()] = null; }
 

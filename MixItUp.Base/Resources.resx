@@ -7585,4 +7585,19 @@ amount of whispers that can be sent in a timeline that make it very impractical 
 preventative measures if the user is not on your friends list on Twitch. So although you can send whispers
 via Twitch, it's a "your mileage may very" situation.</value>
   </data>
+  <data name="AlertName" xml:space="preserve">
+    <value>Alert Name</value>
+  </data>
+  <data name="EnablePolyPop" xml:space="preserve">
+    <value>Please enable PolyPop on the Services page!</value>
+  </data>
+  <data name="PolyPop" xml:space="preserve">
+    <value>PolyPop</value>
+  </data>
+  <data name="PolyPopActionMissingVariableName" xml:space="preserve">
+    <value>PolyPop Action: Missing variable name</value>
+  </data>
+  <data name="PolyPopFailedToConnect" xml:space="preserve">
+    <value>Failed to start web socket listening server for PolyPop</value>
+  </data>
 </root>
