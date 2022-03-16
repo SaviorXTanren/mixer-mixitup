@@ -13487,6 +13487,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The PolyPop service allow you to connect to your installation of PolyPop via the websocket alert plugin and trigger alerts..
+        /// </summary>
+        public static string PolyPopInfo1 {
+            get {
+                return ResourceManager.GetString("PolyPopInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To connect the service, you must download and install the Websocket plugin to your PolyPop installation. Full instructions can be found on the Wiki page for this service..
+        /// </summary>
+        public static string PolyPopInfo2 {
+            get {
+                return ResourceManager.GetString("PolyPopInfo2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Port Name.
         /// </summary>
         public static string PortName {
@@ -21349,6 +21367,15 @@ namespace MixItUp.Base {
         public static string Width {
             get {
                 return ResourceManager.GetString("Width", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wiki Page.
+        /// </summary>
+        public static string WikiPage {
+            get {
+                return ResourceManager.GetString("WikiPage", resourceCulture);
             }
         }
         

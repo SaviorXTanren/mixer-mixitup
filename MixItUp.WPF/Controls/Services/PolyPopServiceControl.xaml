@@ -26,15 +26,23 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.OvrStreamInfo1}"/>
+            <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.PolyPopInfo1}"/>
 
-            <TextBlock Grid.Row="2" TextWrapping="Wrap" Text="{x:Static resx:Resources.OvrStreamInfo2}"/>
-
-            <TextBlock Grid.Row="4" TextWrapping="Wrap" HorizontalAlignment="Center">
+            <TextBlock Grid.Row="2" TextWrapping="Wrap" HorizontalAlignment="Center">
                 <Hyperlink NavigateUri="https://www.polypoplive.com/" RequestNavigate="Hyperlink_RequestNavigate">
                     https://www.polypoplive.com/
+                </Hyperlink>
+            </TextBlock>
+
+            <TextBlock Grid.Row="4" TextWrapping="Wrap" Text="{x:Static resx:Resources.PolyPopInfo2}"/>
+
+            <TextBlock Grid.Row="6" TextWrapping="Wrap" HorizontalAlignment="Center">
+                <Hyperlink NavigateUri="https://wiki.mixitupapp.com/services/polypop" RequestNavigate="Hyperlink_RequestNavigate">
+                    <TextBlock Text="{x:Static resx:Resources.WikiPage}"/>
                 </Hyperlink>
             </TextBlock>
         </Grid>

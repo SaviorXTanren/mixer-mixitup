@@ -7600,4 +7600,13 @@ via Twitch, it's a "your mileage may very" situation.</value>
   <data name="PolyPopFailedToConnect" xml:space="preserve">
     <value>Failed to start web socket listening server for PolyPop</value>
   </data>
+  <data name="PolyPopInfo1" xml:space="preserve">
+    <value>The PolyPop service allow you to connect to your installation of PolyPop via the websocket alert plugin and trigger alerts.</value>
+  </data>
+  <data name="PolyPopInfo2" xml:space="preserve">
+    <value>To connect the service, you must download and install the Websocket plugin to your PolyPop installation. Full instructions can be found on the Wiki page for this service.</value>
+  </data>
+  <data name="WikiPage" xml:space="preserve">
+    <value>Wiki Page</value>
+  </data>
 </root>
