@@ -13,6 +13,7 @@ using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -238,9 +239,21 @@ namespace MixItUp.Base.Util
                 }
 
                 string currentScene = "Unknown";
-                if (ssService != null)
+                if (ssService != null && ssService.IsEnabled)
                 {
-                    currentScene = await ssService.GetCurrentScene();
+                    if (!ssService.IsConnected)
+                    {
+                        Result result = await ssService.Connect();
+                        if (!result.Success)
+                        {
+                            Logger.Log(LogLevel.Error, result.Message);
+                        }
+                    }
+
+                    if (ssService.IsConnected)
+                    {
+                        currentScene = await ssService.GetCurrentScene();
+                    }
                 }
 
                 this.ReplaceSpecialIdentifier("streamcurrentscene", currentScene);
