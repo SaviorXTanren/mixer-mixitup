@@ -42,7 +42,7 @@ namespace MixItUp.Base.ViewModel.Commands
         {
             if (command != null)
             {
-                string fileName = ServiceManager.Get<IFileService>().ShowSaveFileDialog(command.Name + MixItUpCommandFileExtension);
+                string fileName = ServiceManager.Get<IFileService>().ShowSaveFileDialog(command.Name + MixItUpCommandFileExtension, MixItUp.Base.Resources.MixItUpCommandFileFormatFilter);
                 if (!string.IsNullOrEmpty(fileName))
                 {
                     await FileSerializerHelper.SerializeToFile(fileName, command);
@@ -200,6 +200,12 @@ namespace MixItUp.Base.ViewModel.Commands
                 try
                 {
                     string filename = CommandEditorWindowViewModelBase.OpenCommandFileBrowser();
+
+                    if (string.IsNullOrEmpty(filename))
+                    {
+                        return;
+                    }
+
                     CommandModelBase command = null;
 
                     // Check if the imported command type matches the currently edited command. If so, import additional information.

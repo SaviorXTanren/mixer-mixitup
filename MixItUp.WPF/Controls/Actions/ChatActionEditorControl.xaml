@@ -35,10 +35,10 @@
             <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.SendAsStreamer}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
             <ToggleButton Grid.Column="2" IsChecked="{Binding SendAsStreamer}" VerticalAlignment="Center" />
 
-            <TextBlock Grid.Column="4" Text="{Binding Source={x:Static resx:Resources.Whisper}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
-            <ToggleButton Grid.Column="6" IsChecked="{Binding IsWhisper}" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="4" Text="{Binding Source={x:Static resx:Resources.Whisper}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" ToolTip="{x:Static resx:Resources.WhisperTooltip}" VerticalAlignment="Center" />
+            <ToggleButton Grid.Column="6" IsChecked="{Binding IsWhisper}" ToolTip="{x:Static resx:Resources.WhisperTooltip}" VerticalAlignment="Center" />
 
-            <TextBox Grid.Column="8" Text="{Binding WhisperUserName}" IsEnabled="{Binding IsWhisper}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.WhisperUserOptional}" Width="150" />
+            <TextBox Grid.Column="8" Text="{Binding WhisperUserName}" IsEnabled="{Binding IsWhisper}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.WhisperUserOptional}" ToolTip="{x:Static resx:Resources.WhisperTooltip}" Width="150" />
 
             <TextBlock Grid.Column="10" HorizontalAlignment="Right" VerticalAlignment="Center">
                 <Hyperlink NavigateUri="https://wiki.mixitupapp.com/special-identifiers" RequestNavigate="Hyperlink_RequestNavigate">

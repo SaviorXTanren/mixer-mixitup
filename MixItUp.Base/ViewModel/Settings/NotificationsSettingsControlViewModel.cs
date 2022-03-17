@@ -36,7 +36,7 @@ namespace MixItUp.Base.ViewModel.Settings
                 }
                 else if (this.Sound.Equals(CustomSoundName))
                 {
-                    string selectedSound = ServiceManager.Get<IFileService>().ShowOpenFileDialog(ServiceManager.Get<IFileService>().MusicFileFilter());
+                    string selectedSound = ServiceManager.Get<IFileService>().ShowOpenFileDialog(ServiceManager.Get<IFileService>().SoundFileFilter());
                     if (!string.IsNullOrEmpty(selectedSound))
                     {
                         this.valueSetter(selectedSound);

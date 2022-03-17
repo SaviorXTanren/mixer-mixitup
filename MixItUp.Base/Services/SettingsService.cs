@@ -439,13 +439,7 @@ namespace MixItUp.Base.Services
 
                 foreach (GameOutcomeModel outcome in gCommand.BetOptions)
                 {
-                    foreach (var kvp in outcome.RoleProbabilityPayouts)
-                    {
-                        UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
-                        kvp.Value.Role = OldUserRoleEnum.Banned;
-                        kvp.Value.UserRole = role;
-                        outcome.UserRoleProbabilityPayouts[role] = kvp.Value;
-                    }
+                    outcome.UpgradeProbabilitySettings();
                 }
             }
             else if (command is BidGameCommandModel)
@@ -456,48 +450,29 @@ namespace MixItUp.Base.Services
             else if (command is DuelGameCommandModel)
             {
                 DuelGameCommandModel gCommand = (DuelGameCommandModel)command;
-                foreach (var kvp in gCommand.SuccessfulOutcome.RoleProbabilityPayouts)
-                {
-                    UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
-                    kvp.Value.Role = OldUserRoleEnum.Banned;
-                    kvp.Value.UserRole = role;
-                    gCommand.SuccessfulOutcome.UserRoleProbabilityPayouts[role] = kvp.Value;
-                }
+                gCommand.SuccessfulOutcome.UpgradeProbabilitySettings();
             }
             else if (command is HeistGameCommandModel)
             {
                 HeistGameCommandModel gCommand = (HeistGameCommandModel)command;
-                foreach (var kvp in gCommand.UserSuccessOutcome.RoleProbabilityPayouts)
-                {
-                    UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
-                    kvp.Value.Role = OldUserRoleEnum.Banned;
-                    kvp.Value.UserRole = role;
-                    gCommand.UserSuccessOutcome.UserRoleProbabilityPayouts[role] = kvp.Value;
-                }
+                gCommand.UserSuccessOutcome.UpgradeProbabilitySettings();
             }
             else if (command is RouletteGameCommandModel)
             {
                 RouletteGameCommandModel gCommand = (RouletteGameCommandModel)command;
-                foreach (var kvp in gCommand.UserSuccessOutcome.RoleProbabilityPayouts)
-                {
-                    UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
-                    kvp.Value.Role = OldUserRoleEnum.Banned;
-                    kvp.Value.UserRole = role;
-                    gCommand.UserSuccessOutcome.UserRoleProbabilityPayouts[role] = kvp.Value;
-                }
+                gCommand.UserSuccessOutcome.UpgradeProbabilitySettings();
+            }
+            else if (command is StealGameCommandModel)
+            {
+                StealGameCommandModel gCommand = (StealGameCommandModel)command;
+                gCommand.SuccessfulOutcome.UpgradeProbabilitySettings();
             }
             else if (command is SpinGameCommandModel)
             {
                 SpinGameCommandModel gCommand = (SpinGameCommandModel)command;
                 foreach (GameOutcomeModel outcome in gCommand.Outcomes)
                 {
-                    foreach (var kvp in outcome.RoleProbabilityPayouts)
-                    {
-                        UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
-                        kvp.Value.Role = OldUserRoleEnum.Banned;
-                        kvp.Value.UserRole = role;
-                        outcome.UserRoleProbabilityPayouts[role] = kvp.Value;
-                    }
+                    outcome.UpgradeProbabilitySettings();
                 }
             }
             else if (command is SlotMachineGameCommandModel)
@@ -505,13 +480,7 @@ namespace MixItUp.Base.Services
                 SlotMachineGameCommandModel gCommand = (SlotMachineGameCommandModel)command;
                 foreach (SlotMachineGameOutcomeModel outcome in gCommand.Outcomes)
                 {
-                    foreach (var kvp in outcome.RoleProbabilityPayouts)
-                    {
-                        UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
-                        kvp.Value.Role = OldUserRoleEnum.Banned;
-                        kvp.Value.UserRole = role;
-                        outcome.UserRoleProbabilityPayouts[role] = kvp.Value;
-                    }
+                    outcome.UpgradeProbabilitySettings();
                 }
             }
 

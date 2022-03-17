@@ -345,9 +345,13 @@ namespace MixItUp.Base.Services
 
                     this.signalRConnection.Listen("AuthenticationCompleteEvent", (bool approved) =>
                     {
+                        Logger.Log($"Webhook Authentication - {approved}");
+
                         this.IsWebhookHubAllowed = approved;
                         if (!this.IsWebhookHubAllowed)
                         {
+                            Logger.Log(LogLevel.Error, $"Webhook Authentication Failed");
+
                             // Force disconnect is it doesn't retry
                             var _ = this.Disconnect();
                         }
@@ -405,6 +409,8 @@ namespace MixItUp.Base.Services
 
         public async Task Authenticate(CommunityCommandLoginModel login)
         {
+            Logger.Log($"Webhook - Sending Auth - {JSONSerializerHelper.SerializeToString(login)}");
+
             await this.AsyncWrapper(this.signalRConnection.Send(AuthenticateMethodName, login));
         }
 

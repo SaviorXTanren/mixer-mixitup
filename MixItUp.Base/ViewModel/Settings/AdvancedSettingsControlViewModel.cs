@@ -26,7 +26,7 @@ namespace MixItUp.Base.ViewModel.Settings
         {
             this.BackupSettings = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.BackupYourCurrentSettings, MixItUp.Base.Resources.BackupSettings, this.CreateCommand(async () =>
             {
-                string filePath = ServiceManager.Get<IFileService>().ShowSaveFileDialog(ChannelSession.Settings.Name + "." + SettingsV3Model.SettingsBackupFileExtension);
+                string filePath = ServiceManager.Get<IFileService>().ShowSaveFileDialog(ChannelSession.Settings.Name + "." + SettingsV3Model.SettingsBackupFileExtension, MixItUp.Base.Resources.MixItUpBackupFileFormatFilter);
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     await ServiceManager.Get<SettingsService>().SavePackagedBackup(ChannelSession.Settings, filePath);

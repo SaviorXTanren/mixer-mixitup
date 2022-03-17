@@ -63,7 +63,8 @@ namespace MixItUp.Base
             ServiceManager.Add(new OverlayService());
 
             ServiceManager.Add(new StreamlabsOBSService());
-            ServiceManager.Add(new XSplitService("http://localhost:8211/"));
+            ServiceManager.Add(new XSplitService());
+            ServiceManager.Add(new PolyPopService());
 
             ServiceManager.Add(new StreamlootsService());
             ServiceManager.Add(new JustGivingService());
@@ -325,6 +326,7 @@ namespace MixItUp.Base
                 if (ServiceManager.Get<StreamlabsOBSService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<StreamlabsOBSService>()] = null; }
                 if (ServiceManager.Get<XSplitService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<XSplitService>()] = null; }
                 if (!string.IsNullOrEmpty(ChannelSession.Settings.OvrStreamServerIP)) { externalServiceToConnect[ServiceManager.Get<IOvrStreamService>()] = null; }
+                if (ChannelSession.Settings.PolyPopPortNumber > 0) { externalServiceToConnect[ServiceManager.Get<PolyPopService>()] = null; }
                 if (ChannelSession.Settings.EnableOverlay) { externalServiceToConnect[ServiceManager.Get<OverlayService>()] = null; }
                 if (ChannelSession.Settings.EnableDeveloperAPI) { externalServiceToConnect[ServiceManager.Get<IDeveloperAPIService>()] = null; }
 
@@ -333,7 +335,7 @@ namespace MixItUp.Base
                     Dictionary<IExternalService, Task<Result>> externalServiceTasks = new Dictionary<IExternalService, Task<Result>>();
                     foreach (var kvp in externalServiceToConnect)
                     {
-                        Logger.Log(LogLevel.Debug, "Trying automatic OAuth service connection: " + nameof(kvp.Key));
+                        Logger.Log(LogLevel.Debug, "Trying automatic OAuth service connection: " + kvp.Key.GetType().ToString());
 
                         try
                         {
@@ -348,7 +350,7 @@ namespace MixItUp.Base
                         }
                         catch (Exception sex)
                         {
-                            Logger.Log(LogLevel.Error, "Error in external service initial connection: " + nameof(kvp.Key));
+                            Logger.Log(LogLevel.Error, "Error in external service initial connection: " + kvp.Key.GetType().ToString());
                             Logger.Log(sex);
                         }
                     }
@@ -370,7 +372,7 @@ namespace MixItUp.Base
                         {
                             if (kvp.Value.Result != null && !kvp.Value.Result.Success && kvp.Key is IOAuthExternalService)
                             {
-                                Logger.Log(LogLevel.Debug, "Automatic OAuth token connection failed, trying manual connection: " + nameof(kvp.Key));
+                                Logger.Log(LogLevel.Debug, "Automatic OAuth token connection failed, trying manual connection: " + kvp.Key.GetType().ToString());
                                 result = await kvp.Key.Connect();
                                 if (!result.Success)
                                 {
@@ -380,7 +382,7 @@ namespace MixItUp.Base
                         }
                         catch (Exception sex)
                         {
-                            Logger.Log(LogLevel.Error, "Error in external service failed re-connection: " + nameof(kvp.Key));
+                            Logger.Log(LogLevel.Error, "Error in external service failed re-connection: " + kvp.Key.GetType().ToString());
                             Logger.Log(sex);
                             failedServices.Add(kvp.Key);
                         }
@@ -388,7 +390,7 @@ namespace MixItUp.Base
 
                     if (failedServices.Count > 0)
                     {
-                        Logger.Log(LogLevel.Debug, "Connection failed for services: " + string.Join(", ", failedServices.Select(s => nameof(s))));
+                        Logger.Log(LogLevel.Debug, "Connection failed for services: " + string.Join(", ", failedServices.Select(s => s.GetType().ToString())));
 
                         StringBuilder failedServiceMessage = new StringBuilder();
                         foreach (IExternalService service in failedServices)

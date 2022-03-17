@@ -16,6 +16,9 @@ namespace MixItUp.Base.Model.Store
         public CommunityCommandTagEnum Tag { get; set; } = CommunityCommandTagEnum.Custom;
 
         [DataMember]
+        public string SearchText { get; set; }
+
+        [DataMember]
         public List<CommunityCommandModel> Commands { get; set; } = new List<CommunityCommandModel>();
     }
 }
