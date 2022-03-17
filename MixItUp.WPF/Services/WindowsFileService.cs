@@ -20,11 +20,11 @@ namespace MixItUp.WPF.Services
 
         private static SemaphoreSlim fileLock = new SemaphoreSlim(1);
 
-        public string TextFileFilter() { return "Text Files|*.txt|All files (*.*)|*.*"; }
-        public string ImageFileFilter() { return "Picture Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;|All files (*.*)|*.*"; }
-        public string MusicFileFilter() { return "Music Files|*.mp3;*.wav|All files (*.*)|*.*"; }
-        public string VideoFileFilter() { return "Video Files|*.mp4;*.webm|All files (*.*)|*.*"; }
-        public string HTMLFileFilter() { return "HTML Files (*.html)|*.html|All files (*.*)|*.*"; }
+        public string TextFileFilter() { return MixItUp.Base.Resources.TextFileFormatFilter; }
+        public string ImageFileFilter() { return MixItUp.Base.Resources.ImageFileFormatFilter; }
+        public string SoundFileFilter() { return MixItUp.Base.Resources.SoundFileFormatFilter; }
+        public string VideoFileFilter() { return MixItUp.Base.Resources.VideoFileFormatFilter; }
+        public string HTMLFileFilter() { return MixItUp.Base.Resources.HTMLFileFormatFilter; }
 
         public async Task CopyFile(string sourcePath, string destinationPath)
         {

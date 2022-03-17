@@ -7618,4 +7618,25 @@ via Twitch, it's a "your mileage may very" situation.</value>
   <data name="SetCustomTags" xml:space="preserve">
     <value>Set Custom Tags</value>
   </data>
+  <data name="HTMLFileFormatFilter" xml:space="preserve">
+    <value>HTML Files (*.html)|*.html|All files (*.*)|*.*</value>
+  </data>
+  <data name="ImageFileFormatFilter" xml:space="preserve">
+    <value>Image Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;|All files (*.*)|*.*</value>
+  </data>
+  <data name="MixItUpBackupFileFormatFilter" xml:space="preserve">
+    <value>Mix It Up Backup|*.miubackup|All files (*.*)|*.*</value>
+  </data>
+  <data name="MixItUpCommandFileFormatFilter" xml:space="preserve">
+    <value>Mix It Up Command|*.miucommand|All files (*.*)|*.*</value>
+  </data>
+  <data name="SoundFileFormatFilter" xml:space="preserve">
+    <value>Sound Files|*.mp3;*.wav|All files (*.*)|*.*</value>
+  </data>
+  <data name="TextFileFormatFilter" xml:space="preserve">
+    <value>Text Files|*.txt|All files (*.*)|*.*</value>
+  </data>
+  <data name="VideoFileFormatFilter" xml:space="preserve">
+    <value>Video Files|*.mp4;*.webm|All files (*.*)|*.*</value>
+  </data>
 </root>

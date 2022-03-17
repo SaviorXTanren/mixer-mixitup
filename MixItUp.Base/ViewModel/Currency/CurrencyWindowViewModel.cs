@@ -590,7 +590,7 @@ namespace MixItUp.Base.ViewModel.Currency
             {
                 await ServiceManager.Get<UserService>().LoadAllUserData();
 
-                string filePath = ServiceManager.Get<IFileService>().ShowSaveFileDialog(this.Currency.Name + " Data.txt");
+                string filePath = ServiceManager.Get<IFileService>().ShowSaveFileDialog(this.Currency.Name + " Data.txt", MixItUp.Base.Resources.TextFileFormatFilter);
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     StringBuilder fileContents = new StringBuilder();

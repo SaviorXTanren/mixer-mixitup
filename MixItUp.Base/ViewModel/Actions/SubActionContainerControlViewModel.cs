@@ -61,7 +61,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     CustomCommandModel command = new CustomCommandModel(this.Name);
                     command.Actions.AddRange(await this.ActionEditorList.GetActions());
 
-                    string fileName = ServiceManager.Get<IFileService>().ShowSaveFileDialog(this.Name + CommandEditorWindowViewModelBase.MixItUpCommandFileExtension);
+                    string fileName = ServiceManager.Get<IFileService>().ShowSaveFileDialog(this.Name + CommandEditorWindowViewModelBase.MixItUpCommandFileExtension, MixItUp.Base.Resources.MixItUpCommandFileFormatFilter);
                     if (!string.IsNullOrEmpty(fileName))
                     {
                         await FileSerializerHelper.SerializeToFile(fileName, command);

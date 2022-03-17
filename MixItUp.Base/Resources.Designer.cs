@@ -9102,6 +9102,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HTML Files (*.html)|*.html|All files (*.*)|*.*.
+        /// </summary>
+        public static string HTMLFileFormatFilter {
+            get {
+                return ResourceManager.GetString("HTMLFileFormatFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to HTML Style.
         /// </summary>
         public static string HTMLStyle {
@@ -9215,6 +9224,15 @@ namespace MixItUp.Base {
         public static string Image {
             get {
                 return ResourceManager.GetString("Image", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Image Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;|All files (*.*)|*.*.
+        /// </summary>
+        public static string ImageFileFormatFilter {
+            get {
+                return ResourceManager.GetString("ImageFileFormatFilter", resourceCulture);
             }
         }
         
@@ -11071,6 +11089,24 @@ namespace MixItUp.Base {
         public static string MixItUp {
             get {
                 return ResourceManager.GetString("MixItUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mix It Up Backup|*.miubackup|All files (*.*)|*.*.
+        /// </summary>
+        public static string MixItUpBackupFileFormatFilter {
+            get {
+                return ResourceManager.GetString("MixItUpBackupFileFormatFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mix It Up Command|*.miucommand|All files (*.*)|*.*.
+        /// </summary>
+        public static string MixItUpCommandFileFormatFilter {
+            get {
+                return ResourceManager.GetString("MixItUpCommandFileFormatFilter", resourceCulture);
             }
         }
         
@@ -16493,6 +16529,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sound Files|*.mp3;*.wav|All files (*.*)|*.*.
+        /// </summary>
+        public static string SoundFileFormatFilter {
+            get {
+                return ResourceManager.GetString("SoundFileFormatFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sound File Path.
         /// </summary>
         public static string SoundFilePath {
@@ -17995,6 +18040,15 @@ namespace MixItUp.Base {
         public static string TextColor {
             get {
                 return ResourceManager.GetString("TextColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text Files|*.txt|All files (*.*)|*.*.
+        /// </summary>
+        public static string TextFileFormatFilter {
+            get {
+                return ResourceManager.GetString("TextFileFormatFilter", resourceCulture);
             }
         }
         
@@ -20652,6 +20706,15 @@ namespace MixItUp.Base {
         public static string Video {
             get {
                 return ResourceManager.GetString("Video", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Video Files|*.mp4;*.webm|All files (*.*)|*.*.
+        /// </summary>
+        public static string VideoFileFormatFilter {
+            get {
+                return ResourceManager.GetString("VideoFileFormatFilter", resourceCulture);
             }
         }
         

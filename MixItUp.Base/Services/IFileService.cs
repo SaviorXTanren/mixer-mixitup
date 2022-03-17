@@ -7,7 +7,7 @@ namespace MixItUp.Base.Services
     {
         string TextFileFilter();
         string ImageFileFilter();
-        string MusicFileFilter();
+        string SoundFileFilter();
         string VideoFileFilter();
         string HTMLFileFilter();
 
