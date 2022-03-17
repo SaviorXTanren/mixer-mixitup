@@ -9201,7 +9201,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to If the update does not complete successfully and you are prompted to update again, restart your computer first &amp;amp; then try again..
+        ///   Looks up a localized string similar to If the update does not complete successfully and you are prompted to update again, restart your computer first &amp; then try again..
         /// </summary>
         public static string IfUpdateDoesNotCompleteRestartComputer {
             get {
@@ -21515,7 +21515,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mix It Up uses a Command &amp;amp; Action structure for everything throughout the app. Think of it similar to a recipe that you would follow to make food..
+        ///   Looks up a localized string similar to Mix It Up uses a Command &amp; Action structure for everything throughout the app. Think of it similar to a recipe that you would follow to make food..
         /// </summary>
         public static string WizardCommands1 {
             get {
@@ -21569,7 +21569,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t forget the following resources available to you for questions &amp;amp; support:.
+        ///   Looks up a localized string similar to Don&apos;t forget the following resources available to you for questions &amp; support:.
         /// </summary>
         public static string WizardFinal3 {
             get {
@@ -21605,7 +21605,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Our Discord is our main point for support &amp;amp; questions. This should be your first place to go to for any issues you might be encountering..
+        ///   Looks up a localized string similar to Our Discord is our main point for support &amp; questions. This should be your first place to go to for any issues you might be encountering..
         /// </summary>
         public static string WizardIntro3 {
             get {
