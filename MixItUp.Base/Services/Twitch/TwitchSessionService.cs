@@ -368,7 +368,10 @@ namespace MixItUp.Base.Services.Twitch
                 if (!tag.is_auto)
                 {
                     TwitchTagModel tagModel = new TwitchTagModel(tag);
-                    tags.Add(tagModel.Name, tagModel);
+                    if (!string.IsNullOrEmpty(tagModel.Name) && !tags.ContainsKey(tagModel.Name))
+                    {
+                        tags.Add(tagModel.Name, tagModel);
+                    }
                 }
             }
             this.StreamTags = tags.Values.ToList();
@@ -413,7 +416,7 @@ namespace MixItUp.Base.Services.Twitch
             }
             else
             {
-                languageLocale = Languages.GetLanguageLocale(LanguageOptions.Default);
+                languageLocale = Languages.GetLanguageLocale(LanguageOptions.Default).ToLower();
                 if (this.Tag.localization_names.ContainsKey(languageLocale))
                 {
                     this.Name = (string)this.Tag.localization_names[languageLocale];
@@ -425,7 +428,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public string ID { get { return this.Tag.tag_id; } }
 
-        public string Name { get; private set; } = MixItUp.Base.Resources.Unknown;
+        public string Name { get; private set; }
 
         public bool IsDeletable { get { return !this.Tag.is_auto; } }
     }
