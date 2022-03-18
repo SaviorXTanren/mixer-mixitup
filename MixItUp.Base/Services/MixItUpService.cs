@@ -454,12 +454,12 @@ namespace MixItUp.Base.Services
 
         private async Task TwitchStreamStartedEvent()
         {
-            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStart, new CommandParametersModel());
+            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStart, new CommandParametersModel(StreamingPlatformTypeEnum.Twitch));
         }
 
         private async Task TwitchStreamStoppedEvent()
         {
-            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStop, new CommandParametersModel());
+            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStop, new CommandParametersModel(StreamingPlatformTypeEnum.Twitch));
         }
 
         private async Task TwitchChannelHypeTrainBegin(int totalPoints, int levelPoints, int levelGoal)

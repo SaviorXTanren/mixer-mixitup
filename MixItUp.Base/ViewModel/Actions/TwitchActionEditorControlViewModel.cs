@@ -646,7 +646,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowTextGrid)
             {
-                return TwitchActionModel.CreateTextAction(this.SelectedActionType, this.Username);
+                return TwitchActionModel.CreateTextAction(this.SelectedActionType, this.Text);
             }
             else if (this.ShowSetCustomTagsGrid)
             {

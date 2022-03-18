@@ -7478,7 +7478,7 @@ We will attempt to re-connect with the service when possible. If this continues,
     <value>&lt; Back</value>
   </data>
   <data name="WizardCommands1" xml:space="preserve">
-    <value>Mix It Up uses a Command &amp;amp; Action structure for everything throughout the app. Think of it similar to a recipe that you would follow to make food.</value>
+    <value>Mix It Up uses a Command &amp; Action structure for everything throughout the app. Think of it similar to a recipe that you would follow to make food.</value>
   </data>
   <data name="WizardCommands2" xml:space="preserve">
     <value>Let's say you wanted to make some pasta; you would follow the steps in the recipe one after the other until you're done. You also would follow every step in the order they are specified. For example, you need to heat the water before you can add the pasta.</value>
@@ -7496,7 +7496,7 @@ We will attempt to re-connect with the service when possible. If this continues,
     <value>Don't know how a feature works or want more info? Simply click on the Help icon on the top bar of the main window to find out more!</value>
   </data>
   <data name="WizardFinal3" xml:space="preserve">
-    <value>Don't forget the following resources available to you for questions &amp;amp; support:</value>
+    <value>Don't forget the following resources available to you for questions &amp; support:</value>
   </data>
   <data name="WizardFinal4" xml:space="preserve">
     <value>Thanks for using Mix It Up and we hope it meets all your needs!</value>
@@ -7508,7 +7508,7 @@ We will attempt to re-connect with the service when possible. If this continues,
     <value>Before we get started, we want to let you know about some great resources you can use to help you with problems or give you ideas of things to create. Click any of the buttons below to go to that resource:</value>
   </data>
   <data name="WizardIntro3" xml:space="preserve">
-    <value>Our Discord is our main point for support &amp;amp; questions. This should be your first place to go to for any issues you might be encountering.</value>
+    <value>Our Discord is our main point for support &amp; questions. This should be your first place to go to for any issues you might be encountering.</value>
   </data>
   <data name="WizardIntro4" xml:space="preserve">
     <value>Our Twitter account is a great way to stay up to date on important announcements or major updates.</value>
@@ -7532,7 +7532,7 @@ We will attempt to re-connect with the service when possible. If this continues,
     <value>Current Version</value>
   </data>
   <data name="IfUpdateDoesNotCompleteRestartComputer" xml:space="preserve">
-    <value>If the update does not complete successfully and you are prompted to update again, restart your computer first &amp;amp; then try again.</value>
+    <value>If the update does not complete successfully and you are prompted to update again, restart your computer first &amp; then try again.</value>
   </data>
   <data name="MixItUpUpdateAvailable" xml:space="preserve">
     <value>Mix It Up - Update Available</value>

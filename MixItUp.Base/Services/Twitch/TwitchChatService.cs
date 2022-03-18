@@ -848,9 +848,16 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void UserClient_OnHostTargetReceived(object sender, ChatHostTargetPacketModel packet)
         {
-            if (packet.IsStartingHostMode && !ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TwitchChannelStreamStart, new CommandParametersModel()))
+            if (ChannelSession.User == null)
             {
-                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStop, new CommandParametersModel());
+                // User has not been set yet (race condition), exit out early
+                return;
+            }
+
+            CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.Twitch);
+            if (packet.IsStartingHostMode && !ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TwitchChannelStreamStart, parameters))
+            {
+                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStop, parameters);
             }
         }
 
