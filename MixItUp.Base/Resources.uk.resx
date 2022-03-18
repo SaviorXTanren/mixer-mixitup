@@ -7462,9 +7462,6 @@
   <data name="AutoCommandsExplanation" xml:space="preserve">
     <value>Наступні команди можуть бути автоматично створені для початку роботи з використанням цієї функції. Ви бажаєте, щоб ми автоматично додали для вас такі команди?</value>
   </data>
-  <data name="MixItUp" xml:space="preserve">
-    <value>Змішати його</value>
-  </data>
   <data name="MixItUpPopOut" xml:space="preserve">
     <value>Змішати його - Вискочити</value>
   </data>

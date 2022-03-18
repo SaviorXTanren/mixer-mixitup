@@ -7462,9 +7462,6 @@ Nous tenterons de nous reconnecter au service lorsque cela sera possible. Si cel
   <data name="AutoCommandsExplanation" xml:space="preserve">
     <value>Les commandes suivantes peuvent être créées automatiquement pour que vous puissiez commencer à utiliser cette fonctionnalité. Souhaitez-vous que nous ajoutions automatiquement les commandes suivantes pour vous?</value>
   </data>
-  <data name="MixItUp" xml:space="preserve">
-    <value>Mélangez-le</value>
-  </data>
   <data name="MixItUpPopOut" xml:space="preserve">
     <value>Mélangez-le - Pop Out</value>
   </data>
