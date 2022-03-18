@@ -90,9 +90,19 @@ namespace MixItUp.Base.Model.Requirements
                         {
                             if (role == UserRoleEnum.Subscriber || role == UserRoleEnum.YouTubeMember)
                             {
-                                if (this.SubscriberTier == 1 || parameters.User.SubscriberTier >= this.SubscriberTier)
+                                if (ChannelSession.Settings.ExplicitUserRoleRequirements)
                                 {
-                                    return Task.FromResult(new Result());
+                                    if (parameters.User.SubscriberTier == this.SubscriberTier)
+                                    {
+                                        return Task.FromResult(new Result());
+                                    }
+                                }
+                                else
+                                {
+                                    if (this.SubscriberTier == 1 || parameters.User.SubscriberTier >= this.SubscriberTier)
+                                    {
+                                        return Task.FromResult(new Result());
+                                    }
                                 }
                             }
                             else
@@ -108,9 +118,19 @@ namespace MixItUp.Base.Model.Requirements
                     {
                         if (this.UserRole == UserRoleEnum.Subscriber || this.UserRole == UserRoleEnum.YouTubeMember)
                         {
-                            if (parameters.User.ExceedRole(this.UserRole) || this.SubscriberTier == 1 || parameters.User.SubscriberTier >= this.SubscriberTier)
+                            if (ChannelSession.Settings.ExplicitUserRoleRequirements)
                             {
-                                return Task.FromResult(new Result());
+                                if (parameters.User.SubscriberTier == this.SubscriberTier)
+                                {
+                                    return Task.FromResult(new Result());
+                                }
+                            }
+                            else
+                            {
+                                if (parameters.User.ExceedRole(this.UserRole) || this.SubscriberTier == 1 || parameters.User.SubscriberTier >= this.SubscriberTier)
+                                {
+                                    return Task.FromResult(new Result());
+                                }
                             }
                         }
                         else
