@@ -11084,15 +11084,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mix It Up.
-        /// </summary>
-        public static string MixItUp {
-            get {
-                return ResourceManager.GetString("MixItUp", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Mix It Up Backup|*.miubackup|All files (*.*)|*.*.
         /// </summary>
         public static string MixItUpBackupFileFormatFilter {

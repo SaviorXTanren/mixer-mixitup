@@ -7462,9 +7462,6 @@ Mix It Up の実行中にまだチャンネルにアクセスしていないユ�
   <data name="AutoCommandsExplanation" xml:space="preserve">
     <value>この機能を使用する際に、次のコマンドを自動的に作成できます。次のコマンドを自動的に追加しますか?</value>
   </data>
-  <data name="MixItUp" xml:space="preserve">
-    <value>ミックス・イット・アップ</value>
-  </data>
   <data name="MixItUpPopOut" xml:space="preserve">
     <value>ミックス・イット・アップ - ポップアウト</value>
   </data>
