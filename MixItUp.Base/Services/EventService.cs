@@ -199,7 +199,7 @@ namespace MixItUp.Base.Services
         public bool CanPerformEvent(EventTypeEnum type, CommandParametersModel parameters)
         {
             UserV2ViewModel user = (parameters.User != null) ? parameters.User : ChannelSession.User;
-            if (EventService.singleUseTracking.Contains(type) && this.userEventTracking.ContainsKey(type))
+            if (EventService.singleUseTracking.Contains(type) && this.userEventTracking.ContainsKey(type) && user != null)
             {
                 return !this.userEventTracking[type].Contains(user.ID);
             }

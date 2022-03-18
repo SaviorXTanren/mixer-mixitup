@@ -453,7 +453,7 @@ namespace MixItUp.Base.Services.Twitch
                         Logger.Log(LogLevel.Debug, "Stream start detected");
 
                         streamStartCheckTime = DateTimeOffset.MaxValue;
-                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStart, new CommandParametersModel());
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStart, new CommandParametersModel(StreamingPlatformTypeEnum.Twitch));
                     }
                 }
 
