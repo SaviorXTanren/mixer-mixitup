@@ -374,6 +374,8 @@ namespace MixItUp.Base.Services
                 settings.ModerationBlockLinksExcemptUserRole = UserRoles.ConvertFromOldRole(settings.ModerationBlockLinksExcempt);
                 settings.ModerationChatInteractiveParticipationExcemptUserRole = UserRoles.ConvertFromOldRole(settings.ModerationChatInteractiveParticipationExcempt);
 
+                settings.GiveawayRequirementsSet.Role.UserRole = UserRoles.ConvertFromOldRole(settings.GiveawayRequirementsSet.Role.Role);
+
                 foreach (var title in settings.UserTitles)
                 {
                     title.UserRole = UserRoles.ConvertFromOldRole(title.Role);
@@ -391,6 +393,11 @@ namespace MixItUp.Base.Services
                 {
                     UserRoleEnum newRole = UserRoles.ConvertFromOldRole(kvp.Key);
                     settings.CustomUsernameRoleColors[newRole] = kvp.Value;
+                }
+
+                foreach (var kvp in settings.RedemptionStoreProducts)
+                {
+                    kvp.Value.Requirements.Role.UpgradeFromOldRoles();
                 }
 
                 foreach (var kvp in settings.StreamPass)
@@ -489,11 +496,7 @@ namespace MixItUp.Base.Services
                 if (requirement is RoleRequirementModel)
                 {
                     RoleRequirementModel rRequirement = (RoleRequirementModel)requirement;
-                    rRequirement.UserRole = UserRoles.ConvertFromOldRole(rRequirement.Role);
-                    foreach (OldUserRoleEnum oldRole in rRequirement.UserRoleList)
-                    {
-                        rRequirement.UserRoleList.Add(UserRoles.ConvertFromOldRole(oldRole));
-                    }
+                    rRequirement.UpgradeFromOldRoles();
                 }
             }
 
@@ -503,6 +506,11 @@ namespace MixItUp.Base.Services
                 {
                     ConsumablesActionModel cAction = (ConsumablesActionModel)action;
                     cAction.UserRoleToApplyTo = UserRoles.ConvertFromOldRole(cAction.UsersToApplyTo);
+                }
+                else if (action is GameQueueActionModel)
+                {
+                    GameQueueActionModel gqAction = (GameQueueActionModel)action;
+                    gqAction.RoleRequirement.UpgradeFromOldRoles();
                 }
                 else if (action is InputActionModel)
                 {

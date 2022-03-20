@@ -166,6 +166,16 @@ namespace MixItUp.Base.Model.Requirements
             return Task.FromResult(this.CreateErrorMessage(parameters));
         }
 
+        [Obsolete]
+        public void UpgradeFromOldRoles()
+        {
+            this.UserRole = UserRoles.ConvertFromOldRole(this.Role);
+            foreach (OldUserRoleEnum oldRole in this.RoleList)
+            {
+                this.UserRoleList.Add(UserRoles.ConvertFromOldRole(oldRole));
+            }
+        }
+
         private Result CreateErrorMessage(CommandParametersModel parameters)
         {
             if (this.StreamingPlatform != StreamingPlatformTypeEnum.All && parameters.Platform != this.StreamingPlatform)
