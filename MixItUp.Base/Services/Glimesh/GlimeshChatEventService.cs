@@ -188,46 +188,27 @@ namespace MixItUp.Base.Services.Glimesh
 
         public async Task ShortTimeoutUser(UserV2ViewModel user)
         {
-            await AsyncRunner.RunAsync(async () =>
-            {
-                if (this.userClient != null)
-                {
-                    await this.userClient.ShortTimeoutUser(ServiceManager.Get<GlimeshSessionService>().ChannelID, user.PlatformID);
-                }
-            });
+            await this.GetChatClient(sendAsStreamer: true).ShortTimeoutUser(ServiceManager.Get<GlimeshSessionService>().ChannelID, user.PlatformID);
         }
 
         public async Task LongTimeoutUser(UserV2ViewModel user)
         {
-            await AsyncRunner.RunAsync(async () =>
-            {
-                if (this.userClient != null)
-                {
-                    await this.userClient.LongTimeoutUser(ServiceManager.Get<GlimeshSessionService>().ChannelID, user.PlatformID);
-                }
-            });
+            await this.GetChatClient(sendAsStreamer: true).LongTimeoutUser(ServiceManager.Get<GlimeshSessionService>().ChannelID, user.PlatformID);
         }
 
         public async Task BanUser(UserV2ViewModel user)
         {
-            await AsyncRunner.RunAsync(async () =>
-            {
-                if (this.userClient != null)
-                {
-                    await this.userClient.BanUser(ServiceManager.Get<GlimeshSessionService>().ChannelID, user.PlatformID);
-                }
-            });
+            await this.GetChatClient(sendAsStreamer: true).BanUser(ServiceManager.Get<GlimeshSessionService>().ChannelID, user.PlatformID);
         }
 
         public async Task UnbanUser(UserV2ViewModel user)
         {
-            await AsyncRunner.RunAsync(async () =>
-            {
-                if (this.userClient != null)
-                {
-                    await this.userClient.UnbanUser(ServiceManager.Get<GlimeshSessionService>().ChannelID, user.PlatformID);
-                }
-            });
+            await this.GetChatClient(sendAsStreamer: true).UnbanUser(ServiceManager.Get<GlimeshSessionService>().ChannelID, user.PlatformID);
+        }
+
+        public async Task<bool> DeleteMessage(ChatMessageViewModel message)
+        {
+            return await this.GetChatClient(sendAsStreamer: true).DeleteMessage(ServiceManager.Get<GlimeshSessionService>().ChannelID, message.ID);
         }
 
         private ChatEventClient GetChatClient(bool sendAsStreamer = false) { return (this.botClient != null && !sendAsStreamer) ? this.botClient : this.userClient; }
