@@ -277,7 +277,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<IEnumerable<ChatEmoteModel>> GetEmoteSets(IEnumerable<string> emoteSetIDs) { return await this.RunAsync(this.Connection.NewAPI.Chat.GetEmoteSets(emoteSetIDs)); }
 
-        public async Task<SubscriptionModel> GetUserSubscription(UserModel broadcaster, UserModel user) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Subscriptions.GetUserSubscription(broadcaster, user)); }
+        public async Task<SubscriptionModel> GetBroadcasterSubscription(UserModel broadcaster, UserModel user) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Subscriptions.GetBroadcasterSubscription(broadcaster, user)); }
 
         public async Task<IEnumerable<TeamModel>> GetChannelTeams(UserModel broadcaster) { return await this.RunAsync(this.Connection.NewAPI.Teams.GetChannelTeams(broadcaster)); }
 

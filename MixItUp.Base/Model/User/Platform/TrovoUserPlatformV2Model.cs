@@ -90,7 +90,6 @@ namespace MixItUp.Base.Model.User.Platform
                     if (rolesSet.Remove(ChatMessageModel.SubscriberRole))
                     {
                         this.Roles.Add(UserRoleEnum.Subscriber);
-                        this.SubscriberTier = 1;
                     }
                     else
                     {
