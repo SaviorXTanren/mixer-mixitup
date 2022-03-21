@@ -16,6 +16,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Trovo.Base.Clients;
+using Trovo.Base.Models.Channels;
 using Trovo.Base.Models.Chat;
 using Trovo.Base.Models.Users;
 
@@ -486,7 +487,7 @@ namespace MixItUp.Base.Services.Trovo
                         ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = subMessage.Months;
 
                         user.Roles.Add(UserRoleEnum.Subscriber);
-                        user.SubscriberTier = 1;
+                        user.SubscriberTier = subMessage.Tier;
                         if (!subMessage.IsResub)
                         {
                             user.SubscribeDate = DateTimeOffset.Now;
