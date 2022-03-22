@@ -285,7 +285,6 @@ namespace MixItUp.Base.Services.Glimesh
                     user = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(follow.Follow.user));
                 }
 
-                ServiceManager.Get<GlimeshSessionService>().Followers.Add(follow.Follow.user.id);
                 user.Roles.Add(UserRoleEnum.Follower);
                 user.FollowDate = DateTimeOffset.Now;
 
