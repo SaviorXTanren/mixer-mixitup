@@ -4,6 +4,7 @@ using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -229,10 +230,21 @@ namespace MixItUp.Base.Model.Commands
                     return TwitchPlatformService.GetTwitchDateTime(ServiceManager.Get<TwitchSessionService>().Stream?.started_at);
                 }
             }
+            else if (ServiceManager.Get<TrovoSessionService>().IsConnected)
+            {
+                await ServiceManager.Get<TrovoSessionService>().RefreshChannel();
+                if (ServiceManager.Get<TrovoSessionService>().IsLive)
+                {
+                    return TrovoPlatformService.GetTrovoDateTime(ServiceManager.Get<TrovoSessionService>().Channel?.started_at);
+                }
+            }
             else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
             {
                 await ServiceManager.Get<GlimeshSessionService>().RefreshChannel();
-                return GlimeshPlatformService.GetGlimeshDateTime(ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.startedAt);
+                if (ServiceManager.Get<GlimeshSessionService>().IsLive)
+                {
+                    return GlimeshPlatformService.GetGlimeshDateTime(ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.startedAt);
+                }
             }
             return DateTimeOffset.MinValue;
         }

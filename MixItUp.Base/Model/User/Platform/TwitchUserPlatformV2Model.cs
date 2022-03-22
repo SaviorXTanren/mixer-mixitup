@@ -103,7 +103,7 @@ namespace MixItUp.Base.Model.User.Platform
 
                 if (ServiceManager.Get<TwitchSessionService>().User.IsAffiliate() || ServiceManager.Get<TwitchSessionService>().User.IsPartner())
                 {
-                    SubscriptionModel subscription = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetUserSubscription(ServiceManager.Get<TwitchSessionService>().User, this.GetTwitchNewAPIUserModel());
+                    SubscriptionModel subscription = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetBroadcasterSubscription(ServiceManager.Get<TwitchSessionService>().User, this.GetTwitchNewAPIUserModel());
                     if (subscription != null)
                     {
                         this.Roles.Add(UserRoleEnum.Subscriber);
@@ -114,6 +114,7 @@ namespace MixItUp.Base.Model.User.Platform
                     else
                     {
                         this.Roles.Remove(UserRoleEnum.Subscriber);
+                        this.SubscriberTier = 1;
                         this.SubscribeDate = null;
                     }
                 }
@@ -163,7 +164,6 @@ namespace MixItUp.Base.Model.User.Platform
                 if (this.IsTwitchSubscriber)
                 {
                     this.Roles.Add(UserRoleEnum.Subscriber);
-                    this.SubscriberTier = 1;
                 }
                 else
                 {

@@ -14,7 +14,7 @@ namespace MixItUp.Base.Util
 
         private LockedList<WebSocketServerBase> webSocketServers = new LockedList<WebSocketServerBase>();
 
-        public WebSocketHttpListenerServerBase(string address) : base(address) { }
+        public WebSocketHttpListenerServerBase() : base() { }
 
         public int TotalConnectedClients { get { return this.webSocketServers.Count; } }
 

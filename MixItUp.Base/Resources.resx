@@ -7462,9 +7462,6 @@ We will attempt to re-connect with the service when possible. If this continues,
   <data name="AutoCommandsExplanation" xml:space="preserve">
     <value>The following commands can be automatically created for you to get started with using this feature. Would you like us to automatically add the following commands for you?</value>
   </data>
-  <data name="MixItUp" xml:space="preserve">
-    <value>Mix It Up</value>
-  </data>
   <data name="MixItUpPopOut" xml:space="preserve">
     <value>Mix It Up - Pop Out</value>
   </data>
@@ -7478,7 +7475,7 @@ We will attempt to re-connect with the service when possible. If this continues,
     <value>&lt; Back</value>
   </data>
   <data name="WizardCommands1" xml:space="preserve">
-    <value>Mix It Up uses a Command &amp;amp; Action structure for everything throughout the app. Think of it similar to a recipe that you would follow to make food.</value>
+    <value>Mix It Up uses a Command &amp; Action structure for everything throughout the app. Think of it similar to a recipe that you would follow to make food.</value>
   </data>
   <data name="WizardCommands2" xml:space="preserve">
     <value>Let's say you wanted to make some pasta; you would follow the steps in the recipe one after the other until you're done. You also would follow every step in the order they are specified. For example, you need to heat the water before you can add the pasta.</value>
@@ -7496,7 +7493,7 @@ We will attempt to re-connect with the service when possible. If this continues,
     <value>Don't know how a feature works or want more info? Simply click on the Help icon on the top bar of the main window to find out more!</value>
   </data>
   <data name="WizardFinal3" xml:space="preserve">
-    <value>Don't forget the following resources available to you for questions &amp;amp; support:</value>
+    <value>Don't forget the following resources available to you for questions &amp; support:</value>
   </data>
   <data name="WizardFinal4" xml:space="preserve">
     <value>Thanks for using Mix It Up and we hope it meets all your needs!</value>
@@ -7508,7 +7505,7 @@ We will attempt to re-connect with the service when possible. If this continues,
     <value>Before we get started, we want to let you know about some great resources you can use to help you with problems or give you ideas of things to create. Click any of the buttons below to go to that resource:</value>
   </data>
   <data name="WizardIntro3" xml:space="preserve">
-    <value>Our Discord is our main point for support &amp;amp; questions. This should be your first place to go to for any issues you might be encountering.</value>
+    <value>Our Discord is our main point for support &amp; questions. This should be your first place to go to for any issues you might be encountering.</value>
   </data>
   <data name="WizardIntro4" xml:space="preserve">
     <value>Our Twitter account is a great way to stay up to date on important announcements or major updates.</value>
@@ -7532,7 +7529,7 @@ We will attempt to re-connect with the service when possible. If this continues,
     <value>Current Version</value>
   </data>
   <data name="IfUpdateDoesNotCompleteRestartComputer" xml:space="preserve">
-    <value>If the update does not complete successfully and you are prompted to update again, restart your computer first &amp;amp; then try again.</value>
+    <value>If the update does not complete successfully and you are prompted to update again, restart your computer first &amp; then try again.</value>
   </data>
   <data name="MixItUpUpdateAvailable" xml:space="preserve">
     <value>Mix It Up - Update Available</value>
@@ -7577,5 +7574,66 @@ We will attempt to re-connect with the service when possible. If this continues,
   </data>
   <data name="ChatUserEntranceCommand" xml:space="preserve">
     <value>Chat User Entrance Command</value>
+  </data>
+  <data name="WhisperTooltip" xml:space="preserve">
+    <value>Whispers are supported on Twitch, but are highly discouraged from being used. Twitch does not intend
+whispers to be used as a form of automated communication. There are severe restrictions placed on the
+amount of whispers that can be sent in a timeline that make it very impractical for use, as well as spam
+preventative measures if the user is not on your friends list on Twitch. So although you can send whispers
+via Twitch, it's a "your mileage may very" situation.</value>
+  </data>
+  <data name="AlertName" xml:space="preserve">
+    <value>Alert Name</value>
+  </data>
+  <data name="EnablePolyPop" xml:space="preserve">
+    <value>Please enable PolyPop on the Services page!</value>
+  </data>
+  <data name="PolyPop" xml:space="preserve">
+    <value>PolyPop</value>
+  </data>
+  <data name="PolyPopActionMissingVariableName" xml:space="preserve">
+    <value>PolyPop Action: Missing variable name</value>
+  </data>
+  <data name="PolyPopFailedToConnect" xml:space="preserve">
+    <value>Failed to start web socket listening server for PolyPop</value>
+  </data>
+  <data name="PolyPopInfo1" xml:space="preserve">
+    <value>The PolyPop service allow you to connect to your installation of PolyPop via the websocket alert plugin and trigger alerts.</value>
+  </data>
+  <data name="PolyPopInfo2" xml:space="preserve">
+    <value>To connect the service, you must download and install the Websocket plugin to your PolyPop installation. Full instructions can be found on the Wiki page for this service.</value>
+  </data>
+  <data name="WikiPage" xml:space="preserve">
+    <value>Wiki Page</value>
+  </data>
+  <data name="TrovoActionNameMissing" xml:space="preserve">
+    <value>Trovo Action: A valid name must be specified</value>
+  </data>
+  <data name="TwitchActionNameMissing" xml:space="preserve">
+    <value>Twitch Action: A valid name must be specified</value>
+  </data>
+  <data name="SetCustomTags" xml:space="preserve">
+    <value>Set Custom Tags</value>
+  </data>
+  <data name="HTMLFileFormatFilter" xml:space="preserve">
+    <value>HTML Files (*.html)|*.html|All files (*.*)|*.*</value>
+  </data>
+  <data name="ImageFileFormatFilter" xml:space="preserve">
+    <value>Image Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;|All files (*.*)|*.*</value>
+  </data>
+  <data name="MixItUpBackupFileFormatFilter" xml:space="preserve">
+    <value>Mix It Up Backup|*.miubackup|All files (*.*)|*.*</value>
+  </data>
+  <data name="MixItUpCommandFileFormatFilter" xml:space="preserve">
+    <value>Mix It Up Command|*.miucommand|All files (*.*)|*.*</value>
+  </data>
+  <data name="SoundFileFormatFilter" xml:space="preserve">
+    <value>Sound Files|*.mp3;*.wav|All files (*.*)|*.*</value>
+  </data>
+  <data name="TextFileFormatFilter" xml:space="preserve">
+    <value>Text Files|*.txt|All files (*.*)|*.*</value>
+  </data>
+  <data name="VideoFileFormatFilter" xml:space="preserve">
+    <value>Video Files|*.mp4;*.webm|All files (*.*)|*.*</value>
   </data>
 </root>

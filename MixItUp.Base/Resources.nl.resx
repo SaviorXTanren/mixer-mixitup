@@ -7462,9 +7462,6 @@ We zullen proberen indien mogelijk opnieuw verbinding te maken met de service. A
   <data name="AutoCommandsExplanation" xml:space="preserve">
     <value>De volgende opdrachten kunnen automatisch worden gemaakt zodat u aan de slag kunt met deze functie. Wilt u dat wij automatisch de volgende commando's voor u toevoegen?</value>
   </data>
-  <data name="MixItUp" xml:space="preserve">
-    <value>Mix het op</value>
-  </data>
   <data name="MixItUpPopOut" xml:space="preserve">
     <value>Mix It Up - Pop Out</value>
   </data>

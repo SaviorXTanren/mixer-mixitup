@@ -277,11 +277,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<IEnumerable<ChatEmoteModel>> GetEmoteSets(IEnumerable<string> emoteSetIDs) { return await this.RunAsync(this.Connection.NewAPI.Chat.GetEmoteSets(emoteSetIDs)); }
 
-        public async Task<SubscriptionModel> GetUserSubscription(UserModel broadcaster, UserModel user)
-        {
-            IEnumerable<SubscriptionModel> subscriptions = await AsyncRunner.RunAsync(this.Connection.NewAPI.Subscriptions.GetSubscriptions(broadcaster, new List<string>() { user.id }));
-            return (subscriptions != null) ? subscriptions.FirstOrDefault() : null;
-        }
+        public async Task<SubscriptionModel> GetBroadcasterSubscription(UserModel broadcaster, UserModel user) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Subscriptions.GetBroadcasterSubscription(broadcaster, user)); }
 
         public async Task<IEnumerable<TeamModel>> GetChannelTeams(UserModel broadcaster) { return await this.RunAsync(this.Connection.NewAPI.Teams.GetChannelTeams(broadcaster)); }
 
@@ -289,7 +285,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<IEnumerable<ChannelEditorUserModel>> GetChannelEditors(UserModel broadcaster) { return await this.RunAsync(this.Connection.NewAPI.Channels.GetChannelEditorUsers(broadcaster)); }
 
-        public async Task<long> GetSubscriberCount(UserModel broadcaster) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Subscriptions.GetSubscriptionsCount(broadcaster)); }
+        public async Task<long> GetSubscriberCount(UserModel broadcaster) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Subscriptions.GetBroadcasterSubscriptionsCount(broadcaster)); }
 
         public async Task<long> GetFollowerCount(UserModel broadcaster) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Users.GetFollowerCount(broadcaster)); }
 

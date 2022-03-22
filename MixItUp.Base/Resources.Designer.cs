@@ -691,6 +691,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alert Name.
+        /// </summary>
+        public static string AlertName {
+            get {
+                return ResourceManager.GetString("AlertName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} Raided with {1} viewers.
         /// </summary>
         public static string AlertRaid {
@@ -4920,6 +4929,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enable PolyPop on the Services page!.
+        /// </summary>
+        public static string EnablePolyPop {
+            get {
+                return ResourceManager.GetString("EnablePolyPop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enable Queue.
         /// </summary>
         public static string EnableQueue {
@@ -9084,6 +9102,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HTML Files (*.html)|*.html|All files (*.*)|*.*.
+        /// </summary>
+        public static string HTMLFileFormatFilter {
+            get {
+                return ResourceManager.GetString("HTMLFileFormatFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to HTML Style.
         /// </summary>
         public static string HTMLStyle {
@@ -9174,7 +9201,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to If the update does not complete successfully and you are prompted to update again, restart your computer first &amp;amp; then try again..
+        ///   Looks up a localized string similar to If the update does not complete successfully and you are prompted to update again, restart your computer first &amp; then try again..
         /// </summary>
         public static string IfUpdateDoesNotCompleteRestartComputer {
             get {
@@ -9197,6 +9224,15 @@ namespace MixItUp.Base {
         public static string Image {
             get {
                 return ResourceManager.GetString("Image", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Image Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;|All files (*.*)|*.*.
+        /// </summary>
+        public static string ImageFileFormatFilter {
+            get {
+                return ResourceManager.GetString("ImageFileFormatFilter", resourceCulture);
             }
         }
         
@@ -11048,11 +11084,20 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mix It Up.
+        ///   Looks up a localized string similar to Mix It Up Backup|*.miubackup|All files (*.*)|*.*.
         /// </summary>
-        public static string MixItUp {
+        public static string MixItUpBackupFileFormatFilter {
             get {
-                return ResourceManager.GetString("MixItUp", resourceCulture);
+                return ResourceManager.GetString("MixItUpBackupFileFormatFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mix It Up Command|*.miucommand|All files (*.*)|*.*.
+        /// </summary>
+        public static string MixItUpCommandFileFormatFilter {
+            get {
+                return ResourceManager.GetString("MixItUpCommandFileFormatFilter", resourceCulture);
             }
         }
         
@@ -13438,6 +13483,51 @@ namespace MixItUp.Base {
         public static string Poll {
             get {
                 return ResourceManager.GetString("Poll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PolyPop.
+        /// </summary>
+        public static string PolyPop {
+            get {
+                return ResourceManager.GetString("PolyPop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PolyPop Action: Missing variable name.
+        /// </summary>
+        public static string PolyPopActionMissingVariableName {
+            get {
+                return ResourceManager.GetString("PolyPopActionMissingVariableName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to start web socket listening server for PolyPop.
+        /// </summary>
+        public static string PolyPopFailedToConnect {
+            get {
+                return ResourceManager.GetString("PolyPopFailedToConnect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The PolyPop service allow you to connect to your installation of PolyPop via the websocket alert plugin and trigger alerts..
+        /// </summary>
+        public static string PolyPopInfo1 {
+            get {
+                return ResourceManager.GetString("PolyPopInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To connect the service, you must download and install the Websocket plugin to your PolyPop installation. Full instructions can be found on the Wiki page for this service..
+        /// </summary>
+        public static string PolyPopInfo2 {
+            get {
+                return ResourceManager.GetString("PolyPopInfo2", resourceCulture);
             }
         }
         
@@ -15834,6 +15924,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set Custom Tags.
+        /// </summary>
+        public static string SetCustomTags {
+            get {
+                return ResourceManager.GetString("SetCustomTags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set Game.
         /// </summary>
         public static string SetGame {
@@ -16417,6 +16516,15 @@ namespace MixItUp.Base {
         public static string SoundActionMissingFilePath {
             get {
                 return ResourceManager.GetString("SoundActionMissingFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sound Files|*.mp3;*.wav|All files (*.*)|*.*.
+        /// </summary>
+        public static string SoundFileFormatFilter {
+            get {
+                return ResourceManager.GetString("SoundFileFormatFilter", resourceCulture);
             }
         }
         
@@ -17927,6 +18035,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Text Files|*.txt|All files (*.*)|*.*.
+        /// </summary>
+        public static string TextFileFormatFilter {
+            get {
+                return ResourceManager.GetString("TextFileFormatFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Text Font.
         /// </summary>
         public static string TextFont {
@@ -18692,6 +18809,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Trovo Action: A valid name must be specified.
+        /// </summary>
+        public static string TrovoActionNameMissing {
+            get {
+                return ResourceManager.GetString("TrovoActionNameMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trovo Action: A valid role name must be specified.
         /// </summary>
         public static string TrovoActionRoleNameMissing {
@@ -19139,6 +19265,15 @@ namespace MixItUp.Base {
         public static string TwitchActionCreatePredictionTwoChoices {
             get {
                 return ResourceManager.GetString("TwitchActionCreatePredictionTwoChoices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Action: A valid name must be specified.
+        /// </summary>
+        public static string TwitchActionNameMissing {
+            get {
+                return ResourceManager.GetString("TwitchActionNameMissing", resourceCulture);
             }
         }
         
@@ -20566,6 +20701,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Video Files|*.mp4;*.webm|All files (*.*)|*.*.
+        /// </summary>
+        public static string VideoFileFormatFilter {
+            get {
+                return ResourceManager.GetString("VideoFileFormatFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Video File Path.
         /// </summary>
         public static string VideoFilePath {
@@ -21259,6 +21403,19 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Whispers are supported on Twitch, but are highly discouraged from being used. Twitch does not intend
+        ///whispers to be used as a form of automated communication. There are severe restrictions placed on the
+        ///amount of whispers that can be sent in a timeline that make it very impractical for use, as well as spam
+        ///preventative measures if the user is not on your friends list on Twitch. So although you can send whispers
+        ///via Twitch, it&apos;s a &quot;your mileage may very&quot; situation..
+        /// </summary>
+        public static string WhisperTooltip {
+            get {
+                return ResourceManager.GetString("WhisperTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Whisper User (Optional).
         /// </summary>
         public static string WhisperUserOptional {
@@ -21291,6 +21448,15 @@ namespace MixItUp.Base {
         public static string Width {
             get {
                 return ResourceManager.GetString("Width", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wiki Page.
+        /// </summary>
+        public static string WikiPage {
+            get {
+                return ResourceManager.GetString("WikiPage", resourceCulture);
             }
         }
         
@@ -21340,7 +21506,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mix It Up uses a Command &amp;amp; Action structure for everything throughout the app. Think of it similar to a recipe that you would follow to make food..
+        ///   Looks up a localized string similar to Mix It Up uses a Command &amp; Action structure for everything throughout the app. Think of it similar to a recipe that you would follow to make food..
         /// </summary>
         public static string WizardCommands1 {
             get {
@@ -21394,7 +21560,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t forget the following resources available to you for questions &amp;amp; support:.
+        ///   Looks up a localized string similar to Don&apos;t forget the following resources available to you for questions &amp; support:.
         /// </summary>
         public static string WizardFinal3 {
             get {
@@ -21430,7 +21596,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Our Discord is our main point for support &amp;amp; questions. This should be your first place to go to for any issues you might be encountering..
+        ///   Looks up a localized string similar to Our Discord is our main point for support &amp; questions. This should be your first place to go to for any issues you might be encountering..
         /// </summary>
         public static string WizardIntro3 {
             get {

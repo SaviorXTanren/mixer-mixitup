@@ -278,7 +278,7 @@ namespace MixItUp.Base.Services.External
         public string ServerID { get; private set; }
         public string BotPermissions { get; private set; }
 
-        public DiscordOAuthServer() : base(OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL, OAuthExternalServiceBase.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, OAuthExternalServiceBase.LoginRedirectPageHTML) { }
+        public DiscordOAuthServer() : base(OAuthExternalServiceBase.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, OAuthExternalServiceBase.LoginRedirectPageHTML) { }
 
         protected override async Task ProcessConnection(HttpListenerContext listenerContext)
         {
@@ -642,7 +642,7 @@ namespace MixItUp.Base.Services.External
             try
             {
                 DiscordOAuthServer oauthServer = new DiscordOAuthServer();
-                oauthServer.Start();
+                oauthServer.Start(OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL);
 
                 ProcessHelper.LaunchLink(string.Format(DiscordService.AuthorizationUrl, this.ClientID, DiscordService.ClientBotPermissions));
 

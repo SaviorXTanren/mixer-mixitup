@@ -20,7 +20,6 @@ namespace MixItUp.Base.Services.Glimesh
         public UserModel Bot { get; private set; }
 
         public HashSet<string> Moderators { get; private set; } = new HashSet<string>();
-        public HashSet<string> Followers { get; private set; } = new HashSet<string>();
 
         public bool IsConnected { get { return this.UserConnection != null; } }
         public bool IsBotConnected { get { return this.BotConnection != null; } }
@@ -203,20 +202,6 @@ namespace MixItUp.Base.Services.Glimesh
                         string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
                         return new Result(MixItUp.Base.Resources.GlimeshFailedToConnectHeader + Environment.NewLine + Environment.NewLine + errors);
                     }
-
-                    IEnumerable<UserFollowModel> followers = await this.UserConnection.GetFollowingUsers(this.UserID);
-                    if (followers != null)
-                    {
-                        foreach (UserFollowModel follow in followers)
-                        {
-                            this.Followers.Add(follow.user.id);
-                        }
-                    }
-
-                    foreach (ChannelModeratorModel moderator in this.User.channel.moderators.Items)
-                    {
-                        this.Moderators.Add(moderator.user.id);
-                    }
                 }
                 catch (Exception ex)
                 {
@@ -296,7 +281,16 @@ namespace MixItUp.Base.Services.Glimesh
             }
         }
 
-        public Task RefreshChannel() { return Task.CompletedTask; }
+        public Task RefreshChannel()
+        {
+            this.Moderators.Clear();
+            foreach (ChannelModeratorModel moderator in this.User.channel.moderators.Items)
+            {
+                this.Moderators.Add(moderator.user.id);
+            }
+
+            return Task.CompletedTask;
+        }
 
         public Task<string> GetTitle()
         {

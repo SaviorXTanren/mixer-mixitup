@@ -38,7 +38,9 @@ namespace MixItUp.Base.Model.Commands
 
         public CommandParametersModel() : this(ChannelSession.User) { }
 
-        public CommandParametersModel(UserV2ViewModel user) : this(user, user.Platform) { }
+        public CommandParametersModel(UserV2ViewModel user) : this(user, (user != null) ? user.Platform : StreamingPlatformTypeEnum.None) { }
+
+        public CommandParametersModel(StreamingPlatformTypeEnum platform) : this(platform, null) { }
 
         public CommandParametersModel(ChatMessageViewModel message)
             : this(message.User, message.Platform, message.ToArguments())

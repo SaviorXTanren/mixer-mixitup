@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using Trovo.Base.Models.Channels;
 using Trovo.Base.Models.Chat;
 using Trovo.Base.Models.Users;
 
@@ -90,11 +91,23 @@ namespace MixItUp.Base.Model.User.Platform
                     if (rolesSet.Remove(ChatMessageModel.SubscriberRole))
                     {
                         this.Roles.Add(UserRoleEnum.Subscriber);
-                        this.SubscriberTier = 1;
+                        if (ServiceManager.Get<TrovoSessionService>().Subscribers.TryGetValue(this.ID, out ChannelSubscriberModel subscriber))
+                        {
+                            if (int.TryParse(subscriber.sub_tier, out int subTier) && subTier > this.SubscriberTier)
+                            {
+                                this.SubscriberTier = subTier;
+                            }
+                            if (subscriber.sub_created_at != null)
+                            {
+                                this.SubscribeDate = TrovoPlatformService.GetTrovoDateTime(subscriber.sub_created_at.GetValueOrDefault().ToString());
+                            }
+                        }
                     }
                     else
                     {
                         this.Roles.Remove(UserRoleEnum.Subscriber);
+                        this.SubscriberTier = 1;
+                        this.SubscribeDate = null;
                     }
 
                     this.CustomRoles.Clear();

@@ -15,6 +15,7 @@ using Twitch.Base.Models.NewAPI.Clips;
 using Twitch.Base.Models.NewAPI.Polls;
 using Twitch.Base.Models.NewAPI.Predictions;
 using Twitch.Base.Models.NewAPI.Streams;
+using Twitch.Base.Models.NewAPI.Tags;
 
 namespace MixItUp.Base.Model.Actions
 {
@@ -38,6 +39,9 @@ namespace MixItUp.Base.Model.Actions
         DisableSlowChat,
         EnableSubscribersChat,
         DisableSubscriberChat,
+        SetTitle,
+        SetGame,
+        SetCustomTags
     }
 
     [DataContract]
@@ -58,6 +62,20 @@ namespace MixItUp.Base.Model.Actions
         {
             TwitchActionModel action = new TwitchActionModel(type);
             action.Username = username;
+            return action;
+        }
+
+        public static TwitchActionModel CreateTextAction(TwitchActionType type, string text)
+        {
+            TwitchActionModel action = new TwitchActionModel(type);
+            action.Text = text;
+            return action;
+        }
+
+        public static TwitchActionModel CreateSetCustomTagsAction(IEnumerable<string> customTags)
+        {
+            TwitchActionModel action = new TwitchActionModel(TwitchActionType.SetCustomTags);
+            action.CustomTags.AddRange(customTags);
             return action;
         }
 
@@ -138,6 +156,12 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public string Username { get; set; }
+
+        [DataMember]
+        public string Text { get; set; }
+
+        [DataMember]
+        public List<string> CustomTags { get; set; } = new List<string>();
 
         [DataMember]
         public int AdLength { get; set; } = 60;
@@ -548,6 +572,20 @@ namespace MixItUp.Base.Model.Actions
                 else if (this.ActionType == TwitchActionType.DisableSubscriberChat)
                 {
                     await ServiceManager.Get<ChatService>().SendMessage("/subscribersoff", sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                }
+                else if (this.ActionType == TwitchActionType.SetTitle)
+                {
+                    string text = await ReplaceStringWithSpecialModifiers(this.Text, parameters);
+                    await ServiceManager.Get<TwitchSessionService>().SetTitle(text);
+                }
+                else if (this.ActionType == TwitchActionType.SetGame)
+                {
+                    string text = await ReplaceStringWithSpecialModifiers(this.Text, parameters);
+                    await ServiceManager.Get<TwitchSessionService>().SetGame(text);
+                }
+                else if (this.ActionType == TwitchActionType.SetCustomTags)
+                {
+                    await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateStreamTagsForChannel(ServiceManager.Get<TwitchSessionService>().User, this.CustomTags.Select(t => new TagModel() { tag_id = t }));
                 }
             }
         }

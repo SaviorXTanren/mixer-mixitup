@@ -7462,9 +7462,6 @@ Intentaremos volver a conectarnos con el servicio cuando sea posible. Si esto co
   <data name="AutoCommandsExplanation" xml:space="preserve">
     <value>Los siguientes comandos se pueden crear automáticamente para que pueda comenzar a usar esta función. ¿Desea que agreguemos automáticamente los siguientes comandos para usted?</value>
   </data>
-  <data name="MixItUp" xml:space="preserve">
-    <value>Mézclalo</value>
-  </data>
   <data name="MixItUpPopOut" xml:space="preserve">
     <value>Mézclalo - Pop Out</value>
   </data>

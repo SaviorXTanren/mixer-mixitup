@@ -109,9 +109,11 @@ namespace MixItUp.Base.Services.Glimesh
 
         public async Task<UserModel> GetUserByName(string username) { return await AsyncRunner.RunAsync(this.Connection.Users.GetUserByName(username)); }
 
-        public async Task<IEnumerable<UserFollowModel>> GetFollowingUsers(string userId) { return await AsyncRunner.RunAsync(this.Connection.Users.GetFollowingUsers(userId)); }
+        public async Task<IEnumerable<UserFollowModel>> GetFollowingUsers(UserModel streamer, int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.Users.GetFollowingUsers(streamer, maxResults)); }
 
-        public async Task<IEnumerable<UserFollowModel>> GetUsersFollowed(string userId) { return await AsyncRunner.RunAsync(this.Connection.Users.GetUsersFollowed(userId)); }
+        public async Task<UserFollowModel> GetFollowingUser(UserModel streamer, UserModel user) { return await AsyncRunner.RunAsync(this.Connection.Users.GetFollowingUser(streamer, user)); }
+
+        public async Task<IEnumerable<UserFollowModel>> GetUsersFollowed(UserModel user, int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.Users.GetUsersFollowed(user, maxResults)); }
 
         public async Task<ChannelModel> GetChannelByID(string channelID) { return await AsyncRunner.RunAsync(this.Connection.Channel.GetChannelByID(channelID)); }
 

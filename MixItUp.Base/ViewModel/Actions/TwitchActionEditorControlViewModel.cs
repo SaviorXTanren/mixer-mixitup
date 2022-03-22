@@ -1,13 +1,16 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Twitch.Base.Models.NewAPI.ChannelPoints;
 
 namespace MixItUp.Base.ViewModel.Actions
@@ -28,6 +31,8 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.selectedActionType = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged("ShowUsernameGrid");
+                this.NotifyPropertyChanged("ShowTextGrid");
+                this.NotifyPropertyChanged("ShowSetCustomTagsGrid");
                 this.NotifyPropertyChanged("ShowAdGrid");
                 this.NotifyPropertyChanged("ShowClipsGrid");
                 this.NotifyPropertyChanged("ShowStreamMarkerGrid");
@@ -73,6 +78,42 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private string username;
+
+        public bool ShowTextGrid { get { return this.SelectedActionType == TwitchActionType.SetTitle || this.SelectedActionType == TwitchActionType.SetGame; } }
+
+        public string Text
+        {
+            get { return this.text; }
+            set
+            {
+                this.text = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string text;
+
+        public bool ShowSetCustomTagsGrid { get { return this.SelectedActionType == TwitchActionType.SetCustomTags; } }
+
+        public ThreadSafeObservableCollection<TwitchTagModel> Tags { get; private set; } = new ThreadSafeObservableCollection<TwitchTagModel>();
+
+        public TwitchTagModel SelectedTag
+        {
+            get { return this.selectedTag; }
+            set
+            {
+                this.selectedTag = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private TwitchTagModel selectedTag;
+
+        public ThreadSafeObservableCollection<TwitchTagViewModel> CustomTags { get; private set; } = new ThreadSafeObservableCollection<TwitchTagViewModel>();
+
+        public bool CanAddMoreTags { get { return this.CustomTags.Count < 5; } }
+
+        public ICommand AddTagCommand { get; private set; }
+
+        private List<string> existingCustomTags = new List<string>();
 
         public bool ShowAdGrid { get { return this.SelectedActionType == TwitchActionType.RunAd; } }
 
@@ -389,6 +430,14 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.Username = action.Username;
             }
+            else if (this.ShowTextGrid)
+            {
+                this.Text = action.Text;
+            }
+            else if (this.ShowSetCustomTagsGrid)
+            {
+                this.existingCustomTags.AddRange(action.CustomTags);
+            }
             else if (this.ShowAdGrid)
             {
                 this.SelectedAdLength = action.AdLength;
@@ -475,6 +524,13 @@ namespace MixItUp.Base.ViewModel.Actions
                     return new Result(MixItUp.Base.Resources.TwitchActionUsernameMissing);
                 }
             }
+            else if (this.ShowTextGrid)
+            {
+                if (string.IsNullOrEmpty(this.Text))
+                {
+                    return new Result(MixItUp.Base.Resources.TwitchActionNameMissing);
+                }
+            }
             else if (this.ShowStreamMarkerGrid)
             {
                 if (!string.IsNullOrEmpty(this.StreamMarkerDescription) && this.StreamMarkerDescription.Length > TwitchActionModel.StreamMarkerMaxDescriptionLength)
@@ -538,10 +594,37 @@ namespace MixItUp.Base.ViewModel.Actions
             return await base.Validate();
         }
 
+        public void RemoveCustomTag(TwitchTagViewModel tag)
+        {
+            this.CustomTags.Remove(tag);
+            this.NotifyPropertyChanged("CanAddMoreTags");
+        }
+
         protected override async Task OnOpenInternal()
         {
+            this.AddTagCommand = this.CreateCommand(() =>
+            {
+                this.AddSelectedCustomTag();
+            });
+
             if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
+                this.Tags.ClearAndAddRange(ServiceManager.Get<TwitchSessionService>().StreamTags);
+                this.NotifyPropertyChanged("CanAddMoreTags");
+
+                if (this.ShowSetCustomTagsGrid)
+                {
+                    foreach (string tagID in this.existingCustomTags)
+                    {
+                        TwitchTagModel tag = ServiceManager.Get<TwitchSessionService>().StreamTags.FirstOrDefault(t => string.Equals(t.ID, tagID));
+                        if (tag != null)
+                        {
+                            this.SelectedTag = tag;
+                            this.AddSelectedCustomTag();
+                        }
+                    }
+                }
+
                 foreach (CustomChannelPointRewardModel channelPoint in (await ServiceManager.Get<TwitchSessionService>().UserConnection.GetCustomChannelPointRewards(ServiceManager.Get<TwitchSessionService>().User, managableRewardsOnly: true)).OrderBy(c => c.title))
                 {
                     this.ChannelPointRewards.Add(channelPoint);
@@ -560,6 +643,14 @@ namespace MixItUp.Base.ViewModel.Actions
             if (this.ShowUsernameGrid)
             {
                 return TwitchActionModel.CreateUserAction(this.SelectedActionType, this.Username);
+            }
+            else if (this.ShowTextGrid)
+            {
+                return TwitchActionModel.CreateTextAction(this.SelectedActionType, this.Text);
+            }
+            else if (this.ShowSetCustomTagsGrid)
+            {
+                return TwitchActionModel.CreateSetCustomTagsAction(this.CustomTags.Select(t => t.ID));
             }
             else if (this.ShowAdGrid)
             {
@@ -604,5 +695,59 @@ namespace MixItUp.Base.ViewModel.Actions
                 return TwitchActionModel.CreateAction(this.SelectedActionType);
             }
         }
+
+        private void AddSelectedCustomTag()
+        {
+            if (this.SelectedTag != null)
+            {
+                TwitchTagViewModel tag = new TwitchTagViewModel(this.SelectedTag);
+                if (!this.CustomTags.Contains(tag))
+                {
+                    this.CustomTags.Add(tag);
+                    tag.TagDeleted += (sender, e) =>
+                    {
+                        this.RemoveCustomTag((TwitchTagViewModel)sender);
+                    };
+                    this.SelectedTag = null;
+                }
+            }
+            this.NotifyPropertyChanged("CanAddMoreTags");
+        }
+    }
+
+    public class TwitchTagViewModel : UIViewModelBase, IEquatable<TwitchTagViewModel>
+    {
+        public TwitchTagModel Tag
+        {
+            get { return this.tag; }
+            set
+            {
+                this.tag = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private TwitchTagModel tag;
+
+        public ICommand DeleteTagCommand { get; private set; }
+
+        public event EventHandler TagDeleted = delegate { };
+
+        public TwitchTagViewModel(TwitchTagModel tag)
+        {
+            this.Tag = tag;
+
+            this.DeleteTagCommand = this.CreateCommand(() =>
+            {
+                this.TagDeleted.Invoke(this, new EventArgs());
+            });
+        }
+
+        public string ID { get { return this.Tag.ID; } }
+
+        public string Name { get { return this.Tag.Name; } }
+
+        public bool IsDeletable { get { return this.Tag.IsDeletable; } }
+
+        public bool Equals(TwitchTagViewModel other) { return this.ID.Equals(other.ID); }
     }
 }

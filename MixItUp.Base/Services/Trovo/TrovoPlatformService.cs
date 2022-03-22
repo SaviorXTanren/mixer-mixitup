@@ -41,6 +41,26 @@ namespace MixItUp.Base.Services.Trovo
             OAuthClientScopeEnum.user_details_self,
         };
 
+        public static DateTimeOffset GetTrovoDateTime(string dateTime)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(dateTime) && long.TryParse(dateTime, out long milliseconds))
+                {
+                    DateTimeOffset result = StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeMilliseconds(milliseconds);
+                    if (result > DateTimeOffset.MinValue)
+                    {
+                        return new DateTimeOffset(result.DateTime, TimeSpan.Zero);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"{dateTime} - {ex}");
+            }
+            return DateTimeOffset.MinValue;
+        }
+
         public static async Task<Result<TrovoPlatformService>> Connect(OAuthTokenModel token)
         {
             try

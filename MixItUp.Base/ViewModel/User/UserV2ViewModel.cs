@@ -619,9 +619,11 @@ namespace MixItUp.Base.ViewModel.User
 
             if (ChannelSession.Settings.ExplicitUserRoleRequirements)
             {
+                Logger.Log($"Perform explicit user role check: {role}");
                 return this.HasRole(role);
             }
 
+            Logger.Log($"Perform regular user role check: {this.PrimaryRole} >= {role}");
             return this.PrimaryRole >= role;
         }
 
