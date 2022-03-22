@@ -130,7 +130,7 @@
     <value>Accepteren</value>
   </data>
   <data name="AccessTheFolderWhereMixItUpIsInstalled" xml:space="preserve">
-    <value>Toegang tot de map waarin Mix It Up is geïnstalleerd</value>
+    <value>Installatiemap van Mix It Up</value>
   </data>
   <data name="Account" xml:space="preserve">
     <value>Rekening</value>
@@ -148,10 +148,10 @@
     <value>Rekeningen</value>
   </data>
   <data name="AccountsDetails" xml:space="preserve">
-    <value>Streameraccounts zijn uw werkelijke account waarvan u streamt. Botaccounts zijn afzonderlijke, optionele accounts die je kunt gebruiken om berichten te verzenden vanuit je kanaal. Bots-accounts moeten handmatig door u worden gemaakt en u moet ervoor zorgen dat u zich bij hen aanmeldt voordat u ze probeert te verbinden in Mix It Up.</value>
+    <value>Streamer-accounts zijn uw werkelijke accounts waarmee U streamt. Bot-accounts zijn afzonderlijke, optionele accounts die U gebruikt om berichten te verzenden vanuit uw kanaal. Bots-accounts moet uzelf handmatig maken en moet U er in aangemeld zijn voordat U ze probeert te verbinden met Mix It Up.</value>
   </data>
   <data name="AccountsWizardInstructions" xml:space="preserve">
-    <value>Laten we beginnen door u aan te melden bij de accounts die u op elk streamingplatform gebruikt. Selecteer de onderstaande opties voor elk account dat u wilt inloggen. U kunt deze opties later opnieuw bekijken door naar de pagina Accounts te gaan.</value>
+    <value>Laten we aan de slag gaan door U aan te melden bij de accounts die U op elk streamingplatform gebruikt. Selecteer de onderstaande opties voor elk account dat U wilt aanmelden. U kan deze opties later opnieuw bekijken in de Accounts pagina.</value>
   </data>
   <data name="AccountWeek" xml:space="preserve">
     <value>Account is 1 week oud</value>
@@ -202,16 +202,16 @@
     <value>Overlay-widget toevoegen</value>
   </data>
   <data name="AddQuote" xml:space="preserve">
-    <value>Offerte toevoegen</value>
+    <value>Citaat toevoegen</value>
   </data>
   <data name="AddToAllChatUsers" xml:space="preserve">
-    <value>Toevoegen aan alle chatgebruikers</value>
+    <value>Aan alle chatgebruikers toevoegen</value>
   </data>
   <data name="AddToSpecificUser" xml:space="preserve">
-    <value>Toevoegen aan specifieke gebruiker</value>
+    <value>Aan specifieke gebruiker toevoegen</value>
   </data>
   <data name="AddToUser" xml:space="preserve">
-    <value>Toevoegen aan gebruiker</value>
+    <value>Aan gebruiker toevoegen</value>
   </data>
   <data name="Advanced" xml:space="preserve">
     <value>Geavanceerd</value>
@@ -220,13 +220,13 @@
     <value>Waarschuwingen</value>
   </data>
   <data name="AllowCommandsToBeWhispered" xml:space="preserve">
-    <value>Toestaan dat commando's worden gefluisterd</value>
+    <value>Opdrachten worden gefluisterd</value>
   </data>
   <data name="AllowPastWinners" xml:space="preserve">
-    <value>Eerdere winnaars toestaan</value>
+    <value>Eerdere winnaars toelaten</value>
   </data>
   <data name="AllowProfanity" xml:space="preserve">
-    <value>Godslastering toestaan</value>
+    <value>Grove Taal toestaan</value>
   </data>
   <data name="Alt" xml:space="preserve">
     <value>Alt</value>
@@ -238,7 +238,7 @@
     <value>Aantal</value>
   </data>
   <data name="AmountDonated" xml:space="preserve">
-    <value>Gedoneerd bedrag</value>
+    <value>Gedoneerd aantal</value>
   </data>
   <data name="AmountPlusMinus" xml:space="preserve">
     <value>Aantal</value>
@@ -247,28 +247,28 @@
     <value>Aantal (seconden)</value>
   </data>
   <data name="AnyChatMessageSound" xml:space="preserve">
-    <value>Elk chatberichtgeluid</value>
+    <value>Geluid van elk chatbericht</value>
   </data>
   <data name="AppendToFile" xml:space="preserve">
-    <value>Toevoegen aan bestand</value>
+    <value>Aan bestand toevoegen</value>
   </data>
   <data name="ApplicationInfo" xml:space="preserve">
     <value>Toepassing Info</value>
   </data>
   <data name="ApplyStrikes" xml:space="preserve">
-    <value>Stakingen toepassen</value>
+    <value>Strikes toepassen</value>
   </data>
   <data name="ApprovedDevices" xml:space="preserve">
-    <value>Goedgekeurde apparaten</value>
+    <value>Bekende apparaten</value>
   </data>
   <data name="AudioOutputDevice" xml:space="preserve">
     <value>Audio-uitvoerapparaat</value>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
-    <value>Automatisch opnemen "!"</value>
+    <value>Auto-invoeg "!"</value>
   </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
-    <value>Automatisch inloggen huidige rekening</value>
+    <value>Account automatisch aanmelden</value>
   </data>
   <data name="AutomatedSettingsBackupRate" xml:space="preserve">
     <value>Back-uppercentage voor geautomatiseerde instellingen</value>
@@ -283,16 +283,16 @@
     <value>Achtergrondkleur</value>
   </data>
   <data name="BackupRate" xml:space="preserve">
-    <value>Back-up tarief</value>
+    <value>Back-up vernieuwing</value>
   </data>
   <data name="BackupSettings" xml:space="preserve">
-    <value>Back-upinstellingen</value>
+    <value>Back-up instellingen</value>
   </data>
   <data name="BackupYourCurrentSettings" xml:space="preserve">
     <value>Maak een back-up van uw huidige instellingen</value>
   </data>
   <data name="Banned" xml:space="preserve">
-    <value>Verboden</value>
+    <value>Verbannen</value>
   </data>
   <data name="BaudRate" xml:space="preserve">
     <value>Baud Rate</value>
@@ -328,10 +328,10 @@
     <value>Koopprijs</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Annuleren</value>
+    <value>Annuleer</value>
   </data>
   <data name="CancelGiveaway" xml:space="preserve">
-    <value>Annuleren Giveaway</value>
+    <value>Annuleer Giveaway</value>
   </data>
   <data name="CaseSensitive" xml:space="preserve">
     <value>Hoofdlettergevoelig</value>
@@ -340,10 +340,10 @@
     <value>Kanaal</value>
   </data>
   <data name="BannedWords" xml:space="preserve">
-    <value>Verboden woorden (één per regel) ( * = jokerteken)</value>
+    <value>Verboden woorden (één per regel) ( * = Joker)</value>
   </data>
   <data name="ChannelEditor" xml:space="preserve">
-    <value>Kanaal editor</value>
+    <value>Kanaal Editor</value>
   </data>
   <data name="ChannelInfo" xml:space="preserve">
     <value>Kanaal Info</value>
@@ -367,16 +367,16 @@
     <value>Chat Tagged Geluid</value>
   </data>
   <data name="ChatTextModeration" xml:space="preserve">
-    <value>Chattekst moderatie</value>
+    <value>Moduratie van chattekst</value>
   </data>
   <data name="ChatTriggersHintAssist" xml:space="preserve">
-    <value>Chattrigger(s) (spatie gescheiden, puntkomma voor meerdere woorden)</value>
+    <value>Chattrigger(s) (Spatie gescheiden, puntkomma voor multi-woorden)</value>
   </data>
   <data name="ChatTriggersNoExclamationHintAssist" xml:space="preserve">
-    <value>Chat Trigger(s) (Geen "!" nodig, spatie gescheiden, puntkomma voor meerdere woorden)</value>
+    <value>Chattrigger(s) (Geen "!" nodig, spatie gescheiden, puntkomma voor multi-woorden)</value>
   </data>
   <data name="ChatWhisperSound" xml:space="preserve">
-    <value>Chat fluistergeluid</value>
+    <value>Geluid Chat Fluister</value>
   </data>
   <data name="ClearAllUserDataHeader" xml:space="preserve">
     <value>Wis alle gebruikersgegevens (uren, valuta, rang, enz.)</value>
@@ -400,7 +400,7 @@
     <value>Sluiten</value>
   </data>
   <data name="ClosingPleaseWait" xml:space="preserve">
-    <value>Wacht even terwijl Mix It Up je instellingen opslaat en afsluit...</value>
+    <value>Wacht tot Mix It Up uw instellingen heeft opgeslagen en wordt afgesloten ...</value>
   </data>
   <data name="ColorScheme" xml:space="preserve">
     <value>Kleurenschema</value>
@@ -412,10 +412,10 @@
     <value>Bevelen</value>
   </data>
   <data name="CommandGroup" xml:space="preserve">
-    <value>Opdrachtgroep</value>
+    <value>Opdracht Groep</value>
   </data>
   <data name="CommandNoBang" xml:space="preserve">
-    <value>Commando (Geen '!' nodig)</value>
+    <value>Opdracht (Geen '!' nodig)</value>
   </data>
   <data name="Commands" xml:space="preserve">
     <value>Opdrachten</value>
@@ -460,7 +460,7 @@
     <value>Map Items</value>
   </data>
   <data name="CumulativeMonthsSubbed" xml:space="preserve">
-    <value>Cumulatieve maanden subbed</value>
+    <value>Aantal maanden geabonneerd</value>
   </data>
   <data name="Currency" xml:space="preserve">
     <value>Valuta</value>
@@ -487,7 +487,7 @@
     <value>Actueel</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Gewoonte</value>
+    <value>Aangepast</value>
   </data>
   <data name="CustomCommands" xml:space="preserve">
     <value>Aangepaste opdrachten</value>
@@ -526,10 +526,10 @@
     <value>Verdoven</value>
   </data>
   <data name="DeafenSelf" xml:space="preserve">
-    <value>Doof/Ondoof zelf</value>
+    <value>Doof/Ondoof Uzelf</value>
   </data>
   <data name="DeductFromUserRunningCommand" xml:space="preserve">
-    <value>Aftrekken van de opdracht Gebruiker uitvoeren</value>
+    <value>Uitvoeren van opdracht door gebruiker wegnemen</value>
   </data>
   <data name="DeepOrange" xml:space="preserve">
     <value>Diep Oranje</value>
@@ -541,16 +541,16 @@
     <value>Verstek</value>
   </data>
   <data name="DefaultAudioOutput" xml:space="preserve">
-    <value>Standaard audio-uitgang</value>
+    <value>Standaard audio uitvoer</value>
   </data>
   <data name="DefaultMaxAmount" xml:space="preserve">
-    <value>Standaard max bedrag</value>
+    <value>Standaard maximum aantal</value>
   </data>
   <data name="DefaultOutput" xml:space="preserve">
     <value>Standaard uitvoer</value>
   </data>
   <data name="DefaultStreamingSoftware" xml:space="preserve">
-    <value>Standaard streamingsoftware</value>
+    <value>Standaard streaming software</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Verwijderen</value>
@@ -559,7 +559,7 @@
     <value>Chatopdrachten verwijderen wanneer ze worden uitgevoerd</value>
   </data>
   <data name="DeleteCommand" xml:space="preserve">
-    <value>Opdracht Verwijderen</value>
+    <value>Opdracht wissen</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>Beschrijving</value>
@@ -580,7 +580,7 @@
     <value>Opdrachtgroep uitschakelen</value>
   </data>
   <data name="Disabled" xml:space="preserve">
-    <value>Invalide</value>
+    <value>Uitgeschakeld</value>
   </data>
   <data name="DisableQueue" xml:space="preserve">
     <value>Wachtrij uitschakelen</value>
@@ -589,7 +589,7 @@
     <value>Scheiden</value>
   </data>
   <data name="Discord" xml:space="preserve">
-    <value>Onenigheid</value>
+    <value>Discord</value>
   </data>
   <data name="DoesNotContain" xml:space="preserve">
     <value>&lt;&gt; bevat</value>
@@ -610,7 +610,7 @@
     <value>Bewerken</value>
   </data>
   <data name="EditCommand" xml:space="preserve">
-    <value>Opdracht Bewerken</value>
+    <value>Opdracht bewerken</value>
   </data>
   <data name="Enable" xml:space="preserve">
     <value>Inschakelen</value>
@@ -664,7 +664,7 @@
     <value>Engels</value>
   </data>
   <data name="EnteredUsers" xml:space="preserve">
-    <value>Ingevoerde gebruikers</value>
+    <value>Aanwezige gebruikers</value>
   </data>
   <data name="EntranceAnimation" xml:space="preserve">
     <value>Entree Animatie</value>
@@ -706,7 +706,7 @@
     <value>Extern programma</value>
   </data>
   <data name="FanProgression" xml:space="preserve">
-    <value>Fan progressie</value>
+    <value>Fan Progressie</value>
   </data>
   <data name="FieldName" xml:space="preserve">
     <value>Veldnaam</value>
@@ -727,22 +727,22 @@
     <value>Gefilterde woorden (één per regel) ( * = jokerteken)</value>
   </data>
   <data name="FindChannelToRaid" xml:space="preserve">
-    <value>Zoek kanaal naar raid</value>
+    <value>Zoek kanaal voor Raid</value>
   </data>
   <data name="FirstValue" xml:space="preserve">
     <value>Eerste waarde</value>
   </data>
   <data name="FollowAge" xml:space="preserve">
-    <value>Leeftijd volgen</value>
+    <value>Volg tijd</value>
   </data>
   <data name="Follower" xml:space="preserve">
     <value>Volgeling</value>
   </data>
   <data name="FollowerOnly" xml:space="preserve">
-    <value>Alleen volger</value>
+    <value>Alleen volgers</value>
   </data>
   <data name="FontSize" xml:space="preserve">
-    <value>Tekengrootte</value>
+    <value>Font grootte</value>
   </data>
   <data name="Four" xml:space="preserve">
     <value>Vier</value>
@@ -769,10 +769,10 @@
     <value>Duits</value>
   </data>
   <data name="GetCurrent" xml:space="preserve">
-    <value>Word actueel</value>
+    <value>Huidig ophalen</value>
   </data>
   <data name="Gifted" xml:space="preserve">
-    <value>Begaafd</value>
+    <value>Kado</value>
   </data>
   <data name="Giveaway" xml:space="preserve">
     <value>Giveaway</value>
@@ -811,7 +811,7 @@
     <value>Help</value>
   </data>
   <data name="HideChatUserList" xml:space="preserve">
-    <value>Chatgebruikerslijst verbergen</value>
+    <value>Chat gebruikerslijst verbergen</value>
   </data>
   <data name="HideDeletedMessages" xml:space="preserve">
     <value>Verberg verwijderde berichten</value>
@@ -829,13 +829,13 @@
     <value>Uren</value>
   </data>
   <data name="HTML" xml:space="preserve">
-    <value>Html</value>
+    <value>HTML</value>
   </data>
   <data name="IFTTT" xml:space="preserve">
-    <value>Ifttt</value>
+    <value>IFTTT</value>
   </data>
   <data name="IgnoreYourBotAccountForCommands" xml:space="preserve">
-    <value>Negeer uw botaccount voor opdrachten</value>
+    <value>Opdrachten van Uw Bot-account negeren</value>
   </data>
   <data name="Image" xml:space="preserve">
     <value>Beeld</value>
@@ -874,19 +874,19 @@
     <value>Is primair</value>
   </data>
   <data name="IsRankSystem" xml:space="preserve">
-    <value>Is Rank Systeem</value>
+    <value>Is rang systeem</value>
   </data>
   <data name="Item1" xml:space="preserve">
     <value>Punt 1</value>
   </data>
   <data name="Item2" xml:space="preserve">
-    <value>Punt 2</value>
+    <value>Object 2</value>
   </data>
   <data name="Item3" xml:space="preserve">
-    <value>Punt 3</value>
+    <value>Object 3</value>
   </data>
   <data name="Item4" xml:space="preserve">
-    <value>Punt 4</value>
+    <value>Object 4</value>
   </data>
   <data name="ItemList" xml:space="preserve">
     <value>Lijst met objecten</value>
@@ -904,10 +904,10 @@
     <value>Verhandelde items</value>
   </data>
   <data name="JoinFrontOfQueue" xml:space="preserve">
-    <value>Gebruiker join front of queue</value>
+    <value>Gebruiker vooraan de wachtlijst</value>
   </data>
   <data name="JoinQueue" xml:space="preserve">
-    <value>Wachtrij voor deelnemen aan gebruiker</value>
+    <value>Gebruiker in de wachtrij</value>
   </data>
   <data name="JSONValueName" xml:space="preserve">
     <value>JSON-waardenaam (gebruik '\' voor geneste parameters)</value>
@@ -937,7 +937,7 @@
     <value>Indeling</value>
   </data>
   <data name="Leaderboard" xml:space="preserve">
-    <value>Klassement</value>
+    <value>Leidersbord</value>
   </data>
   <data name="LeaveQueue" xml:space="preserve">
     <value>Wachtrij voor gebruikers verlaten</value>
@@ -988,10 +988,10 @@
     <value>Aanmelden</value>
   </data>
   <data name="LoginErrorNoStreamerAccount" xml:space="preserve">
-    <value>U moet een Streamer-account selecteren om u bij aan te melden.</value>
+    <value>U moet een streamer-account selecteren om aan te melden.</value>
   </data>
   <data name="Logout" xml:space="preserve">
-    <value>Uitloggen</value>
+    <value>Afmelden</value>
   </data>
   <data name="MagicEightBall" xml:space="preserve">
     <value>Magic 8 Bal</value>
@@ -1009,7 +1009,7 @@
     <value>Max</value>
   </data>
   <data name="MaxAmount" xml:space="preserve">
-    <value>Max bedrag</value>
+    <value>Maximum waarde</value>
   </data>
   <data name="MaxCaps" xml:space="preserve">
     <value>Max Caps</value>
@@ -1054,7 +1054,7 @@
     <value>Min waarde</value>
   </data>
   <data name="MixItUpCommands" xml:space="preserve">
-    <value>Mix It Up Commando's</value>
+    <value>Mix It Up Opdrachten</value>
   </data>
   <data name="MixItUpDashboard" xml:space="preserve">
     <value>Mix It Up - Dashboard</value>
@@ -1072,7 +1072,7 @@
     <value>Mod Bonus</value>
   </data>
   <data name="Moderation" xml:space="preserve">
-    <value>Matigheid</value>
+    <value>Moderatie</value>
   </data>
   <data name="ModerationAction" xml:space="preserve">
     <value>Moderatie Actie</value>
@@ -1165,7 +1165,7 @@
     <value>Een</value>
   </data>
   <data name="OneStrikeCommand" xml:space="preserve">
-    <value>1 Stakingscommando</value>
+    <value>1 Strike opdracht</value>
   </data>
   <data name="OnFollow" xml:space="preserve">
     <value>Op volgen</value>
@@ -1267,7 +1267,7 @@
     <value>Poortnaam</value>
   </data>
   <data name="Position" xml:space="preserve">
-    <value>Pos</value>
+    <value>Positie</value>
   </data>
   <data name="PreMade" xml:space="preserve">
     <value>Kant-en-klaar</value>
@@ -1276,7 +1276,7 @@
     <value>Vooraf gemaakte opdrachten</value>
   </data>
   <data name="Press" xml:space="preserve">
-    <value>Pers</value>
+    <value>Druk</value>
   </data>
   <data name="PrimaryCurrency" xml:space="preserve">
     <value>Primaire valuta</value>
@@ -1291,10 +1291,10 @@
     <value>Profielen</value>
   </data>
   <data name="ProgramArguments" xml:space="preserve">
-    <value>Programma Argumenten</value>
+    <value>Programma argumenten</value>
   </data>
   <data name="ProgramFilePath" xml:space="preserve">
-    <value>Pad naar programmabestand</value>
+    <value>Bestandspad programma</value>
   </data>
   <data name="ProgressBar" xml:space="preserve">
     <value>Doel/voortgangsbalk</value>
@@ -1324,7 +1324,7 @@
     <value>Citaat</value>
   </data>
   <data name="QuoteFormatting" xml:space="preserve">
-    <value>Opmaak van offertes ($quotenumber, $quotetext, $quotegame, $quotedatetime)</value>
+    <value>Opmaak van citaten ($quotenumber, $quotetext, $quotegame $quotedatetime)</value>
   </data>
   <data name="Quotes" xml:space="preserve">
     <value>Aanhalingstekens</value>
@@ -1387,7 +1387,7 @@
     <value>Rapport</value>
   </data>
   <data name="RequireClaim" xml:space="preserve">
-    <value>Vereisen "!claim"</value>
+    <value>Vereist "!claim"</value>
   </data>
   <data name="RequiredHours" xml:space="preserve">
     <value>Vereiste uren</value>
@@ -1411,7 +1411,7 @@
     <value>Reset bij laden</value>
   </data>
   <data name="ResetStrikesOnLaunch" xml:space="preserve">
-    <value>Reset strikes bij het starten</value>
+    <value>Strikes opnieuw instellen bij opstart</value>
   </data>
   <data name="RestoreSettings" xml:space="preserve">
     <value>Instellingen herstellen</value>
@@ -1432,7 +1432,7 @@
     <value>Rol</value>
   </data>
   <data name="RoleBonuses" xml:space="preserve">
-    <value>Rolbonussen</value>
+    <value>Rol bonus</value>
   </data>
   <data name="RoleErrorInsufficientRole" xml:space="preserve">
     <value>Je moet een {0} zijn om dit te doen.</value>
@@ -1447,10 +1447,10 @@
     <value>RTS</value>
   </data>
   <data name="RunCommand" xml:space="preserve">
-    <value>Opdracht Uitvoeren</value>
+    <value>Opdracht uitvoeren</value>
   </data>
   <data name="RunOneRandomly" xml:space="preserve">
-    <value>Voer er een willekeurig uit</value>
+    <value>Willekeurige uitvoering</value>
   </data>
   <data name="SameGame" xml:space="preserve">
     <value>Hetzelfde spel</value>
@@ -1462,7 +1462,7 @@
     <value>Chat-/gebeurtenislogboeken opslaan</value>
   </data>
   <data name="SaveFailed" xml:space="preserve">
-    <value>Opslaan mislukt, nog één keer proberen...</value>
+    <value>Opslaan mislukt, probeer opnieuw ...</value>
   </data>
   <data name="SaveToFile" xml:space="preserve">
     <value>Opslaan in bestand</value>
@@ -1474,7 +1474,7 @@
     <value>Naam scèneverzameling</value>
   </data>
   <data name="SceneName" xml:space="preserve">
-    <value>Scènenaam (hoofdlettergevoelig)</value>
+    <value>Scènenaam (hoofdletter gevoelig)</value>
   </data>
   <data name="SceneNameOptional" xml:space="preserve">
     <value>Scènenaam (hoofdlettergevoelig) (optioneel)</value>
@@ -1492,10 +1492,10 @@
     <value>Tweede waarde</value>
   </data>
   <data name="SelectFirst" xml:space="preserve">
-    <value>Selecteer Gebruiker vooraan in de wachtrij</value>
+    <value>Eerste gebruiker selecteren in wachtrij</value>
   </data>
   <data name="SelectFirstType" xml:space="preserve">
-    <value>Selecteer Eerste gebruiker van type in wachtrij</value>
+    <value>Eerste gebruikers type selecteren in wachtrij</value>
   </data>
   <data name="SelectRandom" xml:space="preserve">
     <value>Selecteer Willekeurige gebruiker in wachtrij</value>
@@ -1516,7 +1516,7 @@
     <value>Bericht verzenden</value>
   </data>
   <data name="Serial" xml:space="preserve">
-    <value>Vervolgverhaal</value>
+    <value>Serieel</value>
   </data>
   <data name="SerialDevice" xml:space="preserve">
     <value>Serieel apparaat</value>
@@ -1528,7 +1528,7 @@
     <value>Dienst</value>
   </data>
   <data name="ServiceConnectSound" xml:space="preserve">
-    <value>Service Connect Geluid</value>
+    <value>Geluid van Service-verbinding</value>
   </data>
   <data name="ServiceDisconnectSound" xml:space="preserve">
     <value>Service Geluid verbreken</value>
@@ -1579,16 +1579,16 @@
     <value>Contextmenu weergeven in chatlijst</value>
   </data>
   <data name="ShowUserJoinLeave" xml:space="preserve">
-    <value>Gebruikersdeelname/-verlof weergeven</value>
+    <value>Gebruikers deelname/verlaten tonen</value>
   </data>
   <data name="ShowWindow" xml:space="preserve">
     <value>Winkelkast</value>
   </data>
   <data name="SongRequest" xml:space="preserve">
-    <value>Song aanvraag</value>
+    <value>Muziek aanvraag</value>
   </data>
   <data name="SongRequests" xml:space="preserve">
-    <value>Song verzoeken</value>
+    <value>Muziek aanvragen</value>
   </data>
   <data name="Sound" xml:space="preserve">
     <value>Geluid</value>
@@ -1606,7 +1606,7 @@
     <value>Brontekst</value>
   </data>
   <data name="SparkCrystal" xml:space="preserve">
-    <value>Vonk Kristal</value>
+    <value>Spark kristal</value>
   </data>
   <data name="Sparks" xml:space="preserve">
     <value>Sparks</value>
@@ -1672,10 +1672,10 @@
     <value>Bekeken streams</value>
   </data>
   <data name="StrikeCommands" xml:space="preserve">
-    <value>Opdrachten doorhalen</value>
+    <value>Strikes opdrachten</value>
   </data>
   <data name="SubAge" xml:space="preserve">
-    <value>Sub leeftijd</value>
+    <value>Abonnements duur</value>
   </data>
   <data name="SubBonus" xml:space="preserve">
     <value>Sub Bonus</value>
@@ -1687,7 +1687,7 @@
     <value>Subs</value>
   </data>
   <data name="SubscribeAge" xml:space="preserve">
-    <value>Abonneren Leeftijd</value>
+    <value>Abonnement sinds</value>
   </data>
   <data name="Subscriber" xml:space="preserve">
     <value>Abonnee</value>
@@ -1696,10 +1696,10 @@
     <value>Alleen abonnee</value>
   </data>
   <data name="SubsGifted" xml:space="preserve">
-    <value>Subs Hoogbegaafd</value>
+    <value>Kado Abonnement</value>
   </data>
   <data name="SubsReceived" xml:space="preserve">
-    <value>Ontvangen subs</value>
+    <value>Ontvangen abonnementen</value>
   </data>
   <data name="SubtractFromAllChatUsers" xml:space="preserve">
     <value>Aftrekken van alle chatgebruikers</value>
@@ -1747,7 +1747,7 @@
     <value>Drie links</value>
   </data>
   <data name="ThreeOrMoreStrikesCommand" xml:space="preserve">
-    <value>3+ Strikes Commando</value>
+    <value>3+ strikes opdracht</value>
   </data>
   <data name="ThreeRight" xml:space="preserve">
     <value>Drie rechts</value>
@@ -1789,7 +1789,7 @@
     <value>Totale tijd (min.)</value>
   </data>
   <data name="TrackWhispererNumbers" xml:space="preserve">
-    <value>Track Whisperer Nummers</value>
+    <value>Volg fluister nummers</value>
   </data>
   <data name="Trade" xml:space="preserve">
     <value>Handel</value>
@@ -1801,7 +1801,7 @@
     <value>Vertaling</value>
   </data>
   <data name="TranslationBy" xml:space="preserve">
-    <value />
+    <value>Vertaald door</value>
   </data>
   <data name="TweetImageURL" xml:space="preserve">
     <value>URL van tweetafbeelding (optioneel)</value>
@@ -1810,22 +1810,22 @@
     <value>Tweetbericht (geen @mentions toegestaan)</value>
   </data>
   <data name="Twitter" xml:space="preserve">
-    <value>Sjilpen</value>
+    <value>Twitter</value>
   </data>
   <data name="Two" xml:space="preserve">
     <value>Twee</value>
   </data>
   <data name="TwoStrikesCommand" xml:space="preserve">
-    <value>2 Strikes Commando</value>
+    <value>2 Strikes opdracht</value>
   </data>
   <data name="Type" xml:space="preserve">
     <value>Type</value>
   </data>
   <data name="Unassigned" xml:space="preserve">
-    <value>Toegewezen</value>
+    <value>Niet toegewezen</value>
   </data>
   <data name="Ungrouped" xml:space="preserve">
-    <value>Gegroepeerde</value>
+    <value>Niet gegroepeerd</value>
   </data>
   <data name="Unknown" xml:space="preserve">
     <value>Onbekend</value>
@@ -1840,7 +1840,7 @@
     <value>Update</value>
   </data>
   <data name="UpdateCommand" xml:space="preserve">
-    <value>Opdracht Bijwerken</value>
+    <value>Opdracht bijwerken</value>
   </data>
   <data name="UpdatePreviewProgram" xml:space="preserve">
     <value>Preview-programma bijwerken</value>
@@ -1867,10 +1867,10 @@
     <value>Gebruikersgegevens importeren</value>
   </data>
   <data name="UserDataStep1" xml:space="preserve">
-    <value>Hiermee kun je de gebruikersgegevens van je kanaal importeren uit een platte tekst- of spreadsheetbestand. Als u een spreadsheetbestand wilt importeren, moet een of andere vorm van Microsoft Excel zijn geïnstalleerd. Merk op dat dit bestaande gebruikersgegevens in Mix It Up OVERSCHRIJFT. Geef eerst het bestand op waaruit u de gebruikersgegevens wilt importeren:</value>
+    <value>Hiermee kunt u de gebruikersgegevens van uw kanaal importeren uit een platte tekst of spreadsheetbestand. Als u een spreadsheetbestand wilt importeren, moet een bepaalde vorm van Microsoft Excel zijn geïnstalleerd. Houd er rekening mee dat dit bestaande gebruikersgegevens overschrijft in Mix It Up. Geef eerst het bestand op waaruit u de gebruikersgegevens wilt importeren:</value>
   </data>
   <data name="UserDataStep2" xml:space="preserve">
-    <value>Vervolgens moet u het kolomnummer voor elke waarde in uw gegevensbestand opgeven of leeg laten als die waarde niet aanwezig is. Houd er rekening mee dat het gegevensbestand ten minste de gebruikersnaam en / of Twitch-ID moet hebben:</value>
+    <value>Vervolgens moet u het kolomnummer opgeven voor elke waarde in uw gegevensbestand of deze leeg laten als die waarde niet aanwezig is. Houd er rekening mee dat het gegevensbestand ten minste de gebruikersidentificatie en/of de gebruikersnaam moet hebben:</value>
   </data>
   <data name="UserJoined" xml:space="preserve">
     <value>Lid van gebruiker</value>
@@ -1888,7 +1888,7 @@
     <value>Gebruikersnaam (optioneel)</value>
   </data>
   <data name="UserOnlyChatCommands" xml:space="preserve">
-    <value>Chatopdrachten alleen voor gebruikers</value>
+    <value>Chatopdrachten enkel voor gebruikers</value>
   </data>
   <data name="UserRankChanged" xml:space="preserve">
     <value>Gebruikersrangschikking omhoog</value>
@@ -1996,7 +1996,7 @@
     <value>Wekelijks</value>
   </data>
   <data name="Whisper" xml:space="preserve">
-    <value>Fluisteren</value>
+    <value>Fluister</value>
   </data>
   <data name="WhisperUserOptional" xml:space="preserve">
     <value>Whisper-gebruiker (optioneel)</value>
@@ -2062,19 +2062,19 @@
     <value>Chatgebruiker verbannen</value>
   </data>
   <data name="ChatUserFirstJoin" xml:space="preserve">
-    <value>Chat Nieuwe gebruiker lid</value>
+    <value>Nieuwe gebruiker in chat</value>
   </data>
   <data name="ChatUserJoined" xml:space="preserve">
-    <value>Chat gebruiker lid</value>
+    <value>Gebruiker komt in chat</value>
   </data>
   <data name="ChatUserLeft" xml:space="preserve">
-    <value>Chat gebruiker links</value>
+    <value>Gebruiker verlaat chat</value>
   </data>
   <data name="ChatUserPurge" xml:space="preserve">
     <value>Chat gebruiker gezuiverd</value>
   </data>
   <data name="ExtraLifeDonation" xml:space="preserve">
-    <value>Extra Life Donatie</value>
+    <value>ExtraLife Donatie</value>
   </data>
   <data name="JustGivingDonation" xml:space="preserve">
     <value>JustGiving Donatie</value>
@@ -4264,7 +4264,7 @@ Ingeschakeld. Je kunt het zien als vergelijkbaar met het schakelen tussen de opt
     <value>Absoluut</value>
   </data>
   <data name="Twitch" xml:space="preserve">
-    <value>Trekken</value>
+    <value>Twitch</value>
   </data>
   <data name="Premium" xml:space="preserve">
     <value>Premie</value>
@@ -4351,7 +4351,7 @@ Ingeschakeld. Je kunt het zien als vergelijkbaar met het schakelen tussen de opt
     <value>Voer een geldig aangepast clientgeheim in.</value>
   </data>
   <data name="ExtraLife" xml:space="preserve">
-    <value>Extra leven</value>
+    <value>Extra Life</value>
   </data>
   <data name="ExtraLifeInfo1" xml:space="preserve">
     <value>Met de extra life-serviceconnectiviteit kunt u gebeurtenissen activeren vanaf het moment dat u of uw team een donatie ontvangt.</value>
@@ -4448,7 +4448,7 @@ Ingeschakeld. Je kunt het zien als vergelijkbaar met het schakelen tussen de opt
     <value>Item breedte (pixels)</value>
   </data>
   <data name="JustGiving" xml:space="preserve">
-    <value>Justgiving</value>
+    <value>JustGiving</value>
   </data>
   <data name="JustGivingInfo1" xml:space="preserve">
     <value>Met de connectiviteit van de JustGiving-service kunt u acties uitvoeren wanneer een donatie wordt ontvangen. Wanneer u zich aanmeldt, wordt een verificatiewebpagina geopend waarin u wordt gevraagd in te loggen bij JustGiving en Mix It Up goed te keuren om toegang te krijgen tot uw gegevens.</value>
@@ -4502,7 +4502,7 @@ Ingeschakeld. Je kunt het zien als vergelijkbaar met het schakelen tussen de opt
     <value>Wachtwoord (optioneel)</value>
   </data>
   <data name="Patreon" xml:space="preserve">
-    <value>Patreon ·</value>
+    <value>Patreon</value>
   </data>
   <data name="PatreonInfo1" xml:space="preserve">
     <value>Patreon-serviceconnectiviteit stelt u in staat om acties uit te voeren wanneer een donatie wordt ontvangen. Wanneer u zich aanmeldt, wordt een verificatiewebpagina geopend waarin u wordt gevraagd in te loggen bij Patreon en Mix It Up goed te keuren om toegang te krijgen tot uw gegevens.</value>
@@ -4559,7 +4559,7 @@ Ingeschakeld. Je kunt het zien als vergelijkbaar met het schakelen tussen de opt
     <value>Eenvoudig</value>
   </data>
   <data name="StreamAvatars" xml:space="preserve">
-    <value>Avatars streamen</value>
+    <value>Stream Avatars</value>
   </data>
   <data name="StreamAvatarsInfo1" xml:space="preserve">
     <value>Stream Avatars functionaliteit wordt direct afgehandeld via het Stream Avatars programma. Voordat u Stream-avatars verbindt met Mix It Up, moet u ervoor zorgen dat de Developer API is ingeschakeld op de pagina Services.</value>
