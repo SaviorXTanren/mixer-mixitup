@@ -224,7 +224,7 @@ namespace MixItUp.Base.Model.Commands
         {
             if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
-                await ServiceManager.Get<GlimeshSessionService>().RefreshChannel();
+                await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
                 if (ServiceManager.Get<TwitchSessionService>().IsLive)
                 {
                     return TwitchPlatformService.GetTwitchDateTime(ServiceManager.Get<TwitchSessionService>().Stream?.started_at);
