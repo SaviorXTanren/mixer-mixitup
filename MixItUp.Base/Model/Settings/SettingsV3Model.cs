@@ -612,75 +612,92 @@ namespace MixItUp.Base.Model.Settings
             });
             this.Quotes.ClearTracking();
 
+            HashSet<Guid> forcedCommandResaves = new HashSet<Guid>();
             await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Commands", (Dictionary<string, object> data) =>
             {
                 CommandModelBase command = null;
                 CommandTypeEnum type = (CommandTypeEnum)Convert.ToInt32(data["TypeID"]);
 
-                string commandData = data["Data"].ToString();
-                if (type == CommandTypeEnum.Chat)
+                try
                 {
-                    command = JSONSerializerHelper.DeserializeFromString<ChatCommandModel>(commandData);
-                }
-                else if (type == CommandTypeEnum.Event)
-                {
-                    command = JSONSerializerHelper.DeserializeFromString<EventCommandModel>(commandData);
-                }
-                else if (type == CommandTypeEnum.Timer)
-                {
-                    command = JSONSerializerHelper.DeserializeFromString<TimerCommandModel>(commandData);
-                }
-                else if (type == CommandTypeEnum.ActionGroup)
-                {
-                    command = JSONSerializerHelper.DeserializeFromString<ActionGroupCommandModel>(commandData);
-                }
-                else if (type == CommandTypeEnum.Game)
-                {
-                    try
+                    string commandData = data["Data"].ToString();
+                    if (type == CommandTypeEnum.Chat)
                     {
-                        command = JSONSerializerHelper.DeserializeFromString<GameCommandModelBase>(commandData);
+                        command = JSONSerializerHelper.DeserializeFromString<ChatCommandModel>(commandData);
                     }
-                    catch (Exception ex)
+                    else if (type == CommandTypeEnum.Event)
                     {
-                        Logger.Log(ex);
-                        if (ex.Message.Contains("MixItUp.Base.Model.User.UserRoleEnum"))
+                        command = JSONSerializerHelper.DeserializeFromString<EventCommandModel>(commandData);
+                    }
+                    else if (type == CommandTypeEnum.Timer)
+                    {
+                        command = JSONSerializerHelper.DeserializeFromString<TimerCommandModel>(commandData);
+                    }
+                    else if (type == CommandTypeEnum.ActionGroup)
+                    {
+                        command = JSONSerializerHelper.DeserializeFromString<ActionGroupCommandModel>(commandData);
+                    }
+                    else if (type == CommandTypeEnum.Game)
+                    {
+                        try
                         {
-                            commandData = commandData.Replace("MixItUp.Base.Model.User.UserRoleEnum", "MixItUp.Base.Model.User.OldUserRoleEnum");
                             command = JSONSerializerHelper.DeserializeFromString<GameCommandModelBase>(commandData);
                         }
+                        catch (Exception ex)
+                        {
+                            if (ex.Message.Contains("MixItUp.Base.Model.User.UserRoleEnum"))
+                            {
+                                commandData = commandData.Replace("MixItUp.Base.Model.User.UserRoleEnum", "MixItUp.Base.Model.User.OldUserRoleEnum");
+                                command = JSONSerializerHelper.DeserializeFromString<GameCommandModelBase>(commandData);
+                                forcedCommandResaves.Add(command.ID);
+                            }
+                            else
+                            {
+                                Logger.Log(ex);
+                            }
+                        }
+                    }
+                    else if (type == CommandTypeEnum.TwitchChannelPoints)
+                    {
+                        command = JSONSerializerHelper.DeserializeFromString<TwitchChannelPointsCommandModel>(commandData);
+                    }
+                    else if (type == CommandTypeEnum.StreamlootsCard)
+                    {
+                        command = JSONSerializerHelper.DeserializeFromString<StreamlootsCardCommandModel>(commandData);
+                    }
+                    else if (type == CommandTypeEnum.Custom)
+                    {
+                        command = JSONSerializerHelper.DeserializeFromString<CustomCommandModel>(commandData);
+                    }
+                    else if (type == CommandTypeEnum.UserOnlyChat)
+                    {
+                        command = JSONSerializerHelper.DeserializeFromString<UserOnlyChatCommandModel>(commandData);
+                    }
+                    else if (type == CommandTypeEnum.Webhook)
+                    {
+                        command = JSONSerializerHelper.DeserializeFromString<WebhookCommandModel>(commandData);
+                    }
+                    else if (type == CommandTypeEnum.TrovoSpell)
+                    {
+                        command = JSONSerializerHelper.DeserializeFromString<TrovoSpellCommandModel>(commandData);
+                    }
+
+                    if (command != null)
+                    {
+                        this.Commands[command.ID] = command;
                     }
                 }
-                else if (type == CommandTypeEnum.TwitchChannelPoints)
+                catch (Exception ex)
                 {
-                    command = JSONSerializerHelper.DeserializeFromString<TwitchChannelPointsCommandModel>(commandData);
-                }
-                else if (type == CommandTypeEnum.StreamlootsCard)
-                {
-                    command = JSONSerializerHelper.DeserializeFromString<StreamlootsCardCommandModel>(commandData);
-                }
-                else if (type == CommandTypeEnum.Custom)
-                {
-                    command = JSONSerializerHelper.DeserializeFromString<CustomCommandModel>(commandData);
-                }
-                else if (type == CommandTypeEnum.UserOnlyChat)
-                {
-                    command = JSONSerializerHelper.DeserializeFromString<UserOnlyChatCommandModel>(commandData);
-                }
-                else if (type == CommandTypeEnum.Webhook)
-                {
-                    command = JSONSerializerHelper.DeserializeFromString<WebhookCommandModel>(commandData);
-                }
-                else if (type == CommandTypeEnum.TrovoSpell)
-                {
-                    command = JSONSerializerHelper.DeserializeFromString<TrovoSpellCommandModel>(commandData);
-                }
-
-                if (command != null)
-                {
-                    this.Commands[command.ID] = command;
+                    Logger.Log(ex);
                 }
             });
             this.Commands.ClearTracking();
+
+            foreach (Guid id in forcedCommandResaves)
+            {
+                this.Commands.ManualValueChanged(id);
+            }
 
             foreach (CounterModel counter in this.Counters.Values.ToList())
             {
