@@ -179,9 +179,9 @@ namespace MixItUp.WPF.Controls.Chat
                             }
                             if (ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
                             {
-                                //emotes.AddRange(this.FindMatchingEmoticons<TrovoChatEmoteViewModel>(tagText, ServiceManager.Get<TrovoChatEventService>().ChannelEmotes));
-                                //emotes.AddRange(this.FindMatchingEmoticons<TrovoChatEmoteViewModel>(tagText, ServiceManager.Get<TrovoChatEventService>().EventEmotes));
-                                //emotes.AddRange(this.FindMatchingEmoticons<TrovoChatEmoteViewModel>(tagText, ServiceManager.Get<TrovoChatEventService>().GlobalEmotes));
+                                emotes.AddRange(this.FindMatchingEmoticons<TrovoChatEmoteViewModel>(tagText, ServiceManager.Get<TrovoChatEventService>().ChannelEmotes));
+                                emotes.AddRange(this.FindMatchingEmoticons<TrovoChatEmoteViewModel>(tagText, ServiceManager.Get<TrovoChatEventService>().EventEmotes));
+                                emotes.AddRange(this.FindMatchingEmoticons<TrovoChatEmoteViewModel>(tagText, ServiceManager.Get<TrovoChatEventService>().GlobalEmotes));
                             }
                             if (ServiceManager.Get<GlimeshChatEventService>().IsUserConnected)
                             {
