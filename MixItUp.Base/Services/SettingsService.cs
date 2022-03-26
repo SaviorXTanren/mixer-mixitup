@@ -522,7 +522,10 @@ namespace MixItUp.Base.Services
                 else if (action is GameQueueActionModel)
                 {
                     GameQueueActionModel gqAction = (GameQueueActionModel)action;
-                    gqAction.RoleRequirement.UpgradeFromOldRoles();
+                    if (gqAction.RoleRequirement != null)
+                    {
+                        gqAction.RoleRequirement.UpgradeFromOldRoles();
+                    }
                 }
                 else if (action is InputActionModel)
                 {
