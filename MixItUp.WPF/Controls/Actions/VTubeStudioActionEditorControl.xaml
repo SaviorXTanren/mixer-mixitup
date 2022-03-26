@@ -104,7 +104,7 @@
 
                 <ComboBox Grid.Row="0" ItemsSource="{Binding Models}" SelectedItem="{Binding SelectedModel}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VTubeStudioModel}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="modelName" />
 
-                <ComboBox Grid.Row="2" ItemsSource="{Binding HotKeys}" SelectedItem="{Binding SelectedHotKey}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VTubeStudioHotKey}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="name" />
+                <ComboBox Grid.Row="2" ItemsSource="{Binding HotKeys}" SelectedItem="{Binding SelectedHotKey}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VTubeStudioHotKey}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="DisplayName" />
             </Grid>
         </Grid>
     </Grid>

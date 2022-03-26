@@ -31,6 +31,14 @@ namespace MixItUp.Base.Services.External
         public string type { get; set; }
         public string file { get; set; }
         public string hotkeyID { get; set; }
+
+        public string DisplayName
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(this.name) ? this.name : this.file;
+            }
+        }
     }
 
     public class VTubeStudioWebSocketRequestPacket

@@ -589,7 +589,7 @@
     <value>Desconectar</value>
   </data>
   <data name="Discord" xml:space="preserve">
-    <value>Discordia</value>
+    <value>Discord</value>
   </data>
   <data name="DoesNotContain" xml:space="preserve">
     <value>&lt;&gt; contiene</value>
@@ -2780,7 +2780,7 @@ Por ejemplo, si esta opción está habilitada y la cantidad se establece en 5, c
     <value>Configuración predeterminada</value>
   </data>
   <data name="OBSStudio" xml:space="preserve">
-    <value>Estudio OBS</value>
+    <value>OBS Studio</value>
   </data>
   <data name="SaveReplayBuffer" xml:space="preserve">
     <value>Guardar búfer de reproducción</value>
@@ -4264,7 +4264,7 @@ Habilitado. Puede pensar que es similar a alternar la opción "Desbloquear coman
     <value>Absoluto</value>
   </data>
   <data name="Twitch" xml:space="preserve">
-    <value>Tic</value>
+    <value>Twitch</value>
   </data>
   <data name="Premium" xml:space="preserve">
     <value>Prima</value>
@@ -4351,7 +4351,7 @@ Habilitado. Puede pensar que es similar a alternar la opción "Desbloquear coman
     <value>Introduzca un secreto de cliente personalizado válido.</value>
   </data>
   <data name="ExtraLife" xml:space="preserve">
-    <value>Vida extra</value>
+    <value>Extra Life</value>
   </data>
   <data name="ExtraLifeInfo1" xml:space="preserve">
     <value>La conectividad del servicio Extra Life le permite activar eventos desde que usted o su equipo reciben una donación.</value>
@@ -4502,7 +4502,7 @@ Habilitado. Puede pensar que es similar a alternar la opción "Desbloquear coman
     <value>Contraseña (opcional)</value>
   </data>
   <data name="Patreon" xml:space="preserve">
-    <value>Patreón</value>
+    <value>Patreon</value>
   </data>
   <data name="PatreonInfo1" xml:space="preserve">
     <value>La conectividad del servicio Patreon le permite realizar acciones cuando se recibe una donación. Cuando inicie sesión, se abrirá una página web de autenticación pidiéndole que inicie sesión en Patreon y apruebe Mix It Up para acceder a su información.</value>
@@ -4559,7 +4559,7 @@ Habilitado. Puede pensar que es similar a alternar la opción "Desbloquear coman
     <value>Sencillo</value>
   </data>
   <data name="StreamAvatars" xml:space="preserve">
-    <value>Transmitir avatares</value>
+    <value>Stream Avatars</value>
   </data>
   <data name="StreamAvatarsInfo1" xml:space="preserve">
     <value>La funcionalidad de Stream Avatars se maneja directamente a través del programa Stream Avatars. Antes de conectar Stream Avatars para mezclarlo, debe asegurarse de que la API para desarrolladores esté habilitada en la página Servicios.</value>
@@ -4571,7 +4571,7 @@ Habilitado. Puede pensar que es similar a alternar la opción "Desbloquear coman
     <value>Stream Avatars Sección Wiki</value>
   </data>
   <data name="StreamDeck" xml:space="preserve">
-    <value>Cubierta Stream</value>
+    <value>Stream Deck</value>
   </data>
   <data name="StreamDeckInfo1" xml:space="preserve">
     <value>Este complemento de Stream Deck le permite ejecutar comandos de Mix It Up directamente desde su dispositivo Stream Deck, así como otra información de estado sobre su transmisión.</value>
@@ -4580,7 +4580,7 @@ Habilitado. Puede pensar que es similar a alternar la opción "Desbloquear coman
     <value>Para comenzar, asegúrese de que el software Stream Deck esté actualizado al menos a la versión 4.0 y que el servicio Developer API esté habilitado en Mix It Up. Para instalar el plugin Mix It Up, haga clic en "Más acciones..." en la esquina inferior derecha, luego busque "Mezclar" en la ventana.</value>
   </data>
   <data name="StreamElements" xml:space="preserve">
-    <value>StreamElementos</value>
+    <value>StreamElements</value>
   </data>
   <data name="StreamElementsInfo1" xml:space="preserve">
     <value>La conectividad del servicio StreamElements le permite realizar acciones cuando se recibe una donación. Cuando inicie sesión, se abrirá una página web de autenticación que le pedirá que inicie sesión en StreamElements y apruebe Mix It Up para acceder a su información.</value>
@@ -7461,9 +7461,6 @@ Intentaremos volver a conectarnos con el servicio cuando sea posible. Si esto co
   </data>
   <data name="AutoCommandsExplanation" xml:space="preserve">
     <value>Los siguientes comandos se pueden crear automáticamente para que pueda comenzar a usar esta función. ¿Desea que agreguemos automáticamente los siguientes comandos para usted?</value>
-  </data>
-  <data name="MixItUp" xml:space="preserve">
-    <value>Mézclalo</value>
   </data>
   <data name="MixItUpPopOut" xml:space="preserve">
     <value>Mézclalo - Pop Out</value>

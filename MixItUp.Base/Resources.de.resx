@@ -124,13 +124,13 @@
     <value>1 pro Minute</value>
   </data>
   <data name="About" xml:space="preserve">
-    <value>Über</value>
+    <value>Über uns</value>
   </data>
   <data name="Accept" xml:space="preserve">
-    <value>Annehmen</value>
+    <value>Akzeptieren</value>
   </data>
   <data name="AccessTheFolderWhereMixItUpIsInstalled" xml:space="preserve">
-    <value>Greifen Sie auf den Ordner zu, in dem Mix It Up installiert ist</value>
+    <value>Auf den Ordner zugreifen, in dem Mix it Up installiert ist</value>
   </data>
   <data name="Account" xml:space="preserve">
     <value>Konto</value>
@@ -157,13 +157,13 @@
     <value>Konto ist 1 Woche alt</value>
   </data>
   <data name="AcquireRate" xml:space="preserve">
-    <value>Rate erwerben</value>
+    <value>Erhaltene Rate</value>
   </data>
   <data name="Action" xml:space="preserve">
     <value>Aktion</value>
   </data>
   <data name="ActionGroup" xml:space="preserve">
-    <value>Bürgerinitiative</value>
+    <value>Aktionsgruppen</value>
   </data>
   <data name="ActionGroups" xml:space="preserve">
     <value>Aktionsgruppen</value>
@@ -175,10 +175,10 @@
     <value>Hinzufügen</value>
   </data>
   <data name="AddClause" xml:space="preserve">
-    <value>Add-Klausel</value>
+    <value>Klausel hinzufügen</value>
   </data>
   <data name="AddCommand" xml:space="preserve">
-    <value>Befehl "Hinzufügen"</value>
+    <value>Befehl hinzufügen</value>
   </data>
   <data name="AddCurrencyRank" xml:space="preserve">
     <value>Währung/Rang hinzufügen</value>
@@ -187,43 +187,43 @@
     <value>Inventar hinzufügen</value>
   </data>
   <data name="AddItem" xml:space="preserve">
-    <value>Element hinzufügen</value>
+    <value>Gegenstände hinzufügen</value>
   </data>
   <data name="AddNewPair" xml:space="preserve">
     <value>Neues Paar hinzufügen</value>
   </data>
   <data name="AddNewRank" xml:space="preserve">
-    <value>Neuen Rang hinzufügen</value>
+    <value>Rang hinzufügen</value>
   </data>
   <data name="AddNewVariable" xml:space="preserve">
     <value>Neue Variable hinzufügen</value>
   </data>
   <data name="AddOverlayWidget" xml:space="preserve">
-    <value>Overlay-Widget hinzufügen</value>
+    <value>Overlay Widget hinzufügen</value>
   </data>
   <data name="AddQuote" xml:space="preserve">
-    <value>Angebot hinzufügen</value>
+    <value>Zitat hinzufügen</value>
   </data>
   <data name="AddToAllChatUsers" xml:space="preserve">
-    <value>Zu allen Chat-Benutzern hinzufügen</value>
+    <value>Zu allen Benutzern hinzufügen (im Chat)</value>
   </data>
   <data name="AddToSpecificUser" xml:space="preserve">
     <value>Zu einem bestimmten Benutzer hinzufügen</value>
   </data>
   <data name="AddToUser" xml:space="preserve">
-    <value>Zu Benutzer hinzufügen</value>
+    <value>Zu allen Benutzern hinzufügen</value>
   </data>
   <data name="Advanced" xml:space="preserve">
-    <value>Fortgeschritten</value>
+    <value>Erweiterte Einstellung</value>
   </data>
   <data name="Alerts" xml:space="preserve">
     <value>Alarmsignale</value>
   </data>
   <data name="AllowCommandsToBeWhispered" xml:space="preserve">
-    <value>Zulassen, dass Befehle geflüstert werden</value>
+    <value>Erlaube das Flüstern von Befehlen</value>
   </data>
   <data name="AllowPastWinners" xml:space="preserve">
-    <value>Frühere Gewinner zulassen</value>
+    <value>Vergangene Gewinner zulassen</value>
   </data>
   <data name="AllowProfanity" xml:space="preserve">
     <value>Obszönitäten zulassen</value>
@@ -238,7 +238,7 @@
     <value>Menge</value>
   </data>
   <data name="AmountDonated" xml:space="preserve">
-    <value>Spendenbetrag</value>
+    <value>Gespendeter Betrag</value>
   </data>
   <data name="AmountPlusMinus" xml:space="preserve">
     <value>Menge</value>
@@ -247,13 +247,13 @@
     <value>Betrag (Sekunden)</value>
   </data>
   <data name="AnyChatMessageSound" xml:space="preserve">
-    <value>Jeder Chat-Nachrichtenton</value>
+    <value>Beliebiger Chat-Nachrichtenton</value>
   </data>
   <data name="AppendToFile" xml:space="preserve">
     <value>An Datei anhängen</value>
   </data>
   <data name="ApplicationInfo" xml:space="preserve">
-    <value>Informationen zur Bewerbung</value>
+    <value>Programminfo</value>
   </data>
   <data name="ApplyStrikes" xml:space="preserve">
     <value>Verwarnungen anwenden</value>
@@ -268,13 +268,13 @@
     <value>Automatisches Einschließen von "!"</value>
   </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
-    <value>Automatische Anmeldung Girokonto</value>
+    <value>Auto-Einloggen in aktuellen Konto</value>
   </data>
   <data name="AutomatedSettingsBackupRate" xml:space="preserve">
     <value>Backup-Rate für automatisierte Einstellungen</value>
   </data>
   <data name="AutomaticReset" xml:space="preserve">
-    <value>Automatisches Zurücksetzen</value>
+    <value>Automatisches Resetten</value>
   </data>
   <data name="Average" xml:space="preserve">
     <value>Durchschnitt</value>
@@ -283,10 +283,10 @@
     <value>Hintergrundfarbe</value>
   </data>
   <data name="BackupRate" xml:space="preserve">
-    <value>Backup-Rate</value>
+    <value>Sicherungsrate</value>
   </data>
   <data name="BackupSettings" xml:space="preserve">
-    <value>Backup-Einstellungen</value>
+    <value>Einstellungen sichern</value>
   </data>
   <data name="BackupYourCurrentSettings" xml:space="preserve">
     <value>Sichern Sie Ihre aktuellen Einstellungen</value>
@@ -298,7 +298,7 @@
     <value>Baudrate</value>
   </data>
   <data name="Between" xml:space="preserve">
-    <value>Zwischen</value>
+    <value>zwischen</value>
   </data>
   <data name="Black" xml:space="preserve">
     <value>Schwarz</value>
@@ -307,13 +307,13 @@
     <value>Blau</value>
   </data>
   <data name="BlueGrey" xml:space="preserve">
-    <value>Blau Grau</value>
+    <value>Blaugrau</value>
   </data>
   <data name="Bot" xml:space="preserve">
     <value>Bot</value>
   </data>
   <data name="BotAccount" xml:space="preserve">
-    <value>Bot-Konto</value>
+    <value>Bot Konto</value>
   </data>
   <data name="Brown" xml:space="preserve">
     <value>Braun</value>
@@ -340,34 +340,34 @@
     <value>Kanal</value>
   </data>
   <data name="BannedWords" xml:space="preserve">
-    <value>Gesperrte Wörter (eines pro Zeile) ( * = Platzhalter)</value>
+    <value>Banned Wörter (Eins pro Zeile) (* = Wildcard)</value>
   </data>
   <data name="ChannelEditor" xml:space="preserve">
-    <value>Channel-Editor</value>
+    <value>Kanaleditor</value>
   </data>
   <data name="ChannelInfo" xml:space="preserve">
-    <value>Kanal-Info</value>
+    <value>Kanalinformationen</value>
   </data>
   <data name="ChannelName" xml:space="preserve">
-    <value>Name des Kanals</value>
+    <value>Kanalname</value>
   </data>
   <data name="Chat" xml:space="preserve">
-    <value>Plaudern</value>
+    <value>Chat</value>
   </data>
   <data name="ChatMessage" xml:space="preserve">
-    <value>Chat-Nachricht</value>
+    <value>Nachricht an den Chat</value>
   </data>
   <data name="ChatMessages" xml:space="preserve">
-    <value>Chat-Nachrichten</value>
+    <value>Chatnachrichten</value>
   </data>
   <data name="ChatMessagesSent" xml:space="preserve">
-    <value>Gesendete Chat-Nachrichten</value>
+    <value>Chatnachrichten gesendet</value>
   </data>
   <data name="ChatTaggedSound" xml:space="preserve">
-    <value>Chat Tagged Sound</value>
+    <value>Chat-Markierungston</value>
   </data>
   <data name="ChatTextModeration" xml:space="preserve">
-    <value>Moderation von Chat-Texten</value>
+    <value>Chat-Textmoderation</value>
   </data>
   <data name="ChatTriggersHintAssist" xml:space="preserve">
     <value>Chat-Auslöser (Leerzeichen getrennt, Semikolon für mehrere Wörter)</value>
@@ -376,19 +376,19 @@
     <value>Chat-Auslöser (Kein "!" erforderlich, Leerzeichen getrennt, Semikolon für mehrere Wörter)</value>
   </data>
   <data name="ChatWhisperSound" xml:space="preserve">
-    <value>Chat Flüsterton</value>
+    <value>Chat-Flüsterton</value>
   </data>
   <data name="ClearAllUserDataHeader" xml:space="preserve">
-    <value>Löschen Sie alle Benutzerdaten (Stunden, Währung, Rang usw.)</value>
+    <value>Alle Benutzerdaten löschen (Stunden, Währung, Rang usw.)</value>
   </data>
   <data name="ClearChat" xml:space="preserve">
-    <value>Chat löschen</value>
+    <value>Chat leeren</value>
   </data>
   <data name="ClearChatConfirmation" xml:space="preserve">
-    <value>Dadurch werden alle Chat-Nachrichten für den Stream gelöscht. Bist du sicher?</value>
+    <value>Dadurch werden alle Chat-Nachrichten für den Stream gelöschen. Bist Du sicher?</value>
   </data>
   <data name="ClearQueue" xml:space="preserve">
-    <value>Warteschlange löschen</value>
+    <value>Warteschlange leeren</value>
   </data>
   <data name="ClearUserData" xml:space="preserve">
     <value>Benutzerdaten löschen</value>
@@ -400,7 +400,7 @@
     <value>Schließen</value>
   </data>
   <data name="ClosingPleaseWait" xml:space="preserve">
-    <value>Bitte warten Sie, während Mix It Up Ihre Einstellungen speichert und herunterfährt...</value>
+    <value>Bitte warte einen Moment, während Mix It Up deine Einstellungen speichert und herunterfährt...</value>
   </data>
   <data name="ColorScheme" xml:space="preserve">
     <value>Farbschema</value>
@@ -415,7 +415,7 @@
     <value>Befehlsgruppe</value>
   </data>
   <data name="CommandNoBang" xml:space="preserve">
-    <value>Befehl (Kein '!' erforderlich)</value>
+    <value>Befehl (kein '!' benötigt)</value>
   </data>
   <data name="Commands" xml:space="preserve">
     <value>Befehle</value>
@@ -427,13 +427,13 @@
     <value>Vergleichen</value>
   </data>
   <data name="Conditional" xml:space="preserve">
-    <value>Konditional</value>
+    <value>Bedingungen</value>
   </data>
   <data name="Connect" xml:space="preserve">
     <value>Verbinden</value>
   </data>
   <data name="ConnectDevices" xml:space="preserve">
-    <value>Geräte verbinden</value>
+    <value>Gerät verbinden</value>
   </data>
   <data name="ContactAndResources" xml:space="preserve">
     <value>Kontakt &amp; Ressourcen</value>
@@ -454,13 +454,13 @@
     <value>Zähler (Erstellen &amp; Aktualisieren)</value>
   </data>
   <data name="CounterNameWithTips" xml:space="preserve">
-    <value>Zählername (Nur Buchstaben und Zahlen erlaubt, kein $)</value>
+    <value>Zählername (nur Buchstaben &amp; Zahlen zulässig, kein $)</value>
   </data>
   <data name="CountersFolder" xml:space="preserve">
-    <value>Ordner "Zähler"</value>
+    <value>Zähler Ordner</value>
   </data>
   <data name="CumulativeMonthsSubbed" xml:space="preserve">
-    <value>Kumulierte Monate Unterbett</value>
+    <value>Gesamte Anzahl der gesubten Monate</value>
   </data>
   <data name="Currency" xml:space="preserve">
     <value>Währung</value>
@@ -469,13 +469,13 @@
     <value>Währungskosten</value>
   </data>
   <data name="CurrencyRank" xml:space="preserve">
-    <value>Währung/Rang</value>
+    <value>Währung / Rang</value>
   </data>
   <data name="CurrencyRankInventory" xml:space="preserve">
     <value>Währung/Rang/Inventar</value>
   </data>
   <data name="CurrencyRankInventoryExempt" xml:space="preserve">
-    <value>Währung/Rang/Inventar ausgenommen</value>
+    <value>Währung/Rang/Inventory Ausnahme</value>
   </data>
   <data name="CurrencyRankName" xml:space="preserve">
     <value>Währung/Rangname</value>
@@ -487,13 +487,13 @@
     <value>Strömung</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Gewohnheit</value>
+    <value>Benutzerdefiniert</value>
   </data>
   <data name="CustomCommands" xml:space="preserve">
     <value>Benutzerdefinierte Befehle</value>
   </data>
   <data name="CustomEntranceCommand" xml:space="preserve">
-    <value>Benutzerdefinierter Eingabebefehl</value>
+    <value>Benutzerdefinierter Willkommensbefehl</value>
   </data>
   <data name="CustomizeCurrencyRank" xml:space="preserve">
     <value>Währung/Rang anpassen</value>
@@ -505,7 +505,7 @@
     <value>Benutzerdefinierter Titel</value>
   </data>
   <data name="Cyan" xml:space="preserve">
-    <value>Zyan</value>
+    <value>Cyan</value>
   </data>
   <data name="Daily" xml:space="preserve">
     <value>Täglich</value>
@@ -514,7 +514,7 @@
     <value>Dunkel</value>
   </data>
   <data name="Dashboard" xml:space="preserve">
-    <value>Instrumententafel</value>
+    <value>Dashboard</value>
   </data>
   <data name="Date" xml:space="preserve">
     <value>Datum</value>
@@ -532,19 +532,19 @@
     <value>Vom Benutzer ausführenden Befehl abziehen</value>
   </data>
   <data name="DeepOrange" xml:space="preserve">
-    <value>Tiefes Orange</value>
+    <value>Dunkelorange</value>
   </data>
   <data name="DeepPurple" xml:space="preserve">
-    <value>Tiefviolett</value>
+    <value>Dunkellila</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Vorgabe</value>
+    <value>Standard</value>
   </data>
   <data name="DefaultAudioOutput" xml:space="preserve">
-    <value>Standard-Audioausgang</value>
+    <value>Standard-Audio-Ausgang</value>
   </data>
   <data name="DefaultMaxAmount" xml:space="preserve">
-    <value>Standard-Höchstbetrag</value>
+    <value>Standard-Maximalbetrag</value>
   </data>
   <data name="DefaultOutput" xml:space="preserve">
     <value>Standardausgabe</value>
@@ -559,28 +559,28 @@
     <value>Chat-Befehle beim Ausführen löschen</value>
   </data>
   <data name="DeleteCommand" xml:space="preserve">
-    <value>Befehl "Löschen"</value>
+    <value>Befehl löschen</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>Beschreibung</value>
   </data>
   <data name="DisableAllTimers" xml:space="preserve">
-    <value>Alle Timer deaktivieren</value>
+    <value>Alle Zeitschalter deaktivieren</value>
   </data>
   <data name="DisableChat" xml:space="preserve">
-    <value>Chat deaktivieren</value>
+    <value>Chat ausschalten</value>
   </data>
   <data name="DisableChatConfirmation" xml:space="preserve">
-    <value>Dadurch wird der Chat für alle Benutzer deaktiviert. Bist du sicher?</value>
+    <value>Dadurch wird der Chat für alle Benutzer deaktiviert. Bist Du sicher?</value>
   </data>
   <data name="DisableCommand" xml:space="preserve">
-    <value>Befehl deaktivieren</value>
+    <value>Befehle deaktivieren</value>
   </data>
   <data name="DisableCommandGroup" xml:space="preserve">
     <value>Befehlsgruppe deaktivieren</value>
   </data>
   <data name="Disabled" xml:space="preserve">
-    <value>Arbeitsunfähig</value>
+    <value>Deaktiviert</value>
   </data>
   <data name="DisableQueue" xml:space="preserve">
     <value>Warteschlange deaktivieren</value>
@@ -589,10 +589,10 @@
     <value>Trennen</value>
   </data>
   <data name="Discord" xml:space="preserve">
-    <value>Zwietracht</value>
+    <value>Discord</value>
   </data>
   <data name="DoesNotContain" xml:space="preserve">
-    <value>&lt;&gt; Enthält</value>
+    <value>&lt;&gt; enthält</value>
   </data>
   <data name="Donators" xml:space="preserve">
     <value>Spender</value>
@@ -601,19 +601,19 @@
     <value>DTR</value>
   </data>
   <data name="Duplicate" xml:space="preserve">
-    <value>Duplikat</value>
+    <value>Duplizieren</value>
   </data>
   <data name="DurationSec" xml:space="preserve">
     <value>Dauer (Sek.)</value>
   </data>
   <data name="Edit" xml:space="preserve">
-    <value>Redigieren</value>
+    <value>Bearbeiten</value>
   </data>
   <data name="EditCommand" xml:space="preserve">
-    <value>Befehl "Bearbeiten"</value>
+    <value>Befehl bearbeiten</value>
   </data>
   <data name="Enable" xml:space="preserve">
-    <value>Ermöglichen</value>
+    <value>Aktivieren</value>
   </data>
   <data name="EnableChat" xml:space="preserve">
     <value>Chat aktivieren</value>
@@ -628,7 +628,7 @@
     <value>Aktivieren/Deaktivieren</value>
   </data>
   <data name="EnableDisableCommand" xml:space="preserve">
-    <value>Befehl "Aktivieren/Deaktivieren"</value>
+    <value>Befehl aktivieren/deaktivieren</value>
   </data>
   <data name="EnableDisableQueue" xml:space="preserve">
     <value>Warteschlange aktivieren/deaktivieren</value>
@@ -664,7 +664,7 @@
     <value>Englisch</value>
   </data>
   <data name="EnteredUsers" xml:space="preserve">
-    <value>Eingegebene Benutzer</value>
+    <value>Beigetretene Benutzer</value>
   </data>
   <data name="EntranceAnimation" xml:space="preserve">
     <value>Eingangsanimation</value>
@@ -673,31 +673,31 @@
     <value>=</value>
   </data>
   <data name="Event" xml:space="preserve">
-    <value>Ereignis</value>
+    <value>Ereigniss</value>
   </data>
   <data name="EventBonuses" xml:space="preserve">
-    <value>Event-Boni</value>
+    <value>Event Bonusse</value>
   </data>
   <data name="EventList" xml:space="preserve">
-    <value>Veranstaltungsliste</value>
+    <value>Ereignissliste</value>
   </data>
   <data name="Events" xml:space="preserve">
     <value>Ereignisse</value>
   </data>
   <data name="ExemptFromRule" xml:space="preserve">
-    <value>Von der Regel ausgenommen</value>
+    <value>Ausgenomme Rolle</value>
   </data>
   <data name="ExemptFromRuleAndStrikes" xml:space="preserve">
-    <value>Ausgenommen von Regel &amp; Streiks</value>
+    <value>Ausgenomme Rolle &amp; Verwarnung</value>
   </data>
   <data name="ExitAnimation" xml:space="preserve">
     <value>Animation beenden</value>
   </data>
   <data name="ExitConfirmation" xml:space="preserve">
-    <value>Bist du sicher, dass du Mix It Up beenden möchtest?</value>
+    <value>Bist Du sicher dass, du Mix It Up schließen möchtest?</value>
   </data>
   <data name="ExportActions" xml:space="preserve">
-    <value>Aktionen in Datei exportieren</value>
+    <value>Aktion in Datei exportieren</value>
   </data>
   <data name="ExportData" xml:space="preserve">
     <value>Daten exportieren</value>
@@ -721,46 +721,46 @@
     <value>Nach Namen filtern</value>
   </data>
   <data name="FilteredBannedWords" xml:space="preserve">
-    <value>Gefilterte / verbotene Wörter</value>
+    <value>Gefilterte / gesperrte Wörter</value>
   </data>
   <data name="FilteredWordsHeader" xml:space="preserve">
-    <value>Gefilterte Wörter (eines pro Zeile) ( * = Platzhalter)</value>
+    <value>Gefilterte Wörter (Eins pro Zeile) (* = Wildcard)</value>
   </data>
   <data name="FindChannelToRaid" xml:space="preserve">
-    <value>Kanal zu Raid finden</value>
+    <value>Raidkanal finden</value>
   </data>
   <data name="FirstValue" xml:space="preserve">
     <value>Erster Wert</value>
   </data>
   <data name="FollowAge" xml:space="preserve">
-    <value>Folgen Sie dem Alter</value>
+    <value>Follow-Alter</value>
   </data>
   <data name="Follower" xml:space="preserve">
-    <value>Anhänger</value>
+    <value>Follower</value>
   </data>
   <data name="FollowerOnly" xml:space="preserve">
     <value>Nur Follower</value>
   </data>
   <data name="FontSize" xml:space="preserve">
-    <value>Schriftgrad</value>
+    <value>Schriftgröße</value>
   </data>
   <data name="Four" xml:space="preserve">
     <value>Vier</value>
   </data>
   <data name="FullTheme" xml:space="preserve">
-    <value>Vollständiges Thema</value>
+    <value>Vollständiges Theme</value>
   </data>
   <data name="Game" xml:space="preserve">
     <value>Spiel</value>
   </data>
   <data name="GameName" xml:space="preserve">
-    <value>Name des Spiels</value>
+    <value>Spielname</value>
   </data>
   <data name="GameQueue" xml:space="preserve">
-    <value>Spiel-Warteschlange</value>
+    <value>Spielwarteschlage</value>
   </data>
   <data name="Games" xml:space="preserve">
-    <value>Spiele</value>
+    <value>Mini-Spiele</value>
   </data>
   <data name="General" xml:space="preserve">
     <value>Allgemein</value>
@@ -775,10 +775,10 @@
     <value>Begabt</value>
   </data>
   <data name="Giveaway" xml:space="preserve">
-    <value>Werbegeschenk</value>
+    <value>Giveaway</value>
   </data>
   <data name="GiveawayItem" xml:space="preserve">
-    <value>Giveaway Artikel</value>
+    <value>Giveaway-Gegenstand</value>
   </data>
   <data name="GlobalMod" xml:space="preserve">
     <value>Globale Mod</value>
@@ -799,13 +799,13 @@
     <value>Gruppe</value>
   </data>
   <data name="GroupIntervalMin" xml:space="preserve">
-    <value>Gruppenintervall (Min)</value>
+    <value>Gruppeninternval (Min)</value>
   </data>
   <data name="GroupName" xml:space="preserve">
     <value>Gruppenname</value>
   </data>
   <data name="Groups" xml:space="preserve">
-    <value>Gruppen</value>
+    <value>Gruppe</value>
   </data>
   <data name="Help" xml:space="preserve">
     <value>Hilfe</value>
@@ -817,7 +817,7 @@
     <value>Gelöschte Nachrichten ausblenden</value>
   </data>
   <data name="HideViewerAndChatterNumbers" xml:space="preserve">
-    <value>Viewer- und Chatter-Zahlen ausblenden</value>
+    <value>Zuschauer- und Chatter-Anzahl ausblenden</value>
   </data>
   <data name="HotKey" xml:space="preserve">
     <value>Hotkey</value>
@@ -835,13 +835,13 @@
     <value>IFTTT</value>
   </data>
   <data name="IgnoreYourBotAccountForCommands" xml:space="preserve">
-    <value>Ignorieren Ihres Bot-Kontos für Befehle</value>
+    <value>Ignoriere deinen Bot Konto für Befehle</value>
   </data>
   <data name="Image" xml:space="preserve">
     <value>Bild</value>
   </data>
   <data name="ImportActions" xml:space="preserve">
-    <value>Aktionen aus Datei importieren</value>
+    <value>Aktion aus Datei importieren</value>
   </data>
   <data name="ImportData" xml:space="preserve">
     <value>Daten importieren</value>
@@ -862,10 +862,10 @@
     <value>Inventar</value>
   </data>
   <data name="InventoryName" xml:space="preserve">
-    <value>Name des Inventars</value>
+    <value>Inventarname</value>
   </data>
   <data name="InventoryRequirement" xml:space="preserve">
-    <value>Bestandsanforderung</value>
+    <value>Inventory Requirement</value>
   </data>
   <data name="IsMathExpression" xml:space="preserve">
     <value>Ist mathematischer Ausdruck</value>
@@ -874,7 +874,7 @@
     <value>Ist primär</value>
   </data>
   <data name="IsRankSystem" xml:space="preserve">
-    <value>Ist das Rangsystem</value>
+    <value>Ist Rangsystem</value>
   </data>
   <data name="Item1" xml:space="preserve">
     <value>Punkt 1</value>
@@ -889,19 +889,19 @@
     <value>Punkt 4</value>
   </data>
   <data name="ItemList" xml:space="preserve">
-    <value>Artikelliste</value>
+    <value>Gegenstandsliste</value>
   </data>
   <data name="ItemName" xml:space="preserve">
-    <value>Artikelname</value>
+    <value>Gegenstandsname</value>
   </data>
   <data name="ItemsBought" xml:space="preserve">
-    <value>Gekaufte Artikel</value>
+    <value>Gekaufte Gegenstände</value>
   </data>
   <data name="ItemsSold" xml:space="preserve">
-    <value>Verkaufte Artikel</value>
+    <value>Verkaufte Gegenstände</value>
   </data>
   <data name="ItemsTraded" xml:space="preserve">
-    <value>Gehandelte Artikel</value>
+    <value>Gegenstände gehandelt</value>
   </data>
   <data name="JoinFrontOfQueue" xml:space="preserve">
     <value>Benutzerbeitritt an der Spitze der Warteschlange</value>
@@ -931,7 +931,7 @@
     <value>Zuletzt aktualisiert</value>
   </data>
   <data name="LatestRelease" xml:space="preserve">
-    <value>Neueste Version</value>
+    <value>Neuestes Release</value>
   </data>
   <data name="Layout" xml:space="preserve">
     <value>Layout</value>
@@ -961,19 +961,19 @@
     <value>Lizenzvertrag</value>
   </data>
   <data name="Light" xml:space="preserve">
-    <value>Licht</value>
+    <value>Hell</value>
   </data>
   <data name="LightBlue" xml:space="preserve">
     <value>Hellblau</value>
   </data>
   <data name="LightGreen" xml:space="preserve">
-    <value>Lichtgrün</value>
+    <value>Hellgrün</value>
   </data>
   <data name="Lime" xml:space="preserve">
-    <value>Limone</value>
+    <value>Limonengrün</value>
   </data>
   <data name="LinkBlocking" xml:space="preserve">
-    <value>Blockieren von Links</value>
+    <value>Link-Blockierung</value>
   </data>
   <data name="Live" xml:space="preserve">
     <value>Leben</value>
@@ -982,13 +982,13 @@
     <value>ORT</value>
   </data>
   <data name="LockChatScrolling" xml:space="preserve">
-    <value>Chat-Scrolling sperren/entsperren</value>
+    <value>Chat-Bildlauf sperren/entsperren</value>
   </data>
   <data name="Login" xml:space="preserve">
-    <value>Anmelden</value>
+    <value>Einloggen</value>
   </data>
   <data name="LoginErrorNoStreamerAccount" xml:space="preserve">
-    <value>Sie müssen ein Streamer-Konto auswählen, bei dem Sie sich anmelden möchten.</value>
+    <value>Du musst ein Streamer-Konto auswählen, um dich anzumelden.</value>
   </data>
   <data name="Logout" xml:space="preserve">
     <value>Ausloggen</value>
@@ -1000,7 +1000,7 @@
     <value>Global nutzbar machen</value>
   </data>
   <data name="ManualReset" xml:space="preserve">
-    <value>Manuelles Zurücksetzen</value>
+    <value>Manueller Reset</value>
   </data>
   <data name="Map" xml:space="preserve">
     <value>Landkarte</value>
@@ -1012,19 +1012,19 @@
     <value>Maximaler Betrag</value>
   </data>
   <data name="MaxCaps" xml:space="preserve">
-    <value>Maximale Kappen</value>
+    <value>max. Großbuchstaben</value>
   </data>
   <data name="MaxEntries" xml:space="preserve">
-    <value>Maximale Anzahl von Einträgen</value>
+    <value>Max Einträge</value>
   </data>
   <data name="MaxPunctSymbolsEmotes" xml:space="preserve">
-    <value>Max Punct. / Symbole / Emotes</value>
+    <value>max. Satzzeichen / Symbole / Emotes</value>
   </data>
   <data name="MaxValue" xml:space="preserve">
     <value>Max. Wert</value>
   </data>
   <data name="MeetTheTeam" xml:space="preserve">
-    <value>Lernen Sie das Team kennen</value>
+    <value>Triff das Team</value>
   </data>
   <data name="Message" xml:space="preserve">
     <value>Nachricht</value>
@@ -1036,25 +1036,25 @@
     <value>Min</value>
   </data>
   <data name="MinimumChannelActivityMins" xml:space="preserve">
-    <value>Minimale Kanalaktivität (Min.)</value>
+    <value>Minimale Kanalaktivität (Minuten)</value>
   </data>
   <data name="MinimumRequirement" xml:space="preserve">
-    <value>Mindestanforderung</value>
+    <value>Minimale Anforderungen</value>
   </data>
   <data name="MinMessages" xml:space="preserve">
     <value>Min. Nachrichten</value>
   </data>
   <data name="MinPoints" xml:space="preserve">
-    <value>Mindestpunkte</value>
+    <value>Min Punkte</value>
   </data>
   <data name="Minutes" xml:space="preserve">
-    <value>Protokoll</value>
+    <value>Minuten</value>
   </data>
   <data name="MinValue" xml:space="preserve">
     <value>Minimaler Wert</value>
   </data>
   <data name="MixItUpCommands" xml:space="preserve">
-    <value>Befehle zum Mischen</value>
+    <value>Mix It Up Befehle</value>
   </data>
   <data name="MixItUpDashboard" xml:space="preserve">
     <value>Mix It Up - Dashboard</value>
@@ -1084,7 +1084,7 @@
     <value>Moderator</value>
   </data>
   <data name="ModeratorOnly" xml:space="preserve">
-    <value>Nur Moderator</value>
+    <value>Nur Moderatoren</value>
   </data>
   <data name="Monthly" xml:space="preserve">
     <value>Monatlich</value>
@@ -1099,10 +1099,10 @@
     <value>Maustaste</value>
   </data>
   <data name="MoveDown" xml:space="preserve">
-    <value>Nach unten verschieben</value>
+    <value>Nach unten bewegen</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
-    <value>Aufrücken</value>
+    <value>Nach oben bewegen</value>
   </data>
   <data name="Mute" xml:space="preserve">
     <value>Stumm</value>
@@ -1114,7 +1114,7 @@
     <value>Name</value>
   </data>
   <data name="NameOfProfileHeader" xml:space="preserve">
-    <value>Name des Profils:</value>
+    <value>Profilname:</value>
   </data>
   <data name="Never" xml:space="preserve">
     <value>Nie</value>
@@ -1135,13 +1135,13 @@
     <value>Assistent für neue Benutzer</value>
   </data>
   <data name="Next" xml:space="preserve">
-    <value>Nächster</value>
+    <value>Weiter</value>
   </data>
   <data name="No" xml:space="preserve">
     <value>Nein</value>
   </data>
   <data name="None" xml:space="preserve">
-    <value>Nichts</value>
+    <value>Kein</value>
   </data>
   <data name="Normal" xml:space="preserve">
     <value>Normal</value>
@@ -1165,25 +1165,25 @@
     <value>Eins</value>
   </data>
   <data name="OneStrikeCommand" xml:space="preserve">
-    <value>1 Strike Befehl</value>
+    <value>1 Verwarnungsbefehl</value>
   </data>
   <data name="OnFollow" xml:space="preserve">
-    <value>Auf Follow</value>
+    <value>Beim Folgen</value>
   </data>
   <data name="OnHost" xml:space="preserve">
-    <value>Auf dem Host</value>
+    <value>Beim Hosten</value>
   </data>
   <data name="OnlineRate" xml:space="preserve">
     <value>Online-Tarif</value>
   </data>
   <data name="OnlyShowAlertsInDashboard" xml:space="preserve">
-    <value>Warnungen nur im Dashboard anzeigen</value>
+    <value>Alerts nur im Dashboard anzeigen</value>
   </data>
   <data name="OnSubscribe" xml:space="preserve">
-    <value>Beim Abonnieren</value>
+    <value>Beim Subscriben</value>
   </data>
   <data name="OnUserRankChanged" xml:space="preserve">
-    <value>Auf Benutzerrang nach oben</value>
+    <value>Auf Benutzerrang geändert</value>
   </data>
   <data name="OnUserRankDown" xml:space="preserve">
     <value>Auf Benutzerrang nach unten</value>
@@ -1198,7 +1198,7 @@
     <value>Optionen</value>
   </data>
   <data name="OptOutofDataTracking" xml:space="preserve">
-    <value>Opt-Out der Datenverfolgung</value>
+    <value>Datentracking*</value>
   </data>
   <data name="Orange" xml:space="preserve">
     <value>Orange</value>
@@ -1207,7 +1207,7 @@
     <value>Overlay</value>
   </data>
   <data name="OverlayEndpoints" xml:space="preserve">
-    <value>Overlay-Endpunkte</value>
+    <value>Overlay Endpunkte</value>
   </data>
   <data name="OverlayImagesAndVideos" xml:space="preserve">
     <value>Overlay (Bilder &amp; Videos)</value>
@@ -1228,13 +1228,13 @@
     <value>Overlay-Widget - Editor</value>
   </data>
   <data name="OverlayWidgetEditorInstructions" xml:space="preserve">
-    <value>Wählen Sie den Overlay-Typ aus, den Sie erstellen möchten:</value>
+    <value>Wähle das Overlay Widget aus, das Du erstellen möchtest:</value>
   </data>
   <data name="OverlayWidgets" xml:space="preserve">
     <value>Overlay-Widgets</value>
   </data>
   <data name="OverlayWidgetsRequireOverlay" xml:space="preserve">
-    <value>Das Overlay muss im Menü Dienste aktiviert sein, um Overlay-Widgets verwenden zu können.</value>
+    <value>Wenn Du das Overlay-Widget verwenden möchtest, dann musst du es zuerst im Menü Dienste aktivieren.</value>
   </data>
   <data name="OvrStream" xml:space="preserve">
     <value>OvrStream</value>
@@ -1249,19 +1249,19 @@
     <value>%</value>
   </data>
   <data name="Permissions" xml:space="preserve">
-    <value>Erlaubnisse</value>
+    <value>Berechtigungen</value>
   </data>
   <data name="PerPerson" xml:space="preserve">
     <value>Pro Kopf</value>
   </data>
   <data name="Pink" xml:space="preserve">
-    <value>Rosa</value>
+    <value>Rose</value>
   </data>
   <data name="Pitch" xml:space="preserve">
     <value>Stellplatz (0% - 200%)</value>
   </data>
   <data name="Play" xml:space="preserve">
-    <value>Spielen</value>
+    <value>Abspielen</value>
   </data>
   <data name="PortName" xml:space="preserve">
     <value>Portname</value>
@@ -1279,7 +1279,7 @@
     <value>Presse</value>
   </data>
   <data name="PrimaryCurrency" xml:space="preserve">
-    <value>Hauptwährung</value>
+    <value>Primäre Währung</value>
   </data>
   <data name="PrimaryRank" xml:space="preserve">
     <value>Primärer Rang</value>
@@ -1321,13 +1321,13 @@
     <value>Sie müssen zuerst mindestens einen Befehl erstellen, um diese Funktion verwenden zu können.</value>
   </data>
   <data name="Quote" xml:space="preserve">
-    <value>Zitieren</value>
+    <value>Zitate</value>
   </data>
   <data name="QuoteFormatting" xml:space="preserve">
-    <value>Formatierung von Zitaten ($quotenumber, $quotetext, $quotegame, $quotedatetime)</value>
+    <value>Zitatformat ($quotenumber, $quotetext, $quotegame, $quotedatetime)</value>
   </data>
   <data name="Quotes" xml:space="preserve">
-    <value>Gänsefüßchen</value>
+    <value>Zitate</value>
   </data>
   <data name="Rank" xml:space="preserve">
     <value>Rang</value>
@@ -1354,19 +1354,19 @@
     <value>Rot</value>
   </data>
   <data name="RefreshTimeSecs" xml:space="preserve">
-    <value>Aktualisierungszeit (Sek.)</value>
+    <value>Aktualisierungszeit (Sek)</value>
   </data>
   <data name="Regular" xml:space="preserve">
-    <value>Regelmäßig</value>
+    <value>Regulär</value>
   </data>
   <data name="RegularStatusOnlineViewingTime" xml:space="preserve">
-    <value>"Regulärer" Status Online-Anzeigezeit</value>
+    <value>"Regular" Status Online Anzeigezeit</value>
   </data>
   <data name="Release" xml:space="preserve">
     <value>Loslassen</value>
   </data>
   <data name="ReminderMins" xml:space="preserve">
-    <value>Erinnerung (Min.)</value>
+    <value>Erinnerung (Minuten)</value>
   </data>
   <data name="Remote" xml:space="preserve">
     <value>Abgelegen</value>
@@ -1387,7 +1387,7 @@
     <value>Bericht</value>
   </data>
   <data name="RequireClaim" xml:space="preserve">
-    <value>"!claim" anfordern</value>
+    <value>Benötige "!claim"</value>
   </data>
   <data name="RequiredHours" xml:space="preserve">
     <value>Erforderliche Stunden</value>
@@ -1399,19 +1399,19 @@
     <value>Erneutes Ausführen des Assistenten für neue Benutzer</value>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value>Zurücksetzen</value>
+    <value>Reset</value>
   </data>
   <data name="ResetForAllUsers" xml:space="preserve">
     <value>Für alle Benutzer zurücksetzen</value>
   </data>
   <data name="ResetForUser" xml:space="preserve">
-    <value>Für Benutzer zurücksetzen</value>
+    <value>Für einen bestimmten Benutzer zurücksetzen</value>
   </data>
   <data name="ResetOnLoad" xml:space="preserve">
     <value>Beim Laden zurücksetzen</value>
   </data>
   <data name="ResetStrikesOnLaunch" xml:space="preserve">
-    <value>Reset Strikes beim Start</value>
+    <value>Verwarnungen beim Start zurücksetzen</value>
   </data>
   <data name="RestoreSettings" xml:space="preserve">
     <value>Einstellungen wiederherstellen</value>
@@ -1423,7 +1423,7 @@
     <value>Resubs</value>
   </data>
   <data name="RetroactivelyGivePoints" xml:space="preserve">
-    <value>Rückwirkend Punkte vergeben</value>
+    <value>Nachträglich Punkte geben</value>
   </data>
   <data name="RightButton" xml:space="preserve">
     <value>Rechte Taste</value>
@@ -1432,13 +1432,13 @@
     <value>Rolle</value>
   </data>
   <data name="RoleBonuses" xml:space="preserve">
-    <value>Rollenboni</value>
+    <value>Rollen Bonusse</value>
   </data>
   <data name="RoleErrorInsufficientRole" xml:space="preserve">
-    <value>Sie müssen ein {0} sein, um dies zu tun.</value>
+    <value>Dazu musst Du ein {0} sein.</value>
   </data>
   <data name="Roles" xml:space="preserve">
-    <value>Rollen</value>
+    <value>Rolle</value>
   </data>
   <data name="Rotation" xml:space="preserve">
     <value>Drehung (Grad)</value>
@@ -1450,19 +1450,19 @@
     <value>Befehl ausführen</value>
   </data>
   <data name="RunOneRandomly" xml:space="preserve">
-    <value>Führen Sie eine zufällig aus</value>
+    <value>Run One Randomly</value>
   </data>
   <data name="SameGame" xml:space="preserve">
     <value>Gleiches Spiel</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Retten</value>
+    <value>Speichern</value>
   </data>
   <data name="SaveChatEventLogs" xml:space="preserve">
-    <value>Chat-/Ereignisprotokolle speichern</value>
+    <value>Chat-/Eventprotokolle speichern</value>
   </data>
   <data name="SaveFailed" xml:space="preserve">
-    <value>Speichern fehlgeschlagen, noch einmal versucht...</value>
+    <value>Speichern fehlgeschlagen, versuche es erneut...</value>
   </data>
   <data name="SaveToFile" xml:space="preserve">
     <value>In Datei speichern</value>
@@ -1483,10 +1483,10 @@
     <value>Suchen</value>
   </data>
   <data name="SearchCriteria" xml:space="preserve">
-    <value>Suchkriterien</value>
+    <value>Suchkriterium</value>
   </data>
   <data name="Seconds" xml:space="preserve">
-    <value>Nachschlag</value>
+    <value>Sekunden</value>
   </data>
   <data name="SecondValue" xml:space="preserve">
     <value>Zweiter Wert</value>
@@ -1510,13 +1510,13 @@
     <value>Senden als</value>
   </data>
   <data name="SendAsStreamer" xml:space="preserve">
-    <value>Als Streamer senden</value>
+    <value>Als Streamer versenden</value>
   </data>
   <data name="SendMessage" xml:space="preserve">
     <value>Nachricht senden</value>
   </data>
   <data name="Serial" xml:space="preserve">
-    <value>Seriell</value>
+    <value>Angeschlossene Geräte</value>
   </data>
   <data name="SerialDevice" xml:space="preserve">
     <value>Serielles Gerät</value>
@@ -1525,13 +1525,13 @@
     <value>Serielle Geräte</value>
   </data>
   <data name="Service" xml:space="preserve">
-    <value>Dienst</value>
+    <value>Dienste</value>
   </data>
   <data name="ServiceConnectSound" xml:space="preserve">
-    <value>Service Connect Sound</value>
+    <value>Dienst-Verbindungston (Verbunden)</value>
   </data>
   <data name="ServiceDisconnectSound" xml:space="preserve">
-    <value>Diensttrennungs-Sound</value>
+    <value>Dienst-Verbindungston (Getrennt)</value>
   </data>
   <data name="Services" xml:space="preserve">
     <value>Dienste</value>
@@ -1540,46 +1540,46 @@
     <value>Garnitur</value>
   </data>
   <data name="SetGame" xml:space="preserve">
-    <value>Set-Spiel</value>
+    <value>Spielname einstellen</value>
   </data>
   <data name="SetLocation" xml:space="preserve">
-    <value>Standort festlegen</value>
+    <value>Speicherort festlegen</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Einstellungen</value>
   </data>
   <data name="SetTitle" xml:space="preserve">
-    <value>Titel festlegen</value>
+    <value>Stream-Titel einstellen</value>
   </data>
   <data name="SetUserTitle" xml:space="preserve">
-    <value>Festlegen des Benutzertitels</value>
+    <value>Benutzer-Titel einstellen</value>
   </data>
   <data name="Shift" xml:space="preserve">
     <value>Umschalten</value>
   </data>
   <data name="Shop" xml:space="preserve">
-    <value>Laden</value>
+    <value>Shop</value>
   </data>
   <data name="ShopCommand" xml:space="preserve">
     <value>Shop-Befehl</value>
   </data>
   <data name="ShopCurrency" xml:space="preserve">
-    <value>Shop Währung</value>
+    <value>Shop-Währung</value>
   </data>
   <data name="ShowInfoInChat" xml:space="preserve">
     <value>Informationen im Chat anzeigen</value>
   </data>
   <data name="ShowLatestChatMessagesAtTopInsteadOfBottom" xml:space="preserve">
-    <value>Neueste Chat-Nachrichten oben statt unten anzeigen</value>
+    <value>Zeige die neuesten Chat-Nachrichten oben anstatt unten</value>
   </data>
   <data name="ShowMessageTimestamp" xml:space="preserve">
-    <value>Nachrichtenzeitstempel anzeigen</value>
+    <value>Chat-Zeitstempel anzeigen</value>
   </data>
   <data name="ShowOnChatListContextMenu" xml:space="preserve">
     <value>Kontextmenü der Chatliste anzeigen</value>
   </data>
   <data name="ShowUserJoinLeave" xml:space="preserve">
-    <value>Benutzer beitreten/verlassen anzeigen</value>
+    <value>Zeige Benutzer beitreten/verlassen</value>
   </data>
   <data name="ShowWindow" xml:space="preserve">
     <value>Fenster anzeigen</value>
@@ -1609,28 +1609,28 @@
     <value>Funkenkristall</value>
   </data>
   <data name="Sparks" xml:space="preserve">
-    <value>Funken</value>
+    <value>Sparks</value>
   </data>
   <data name="SpecialIdentifier" xml:space="preserve">
-    <value>Spezielle Kennung</value>
+    <value>Spezielle Bezeichner</value>
   </data>
   <data name="SpecialIdentifierHint" xml:space="preserve">
     <value>Spezieller Bezeichnername (nur Buchstaben und Zahlen, kein $)</value>
   </data>
   <data name="SpecialIdentifierName" xml:space="preserve">
-    <value>Spezieller Bezeichnername</value>
+    <value>Spezielle Bezeichner</value>
   </data>
   <data name="SpecialIdentifiers" xml:space="preserve">
-    <value>Spezielle Identifikatoren</value>
+    <value>Spezielle Bezeichner</value>
   </data>
   <data name="SpecialIdentifiersReference" xml:space="preserve">
-    <value>Referenz zu speziellen Bezeichnern</value>
+    <value>Referenz für Spezielle Bezeichner</value>
   </data>
   <data name="SpeechMessage" xml:space="preserve">
     <value>Sprachnachricht</value>
   </data>
   <data name="Staff" xml:space="preserve">
-    <value>Personal</value>
+    <value>Mixer-Mitarbeiter</value>
   </data>
   <data name="StartGiveaway" xml:space="preserve">
     <value>Giveaway starten</value>
@@ -1642,7 +1642,7 @@
     <value>Statistik</value>
   </data>
   <data name="SteamGame" xml:space="preserve">
-    <value>Steam Spiel</value>
+    <value>Steamspiel</value>
   </data>
   <data name="StreamBoss" xml:space="preserve">
     <value>Boss streamen</value>
@@ -1651,10 +1651,10 @@
     <value>Stream-Clip-Wiedergabe</value>
   </data>
   <data name="Streamer" xml:space="preserve">
-    <value>Wimpel</value>
+    <value>Streamer</value>
   </data>
   <data name="StreamerAccount" xml:space="preserve">
-    <value>Streamer-Konto</value>
+    <value>Streamkonto</value>
   </data>
   <data name="StreamerAge" xml:space="preserve">
     <value>Streamer-Alter</value>
@@ -1669,49 +1669,49 @@
     <value>Streamlabs</value>
   </data>
   <data name="StreamsWatched" xml:space="preserve">
-    <value>Angesehene Streams</value>
+    <value>Streams angesehen</value>
   </data>
   <data name="StrikeCommands" xml:space="preserve">
-    <value>Strike-Befehle</value>
+    <value>Verwarnbefehle</value>
   </data>
   <data name="SubAge" xml:space="preserve">
-    <value>Sub-Age</value>
+    <value>Abo-Alter</value>
   </data>
   <data name="SubBonus" xml:space="preserve">
-    <value>Sub-Bonus</value>
+    <value>Abo Bonus</value>
   </data>
   <data name="SubmitABug" xml:space="preserve">
     <value>Einen Fehler einreichen</value>
   </data>
   <data name="Subs" xml:space="preserve">
-    <value>Ersätze</value>
+    <value>Abos</value>
   </data>
   <data name="SubscribeAge" xml:space="preserve">
-    <value>Alter abonnieren</value>
+    <value>Subscriber-Alter</value>
   </data>
   <data name="Subscriber" xml:space="preserve">
-    <value>Abonnent</value>
+    <value>Subscriber</value>
   </data>
   <data name="SubscriberOnly" xml:space="preserve">
-    <value>Nur für Abonnenten</value>
+    <value>Nur Subscriber</value>
   </data>
   <data name="SubsGifted" xml:space="preserve">
-    <value>Subs Begabt</value>
+    <value>Abos verschenkt</value>
   </data>
   <data name="SubsReceived" xml:space="preserve">
-    <value>Subs erhalten</value>
+    <value>Abos erhalten</value>
   </data>
   <data name="SubtractFromAllChatUsers" xml:space="preserve">
-    <value>Subtrahieren sie von allen Chat-Benutzern</value>
+    <value>Von allen Benutzern abziehen (im Chat)</value>
   </data>
   <data name="SubtractFromSpecificUser" xml:space="preserve">
-    <value>Subtrahieren von einem bestimmten Benutzer</value>
+    <value>Von einem bestimmten Benutzer abziehen</value>
   </data>
   <data name="SubtractFromUser" xml:space="preserve">
-    <value>Vom Benutzer subtrahieren</value>
+    <value>Von allen Benutzern abziehen</value>
   </data>
   <data name="TaggedInChat" xml:space="preserve">
-    <value>Tagged In Chat</value>
+    <value>Im Chat getaggt</value>
   </data>
   <data name="TargetUser" xml:space="preserve">
     <value>Zielbenutzer</value>
@@ -1720,13 +1720,13 @@
     <value>Zielbenutzer (optional)</value>
   </data>
   <data name="Teal" xml:space="preserve">
-    <value>Krickente</value>
+    <value>Blaugrün</value>
   </data>
   <data name="Team" xml:space="preserve">
-    <value>Mannschaft</value>
+    <value>Team</value>
   </data>
   <data name="TestCommand" xml:space="preserve">
-    <value>Test-Befehl</value>
+    <value>Befehl testen</value>
   </data>
   <data name="Text" xml:space="preserve">
     <value>Text</value>
@@ -1747,31 +1747,31 @@
     <value>Drei übrig</value>
   </data>
   <data name="ThreeOrMoreStrikesCommand" xml:space="preserve">
-    <value>3+ Strikes Befehl</value>
+    <value>3+ Verwarnungsbefehle</value>
   </data>
   <data name="ThreeRight" xml:space="preserve">
     <value>Drei Rechte</value>
   </data>
   <data name="TickerTape" xml:space="preserve">
-    <value>Ticker Band</value>
+    <value>Laufband</value>
   </data>
   <data name="Time" xml:space="preserve">
-    <value>Zeit</value>
+    <value>Uhrzeit</value>
   </data>
   <data name="TimeLeft" xml:space="preserve">
-    <value>Verbleibende Zeit</value>
+    <value>Übrige Zeit</value>
   </data>
   <data name="Timer" xml:space="preserve">
-    <value>Zeitschaltuhr</value>
+    <value>Timer</value>
   </data>
   <data name="TimerInterval" xml:space="preserve">
-    <value>Intervall (Minuten)</value>
+    <value>Interval (Minuten)</value>
   </data>
   <data name="Timers" xml:space="preserve">
-    <value>Zeitmesser</value>
+    <value>Zeitschalter</value>
   </data>
   <data name="TimerTrain" xml:space="preserve">
-    <value>Timer Zug</value>
+    <value>Timer-Zug</value>
   </data>
   <data name="TimeSpanSeconds" xml:space="preserve">
     <value>Zeitspanne (Sekunden)</value>
@@ -1786,22 +1786,22 @@
     <value>Gesamt</value>
   </data>
   <data name="TotalTimeMins" xml:space="preserve">
-    <value>Gesamtzeit (Min.)</value>
+    <value>Gesamtzeit (Minuten)</value>
   </data>
   <data name="TrackWhispererNumbers" xml:space="preserve">
-    <value>Flüstererzahlen verfolgen</value>
+    <value>Whisperer-Nummern verfolgen</value>
   </data>
   <data name="Trade" xml:space="preserve">
     <value>Handel</value>
   </data>
   <data name="TradeCommand" xml:space="preserve">
-    <value>Handelskommando</value>
+    <value>Handels-Befehl</value>
   </data>
   <data name="Translation" xml:space="preserve">
     <value>Übersetzung</value>
   </data>
   <data name="TranslationBy" xml:space="preserve">
-    <value />
+    <value>Deutsche Übersetzung von: DerWashbr (https://mixer.com/DerWashbr)</value>
   </data>
   <data name="TweetImageURL" xml:space="preserve">
     <value>Tweet-Bild-URL (optional)</value>
@@ -1810,16 +1810,16 @@
     <value>Tweet-Nachricht (keine @mentions erlaubt)</value>
   </data>
   <data name="Twitter" xml:space="preserve">
-    <value>Zwitschern</value>
+    <value>Twitter</value>
   </data>
   <data name="Two" xml:space="preserve">
     <value>Zwei</value>
   </data>
   <data name="TwoStrikesCommand" xml:space="preserve">
-    <value>2 Strikes-Befehl</value>
+    <value>2 Verwarnungsbefehl</value>
   </data>
   <data name="Type" xml:space="preserve">
-    <value>Art</value>
+    <value>Typ</value>
   </data>
   <data name="Unassigned" xml:space="preserve">
     <value>Unbestimmt</value>
@@ -1834,16 +1834,16 @@
     <value>Alle Befehlstypen entsperren</value>
   </data>
   <data name="UnlockCommand" xml:space="preserve">
-    <value>Befehl "Entsperren"</value>
+    <value>Befehl entsperren</value>
   </data>
   <data name="Update" xml:space="preserve">
     <value>Aktualisieren</value>
   </data>
   <data name="UpdateCommand" xml:space="preserve">
-    <value>Befehl "Aktualisieren"</value>
+    <value>Befehl aktualisieren</value>
   </data>
   <data name="UpdatePreviewProgram" xml:space="preserve">
-    <value>Update-Vorschauprogramm</value>
+    <value>Als Preview-Programm aktualisieren</value>
   </data>
   <data name="Upload" xml:space="preserve">
     <value>Hochladen</value>
@@ -1852,16 +1852,16 @@
     <value>Dateipfad hochladen (optional)</value>
   </data>
   <data name="Uptime" xml:space="preserve">
-    <value>Betriebszeit</value>
+    <value>Uptime</value>
   </data>
   <data name="UsageRequirements" xml:space="preserve">
-    <value>Nutzungsanforderungen</value>
+    <value>Verwendungsanforderungen</value>
   </data>
   <data name="UseCommunityList" xml:space="preserve">
     <value>Community-Liste verwenden (SEHR STRENG)</value>
   </data>
   <data name="User" xml:space="preserve">
-    <value>Benutzer</value>
+    <value>Zuschauer</value>
   </data>
   <data name="UserDataImport" xml:space="preserve">
     <value>Import von Benutzerdaten</value>
@@ -1876,13 +1876,13 @@
     <value>Benutzer beigetreten</value>
   </data>
   <data name="UserJoinedChat" xml:space="preserve">
-    <value>{0} Dem Chat beigetreten</value>
+    <value>{0} ist dem Chat beigetreten</value>
   </data>
   <data name="UserLeftChat" xml:space="preserve">
-    <value>{0} Chat verlassen</value>
+    <value>{0} hat den Chat verlassen</value>
   </data>
   <data name="UserMetrics" xml:space="preserve">
-    <value>Benutzermetriken</value>
+    <value>Benutzerkennzahlen</value>
   </data>
   <data name="UserNameOptional" xml:space="preserve">
     <value>Benutzername (optional)</value>
@@ -1891,16 +1891,16 @@
     <value>Nur-Benutzer-Chat-Befehle</value>
   </data>
   <data name="UserRankChanged" xml:space="preserve">
-    <value>Benutzer-Rang nach oben</value>
+    <value>Benutzerrang geändert</value>
   </data>
   <data name="UserRankDown" xml:space="preserve">
     <value>Benutzerrang nach unten</value>
   </data>
   <data name="UserRanks" xml:space="preserve">
-    <value>Benutzer-Ränge</value>
+    <value>Benutzerränge</value>
   </data>
   <data name="UserRole" xml:space="preserve">
-    <value>Benutzerrolle</value>
+    <value>Benutzer-Rolle</value>
   </data>
   <data name="Users" xml:space="preserve">
     <value>Benutzer</value>
@@ -1936,22 +1936,22 @@
     <value>Video</value>
   </data>
   <data name="Viewers" xml:space="preserve">
-    <value>Betrachterinnen</value>
+    <value>Zuschauer</value>
   </data>
   <data name="ViewingOneHour" xml:space="preserve">
-    <value>1 Stunde lang beobachtet</value>
+    <value>1 Stunde lang zugeschaut</value>
   </data>
   <data name="ViewingTenHours" xml:space="preserve">
-    <value>10 Stunden lang beobachtet</value>
+    <value>10 Stunden lang zugeschaut</value>
   </data>
   <data name="ViewingTenMinutes" xml:space="preserve">
-    <value>10 Minuten lang beobachtet</value>
+    <value>10 Minuten lang zugeschaut</value>
   </data>
   <data name="ViewingThirtyMinutes" xml:space="preserve">
-    <value>30 Minuten lang beobachtet</value>
+    <value>30 Minuten lang zugeschaut</value>
   </data>
   <data name="ViewingTwoHours" xml:space="preserve">
-    <value>2 Stunden lang beobachtet</value>
+    <value>2 Stunden lang zugeschaut</value>
   </data>
   <data name="Visible" xml:space="preserve">
     <value>Sichtbar</value>
@@ -1969,13 +1969,13 @@
     <value>Volumen (0% - 100%)</value>
   </data>
   <data name="Wait" xml:space="preserve">
-    <value>Warte</value>
+    <value>Wartend</value>
   </data>
   <data name="WaitForFinish" xml:space="preserve">
     <value>Warten Sie auf das Ende</value>
   </data>
   <data name="WatchTime" xml:space="preserve">
-    <value>Wiedergabezeit</value>
+    <value>Zuschau-Zeit</value>
   </data>
   <data name="WebHookEventName" xml:space="preserve">
     <value>Name des Web Hook-Ereignisses</value>
@@ -1987,7 +1987,7 @@
     <value>Webseite (URL oder lokale Datei)</value>
   </data>
   <data name="WebRequest" xml:space="preserve">
-    <value>Web-Anfrage</value>
+    <value>Webanfrage</value>
   </data>
   <data name="WebRequestURL" xml:space="preserve">
     <value>Webanforderungs-URL</value>
@@ -1999,7 +1999,7 @@
     <value>Flüstern</value>
   </data>
   <data name="WhisperUserOptional" xml:space="preserve">
-    <value>Whisper-Benutzer (optional)</value>
+    <value>Flüstern an (Optional)</value>
   </data>
   <data name="White" xml:space="preserve">
     <value>Weiß</value>
@@ -2017,10 +2017,10 @@
     <value>Gewinner ausgewählt</value>
   </data>
   <data name="XboxGame" xml:space="preserve">
-    <value>Xbox-Spiel</value>
+    <value>Xbox Spiel</value>
   </data>
   <data name="XLarge" xml:space="preserve">
-    <value>X-Groß</value>
+    <value>Größer</value>
   </data>
   <data name="XPosition" xml:space="preserve">
     <value>X-Position</value>
@@ -2029,7 +2029,7 @@
     <value>X-Skala (Dezimal)</value>
   </data>
   <data name="XXLarge" xml:space="preserve">
-    <value>XX-Groß</value>
+    <value>Am Größten</value>
   </data>
   <data name="Yearly" xml:space="preserve">
     <value>Jährlich</value>
@@ -2041,22 +2041,22 @@
     <value>Ja</value>
   </data>
   <data name="YPosition" xml:space="preserve">
-    <value>Y-Position</value>
+    <value>Y Position</value>
   </data>
   <data name="YScale" xml:space="preserve">
-    <value>Y-Skala (Dezimal)</value>
+    <value>Y Scale (Decimal)</value>
   </data>
   <data name="1PerBit" xml:space="preserve">
     <value>1 pro Bit</value>
   </data>
   <data name="Replaced" xml:space="preserve">
-    <value>Ausgewechselt</value>
+    <value>Ersetzt</value>
   </data>
   <data name="ChatMessageDeleted" xml:space="preserve">
     <value>Chat-Nachricht gelöscht</value>
   </data>
   <data name="ChatMessageReceived" xml:space="preserve">
-    <value>Chat-Nachricht erhalten</value>
+    <value>Chat-Nachricht empfangen</value>
   </data>
   <data name="ChatUserBan" xml:space="preserve">
     <value>Chat-Benutzer gesperrt</value>
@@ -2092,10 +2092,10 @@
     <value>Streamlabs Spende</value>
   </data>
   <data name="StreamlootsCardRedeemed" xml:space="preserve">
-    <value>Streamloots Card eingelöst</value>
+    <value>Streamloots-Karte eingelöst</value>
   </data>
   <data name="StreamlootsPackGifted" xml:space="preserve">
-    <value>Streamloots Pack Geschenk</value>
+    <value>Streamloots Pack verschenkt</value>
   </data>
   <data name="StreamlootsPackPurchased" xml:space="preserve">
     <value>Streamloots Pack gekauft</value>
@@ -2110,19 +2110,19 @@
     <value>TreatStream Spende</value>
   </data>
   <data name="RunAd" xml:space="preserve">
-    <value>Werbeanzeige schalten</value>
+    <value>Anzeige ausführen</value>
   </data>
   <data name="Ban" xml:space="preserve">
-    <value>Verbot</value>
+    <value>Ban</value>
   </data>
   <data name="Purge" xml:space="preserve">
-    <value>Säubern</value>
+    <value>Purge</value>
   </data>
   <data name="Timeout" xml:space="preserve">
-    <value>Zeitüberschreitung</value>
+    <value>Timeout</value>
   </data>
   <data name="Imported" xml:space="preserve">
-    <value>Eingeführt</value>
+    <value>Importiert</value>
   </data>
   <data name="ImportFromFile" xml:space="preserve">
     <value>Aus Datei importieren</value>
@@ -2233,7 +2233,7 @@
     <value>Menge</value>
   </data>
   <data name="AutoReplenish" xml:space="preserve">
-    <value>Automatische Auffüllung:</value>
+    <value>Automatisch Aufstocken</value>
   </data>
   <data name="AutoRedeem" xml:space="preserve">
     <value>Automatisches Einlösen:</value>
@@ -2386,7 +2386,7 @@
     <value>Unendlich</value>
   </data>
   <data name="ExportQuotes" xml:space="preserve">
-    <value>Angebote exportieren</value>
+    <value>Zitate exportieren</value>
   </data>
   <data name="RegularBonus" xml:space="preserve">
     <value>Regulärer Bonus</value>
@@ -2425,7 +2425,7 @@
     <value>Bits Bonus</value>
   </data>
   <data name="BitsCheered" xml:space="preserve">
-    <value>Bits jubelte</value>
+    <value>Bits bejubelt</value>
   </data>
   <data name="Tag" xml:space="preserve">
     <value>Etikett</value>
@@ -2458,7 +2458,7 @@
     <value>Einstellungen löschen</value>
   </data>
   <data name="Changelog" xml:space="preserve">
-    <value>Changelog</value>
+    <value>Änderungsprotokoll</value>
   </data>
   <data name="ClipPlayback" xml:space="preserve">
     <value>Clip-Wiedergabe</value>
@@ -2518,13 +2518,13 @@
     <value>Kanalpunkte anzeigen</value>
   </data>
   <data name="ShowFollows" xml:space="preserve">
-    <value>Show folgt</value>
+    <value>Follower anzeigen</value>
   </data>
   <data name="ShowGiftedSubs" xml:space="preserve">
-    <value>Begabte Subs anzeigen</value>
+    <value>Verschenkte Abos anzeigen</value>
   </data>
   <data name="ShowHosts" xml:space="preserve">
-    <value>Gastgeber anzeigen</value>
+    <value>Hosts anzeigen</value>
   </data>
   <data name="ShowMassGiftedSubs" xml:space="preserve">
     <value>Massenbegabte U-Boote anzeigen</value>
@@ -2533,7 +2533,7 @@
     <value>Moderation anzeigen</value>
   </data>
   <data name="ShowRaids" xml:space="preserve">
-    <value>Raids anzeigen</value>
+    <value>Überfälle anzeigen</value>
   </data>
   <data name="ShowSubs" xml:space="preserve">
     <value>Subs anzeigen</value>
@@ -2594,7 +2594,7 @@ Wenn diese Option beispielsweise aktiviert ist und der Betrag auf 5 festgelegt i
     <value>Verwenden Sie abwechselnde Hintergrundfarben</value>
   </data>
   <data name="ShowSubsResubs" xml:space="preserve">
-    <value>Subs/Resubs anzeigen</value>
+    <value>Abos/erneurte Abos anzeigen</value>
   </data>
   <data name="ClearAllMixerUserDataWarning" xml:space="preserve">
     <value>Dadurch werden alle Daten für Ihre alten Mixer-Benutzer gelöscht, einschließlich ihrer Stunden, Währung, Rang und benutzerdefinierten Benutzerbefehle, und starten Sie Mix It Up neu. Dieser Vorgang wird einige Zeit in Anspruch nehmen, je nachdem, wie viele Benutzer Sie hatten und KANN NICHT rückgängig gemacht werden! Sind Sie sicher, dass Sie dies tun möchten?</value>
@@ -2780,7 +2780,7 @@ Wenn diese Option beispielsweise aktiviert ist und der Betrag auf 5 festgelegt i
     <value>Defaulteinstellung</value>
   </data>
   <data name="OBSStudio" xml:space="preserve">
-    <value>OBS-Studio</value>
+    <value>OBS Studio</value>
   </data>
   <data name="SaveReplayBuffer" xml:space="preserve">
     <value>Replay-Puffer speichern</value>
@@ -3149,7 +3149,7 @@ Sobald der Vulkan Stadium 3 erreicht hat, hat jede nachfolgende Lagerstätte die
     <value>@$username hat $gamepayout {0} von @$targetusername gestohlen!</value>
   </data>
   <data name="UserSelection" xml:space="preserve">
-    <value>Benutzerauswahl</value>
+    <value>Benutzer ausgewählt</value>
   </data>
   <data name="ColumnHeaderFormat" xml:space="preserve">
     <value>{0}:</value>
@@ -4076,7 +4076,7 @@ Mit dieser Einstellung werden alle Rollenanforderungen so geändert, dass sie ex
     <value>Freiform HTML 3</value>
   </data>
   <data name="GiftedSubs" xml:space="preserve">
-    <value>Begabte Subs</value>
+    <value>Verschenkte Abos</value>
   </data>
   <data name="Hosts" xml:space="preserve">
     <value>Wirte</value>
@@ -4156,49 +4156,49 @@ ermöglichte. Sie können es sich ähnlich wie das Umschalten der Option "Entspe
     <value>Chat Whisper erhalten</value>
   </data>
   <data name="TwitchChannelBitsCheered" xml:space="preserve">
-    <value>Twitch Channel Bits jubelt</value>
+    <value>Twitch-Kanal Bits bejubelt</value>
   </data>
   <data name="TwitchChannelFollowed" xml:space="preserve">
     <value>Twitch-Kanal gefolgt</value>
   </data>
   <data name="TwitchChannelHosted" xml:space="preserve">
-    <value>Twitch-Kanal gehostet</value>
+    <value>Twitch-Kanal Gehostet</value>
   </data>
   <data name="TwitchChannelMassSubscriptionsGifted" xml:space="preserve">
-    <value>Twitch Channel Massenabonnements verschenkt</value>
+    <value>Twitch-Kanal Massenabonnements verschenkt</value>
   </data>
   <data name="TwitchChannelPointsRedeemed" xml:space="preserve">
-    <value>Eingelöste Twitch-Kanalpunkte</value>
+    <value>Twitch-Kanal Punkte eingelöst</value>
   </data>
   <data name="TwitchChannelRaided" xml:space="preserve">
-    <value>Twitch-Kanal überfallen</value>
+    <value>Twitch-Kanal Überfallen</value>
   </data>
   <data name="TwitchChannelHypeTrainBegin" xml:space="preserve">
-    <value>Twitch Channel Hype Train gestartet</value>
+    <value>Twitch-Kanal Hype Train gestartet</value>
   </data>
   <data name="TwitchChannelHypeTrainProgress" xml:space="preserve">
-    <value>Twitch Channel Hype Train Fortschritt</value>
+    <value>Twitch-Kanal Hype Train vorankommen</value>
   </data>
   <data name="TwitchChannelHypeTrainEnd" xml:space="preserve">
-    <value>Twitch Channel Hype Train beendet</value>
+    <value>Twitch-Kanal Hype Train beendet</value>
   </data>
   <data name="TwitchChannelResubscribed" xml:space="preserve">
-    <value>Twitch-Kanal erneut abonniert</value>
+    <value>Twitch-Kanal Abonnement erneuert</value>
   </data>
   <data name="TwitchChannelStreamStart" xml:space="preserve">
-    <value>Start des Twitch-Kanal-Streams</value>
+    <value>Twitch-Kanal Stream gestartet</value>
   </data>
   <data name="TwitchChannelStreamStop" xml:space="preserve">
-    <value>Twitch Channel Stream Stopp</value>
+    <value>Twitch-Kanal Stream gestoppt</value>
   </data>
   <data name="TwitchChannelSubscribed" xml:space="preserve">
     <value>Twitch-Kanal abonniert</value>
   </data>
   <data name="TwitchChannelSubscriptionGifted" xml:space="preserve">
-    <value>Twitch-Kanal-Abonnement verschenkt</value>
+    <value>Twitch-Kanal Abonnement verschenkt</value>
   </data>
   <data name="TwitchChannelUnfollowed" xml:space="preserve">
-    <value>Twitch-Kanal nicht gefolgt</value>
+    <value>Twitch-Kanal entfolgt</value>
   </data>
   <data name="ChatTimeout" xml:space="preserve">
     <value>Chat-Zeitüberschreitung</value>
@@ -4264,7 +4264,7 @@ ermöglichte. Sie können es sich ähnlich wie das Umschalten der Option "Entspe
     <value>Absolut</value>
   </data>
   <data name="Twitch" xml:space="preserve">
-    <value>Zucken</value>
+    <value>Twitch</value>
   </data>
   <data name="Premium" xml:space="preserve">
     <value>Prämie</value>
@@ -4351,7 +4351,7 @@ ermöglichte. Sie können es sich ähnlich wie das Umschalten der Option "Entspe
     <value>Geben Sie einen gültigen benutzerdefinierten geheimen Clientschlüssel ein.</value>
   </data>
   <data name="ExtraLife" xml:space="preserve">
-    <value>Zusätzliches Leben</value>
+    <value>Extra Life</value>
   </data>
   <data name="ExtraLifeInfo1" xml:space="preserve">
     <value>Mit der Extra Life Service-Konnektivität können Sie Ereignisse auslösen, wenn Sie oder Ihr Team eine Spende erhalten.</value>
@@ -4559,7 +4559,7 @@ ermöglichte. Sie können es sich ähnlich wie das Umschalten der Option "Entspe
     <value>Einfach</value>
   </data>
   <data name="StreamAvatars" xml:space="preserve">
-    <value>Avatare streamen</value>
+    <value>Stream Avatars</value>
   </data>
   <data name="StreamAvatarsInfo1" xml:space="preserve">
     <value>Die Stream-Avatar-Funktionalität wird direkt über das Stream Avatars-Programm abgewickelt. Bevor Sie Stream-Avatare mit Mix It Up verbinden, müssen Sie sicherstellen, dass die Entwickler-API auf der Seite Dienste aktiviert ist.</value>
@@ -4635,7 +4635,7 @@ ermöglichte. Sie können es sich ähnlich wie das Umschalten der Option "Entspe
     <value>Texthöhe (Pixel)</value>
   </data>
   <data name="Tiltify" xml:space="preserve">
-    <value>Kippen</value>
+    <value>Tiltify</value>
   </data>
   <data name="TiltifyInfo1" xml:space="preserve">
     <value>Mit der Tiltify-Dienstkonnektivität können Sie Aktionen ausführen, wenn eine Spende eingegangen ist. Wenn Sie sich anmelden, wird eine Authentifizierungsseite geöffnet, auf der Sie aufgefordert werden, sich bei Tiltify anzumelden und Mix It Up für den Zugriff auf Ihre Informationen zu genehmigen. Sobald Sie Tiltify verbunden haben, müssen Sie die Kampagne auswählen, die Sie verwenden möchten, wenn Sie Spenden erkennen.</value>
@@ -4770,7 +4770,7 @@ ermöglichte. Sie können es sich ähnlich wie das Umschalten der Option "Entspe
     <value>Möchten Sie dieses Profil wirklich löschen?</value>
   </data>
   <data name="DeleteQuotePrompt" xml:space="preserve">
-    <value>Sind Sie sicher, dass Sie dieses Zitat löschen möchten?</value>
+    <value>Möchten Sie dieses Zitat wirklich löschen?</value>
   </data>
   <data name="DeleteUserDataPrompt" xml:space="preserve">
     <value>Dadurch werden die Daten dieses Benutzers gelöscht, einschließlich seiner Stunden, Währung, Rang und benutzerdefinierten Benutzerbefehle. Sind Sie sicher, dass Sie dies tun möchten?</value>
@@ -5351,13 +5351,13 @@ ermöglichte. Sie können es sich ähnlich wie das Umschalten der Option "Entspe
     <value>Zu Mod aufsteigen</value>
   </data>
   <data name="Resubscribes" xml:space="preserve">
-    <value>Erneut abonnieren</value>
+    <value>Erneuerte Abonnements</value>
   </data>
   <data name="StreamInfo" xml:space="preserve">
     <value>Stream-Informationen</value>
   </data>
   <data name="SubPriorityHeader" xml:space="preserve">
-    <value>Unterpriorität:</value>
+    <value>Abo-Priorität:</value>
   </data>
   <data name="SubscribersReceivePriority" xml:space="preserve">
     <value>Abonnenten erhalten Priorität</value>
@@ -5417,10 +5417,10 @@ Wenn dieses Problem weiterhin besteht, besuchen Sie bitte den Mix It Up Support 
 Klicken Sie dazu auf der Seite Kanalpunkte in Mix It Up auf Kanalpunktbelohnung erstellen.</value>
   </data>
   <data name="FollowEventModeration" xml:space="preserve">
-    <value>Eventmoderation folgen</value>
+    <value>Folgen Ereigniss Moderation</value>
   </data>
   <data name="FollowEventModerationMaxQueue" xml:space="preserve">
-    <value>Max Warteschlange</value>
+    <value>max. Warteschlange</value>
   </data>
   <data name="RequirementCurrentAmount" xml:space="preserve">
     <value>(Aktuell: {0})</value>
@@ -5448,7 +5448,7 @@ Klicken Sie dazu auf der Seite Kanalpunkte in Mix It Up auf Kanalpunktbelohnung 
 - Keine: Es werden keine Anforderungsfehlermeldungen angezeigt</value>
   </data>
   <data name="CommandHistory" xml:space="preserve">
-    <value>Befehlsverlauf</value>
+    <value>Befehlshistorie</value>
   </data>
   <data name="Replay" xml:space="preserve">
     <value>Wiederholungsspiel</value>
@@ -5482,10 +5482,10 @@ Ordnerpfad korrekt und dass der Ordnerpfad für Mix It Up zugänglich ist.</valu
     <value>Aktionsliste</value>
   </data>
   <data name="CancelSelected" xml:space="preserve">
-    <value>Ausgewählt abbrechen</value>
+    <value>ausgewähle abbrechen</value>
   </data>
   <data name="ReplaySelected" xml:space="preserve">
-    <value>Wiederholung ausgewählt</value>
+    <value>ausgewähle wiederholen</value>
   </data>
   <data name="Filter" xml:space="preserve">
     <value>Filter</value>
@@ -5634,13 +5634,13 @@ Stellen Sie sicher, dass diese Option deaktiviert ist, nachdem Sie alle Tests du
     <value>Wahlfrei</value>
   </data>
   <data name="SpecialtyExcluded" xml:space="preserve">
-    <value>Spezialität ausgeschlossen</value>
+    <value>Extra ausgenommen</value>
   </data>
   <data name="SpecialtyExcludedTooltip" xml:space="preserve">
-    <value>Spezielle Ausgeschlossene Benutzer werden für verschiedene Interaktionen und Funktionen über die App ignoriert.
-Dazu gehören Dinge wie Währungs- / Ranganforderungen, zufällige Benutzerauswahl und
-Bestenlisten. Es wird empfohlen, diese Option für Benutzer wie Bot-Konten oder
-spezielle Benutzer, denen Sie mehr Kontrolle gewähren möchten, z. B. einem Moderator.</value>
+    <value>Extra ausgenomme Benutzer werden in verschiedenen Aktionen und Funktionen in der Anwendung ignoriert.
+      Dies schließt Dinge wie Währungs-/Rangsanforderungnen, Zufällige Benutzerwahl und Bestenlisten mit ein.
+      Diese Option ist für Bot-Konten und spezielle Benutzer empfohlen, die mehr Kontrolle erhalten sollen als z.B. Moderatoren.
+    </value>
   </data>
   <data name="RainmakerSocketFailed" xml:space="preserve">
     <value>Fehler beim Herstellen einer Verbindung zum Socket</value>
@@ -5652,10 +5652,10 @@ spezielle Benutzer, denen Sie mehr Kontrolle gewähren möchten, z. B. einem Mod
     <value>Laden von Benutzerdaten</value>
   </data>
   <data name="CommunityCommands" xml:space="preserve">
-    <value>Community-Befehle</value>
+    <value>Community Befehle</value>
   </data>
   <data name="SearchText" xml:space="preserve">
-    <value>Suchtext</value>
+    <value>Such Text</value>
   </data>
   <data name="Back" xml:space="preserve">
     <value>Zurück</value>
@@ -5715,7 +5715,7 @@ spezielle Benutzer, denen Sie mehr Kontrolle gewähren möchten, z. B. einem Mod
     <value>Community hochladen (Befehl)</value>
   </data>
   <data name="CommandEditor" xml:space="preserve">
-    <value>Befehls-Editor</value>
+    <value>Kommando anpassen</value>
   </data>
   <data name="CommunityCommandsExternalAssetActionsDetected" xml:space="preserve">
     <value>Der folgende Befehl enthält Aktionen, die externe Assets in irgendeiner Weise verwenden können (z. B. Sound, Overlay, Datei). Wenn diese Aktion hochgeladen wird, enthält sie NICHT diese externen Assets, sondern nur die Aktionen selbst. Wir empfehlen YouTubern, eine der folgenden Aktionen auszuführen:
@@ -7461,9 +7461,6 @@ Wir werden versuchen, uns nach Möglichkeit wieder mit dem Dienst zu verbinden. 
   </data>
   <data name="AutoCommandsExplanation" xml:space="preserve">
     <value>Die folgenden Befehle können automatisch erstellt werden, damit Sie mit der Verwendung dieser Funktion beginnen können. Möchten Sie, dass wir die folgenden Befehle automatisch für Sie hinzufügen?</value>
-  </data>
-  <data name="MixItUp" xml:space="preserve">
-    <value>Mischen Sie es auf</value>
   </data>
   <data name="MixItUpPopOut" xml:space="preserve">
     <value>Mix It Up - Pop Out</value>

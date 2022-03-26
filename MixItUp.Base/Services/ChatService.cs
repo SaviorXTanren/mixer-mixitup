@@ -170,15 +170,17 @@ namespace MixItUp.Base.Services
                 {
                     await ServiceManager.Get<TwitchChatService>().DeleteMessage(message);
                 }
-
-                if (message.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeChatService>().IsUserConnected)
+                else if (message.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeChatService>().IsUserConnected)
                 {
                     await ServiceManager.Get<YouTubeChatService>().DeleteMessage(message);
                 }
-
-                if (message.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
+                else if (message.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
                 {
                     await ServiceManager.Get<TrovoChatEventService>().DeleteMessage(message);
+                }
+                else if (message.Platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshChatEventService>().IsUserConnected)
+                {
+                    await ServiceManager.Get<GlimeshChatEventService>().DeleteMessage(message);
                 }
             }
 
@@ -410,7 +412,7 @@ namespace MixItUp.Base.Services
                 bool showMessage = true;
                 if (ChannelSession.Settings.HideBotMessages && message.User != null && message.Platform != StreamingPlatformTypeEnum.None)
                 {
-                    if (StreamingPlatforms.GetPlatformSessionService(message.Platform).IsBotConnected && string.Equals(message.User?.ID, StreamingPlatforms.GetPlatformSessionService(message.Platform)?.BotID))
+                    if (StreamingPlatforms.GetPlatformSessionService(message.Platform).IsBotConnected && string.Equals(message.User?.PlatformID, StreamingPlatforms.GetPlatformSessionService(message.Platform)?.BotID))
                     {
                         showMessage = false;
                     }

@@ -30,6 +30,8 @@ namespace MixItUp.Base.Services.Trovo
         public string ChannelID { get { return this.User?.channelId; } }
         public string ChannelLink { get { return string.Format("trovo.live/{0}", this.Username?.ToLower()); } }
 
+        public Dictionary<string, ChannelSubscriberModel> Subscribers { get; private set; } = new Dictionary<string, ChannelSubscriberModel>();
+
         public StreamingPlatformAccountModel UserAccount
         {
             get
@@ -204,6 +206,7 @@ namespace MixItUp.Base.Services.Trovo
 
                         List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
                         platformServiceTasks.Add(ServiceManager.Get<TrovoChatEventService>().ConnectUser());
+                        platformServiceTasks.Add(this.RefreshSubscriberCache());
 
                         await Task.WhenAll(platformServiceTasks);
 
@@ -334,6 +337,20 @@ namespace MixItUp.Base.Services.Trovo
                 }
             }
             return false;
+        }
+
+        private async Task<Result> RefreshSubscriberCache()
+        {
+            IEnumerable<ChannelSubscriberModel> subscribers = await this.UserConnection.GetSubscribers(this.Channel.channel_id, int.MaxValue);
+            if (subscribers != null)
+            {
+                this.Subscribers.Clear();
+                foreach (ChannelSubscriberModel subscriber in subscribers)
+                {
+                    this.Subscribers[subscriber.user.user_id] = subscriber;
+                }
+            }
+            return new Result();
         }
     }
 }
