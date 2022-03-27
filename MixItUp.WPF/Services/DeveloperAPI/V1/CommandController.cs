@@ -58,7 +58,13 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
                 throw new HttpResponseException(resp);
             }
 
-            AsyncRunner.RunAsyncBackground((cancellationToken) => ServiceManager.Get<CommandService>().Queue(selectedCommand, new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.All, arguments)), new CancellationToken());
+            AsyncRunner.RunAsyncBackground((cancellationToken) => ServiceManager.Get<CommandService>().Queue(
+                    selectedCommand,
+                    new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.All, arguments)
+                    {
+                        IgnoreRequirements = true
+                    }),
+                new CancellationToken());
 
             return CommandFromCommandBase(selectedCommand, category);
         }

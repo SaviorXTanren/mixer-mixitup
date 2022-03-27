@@ -302,10 +302,13 @@ namespace MixItUp.Base.Services
                 validationResult = await command.CustomValidation(commandInstance.Parameters);
                 if (validationResult.Success)
                 {
-                    validationResult = await command.ValidateRequirements(commandInstance.Parameters);
-                    if (!validationResult.Success && ChannelSession.Settings.RequirementErrorsCooldownType != RequirementErrorCooldownTypeEnum.PerCommand)
+                    if (!commandInstance.Parameters.IgnoreRequirements)
                     {
-                        command.CommandErrorCooldown = RequirementModelBase.UpdateErrorCooldown();
+                        validationResult = await command.ValidateRequirements(commandInstance.Parameters);
+                        if (!validationResult.Success && ChannelSession.Settings.RequirementErrorsCooldownType != RequirementErrorCooldownTypeEnum.PerCommand)
+                        {
+                            command.CommandErrorCooldown = RequirementModelBase.UpdateErrorCooldown();
+                        }
                     }
                 }
                 else
@@ -321,7 +324,7 @@ namespace MixItUp.Base.Services
 
                 if (validationResult.Success)
                 {
-                    if (command.Requirements != null)
+                    if (command.Requirements != null && !commandInstance.Parameters.IgnoreRequirements)
                     {
                         await command.PerformRequirements(commandInstance.Parameters);
                         commandInstance.RunnerParameters = new List<CommandParametersModel>(command.GetPerformingUsers(commandInstance.Parameters));
