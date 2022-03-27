@@ -29,6 +29,10 @@
 
             <Separator Margin="10" />
 
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding PreviewProgram}" />
+
+            <Separator Margin="10" />
+
             <GenericSettingsControls:GenericButtonSettingsOptionControl DataContext="{Binding InstallationFolder}" />
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding DiagnosticLogging}" />
             <GenericSettingsControls:GenericButtonSettingsOptionControl DataContext="{Binding RunNewUserWizard}" />

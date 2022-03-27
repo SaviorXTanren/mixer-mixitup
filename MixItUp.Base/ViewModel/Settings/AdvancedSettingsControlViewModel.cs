@@ -17,6 +17,8 @@ namespace MixItUp.Base.ViewModel.Settings
 
         public string AutomaticBackupLocationFolderPath { get { return !string.IsNullOrEmpty(ChannelSession.Settings.SettingsBackupLocation) ? ChannelSession.Settings.SettingsBackupLocation : MixItUp.Base.Resources.MixItUpInstallFolder; } }
 
+        public GenericToggleSettingsOptionControlViewModel PreviewProgram { get; set; }
+
         public GenericButtonSettingsOptionControlViewModel InstallationFolder { get; set; }
         public GenericToggleSettingsOptionControlViewModel DiagnosticLogging { get; set; }
         public GenericButtonSettingsOptionControlViewModel RunNewUserWizard { get; set; }
@@ -64,6 +66,16 @@ namespace MixItUp.Base.ViewModel.Settings
                     this.NotifyPropertyChanged("AutomaticBackupLocationFolderPath");
                 }
             }));
+
+            this.PreviewProgram = new GenericToggleSettingsOptionControlViewModel(
+                MixItUp.Base.Resources.UpdatePreviewProgram,
+                ChannelSession.AppSettings.PreviewProgram,
+                async (value) =>
+                {
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.UpdatePreviewProgramTooltip);
+                    ChannelSession.AppSettings.PreviewProgram = value;
+                },
+                MixItUp.Base.Resources.UpdatePreviewProgramTooltip);
 
             this.InstallationFolder = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.AccessTheFolderWhereMixItUpIsInstalled, MixItUp.Base.Resources.InstallationFolder, this.CreateCommand(() =>
             {
