@@ -24,12 +24,13 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V2
                 return BadRequest($"Missing chat message");
             }
 
-            if (!Enum.TryParse<StreamingPlatformTypeEnum>(chatMessage.Platform, ignoreCase: true, out var platformEnum))
+            StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All;
+            if (!string.IsNullOrEmpty(chatMessage.Platform) && !Enum.TryParse<StreamingPlatformTypeEnum>(chatMessage.Platform, ignoreCase: true, out platform))
             {
                 return BadRequest($"Unknown platform: {chatMessage.Platform}");
             }
 
-            await ServiceManager.Get<ChatService>().SendMessage(chatMessage.Message, platformEnum, chatMessage.SendAsStreamer);
+            await ServiceManager.Get<ChatService>().SendMessage(chatMessage.Message, platform, chatMessage.SendAsStreamer);
 
             return Ok();
         }
