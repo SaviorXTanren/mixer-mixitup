@@ -472,41 +472,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public async Task FindAndAddUser(StreamingPlatformTypeEnum platform, string username)
         {
-            if (!StreamingPlatforms.GetPlatformSessionService(platform).IsConnected)
-            {
-                return;
-            }
-
-            UserV2ViewModel user = null;
-            if (platform == StreamingPlatformTypeEnum.Twitch)
-            {
-                Twitch.Base.Models.NewAPI.Users.UserModel tUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
-                if (tUser != null)
-                {
-                    user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(tUser));
-                }
-            }
-            else if (platform == StreamingPlatformTypeEnum.YouTube)
-            {
-                // TODO
-            }
-            else if (platform == StreamingPlatformTypeEnum.Trovo)
-            {
-                Trovo.Base.Models.Users.UserModel tUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(username);
-                if (tUser != null)
-                {
-                    user = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(tUser));
-                }
-            }
-            else if (platform == StreamingPlatformTypeEnum.Glimesh)
-            {
-                Glimesh.Base.Models.Users.UserModel gUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByName(username);
-                if (gUser != null)
-                {
-                    user = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(gUser));
-                }
-            }
-
+            UserV2ViewModel user = await ServiceManager.Get<UserService>().CreateUser(platform, username);
             if (user != null)
             {
                 await DialogHelper.ShowMessage(string.Format(MixItUp.Base.Resources.UsersSuccessfullyFoundUser, user.DisplayName));
