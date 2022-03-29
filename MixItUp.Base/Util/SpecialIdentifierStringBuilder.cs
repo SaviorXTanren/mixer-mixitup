@@ -63,6 +63,7 @@ namespace MixItUp.Base.Util
         public const string TwitchSpecialIdentifierHeader = "twitch";
 
         public const string QuoteSpecialIdentifierHeader = "quote";
+        public const string LatestQuoteSpecialIdentifierHeader = "latestquote";
 
         public const string DonationSourceSpecialIdentifier = "donationsource";
         public const string DonationTypeSpecialIdentifier = "donationtype";
@@ -359,25 +360,33 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (this.ContainsSpecialIdentifier(QuoteSpecialIdentifierHeader) && ChannelSession.Settings.QuotesEnabled && ChannelSession.Settings.Quotes.Count > 0)
+            if (ChannelSession.Settings.QuotesEnabled && ChannelSession.Settings.Quotes.Count > 0)
             {
-                UserQuoteModel quote = ChannelSession.Settings.Quotes.PickRandom();
-                if (quote != null)
+                if (this.ContainsSpecialIdentifier(QuoteSpecialIdentifierHeader))
                 {
-                    this.ReplaceSpecialIdentifier(QuoteSpecialIdentifierHeader + "random", quote.ToString());
-                }
-
-                if (this.ContainsRegexSpecialIdentifier(QuoteSpecialIdentifierHeader + SpecialIdentifierNumberRegexPattern))
-                {
-                    await this.ReplaceNumberBasedRegexSpecialIdentifier(QuoteSpecialIdentifierHeader + SpecialIdentifierNumberRegexPattern, (index) =>
+                    UserQuoteModel quote = ChannelSession.Settings.Quotes.PickRandom();
+                    if (quote != null)
                     {
-                        if (index > 0 && index <= ChannelSession.Settings.Quotes.Count)
+                        this.ReplaceSpecialIdentifier(QuoteSpecialIdentifierHeader + "random", quote.ToString());
+                    }
+
+                    if (this.ContainsRegexSpecialIdentifier(QuoteSpecialIdentifierHeader + SpecialIdentifierNumberRegexPattern))
+                    {
+                        await this.ReplaceNumberBasedRegexSpecialIdentifier(QuoteSpecialIdentifierHeader + SpecialIdentifierNumberRegexPattern, (index) =>
                         {
-                            index--;
-                            return Task.FromResult(ChannelSession.Settings.Quotes[index].ToString());
-                        }
-                        return Task.FromResult<string>(null);
-                    });
+                            if (index > 0 && index <= ChannelSession.Settings.Quotes.Count)
+                            {
+                                index--;
+                                return Task.FromResult(ChannelSession.Settings.Quotes[index].ToString());
+                            }
+                            return Task.FromResult<string>(null);
+                        });
+                    }   
+                }
+                
+                if (this.ContainsSpecialIdentifier(LatestQuoteSpecialIdentifierHeader))
+                {
+                    this.ReplaceSpecialIdentifier(LatestQuoteSpecialIdentifierHeader, ChannelSession.Settings.Quotes.Last().ToString());
                 }
             }
 
