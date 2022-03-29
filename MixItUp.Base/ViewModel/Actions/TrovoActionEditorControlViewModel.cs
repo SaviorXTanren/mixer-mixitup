@@ -127,7 +127,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public override async Task<Result> Validate()
         {
-            if (this.ShowUsernameGrid)
+            if (this.selectedActionType == TrovoActionType.Host)
             {
                 if (string.IsNullOrEmpty(this.Username))
                 {

@@ -91,7 +91,16 @@ namespace MixItUp.Base.Model.Actions
         {
             if (ServiceManager.Get<TrovoSessionService>().IsConnected && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
             {
-                string username = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                string username = null;
+                if (!string.IsNullOrEmpty(this.Username))
+                {
+                    username = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                }
+                else
+                {
+                    username = parameters.User?.Username;
+                }
+
                 string text = await ReplaceStringWithSpecialModifiers(this.Text, parameters);
                 string roleName = await ReplaceStringWithSpecialModifiers(this.RoleName, parameters);
 
