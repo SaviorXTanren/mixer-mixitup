@@ -63,7 +63,6 @@ namespace MixItUp.Base.Util
         public const string TwitchSpecialIdentifierHeader = "twitch";
 
         public const string QuoteSpecialIdentifierHeader = "quote";
-        public const string LatestQuoteSpecialIdentifierHeader = "latestquote";
 
         public const string DonationSourceSpecialIdentifier = "donationsource";
         public const string DonationTypeSpecialIdentifier = "donationtype";
@@ -364,11 +363,8 @@ namespace MixItUp.Base.Util
             {
                 if (this.ContainsSpecialIdentifier(QuoteSpecialIdentifierHeader))
                 {
-                    UserQuoteModel quote = ChannelSession.Settings.Quotes.PickRandom();
-                    if (quote != null)
-                    {
-                        this.ReplaceSpecialIdentifier(QuoteSpecialIdentifierHeader + "random", quote.ToString());
-                    }
+                    this.ReplaceSpecialIdentifier(QuoteSpecialIdentifierHeader + "random", ChannelSession.Settings.Quotes.PickRandom().ToString());
+                    this.ReplaceSpecialIdentifier(QuoteSpecialIdentifierHeader + "latest", ChannelSession.Settings.Quotes.Last().ToString());
 
                     if (this.ContainsRegexSpecialIdentifier(QuoteSpecialIdentifierHeader + SpecialIdentifierNumberRegexPattern))
                     {
@@ -382,11 +378,6 @@ namespace MixItUp.Base.Util
                             return Task.FromResult<string>(null);
                         });
                     }   
-                }
-                
-                if (this.ContainsSpecialIdentifier(LatestQuoteSpecialIdentifierHeader))
-                {
-                    this.ReplaceSpecialIdentifier(LatestQuoteSpecialIdentifierHeader, ChannelSession.Settings.Quotes.Last().ToString());
                 }
             }
 
