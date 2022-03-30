@@ -412,7 +412,7 @@ namespace MixItUp.Base.Services
                 bool showMessage = true;
                 if (ChannelSession.Settings.HideBotMessages && message.User != null && message.Platform != StreamingPlatformTypeEnum.None)
                 {
-                    if (StreamingPlatforms.GetPlatformSessionService(message.Platform).IsBotConnected && string.Equals(message.User?.ID, StreamingPlatforms.GetPlatformSessionService(message.Platform)?.BotID))
+                    if (StreamingPlatforms.GetPlatformSessionService(message.Platform).IsBotConnected && string.Equals(message.User?.PlatformID, StreamingPlatforms.GetPlatformSessionService(message.Platform)?.BotID))
                     {
                         showMessage = false;
                     }

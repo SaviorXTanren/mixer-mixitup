@@ -4,6 +4,7 @@ using MixItUp.Base.Model;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
+using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ using System.Web.Http;
 namespace MixItUp.WPF.Services.DeveloperAPI.V2
 {
     [RoutePrefix("api/v2/users")]
-    public class UsersController : ApiController
+    public class UsersControllerV2 : ApiController
     {
         // Update user
         // Create user
@@ -49,20 +50,25 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V2
             return Ok();
         }
 
-        [Route]
+        [Route("add")]
         [HttpPost]
-        public async Task<IHttpActionResult> CreateUser(User newUser)
+        public async Task<IHttpActionResult> AddUser(NewUser newUser)
         {
             await ServiceManager.Get<UserService>().LoadAllUserData();
 
-            // TODO: Map newUser to UserPlatformV2ModelBase
-            var usermodel = await ServiceManager.Get<UserService>().CreateUser(null);
-            if (!ChannelSession.Settings.Users.TryGetValue(usermodel.ID, out var user) || user == null)
+            if (!Enum.TryParse<StreamingPlatformTypeEnum>(newUser.Platform, ignoreCase: true, out var platformEnum))
+            {
+                return BadRequest($"Unknown platform: {newUser.Platform}");
+            }
+
+            UserV2ViewModel user = await ServiceManager.Get<UserService>().CreateUser(platformEnum, newUser.Username);
+
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return Ok(new GetSingleUserResponse { User = UserMapper.ToUser(user) });
+            return Ok(new GetSingleUserResponse { User = UserMapper.ToUser(user.Model) });
         }
 
         [Route("{platform}/{usernameOrID}")]
@@ -132,24 +138,12 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V2
                 StreamPassAmounts = new Dictionary<Guid, int>(user.StreamPassAmounts),
                 CustomTitle = user.CustomTitle,
                 IsSpecialtyExcluded = user.IsSpecialtyExcluded,
-                EntranceCommandID = user.EntranceCommandID,
-                CustomCommandIDs = new List<Guid>(user.CustomCommandIDs),
-                PatreonUserID = user.PatreonUserID,
-                ModerationStrikes = user.ModerationStrikes,
                 Notes = user.Notes,
-                TotalStreamsWatched = user.TotalStreamsWatched,
-                TotalAmountDonated = user.TotalAmountDonated,
-                TotalSubsGifted = user.TotalSubsGifted,
-                TotalSubsReceived = user.TotalSubsReceived,
-                TotalChatMessageSent = user.TotalChatMessageSent,
-                TotalTimesTagged = user.TotalStreamsWatched,
-                TotalCommandsRun = user.TotalCommandsRun,
-                TotalMonthsSubbed = user.TotalMonthsSubbed,
                 PlatformData = ToPlatformData(user.PlatformData),
             };
         }
 
-        private static Dictionary<string, UserPlatformData> ToPlatformData(Dictionary<StreamingPlatformTypeEnum, UserPlatformV2ModelBase> platformData)
+        private static Dictionary<string, UserPlatformData> ToPlatformData(Dictionary<Base.Model.StreamingPlatformTypeEnum, UserPlatformV2ModelBase> platformData)
         {
             var results = new Dictionary<string, UserPlatformData>();
 

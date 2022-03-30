@@ -16,7 +16,7 @@ using System.Web.Http;
 namespace MixItUp.WPF.Services.DeveloperAPI.V1
 {
     [RoutePrefix("api/commands")]
-    public class CommandController : ApiController
+    public class CommandControllerV1 : ApiController
     {
         [Route]
         [HttpGet]
@@ -58,7 +58,13 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
                 throw new HttpResponseException(resp);
             }
 
-            AsyncRunner.RunAsyncBackground((cancellationToken) => ServiceManager.Get<CommandService>().Queue(selectedCommand, new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.All, arguments)), new CancellationToken());
+            AsyncRunner.RunAsyncBackground((cancellationToken) => ServiceManager.Get<CommandService>().Queue(
+                    selectedCommand,
+                    new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.All, arguments)
+                    {
+                        IgnoreRequirements = true
+                    }),
+                new CancellationToken());
 
             return CommandFromCommandBase(selectedCommand, category);
         }

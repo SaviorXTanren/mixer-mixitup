@@ -103,8 +103,7 @@
                 <Controls:IconButton Grid.Column="8" ToolTip="{x:Static resx:Resources.ExportActions}" Icon="Export" Command="{Binding ExportCommand}" />
                 <Controls:IconButton Grid.Column="10" ToolTip="{x:Static resx:Resources.ImportActions}" Icon="Import" Command="{Binding ImportCommand}" />
 
-                <!-- // TODO -->
-                <Button IsEnabled="False" Grid.Column="11" x:Name="UploadCommunityCommandButton" Margin="30,0,0,0" Visibility="{Binding IsExistingCommand, Converter={StaticResource BooleanToVisibilityConverter}}" Content="{x:Static resx:Resources.CommunityCommandsUploadToCommunity}" ToolTip="{x:Static resx:Resources.CommunityCommandsUploadToCommunityTooltip}" Click="UploadCommunityCommandButton_Click" />
+                <Button Grid.Column="11" x:Name="UploadCommunityCommandButton" Margin="30,0,0,0" Visibility="{Binding IsExistingCommand, Converter={StaticResource BooleanToVisibilityConverter}}" Content="{x:Static resx:Resources.CommunityCommandsUploadToCommunity}" ToolTip="{x:Static resx:Resources.CommunityCommandsUploadToCommunityTooltip}" Click="UploadCommunityCommandButton_Click" />
 
             </Grid>
         </Grid>

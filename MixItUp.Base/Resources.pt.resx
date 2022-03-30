@@ -382,10 +382,10 @@
     <value>Limpar todos os dados do Usuário (Horas, Moeda, Classificação, etc)</value>
   </data>
   <data name="ClearChat" xml:space="preserve">
-    <value>Bate-papo claro</value>
+    <value>Limpar bate-papo</value>
   </data>
   <data name="ClearChatConfirmation" xml:space="preserve">
-    <value>Isso limpará todas as mensagens de bate-papo para o fluxo. Tem certeza?</value>
+    <value>Isso limpará todas as mensagens do bate-papo. Tem certeza?</value>
   </data>
   <data name="ClearQueue" xml:space="preserve">
     <value>Fila limpa</value>
@@ -589,7 +589,7 @@
     <value>Desligar</value>
   </data>
   <data name="Discord" xml:space="preserve">
-    <value>Discórdia</value>
+    <value>Discord</value>
   </data>
   <data name="DoesNotContain" xml:space="preserve">
     <value>&lt;&gt; contém</value>
@@ -733,7 +733,7 @@
     <value>Primeiro Valor</value>
   </data>
   <data name="FollowAge" xml:space="preserve">
-    <value>Seguir a Idade</value>
+    <value>Seguidor a</value>
   </data>
   <data name="Follower" xml:space="preserve">
     <value>Seguidor</value>
@@ -775,7 +775,7 @@
     <value>Dotado</value>
   </data>
   <data name="Giveaway" xml:space="preserve">
-    <value>Giveaway</value>
+    <value>Sorteios</value>
   </data>
   <data name="GiveawayItem" xml:space="preserve">
     <value>Item de sorteio</value>
@@ -823,7 +823,7 @@
     <value>Atalho</value>
   </data>
   <data name="HotKeys" xml:space="preserve">
-    <value>Chaves quentes</value>
+    <value>Teclas de Atalho</value>
   </data>
   <data name="Hours" xml:space="preserve">
     <value>Horas</value>
@@ -1048,7 +1048,7 @@
     <value>Pontos Min</value>
   </data>
   <data name="Minutes" xml:space="preserve">
-    <value>Ata</value>
+    <value>Minutos</value>
   </data>
   <data name="MinValue" xml:space="preserve">
     <value>Valor Min</value>
@@ -1429,7 +1429,7 @@
     <value>Botão direito</value>
   </data>
   <data name="Role" xml:space="preserve">
-    <value>Papel</value>
+    <value>Cargo</value>
   </data>
   <data name="RoleBonuses" xml:space="preserve">
     <value>Bônus de função</value>
@@ -1438,7 +1438,7 @@
     <value>Você deve ser um {0} para fazer isso.</value>
   </data>
   <data name="Roles" xml:space="preserve">
-    <value>Papéis</value>
+    <value>Cargos</value>
   </data>
   <data name="Rotation" xml:space="preserve">
     <value>Rotação (Graus)</value>
@@ -1651,19 +1651,19 @@
     <value>Reprodução do clipe de fluxo</value>
   </data>
   <data name="Streamer" xml:space="preserve">
-    <value>Serpentina</value>
+    <value>Streamer</value>
   </data>
   <data name="StreamerAccount" xml:space="preserve">
     <value>Conta do streamer</value>
   </data>
   <data name="StreamerAge" xml:space="preserve">
-    <value>Era do Streamer</value>
+    <value>Idade do Streamer</value>
   </data>
   <data name="StreamingPlatform" xml:space="preserve">
     <value>Plataforma de Streaming</value>
   </data>
   <data name="StreamingSoftware" xml:space="preserve">
-    <value>Streaming Software</value>
+    <value>Software de Streaming</value>
   </data>
   <data name="Streamlabs" xml:space="preserve">
     <value>Streamlabs</value>
@@ -1810,7 +1810,7 @@
     <value>Mensagem de Tweet (não @mentions permitido)</value>
   </data>
   <data name="Twitter" xml:space="preserve">
-    <value>Gorjeio</value>
+    <value>Twitter</value>
   </data>
   <data name="Two" xml:space="preserve">
     <value>Dois</value>
@@ -1972,10 +1972,10 @@
     <value>Esperar</value>
   </data>
   <data name="WaitForFinish" xml:space="preserve">
-    <value>Aguarde o acabamento</value>
+    <value>Aguarde a finalização</value>
   </data>
   <data name="WatchTime" xml:space="preserve">
-    <value>Relógio tempo</value>
+    <value>Tempo Assistido</value>
   </data>
   <data name="WebHookEventName" xml:space="preserve">
     <value>Nome do evento do Web Hook</value>
@@ -2062,13 +2062,13 @@
     <value>Usuário de bate-papo banido</value>
   </data>
   <data name="ChatUserFirstJoin" xml:space="preserve">
-    <value>Bate-papo novo usuário inscrito</value>
+    <value>Usuário entrou pela primeira vez no Bate-papo</value>
   </data>
   <data name="ChatUserJoined" xml:space="preserve">
-    <value>Usuário de bate-papo inscrito</value>
+    <value>Usuário de bate-papo entrou</value>
   </data>
   <data name="ChatUserLeft" xml:space="preserve">
-    <value>Usuário de chat deixado</value>
+    <value>Usuário de bate-papo saiu</value>
   </data>
   <data name="ChatUserPurge" xml:space="preserve">
     <value>Usuário de bate-papo expurgado</value>
@@ -2137,7 +2137,7 @@
     <value>Bônus de doação</value>
   </data>
   <data name="FollowBonus" xml:space="preserve">
-    <value>Siga o bônus</value>
+    <value>Bônus de Follow</value>
   </data>
   <data name="HostBonus" xml:space="preserve">
     <value>Bônus do host</value>
@@ -2155,7 +2155,7 @@
     <value>Adicionar up de nível personalizado</value>
   </data>
   <data name="AddStreamPass" xml:space="preserve">
-    <value>Adicionar passe de fluxo</value>
+    <value>Adicionar passe de stream</value>
   </data>
   <data name="Copy" xml:space="preserve">
     <value>Copiar</value>
@@ -2188,7 +2188,7 @@
     <value>Começar</value>
   </data>
   <data name="StreamPass" xml:space="preserve">
-    <value>Passagem de córrego</value>
+    <value>Passe da Stream</value>
   </data>
   <data name="Dutch" xml:space="preserve">
     <value>Holandês</value>
@@ -2227,7 +2227,7 @@
     <value>Idade da conta</value>
   </data>
   <data name="LastSeen" xml:space="preserve">
-    <value>Visto pela última vez</value>
+    <value>Última sessão</value>
   </data>
   <data name="Quantity" xml:space="preserve">
     <value>Quantidade</value>
@@ -2269,7 +2269,7 @@
     <value>Editar produtos</value>
   </data>
   <data name="RedemptionStore" xml:space="preserve">
-    <value>Loja de Redenção</value>
+    <value>Loja de Resgates</value>
   </data>
   <data name="ChatPurchaseCommand" xml:space="preserve">
     <value>Comando de compra de chat</value>
@@ -2458,7 +2458,7 @@
     <value>Excluir configurações</value>
   </data>
   <data name="Changelog" xml:space="preserve">
-    <value>Changelog</value>
+    <value>Notas de Atualização</value>
   </data>
   <data name="ClipPlayback" xml:space="preserve">
     <value>Reprodução de clipe</value>
@@ -2780,7 +2780,7 @@ Por exemplo, se essa opção estiver ativada e o valor for definido para 5, ent�
     <value>Configuração padrão</value>
   </data>
   <data name="OBSStudio" xml:space="preserve">
-    <value>Estúdio OBS</value>
+    <value>OBS Studio</value>
   </data>
   <data name="SaveReplayBuffer" xml:space="preserve">
     <value>Salvar buffer de repetição</value>
@@ -4264,7 +4264,7 @@ Habilitado. Você pode pensar nisso como semelhante à opção "Desbloquear Coma
     <value>Absoluto</value>
   </data>
   <data name="Twitch" xml:space="preserve">
-    <value>Contrair-se</value>
+    <value>Twitch</value>
   </data>
   <data name="Premium" xml:space="preserve">
     <value>Prêmio</value>
@@ -4351,7 +4351,7 @@ Habilitado. Você pode pensar nisso como semelhante à opção "Desbloquear Coma
     <value>Por favor, insira um segredo personalizado válido para clientes.</value>
   </data>
   <data name="ExtraLife" xml:space="preserve">
-    <value>Vida Extra</value>
+    <value>Extra Life</value>
   </data>
   <data name="ExtraLifeInfo1" xml:space="preserve">
     <value>A conectividade do serviço Extra Life permite que você acione eventos a partir de quando você ou sua equipe recebem uma doação.</value>
@@ -4559,7 +4559,7 @@ Habilitado. Você pode pensar nisso como semelhante à opção "Desbloquear Coma
     <value>Simples</value>
   </data>
   <data name="StreamAvatars" xml:space="preserve">
-    <value>Avatares de fluxo</value>
+    <value>Stream Avatars</value>
   </data>
   <data name="StreamAvatarsInfo1" xml:space="preserve">
     <value>A funcionalidade do Stream Avatars é tratada diretamente através do programa Stream Avatars. Antes de conectar Avatares do Fluxo para Mix It Up, você deve garantir que a API do desenvolvedor esteja ativada na página Serviços.</value>
@@ -4571,7 +4571,7 @@ Habilitado. Você pode pensar nisso como semelhante à opção "Desbloquear Coma
     <value>Seção Wiki de Avatares de fluxo</value>
   </data>
   <data name="StreamDeck" xml:space="preserve">
-    <value>Deck de córrego</value>
+    <value>Stream Deck</value>
   </data>
   <data name="StreamDeckInfo1" xml:space="preserve">
     <value>Este plug-in do Stream Deck permite que você execute comandos Mix It Up diretamente do seu dispositivo Stream Deck, bem como outras informações de status sobre seu fluxo.</value>
@@ -5652,7 +5652,7 @@ usuários especiais que você deseja permitir mais controle para, como um Modera
     <value>Carregando dados do usuário</value>
   </data>
   <data name="CommunityCommands" xml:space="preserve">
-    <value>Comandos comunitários</value>
+    <value>Comandos da comunidade</value>
   </data>
   <data name="SearchText" xml:space="preserve">
     <value>Texto de pesquisa</value>

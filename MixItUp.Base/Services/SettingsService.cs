@@ -350,8 +350,17 @@ namespace MixItUp.Base.Services
 
                 SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
                 await settings.Initialize();
-                
-                await ServiceManager.Get<IDatabaseService>().Write(settings.DatabaseFilePath, "CREATE TABLE \"ImportedUsers\" (\"ID\" TEXT NOT NULL, \"Platform\" INTEGER NOT NULL, \"PlatformID\" TEXT, \"PlatformUsername\" TEXT, \"Data\" TEXT NOT NULL, UNIQUE(\"Platform\",\"PlatformID\",\"PlatformUsername\"), PRIMARY KEY(\"ID\"))");
+
+                bool tableExists = false;
+                await ServiceManager.Get<IDatabaseService>().Read(settings.DatabaseFilePath, "SELECT name FROM sqlite_master WHERE type='table' AND name='ImportedUsers'", (row) =>
+                {
+                    tableExists = true;
+                });
+
+                if (!tableExists)
+                {
+                    await ServiceManager.Get<IDatabaseService>().Write(settings.DatabaseFilePath, "CREATE TABLE \"ImportedUsers\" (\"ID\" TEXT NOT NULL, \"Platform\" INTEGER NOT NULL, \"PlatformID\" TEXT, \"PlatformUsername\" TEXT, \"Data\" TEXT NOT NULL, UNIQUE(\"Platform\",\"PlatformID\",\"PlatformUsername\"), PRIMARY KEY(\"ID\"))");
+                }
 
                 foreach (StreamingPlatformTypeEnum type in settings.StreamingPlatformAuthentications.Keys.ToList())
                 {
@@ -374,7 +383,10 @@ namespace MixItUp.Base.Services
                 settings.ModerationBlockLinksExcemptUserRole = UserRoles.ConvertFromOldRole(settings.ModerationBlockLinksExcempt);
                 settings.ModerationChatInteractiveParticipationExcemptUserRole = UserRoles.ConvertFromOldRole(settings.ModerationChatInteractiveParticipationExcempt);
 
-                settings.GiveawayRequirementsSet.Role.UserRole = UserRoles.ConvertFromOldRole(settings.GiveawayRequirementsSet.Role.Role);
+                if (settings.GiveawayRequirementsSet?.Role != null)
+                {
+                    settings.GiveawayRequirementsSet.Role.UserRole = UserRoles.ConvertFromOldRole(settings.GiveawayRequirementsSet.Role.Role);
+                }
 
                 foreach (var title in settings.UserTitles)
                 {
@@ -510,7 +522,10 @@ namespace MixItUp.Base.Services
                 else if (action is GameQueueActionModel)
                 {
                     GameQueueActionModel gqAction = (GameQueueActionModel)action;
-                    gqAction.RoleRequirement.UpgradeFromOldRoles();
+                    if (gqAction.RoleRequirement != null)
+                    {
+                        gqAction.RoleRequirement.UpgradeFromOldRoles();
+                    }
                 }
                 else if (action is InputActionModel)
                 {

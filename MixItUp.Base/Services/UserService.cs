@@ -231,6 +231,47 @@ namespace MixItUp.Base.Services
             return null;
         }
 
+        public async Task<UserV2ViewModel> CreateUser(StreamingPlatformTypeEnum platform, string username)
+        {
+            UserV2ViewModel user = null;
+
+            if (!StreamingPlatforms.GetPlatformSessionService(platform).IsConnected)
+            {
+                return user;
+            }
+
+            if (platform == StreamingPlatformTypeEnum.Twitch)
+            {
+                var tUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
+                if (tUser != null)
+                {
+                    user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(tUser));
+                }
+            }
+            else if (platform == StreamingPlatformTypeEnum.YouTube)
+            {
+                // TODO
+            }
+            else if (platform == StreamingPlatformTypeEnum.Trovo)
+            {
+                var tUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(username);
+                if (tUser != null)
+                {
+                    user = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(tUser));
+                }
+            }
+            else if (platform == StreamingPlatformTypeEnum.Glimesh)
+            {
+                var gUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByName(username);
+                if (gUser != null)
+                {
+                    user = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(gUser));
+                }
+            }
+
+            return user;
+        }
+
         public async Task<UserV2ViewModel> CreateUser(UserPlatformV2ModelBase platformModel)
         {
             if (platformModel != null && !string.IsNullOrEmpty(platformModel.ID))

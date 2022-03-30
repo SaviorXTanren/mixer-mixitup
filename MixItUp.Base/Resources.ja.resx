@@ -589,7 +589,7 @@
     <value>切る</value>
   </data>
   <data name="Discord" xml:space="preserve">
-    <value>不和</value>
+    <value>Discord</value>
   </data>
   <data name="DoesNotContain" xml:space="preserve">
     <value>&lt;&gt; 含む</value>
@@ -1237,7 +1237,7 @@
     <value>オーバーレイ ウィジェットを使用するには、[サービス] メニューの [オーバーレイ] を有効にする必要があります。</value>
   </data>
   <data name="OvrStream" xml:space="preserve">
-    <value>オーヴストリーム</value>
+    <value>OvrStream</value>
   </data>
   <data name="Partner" xml:space="preserve">
     <value>パートナー</value>
@@ -1666,7 +1666,7 @@
     <value>ストリーミングソフトウェア</value>
   </data>
   <data name="Streamlabs" xml:space="preserve">
-    <value>ストリームラボ</value>
+    <value>Streamlabs</value>
   </data>
   <data name="StreamsWatched" xml:space="preserve">
     <value>視聴されたストリーム</value>
@@ -1810,7 +1810,7 @@
     <value>ツイートメッセージ (@mentions不可)</value>
   </data>
   <data name="Twitter" xml:space="preserve">
-    <value>囀る</value>
+    <value>Twitter</value>
   </data>
   <data name="Two" xml:space="preserve">
     <value>2</value>
@@ -2780,7 +2780,7 @@
     <value>デフォルト設定</value>
   </data>
   <data name="OBSStudio" xml:space="preserve">
-    <value>OBS スタジオ</value>
+    <value>OBS Studio</value>
   </data>
   <data name="SaveReplayBuffer" xml:space="preserve">
     <value>再生バッファの保存</value>
@@ -2798,7 +2798,7 @@
     <value>ストリームの開始/停止</value>
   </data>
   <data name="StreamlabsOBS" xml:space="preserve">
-    <value>ストリームラボ OBS</value>
+    <value>Streamlabs OBS</value>
   </data>
   <data name="TextSource" xml:space="preserve">
     <value>テキストソース</value>
@@ -2807,7 +2807,7 @@
     <value>Web ブラウザのソース</value>
   </data>
   <data name="XSplit" xml:space="preserve">
-    <value>Xスプリット</value>
+    <value>XSplit</value>
   </data>
   <data name="StreamingSoftwareActionMissingScene" xml:space="preserve">
     <value>ストリーミング ソフトウェア アクション: シーンが見つかりません</value>
@@ -4264,7 +4264,7 @@
     <value>絶対</value>
   </data>
   <data name="Twitch" xml:space="preserve">
-    <value>引き攣り</value>
+    <value>Twitch</value>
   </data>
   <data name="Premium" xml:space="preserve">
     <value>プレミアム</value>
@@ -4351,7 +4351,7 @@
     <value>有効なカスタム クライアント シークレットを入力してください。</value>
   </data>
   <data name="ExtraLife" xml:space="preserve">
-    <value>エクストラライフ</value>
+    <value>Extra Life</value>
   </data>
   <data name="ExtraLifeInfo1" xml:space="preserve">
     <value>エクストラライフサービス接続を使用すると、あなたやあなたのチームが寄付を受け取ったときにからイベントをトリガすることができます。</value>
@@ -4448,7 +4448,7 @@
     <value>アイテムの幅 (ピクセル)</value>
   </data>
   <data name="JustGiving" xml:space="preserve">
-    <value>ジャストギビング</value>
+    <value>JustGiving</value>
   </data>
   <data name="JustGivingInfo1" xml:space="preserve">
     <value>JustGiving サービス接続を使用すると、寄付を受け取ったときにアクションを実行できます。ログインすると、認証ウェブページが開き、JustGivingにログインし、あなたの情報にアクセスするためにMix It Upを承認するように求めます。</value>
@@ -4502,7 +4502,7 @@
     <value>パスワード (オプション)</value>
   </data>
   <data name="Patreon" xml:space="preserve">
-    <value>パトレオン</value>
+    <value>Patreon</value>
   </data>
   <data name="PatreonInfo1" xml:space="preserve">
     <value>Patreonサービス接続により、寄付を受け取ったときにアクションを実行できます。ログインすると、認証ウェブページが開き、Patreonにログインして、あなたの情報にアクセスするためにMix It Upを承認するように求める。</value>
@@ -4559,7 +4559,7 @@
     <value>簡単</value>
   </data>
   <data name="StreamAvatars" xml:space="preserve">
-    <value>アバターをストリーム配信</value>
+    <value>Stream Avatars</value>
   </data>
   <data name="StreamAvatarsInfo1" xml:space="preserve">
     <value>ストリームアバター機能は、ストリームアバタープログラムを通じて直接処理されます。ストリームアバターをミックス・イット・アップに接続する前に、サービスページで開発者APIが有効になっていることを確認する必要があります。</value>
@@ -4571,7 +4571,7 @@
     <value>ストリームアバター Wiki セクション</value>
   </data>
   <data name="StreamDeck" xml:space="preserve">
-    <value>ストリームデッキ</value>
+    <value>Stream Deck</value>
   </data>
   <data name="StreamDeckInfo1" xml:space="preserve">
     <value>このストリームデッキプラグインを使用すると、ストリームデッキデバイスから直接Mix It Upコマンドを実行でき、ストリームに関するその他のステータス情報も実行できます。</value>
@@ -4580,7 +4580,7 @@
     <value>開始するには、Stream Deck ソフトウェアが少なくともバージョン 4.0 に更新され、開発者 API サービスが Mix It Up で有効になっていることを確認します。Mix It Up プラグインをインストールするには、「その他のアクション.」をクリックします。ボタンをクリックし、ウィンドウで「ミックス・イット・アップ」を検索します。</value>
   </data>
   <data name="StreamElements" xml:space="preserve">
-    <value>ストリーム要素</value>
+    <value>StreamElements</value>
   </data>
   <data name="StreamElementsInfo1" xml:space="preserve">
     <value>StreamElements サービス接続を使用すると、寄付を受け取ったときにアクションを実行できます。ログインすると、認証ウェブページが開き、StreamElementsにログインし、あなたの情報にアクセスするためにMix It Upを承認するように求めます。</value>
@@ -4607,7 +4607,7 @@
     <value>Streamlabs OBS サービスを使用すると、Streamlabs OBS のインスタンスと直接対話して、シーンやソースに対する変更を実行できます。</value>
   </data>
   <data name="Streamloots" xml:space="preserve">
-    <value>ストリームルート</value>
+    <value>Streamloots</value>
   </data>
   <data name="StreamlootsAlertsOverlayURL" xml:space="preserve">
     <value>ストリームルートアラートオーバーレイ URL</value>
@@ -4635,13 +4635,13 @@
     <value>文字の高さ (ピクセル)</value>
   </data>
   <data name="Tiltify" xml:space="preserve">
-    <value>チルト化</value>
+    <value>Tiltify</value>
   </data>
   <data name="TiltifyInfo1" xml:space="preserve">
     <value>Tiltify サービス接続では、寄付を受け取ったときにアクションを実行できます。ログインすると、認証ウェブページが開き、Tiltifyにログインし、あなたの情報にアクセスするためにMix It Upを承認するように求める。Tiltifyを接続したら、寄付を検出するときに使用するキャンペーンを選択する必要があります。</value>
   </data>
   <data name="TipeeeStream" xml:space="preserve">
-    <value>ティピーストリーム</value>
+    <value>TipeeeStream</value>
   </data>
   <data name="TipeeeStreamInfo1" xml:space="preserve">
     <value>TipeeStream サービス接続では、寄付を受け取ったときにアクションを実行できます。ログインすると、認証ウェブページが開き、TipeeeStreamにログインし、あなたの情報にアクセスするためにMix It Upを承認するように求めます。</value>
@@ -4656,7 +4656,7 @@
     <value>表示する合計</value>
   </data>
   <data name="TreatStream" xml:space="preserve">
-    <value>トリートストリーム</value>
+    <value>TreatStream</value>
   </data>
   <data name="TreatStreamInfo1" xml:space="preserve">
     <value>TreatStream サービス接続を使用すると、処置を受けたときにアクションを実行できます。ログインすると、認証ウェブページが開き、TreatStreamにログインし、あなたの情報にアクセスするためにMix It Upを承認するように求めます。</value>

@@ -28,6 +28,9 @@ namespace MixItUp.Base.Model.Commands
         public Dictionary<string, string> SpecialIdentifiers { get; set; } = new Dictionary<string, string>();
 
         [DataMember]
+        public bool IgnoreRequirements { get; set; }
+
+        [DataMember]
         public UserV2ViewModel TargetUser { get; set; }
 
         [DataMember]

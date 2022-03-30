@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Runtime.Serialization;
@@ -24,7 +25,9 @@ namespace MixItUp.Base.Model.Actions
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             string amountText = await ReplaceStringWithSpecialModifiers(this.Amount, parameters);
-            if (double.TryParse(amountText, out double amount) && amount > 0.0)
+            double amount = MathHelper.ProcessMathEquation(amountText);
+
+            if (amount > 0.0)
             {
                 if (amount > 30)
                 {

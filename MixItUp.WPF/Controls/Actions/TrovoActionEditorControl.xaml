@@ -33,7 +33,7 @@
         </ComboBox>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowUsernameGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <TextBox Text="{Binding Username}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Username}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding Username}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserNameOptional}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowTextGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
