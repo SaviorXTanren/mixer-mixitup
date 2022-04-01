@@ -359,25 +359,25 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (this.ContainsSpecialIdentifier(QuoteSpecialIdentifierHeader) && ChannelSession.Settings.QuotesEnabled && ChannelSession.Settings.Quotes.Count > 0)
+            if (ChannelSession.Settings.QuotesEnabled && ChannelSession.Settings.Quotes.Count > 0)
             {
-                UserQuoteModel quote = ChannelSession.Settings.Quotes.PickRandom();
-                if (quote != null)
+                if (this.ContainsSpecialIdentifier(QuoteSpecialIdentifierHeader))
                 {
-                    this.ReplaceSpecialIdentifier(QuoteSpecialIdentifierHeader + "random", quote.ToString());
-                }
+                    this.ReplaceSpecialIdentifier(QuoteSpecialIdentifierHeader + "random", ChannelSession.Settings.Quotes.PickRandom().ToString());
+                    this.ReplaceSpecialIdentifier(QuoteSpecialIdentifierHeader + "latest", ChannelSession.Settings.Quotes.Last().ToString());
 
-                if (this.ContainsRegexSpecialIdentifier(QuoteSpecialIdentifierHeader + SpecialIdentifierNumberRegexPattern))
-                {
-                    await this.ReplaceNumberBasedRegexSpecialIdentifier(QuoteSpecialIdentifierHeader + SpecialIdentifierNumberRegexPattern, (index) =>
+                    if (this.ContainsRegexSpecialIdentifier(QuoteSpecialIdentifierHeader + SpecialIdentifierNumberRegexPattern))
                     {
-                        if (index > 0 && index <= ChannelSession.Settings.Quotes.Count)
+                        await this.ReplaceNumberBasedRegexSpecialIdentifier(QuoteSpecialIdentifierHeader + SpecialIdentifierNumberRegexPattern, (index) =>
                         {
-                            index--;
-                            return Task.FromResult(ChannelSession.Settings.Quotes[index].ToString());
-                        }
-                        return Task.FromResult<string>(null);
-                    });
+                            if (index > 0 && index <= ChannelSession.Settings.Quotes.Count)
+                            {
+                                index--;
+                                return Task.FromResult(ChannelSession.Settings.Quotes[index].ToString());
+                            }
+                            return Task.FromResult<string>(null);
+                        });
+                    }   
                 }
             }
 
