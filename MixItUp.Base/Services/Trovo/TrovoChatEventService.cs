@@ -16,7 +16,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Trovo.Base.Clients;
-using Trovo.Base.Models.Channels;
 using Trovo.Base.Models.Chat;
 using Trovo.Base.Models.Users;
 
@@ -531,6 +530,7 @@ namespace MixItUp.Base.Services.Trovo
                     {
                         CommandParametersModel parameters = new CommandParametersModel(user);
                         parameters.SpecialIdentifiers["subsgiftedamount"] = totalGifted.ToString();
+                        parameters.SpecialIdentifiers["isanonymous"] = false.ToString();
                         await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelMassSubscriptionsGifted, parameters);
                     }
                     await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertMassSubscriptionsGifted, user.DisplayName, totalGifted), ChannelSession.Settings.AlertMassGiftedSubColor));
