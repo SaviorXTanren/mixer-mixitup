@@ -436,7 +436,25 @@ namespace MixItUp.Base.Services.Trovo
 
                 user.GetPlatformData<TrovoUserPlatformV2Model>(StreamingPlatformTypeEnum.Trovo).SetUserProperties(message);
 
-                if (message.type == ChatMessageTypeEnum.FollowAlert)
+                if (message.type == ChatMessageTypeEnum.StreamOnOff && !string.IsNullOrEmpty(message.content))
+                {
+                    CommandParametersModel parameters = new CommandParametersModel();
+                    if (message.content.Equals("stream_on", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TrovoChannelStreamStart, parameters))
+                        {
+                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelStreamStart, parameters);
+                        }
+                    }
+                    else if (message.content.Equals("stream_off", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TrovoChannelStreamStop, parameters))
+                        {
+                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelStreamStop, parameters);
+                        }
+                    }
+                }
+                else if (message.type == ChatMessageTypeEnum.FollowAlert)
                 {
                     CommandParametersModel parameters = new CommandParametersModel(user);
                     if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TrovoChannelFollowed, parameters))
