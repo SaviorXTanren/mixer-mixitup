@@ -47,26 +47,34 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public string EnableDisableChatButtonText
         {
-            get { return this.enableDisableChatButtonText; }
-            set
+            get
             {
-                this.enableDisableChatButtonText = value;
-                this.NotifyPropertyChanged();
+                if (ServiceManager.Get<ChatService>().DisableChat)
+                {
+                    return MixItUp.Base.Resources.EnableChat;
+                }
+                else
+                {
+                    return MixItUp.Base.Resources.DisableChat;
+                }
             }
         }
-        private string enableDisableChatButtonText = MixItUp.Base.Resources.DisableChat;
         public ICommand EnableDisableChatCommand { get; private set; }
 
         public string PauseUnpauseCommandsButtonText
         {
-            get { return this.pauseUnpauseCommandsButtonText; }
-            set
+            get
             {
-                this.pauseUnpauseCommandsButtonText = value;
-                this.NotifyPropertyChanged();
+                if (ServiceManager.Get<CommandService>().IsPaused)
+                {
+                    return MixItUp.Base.Resources.UnpauseCommands;
+                }
+                else
+                {
+                    return MixItUp.Base.Resources.PauseCommands;
+                }
             }
         }
-        private string pauseUnpauseCommandsButtonText = MixItUp.Base.Resources.PauseCommands;
         public ICommand PauseUnpauseCommandsCommand { get; private set; }
 
         public ChatMainControlViewModel(MainWindowViewModel windowViewModel)
@@ -88,14 +96,8 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
 
                 ServiceManager.Get<ChatService>().DisableChat = !ServiceManager.Get<ChatService>().DisableChat;
-                if (ServiceManager.Get<ChatService>().DisableChat)
-                {
-                    this.EnableDisableChatButtonText = MixItUp.Base.Resources.EnableChat;
-                }
-                else
-                {
-                    this.EnableDisableChatButtonText = MixItUp.Base.Resources.DisableChat;
-                }
+
+                this.NotifyPropertyChanged("EnableDisableChatButtonText");
             });
 
             this.PauseUnpauseCommandsCommand = this.CreateCommand(async () =>
@@ -114,14 +116,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                     await ServiceManager.Get<CommandService>().Pause();
                 }
 
-                if (ServiceManager.Get<CommandService>().IsPaused)
-                {
-                    this.PauseUnpauseCommandsButtonText = MixItUp.Base.Resources.UnpauseCommands;
-                }
-                else
-                {
-                    this.PauseUnpauseCommandsButtonText = MixItUp.Base.Resources.PauseCommands;
-                }
+                this.NotifyPropertyChanged("PauseUnpauseCommandsButtonText");
             });
         }
 
@@ -143,6 +138,8 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.NotifyPropertyChanged("ShowViewerAndChatterNumbers");
             this.NotifyPropertyChanged("ShowChatUserList");
+            this.NotifyPropertyChanged("EnableDisableChatButtonText");
+            this.NotifyPropertyChanged("PauseUnpauseCommandsButtonText");
         }
 
         private void Messages_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
