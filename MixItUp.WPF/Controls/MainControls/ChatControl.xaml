@@ -42,9 +42,11 @@
                     <Grid Height="20" Grid.Column="0" HorizontalAlignment="Center" Margin="5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="40" />
+                            <ColumnDefinition Width="30" />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="40" />
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="30" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
@@ -52,7 +54,9 @@
 
                         <Button Command="{Binding ClearChatCommand}" Grid.Column="2" MinWidth="100" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="{x:Static resx:Resources.ClearChat}" />
 
-                        <Button Command="{Binding EnableDisableChatCommand}" Content="{Binding EnableDisableButtonText}" Grid.Column="4" MinWidth="115" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" />
+                        <Button Command="{Binding EnableDisableChatCommand}" Content="{Binding EnableDisableChatButtonText}" Grid.Column="4" MinWidth="115" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" />
+
+                        <Button Command="{Binding PauseUnpauseCommandsCommand}" Content="{Binding PauseUnpauseCommandsButtonText}" Grid.Column="6" MinWidth="165" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" />
 
                     </Grid>
 

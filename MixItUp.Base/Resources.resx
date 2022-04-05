@@ -7636,4 +7636,13 @@ via Twitch, it's a "your mileage may very" situation.</value>
   <data name="VideoFileFormatFilter" xml:space="preserve">
     <value>Video Files|*.mp4;*.webm|All files (*.*)|*.*</value>
   </data>
+  <data name="PauseCommands" xml:space="preserve">
+    <value>Pause Commands</value>
+  </data>
+  <data name="UnpauseCommands" xml:space="preserve">
+    <value>Unpause Commands</value>
+  </data>
+  <data name="PauseCommandsConfirmation" xml:space="preserve">
+    <value>This will pause all currently pending commands. Are you sure?</value>
+  </data>
 </root>

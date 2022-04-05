@@ -43,19 +43,31 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private int chattersCount;
 
-        public string EnableDisableButtonText
+        public ICommand ClearChatCommand { get; private set; }
+
+        public string EnableDisableChatButtonText
         {
-            get { return this.enableDisableButtonText; }
+            get { return this.enableDisableChatButtonText; }
             set
             {
-                this.enableDisableButtonText = value;
+                this.enableDisableChatButtonText = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private string enableDisableButtonText = MixItUp.Base.Resources.DisableChat;
-
-        public ICommand ClearChatCommand { get; private set; }
+        private string enableDisableChatButtonText = MixItUp.Base.Resources.DisableChat;
         public ICommand EnableDisableChatCommand { get; private set; }
+
+        public string PauseUnpauseCommandsButtonText
+        {
+            get { return this.pauseUnpauseCommandsButtonText; }
+            set
+            {
+                this.pauseUnpauseCommandsButtonText = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string pauseUnpauseCommandsButtonText = MixItUp.Base.Resources.PauseCommands;
+        public ICommand PauseUnpauseCommandsCommand { get; private set; }
 
         public ChatMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
@@ -78,11 +90,37 @@ namespace MixItUp.Base.ViewModel.MainControls
                 ServiceManager.Get<ChatService>().DisableChat = !ServiceManager.Get<ChatService>().DisableChat;
                 if (ServiceManager.Get<ChatService>().DisableChat)
                 {
-                    this.EnableDisableButtonText = MixItUp.Base.Resources.EnableChat;
+                    this.EnableDisableChatButtonText = MixItUp.Base.Resources.EnableChat;
                 }
                 else
                 {
-                    this.EnableDisableButtonText = MixItUp.Base.Resources.DisableChat;
+                    this.EnableDisableChatButtonText = MixItUp.Base.Resources.DisableChat;
+                }
+            });
+
+            this.PauseUnpauseCommandsCommand = this.CreateCommand(async () =>
+            {
+                if (!ServiceManager.Get<CommandService>().IsPaused && !await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.PauseCommandsConfirmation))
+                {
+                    return;
+                }
+
+                if (ServiceManager.Get<CommandService>().IsPaused)
+                {
+                    await ServiceManager.Get<CommandService>().Unpause();
+                }
+                else
+                {
+                    await ServiceManager.Get<CommandService>().Pause();
+                }
+
+                if (ServiceManager.Get<CommandService>().IsPaused)
+                {
+                    this.PauseUnpauseCommandsButtonText = MixItUp.Base.Resources.UnpauseCommands;
+                }
+                else
+                {
+                    this.PauseUnpauseCommandsButtonText = MixItUp.Base.Resources.PauseCommands;
                 }
             });
         }

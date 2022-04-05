@@ -13109,6 +13109,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pause Commands.
+        /// </summary>
+        public static string PauseCommands {
+            get {
+                return ResourceManager.GetString("PauseCommands", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This will pause all currently pending commands. Are you sure?.
+        /// </summary>
+        public static string PauseCommandsConfirmation {
+            get {
+                return ResourceManager.GetString("PauseCommandsConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Payout.
         /// </summary>
         public static string Payout {
@@ -19998,6 +20016,15 @@ namespace MixItUp.Base {
         public static string UnpauseAllCommands {
             get {
                 return ResourceManager.GetString("UnpauseAllCommands", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unpause Commands.
+        /// </summary>
+        public static string UnpauseCommands {
+            get {
+                return ResourceManager.GetString("UnpauseCommands", resourceCulture);
             }
         }
         
