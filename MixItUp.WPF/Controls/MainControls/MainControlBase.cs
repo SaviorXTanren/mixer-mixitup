@@ -51,15 +51,6 @@ namespace MixItUp.WPF.Controls.MainControls
                 return;
             }
 
-            if ((bool)e.NewValue)
-            {
-                string typeName = this.GetType().FullName;
-                if (!IgnoredPages.Contains(typeName) && ServiceManager.Get<ITelemetryService>() != null)
-                {
-                    ServiceManager.Get<ITelemetryService>().TrackPageView(typeName);
-                }
-            }
-
             if (this.Window != null)
             {
                 await this.Window.RunAsyncOperation(async () =>

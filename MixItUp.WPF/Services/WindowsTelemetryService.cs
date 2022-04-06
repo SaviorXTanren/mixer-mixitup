@@ -59,11 +59,6 @@ namespace MixItUp.WPF.Services
             this.TrySendEvent(() => this.telemetryClient.TrackException(ex));
         }
 
-        public void TrackPageView(string pageName)
-        {
-            this.TrySendEvent(() => this.telemetryClient.TrackPageView(pageName));
-        }
-
         public void TrackLogin(string userID, string userType)
         {
             if (string.IsNullOrEmpty(userType))
@@ -91,32 +86,6 @@ namespace MixItUp.WPF.Services
         public void TrackService(string type)
         {
             this.TrySendEvent(() => this.telemetryClient.TrackEvent("Service", new Dictionary<string, string> { { "Type", type } }));
-        }
-
-        public void TrackChannelMetrics(string type, long viewerCount, long chatterCount, string game, long viewCount)
-        {
-            if (string.IsNullOrEmpty(type))
-            {
-                type = "Normal";
-            }
-            this.TrySendEvent(() => this.telemetryClient.TrackEvent("Channel", new Dictionary<string, string> { { "Type", type }, { "Viewers", viewerCount.ToString() },
-                { "Chatters", chatterCount.ToString() }, { "Game", game }, { "Views", viewCount.ToString() } }));
-        }
-
-        public void TrackRemoteAuthentication(Guid clientID)
-        {
-            this.telemetryClient.TrackEvent("RemoteAuthentication", new Dictionary<string, string> { { "ClientID", clientID.ToString() } });
-        }
-
-        public void TrackRemoteSendProfiles(Guid clientID)
-        {
-            this.telemetryClient.TrackEvent("RemoteSendProfiles", new Dictionary<string, string> { { "ClientID", clientID.ToString() } });
-        }
-
-        public void TrackRemoteSendBoard(Guid clientID, Guid profileID, Guid boardID)
-        {
-            this.telemetryClient.TrackEvent("RemoteSendBoard", new Dictionary<string, string> { { "ClientID", clientID.ToString() }, { "ProfileID", profileID.ToString() },
-                { "BoardID", boardID.ToString() } });
         }
 
         public void SetUserID(string id)
