@@ -96,9 +96,11 @@ namespace MixItUp.Base.Services.YouTube
 
         public async Task<LiveBroadcast> GetMyActiveBroadcast() { return await AsyncRunner.RunAsync(this.Connection.LiveBroadcasts.GetMyActiveBroadcast()); }
 
-        public async Task<LiveBroadcast> UpdateBroadcast(LiveBroadcast broadcast) { return await AsyncRunner.RunAsync(this.Connection.LiveBroadcasts.UpdateBroadcast(broadcast)); }
-
         public async Task<LiveCuepoint> StartAdBreak(LiveBroadcast broadcast, long duration) { return await AsyncRunner.RunAsync(this.Connection.LiveBroadcasts.StartAdBreak(broadcast, duration)); }
+
+        public async Task<Video> GetVideoByID(string id) { return await AsyncRunner.RunAsync(this.Connection.Videos.GetVideoByID(id)); }
+
+        public async Task<Video> UpdateVideo(Video video, string title = null, string description = null, string categoryId = null) { return await AsyncRunner.RunAsync(this.Connection.Videos.UpdateVideo(video, title, description, categoryId)); }
 
         public async Task<IEnumerable<Member>> GetChannelMemberships(int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.GetChannelMemberships(maxResults)); }
 

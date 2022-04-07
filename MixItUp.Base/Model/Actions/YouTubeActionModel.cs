@@ -62,7 +62,7 @@ namespace MixItUp.Base.Model.Actions
             {
                 if (this.ActionType == YouTubeActionType.SetTitleDescription)
                 {
-                    //await ServiceManager.Get<YouTubeSessionService>().UserConnection.UpdateBroadcast(ServiceManager.Get<YouTubeChatService>()?.Broadcast);
+                    await ServiceManager.Get<YouTubeSessionService>().UserConnection.UpdateVideo(ServiceManager.Get<YouTubeSessionService>()?.Video, title: this.Title, description: this.Description);
                 }
                 else if (this.ActionType == YouTubeActionType.RunAdBreak)
                 {
