@@ -499,11 +499,11 @@ namespace MixItUp.Base.Services
                             this.userEntranceCommands.Add(message.User.ID);
                             if (ChannelSession.Settings.GetCommand(message.User.EntranceCommandID) != null)
                             {
-                                await ServiceManager.Get<CommandService>().Queue(message.User.EntranceCommandID, new CommandParametersModel(message.User, message.Platform, message.ToArguments()));
+                                await ServiceManager.Get<CommandService>().Queue(message.User.EntranceCommandID, new CommandParametersModel(message));
                             }
                             else
                             {
-                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserEntranceCommand, new CommandParametersModel(message.User, message.Platform, message.ToArguments()));
+                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserEntranceCommand, new CommandParametersModel(message));
                             }
                         }
 
@@ -700,7 +700,6 @@ namespace MixItUp.Base.Services
 
             CommandParametersModel parameters = new CommandParametersModel(message);
             parameters.Arguments = new List<string>(arguments);   // Overwrite arguments to account for variable argument length for commands
-            parameters.SpecialIdentifiers["message"] = message.PlainTextMessage;
             await ServiceManager.Get<CommandService>().Queue(command, parameters);
 
             SettingsRequirementModel settings = command.Requirements.Settings;

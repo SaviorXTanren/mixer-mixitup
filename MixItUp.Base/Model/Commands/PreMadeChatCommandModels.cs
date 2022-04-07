@@ -96,7 +96,7 @@ namespace MixItUp.Base.Model.Commands
             List<string> commandTriggers = new List<string>();
             foreach (ChatCommandModel command in ServiceManager.Get<CommandService>().AllEnabledChatAccessibleCommands)
             {
-                if (command.IsEnabled)
+                if (command.IsEnabled && !command.Wildcards)
                 {
                     RoleRequirementModel roleRequirement = command.Requirements.Role;
                     if (roleRequirement != null)
@@ -106,11 +106,11 @@ namespace MixItUp.Base.Model.Commands
                         {
                             if (command.IncludeExclamation)
                             {
-                                commandTriggers.AddRange(command.Triggers.Select(c => $"!{c}"));
+                                commandTriggers.AddRange(command.Triggers.First().Select(c => $"!{c}"));
                             }
                             else
                             {
-                                commandTriggers.AddRange(command.Triggers);
+                                commandTriggers.Add(command.Triggers.First());
                             }
                         }
                     }

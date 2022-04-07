@@ -16,7 +16,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Trovo.Base.Clients;
-using Trovo.Base.Models.Channels;
 using Trovo.Base.Models.Chat;
 using Trovo.Base.Models.Users;
 
@@ -437,7 +436,25 @@ namespace MixItUp.Base.Services.Trovo
 
                 user.GetPlatformData<TrovoUserPlatformV2Model>(StreamingPlatformTypeEnum.Trovo).SetUserProperties(message);
 
-                if (message.type == ChatMessageTypeEnum.FollowAlert)
+                if (message.type == ChatMessageTypeEnum.StreamOnOff && !string.IsNullOrEmpty(message.content))
+                {
+                    CommandParametersModel parameters = new CommandParametersModel();
+                    if (message.content.Equals("stream_on", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TrovoChannelStreamStart, parameters))
+                        {
+                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelStreamStart, parameters);
+                        }
+                    }
+                    else if (message.content.Equals("stream_off", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TrovoChannelStreamStop, parameters))
+                        {
+                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelStreamStop, parameters);
+                        }
+                    }
+                }
+                else if (message.type == ChatMessageTypeEnum.FollowAlert)
                 {
                     CommandParametersModel parameters = new CommandParametersModel(user);
                     if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TrovoChannelFollowed, parameters))
@@ -531,6 +548,7 @@ namespace MixItUp.Base.Services.Trovo
                     {
                         CommandParametersModel parameters = new CommandParametersModel(user);
                         parameters.SpecialIdentifiers["subsgiftedamount"] = totalGifted.ToString();
+                        parameters.SpecialIdentifiers["isanonymous"] = false.ToString();
                         await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelMassSubscriptionsGifted, parameters);
                     }
                     await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertMassSubscriptionsGifted, user.DisplayName, totalGifted), ChannelSession.Settings.AlertMassGiftedSubColor));

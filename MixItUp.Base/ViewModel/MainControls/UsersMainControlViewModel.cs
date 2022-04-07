@@ -3,9 +3,6 @@ using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Glimesh;
-using MixItUp.Base.Services.Trovo;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
@@ -26,6 +23,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         WatchTime,
         Consumables,
         CustomSettings,
+        LastSeen,
     }
 
     public class ConsumableSearchFilterViewModel : UIViewModelBase
@@ -117,6 +115,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 this.NotifyPropertyChanged("IsWatchTimeSearchFilterType");
                 this.NotifyPropertyChanged("IsConsumablesSearchFilterType");
                 this.NotifyPropertyChanged("IsCustomSettingsSearchFilterType");
+                this.NotifyPropertyChanged("IsLastSeenSearchFilterType");
             }
         }
         private UserSearchFilterTypeEnum selectedSearchFilterType = UserSearchFilterTypeEnum.None;
@@ -228,6 +227,32 @@ namespace MixItUp.Base.ViewModel.MainControls
         private int consumablesAmountSearchFilter = 0;
 
         public bool IsCustomSettingsSearchFilterType { get { return this.SelectedSearchFilterType == UserSearchFilterTypeEnum.CustomSettings; } }
+
+        public bool IsLastSeenSearchFilterType { get { return this.SelectedSearchFilterType == UserSearchFilterTypeEnum.LastSeen; } }
+
+        public IEnumerable<string> LastSeenComparisonSearchFilters { get { return new List<string>() { GreaterThanAmountFilter, EqualToAmountFilter, LessThanAmountFilter }; } }
+
+        public string SelectedLastSeenComparisonSearchFilter
+        {
+            get { return this.selectedLastSeenComparisonSearchFilter; }
+            set
+            {
+                this.selectedLastSeenComparisonSearchFilter = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string selectedLastSeenComparisonSearchFilter = GreaterThanAmountFilter;
+
+        public int LastSeenAmountSearchFilter
+        {
+            get { return this.lastSeenAmountSearchFilter; }
+            set
+            {
+                this.lastSeenAmountSearchFilter = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int lastSeenAmountSearchFilter = 0;
 
         public ThreadSafeObservableCollection<UserV2ViewModel> Users { get; private set; } = new ThreadSafeObservableCollection<UserV2ViewModel>();
 
@@ -433,6 +458,23 @@ namespace MixItUp.Base.ViewModel.MainControls
                             else if (this.IsCustomSettingsSearchFilterType)
                             {
                                 data = data.Where(u => u.IsSpecialtyExcluded || u.CustomTitle != null || u.CustomCommandIDs.Count > 0 || u.EntranceCommandID != Guid.Empty || !string.IsNullOrEmpty(u.Notes));
+                            }
+                            else if (this.IsLastSeenSearchFilterType && this.LastSeenAmountSearchFilter > 0)
+                            {
+                                DateTime lastSeenDate = DateTimeOffset.Now.Date.Subtract(TimeSpan.FromDays(this.LastSeenAmountSearchFilter));
+                                if (this.SelectedLastSeenComparisonSearchFilter.Equals(GreaterThanAmountFilter))
+                                {
+                                    data = data.Where(u => u.LastActivity.Date < lastSeenDate);
+                                }
+                                else if (this.SelectedLastSeenComparisonSearchFilter.Equals(LessThanAmountFilter))
+                                {
+                                    data = data.Where(u => u.LastActivity.Date > lastSeenDate);
+                                }
+                                else if (this.SelectedLastSeenComparisonSearchFilter.Equals(EqualToAmountFilter))
+                                {
+                                    data = data.Where(u => u.LastActivity.Date == lastSeenDate);
+
+                                }
                             }
                         }
 

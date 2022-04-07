@@ -132,7 +132,7 @@ namespace MixItUp.Base.Services.External
 
         public override string Name { get { return MixItUp.Base.Resources.ExtraLife; } }
 
-        public override bool IsConnected { get { return ChannelSession.Settings.ExtraLifeTeamID > 0 && ChannelSession.Settings.ExtraLifeParticipantID > 0; } }
+        public override bool IsConnected { get { return ChannelSession.Settings.ExtraLifeParticipantID > 0; } }
 
         public override async Task<Result> Connect()
         {
@@ -150,9 +150,6 @@ namespace MixItUp.Base.Services.External
 
         public override Task Disconnect()
         {
-            ChannelSession.Settings.ExtraLifeTeamID = 0;
-            ChannelSession.Settings.ExtraLifeParticipantID = 0;
-
             this.cancellationTokenSource.Cancel();
 
             return Task.CompletedTask;
@@ -222,17 +219,24 @@ namespace MixItUp.Base.Services.External
         {
             this.cancellationTokenSource = new CancellationTokenSource();
 
-            this.team = await this.GetTeam();
+            if (ChannelSession.Settings.ExtraLifeTeamID > 0)
+            {
+                this.team = await this.GetTeam();
+            }
+
             this.participant = await this.GetParticipant();
 
-            if (this.team != null && this.participant != null)
+            if (this.participant != null)
             {
-                IEnumerable<ExtraLifeDonation> donations = (ChannelSession.Settings.ExtraLifeIncludeTeamDonations) ? await this.GetTeamDonations() : await this.GetParticipantDonations();
-                foreach (ExtraLifeDonation donation in donations)
+                IEnumerable<ExtraLifeDonation> donations = await this.GetDonations();
+                if (donations != null)
                 {
-                    if (!string.IsNullOrEmpty(donation.donationID))
+                    foreach (ExtraLifeDonation donation in donations)
                     {
-                        donationsReceived[donation.donationID] = donation;
+                        if (!string.IsNullOrEmpty(donation.donationID))
+                        {
+                            donationsReceived[donation.donationID] = donation;
+                        }
                     }
                 }
 
@@ -253,15 +257,30 @@ namespace MixItUp.Base.Services.External
 
         private async Task BackgroundDonationCheck(CancellationToken token)
         {
-            IEnumerable<ExtraLifeDonation> donations = (ChannelSession.Settings.ExtraLifeIncludeTeamDonations) ? await this.GetTeamDonations() : await this.GetParticipantDonations();
-            foreach (ExtraLifeDonation elDonation in donations)
+            IEnumerable<ExtraLifeDonation> donations = await this.GetDonations();
+            if (donations != null)
             {
-                if (!string.IsNullOrEmpty(elDonation.donationID) && !donationsReceived.ContainsKey(elDonation.donationID) && elDonation.CreatedDate > this.startTime)
+                foreach (ExtraLifeDonation elDonation in donations)
                 {
-                    donationsReceived[elDonation.donationID] = elDonation;
-                    UserDonationModel donation = elDonation.ToGenericDonation();
-                    await EventService.ProcessDonationEvent(EventTypeEnum.ExtraLifeDonation, donation);
+                    if (!string.IsNullOrEmpty(elDonation.donationID) && !donationsReceived.ContainsKey(elDonation.donationID) && elDonation.CreatedDate > this.startTime)
+                    {
+                        donationsReceived[elDonation.donationID] = elDonation;
+                        UserDonationModel donation = elDonation.ToGenericDonation();
+                        await EventService.ProcessDonationEvent(EventTypeEnum.ExtraLifeDonation, donation);
+                    }
                 }
+            }
+        }
+
+        private async Task<IEnumerable<ExtraLifeDonation>> GetDonations()
+        {
+            if (ChannelSession.Settings.ExtraLifeIncludeTeamDonations && this.team != null)
+            {
+                return await this.GetTeamDonations();
+            }
+            else
+            {
+                return await this.GetParticipantDonations();
             }
         }
     }

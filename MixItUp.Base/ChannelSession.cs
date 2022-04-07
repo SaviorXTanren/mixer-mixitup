@@ -524,8 +524,6 @@ namespace MixItUp.Base
                             {
                                 type = "Affiliate";
                             }
-                            ServiceManager.Get<ITelemetryService>().TrackChannelMetrics(type, ServiceManager.Get<TwitchSessionService>().Stream.viewer_count, ServiceManager.Get<UserService>().ActiveUserCount,
-                                ServiceManager.Get<TwitchSessionService>().Channel.game_name, ServiceManager.Get<TwitchSessionService>().User.view_count);
                         }
                         catch (Exception ex)
                         {

@@ -153,8 +153,15 @@ namespace MixItUp.WPF
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-            WindowsIdentity id = WindowsIdentity.GetCurrent();
-            ChannelSession.IsElevated = id.Owner != id.User;
+            try
+            {
+                WindowsIdentity id = WindowsIdentity.GetCurrent();
+                ChannelSession.IsElevated = id.Owner != id.User;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(LogLevel.Error, "Failed to get Windows Identity for elevation status");
+            }
 
             Logger.ForceLog(LogLevel.Information, "Application Version: " + ServiceManager.Get<IFileService>().GetApplicationVersion());
             if (ChannelSession.IsDebug() || ChannelSession.AppSettings.DiagnosticLogging)
