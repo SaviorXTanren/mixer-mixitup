@@ -2,7 +2,6 @@
 using MixItUp.Base.Model;
 using MixItUp.Base.Services;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -11,10 +10,6 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V2
     [RoutePrefix("api/v2/chat")]
     public class ChatControllerV2 : ApiController
     {
-        // Send chat message?
-        // Get users in chat?
-        // Clear chat
-
         [Route("message")]
         [HttpPost]
         public async Task<IHttpActionResult> SendChatMessage([FromBody] SendChatMessage chatMessage)
@@ -35,25 +30,12 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V2
             return Ok();
         }
 
-        [Route("users")]
-        [HttpGet]
-        public async Task<IHttpActionResult> GetAllUsers(int skip = 0, int pageSize = 25)
+        [Route("clear")]
+        [HttpPost]
+        public async Task<IHttpActionResult> ClearChat()
         {
-            await ServiceManager.Get<UserService>().LoadAllUserData();
-
-            var users = ServiceManager.Get<UserService>().GetActiveUsers()
-                .OrderBy(u => u.ID)
-                .Skip(skip)
-                .Take(pageSize);
-
-            var result = new GetListOfUsersResponse();
-            result.TotalCount = ServiceManager.Get<UserService>().GetActiveUserCount();
-            foreach (var user in users)
-            {
-                result.Users.Add(UserMapper.ToUser(user.Model));
-            }
-
-            return Ok(result);
+            await ServiceManager.Get<ChatService>().ClearMessages(StreamingPlatformTypeEnum.All);
+            return Ok();
         }
     }
 }

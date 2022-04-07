@@ -16,10 +16,6 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V2
     [RoutePrefix("api/v2/users")]
     public class UsersControllerV2 : ApiController
     {
-        // Update user
-        // Create user
-        // Link user
-
         [Route("{userId:guid}")]
         [HttpGet]
         public async Task<IHttpActionResult> GetUserById(Guid userId)
@@ -32,43 +28,6 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V2
             }
 
             return Ok(new GetSingleUserResponse { User = UserMapper.ToUser(user) });
-        }
-
-        [Route("{userId:guid}")]
-        [HttpDelete]
-        public async Task<IHttpActionResult> DeleteUserById(Guid userId)
-        {
-            await ServiceManager.Get<UserService>().LoadAllUserData();
-
-            if (!ChannelSession.Settings.Users.TryGetValue(userId, out var user) || user == null)
-            {
-                return NotFound();
-            }
-
-            ServiceManager.Get<UserService>().DeleteUserData(user.ID);
-
-            return Ok();
-        }
-
-        [Route("add")]
-        [HttpPost]
-        public async Task<IHttpActionResult> AddUser(NewUser newUser)
-        {
-            await ServiceManager.Get<UserService>().LoadAllUserData();
-
-            if (!Enum.TryParse<StreamingPlatformTypeEnum>(newUser.Platform, ignoreCase: true, out var platformEnum))
-            {
-                return BadRequest($"Unknown platform: {newUser.Platform}");
-            }
-
-            UserV2ViewModel user = await ServiceManager.Get<UserService>().CreateUser(platformEnum, newUser.Username);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(new GetSingleUserResponse { User = UserMapper.ToUser(user.Model) });
         }
 
         [Route("{platform}/{usernameOrID}")]
@@ -120,6 +79,64 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V2
             }
 
             return Ok(result);
+        }
+
+        [Route("active")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetAllActiveUsers(int skip = 0, int pageSize = 25)
+        {
+            await ServiceManager.Get<UserService>().LoadAllUserData();
+
+            var users = ServiceManager.Get<UserService>().GetActiveUsers()
+                .OrderBy(u => u.ID)
+                .Skip(skip)
+                .Take(pageSize);
+
+            var result = new GetListOfUsersResponse();
+            result.TotalCount = ServiceManager.Get<UserService>().GetActiveUserCount();
+            foreach (var user in users)
+            {
+                result.Users.Add(UserMapper.ToUser(user.Model));
+            }
+
+            return Ok(result);
+        }
+
+        [Route("add")]
+        [HttpPost]
+        public async Task<IHttpActionResult> AddUser(NewUser newUser)
+        {
+            await ServiceManager.Get<UserService>().LoadAllUserData();
+
+            if (!Enum.TryParse<StreamingPlatformTypeEnum>(newUser.Platform, ignoreCase: true, out var platformEnum))
+            {
+                return BadRequest($"Unknown platform: {newUser.Platform}");
+            }
+
+            UserV2ViewModel user = await ServiceManager.Get<UserService>().CreateUser(platformEnum, newUser.Username);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new GetSingleUserResponse { User = UserMapper.ToUser(user.Model) });
+        }
+
+        [Route("{userId:guid}")]
+        [HttpDelete]
+        public async Task<IHttpActionResult> DeleteUserById(Guid userId)
+        {
+            await ServiceManager.Get<UserService>().LoadAllUserData();
+
+            if (!ChannelSession.Settings.Users.TryGetValue(userId, out var user) || user == null)
+            {
+                return NotFound();
+            }
+
+            ServiceManager.Get<UserService>().DeleteUserData(user.ID);
+
+            return Ok();
         }
     }
 

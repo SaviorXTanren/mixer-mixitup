@@ -343,7 +343,17 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public void SetAmount(UserV2ViewModel user, InventoryItemModel item, int amount)
+        public void SetAmount(UserV2Model user, Guid itemID, int amount)
+        {
+            if (this.ItemExists(itemID))
+            {
+                this.SetAmount(user, this.GetItem(itemID), amount);
+            }
+        }
+
+        public void SetAmount(UserV2ViewModel user, InventoryItemModel item, int amount) { this.SetAmount(user.Model, item, amount); }
+
+        public void SetAmount(UserV2Model user, InventoryItemModel item, int amount)
         {
             if (!user.InventoryAmounts.ContainsKey(this.ID))
             {
@@ -365,7 +375,23 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
+        public void AddAmount(UserV2Model user, Guid itemID, int amount)
+        {
+            if (this.ItemExists(itemID))
+            {
+                this.AddAmount(user, this.GetItem(itemID), amount);
+            }
+        }
+
         public void AddAmount(UserV2ViewModel user, InventoryItemModel item, int amount)
+        {
+            if (!user.IsSpecialtyExcluded && amount > 0)
+            {
+                this.SetAmount(user, item, this.GetAmount(user, item) + amount);
+            }
+        }
+
+        public void AddAmount(UserV2Model user, InventoryItemModel item, int amount)
         {
             if (!user.IsSpecialtyExcluded && amount > 0)
             {
