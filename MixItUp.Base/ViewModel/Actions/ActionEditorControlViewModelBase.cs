@@ -140,6 +140,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     case ActionTypeEnum.VTubeStudio: actionPageName = "vtube-studio-action"; break;
                     case ActionTypeEnum.Wait: actionPageName = "wait-action"; break;
                     case ActionTypeEnum.WebRequest: actionPageName = "web-request-action"; break;
+                    case ActionTypeEnum.YouTube: actionPageName = "youtube-action"; break;
                 }
 
                 ProcessHelper.LaunchLink("https://wiki.mixitupapp.com/actions/" + actionPageName);

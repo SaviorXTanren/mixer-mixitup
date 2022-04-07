@@ -16063,6 +16063,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set Title/Description.
+        /// </summary>
+        public static string SetTitleDescription {
+            get {
+                return ResourceManager.GetString("SetTitleDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set User Title.
         /// </summary>
         public static string SetUserTitle {
@@ -21900,6 +21909,24 @@ namespace MixItUp.Base {
         public static string YouTube {
             get {
                 return ResourceManager.GetString("YouTube", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to YouTube Action: A valid amount must be specified.
+        /// </summary>
+        public static string YouTubeActionMissingAmount {
+            get {
+                return ResourceManager.GetString("YouTubeActionMissingAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to YouTube Action: A valid title or description must be specified.
+        /// </summary>
+        public static string YouTubeActionMissingTitleDescription {
+            get {
+                return ResourceManager.GetString("YouTubeActionMissingTitleDescription", resourceCulture);
             }
         }
         

@@ -61,6 +61,7 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.VTubeStudio: this.ActionControl = new VTubeStudioActionEditorControl(); break;
                     case ActionTypeEnum.Wait: this.ActionControl = new WaitActionEditorControl(); break;
                     case ActionTypeEnum.WebRequest: this.ActionControl = new WebRequestActionEditorControl(); break;
+                    case ActionTypeEnum.YouTube: this.ActionControl = new YouTubeActionEditorControl(); break;
                 }
 
                 if (this.ActionControl != null)

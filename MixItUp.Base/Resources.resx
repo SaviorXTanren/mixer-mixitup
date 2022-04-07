@@ -7653,4 +7653,13 @@ via Twitch, it's a "your mileage may very" situation.</value>
   <data name="ExtraLifeInvalidParticipantId" xml:space="preserve">
     <value>Please enter a valid Extra Life participant ID.</value>
   </data>
+  <data name="SetTitleDescription" xml:space="preserve">
+    <value>Set Title/Description</value>
+  </data>
+  <data name="YouTubeActionMissingAmount" xml:space="preserve">
+    <value>YouTube Action: A valid amount must be specified</value>
+  </data>
+  <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
+    <value>YouTube Action: A valid title or description must be specified</value>
+  </data>
 </root>

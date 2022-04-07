@@ -75,6 +75,7 @@ namespace MixItUp.Base.ViewModel.Actions
                         case ActionTypeEnum.VTubeStudio: editorViewModel = new VTubeStudioActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Wait: editorViewModel = new WaitActionEditorControlViewModel(); break;
                         case ActionTypeEnum.WebRequest: editorViewModel = new WebRequestActionEditorControlViewModel(); break;
+                        case ActionTypeEnum.YouTube: editorViewModel = new YouTubeActionEditorControlViewModel(); break;
                     }
 
                     if (editorViewModel != null)
@@ -155,6 +156,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 case ActionTypeEnum.VTubeStudio: editorViewModel = new VTubeStudioActionEditorControlViewModel((VTubeStudioActionModel)action); break;
                 case ActionTypeEnum.Wait: editorViewModel = new WaitActionEditorControlViewModel((WaitActionModel)action); break;
                 case ActionTypeEnum.WebRequest: editorViewModel = new WebRequestActionEditorControlViewModel((WebRequestActionModel)action); break;
+                case ActionTypeEnum.YouTube: editorViewModel = new YouTubeActionEditorControlViewModel((YouTubeActionModel)action); break;
             }
 
             if (editorViewModel != null)
