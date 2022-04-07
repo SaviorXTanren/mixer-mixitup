@@ -5,6 +5,54 @@
     <body>
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
+        <h2 style="color: #2e6c80;">v1.0.0.0:</h2>
+        <ul>
+            <li>Trovo:</li>
+            <ul>
+                <li>Adding support for Trovo streaming platform</li>
+                <li>Adding Trovo Spells page to allow custom commands to trigger for specific spells</li>
+                <li>Adding Trovo action for adding/removing roles, setting channel mods, and hosting, and other features</li>
+                <li>Adding Trovo custom role option to User Role Usage Requirement</li>
+                <li>Adding $usertrovocustomroles Special Identifier</li>
+            </ul>
+            <li>Glimesh:</li>
+            <ul>
+                <li>Adding support for Glimesh streaming platform</li>
+            </ul>
+            <li>Twitch</li>
+            <ul>
+                <li>Adding Set Title, Set Game, and Set Custom Tags options to Twitch action</li>
+                <li>Adding additional options to Twitch action for various chat moderation features</li>
+                <li>Adding $twitchsubcount Special Identifier</li>
+                <li>Adding $streamtwitchtags Special Identifier</li>
+                <li>User subscription dates are no longer available due to breaking changes with Twitch's API. Dates will be tracked with a best-effort basis based on historical tracking in Mix It Up and when subscription events occur while Mix It Up is running.</li>
+            </ul>
+            <li>Users:</li>
+            <ul>
+                <li>Adding "Add User" option to Users page to manually add individual user data to Mix It Up directly from a streaming platform</li>
+                <li>Basic account linking is now supported for user data between different platforms by using "!linkaccount" in chat</li>
+                <li>User data importing now supports handling data from different platforms. Imported data is added to users that Mix It Up currently knows about or is saved for later importing when that user is detected by Mix It Up for the first time.</li>
+            </ul>
+            <li>Special Identifiers:</li>
+            <ul>
+                <li>Adding $useraccountdays, $userfollowdays, and $usersubdays Special Identifiers</li>
+                <li>Adding $userstreamislive Special Identifier</li>
+            </ul>
+            <li>Removed Features:</li>
+            <ul>
+                <li>The Channel page has been removed due to low-usage, breaking changes in Twitch API, and varying functionality differences between different streaming platforms. This page will be brought back at a later date once it has been determined what features are worth bringing forward.</li>
+                <li>Offline user viewing time and offline currency/rank acquire rates have been removed</li>
+            </ul>
+            <li>Adding new Generic event commands that are triggered regardless of what platform you are streaming on so long as the related event command is supported on that platform (IE, it appears under that platforms list of event commands)</li>
+            <li>Adding new Wiki site and updating all links within the app to point to new site</li>
+            <li>Adding the ability to pause and unpause all queued commands via the Command History page and the Command Action</li>
+            <li>Large-scale improvements to automated input via the Input Action and for Hot Key detection support</li>
+            <li>Adding support for importing quotes from text or spreadsheet file</li>
+            <li>Adding PolyPop service connectivity and PolyPop action</li>
+            <li>Adding Enable Chat and Disable Chat options to Moderation Action</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
         <h2 style="color: #2e6c80;">v0.5.11.12:</h2>
         <ul>
             <li>Fixing bug with selected Custom Overlay Endpoints being reset to the Default Overlay Endpoint when launching the app.</li>
