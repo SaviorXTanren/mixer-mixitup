@@ -4357,7 +4357,9 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
     <value>Extra Life service connectivity allows you to trigger events from when you or your team receive a donation.</value>
   </data>
   <data name="ExtraLifeInfo2" xml:space="preserve">
-    <value>First, visit your team's page on the Extra Life website and near the end of the web URL, it will say "teamID=_____". Type that number into the first box, click search, select your name from the list, then click Log In button.</value>
+    <value>If you are a member of a team, visit your team page and near the end of the web URL, it will say "teamID=_____". Type that number into the Team ID box, click search, select your name from the list, then click Log In button.
+
+If you are an individual, visit your individual page and near the end of the web URL, it will say "participantID=_______". Type that number into the Participant ID box and then click Log In button.</value>
   </data>
   <data name="ExtraLifeInvalidParticipant" xml:space="preserve">
     <value>Please select a valid Extra Life participant.</value>
@@ -7644,5 +7646,11 @@ via Twitch, it's a "your mileage may very" situation.</value>
   </data>
   <data name="PauseCommandsConfirmation" xml:space="preserve">
     <value>This will pause all currently pending commands. Are you sure?</value>
+  </data>
+  <data name="ParticipantID" xml:space="preserve">
+    <value>Participant ID</value>
+  </data>
+  <data name="ExtraLifeInvalidParticipantId" xml:space="preserve">
+    <value>Please enter a valid Extra Life participant ID.</value>
   </data>
 </root>

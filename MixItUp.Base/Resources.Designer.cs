@@ -5309,7 +5309,9 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to First, visit your team&apos;s page on the Extra Life website and near the end of the web URL, it will say &quot;teamID=_____&quot;. Type that number into the first box, click search, select your name from the list, then click Log In button..
+        ///   Looks up a localized string similar to If you are a member of a team, visit your team page and near the end of the web URL, it will say &quot;teamID=_____&quot;. Type that number into the Team ID box, click search, select your name from the list, then click Log In button.
+        ///
+        ///If you are an individual, visit your individual page and near the end of the web URL, it will say &quot;participantID=_______&quot;. Type that number into the Participant ID box and then click Log In button..
         /// </summary>
         public static string ExtraLifeInfo2 {
             get {
@@ -5323,6 +5325,15 @@ namespace MixItUp.Base {
         public static string ExtraLifeInvalidParticipant {
             get {
                 return ResourceManager.GetString("ExtraLifeInvalidParticipant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter a valid Extra Life participant ID..
+        /// </summary>
+        public static string ExtraLifeInvalidParticipantId {
+            get {
+                return ResourceManager.GetString("ExtraLifeInvalidParticipantId", resourceCulture);
             }
         }
         
@@ -12997,6 +13008,15 @@ namespace MixItUp.Base {
         public static string PageUp {
             get {
                 return ResourceManager.GetString("PageUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Participant ID.
+        /// </summary>
+        public static string ParticipantID {
+            get {
+                return ResourceManager.GetString("ParticipantID", resourceCulture);
             }
         }
         
