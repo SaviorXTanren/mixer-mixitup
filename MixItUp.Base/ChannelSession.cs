@@ -510,26 +510,6 @@ namespace MixItUp.Base
                 {
                     await ChannelSession.SaveSettings();
                     sessionBackgroundTimer = 0;
-
-                    if (ServiceManager.Get<TwitchSessionService>().IsConnected && ServiceManager.Get<TwitchSessionService>().IsLive)
-                    {
-                        try
-                        {
-                            string type = null;
-                            if (ServiceManager.Get<TwitchSessionService>().User.IsPartner())
-                            {
-                                type = "Partner";
-                            }
-                            else if (ServiceManager.Get<TwitchSessionService>().User.IsAffiliate())
-                            {
-                                type = "Affiliate";
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Log(ex);
-                        }
-                    }
                 }
             }
         }
