@@ -446,7 +446,6 @@ namespace MixItUp.Base.Util
                 if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<TwitchSessionService>().Stream?.viewer_count.ToString());
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewscount", ServiceManager.Get<TwitchSessionService>().User?.view_count.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<TwitchSessionService>().Channel?.title);
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gameimage", ServiceManager.Get<TwitchSessionService>().Stream?.thumbnail_url);
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceManager.Get<TwitchSessionService>().Channel?.game_name);
