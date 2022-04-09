@@ -16,7 +16,7 @@ using System.Web.Http;
 namespace MixItUp.WPF.Services.DeveloperAPI.V1
 {
     [RoutePrefix("api/currency")]
-    public class CurrencyController : ApiController
+    public class CurrencyV1Controller : ApiController
     {
         [Route]
         [HttpGet]
@@ -85,7 +85,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
             List<User> currencyUserList = new List<User>();
             foreach (UserV2Model currencyUser in allUsers.OrderByDescending(u => currency.GetAmount(u)).Take(count))
             {
-                currencyUserList.Add(UserController.UserFromUserDataViewModel(new UserV2ViewModel(currencyUser)));
+                currencyUserList.Add(UserV1Controller.UserFromUserDataViewModel(new UserV2ViewModel(currencyUser)));
             }
             return currencyUserList;
         }
@@ -121,11 +121,11 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
             List<User> users = new List<User>();
             foreach (var giveData in giveDatas)
             {
-                UserV2ViewModel user = await UserController.GetUserData(giveData.UsernameOrID);
+                UserV2ViewModel user = await UserV1Controller.GetUserData(giveData.UsernameOrID);
                 if (user != null && giveData.Amount > 0)
                 {
                     currency.AddAmount(user, giveData.Amount);
-                    users.Add(UserController.UserFromUserDataViewModel(user));
+                    users.Add(UserV1Controller.UserFromUserDataViewModel(user));
                 }
             }
 

@@ -16,7 +16,7 @@ using System.Web.Http;
 namespace MixItUp.WPF.Services.DeveloperAPI.V1
 {
     [RoutePrefix("api/commands")]
-    public class CommandController : ApiController
+    public class CommandV1Controller : ApiController
     {
         [Route]
         [HttpGet]

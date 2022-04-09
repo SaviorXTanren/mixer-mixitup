@@ -1065,20 +1065,20 @@
       <DependentUpon>ConfirmationDialogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
-    <Compile Include="Services\DeveloperAPI\V1\ChatController.cs" />
-    <Compile Include="Services\DeveloperAPI\V1\QuotesController.cs" />
-    <Compile Include="Services\DeveloperAPI\V1\CommandController.cs" />
-    <Compile Include="Services\DeveloperAPI\V1\CurrencyController.cs" />
-    <Compile Include="Services\DeveloperAPI\V1\InventoryController.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\ChatV1Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\QuotesV1Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\CommandV1Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\CurrencyV1Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\InventoryV1Controller.cs" />
     <Compile Include="Services\DeveloperAPI\NoCacheHeader.cs" />
-    <Compile Include="Services\DeveloperAPI\V1\StatusController.cs" />
-    <Compile Include="Services\DeveloperAPI\V1\UserController.cs" />
-    <Compile Include="Services\DeveloperAPI\V2\CurrencyControllerV2.cs" />
-    <Compile Include="Services\DeveloperAPI\V2\InventoryControllerV2.cs" />
-    <Compile Include="Services\DeveloperAPI\V2\StatusControllerV2.cs" />
-    <Compile Include="Services\DeveloperAPI\V2\ChatControllerV2.cs" />
-    <Compile Include="Services\DeveloperAPI\V2\CommandsControllerV2.cs" />
-    <Compile Include="Services\DeveloperAPI\V2\UsersControllerV2.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\StatusV1Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\UserV1Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\V2\CurrencyV2Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\V2\InventoryV2Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\V2\StatusV2Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\V2\ChatV2Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\V2\CommandsV2Controller.cs" />
+    <Compile Include="Services\DeveloperAPI\V2\UsersV2Controller.cs" />
     <Compile Include="Services\DeveloperAPI\WindowsDeveloperAPIService.cs" />
     <Compile Include="Services\WindowsOvrStreamService.cs" />
     <Compile Include="Services\WindowsSocketIOConnection.cs" />
