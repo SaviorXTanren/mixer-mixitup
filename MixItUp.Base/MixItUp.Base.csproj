@@ -44,7 +44,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="StreamingClientLibrary.Glimesh" Version="1.0.0.15" />
     <PackageReference Include="StreamingClientLibrary.Trovo" Version="1.0.0.17" />
-    <PackageReference Include="StreamingClientLibrary.Twitch" Version="1.0.0.40" />
+    <PackageReference Include="StreamingClientLibrary.Twitch" Version="1.0.0.41" />
     <PackageReference Include="StreamingClientLibrary.YouTube" Version="1.0.0.10" />
     <PackageReference Include="System.IO.Ports" Version="6.0.0" />
   </ItemGroup>
