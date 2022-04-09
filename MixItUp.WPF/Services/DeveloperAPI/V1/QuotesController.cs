@@ -17,7 +17,7 @@ using WebSocketSharp;
 namespace MixItUp.WPF.Services.DeveloperAPI.V1
 {
     [RoutePrefix("api/quotes")]
-    public class QuotesControllerV1 : ApiController
+    public class QuotesController : ApiController
     {
         [Route]
         [HttpGet]

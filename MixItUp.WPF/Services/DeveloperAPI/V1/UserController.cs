@@ -17,7 +17,7 @@ using System.Web.Http;
 namespace MixItUp.WPF.Services.DeveloperAPI.V1
 {
     [RoutePrefix("api/users")]
-    public class UserControllerV1 : ApiController
+    public class UserController : ApiController
     {
         public static async Task<UserV2ViewModel> GetUserData(string usernameOrID)
         {
@@ -49,7 +49,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
             List<User> users = new List<User>();
             foreach (var usernameOrID in usernamesOrIDs)
             {
-                UserV2ViewModel user = await UserControllerV1.GetUserData(usernameOrID);
+                UserV2ViewModel user = await UserController.GetUserData(usernameOrID);
                 if (user != null)
                 {
                     users.Add(UserFromUserDataViewModel(user));
@@ -65,7 +65,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
         {
             await ServiceManager.Get<UserService>().LoadAllUserData();
 
-            UserV2ViewModel user = await UserControllerV1.GetUserData(usernameOrID);
+            UserV2ViewModel user = await UserController.GetUserData(usernameOrID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -114,7 +114,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
         {
             await ServiceManager.Get<UserService>().LoadAllUserData();
 
-            UserV2ViewModel user = await UserControllerV1.GetUserData(usernameOrID);
+            UserV2ViewModel user = await UserController.GetUserData(usernameOrID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -164,7 +164,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
         {
             await ServiceManager.Get<UserService>().LoadAllUserData();
 
-            UserV2ViewModel user = await UserControllerV1.GetUserData(usernameOrID);
+            UserV2ViewModel user = await UserController.GetUserData(usernameOrID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -184,7 +184,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
         {
             await ServiceManager.Get<UserService>().LoadAllUserData();
 
-            UserV2ViewModel user = await UserControllerV1.GetUserData(usernameOrID);
+            UserV2ViewModel user = await UserController.GetUserData(usernameOrID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -239,12 +239,12 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
 
             foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
             {
-                user.CurrencyAmounts.Add(CurrencyControllerV1.CurrencyAmountFromUserCurrencyViewModel(currency, currency.GetAmount(userData)));
+                user.CurrencyAmounts.Add(CurrencyController.CurrencyAmountFromUserCurrencyViewModel(currency, currency.GetAmount(userData)));
             }
 
             foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values)
             {
-                user.InventoryAmounts.Add(InventoryControllerV1.InventoryAmountFromUserInventoryViewModel(inventory, inventory.GetAmounts(userData)));
+                user.InventoryAmounts.Add(InventoryController.InventoryAmountFromUserInventoryViewModel(inventory, inventory.GetAmounts(userData)));
             }
 
             return user;

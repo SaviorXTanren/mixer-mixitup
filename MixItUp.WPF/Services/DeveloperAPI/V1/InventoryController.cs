@@ -12,7 +12,7 @@ using System.Web.Http;
 namespace MixItUp.WPF.Services.DeveloperAPI.V1
 {
     [RoutePrefix("api/inventory")]
-    public class InventoryControllerV1 : ApiController
+    public class InventoryController : ApiController
     {
         [Route]
         [HttpGet]

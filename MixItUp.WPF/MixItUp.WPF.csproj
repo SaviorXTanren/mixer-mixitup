@@ -1065,13 +1065,14 @@
       <DependentUpon>ConfirmationDialogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
-    <Compile Include="Services\DeveloperAPI\V1\ChatControllerV1.cs" />
-    <Compile Include="Services\DeveloperAPI\V1\QuotesControllerV1.cs" />
-    <Compile Include="Services\DeveloperAPI\V1\CommandControllerV1.cs" />
-    <Compile Include="Services\DeveloperAPI\V1\CurrencyControllerV1.cs" />
-    <Compile Include="Services\DeveloperAPI\V1\InventoryControllerV1.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\ChatController.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\QuotesController.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\CommandController.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\CurrencyController.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\InventoryController.cs" />
     <Compile Include="Services\DeveloperAPI\NoCacheHeader.cs" />
-    <Compile Include="Services\DeveloperAPI\V1\UserControllerV1.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\StatusController.cs" />
+    <Compile Include="Services\DeveloperAPI\V1\UserController.cs" />
     <Compile Include="Services\DeveloperAPI\V2\CurrencyControllerV2.cs" />
     <Compile Include="Services\DeveloperAPI\V2\InventoryControllerV2.cs" />
     <Compile Include="Services\DeveloperAPI\V2\StatusControllerV2.cs" />

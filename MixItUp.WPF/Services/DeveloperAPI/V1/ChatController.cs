@@ -11,7 +11,7 @@ using System.Web.Http;
 namespace MixItUp.WPF.Services.DeveloperAPI.V1
 {
     [RoutePrefix("api/chat")]
-    public class ChatControllerV1 : ApiController
+    public class ChatController : ApiController
     {
         [Route("users")]
         [HttpGet]
@@ -22,7 +22,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
             var chatUsers = ServiceManager.Get<UserService>().GetActiveUsers();
             foreach (var chatUser in chatUsers)
             {
-                users.Add(UserControllerV1.UserFromUserDataViewModel(chatUser));
+                users.Add(UserController.UserFromUserDataViewModel(chatUser));
             }
 
             return Task.FromResult<IEnumerable<User>>(users);
