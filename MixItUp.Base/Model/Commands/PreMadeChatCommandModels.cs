@@ -104,14 +104,13 @@ namespace MixItUp.Base.Model.Commands
                         Result result = await roleRequirement.Validate(parameters);
                         if (result.Success)
                         {
+                            string firstTrigger = command.Triggers.First();
                             if (command.IncludeExclamation)
                             {
-                                commandTriggers.AddRange(command.Triggers.First().Select(c => $"!{c}"));
+                                firstTrigger = $"!{firstTrigger}";
                             }
-                            else
-                            {
-                                commandTriggers.Add(command.Triggers.First());
-                            }
+
+                            commandTriggers.Add(firstTrigger);
                         }
                     }
                 }
