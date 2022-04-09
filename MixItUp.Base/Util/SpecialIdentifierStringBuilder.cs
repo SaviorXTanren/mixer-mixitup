@@ -499,7 +499,7 @@ namespace MixItUp.Base.Util
                 }
                 else if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
                 {
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "islive", ServiceManager.Get<TwitchSessionService>().IsLive.ToString());
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "islive", ServiceManager.Get<TrovoSessionService>().IsLive.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<TrovoSessionService>().Channel?.current_viewers.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<TrovoSessionService>().Channel?.live_title);
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceManager.Get<TrovoSessionService>().Channel?.category_name);
@@ -508,7 +508,7 @@ namespace MixItUp.Base.Util
                 }
                 else if (platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().IsConnected)
                 {
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "islive", ServiceManager.Get<TwitchSessionService>().IsLive.ToString());
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "islive", ServiceManager.Get<GlimeshSessionService>().IsLive.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.countViewers.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<GlimeshSessionService>().User?.channel?.title);
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.category?.name);
