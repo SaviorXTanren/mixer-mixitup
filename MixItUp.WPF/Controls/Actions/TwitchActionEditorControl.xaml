@@ -120,6 +120,10 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{x:Static resx:Resources.TwitchActionChannelPointRewardMustBeCreatedInMixItUp}"/>
@@ -135,7 +139,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 
-                <ComboBox Grid.Column="0" ItemsSource="{Binding ChannelPointRewards}" SelectedItem="{Binding ChannelPointReward}" DisplayMemberPath="title" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                <ComboBox Grid.Column="0" ItemsSource="{Binding ChannelPointRewards}" SelectedItem="{Binding ChannelPointReward}" DisplayMemberPath="title" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ChannelPoints}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
                 <TextBlock Grid.Column="2" Margin="0,10,0,0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Enable}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                 <ToggleButton Grid.Column="4" Margin="0,10,0,0" VerticalAlignment="Center" IsChecked="{Binding ChannelPointRewardState}" />
@@ -143,7 +147,11 @@
                 <TextBox Grid.Column="6" Text="{Binding ChannelPointRewardCost}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Cost}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
             </Grid>
 
-            <Grid Grid.Row="4">
+            <TextBox Grid.Row="4" Text="{Binding ChannelPointRewardName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBox Grid.Row="6" Text="{Binding ChannelPointRewardDescription}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Description}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <Grid Grid.Row="8">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="5" />
