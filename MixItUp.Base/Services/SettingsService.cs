@@ -206,6 +206,10 @@ namespace MixItUp.Base.Services
                 Logger.Log(ex);
             }
 
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
             await DialogHelper.ShowMessage(MixItUp.Base.Resources.BackupGenerationFailed);
         }
 
