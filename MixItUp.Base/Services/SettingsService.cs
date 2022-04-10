@@ -194,6 +194,7 @@ namespace MixItUp.Base.Services
                         zipFile.CreateEntryFromFile(settings.SettingsFilePath, Path.GetFileName(settings.SettingsFilePath));
                         zipFile.CreateEntryFromFile(settings.DatabaseFilePath, Path.GetFileName(settings.DatabaseFilePath));
                     }
+                    return;
                 }
                 else
                 {
@@ -204,6 +205,8 @@ namespace MixItUp.Base.Services
             {
                 Logger.Log(ex);
             }
+
+            await DialogHelper.ShowMessage(MixItUp.Base.Resources.BackupGenerationFailed);
         }
 
         public async Task<Result<SettingsV3Model>> RestorePackagedBackup(string filePath)

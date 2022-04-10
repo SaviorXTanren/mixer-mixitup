@@ -7653,4 +7653,7 @@ via Twitch, it's a "your mileage may very" situation.</value>
   <data name="ExtraLifeInvalidParticipantId" xml:space="preserve">
     <value>Please enter a valid Extra Life participant ID.</value>
   </data>
+  <data name="BackupGenerationFailed" xml:space="preserve">
+    <value>Backup file failed to generate. If this continues, please visit the Mix It Up support Discord for further assistance.</value>
+  </data>
 </root>
