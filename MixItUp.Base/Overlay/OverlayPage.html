@@ -474,13 +474,8 @@
 
                 var fileExtensionIndex = data.FilePath.lastIndexOf(".");
                 if (fileExtensionIndex > 0) {
-                    var fileExtension = data.FilePath.substring(fileExtensionIndex + 1).toLowerCase();
-                    if (fileExtension !== "mpeg" && fileExtension !== "mp3" && fileExtension !== "wav" && fileExtension !== "ogg") {
-                        fileExtension = "wav";
-                    }
+                    var fileExtension = data.FilePath.substring(fileExtensionIndex + 1);
                     sourceElement.type = "audio/" + fileExtension;
-                } else {
-                    sourceElement.type = "audio/wav";
                 }
                 addedElement.appendChild(sourceElement);
 
