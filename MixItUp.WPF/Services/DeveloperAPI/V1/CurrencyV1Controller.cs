@@ -121,7 +121,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
             List<User> users = new List<User>();
             foreach (var giveData in giveDatas)
             {
-                UserV2ViewModel user = await UserV1Controller.GetUserData(giveData.UsernameOrID);
+                UserV2ViewModel user = await UserV1Controller.GetUserData(ChannelSession.Settings.DefaultStreamingPlatform, giveData.UsernameOrID);
                 if (user != null && giveData.Amount > 0)
                 {
                     currency.AddAmount(user, giveData.Amount);
