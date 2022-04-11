@@ -7656,4 +7656,26 @@ via Twitch, it's a "your mileage may very" situation.</value>
   <data name="BackupGenerationFailed" xml:space="preserve">
     <value>Backup file failed to generate. If this continues, please visit the Mix It Up support Discord for further assistance.</value>
   </data>
+  <data name="CSharp" xml:space="preserve">
+    <value>C#</value>
+  </data>
+  <data name="Javascript" xml:space="preserve">
+    <value>Javascript</value>
+  </data>
+  <data name="Python" xml:space="preserve">
+    <value>Python</value>
+  </data>
+  <data name="Script" xml:space="preserve">
+    <value>Script</value>
+  </data>
+  <data name="ScriptActionMissingScript" xml:space="preserve">
+    <value>Script Action: Missing script</value>
+  </data>
+  <data name="VisualBasic" xml:space="preserve">
+    <value>Visual Basic</value>
+  </data>
+  <data name="ScriptActionFailedCompile" xml:space="preserve">
+    <value>Script Error: {0}</value>
+    <comment>{0} is the series of script errors</comment>
+  </data>
 </root>

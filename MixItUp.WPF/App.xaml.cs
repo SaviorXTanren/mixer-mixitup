@@ -49,6 +49,7 @@ namespace MixItUp.WPF
                 ServiceManager.Add<IAudioService>(new WindowsAudioService());
                 ServiceManager.Add<IDeveloperAPIService>(new WindowsDeveloperAPIService());
                 ServiceManager.Add<ITelemetryService>(new WindowsTelemetryService());
+                ServiceManager.Add<IScriptRunnerService>(new WindowsScriptRunnerService());
 
                 ServiceManager.Add(new StreamlabsService(new WindowsSocketIOConnection()));
                 ServiceManager.Add(new RainmakerService(new WindowsSocketIOConnection()));

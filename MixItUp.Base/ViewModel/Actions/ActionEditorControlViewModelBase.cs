@@ -128,6 +128,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     case ActionTypeEnum.OvrStream: actionPageName = "ovrstream-action"; break;
                     case ActionTypeEnum.PixelChat: actionPageName = "pixel-chat-action"; break;
                     case ActionTypeEnum.PolyPop: actionPageName = "polypop-action"; break;
+                    case ActionTypeEnum.Script: actionPageName = "script-action"; break;
                     case ActionTypeEnum.Serial: actionPageName = "serial-action"; break;
                     case ActionTypeEnum.Sound: actionPageName = "sound-action"; break;
                     case ActionTypeEnum.SpecialIdentifier: actionPageName = "special-identifier-action"; break;

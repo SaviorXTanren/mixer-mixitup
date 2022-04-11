@@ -51,7 +51,8 @@ namespace MixItUp.Base.Model.Actions
         [Obsolete]
         YouTube,
         Trovo,
-        PolyPop
+        PolyPop,
+        Script
     }
 
     [DataContract]
