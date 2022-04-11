@@ -113,6 +113,18 @@ namespace MixItUp.WPF.Services
             });
         }
 
+        public void ClearAllPools()
+        {
+            try
+            {
+                SqliteConnection.ClearAllPools();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
         private async Task EstablishConnection(string databaseFilePath, Func<SqliteConnection, Task> databaseQuery)
         {
             try
