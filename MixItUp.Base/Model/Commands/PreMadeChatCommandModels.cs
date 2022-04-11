@@ -93,24 +93,29 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
+            string groupFilter = (parameters.Arguments != null) ? string.Join(" ", parameters.Arguments) : null;
+
             List<string> commandTriggers = new List<string>();
             foreach (ChatCommandModel command in ServiceManager.Get<CommandService>().AllEnabledChatAccessibleCommands)
             {
                 if (command.IsEnabled && !command.Wildcards)
                 {
-                    RoleRequirementModel roleRequirement = command.Requirements.Role;
-                    if (roleRequirement != null)
+                    if (string.IsNullOrEmpty(groupFilter) || string.Equals(groupFilter, command.GroupName, StringComparison.OrdinalIgnoreCase))
                     {
-                        Result result = await roleRequirement.Validate(parameters);
-                        if (result.Success)
+                        RoleRequirementModel roleRequirement = command.Requirements.Role;
+                        if (roleRequirement != null)
                         {
-                            string firstTrigger = command.Triggers.First();
-                            if (command.IncludeExclamation)
+                            Result result = await roleRequirement.Validate(parameters);
+                            if (result.Success)
                             {
-                                firstTrigger = $"!{firstTrigger}";
-                            }
+                                string firstTrigger = command.Triggers.First();
+                                if (command.IncludeExclamation)
+                                {
+                                    firstTrigger = $"!{firstTrigger}";
+                                }
 
-                            commandTriggers.Add(firstTrigger);
+                                commandTriggers.Add(firstTrigger);
+                            }
                         }
                     }
                 }
