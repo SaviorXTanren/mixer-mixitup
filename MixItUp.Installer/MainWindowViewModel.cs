@@ -353,14 +353,14 @@ namespace MixItUp.Installer
             this.IsOperationIndeterminate = true;
             this.OperationProgress = 0;
 
-            string url = "https://mixitupapi.azurewebsites.net/api/updates";
+            string url = "https://api.mixitupapp.com/api/updates";
             if (preview)
             {
-                url = "https://mixitupapi.azurewebsites.net/api/updates/preview";
+                url = "https://api.mixitupapp.com/api/updates/preview";
             }
             else if (test)
             {
-                url = "https://mixitupapi.azurewebsites.net/api/updates/test";
+                url = "https://api.mixitupapp.com/api/updates/test";
             }
 
             using (HttpClient client = new HttpClient())
