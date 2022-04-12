@@ -330,6 +330,8 @@ namespace MixItUp.Base.Services.External
                 {
                     this.WebSocketConnected = true;
                     this.websocket.OnDisconnectOccurred += Websocket_OnDisconnectOccurred;
+
+                    this.TrackServiceTelemetry("VTube Studio");
                     return new Result();
                 }
             }

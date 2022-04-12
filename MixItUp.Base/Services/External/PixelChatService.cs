@@ -157,6 +157,7 @@ namespace MixItUp.Base.Services.External
 
         public override Task<Result> Connect()
         {
+            this.TrackServiceTelemetry("PixelChat");
             return Task.FromResult(new Result(false));
         }
 
