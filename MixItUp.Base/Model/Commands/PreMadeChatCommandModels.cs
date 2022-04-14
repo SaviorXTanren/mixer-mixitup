@@ -234,7 +234,8 @@ namespace MixItUp.Base.Model.Commands
                     return TwitchPlatformService.GetTwitchDateTime(ServiceManager.Get<TwitchSessionService>().Stream?.started_at);
                 }
             }
-            else if (ServiceManager.Get<TrovoSessionService>().IsConnected)
+            
+            if (ServiceManager.Get<TrovoSessionService>().IsConnected)
             {
                 await ServiceManager.Get<TrovoSessionService>().RefreshChannel();
                 if (ServiceManager.Get<TrovoSessionService>().IsLive)
@@ -242,7 +243,8 @@ namespace MixItUp.Base.Model.Commands
                     return TrovoPlatformService.GetTrovoDateTime(ServiceManager.Get<TrovoSessionService>().Channel?.started_at);
                 }
             }
-            else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
+            
+            if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
             {
                 await ServiceManager.Get<GlimeshSessionService>().RefreshChannel();
                 if (ServiceManager.Get<GlimeshSessionService>().IsLive)
@@ -250,6 +252,7 @@ namespace MixItUp.Base.Model.Commands
                     return GlimeshPlatformService.GetGlimeshDateTime(ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.startedAt);
                 }
             }
+
             return DateTimeOffset.MinValue;
         }
 

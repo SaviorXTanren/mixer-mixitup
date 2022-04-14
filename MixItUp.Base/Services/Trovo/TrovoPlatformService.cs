@@ -50,7 +50,7 @@ namespace MixItUp.Base.Services.Trovo
                     DateTimeOffset result = StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeSeconds(seconds);
                     if (result > DateTimeOffset.MinValue)
                     {
-                        return new DateTimeOffset(result.DateTime, TimeSpan.Zero);
+                        return result;
                     }
                 }
             }
