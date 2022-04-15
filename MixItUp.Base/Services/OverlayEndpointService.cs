@@ -304,7 +304,7 @@ namespace MixItUp.Base.Services
 
                             // If they overlay requests a range, let's chunk this file
                             string range = listenerContext.Request.Headers["Range"];
-                            if (range != null && !fileInfo.IsReadOnly)
+                            if (range != null)
                             {
                                 // The total file size
                                 long filesize = fileInfo.Length;
@@ -333,7 +333,7 @@ namespace MixItUp.Base.Services
 
                                 // Only read/write the range of bytes requested
                                 byte[] fileData = new byte[byteRange];
-                                using (BinaryReader reader = new BinaryReader(new FileStream(filePath, FileMode.Open)))
+                                using (BinaryReader reader = new BinaryReader(new FileStream(filePath, FileMode.Open, FileAccess.Read)))
                                 {
                                     reader.BaseStream.Seek(startByte, SeekOrigin.Begin);
                                     reader.Read(fileData, 0, byteRange);
