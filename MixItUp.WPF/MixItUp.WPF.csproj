@@ -2152,6 +2152,11 @@
     <Resource Include="Assets\Images\YoutubeMonochrome.png" />
     <Resource Include="Assets\Images\TwitchMonochrome.png" />
     <Resource Include="Assets\Images\TrovoMonochrome.png" />
+    <Resource Include="Assets\Images\YoutubeDark.png" />
+    <Resource Include="Assets\Images\Youtube-XS.png" />
+    <Resource Include="Assets\Images\Twitch-XS.png" />
+    <Resource Include="Assets\Images\Glimesh-XS.png" />
+    <Resource Include="Assets\Images\Trovo-XS.png" />
     <Content Include="Assets\OBS\obs-websocket-4.9.1-Windows-Installer.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
