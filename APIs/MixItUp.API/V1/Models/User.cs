@@ -12,6 +12,10 @@ namespace MixItUp.API.V1.Models
 
         [DataMember]
         public string TwitchID { get; set; }
+        [DataMember]
+        public string TrovoID { get; set; }
+        [DataMember]
+        public string GlimeshID { get; set; }
 
         [DataMember]
         public string Username { get; set; }

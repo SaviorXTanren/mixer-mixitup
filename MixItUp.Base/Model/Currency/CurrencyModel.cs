@@ -290,7 +290,45 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
+        public void SetAmount(UserV2Model user, int amount)
+        {
+            RankModel prevRank = this.GetRank(user);
+
+            user.CurrencyAmounts[this.ID] = Math.Min(Math.Max(amount, 0), this.MaxAmount);
+            if (ChannelSession.Settings != null)
+            {
+                ChannelSession.Settings.Users.ManualValueChanged(user.ID);
+            }
+
+            RankModel newRank = this.GetRank(user);
+
+            if (newRank.Amount > prevRank.Amount && this.RankChangedCommand != null)
+            {
+                AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                {
+                    UserV2ViewModel userVM = await ServiceManager.Get<UserService>().GetUserByID(user.ID);
+                    await ServiceManager.Get<CommandService>().Queue(this.RankChangedCommand, new CommandParametersModel(userVM));
+                }, new CancellationToken());
+            }
+            else if (newRank.Amount < prevRank.Amount && this.RankDownCommand != null)
+            {
+                AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                {
+                    UserV2ViewModel userVM = await ServiceManager.Get<UserService>().GetUserByID(user.ID);
+                    await ServiceManager.Get<CommandService>().Queue(this.RankDownCommand, new CommandParametersModel(userVM));
+                }, new CancellationToken());
+            }
+        }
+
         public void AddAmount(UserV2ViewModel user, int amount)
+        {
+            if (!user.IsSpecialtyExcluded && amount > 0)
+            {
+                this.SetAmount(user, this.GetAmount(user) + amount);
+            }
+        }
+
+        public void AddAmount(UserV2Model user, int amount)
         {
             if (!user.IsSpecialtyExcluded && amount > 0)
             {
@@ -309,6 +347,20 @@ namespace MixItUp.Base.Model.Currency
         public void ResetAmount(UserV2ViewModel user) { this.SetAmount(user, 0); }
 
         public RankModel GetRank(UserV2ViewModel user)
+        {
+            if (this.Ranks.Count > 0)
+            {
+                int amount = this.GetAmount(user);
+                RankModel rank = this.Ranks.Where(r => r.Amount <= amount).Max();
+                if (rank != null)
+                {
+                    return rank;
+                }
+            }
+            return CurrencyModel.NoRank;
+        }
+
+        public RankModel GetRank(UserV2Model user)
         {
             if (this.Ranks.Count > 0)
             {

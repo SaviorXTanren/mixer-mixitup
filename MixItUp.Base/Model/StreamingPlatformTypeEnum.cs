@@ -32,6 +32,11 @@ namespace MixItUp.Base.Model
         public const string TrovoLogoImageAssetFilePath = "/Assets/Images/Trovo.png";
         public const string GlimeshLogoImageAssetFilePath = "/Assets/Images/Glimesh.png";
 
+        public const string TwitchSmallLogoImageAssetFilePath = "/Assets/Images/Twitch-XS.png";
+        public const string YouTubeSmallLogoImageAssetFilePath = "/Assets/Images/YouTube-XS.png";
+        public const string TrovoSmallLogoImageAssetFilePath = "/Assets/Images/Trovo-XS.png";
+        public const string GlimeshSmallLogoImageAssetFilePath = "/Assets/Images/Glimesh-XS.png";
+
         public static IEnumerable<StreamingPlatformTypeEnum> SupportedPlatforms { get; private set; } = new List<StreamingPlatformTypeEnum>()
         {
             StreamingPlatformTypeEnum.Twitch,
@@ -64,6 +69,15 @@ namespace MixItUp.Base.Model
             else if (platform == StreamingPlatformTypeEnum.YouTube) { return YouTubeLogoImageAssetFilePath; }
             else if (platform == StreamingPlatformTypeEnum.Trovo) { return TrovoLogoImageAssetFilePath; }
             else if (platform == StreamingPlatformTypeEnum.Glimesh) { return GlimeshLogoImageAssetFilePath; }
+            return string.Empty;
+        }
+
+        public static string GetPlatformSmallImage(StreamingPlatformTypeEnum platform)
+        {
+            if (platform == StreamingPlatformTypeEnum.Twitch) { return TwitchSmallLogoImageAssetFilePath; }
+            else if (platform == StreamingPlatformTypeEnum.YouTube) { return YouTubeSmallLogoImageAssetFilePath; }
+            else if (platform == StreamingPlatformTypeEnum.Trovo) { return TrovoSmallLogoImageAssetFilePath; }
+            else if (platform == StreamingPlatformTypeEnum.Glimesh) { return GlimeshSmallLogoImageAssetFilePath; }
             return string.Empty;
         }
 

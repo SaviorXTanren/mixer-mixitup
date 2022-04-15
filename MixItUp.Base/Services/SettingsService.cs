@@ -189,11 +189,14 @@ namespace MixItUp.Base.Services
                         File.Delete(filePath);
                     }
 
+                    ServiceManager.Get<IDatabaseService>().ClearAllPools();
+
                     using (ZipArchive zipFile = ZipFile.Open(filePath, ZipArchiveMode.Create))
                     {
                         zipFile.CreateEntryFromFile(settings.SettingsFilePath, Path.GetFileName(settings.SettingsFilePath));
                         zipFile.CreateEntryFromFile(settings.DatabaseFilePath, Path.GetFileName(settings.DatabaseFilePath));
                     }
+                    return;
                 }
                 else
                 {
@@ -204,6 +207,12 @@ namespace MixItUp.Base.Services
             {
                 Logger.Log(ex);
             }
+
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+            await DialogHelper.ShowMessage(MixItUp.Base.Resources.BackupGenerationFailed);
         }
 
         public async Task<Result<SettingsV3Model>> RestorePackagedBackup(string filePath)
@@ -215,6 +224,8 @@ namespace MixItUp.Base.Services
 
                 string settingsFile = null;
                 string databaseFile = null;
+
+                ServiceManager.Get<IDatabaseService>().ClearAllPools();
 
                 try
                 {

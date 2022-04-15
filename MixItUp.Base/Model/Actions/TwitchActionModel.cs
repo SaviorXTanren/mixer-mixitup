@@ -102,10 +102,12 @@ namespace MixItUp.Base.Model.Actions
             return actionModel;
         }
 
-        public static TwitchActionModel CreateUpdateChannelPointReward(Guid id, bool state, string cost, bool updateCooldownsAndLimits, string maxPerStream, string maxPerUser, string globalCooldown)
+        public static TwitchActionModel CreateUpdateChannelPointReward(Guid id, string name, string description, bool state, string cost, bool updateCooldownsAndLimits, string maxPerStream, string maxPerUser, string globalCooldown)
         {
             TwitchActionModel action = new TwitchActionModel(TwitchActionType.UpdateChannelPointReward);
             action.ChannelPointRewardID = id;
+            action.ChannelPointRewardName = name;
+            action.ChannelPointRewardDescription = description;
             action.ChannelPointRewardState = state;
             action.ChannelPointRewardCostString = cost;
             action.ChannelPointRewardUpdateCooldownsAndLimits = updateCooldownsAndLimits;
@@ -174,6 +176,10 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public Guid ChannelPointRewardID { get; set; }
+        [DataMember]
+        public string ChannelPointRewardName { get; set; }
+        [DataMember]
+        public string ChannelPointRewardDescription { get; set; }
         [DataMember]
         public bool ChannelPointRewardState { get; set; }
         [DataMember]
@@ -350,6 +356,16 @@ namespace MixItUp.Base.Model.Actions
                     }
 #pragma warning restore CS0612 // Type or member is obsolete
 
+                    if (!string.IsNullOrEmpty(this.ChannelPointRewardName))
+                    {
+                        jobj["title"] = await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardName, parameters);
+                    }
+
+                    if (!string.IsNullOrEmpty(this.ChannelPointRewardDescription))
+                    {
+                        jobj["prompt"] = await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardDescription, parameters);
+                    }
+
                     int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardCostString, parameters), out int cost);
                     if (cost > 0) { jobj["cost"] = cost; }
 
@@ -359,51 +375,51 @@ namespace MixItUp.Base.Model.Actions
                         if (maxPerStream > 0)
                         {
                             jobj["max_per_stream_setting"] = new JObject()
-                        {
-                            { "is_enabled", true },
-                            { "max_per_stream", maxPerStream}
-                        };
+                            {
+                                { "is_enabled", true },
+                                { "max_per_stream", maxPerStream}
+                            };
                         }
                         else
                         {
                             jobj["max_per_stream_setting"] = new JObject()
-                        {
-                            { "is_enabled", false },
-                        };
+                            {
+                                { "is_enabled", false },
+                            };
                         }
 
                         int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardMaxPerUserString, parameters), out int maxPerUser);
                         if (maxPerUser > 0)
                         {
                             jobj["max_per_user_per_stream_setting"] = new JObject()
-                        {
-                            { "is_enabled", true },
-                            { "max_per_user_per_stream", maxPerUser }
-                        };
+                            {
+                                { "is_enabled", true },
+                                { "max_per_user_per_stream", maxPerUser }
+                            };
                         }
                         else
                         {
                             jobj["max_per_user_per_stream_setting"] = new JObject()
-                        {
-                            { "is_enabled", false },
-                        };
+                            {
+                                { "is_enabled", false },
+                            };
                         }
 
                         int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardGlobalCooldownString, parameters), out int globalCooldown);
                         if (globalCooldown > 0)
                         {
                             jobj["global_cooldown_setting"] = new JObject()
-                        {
-                            { "is_enabled", true },
-                            { "global_cooldown_seconds", globalCooldown * 60 }
-                        };
+                            {
+                                { "is_enabled", true },
+                                { "global_cooldown_seconds", globalCooldown * 60 }
+                            };
                         }
                         else
                         {
                             jobj["global_cooldown_setting"] = new JObject()
-                        {
-                            { "is_enabled", false },
-                        };
+                            {
+                                { "is_enabled", false },
+                            };
                         }
                     }
 

@@ -123,8 +123,8 @@ namespace MixItUp.Base.Services
 
     public class MixItUpService : OAuthRestServiceBase, ICommunityCommandsService, IMixItUpService, IWebhookService, IDisposable
     {
-        public const string MixItUpAPIEndpoint = "https://mixitupapi.azurewebsites.net/api/";
-        public const string MixItUpSignalRHubEndpoint = "https://mixitupapi.azurewebsites.net/webhookhub";
+        public const string MixItUpAPIEndpoint = "https://api.mixitupapp.com/api/";
+        public const string MixItUpSignalRHubEndpoint = "https://api.mixitupapp.com/webhookhub";
 
         //public const string MixItUpAPIEndpoint = "https://localhost:44309/api/";                // Dev Endpoint
         //public const string MixItUpSignalRHubEndpoint = "https://localhost:44309/webhookhub";   // Dev Endpoint

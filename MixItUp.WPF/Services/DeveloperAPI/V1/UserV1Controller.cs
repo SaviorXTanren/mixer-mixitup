@@ -17,9 +17,9 @@ using System.Web.Http;
 namespace MixItUp.WPF.Services.DeveloperAPI.V1
 {
     [RoutePrefix("api/users")]
-    public class UserControllerV1 : ApiController
+    public class UserV1Controller : ApiController
     {
-        public static async Task<UserV2ViewModel> GetUserData(string usernameOrID)
+        public static async Task<UserV2ViewModel> GetUserData(StreamingPlatformTypeEnum platform, string usernameOrID)
         {
             await ServiceManager.Get<UserService>().LoadAllUserData();
 
@@ -30,13 +30,13 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
                 {
                     user = await ServiceManager.Get<UserService>().GetUserByID(userId);
                 }
-                else if (int.TryParse(usernameOrID, out int twitchID))
-                {
-                    user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, usernameOrID);
-                }
                 else
                 {
-                    user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, usernameOrID);
+                    user = await ServiceManager.Get<UserService>().GetUserByPlatformID(platform, usernameOrID);
+                    if (user == null)
+                    {
+                        user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(platform, usernameOrID);
+                    }
                 }
             }
             return user;
@@ -49,7 +49,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
             List<User> users = new List<User>();
             foreach (var usernameOrID in usernamesOrIDs)
             {
-                UserV2ViewModel user = await UserControllerV1.GetUserData(usernameOrID);
+                UserV2ViewModel user = await UserV1Controller.GetUserData(ChannelSession.Settings.DefaultStreamingPlatform, usernameOrID);
                 if (user != null)
                 {
                     users.Add(UserFromUserDataViewModel(user));
@@ -65,7 +65,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
         {
             await ServiceManager.Get<UserService>().LoadAllUserData();
 
-            UserV2ViewModel user = await UserControllerV1.GetUserData(usernameOrID);
+            UserV2ViewModel user = await UserV1Controller.GetUserData(ChannelSession.Settings.DefaultStreamingPlatform, usernameOrID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -85,16 +85,47 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
         {
             await ServiceManager.Get<UserService>().LoadAllUserData();
 
-            UserV2ViewModel user = null;
-            if (!string.IsNullOrEmpty(usernameOrID))
+            UserV2ViewModel user = await UserV1Controller.GetUserData(StreamingPlatformTypeEnum.Twitch, usernameOrID);
+            if (user == null)
             {
-                user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, usernameOrID);
-                if (user == null)
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
                 {
-                    user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, usernameOrID);
-                }
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find user: {usernameOrID}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "User not found"
+                };
+                throw new HttpResponseException(resp);
             }
 
+            return UserFromUserDataViewModel(user);
+        }
+
+        [Route("trovo/{usernameOrID}")]
+        [HttpGet]
+        public async Task<User> GetTrovo(string usernameOrID)
+        {
+            await ServiceManager.Get<UserService>().LoadAllUserData();
+
+            UserV2ViewModel user = await UserV1Controller.GetUserData(StreamingPlatformTypeEnum.Trovo, usernameOrID);
+            if (user == null)
+            {
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find user: {usernameOrID}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "User not found"
+                };
+                throw new HttpResponseException(resp);
+            }
+
+            return UserFromUserDataViewModel(user);
+        }
+
+        [Route("glimesh/{usernameOrID}")]
+        [HttpGet]
+        public async Task<User> GetGlimesh(string usernameOrID)
+        {
+            await ServiceManager.Get<UserService>().LoadAllUserData();
+
+            UserV2ViewModel user = await UserV1Controller.GetUserData(StreamingPlatformTypeEnum.Glimesh, usernameOrID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -114,7 +145,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
         {
             await ServiceManager.Get<UserService>().LoadAllUserData();
 
-            UserV2ViewModel user = await UserControllerV1.GetUserData(usernameOrID);
+            UserV2ViewModel user = await UserV1Controller.GetUserData(ChannelSession.Settings.DefaultStreamingPlatform, usernameOrID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -164,7 +195,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
         {
             await ServiceManager.Get<UserService>().LoadAllUserData();
 
-            UserV2ViewModel user = await UserControllerV1.GetUserData(usernameOrID);
+            UserV2ViewModel user = await UserV1Controller.GetUserData(ChannelSession.Settings.DefaultStreamingPlatform, usernameOrID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -184,7 +215,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
         {
             await ServiceManager.Get<UserService>().LoadAllUserData();
 
-            UserV2ViewModel user = await UserControllerV1.GetUserData(usernameOrID);
+            UserV2ViewModel user = await UserV1Controller.GetUserData(ChannelSession.Settings.DefaultStreamingPlatform, usernameOrID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -233,18 +264,20 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
             {
                 ID = userData.ID,
                 TwitchID = userData.Model.GetPlatformID(StreamingPlatformTypeEnum.Twitch),
-                Username = userData.Model.GetPlatformUsername(StreamingPlatformTypeEnum.Twitch),
+                TrovoID = userData.Model.GetPlatformID(StreamingPlatformTypeEnum.Trovo),
+                GlimeshID = userData.Model.GetPlatformID(StreamingPlatformTypeEnum.Glimesh),
+                Username = userData.Model.GetPlatformUsername(ChannelSession.Settings.DefaultStreamingPlatform),
                 ViewingMinutes = userData.OnlineViewingMinutes
             };
 
             foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
             {
-                user.CurrencyAmounts.Add(CurrencyControllerV1.CurrencyAmountFromUserCurrencyViewModel(currency, currency.GetAmount(userData)));
+                user.CurrencyAmounts.Add(CurrencyV1Controller.CurrencyAmountFromUserCurrencyViewModel(currency, currency.GetAmount(userData)));
             }
 
             foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values)
             {
-                user.InventoryAmounts.Add(InventoryControllerV1.InventoryAmountFromUserInventoryViewModel(inventory, inventory.GetAmounts(userData)));
+                user.InventoryAmounts.Add(InventoryV1Controller.InventoryAmountFromUserInventoryViewModel(inventory, inventory.GetAmounts(userData)));
             }
 
             return user;

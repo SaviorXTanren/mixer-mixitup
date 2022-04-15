@@ -77,7 +77,7 @@ namespace MixItUp.Base.ViewModel.Actions
         public CounterActionEditorControlViewModel(CounterActionModel action)
             : base(action)
         {
-            this.CounterName = action.CounterName;
+            this.CounterName = action.CounterName?.ToLower();
             this.SelectedActionType = action.ActionType;
             this.Amount = action.Amount;
 
@@ -123,15 +123,11 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override Task<ActionModelBase> GetActionInternal()
         {
-            if (!ChannelSession.Settings.Counters.ContainsKey(this.CounterName))
-            {
-                ChannelSession.Settings.Counters[this.CounterName] = new CounterModel(this.CounterName);
-            }
-            CounterModel counter = ChannelSession.Settings.Counters[this.CounterName];
-            counter.SaveToFile = this.SaveToFile;
-            counter.ResetOnLoad = this.ResetOnLoad;
+            string counterName = this.CounterName.ToLower();
 
-            return Task.FromResult<ActionModelBase>(new CounterActionModel(this.CounterName, this.SelectedActionType, this.Amount));
+            CounterModel.CreateCounter(counterName, this.SaveToFile, this.ResetOnLoad);
+
+            return Task.FromResult<ActionModelBase>(new CounterActionModel(counterName, this.SelectedActionType, this.Amount));
         }
     }
 }

@@ -27,7 +27,7 @@ namespace MixItUp.Reporter
 
             if (e.Args.Length >= 2)
             {
-                App.Username = e.Args[3];
+                App.Username = e.Args[1];
             }
         }
     }

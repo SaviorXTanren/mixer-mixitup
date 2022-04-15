@@ -160,7 +160,7 @@ namespace MixItUp.WPF
             }
             catch (Exception ex)
             {
-                Logger.Log(LogLevel.Error, "Failed to get Windows Identity for elevation status");
+                Logger.Log(ex);
             }
 
             Logger.ForceLog(LogLevel.Information, "Application Version: " + ServiceManager.Get<IFileService>().GetApplicationVersion());

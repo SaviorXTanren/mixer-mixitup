@@ -772,6 +772,7 @@
             }
 
             function textToSpeechPacket(data) {
+                responsiveVoice.forcedFallbackMode = true;
                 if (responsiveVoice.voiceSupport()) {
                     responsiveVoice.speak(data.Text, data.Voice, { pitch: data.Pitch, rate: data.Rate, volume: data.Volume });
                 }

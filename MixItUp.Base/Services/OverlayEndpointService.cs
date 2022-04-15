@@ -299,12 +299,15 @@ namespace MixItUp.Base.Services
                             listenerContext.Response.ContentType = fileType + "/" + Path.GetExtension(this.localFiles[fileID]).Replace(".", "");
                             listenerContext.Response.Headers["Accept-Ranges"] = "bytes";
 
+                            string filePath = this.localFiles[fileID];
+                            FileInfo fileInfo = new FileInfo(this.localFiles[fileID]);
+
                             // If they overlay requests a range, let's chunk this file
                             string range = listenerContext.Request.Headers["Range"];
                             if (range != null)
                             {
                                 // The total file size
-                                long filesize = new FileInfo(this.localFiles[fileID]).Length;
+                                long filesize = fileInfo.Length;
 
                                 // Format is: bytes=0-123
                                 //  0  : start byte
@@ -330,7 +333,7 @@ namespace MixItUp.Base.Services
 
                                 // Only read/write the range of bytes requested
                                 byte[] fileData = new byte[byteRange];
-                                using (BinaryReader reader = new BinaryReader(new FileStream(this.localFiles[fileID], FileMode.Open)))
+                                using (BinaryReader reader = new BinaryReader(new FileStream(filePath, FileMode.Open, FileAccess.Read)))
                                 {
                                     reader.BaseStream.Seek(startByte, SeekOrigin.Begin);
                                     reader.Read(fileData, 0, byteRange);
@@ -339,7 +342,7 @@ namespace MixItUp.Base.Services
                             }
                             else
                             {
-                                byte[] fileData = File.ReadAllBytes(this.localFiles[fileID]);
+                                byte[] fileData = File.ReadAllBytes(filePath);
                                 listenerContext.Response.ContentLength64 = fileData.Length;
                                 await listenerContext.Response.OutputStream.WriteAsync(fileData, 0, fileData.Length);
                             }

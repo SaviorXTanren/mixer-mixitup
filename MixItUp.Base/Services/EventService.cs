@@ -230,59 +230,57 @@ namespace MixItUp.Base.Services
                 EventCommandModel command = this.GetEventCommand(type);
                 if (command != null)
                 {
-                    Logger.Log(LogLevel.Debug, $"Performing event trigger: {type}");
-
+                    Logger.Log(LogLevel.Debug, $"Performing platform event trigger: {type}");
                     await ServiceManager.Get<CommandService>().Queue(command, parameters);
-
-                    EventCommandModel genericCommand = null;
-                    switch (type)
-                    {
-                        case EventTypeEnum.TwitchChannelStreamStart:
-                        case EventTypeEnum.TrovoChannelStreamStart:
-                        case EventTypeEnum.GlimeshChannelStreamStart:
-                            genericCommand = this.GetEventCommand(EventTypeEnum.ChannelStreamStart);
-                            break;
-                        case EventTypeEnum.TwitchChannelStreamStop:
-                        case EventTypeEnum.TrovoChannelStreamStop:
-                        case EventTypeEnum.GlimeshChannelStreamStop:
-                            genericCommand = this.GetEventCommand(EventTypeEnum.ChannelStreamStop);
-                            break;
-                        case EventTypeEnum.TwitchChannelRaided:
-                        case EventTypeEnum.TrovoChannelRaided:
-                            genericCommand = this.GetEventCommand(EventTypeEnum.ChannelRaided);
-                            break;
-                        case EventTypeEnum.TwitchChannelFollowed:
-                        case EventTypeEnum.TrovoChannelFollowed:
-                        case EventTypeEnum.GlimeshChannelFollowed:
-                            genericCommand = this.GetEventCommand(EventTypeEnum.ChannelFollowed);
-                            break;
-                        case EventTypeEnum.TwitchChannelSubscribed:
-                        case EventTypeEnum.TrovoChannelSubscribed:
-                            genericCommand = this.GetEventCommand(EventTypeEnum.ChannelSubscribed);
-                            break;
-                        case EventTypeEnum.TwitchChannelResubscribed:
-                        case EventTypeEnum.TrovoChannelResubscribed:
-                            genericCommand = this.GetEventCommand(EventTypeEnum.ChannelResubscribed);
-                            break;
-                        case EventTypeEnum.TwitchChannelSubscriptionGifted:
-                        case EventTypeEnum.TrovoChannelSubscriptionGifted:
-                            genericCommand = this.GetEventCommand(EventTypeEnum.ChannelSubscriptionGifted);
-                            break;
-                        case EventTypeEnum.TwitchChannelMassSubscriptionsGifted:
-                        case EventTypeEnum.TrovoChannelMassSubscriptionsGifted:
-                            genericCommand = this.GetEventCommand(EventTypeEnum.ChannelMassSubscriptionsGifted);
-                            break;
-                    }
-
-                    if (genericCommand != null)
-                    {
-                        Logger.Log(LogLevel.Debug, $"Performing event trigger: {genericCommand.EventType}");
-
-                        await ServiceManager.Get<CommandService>().Queue(genericCommand, parameters);
-                    }
-
-                    return true;
                 }
+
+                EventCommandModel genericCommand = null;
+                switch (type)
+                {
+                    case EventTypeEnum.TwitchChannelStreamStart:
+                    case EventTypeEnum.TrovoChannelStreamStart:
+                    case EventTypeEnum.GlimeshChannelStreamStart:
+                        genericCommand = this.GetEventCommand(EventTypeEnum.ChannelStreamStart);
+                        break;
+                    case EventTypeEnum.TwitchChannelStreamStop:
+                    case EventTypeEnum.TrovoChannelStreamStop:
+                    case EventTypeEnum.GlimeshChannelStreamStop:
+                        genericCommand = this.GetEventCommand(EventTypeEnum.ChannelStreamStop);
+                        break;
+                    case EventTypeEnum.TwitchChannelRaided:
+                    case EventTypeEnum.TrovoChannelRaided:
+                        genericCommand = this.GetEventCommand(EventTypeEnum.ChannelRaided);
+                        break;
+                    case EventTypeEnum.TwitchChannelFollowed:
+                    case EventTypeEnum.TrovoChannelFollowed:
+                    case EventTypeEnum.GlimeshChannelFollowed:
+                        genericCommand = this.GetEventCommand(EventTypeEnum.ChannelFollowed);
+                        break;
+                    case EventTypeEnum.TwitchChannelSubscribed:
+                    case EventTypeEnum.TrovoChannelSubscribed:
+                        genericCommand = this.GetEventCommand(EventTypeEnum.ChannelSubscribed);
+                        break;
+                    case EventTypeEnum.TwitchChannelResubscribed:
+                    case EventTypeEnum.TrovoChannelResubscribed:
+                        genericCommand = this.GetEventCommand(EventTypeEnum.ChannelResubscribed);
+                        break;
+                    case EventTypeEnum.TwitchChannelSubscriptionGifted:
+                    case EventTypeEnum.TrovoChannelSubscriptionGifted:
+                        genericCommand = this.GetEventCommand(EventTypeEnum.ChannelSubscriptionGifted);
+                        break;
+                    case EventTypeEnum.TwitchChannelMassSubscriptionsGifted:
+                    case EventTypeEnum.TrovoChannelMassSubscriptionsGifted:
+                        genericCommand = this.GetEventCommand(EventTypeEnum.ChannelMassSubscriptionsGifted);
+                        break;
+                }
+
+                if (genericCommand != null)
+                {
+                    Logger.Log(LogLevel.Debug, $"Performing generic event trigger: {genericCommand.EventType}");
+                    await ServiceManager.Get<CommandService>().Queue(genericCommand, parameters);
+                }
+
+                return true;
             }
             return false;
         }

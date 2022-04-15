@@ -1,5 +1,6 @@
 ﻿using MixItUp.API.V2.Models;
 using MixItUp.Base;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using System;
@@ -11,15 +12,8 @@ using System.Web.Http;
 namespace MixItUp.WPF.Services.DeveloperAPI.V2
 {
     [RoutePrefix("api/v2/commands")]
-    public class CommandsControllerV2 : ApiController
+    public class CommandsV2Controller : ApiController
     {
-        // Get Command
-        // Must have all command data (triggers, costs, restrictions, etc)
-        // Run Command
-        // Update Command
-        // Delete Command?
-        // Create Command?
-
         [Route("{commandId:guid}")]
         [HttpGet]
         public IHttpActionResult GetCommandById(Guid commandId)
@@ -88,6 +82,26 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V2
             }
 
             return Ok(new GetSingleCommandResponse { Command = CommandMapper.ToCommand(command) });
+        }
+
+        [Route("{commandId:guid}")]
+        [HttpPost]
+        public async Task<IHttpActionResult> RunCommand(Guid commandId, [FromBody] RunCommandParameters parameters)
+        {
+            if (!ChannelSession.Settings.Commands.TryGetValue(commandId, out var command) || command == null)
+            {
+                return NotFound();
+            }
+
+            StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All;
+            if (!string.IsNullOrEmpty(parameters.Platform) && !Enum.TryParse<StreamingPlatformTypeEnum>(parameters.Platform, ignoreCase: true, out platform))
+            {
+                return BadRequest($"Unknown platform: {parameters.Platform}");
+            }
+
+            await ServiceManager.Get<CommandService>().Queue(commandId, new CommandParametersModel(platform: platform, arguments: parameters.Arguments, specialIdentifiers: parameters.SpecialIdentifiers));
+
+            return Ok();
         }
 
         private IEnumerable<CommandModelBase> GetAllCommands()

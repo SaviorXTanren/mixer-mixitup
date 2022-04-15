@@ -28,11 +28,11 @@ namespace MixItUp.Base.Model.Settings
                 }
             }
 
-            //if (settings.ForceResetPreviewProgram)
-            //{
-            //    settings.ForceResetPreviewProgram = false;
-            //    settings.PreviewProgram = false;
-            //}
+            if (settings.ForceResetPreviewProgram)
+            {
+                settings.ForceResetPreviewProgram = false;
+                settings.PreviewProgram = false;
+            }
 
             return settings;
         }
@@ -45,8 +45,8 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public bool PreviewProgram { get; set; } = false;
-        //[DataMember]
-        //public bool ForceResetPreviewProgram { get; set; } = true;
+        [DataMember]
+        public bool ForceResetPreviewProgram { get; set; } = true;
 
         [DataMember]
         public bool TestBuild { get; set; } = false;

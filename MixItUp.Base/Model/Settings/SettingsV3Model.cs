@@ -701,6 +701,11 @@ namespace MixItUp.Base.Model.Settings
 
             foreach (CounterModel counter in this.Counters.Values.ToList())
             {
+                // TODO: ToLower() all counters due to case-insensitive Special Identifier processing. Remove at some point in the future.
+                this.Counters.Remove(counter.Name);
+                counter.Name = counter.Name.ToLower();
+                this.Counters[counter.Name] = counter;
+
                 if (counter.ResetOnLoad)
                 {
                     await counter.ResetAmount();

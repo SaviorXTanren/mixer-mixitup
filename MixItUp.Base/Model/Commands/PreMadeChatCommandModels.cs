@@ -93,24 +93,28 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
+            string groupFilter = (parameters.Arguments != null) ? string.Join(" ", parameters.Arguments) : null;
+
             List<string> commandTriggers = new List<string>();
             foreach (ChatCommandModel command in ServiceManager.Get<CommandService>().AllEnabledChatAccessibleCommands)
             {
                 if (command.IsEnabled && !command.Wildcards)
                 {
-                    RoleRequirementModel roleRequirement = command.Requirements.Role;
-                    if (roleRequirement != null)
+                    if (string.IsNullOrEmpty(groupFilter) || string.Equals(groupFilter, command.GroupName, StringComparison.OrdinalIgnoreCase))
                     {
-                        Result result = await roleRequirement.Validate(parameters);
-                        if (result.Success)
+                        RoleRequirementModel roleRequirement = command.Requirements.Role;
+                        if (roleRequirement != null)
                         {
-                            if (command.IncludeExclamation)
+                            Result result = await roleRequirement.Validate(parameters);
+                            if (result.Success)
                             {
-                                commandTriggers.AddRange(command.Triggers.First().Select(c => $"!{c}"));
-                            }
-                            else
-                            {
-                                commandTriggers.Add(command.Triggers.First());
+                                string firstTrigger = command.Triggers.First();
+                                if (command.IncludeExclamation)
+                                {
+                                    firstTrigger = $"!{firstTrigger}";
+                                }
+
+                                commandTriggers.Add(firstTrigger);
                             }
                         }
                     }
@@ -230,7 +234,8 @@ namespace MixItUp.Base.Model.Commands
                     return TwitchPlatformService.GetTwitchDateTime(ServiceManager.Get<TwitchSessionService>().Stream?.started_at);
                 }
             }
-            else if (ServiceManager.Get<TrovoSessionService>().IsConnected)
+            
+            if (ServiceManager.Get<TrovoSessionService>().IsConnected)
             {
                 await ServiceManager.Get<TrovoSessionService>().RefreshChannel();
                 if (ServiceManager.Get<TrovoSessionService>().IsLive)
@@ -238,7 +243,8 @@ namespace MixItUp.Base.Model.Commands
                     return TrovoPlatformService.GetTrovoDateTime(ServiceManager.Get<TrovoSessionService>().Channel?.started_at);
                 }
             }
-            else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
+            
+            if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
             {
                 await ServiceManager.Get<GlimeshSessionService>().RefreshChannel();
                 if (ServiceManager.Get<GlimeshSessionService>().IsLive)
@@ -246,6 +252,7 @@ namespace MixItUp.Base.Model.Commands
                     return GlimeshPlatformService.GetGlimeshDateTime(ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.startedAt);
                 }
             }
+
             return DateTimeOffset.MinValue;
         }
 

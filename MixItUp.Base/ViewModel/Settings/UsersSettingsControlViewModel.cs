@@ -110,8 +110,15 @@ namespace MixItUp.Base.ViewModel.Settings
 
         public UsersSettingsControlViewModel()
         {
-            this.ExplicitUserRoleRequirements = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.ExplicitUserRoleRequirements,
-                ChannelSession.Settings.ExplicitUserRoleRequirements, (value) => { ChannelSession.Settings.ExplicitUserRoleRequirements = value; }, MixItUp.Base.Resources.ExplicitUserRoleRequirementsTooltip);
+            this.ExplicitUserRoleRequirements = new GenericToggleSettingsOptionControlViewModel(
+                MixItUp.Base.Resources.ExplicitUserRoleRequirements,
+                ChannelSession.Settings.ExplicitUserRoleRequirements,
+                async (value) =>
+                {
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.ExplicitUserRoleRequirementsTooltip);
+                    ChannelSession.Settings.ExplicitUserRoleRequirements = value;
+                },
+                MixItUp.Base.Resources.ExplicitUserRoleRequirementsTooltip);
 
             this.ClearUserData = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.ClearAllUserDataHeader, MixItUp.Base.Resources.ClearUserData, this.CreateCommand(async () =>
             {

@@ -36,7 +36,7 @@ namespace MixItUp.Base.Services.Glimesh
                     DateTimeOffset result = StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCISO8601String(dateTime);
                     if (result > DateTimeOffset.MinValue)
                     {
-                        return new DateTimeOffset(result.DateTime, TimeSpan.Zero);
+                        return result;
                     }
                 }
             }

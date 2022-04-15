@@ -4,7 +4,7 @@ using System.Web.Http;
 namespace MixItUp.WPF.Services.DeveloperAPI.V2
 {
     [RoutePrefix("api/v2/status")]
-    public class StatusControllerV2 : ApiController
+    public class StatusV2Controller : ApiController
     {
         [Route("version")]
         [HttpGet]

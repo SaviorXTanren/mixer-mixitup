@@ -1286,6 +1286,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Backup file failed to generate. If this continues, please visit the Mix It Up support Discord for further assistance..
+        /// </summary>
+        public static string BackupGenerationFailed {
+            get {
+                return ResourceManager.GetString("BackupGenerationFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Backup Rate.
         /// </summary>
         public static string BackupRate {

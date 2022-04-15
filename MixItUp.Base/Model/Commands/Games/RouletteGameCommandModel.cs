@@ -128,6 +128,11 @@ namespace MixItUp.Base.Model.Commands.Games
                         }
 
                         string winningBetType = this.BetOptions.Random();
+                        if (this.BetType == RouletteGameCommandBetType.NumberRange)
+                        {
+                            IEnumerable<int> minMaxNumbers = this.BetOptions.Select(s => int.Parse(s));
+                            winningBetType = RandomHelper.GenerateRandomNumber(minMaxNumbers.Min(), minMaxNumbers.Max()).ToString();
+                        }
 
                         List<CommandParametersModel> winners = new List<CommandParametersModel>();
                         int totalPayout = 0;
