@@ -332,6 +332,7 @@ namespace MixItUp.Base.Services.Twitch
                 CommandParametersModel parameters = new CommandParametersModel(user);
                 if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TwitchChannelFollowed, parameters))
                 {
+                    user.Roles.Add(UserRoleEnum.Follower);
                     user.FollowDate = DateTimeOffset.Now;
 
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user.ID;
