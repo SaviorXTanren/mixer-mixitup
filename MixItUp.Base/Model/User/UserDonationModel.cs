@@ -34,6 +34,8 @@ namespace MixItUp.Base.Model.User
         public string ID { get; set; }
         [DataMember]
         public StreamingPlatformTypeEnum Platform { get; set; } = StreamingPlatformTypeEnum.None;
+        [DataMember]
+        public bool IsAnonymous { get; set; }
 
         [DataMember]
         public string Type { get; set; }
@@ -52,6 +54,11 @@ namespace MixItUp.Base.Model.User
         {
             get
             {
+                if (this.IsAnonymous)
+                {
+                    return MixItUp.Base.Resources.Anonymous;
+                }
+
                 if (this.User != null)
                 {
                     return this.User.DisplayName;
@@ -77,6 +84,11 @@ namespace MixItUp.Base.Model.User
 
         public async Task AssignUser()
         {
+            if (this.IsAnonymous)
+            {
+                this.User = UserV2ViewModel.CreateUnassociated(MixItUp.Base.Resources.Anonymous);
+            }
+
             if (!string.IsNullOrEmpty(this.username))
             {
                 this.User = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(this.Platform, this.username);
