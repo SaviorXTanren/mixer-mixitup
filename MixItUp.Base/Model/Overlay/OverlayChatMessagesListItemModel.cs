@@ -124,11 +124,11 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async void GlobalEvents_OnChatMessageDeleted(object sender, Guid id)
+        private async void GlobalEvents_OnChatMessageDeleted(object sender, string id)
         {
             await this.listSemaphore.WaitAndRelease(() =>
             {
-                OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateRemoveItem(id.ToString());
+                OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateRemoveItem(id);
                 this.Items.Add(item);
                 this.SendUpdateRequired();
                 return Task.CompletedTask;
