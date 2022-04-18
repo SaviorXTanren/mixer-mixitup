@@ -16,6 +16,8 @@ namespace MixItUp.Base.Services
         Task BulkWrite(string databaseFilePath, string commandString, IEnumerable<Dictionary<string, object>> parameters);
 
         void ClearAllPools();
+
+        Task CompressDb(string databaseFilePath);
     }
 
     public static class DbDataReaderExtensions

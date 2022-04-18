@@ -446,6 +446,10 @@ namespace MixItUp.Base.Services
                     {
                         settings.Users[user.ID] = user;
                     }
+                    else
+                    {
+                        settings.Users.Remove(oldUser.ID);
+                    }
                 }
 
                 foreach (CommandModelBase command in settings.Commands.Values)

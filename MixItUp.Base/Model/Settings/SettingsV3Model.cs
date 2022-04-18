@@ -858,6 +858,8 @@ namespace MixItUp.Base.Model.Settings
                     { "$PlatformUsername", u.PlatformUsername },
                     { "$Data", JSONSerializerHelper.SerializeToString(u) }
                 }));
+
+            await ServiceManager.Get<IDatabaseService>().CompressDb(this.DatabaseFilePath);
         }
 
         public async Task<IEnumerable<UserV2Model>> LoadUserV2Data(string query, Dictionary<string, object> parameters)

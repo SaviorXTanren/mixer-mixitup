@@ -113,6 +113,11 @@ namespace MixItUp.WPF.Services
             });
         }
 
+        public async Task CompressDb(string databaseFilePath)
+        {
+            await Write(databaseFilePath, "vacuum;");
+        }
+
         public void ClearAllPools()
         {
             try
