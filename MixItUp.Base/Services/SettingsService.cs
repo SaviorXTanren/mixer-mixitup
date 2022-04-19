@@ -345,16 +345,16 @@ namespace MixItUp.Base.Services
             }
             else if (currentVersion < SettingsV3Model.LatestVersion)
             {
-                await SettingsV3Upgrader.Version5Upgrade(currentVersion, filePath);
+                await SettingsV3Upgrader.Version4Upgrade(currentVersion, filePath);
             }
             SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
             settings.Version = SettingsV3Model.LatestVersion;
             return settings;
         }
 
-        public static async Task Version5Upgrade(int version, string filePath)
+        public static async Task Version4Upgrade(int version, string filePath)
         {
-            if (version < 5)
+            if (version < 4)
             {
                 string fileData = await ServiceManager.Get<IFileService>().ReadFile(filePath);
                 fileData = fileData.Replace("MixItUp.Base.Model.User.UserRoleEnum", "MixItUp.Base.Model.User.OldUserRoleEnum");
