@@ -326,7 +326,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                return (this.SubscriberTier > 0) ? $"{MixItUp.Base.Resources.Tier} {this.SubscriberTier}" : MixItUp.Base.Resources.NotSubscribed;
+                return (this.IsPlatformSubscriber) ? $"{MixItUp.Base.Resources.Tier} {this.SubscriberTier}" : MixItUp.Base.Resources.NotSubscribed;
             }
         }
         public string PlatformSubscriberBadgeLink { get { return this.PlatformModel.SubscriberBadgeLink; } }
