@@ -19,7 +19,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public string Platform { get { return EnumLocalizationHelper.GetLocalizedName(this.user.Platform); } }
 
-        public string PrimaryRole { get { return EnumHelper.GetEnumName(this.user.PrimaryRole); } }
+        public string PrimaryRole { get { return EnumLocalizationHelper.GetLocalizedName(this.user.PrimaryRole); } }
 
         public QueueUser(UserV2ViewModel user, int queuePosition)
         {
