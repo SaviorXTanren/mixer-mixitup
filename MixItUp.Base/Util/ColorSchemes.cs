@@ -27,29 +27,10 @@ namespace MixItUp.Base.Util
             { "Pink", "#e91e63" },
             { "Purple", "#9c27b0" },
             { "Red", "#f44336" },
+            { "Transparent", "Transparent" },
             { "Teal", "#009688" },
             { "White", "#ffffff" },
             { "Yellow", "#ffeb3b" },
-        };
-
-        public static readonly HashSet<string> WPFColorSchemeDictionary = new HashSet<string>()
-        {
-            "Black",
-            "Blue",
-            "Brown",
-            "Cyan",
-            "Gray",
-            "Green",
-            "Indigo",
-            "Lime",
-            "Orange",
-            "Pink",
-            "Purple",
-            "Red",
-            "Teal",
-            "Transparent",
-            "White",
-            "Yellow",
         };
 
         public static string GetColorCode(string name)
