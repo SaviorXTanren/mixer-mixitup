@@ -6,7 +6,6 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -284,7 +283,7 @@ namespace MixItUp.Base.ViewModel.Currency
                 }
                 else
                 {
-                    this.SelectedItem.Name = this.ItemName;
+                    this.SelectedItem.Name = this.ItemName.Trim();
                     this.SelectedItem.MaxAmount = this.ItemMaxAmount;
                     this.SelectedItem.BuyAmount = this.ItemBuyAmount;
                     this.SelectedItem.SellAmount = this.ItemSellAmount;
@@ -394,7 +393,7 @@ namespace MixItUp.Base.ViewModel.Currency
                 ChannelSession.Settings.Inventory[this.inventory.ID] = this.inventory;
             }
 
-            this.inventory.Name = this.Name;
+            this.inventory.Name = this.Name.Trim();
             this.inventory.DefaultMaxAmount = this.DefaultItemMaxAmount;
             this.inventory.SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.inventory.Name);
             this.inventory.Items = new Dictionary<Guid, InventoryItemModel>(this.Items.ToDictionary(i => i.ID, i => i));

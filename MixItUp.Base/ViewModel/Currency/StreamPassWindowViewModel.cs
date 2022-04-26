@@ -7,7 +7,6 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -462,7 +461,7 @@ namespace MixItUp.Base.ViewModel.Currency
                 ChannelSession.Settings.StreamPass[this.StreamPass.ID] = this.StreamPass;
             }
 
-            this.StreamPass.Name = this.Name;
+            this.StreamPass.Name = this.Name.Trim();
             this.StreamPass.SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.Name, maxLength: 15);
             this.StreamPass.UserPermission = this.Permission;
             this.StreamPass.MaxLevel = this.MaxLevel;

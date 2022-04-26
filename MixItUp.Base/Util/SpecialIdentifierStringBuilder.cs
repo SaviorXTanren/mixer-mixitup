@@ -120,22 +120,28 @@ namespace MixItUp.Base.Util
 
         public static string ConvertToSpecialIdentifier(string text, int maxLength = 0)
         {
-            StringBuilder specialIdentifier = new StringBuilder();
-            for (int i = 0; i < text.Length; i++)
+            if (!string.IsNullOrEmpty(text))
             {
-                if (char.IsLetterOrDigit(text[i]))
+                text = text.Trim();
+
+                StringBuilder specialIdentifier = new StringBuilder();
+                for (int i = 0; i < text.Length; i++)
                 {
-                    specialIdentifier.Append(text[i]);
+                    if (char.IsLetterOrDigit(text[i]))
+                    {
+                        specialIdentifier.Append(text[i]);
+                    }
                 }
-            }
-            string result = specialIdentifier.ToString().ToLower();
+                string result = specialIdentifier.ToString().ToLower();
 
-            if (maxLength > 0 && result.Length > maxLength)
-            {
-                result = result.Substring(0, maxLength);
-            }
+                if (maxLength > 0 && result.Length > maxLength)
+                {
+                    result = result.Substring(0, maxLength);
+                }
 
-            return result;
+                return result;
+            }
+            return null;
         }
 
         public static string ReplaceParameterVariablesEntries(string text, string pattern, string preReplacement, string postReplacement = null)
