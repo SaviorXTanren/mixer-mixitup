@@ -738,7 +738,7 @@ namespace MixItUp.Base.ViewModel.Currency
                 ChannelSession.Settings.Currency[this.Currency.ID] = this.Currency;
             }
 
-            this.Currency.Name = this.Name;
+            this.Currency.Name = this.Name.Trim();
             this.Currency.IsPrimary = this.IsPrimary;
             this.Currency.MaxAmount = (this.MaxAmount != 0 && this.MaxAmount != int.MaxValue) ? this.MaxAmount : int.MaxValue;
 

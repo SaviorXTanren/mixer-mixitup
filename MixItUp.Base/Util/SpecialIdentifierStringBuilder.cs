@@ -120,22 +120,28 @@ namespace MixItUp.Base.Util
 
         public static string ConvertToSpecialIdentifier(string text, int maxLength = 0)
         {
-            StringBuilder specialIdentifier = new StringBuilder();
-            for (int i = 0; i < text.Length; i++)
+            if (!string.IsNullOrEmpty(text))
             {
-                if (char.IsLetterOrDigit(text[i]))
+                text = text.Trim();
+
+                StringBuilder specialIdentifier = new StringBuilder();
+                for (int i = 0; i < text.Length; i++)
                 {
-                    specialIdentifier.Append(text[i]);
+                    if (char.IsLetterOrDigit(text[i]))
+                    {
+                        specialIdentifier.Append(text[i]);
+                    }
                 }
-            }
-            string result = specialIdentifier.ToString().ToLower();
+                string result = specialIdentifier.ToString().ToLower();
 
-            if (maxLength > 0 && result.Length > maxLength)
-            {
-                result = result.Substring(0, maxLength);
-            }
+                if (maxLength > 0 && result.Length > maxLength)
+                {
+                    result = result.Substring(0, maxLength);
+                }
 
-            return result;
+                return result;
+            }
+            return null;
         }
 
         public static string ReplaceParameterVariablesEntries(string text, string pattern, string preReplacement, string postReplacement = null)
@@ -323,6 +329,17 @@ namespace MixItUp.Base.Util
 
                 foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                 {
+                    if (this.ContainsRegexSpecialIdentifier(currency.AllTotalAmountSpecialIdentifier) || this.ContainsRegexSpecialIdentifier(currency.AllTotalAmountDisplaySpecialIdentifier))
+                    {
+                        await ServiceManager.Get<UserService>().LoadAllUserData();
+
+                        IEnumerable<UserV2Model> applicableUsers = await SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
+                        int total = applicableUsers.Sum(u => currency.GetAmount(u));
+
+                        this.ReplaceSpecialIdentifier(currency.AllTotalAmountDisplaySpecialIdentifier, total.ToNumberDisplayString());
+                        this.ReplaceSpecialIdentifier(currency.AllTotalAmountSpecialIdentifier, total.ToString());
+                    }
+
                     if (this.ContainsRegexSpecialIdentifier(currency.TopRegexSpecialIdentifier))
                     {
                         await this.ReplaceNumberBasedRegexSpecialIdentifier(currency.TopRegexSpecialIdentifier, async (total) =>
@@ -332,7 +349,7 @@ namespace MixItUp.Base.Util
                             foreach (UserV2Model userData in (await SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency)).Take(total))
                             {
                                 UserV2ViewModel userViewModel = new UserV2ViewModel(userData);
-                                currencyUserList.Add($"#{userPosition}) {userViewModel.Username} - {currency.GetAmount(userData).ToString("N0")}");
+                                currencyUserList.Add($"#{userPosition}) {userViewModel.Username} - {currency.GetAmount(userData).ToNumberDisplayString()}");
                                 userPosition++;
                             }
 
@@ -785,11 +802,11 @@ namespace MixItUp.Base.Util
                         RankModel nextRank = currency.GetNextRank(user);
 
                         this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNextNameSpecialIdentifier, nextRank.Name);
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextDisplaySpecialIdentifier, nextRank.Amount.ToString("N0"));
+                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextDisplaySpecialIdentifier, nextRank.Amount.ToNumberDisplayString());
                         this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextSpecialIdentifier, nextRank.Amount.ToString());
 
                         this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNameSpecialIdentifier, rank.Name);
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountDisplaySpecialIdentifier, amount.ToString("N0"));
+                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountDisplaySpecialIdentifier, amount.ToNumberDisplayString());
                         this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier, amount.ToString());
                     }
                 }
@@ -838,7 +855,7 @@ namespace MixItUp.Base.Util
                     if (this.ContainsSpecialIdentifier(identifierHeader + streamPass.UserAmountSpecialIdentifier))
                     {
                         this.ReplaceSpecialIdentifier(identifierHeader + streamPass.UserLevelSpecialIdentifier, streamPass.GetLevel(user).ToString());
-                        this.ReplaceSpecialIdentifier(identifierHeader + streamPass.UserPointsDisplaySpecialIdentifier, streamPass.GetAmount(user).ToString("N0"));
+                        this.ReplaceSpecialIdentifier(identifierHeader + streamPass.UserPointsDisplaySpecialIdentifier, streamPass.GetAmount(user).ToNumberDisplayString());
                         this.ReplaceSpecialIdentifier(identifierHeader + streamPass.UserAmountSpecialIdentifier, streamPass.GetAmount(user).ToString());
                     }
                 }

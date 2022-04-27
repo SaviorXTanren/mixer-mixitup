@@ -267,7 +267,7 @@ namespace MixItUp.Base.ViewModel.Currency
                     product = new RedemptionStoreProductModel();
                 }
 
-                product.Name = this.ProductName;
+                product.Name = this.ProductName.Trim();
                 product.MaxAmount = product.CurrentAmount = this.ProductQuantity;
                 product.AutoReplenish = this.ProductAutoReplenish;
                 product.AutoRedeem = this.ProductAutoRedeem;

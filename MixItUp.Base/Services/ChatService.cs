@@ -193,6 +193,8 @@ namespace MixItUp.Base.Services
             {
                 await this.RemoveMessage(message);
             }
+
+            GlobalEvents.ChatMessageDeleted(message.ID);
         }
 
         public async Task ClearMessages(StreamingPlatformTypeEnum platform)

@@ -101,12 +101,21 @@ namespace MixItUp.Base.Services.External
                 amount = this.amount.GetValueOrDefault();
             }
 
+            bool isAnonymous = false;
+            string username = this.displayName;
+            if (string.IsNullOrEmpty(username))
+            {
+                username = MixItUp.Base.Resources.Anonymous;
+                isAnonymous = true;
+            }
+
             return new UserDonationModel()
             {
                 Source = UserDonationSourceEnum.ExtraLife,
+                IsAnonymous = isAnonymous,
 
                 ID = this.donationID,
-                Username = this.displayName,
+                Username = username,
                 Message = this.message,
 
                 Amount = Math.Round(amount, 2),

@@ -40,7 +40,7 @@ namespace MixItUp.Base.Model.Commands.Games
         public override async Task CustomRun(CommandParametersModel parameters)
         {
             await this.SetSelectedUser(this.PlayerSelectionType, parameters);
-            if (parameters.TargetUser != null)
+            if (parameters.TargetUser != null && !parameters.IsTargetUserSelf)
             {
                 if (await this.ValidateTargetUserPrimaryBetAmount(parameters))
                 {

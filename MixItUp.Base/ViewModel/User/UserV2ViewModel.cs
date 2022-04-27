@@ -326,7 +326,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                return (this.SubscriberTier > 0) ? $"{MixItUp.Base.Resources.Tier} {this.SubscriberTier}" : MixItUp.Base.Resources.NotSubscribed;
+                return (this.IsPlatformSubscriber) ? $"{MixItUp.Base.Resources.Tier} {this.SubscriberTier}" : MixItUp.Base.Resources.NotSubscribed;
             }
         }
         public string PlatformSubscriberBadgeLink { get { return this.PlatformModel.SubscriberBadgeLink; } }
@@ -681,7 +681,7 @@ namespace MixItUp.Base.ViewModel.User
 
                     double refreshTime = (DateTimeOffset.Now - refreshStart).TotalMilliseconds;
                     Logger.Log($"User refresh time: {refreshTime} ms");
-                    if (refreshTime > 500)
+                    if (refreshTime > 1000)
                     {
                         Logger.Log(LogLevel.Error, string.Format("Long user refresh time detected for the following user: {0} - {1} - {2} ms", this.ID, this.Username, refreshTime));
                     }
