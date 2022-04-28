@@ -224,8 +224,11 @@ namespace MixItUp.Base.Services
                     }
                 }
 
-                await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
                 user.UpdateLastActivity();
+                if (type != EventTypeEnum.ChatUserLeft)
+                {
+                    await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
+                }
 
                 EventCommandModel command = this.GetEventCommand(type);
                 if (command != null)
