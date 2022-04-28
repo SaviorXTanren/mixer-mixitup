@@ -119,5 +119,13 @@ namespace MixItUp.Base.Util
             }
             return result;
         }
+
+        public static void AddRange<T>(this HashSet<T> list, IEnumerable<T> items)
+        {
+            foreach (T item in items)
+            {
+                list.Add(item);
+            }
+        }
     }
 }

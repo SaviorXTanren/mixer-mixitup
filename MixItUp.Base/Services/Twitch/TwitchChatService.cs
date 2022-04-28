@@ -53,6 +53,23 @@ namespace MixItUp.Base.Services.Twitch
         }
     }
 
+    public class TwitchTMIChatModel
+    {
+        public long chatter_count { get; set; }
+        public TwitchTMIChatGroupsModel chatters { get; set; } = new TwitchTMIChatGroupsModel();
+    }
+
+    public class TwitchTMIChatGroupsModel
+    {
+        public List<string> broadcaster { get; set; } = new List<string>();
+        public List<string> vips { get; set; } = new List<string>();
+        public List<string> moderators { get; set; } = new List<string>();
+        public List<string> staff { get; set; } = new List<string>();
+        public List<string> admins { get; set; } = new List<string>();
+        public List<string> global_mods { get; set; } = new List<string>();
+        public List<string> viewers { get; set; } = new List<string>();
+    }
+
     public class TwitchChatService : StreamingPlatformServiceBase
     {
         private const int MaxMessageLength = 500;
@@ -92,10 +109,10 @@ namespace MixItUp.Base.Services.Twitch
         private HashSet<string> userJoinEvents = new HashSet<string>();
         private HashSet<string> userLeaveEvents = new HashSet<string>();
 
-        private List<string> initialUserLogins = new List<string>();
+        private HashSet<string> initialUserLogins = new HashSet<string>();
+        private HashSet<string> lastTMIChatLogins = new HashSet<string>();
 
         private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
-        private SemaphoreSlim whisperSemaphore = new SemaphoreSlim(1);
 
         public TwitchChatService() { }
 
@@ -151,6 +168,7 @@ namespace MixItUp.Base.Services.Twitch
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         AsyncRunner.RunAsyncBackground(this.ChatterJoinLeaveBackground, this.cancellationTokenSource.Token, 2500);
+                        AsyncRunner.RunAsyncBackground(this.TMIChatUpdateBackground, this.cancellationTokenSource.Token, 60000);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                         await Task.Delay(3000);
@@ -483,6 +501,14 @@ namespace MixItUp.Base.Services.Twitch
             });
         }
 
+        public async Task<TwitchTMIChatModel> GetTMIChatUsers()
+        {
+            using (AdvancedHttpClient client = new AdvancedHttpClient())
+            {
+                return await client.GetAsync<TwitchTMIChatModel>($"https://tmi.twitch.tv/group/user/{ServiceManager.Get<TwitchSessionService>().Username}/chatters");
+            }
+        }
+
         private ChatClient GetChatClient(bool sendAsStreamer = false) { return (this.botClient != null && !sendAsStreamer) ? this.botClient : this.userClient; }
 
         private async Task ChatterJoinLeaveBackground(CancellationToken cancellationToken)
@@ -495,6 +521,18 @@ namespace MixItUp.Base.Services.Twitch
                     string username = this.userJoinEvents.First();
                     joinsToProcess.Add(username);
                     this.userJoinEvents.Remove(username);
+                }
+                return Task.CompletedTask;
+            });
+
+            List<string> leavesToProcess = new List<string>();
+            await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>
+            {
+                for (int i = 0; i < userJoinLeaveEventsTotalToProcess && i < this.userLeaveEvents.Count(); i++)
+                {
+                    string username = this.userLeaveEvents.First();
+                    leavesToProcess.Add(username);
+                    this.userLeaveEvents.Remove(username);
                 }
                 return Task.CompletedTask;
             });
@@ -514,17 +552,70 @@ namespace MixItUp.Base.Services.Twitch
                 await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(processedUsers);
             }
 
-            List<string> leavesToProcess = new List<string>();
-            await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>
+            if (leavesToProcess.Count > 0)
             {
-                for (int i = 0; i < userJoinLeaveEventsTotalToProcess && i < this.userLeaveEvents.Count(); i++)
+                List<UserV2ViewModel> processedUsers = new List<UserV2ViewModel>();
+                foreach (string username in leavesToProcess)
                 {
-                    string username = this.userLeaveEvents.First();
-                    leavesToProcess.Add(username);
-                    this.userLeaveEvents.Remove(username);
+                    if (!string.IsNullOrEmpty(username))
+                    {
+                        UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, username);
+                        if (user != null)
+                        {
+                            processedUsers.Add(user);
+                        }
+                    }
                 }
-                return Task.CompletedTask;
-            });
+                await ServiceManager.Get<UserService>().RemoveActiveUsers(processedUsers);
+            }
+        }
+
+        private async Task TMIChatUpdateBackground(CancellationToken cancellationToken)
+        {
+            TwitchTMIChatModel tmiChat = await GetTMIChatUsers();
+
+            HashSet<string> chatters = new HashSet<string>();
+            chatters.AddRange(tmiChat.chatters.admins);
+            chatters.AddRange(tmiChat.chatters.broadcaster);
+            chatters.AddRange(tmiChat.chatters.global_mods);
+            chatters.AddRange(tmiChat.chatters.moderators);
+            chatters.AddRange(tmiChat.chatters.staff);
+            chatters.AddRange(tmiChat.chatters.viewers);
+            chatters.AddRange(tmiChat.chatters.vips);
+
+            HashSet<string> joinsToProcess = new HashSet<string>();
+            HashSet<string> leavesToProcess = new HashSet<string>();
+
+            foreach (string chatter in chatters)
+            {
+                if (!lastTMIChatLogins.Contains(chatter))
+                {
+                    joinsToProcess.Add(chatter);
+                }
+            }
+
+            foreach (string chatter in lastTMIChatLogins)
+            {
+                if (!chatters.Contains(chatter))
+                {
+                    leavesToProcess.Add(chatter);
+                }
+            }
+
+            if (joinsToProcess.Count > 0)
+            {
+                List<UserV2ViewModel> processedUsers = new List<UserV2ViewModel>();
+                foreach (string username in joinsToProcess)
+                {
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, username, performPlatformSearch: true);
+                    if (user != null)
+                    {
+                        processedUsers.Add(user);
+                    }
+                }
+
+                await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(processedUsers);
+            }
 
             if (leavesToProcess.Count > 0)
             {
@@ -542,6 +633,8 @@ namespace MixItUp.Base.Services.Twitch
                 }
                 await ServiceManager.Get<UserService>().RemoveActiveUsers(processedUsers);
             }
+
+            lastTMIChatLogins = chatters;
         }
 
         private async Task DownloadBetterTTVEmotes(string twitchID = null)
