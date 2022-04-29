@@ -24,23 +24,29 @@ using Twitch.Base.Models.NewAPI.Chat;
 
 namespace MixItUp.Base.Services.Twitch
 {
-    public class BetterTTVEmoteModel
+    public class BetterTTVEmoteModel : IChatEmoteViewModel
     {
         public string id { get; set; }
         public string channel { get; set; }
         public string code { get; set; }
         public string imageType { get; set; }
 
-        public string url { get { return string.Format("https://cdn.betterttv.net/emote/{0}/1x", this.id); } }
+        public string ID { get { return this.id; } }
+        public string Name { get { return this.code; } }
+        public string ImageURL { get { return string.Format("https://cdn.betterttv.net/emote/{0}/1x", this.id); } }
+
+        public bool IsGIF { get { return string.Equals(this.imageType, "gif", StringComparison.OrdinalIgnoreCase); } }
     }
 
-    public class FrankerFaceZEmoteModel
+    public class FrankerFaceZEmoteModel : IChatEmoteViewModel
     {
         public string id { get; set; }
         public string name { get; set; }
         public JObject urls { get; set; }
 
-        public string url
+        public string ID { get { return this.id; } }
+        public string Name { get { return this.name; } }
+        public string ImageURL
         {
             get
             {
