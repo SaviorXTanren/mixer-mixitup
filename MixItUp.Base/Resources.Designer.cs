@@ -11185,6 +11185,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mix It Up Services.
+        /// </summary>
+        public static string MixItUpServices {
+            get {
+                return ResourceManager.GetString("MixItUpServices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mix It Up - Update Available.
         /// </summary>
         public static string MixItUpUpdateAvailable {

@@ -7659,4 +7659,7 @@ via Twitch, it's a "your mileage may very" situation.</value>
   <data name="Transparent" xml:space="preserve">
     <value>Transparent</value>
   </data>
+  <data name="MixItUpServices" xml:space="preserve">
+    <value>Mix It Up Services</value>
+  </data>
 </root>
