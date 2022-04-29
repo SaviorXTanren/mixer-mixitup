@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -15,6 +16,8 @@ namespace MixItUp.Base.Model.User.Platform
     [DataContract]
     public class TwitchUserPlatformV2Model : UserPlatformV2ModelBase
     {
+        private const int FollowDelayLeniencyMinutes = 10;
+
         [DataMember]
         public string Color { get; set; }
 
@@ -97,8 +100,11 @@ namespace MixItUp.Base.Model.User.Platform
                 }
                 else
                 {
-                    this.Roles.Remove(UserRoleEnum.Follower);
-                    this.FollowDate = null;
+                    if (!this.Roles.Contains(UserRoleEnum.Follower) || (DateTimeOffset.Now - this.FollowDate.GetValueOrDefault()).TotalMinutes > FollowDelayLeniencyMinutes)
+                    {
+                        this.Roles.Remove(UserRoleEnum.Follower);
+                        this.FollowDate = null;
+                    }
                 }
 
                 if (ServiceManager.Get<TwitchSessionService>().User.IsAffiliate() || ServiceManager.Get<TwitchSessionService>().User.IsPartner())
