@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 
 namespace MixItUp.WPF.Controls.Chat
 {
