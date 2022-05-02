@@ -27,6 +27,10 @@
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <Util:ColorBrushConverter x:Key="ColorBrushConverter" />
 
+            <ContextMenu x:Key="UserListContextMenu">
+                <MenuItem x:Name="UserInformationMenuItem" Header="User Info" Click="UserInformationMenuItem_Click" />
+            </ContextMenu>
+
         </ResourceDictionary>
     </local:MainControlBase.Resources>
 
@@ -91,7 +95,7 @@
 
                 <GridSplitter x:Name="ChatSplitter" Visibility="{Binding ShowChatUserList, Converter={StaticResource BoolToVisibilityConverter}}" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="5" />
 
-                <ListView x:Name="UserList" ItemsSource="{Binding DisplayUsers}" Visibility="{Binding ShowChatUserList, Converter={StaticResource BoolToVisibilityConverter}}" Grid.Column="2" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Stretch" SelectionChanged="UserList_SelectionChanged" MinWidth="200">
+                <ListView x:Name="UserList" ItemsSource="{Binding DisplayUsers}" ContextMenu="{StaticResource UserListContextMenu}" Visibility="{Binding ShowChatUserList, Converter={StaticResource BoolToVisibilityConverter}}" Grid.Column="2" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Stretch" MinWidth="200">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ChatControls:ChatUserControl DataContext="{Binding}" Grid.Column="0" />
