@@ -15,6 +15,8 @@ using YouTube.Base.Clients;
 
 namespace MixItUp.Base.Services.YouTube
 {
+    // https://stackoverflow.com/questions/64726611/how-to-get-a-list-of-youtube-channel-emojis
+
     public class YouTubeChatEmoteModel
     {
         public class YouTubeChatEmoteImageModel
@@ -196,7 +198,7 @@ namespace MixItUp.Base.Services.YouTube
         {
             using (AdvancedHttpClient client = new AdvancedHttpClient())
             {
-                return await client.GetAsync<List<YouTubeChatEmoteModel>>("https://www.gstatic.com/youtube/img/emojis/emojis-svg-5.json");
+                return await client.GetAsync<List<YouTubeChatEmoteModel>>("https://www.gstatic.com/youtube/img/emojis/emojis-svg-8.json");
             }
         }
 
