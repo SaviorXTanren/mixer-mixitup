@@ -169,7 +169,7 @@ namespace MixItUp.WPF.Controls.Chat
                         // Short circuit for very short searches that start with letters or digits
                         if (tag.Length > 2)
                         {
-                            List<IChatEmoteViewModel> emotes = new List<IChatEmoteViewModel>();
+                            List<ChatEmoteViewModelBase> emotes = new List<ChatEmoteViewModelBase>();
 
                             string tagText = tag.Substring(1, tag.Length - 1);
                             if (ServiceManager.Get<TwitchChatService>().IsUserConnected)
@@ -192,24 +192,28 @@ namespace MixItUp.WPF.Controls.Chat
                     }
                     else if (ChannelSession.Settings.ShowBetterTTVEmotes || ChannelSession.Settings.ShowFrankerFaceZEmotes)
                     {
-                        if (ServiceManager.Get<TwitchChatService>().IsUserConnected || ServiceManager.Get<YouTubeChatService>().IsUserConnected)
+                        // Short circuit for very short searches that start with letters or digits
+                        if (tag.Length > 2)
                         {
-                            Dictionary<string, object> emotes = new Dictionary<string, object>();
-                            if (ChannelSession.Settings.ShowBetterTTVEmotes)
+                            if (ServiceManager.Get<TwitchChatService>().IsUserConnected || ServiceManager.Get<YouTubeChatService>().IsUserConnected)
                             {
-                                foreach (var kvp in ServiceManager.Get<TwitchChatService>().BetterTTVEmotes)
+                                Dictionary<string, object> emotes = new Dictionary<string, object>();
+                                if (ChannelSession.Settings.ShowBetterTTVEmotes)
                                 {
-                                    emotes[kvp.Key] = kvp.Value;
+                                    foreach (var kvp in ServiceManager.Get<TwitchChatService>().BetterTTVEmotes)
+                                    {
+                                        emotes[kvp.Key] = kvp.Value;
+                                    }
                                 }
-                            }
-                            if (ChannelSession.Settings.ShowFrankerFaceZEmotes)
-                            {
-                                foreach (var kvp in ServiceManager.Get<TwitchChatService>().FrankerFaceZEmotes)
+                                if (ChannelSession.Settings.ShowFrankerFaceZEmotes)
                                 {
-                                    emotes[kvp.Key] = kvp.Value;
+                                    foreach (var kvp in ServiceManager.Get<TwitchChatService>().FrankerFaceZEmotes)
+                                    {
+                                        emotes[kvp.Key] = kvp.Value;
+                                    }
                                 }
+                                this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, this.FindMatchingEmoticons<object>(tag, emotes));
                             }
-                            this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, this.FindMatchingEmoticons<object>(tag, emotes));
                         }
                     }
                 }
@@ -420,9 +424,9 @@ namespace MixItUp.WPF.Controls.Chat
                     this.SelectIntellisenseItem(":" + emoticon.Name);
                 }
             }
-            else if (this.EmoticonIntellisenseListBox.SelectedItem is IChatEmoteViewModel)
+            else if (this.EmoticonIntellisenseListBox.SelectedItem is ChatEmoteViewModelBase)
             {
-                BetterTTVEmoteModel emoticon = this.EmoticonIntellisenseListBox.SelectedItem as BetterTTVEmoteModel;
+                ChatEmoteViewModelBase emoticon = this.EmoticonIntellisenseListBox.SelectedItem as ChatEmoteViewModelBase;
                 if (emoticon != null)
                 {
                     this.SelectIntellisenseItem(emoticon.Name);

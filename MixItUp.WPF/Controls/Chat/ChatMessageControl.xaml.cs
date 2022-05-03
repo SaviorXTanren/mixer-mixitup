@@ -114,9 +114,9 @@ namespace MixItUp.WPF.Controls.Chat
                                 string messagePartString = (string)messagePart;
                                 this.AddStringMessage(messagePartString, isHighlighted: highlighted, isItalicized: italics);
                             }
-                            else if (messagePart is IChatEmoteViewModel)
+                            else if (messagePart is ChatEmoteViewModelBase)
                             {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((IChatEmoteViewModel)messagePart));
+                                this.MessageWrapPanel.Children.Add(new ChatImageControl((ChatEmoteViewModelBase)messagePart));
                             }
                         }
                     }

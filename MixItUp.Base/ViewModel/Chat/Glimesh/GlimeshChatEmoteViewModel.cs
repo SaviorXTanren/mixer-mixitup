@@ -2,15 +2,15 @@
 
 namespace MixItUp.Base.ViewModel.Chat.Glimesh
 {
-    public class GlimeshChatEmoteViewModel : IChatEmoteViewModel
+    public class GlimeshChatEmoteViewModel : ChatEmoteViewModelBase
     {
-        public string ID { get { return this.Name; } }
-        public string Name { get; set; }
-        public string ImageURL { get; set; }
+        public override string ID { get;  protected set; }
+        public override string Name { get; protected set; }
+        public override string ImageURL { get; protected set; }
 
         public GlimeshChatEmoteViewModel(ChatMessageTokenModel token)
         {
-            this.Name = token.text;
+            this.ID = this.Name = token.text;
             this.ImageURL = token.src;
         }
     }

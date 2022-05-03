@@ -21,7 +21,7 @@
                 <RowDefinition Height="45" />
             </Grid.RowDefinitions>
 
-            <Image Source="{Binding PlatformImage}" Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Width="70" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="30,0,0,0" />
+            <Image Source="{Binding PlatformImage, TargetNullValue={x:Null}}" Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Width="70" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="30,0,0,0" />
 
             <TextBlock Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Streamer}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
@@ -32,7 +32,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="0" Source="{Binding UserAccountAvatar}" Height="24" Width="24" />
+                <Image Grid.Column="0" Source="{Binding UserAccountAvatar, TargetNullValue={x:Null}}" Height="24" Width="24" />
                 <TextBlock Grid.Column="2" Text="{Binding UserAccountUsername}" VerticalAlignment="Center" />
             </Grid>
 
@@ -44,7 +44,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Image Grid.Column="0" Source="{Binding LoginWithButtonImage}" Margin="0,3" />
+                    <Image Grid.Column="0" Source="{Binding LoginWithButtonImage, TargetNullValue={x:Null}}" Margin="0,3" />
 
                     <TextBlock Grid.Column="2" Text="{Binding UserAccountButtonContent}" Foreground="{Binding LoginWithButtonTextForeground}" VerticalAlignment="Center" />
                 </Grid>
@@ -59,7 +59,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="0" Source="{Binding BotAccountAvatar}" Height="24" Width="24" />
+                <Image Grid.Column="0" Source="{Binding BotAccountAvatar, TargetNullValue={x:Null}}" Height="24" Width="24" />
                 <TextBlock Grid.Column="2" Text="{Binding BotAccountUsername}" VerticalAlignment="Center" />
             </Grid>
 
@@ -71,7 +71,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Image Grid.Column="0" Source="{Binding LoginWithButtonImage}" Margin="0,3" />
+                    <Image Grid.Column="0" Source="{Binding LoginWithButtonImage, TargetNullValue={x:Null}}" Margin="0,3" />
 
                     <TextBlock Grid.Column="2" Text="{Binding BotAccountButtonContent}" Foreground="{Binding LoginWithButtonTextForeground}" VerticalAlignment="Center" />
                 </Grid>

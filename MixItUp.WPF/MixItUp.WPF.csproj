@@ -1091,7 +1091,6 @@
     </Compile>
     <Compile Include="Util\ActionListDropHandler.cs" />
     <Compile Include="Util\AlternationIndexConverter.cs" />
-    <Compile Include="Util\NullImageConverter.cs" />
     <Compile Include="Util\RegistryHelpers.cs" />
     <Compile Include="Util\StrikethroughConverter.cs" />
     <Compile Include="Util\FrameworkElementHelpers.cs" />

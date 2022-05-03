@@ -34,7 +34,7 @@
 
         <TextBox Grid.Column="0" Text="{Binding Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" />
 
-        <MaterialDesign:PopupBox Grid.Column="2" x:Name="JSONPopup" ToggleContent="{StaticResource JSONPopupIcon}" Margin="6" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
+        <MaterialDesign:PopupBox Grid.Column="2" x:Name="JSONPopup" ToggleContent="{StaticResource JSONPopupIcon}" Margin="6" StaysOpen="True">
             <Grid MinWidth="600" MinHeight="100" Margin="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />

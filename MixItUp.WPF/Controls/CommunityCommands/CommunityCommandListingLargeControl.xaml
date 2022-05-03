@@ -14,7 +14,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Image Grid.Column="0" Source="{Binding ImageURL}" Width="75" Height="75" />
+        <Image Grid.Column="0" Source="{Binding ImageURL, TargetNullValue={x:Null}}" Width="75" Height="75" />
 
         <Grid Grid.Column="2" Margin="0,5">
             <Grid.RowDefinitions>
@@ -42,7 +42,7 @@
 
                 <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" />
 
-                <Image Grid.Column="2" Source="{Binding UserAvatarURL}" Width="20" Height="20" VerticalAlignment="Center" />
+                <Image Grid.Column="2" Source="{Binding UserAvatarURL, TargetNullValue={x:Null}}" Width="20" Height="20" VerticalAlignment="Center" />
                 <TextBlock Grid.Column="4" Text="{Binding Username}" VerticalAlignment="Center" />
 
                 <MaterialDesign:PackIcon Grid.Column="6" Kind="Star" VerticalAlignment="Center" Margin="0,0,0,1" Style="{StaticResource DarkLightBackgroundPackIcon}" />

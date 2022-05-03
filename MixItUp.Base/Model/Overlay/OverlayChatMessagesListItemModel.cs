@@ -76,9 +76,9 @@ namespace MixItUp.Base.Model.Overlay
                         {
                             textParts.Add(HttpUtility.HtmlEncode((string)messagePart));
                         }
-                        else if (messagePart is IChatEmoteViewModel)
+                        else if (messagePart is ChatEmoteViewModelBase)
                         {
-                            imageURL = ((IChatEmoteViewModel)messagePart).ImageURL;
+                            imageURL = ((ChatEmoteViewModelBase)messagePart).ImageURL;
                         }
 
                         if (!string.IsNullOrEmpty(imageURL))

@@ -24,29 +24,29 @@ using Twitch.Base.Models.NewAPI.Chat;
 
 namespace MixItUp.Base.Services.Twitch
 {
-    public class BetterTTVEmoteModel : IChatEmoteViewModel
+    public class BetterTTVEmoteModel : ChatEmoteViewModelBase
     {
         public string id { get; set; }
         public string channel { get; set; }
         public string code { get; set; }
         public string imageType { get; set; }
 
-        public string ID { get { return this.id; } }
-        public string Name { get { return this.code; } }
-        public string ImageURL { get { return string.Format("https://cdn.betterttv.net/emote/{0}/1x", this.id); } }
+        public override string ID { get { return this.id; } protected set { } }
+        public override string Name { get { return this.code; } protected set { } }
+        public override string ImageURL { get { return string.Format("https://cdn.betterttv.net/emote/{0}/1x", this.ID); } protected set { } }
 
-        public bool IsGIF { get { return string.Equals(this.imageType, "gif", StringComparison.OrdinalIgnoreCase); } }
+        public override bool IsGIFImage { get { return string.Equals(this.imageType, "gif", StringComparison.OrdinalIgnoreCase); } }
     }
 
-    public class FrankerFaceZEmoteModel : IChatEmoteViewModel
+    public class FrankerFaceZEmoteModel : ChatEmoteViewModelBase
     {
         public string id { get; set; }
         public string name { get; set; }
         public JObject urls { get; set; }
 
-        public string ID { get { return this.id; } }
-        public string Name { get { return this.name; } }
-        public string ImageURL
+        public override string ID { get { return this.id; } protected set { } }
+        public override string Name { get { return this.name; } protected set { } }
+        public override string ImageURL
         {
             get
             {
@@ -56,6 +56,7 @@ namespace MixItUp.Base.Services.Twitch
                 }
                 return string.Empty;
             }
+            protected set { }
         }
     }
 
