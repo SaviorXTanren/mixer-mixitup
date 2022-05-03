@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;

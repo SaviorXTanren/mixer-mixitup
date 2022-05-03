@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User.Platform;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
@@ -12,7 +13,6 @@ using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Net.WebSockets;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -24,20 +24,6 @@ using Twitch.Base.Models.NewAPI.Chat;
 
 namespace MixItUp.Base.Services.Twitch
 {
-    public class BetterTTVEmoteModel : IChatEmoteViewModel
-    {
-        public string id { get; set; }
-        public string channel { get; set; }
-        public string code { get; set; }
-        public string imageType { get; set; }
-
-        public string ID { get { return this.id; } }
-        public string Name { get { return this.code; } }
-        public string ImageURL { get { return string.Format("https://cdn.betterttv.net/emote/{0}/1x", this.id); } }
-
-        public bool IsGIF { get { return string.Equals(this.imageType, "gif", StringComparison.OrdinalIgnoreCase); } }
-    }
-
     public class FrankerFaceZEmoteModel : IChatEmoteViewModel
     {
         public string id { get; set; }
@@ -634,46 +620,20 @@ namespace MixItUp.Base.Services.Twitch
 
         private async Task DownloadBetterTTVEmotes(string twitchID = null)
         {
-            try
+            if (!string.IsNullOrEmpty(twitchID))
             {
-                using (AdvancedHttpClient client = new AdvancedHttpClient())
+                foreach (BetterTTVEmoteModel emote in await ServiceManager.Get<BetterTTVService>().GetTwitchBetterTTVEmotes(twitchID))
                 {
-                    List<BetterTTVEmoteModel> emotes = new List<BetterTTVEmoteModel>();
-
-                    HttpResponseMessage response = await client.GetAsync((!string.IsNullOrEmpty(twitchID)) ? "https://api.betterttv.net/3/cached/users/twitch/" + twitchID : "https://api.betterttv.net/3/cached/emotes/global");
-                    if (response.IsSuccessStatusCode)
-                    {
-                        if (!string.IsNullOrEmpty(twitchID))
-                        {
-                            JObject jobj = await response.ProcessJObjectResponse();
-                            if (jobj != null)
-                            {
-                                JToken channelEmotes = jobj.SelectToken("channelEmotes");
-                                if (channelEmotes != null)
-                                {
-                                    emotes.AddRange(((JArray)channelEmotes).ToTypedArray<BetterTTVEmoteModel>());
-                                }
-
-                                JToken sharedEmotes = jobj.SelectToken("sharedEmotes");
-                                if (sharedEmotes != null)
-                                {
-                                    emotes.AddRange(((JArray)sharedEmotes).ToTypedArray<BetterTTVEmoteModel>());
-                                }
-                            }
-                        }
-                        else
-                        {
-                            emotes.AddRange(await response.ProcessResponse<List<BetterTTVEmoteModel>>());
-                        }
-
-                        foreach (BetterTTVEmoteModel emote in emotes)
-                        {
-                            this.betterTTVEmotes[emote.code] = emote;
-                        }
-                    }
+                    this.betterTTVEmotes[emote.code] = emote;
                 }
             }
-            catch (Exception ex) { Logger.Log(ex); }
+            else
+            {
+                foreach (BetterTTVEmoteModel emote in await ServiceManager.Get<BetterTTVService>().GetGlobalBetterTTVEmotes())
+                {
+                    this.betterTTVEmotes[emote.code] = emote;
+                }
+            }
         }
 
         private async Task DownloadFrankerFaceZEmotes(string channelName = null)

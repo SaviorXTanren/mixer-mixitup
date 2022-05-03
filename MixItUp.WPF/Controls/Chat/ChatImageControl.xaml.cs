@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Glimesh;
@@ -53,19 +54,7 @@ namespace MixItUp.WPF.Controls.Chat
             this.SVGImage.DataContextChanged += Image_DataContextChanged;
         }
 
-        public ChatImageControl(TwitchChatEmoteViewModel emote) : this() { this.DataContext = emote; }
-
-        public ChatImageControl(BetterTTVEmoteModel emote) : this() { this.DataContext = emote; }
-
-        public ChatImageControl(FrankerFaceZEmoteModel emote) : this() { this.DataContext = emote; }
-
-        public ChatImageControl(TwitchBitsCheerViewModel bitsCheer) : this() { this.DataContext = bitsCheer; }
-
-        public ChatImageControl(GlimeshChatEmoteViewModel emote) : this() { this.DataContext = emote; }
-
-        public ChatImageControl(TrovoChatEmoteViewModel emote) : this() { this.DataContext = emote; }
-
-        public ChatImageControl(YouTubeChatEmoteViewModel emote) : this() { this.DataContext = emote; }
+        public ChatImageControl(IChatEmoteViewModel emote) : this() { this.DataContext = emote; }
 
         private void ChatEmoteControl_Loaded(object sender, RoutedEventArgs e)
         {
