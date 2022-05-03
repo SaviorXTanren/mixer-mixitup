@@ -386,14 +386,14 @@ namespace MixItUp.Base.Services
 
         private async void SignalRConnection_Connected(object sender, EventArgs e)
         {
-            ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.WebhookEvents);
+            ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.MixItUpServices);
 
             await this.Authenticate(this.GetLoginToken());
         }
 
         private async void SignalRConnection_Disconnected(object sender, Exception e)
         {
-            ChannelSession.DisconnectionOccurred(MixItUp.Base.Resources.WebhookEvents);
+            ChannelSession.DisconnectionOccurred(MixItUp.Base.Resources.MixItUpServices);
 
             Result result = new Result();
             do
@@ -405,6 +405,8 @@ namespace MixItUp.Base.Services
                 result = await this.Connect();
             }
             while (!result.Success);
+
+            ChannelSession.ReconnectionOccurred(MixItUp.Base.Resources.MixItUpServices);
         }
 
         public async Task Authenticate(CommunityCommandLoginModel login)

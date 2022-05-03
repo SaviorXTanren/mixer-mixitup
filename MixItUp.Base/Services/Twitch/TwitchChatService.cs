@@ -24,23 +24,29 @@ using Twitch.Base.Models.NewAPI.Chat;
 
 namespace MixItUp.Base.Services.Twitch
 {
-    public class BetterTTVEmoteModel
+    public class BetterTTVEmoteModel : IChatEmoteViewModel
     {
         public string id { get; set; }
         public string channel { get; set; }
         public string code { get; set; }
         public string imageType { get; set; }
 
-        public string url { get { return string.Format("https://cdn.betterttv.net/emote/{0}/1x", this.id); } }
+        public string ID { get { return this.id; } }
+        public string Name { get { return this.code; } }
+        public string ImageURL { get { return string.Format("https://cdn.betterttv.net/emote/{0}/1x", this.id); } }
+
+        public bool IsGIF { get { return string.Equals(this.imageType, "gif", StringComparison.OrdinalIgnoreCase); } }
     }
 
-    public class FrankerFaceZEmoteModel
+    public class FrankerFaceZEmoteModel : IChatEmoteViewModel
     {
         public string id { get; set; }
         public string name { get; set; }
         public JObject urls { get; set; }
 
-        public string url
+        public string ID { get { return this.id; } }
+        public string Name { get { return this.name; } }
+        public string ImageURL
         {
             get
             {
@@ -110,7 +116,6 @@ namespace MixItUp.Base.Services.Twitch
         private HashSet<string> userLeaveEvents = new HashSet<string>();
 
         private HashSet<string> initialUserLogins = new HashSet<string>();
-        private HashSet<string> lastTMIChatLogins = new HashSet<string>();
 
         private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
 
@@ -584,21 +589,25 @@ namespace MixItUp.Base.Services.Twitch
             chatters.AddRange(tmiChat.chatters.vips);
 
             HashSet<string> joinsToProcess = new HashSet<string>();
-            HashSet<string> leavesToProcess = new HashSet<string>();
+            List<UserV2ViewModel> leavesToProcess = new List<UserV2ViewModel>();
+
+            IEnumerable<UserV2ViewModel> activeUsers = ServiceManager.Get<UserService>().GetActiveUsers(StreamingPlatformTypeEnum.Twitch);
+            HashSet<string> activeUsernames = new HashSet<string>();
+            activeUsernames.AddRange(activeUsers.Select(u => u.Username));
 
             foreach (string chatter in chatters)
             {
-                if (!lastTMIChatLogins.Contains(chatter))
+                if (!activeUsernames.Contains(chatter))
                 {
                     joinsToProcess.Add(chatter);
                 }
             }
 
-            foreach (string chatter in lastTMIChatLogins)
+            foreach (UserV2ViewModel activeUser in activeUsers)
             {
-                if (!chatters.Contains(chatter))
+                if (!chatters.Contains(activeUser.Username))
                 {
-                    leavesToProcess.Add(chatter);
+                    leavesToProcess.Add(activeUser);
                 }
             }
 
@@ -619,22 +628,8 @@ namespace MixItUp.Base.Services.Twitch
 
             if (leavesToProcess.Count > 0)
             {
-                List<UserV2ViewModel> processedUsers = new List<UserV2ViewModel>();
-                foreach (string username in leavesToProcess)
-                {
-                    if (!string.IsNullOrEmpty(username))
-                    {
-                        UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, username);
-                        if (user != null)
-                        {
-                            processedUsers.Add(user);
-                        }
-                    }
-                }
-                await ServiceManager.Get<UserService>().RemoveActiveUsers(processedUsers);
+                await ServiceManager.Get<UserService>().RemoveActiveUsers(leavesToProcess);
             }
-
-            lastTMIChatLogins = chatters;
         }
 
         private async Task DownloadBetterTTVEmotes(string twitchID = null)

@@ -76,21 +76,9 @@ namespace MixItUp.Base.Model.Overlay
                         {
                             textParts.Add(HttpUtility.HtmlEncode((string)messagePart));
                         }
-                        else if (messagePart is TwitchChatEmoteViewModel)
+                        else if (messagePart is IChatEmoteViewModel)
                         {
-                            imageURL = ((TwitchChatEmoteViewModel)messagePart).ImageURL;
-                        }
-                        else if (messagePart is BetterTTVEmoteModel)
-                        {
-                            imageURL = ((BetterTTVEmoteModel)messagePart).url;
-                        }
-                        else if (messagePart is FrankerFaceZEmoteModel)
-                        {
-                            imageURL = ((FrankerFaceZEmoteModel)messagePart).url;
-                        }
-                        else if (messagePart is TwitchBitsCheerViewModel)
-                        {
-                            imageURL = ((TwitchBitsCheerViewModel)messagePart).Tier.LightImage;
+                            imageURL = ((IChatEmoteViewModel)messagePart).ImageURL;
                         }
 
                         if (!string.IsNullOrEmpty(imageURL))

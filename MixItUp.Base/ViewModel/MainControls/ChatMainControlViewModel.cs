@@ -118,6 +118,8 @@ namespace MixItUp.Base.ViewModel.MainControls
 
                 this.NotifyPropertyChanged("PauseUnpauseCommandsButtonText");
             });
+
+            GlobalEvents.OnChatVisualSettingsChanged += GlobalEvents_OnChatVisualSettingsChanged;
         }
 
         protected override async Task OnOpenInternal()
@@ -171,6 +173,11 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             this.DisplayUsers = ServiceManager.Get<UserService>().DisplayUsers;
             this.NotifyPropertyChanged("DisplayUsers");
+        }
+
+        private void GlobalEvents_OnChatVisualSettingsChanged(object sender, EventArgs e)
+        {
+            ChatService_DisplayUsersUpdated(sender, e);
         }
     }
 }
