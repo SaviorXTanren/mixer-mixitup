@@ -114,29 +114,9 @@ namespace MixItUp.WPF.Controls.Chat
                                 string messagePartString = (string)messagePart;
                                 this.AddStringMessage(messagePartString, isHighlighted: highlighted, isItalicized: italics);
                             }
-                            else if (messagePart is TwitchChatEmoteViewModel)
+                            else if (messagePart is IChatEmoteViewModel)
                             {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((TwitchChatEmoteViewModel)messagePart));
-                            }
-                            else if (messagePart is BetterTTVEmoteModel)
-                            {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((BetterTTVEmoteModel)messagePart));
-                            }
-                            else if (messagePart is FrankerFaceZEmoteModel)
-                            {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((FrankerFaceZEmoteModel)messagePart));
-                            }
-                            else if (messagePart is TwitchBitsCheerViewModel)
-                            {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((TwitchBitsCheerViewModel)messagePart));
-                            }
-                            else if (messagePart is GlimeshChatEmoteViewModel)
-                            {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((GlimeshChatEmoteViewModel)messagePart));
-                            }
-                            else if (messagePart is TrovoChatEmoteViewModel)
-                            {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((TrovoChatEmoteViewModel)messagePart));
+                                this.MessageWrapPanel.Children.Add(new ChatImageControl((IChatEmoteViewModel)messagePart));
                             }
                         }
                     }

@@ -412,14 +412,6 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void SelectIntellisenseEmoticon()
         {
-            if (this.EmoticonIntellisenseListBox.SelectedItem is TwitchChatEmoteViewModel)
-            {
-                TwitchChatEmoteViewModel emoticon = this.EmoticonIntellisenseListBox.SelectedItem as TwitchChatEmoteViewModel;
-                if (emoticon != null)
-                {
-                    this.SelectIntellisenseItem(emoticon.Name);
-                }
-            }
             if (this.EmoticonIntellisenseListBox.SelectedItem is TrovoChatEmoteViewModel)
             {
                 TrovoChatEmoteViewModel emoticon = this.EmoticonIntellisenseListBox.SelectedItem as TrovoChatEmoteViewModel;
@@ -428,20 +420,12 @@ namespace MixItUp.WPF.Controls.Chat
                     this.SelectIntellisenseItem(":" + emoticon.Name);
                 }
             }
-            else if (this.EmoticonIntellisenseListBox.SelectedItem is BetterTTVEmoteModel)
+            else if (this.EmoticonIntellisenseListBox.SelectedItem is IChatEmoteViewModel)
             {
                 BetterTTVEmoteModel emoticon = this.EmoticonIntellisenseListBox.SelectedItem as BetterTTVEmoteModel;
                 if (emoticon != null)
                 {
-                    this.SelectIntellisenseItem(emoticon.code);
-                }
-            }
-            else if (this.EmoticonIntellisenseListBox.SelectedItem is FrankerFaceZEmoteModel)
-            {
-                FrankerFaceZEmoteModel emoticon = this.EmoticonIntellisenseListBox.SelectedItem as FrankerFaceZEmoteModel;
-                if (emoticon != null)
-                {
-                    this.SelectIntellisenseItem(emoticon.name);
+                    this.SelectIntellisenseItem(emoticon.Name);
                 }
             }
             this.HideIntellisense();
