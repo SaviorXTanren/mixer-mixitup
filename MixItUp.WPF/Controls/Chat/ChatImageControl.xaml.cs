@@ -38,15 +38,6 @@ namespace MixItUp.WPF.Controls.Chat
 
             this.Loaded += ChatImageControl_Loaded;
             this.DataContextChanged += ChatImageControl_DataContextChanged;
-
-            this.Image.Loaded += Image_Loaded;
-            this.Image.DataContextChanged += Image_DataContextChanged;
-
-            this.GifImage.Loaded += Image_Loaded;
-            this.GifImage.DataContextChanged += Image_DataContextChanged;
-
-            this.SVGImage.Loaded += Image_Loaded;
-            this.SVGImage.DataContextChanged += Image_DataContextChanged;
         }
 
         public ChatImageControl(ChatEmoteViewModelBase emote) : this() { this.DataContext = emote; }
@@ -71,11 +62,6 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void Image_Loaded(object sender, RoutedEventArgs e)
         {
-            Image_DataContextChanged(sender, new DependencyPropertyChangedEventArgs());
-        }
-
-        private void Image_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
             try
             {
                 if (emote != null)
@@ -93,28 +79,48 @@ namespace MixItUp.WPF.Controls.Chat
                 Image image = this.Image;
                 if (emote.IsGIFImage)
                 {
-                    image = this.GifImage;
+                    if (this.WindowsFormHostGifImage.IsLoaded)
+                    {
+                        loaded = true;
+                        this.WindowsFormHostGifImage.DataContext = emote;
+                        this.WindowsFormHostGifImage.Visibility = Visibility.Visible;
+                        this.GifImage.ImageLocation = emote.ImageURL;
+                        this.GifImage.Size = new System.Drawing.Size(ChannelSession.Settings.ChatFontSize * 2, ChannelSession.Settings.ChatFontSize * 2);
+                        this.AltText.Text = emote.Name;
+                    }
                 }
                 else if (emote.IsSVGImage)
                 {
-                    image = this.SVGImage;
+                    this.SetImageProperties(this.SVGImage, emote);
                 }
-
-                if (image.IsLoaded)
+                else
                 {
-                    loaded = true;
-                    this.ResizeImage(image);
-                    image.DataContext = emote;
-                    image.Visibility = Visibility.Visible;
-                    this.AltText.Text = emote.Name;
-
-                    if (emote is TwitchBitsCheerViewModel)
-                    {
-                        TwitchBitsCheerViewModel bitsCheer = (TwitchBitsCheerViewModel)emote;
-                        this.Text.Visibility = Visibility.Visible;
-                        this.Text.Text = bitsCheer.Amount.ToString();
-                    }
+                    this.SetImageProperties(this.Image, emote);
                 }
+
+                this.SetBitsCheerText(emote);
+            }
+        }
+
+        private void SetImageProperties(Image image, ChatEmoteViewModelBase emote)
+        {
+            if (image.IsLoaded)
+            {
+                loaded = true;
+                this.ResizeImage(image);
+                image.DataContext = emote;
+                image.Visibility = Visibility.Visible;
+                this.AltText.Text = emote.Name;
+            }
+        }
+
+        private void SetBitsCheerText(ChatEmoteViewModelBase emote)
+        {
+            if (emote is TwitchBitsCheerViewModel)
+            {
+                TwitchBitsCheerViewModel bitsCheer = (TwitchBitsCheerViewModel)emote;
+                this.Text.Visibility = Visibility.Visible;
+                this.Text.Text = bitsCheer.Amount.ToString();
             }
         }
 
