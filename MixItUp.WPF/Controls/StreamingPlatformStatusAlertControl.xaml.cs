@@ -37,9 +37,13 @@ namespace MixItUp.WPF.Controls
         {
             this.LaunchStatusPageCommand = this.CreateCommand((parameter) =>
             {
-                if (this.Show && !string.IsNullOrEmpty(this.incidents.FirstOrDefault().Link))
+                if (this.Show)
                 {
-                    ProcessHelper.LaunchLink(this.incidents.FirstOrDefault().Link);
+                    StreamingPlatformStatusModel status = this.incidents.FirstOrDefault();
+                    if (status != null && !string.IsNullOrEmpty(status.Link))
+                    {
+                        ProcessHelper.LaunchLink(status.Link);
+                    }
                 }
                 return Task.CompletedTask;
             });
