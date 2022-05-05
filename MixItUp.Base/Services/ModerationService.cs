@@ -49,11 +49,12 @@ namespace MixItUp.Base.Services
 
         private static readonly Regex EmoteRegex = new Regex(":\\w+ ");
         private static readonly Regex EmojiRegex = new Regex(@"\uD83D[\uDC00-\uDFFF]|\uD83C[\uDC00-\uDFFF]|\uFFFD");
-        private static readonly Regex LinkRegex = new Regex(@"(?xi)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'"".,<>?«»“”‘’]))");
+        private static readonly Regex LinkRegex = new Regex(@"[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,256}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)");
 
         private LockedList<string> communityWords = new LockedList<string>();
         private LockedList<string> filteredWords = new LockedList<string>();
         private LockedList<string> bannedWords = new LockedList<string>();
+        private LockedList<string> linkWhiteList = new LockedList<string>();
 
         private DateTimeOffset chatParticipationLastErrorMessage = DateTimeOffset.MinValue;
 
@@ -85,6 +86,12 @@ namespace MixItUp.Base.Services
             foreach (string word in ChannelSession.Settings.BannedWords)
             {
                 this.bannedWords.Add(word);
+            }
+
+            this.linkWhiteList.Clear();
+            foreach (string word in ChannelSession.Settings.LinkWhiteList)
+            {
+                this.linkWhiteList.Add($"^(https?://)?{word.Replace("*", "\\S*")}$");
             }
         }
 
@@ -231,17 +238,37 @@ namespace MixItUp.Base.Services
 
         public string ShouldTextBeLinkModerated(UserV2ViewModel user, string text, bool containsLink = false)
         {
+            string result = null;
             text = PrepareTextForChecking(text);
 
             if (!user.MeetsRole(ChannelSession.Settings.ModerationBlockLinksExcemptUserRole))
             {
                 if (ChannelSession.Settings.ModerationBlockLinks && (containsLink || LinkRegex.IsMatch(text)))
                 {
-                    return MixItUp.Base.Resources.ModerationNoLinks;
+                    MatchCollection matches = LinkRegex.Matches(text);
+
+                    foreach (Match match in matches)
+                    {
+                        bool isWhitelisted = false;
+                        foreach (string pattern in linkWhiteList)
+                        {
+                             if (Regex.IsMatch(match.Value, pattern, RegexOptions.IgnoreCase))
+                             {
+                                isWhitelisted = true;
+                                break;
+                             }
+                        }
+
+
+                        if (!isWhitelisted)
+                        {
+                            result = MixItUp.Base.Resources.ModerationNoLinks;
+                            break;
+                        }
+                    }
                 }
             }
-
-            return null;
+            return result;
         }
 
         public bool DoesUserMeetChatInteractiveParticipationRequirement(UserV2ViewModel user, ChatMessageViewModel message = null)

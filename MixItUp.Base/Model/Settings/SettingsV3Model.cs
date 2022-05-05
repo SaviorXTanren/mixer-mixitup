@@ -362,6 +362,8 @@ namespace MixItUp.Base.Model.Settings
         public List<string> FilteredWords { get; set; } = new List<string>();
         [DataMember]
         public List<string> BannedWords { get; set; } = new List<string>();
+        [DataMember]
+        public List<string> LinkWhiteList { get; set; } = new List<string>();
 
         [DataMember]
         public int ModerationFilteredWordsTimeout1MinuteOffenseCount { get; set; }

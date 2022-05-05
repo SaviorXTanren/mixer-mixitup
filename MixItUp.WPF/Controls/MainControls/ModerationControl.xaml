@@ -32,6 +32,8 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <GroupBox Grid.Row="0">
@@ -52,7 +54,7 @@
 
                         </Grid>
                     </GroupBox.Header>
-                    
+
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -315,7 +317,13 @@
                     </GroupBox>
                 </Grid>
 
-                <GroupBox Grid.Row="6">
+                <GroupBox Grid.Row="6" Header="URL Whitelist">
+                    <Border Grid.Column="0" Grid.Row="2" Style="{StaticResource DefaultBorder}">
+                        <TextBox x:Name="LinkWhiteListTextBox" AcceptsReturn="True" Margin="5" LostFocus="TextBoxes_LostFocus" Height="165"/>
+                    </Border>
+                </GroupBox>
+
+                <GroupBox Grid.Row="8">
                     <GroupBox.Header>
                         <TextBlock Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Text="{x:Static resx:Resources.StrikeCommands}"/>
                     </GroupBox.Header>

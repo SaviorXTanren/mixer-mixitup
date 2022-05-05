@@ -40,6 +40,8 @@ namespace MixItUp.WPF.Controls.MainControls
             this.CommunityBannedWordsToggleButton.IsChecked = ChannelSession.Settings.ModerationUseCommunityFilteredWords;
             this.FilteredWordsTextBox.Text = this.ConvertFilteredWordListToText(ChannelSession.Settings.FilteredWords);
             this.BannedWordsTextBox.Text = this.ConvertFilteredWordListToText(ChannelSession.Settings.BannedWords);
+            this.LinkWhiteListTextBox.Text = this.ConvertFilteredWordListToText(ChannelSession.Settings.LinkWhiteList, false);
+            
             this.FilteredWordsExemptComboBox.SelectedItem = ChannelSession.Settings.ModerationFilteredWordsExcemptUserRole;
             this.FilteredWordsApplyStrikesToggleButton.IsChecked = ChannelSession.Settings.ModerationFilteredWordsApplyStrikes;
 
@@ -81,6 +83,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     this.ConvertFilteredTextToWordList(this.FilteredWordsTextBox.Text, ChannelSession.Settings.FilteredWords);
                     this.ConvertFilteredTextToWordList(this.BannedWordsTextBox.Text, ChannelSession.Settings.BannedWords);
+                    this.ConvertFilteredTextToWordList(this.LinkWhiteListTextBox.Text, ChannelSession.Settings.LinkWhiteList, false);
                     ChannelSession.Settings.ModerationFilteredWordsExcemptUserRole = (UserRoleEnum)this.FilteredWordsExemptComboBox.SelectedItem;
                     ChannelSession.Settings.ModerationFilteredWordsApplyStrikes = this.FilteredWordsApplyStrikesToggleButton.IsChecked.GetValueOrDefault();
 
@@ -135,20 +138,22 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.SaveSettings();
         }
 
-        private string ConvertFilteredWordListToText(IEnumerable<string> words)
+        private string ConvertFilteredWordListToText(IEnumerable<string> words, bool replaceWildcard = true)
         {
             string text = string.Join(Environment.NewLine, words);
-            text = text.Replace(ModerationService.WordWildcardRegex, "*");
+            if (replaceWildcard)
+                text = text.Replace(ModerationService.WordWildcardRegex, "*");
             return text;
         }
 
-        private void ConvertFilteredTextToWordList(string text, List<string> list)
+        private void ConvertFilteredTextToWordList(string text, List<string> list, bool replaceWildcard = true)
         {
             if (string.IsNullOrEmpty(text))
             {
                 text = "";
             }
-            text = text.Replace("*", ModerationService.WordWildcardRegex);
+            if (replaceWildcard)
+                text = text.Replace("*", ModerationService.WordWildcardRegex);
 
             list.Clear();
             foreach (string split in text.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
