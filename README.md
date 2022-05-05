@@ -2,7 +2,7 @@
 A desktop client for handling chat, interactivity, and other streamer assistance features for Twitch, Trovo, and Glimesh.
 
 ## What is this?
-Mix It Up is striving to be the "one stop shop" for all of your administrative needs when streaming to Mixer. Mix It Up will allow you to handle chat moderation, interactivity, constellation events, and create customized commands that work across chat, interactivity, and constellation events.
+Mix It Up is striving to be the "one stop shop" for all of your administrative needs when streaming. Mix It Up will allow you to handle chat commands, events, moderation, service connectivity, and more!
 
 ## How do I get started using it?
 Go to http://mixitupapp.com for the latest release and check out https://wiki.mixitupapp.com/ for getting started information and detailed tutorials.
