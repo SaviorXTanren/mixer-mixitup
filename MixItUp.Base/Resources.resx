@@ -7662,4 +7662,7 @@ via Twitch, it's a "your mileage may very" situation.</value>
   <data name="MixItUpServices" xml:space="preserve">
     <value>Mix It Up Services</value>
   </data>
+  <data name="DisableAnimatedEmotes" xml:space="preserve">
+    <value>Disable Animated Emotes</value>
+  </data>
 </root>

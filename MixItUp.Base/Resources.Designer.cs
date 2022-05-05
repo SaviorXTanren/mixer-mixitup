@@ -4344,6 +4344,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disable Animated Emotes.
+        /// </summary>
+        public static string DisableAnimatedEmotes {
+            get {
+                return ResourceManager.GetString("DisableAnimatedEmotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disable Chat.
         /// </summary>
         public static string DisableChat {

@@ -126,6 +126,8 @@ namespace MixItUp.Base.Model.Settings
         public bool AddSeparatorsBetweenMessages { get; set; }
         [DataMember]
         public bool UseAlternatingBackgroundColors { get; set; }
+        [DataMember]
+        public bool DisableAnimatedEmotes { get; set; }
 
         [DataMember]
         public bool OnlyShowAlertsInDashboard { get; set; }

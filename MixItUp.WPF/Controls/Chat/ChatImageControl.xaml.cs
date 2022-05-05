@@ -91,7 +91,7 @@ namespace MixItUp.WPF.Controls.Chat
             if (!loaded)
             {
                 Image image = this.Image;
-                if (emote.IsGIFImage)
+                if (emote.IsGIFImage && !ChannelSession.Settings.DisableAnimatedEmotes)
                 {
                     image = this.GifImage;
                 }
