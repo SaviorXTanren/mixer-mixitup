@@ -473,6 +473,7 @@ namespace MixItUp.Base.Services
                 }
 
                 usersAdded = true;
+                user.UpdateLastActivity();
 
                 lock (displayUsersLock)
                 {
