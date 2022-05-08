@@ -86,6 +86,9 @@ namespace MixItUp.Base.Model.Commands
         [DataMember]
         public string GroupName { get; set; }
 
+        [JsonIgnore]
+        public string GroupDisplayName { get { return (!string.IsNullOrEmpty(this.GroupName)) ? this.GroupName : MixItUp.Base.Resources.Ungrouped; } }
+
         [DataMember]
         public HashSet<string> Triggers { get; set; } = new HashSet<string>();
 
