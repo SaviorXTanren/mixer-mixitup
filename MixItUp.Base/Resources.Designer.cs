@@ -1078,6 +1078,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Assign To Special Identifiers.
+        /// </summary>
+        public static string AssignToSpecialIdentifiers {
+            get {
+                return ResourceManager.GetString("AssignToSpecialIdentifiers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Audio Output Device.
         /// </summary>
         public static string AudioOutputDevice {

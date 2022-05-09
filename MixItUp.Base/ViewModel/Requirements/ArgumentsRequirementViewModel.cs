@@ -86,6 +86,17 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public ICommand AddItemCommand { get; private set; }
 
+        public bool AssignToSpecialIdentifiers
+        {
+            get { return this.assignToSpecialIdentifiers; }
+            set
+            {
+                this.assignToSpecialIdentifiers = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool assignToSpecialIdentifiers;
+
         public ArgumentsRequirementViewModel(ArgumentsRequirementModel arguments)
             : this()
         {
@@ -95,6 +106,7 @@ namespace MixItUp.Base.ViewModel.Requirements
                 {
                     this.Items.Add(new ArgumentsRequirementItemViewModel(this, argument));
                 }
+                this.AssignToSpecialIdentifiers = arguments.AssignToSpecialIdentifiers;
             }
         }
 
@@ -126,7 +138,7 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public override RequirementModelBase GetRequirement()
         {
-            return new ArgumentsRequirementModel(this.Items.Select(i => i.GetArgumentItem()));
+            return new ArgumentsRequirementModel(this.Items.Select(i => i.GetArgumentItem()), this.AssignToSpecialIdentifiers);
         }
     }
 }

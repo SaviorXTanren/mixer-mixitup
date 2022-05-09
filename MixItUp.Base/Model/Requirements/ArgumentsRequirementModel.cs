@@ -96,9 +96,13 @@ namespace MixItUp.Base.Model.Requirements
         [DataMember]
         public List<ArgumentsRequirementItemModel> Items { get; set; } = new List<ArgumentsRequirementItemModel>();
 
-        public ArgumentsRequirementModel(IEnumerable<ArgumentsRequirementItemModel> items)
+        [DataMember]
+        public bool AssignToSpecialIdentifiers { get; set; }
+
+        public ArgumentsRequirementModel(IEnumerable<ArgumentsRequirementItemModel> items, bool assignToSpecialIdentifiers)
         {
             this.Items = new List<ArgumentsRequirementItemModel>(items);
+            this.AssignToSpecialIdentifiers = assignToSpecialIdentifiers;
         }
 
         public ArgumentsRequirementModel() { }
@@ -110,10 +114,17 @@ namespace MixItUp.Base.Model.Requirements
             for (int i = 0; i < this.Items.Count; i++)
             {
                 parameters.Arguments.TryGetValue(i, out string argument);
-                Result result = await this.Items[i].Validate(parameters, argument);
+
+                ArgumentsRequirementItemModel argumentItem = this.Items[i];
+                Result result = await argumentItem.Validate(parameters, argument);
                 if (!result.Success)
                 {
                     return new Result($"{MixItUp.Base.Resources.Usage}: {string.Join(" ", this.Items.Select(a => a.DisplayName))}");
+                }
+
+                if (this.AssignToSpecialIdentifiers)
+                {
+                    parameters.SpecialIdentifiers[SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(argumentItem.Name)] = argument;
                 }
             }
             return new Result();
