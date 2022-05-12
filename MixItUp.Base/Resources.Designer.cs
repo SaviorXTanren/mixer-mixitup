@@ -18973,6 +18973,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Trovo Channel Stream Start.
+        /// </summary>
+        public static string TrovoChannelStreamStart {
+            get {
+                return ResourceManager.GetString("TrovoChannelStreamStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trovo Channel Stream Stop.
+        /// </summary>
+        public static string TrovoChannelStreamStop {
+            get {
+                return ResourceManager.GetString("TrovoChannelStreamStop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trovo Channel Subscribed.
         /// </summary>
         public static string TrovoChannelSubscribed {
