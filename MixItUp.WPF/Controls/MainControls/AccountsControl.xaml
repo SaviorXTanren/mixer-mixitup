@@ -42,7 +42,7 @@
 
             <AccountControls:StreamingPlatformAccountControl Grid.Row="4" DataContext="{Binding Twitch}" />
 
-            <AccountControls:StreamingPlatformAccountControl Grid.Row="6" DataContext="{Binding YouTube}" IsEnabled="False" />
+            <!--<AccountControls:StreamingPlatformAccountControl Grid.Row="6" DataContext="{Binding YouTube}" IsEnabled="False" />-->
 
             <AccountControls:StreamingPlatformAccountControl Grid.Row="8" DataContext="{Binding Trovo}" />
 
