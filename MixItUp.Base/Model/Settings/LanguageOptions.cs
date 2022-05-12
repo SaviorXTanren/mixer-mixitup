@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 
 namespace MixItUp.Base.Model.Settings
 {
@@ -63,6 +64,11 @@ namespace MixItUp.Base.Model.Settings
                 return locale;
             }
             return null;
+        }
+
+        public static CultureInfo GetLanguageLocaleCultureInfo()
+        {
+            return new CultureInfo(Languages.GetLanguageLocale());
         }
     }
 }
