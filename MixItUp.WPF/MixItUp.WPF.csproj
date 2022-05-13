@@ -738,6 +738,9 @@
     <Compile Include="Controls\MainControls\ChangelogControl.xaml.cs">
       <DependentUpon>ChangelogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MainControls\ChannelControl.xaml.cs">
+      <DependentUpon>ChannelControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MainControls\ChatControl.xaml.cs">
       <DependentUpon>ChatControl.xaml</DependentUpon>
     </Compile>
@@ -1506,6 +1509,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\ChangelogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\ChannelControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
