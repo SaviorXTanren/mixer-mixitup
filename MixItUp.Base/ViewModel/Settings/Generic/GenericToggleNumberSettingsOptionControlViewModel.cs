@@ -23,12 +23,11 @@ namespace MixItUp.Base.ViewModel.Settings.Generic
         }
         private bool enabled = true;
 
-        public bool ShowEnabledOption { get; private set; } = true;
-
         public GenericToggleNumberSettingsOptionControlViewModel(string name, int initialValue, Action<int> valueSetter, string tooltip = null)
             : base(name, initialValue, valueSetter, tooltip)
         {
             this.enabled = (this.Value > 0);
+            this.ShowEnabledOption = true;
         }
     }
 }

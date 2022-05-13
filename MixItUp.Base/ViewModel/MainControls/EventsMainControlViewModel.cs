@@ -19,7 +19,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public bool ShowImage { get { return !string.IsNullOrEmpty(this.Image); } }
 
-        public bool ShowPackIcon { get { return !string.IsNullOrEmpty(this.PackIconName); } }
+        public bool ShowPackIcon { get { return !this.ShowImage; } }
 
         public EventCommandGroupViewModel(string name, string image = null, string packIconName = null)
         {

@@ -1,11 +1,6 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Services.External;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.Chat.Glimesh;
-using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.Twitch;
-using MixItUp.Base.ViewModel.Chat.YouTube;
 using StreamingClient.Base.Util;
 using System;
 using System.Windows;
@@ -18,7 +13,7 @@ namespace MixItUp.WPF.Controls.Chat
     /// </summary>
     public partial class ChatImageControl : UserControl
     {
-        private IChatEmoteViewModel emote;
+        private ChatEmoteViewModelBase emote;
         private bool loaded = false;
 
         public bool ShowText
@@ -41,8 +36,8 @@ namespace MixItUp.WPF.Controls.Chat
         {
             InitializeComponent();
 
-            this.Loaded += ChatEmoteControl_Loaded;
-            this.DataContextChanged += EmoticonControl_DataContextChanged;
+            this.Loaded += ChatImageControl_Loaded;
+            this.DataContextChanged += ChatImageControl_DataContextChanged;
 
             this.Image.Loaded += Image_Loaded;
             this.Image.DataContextChanged += Image_DataContextChanged;
@@ -54,63 +49,24 @@ namespace MixItUp.WPF.Controls.Chat
             this.SVGImage.DataContextChanged += Image_DataContextChanged;
         }
 
-        public ChatImageControl(IChatEmoteViewModel emote) : this() { this.DataContext = emote; }
+        public ChatImageControl(ChatEmoteViewModelBase emote) : this() { this.DataContext = emote; }
 
-        private void ChatEmoteControl_Loaded(object sender, RoutedEventArgs e)
+        private void ChatImageControl_Loaded(object sender, RoutedEventArgs e)
         {
-            this.EmoticonControl_DataContextChanged(sender, new DependencyPropertyChangedEventArgs());
+            this.ChatImageControl_DataContextChanged(sender, new DependencyPropertyChangedEventArgs());
         }
 
-        private void EmoticonControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void ChatImageControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             try
             {
-                if (this.DataContext != null && this.DataContext is IChatEmoteViewModel)
+                if (this.DataContext != null && this.DataContext is ChatEmoteViewModelBase)
                 {
-                    this.emote = (IChatEmoteViewModel)this.DataContext;
+                    this.emote = (ChatEmoteViewModelBase)this.DataContext;
                     this.ProcessEmote(emote);
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
-        }
-
-        private void ProcessEmote(IChatEmoteViewModel emote)
-        {
-            bool forceGIF = false;
-            if (emote is TwitchChatEmoteViewModel)
-            {
-                forceGIF = ((TwitchChatEmoteViewModel)emote).IsAnimated;
-            }
-            else if (emote is BetterTTVEmoteModel)
-            {
-                forceGIF = ((BetterTTVEmoteModel)emote).IsGIF;
-            }
-
-            Image image = this.Image;
-            if (forceGIF || this.IsGIFImage(emote.ImageURL))
-            {
-                image = this.GifImage;
-            }
-            else if (this.IsSVGImage(emote.ImageURL))
-            {
-                image = this.SVGImage;
-            }
-
-            if (image.IsLoaded && !loaded)
-            {
-                loaded = true;
-                this.ResizeImage(image);
-                image.DataContext = emote;
-                image.Visibility = Visibility.Visible;
-                this.AltText.Text = emote.Name;
-
-                if (emote is TwitchBitsCheerViewModel)
-                {
-                    TwitchBitsCheerViewModel bitsCheer = (TwitchBitsCheerViewModel)emote;
-                    this.Text.Visibility = Visibility.Visible;
-                    this.Text.Text = bitsCheer.Amount.ToString();
-                }
-            }
         }
 
         private void Image_Loaded(object sender, RoutedEventArgs e)
@@ -130,8 +86,37 @@ namespace MixItUp.WPF.Controls.Chat
             catch (Exception ex) { Logger.Log(ex); }
         }
 
-        private bool IsGIFImage(string url) { return url.Contains(".gif"); }
-        private bool IsSVGImage(string url) { return url.Contains(".svg"); }
+        private void ProcessEmote(ChatEmoteViewModelBase emote)
+        {
+            if (!loaded)
+            {
+                Image image = this.Image;
+                if (emote.IsGIFImage && !ChannelSession.Settings.DisableAnimatedEmotes)
+                {
+                    image = this.GifImage;
+                }
+                else if (emote.IsSVGImage)
+                {
+                    image = this.SVGImage;
+                }
+
+                if (image.IsLoaded)
+                {
+                    loaded = true;
+                    this.ResizeImage(image);
+                    image.DataContext = emote;
+                    image.Visibility = Visibility.Visible;
+                    this.AltText.Text = emote.Name;
+
+                    if (emote is TwitchBitsCheerViewModel)
+                    {
+                        TwitchBitsCheerViewModel bitsCheer = (TwitchBitsCheerViewModel)emote;
+                        this.Text.Visibility = Visibility.Visible;
+                        this.Text.Text = bitsCheer.Amount.ToString();
+                    }
+                }
+            }
+        }
 
         private void ResizeImage(Image image) { image.MaxWidth = image.MaxHeight = image.Width = image.Height = ChannelSession.Settings.ChatFontSize * 2; }
     }

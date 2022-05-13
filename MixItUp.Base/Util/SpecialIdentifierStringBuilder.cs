@@ -329,17 +329,6 @@ namespace MixItUp.Base.Util
 
                 foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                 {
-                    if (this.ContainsRegexSpecialIdentifier(currency.AllTotalAmountSpecialIdentifier) || this.ContainsRegexSpecialIdentifier(currency.AllTotalAmountDisplaySpecialIdentifier))
-                    {
-                        await ServiceManager.Get<UserService>().LoadAllUserData();
-
-                        IEnumerable<UserV2Model> applicableUsers = await SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
-                        int total = applicableUsers.Sum(u => currency.GetAmount(u));
-
-                        this.ReplaceSpecialIdentifier(currency.AllTotalAmountDisplaySpecialIdentifier, total.ToNumberDisplayString());
-                        this.ReplaceSpecialIdentifier(currency.AllTotalAmountSpecialIdentifier, total.ToString());
-                    }
-
                     if (this.ContainsRegexSpecialIdentifier(currency.TopRegexSpecialIdentifier))
                     {
                         await this.ReplaceNumberBasedRegexSpecialIdentifier(currency.TopRegexSpecialIdentifier, async (total) =>
@@ -373,6 +362,20 @@ namespace MixItUp.Base.Util
                         }
                         await this.HandleUserSpecialIdentifiers(topUser, currency.TopSpecialIdentifier);
                     }
+                }
+            }
+
+            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
+            {
+                if (this.ContainsRegexSpecialIdentifier(currency.AllTotalAmountSpecialIdentifier) || this.ContainsRegexSpecialIdentifier(currency.AllTotalAmountDisplaySpecialIdentifier))
+                {
+                    await ServiceManager.Get<UserService>().LoadAllUserData();
+
+                    IEnumerable<UserV2Model> applicableUsers = await SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
+                    int total = applicableUsers.Sum(u => currency.GetAmount(u));
+
+                    this.ReplaceSpecialIdentifier(currency.AllTotalAmountDisplaySpecialIdentifier, total.ToNumberDisplayString());
+                    this.ReplaceSpecialIdentifier(currency.AllTotalAmountSpecialIdentifier, total.ToString());
                 }
             }
 

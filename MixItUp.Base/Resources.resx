@@ -7662,6 +7662,18 @@ via Twitch, it's a "your mileage may very" situation.</value>
   <data name="MixItUpServices" xml:space="preserve">
     <value>Mix It Up Services</value>
   </data>
+  <data name="DisableAnimatedEmotes" xml:space="preserve">
+    <value>Disable Animated Emotes</value>
+  </data>
+  <data name="AssignToSpecialIdentifiers" xml:space="preserve">
+    <value>Assign To Special Identifiers</value>
+  </data>
+  <data name="TrovoChannelStreamStart" xml:space="preserve">
+    <value>Trovo Channel Stream Start</value>
+  </data>
+  <data name="TrovoChannelStreamStop" xml:space="preserve">
+    <value>Trovo Channel Stream Stop</value>
+  </data>
   <data name="SetTitleDescription" xml:space="preserve">
     <value>Set Title/Description</value>
   </data>

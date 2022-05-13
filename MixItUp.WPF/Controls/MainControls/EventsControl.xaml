@@ -28,8 +28,8 @@
                                             <ColumnDefinition Width="20" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <Image Grid.Column="0" Source="{Binding Image}" Visibility="{Binding ShowImage, Converter={StaticResource BooleanToVisibilityConverter}}" Height="24" Width="24" VerticalAlignment="Center" />
-                                        <MaterialDesign:PackIcon Grid.Column="0" Kind="{Binding PackIconName}" Visibility="{Binding ShowPackIcon, Converter={StaticResource BooleanToVisibilityConverter}}" Height="24" Width="24" VerticalAlignment="Center" Style="{StaticResource ColoredBackgroundPackIcon}" />
+                                        <Image Grid.Column="0" Source="{Binding Image, TargetNullValue={x:Null}}" Visibility="{Binding ShowImage, Converter={StaticResource BooleanToVisibilityConverter}}" Height="24" Width="24" VerticalAlignment="Center" />
+                                        <MaterialDesign:PackIcon Grid.Column="0" Kind="{Binding PackIconName, TargetNullValue=Delete}" Visibility="{Binding ShowPackIcon, Converter={StaticResource BooleanToVisibilityConverter}}" Height="24" Width="24" VerticalAlignment="Center" Style="{StaticResource ColoredBackgroundPackIcon}" />
 
                                         <TextBlock Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding Name}" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" />
                                     </Grid>

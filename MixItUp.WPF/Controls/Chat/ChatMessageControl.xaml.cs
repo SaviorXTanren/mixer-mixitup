@@ -1,12 +1,10 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Glimesh;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.Twitch;
-using MixItUp.Base.ViewModel.Chat.YouTube;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -116,9 +114,9 @@ namespace MixItUp.WPF.Controls.Chat
                                 string messagePartString = (string)messagePart;
                                 this.AddStringMessage(messagePartString, isHighlighted: highlighted, isItalicized: italics);
                             }
-                            else if (messagePart is IChatEmoteViewModel)
+                            else if (messagePart is ChatEmoteViewModelBase)
                             {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((IChatEmoteViewModel)messagePart));
+                                this.MessageWrapPanel.Children.Add(new ChatImageControl((ChatEmoteViewModelBase)messagePart));
                             }
                         }
                     }

@@ -669,7 +669,6 @@ namespace MixItUp.Base.ViewModel.User
                 if (force || lastUpdatedTimeSpan > RefreshTimeSpan)
                 {
                     this.LastUpdated = DateTimeOffset.Now;
-                    this.UpdateLastActivity();
 
                     DateTimeOffset refreshStart = DateTimeOffset.Now;
 

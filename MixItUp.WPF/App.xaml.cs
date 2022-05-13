@@ -61,8 +61,7 @@ namespace MixItUp.WPF
 
                 ChannelSession.Initialize().Wait();
 
-                var culture = new System.Globalization.CultureInfo(Languages.GetLanguageLocale());
-                System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
+                System.Threading.Thread.CurrentThread.CurrentUICulture = Languages.GetLanguageLocaleCultureInfo();
             }
             catch { }
         }

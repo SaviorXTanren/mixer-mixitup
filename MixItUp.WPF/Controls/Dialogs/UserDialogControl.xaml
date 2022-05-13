@@ -87,7 +87,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Image Source="{Binding PlatformImageURL}" Grid.Column="0" Width="18" Height="18" />
+                    <Image Source="{Binding PlatformImageURL, TargetNullValue={x:Null}}" Grid.Column="0" Width="18" Height="18" />
                     <TextBlock Grid.Column="2" Text="{Binding Source={x:Static resx:Resources.Roles}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                 </Grid>
                 <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding DisplayRolesString}" TextWrapping="Wrap" />

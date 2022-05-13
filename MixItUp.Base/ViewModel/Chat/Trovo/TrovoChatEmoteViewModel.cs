@@ -2,17 +2,19 @@
 
 namespace MixItUp.Base.ViewModel.Chat.Trovo
 {
-    public class TrovoChatEmoteViewModel : IChatEmoteViewModel
+    public class TrovoChatEmoteViewModel : ChatEmoteViewModelBase
     {
-        public string ID { get { return this.Name; } }
-        public string Name { get; set; }
-        public string ImageURL { get; set; }
+        public override string ID { get; protected set; }
+        public override string Name { get; protected set; }
+        public override string ImageURL { get; protected set; }
 
-        public bool IsGif { get; set; }
+        public override bool IsGIFImage { get { return this.IsGif || base.IsGIFImage; } }
+
+        private bool IsGif { get; set; }
 
         public TrovoChatEmoteViewModel(ChatEmoteModel emote)
         {
-            this.Name = emote.name;
+            this.ID = this.Name = emote.name;
             this.ImageURL = emote.url;
         }
 

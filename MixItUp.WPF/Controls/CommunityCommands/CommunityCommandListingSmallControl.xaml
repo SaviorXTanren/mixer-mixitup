@@ -36,6 +36,6 @@
             <TextBlock Grid.Column="6" Text="{Binding DownloadsString}" VerticalAlignment="Center" />
         </Grid>
 
-        <Image Grid.Row="4" Source="{Binding ImageURL}" Width="100" Height="100" HorizontalAlignment="Center" />
+        <Image Grid.Row="4" Source="{Binding ImageURL, TargetNullValue={x:Null}}" Width="100" Height="100" HorizontalAlignment="Center" />
     </Grid>
 </UserControl>

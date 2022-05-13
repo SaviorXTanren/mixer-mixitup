@@ -12,17 +12,36 @@ using Twitch.Base.Models.NewAPI.Chat;
 
 namespace MixItUp.Base.ViewModel.Chat.Twitch
 {
-    public class TwitchChatEmoteViewModel : IChatEmoteViewModel
+    public class TwitchChatEmoteViewModel : ChatEmoteViewModelBase
     {
-        public string ID { get; private set; }
-        public string Name { get; private set; }
-        public string LightSmallImageUrl { get; private set; }
+        public override string ID { get; protected set; }
+        public override string Name { get; protected set; }
+        public override string ImageURL
+        {
+            get
+            {
+                if (ChannelSession.Settings.ChatFontSize <= 30)
+                {
+                    return this.DarkSmallImageUrl;
+                }
+                else if (ChannelSession.Settings.ChatFontSize <= 70)
+                {
+                    return this.DarkMediumImageUrl;
+                }
+                else
+                {
+                    return this.DarkLargeImageUrl;
+                }
+            }
+            protected set { }
+        }
+
+        public override bool IsGIFImage { get { return this.IsAnimated; } }
+
         public string DarkSmallImageUrl { get; private set; }
-        public string LightLargeImageUrl { get; private set; }
+        public string DarkMediumImageUrl { get; private set; }
         public string DarkLargeImageUrl { get; private set; }
         public bool IsAnimated { get; private set; }
-
-        public string ImageURL { get { return this.DarkLargeImageUrl; } }
 
         public TwitchChatEmoteViewModel(ChatEmoteModel emote)
         {
@@ -31,16 +50,14 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             if (emote.HasAnimated)
             {
                 this.IsAnimated = true;
-                this.LightSmallImageUrl = emote.BuildImageURL(ChatEmoteModel.AnimatedFormatName, ChatEmoteModel.LightThemeName, ChatEmoteModel.Scale1Name);
                 this.DarkSmallImageUrl = emote.BuildImageURL(ChatEmoteModel.AnimatedFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale1Name);
-                this.LightLargeImageUrl = emote.BuildImageURL(ChatEmoteModel.AnimatedFormatName, ChatEmoteModel.LightThemeName, ChatEmoteModel.Scale3Name);
+                this.DarkMediumImageUrl = emote.BuildImageURL(ChatEmoteModel.AnimatedFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale2Name);
                 this.DarkLargeImageUrl = emote.BuildImageURL(ChatEmoteModel.AnimatedFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale3Name);
             }
             else
             {
-                this.LightSmallImageUrl = emote.BuildImageURL(ChatEmoteModel.StaticFormatName, ChatEmoteModel.LightThemeName, ChatEmoteModel.Scale1Name);
                 this.DarkSmallImageUrl = emote.BuildImageURL(ChatEmoteModel.StaticFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale1Name);
-                this.LightLargeImageUrl = emote.BuildImageURL(ChatEmoteModel.StaticFormatName, ChatEmoteModel.LightThemeName, ChatEmoteModel.Scale3Name);
+                this.DarkMediumImageUrl = emote.BuildImageURL(ChatEmoteModel.StaticFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale2Name);
                 this.DarkLargeImageUrl = emote.BuildImageURL(ChatEmoteModel.StaticFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale3Name);
             }
         }
@@ -49,31 +66,31 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
         {
             this.ID = emoteID;
             this.Name = emoteCode;
-            this.LightSmallImageUrl = this.BuildV2EmoteURL(ChatEmoteModel.LightThemeName, ChatEmoteModel.Scale1Name);
             this.DarkSmallImageUrl = this.BuildV2EmoteURL(ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale1Name);
-            this.LightLargeImageUrl = this.BuildV2EmoteURL(ChatEmoteModel.LightThemeName, ChatEmoteModel.Scale3Name);
+            this.DarkMediumImageUrl = this.BuildV2EmoteURL(ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale2Name);
             this.DarkLargeImageUrl = this.BuildV2EmoteURL(ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale3Name);
         }
 
         private string BuildV2EmoteURL(string theme, string size) { return $"https://static-cdn.jtvnw.net/emoticons/v2/{this.ID}/default/{theme}/{size}"; }
     }
 
-    public class TwitchBitsCheerViewModel : IChatEmoteViewModel
+    public class TwitchBitsCheerViewModel : ChatEmoteViewModelBase
     {
-        public string Text { get; set; }
+        public override string ID { get; protected set; }
+        public override string Name { get; protected set; }
+        public override string ImageURL { get; protected set; }
+
         public int Amount { get; set; }
         public TwitchBitsCheermoteTierViewModel Tier { get; set; }
 
         public TwitchBitsCheerViewModel(string text, int amount, TwitchBitsCheermoteTierViewModel tier)
         {
-            this.Text = text;
             this.Amount = amount;
             this.Tier = tier;
-        }
 
-        public string ID { get { return this.Text; } }
-        public string Name { get { return this.Name; } }
-        public string ImageURL { get { return (ChannelSession.AppSettings.IsDarkBackground) ? this.Tier.DarkImage : this.Tier.LightImage; } }
+            this.ID = this.Name = text;
+            this.ImageURL = (ChannelSession.AppSettings.IsDarkBackground) ? this.Tier.DarkImage : this.Tier.LightImage;
+        }
     }
 
     public class TwitchChatMessageViewModel : UserChatMessageViewModel

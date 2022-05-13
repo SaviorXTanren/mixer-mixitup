@@ -1078,6 +1078,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Assign To Special Identifiers.
+        /// </summary>
+        public static string AssignToSpecialIdentifiers {
+            get {
+                return ResourceManager.GetString("AssignToSpecialIdentifiers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Audio Output Device.
         /// </summary>
         public static string AudioOutputDevice {
@@ -4340,6 +4349,15 @@ namespace MixItUp.Base {
         public static string DisableAllTimers {
             get {
                 return ResourceManager.GetString("DisableAllTimers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable Animated Emotes.
+        /// </summary>
+        public static string DisableAnimatedEmotes {
+            get {
+                return ResourceManager.GetString("DisableAnimatedEmotes", resourceCulture);
             }
         }
         
@@ -18960,6 +18978,24 @@ namespace MixItUp.Base {
         public static string TrovoChannelResubscribed {
             get {
                 return ResourceManager.GetString("TrovoChannelResubscribed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trovo Channel Stream Start.
+        /// </summary>
+        public static string TrovoChannelStreamStart {
+            get {
+                return ResourceManager.GetString("TrovoChannelStreamStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trovo Channel Stream Stop.
+        /// </summary>
+        public static string TrovoChannelStreamStop {
+            get {
+                return ResourceManager.GetString("TrovoChannelStreamStop", resourceCulture);
             }
         }
         

@@ -13,6 +13,7 @@ namespace MixItUp.Base.ViewModel.Settings
         public GenericSliderSettingsOptionControlViewModel FontSize { get; set; }
         public GenericToggleSettingsOptionControlViewModel AddSeparatorsBetweenMessages { get; set; }
         public GenericToggleSettingsOptionControlViewModel UseAlternatingBackgroundColors { get; set; }
+        public GenericToggleSettingsOptionControlViewModel DisableAnimatedEmotes { get; set; }
 
         public GenericToggleSettingsOptionControlViewModel ShowLatestChatMessagesAtTop { get; set; }
         public GenericToggleSettingsOptionControlViewModel ShowMessageTimestamp { get; set; }
@@ -53,6 +54,12 @@ namespace MixItUp.Base.ViewModel.Settings
                 (value) =>
                 {
                     ChannelSession.Settings.UseAlternatingBackgroundColors = value;
+                    GlobalEvents.ChatVisualSettingsChanged();
+                });
+            this.DisableAnimatedEmotes = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.DisableAnimatedEmotes, ChannelSession.Settings.DisableAnimatedEmotes,
+                (value) =>
+                {
+                    ChannelSession.Settings.DisableAnimatedEmotes = value;
                     GlobalEvents.ChatVisualSettingsChanged();
                 });
 
