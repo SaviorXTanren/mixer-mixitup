@@ -6,7 +6,9 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:util="clr-namespace:MixItUp.WPF.Util"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:TwitchControls="clr-namespace:MixItUp.WPF.Controls.Twitch"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <local:MainControlBase.Resources>
@@ -14,130 +16,226 @@
     </local:MainControlBase.Resources>
 
     <ScrollViewer>
-        <Grid Margin="10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+        <ItemsControl HorizontalAlignment="Stretch">
 
-            <GroupBox Grid.Row="0" Header="{x:Static resx:Resources.ChannelInfo}">
-                <Grid Margin="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
-                        <ComboBox Grid.Column="0" Text="{Binding Title}" ItemsSource="{Binding PastTitles}" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Title}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
-
-                        <ComboBox Grid.Column="2" Text="{Binding GameName}" ItemsSource="{Binding PastGameNames}" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Game}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
-                    </Grid>
-
-                    <Grid Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <Border Grid.Column="0" Style="{StaticResource DefaultBorder}">
-                            <ItemsControl ItemsSource="{Binding CustomTags}" Margin="10">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <MaterialDesign:Chip Content="{Binding Name}" IsDeletable="{Binding IsDeletable}" DeleteCommand="{Binding DeleteTagCommand}" />
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </Border>
-
-                        <Grid Grid.Column="2" VerticalAlignment="Center">
+            <!-- Twitch -->
+            
+            <Border Visibility="{Binding IsTwitchConnected, Converter={StaticResource BooleanToVisibilityConverter}}" BorderBrush="{StaticResource PrimaryHueDarkBrush}" BorderThickness="1">
+                <Expander DataContext="{Binding Twitch}" VerticalContentAlignment="Top" HorizontalContentAlignment="Stretch" Background="{StaticResource PrimaryHueMidBrush}" IsExpanded="True">
+                    <Expander.Header>
+                        <Grid Background="Transparent">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0" Source="/Assets/Images/Twitch.png" Height="24" Width="24" VerticalAlignment="Center" />
 
-                            <ComboBox Grid.Column="0" ItemsSource="{Binding Tags}" SelectedItem="{Binding Tag}" DisplayMemberPath="Name" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Tag}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
+                            <TextBlock Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{x:Static resx:Resources.Twitch}" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" />
+                        </Grid>
+                    </Expander.Header>
 
-                            <Button Grid.Column="2" Command="{Binding AddTagCommand}" IsEnabled="{Binding CanAddMoreTags}" Content="{MaterialDesign:PackIcon Add}" Padding="10,0" />
+                    <Grid Background="{StaticResource MaterialDesignBackground}">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <GroupBox Grid.Row="0" Header="{x:Static resx:Resources.ChannelInfo}">
+                                <Grid Margin="10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="20" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="20" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Grid Grid.Row="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="10" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <ComboBox Grid.Column="0" Text="{Binding Title}" ItemsSource="{Binding PastTitles}" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Title}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+                                        <ComboBox Grid.Column="2" Text="{Binding Category}" ItemsSource="{Binding PastCategories}" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Category}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                                    </Grid>
+
+                                    <Grid Grid.Row="2">
+                                        <TwitchControls:TwitchTagEditorControl DataContext="{Binding TagEditor}" />
+                                    </Grid>
+
+                                    <Button Grid.Row="4" Content="{x:Static resx:Resources.Update}" Command="{Binding UpdateChannelInformationCommand}" Width="150" />
+                                </Grid>
+                            </GroupBox>
+
+                            <GroupBox Grid.Row="2" Header="{x:Static resx:Resources.FindChannelToRaid}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="20" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Grid Grid.Row="0" HorizontalAlignment="Center">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="20" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <ComboBox Grid.Column="0" ItemsSource="{Binding SearchFindChannelToRaidOptions}" SelectedItem="{Binding SelectedSearchFindChannelToRaidOption}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SearchCriteria}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+
+                                        <Button Grid.Column="2" Command="{Binding SearchChannelToRaidCommand}" Content="{x:Static resx:Resources.Search}" />
+                                    </Grid>
+
+                                    <DataGrid Grid.Row="2" ItemsSource="{Binding ChannelsToRaid}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="{x:Static resx:Resources.Channel}" Binding="{Binding Name}" IsReadOnly="True" Width="200" />
+                                            <DataGridTextColumn Header="{x:Static resx:Resources.Viewers}" Binding="{Binding Viewers}" IsReadOnly="True" Width="100" />
+                                            <DataGridTextColumn Header="{x:Static resx:Resources.Category}" Binding="{Binding Category}" IsReadOnly="True" Width="2*" />
+                                            <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="125">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="10" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <Controls:IconButton Grid.Column="0" Command="{Binding OpenChannelCommand}" Icon="Television" ToolTip="{x:Static resx:Resources.OpenChannel}" />
+
+                                                            <Controls:IconButton Grid.Column="2" Command="{Binding RaidChannelCommand}" Icon="SatelliteUplink" ToolTip="{x:Static resx:Resources.RaidChannel}" />
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Grid>
+                            </GroupBox>
                         </Grid>
                     </Grid>
+                </Expander>
+            </Border>
 
-                    <Button Grid.Row="4" Content="{x:Static resx:Resources.Update}" Command="{Binding UpdateChannelInformationCommand}" Width="150" />
-                </Grid>
-            </GroupBox>
+            <!-- Trovo -->
+            
+            <Border Visibility="{Binding IsTrovoConnected, Converter={StaticResource BooleanToVisibilityConverter}}" BorderBrush="{StaticResource PrimaryHueDarkBrush}" BorderThickness="1">
+                <Expander DataContext="{Binding Trovo}" VerticalContentAlignment="Top" HorizontalContentAlignment="Stretch" Background="{StaticResource PrimaryHueMidBrush}" IsExpanded="True">
+                    <Expander.Header>
+                        <Grid Background="Transparent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0" Source="/Assets/Images/Trovo.png" Height="24" Width="24" VerticalAlignment="Center" />
 
-            <GroupBox Grid.Row="2" Header="{x:Static resx:Resources.FindChannelToRaid}">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+                            <TextBlock Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{x:Static resx:Resources.Trovo}" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" />
+                        </Grid>
+                    </Expander.Header>
 
-                    <Grid Grid.Row="0" HorizontalAlignment="Center">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="20" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+                    <Grid Background="{StaticResource MaterialDesignBackground}">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                        <ComboBox Grid.Column="0" ItemsSource="{Binding SearchFindChannelToRaidOptions}" SelectedItem="{Binding SelectedSearchFindChannelToRaidOption}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SearchCriteria}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
+                            <GroupBox Grid.Row="0" Header="{x:Static resx:Resources.ChannelInfo}">
+                                <Grid Margin="10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="20" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
 
-                        <Button Grid.Column="2" Command="{Binding SearchFindChannelToRaidCommand}" Content="{x:Static resx:Resources.Search}" />
+                                    <Grid Grid.Row="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="10" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <ComboBox Grid.Column="0" Text="{Binding Title}" ItemsSource="{Binding PastTitles}" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Title}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+                                        <ComboBox Grid.Column="2" Text="{Binding Category}" ItemsSource="{Binding PastCategories}" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Category}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                                    </Grid>
+
+                                    <Button Grid.Row="2" Content="{x:Static resx:Resources.Update}" Command="{Binding UpdateChannelInformationCommand}" Width="150" />
+                                </Grid>
+                            </GroupBox>
+
+                            <GroupBox Grid.Row="2" Header="{x:Static resx:Resources.FindChannelToRaid}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="20" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Grid Grid.Row="0" HorizontalAlignment="Center">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="20" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <ComboBox Grid.Column="0" ItemsSource="{Binding SearchFindChannelToRaidOptions}" SelectedItem="{Binding SelectedSearchFindChannelToRaidOption}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SearchCriteria}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+
+                                        <Button Grid.Column="2" Command="{Binding SearchChannelToRaidCommand}" Content="{x:Static resx:Resources.Search}" />
+                                    </Grid>
+
+                                    <DataGrid Grid.Row="2" ItemsSource="{Binding ChannelsToRaid}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="{x:Static resx:Resources.Channel}" Binding="{Binding Name}" IsReadOnly="True" Width="200" />
+                                            <DataGridTextColumn Header="{x:Static resx:Resources.Viewers}" Binding="{Binding Viewers}" IsReadOnly="True" Width="100" />
+                                            <DataGridTextColumn Header="{x:Static resx:Resources.Category}" Binding="{Binding Category}" IsReadOnly="True" Width="2*" />
+                                            <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="125">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="10" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <Controls:IconButton Grid.Column="0" Command="{Binding OpenChannelCommand}" Icon="Television" ToolTip="{x:Static resx:Resources.OpenChannel}" />
+
+                                                            <Controls:IconButton Grid.Column="2" Command="{Binding RaidChannelCommand}" Icon="SatelliteUplink" ToolTip="{x:Static resx:Resources.RaidChannel}" />
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Grid>
+                            </GroupBox>
+                        </Grid>
                     </Grid>
+                </Expander>
+            </Border>
 
-                    <DataGrid Grid.Row="2" ItemsSource="{Binding SearchFindChannelToRaidResults}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="{x:Static resx:Resources.Channel}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                            <DataGridTextColumn Header="{x:Static resx:Resources.Viewers}" Binding="{Binding Viewers}" IsReadOnly="True" Width="80" />
-                            <DataGridTextColumn Header="{x:Static resx:Resources.Game}" Binding="{Binding GameName}" IsReadOnly="True" Width="*" />
-                            <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="125">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="10" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <Button Grid.Column="0" Command="{Binding OpenChannelCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.OpenChannel}">
-                                                <MaterialDesign:PackIcon Kind="Television" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                            </Button>
-
-                                            <Button Grid.Column="2" Command="{Binding RaidChannelCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.RaidChannel}">
-                                                <MaterialDesign:PackIcon Kind="SatelliteUplink" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                            </Button>
-                                        </Grid>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Grid>
-            </GroupBox>
-        </Grid>
+        </ItemsControl>
     </ScrollViewer>
 </local:MainControlBase>

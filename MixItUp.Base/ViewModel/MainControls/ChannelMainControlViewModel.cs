@@ -1,15 +1,16 @@
 ﻿using MixItUp.Base.Model;
-using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Twitch;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Trovo.Base.Models.Channels;
 using Twitch.Base.Models.NewAPI.Channels;
 using Twitch.Base.Models.NewAPI.Games;
 using Twitch.Base.Models.NewAPI.Streams;
@@ -19,116 +20,324 @@ using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.ViewModel.MainControls
 {
-    public class TwitchTagViewModel : UIViewModelBase
+    public class TwitchChannelControlViewModel : PlatformChannelControlViewModelBase
     {
-        public TagModel Tag
+        public enum TwitchSearchFindChannelToRaidTypeEnum
         {
-            get { return this.tag; }
+            FollowedChannels,
+            TeamMembers,
+            SameCategory,
+            SameLanguage,
+            Featured,
+        }
+
+        public IEnumerable<TwitchSearchFindChannelToRaidTypeEnum> SearchFindChannelToRaidOptions { get; set; } = EnumHelper.GetEnumList<TwitchSearchFindChannelToRaidTypeEnum>();
+
+        public TwitchSearchFindChannelToRaidTypeEnum SelectedSearchFindChannelToRaidOption
+        {
+            get { return this.selectedSearchFindChannelToRaidOption; }
             set
             {
-                this.tag = value;
+                this.selectedSearchFindChannelToRaidOption = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private TagModel tag;
+        private TwitchSearchFindChannelToRaidTypeEnum selectedSearchFindChannelToRaidOption;
 
-        public ICommand DeleteTagCommand { get; private set; }
+        public ChannelInformationModel ChannelInformation { get; private set; }
 
-        private ChannelMainControlViewModel viewModel;
+        public TwitchTagEditorViewModel TagEditor { get; set; } = new TwitchTagEditorViewModel();
 
-        public TwitchTagViewModel(ChannelMainControlViewModel viewModel, TagModel tag)
+        private GameModel currentGame;
+
+        public TwitchChannelControlViewModel() { this.Platform = StreamingPlatformTypeEnum.Twitch; }
+
+        protected override async Task OnOpenInternal()
         {
-            this.viewModel = viewModel;
-            this.Tag = tag;
+            await this.TagEditor.OnOpen();
 
-            this.DeleteTagCommand = this.CreateCommand(() =>
-            {
-                this.viewModel.RemoveTag(this);
-            });
+            await base.OnOpenInternal();
         }
 
-        public string ID { get { return this.Tag.tag_id; } }
-
-        public string Name
+        protected override async Task<Result> UpdateChannelInformation()
         {
-            get
+            Result result = await base.UpdateChannelInformation();
+            if (!result.Success)
             {
-                string languageLocale = Languages.GetLanguageLocale().ToLower();
+                return result;
+            }
 
-                if (this.tag.localization_names.ContainsKey(languageLocale))
+            if (!await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateStreamTagsForChannel(ServiceManager.Get<TwitchSessionService>().User, this.TagEditor.CustomTags.Select(t => t.Tag.Tag)))
+            {
+                return new Result(MixItUp.Base.Resources.TwitchFailedToUpdateCustomTags);
+            }
+
+            return new Result();
+        }
+
+        protected override async Task RefreshChannelInformation()
+        {
+            this.ChannelInformation = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelInformation(ServiceManager.Get<TwitchSessionService>().User);
+            if (this.ChannelInformation != null)
+            {
+                if (!string.IsNullOrEmpty(this.ChannelInformation.title))
                 {
-                    return (string)this.tag.localization_names[languageLocale];
+                    this.Title = this.ChannelInformation.title;
                 }
 
-                languageLocale = Languages.GetLanguageLocale(LanguageOptions.Default).ToLower();
-
-                if (this.tag.localization_names.ContainsKey(languageLocale))
+                if (!string.IsNullOrEmpty(this.ChannelInformation.game_id) && !string.IsNullOrEmpty(this.ChannelInformation.game_name))
                 {
-                    return (string)this.tag.localization_names[languageLocale];
-                }
+                    this.currentGame = new GameModel()
+                    {
+                        id = this.ChannelInformation.game_id,
+                        name = this.ChannelInformation.game_name
+                    };
 
-                return MixItUp.Base.Resources.Unknown;
+                    this.CategoryName = this.currentGame.name;
+                }
+            }
+
+            this.TagEditor.ClearCustomTags();
+
+            List<TwitchTagViewModel> tags = new List<TwitchTagViewModel>();
+            foreach (TagModel tag in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStreamTagsForChannel(ServiceManager.Get<TwitchSessionService>().User))
+            {
+                if (!tag.is_auto)
+                {
+                    this.TagEditor.AddCustomTag(new TwitchTagModel(tag));
+                }
             }
         }
 
-        public bool IsDeletable { get { return !this.Tag.is_auto; } }
-    }
-
-    public enum SearchFindChannelToRaidTypeEnum
-    {
-        FollowedChannels,
-        TeamMembers,
-        SameGame,
-        SameLanguage,
-        Featured,
-    }
-
-    public class SearchFindChannelToRaidItemViewModel : UIViewModelBase
-    {
-        public string ID { get; set; }
-        public string Name { get; set; }
-        public long Viewers { get; set; }
-        public string GameName { get; set; }
-
-        public ICommand OpenChannelCommand { get; private set; }
-        public ICommand RaidChannelCommand { get; private set; }
-
-        public SearchFindChannelToRaidItemViewModel(Twitch.Base.Models.NewAPI.Streams.StreamModel stream)
-            : this()
+        protected override async Task SearchChannelsToRaid()
         {
-            this.ID = stream.user_id;
-            this.Name = stream.user_login;
-            this.Viewers = stream.viewer_count;
-            this.GameName = stream.game_name;
-        }
+            this.ChannelsToRaid.Clear();
 
-        public SearchFindChannelToRaidItemViewModel(Twitch.Base.Models.NewAPI.Streams.StreamModel stream, GameModel game)
-            : this()
-        {
-            this.ID = stream.user_id;
-            this.Name = stream.user_name;
-            this.Viewers = stream.viewer_count;
-            this.GameName = (game != null) ? game.name : "Unknown";
-        }
+            List<ChannelToRaidItemViewModel> results = new List<ChannelToRaidItemViewModel>();
 
-        private SearchFindChannelToRaidItemViewModel()
-        {
-            this.OpenChannelCommand = this.CreateCommand(() =>
+            if (this.SelectedSearchFindChannelToRaidOption == TwitchSearchFindChannelToRaidTypeEnum.Featured)
             {
-                ProcessHelper.LaunchLink(this.URL);
-            });
-
-            this.RaidChannelCommand = this.CreateCommand(async () =>
+                foreach (StreamModel stream in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetTopStreams(10))
+                {
+                    results.Add(new ChannelToRaidItemViewModel(stream));
+                }
+            }
+            else if (this.SelectedSearchFindChannelToRaidOption == TwitchSearchFindChannelToRaidTypeEnum.SameCategory && this.currentGame != null)
             {
-                await ServiceManager.Get<ChatService>().SendMessage("/raid @" + this.Name, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
-            });
-        }
+                IEnumerable<StreamModel> streams = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetGameStreams(this.currentGame.id, 10);
+                if (streams.Count() > 0)
+                {
+                    Dictionary<string, GameModel> games = new Dictionary<string, GameModel>();
+                    foreach (GameModel game in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIGamesByIDs(streams.Select(s => s.game_id)))
+                    {
+                        games[game.id] = game;
+                    }
 
-        public string URL { get { return $"https://www.twitch.tv/{this.Name}"; } }
+                    foreach (StreamModel stream in streams)
+                    {
+                        results.Add(new ChannelToRaidItemViewModel(stream, games.ContainsKey(stream.game_id) ? games[stream.game_id] : null));
+                    }
+                }
+            }
+            else if (this.SelectedSearchFindChannelToRaidOption == TwitchSearchFindChannelToRaidTypeEnum.SameLanguage && this.ChannelInformation != null)
+            {
+                IEnumerable<StreamModel> streams = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetLanguageStreams(this.ChannelInformation.broadcaster_language, 10);
+                if (streams.Count() > 0)
+                {
+                    Dictionary<string, GameModel> games = new Dictionary<string, GameModel>();
+                    foreach (GameModel game in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIGamesByIDs(streams.Select(s => s.game_id)))
+                    {
+                        games[game.id] = game;
+                    }
+
+                    foreach (StreamModel stream in streams)
+                    {
+                        results.Add(new ChannelToRaidItemViewModel(stream, games.ContainsKey(stream.game_id) ? games[stream.game_id] : null));
+                    }
+                }
+            }
+            else if (this.SelectedSearchFindChannelToRaidOption == TwitchSearchFindChannelToRaidTypeEnum.FollowedChannels)
+            {
+                foreach (StreamModel stream in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetFollowedStreams(ServiceManager.Get<TwitchSessionService>().User, 10))
+                {
+                    results.Add(new ChannelToRaidItemViewModel(stream));
+                }
+            }
+            else if (this.SelectedSearchFindChannelToRaidOption == TwitchSearchFindChannelToRaidTypeEnum.TeamMembers)
+            {
+                List<UserModel> users = new List<UserModel>();
+                foreach (TeamModel team in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelTeams(ServiceManager.Get<TwitchSessionService>().User))
+                {
+                    TeamDetailsModel teamDetails = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetTeam(team.id);
+                    if (teamDetails != null && teamDetails.users != null)
+                    {
+                        foreach (TeamMemberModel user in teamDetails.users)
+                        {
+                            users.Add(new UserModel()
+                            {
+                                id = user.user_id,
+                                login = user.user_login,
+                                display_name = user.user_name
+                            });
+                        }
+                    }
+                }
+
+                if (users.Count > 0)
+                {
+                    foreach (StreamModel stream in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStreams(users.Select(u => u.id)))
+                    {
+                        results.Add(new ChannelToRaidItemViewModel(stream));
+                    }
+                }
+            }
+
+            this.ChannelsToRaid.AddRange(results.Take(10));
+        }
     }
 
-    public class ChannelMainControlViewModel : WindowControlViewModelBase
+    public class TrovoChannelControlViewModel : PlatformChannelControlViewModelBase
     {
+        public enum TrovoSearchFindChannelToRaidTypeEnum
+        {
+            SameCategory,
+            Featured,
+        }
+
+        public IEnumerable<TrovoSearchFindChannelToRaidTypeEnum> SearchFindChannelToRaidOptions { get; set; } = EnumHelper.GetEnumList<TrovoSearchFindChannelToRaidTypeEnum>();
+
+        public TrovoSearchFindChannelToRaidTypeEnum SelectedSearchFindChannelToRaidOption
+        {
+            get { return this.selectedSearchFindChannelToRaidOption; }
+            set
+            {
+                this.selectedSearchFindChannelToRaidOption = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private TrovoSearchFindChannelToRaidTypeEnum selectedSearchFindChannelToRaidOption;
+
+        public TrovoChannelControlViewModel() { this.Platform = StreamingPlatformTypeEnum.Trovo; }
+
+        protected override async Task OnOpenInternal()
+        {
+            await base.OnOpenInternal();
+        }
+
+        protected override async Task SearchChannelsToRaid()
+        {
+            this.ChannelsToRaid.Clear();
+
+            List<ChannelToRaidItemViewModel> results = new List<ChannelToRaidItemViewModel>();
+
+            if (this.SelectedSearchFindChannelToRaidOption == TrovoSearchFindChannelToRaidTypeEnum.Featured)
+            {
+                foreach (TopChannelModel channel in await ServiceManager.Get<TrovoSessionService>().UserConnection.GetTopChannels(maxResults: 10))
+                {
+                    results.Add(new ChannelToRaidItemViewModel(channel));
+                }
+            }
+            else if (this.SelectedSearchFindChannelToRaidOption == TrovoSearchFindChannelToRaidTypeEnum.SameCategory)
+            {
+                foreach (TopChannelModel channel in await ServiceManager.Get<TrovoSessionService>().UserConnection.GetTopChannels(maxResults: 10, category: ServiceManager.Get<TrovoSessionService>().Channel.category_id))
+                {
+                    results.Add(new ChannelToRaidItemViewModel(channel));
+                }
+            }
+
+            this.ChannelsToRaid.AddRange(results.Take(10));
+        }
+    }
+
+    public abstract class PlatformChannelControlViewModelBase : UIViewModelBase
+    {
+        public class ChannelToRaidItemViewModel : UIViewModelBase
+        {
+            public StreamingPlatformTypeEnum Platform { get; set; }
+            public string ID { get; set; }
+            public string Name { get; set; }
+            public long Viewers { get; set; }
+            public string Category { get; set; }
+
+            public ICommand OpenChannelCommand { get; private set; }
+            public ICommand RaidChannelCommand { get; private set; }
+
+            public ChannelToRaidItemViewModel(StreamModel stream)
+                : this()
+            {
+                this.Platform = StreamingPlatformTypeEnum.Twitch;
+                this.ID = stream.user_id;
+                this.Name = stream.user_login;
+                this.Viewers = stream.viewer_count;
+                this.Category = stream.game_name;
+            }
+
+            public ChannelToRaidItemViewModel(StreamModel stream, GameModel game)
+                : this()
+            {
+                this.Platform = StreamingPlatformTypeEnum.Twitch;
+                this.ID = stream.user_id;
+                this.Name = stream.user_name;
+                this.Viewers = stream.viewer_count;
+                this.Category = (game != null) ? game.name : MixItUp.Base.Resources.Unknown;
+            }
+
+            public ChannelToRaidItemViewModel(TopChannelModel channel)
+            {
+                this.Platform = StreamingPlatformTypeEnum.Trovo;
+                this.ID = channel.channel_id;
+                this.Name = channel.username;
+                this.Viewers = channel.current_viewers;
+                this.Category = channel.category_name;
+            }
+
+            private ChannelToRaidItemViewModel()
+            {
+                this.OpenChannelCommand = this.CreateCommand(() =>
+                {
+                    ProcessHelper.LaunchLink(this.URL);
+                });
+
+                this.RaidChannelCommand = this.CreateCommand(async () =>
+                {
+                    if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                    {
+                        await ServiceManager.Get<ChatService>().SendMessage("/raid @" + this.Name, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                    }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Trovo)
+                    {
+                        await ServiceManager.Get<TrovoChatEventService>().HostUser(this.Name);
+                    }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
+                    {
+
+                    }
+                });
+            }
+
+            public string URL
+            {
+                get
+                {
+                    if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                    {
+                        return $"https://www.twitch.tv/{this.Name}";
+                    }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Trovo)
+                    {
+                        return $"https://www.trovo.live/{this.Name}";
+                    }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
+                    {
+                        return $"https://glimesh.tv/{this.Name}";
+                    }
+                    return string.Empty;
+                }
+            }
+        }
+
+        public StreamingPlatformTypeEnum Platform { get; protected set; }
+
         public ThreadSafeObservableCollection<string> PastTitles { get; private set; } = new ThreadSafeObservableCollection<string>();
 
         public string Title
@@ -142,220 +351,51 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private string title;
 
-        public ThreadSafeObservableCollection<string> PastGameNames { get; private set; } = new ThreadSafeObservableCollection<string>();
+        public ThreadSafeObservableCollection<string> PastCategories { get; private set; } = new ThreadSafeObservableCollection<string>();
 
-        public string GameName
+        public string CategoryName
         {
-            get { return this.gameName; }
+            get { return this.categoryName; }
             set
             {
-                this.gameName = value;
+                this.categoryName = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private string gameName;
-
-        public ThreadSafeObservableCollection<TwitchTagViewModel> Tags { get; private set; } = new ThreadSafeObservableCollection<TwitchTagViewModel>();
-
-        public TwitchTagViewModel Tag
-        {
-            get { return this.tag; }
-            set
-            {
-                this.tag = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private TwitchTagViewModel tag;
-
-        public ThreadSafeObservableCollection<TwitchTagViewModel> CustomTags { get; private set; } = new ThreadSafeObservableCollection<TwitchTagViewModel>();
-
-        public ChannelInformationModel ChannelInformation { get; private set; }
-
-        public ICommand AddTagCommand { get; private set; }
-
-        public bool CanAddMoreTags { get { return this.CustomTags.Count < 5; } }
+        private string categoryName;
 
         public ICommand UpdateChannelInformationCommand { get; private set; }
 
-        public List<SearchFindChannelToRaidTypeEnum> SearchFindChannelToRaidOptions { get; private set; } = new List<SearchFindChannelToRaidTypeEnum>(EnumHelper.GetEnumList<SearchFindChannelToRaidTypeEnum>());
+        public ICommand SearchChannelToRaidCommand { get; private set; }
 
-        public SearchFindChannelToRaidTypeEnum SelectedSearchFindChannelToRaidOption
+        public ThreadSafeObservableCollection<ChannelToRaidItemViewModel> ChannelsToRaid { get; private set; } = new ThreadSafeObservableCollection<ChannelToRaidItemViewModel>();
+
+        public PlatformChannelControlViewModelBase()
         {
-            get { return this.selectedSearchFindChannelToRaidOption; }
-            set
-            {
-                this.selectedSearchFindChannelToRaidOption = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private SearchFindChannelToRaidTypeEnum selectedSearchFindChannelToRaidOption;
-
-        public ICommand SearchFindChannelToRaidCommand { get; private set; }
-
-        public ThreadSafeObservableCollection<SearchFindChannelToRaidItemViewModel> SearchFindChannelToRaidResults { get; private set; } = new ThreadSafeObservableCollection<SearchFindChannelToRaidItemViewModel>();
-
-        private GameModel currentGame;
-
-        public ChannelMainControlViewModel(MainWindowViewModel windowViewModel)
-            : base(windowViewModel)
-        {
-            this.AddTagCommand = this.CreateCommand(() =>
-            {
-                if (this.Tag != null && !this.CustomTags.Contains(tag))
-                {
-                    this.CustomTags.Add(tag);
-                    this.Tag = null;
-                }
-                this.NotifyPropertyChanged("CanAddMoreTags");
-            });
-
             this.UpdateChannelInformationCommand = this.CreateCommand(async () =>
             {
-                // TODO
-
-                bool failedToFindGame = false;
-                if (this.currentGame != null && !string.IsNullOrEmpty(this.GameName) && this.GameName.Length > 3 && !string.Equals(this.currentGame.name, this.GameName, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    IEnumerable<GameModel> games = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIGamesByName(this.GameName);
-                    if (games != null && games.Count() > 0)
-                    {
-                        this.currentGame = games.First();
-                    }
-                    else
-                    {
-                        failedToFindGame = true;
-                    }
-                }
-
-                await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateChannelInformation(ServiceManager.Get<TwitchSessionService>().User, this.Title, this.currentGame?.id);
-
-                IEnumerable<TagModel> tags = this.CustomTags.Select(t => t.Tag);
-                await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateStreamTagsForChannel(ServiceManager.Get<TwitchSessionService>().User, tags);
+                Result result = await this.UpdateChannelInformation();
 
                 await this.RefreshChannelInformation();
 
-                if (failedToFindGame)
+                if (!result.Success)
                 {
-                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.FailedToUpdateGame);
+                    Logger.Log(LogLevel.Error, result.ToString());
+                    await DialogHelper.ShowFailedResult(result);
                 }
             });
 
-            this.SearchFindChannelToRaidCommand = this.CreateCommand(async () =>
+            this.SearchChannelToRaidCommand = this.CreateCommand(async () =>
             {
-                // TODO
-
-                this.SearchFindChannelToRaidResults.Clear();
-
-                List<SearchFindChannelToRaidItemViewModel> results = new List<SearchFindChannelToRaidItemViewModel>();
-
-                if (this.SelectedSearchFindChannelToRaidOption == SearchFindChannelToRaidTypeEnum.Featured)
-                {
-                    foreach (StreamModel stream in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetTopStreams(10))
-                    {
-                        results.Add(new SearchFindChannelToRaidItemViewModel(stream));
-                    }
-                }
-                else if (this.SelectedSearchFindChannelToRaidOption == SearchFindChannelToRaidTypeEnum.SameGame && this.currentGame != null)
-                {
-                    IEnumerable<StreamModel> streams = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetGameStreams(this.currentGame.id, 10);
-                    if (streams.Count() > 0)
-                    {
-                        Dictionary<string, GameModel> games = new Dictionary<string, GameModel>();
-                        foreach (GameModel game in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIGamesByIDs(streams.Select(s => s.game_id)))
-                        {
-                            games[game.id] = game;
-                        }
-
-                        foreach (StreamModel stream in streams)
-                        {
-                            results.Add(new SearchFindChannelToRaidItemViewModel(stream, games.ContainsKey(stream.game_id) ? games[stream.game_id] : null));
-                        }
-                    }
-                }
-                else if (this.SelectedSearchFindChannelToRaidOption == SearchFindChannelToRaidTypeEnum.SameLanguage && this.ChannelInformation != null)
-                {
-                    IEnumerable<StreamModel> streams = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetLanguageStreams(this.ChannelInformation.broadcaster_language, 10);
-                    if (streams.Count() > 0)
-                    {
-                        Dictionary<string, GameModel> games = new Dictionary<string, GameModel>();
-                        foreach (GameModel game in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIGamesByIDs(streams.Select(s => s.game_id)))
-                        {
-                            games[game.id] = game;
-                        }
-
-                        foreach (StreamModel stream in streams)
-                        {
-                            results.Add(new SearchFindChannelToRaidItemViewModel(stream, games.ContainsKey(stream.game_id) ? games[stream.game_id] : null));
-                        }
-                    }
-                }
-                else if (this.SelectedSearchFindChannelToRaidOption == SearchFindChannelToRaidTypeEnum.FollowedChannels)
-                {
-                    foreach (StreamModel stream in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetFollowedStreams(ServiceManager.Get<TwitchSessionService>().User, 10))
-                    {
-                        results.Add(new SearchFindChannelToRaidItemViewModel(stream));
-                    }
-                }
-                else if (this.SelectedSearchFindChannelToRaidOption == SearchFindChannelToRaidTypeEnum.TeamMembers)
-                {
-                    List<UserModel> users = new List<UserModel>();
-                    foreach (TeamModel team in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelTeams(ServiceManager.Get<TwitchSessionService>().User))
-                    {
-                        TeamDetailsModel teamDetails = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetTeam(team.id);
-                        if (teamDetails != null && teamDetails.users != null)
-                        {
-                            foreach (TeamMemberModel user in teamDetails.users)
-                            {
-                                users.Add(new UserModel()
-                                {
-                                    id = user.user_id,
-                                    login = user.user_login,
-                                    display_name = user.user_name
-                                });
-                            }
-                        }
-                    }
-
-                    if (users.Count > 0)
-                    {
-                        foreach (StreamModel stream in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStreams(users.Select(u => u.id)))
-                        {
-                            results.Add(new SearchFindChannelToRaidItemViewModel(stream));
-                        }
-                    }
-                }
-
-                this.SearchFindChannelToRaidResults.AddRange(results.Take(10));
+                await this.SearchChannelsToRaid();
             });
-        }
-
-        public void RemoveTag(TwitchTagViewModel tag)
-        {
-            this.CustomTags.Remove(tag);
-            this.NotifyPropertyChanged("CanAddMoreTags");
         }
 
         protected override async Task OnOpenInternal()
         {
             this.PastTitles.AddRange(ChannelSession.Settings.RecentStreamTitles);
 
-            this.PastGameNames.AddRange(ChannelSession.Settings.RecentStreamGames);
-
-            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
-            {
-                List<TwitchTagViewModel> tags = new List<TwitchTagViewModel>();
-                foreach (TagModel tag in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStreamTags())
-                {
-                    if (!tag.is_auto)
-                    {
-                        tags.Add(new TwitchTagViewModel(this, tag));
-                    }
-                }
-
-                this.Tags.ClearAndAddRange(tags.OrderBy(t => t.Name));
-
-            }
+            this.PastCategories.AddRange(ChannelSession.Settings.RecentStreamCategories);
 
             await base.OnOpenInternal();
         }
@@ -367,69 +407,64 @@ namespace MixItUp.Base.ViewModel.MainControls
             await base.OnVisibleInternal();
         }
 
-        private async Task RefreshChannelInformation()
+        protected virtual async Task RefreshChannelInformation()
         {
-            // TODO
+            this.Title = await StreamingPlatforms.GetPlatformSessionService(this.Platform).GetTitle();
+            this.CategoryName = await StreamingPlatforms.GetPlatformSessionService(this.Platform).GetGame();
+        }
 
-            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+        protected virtual async Task<Result> UpdateChannelInformation()
+        {
+            if (!await StreamingPlatforms.GetPlatformSessionService(this.Platform).SetTitle(this.Title) || !await StreamingPlatforms.GetPlatformSessionService(this.Platform).SetGame(this.CategoryName))
             {
-                this.ChannelInformation = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelInformation(ServiceManager.Get<TwitchSessionService>().User);
-                if (this.ChannelInformation != null)
-                {
-                    if (!string.IsNullOrEmpty(this.ChannelInformation.title))
-                    {
-                        this.Title = this.ChannelInformation.title;
-                        if (!ChannelSession.Settings.RecentStreamTitles.Contains(this.ChannelInformation.title))
-                        {
-                            ChannelSession.Settings.RecentStreamTitles.Insert(0, this.ChannelInformation.title);
-                            while (ChannelSession.Settings.RecentStreamTitles.Count > 5)
-                            {
-                                ChannelSession.Settings.RecentStreamTitles.RemoveAt(ChannelSession.Settings.RecentStreamTitles.Count - 1);
-                            }
-                        }
-                    }
+                return new Result(MixItUp.Base.Resources.FailedToUpdateChannelInformation);
+            }
+            return new Result();
+        }
 
-                    if (!string.IsNullOrEmpty(this.ChannelInformation.game_id) && !string.IsNullOrEmpty(this.ChannelInformation.game_name))
-                    {
-                        this.currentGame = new GameModel()
-                        {
-                            id = this.ChannelInformation.game_id,
-                            name = this.ChannelInformation.game_name
-                        };
+        protected abstract Task SearchChannelsToRaid();
+    }
 
-                        this.GameName = this.currentGame.name;
+    public class ChannelMainControlViewModel : WindowControlViewModelBase
+    {
+        public TwitchChannelControlViewModel Twitch { get; set; } = new TwitchChannelControlViewModel();
 
-                        if (!ChannelSession.Settings.RecentStreamGames.Contains(this.currentGame.name))
-                        {
-                            ChannelSession.Settings.RecentStreamGames.Insert(0, this.currentGame.name);
-                            while (ChannelSession.Settings.RecentStreamGames.Count > 5)
-                            {
-                                ChannelSession.Settings.RecentStreamGames.RemoveAt(ChannelSession.Settings.RecentStreamTitles.Count - 1);
-                            }
-                        }
-                    }
-                }
+        public TrovoChannelControlViewModel Trovo { get; set; } = new TrovoChannelControlViewModel();
+
+        public bool IsTwitchConnected { get { return ServiceManager.Get<TwitchSessionService>().IsConnected; } }
+
+        public bool IsTrovoConnected { get { return ServiceManager.Get<TrovoSessionService>().IsConnected; } }
+
+        public ChannelMainControlViewModel(MainWindowViewModel windowViewModel) : base(windowViewModel) { }
+
+        protected override async Task OnOpenInternal()
+        {
+            if (this.IsTwitchConnected)
+            {
+                await this.Twitch.OnOpen();
             }
 
-            // TODO
-            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+            if (this.IsTrovoConnected)
             {
-                List<TwitchTagViewModel> tags = new List<TwitchTagViewModel>();
-                foreach (TagModel tag in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStreamTagsForChannel(ServiceManager.Get<TwitchSessionService>().User))
-                {
-                    if (!tag.is_auto)
-                    {
-                        TwitchTagViewModel tagViewModel = this.Tags.FirstOrDefault(t => string.Equals(t.ID, tag.tag_id));
-                        if (tagViewModel != null)
-                        {
-                            tags.Add(tagViewModel);
-                        }
-                    }
-                }
-                this.CustomTags.ClearAndAddRange(tags);
+                await this.Trovo.OnOpen();
             }
 
-            this.NotifyPropertyChanged("CanAddMoreTags");
+            await base.OnOpenInternal();
+        }
+
+        protected override async Task OnVisibleInternal()
+        {
+            if (this.IsTwitchConnected)
+            {
+                await this.Twitch.OnVisible();
+            }
+
+            if (this.IsTrovoConnected)
+            {
+                await this.Trovo.OnVisible();
+            }
+
+            await base.OnVisibleInternal();
         }
     }
 }

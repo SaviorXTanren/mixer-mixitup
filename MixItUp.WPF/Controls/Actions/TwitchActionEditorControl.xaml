@@ -9,6 +9,7 @@
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:ActionControls="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:TwitchControls="clr-namespace:MixItUp.WPF.Controls.Twitch"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <local:ActionEditorControlBase.Resources>
@@ -41,32 +42,7 @@
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowSetCustomTagsGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <Border Grid.Column="0" Style="{StaticResource DefaultBorder}">
-                <ItemsControl ItemsSource="{Binding CustomTags}" Margin="10">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <MaterialDesign:Chip Content="{Binding Name}" IsDeletable="{Binding IsDeletable}" DeleteCommand="{Binding DeleteTagCommand}" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </Border>
-
-            <ComboBox Grid.Column="2" ItemsSource="{Binding Tags}" SelectedItem="{Binding SelectedTag}" DisplayMemberPath="Name" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Tag}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
-
-            <Button Grid.Column="4" Command="{Binding AddTagCommand}" IsEnabled="{Binding CanAddMoreTags}" Content="{MaterialDesign:PackIcon Add}" Padding="10,0" />
+            <TwitchControls:TwitchTagEditorControl DataContext="{Binding TagEditor}" />
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowAdGrid, Converter={StaticResource BooleanToVisibilityConverter}}">

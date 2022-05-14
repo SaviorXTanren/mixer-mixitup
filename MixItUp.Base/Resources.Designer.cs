@@ -1763,6 +1763,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Category.
+        /// </summary>
+        public static string Category {
+            get {
+                return ResourceManager.GetString("Category", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Center.
         /// </summary>
         public static string Center {
@@ -5811,6 +5820,15 @@ namespace MixItUp.Base {
         public static string FailedToInitializeStreamerBasedServices {
             get {
                 return ResourceManager.GetString("FailedToInitializeStreamerBasedServices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to update channel information.
+        /// </summary>
+        public static string FailedToUpdateChannelInformation {
+            get {
+                return ResourceManager.GetString("FailedToUpdateChannelInformation", resourceCulture);
             }
         }
         
@@ -15458,6 +15476,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Same Category.
+        /// </summary>
+        public static string SameCategory {
+            get {
+                return ResourceManager.GetString("SameCategory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Same Game.
         /// </summary>
         public static string SameGame {
@@ -19735,6 +19762,15 @@ namespace MixItUp.Base {
         public static string TwitchFailedToGetUserData {
             get {
                 return ResourceManager.GetString("TwitchFailedToGetUserData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to update custom Twitch tags.
+        /// </summary>
+        public static string TwitchFailedToUpdateCustomTags {
+            get {
+                return ResourceManager.GetString("TwitchFailedToUpdateCustomTags", resourceCulture);
             }
         }
         
