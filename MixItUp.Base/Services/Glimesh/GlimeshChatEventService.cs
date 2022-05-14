@@ -225,26 +225,71 @@ namespace MixItUp.Base.Services.Glimesh
 
         private async void UserClient_OnChatMessageReceived(object sender, ChatMessagePacketModel message)
         {
-            if (message != null && !string.IsNullOrEmpty(message.Message))
+            try
             {
-                UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, message.User?.id);
-                if (user == null)
+                if (message != null && !string.IsNullOrEmpty(message.Message))
                 {
-                    UserModel glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByID(message.User?.id);
-                    if (glimeshUser != null)
+                    UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, message.User?.id);
+                    if (user == null)
                     {
-                        user = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(glimeshUser));
+                        UserModel glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByID(message.User?.id);
+                        if (glimeshUser != null)
+                        {
+                            user = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(glimeshUser));
+                        }
+                        else
+                        {
+                            user = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(message));
+                        }
+                        await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
+                    }
+
+                    user.GetPlatformData<GlimeshUserPlatformV2Model>(StreamingPlatformTypeEnum.Glimesh).SetUserProperties(message);
+
+                    if (message.IsFollowedMessage)
+                    {
+                        // Ignore follow messages
+                    }
+                    else if (message.IsSubscriptionMessage)
+                    {
+                        user.Roles.Add(UserRoleEnum.Subscriber);
+                        user.SubscribeDate = DateTimeOffset.Now;
+
+                        CommandParametersModel parameters = new CommandParametersModel(user);
+                        if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.GlimeshChannelSubscribed, parameters))
+                        {
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
+
+                            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
+                            {
+                                currency.AddAmount(user, currency.OnSubscribeBonus);
+                            }
+
+                            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                            {
+                                if (user.MeetsRole(streamPass.UserPermission))
+                                {
+                                    streamPass.AddAmount(user, streamPass.SubscribeBonus);
+                                }
+                            }
+
+                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.GlimeshChannelSubscribed, parameters);
+
+                            GlobalEvents.SubscribeOccurred(user);
+
+                            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertSubscribed, user.DisplayName), ChannelSession.Settings.AlertSubColor));
+                        }
                     }
                     else
                     {
-                        user = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(message));
+                        await ServiceManager.Get<ChatService>().AddMessage(new GlimeshChatMessageViewModel(message, user));
                     }
-                    await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
                 }
-
-                user.GetPlatformData<GlimeshUserPlatformV2Model>(StreamingPlatformTypeEnum.Glimesh).SetUserProperties(message);
-
-                await ServiceManager.Get<ChatService>().AddMessage(new GlimeshChatMessageViewModel(message, user));
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
 
@@ -291,8 +336,6 @@ namespace MixItUp.Base.Services.Glimesh
                 CommandParametersModel parameters = new CommandParametersModel(user);
                 if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.GlimeshChannelFollowed, parameters))
                 {
-                    user.FollowDate = DateTimeOffset.Now;
-
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user.ID;
 
                     foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
@@ -312,7 +355,7 @@ namespace MixItUp.Base.Services.Glimesh
 
                     GlobalEvents.FollowOccurred(user);
 
-                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format("{0} Followed", user.DisplayName), ChannelSession.Settings.AlertFollowColor));
+                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertFollow, user.DisplayName), ChannelSession.Settings.AlertFollowColor));
                 }
             }
             catch (Exception ex)
