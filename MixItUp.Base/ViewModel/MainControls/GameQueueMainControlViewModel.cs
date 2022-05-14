@@ -1,9 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
-using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Windows.Input;
 
@@ -11,19 +9,19 @@ namespace MixItUp.Base.ViewModel.MainControls
 {
     public class QueueUser
     {
-        public UserV2ViewModel user { get; set; }
+        public CommandParametersModel parameters { get; set; }
 
         public int QueuePosition { get; set; }
 
-        public string Username { get { return this.user.FullDisplayName; } }
+        public string Username { get { return this.parameters.User.FullDisplayName; } }
 
-        public string Platform { get { return EnumLocalizationHelper.GetLocalizedName(this.user.Platform); } }
+        public string Platform { get { return EnumLocalizationHelper.GetLocalizedName(this.parameters.User.Platform); } }
 
-        public string PrimaryRole { get { return EnumLocalizationHelper.GetLocalizedName(this.user.PrimaryRole); } }
+        public string PrimaryRole { get { return EnumLocalizationHelper.GetLocalizedName(this.parameters.User.PrimaryRole); } }
 
-        public QueueUser(UserV2ViewModel user, int queuePosition)
+        public QueueUser(CommandParametersModel parameters, int queuePosition)
         {
-            this.user = user;
+            this.parameters = parameters;
             this.QueuePosition = queuePosition;
         }
     }
@@ -96,19 +94,19 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.MoveUpCommand = this.CreateCommand(async (user) =>
             {
-                await ServiceManager.Get<GameQueueService>().MoveUp((UserV2ViewModel)user);
+                await ServiceManager.Get<GameQueueService>().MoveUp(((QueueUser)user).parameters);
                 this.NotifyPropertyChanges();
             });
 
             this.MoveDownCommand = this.CreateCommand(async (user) =>
             {
-                await ServiceManager.Get<GameQueueService>().MoveDown((UserV2ViewModel)user);
+                await ServiceManager.Get<GameQueueService>().MoveDown(((QueueUser)user).parameters);
                 this.NotifyPropertyChanges();
             });
 
             this.DeleteCommand = this.CreateCommand(async (user) =>
             {
-                await ServiceManager.Get<GameQueueService>().Leave((UserV2ViewModel)user);
+                await ServiceManager.Get<GameQueueService>().Leave(((QueueUser)user).parameters);
                 this.NotifyPropertyChanges();
             });
 
@@ -126,9 +124,9 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             List<QueueUser> queue = new List<QueueUser>();
             int position = 1;
-            foreach (UserV2ViewModel user in ServiceManager.Get<GameQueueService>().Queue)
+            foreach (CommandParametersModel parameters in ServiceManager.Get<GameQueueService>().Queue)
             {
-                queue.Add(new QueueUser(user, position));
+                queue.Add(new QueueUser(parameters, position));
                 position++;
             }
             this.QueueUsers.ClearAndAddRange(queue);

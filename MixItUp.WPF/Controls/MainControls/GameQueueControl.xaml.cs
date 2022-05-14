@@ -48,7 +48,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 try
                 {
                     QueueUser queueUser = FrameworkElementHelpers.GetDataContext<QueueUser>(sender);
-                    this.viewModel.MoveUpCommand.Execute(queueUser.user);
+                    this.viewModel.MoveUpCommand.Execute(queueUser);
                 }
                 catch (Exception ex) { Logger.Log(ex); }
                 return Task.CompletedTask;
@@ -62,7 +62,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 try
                 {
                     QueueUser queueUser = FrameworkElementHelpers.GetDataContext<QueueUser>(sender);
-                    this.viewModel.MoveDownCommand.Execute(queueUser.user);
+                    this.viewModel.MoveDownCommand.Execute(queueUser);
                 }
                 catch (Exception ex) { Logger.Log(ex); }
                 return Task.CompletedTask;
@@ -76,7 +76,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 try
                 {
                     QueueUser queueUser = FrameworkElementHelpers.GetDataContext<QueueUser>(sender);
-                    this.viewModel.DeleteCommand.Execute(queueUser.user);
+                    this.viewModel.DeleteCommand.Execute(queueUser);
                 }
                 catch (Exception ex) { Logger.Log(ex); }
                 return Task.CompletedTask;

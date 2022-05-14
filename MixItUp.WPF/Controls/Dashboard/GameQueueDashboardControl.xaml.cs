@@ -33,7 +33,7 @@ namespace MixItUp.WPF.Controls.Dashboard
                     QueueUser queueUser = FrameworkElementHelpers.GetDataContext<QueueUser>(sender);
                     if (queueUser != null)
                     {
-                        this.viewModel.MoveUpCommand.Execute(queueUser.user);
+                        this.viewModel.MoveUpCommand.Execute(queueUser);
                     }
                 }
                 catch (Exception ex)
@@ -53,7 +53,7 @@ namespace MixItUp.WPF.Controls.Dashboard
                     QueueUser queueUser = FrameworkElementHelpers.GetDataContext<QueueUser>(sender);
                     if (queueUser != null)
                     {
-                        this.viewModel.MoveDownCommand.Execute(queueUser.user);
+                        this.viewModel.MoveDownCommand.Execute(queueUser);
                     }
                 }
                 catch (Exception ex)
@@ -73,7 +73,7 @@ namespace MixItUp.WPF.Controls.Dashboard
                     QueueUser queueUser = FrameworkElementHelpers.GetDataContext<QueueUser>(sender);
                     if (queueUser != null)
                     {
-                        this.viewModel.DeleteCommand.Execute(queueUser.user);
+                        this.viewModel.DeleteCommand.Execute(queueUser);
                     }
                 }
                 catch (Exception ex)
