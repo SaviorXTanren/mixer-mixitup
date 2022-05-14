@@ -149,11 +149,11 @@ namespace MixItUp.Base.Services
             int position = this.GetUserPosition(parameters.User);
             if (position != -1)
             {
-                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.QueueYouAreInPosition, position), parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.QueueYouAreInPosition, position), parameters);
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.QueueYouAreNotCurrentlyIn, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.QueueYouAreNotCurrentlyIn, parameters);
             }
         }
 
@@ -176,7 +176,7 @@ namespace MixItUp.Base.Services
                 message.Append(".");
             }
 
-            await ServiceManager.Get<ChatService>().SendMessage(message.ToString(), parameters.Platform);
+            await ServiceManager.Get<ChatService>().SendMessage(message.ToString(), parameters);
         }
 
         public Task Clear()
@@ -191,7 +191,7 @@ namespace MixItUp.Base.Services
             int position = this.GetUserPosition(parameters.User);
             if (position != -1)
             {
-                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.QueueYouAreInPosition, position), parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.QueueYouAreInPosition, position), parameters);
                 return false;
             }
             return true;

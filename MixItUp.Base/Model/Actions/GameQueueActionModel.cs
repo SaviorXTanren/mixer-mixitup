@@ -72,7 +72,7 @@ namespace MixItUp.Base.Model.Actions
             {
                 if (!ServiceManager.Get<GameQueueService>().IsEnabled)
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameQueueNotEnabled, parameters.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameQueueNotEnabled, parameters);
                     return;
                 }
 
@@ -83,7 +83,7 @@ namespace MixItUp.Base.Model.Actions
                     targetUser = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(parameters.Platform, username);
                     if (targetUser == null)
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.UserNotFound, parameters.Platform);
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.UserNotFound, parameters);
                         return;
                     }
                 }
