@@ -72,7 +72,7 @@ namespace MixItUp.Base.Model.Actions
             {
                 if (!ServiceManager.Get<GameQueueService>().IsEnabled)
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameQueueNotEnabled, parameters.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameQueueNotEnabled, parameters);
                     return;
                 }
 
@@ -83,30 +83,33 @@ namespace MixItUp.Base.Model.Actions
                     targetUser = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(parameters.Platform, username);
                     if (targetUser == null)
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.UserNotFound, parameters.Platform);
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.UserNotFound, parameters);
                         return;
                     }
                 }
 
+                CommandParametersModel gameQueueParameters = parameters.Duplicate();
+                gameQueueParameters.User = targetUser;
+
                 if (this.ActionType == GameQueueActionType.JoinQueue)
                 {
-                    await ServiceManager.Get<GameQueueService>().Join(targetUser);
+                    await ServiceManager.Get<GameQueueService>().Join(gameQueueParameters);
                 }
                 else if (this.ActionType == GameQueueActionType.JoinFrontOfQueue)
                 {
-                    await ServiceManager.Get<GameQueueService>().JoinFront(targetUser);
+                    await ServiceManager.Get<GameQueueService>().JoinFront(gameQueueParameters);
                 }
                 else if (this.ActionType == GameQueueActionType.QueuePosition)
                 {
-                    await ServiceManager.Get<GameQueueService>().PrintUserPosition(targetUser);
+                    await ServiceManager.Get<GameQueueService>().PrintUserPosition(gameQueueParameters);
                 }
                 else if (this.ActionType == GameQueueActionType.QueueStatus)
                 {
-                    await ServiceManager.Get<GameQueueService>().PrintStatus(parameters);
+                    await ServiceManager.Get<GameQueueService>().PrintStatus(gameQueueParameters);
                 }
                 else if (this.ActionType == GameQueueActionType.LeaveQueue)
                 {
-                    await ServiceManager.Get<GameQueueService>().Leave(targetUser);
+                    await ServiceManager.Get<GameQueueService>().Leave(gameQueueParameters);
                 }
                 if (this.ActionType == GameQueueActionType.SelectFirst)
                 {

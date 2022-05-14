@@ -149,5 +149,7 @@ namespace MixItUp.Base.Services.Trovo
         public async Task<ChatEmotePackageModel> GetPlatformAndChannelEmotes(string channelID) { return await AsyncRunner.RunAsync(this.Connection.Chat.GetEmotes(new List<string>() { channelID })); }
 
         public async Task<ChatViewersModel> GetViewers(string channelID) { return await AsyncRunner.RunAsync(this.Connection.Chat.GetViewers(channelID, maxResults: 1000)); }
+
+        public async Task<IEnumerable<TopChannelModel>> GetTopChannels(int maxResults = 1, string category = null) { return await AsyncRunner.RunAsync(this.Connection.Channels.GetTopChannels(maxResults, category)); }
     }
 }

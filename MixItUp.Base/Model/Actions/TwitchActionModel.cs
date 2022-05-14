@@ -302,7 +302,7 @@ namespace MixItUp.Base.Model.Actions
                             {
                                 if (this.ShowInfoInChat)
                                 {
-                                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.ClipCreatedMessage, clip.url), parameters.Platform);
+                                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.ClipCreatedMessage, clip.url), parameters);
                                 }
                                 parameters.SpecialIdentifiers[ClipURLSpecialIdentifier] = clip.url;
 
@@ -327,12 +327,12 @@ namespace MixItUp.Base.Model.Actions
                     {
                         if (this.ShowInfoInChat)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.StreamMarkerCreatedMessage, streamMarker.URL), parameters.Platform);
+                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.StreamMarkerCreatedMessage, streamMarker.URL), parameters);
                         }
                         parameters.SpecialIdentifiers[StreamMarkerURLSpecialIdentifier] = streamMarker.URL;
                         return;
                     }
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StreamMarkerCreationFailed, parameters.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StreamMarkerCreationFailed, parameters);
                 }
                 else if (this.ActionType == TwitchActionType.UpdateChannelPointReward)
                 {
@@ -426,7 +426,7 @@ namespace MixItUp.Base.Model.Actions
                     CustomChannelPointRewardModel reward = await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateCustomChannelPointReward(ServiceManager.Get<TwitchSessionService>().User, this.ChannelPointRewardID, jobj);
                     if (reward == null)
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.TwitchActionChannelPointRewardCouldNotBeUpdated, StreamingPlatformTypeEnum.Twitch);
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.TwitchActionChannelPointRewardCouldNotBeUpdated, parameters);
                     }
                 }
                 else if (this.ActionType == TwitchActionType.CreatePoll)

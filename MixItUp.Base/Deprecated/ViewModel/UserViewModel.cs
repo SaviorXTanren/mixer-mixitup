@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Model;
-using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
@@ -14,8 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Twitch.Base.Models.Clients.Chat;
-using Twitch.Base.Models.Clients.PubSub.Messages;
 using Twitch.Base.Models.NewAPI.Chat;
 using Twitch.Base.Models.NewAPI.Subscriptions;
 using Twitch.Base.Models.NewAPI.Users;
@@ -920,21 +917,6 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         #region Twitch Data Setter Functions
-
-        public void SetTwitchChatDetails(Twitch.Base.Models.Clients.Chat.ChatMessagePacketModel message)
-        {
-            this.SetTwitchChatDetails(message.UserDisplayName, message.BadgeDictionary, message.BadgeInfoDictionary, message.Color);
-        }
-
-        public void SetTwitchChatDetails(Twitch.Base.Models.Clients.Chat.ChatUserStatePacketModel userState)
-        {
-            this.SetTwitchChatDetails(userState.UserDisplayName, userState.BadgeDictionary, userState.BadgeInfoDictionary, userState.Color);
-        }
-
-        public void SetTwitchChatDetails(Twitch.Base.Models.Clients.Chat.ChatUserNoticePacketModel userNotice)
-        {
-            this.SetTwitchChatDetails(userNotice.UserDisplayName, userNotice.BadgeDictionary, userNotice.BadgeInfoDictionary, userNotice.Color);
-        }
 
         private void SetTwitchChatDetails(string displayName, Dictionary<string, int> badges, Dictionary<string, int> badgeInfo, string color)
         {

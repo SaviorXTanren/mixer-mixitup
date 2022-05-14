@@ -603,7 +603,7 @@ namespace MixItUp.Base.Model.Overlay
 
                 string sectionHTML = this.PerformTemplateReplacements(sectionTemplate.SectionHTML, new Dictionary<string, string>()
                 {
-                    { "NAME", EnumHelper.GetEnumName(itemType) },
+                    { "NAME", EnumLocalizationHelper.GetLocalizedName(itemType) },
                     { "TEXT_FONT", this.SectionTextFont },
                     { "TEXT_SIZE", this.SectionTextSize.ToString() },
                     { "TEXT_COLOR", this.SectionTextColor }

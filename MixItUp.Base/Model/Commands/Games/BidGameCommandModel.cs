@@ -129,7 +129,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
                 if (currencyRequirement != null)
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, this.lastBidAmount, currencyRequirement.Currency.Name), parameters.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, this.lastBidAmount, currencyRequirement.Currency.Name), parameters);
                 }
                 await this.Requirements.Refund(parameters);
             }

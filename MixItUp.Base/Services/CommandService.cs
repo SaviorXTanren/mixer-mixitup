@@ -317,7 +317,7 @@ namespace MixItUp.Base.Services
                     {
                         if (!string.IsNullOrEmpty(validationResult.Message) && validationResult.DisplayMessage)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(validationResult.Message, commandInstance.Parameters.Platform);
+                            await ServiceManager.Get<ChatService>().SendMessage(validationResult.Message, commandInstance.Parameters);
                         }
                     }
                 }

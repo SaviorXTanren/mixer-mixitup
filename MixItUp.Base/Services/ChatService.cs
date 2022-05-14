@@ -88,46 +88,56 @@ namespace MixItUp.Base.Services
 
         public async Task SendMessage(string message, bool sendAsStreamer = false, string replyMessageID = null)
         {
-            if (!string.IsNullOrEmpty(message))
+            await StreamingPlatforms.ForEachPlatform(async (p) =>
             {
-                await StreamingPlatforms.ForEachPlatform(async (p) =>
-                {
-                    await this.SendMessage(message, p, sendAsStreamer, replyMessageID);
-                });
-            }
+                await this.SendMessage(message, p, sendAsStreamer, replyMessageID);
+            });
+        }
+
+        public async Task SendMessage(string message, CommandParametersModel parameters, bool sendAsStreamer = false)
+        {
+            await this.SendMessage(message, parameters.Platform, sendAsStreamer, parameters.TriggeringChatMessageID);
         }
 
         public async Task SendMessage(string message, StreamingPlatformTypeEnum platform, bool sendAsStreamer = false, string replyMessageID = null)
         {
-            if (platform == StreamingPlatformTypeEnum.All)
+            if (!string.IsNullOrEmpty(message))
             {
-                await this.SendMessage(message, sendAsStreamer, replyMessageID);
-            }
-            else if (!string.IsNullOrEmpty(message))
-            {
-                if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchChatService>().IsUserConnected)
+                if (platform == StreamingPlatformTypeEnum.All)
                 {
-                    await ServiceManager.Get<TwitchChatService>().SendMessage(message, sendAsStreamer, replyMessageID);
-
-                    if (sendAsStreamer || !ServiceManager.Get<TwitchChatService>().IsBotConnected)
+                    await this.SendMessage(message, sendAsStreamer, replyMessageID);
+                }
+                else if (!string.IsNullOrEmpty(message))
+                {
+                    if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchChatService>().IsUserConnected)
                     {
-                        await this.AddMessage(new TwitchChatMessageViewModel(ChannelSession.User, message, replyMessageID));
+                        if (!ChannelSession.Settings.TwitchReplyToCommandChatMessages)
+                        {
+                            replyMessageID = null;
+                        }
+
+                        await ServiceManager.Get<TwitchChatService>().SendMessage(message, sendAsStreamer, replyMessageID);
+
+                        if (sendAsStreamer || !ServiceManager.Get<TwitchChatService>().IsBotConnected)
+                        {
+                            await this.AddMessage(new TwitchChatMessageViewModel(ChannelSession.User, message, replyMessageID));
+                        }
                     }
-                }
 
-                if (platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeChatService>().IsUserConnected)
-                {
-                    await ServiceManager.Get<YouTubeChatService>().SendMessage(message, sendAsStreamer);
-                }
+                    if (platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeChatService>().IsUserConnected)
+                    {
+                        await ServiceManager.Get<YouTubeChatService>().SendMessage(message, sendAsStreamer);
+                    }
 
-                if (platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshChatEventService>().IsUserConnected)
-                {
-                    await ServiceManager.Get<GlimeshChatEventService>().SendMessage(message, sendAsStreamer);
-                }
+                    if (platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshChatEventService>().IsUserConnected)
+                    {
+                        await ServiceManager.Get<GlimeshChatEventService>().SendMessage(message, sendAsStreamer);
+                    }
 
-                if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
-                {
-                    await ServiceManager.Get<TrovoChatEventService>().SendMessage(message, sendAsStreamer);
+                    if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
+                    {
+                        await ServiceManager.Get<TrovoChatEventService>().SendMessage(message, sendAsStreamer);
+                    }
                 }
             }
         }

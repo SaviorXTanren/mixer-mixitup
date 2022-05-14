@@ -95,6 +95,8 @@ namespace MixItUp.Base.Services
 
         GlimeshChannelFollowed = 510,
 
+        GlimeshChannelSubscribed = 520,
+
         // Donation Services = 1000
 
         GenericDonation = 1999,

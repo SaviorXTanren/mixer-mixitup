@@ -7674,6 +7674,18 @@ via Twitch, it's a "your mileage may very" situation.</value>
   <data name="TrovoChannelStreamStop" xml:space="preserve">
     <value>Trovo Channel Stream Stop</value>
   </data>
+  <data name="FailedToUpdateChannelInformation" xml:space="preserve">
+    <value>Failed to update channel information</value>
+  </data>
+  <data name="TwitchFailedToUpdateCustomTags" xml:space="preserve">
+    <value>Failed to update custom Twitch tags</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="SameCategory" xml:space="preserve">
+    <value>Same Category</value>
+  </data>
   <data name="SetTitleDescription" xml:space="preserve">
     <value>Set Title/Description</value>
   </data>

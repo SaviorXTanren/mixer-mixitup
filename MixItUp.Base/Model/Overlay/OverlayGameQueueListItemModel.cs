@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
@@ -30,12 +31,12 @@ namespace MixItUp.Base.Model.Overlay
         {
             UserV2ViewModel user = ChannelSession.User;
 
-            List<UserV2ViewModel> users = new List<UserV2ViewModel>();
+            List<CommandParametersModel> parameters = new List<CommandParametersModel>();
             for (int i = 0; i < this.TotalToShow; i++)
             {
-                users.Add(user);
+                parameters.Add(new CommandParametersModel(user));
             }
-            await this.AddGameQueueUsers(users);
+            await this.AddGameQueueUsers(parameters);
         }
 
         public override async Task Enable()
@@ -59,30 +60,30 @@ namespace MixItUp.Base.Model.Overlay
             await this.AddGameQueueUsers(ServiceManager.Get<GameQueueService>().Queue);
         }
 
-        private async Task AddGameQueueUsers(IEnumerable<UserV2ViewModel> users)
+        private async Task AddGameQueueUsers(IEnumerable<CommandParametersModel> parameters)
         {
             await this.listSemaphore.WaitAndRelease(() =>
             {
                 foreach (UserV2ViewModel user in this.lastUsers)
                 {
-                    if (!users.Contains(user))
+                    if (!parameters.Select(p => p.User).Contains(user))
                     {
                         this.Items.Add(OverlayListIndividualItemModel.CreateRemoveItem(user.ID.ToString()));
                     }
                 }
 
-                for (int i = 0; i < users.Count() && i < this.TotalToShow; i++)
+                for (int i = 0; i < parameters.Count() && i < this.TotalToShow; i++)
                 {
-                    UserV2ViewModel user = users.ElementAt(i);
+                    CommandParametersModel p = parameters.ElementAt(i);
 
-                    OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(user.ID.ToString(), user, i + 1, this.HTML);
-                    item.TemplateReplacements.Add("USERNAME", (string)user.DisplayName);
+                    OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(p.User.ID.ToString(), p.User, i + 1, this.HTML);
+                    item.TemplateReplacements.Add("USERNAME", (string)p.User.DisplayName);
                     item.TemplateReplacements.Add("POSITION", (i + 1).ToString());
 
                     this.Items.Add(item);
                 }
 
-                this.lastUsers = new List<UserV2ViewModel>(users);
+                this.lastUsers = new List<UserV2ViewModel>(parameters.Select(p => p.User));
 
                 this.SendUpdateRequired();
 
