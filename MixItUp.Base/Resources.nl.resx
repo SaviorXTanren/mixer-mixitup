@@ -8026,11 +8026,12 @@ Geïmporteerde aanhalingstekens met ID&apos;s die overeenkomen met bestaande aan
     <value>Het item dat u hebt opgegeven, bestaat niet</value>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
-    <value>U moet &quot;kopen&quot; of &quot;verkopen&quot; opgeven</value>
+    <value>U moet &quot;{0}&quot; of &quot;{1}&quot; opgeven</value>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
-    <value>GEBRUIK: {0} lijst = Geeft alle items weer die beschikbaar zijn om te kopen / verkopen ** {0} &lt;ITEM NAAM&gt; = Geeft de koop / verkoopprijs voor het object weer ** {0} koop &lt;ITEM NAAM&gt; [BEDRAG] = Koopt 1 of het opgegeven bedrag van het item ** {0} verkopen &lt;ITEM NAAM&gt; [BEDRAG] = Verkoopt 1 of het opgegeven bedrag van het item</value>
-    <comment>{0} is the shop command</comment>
+    <value>GEBRUIK: {0} {1} = Geeft alle items weer die beschikbaar zijn om te kopen / verkopen ** {0} &lt;ITEM NAAM&gt; = Geeft de koop / verkoopprijs voor het object weer ** {0} {2} &lt;ITEM NAAM&gt; [BEDRAG] = Koopt 1 of het opgegeven bedrag van het item ** {0} {3} &lt;ITEM NAAM&gt; [BEDRAG] = Verkoopt 1 of het opgegeven bedrag van het item</value>
+    <comment>{0} is the shop command, {1} is the English word 'list', {2} is the English word 'buy', {3} is the English word 'sell'</comment>
   </data>
   <data name="InventoryTradeAlreadyUnderway" xml:space="preserve">
     <value>Een transactie is al aan de gang, wacht tot deze is voltooid</value>
@@ -8131,9 +8132,6 @@ Geïmporteerde aanhalingstekens met ID&apos;s die overeenkomen met bestaande aan
   <data name="ResubscribedAmount" xml:space="preserve">
     <value>Opnieuw geabonneerd ({0})</value>
     <comment>{0} is the amount of months</comment>
-  </data>
-  <data name="Sell" xml:space="preserve">
-    <value>Verkopen</value>
   </data>
   <data name="StartTimeHeader" xml:space="preserve">
     <value>Starttijd: </value>

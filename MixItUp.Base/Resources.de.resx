@@ -6878,11 +6878,12 @@ Importierte Anf체hrungszeichen mit IDs, die mit vorhandenen Anf체hrungszeichen �
     <value>Das angegebene Element ist nicht vorhanden</value>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
-    <value>Sie m체ssen entweder "kaufen" oder "verkaufen" angeben.</value>
+    <value>Sie m체ssen entweder "{0}" oder "{1}" angeben.</value>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
-    <value>VERWENDUNG: {0} Liste = Listet alle Artikel auf, die zum Kauf/Verkauf verf체gbar sind ** {0} &lt;ITEM NAME&gt; = Listet den Kauf-/Verkaufspreis f체r den Artikel auf ** {0} kauf &lt;ITEM NAME&gt; [AMOUNT] = Kauft 1 oder den angegebenen Betrag des Artikels ** {0} Verkauf &lt;ITEM NAME&gt; [AMOUNT] = Verkauft 1 oder den angegebenen Betrag des Artikels</value>
-    <comment>{0} is the shop command</comment>
+    <value>VERWENDUNG: {0} {1} = Listet alle Artikel auf, die zum Kauf/Verkauf verf체gbar sind ** {0} &lt;ITEM NAME&gt; = Listet den Kauf-/Verkaufspreis f체r den Artikel auf ** {0} {2} &lt;ITEM NAME&gt; [AMOUNT] = Kauft 1 oder den angegebenen Betrag des Artikels ** {0} {3} &lt;ITEM NAME&gt; [AMOUNT] = Verkauft 1 oder den angegebenen Betrag des Artikels</value>
+    <comment>{0} is the shop command, {1} is the English word 'list', {2} is the English word 'buy', {3} is the English word 'sell'</comment>
   </data>
   <data name="InventoryTradeAlreadyUnderway" xml:space="preserve">
     <value>Ein Trade ist bereits im Gange, bitte warten Sie, bis er abgeschlossen ist</value>
@@ -6983,9 +6984,6 @@ Importierte Anf체hrungszeichen mit IDs, die mit vorhandenen Anf체hrungszeichen �
   <data name="ResubscribedAmount" xml:space="preserve">
     <value>Erneut abonniert ({0})</value>
     <comment>{0} is the amount of months</comment>
-  </data>
-  <data name="Sell" xml:space="preserve">
-    <value>Verkaufen</value>
   </data>
   <data name="StartTimeHeader" xml:space="preserve">
     <value>Startzeit: </value>

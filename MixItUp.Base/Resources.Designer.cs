@@ -9662,7 +9662,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You must specify either &quot;buy&quot; or &quot;sell&quot;.
+        ///   Looks up a localized string similar to You must specify either &quot;{0}&quot; or &quot;{1}&quot;.
         /// </summary>
         public static string InventoryMustSpecifyEitherBuyOrSell {
             get {
@@ -9725,7 +9725,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to USAGE: {0} list = Lists all the items available for buying/selling ** {0} &lt;ITEM NAME&gt; = Lists the buying/selling price for the item ** {0} buy &lt;ITEM NAME&gt; [AMOUNT] = Buys 1 or the amount specified of the item ** {0} sell &lt;ITEM NAME&gt; [AMOUNT] = Sells 1 or the amount specified of the item.
+        ///   Looks up a localized string similar to USAGE: {0} {1} = Lists all the items available for buying/selling ** {0} &lt;ITEM NAME&gt; = Lists the buying/selling price for the item ** {0} {2} &lt;ITEM NAME&gt; [AMOUNT] = Buys 1 or the amount specified of the item ** {0} {3} &lt;ITEM NAME&gt; [AMOUNT] = Sells 1 or the amount specified of the item.
         /// </summary>
         public static string InventoryShopUsage {
             get {
@@ -15805,15 +15805,6 @@ namespace MixItUp.Base {
         public static string SelectVoice {
             get {
                 return ResourceManager.GetString("SelectVoice", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sell.
-        /// </summary>
-        public static string Sell {
-            get {
-                return ResourceManager.GetString("Sell", resourceCulture);
             }
         }
         
