@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.External
 {
-    public class BetterTTVEmoteModel : IChatEmoteViewModel
+    public class BetterTTVEmoteModel : ChatEmoteViewModelBase
     {
         public string id { get; set; }
         public string channel { get; set; }
         public string code { get; set; }
         public string imageType { get; set; }
 
-        public string ID { get { return this.id; } }
-        public string Name { get { return this.code; } }
-        public string ImageURL { get { return string.Format("https://cdn.betterttv.net/emote/{0}/1x", this.id); } }
+        public override string ID { get { return this.id; } protected set { } }
+        public override string Name { get { return this.code; } protected set { } }
+        public override string ImageURL { get { return string.Format("https://cdn.betterttv.net/emote/{0}/1x", this.id); } protected set { } }
 
         public bool IsGIF { get { return string.Equals(this.imageType, "gif", StringComparison.OrdinalIgnoreCase); } }
     }

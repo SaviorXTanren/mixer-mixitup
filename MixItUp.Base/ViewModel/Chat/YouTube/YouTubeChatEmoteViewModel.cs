@@ -3,19 +3,22 @@ using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Chat.YouTube
 {
-    public class YouTubeChatEmoteViewModel : IChatEmoteViewModel
+    public class YouTubeChatEmoteViewModel : ChatEmoteViewModelBase
     {
         public YouTubeChatEmoteModel Emote { get; set; }
 
-        public string ID { get { return this.Emote.emojiId; } }
+        public override string ID { get; protected set; }
 
-        public string Name { get { return this.Emote.shortcuts?.FirstOrDefault(); } }
+        public override string Name { get; protected set; }
 
-        public string ImageURL { get { return this.Emote.image?.thumbnails?.FirstOrDefault()?.url; } }
+        public override string ImageURL { get; protected set; }
 
         public YouTubeChatEmoteViewModel(YouTubeChatEmoteModel emote)
         {
             this.Emote = emote;
+            this.ID = this.Emote.emojiId;
+            this.Name = this.Emote.shortcuts?.FirstOrDefault();
+            this.ImageURL = this.Emote.image?.thumbnails?.FirstOrDefault()?.url;
         }
     }
 }
