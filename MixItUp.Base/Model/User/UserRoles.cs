@@ -43,6 +43,8 @@ namespace MixItUp.Base.Model.User
         TwitchStaff = 751,
         [TrovoUserRole]
         TrovoAdmin = 752,
+        [GlimeshUserRole]
+        GlimeshAdmin = 753,
 
         [GenericUserRole, TwitchUserRole, YouTubeUserRole, TrovoUserRole, GlimeshUserRole]
         Moderator = 800,
