@@ -93,7 +93,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                         name = this.ChannelInformation.game_name
                     };
 
-                    this.CategoryName = this.currentGame.name;
+                    this.Category = this.currentGame.name;
                 }
             }
 
@@ -353,16 +353,16 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public ThreadSafeObservableCollection<string> PastCategories { get; private set; } = new ThreadSafeObservableCollection<string>();
 
-        public string CategoryName
+        public string Category
         {
-            get { return this.categoryName; }
+            get { return this.category; }
             set
             {
-                this.categoryName = value;
+                this.category = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private string categoryName;
+        private string category;
 
         public ICommand UpdateChannelInformationCommand { get; private set; }
 
@@ -410,12 +410,12 @@ namespace MixItUp.Base.ViewModel.MainControls
         protected virtual async Task RefreshChannelInformation()
         {
             this.Title = await StreamingPlatforms.GetPlatformSessionService(this.Platform).GetTitle();
-            this.CategoryName = await StreamingPlatforms.GetPlatformSessionService(this.Platform).GetGame();
+            this.Category = await StreamingPlatforms.GetPlatformSessionService(this.Platform).GetGame();
         }
 
         protected virtual async Task<Result> UpdateChannelInformation()
         {
-            if (!await StreamingPlatforms.GetPlatformSessionService(this.Platform).SetTitle(this.Title) || !await StreamingPlatforms.GetPlatformSessionService(this.Platform).SetGame(this.CategoryName))
+            if (!await StreamingPlatforms.GetPlatformSessionService(this.Platform).SetTitle(this.Title) || !await StreamingPlatforms.GetPlatformSessionService(this.Platform).SetGame(this.Category))
             {
                 return new Result(MixItUp.Base.Resources.FailedToUpdateChannelInformation);
             }
