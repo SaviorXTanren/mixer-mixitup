@@ -56,15 +56,13 @@
                         
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
 
-                                        <Button x:Name="DisconnectionAlertButton" Style="{StaticResource MaterialDesignFlatButton}" Visibility="Collapsed" Width="40" HorizontalAlignment="Center" Margin="5,0">
-                                            <MaterialDesign:PackIcon Kind="LanDisconnect" Style="{StaticResource ColoredBackgroundPackIcon}" />
-                                        </Button>
+                                        <Controls:IconButton x:Name="DisconnectionAlertButton" Icon="LanDisconnect" Visibility="Collapsed" Margin="0,0,5,0" />
 
                                         <Controls:StreamingPlatformStatusAlertControl />
 
-                                        <Controls:IconButton x:Name="SectionHelpButton" Style="{StaticResource MaterialDesignFlatButton}" Click="SectionHelpButton_Click" Visibility="{Binding HelpLinkVisibility}" HorizontalAlignment="Center" Icon="Help" ToolTip="{x:Static resx:Resources.Help}" Margin="5,0" />
+                                        <Controls:IconButton x:Name="SectionHelpButton" Style="{StaticResource MaterialDesignRaisedButton}" Click="SectionHelpButton_Click" Visibility="{Binding HelpLinkVisibility}" HorizontalAlignment="Center" Icon="Help" ToolTip="{x:Static resx:Resources.Help}" Margin="5,0,0,0" />
 
-                                        <Controls:IconButton x:Name="SettingsButton" Style="{StaticResource MaterialDesignFlatButton}" Click="SettingsButton_Click" HorizontalAlignment="Center" Icon="Settings" ToolTip="{x:Static resx:Resources.Settings}" />
+                                        <Controls:IconButton x:Name="SettingsButton" Style="{StaticResource MaterialDesignRaisedButton}" Click="SettingsButton_Click" HorizontalAlignment="Center" Icon="Settings" ToolTip="{x:Static resx:Resources.Settings}" Margin="5,0,0,0" />
 
                                     </StackPanel>
                                 </Grid>

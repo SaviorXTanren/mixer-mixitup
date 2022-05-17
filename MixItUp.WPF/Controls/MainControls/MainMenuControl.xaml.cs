@@ -192,12 +192,12 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 StringBuilder tooltip = new StringBuilder();
                 tooltip.AppendLine(DisconnectedServicesHeader);
-                tooltip.AppendLine();
                 lock (this.serviceDisconnections)
                 {
                     foreach (string serviceName in this.serviceDisconnections.OrderBy(s => s))
                     {
-                        tooltip.AppendLine("- " + serviceName);
+                        tooltip.AppendLine();
+                        tooltip.Append("- " + serviceName);
                     }
                     this.DisconnectionAlertButton.Visibility = (serviceDisconnections.Count == 0) ? Visibility.Collapsed : Visibility.Visible;
                 }
