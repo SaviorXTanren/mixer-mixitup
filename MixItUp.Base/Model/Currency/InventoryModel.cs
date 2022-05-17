@@ -469,7 +469,7 @@ namespace MixItUp.Base.Model.Currency
                             return;
                         }
                         else if (arguments.Count() >= 2 &&
-                            (arg1.Equals("buy", StringComparison.InvariantCultureIgnoreCase) || arg1.Equals(MixItUp.Base.Resources.Sell, StringComparison.InvariantCultureIgnoreCase)))
+                            (arg1.Equals("buy", StringComparison.InvariantCultureIgnoreCase) || arg1.Equals("sell", StringComparison.InvariantCultureIgnoreCase)))
                         {
                             int amount = 1;
 
@@ -549,7 +549,7 @@ namespace MixItUp.Base.Model.Currency
                             }
                             else
                             {
-                                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.InventoryMustSpecifyEitherBuyOrSell, user.Platform);
+                                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.InventoryMustSpecifyEitherBuyOrSell, "buy", "sell"), user.Platform);
                             }
 
                             if (command != null)
@@ -600,7 +600,7 @@ namespace MixItUp.Base.Model.Currency
                         }
                     }
 
-                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.InventoryShopUsage, this.ShopCommand), user.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.InventoryShopUsage, this.ShopCommand, "list", "buy", "sell"), user.Platform);
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }

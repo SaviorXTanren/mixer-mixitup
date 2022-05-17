@@ -6859,11 +6859,12 @@
     <value>Указаний елемент не існує</value>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
-    <value>Ви повинні вказати або "купити" або "продати"</value>
+    <value>Ви повинні вказати або "{0}" або "{1}"</value>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
-    <value>ВИКОРИСТАННЯ: {0} список = Перелічує всі товари, доступні для покупки / продажу ** {0} &lt;ITEM ІМ'Я&gt; = Перелічує ціну покупки / продажу товару ** {0} купити &lt;ITEM NAME&gt; [AMOUNT] = Купує 1 або суму, вказану товару ** {0} продати &lt;ITEM ІМ'Я&gt; [AMOUNT] = Продає 1 або суму, вказану товару</value>
-    <comment>{0} is the shop command</comment>
+    <value>ВИКОРИСТАННЯ: {0} {1} = Перелічує всі товари, доступні для покупки / продажу ** {0} &lt;ITEM ІМ'Я&gt; = Перелічує ціну покупки / продажу товару ** {0} {2} &lt;ITEM NAME&gt; [AMOUNT] = Купує 1 або суму, вказану товару ** {0} {3} &lt;ITEM ІМ'Я&gt; [AMOUNT] = Продає 1 або суму, вказану товару</value>
+    <comment>{0} is the shop command, {1} is the English word 'list', {2} is the English word 'buy', {3} is the English word 'sell'</comment>
   </data>
   <data name="InventoryTradeAlreadyUnderway" xml:space="preserve">
     <value>Торгівля вже ведеться, будь ласка, зачекайте, поки вона буде завершена</value>
@@ -6964,9 +6965,6 @@
   <data name="ResubscribedAmount" xml:space="preserve">
     <value>Повторне підписка ({0})</value>
     <comment>{0} is the amount of months</comment>
-  </data>
-  <data name="Sell" xml:space="preserve">
-    <value>Продавати</value>
   </data>
   <data name="StartTimeHeader" xml:space="preserve">
     <value>Час початку: </value>

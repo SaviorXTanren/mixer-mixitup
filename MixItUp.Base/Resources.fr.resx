@@ -6878,11 +6878,12 @@ Les guillemets importés avec des ID qui correspondent aux guillemets existants 
     <value>L’élément que vous avez spécifié n’existe pas</value>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
-    <value>Vous devez spécifier « acheter » ou « vendre »</value>
+    <value>Vous devez spécifier « {0} » ou « {1} »</value>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
-    <value>UTILISATION: liste {0} = Répertorie tous les articles disponibles à l’achat / vente ** {0} &lt;NOM DE L’ARTICLE&gt; = Répertorie le prix d’achat / vente de l’article ** {0} acheter &lt; NOM DE L’article&gt; [MONTANT] = Achète 1 ou le montant spécifié de l’article ** {0} vendre &lt;NOM DE L’article&gt; [MONTANT] = Vend 1 ou le montant spécifié de l’article</value>
-    <comment>{0} is the shop command</comment>
+    <value>UTILISATION: {0} {1} = Répertorie tous les articles disponibles à l’achat / vente ** {0} &lt;NOM DE L’ARTICLE&gt; = Répertorie le prix d’achat / vente de l’article ** {0} {2} &lt; NOM DE L’article&gt; [MONTANT] = Achète 1 ou le montant spécifié de l’article ** {0} {3} &lt;NOM DE L’article&gt; [MONTANT] = Vend 1 ou le montant spécifié de l’article</value>
+    <comment>{0} is the shop command, {1} is the English word 'list', {2} is the English word 'buy', {3} is the English word 'sell'</comment>
   </data>
   <data name="InventoryTradeAlreadyUnderway" xml:space="preserve">
     <value>Une transaction est déjà en cours, veuillez attendre qu’elle soit terminée</value>
@@ -6983,9 +6984,6 @@ Les guillemets importés avec des ID qui correspondent aux guillemets existants 
   <data name="ResubscribedAmount" xml:space="preserve">
     <value>Resouscrit ({0})</value>
     <comment>{0} is the amount of months</comment>
-  </data>
-  <data name="Sell" xml:space="preserve">
-    <value>Vendre</value>
   </data>
   <data name="StartTimeHeader" xml:space="preserve">
     <value>Heure de début : </value>

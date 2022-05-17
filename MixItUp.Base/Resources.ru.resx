@@ -6870,11 +6870,12 @@
     <value>Указанный элемент не существует</value>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
-    <value>Необходимо указать либо «купить», либо «продать»</value>
+    <value>Необходимо указать либо «{0}», либо «{1}»</value>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
-    <value>ИСПОЛЬЗОВАНИЕ: {0} список = Список всех предметов, доступных для покупки/продажи ** {0} &lt;ИМЕНОВАНИЕ&gt; = Список цены покупки/продажи товара ** {0} купить &lt;ИМЯ &gt; [КОЛИЧЕСТВО] = Покупает 1 или указанное количество товара ** {0} продать &lt;НАЗВАНИЕ&gt; [СУММА] = Продает 1 или указанное количество товара</value>
-    <comment>{0} is the shop command</comment>
+    <value>ИСПОЛЬЗОВАНИЕ: {0} {1} = Список всех предметов, доступных для покупки/продажи ** {0} &lt;ИМЕНОВАНИЕ&gt; = Список цены покупки/продажи товара ** {0} {2} &lt;ИМЯ &gt; [КОЛИЧЕСТВО] = Покупает 1 или указанное количество товара ** {0} {3} &lt;НАЗВАНИЕ&gt; [СУММА] = Продает 1 или указанное количество товара</value>
+    <comment>{0} is the shop command, {1} is the English word 'list', {2} is the English word 'buy', {3} is the English word 'sell'</comment>
   </data>
   <data name="InventoryTradeAlreadyUnderway" xml:space="preserve">
     <value>Сделка уже началась, пожалуйста, подождите, пока она не будет завершена</value>
@@ -6975,9 +6976,6 @@
   <data name="ResubscribedAmount" xml:space="preserve">
     <value>Переподписан ({0})</value>
     <comment>{0} is the amount of months</comment>
-  </data>
-  <data name="Sell" xml:space="preserve">
-    <value>Продавать</value>
   </data>
   <data name="StartTimeHeader" xml:space="preserve">
     <value>Время начала: </value>

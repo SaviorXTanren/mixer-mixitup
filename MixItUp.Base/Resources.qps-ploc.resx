@@ -6878,11 +6878,12 @@ Fáïℓèδ Ì₥ƥôřţš: {1}
     <value>[!!! Ţĥè ïţè₥ ¥ôú šƥèçïƒïèδ δôèš ñôţ èжïšţ !!!]</value>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
-    <value>[!!! Ýôú ₥úšţ šƥèçïƒ¥ èïţĥèř "βú¥" ôř "šèℓℓ" !!!]</value>
+    <value>[!!! Ýôú ₥úšţ šƥèçïƒ¥ èïţĥèř "{0}" ôř "{1}" !!!]</value>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
-    <value>[!!! ÛŠÂGÉ: {0} ℓïšţ = Ļïšţš áℓℓ ţĥè ïţè₥š áƲáïℓáβℓè ƒôř βú¥ïñĝ/šèℓℓïñĝ ** {0} &lt;ÌŢÉM NÂMÉ&gt; = Ļïšţš ţĥè βú¥ïñĝ/šèℓℓïñĝ ƥřïçè ƒôř ţĥè ïţè₥ ** {0} βú¥ &lt;ÌŢÉM NÂMÉ&gt; [ÂMÓÛNŢ] = ßú¥š 1 ôř ţĥè á₥ôúñţ šƥèçïƒïèδ ôƒ ţĥè ïţè₥ ** {0} šèℓℓ &lt;ÌŢÉM NÂMÉ&gt; [ÂMÓÛNŢ] = Šèℓℓš 1 ôř ţĥè á₥ôúñţ šƥèçïƒïèδ ôƒ ţĥè ïţè₥ !!!]</value>
-    <comment>{0} is the shop command</comment>
+    <value>[!!! ÛŠÂGÉ: {0} {1} = Ļïšţš áℓℓ ţĥè ïţè₥š áƲáïℓáβℓè ƒôř βú¥ïñĝ/šèℓℓïñĝ ** {0} &lt;ÌŢÉM NÂMÉ&gt; = Ļïšţš ţĥè βú¥ïñĝ/šèℓℓïñĝ ƥřïçè ƒôř ţĥè ïţè₥ ** {0} {2} &lt;ÌŢÉM NÂMÉ&gt; [ÂMÓÛNŢ] = ßú¥š 1 ôř ţĥè á₥ôúñţ šƥèçïƒïèδ ôƒ ţĥè ïţè₥ ** {0} {3} &lt;ÌŢÉM NÂMÉ&gt; [ÂMÓÛNŢ] = Šèℓℓš 1 ôř ţĥè á₥ôúñţ šƥèçïƒïèδ ôƒ ţĥè ïţè₥ !!!]</value>
+    <comment>{0} is the shop command, {1} is the English word 'list', {2} is the English word 'buy', {3} is the English word 'sell'</comment>
   </data>
   <data name="InventoryTradeAlreadyUnderway" xml:space="preserve">
     <value>[!!! Â ţřáδè ïš áℓřèáδ¥ úñδèřωá¥, ƥℓèášè ωáïţ úñţïℓ ïţ ïš çô₥ƥℓèţèδ !!!]</value>
@@ -6983,9 +6984,6 @@ Fáïℓèδ Ì₥ƥôřţš: {1}
   <data name="ResubscribedAmount" xml:space="preserve">
     <value>[!!! Rèšúβšçřïβèδ ({0}) !!!]</value>
     <comment>{0} is the amount of months</comment>
-  </data>
-  <data name="Sell" xml:space="preserve">
-    <value>[!!! Šèℓℓ !!!]</value>
   </data>
   <data name="StartTimeHeader" xml:space="preserve">
     <value>[!!! Šţářţ Ţï₥è:  !!!]</value>

@@ -6878,11 +6878,12 @@ Mix It Up の実行中にまだチャンネルにアクセスしていないユ�
     <value>指定したアイテムは存在しません</value>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
-    <value>"買い" または "売り" のいずれかを指定する必要があります。</value>
+    <value>"{0}" または "{1}" のいずれかを指定する必要があります。</value>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
-    <value>使用法: {0}リスト = 購入/販売に利用可能なすべての商品を一覧表示します {0} ** {0} &lt;ITEM NAME&gt; = 購入&lt;ITEM NAME&gt; [AMOUNT] = 購入1または {0}商品の指定金額&lt;商品名&gt; [金額] = 1 または指定金額を販売します</value>
-    <comment>{0} is the shop command</comment>
+    <value>使用法: {0} {1} = 購入/販売可能なすべてのアイテムを一覧表示 ** {0} &lt;アイテム名&gt; = アイテムの購入/販売価格を一覧表示します ** {0} {2} &lt;アイテム名&gt; [金額] = 購入 1 またはアイテムに指定された金額 ** {0} {3} &lt;アイテム名&gt; [金額] = 販売 1 またはアイテムの指定された金額</value>
+    <comment>{0} is the shop command, {1} is the English word 'list', {2} is the English word 'buy', {3} is the English word 'sell'</comment>
   </data>
   <data name="InventoryTradeAlreadyUnderway" xml:space="preserve">
     <value>取引はすでに進行中です、それが完了するまで待ってください</value>
@@ -6983,9 +6984,6 @@ Mix It Up の実行中にまだチャンネルにアクセスしていないユ�
   <data name="ResubscribedAmount" xml:space="preserve">
     <value>再サブスクライブ ({0})</value>
     <comment>{0} is the amount of months</comment>
-  </data>
-  <data name="Sell" xml:space="preserve">
-    <value>売る</value>
   </data>
   <data name="StartTimeHeader" xml:space="preserve">
     <value>開始時刻:</value>
