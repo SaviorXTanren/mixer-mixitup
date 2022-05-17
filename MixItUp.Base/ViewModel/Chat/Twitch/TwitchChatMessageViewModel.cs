@@ -165,7 +165,14 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             this.ProcessMessageContents(whisper.body);
         }
 
-        public TwitchChatMessageViewModel(UserV2ViewModel user, PubSubBitsEventV2Model bitsCheer)
+        public TwitchChatMessageViewModel(ChatUserNoticePacketModel userNotice, UserV2ViewModel user)
+            : base(userNotice.MessageID, StreamingPlatformTypeEnum.Twitch, user)
+        {
+            this.IsHighlightedMessage = true;
+            this.ProcessMessageContents(userNotice.RawPacket.Get1SkippedParameterText);
+        }
+
+        public TwitchChatMessageViewModel(PubSubBitsEventV2Model bitsCheer, UserV2ViewModel user)
             : base(bitsCheer.message_id, StreamingPlatformTypeEnum.Twitch, user)
         {
             this.HasBits = true;

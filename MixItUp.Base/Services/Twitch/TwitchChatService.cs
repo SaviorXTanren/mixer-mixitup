@@ -88,6 +88,7 @@ namespace MixItUp.Base.Services.Twitch
         private const string RaidUserNoticeMessageTypeID = "raid";
         private const string SubMysteryGiftUserNoticeMessageTypeID = "submysterygift";
         private const string SubGiftPaidUpgradeUserNoticeMessageTypeID = "giftpaidupgrade";
+        private const string AnnouncementUserNoticeMessageTypeID = "announcement";
 
         private List<string> emoteSetIDs = new List<string>();
 
@@ -833,6 +834,17 @@ namespace MixItUp.Base.Services.Twitch
                     user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).SetUserProperties(userNotice);
 
                     await ServiceManager.Get<TwitchEventService>().AddSub(new TwitchSubEventModel(user, userNotice));
+                }
+                else if (AnnouncementUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
+                {
+                    UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, userNotice.UserID.ToString());
+                    if (user == null)
+                    {
+                        user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(userNotice));
+                    }
+                    user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).SetUserProperties(userNotice);
+
+                    await ServiceManager.Get<ChatService>().AddMessage(new TwitchChatMessageViewModel(userNotice, user));
                 }
             }
             catch (Exception ex)
