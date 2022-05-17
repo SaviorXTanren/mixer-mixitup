@@ -7684,4 +7684,16 @@ via Twitch, it's a "your mileage may very" situation.</value>
   <data name="SameCategory" xml:space="preserve">
     <value>Same Category</value>
   </data>
+  <data name="CategoryHeader" xml:space="preserve">
+    <value>Category: </value>
+  </data>
+  <data name="NoCategoryFound" xml:space="preserve">
+    <value>No Category found</value>
+  </data>
+  <data name="CategroryUpdatedHeader" xml:space="preserve">
+    <value>Category Updated: </value>
+  </data>
+  <data name="ErrorFailedToUpdateCategory" xml:space="preserve">
+    <value>ERROR: Failed to update category</value>
+  </data>
 </root>

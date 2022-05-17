@@ -1772,6 +1772,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Category: .
+        /// </summary>
+        public static string CategoryHeader {
+            get {
+                return ResourceManager.GetString("CategoryHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Category Updated: .
+        /// </summary>
+        public static string CategroryUpdatedHeader {
+            get {
+                return ResourceManager.GetString("CategroryUpdatedHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Center.
         /// </summary>
         public static string Center {
@@ -5150,6 +5168,15 @@ namespace MixItUp.Base {
         public static string ErrorDetailsHeader {
             get {
                 return ResourceManager.GetString("ErrorDetailsHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ERROR: Failed to update category.
+        /// </summary>
+        public static string ErrorFailedToUpdateCategory {
+            get {
+                return ResourceManager.GetString("ErrorFailedToUpdateCategory", resourceCulture);
             }
         }
         
@@ -11874,6 +11901,15 @@ namespace MixItUp.Base {
         public static string No {
             get {
                 return ResourceManager.GetString("No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Category found.
+        /// </summary>
+        public static string NoCategoryFound {
+            get {
+                return ResourceManager.GetString("NoCategoryFound", resourceCulture);
             }
         }
         
