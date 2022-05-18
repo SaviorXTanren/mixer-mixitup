@@ -381,7 +381,7 @@ namespace MixItUp.Base.Services.Glimesh
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Logger.Log(ex + " - " + JSONSerializerHelper.SerializeToString(messagePacket));
             }
         }
 
