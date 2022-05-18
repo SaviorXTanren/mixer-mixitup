@@ -7696,4 +7696,16 @@ via Twitch, it's a "your mileage may very" situation.</value>
   <data name="ErrorFailedToUpdateCategory" xml:space="preserve">
     <value>ERROR: Failed to update category</value>
   </data>
+  <data name="GlimeshChannelResubscribed" xml:space="preserve">
+    <value>Glimesh Channel Resubscribed</value>
+  </data>
+  <data name="GlimeshChannelSubscribed" xml:space="preserve">
+    <value>Glimesh Channel Subscribed</value>
+  </data>
+  <data name="GlimeshChannelSubscriptionGifted" xml:space="preserve">
+    <value>Glimesh Channel Subscription Gifted</value>
+  </data>
+  <data name="GlimeshChannelDonation" xml:space="preserve">
+    <value>Glimesh Channel Donation</value>
+  </data>
 </root>

@@ -186,6 +186,8 @@ namespace MixItUp.Base.ViewModel.MainControls
             glimeshCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.GlimeshChannelStreamStop));
             glimeshCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.GlimeshChannelFollowed));
             glimeshCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.GlimeshChannelSubscribed));
+            glimeshCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.GlimeshChannelSubscriptionGifted));
+            glimeshCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.GlimeshChannelDonation));
             commandGroups.Add(glimeshCommands);
 
             EventCommandGroupViewModel chatCommands = new EventCommandGroupViewModel(Resources.Chat, packIconName: "Chat");

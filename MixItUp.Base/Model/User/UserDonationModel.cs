@@ -22,6 +22,7 @@ namespace MixItUp.Base.Model.User
         Rainmaker,
         JustGiving,
         StreamElements,
+        Glimesh,
     }
 
     [DataContract]
@@ -77,24 +78,27 @@ namespace MixItUp.Base.Model.User
         private string username { get; set; }
 
         [JsonIgnore]
-        public UserV2ViewModel User { get; private set; }
+        public UserV2ViewModel User { get; set; }
 
         [JsonIgnore]
         public string AmountText { get { return this.Amount.ToCurrencyString(); } }
 
         public async Task AssignUser()
         {
-            if (this.IsAnonymous)
+            if (this.User == null)
             {
-                this.User = UserV2ViewModel.CreateUnassociated(MixItUp.Base.Resources.Anonymous);
-            }
-
-            if (!string.IsNullOrEmpty(this.username))
-            {
-                this.User = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(this.Platform, this.username);
-                if (this.User == null)
+                if (this.IsAnonymous)
                 {
-                    this.User = UserV2ViewModel.CreateUnassociated(this.username);
+                    this.User = UserV2ViewModel.CreateUnassociated(MixItUp.Base.Resources.Anonymous);
+                }
+
+                if (!string.IsNullOrEmpty(this.username))
+                {
+                    this.User = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(this.Platform, this.username);
+                    if (this.User == null)
+                    {
+                        this.User = UserV2ViewModel.CreateUnassociated(this.username);
+                    }
                 }
             }
         }

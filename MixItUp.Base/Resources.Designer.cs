@@ -8636,11 +8636,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Glimesh Channel Donation.
+        /// </summary>
+        public static string GlimeshChannelDonation {
+            get {
+                return ResourceManager.GetString("GlimeshChannelDonation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Glimesh Channel Followed.
         /// </summary>
         public static string GlimeshChannelFollowed {
             get {
                 return ResourceManager.GetString("GlimeshChannelFollowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Glimesh Channel Resubscribed.
+        /// </summary>
+        public static string GlimeshChannelResubscribed {
+            get {
+                return ResourceManager.GetString("GlimeshChannelResubscribed", resourceCulture);
             }
         }
         
@@ -8659,6 +8677,24 @@ namespace MixItUp.Base {
         public static string GlimeshChannelStreamStop {
             get {
                 return ResourceManager.GetString("GlimeshChannelStreamStop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Glimesh Channel Subscribed.
+        /// </summary>
+        public static string GlimeshChannelSubscribed {
+            get {
+                return ResourceManager.GetString("GlimeshChannelSubscribed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Glimesh Channel Subscription Gifted.
+        /// </summary>
+        public static string GlimeshChannelSubscriptionGifted {
+            get {
+                return ResourceManager.GetString("GlimeshChannelSubscriptionGifted", resourceCulture);
             }
         }
         
