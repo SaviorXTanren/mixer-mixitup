@@ -309,6 +309,7 @@ namespace MixItUp.Base.Services.YouTube
                                 CommandParametersModel parameters = new CommandParametersModel(user);
                                 if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.YouTubeChannelNewMember, parameters))
                                 {
+                                    // TODO
                                     parameters.SpecialIdentifiers["usersubplan"] = liveChatMessage.Snippet.NewSponsorDetails.MemberLevelName;
 
                                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
@@ -345,6 +346,7 @@ namespace MixItUp.Base.Services.YouTube
                                 {
                                     int months = (int)liveChatMessage.Snippet.MemberMilestoneChatDetails.MemberMonth.GetValueOrDefault();
 
+                                    // TODO
                                     parameters.SpecialIdentifiers["message"] = liveChatMessage.Snippet.MemberMilestoneChatDetails.UserComment;
                                     parameters.SpecialIdentifiers["usersubmonths"] = months.ToString();
                                     parameters.SpecialIdentifiers["usersubplan"] = liveChatMessage.Snippet.MemberMilestoneChatDetails.MemberLevelName;
@@ -402,6 +404,7 @@ namespace MixItUp.Base.Services.YouTube
 
                                 if (membershipsGifted.Amount > ChannelSession.Settings.MassGiftedSubsFilterAmount)
                                 {
+                                    // TODO
                                     CommandParametersModel parameters = new CommandParametersModel(user);
                                     parameters.SpecialIdentifiers["subsgiftedamount"] = membershipsGifted.Amount.ToString();
                                     parameters.SpecialIdentifiers["usersubplan"] = membershipsGifted.Tier;
@@ -438,6 +441,7 @@ namespace MixItUp.Base.Services.YouTube
                                 membershipsGifted.Receivers.Add(user);
 
                                 CommandParametersModel parameters = new CommandParametersModel(membershipsGifted.User);
+                                // TODO
                                 parameters.SpecialIdentifiers["usersubplan"] = liveChatMessage.Snippet.GiftMembershipReceivedDetails.MemberLevelName;
                                 parameters.Arguments.Add(user.Username);
                                 parameters.TargetUser = user;
