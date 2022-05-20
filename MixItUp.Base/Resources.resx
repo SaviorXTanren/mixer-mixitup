@@ -7708,4 +7708,7 @@ via Twitch, it's a "your mileage may very" situation.</value>
   <data name="GlimeshChannelDonation" xml:space="preserve">
     <value>Glimesh Channel Donation</value>
   </data>
+  <data name="MixItUpIsAlreadyRunning" xml:space="preserve">
+    <value>Mix It Up is already running! Unless you meant to do this, please shut down any existing instances of Mix It Up before trying to run a new instance. Do you still want to continue running this instance of Mix It Up?</value>
+  </data>
 </root>

@@ -11248,6 +11248,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mix It Up is already running! Unless you meant to do this, please shut down any existing instances of Mix It Up before trying to run a new instance. Do you still want to continue running this instance of Mix It Up?.
+        /// </summary>
+        public static string MixItUpIsAlreadyRunning {
+            get {
+                return ResourceManager.GetString("MixItUpIsAlreadyRunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mix It Up - Login.
         /// </summary>
         public static string MixItUpLogin {
