@@ -12,6 +12,7 @@ using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using YouTube.Base.Clients;
@@ -244,10 +245,22 @@ namespace MixItUp.Base.Services.YouTube
 
         public async Task<IEnumerable<YouTubeChatEmoteModel>> GetChatEmotes()
         {
-            using (AdvancedHttpClient client = new AdvancedHttpClient())
+            try
             {
-                return await client.GetAsync<List<YouTubeChatEmoteModel>>("https://www.gstatic.com/youtube/img/emojis/emojis-svg-8.json");
+                using (HttpClient client = new HttpClient())
+                {
+                    HttpResponseMessage response = await client.GetAsync("https://www.gstatic.com/youtube/img/emojis/emojis-svg-8.json");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return JSONSerializerHelper.DeserializeFromString<List<YouTubeChatEmoteModel>>(await response.Content.ReadAsStringAsync());
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            return new List<YouTubeChatEmoteModel>();
         }
 
         private ChatClient GetChatClient(bool sendAsStreamer = false) { return (this.botClient != null && !sendAsStreamer) ? this.botClient : this.userClient; }
