@@ -7717,4 +7717,42 @@ via Twitch, it's a "your mileage may very" situation.</value>
   <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
     <value>YouTube Action: A valid title or description must be specified</value>
   </data>
+  <data name="YouTubeChannelMassMembershipGifted" xml:space="preserve">
+    <value>YouTube Channel Mass Membership Gifted</value>
+  </data>
+  <data name="YouTubeChannelMemberMilestone" xml:space="preserve">
+    <value>YouTube Channel Member Milestone</value>
+  </data>
+  <data name="YouTubeChannelMembershipGifted" xml:space="preserve">
+    <value>YouTube Channel Membership Gifted</value>
+  </data>
+  <data name="YouTubeChannelNewMember" xml:space="preserve">
+    <value>YouTube Channel New Member</value>
+  </data>
+  <data name="YouTubeChannelStreamStart" xml:space="preserve">
+    <value>YouTube Channel Stream Start</value>
+  </data>
+  <data name="YouTubeChannelStreamStop" xml:space="preserve">
+    <value>YouTube Channel Stream Stop</value>
+  </data>
+  <data name="YouTubeChannelSuperChat" xml:space="preserve">
+    <value>YouTube Channel Super Chat</value>
+  </data>
+  <data name="YouTubeChannelSuperSticker" xml:space="preserve">
+    <value>YouTube Channel Super Sticker</value>
+  </data>
+  <data name="AlertYouTubeSuperChat" xml:space="preserve">
+    <value>{0} Super Chat - {1}</value>
+    <comment>{0} is the name of the user
+{1} is the amount of the super chat</comment>
+  </data>
+  <data name="AlertYouTubeSuperSticker" xml:space="preserve">
+    <value>{0} Super Sticker - {1} - {2}</value>
+    <comment>{0} is the name of the user
+{1} is the name of the super sticker
+{2} is the amount of the super chat</comment>
+  </data>
+  <data name="ShowYouTubeSuperChat" xml:space="preserve">
+    <value>Show YouTube Super Chat</value>
+  </data>
 </root>

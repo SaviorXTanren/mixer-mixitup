@@ -90,6 +90,8 @@ namespace MixItUp.Base.Util
         public const string LatestBitsCheeredAmountData = "latestbitscheeredamount";
         public const string LatestDonationUserData = "latestdonation";
         public const string LatestDonationAmountData = "latestdonationamount";
+        public const string LatestSuperChatUserData = "latestsuperchat";
+        public const string LatestSuperChatAmountData = "latestsuperchatamount";
 
         public const string InteractiveTextBoxTextEntrySpecialIdentifierHelpText = "User Text Entered = " + SpecialIdentifierStringBuilder.SpecialIdentifierHeader +
             SpecialIdentifierStringBuilder.ArgSpecialIdentifierHeader + "1text";

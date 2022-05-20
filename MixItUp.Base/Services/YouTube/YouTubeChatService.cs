@@ -1,5 +1,8 @@
 ﻿using Google.Apis.YouTube.v3.Data;
 using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -36,9 +39,44 @@ namespace MixItUp.Base.Services.YouTube
         public YouTubeChatEmoteImageModel image { get; set; } = null;
     }
 
+    public class YouTubeMembershipsGiftedModel
+    {
+        public UserV2ViewModel User { get; private set; }
+
+        public int Amount { get; private set; }
+
+        public string Tier { get; private set; }
+
+        public List<UserV2ViewModel> Receivers { get; private set; } = new List<UserV2ViewModel>();
+
+        public YouTubeMembershipsGiftedModel(UserV2ViewModel user, LiveChatMembershipGiftingDetails giftingDetails)
+        {
+            this.User = user;
+            this.Amount = giftingDetails.GiftMembershipsCount.GetValueOrDefault();
+            this.Tier = giftingDetails.GiftMembershipsLevelName;
+        }
+
+        public YouTubeMembershipsGiftedModel(UserV2ViewModel user, LiveChatGiftMembershipReceivedDetails giftReceivedDetails)
+        {
+            this.User = user;
+            this.Amount = 1;
+            this.Tier = giftReceivedDetails.MemberLevelName;
+        }
+    }
+
     public class YouTubeChatService : StreamingPlatformServiceBase
     {
         private const int MaxMessageLength = 250;
+
+        private const string TextMessageEventMessageType = "textMessageEvent";
+        private const string NewMemberEventMessageType = "newSponsorEvent";
+        private const string MemberMilestoneEventMessageType = "memberMilestoneChatEvent";
+        private const string MembershipGiftingEventMessageType = "membershipGiftingEvent";
+        private const string GiftMembershipReceivedEventMessageType = "giftMembershipReceivedEvent";
+        private const string SuperChatEventMessageType = "superChatEvent";
+        private const string SuperStickerEventMessageType = "superStickerEvent";
+        private const string MessageDeletedEventMessageType = "messageDeletedEvent";
+        private const string UserBannedEventMessageType = "userBannedEvent";
 
         private ChatClient userClient;
         private ChatClient botClient;
@@ -49,6 +87,8 @@ namespace MixItUp.Base.Services.YouTube
 
         public IEnumerable<YouTubeChatEmoteModel> Emotes { get; private set; } = new List<YouTubeChatEmoteModel>();
         public Dictionary<string, YouTubeChatEmoteModel> EmoteDictionary { get; private set; } = new Dictionary<string, YouTubeChatEmoteModel>();
+
+        private Dictionary<string, YouTubeMembershipsGiftedModel> userGiftedMembershipDictionary = new Dictionary<string, YouTubeMembershipsGiftedModel>();
 
         public override string Name { get { return "YouTube Chat"; } }
 
@@ -204,41 +244,259 @@ namespace MixItUp.Base.Services.YouTube
 
         private ChatClient GetChatClient(bool sendAsStreamer = false) { return (this.botClient != null && !sendAsStreamer) ? this.botClient : this.userClient; }
 
-        private async void UserClient_OnMessagesReceived(object sender, IEnumerable<LiveChatMessage> messages)
+        private async void UserClient_OnMessagesReceived(object sender, IEnumerable<LiveChatMessage> liveChatMessages)
         {
-            if (messages != null)
+            if (liveChatMessages != null)
             {
-                foreach (LiveChatMessage message in messages)
+                foreach (LiveChatMessage liveChatMessage in liveChatMessages)
                 {
-                    if (ChannelSession.AppSettings.DiagnosticLogging)
+                    try
                     {
-                        Logger.Log(LogLevel.Debug, string.Format("YouTube Chat Packet Received: {0}", JSONSerializerHelper.SerializeToString(message)));
+                        if (ChannelSession.AppSettings.DiagnosticLogging)
+                        {
+                            Logger.Log(LogLevel.Debug, string.Format("YouTube Chat Packet Received: {0}", JSONSerializerHelper.SerializeToString(liveChatMessage)));
+                        }
+
+                        if (liveChatMessage.AuthorDetails?.ChannelId != null)
+                        {
+                            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.YouTube, liveChatMessage.AuthorDetails.ChannelId);
+                            if (user == null)
+                            {
+                                Channel youtubeUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByID(liveChatMessage.AuthorDetails.ChannelId);
+                                if (youtubeUser != null)
+                                {
+                                    user = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(youtubeUser));
+                                }
+                                else
+                                {
+                                    user = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(liveChatMessage));
+                                }
+                                await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
+                            }
+                            user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).SetMessageProperties(liveChatMessage);
+
+                            // https://developers.google.com/youtube/v3/live/docs/liveChatMessages#resource
+                            if (TextMessageEventMessageType.Equals(liveChatMessage.Snippet.Type))
+                            {
+                                if (liveChatMessage.Snippet.HasDisplayContent.GetValueOrDefault() && !string.IsNullOrEmpty(liveChatMessage.Snippet.DisplayMessage))
+                                {
+                                    await ServiceManager.Get<ChatService>().AddMessage(new YouTubeChatMessageViewModel(liveChatMessage, user));
+                                }
+                            }
+                            else if (NewMemberEventMessageType.Equals(liveChatMessage.Snippet.Type))
+                            {
+                                CommandParametersModel parameters = new CommandParametersModel(user);
+                                if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.YouTubeChannelNewMember, parameters))
+                                {
+                                    parameters.SpecialIdentifiers["usersubplan"] = liveChatMessage.Snippet.NewSponsorDetails.MemberLevelName;
+
+                                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
+                                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
+
+                                    user.Roles.Add(UserRoleEnum.Subscriber);
+                                    // TODO
+                                    //user.SubscriberTier = subMessage.Tier;
+                                    user.SubscribeDate = DateTimeOffset.Now;
+
+                                    foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
+                                    {
+                                        currency.AddAmount(user, currency.OnSubscribeBonus);
+                                    }
+
+                                    foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                                    {
+                                        if (parameters.User.MeetsRole(streamPass.UserPermission))
+                                        {
+                                            streamPass.AddAmount(user, streamPass.SubscribeBonus);
+                                        }
+                                    }
+
+                                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelNewMember, parameters);
+
+                                    GlobalEvents.SubscribeOccurred(user);
+                                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertSubscribed, user.DisplayName), ChannelSession.Settings.AlertSubColor));
+                                }
+                            }
+                            else if (MemberMilestoneEventMessageType.Equals(liveChatMessage.Snippet.Type))
+                            {
+                                CommandParametersModel parameters = new CommandParametersModel(user);
+                                if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.YouTubeChannelMemberMilestone, parameters))
+                                {
+                                    int months = (int)liveChatMessage.Snippet.MemberMilestoneChatDetails.MemberMonth.GetValueOrDefault();
+
+                                    parameters.SpecialIdentifiers["message"] = liveChatMessage.Snippet.MemberMilestoneChatDetails.UserComment;
+                                    parameters.SpecialIdentifiers["usersubmonths"] = months.ToString();
+                                    parameters.SpecialIdentifiers["usersubplan"] = liveChatMessage.Snippet.MemberMilestoneChatDetails.MemberLevelName;
+
+                                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
+                                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = months;
+
+                                    user.Roles.Add(UserRoleEnum.Subscriber);
+                                    // TODO
+                                    //user.SubscriberTier = subMessage.Tier;
+                                    if (!user.SubscribeDate.HasValue)
+                                    {
+                                        user.SubscribeDate = DateTimeOffset.Now.SubtractMonths(months);
+                                    }
+
+                                    foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
+                                    {
+                                        currency.AddAmount(user, currency.OnSubscribeBonus);
+                                    }
+
+                                    foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                                    {
+                                        if (parameters.User.MeetsRole(streamPass.UserPermission))
+                                        {
+                                            streamPass.AddAmount(user, streamPass.SubscribeBonus);
+                                        }
+                                    }
+
+                                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelMemberMilestone, parameters);
+
+                                    GlobalEvents.ResubscribeOccurred(new Tuple<UserV2ViewModel, int>(user, months));
+                                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertResubscribed, user.DisplayName, months), ChannelSession.Settings.AlertSubColor));
+                                }
+                            }
+                            else if (MembershipGiftingEventMessageType.Equals(liveChatMessage.Snippet.Type))
+                            {
+                                YouTubeMembershipsGiftedModel membershipsGifted = new YouTubeMembershipsGiftedModel(user, liveChatMessage.Snippet.MembershipGiftingDetails);
+                                this.userGiftedMembershipDictionary[membershipsGifted.User.PlatformID] = membershipsGifted;
+
+                                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
+                                {
+                                    for (int i = 0; i < membershipsGifted.Amount; i++)
+                                    {
+                                        currency.AddAmount(user, currency.OnSubscribeBonus * membershipsGifted.Amount);
+                                    }
+                                }
+
+                                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                                {
+                                    if (user.MeetsRole(streamPass.UserPermission))
+                                    {
+                                        streamPass.AddAmount(user, streamPass.SubscribeBonus * membershipsGifted.Amount);
+                                    }
+                                }
+
+                                if (membershipsGifted.Amount > ChannelSession.Settings.MassGiftedSubsFilterAmount)
+                                {
+                                    CommandParametersModel parameters = new CommandParametersModel(user);
+                                    parameters.SpecialIdentifiers["subsgiftedamount"] = membershipsGifted.Amount.ToString();
+                                    parameters.SpecialIdentifiers["usersubplan"] = membershipsGifted.Tier;
+
+                                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelMassSubscriptionsGifted, parameters);
+
+                                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertMassSubscriptionsGiftedTier, user.FullDisplayName, membershipsGifted.Amount, membershipsGifted.Tier), ChannelSession.Settings.AlertMassGiftedSubColor));
+                                }
+                            }
+                            else if (GiftMembershipReceivedEventMessageType.Equals(liveChatMessage.Snippet.Type))
+                            {
+                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
+                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
+
+                                user.Roles.Add(UserRoleEnum.Subscriber);
+                                user.SubscribeDate = DateTimeOffset.Now;
+                                // TODO
+                                //user.SubscriberTier = giftedSubEvent.PlanTierNumber;
+                                user.TotalSubsReceived++;
+                                user.TotalMonthsSubbed++;
+
+                                if (this.userGiftedMembershipDictionary.TryGetValue(liveChatMessage.Snippet.GiftMembershipReceivedDetails.GifterChannelId, out YouTubeMembershipsGiftedModel membershipsGifted))
+                                {
+                                    if (membershipsGifted.Amount > ChannelSession.Settings.MassGiftedSubsFilterAmount)
+                                    {
+                                        // Skip ones that are filtered by the mass gifted subs amount
+                                        continue;
+                                    }
+                                }
+                                else
+                                {
+                                    membershipsGifted = new YouTubeMembershipsGiftedModel(user, liveChatMessage.Snippet.GiftMembershipReceivedDetails);
+                                }
+                                membershipsGifted.Receivers.Add(user);
+
+                                CommandParametersModel parameters = new CommandParametersModel(membershipsGifted.User);
+                                parameters.SpecialIdentifiers["usersubplan"] = liveChatMessage.Snippet.GiftMembershipReceivedDetails.MemberLevelName;
+                                parameters.Arguments.Add(user.Username);
+                                parameters.TargetUser = user;
+                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelMembershipGifted, parameters);
+
+                                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(membershipsGifted.User, string.Format(MixItUp.Base.Resources.AlertSubscriptionGiftedTier, membershipsGifted.User.FullDisplayName, liveChatMessage.Snippet.GiftMembershipReceivedDetails.MemberLevelName, user.FullDisplayName), ChannelSession.Settings.AlertGiftedSubColor));
+                                GlobalEvents.SubscriptionGiftedOccurred(membershipsGifted.User, user);
+                            }
+                            else if (SuperChatEventMessageType.Equals(liveChatMessage.Snippet.Type))
+                            {
+                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSuperChatUserData] = user.ID;
+                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSuperChatAmountData] = liveChatMessage.Snippet.SuperChatDetails.AmountDisplayString;
+
+                                double amount = Math.Round((double)liveChatMessage.Snippet.SuperChatDetails.AmountMicros.GetValueOrDefault() / 1000000.0, 2);
+
+                                CommandParametersModel parameters = new CommandParametersModel(user);
+                                parameters.SpecialIdentifiers["amountnumber"] = amount.ToString();
+                                parameters.SpecialIdentifiers["amount"] = liveChatMessage.Snippet.SuperChatDetails.AmountDisplayString;
+                                parameters.SpecialIdentifiers["tier"] = liveChatMessage.Snippet.SuperChatDetails.Tier.GetValueOrDefault().ToString();
+                                parameters.SpecialIdentifiers["message"] = liveChatMessage.Snippet.SuperChatDetails.UserComment;
+
+                                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                                {
+                                    if (parameters.User.MeetsRole(streamPass.UserPermission))
+                                    {
+                                        streamPass.AddAmount(user, (int)Math.Ceiling(streamPass.DonationBonus * amount));
+                                    }
+                                }
+
+                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelSuperChat, parameters);
+
+                                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertYouTubeSuperChat, user.FullDisplayName, liveChatMessage.Snippet.SuperChatDetails.AmountDisplayString), ChannelSession.Settings.AlertYouTubeSuperChatColor));
+                            }
+                            else if (SuperStickerEventMessageType.Equals(liveChatMessage.Snippet.Type))
+                            {
+                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSuperChatUserData] = user.ID;
+                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSuperChatAmountData] = liveChatMessage.Snippet.SuperStickerDetails.AmountDisplayString;
+
+                                double amount = Math.Round((double)liveChatMessage.Snippet.SuperStickerDetails.AmountMicros.GetValueOrDefault() / 1000000.0, 2);
+
+                                CommandParametersModel parameters = new CommandParametersModel(user);
+                                parameters.SpecialIdentifiers["amountnumber"] = amount.ToString();
+                                parameters.SpecialIdentifiers["amount"] = liveChatMessage.Snippet.SuperStickerDetails.AmountDisplayString;
+                                parameters.SpecialIdentifiers["tier"] = liveChatMessage.Snippet.SuperStickerDetails.Tier.GetValueOrDefault().ToString();
+                                parameters.SpecialIdentifiers["message"] = liveChatMessage.Snippet.SuperStickerDetails.SuperStickerMetadata.AltText;
+
+                                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                                {
+                                    if (parameters.User.MeetsRole(streamPass.UserPermission))
+                                    {
+                                        streamPass.AddAmount(user, (int)Math.Ceiling(streamPass.DonationBonus * amount));
+                                    }
+                                }
+
+                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelSuperChat, parameters);
+
+                                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertYouTubeSuperChat, user.FullDisplayName, liveChatMessage.Snippet.SuperStickerDetails.AmountDisplayString), ChannelSession.Settings.AlertYouTubeSuperChatColor));
+                            }
+                            else if (MessageDeletedEventMessageType.Equals(liveChatMessage.Snippet.Type))
+                            {
+                                await ServiceManager.Get<ChatService>().DeleteMessage(liveChatMessage.Snippet.MessageDeletedDetails.DeletedMessageId);
+                            }
+                            else if (UserBannedEventMessageType.Equals(liveChatMessage.Snippet.Type))
+                            {
+                                // TODO
+                                if (liveChatMessage.Snippet.UserBannedDetails.BanDurationSeconds.HasValue)
+                                {
+                                    // Timeout
+                                }
+                                else
+                                {
+                                    // Ban
+                                }
+                                //message.Snippet.UserBannedDetails.BannedUserDetails.ChannelId
+                            }
+                        }
                     }
-
-                    if (message.AuthorDetails?.ChannelId != null)
+                    catch (Exception ex)
                     {
-                        UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.YouTube, message.AuthorDetails.ChannelId);
-                        if (user == null)
-                        {
-                            Channel youtubeUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByID(message.AuthorDetails.ChannelId);
-                            if (youtubeUser != null)
-                            {
-                                user = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(youtubeUser));
-                            }
-                            else
-                            {
-                                user = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(message));
-                            }
-                            await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
-                        }
-                        user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).SetMessageProperties(message);
-
-                        // https://developers.google.com/youtube/v3/live/docs/liveChatMessages#resource
-
-                        if (message.Snippet.HasDisplayContent.GetValueOrDefault() && !string.IsNullOrEmpty(message.Snippet.DisplayMessage))
-                        {
-                            await ServiceManager.Get<ChatService>().AddMessage(new YouTubeChatMessageViewModel(message, user));
-                        }
+                        Logger.Log(ex);
                     }
                 }
             }

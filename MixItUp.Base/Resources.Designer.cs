@@ -808,6 +808,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} Super Chat - {1}.
+        /// </summary>
+        public static string AlertYouTubeSuperChat {
+            get {
+                return ResourceManager.GetString("AlertYouTubeSuperChat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} Super Sticker - {1} - {2}.
+        /// </summary>
+        public static string AlertYouTubeSuperSticker {
+            get {
+                return ResourceManager.GetString("AlertYouTubeSuperSticker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All.
         /// </summary>
         public static string All {
@@ -16531,6 +16549,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show YouTube Super Chat.
+        /// </summary>
+        public static string ShowYouTubeSuperChat {
+            get {
+                return ResourceManager.GetString("ShowYouTubeSuperChat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Simple.
         /// </summary>
         public static string Simple {
@@ -22098,6 +22125,78 @@ namespace MixItUp.Base {
         public static string YouTubeActionUnableToRunAdBreak {
             get {
                 return ResourceManager.GetString("YouTubeActionUnableToRunAdBreak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to YouTube Channel Mass Membership Gifted.
+        /// </summary>
+        public static string YouTubeChannelMassMembershipGifted {
+            get {
+                return ResourceManager.GetString("YouTubeChannelMassMembershipGifted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to YouTube Channel Member Milestone.
+        /// </summary>
+        public static string YouTubeChannelMemberMilestone {
+            get {
+                return ResourceManager.GetString("YouTubeChannelMemberMilestone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to YouTube Channel Membership Gifted.
+        /// </summary>
+        public static string YouTubeChannelMembershipGifted {
+            get {
+                return ResourceManager.GetString("YouTubeChannelMembershipGifted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to YouTube Channel New Member.
+        /// </summary>
+        public static string YouTubeChannelNewMember {
+            get {
+                return ResourceManager.GetString("YouTubeChannelNewMember", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to YouTube Channel Stream Start.
+        /// </summary>
+        public static string YouTubeChannelStreamStart {
+            get {
+                return ResourceManager.GetString("YouTubeChannelStreamStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to YouTube Channel Stream Stop.
+        /// </summary>
+        public static string YouTubeChannelStreamStop {
+            get {
+                return ResourceManager.GetString("YouTubeChannelStreamStop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to YouTube Channel Super Chat.
+        /// </summary>
+        public static string YouTubeChannelSuperChat {
+            get {
+                return ResourceManager.GetString("YouTubeChannelSuperChat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to YouTube Channel Super Sticker.
+        /// </summary>
+        public static string YouTubeChannelSuperSticker {
+            get {
+                return ResourceManager.GetString("YouTubeChannelSuperSticker", resourceCulture);
             }
         }
         

@@ -1,5 +1,6 @@
 ﻿using Google.Apis.YouTube.v3.Data;
 using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
@@ -28,6 +29,8 @@ namespace MixItUp.Base.Services.YouTube
         public string Botname { get { return this.Bot?.Snippet?.Title; } }
         public string ChannelID { get { return this.User?.Id; } }
         public string ChannelLink { get { return this.User?.Snippet?.CustomUrl; } }
+
+        private DateTime launchDateTime = DateTime.UtcNow;
 
         public StreamingPlatformAccountModel UserAccount
         {
@@ -277,6 +280,25 @@ namespace MixItUp.Base.Services.YouTube
             this.Broadcast = ServiceManager.Get<YouTubeChatService>().Broadcast;
             if (this.Broadcast != null)
             {
+                if (this.Broadcast.Snippet.ActualStartTime.HasValue && this.launchDateTime < this.Broadcast.Snippet.ActualStartTime)
+                {
+                    this.launchDateTime = this.Broadcast.Snippet.ActualStartTime.GetValueOrDefault();
+                    CommandParametersModel parameters = new CommandParametersModel();
+                    if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.YouTubeChannelStreamStart, parameters))
+                    {
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStart, parameters);
+                    }
+                }
+                else if (this.Broadcast.Snippet.ActualEndTime.HasValue && this.launchDateTime < this.Broadcast.Snippet.ActualEndTime)
+                {
+                    this.launchDateTime = this.Broadcast.Snippet.ActualEndTime.GetValueOrDefault();
+                    CommandParametersModel parameters = new CommandParametersModel();
+                    if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.YouTubeChannelStreamStop, parameters))
+                    {
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStop, parameters);
+                    }
+                }
+
                 this.Video = await this.UserConnection.GetVideoByID(this.Broadcast.Id);
             }
             else

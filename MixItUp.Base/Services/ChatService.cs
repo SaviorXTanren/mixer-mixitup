@@ -162,6 +162,19 @@ namespace MixItUp.Base.Services
             }
         }
 
+        public async Task DeleteMessage(string messageID)
+        {
+            if (string.IsNullOrEmpty(messageID))
+            {
+                return;
+            }
+
+            if (this.messagesLookup.TryGetValue(messageID, out ChatMessageViewModel message) && message != null)
+            {
+                await this.DeleteMessage(message, externalDeletion: true);
+            }
+        }
+
         public async Task DeleteMessage(ChatMessageViewModel message, bool externalDeletion = false)
         {
             if (message == null)
