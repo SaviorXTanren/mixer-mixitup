@@ -45,7 +45,7 @@
     <PackageReference Include="StreamingClientLibrary.Glimesh" Version="1.0.0.18" />
     <PackageReference Include="StreamingClientLibrary.Trovo" Version="1.0.0.19" />
     <PackageReference Include="StreamingClientLibrary.Twitch" Version="1.0.0.42" />
-    <PackageReference Include="StreamingClientLibrary.YouTube" Version="1.0.0.11" />
+    <PackageReference Include="StreamingClientLibrary.YouTube" Version="1.0.0.12" />
     <PackageReference Include="System.IO.Ports" Version="6.0.0" />
   </ItemGroup>
 
