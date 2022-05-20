@@ -109,7 +109,15 @@ namespace MixItUp.Base.Services.YouTube
 
                         this.userClient.OnMessagesReceived += UserClient_OnMessagesReceived;
 
-                        if (!await this.userClient.Connect())
+                        int pollDelay = 5000;
+                        if (RandomHelper.GenerateProbability() > 50)
+                        {
+                            pollDelay = 10000;
+                        }
+
+                        Logger.Log(LogLevel.Information, $"YouTube Chat polling delay set to {pollDelay} milliseconds");
+
+                        if (!await this.userClient.Connect(minimumPollTimeMilliseconds: pollDelay))
                         {
                             return new Result(MixItUp.Base.Resources.YouTubeFailedToConnectToChat);
                         }
