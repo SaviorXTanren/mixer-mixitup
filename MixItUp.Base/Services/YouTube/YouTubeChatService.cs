@@ -293,7 +293,7 @@ namespace MixItUp.Base.Services.YouTube
                                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
                                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
-                                    user.Roles.Add(UserRoleEnum.Subscriber);
+                                    user.Roles.Add(UserRoleEnum.YouTubeMember);
                                     // TODO
                                     //user.SubscriberTier = subMessage.Tier;
                                     user.SubscribeDate = DateTimeOffset.Now;
@@ -331,7 +331,7 @@ namespace MixItUp.Base.Services.YouTube
                                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
                                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = months;
 
-                                    user.Roles.Add(UserRoleEnum.Subscriber);
+                                    user.Roles.Add(UserRoleEnum.YouTubeMember);
                                     // TODO
                                     //user.SubscriberTier = subMessage.Tier;
                                     if (!user.SubscribeDate.HasValue)
@@ -395,7 +395,7 @@ namespace MixItUp.Base.Services.YouTube
                                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
                                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
-                                user.Roles.Add(UserRoleEnum.Subscriber);
+                                user.Roles.Add(UserRoleEnum.YouTubeMember);
                                 user.SubscribeDate = DateTimeOffset.Now;
                                 // TODO
                                 //user.SubscriberTier = giftedSubEvent.PlanTierNumber;
