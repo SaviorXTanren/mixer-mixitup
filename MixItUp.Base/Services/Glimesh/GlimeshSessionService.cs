@@ -13,6 +13,8 @@ namespace MixItUp.Base.Services.Glimesh
 {
     public class GlimeshSessionService : IStreamingPlatformSessionService
     {
+        private const string GamingCategorySlug = "gaming";
+
         public GlimeshPlatformService UserConnection { get; private set; }
         public GlimeshPlatformService BotConnection { get; private set; }
 
@@ -301,7 +303,21 @@ namespace MixItUp.Base.Services.Glimesh
 
         public Task<string> GetGame()
         {
-            return Task.FromResult(this.User?.channel?.stream?.category?.name);
+            if (this.User?.channel?.subcategory != null)
+            {
+                if (GamingCategorySlug.Equals(this.User?.channel?.category?.slug))
+                {
+                    return Task.FromResult(this.User?.channel?.subcategory?.name);
+                }
+                else
+                {
+                    return Task.FromResult($"{this.User?.channel?.category?.name} - {this.User?.channel?.subcategory?.name}");
+                }
+            }
+            else
+            {
+                return Task.FromResult(this.User?.channel?.category?.name);
+            }
         }
 
         public Task<bool> SetGame(string gameName) { return Task.FromResult(false); }

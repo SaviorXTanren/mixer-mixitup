@@ -67,7 +67,15 @@ namespace MixItUp.Base.Model.User.Platform
             this.AccountDate = GlimeshPlatformService.GetGlimeshDateTime(user.confirmedAt);
         }
 
-        public void SetUserProperties(ChatMessagePacketModel message) { this.SetUserProperties(message.User); }
+        public void SetUserProperties(ChatMessagePacketModel message)
+        {
+            this.SetUserProperties(message.User);
+
+            if (message.Metadata.streamer) { this.Roles.Add(UserRoleEnum.Streamer); } else { this.Roles.Remove(UserRoleEnum.Streamer); }
+            if (message.Metadata.admin) { this.Roles.Add(UserRoleEnum.GlimeshAdmin); } else { this.Roles.Remove(UserRoleEnum.GlimeshAdmin); }
+            if (message.Metadata.moderator) { this.Roles.Add(UserRoleEnum.Moderator); } else { this.Roles.Remove(UserRoleEnum.Moderator); }
+            if (message.Metadata.subscriber) { this.Roles.Add(UserRoleEnum.Subscriber); } else { this.Roles.Remove(UserRoleEnum.Subscriber); }
+        }
 
         public UserModel GetGlimeshUser()
         {

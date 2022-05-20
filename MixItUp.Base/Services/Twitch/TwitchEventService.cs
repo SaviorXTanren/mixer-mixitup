@@ -143,7 +143,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             this.User = user;
             this.Amount = bitsEvent.bits_used;
-            this.Message = new TwitchChatMessageViewModel(user, bitsEvent);
+            this.Message = new TwitchChatMessageViewModel(bitsEvent, user);
         }
     }
 

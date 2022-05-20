@@ -185,6 +185,9 @@ namespace MixItUp.Base.Model.User.Platform
                     else if (this.HasTwitchBadge("twitchbot")) { this.RoleBadge = this.GetTwitchBadgeURL("twitchbot"); }
                     else if (this.Roles.Contains(UserRoleEnum.Moderator)) { this.RoleBadge = this.GetTwitchBadgeURL("moderator"); }
                     else if (this.Roles.Contains(UserRoleEnum.TwitchVIP)) { this.RoleBadge = this.GetTwitchBadgeURL("vip"); }
+                    else if (this.HasTwitchBadge("artist-badge")) { this.RoleBadge = this.GetTwitchBadgeURL("artist-badge"); }
+                    else if (this.HasTwitchBadge("no_audio")) { this.RoleBadge = this.GetTwitchBadgeURL("no_audio"); }
+                    else if (this.HasTwitchBadge("no_video")) { this.RoleBadge = this.GetTwitchBadgeURL("no_video"); }
 
                     if (this.HasTwitchSubscriberFounderBadge) { this.SubscriberBadge = this.GetTwitchBadgeURL("founder"); }
                     else if (this.HasTwitchSubscriberBadge) { this.SubscriberBadge = this.GetTwitchBadgeURL("subscriber"); }

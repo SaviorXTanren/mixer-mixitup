@@ -6878,11 +6878,12 @@ As cotações importadas com IDs que correspondem às cotações existentes ser�
     <value>O item especificado não existe</value>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
-    <value>Você deve especificar "comprar" ou "vender"</value>
+    <value>Você deve especificar "{0}" ou "{1}"</value>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
-    <value>USO: {0} lista = Lista todos os itens disponíveis para compra/venda ** {0} &lt;ITEM NAME&gt; = Lista o preço de compra/venda do item ** {0} comprar &lt;ITE NOME DE M&gt; [QUANTIDADE] = Compra 1 ou o valor especificado do item ** {0} vender &lt;ITEM NAME&gt; [QUANTIDADE] = Vende 1 ou o valor especificado do item</value>
-    <comment>{0} is the shop command</comment>
+    <value>USO: {0} {1} = Lista todos os itens disponíveis para compra/venda ** {0} &lt;ITEM NAME&gt; = Lista o preço de compra/venda do item ** {0} {2} &lt;ITE NOME DE M&gt; [QUANTIDADE] = Compra 1 ou o valor especificado do item ** {0} {3} &lt;ITEM NAME&gt; [QUANTIDADE] = Vende 1 ou o valor especificado do item</value>
+    <comment>{0} is the shop command, {1} is the English word 'list', {2} is the English word 'buy', {3} is the English word 'sell'</comment>
   </data>
   <data name="InventoryTradeAlreadyUnderway" xml:space="preserve">
     <value>Uma negociação já está em andamento, por favor, espere até que seja concluída</value>
@@ -6983,9 +6984,6 @@ As cotações importadas com IDs que correspondem às cotações existentes ser�
   <data name="ResubscribedAmount" xml:space="preserve">
     <value>Resinscrevido ({0})</value>
     <comment>{0} is the amount of months</comment>
-  </data>
-  <data name="Sell" xml:space="preserve">
-    <value>Vender</value>
   </data>
   <data name="StartTimeHeader" xml:space="preserve">
     <value>Hora de início: </value>

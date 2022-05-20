@@ -1772,6 +1772,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Category: .
+        /// </summary>
+        public static string CategoryHeader {
+            get {
+                return ResourceManager.GetString("CategoryHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Category Updated: .
+        /// </summary>
+        public static string CategroryUpdatedHeader {
+            get {
+                return ResourceManager.GetString("CategroryUpdatedHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Center.
         /// </summary>
         public static string Center {
@@ -5150,6 +5168,15 @@ namespace MixItUp.Base {
         public static string ErrorDetailsHeader {
             get {
                 return ResourceManager.GetString("ErrorDetailsHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ERROR: Failed to update category.
+        /// </summary>
+        public static string ErrorFailedToUpdateCategory {
+            get {
+                return ResourceManager.GetString("ErrorFailedToUpdateCategory", resourceCulture);
             }
         }
         
@@ -8609,11 +8636,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Glimesh Channel Donation.
+        /// </summary>
+        public static string GlimeshChannelDonation {
+            get {
+                return ResourceManager.GetString("GlimeshChannelDonation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Glimesh Channel Followed.
         /// </summary>
         public static string GlimeshChannelFollowed {
             get {
                 return ResourceManager.GetString("GlimeshChannelFollowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Glimesh Channel Resubscribed.
+        /// </summary>
+        public static string GlimeshChannelResubscribed {
+            get {
+                return ResourceManager.GetString("GlimeshChannelResubscribed", resourceCulture);
             }
         }
         
@@ -8632,6 +8677,24 @@ namespace MixItUp.Base {
         public static string GlimeshChannelStreamStop {
             get {
                 return ResourceManager.GetString("GlimeshChannelStreamStop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Glimesh Channel Subscribed.
+        /// </summary>
+        public static string GlimeshChannelSubscribed {
+            get {
+                return ResourceManager.GetString("GlimeshChannelSubscribed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Glimesh Channel Subscription Gifted.
+        /// </summary>
+        public static string GlimeshChannelSubscriptionGifted {
+            get {
+                return ResourceManager.GetString("GlimeshChannelSubscriptionGifted", resourceCulture);
             }
         }
         
@@ -9662,7 +9725,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You must specify either &quot;buy&quot; or &quot;sell&quot;.
+        ///   Looks up a localized string similar to You must specify either &quot;{0}&quot; or &quot;{1}&quot;.
         /// </summary>
         public static string InventoryMustSpecifyEitherBuyOrSell {
             get {
@@ -9725,7 +9788,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to USAGE: {0} list = Lists all the items available for buying/selling ** {0} &lt;ITEM NAME&gt; = Lists the buying/selling price for the item ** {0} buy &lt;ITEM NAME&gt; [AMOUNT] = Buys 1 or the amount specified of the item ** {0} sell &lt;ITEM NAME&gt; [AMOUNT] = Sells 1 or the amount specified of the item.
+        ///   Looks up a localized string similar to USAGE: {0} {1} = Lists all the items available for buying/selling ** {0} &lt;ITEM NAME&gt; = Lists the buying/selling price for the item ** {0} {2} &lt;ITEM NAME&gt; [AMOUNT] = Buys 1 or the amount specified of the item ** {0} {3} &lt;ITEM NAME&gt; [AMOUNT] = Sells 1 or the amount specified of the item.
         /// </summary>
         public static string InventoryShopUsage {
             get {
@@ -11874,6 +11937,15 @@ namespace MixItUp.Base {
         public static string No {
             get {
                 return ResourceManager.GetString("No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Category found.
+        /// </summary>
+        public static string NoCategoryFound {
+            get {
+                return ResourceManager.GetString("NoCategoryFound", resourceCulture);
             }
         }
         
@@ -15805,15 +15877,6 @@ namespace MixItUp.Base {
         public static string SelectVoice {
             get {
                 return ResourceManager.GetString("SelectVoice", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sell.
-        /// </summary>
-        public static string Sell {
-            get {
-                return ResourceManager.GetString("Sell", resourceCulture);
             }
         }
         

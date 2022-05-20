@@ -6878,11 +6878,12 @@ Las cotizaciones importadas con ID que coincidan con las cotizaciones existentes
     <value>El elemento especificado no existe</value>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
-    <value>Debe especificar "comprar" o "vender"</value>
+    <value>Debe especificar "{0}" o "{1}"</value>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
-    <value>USO: {0} lista = Enumera todos los artículos disponibles para comprar/vender ** {0} &lt; NOMBRE DEL ARTÍCULO&gt; = Enumera el precio de compra/venta del artículo ** {0} comprar &lt;NOMBRE DEL ARTÍCULO&gt; [IMPORTE] = Compra 1 o la cantidad especificada del artículo ** {0} vender &lt;NOMBRE DEL ARTÍCULO&gt; [IMPORTE] = Vende 1 o la cantidad especificada del artículo</value>
-    <comment>{0} is the shop command</comment>
+    <value>USO: {0} {1} = Enumera todos los artículos disponibles para comprar/vender ** {0} &lt; NOMBRE DEL ARTÍCULO&gt; = Enumera el precio de compra/venta del artículo ** {0} {2} &lt;NOMBRE DEL ARTÍCULO&gt; [IMPORTE] = Compra 1 o la cantidad especificada del artículo ** {0} {3} &lt;NOMBRE DEL ARTÍCULO&gt; [IMPORTE] = Vende 1 o la cantidad especificada del artículo</value>
+    <comment>{0} is the shop command, {1} is the English word 'list', {2} is the English word 'buy', {3} is the English word 'sell'</comment>
   </data>
   <data name="InventoryTradeAlreadyUnderway" xml:space="preserve">
     <value>Una operación ya está en marcha, espere hasta que se complete</value>
@@ -6983,9 +6984,6 @@ Las cotizaciones importadas con ID que coincidan con las cotizaciones existentes
   <data name="ResubscribedAmount" xml:space="preserve">
     <value>Suscrito ({0})</value>
     <comment>{0} is the amount of months</comment>
-  </data>
-  <data name="Sell" xml:space="preserve">
-    <value>Vender</value>
   </data>
   <data name="StartTimeHeader" xml:space="preserve">
     <value>Hora de comienzo: </value>

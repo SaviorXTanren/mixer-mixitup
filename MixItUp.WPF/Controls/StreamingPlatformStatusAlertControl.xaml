@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -11,7 +11,5 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
 
-    <Button Visibility="{Binding Show, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="{Binding ToolTipText}" Command="{Binding LaunchStatusPageCommand}" Style="{StaticResource MaterialDesignFlatButton}" Width="40" HorizontalAlignment="Center" Margin="5,0">
-        <MaterialDesign:PackIcon Kind="AlertOutline" Style="{StaticResource ColoredBackgroundPackIcon}" />
-    </Button>
+    <Controls:IconButton Visibility="{Binding Show, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding LaunchStatusPageCommand}" Icon="AlertOutline" ToolTip="{Binding ToolTipText}" />
 </UserControl>

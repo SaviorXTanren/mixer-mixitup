@@ -13,6 +13,8 @@ using MixItUp.Base.ViewModel.Chat.Glimesh;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,6 +22,10 @@ namespace MixItUp.Base.Services.Glimesh
 {
     public class GlimeshChatEventService : StreamingPlatformServiceBase
     {
+        private const string SubscriptionMessageContents = " just subscribed!";
+        private const string GiftedSubscriptionMessageContentsFormat = " just gifted a subscription to \\w+!";
+        private const string DonationMessageContentsFormat = " just donated \\$[\\d.]+!";
+
         private ChatEventClient userClient;
         private ChatEventClient botClient;
 
@@ -223,73 +229,159 @@ namespace MixItUp.Base.Services.Glimesh
             Logger.Log(LogLevel.Debug, string.Format("Glimesh Chat Packet Received: {0}", packet));
         }
 
-        private async void UserClient_OnChatMessageReceived(object sender, ChatMessagePacketModel message)
+        private async void UserClient_OnChatMessageReceived(object sender, ChatMessagePacketModel messagePacket)
         {
             try
             {
-                if (message != null && !string.IsNullOrEmpty(message.Message))
+                if (messagePacket != null && !string.IsNullOrEmpty(messagePacket.Message))
                 {
-                    UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, message.User?.id);
+                    UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, messagePacket.User?.id);
                     if (user == null)
                     {
-                        UserModel glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByID(message.User?.id);
+                        UserModel glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByID(messagePacket.User?.id);
                         if (glimeshUser != null)
                         {
                             user = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(glimeshUser));
                         }
                         else
                         {
-                            user = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(message));
+                            user = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(messagePacket));
                         }
                         await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
                     }
 
-                    user.GetPlatformData<GlimeshUserPlatformV2Model>(StreamingPlatformTypeEnum.Glimesh).SetUserProperties(message);
+                    user.GetPlatformData<GlimeshUserPlatformV2Model>(StreamingPlatformTypeEnum.Glimesh).SetUserProperties(messagePacket);
 
-                    if (message.IsFollowedMessage)
+                    GlimeshChatMessageViewModel message = new GlimeshChatMessageViewModel(messagePacket, user);
+
+                    if (messagePacket.IsFollowedMessage)
                     {
                         // Ignore follow messages
                     }
-                    else if (message.IsSubscriptionMessage)
+                    else if (messagePacket.IsSubscriptionMessage)
                     {
-                        user.Roles.Add(UserRoleEnum.Subscriber);
-                        user.SubscribeDate = DateTimeOffset.Now;
-
-                        CommandParametersModel parameters = new CommandParametersModel(user);
-                        if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.GlimeshChannelSubscribed, parameters))
+                        if (messagePacket.Message.Contains(SubscriptionMessageContents, StringComparison.OrdinalIgnoreCase))
                         {
-                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
-                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
+                            user.Roles.Add(UserRoleEnum.Subscriber);
+                            user.SubscribeDate = DateTimeOffset.Now;
 
-                            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
+                            CommandParametersModel parameters = new CommandParametersModel(user);
+                            if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.GlimeshChannelSubscribed, parameters))
                             {
-                                currency.AddAmount(user, currency.OnSubscribeBonus);
-                            }
+                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
+                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
-                            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
-                            {
-                                if (user.MeetsRole(streamPass.UserPermission))
+                                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                                 {
-                                    streamPass.AddAmount(user, streamPass.SubscribeBonus);
+                                    currency.AddAmount(user, currency.OnSubscribeBonus);
+                                }
+
+                                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                                {
+                                    if (user.MeetsRole(streamPass.UserPermission))
+                                    {
+                                        streamPass.AddAmount(user, streamPass.SubscribeBonus);
+                                    }
+                                }
+
+                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.GlimeshChannelSubscribed, parameters);
+
+                                GlobalEvents.SubscribeOccurred(user);
+
+                                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertSubscribed, user.DisplayName), ChannelSession.Settings.AlertSubColor));
+                            }
+                        }
+                        else if (Regex.IsMatch(messagePacket.Message, GiftedSubscriptionMessageContentsFormat, RegexOptions.IgnoreCase))
+                        {
+                            Match match = Regex.Match(messagePacket.Message, GiftedSubscriptionMessageContentsFormat, RegexOptions.IgnoreCase);
+                            string[] splits = match.Value.Split(new char[] { ' ', '!' }, StringSplitOptions.RemoveEmptyEntries);
+                            if (splits.Length > 0)
+                            {
+                                string gifteeName = splits.Last();
+                                UserV2ViewModel giftee = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Glimesh, gifteeName);
+                                if (giftee == null)
+                                {
+                                    UserModel gifteeGlimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByName(gifteeName);
+                                    if (giftee != null)
+                                    {
+                                        giftee = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(gifteeGlimeshUser));
+                                    }
+                                }
+
+                                if (giftee == null)
+                                {
+                                    Logger.Log(LogLevel.Error, "Glimesh Gifted Subscription processing failed: " + message.ToString());
+                                    return;
+                                }
+
+                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = giftee.ID;
+                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
+
+                                giftee.Roles.Add(UserRoleEnum.Subscriber);
+                                giftee.SubscriberTier = 1;
+                                giftee.SubscribeDate = DateTimeOffset.Now;
+                                user.TotalSubsGifted++;
+                                giftee.TotalSubsReceived++;
+
+                                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
+                                {
+                                    currency.AddAmount(user, currency.OnSubscribeBonus);
+                                }
+
+                                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                                {
+                                    if (user.MeetsRole(streamPass.UserPermission))
+                                    {
+                                        streamPass.AddAmount(user, streamPass.SubscribeBonus);
+                                    }
+                                }
+
+                                CommandParametersModel parameters = new CommandParametersModel(user);
+                                parameters.Arguments.Add(giftee.Username);
+                                parameters.TargetUser = giftee;
+                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelSubscriptionGifted, parameters);
+
+                                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertSubscriptionGifted, user.DisplayName, giftee.DisplayName), ChannelSession.Settings.AlertGiftedSubColor));
+
+                                GlobalEvents.SubscriptionGiftedOccurred(user, giftee);
+                            }
+                        }
+                        else if (Regex.IsMatch(messagePacket.Message, DonationMessageContentsFormat, RegexOptions.IgnoreCase))
+                        {
+                            Match match = Regex.Match(messagePacket.Message, GiftedSubscriptionMessageContentsFormat, RegexOptions.IgnoreCase);
+                            string[] splits = match.Value.Split(new char[] { ' ', '!' }, StringSplitOptions.RemoveEmptyEntries);
+                            if (splits.Length > 0)
+                            {
+                                string amountText = string.Concat(splits.Last().Where(c => char.IsDigit(c) || c == '.'));
+                                if (double.TryParse(amountText, out double amount))
+                                {
+                                    await EventService.ProcessDonationEvent(EventTypeEnum.GlimeshChannelDonation, new UserDonationModel()
+                                    {
+                                        Source = UserDonationSourceEnum.Glimesh,
+
+                                        ID = message.ID,
+
+                                        User = user,
+                                        Username = user.Username,
+                                        Message = message.PlainTextMessage,
+
+                                        Amount = Math.Round(amount, 2),
+
+                                        DateTime = DateTimeOffset.Now,
+                                    });
                                 }
                             }
-
-                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.GlimeshChannelSubscribed, parameters);
-
-                            GlobalEvents.SubscribeOccurred(user);
-
-                            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertSubscribed, user.DisplayName), ChannelSession.Settings.AlertSubColor));
                         }
                     }
                     else
                     {
-                        await ServiceManager.Get<ChatService>().AddMessage(new GlimeshChatMessageViewModel(message, user));
+                        await ServiceManager.Get<ChatService>().AddMessage(message);
                     }
                 }
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Logger.Log(ex + " - " + JSONSerializerHelper.SerializeToString(messagePacket));
             }
         }
 

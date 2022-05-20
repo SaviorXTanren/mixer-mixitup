@@ -172,7 +172,7 @@ namespace MixItUp.Base.Model.Commands
 
     public class GamePreMadeChatCommandModel : PreMadeChatCommandModelBase
     {
-        public GamePreMadeChatCommandModel() : base(MixItUp.Base.Resources.Game, "game", 5, UserRoleEnum.User) { }
+        public GamePreMadeChatCommandModel() : base(MixItUp.Base.Resources.Game, new HashSet<string>() { "title", "category" }, 5, UserRoleEnum.User) { }
 
         public static async Task<string> GetCurrentGameName(StreamingPlatformTypeEnum platform)
         {
@@ -197,12 +197,12 @@ namespace MixItUp.Base.Model.Commands
                 }
                 else
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameHeader + gameName, parameters);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.CategoryHeader + gameName, parameters);
                 }
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorHeader + MixItUp.Base.Resources.NoGameFound, parameters);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorHeader + MixItUp.Base.Resources.NoCategoryFound, parameters);
             }
         }
     }
@@ -709,22 +709,32 @@ namespace MixItUp.Base.Model.Commands
 
     public class SetGamePreMadeChatCommandModel : PreMadeChatCommandModelBase
     {
-        public SetGamePreMadeChatCommandModel() : base(MixItUp.Base.Resources.SetGame, "setgame", 5, UserRoleEnum.Moderator) { }
+        public SetGamePreMadeChatCommandModel() : base(MixItUp.Base.Resources.SetGame, new HashSet<string>() { "setgame", "setcategory" }, 5, UserRoleEnum.Moderator) { }
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
             if (parameters.Arguments.Count() > 0)
             {
                 string name = string.Join(" ", parameters.Arguments).ToLower();
+                bool result = true;
+
                 await StreamingPlatforms.ForEachPlatform(async (p) =>
                 {
-                    if (StreamingPlatforms.GetPlatformSessionService(p).IsConnected)
+                    if (StreamingPlatforms.GetPlatformSessionService(p).IsConnected && result)
                     {
-                        await StreamingPlatforms.GetPlatformSessionService(p).SetGame(name);
+                        result = await StreamingPlatforms.GetPlatformSessionService(p).SetGame(name);
                         await StreamingPlatforms.GetPlatformSessionService(p).RefreshChannel();
                     }
                 });
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameUpdatedHeader + name, parameters);
+
+                if (result)
+                {
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.CategroryUpdatedHeader + name, parameters);
+                }
+                else
+                {
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorFailedToUpdateCategory, parameters);
+                }
             }
             else
             {

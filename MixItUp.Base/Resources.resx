@@ -6880,11 +6880,12 @@ Imported quotes with IDs that match existing quotes will altered to the next max
     <value>The item you specified does not exist</value>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
-    <value>You must specify either "buy" or "sell"</value>
+    <value>You must specify either "{0}" or "{1}"</value>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
-    <value>USAGE: {0} list = Lists all the items available for buying/selling ** {0} &lt;ITEM NAME&gt; = Lists the buying/selling price for the item ** {0} buy &lt;ITEM NAME&gt; [AMOUNT] = Buys 1 or the amount specified of the item ** {0} sell &lt;ITEM NAME&gt; [AMOUNT] = Sells 1 or the amount specified of the item</value>
-    <comment>{0} is the shop command</comment>
+    <value>USAGE: {0} {1} = Lists all the items available for buying/selling ** {0} &lt;ITEM NAME&gt; = Lists the buying/selling price for the item ** {0} {2} &lt;ITEM NAME&gt; [AMOUNT] = Buys 1 or the amount specified of the item ** {0} {3} &lt;ITEM NAME&gt; [AMOUNT] = Sells 1 or the amount specified of the item</value>
+    <comment>{0} is the shop command, {1} is the English word 'list', {2} is the English word 'buy', {3} is the English word 'sell'</comment>
   </data>
   <data name="InventoryTradeAlreadyUnderway" xml:space="preserve">
     <value>A trade is already underway, please wait until it is completed</value>
@@ -6985,9 +6986,6 @@ Imported quotes with IDs that match existing quotes will altered to the next max
   <data name="ResubscribedAmount" xml:space="preserve">
     <value>Resubscribed ({0})</value>
     <comment>{0} is the amount of months</comment>
-  </data>
-  <data name="Sell" xml:space="preserve">
-    <value>Sell</value>
   </data>
   <data name="StartTimeHeader" xml:space="preserve">
     <value>Start Time: </value>
@@ -7685,6 +7683,30 @@ via Twitch, it's a "your mileage may very" situation.</value>
   </data>
   <data name="SameCategory" xml:space="preserve">
     <value>Same Category</value>
+  </data>
+  <data name="CategoryHeader" xml:space="preserve">
+    <value>Category: </value>
+  </data>
+  <data name="NoCategoryFound" xml:space="preserve">
+    <value>No Category found</value>
+  </data>
+  <data name="CategroryUpdatedHeader" xml:space="preserve">
+    <value>Category Updated: </value>
+  </data>
+  <data name="ErrorFailedToUpdateCategory" xml:space="preserve">
+    <value>ERROR: Failed to update category</value>
+  </data>
+  <data name="GlimeshChannelResubscribed" xml:space="preserve">
+    <value>Glimesh Channel Resubscribed</value>
+  </data>
+  <data name="GlimeshChannelSubscribed" xml:space="preserve">
+    <value>Glimesh Channel Subscribed</value>
+  </data>
+  <data name="GlimeshChannelSubscriptionGifted" xml:space="preserve">
+    <value>Glimesh Channel Subscription Gifted</value>
+  </data>
+  <data name="GlimeshChannelDonation" xml:space="preserve">
+    <value>Glimesh Channel Donation</value>
   </data>
   <data name="SetTitleDescription" xml:space="preserve">
     <value>Set Title/Description</value>
