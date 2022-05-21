@@ -8047,9 +8047,6 @@ Fuzzy</comment>
     <comment>{0} is the amount of the item
 {1} is the name of the item</comment>
   </data>
-  <data name="List" xml:space="preserve">
-    <value>Список</value>
-  </data>
   <data name="NoGameFound" xml:space="preserve">
     <value>Гру не знайдено</value>
   </data>

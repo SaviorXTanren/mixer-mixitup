@@ -8063,9 +8063,6 @@ Imported quotes with IDs that match existing quotes will altered to the next max
     <comment>{0} is the amount of the item
 {1} is the name of the item</comment>
   </data>
-  <data name="List" xml:space="preserve">
-    <value>List</value>
-  </data>
   <data name="NoGameFound" xml:space="preserve">
     <value>No Game Found</value>
   </data>
