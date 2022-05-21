@@ -10598,15 +10598,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to List.
-        /// </summary>
-        public static string List {
-            get {
-                return ResourceManager.GetString("List", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to List Alignment.
         /// </summary>
         public static string ListAlignment {

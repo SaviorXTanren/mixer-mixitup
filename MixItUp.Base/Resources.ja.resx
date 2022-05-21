@@ -6916,9 +6916,6 @@ Mix It Up の実行中にまだチャンネルにアクセスしていないユ�
     <comment>{0} is the amount of the item
 {1} is the name of the item</comment>
   </data>
-  <data name="List" xml:space="preserve">
-    <value>リスト</value>
-  </data>
   <data name="NoGameFound" xml:space="preserve">
     <value>ゲームが見つかりません</value>
   </data>

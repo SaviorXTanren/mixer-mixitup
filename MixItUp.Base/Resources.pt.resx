@@ -6916,9 +6916,6 @@ As cotações importadas com IDs que correspondem às cotações existentes ser�
     <comment>{0} is the amount of the item
 {1} is the name of the item</comment>
   </data>
-  <data name="List" xml:space="preserve">
-    <value>Lista</value>
-  </data>
   <data name="NoGameFound" xml:space="preserve">
     <value>Nenhum jogo encontrado</value>
   </data>
