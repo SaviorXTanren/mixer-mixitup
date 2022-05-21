@@ -447,7 +447,7 @@ namespace MixItUp.Base.Model.Currency
                     if (arguments != null && arguments.Count() > 0)
                     {
                         string arg1 = arguments.ElementAt(0);
-                        if (arguments.Count() == 1 && arg1.Equals(MixItUp.Base.Resources.List, StringComparison.InvariantCultureIgnoreCase))
+                        if (arguments.Count() == 1 && arg1.Equals("list", StringComparison.InvariantCultureIgnoreCase))
                         {
                             if (this.shopListCooldown > DateTimeOffset.Now)
                             {
