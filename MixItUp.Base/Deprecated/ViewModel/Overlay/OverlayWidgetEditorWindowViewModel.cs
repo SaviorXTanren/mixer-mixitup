@@ -24,6 +24,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
     }
 
+    [Obsolete]
     public class OverlayWidgetEditorWindowViewModel : UIViewModelBase
     {
         public event EventHandler<OverlayTypeListing> OverlayTypeSelected;

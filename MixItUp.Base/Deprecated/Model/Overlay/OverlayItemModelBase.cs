@@ -289,6 +289,7 @@ namespace MixItUp.Base.Model.Overlay
         protected void SendHide() { this.OnHide(this, new EventArgs()); }
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayItemPositionModel
     {
@@ -317,6 +318,7 @@ namespace MixItUp.Base.Model.Overlay
         }
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayItemEffectsModel
     {
@@ -372,6 +374,7 @@ namespace MixItUp.Base.Model.Overlay
 
     #region Obsolete
 
+    [Obsolete]
     public class OverlayStreamClipItemModel : OverlayFileItemModelBase
     {
         public OverlayStreamClipItemModel() : base() { }

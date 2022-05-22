@@ -22,6 +22,7 @@ namespace MixItUp.Base.ViewModel.Actions
         ShowHideWidget,
     }
 
+    [Obsolete]
     public class OverlayActionEditorControlViewModel : ActionEditorControlViewModelBase
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.Overlay; } }

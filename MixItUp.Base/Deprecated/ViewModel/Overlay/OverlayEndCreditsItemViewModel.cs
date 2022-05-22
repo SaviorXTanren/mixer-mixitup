@@ -77,6 +77,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
     }
 
+    [Obsolete]
     public class OverlayEndCreditsItemViewModel : OverlayHTMLTemplateItemViewModelBase
     {
         public IEnumerable<OverlayEndCreditsSectionTypeEnum> ItemTypes { get; set; } = EnumHelper.GetEnumList<OverlayEndCreditsSectionTypeEnum>().OrderBy(s => EnumLocalizationHelper.GetLocalizedName(s));

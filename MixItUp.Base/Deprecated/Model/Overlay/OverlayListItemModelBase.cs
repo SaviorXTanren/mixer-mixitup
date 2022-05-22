@@ -91,6 +91,7 @@ namespace MixItUp.Base.Model.Overlay
         }
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayListItemModelBase : OverlayHTMLTemplateItemModelBase
     {
