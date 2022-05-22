@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Mix It Up - Overlay</title>
+    <link rel="shortcut icon" type="image/x-icon" href="https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUp-Logo-Base-WhiteXS.png" />
+
+    <script src="jquery-3.6.0.min.js"></script>
+    <script src="webSocketWrapper.js"></script>
+
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <script src="bootstrap.min.js"></script>
+
+    <link href="video-js.css" rel="stylesheet">
+    <script src="video.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="animate.min.css">
+
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=PkwySfvE"></script>
+</head>
+<body style="background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;">
+
+    <div id="mainOverlay" style="position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;"></div>
+
+    <div id="noConnectionDiv" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); visibility: hidden">
+        <h1 style="font-size: 100px; color: red; text-align: center">No Connection To</h1>
+        <h1 style="font-size: 100px; color: red; text-align: center">Mix It Up Overlay!</h1>
+    </div>
+
+    <div id="noTextToSpeechDiv" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); visibility: hidden">
+        <h1 style="font-size: 100px; color: red; text-align: center">This Browser Does</h1>
+        <h1 style="font-size: 100px; color: red; text-align: center">Not Support</h1>
+        <h1 style="font-size: 100px; color: red; text-align: center">Text To Speech!</h1>
+    </div>
+
+    <script>
+
+        var mainOverlayDiv = document.getElementById('mainOverlay');
+        var noConnectionDiv = document.getElementById('noConnectionDiv');
+        var noTextToSpeechDiv = document.getElementById('noTextToSpeechDiv');
+
+        // YouTube player
+        var youtubeIFrameAPIReady = false;
+        var youtubeVideoPlayer;
+
+        var youtubePlayerScript = document.createElement('script');
+        youtubePlayerScript.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(youtubePlayerScript, firstScriptTag);
+
+        const animateCSS = (element, animation, prefix = 'animate__') =>
+            // We create a Promise and return it
+            new Promise((resolve, reject) => {
+                const animationName = `${prefix}${animation}`;
+                const node = document.querySelector(element);
+
+                node.classList.add(`${prefix}animated`, animationName);
+
+                // When the animation ends, we clean the classes and resolve the Promise
+                function handleAnimationEnd(event) {
+                    event.stopPropagation();
+                    node.classList.remove(`${prefix}animated`, animationName);
+                    resolve('Animation ended');
+                }
+
+                node.addEventListener('animationend', handleAnimationEnd, { once: true });
+            });
+
+        function connectionOpened() {
+            noConnectionDiv.style.visibility = 'hidden';
+        }
+
+        function connectionClosed() {
+            noConnectionDiv.style.visibility = 'visible';
+        }
+
+        function packetReceived(packet) {
+            try {
+                if (packet != null && typeof packet.type !== 'undefined') {
+
+                }
+            }
+            catch (err) { logException(err); }
+        }
+
+        function youtubePacket(data) {
+            if (youtubeIFrameAPIReady) {
+                var addedElement = document.createElement('div');
+                addedElement.id = data.FilePath;
+
+                addWaitRemoveElement(data, addedElement);
+
+                var youtubeVideoPlayer = new YT.Player(addedElement.id, {
+                    height: data.Height,
+                    width: data.Width,
+                    videoId: data.FilePath,
+                    playerVars: { 'controls': 0, 'modestbranding': 1, 'start': data.StartTime },
+                    events: {
+                        'onReady': function () {
+                            youtubeVideoPlayer.setVolume(data.Volume);
+                            youtubeVideoPlayer.setLoop(false);
+                            youtubeVideoPlayer.frameBorder = 0;
+                            youtubeVideoPlayer.playVideo();
+                        },
+                        'onStateChange': function (event) {
+                            if (event.data == YT.PlayerState.ENDED) {
+                                event.target.destroy();
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function logException(err) {
+            logToSessionStorage(err);
+        }
+
+        function onYouTubeIframeAPIReady() {
+            youtubeIFrameAPIReady = true;
+        }
+
+        openWebsocketConnection();
+    </script>
+</body>
+</html >
