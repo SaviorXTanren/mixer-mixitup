@@ -6,6 +6,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
@@ -224,9 +225,9 @@ namespace MixItUp.Base.Model.Commands
 
     public class UptimePreMadeChatCommandModel : PreMadeChatCommandModelBase
     {
-        public static async Task<DateTimeOffset> GetStartTime()
+        public static async Task<DateTimeOffset> GetStartTime(StreamingPlatformTypeEnum platform)
         {
-            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+            if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
                 await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
                 if (ServiceManager.Get<TwitchSessionService>().IsLive)
@@ -234,8 +235,17 @@ namespace MixItUp.Base.Model.Commands
                     return TwitchPlatformService.GetTwitchDateTime(ServiceManager.Get<TwitchSessionService>().Stream?.started_at);
                 }
             }
-            
-            if (ServiceManager.Get<TrovoSessionService>().IsConnected)
+
+            if (platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().IsConnected)
+            {
+                await ServiceManager.Get<YouTubeSessionService>().RefreshChannel();
+                if (ServiceManager.Get<YouTubeSessionService>().IsLive)
+                {
+                    return new DateTimeOffset(ServiceManager.Get<YouTubeSessionService>().Broadcast.Snippet.ActualStartTime.GetValueOrDefault(), TimeSpan.Zero);
+                }
+            }
+
+            if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
             {
                 await ServiceManager.Get<TrovoSessionService>().RefreshChannel();
                 if (ServiceManager.Get<TrovoSessionService>().IsLive)
@@ -244,7 +254,7 @@ namespace MixItUp.Base.Model.Commands
                 }
             }
             
-            if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
+            if (platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().IsConnected)
             {
                 await ServiceManager.Get<GlimeshSessionService>().RefreshChannel();
                 if (ServiceManager.Get<GlimeshSessionService>().IsLive)
@@ -260,7 +270,7 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
-            DateTimeOffset startTime = await UptimePreMadeChatCommandModel.GetStartTime();
+            DateTimeOffset startTime = await UptimePreMadeChatCommandModel.GetStartTime(parameters.Platform);
             if (startTime > DateTimeOffset.MinValue)
             {
                 TimeSpan duration = DateTimeOffset.Now.Subtract(startTime);
