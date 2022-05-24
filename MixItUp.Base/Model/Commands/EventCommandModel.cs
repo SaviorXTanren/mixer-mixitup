@@ -119,7 +119,7 @@ namespace MixItUp.Base.Model.Commands
                 case EventTypeEnum.TrovoChannelMassSubscriptionsGifted:
                     specialIdentifiers["subsgiftedamount"] = "5";
                     break;
-                case EventTypeEnum.TrovoSpellCast:
+                case EventTypeEnum.TrovoChannelSpellCast:
                     specialIdentifiers[TrovoChatSpellViewModel.SpellNameSpecialIdentifier] = "Spell Name";
                     specialIdentifiers[TrovoChatSpellViewModel.SpellQuantitySpecialIdentifier] = "5";
                     specialIdentifiers[TrovoChatSpellViewModel.SpellTotalValueSpecialIdentifier] = "250";

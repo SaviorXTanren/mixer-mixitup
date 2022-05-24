@@ -2,7 +2,6 @@
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Wizard;
@@ -12,7 +11,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Navigation;
 
 namespace MixItUp.WPF
@@ -39,6 +37,14 @@ namespace MixItUp.WPF
             GlobalEvents.OnShowMessageBox += GlobalEvents_OnShowMessageBox;
 
             this.Title += " - v" + Assembly.GetEntryAssembly().GetName().Version.ToString();
+
+            if (ProcessHelper.GetProcessesByName("MixItUp").Count() > 1)
+            {
+                if (!await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.MixItUpIsAlreadyRunning))
+                {
+                    this.Close();
+                }
+            }
 
             this.ExistingStreamerComboBox.ItemsSource = streamerSettings;
 

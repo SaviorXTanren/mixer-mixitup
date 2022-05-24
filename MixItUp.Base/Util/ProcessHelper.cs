@@ -1,5 +1,6 @@
 ﻿using StreamingClient.Base.Util;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
@@ -47,6 +48,16 @@ namespace MixItUp.Base.Util
                 Process.Start(processInfo);
             }
             catch (Exception ex) { Logger.Log(ex); }
+        }
+
+        public static IEnumerable<Process> GetProcessesByName(string name)
+        {
+            try
+            {
+                return Process.GetProcessesByName(name);
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return new List<Process>();
         }
 
         private static string GetRootedPath(string path)

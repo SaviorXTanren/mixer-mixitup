@@ -650,7 +650,7 @@ namespace MixItUp.Base.Services.Trovo
                     TrovoChatSpellViewModel spell = new TrovoChatSpellViewModel(message);
                     CommandParametersModel parameters = new CommandParametersModel(user, spell.GetSpecialIdentifiers());
 
-                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoSpellCast, parameters);
+                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelSpellCast, parameters);
 
                     TrovoSpellCommandModel command = ServiceManager.Get<CommandService>().TrovoSpellCommands.FirstOrDefault(c => string.Equals(c.Name, spell.Name, StringComparison.CurrentCultureIgnoreCase));
                     if (command != null)
@@ -673,7 +673,17 @@ namespace MixItUp.Base.Services.Trovo
 
                 if (TrovoChatMessageViewModel.ApplicableMessageTypes.Contains(message.type) && !string.IsNullOrEmpty(message.content))
                 {
-                    await ServiceManager.Get<ChatService>().AddMessage(new TrovoChatMessageViewModel(message, user));
+                    TrovoChatMessageViewModel chatMessage = new TrovoChatMessageViewModel(message, user);
+
+                    await ServiceManager.Get<ChatService>().AddMessage(chatMessage);
+
+                    if (message.type == ChatMessageTypeEnum.MagicChatBulletScreenChat || message.type == ChatMessageTypeEnum.MagicChatColorfulChat ||
+                        message.type == ChatMessageTypeEnum.MagicChatSpellChat || message.type == ChatMessageTypeEnum.MagicChatBulletScreenChat)
+                    {
+                        CommandParametersModel parameters = new CommandParametersModel(chatMessage);
+
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelMagicChat, parameters);
+                    }
                 }
             }
         }

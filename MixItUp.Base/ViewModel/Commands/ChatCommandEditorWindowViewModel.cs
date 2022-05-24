@@ -172,6 +172,8 @@ namespace MixItUp.Base.ViewModel.Commands
             }
             return new HashSet<string>(this.Triggers.Split(triggerSeparator, StringSplitOptions.RemoveEmptyEntries));
         }
+
+        public override Dictionary<string, string> GetTestSpecialIdentifiers() { return ChatCommandModel.GetChatTestSpecialIdentifiers(); }
     }
 
     public class UserOnlyChatCommandEditorWindowViewModel : ChatCommandEditorWindowViewModel

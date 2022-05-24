@@ -52,37 +52,39 @@ namespace MixItUp.Base.ViewModel.Commands
             return false;
         }
 
-        public static async Task TestCommandWithTestSpecialIdentifiers(CommandModelBase command)
+        public static async Task TestCommandWithTestCommandParameters(CommandModelBase command)
         {
             Dictionary<string, string> testSpecialIdentifiers = command.GetTestSpecialIdentifiers();
+            CommandParametersModel parameters = CommandParametersModel.GetTestParameters(testSpecialIdentifiers);
             if (testSpecialIdentifiers != null && testSpecialIdentifiers.Count > 0)
             {
-                testSpecialIdentifiers = await DialogHelper.ShowEditTestSpecialIdentifiersDialog(testSpecialIdentifiers);
-                if (testSpecialIdentifiers == null)
+                parameters = await DialogHelper.ShowEditTestCommandParametersDialog(parameters);
+                if (parameters == null)
                 {
                     return;
                 }
             }
 
-            await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(command, CommandParametersModel.GetTestParameters(testSpecialIdentifiers)));
+            await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(command, parameters));
             if (command.Requirements.Cooldown != null)
             {
                 command.Requirements.Cooldown.Reset();
             }
         }
 
-        public static async Task TestCommandWithTestSpecialIdentifiers(IEnumerable<ActionModelBase> actions, Dictionary<string, string> testSpecialIdentifiers)
+        public static async Task TestCommandWithTestCommandParameters(IEnumerable<ActionModelBase> actions, Dictionary<string, string> testSpecialIdentifiers)
         {
+            CommandParametersModel parameters = CommandParametersModel.GetTestParameters(testSpecialIdentifiers);
             if (testSpecialIdentifiers != null && testSpecialIdentifiers.Count > 0)
             {
-                testSpecialIdentifiers = await DialogHelper.ShowEditTestSpecialIdentifiersDialog(testSpecialIdentifiers);
-                if (testSpecialIdentifiers == null)
+                parameters = await DialogHelper.ShowEditTestCommandParametersDialog(parameters);
+                if (parameters == null)
                 {
                     return;
                 }
             }
 
-            await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(actions, CommandParametersModel.GetTestParameters(testSpecialIdentifiers)));
+            await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(actions, parameters));
         }
 
         public CommandTypeEnum Type
@@ -185,7 +187,7 @@ namespace MixItUp.Base.ViewModel.Commands
                     IEnumerable<ActionModelBase> actions = await this.GetActions();
                     if (actions != null)
                     {
-                        await CommandEditorWindowViewModelBase.TestCommandWithTestSpecialIdentifiers(actions, this.GetTestSpecialIdentifiers());
+                        await CommandEditorWindowViewModelBase.TestCommandWithTestCommandParameters(actions, this.GetTestSpecialIdentifiers());
                     }
                 }
             });

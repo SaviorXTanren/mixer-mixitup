@@ -108,7 +108,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public virtual bool ContainsOnlyEmotes() { return false; }
 
-        public IEnumerable<string> ToArguments() { return (!string.IsNullOrEmpty(this.PlainTextMessage)) ? this.PlainTextMessage.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries) : null; }
+        public IEnumerable<string> ToArguments() { return CommandParametersModel.GenerateArguments(this.PlainTextMessage); }
 
         public async Task<bool> CheckForModeration()
         {

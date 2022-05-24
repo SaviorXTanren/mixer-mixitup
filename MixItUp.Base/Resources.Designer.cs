@@ -2586,7 +2586,7 @@ namespace MixItUp.Base {
         ///built-in command locking system for this specific time it is run. This is to prevent what&apos;s known as a deadlock from occurring
         ///(command gets stuck and can&apos;t complete). This also means that other commands of the same type as the selected
         ///sub-command will be able to run at the same time if it&apos;s different than the current command. For example, if the selected
-        ///sub-command is an Action Group, then it [rest of string was truncated]&quot;;.
+        ///sub-command is an Action Group, then it wil [rest of string was truncated]&quot;;.
         /// </summary>
         public static string CommandActionWaitUntilCompleteHintText {
             get {
@@ -2661,7 +2661,7 @@ namespace MixItUp.Base {
         ///   Looks up a localized string similar to - Per Command Type: Each command type (Chat, Event, Timer, etc) has a lock that prevents other commands of the same type from running at the same time.
         ///- Per Action Type: Each action type (Chat, Sound, Conditional, etc) has a lock that prevents other commands also containing those actions from running at the same time.
         ///- Visual/Audio Actions: Commands containing visual/audio-based actions (Sound, Overlay, etc) share 1 lock while other commands will run as soon as they are triggered.
-        ///- Singular: All comma [rest of string was truncated]&quot;;.
+        ///- Singular: All commands [rest of string was truncated]&quot;;.
         /// </summary>
         public static string CommandLockSystemTooltip {
             get {
@@ -2800,7 +2800,7 @@ namespace MixItUp.Base {
         ///
         ///- Explain what the intent of your command is so that users can understand how they use their own assets in your commands.
         ///
-        ///- Upload these assets somewhere online and either use links to them in the actions themselves or include a link in the descr [rest of string was truncated]&quot;;.
+        ///- Upload these assets somewhere online and either use links to them in the actions themselves or include a link in the descripti [rest of string was truncated]&quot;;.
         /// </summary>
         public static string CommunityCommandsExternalAssetActionsDetected {
             get {
@@ -2849,7 +2849,7 @@ namespace MixItUp.Base {
         ///
         ///- Combine your other referenced commands into this command so users only need this one to fully use your setup.
         ///
-        ///- Upload the other commands needed for this command to work as well and reference their names in  [rest of string was truncated]&quot;;.
+        ///- Upload the other commands needed for this command to work as well and reference their names in the  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string CommunityCommandsOtherCommandReferencedDetected {
             get {
@@ -2902,7 +2902,7 @@ namespace MixItUp.Base {
         ///
         ///- The contents of these commands are appropriate for the general public and do not contain any sexually explicit material, hateful speech, or malicious processes.
         ///
-        ///Failure to meet the above could have your command removed and lead to blocking of the a [rest of string was truncated]&quot;;.
+        ///Failure to meet the above could have your command removed and lead to blocking of the ability [rest of string was truncated]&quot;;.
         /// </summary>
         public static string CommunityCommandsUploadAgreement {
             get {
@@ -5309,7 +5309,7 @@ namespace MixItUp.Base {
         /// <summary>
         ///   Looks up a localized string similar to By default, all user role requirements are hiearchy-based. This means that if a user has a role that is the requirement OR they have a role that is higher than the requirement, they will not be blocked by it. For example, if a role requirement is set to Subscriber, the user must either be a Subscriber or have a role that is higher on the list such as Mod or Channel Editor.
         ///
-        ///This setting will change all role requirements to be explicit and require that the user has that role in order to pass the check. For [rest of string was truncated]&quot;;.
+        ///This setting will change all role requirements to be explicit and require that the user has that role in order to pass the check. For e [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ExplicitUserRoleRequirementsTooltip {
             get {
@@ -5390,9 +5390,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to If you are a member of a team, visit your team page and near the end of the web URL, it will say &quot;teamID=_____&quot;. Type that number into the Team ID box, click search, select your name from the list, then click Log In button.
-        ///
-        ///If you are an individual, visit your individual page and near the end of the web URL, it will say &quot;participantID=_______&quot;. Type that number into the Participant ID box and then click Log In button..
+        ///   Looks up a localized string similar to First, visit your team&apos;s page on the Extra Life website and near the end of the web URL, it will say &quot;teamID=_____&quot;. Type that number into the first box, click search, select your name from the list, then click Log In button..
         /// </summary>
         public static string ExtraLifeInfo2 {
             get {
@@ -7617,7 +7615,7 @@ namespace MixItUp.Base {
         /// <summary>
         ///   Looks up a localized string similar to The Treasure Defense game allows a user to start a winner-takes-all bet amongst all entered users. By default, the user that starts the game specifies how much the bet is and all subsequent users must bet that amount to join, with all winners of the game splitting the total payout equally.
         ///
-        ///After the time limit is up, a user from the participants is selected to be King. All other users are either then selected to be Knights or Thieves. It is the job of the King to pick one participant in hopes that they a [rest of string was truncated]&quot;;.
+        ///After the time limit is up, a user from the participants is selected to be King. All other users are either then selected to be Knights or Thieves. It is the job of the King to pick one participant in hopes that they are [rest of string was truncated]&quot;;.
         /// </summary>
         public static string GameCommandTreasureDefenseDescription {
             get {
@@ -7997,7 +7995,7 @@ namespace MixItUp.Base {
         /// <summary>
         ///   Looks up a localized string similar to The Volcano game allows a user to deposit a specific amount of currency into a volcano with the chance for a personal payout and a payout for all users in chat. The volcano goes through 3 stages as more and more currency is deposited into it and a different set of Deposit &amp; Status commands are used depending on what stage the Volcano is at.
         ///
-        ///Once the volcano reaches stage 3, each subsequent deposit has a chance to trigger an eruption. When an eruption occurs, the user who triggered it gets a specialized p [rest of string was truncated]&quot;;.
+        ///Once the volcano reaches stage 3, each subsequent deposit has a chance to trigger an eruption. When an eruption occurs, the user who triggered it gets a specialized pay [rest of string was truncated]&quot;;.
         /// </summary>
         public static string GameCommandVolcanoDescription {
             get {
@@ -8303,7 +8301,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Game Queue Used Joined.
+        ///   Looks up a localized string similar to Game Queue User Joined.
         /// </summary>
         public static string GameQueueUserJoinedCommandName {
             get {
@@ -8321,7 +8319,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Game Queue Used Selected.
+        ///   Looks up a localized string similar to Game Queue User Selected.
         /// </summary>
         public static string GameQueueUserSelectedCommandName {
             get {
@@ -9743,7 +9741,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You must specify either &quot;{0}&quot; or &quot;{1}&quot;.
+        ///   Looks up a localized string similar to You must specify either &quot;buy&quot; or &quot;sell&quot;.
         /// </summary>
         public static string InventoryMustSpecifyEitherBuyOrSell {
             get {
@@ -9806,7 +9804,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to USAGE: {0} {1} = Lists all the items available for buying/selling ** {0} &lt;ITEM NAME&gt; = Lists the buying/selling price for the item ** {0} {2} &lt;ITEM NAME&gt; [AMOUNT] = Buys 1 or the amount specified of the item ** {0} {3} &lt;ITEM NAME&gt; [AMOUNT] = Sells 1 or the amount specified of the item.
+        ///   Looks up a localized string similar to USAGE: {0} list = Lists all the items available for buying/selling ** {0} &lt;ITEM NAME&gt; = Lists the buying/selling price for the item ** {0} buy &lt;ITEM NAME&gt; [AMOUNT] = Buys 1 or the amount specified of the item ** {0} sell &lt;ITEM NAME&gt; [AMOUNT] = Sells 1 or the amount specified of the item.
         /// </summary>
         public static string InventoryShopUsage {
             get {
@@ -10616,15 +10614,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to List.
-        /// </summary>
-        public static string List {
-            get {
-                return ResourceManager.GetString("List", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to List Alignment.
         /// </summary>
         public static string ListAlignment {
@@ -10879,7 +10868,7 @@ namespace MixItUp.Base {
         /// <summary>
         ///   Looks up a localized string similar to This option helps to ensure that only the regular Subscription Gifted OR Mass Subscription Gifted event commands are run depending on what the number is set to. This is designed to help reduce the spam of subscription gifted commands and provide a better experience for your stream. Note that this will cause the processing of Subscription Gifted &amp; Mass Subscription Gifted event commands to be slightly delayed, typically less than 10 seconds.
         ///
-        ///This setting also only applies to streaming platforms that suppo [rest of string was truncated]&quot;;.
+        ///This setting also only applies to streaming platforms that support [rest of string was truncated]&quot;;.
         /// </summary>
         public static string MassGiftedSubsFilterAmountTooltip {
             get {
@@ -11262,6 +11251,15 @@ namespace MixItUp.Base {
         public static string MixItUpInstallFolder {
             get {
                 return ResourceManager.GetString("MixItUpInstallFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mix It Up is already running! Unless you meant to do this, please shut down any existing instances of Mix It Up before trying to run a new instance. Do you still want to continue running this instance of Mix It Up?.
+        /// </summary>
+        public static string MixItUpIsAlreadyRunning {
+            get {
+                return ResourceManager.GetString("MixItUpIsAlreadyRunning", resourceCulture);
             }
         }
         
@@ -13111,7 +13109,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to OvrStream is a powerful, motion graphics editor for alerts &amp;amp; overlays. Mix It Up allows you to trigger your visualizations and set variables values for them in OvrStream..
+        ///   Looks up a localized string similar to OvrStream is a powerful, motion graphics editor for alerts &amp; overlays. Mix It Up allows you to trigger your visualizations and set variables values for them in OvrStream..
         /// </summary>
         public static string OvrStreamInfo1 {
             get {
@@ -15899,6 +15897,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sell.
+        /// </summary>
+        public static string Sell {
+            get {
+                return ResourceManager.GetString("Sell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sell Price.
         /// </summary>
         public static string SellPrice {
@@ -17209,7 +17216,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to To get started, ensure the Stream Deck software is updated to at least version 4.0 &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the &quot;More Actions...&quot; button in the bottom-right corner, then search for &quot;Mix It Up&quot; in the window..
+        ///   Looks up a localized string similar to To get started, ensure the Stream Deck software is updated to at least version 4.0 &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the store icon at the top right of your Stream Deck software, then search for &quot;Mix It Up&quot; in the window..
         /// </summary>
         public static string StreamDeckInfo2 {
             get {
@@ -18874,7 +18881,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Mix It Up.
         /// </summary>
         public static string TranslationBy {
             get {
@@ -19072,6 +19079,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Trovo Channel Magic Chat.
+        /// </summary>
+        public static string TrovoChannelMagicChat {
+            get {
+                return ResourceManager.GetString("TrovoChannelMagicChat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trovo Channel Mass Subscriptions Gifted.
         /// </summary>
         public static string TrovoChannelMassSubscriptionsGifted {
@@ -19095,6 +19111,15 @@ namespace MixItUp.Base {
         public static string TrovoChannelResubscribed {
             get {
                 return ResourceManager.GetString("TrovoChannelResubscribed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trovo Channel Spell Cast.
+        /// </summary>
+        public static string TrovoChannelSpellCast {
+            get {
+                return ResourceManager.GetString("TrovoChannelSpellCast", resourceCulture);
             }
         }
         
