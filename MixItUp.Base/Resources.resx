@@ -162,7 +162,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AccountsWizardInstructions" xml:space="preserve">
-    <value>Let&apos;s get started by signing in to the accounts you use on each Streaming Platform. Select the options below for each account you want to log in. You can revisit these options later by going to the Accounts page.</value>
+    <value>Let's get started by signing in to the accounts you use on each Streaming Platform. Select the options below for each account you want to log in. You can revisit these options later by going to the Accounts page.</value>
     <comment>Manual</comment>
   </data>
   <data name="AccountWeek" xml:space="preserve">
@@ -311,7 +311,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
-    <value>Auto-Include &quot;!&quot;</value>
+    <value>Auto-Include "!"</value>
     <comment>Manual</comment>
   </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
@@ -453,7 +453,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ChatTriggersNoExclamationHintAssist" xml:space="preserve">
-    <value>Chat Trigger(s) (No &quot;!&quot; needed, space seperated, semi-colon for multi-word)</value>
+    <value>Chat Trigger(s) (No "!" needed, space seperated, semi-colon for multi-word)</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatWhisperSound" xml:space="preserve">
@@ -509,7 +509,7 @@
     <comment>Manual</comment>
   </data>
   <data name="CommandNoBang" xml:space="preserve">
-    <value>Command (No &apos;!&apos; needed)</value>
+    <value>Command (No '!' needed)</value>
     <comment>Manual</comment>
   </data>
   <data name="Commands" xml:space="preserve">
@@ -1160,7 +1160,7 @@
     <comment>Manual</comment>
   </data>
   <data name="JSONValueName" xml:space="preserve">
-    <value>JSON Value Name (Use &apos;\&apos; for nested parameters)</value>
+    <value>JSON Value Name (Use '\' for nested parameters)</value>
     <comment>Manual</comment>
   </data>
   <data name="Keyboard" xml:space="preserve">
@@ -1670,7 +1670,7 @@
     <value>Question</value>
   </data>
   <data name="QueuePosition" xml:space="preserve">
-    <value>User&apos;s Queue Position</value>
+    <value>User's Queue Position</value>
     <comment>Manual</comment>
   </data>
   <data name="QueueStatus" xml:space="preserve">
@@ -1734,7 +1734,7 @@
     <comment>Manual</comment>
   </data>
   <data name="RegularStatusOnlineViewingTime" xml:space="preserve">
-    <value>&quot;Regular&quot; Status Online Viewing Time</value>
+    <value>"Regular" Status Online Viewing Time</value>
     <comment>Manual</comment>
   </data>
   <data name="Release" xml:space="preserve">
@@ -1765,7 +1765,7 @@
     <value>Report</value>
   </data>
   <data name="RequireClaim" xml:space="preserve">
-    <value>Require &quot;!claim&quot;</value>
+    <value>Require "!claim"</value>
     <comment>Manual</comment>
   </data>
   <data name="RequiredHours" xml:space="preserve">
@@ -2388,11 +2388,11 @@
     <value>User Data Import</value>
   </data>
   <data name="UserDataStep1" xml:space="preserve">
-    <value>This will allow you to import your channel&apos;s user data from either a plain-text or spreadsheet file. To import a spreadsheet file, you must have some form of Microsoft Excel installed. Note that this WILL OVERWRITE existing user data in Mix It Up. First, specify the file that you want to import the User data from:</value>
+    <value>This will allow you to import your channel's user data from either a plain-text or spreadsheet file. To import a spreadsheet file, you must have some form of Microsoft Excel installed. Note that this WILL OVERWRITE existing user data in Mix It Up. First, specify the file that you want to import the User data from:</value>
     <comment>Manual</comment>
   </data>
   <data name="UserDataStep2" xml:space="preserve">
-    <value>Next, you&apos;ll need to specify the column number for each value in your data file or leave it blank if that value is not present. Note that the data file is required to have at least either the username and/or Twitch ID:</value>
+    <value>Next, you'll need to specify the column number for each value in your data file or leave it blank if that value is not present. Note that the data file is required to have at least either the username and/or Twitch ID:</value>
     <comment>Manual</comment>
   </data>
   <data name="UserJoined" xml:space="preserve">
@@ -3179,7 +3179,7 @@
     <value>Delete Chat Message When Run</value>
   </data>
   <data name="DontDeleteChatMessageWhenRun" xml:space="preserve">
-    <value>Don&apos;t Delete Chat Message When Run</value>
+    <value>Don't Delete Chat Message When Run</value>
     <comment>Manual</comment>
   </data>
   <data name="UnlockAllCommandTypesTooltip" xml:space="preserve">
@@ -3504,7 +3504,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
     <comment>Manual</comment>
   </data>
   <data name="TwitterActionInvalidTweet" xml:space="preserve">
-    <value>Twitter Action: Tweet can not contain any &quot;@&quot; tags</value>
+    <value>Twitter Action: Tweet can not contain any "@" tags</value>
     <comment>Manual</comment>
   </data>
   <data name="TwitterActionMissingNameUpdate" xml:space="preserve">
@@ -3729,7 +3729,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoAlreadyCollected" xml:space="preserve">
-    <value>You&apos;ve already collected your share</value>
+    <value>You've already collected your share</value>
   </data>
   <data name="GameCommandVolcanoCollectUnderway" xml:space="preserve">
     <value>Collecting is currently underway, please wait until it has completed</value>
@@ -3782,7 +3782,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
     <comment>Manual</comment>
   </data>
   <data name="GameCommandBetDescription" xml:space="preserve">
-    <value>The Bet game allows a user to start a bet amongst all users over which option is correct. Each user who participates must specify which options you expect to win and how much they wish to bet. Once the time limit is completed, a user can specify what the correct answer is to the bet and all correct users will be rewarded. Additionally, you can specify what user roles can start &amp; answer this game to ensure it isn&apos;t abused, such as Moderators or higher only.</value>
+    <value>The Bet game allows a user to start a bet amongst all users over which option is correct. Each user who participates must specify which options you expect to win and how much they wish to bet. Once the time limit is completed, a user can specify what the correct answer is to the bet and all correct users will be rewarded. Additionally, you can specify what user roles can start &amp; answer this game to ensure it isn't abused, such as Moderators or higher only.</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandBetAnswerExample" xml:space="preserve">
@@ -3794,7 +3794,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
     <comment>Manual</comment>
   </data>
   <data name="GameCommandBidDescription" xml:space="preserve">
-    <value>The Bid game allows a user to start a bidding competition amongst all users to win a prize or special privilege. A user must bid at least 1 currency amount higher than the highest bid to become the leading bidder. When a user is outbid, they receive their bet currency back and the highest bidder when time runs out wins. Additionally, you can specify what user roles can start this game to ensure it isn&apos;t abused, such as Moderators or higher only.</value>
+    <value>The Bid game allows a user to start a bidding competition amongst all users to win a prize or special privilege. A user must bid at least 1 currency amount higher than the highest bid to become the leading bidder. When a user is outbid, they receive their bet currency back and the highest bidder when time runs out wins. Additionally, you can specify what user roles can start this game to ensure it isn't abused, such as Moderators or higher only.</value>
     <comment>Manual</comment>
   </data>
   <data name="CoinPusher" xml:space="preserve">
@@ -3832,7 +3832,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHitmanDescription" xml:space="preserve">
-    <value>The Hitman game allows a user to start a winner-takes-all bet amongst all entered users. After the initial time limit, a hitman with a specific name will appear in chat. If a user types the hitman&apos;s name in chat within the time limit, they win the entire pot. Otherwise, everyone loses their money.</value>
+    <value>The Hitman game allows a user to start a winner-takes-all bet amongst all entered users. After the initial time limit, a hitman with a specific name will appear in chat. If a user types the hitman's name in chat within the time limit, they win the entire pot. Otherwise, everyone loses their money.</value>
     <comment>Manual</comment>
   </data>
   <data name="HotPotato" xml:space="preserve">
@@ -4156,7 +4156,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandLockBoxFailureExample" xml:space="preserve">
-    <value>@$username drops their coins into and try their combo $arg1text...but the box doesn&apos;t unlock. Their guess was too $gamelockboxhint.</value>
+    <value>@$username drops their coins into and try their combo $arg1text...but the box doesn't unlock. Their guess was too $gamelockboxhint.</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandLockBoxInspectionArgmentExample" xml:space="preserve">
@@ -4184,7 +4184,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandLockBoxStatusExample" xml:space="preserve">
-    <value>After shaking the box for a bit, you guess there&apos;s about $gametotalamount {0} inside it.</value>
+    <value>After shaking the box for a bit, you guess there's about $gametotalamount {0} inside it.</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandLockBoxSuccessfulExample" xml:space="preserve">
@@ -4199,7 +4199,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <value>Not Enough Players</value>
   </data>
   <data name="GameCommandNotEnoughPlayersExample" xml:space="preserve">
-    <value>@$username couldn&apos;t get enough users to join in...</value>
+    <value>@$username couldn't get enough users to join in...</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandSettings" xml:space="preserve">
@@ -4259,15 +4259,15 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <value>Failed Guess</value>
   </data>
   <data name="GameCommandHangmanFailedGuessExample" xml:space="preserve">
-    <value>@$username drops their coins into the pot and guesses &quot;$arg1text&quot;...but it was wrong! $gamehangmancurrent</value>
+    <value>@$username drops their coins into the pot and guesses "$arg1text"...but it was wrong! $gamehangmancurrent</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameLostExample" xml:space="preserve">
-    <value>The game is lost with too many failed guesses; the correct answer was &quot;$gamehangmananswer&quot;. There goes $gametotalamount {0}!</value>
+    <value>The game is lost with too many failed guesses; the correct answer was "$gamehangmananswer". There goes $gametotalamount {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameWonExample" xml:space="preserve">
-    <value>@$username got the secret word &quot;$gamehangmananswer&quot;, winning the whole pot of $gamepayout {0}!</value>
+    <value>@$username got the secret word "$gamehangmananswer", winning the whole pot of $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanMaxFailures" xml:space="preserve">
@@ -4279,7 +4279,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanStatusExample" xml:space="preserve">
-    <value>So far, you&apos;ve gotten $gamehangmancurrent correct &amp; guessed $gamehangmanfailedguesses wrong. Looking into the pot, you see $gametotalamount {0} inside it.</value>
+    <value>So far, you've gotten $gamehangmancurrent correct &amp; guessed $gamehangmanfailedguesses wrong. Looking into the pot, you see $gametotalamount {0} inside it.</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanSuccessfulGuess" xml:space="preserve">
@@ -4290,7 +4290,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHitmanAppearsExample" xml:space="preserve">
-    <value>It&apos;s hitman $gamehitmanname! Quick, type $gamehitmanname in chat!</value>
+    <value>It's hitman $gamehitmanname! Quick, type $gamehitmanname in chat!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHitmanApproachingExample" xml:space="preserve">
@@ -4330,7 +4330,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandRussianRouletteGameCompleteExample" xml:space="preserve">
-    <value>The dust settles after a grueling match-up and...It&apos;s $gamewinners! Total Amount Per Winner: $gamepayout {0}!</value>
+    <value>The dust settles after a grueling match-up and...It's $gamewinners! Total Amount Per Winner: $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandRussianRouletteMaxWinners" xml:space="preserve">
@@ -4366,7 +4366,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserSuccessExample" xml:space="preserve">
-    <value>@$username correctly guessed the word &quot;$gamewordscrambleanswer&quot; and walked away with a bounty of $gamepayout {0}!</value>
+    <value>@$username correctly guessed the word "$gamewordscrambleanswer" and walked away with a bounty of $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBegin" xml:space="preserve">
@@ -4374,7 +4374,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBeginExample" xml:space="preserve">
-    <value>The scrambled word is &quot;$gamewordscrambleword&quot;; solve it and be the first to type it in chat!</value>
+    <value>The scrambled word is "$gamewordscrambleword"; solve it and be the first to type it in chat!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScramblePrepare" xml:space="preserve">
@@ -4394,7 +4394,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandBetBetsClosedExample" xml:space="preserve">
-    <value>All bets are now closed! Let&apos;s wait and see what the result is...</value>
+    <value>All bets are now closed! Let's wait and see what the result is...</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandBetGameCompleteExample" xml:space="preserve">
@@ -4484,7 +4484,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseKingUserExample" xml:space="preserve">
-    <value>King @$username has discovered the treasure but needs someone to defend it! The thieves must work to convince the King to pick them, everyone else needs to prevent that. The King must type &quot;!treasure &lt;PLAYER&gt;&quot; in chat to pick who will defend the treasure!</value>
+    <value>King @$username has discovered the treasure but needs someone to defend it! The thieves must work to convince the King to pick them, everyone else needs to prevent that. The King must type "!treasure &lt;PLAYER&gt;" in chat to pick who will defend the treasure!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseKnightSelected" xml:space="preserve">
@@ -4499,7 +4499,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseKnightUserExample" xml:space="preserve">
-    <value>You&apos;ve been selected as a Knight; tell the King you are a Knight so you can defend the treasure!</value>
+    <value>You've been selected as a Knight; tell the King you are a Knight so you can defend the treasure!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseStartedExample" xml:space="preserve">
@@ -4526,7 +4526,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseThiefUserExample" xml:space="preserve">
-    <value>You&apos;ve been selected as a Thief; convince the King you are a Knight so you can steal the treasure!</value>
+    <value>You've been selected as a Thief; convince the King you are a Knight so you can steal the treasure!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTriviaAddQuestion" xml:space="preserve">
@@ -4602,7 +4602,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoPayoutExample" xml:space="preserve">
-    <value>As @$username drops their deposit into the Volcano, a loud eruption occurs and $gamepayout {0} land on top of them! The Volcano is exploding out coins! Quick, type &quot;!volcano collect&quot; in chat in the next 30 seconds!</value>
+    <value>As @$username drops their deposit into the Volcano, a loud eruption occurs and $gamepayout {0} land on top of them! The Volcano is exploding out coins! Quick, type "!volcano collect" in chat in the next 30 seconds!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoPayoutPercentageMustBePositive" xml:space="preserve">
@@ -4655,7 +4655,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameQueueUserSelectedExample" xml:space="preserve">
-    <value>It&apos;s time to play @$username! Listen carefully for instructions on how to join...</value>
+    <value>It's time to play @$username! Listen carefully for instructions on how to join...</value>
     <comment>Manual</comment>
   </data>
   <data name="GiveawayStartedReminderExample" xml:space="preserve">
@@ -5105,7 +5105,7 @@ This setting will change all role requirements to be explicit and require that t
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserFailureExample" xml:space="preserve">
-    <value>No one correctly guessed the word &quot;$gamewordscrambleanswer&quot;.</value>
+    <value>No one correctly guessed the word "$gamewordscrambleanswer".</value>
     <comment>Manual</comment>
   </data>
   <data name="CommandGroupTimerIntervalMustBePositive" xml:space="preserve">
@@ -5239,11 +5239,11 @@ This setting will change all role requirements to be explicit and require that t
   </data>
   <data name="CommandActionWaitUntilCompleteHintText" xml:space="preserve">
     <value>To have the Command Action wait until the selected sub-command is completed, the sub-command WILL NOT use the
-built-in command locking system for this specific time it is run. This is to prevent what&apos;s known as a deadlock from occurring
-(command gets stuck and can&apos;t complete). This also means that other commands of the same type as the selected
-sub-command will be able to run at the same time if it&apos;s different than the current command. For example, if the selected
+built-in command locking system for this specific time it is run. This is to prevent what's known as a deadlock from occurring
+(command gets stuck and can't complete). This also means that other commands of the same type as the selected
+sub-command will be able to run at the same time if it's different than the current command. For example, if the selected
 sub-command is an Action Group, then it will still be possible for another Action Group to run at the same time if this is
-enabled. You can think of it as similar to toggling the &quot;Unlock Command&quot; option, but it instead only applies to this specific time.</value>
+enabled. You can think of it as similar to toggling the "Unlock Command" option, but it instead only applies to this specific time.</value>
     <comment>Manual</comment>
   </data>
   <data name="Russian" xml:space="preserve">
@@ -5478,7 +5478,7 @@ enabled. You can think of it as similar to toggling the &quot;Unlock Command&quo
     <value>Extra Life service connectivity allows you to trigger events from when you or your team receive a donation.</value>
   </data>
   <data name="ExtraLifeInfo2" xml:space="preserve">
-    <value>First, visit your team&apos;s page on the Extra Life website and near the end of the web URL, it will say &quot;teamID=_____&quot;. Type that number into the first box, click search, select your name from the list, then click Log In button.</value>
+    <value>First, visit your team's page on the Extra Life website and near the end of the web URL, it will say "teamID=_____". Type that number into the first box, click search, select your name from the list, then click Log In button.</value>
   </data>
   <data name="ExtraLifeInvalidParticipant" xml:space="preserve">
     <value>Please select a valid Extra Life participant.</value>
@@ -5702,7 +5702,7 @@ enabled. You can think of it as similar to toggling the &quot;Unlock Command&quo
     <value>This Stream Deck plug-in allows you to run Mix It Up commands directly from your Stream Deck device, as well as other status information about your stream.</value>
   </data>
   <data name="StreamDeckInfo2" xml:space="preserve">
-    <value>To get started, ensure the Stream Deck software is updated to at least version 4.0 &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the store icon at the top right of your Stream Deck software, then search for &quot;Mix It Up&quot; in the window.</value>
+    <value>To get started, ensure the Stream Deck software is updated to at least version 4.0 &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the store icon at the top right of your Stream Deck software, then search for "Mix It Up" in the window.</value>
   </data>
   <data name="StreamElements" xml:space="preserve">
     <value>StreamElements</value>
@@ -5904,7 +5904,7 @@ enabled. You can think of it as similar to toggling the &quot;Unlock Command&quo
     <comment>Manual</comment>
   </data>
   <data name="DeleteUserDataPrompt" xml:space="preserve">
-    <value>This will delete this user&apos;s data, which includes their Hours, Currency, Rank, &amp; Custom User Commands. Are you sure you want to do this?</value>
+    <value>This will delete this user's data, which includes their Hours, Currency, Rank, &amp; Custom User Commands. Are you sure you want to do this?</value>
   </data>
   <data name="DeleteWidgetPrompt" xml:space="preserve">
     <value>Are you sure you want to delete this widget?</value>
@@ -6185,7 +6185,7 @@ enabled. You can think of it as similar to toggling the &quot;Unlock Command&quo
     <comment>{0} is the rank/currency name</comment>
   </data>
   <data name="RetroactivelyGivePointsPrompt2" xml:space="preserve">
-    <value>EX: If the Online Rate is &quot;1 Per Hour&quot; and a user has 16 viewing hours, then that user&apos;s {0} points will be set to 16.</value>
+    <value>EX: If the Online Rate is "1 Per Hour" and a user has 16 viewing hours, then that user's {0} points will be set to 16.</value>
     <comment>{0} is the rank/currency name</comment>
   </data>
   <data name="RetroactivelyGivePointsPrompt3" xml:space="preserve">
@@ -6283,7 +6283,7 @@ enabled. You can think of it as similar to toggling the &quot;Unlock Command&quo
     <value>Every rank must have a unique name and minimum amount.</value>
   </data>
   <data name="UpgradePrompt1" xml:space="preserve">
-    <value>We&apos;ve detected an older version of your settings that needs to be upgraded to a newer format. Depending on the size, this could take some time to perform &amp; is required to use Mix It Up.</value>
+    <value>We've detected an older version of your settings that needs to be upgraded to a newer format. Depending on the size, this could take some time to perform &amp; is required to use Mix It Up.</value>
   </data>
   <data name="UpgradePrompt2" xml:space="preserve">
     <value>If you are ready to do this, please press Yes. Otherwise press No and close to the application to perform later.</value>
@@ -6431,7 +6431,7 @@ enabled. You can think of it as similar to toggling the &quot;Unlock Command&quo
     <value>Shows a progress bar for a specified goal. Progress is updated as events occur or on user-defined refresh Interval.</value>
   </data>
   <data name="OverlayWidgetStreamBossDescription" xml:space="preserve">
-    <value>Shows a user from your channel as a &quot;boss&quot; that can be damaged by performing actions in your channel until they are defeated and a new boss is selected. Damage is added as it occurs. The Stream Boss Special Identifiers can be used in parallel with this overlay widget.</value>
+    <value>Shows a user from your channel as a "boss" that can be damaged by performing actions in your channel until they are defeated and a new boss is selected. Damage is added as it occurs. The Stream Boss Special Identifiers can be used in parallel with this overlay widget.</value>
   </data>
   <data name="OverlayWidgetTextDescription" xml:space="preserve">
     <value>Shows a block of text. Refreshes based on user-defined Refresh Interval.</value>
@@ -6576,9 +6576,9 @@ This can be done by clicking on Create Channel Point Reward on the Channel Point
     <value>Requirement Errors Cooldown Type</value>
   </data>
   <data name="RequirementErrorsCooldownTypeTooltip" xml:space="preserve">
-    <value>- Default: Each requirement for each command tracks it&apos;s own error message cooldown
-- Per Command: Each command tracks it&apos;s own error message cooldown for all of it&apos;s requirements
-- Per Requirement: Each requirement type tracks it&apos;s own error message cooldown across all commands
+    <value>- Default: Each requirement for each command tracks it's own error message cooldown
+- Per Command: Each command tracks it's own error message cooldown for all of it's requirements
+- Per Requirement: Each requirement type tracks it's own error message cooldown across all commands
 - Singular: One universal error message cooldown that applies to all commands &amp; requirements
 - None: No requirement error messages will be shown</value>
   </data>
@@ -6914,7 +6914,7 @@ Failure to do one of the following could effect how users rate &amp; review your
     <value>Pixel Chat service connectivity allows you to control various elements of your Pixel Chat Overlays and trigger specific functionality.</value>
   </data>
   <data name="PixelChatInfo2" xml:space="preserve">
-    <value>To connect to PixelChat, you will need to create a Developer Token. This can be found by going to the profile, click &quot;View Tokens&quot;, and create a new Developer Token.</value>
+    <value>To connect to PixelChat, you will need to create a Developer Token. This can be found by going to the profile, click "View Tokens", and create a new Developer Token.</value>
   </data>
   <data name="PixelChatInvalidAPIKey" xml:space="preserve">
     <value>Please enter a valid Pixel Chat API key.</value>
@@ -7109,7 +7109,7 @@ Failure to do one of the following could effect how users rate &amp; review your
     <value>Voicemod</value>
   </data>
   <data name="VoicemodInfo" xml:space="preserve">
-    <value>Voicemod connectivity allows you to control functionality in the Voicemod software, such as enabling/disabling voice changing and changing the voice you&apos;re using. Some functionality or features in Voicemod require a paid subscription. For more information, please visit the Voicemod website:</value>
+    <value>Voicemod connectivity allows you to control functionality in the Voicemod software, such as enabling/disabling voice changing and changing the voice you're using. Some functionality or features in Voicemod require a paid subscription. For more information, please visit the Voicemod website:</value>
   </data>
   <data name="VoiceChangerOnOff" xml:space="preserve">
     <value>Voice Change On/Off</value>
@@ -7454,7 +7454,7 @@ Failure to do one of the following could effect how users rate &amp; review your
     <value>ERROR: Could not find user with the following username: {0}</value>
   </data>
   <data name="LinkAccountCommandPleaseConfirmLink" xml:space="preserve">
-    <value>Account linking process started. Please re-run command on the other platform with your current user&apos;s information: &quot;!linkaccount {0} {1}&quot;</value>
+    <value>Account linking process started. Please re-run command on the other platform with your current user's information: "!linkaccount {0} {1}"</value>
   </data>
   <data name="LinkAccountCommandUsage" xml:space="preserve">
     <value>Usage: !linkaccount &lt;PLATFORM&gt; &lt;PLATFORM USERNAME&gt;</value>
@@ -7850,7 +7850,7 @@ Failed imports could be due to invalid data or failure to find their information
     <value>This will allow you to import your quotes data from either a plain-text or spreadsheet file. To import a spreadsheet file, you must have some form of Microsoft Excel installed. Note that if there already exists a quote with the same ID in Mix It Up, the quote ID will be updated to the highest number. First, specify the file that you want to import the User data from:</value>
   </data>
   <data name="QuotesDataImportStep2" xml:space="preserve">
-    <value>Next, you&apos;ll need to specify the column number for each value in your data file or leave it blank if that value is not present.</value>
+    <value>Next, you'll need to specify the column number for each value in your data file or leave it blank if that value is not present.</value>
   </data>
   <data name="QuotesImportResults" xml:space="preserve">
     <value>Successful Imports: {0}
@@ -8025,8 +8025,8 @@ Imported quotes with IDs that match existing quotes will altered to the next max
     <value>The item you specified does not exist</value>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
-    <value>You must specify either &quot;buy&quot; or &quot;sell&quot;</value>
-    <comment>{0} is the English word &apos;buy&apos;, {1} is the English word &apos;sell&apos;</comment>
+    <value>You must specify either "buy" or "sell"</value>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
     <value>USAGE: {0} list = Lists all the items available for buying/selling ** {0} &lt;ITEM NAME&gt; = Lists the buying/selling price for the item ** {0} buy &lt;ITEM NAME&gt; [AMOUNT] = Buys 1 or the amount specified of the item ** {0} sell &lt;ITEM NAME&gt; [AMOUNT] = Sells 1 or the amount specified of the item</value>
@@ -8136,7 +8136,7 @@ Imported quotes with IDs that match existing quotes will altered to the next max
     <value>Start Time: </value>
   </data>
   <data name="StreamerAgeHeader" xml:space="preserve">
-    <value>{0}&apos;s Streamer Age: </value>
+    <value>{0}'s Streamer Age: </value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="StreamingPlatformIncorrectAccount" xml:space="preserve">
@@ -8202,11 +8202,11 @@ Imported quotes with IDs that match existing quotes will altered to the next max
     <value>Updated Command: !</value>
   </data>
   <data name="UserFollowAgeHeader" xml:space="preserve">
-    <value>{0}&apos;s Follow Age: </value>
+    <value>{0}'s Follow Age: </value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UserSubscribeAgeHeader" xml:space="preserve">
-    <value>{0}&apos;s Subscribe Age: </value>
+    <value>{0}'s Subscribe Age: </value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="ValidAmountGreaterThan0MustBeSpecified" xml:space="preserve">
@@ -8279,7 +8279,7 @@ Imported quotes with IDs that match existing quotes will altered to the next max
     <value>The giveaway reminder must be 0 or greater</value>
   </data>
   <data name="GiveawayWonTypeClaim" xml:space="preserve">
-    <value>@{0} you&apos;ve won the giveaway; type &quot;!claim&quot; in chat!</value>
+    <value>@{0} you've won the giveaway; type "!claim" in chat!</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="GiveawayYouHaveAlreadyWon" xml:space="preserve">
@@ -8560,7 +8560,7 @@ We will attempt to re-connect with the service when possible. If this continues,
     <value>No settings file has been loaded</value>
   </data>
   <data name="ShowsUsersAmount" xml:space="preserve">
-    <value>Shows User&apos;s Amount</value>
+    <value>Shows User's Amount</value>
   </data>
   <data name="DonatedAmount" xml:space="preserve">
     <value>Donated {0}</value>
@@ -8623,10 +8623,10 @@ We will attempt to re-connect with the service when possible. If this continues,
     <value>Mix It Up uses a Command &amp; Action structure for everything throughout the app. Think of it similar to a recipe that you would follow to make food.</value>
   </data>
   <data name="WizardCommands2" xml:space="preserve">
-    <value>Let&apos;s say you wanted to make some pasta; you would follow the steps in the recipe one after the other until you&apos;re done. You also would follow every step in the order they are specified. For example, you need to heat the water before you can add the pasta.</value>
+    <value>Let's say you wanted to make some pasta; you would follow the steps in the recipe one after the other until you're done. You also would follow every step in the order they are specified. For example, you need to heat the water before you can add the pasta.</value>
   </data>
   <data name="WizardCommands3" xml:space="preserve">
-    <value>Commands are like a recipe and actions are the steps in that recipe. Let&apos;s say you make a shout out command, what are the things it should do? Each of those &quot;things&quot; can be thought of as an action.</value>
+    <value>Commands are like a recipe and actions are the steps in that recipe. Let's say you make a shout out command, what are the things it should do? Each of those "things" can be thought of as an action.</value>
   </data>
   <data name="WizardCommands4" xml:space="preserve">
     <value>In this example, our shout out command sends a message to chat, plays a sound, waits 10 seconds, and then shows an image. Each of those correspond to a different action type (Chat, Sound, Wait, and Overlay).</value>
@@ -8635,10 +8635,10 @@ We will attempt to re-connect with the service when possible. If this continues,
     <value>Mix It Up is a desktop-only application, so your settings and data only exist on your computer. Therefore we encourge users to set up automatic backups for your settings to ensure you always have something to fall back to in the event of any issues:</value>
   </data>
   <data name="WizardFinal2" xml:space="preserve">
-    <value>Don&apos;t know how a feature works or want more info? Simply click on the Help icon on the top bar of the main window to find out more!</value>
+    <value>Don't know how a feature works or want more info? Simply click on the Help icon on the top bar of the main window to find out more!</value>
   </data>
   <data name="WizardFinal3" xml:space="preserve">
-    <value>Don&apos;t forget the following resources available to you for questions &amp; support:</value>
+    <value>Don't forget the following resources available to you for questions &amp; support:</value>
   </data>
   <data name="WizardFinal4" xml:space="preserve">
     <value>Thanks for using Mix It Up and we hope it meets all your needs!</value>
@@ -8707,7 +8707,7 @@ We will attempt to re-connect with the service when possible. If this continues,
     <value>Add User</value>
   </data>
   <data name="UsersUnableToFindUser" xml:space="preserve">
-    <value>Unable find the user &quot;{0}&quot;</value>
+    <value>Unable find the user "{0}"</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UsersSuccessfullyFoundUser" xml:space="preserve">
@@ -8725,7 +8725,7 @@ We will attempt to re-connect with the service when possible. If this continues,
 whispers to be used as a form of automated communication. There are severe restrictions placed on the
 amount of whispers that can be sent in a timeline that make it very impractical for use, as well as spam
 preventative measures if the user is not on your friends list on Twitch. So although you can send whispers
-via Twitch, it&apos;s a &quot;your mileage may very&quot; situation.</value>
+via Twitch, it's a "your mileage may very" situation.</value>
   </data>
   <data name="AlertName" xml:space="preserve">
     <value>Alert Name</value>
@@ -8855,5 +8855,11 @@ via Twitch, it&apos;s a &quot;your mileage may very&quot; situation.</value>
   </data>
   <data name="MixItUpIsAlreadyRunning" xml:space="preserve">
     <value>Mix It Up is already running! Unless you meant to do this, please shut down any existing instances of Mix It Up before trying to run a new instance. Do you still want to continue running this instance of Mix It Up?</value>
+  </data>
+  <data name="TrovoChannelMagicChat" xml:space="preserve">
+    <value>Trovo Channel Magic Chat</value>
+  </data>
+  <data name="TrovoChannelSpellCast" xml:space="preserve">
+    <value>Trovo Channel Spell Cast</value>
   </data>
 </root>
