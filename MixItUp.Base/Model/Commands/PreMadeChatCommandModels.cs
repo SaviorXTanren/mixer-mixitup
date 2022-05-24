@@ -172,7 +172,7 @@ namespace MixItUp.Base.Model.Commands
 
     public class GamePreMadeChatCommandModel : PreMadeChatCommandModelBase
     {
-        public GamePreMadeChatCommandModel() : base(MixItUp.Base.Resources.Game, new HashSet<string>() { "title", "category" }, 5, UserRoleEnum.User) { }
+        public GamePreMadeChatCommandModel() : base(MixItUp.Base.Resources.Game, new HashSet<string>() { "game", "category" }, 5, UserRoleEnum.User) { }
 
         public static async Task<string> GetCurrentGameName(StreamingPlatformTypeEnum platform)
         {
