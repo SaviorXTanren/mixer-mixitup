@@ -15,7 +15,12 @@ namespace MixItUp.Base.Model.Commands
     {
         public static CommandParametersModel GetTestParameters(Dictionary<string, string> specialIdentifiers)
         {
-            return new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.All, new List<string>() { "@" + ChannelSession.User.Username }, specialIdentifiers) { TargetUser = ChannelSession.User };
+            return new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.All, new List<string>() { "@" + ChannelSession.User.Username }, specialIdentifiers);
+        }
+
+        public static List<string> GenerateArguments(string arguments)
+        {
+            return (!string.IsNullOrEmpty(arguments)) ? arguments.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList() : null;
         }
 
         [DataMember]
