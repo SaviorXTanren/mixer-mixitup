@@ -34,7 +34,7 @@ namespace MixItUp.Base.Services.YouTube
 
     public class YouTubeChatService : StreamingPlatformServiceBase
     {
-        private const int MaxMessageLength = 250;
+        private const int MaxMessageLength = 200;
 
         private ChatClient userClient;
         private ChatClient botClient;
