@@ -235,7 +235,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else
             {
-                return ServiceManager.Get<UserService>().GetRandomActiveUser(parameters.Platform);
+                return ServiceManager.Get<UserService>().GetActiveUsers(parameters.Platform, excludeSpecialtyExcluded: true).Random();
             }
         }
 
