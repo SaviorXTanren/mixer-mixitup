@@ -594,29 +594,24 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public IEnumerable<UserV2ViewModel> GetActiveUsers(StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
+        public IEnumerable<UserV2ViewModel> GetActiveUsers(StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All, bool excludeSpecialtyExcluded = true)
         {
-            if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
-            {
-                return this.activeUsers.Values.ToList();
-            }
-            else
-            {
-                return this.activeUsers.Values.ToList().Where(u => u.Platform == platform);
-            }
-        }
+            IEnumerable<UserV2ViewModel> users = this.activeUsers.Values.ToList();
 
-        public int GetActiveUserCount() { return this.activeUsers.Count; }
+            if (platform != StreamingPlatformTypeEnum.None && platform != StreamingPlatformTypeEnum.All)
+            {
+                users = users.Where(u => u.Platform == platform);
+            }
 
-        public UserV2ViewModel GetRandomActiveUser(StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All, bool excludeSpecialtyExcluded = true)
-        {
-            IEnumerable<UserV2ViewModel> users = this.GetActiveUsers(platform);
             if (excludeSpecialtyExcluded)
             {
                 users = users.Where(u => !u.IsSpecialtyExcluded);
             }
-            return users.Random();
+
+            return users;
         }
+
+        public int GetActiveUserCount() { return this.activeUsers.Count; }
 
         #endregion Active Users
     }

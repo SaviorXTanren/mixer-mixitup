@@ -644,12 +644,12 @@ namespace MixItUp.Base.Util
                     });
                 }
 
-                IEnumerable<UserV2ViewModel> workableUsers = ServiceManager.Get<UserService>().GetActiveUsers();
+                IEnumerable<UserV2ViewModel> workableUsers = ServiceManager.Get<UserService>().GetActiveUsers(excludeSpecialtyExcluded: true);
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSpecialIdentifierHeader + "user"))
                 {
                     if (workableUsers != null && workableUsers.Count() > 0)
                     {
-                        await this.HandleUserSpecialIdentifiers(workableUsers.ElementAt(RandomHelper.GenerateRandomNumber(workableUsers.Count())), RandomSpecialIdentifierHeader);
+                        await this.HandleUserSpecialIdentifiers(workableUsers.Random(), RandomSpecialIdentifierHeader);
                     }
                 }
 
@@ -658,7 +658,7 @@ namespace MixItUp.Base.Util
                     IEnumerable<UserV2ViewModel> users = workableUsers.Where(u => u.IsFollower);
                     if (users != null && users.Count() > 0)
                     {
-                        await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomFollowerSpecialIdentifierHeader);
+                        await this.HandleUserSpecialIdentifiers(users.Random(), RandomFollowerSpecialIdentifierHeader);
                     }
                 }
 
@@ -667,7 +667,7 @@ namespace MixItUp.Base.Util
                     IEnumerable<UserV2ViewModel> users = workableUsers.Where(u => u.IsSubscriber);
                     if (users != null && users.Count() > 0)
                     {
-                        await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomSubscriberSpecialIdentifierHeader);
+                        await this.HandleUserSpecialIdentifiers(users.Random(), RandomSubscriberSpecialIdentifierHeader);
                     }
                 }
 
@@ -676,7 +676,7 @@ namespace MixItUp.Base.Util
                     IEnumerable<UserV2ViewModel> users = workableUsers.Where(u => u.IsRegular);
                     if (users != null && users.Count() > 0)
                     {
-                        await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomRegularSpecialIdentifierHeader);
+                        await this.HandleUserSpecialIdentifiers(users.Random(), RandomRegularSpecialIdentifierHeader);
                     }
                 }
             }

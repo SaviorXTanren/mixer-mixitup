@@ -67,7 +67,7 @@ namespace MixItUp.Base.Services.YouTube
 
     public class YouTubeChatService : StreamingPlatformServiceBase
     {
-        private const int MaxMessageLength = 250;
+        private const int MaxMessageLength = 200;
 
         private const string TextMessageEventMessageType = "textMessageEvent";
         private const string NewMemberEventMessageType = "newSponsorEvent";
