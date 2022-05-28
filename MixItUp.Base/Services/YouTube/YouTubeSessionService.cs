@@ -277,33 +277,41 @@ namespace MixItUp.Base.Services.YouTube
 
         public async Task RefreshChannel()
         {
-            this.Broadcast = ServiceManager.Get<YouTubeChatService>().Broadcast;
+            if (this.Broadcast == null)
+            {
+                this.Broadcast = ServiceManager.Get<YouTubeChatService>().Broadcast;
+            }
+
             if (this.Broadcast != null)
             {
-                if (this.Broadcast.Snippet.ActualStartTime.HasValue && this.launchDateTime < this.Broadcast.Snippet.ActualStartTime)
+                LiveBroadcast broadcast = await this.UserConnection.GetBroadcastByID(this.Broadcast.Id);
+                if (broadcast != null)
                 {
-                    this.launchDateTime = this.Broadcast.Snippet.ActualStartTime.GetValueOrDefault();
-                    CommandParametersModel parameters = new CommandParametersModel();
-                    if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.YouTubeChannelStreamStart, parameters))
+                    this.Broadcast = broadcast;
+                }
+
+                Video video = await this.UserConnection.GetVideoByID(this.Broadcast.Id);
+                if (video != null)
+                {
+                    this.Video = video;
+                }
+
+                CommandParametersModel parameters = new CommandParametersModel();
+                if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.YouTubeChannelStreamStart, parameters))
+                {
+                    if (this.Broadcast.Snippet.ActualStartTime.HasValue && this.launchDateTime < this.Broadcast.Snippet.ActualStartTime)
                     {
                         await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStart, parameters);
                     }
                 }
-                else if (this.Broadcast.Snippet.ActualEndTime.HasValue && this.launchDateTime < this.Broadcast.Snippet.ActualEndTime)
+
+                if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.YouTubeChannelStreamStop, parameters))
                 {
-                    this.launchDateTime = this.Broadcast.Snippet.ActualEndTime.GetValueOrDefault();
-                    CommandParametersModel parameters = new CommandParametersModel();
-                    if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.YouTubeChannelStreamStop, parameters))
+                    if (this.Broadcast.Snippet.ActualEndTime.HasValue && this.launchDateTime < this.Broadcast.Snippet.ActualEndTime)
                     {
                         await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStop, parameters);
                     }
                 }
-
-                this.Video = await this.UserConnection.GetVideoByID(this.Broadcast.Id);
-            }
-            else
-            {
-                this.Video = null;
             }
         }
 
