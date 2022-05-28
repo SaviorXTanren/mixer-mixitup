@@ -152,6 +152,25 @@ namespace MixItUp.Base.Services
             this.batchPackets.Clear();
         }
 
+        public async Task SendItem(OverlayItemV3Model item, CommandParametersModel parameters)
+        {
+            if (item != null)
+            {
+                try
+                {
+                    OverlayItemV3Model processedItem = await item.GetProcessedItem(parameters);
+                    if (processedItem != null)
+                    {
+                        await this.SendPacket("Show", JObject.FromObject(processedItem));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+            }
+        }
+
         public async Task ShowItem(OverlayItemModelBase item, CommandParametersModel parameters)
         {
             if (item != null)
@@ -245,7 +264,7 @@ namespace MixItUp.Base.Services
     public class OverlayHttpListenerServer : LocalHttpListenerServer
     {
         private const string OverlayFolderPath = "Overlay\\";
-        private const string OverlayWebpageFilePath = OverlayFolderPath + "OverlayPage.html";
+        private const string OverlayWebpageFilePath = OverlayFolderPath + "Overlay.html";
 
         private const string WebSocketWrapperScriptReplacementString = "<script src=\"webSocketWrapper.js\"></script>";
         private const string WebSocketWrapperFilePath = OverlayFolderPath + "WebSocketWrapper.js";
@@ -260,8 +279,9 @@ namespace MixItUp.Base.Services
         {
             this.webPageInstance = File.ReadAllText(OverlayWebpageFilePath);
 
-            string webSocketWrapperText = File.ReadAllText(WebSocketWrapperFilePath);
-            this.webPageInstance = this.webPageInstance.Replace(WebSocketWrapperScriptReplacementString, string.Format("<script>{0}</script>", webSocketWrapperText));
+            this.ReplaceScriptTag("jquery-3.6.0.min.js");
+            this.ReplaceScriptTag("webSocketWrapper.js");
+            this.ReplaceScriptTag("video.min.js");
         }
 
         public void SetLocalFile(string id, string filepath)
@@ -356,6 +376,11 @@ namespace MixItUp.Base.Services
             }
             catch (HttpListenerException ex) { Logger.Log(LogLevel.Debug, ex); }
             catch (Exception ex) { Logger.Log(ex); }
+        }
+
+        private void ReplaceScriptTag(string fileName)
+        {
+            this.webPageInstance = this.webPageInstance.Replace($"<script src=\"{fileName}\"></script>", $"<script>{File.ReadAllText(OverlayFolderPath + fileName)}</script>");
         }
     }
 

@@ -73,27 +73,7 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" Visibility="{Binding ShowTextItem, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <OverlayControls:OverlayTextItemControl DataContext="{Binding TextItemViewModel}" />
-            </Grid>
-
-            <Grid Grid.Row="0" Visibility="{Binding ShowImageItem, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <OverlayControls:OverlayImageItemControl DataContext="{Binding ImageItemViewModel}" />
-            </Grid>
-
-            <Grid Grid.Row="0" Visibility="{Binding ShowVideoItem, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <OverlayControls:OverlayVideoItemControl DataContext="{Binding VideoItemViewModel}" />
-            </Grid>
-
-            <Grid Grid.Row="0" Visibility="{Binding ShowYouTubeItem, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <OverlayControls:OverlayYouTubeItemControl  DataContext="{Binding YouTubeItemViewModel}" />
-            </Grid>
-
-            <Grid Grid.Row="0" Visibility="{Binding ShowWebPageItem, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <OverlayControls:OverlayWebPageItemControl DataContext="{Binding WebPageItemViewModel}" />
-            </Grid>
-
-            <Grid Grid.Row="0" Visibility="{Binding ShowHTMLItem, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <OverlayControls:OverlayHTMLItemControl Margin="0,10,0,10" DataContext="{Binding HTMLItemViewModel}" />
+                <OverlayControls:OverlayTextItemV3Control DataContext="{Binding TextItemViewModel}" />
             </Grid>
 
             <Grid Grid.Row="2" x:Name="AdditionalOptionsGrid">

@@ -8862,4 +8862,10 @@ via Twitch, it's a "your mileage may very" situation.</value>
   <data name="TrovoChannelSpellCast" xml:space="preserve">
     <value>Trovo Channel Spell Cast</value>
   </data>
+  <data name="ShadowColor" xml:space="preserve">
+    <value>Shadow Color</value>
+  </data>
+  <data name="ShadowSize" xml:space="preserve">
+    <value>Shadow Size</value>
+  </data>
 </root>

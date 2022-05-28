@@ -778,56 +778,59 @@
     <Compile Include="Controls\MainControls\UsersControl.xaml.cs">
       <DependentUpon>UsersControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayChatMessagesListItemControl.xaml.cs">
+    <Compile Include="Controls\Overlay\OverlayTextItemV3Control.xaml.cs">
+      <DependentUpon>OverlayTextItemV3Control.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Deprecated\Controls\Overlay\OverlayChatMessagesListItemControl.xaml.cs">
       <DependentUpon>OverlayChatMessagesListItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayEndCreditsItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayEndCreditsItemControl.xaml.cs">
       <DependentUpon>OverlayEndCreditsItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayGameQueueListItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayGameQueueListItemControl.xaml.cs">
       <DependentUpon>OverlayGameQueueListItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayHTMLItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayHTMLItemControl.xaml.cs">
       <DependentUpon>OverlayHTMLItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayImageItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayImageItemControl.xaml.cs">
       <DependentUpon>OverlayImageItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayItemControl.cs" />
-    <Compile Include="Controls\Overlay\OverlayItemPositionControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayItemControl.cs" />
+    <Compile Include="Deprecated\Controls\Overlay\OverlayItemPositionControl.xaml.cs">
       <DependentUpon>OverlayItemPositionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayEventListItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayEventListItemControl.xaml.cs">
       <DependentUpon>OverlayEventListItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayLeaderboardListItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayLeaderboardListItemControl.xaml.cs">
       <DependentUpon>OverlayLeaderboardListItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayProgressBarItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayProgressBarItemControl.xaml.cs">
       <DependentUpon>OverlayProgressBarItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayStreamBossItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayStreamBossItemControl.xaml.cs">
       <DependentUpon>OverlayStreamBossItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayTextItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayTextItemControl.xaml.cs">
       <DependentUpon>OverlayTextItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayTickerTapeListItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayTickerTapeListItemControl.xaml.cs">
       <DependentUpon>OverlayTickerTapeListItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayTimerItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayTimerItemControl.xaml.cs">
       <DependentUpon>OverlayTimerItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayTimerTrainItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayTimerTrainItemControl.xaml.cs">
       <DependentUpon>OverlayTimerTrainItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayVideoItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayVideoItemControl.xaml.cs">
       <DependentUpon>OverlayVideoItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayWebPageItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayWebPageItemControl.xaml.cs">
       <DependentUpon>OverlayWebPageItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayYouTubeItemControl.xaml.cs">
+    <Compile Include="Deprecated\Controls\Overlay\OverlayYouTubeItemControl.xaml.cs">
       <DependentUpon>OverlayYouTubeItemControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\LoadingControlBase.cs" />
@@ -1567,71 +1570,75 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayChatMessagesListItemControl.xaml">
+    <Page Include="Controls\Overlay\OverlayTextItemV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayEndCreditsItemControl.xaml">
+    <Page Include="Deprecated\Controls\Overlay\OverlayChatMessagesListItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayGameQueueListItemControl.xaml">
+    <Page Include="Deprecated\Controls\Overlay\OverlayEndCreditsItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayHTMLItemControl.xaml">
+    <Page Include="Deprecated\Controls\Overlay\OverlayGameQueueListItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayImageItemControl.xaml">
+    <Page Include="Deprecated\Controls\Overlay\OverlayHTMLItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayItemPositionControl.xaml">
+    <Page Include="Deprecated\Controls\Overlay\OverlayImageItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayEventListItemControl.xaml">
+    <Page Include="Deprecated\Controls\Overlay\OverlayItemPositionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayLeaderboardListItemControl.xaml">
+    <Page Include="Deprecated\Controls\Overlay\OverlayEventListItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayProgressBarItemControl.xaml">
+    <Page Include="Deprecated\Controls\Overlay\OverlayLeaderboardListItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayStreamBossItemControl.xaml">
+    <Page Include="Deprecated\Controls\Overlay\OverlayProgressBarItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayTextItemControl.xaml">
+    <Page Include="Deprecated\Controls\Overlay\OverlayStreamBossItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayTickerTapeListItemControl.xaml">
+    <Page Include="Deprecated\Controls\Overlay\OverlayTextItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayTimerItemControl.xaml">
+    <Page Include="Deprecated\Controls\Overlay\OverlayTickerTapeListItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayTimerTrainItemControl.xaml">
+    <Page Include="Deprecated\Controls\Overlay\OverlayTimerItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayVideoItemControl.xaml">
+    <Page Include="Deprecated\Controls\Overlay\OverlayTimerTrainItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayWebPageItemControl.xaml">
+    <Page Include="Deprecated\Controls\Overlay\OverlayVideoItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayYouTubeItemControl.xaml">
+    <Page Include="Deprecated\Controls\Overlay\OverlayWebPageItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Deprecated\Controls\Overlay\OverlayYouTubeItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

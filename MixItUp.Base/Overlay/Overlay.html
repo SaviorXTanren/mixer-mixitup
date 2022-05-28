@@ -9,13 +9,13 @@
     <script src="jquery-3.6.0.min.js"></script>
     <script src="webSocketWrapper.js"></script>
 
-    <link rel="stylesheet" href="bootstrap.min.css">
-    <script src="bootstrap.min.js"></script>
+    <!--<link rel="stylesheet" href="bootstrap.min.css">
+    <script src="bootstrap.min.js"></script>-->
 
-    <link href="video-js.css" rel="stylesheet">
+    <!--<link href="video-js.css" rel="stylesheet">-->
     <script src="video.min.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="animate.min.css">
+    <!--<link rel="stylesheet" type="text/css" href="animate.min.css">-->
 
     <script src="https://code.responsivevoice.org/responsivevoice.js?key=PkwySfvE"></script>
 </head>
@@ -78,7 +78,20 @@
         function packetReceived(packet) {
             try {
                 if (packet != null && typeof packet.type !== 'undefined') {
+                    if (packet.type == 'Show') {
+                        var addedElement = document.createElement('div');
+                        addedElement.innerHTML = packet.data.HTML;
 
+                        addedElement.style.cssText += 'position: absolute; margin: 0px; left: 50%; top: 50%;'
+                        addedElement.style.cssText += "transform: translate(-50%, -50%);";
+
+                        //var divContainer = document.createElement('div');
+                        //divContainer.style.cssText += 'position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;';
+
+                        //divContainer.appendChild(addedElement);
+
+                        mainOverlayDiv.appendChild(addedElement);
+                    }
                 }
             }
             catch (err) { logException(err); }

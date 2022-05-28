@@ -1,0 +1,91 @@
+﻿<Controls:LoadingControlBase x:Class="MixItUp.WPF.Controls.Overlay.OverlayTextItemV3Control"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBox Text="{Binding Text}" Grid.Row="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Text}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox Text="{Binding FontSize}" Grid.Column="0" Width="100" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontSize}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <ComboBox x:Name="FontNamesComboBox" SelectedItem="{Binding SelectedFontName}" Grid.Column="2" Width="200" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+            <TextBox Text="{Binding FontColor}" Grid.Column="4" Width="150" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <ListBox Grid.Column="6" SelectionMode="Extended" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
+                <ListBoxItem x:Name="TextBoldCheckBox" IsSelected="{Binding Bold}">
+                    <MaterialDesign:PackIcon Kind="FormatBold" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                </ListBoxItem>
+                <ListBoxItem x:Name="TextItalicCheckBox" IsSelected="{Binding Italic}">
+                    <MaterialDesign:PackIcon Kind="FormatItalic" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                </ListBoxItem>
+                <ListBoxItem x:Name="TextUnderlineCheckBox" IsSelected="{Binding Underline}">
+                    <MaterialDesign:PackIcon Kind="FormatUnderline" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                </ListBoxItem>
+            </ListBox>
+        </Grid>
+
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox Text="{Binding ShadowSize}" Grid.Column="0" Width="100" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ShadowSize}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBox Text="{Binding ShadowColor}" Grid.Column="2" Width="150" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ShadowColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBox Text="{Binding Width}" Grid.Column="4" Width="100" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Width}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBox Text="{Binding Height}" Grid.Column="6" Width="100" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Height}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <ListBox Grid.Column="8" SelectionMode="Single" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
+                <ListBoxItem x:Name="TextLeftAlignmentCheckBox" IsSelected="{Binding LeftAlignment}">
+                    <MaterialDesign:PackIcon Kind="FormatAlignLeft" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                </ListBoxItem>
+                <ListBoxItem x:Name="TextCenterAlignmentCheckBox" IsSelected="{Binding CenterAlignment}">
+                    <MaterialDesign:PackIcon Kind="FormatAlignCenter" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                </ListBoxItem>
+                <ListBoxItem x:Name="TextRightAlignmentCheckBox" IsSelected="{Binding RightAlignment}">
+                    <MaterialDesign:PackIcon Kind="FormatAlignRight" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                </ListBoxItem>
+                <ListBoxItem x:Name="TextJustifyAlignmentCheckBox" IsSelected="{Binding JustifyAlignment}">
+                    <MaterialDesign:PackIcon Kind="FormatAlignJustify" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                </ListBoxItem>
+            </ListBox>
+        </Grid>
+    </Grid>
+</Controls:LoadingControlBase>

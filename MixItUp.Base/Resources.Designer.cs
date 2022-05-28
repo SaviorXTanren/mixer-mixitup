@@ -16214,6 +16214,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Shadow Color.
+        /// </summary>
+        public static string ShadowColor {
+            get {
+                return ResourceManager.GetString("ShadowColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shadow Size.
+        /// </summary>
+        public static string ShadowSize {
+            get {
+                return ResourceManager.GetString("ShadowSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Shake.
         /// </summary>
         public static string Shake {
