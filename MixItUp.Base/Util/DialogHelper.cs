@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using MixItUp.Base.Model.Commands;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace MixItUp.Base.Util
 
         Task<object> ShowCustomTimed(object dialog, int timeout);
 
-        Task<Dictionary<string, string>> ShowEditTestSpecialIdentifiersDialog(Dictionary<string, string> specialIdentifiers);
+        Task<CommandParametersModel> ShowEditTestCommandParametersDialog(CommandParametersModel parameters);
 
         void CloseCurrent();
     }
@@ -41,7 +42,7 @@ namespace MixItUp.Base.Util
 
         public static async Task<object> ShowCustomTimed(object dialog, int timeout) { return await DialogHelper.dialogShower.ShowCustomTimed(dialog, timeout); }
 
-        public static async Task<Dictionary<string, string>> ShowEditTestSpecialIdentifiersDialog(Dictionary<string, string> specialIdentifiers) { return await DialogHelper.dialogShower.ShowEditTestSpecialIdentifiersDialog(specialIdentifiers); }
+        public static async Task<CommandParametersModel> ShowEditTestCommandParametersDialog(CommandParametersModel parameters) { return await DialogHelper.dialogShower.ShowEditTestCommandParametersDialog(parameters); }
 
         public static async Task ShowFailedResult(Result result) { await DialogHelper.ShowFailedResults(new List<Result>() { result }); }
 

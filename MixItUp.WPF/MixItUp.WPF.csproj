@@ -713,8 +713,8 @@
     <Compile Include="Controls\Dialogs\CommunityCommands\CommunityCommandsReviewCommandDialogControl.xaml.cs">
       <DependentUpon>CommunityCommandsReviewCommandDialogControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Dialogs\EditTestSpecialIdentifiersDialogControl.xaml.cs">
-      <DependentUpon>EditTestSpecialIdentifiersDialogControl.xaml</DependentUpon>
+    <Compile Include="Controls\Dialogs\EditTestCommandParametersDialogControl.xaml.cs">
+      <DependentUpon>EditTestCommandParametersDialogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Dialogs\AddUserDialogControl.xaml.cs">
       <DependentUpon>AddUserDialogControl.xaml</DependentUpon>
@@ -1483,7 +1483,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Dialogs\EditTestSpecialIdentifiersDialogControl.xaml">
+    <Page Include="Controls\Dialogs\EditTestCommandParametersDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

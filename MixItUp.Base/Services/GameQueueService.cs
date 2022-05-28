@@ -75,22 +75,34 @@ namespace MixItUp.Base.Services
 
         public Task Leave(CommandParametersModel parameters)
         {
-            this.queue.Remove(parameters);
-            GlobalEvents.GameQueueUpdated();
+            CommandParametersModel p = this.FindCurrentParameters(parameters);
+            if (p != null)
+            {
+                this.queue.Remove(p);
+                GlobalEvents.GameQueueUpdated();
+            }
             return Task.CompletedTask;
         }
 
         public Task MoveUp(CommandParametersModel parameters)
         {
-            this.queue.MoveUp(parameters);
-            GlobalEvents.GameQueueUpdated();
+            CommandParametersModel p = this.FindCurrentParameters(parameters);
+            if (p != null)
+            {
+                this.queue.MoveUp(p);
+                GlobalEvents.GameQueueUpdated();
+            }
             return Task.CompletedTask;
         }
 
         public Task MoveDown(CommandParametersModel parameters)
         {
-            this.queue.MoveDown(parameters);
-            GlobalEvents.GameQueueUpdated();
+            CommandParametersModel p = this.FindCurrentParameters(parameters);
+            if (p != null)
+            {
+                this.queue.MoveDown(p);
+                GlobalEvents.GameQueueUpdated();
+            }
             return Task.CompletedTask;
         }
 
@@ -136,8 +148,8 @@ namespace MixItUp.Base.Services
         public int GetUserPosition(UserV2ViewModel user)
         {
             int position = -1;
-            CommandParametersModel parameters = this.queue.FirstOrDefault(q => q.User.Equals(user));
-            if (user != null)
+            CommandParametersModel parameters = this.queue.FirstOrDefault(q => q.User.ID == user.ID);
+            if (parameters != null)
             {
                 position = this.queue.IndexOf(parameters);
             }
@@ -195,6 +207,11 @@ namespace MixItUp.Base.Services
                 return false;
             }
             return true;
+        }
+
+        private CommandParametersModel FindCurrentParameters(CommandParametersModel parameters)
+        {
+            return this.queue.FirstOrDefault(p => p.User.ID == parameters.User.ID);
         }
     }
 }

@@ -150,7 +150,7 @@ namespace MixItUp.WPF.Controls.Commands
             CommandModelBase command = this.GetCommandFromCommandButtons();
             if (command != null)
             {
-                await CommandEditorWindowViewModelBase.TestCommandWithTestSpecialIdentifiers(command);
+                await CommandEditorWindowViewModelBase.TestCommandWithTestCommandParameters(command);
             }
         }
 

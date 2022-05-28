@@ -1,4 +1,5 @@
 ﻿using MaterialDesignThemes.Wpf;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Windows;
@@ -45,12 +46,12 @@ namespace MixItUp.WPF.Util
             return null;
         }
 
-        public async Task<Dictionary<string, string>> ShowEditTestSpecialIdentifiersDialog(Dictionary<string, string> specialIdentifiers)
+        public async Task<CommandParametersModel> ShowEditTestCommandParametersDialog(CommandParametersModel parameters)
         {
-            EditTestSpecialIdentifiersDialogControl dialogControl = new EditTestSpecialIdentifiersDialogControl(specialIdentifiers);
+            EditTestCommandParametersDialogControl dialogControl = new EditTestCommandParametersDialogControl(parameters);
             if (bool.Equals(await DialogHelper.ShowCustom(dialogControl), true))
             {
-                return dialogControl.GetSpecialIdentifiers();
+                return dialogControl.GetCommandParameters();
             }
             return null;
         }

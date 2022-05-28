@@ -86,7 +86,8 @@ namespace MixItUp.Base.Services
         TrovoChannelSubscriptionGifted = 422,
         TrovoChannelMassSubscriptionsGifted = 423,
 
-        TrovoSpellCast = 470,
+        TrovoChannelSpellCast = 470,
+        TrovoChannelMagicChat = 471,
 
         // 500 = Glimesh
 
