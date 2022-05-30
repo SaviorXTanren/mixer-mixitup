@@ -16,27 +16,27 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string text;
 
-        public int FontSize
+        public string FontSize
         {
-            get { return this.fontSize; }
+            get { return this.fontSize.ToString(); }
             set
             {
-                this.fontSize = value;
+                this.fontSize = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
         private int fontSize;
 
-        public string SelectedFontName
+        public string FontName
         {
-            get { return this.selectedFontName; }
+            get { return this.fontName; }
             set
             {
-                this.selectedFontName = value;
+                this.fontName = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private string selectedFontName;
+        private string fontName;
 
         public string FontColor
         {
@@ -126,17 +126,6 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private bool justifyAlignment;
 
-        public string ShadowSize
-        {
-            get { return this.shadowSize; }
-            set
-            {
-                this.shadowSize = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private string shadowSize;
-
         public string ShadowColor
         {
             get { return this.shadowColor; }
@@ -148,50 +137,39 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string shadowColor;
 
-        public int Width
+        public string Width
         {
-            get { return this.width; }
+            get { return this.width > 0 ? this.width.ToString() : string.Empty; }
             set
             {
-                this.width = value;
+                this.width = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
         private int width;
 
-        public int Height
-        {
-            get { return this.height; }
-            set
-            {
-                this.height = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private int height;
-
         public OverlayTextItemV3ViewModel(OverlayTextItemV3Model item)
         {
             this.Text = item.Text;
-            this.FontSize = item.FontSize;
-            this.SelectedFontName = item.FontName;
+            this.fontSize = item.FontSize;
+            this.FontName = item.FontName;
             this.FontColor = item.FontColor;
             this.Bold = item.Bold;
             this.Italics = item.Italics;
             this.Underline = item.Underline;
-            this.LeftAlignment = item.Alignment == OverlayTextAlignmentEnum.Left;
-            this.CenterAlignment = item.Alignment == OverlayTextAlignmentEnum.Center;
-            this.RightAlignment = item.Alignment == OverlayTextAlignmentEnum.Right;
-            this.JustifyAlignment = item.Alignment == OverlayTextAlignmentEnum.Justify;
-            this.ShadowSize = item.ShadowSize;
+            this.LeftAlignment = item.TextAlignment == OverlayTextItemV3AlignmentTypeEnum.Left;
+            this.CenterAlignment = item.TextAlignment == OverlayTextItemV3AlignmentTypeEnum.Center;
+            this.RightAlignment = item.TextAlignment == OverlayTextItemV3AlignmentTypeEnum.Right;
+            this.JustifyAlignment = item.TextAlignment == OverlayTextItemV3AlignmentTypeEnum.Justify;
             this.ShadowColor = item.ShadowColor;
-            this.Width = item.Width;
-            this.Height = item.Height;
+            this.width = item.Width;
         }
 
         public OverlayTextItemV3ViewModel()
         {
-
+            this.FontSize = "24";
+            this.FontName = "Arial";
+            this.FontColor = "Black";
         }
 
         public OverlayTextItemV3Model GetItem()
@@ -199,33 +177,31 @@ namespace MixItUp.Base.ViewModel.Overlay
             OverlayTextItemV3Model result = new OverlayTextItemV3Model()
             {
                 Text = this.Text,
-                FontSize = this.FontSize,
-                FontName = this.SelectedFontName,
+                FontSize = this.fontSize,
+                FontName = this.FontName,
                 FontColor = this.FontColor,
                 Bold = this.Bold,
                 Italics = this.Italics,
-                Underline = this.underline,
-                ShadowSize = this.ShadowSize,
+                Underline = this.Underline,
                 ShadowColor = this.ShadowColor,
                 Width = this.width,
-                Height = this.height
             };
 
             if (this.LeftAlignment)
             {
-                result.Alignment = OverlayTextAlignmentEnum.Left;
+                result.TextAlignment = OverlayTextItemV3AlignmentTypeEnum.Left;
             }
             else if (this.CenterAlignment)
             {
-                result.Alignment = OverlayTextAlignmentEnum.Center;
+                result.TextAlignment = OverlayTextItemV3AlignmentTypeEnum.Center;
             }
             else if (this.RightAlignment)
             {
-                result.Alignment = OverlayTextAlignmentEnum.Right;
+                result.TextAlignment = OverlayTextItemV3AlignmentTypeEnum.Right;
             }
             else if (this.JustifyAlignment)
             {
-                result.Alignment = OverlayTextAlignmentEnum.Justify;
+                result.TextAlignment = OverlayTextItemV3AlignmentTypeEnum.Justify;
             }
 
             return result;

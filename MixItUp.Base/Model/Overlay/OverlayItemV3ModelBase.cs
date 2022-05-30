@@ -6,25 +6,27 @@ using System.Threading.Tasks;
 namespace MixItUp.Base.Model.Overlay
 {
     [DataContract]
-    public class OverlayItemV3Model
+    public class OverlayItemV3ModelBase
     {
         [DataMember]
-        public string HTML { get; set; }
+        public string HTML { get; set; } = string.Empty;
         [DataMember]
-        public string CSS { get; set; }
+        public string CSS { get; set; } = string.Empty;
         [DataMember]
-        public string Javascript { get; set; }
+        public string Javascript { get; set; } = string.Empty;
 
-        public async Task<OverlayItemV3Model> GetProcessedItem(CommandParametersModel parameters)
+        public OverlayItemV3ModelBase() { }
+
+        public async Task<OverlayItemV3ModelBase> GetProcessedItem(CommandParametersModel parameters)
         {
-            OverlayItemV3Model result = new OverlayItemV3Model();
+            OverlayItemV3ModelBase result = new OverlayItemV3ModelBase();
             result.HTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.HTML, parameters);
             result.CSS = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.CSS, parameters);
             result.Javascript = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.Javascript, parameters);
             return await this.GetProcessedItem(result, parameters);
         }
 
-        protected virtual Task<OverlayItemV3Model> GetProcessedItem(OverlayItemV3Model item, CommandParametersModel parameters)
+        protected virtual Task<OverlayItemV3ModelBase> GetProcessedItem(OverlayItemV3ModelBase item, CommandParametersModel parameters)
         {
             return Task.FromResult(item);
         }

@@ -23,20 +23,20 @@
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="100" />
                 <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Text="{Binding FontSize}" Grid.Column="0" Width="100" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontSize}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding FontSize}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontSize}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <ComboBox x:Name="FontNamesComboBox" SelectedItem="{Binding SelectedFontName}" Grid.Column="2" Width="200" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="FontNamesComboBox" Text="{Binding FontName}" Grid.Column="2" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-            <TextBox Text="{Binding FontColor}" Grid.Column="4" Width="150" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding FontColor}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <ListBox Grid.Column="6" SelectionMode="Extended" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
                 <ListBoxItem x:Name="TextBoldCheckBox" IsSelected="{Binding Bold}">
@@ -53,26 +53,18 @@
 
         <Grid Grid.Row="4">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="100" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Text="{Binding ShadowSize}" Grid.Column="0" Width="100" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ShadowSize}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding ShadowColor}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ShadowColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Text="{Binding ShadowColor}" Grid.Column="2" Width="150" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ShadowColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding Width}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Width}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Text="{Binding Width}" Grid.Column="4" Width="100" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Width}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-            <TextBox Text="{Binding Height}" Grid.Column="6" Width="100" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Height}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-            <ListBox Grid.Column="8" SelectionMode="Single" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
+            <ListBox Grid.Column="4" SelectionMode="Single" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
                 <ListBoxItem x:Name="TextLeftAlignmentCheckBox" IsSelected="{Binding LeftAlignment}">
                     <MaterialDesign:PackIcon Kind="FormatAlignLeft" Style="{StaticResource DarkLightBackgroundPackIcon}" />
                 </ListBoxItem>

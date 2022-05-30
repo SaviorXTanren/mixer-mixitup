@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
-    public enum OverlayTextAlignmentEnum
+    public enum OverlayTextItemV3AlignmentTypeEnum
     {
-        Default,
         Left,
         Center,
         Right,
@@ -14,11 +13,9 @@ namespace MixItUp.Base.Model.Overlay
     }
 
     [DataContract]
-    public class OverlayTextItemV3Model : OverlayItemV3Model
+    public class OverlayTextItemV3Model : OverlayPositionedItemV3ModelBase
     {
-        public const string DefaultHTML = "<p style=\"font-size: {FontSize}px; color: {FontColor}; font-family: '{FontFamily}'; font-weight: {FontWeight}; text-decoration: {TextDecoration}; font-style: {FontStyle}; text-shadow: -{ShadowSize}px 0 {ShadowColor}, 0 {ShadowSize}px {ShadowColor}, {ShadowSize}px 0 {ShadowColor}, 0 -{ShadowSize}px {ShadowColor}; white-space: nowrap;\">{Text}</p>";
-        public const string DefaultCSS = "";
-        public const string DefaultJavascript = "";
+        public const string DefaultHTML = "<p style=\"font-size: {FontSize}px; color: {FontColor}; font-family: '{FontFamily}'; font-weight: {FontWeight}; text-decoration: {TextDecoration}; font-style: {FontStyle}; text-align: {TextAlignment}; {Shadow}\">{Text}</p>";
 
         [DataMember]
         public string Text { get; set; }
@@ -35,25 +32,19 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public bool Underline { get; set; }
         [DataMember]
-        public OverlayTextAlignmentEnum Alignment { get; set; }
-        [DataMember]
-        public string ShadowSize { get; set; }
+        public OverlayTextItemV3AlignmentTypeEnum TextAlignment { get; set; }
         [DataMember]
         public string ShadowColor { get; set; }
-        [DataMember]
-        public int Width { get; set; }
-        [DataMember]
-        public int Height { get; set; }
 
         public OverlayTextItemV3Model()
         {
             this.HTML = DefaultHTML;
-            this.CSS = DefaultCSS;
-            this.Javascript = DefaultJavascript;
         }
 
-        protected override Task<OverlayItemV3Model> GetProcessedItem(OverlayItemV3Model item, CommandParametersModel parameters)
+        protected override async Task<OverlayItemV3ModelBase> GetProcessedItem(OverlayItemV3ModelBase item, CommandParametersModel parameters)
         {
+            item = await base.GetProcessedItem(item, parameters);
+
             item.HTML = this.ReplaceProperty(item.HTML, "Text", this.Text);
             item.HTML = this.ReplaceProperty(item.HTML, "FontSize", this.FontSize.ToString());
             item.HTML = this.ReplaceProperty(item.HTML, "FontFamily", this.FontName);
@@ -61,10 +52,18 @@ namespace MixItUp.Base.Model.Overlay
             item.HTML = this.ReplaceProperty(item.HTML, "FontWeight", this.Bold ? "bold" : "normal");
             item.HTML = this.ReplaceProperty(item.HTML, "TextDecoration", this.Underline ? "underline" : "none");
             item.HTML = this.ReplaceProperty(item.HTML, "FontStyle", this.Italics ? "italic" : "normal");
-            item.HTML = this.ReplaceProperty(item.HTML, "ShadowSize", this.ShadowSize.ToString());
-            item.HTML = this.ReplaceProperty(item.HTML, "ShadowColor", this.ShadowColor);
+            item.HTML = this.ReplaceProperty(item.HTML, "TextAlignment", this.TextAlignment.ToString().ToLower());
 
-            return Task.FromResult(item);
+            if (!string.IsNullOrEmpty(this.ShadowColor))
+            {
+                item.HTML = this.ReplaceProperty(item.HTML, "Shadow", $"text-shadow: 2px 2px {this.ShadowColor};");
+            }
+            else
+            {
+                item.HTML = this.ReplaceProperty(item.HTML, "Shadow", string.Empty);
+            }
+
+            return item;
         }
     }
 }

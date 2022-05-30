@@ -20,7 +20,7 @@ namespace MixItUp.Base.Model.Actions
         public OverlayItemModelBase OverlayItem { get; set; }
 
         [DataMember]
-        public OverlayItemV3Model OverlayItemV3 { get; set; }
+        public OverlayItemV3ModelBase OverlayItemV3 { get; set; }
 
         [DataMember]
         public Guid WidgetID { get; set; }
@@ -43,7 +43,7 @@ namespace MixItUp.Base.Model.Actions
             this.OverlayItem = overlayItem;
         }
 
-        public OverlayActionModel(string overlayName, OverlayItemV3Model overlayItem)
+        public OverlayActionModel(string overlayName, OverlayItemV3ModelBase overlayItem)
             : base(ActionTypeEnum.Overlay)
         {
             var overlays = ServiceManager.Get<OverlayService>().GetOverlayNames();
@@ -92,7 +92,7 @@ namespace MixItUp.Base.Model.Actions
                 OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlay(overlayName);
                 if (overlay != null)
                 {
-                    await overlay.SendItem(this.OverlayItemV3, parameters);
+                    await overlay.SendBasicItem(this.OverlayItemV3, parameters);
                 }
             }
         }

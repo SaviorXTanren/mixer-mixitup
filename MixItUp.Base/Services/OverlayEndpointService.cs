@@ -152,16 +152,16 @@ namespace MixItUp.Base.Services
             this.batchPackets.Clear();
         }
 
-        public async Task SendItem(OverlayItemV3Model item, CommandParametersModel parameters)
+        public async Task SendBasicItem(OverlayItemV3ModelBase item, CommandParametersModel parameters)
         {
             if (item != null)
             {
                 try
                 {
-                    OverlayItemV3Model processedItem = await item.GetProcessedItem(parameters);
+                    OverlayItemV3ModelBase processedItem = await item.GetProcessedItem(parameters);
                     if (processedItem != null)
                     {
-                        await this.SendPacket("Show", JObject.FromObject(processedItem));
+                        await this.SendPacket("Basic", JObject.FromObject(processedItem));
                     }
                 }
                 catch (Exception ex)
