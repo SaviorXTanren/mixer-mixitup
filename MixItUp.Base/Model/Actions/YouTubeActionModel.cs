@@ -62,14 +62,20 @@ namespace MixItUp.Base.Model.Actions
             {
                 if (this.ActionType == YouTubeActionType.SetTitleDescription)
                 {
-                    await ServiceManager.Get<YouTubeSessionService>().UserConnection.UpdateVideo(ServiceManager.Get<YouTubeSessionService>()?.Video, title: this.Title, description: this.Description);
+                    if (ServiceManager.Get<YouTubeSessionService>().IsLive && ServiceManager.Get<YouTubeSessionService>().Video != null)
+                    {
+                        await ServiceManager.Get<YouTubeSessionService>().UserConnection.UpdateVideo(ServiceManager.Get<YouTubeSessionService>().Video, title: this.Title, description: this.Description);
+                    }
                 }
                 else if (this.ActionType == YouTubeActionType.RunAdBreak)
                 {
-                    LiveCuepoint response = await ServiceManager.Get<YouTubeSessionService>().UserConnection.StartAdBreak(ServiceManager.Get<YouTubeChatService>()?.Broadcast, this.Amount);
-                    if (response == null)
+                    if (ServiceManager.Get<YouTubeSessionService>().IsLive)
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.YouTubeActionUnableToRunAdBreak);
+                        LiveCuepoint response = await ServiceManager.Get<YouTubeSessionService>().UserConnection.StartAdBreak(ServiceManager.Get<YouTubeSessionService>().Broadcast, this.Amount);
+                        if (response == null)
+                        {
+                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.YouTubeActionUnableToRunAdBreak);
+                        }
                     }
                 }
             }

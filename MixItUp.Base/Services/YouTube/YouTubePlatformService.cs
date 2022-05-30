@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using YouTube.Base;
+using YouTube.Base.Model;
 
 namespace MixItUp.Base.Services.YouTube
 {
@@ -109,5 +110,21 @@ namespace MixItUp.Base.Services.YouTube
         public async Task<IEnumerable<Member>> GetChannelMemberships(int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.GetChannelMemberships(maxResults)); }
 
         public async Task<IEnumerable<LiveChatModerator>> GetModerators(LiveBroadcast broadcast, int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.GetModerators(broadcast, maxResults)); }
+
+        // Chat
+
+        public async Task<LiveChatMessagesResultModel> GetChatMessages(LiveBroadcast broadcast) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.GetMessages(broadcast)); }
+
+        public async Task<LiveChatMessage> SendChatMessage(LiveBroadcast broadcast, string message) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.SendMessage(broadcast, message)); }
+
+        public async Task DeleteChatMessage(LiveChatMessage message) { await AsyncRunner.RunAsync(this.Connection.LiveChat.DeleteMessage(message)); }
+
+        public async Task<LiveChatModerator> ModChatUser(LiveBroadcast broadcast, Channel user) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.ModUser(broadcast, user)); }
+
+        public async Task UnmodChatUser(LiveChatModerator moderator) { await AsyncRunner.RunAsync(this.Connection.LiveChat.UnmodUser(moderator)); }
+
+        public async Task<LiveChatBan> TimeoutChatUser(LiveBroadcast broadcast, Channel user, ulong duration) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.TimeoutUser(broadcast, user, duration)); }
+
+        public async Task<LiveChatBan> BanChatUser(LiveBroadcast broadcast, Channel user) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.BanUser(broadcast, user)); }
     }
 }

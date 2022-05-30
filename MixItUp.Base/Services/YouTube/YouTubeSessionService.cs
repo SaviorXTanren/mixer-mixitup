@@ -30,7 +30,7 @@ namespace MixItUp.Base.Services.YouTube
         public string ChannelID { get { return this.User?.Id; } }
         public string ChannelLink { get { return this.User?.Snippet?.CustomUrl; } }
 
-        private DateTime launchDateTime = DateTime.UtcNow;
+        private DateTime launchDateTime = DateTime.Now;
 
         public StreamingPlatformAccountModel UserAccount
         {
@@ -279,7 +279,7 @@ namespace MixItUp.Base.Services.YouTube
         {
             if (this.Broadcast == null)
             {
-                this.Broadcast = ServiceManager.Get<YouTubeChatService>().Broadcast;
+                this.Broadcast = await this.UserConnection.GetMyActiveBroadcast();
             }
 
             if (this.Broadcast != null)
