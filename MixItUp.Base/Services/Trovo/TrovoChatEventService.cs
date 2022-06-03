@@ -678,7 +678,7 @@ namespace MixItUp.Base.Services.Trovo
                     await ServiceManager.Get<ChatService>().AddMessage(chatMessage);
 
                     if (message.type == ChatMessageTypeEnum.MagicChatBulletScreenChat || message.type == ChatMessageTypeEnum.MagicChatColorfulChat ||
-                        message.type == ChatMessageTypeEnum.MagicChatSpellChat || message.type == ChatMessageTypeEnum.MagicChatBulletScreenChat)
+                        message.type == ChatMessageTypeEnum.MagicChatSuperCapChat || message.type == ChatMessageTypeEnum.MagicChatBulletScreenChat)
                     {
                         CommandParametersModel parameters = new CommandParametersModel(chatMessage);
 

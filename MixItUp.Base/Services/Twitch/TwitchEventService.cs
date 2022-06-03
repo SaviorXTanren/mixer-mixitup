@@ -685,6 +685,9 @@ namespace MixItUp.Base.Services.Twitch
             Dictionary<Guid, List<TwitchGiftedSubEventModel>> giftedSubs = new Dictionary<Guid, List<TwitchGiftedSubEventModel>>();
             List<TwitchMassGiftedSubEventModel> massGiftedSubs = new List<TwitchMassGiftedSubEventModel>();
 
+            List<TwitchGiftedSubEventModel> anonymousGiftedSubs = new List<TwitchGiftedSubEventModel>();
+            List<TwitchMassGiftedSubEventModel> anonymousMassGiftedSubs = new List<TwitchMassGiftedSubEventModel>();
+
             List<TwitchGiftedSubEventModel> tempGiftedSubs = new List<TwitchGiftedSubEventModel>();
             List<TwitchMassGiftedSubEventModel> tempMassGiftedSubs = new List<TwitchMassGiftedSubEventModel>();
 
@@ -704,9 +707,15 @@ namespace MixItUp.Base.Services.Twitch
                     this.newMassGiftedSubTracker.Clear();
                 }
 
+                anonymousGiftedSubs.AddRange(tempGiftedSubs.Where(s => s.IsAnonymous).OrderBy(s => s.Processed));
+                tempGiftedSubs.RemoveAll(s => s.IsAnonymous);
+
+                anonymousMassGiftedSubs.AddRange(tempMassGiftedSubs.Where(s => s.IsAnonymous).OrderBy(s => s.Processed));
+                tempMassGiftedSubs.RemoveAll(s => s.IsAnonymous);
+
                 foreach (var group in tempGiftedSubs.GroupBy(s => s.Gifter.ID, s => s))
                 {
-                    Guid id = group.First().IsAnonymous ? Guid.Empty : group.Key;
+                    Guid id = group.Key;
                     if (!giftedSubs.ContainsKey(id))
                     {
                         giftedSubs[id] = new List<TwitchGiftedSubEventModel>();
@@ -716,13 +725,13 @@ namespace MixItUp.Base.Services.Twitch
 
                 massGiftedSubs.AddRange(tempMassGiftedSubs.OrderBy(s => s.Processed));
 
-            } while (tempGiftedSubs.Count > 0 || tempMassGiftedSubs.Count > 0);
+            } while (tempGiftedSubs.Count > 0 || tempMassGiftedSubs.Count > 0 || anonymousGiftedSubs.Count > 0 || anonymousMassGiftedSubs.Count > 0);
 
             giftedSubProcessorTask = null;
 
             foreach (TwitchMassGiftedSubEventModel massGiftedSub in massGiftedSubs)
             {
-                Guid gifterID = (massGiftedSub.IsAnonymous) ? Guid.Empty : massGiftedSub.Gifter.ID;
+                Guid gifterID = massGiftedSub.Gifter.ID;
                 if (giftedSubs.ContainsKey(gifterID))
                 {
                     for (int i = 0; i < massGiftedSub.TotalGifted && giftedSubs[gifterID].Count > 0; i++)
@@ -739,6 +748,18 @@ namespace MixItUp.Base.Services.Twitch
             }
 
             foreach (TwitchGiftedSubEventModel giftedSub in giftedSubs.SelectMany(kvp => kvp.Value))
+            {
+                await ProcessGiftedSub(giftedSub);
+            }
+
+            foreach (TwitchMassGiftedSubEventModel massGiftedSub in anonymousMassGiftedSubs)
+            {
+                anonymousGiftedSubs.RemoveRange(0, Math.Min(massGiftedSub.TotalGifted, anonymousGiftedSubs.Count));
+
+                await ProcessMassGiftedSub(massGiftedSub);
+            }
+
+            foreach (TwitchGiftedSubEventModel giftedSub in anonymousGiftedSubs)
             {
                 await ProcessGiftedSub(giftedSub);
             }

@@ -516,6 +516,7 @@ namespace MixItUp.Base.Util
                 else if (platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().IsConnected)
                 {
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<YouTubeSessionService>().Broadcast?.Snippet?.Title);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "islive", ServiceManager.Get<YouTubeSessionService>().IsLive.ToString());
                 }
                 else if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
                 {
