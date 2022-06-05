@@ -1,6 +1,8 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -11,8 +13,6 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class SpecialIdentifierActionModel : ActionModelBase
     {
-        private const string TextProcessorFunctionRegexPatternFormat = "{0}\\([^)]+\\)";
-
         [DataMember]
         public string SpecialIdentifierName { get; set; }
 
@@ -41,13 +41,16 @@ namespace MixItUp.Base.Model.Actions
         {
             string replacementText = await ReplaceStringWithSpecialModifiers(this.ReplacementText, parameters);
 
-            replacementText = await this.ProcessStringFunction(replacementText, "removespaces", (text) => { return Task.FromResult(text.Replace(" ", string.Empty)); });
-            replacementText = await this.ProcessStringFunction(replacementText, "removecommas", (text) => { return Task.FromResult(text.Replace(",", string.Empty)); });
-            replacementText = await this.ProcessStringFunction(replacementText, "tolower", (text) => { return Task.FromResult(text.ToLower()); });
-            replacementText = await this.ProcessStringFunction(replacementText, "toupper", (text) => { return Task.FromResult(text.ToUpper()); });
-            replacementText = await this.ProcessStringFunction(replacementText, "length", (text) => { return Task.FromResult(text.Length.ToString()); });
-            replacementText = await this.ProcessStringFunction(replacementText, "urlencode", (text) => { return Task.FromResult(HttpUtility.UrlEncode(text)); });
-            replacementText = await this.ProcessStringFunction(replacementText, "uriescape", (text) => { return Task.FromResult(Uri.EscapeDataString(text)); });
+            if (replacementText.Contains("(") || replacementText.Contains(")"))
+            {
+                replacementText = await this.ProcessStringFunction(replacementText, "removespaces", (text) => { return Task.FromResult(text.Replace(" ", string.Empty)); });
+                replacementText = await this.ProcessStringFunction(replacementText, "removecommas", (text) => { return Task.FromResult(text.Replace(",", string.Empty)); });
+                replacementText = await this.ProcessStringFunction(replacementText, "tolower", (text) => { return Task.FromResult(text.ToLower()); });
+                replacementText = await this.ProcessStringFunction(replacementText, "toupper", (text) => { return Task.FromResult(text.ToUpper()); });
+                replacementText = await this.ProcessStringFunction(replacementText, "length", (text) => { return Task.FromResult(text.Length.ToString()); });
+                replacementText = await this.ProcessStringFunction(replacementText, "urlencode", (text) => { return Task.FromResult(HttpUtility.UrlEncode(text)); });
+                replacementText = await this.ProcessStringFunction(replacementText, "uriescape", (text) => { return Task.FromResult(Uri.EscapeDataString(text)); });
+            }
 
             if (this.ShouldProcessMath)
             {
@@ -66,13 +69,63 @@ namespace MixItUp.Base.Model.Actions
 
         private async Task<string> ProcessStringFunction(string text, string functionName, Func<string, Task<string>> processor)
         {
-            foreach (Match match in Regex.Matches(text, string.Format(TextProcessorFunctionRegexPatternFormat, functionName)))
+            int index = 0;
+            while (index >= 0)
             {
-                string textToProcess = match.Value.Substring(functionName.Length + 1);
-                textToProcess = textToProcess.Substring(0, textToProcess.Length - 1);
-                text = text.Replace(match.Value, await processor(textToProcess));
+                index = text.IndexOf(functionName + "(");
+                if (index >= 0)
+                {
+                    int functionStartIndex = index + functionName.Length;
+                    int rightIndex = functionStartIndex;
+
+                    while (rightIndex >= 0 && rightIndex < text.Length)
+                    {
+                        int searchRightIndex = text.IndexOf(")", rightIndex);
+                        if (rightIndex >= 0)
+                        {
+                            rightIndex = searchRightIndex;
+
+                            int leftCount = text.Substring(functionStartIndex, rightIndex - functionStartIndex).Count(c => c == '(');
+                            int rightCount = text.Substring(functionStartIndex, rightIndex - functionStartIndex).Count(c => c == ')');
+
+                            if (leftCount == (rightCount + 1))
+                            {
+                                // Successful match, reset and check again
+                                text = await this.PerformStringFunction(text, functionName, processor, index, rightIndex);
+
+                                rightIndex = -1;
+                            }
+                            else
+                            {
+                                // Too many left (, expand outward
+                                rightIndex++;
+                            }
+                        }
+                        else
+                        {
+                            // No matching right ), fail out
+                            rightIndex = -1;
+                            index = -1;
+                        }
+                    }
+
+                    if (rightIndex >= 0)
+                    {
+                        // We've reached the end of the text, find the last ) that exists
+                        rightIndex = text.LastIndexOf(")", rightIndex);
+
+                        text = await this.PerformStringFunction(text, functionName, processor, index, rightIndex);
+                    }
+                }
             }
             return text;
+        }
+
+        private async Task<string> PerformStringFunction(string text, string functionName, Func<string, Task<string>> processor, int startIndex, int endIndex)
+        {
+            string functionText = text.Substring(startIndex, endIndex - startIndex + 1);
+            string textToProcess = functionText.Substring(functionName.Length + 1, functionText.Length - functionName.Length - 2);
+            return text.Replace(functionText, await processor(textToProcess));
         }
     }
 }
