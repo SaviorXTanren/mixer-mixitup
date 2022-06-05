@@ -43,7 +43,7 @@ namespace MixItUp.Base.Services.YouTube
     {
         public UserV2ViewModel User { get; private set; }
 
-        public int Amount { get; private set; }
+        public int Amount { get; set; }
 
         public string Tier { get; private set; }
 
@@ -423,27 +423,26 @@ namespace MixItUp.Base.Services.YouTube
                         else if (MembershipGiftingEventMessageType.Equals(liveChatMessage.Snippet.Type))
                         {
                             YouTubeMembershipsGiftedModel membershipsGifted = new YouTubeMembershipsGiftedModel(user, liveChatMessage.Snippet.MembershipGiftingDetails);
-                            this.userGiftedMembershipDictionary[membershipsGifted.User.PlatformID] = membershipsGifted;
-
-                            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
-                            {
-                                for (int i = 0; i < membershipsGifted.Amount; i++)
-                                {
-                                    currency.AddAmount(user, currency.OnSubscribeBonus * membershipsGifted.Amount);
-                                }
-                            }
-
-                            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
-                            {
-                                if (user.MeetsRole(streamPass.UserPermission))
-                                {
-                                    streamPass.AddAmount(user, streamPass.SubscribeBonus * membershipsGifted.Amount);
-                                }
-                            }
-
                             if (membershipsGifted.Amount > ChannelSession.Settings.MassGiftedSubsFilterAmount)
                             {
-                                // TODO
+                                this.userGiftedMembershipDictionary[membershipsGifted.User.PlatformID] = membershipsGifted;
+
+                                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
+                                {
+                                    for (int i = 0; i < membershipsGifted.Amount; i++)
+                                    {
+                                        currency.AddAmount(user, currency.OnSubscribeBonus * membershipsGifted.Amount);
+                                    }
+                                }
+
+                                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                                {
+                                    if (user.MeetsRole(streamPass.UserPermission))
+                                    {
+                                        streamPass.AddAmount(user, streamPass.SubscribeBonus * membershipsGifted.Amount);
+                                    }
+                                }
+
                                 CommandParametersModel parameters = new CommandParametersModel(user);
                                 parameters.SpecialIdentifiers["subsgiftedamount"] = membershipsGifted.Amount.ToString();
                                 parameters.SpecialIdentifiers["usersubplan"] = membershipsGifted.Tier;
@@ -467,27 +466,42 @@ namespace MixItUp.Base.Services.YouTube
 
                             if (this.userGiftedMembershipDictionary.TryGetValue(liveChatMessage.Snippet.GiftMembershipReceivedDetails.GifterChannelId, out YouTubeMembershipsGiftedModel membershipsGifted))
                             {
-                                if (membershipsGifted.Amount > ChannelSession.Settings.MassGiftedSubsFilterAmount)
+                                membershipsGifted.Amount--;
+                                if (membershipsGifted.Amount == 0)
                                 {
-                                    // Skip ones that are filtered by the mass gifted subs amount
-                                    continue;
+                                    this.userGiftedMembershipDictionary.Remove(liveChatMessage.Snippet.GiftMembershipReceivedDetails.GifterChannelId);
                                 }
                             }
                             else
                             {
                                 membershipsGifted = new YouTubeMembershipsGiftedModel(user, liveChatMessage.Snippet.GiftMembershipReceivedDetails);
+
+                                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
+                                {
+                                    for (int i = 0; i < membershipsGifted.Amount; i++)
+                                    {
+                                        currency.AddAmount(user, currency.OnSubscribeBonus);
+                                    }
+                                }
+
+                                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                                {
+                                    if (user.MeetsRole(streamPass.UserPermission))
+                                    {
+                                        streamPass.AddAmount(user, streamPass.SubscribeBonus);
+                                    }
+                                }
+
+                                CommandParametersModel parameters = new CommandParametersModel(membershipsGifted.User);
+                                // TODO
+                                parameters.SpecialIdentifiers["usersubplan"] = liveChatMessage.Snippet.GiftMembershipReceivedDetails.MemberLevelName;
+                                parameters.Arguments.Add(user.Username);
+                                parameters.TargetUser = user;
+                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelMembershipGifted, parameters);
+
+                                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(membershipsGifted.User, string.Format(MixItUp.Base.Resources.AlertSubscriptionGiftedTier, membershipsGifted.User.FullDisplayName, liveChatMessage.Snippet.GiftMembershipReceivedDetails.MemberLevelName, user.FullDisplayName), ChannelSession.Settings.AlertGiftedSubColor));
+                                GlobalEvents.SubscriptionGiftedOccurred(membershipsGifted.User, user);
                             }
-                            membershipsGifted.Receivers.Add(user);
-
-                            CommandParametersModel parameters = new CommandParametersModel(membershipsGifted.User);
-                            // TODO
-                            parameters.SpecialIdentifiers["usersubplan"] = liveChatMessage.Snippet.GiftMembershipReceivedDetails.MemberLevelName;
-                            parameters.Arguments.Add(user.Username);
-                            parameters.TargetUser = user;
-                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelMembershipGifted, parameters);
-
-                            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(membershipsGifted.User, string.Format(MixItUp.Base.Resources.AlertSubscriptionGiftedTier, membershipsGifted.User.FullDisplayName, liveChatMessage.Snippet.GiftMembershipReceivedDetails.MemberLevelName, user.FullDisplayName), ChannelSession.Settings.AlertGiftedSubColor));
-                            GlobalEvents.SubscriptionGiftedOccurred(membershipsGifted.User, user);
                         }
                         else if (SuperChatEventMessageType.Equals(liveChatMessage.Snippet.Type))
                         {
