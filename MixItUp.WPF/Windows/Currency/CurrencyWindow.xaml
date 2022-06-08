@@ -263,7 +263,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBox Grid.Column="0" Text="{Binding MinimumActiveRate}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinimumChannelActivityMins}" Width="160" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                <TextBox Grid.Column="0" Text="{Binding MinimumActiveRate}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinimumChannelActivityMins}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                                 <ComboBox Grid.Column="2" ItemsSource="{Binding AutomaticResetRates}" SelectedItem="{Binding AutomaticResetRate}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AutomaticReset}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150">
                                     <ComboBox.ItemTemplate>
