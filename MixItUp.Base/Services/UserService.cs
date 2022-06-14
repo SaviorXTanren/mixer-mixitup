@@ -224,7 +224,17 @@ namespace MixItUp.Base.Services
 
                 if (platformModel != null)
                 {
-                    return await this.CreateUserInternal(platformModel);
+                    // Check to see if the user already exists by a different name
+                    UserV2ViewModel existingUser = await this.GetUserByPlatformID(platformModel.Platform, platformModel.ID, performPlatformSearch: false);
+                    if (existingUser != null)
+                    {
+                        await existingUser.Refresh();
+                        return existingUser;
+                    }
+                    else
+                    {
+                        return await this.CreateUserInternal(platformModel);
+                    }
                 }
             }
 
