@@ -516,7 +516,7 @@ namespace MixItUp.Base.Services
                     eventCommandSpecialIdentifiers["webhookpayload"] = payload;
 
                     // Do JSON => Special Identifier logic
-                    CommandParametersModel parameters = new CommandParametersModel(ChannelSession.User, eventCommandSpecialIdentifiers);
+                    CommandParametersModel parameters = new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.All, eventCommandSpecialIdentifiers);
                     Dictionary<string, string> jsonParameters = command.JSONParameters.ToDictionary(param => param.JSONParameterName, param => param.SpecialIdentifierName);
                     await WebRequestActionModel.ProcessJSONToSpecialIdentifiers(payload, jsonParameters, parameters);
 
