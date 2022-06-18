@@ -754,7 +754,10 @@ namespace MixItUp.Base.Services.Twitch
 
             foreach (TwitchMassGiftedSubEventModel massGiftedSub in anonymousMassGiftedSubs)
             {
-                anonymousGiftedSubs.RemoveRange(0, Math.Min(massGiftedSub.TotalGifted, anonymousGiftedSubs.Count));
+                for (int i = 0; i < massGiftedSub.TotalGifted && anonymousGiftedSubs.Count > 0; i++)
+                {
+                    anonymousGiftedSubs.RemoveAt(anonymousGiftedSubs.Count - 1);
+                }
 
                 await ProcessMassGiftedSub(massGiftedSub);
             }
