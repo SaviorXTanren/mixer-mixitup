@@ -48,6 +48,14 @@ namespace MixItUp.WPF.Controls.MainControls
             window.ForceShow();
         }
 
+        private async void DeleteWebhookCommandButton_Click(object sender, RoutedEventArgs e)
+        {
+            WebhookCommandItemViewModel commandItem = ((Button)sender).DataContext as WebhookCommandItemViewModel;
+            await ServiceManager.Get<MixItUpService>().DeleteWebhook(commandItem.Webhook.Id);
+            await this.viewModel.RefreshCommands();
+            await ChannelSession.SaveSettings();
+        }
+
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
             WebhookCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<WebhookCommandModel>();

@@ -54,7 +54,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <GroupBox Grid.Row="0" Header="{x:Static resx:Resources.Details}" Width="650">
+                <GroupBox Grid.Row="0" Header="{x:Static resx:Resources.Details}" Width="700">
                     <Grid Margin="10">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -97,9 +97,9 @@
 
                             <TextBox Grid.Column="0" Text="{Binding PointsForLevelUp}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PointsForLevelUp}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
 
-                            <TextBox Grid.Column="2" Text="{Binding SubMultiplier}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SubMultiplier}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+                            <TextBox Grid.Column="2" Text="{Binding SubMultiplier}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SubMultiplier}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                            <TextBox Grid.Column="4" Text="{Binding MinimumActiveRate}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinimumChannelActivityMins}" Width="160" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox Grid.Column="4" Text="{Binding MinimumActiveRate}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinimumChannelActivityMins}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                             <Button Grid.Column="6" Content="{x:Static resx:Resources.ManualReset}" Command="{Binding ManualResetCommand}" />
                         </Grid>
@@ -173,16 +173,16 @@
 
                                     <TextBlock Grid.Column="0" VerticalAlignment="Bottom" Margin="0,0,0,5" Text="{x:Static resx:Resources.Viewing}" />
 
-                                    <TextBox Grid.Column="2" Text="{Binding ViewingRateAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="50" />
+                                    <TextBox Grid.Column="2" Text="{Binding ViewingRateAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                                     <TextBlock Grid.Column="4" VerticalAlignment="Center" Margin="0,20,0,0">/</TextBlock>
 
-                                    <TextBox Grid.Column="6" Text="{Binding ViewingRateMinutes}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Minutes}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="50" />
+                                    <TextBox Grid.Column="6" Text="{Binding ViewingRateMinutes}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Minutes}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                                 </Grid>
 
-                                <TextBox Grid.Column="2" Text="{Binding FollowBonus}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FollowBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+                                <TextBox Grid.Column="2" Text="{Binding FollowBonus}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FollowBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                                <TextBox Grid.Column="4" Text="{Binding HostBonus}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.HostBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+                                <TextBox Grid.Column="4" Text="{Binding HostBonus}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.HostBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                             </Grid>
 
@@ -195,11 +195,11 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBox Grid.Column="0" Text="{Binding SubscribeBonus}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SubscribeBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+                                <TextBox Grid.Column="0" Text="{Binding SubscribeBonus}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SubscribeBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                                <TextBox Grid.Column="2" Text="{Binding DonationBonus}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DonationBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+                                <TextBox Grid.Column="2" Text="{Binding DonationBonus}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DonationBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                                <TextBox Grid.Column="4" Text="{Binding BitsBonus}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BitsBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+                                <TextBox Grid.Column="4" Text="{Binding BitsBonus}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BitsBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                             </Grid>
                         </Grid>
                     </GroupBox>

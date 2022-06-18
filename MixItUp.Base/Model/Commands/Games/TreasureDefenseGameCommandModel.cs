@@ -193,6 +193,8 @@ namespace MixItUp.Base.Model.Commands.Games
                         parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = individualPayout.ToString();
                         parameters.SpecialIdentifiers[GameCommandModelBase.GameAllPayoutSpecialIdentifier] = payout.ToString();
                         this.SetGameWinners(this.runParameters, winnerParameters);
+                        this.SetGameWinners(runParameters, winnerParameters);
+
                         if (selectedType == WinLosePlayerType.Knight)
                         {
                             await this.RunSubCommand(this.KnightSelectedCommand, parameters);

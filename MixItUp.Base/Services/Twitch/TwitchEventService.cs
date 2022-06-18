@@ -697,13 +697,13 @@ namespace MixItUp.Base.Services.Twitch
 
                 lock (this.newGiftedSubTracker)
                 {
-                    tempGiftedSubs = this.newGiftedSubTracker.ToList();
+                    tempGiftedSubs.AddRange(this.newGiftedSubTracker.ToList());
                     this.newGiftedSubTracker.Clear();
                 }
 
                 lock (this.newMassGiftedSubTracker)
                 {
-                    tempMassGiftedSubs = this.newMassGiftedSubTracker.ToList();
+                    tempMassGiftedSubs.AddRange(this.newMassGiftedSubTracker.ToList());
                     this.newMassGiftedSubTracker.Clear();
                 }
 
@@ -725,7 +725,7 @@ namespace MixItUp.Base.Services.Twitch
 
                 massGiftedSubs.AddRange(tempMassGiftedSubs.OrderBy(s => s.Processed));
 
-            } while (tempGiftedSubs.Count > 0 || tempMassGiftedSubs.Count > 0 || anonymousGiftedSubs.Count > 0 || anonymousMassGiftedSubs.Count > 0);
+            } while (tempGiftedSubs.Count > 0 || tempMassGiftedSubs.Count > 0);
 
             giftedSubProcessorTask = null;
 
@@ -754,7 +754,10 @@ namespace MixItUp.Base.Services.Twitch
 
             foreach (TwitchMassGiftedSubEventModel massGiftedSub in anonymousMassGiftedSubs)
             {
-                anonymousGiftedSubs.RemoveRange(0, Math.Min(massGiftedSub.TotalGifted, anonymousGiftedSubs.Count));
+                for (int i = 0; i < massGiftedSub.TotalGifted && anonymousGiftedSubs.Count > 0; i++)
+                {
+                    anonymousGiftedSubs.RemoveAt(anonymousGiftedSubs.Count - 1);
+                }
 
                 await ProcessMassGiftedSub(massGiftedSub);
             }
