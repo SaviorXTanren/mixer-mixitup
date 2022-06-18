@@ -41,7 +41,10 @@
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Center">
                                     <Grid Visibility="{Binding IsNewCommand, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <StackPanel Orientation="Horizontal">
                                         <Button x:Name="NewEventCommandButton" Click="NewWebhookCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}"/>
+                                        <Button Margin="5,0,0,0" x:Name="DeleteEventCommandButton" Click="DeleteWebhookCommandButton_Click" Content="{x:Static resx:Resources.Delete}"/>
+                                        </StackPanel>
                                     </Grid>
                                     <Grid Visibility="{Binding IsExistingCommand, Converter={StaticResource BooleanToVisibilityConverter}}">
                                         <CommandsControls:CommandListingButtonsControl x:Name="CommandButtons" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
