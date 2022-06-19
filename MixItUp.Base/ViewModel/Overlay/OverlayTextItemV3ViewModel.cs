@@ -1,9 +1,8 @@
 ﻿using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.ViewModels;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
-    public class OverlayTextItemV3ViewModel : UIViewModelBase
+    public class OverlayTextItemV3ViewModel : OverlayItemV3ViewModelBase
     {
         public string Text
         {
@@ -148,7 +147,16 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private int width;
 
+        public OverlayTextItemV3ViewModel()
+            : base(OverlayItemV3Type.Text)
+        {
+            this.FontSize = "24";
+            this.FontName = "Arial";
+            this.FontColor = "Black";
+        }
+
         public OverlayTextItemV3ViewModel(OverlayTextItemV3Model item)
+            : base(item)
         {
             this.Text = item.Text;
             this.fontSize = item.FontSize;
@@ -165,17 +173,14 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.width = item.Width;
         }
 
-        public OverlayTextItemV3ViewModel()
-        {
-            this.FontSize = "24";
-            this.FontName = "Arial";
-            this.FontColor = "Black";
-        }
-
         public OverlayTextItemV3Model GetItem()
         {
             OverlayTextItemV3Model result = new OverlayTextItemV3Model()
             {
+                HTML = this.HTML,
+                CSS = this.CSS,
+                Javascript = this.Javascript,
+
                 Text = this.Text,
                 FontSize = this.fontSize,
                 FontName = this.FontName,

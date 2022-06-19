@@ -778,6 +778,9 @@
     <Compile Include="Controls\MainControls\UsersControl.xaml.cs">
       <DependentUpon>UsersControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Overlay\OverlayItemPositionV3Control.xaml.cs">
+      <DependentUpon>OverlayItemPositionV3Control.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Overlay\OverlayTextItemV3Control.xaml.cs">
       <DependentUpon>OverlayTextItemV3Control.xaml</DependentUpon>
     </Compile>
@@ -1567,6 +1570,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\UsersControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayItemPositionV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

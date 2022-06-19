@@ -158,7 +158,7 @@ namespace MixItUp.Base.Services
             {
                 try
                 {
-                    OverlayItemV3ModelBase processedItem = await item.GetProcessedItem(parameters);
+                    OverlayOutputV3Model processedItem = await item.GetProcessedItem(parameters);
                     if (processedItem != null)
                     {
                         await this.SendPacket("Basic", JObject.FromObject(processedItem));

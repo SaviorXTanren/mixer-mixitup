@@ -5779,7 +5779,7 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
     <value>Title HTML Style</value>
   </data>
   <data name="TopPixelPosition" xml:space="preserve">
-    <value>TopPixel Position</value>
+    <value>Top Pixel Position</value>
   </data>
   <data name="TotalToShow" xml:space="preserve">
     <value>Total To Show</value>

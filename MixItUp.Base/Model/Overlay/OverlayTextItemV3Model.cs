@@ -13,7 +13,7 @@ namespace MixItUp.Base.Model.Overlay
     }
 
     [DataContract]
-    public class OverlayTextItemV3Model : OverlayPositionedItemV3ModelBase
+    public class OverlayTextItemV3Model : OverlayItemV3ModelBase
     {
         public const string DefaultHTML = "<p style=\"font-size: {FontSize}px; color: {FontColor}; font-family: '{FontFamily}'; font-weight: {FontWeight}; text-decoration: {TextDecoration}; font-style: {FontStyle}; text-align: {TextAlignment}; {Shadow}\">{Text}</p>";
 
@@ -36,31 +36,28 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public string ShadowColor { get; set; }
 
-        public OverlayTextItemV3Model()
-        {
-            this.HTML = DefaultHTML;
-        }
+        public OverlayTextItemV3Model() : base(OverlayItemV3Type.Text) { }
 
-        protected override async Task<OverlayItemV3ModelBase> GetProcessedItem(OverlayItemV3ModelBase item, CommandParametersModel parameters)
+        protected override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, CommandParametersModel parameters)
         {
             item = await base.GetProcessedItem(item, parameters);
 
-            item.HTML = this.ReplaceProperty(item.HTML, "Text", this.Text);
-            item.HTML = this.ReplaceProperty(item.HTML, "FontSize", this.FontSize.ToString());
-            item.HTML = this.ReplaceProperty(item.HTML, "FontFamily", this.FontName);
-            item.HTML = this.ReplaceProperty(item.HTML, "FontColor", this.FontColor);
-            item.HTML = this.ReplaceProperty(item.HTML, "FontWeight", this.Bold ? "bold" : "normal");
-            item.HTML = this.ReplaceProperty(item.HTML, "TextDecoration", this.Underline ? "underline" : "none");
-            item.HTML = this.ReplaceProperty(item.HTML, "FontStyle", this.Italics ? "italic" : "normal");
-            item.HTML = this.ReplaceProperty(item.HTML, "TextAlignment", this.TextAlignment.ToString().ToLower());
+            item.HTML = ReplaceProperty(item.HTML, "Text", this.Text);
+            item.HTML = ReplaceProperty(item.HTML, "FontSize", this.FontSize.ToString());
+            item.HTML = ReplaceProperty(item.HTML, "FontFamily", this.FontName);
+            item.HTML = ReplaceProperty(item.HTML, "FontColor", this.FontColor);
+            item.HTML = ReplaceProperty(item.HTML, "FontWeight", this.Bold ? "bold" : "normal");
+            item.HTML = ReplaceProperty(item.HTML, "TextDecoration", this.Underline ? "underline" : "none");
+            item.HTML = ReplaceProperty(item.HTML, "FontStyle", this.Italics ? "italic" : "normal");
+            item.HTML = ReplaceProperty(item.HTML, "TextAlignment", this.TextAlignment.ToString().ToLower());
 
             if (!string.IsNullOrEmpty(this.ShadowColor))
             {
-                item.HTML = this.ReplaceProperty(item.HTML, "Shadow", $"text-shadow: 2px 2px {this.ShadowColor};");
+                item.HTML = ReplaceProperty(item.HTML, "Shadow", $"text-shadow: 2px 2px {this.ShadowColor};");
             }
             else
             {
-                item.HTML = this.ReplaceProperty(item.HTML, "Shadow", string.Empty);
+                item.HTML = ReplaceProperty(item.HTML, "Shadow", string.Empty);
             }
 
             return item;

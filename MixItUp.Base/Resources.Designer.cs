@@ -18764,7 +18764,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TopPixel Position.
+        ///   Looks up a localized string similar to Top Pixel Position.
         /// </summary>
         public static string TopPixelPosition {
             get {
