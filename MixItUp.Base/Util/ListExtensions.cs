@@ -127,5 +127,13 @@ namespace MixItUp.Base.Util
                 list.Add(item);
             }
         }
+
+        public static void RemoveRange<T>(this List<T> list, IEnumerable<T> items)
+        {
+            foreach (T item in items)
+            {
+                list.Remove(item);
+            }
+        }
     }
 }

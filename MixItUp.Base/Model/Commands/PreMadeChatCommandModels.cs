@@ -716,18 +716,18 @@ namespace MixItUp.Base.Model.Commands
             if (parameters.Arguments.Count() > 0)
             {
                 string name = string.Join(" ", parameters.Arguments).ToLower();
-                bool result = true;
+                Dictionary<StreamingPlatformTypeEnum, bool> results = new Dictionary<StreamingPlatformTypeEnum, bool>();
 
                 await StreamingPlatforms.ForEachPlatform(async (p) =>
                 {
-                    if (StreamingPlatforms.GetPlatformSessionService(p).IsConnected && result)
+                    if (StreamingPlatforms.GetPlatformSessionService(p).IsConnected)
                     {
-                        result = await StreamingPlatforms.GetPlatformSessionService(p).SetGame(name);
+                        results[p] = await StreamingPlatforms.GetPlatformSessionService(p).SetGame(name);
                         await StreamingPlatforms.GetPlatformSessionService(p).RefreshChannel();
                     }
                 });
 
-                if (result)
+                if (results.Count > 0 && results.All(r => r.Value))
                 {
                     await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.CategroryUpdatedHeader + name, parameters);
                 }

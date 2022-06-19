@@ -185,9 +185,12 @@ namespace MixItUp.Base.ViewModel.MainControls
 
                 if (users.Count > 0)
                 {
-                    foreach (StreamModel stream in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStreams(users.Select(u => u.id)))
+                    foreach (var userBatch in users.Batch(20))
                     {
-                        results.Add(new ChannelToRaidItemViewModel(stream));
+                        foreach (StreamModel stream in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStreams(userBatch.Select(u => u.id)))
+                        {
+                            results.Add(new ChannelToRaidItemViewModel(stream));
+                        }
                     }
                 }
             }
