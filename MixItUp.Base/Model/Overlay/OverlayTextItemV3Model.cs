@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -38,9 +39,9 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayTextItemV3Model() : base(OverlayItemV3Type.Text) { }
 
-        protected override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, CommandParametersModel parameters)
+        protected override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
         {
-            item = await base.GetProcessedItem(item, parameters);
+            item = await base.GetProcessedItem(item, overlayEndpointService, parameters);
 
             item.HTML = ReplaceProperty(item.HTML, "Text", this.Text);
             item.HTML = ReplaceProperty(item.HTML, "FontSize", this.FontSize.ToString());

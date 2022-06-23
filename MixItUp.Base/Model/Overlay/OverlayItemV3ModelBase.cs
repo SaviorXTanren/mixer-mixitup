@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ namespace MixItUp.Base.Model.Overlay
     public enum OverlayItemV3Type
     {
         Text,
+        Image,
     }
 
     [DataContract]
@@ -50,7 +52,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayItemV3ModelBase(OverlayItemV3Type type) { this.Type = type; }
 
-        public async Task<OverlayOutputV3Model> GetProcessedItem(CommandParametersModel parameters)
+        public async Task<OverlayOutputV3Model> GetProcessedItem(OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
         {
             OverlayOutputV3Model result = new OverlayOutputV3Model();
             result.HTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.HTML, parameters);
@@ -91,10 +93,10 @@ namespace MixItUp.Base.Model.Overlay
                 result.HTML = ReplaceProperty(result.HTML, "Height", $"height: auto;");
             }
 
-            return await this.GetProcessedItem(result, parameters);
+            return await this.GetProcessedItem(result, overlayEndpointService, parameters);
         }
 
-        protected virtual Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, CommandParametersModel parameters)
+        protected virtual Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
         {
             return Task.FromResult(item);
         }

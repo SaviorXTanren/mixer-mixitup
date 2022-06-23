@@ -60,6 +60,10 @@
                 <OverlayControls:OverlayTextItemV3Control DataContext="{Binding TextItemViewModel}" />
             </Grid>
 
+            <Grid Grid.Row="0" Visibility="{Binding ShowImageItem, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <OverlayControls:OverlayImageItemV3Control DataContext="{Binding ImageItemViewModel}" />
+            </Grid>
+
             <Grid Grid.Row="2" x:Name="AdditionalOptionsGrid">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />

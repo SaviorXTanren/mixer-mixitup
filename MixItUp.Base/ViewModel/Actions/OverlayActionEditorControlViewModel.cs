@@ -14,6 +14,7 @@ namespace MixItUp.Base.ViewModel.Actions
     public enum OverlayActionTypeEnum
     {
         Text,
+        Image
     }
 
     [Obsolete]
@@ -64,7 +65,33 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string selectedOverlayEndpoint;
 
-        public bool ShowItemProperties { get { return this.ShowTextItem; } }
+        public bool ShowItemProperties { get { return this.ShowTextItem || this.ShowImageItem; } }
+
+        public bool ShowTextItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Text; } }
+
+        public OverlayTextItemV3ViewModel TextItemViewModel
+        {
+            get { return this.textItemViewModel; }
+            set
+            {
+                this.textItemViewModel = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayTextItemV3ViewModel textItemViewModel = new OverlayTextItemV3ViewModel();
+
+        public bool ShowImageItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Image; } }
+
+        public OverlayImageItemV3ViewModel ImageItemViewModel
+        {
+            get { return this.imageItemViewModel; }
+            set
+            {
+                this.imageItemViewModel = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayImageItemV3ViewModel imageItemViewModel = new OverlayImageItemV3ViewModel();
 
         public OverlayItemPositionV3ViewModel ItemPosition
         {
@@ -127,19 +154,6 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private OverlayItemEffectVisibleAnimationTypeEnum selectedVisibleAnimation;
 
-        public bool ShowTextItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Text; } }
-
-        public OverlayTextItemV3ViewModel TextItemViewModel
-        {
-            get { return this.textItemViewModel; }
-            set
-            {
-                this.textItemViewModel = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private OverlayTextItemV3ViewModel textItemViewModel = new OverlayTextItemV3ViewModel();
-
         public OverlayActionEditorControlViewModel(OverlayActionModel action)
             : base(action)
         {
@@ -164,10 +178,15 @@ namespace MixItUp.Base.ViewModel.Actions
                 //    this.SelectedExitAnimation = action.OverlayItem.Effects.ExitAnimation;
                 //}
 
-                if (action.OverlayItemV3 is OverlayTextItemV3Model)
+                if (action.OverlayItemV3.Type == OverlayItemV3Type.Text)
                 {
                     this.SelectedActionType = OverlayActionTypeEnum.Text;
                     this.TextItemViewModel = new OverlayTextItemV3ViewModel((OverlayTextItemV3Model)action.OverlayItemV3);
+                }
+                else if (action.OverlayItemV3.Type == OverlayItemV3Type.Image)
+                {
+                    this.SelectedActionType = OverlayActionTypeEnum.Image;
+                    this.ImageItemViewModel = new OverlayImageItemV3ViewModel((OverlayImageItemV3Model)action.OverlayItemV3);
                 }
             }
         }
@@ -216,6 +235,10 @@ namespace MixItUp.Base.ViewModel.Actions
                 if (this.SelectedActionType == OverlayActionTypeEnum.Text)
                 {
                     item = this.TextItemViewModel.GetItem();
+                }
+                else if (this.SelectedActionType == OverlayActionTypeEnum.Image)
+                {
+                    item = this.ImageItemViewModel.GetItem();
                 }
 
                 if (item != null)

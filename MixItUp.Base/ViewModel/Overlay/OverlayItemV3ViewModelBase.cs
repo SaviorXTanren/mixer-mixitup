@@ -42,9 +42,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             switch (type)
             {
-                case OverlayItemV3Type.Text:
-                    this.HTML = OverlayTextItemV3Model.DefaultHTML;
-                    break;
+                case OverlayItemV3Type.Text: this.HTML = OverlayTextItemV3Model.DefaultHTML; break;
+                case OverlayItemV3Type.Image: this.HTML = OverlayImageItemV3Model.DefaultHTML; break;
             }
 
             if (!string.IsNullOrEmpty(this.HTML))

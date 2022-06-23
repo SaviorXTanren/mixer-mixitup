@@ -158,7 +158,7 @@ namespace MixItUp.Base.Services
             {
                 try
                 {
-                    OverlayOutputV3Model processedItem = await item.GetProcessedItem(parameters);
+                    OverlayOutputV3Model processedItem = await item.GetProcessedItem(this, parameters);
                     if (processedItem != null)
                     {
                         await this.SendPacket("Basic", JObject.FromObject(processedItem));
@@ -232,6 +232,11 @@ namespace MixItUp.Base.Services
 
         public async Task SendTextToSpeech(OverlayTextToSpeech textToSpeech) { await this.SendPacket("TextToSpeech", textToSpeech); }
 
+        public string GetURLForLocalFile(string filePath, string fileType)
+        {
+            return this.httpListenerServer.GetURLForFile(filePath, fileType);
+        }
+
         public void SetLocalFile(string fileID, string filePath)
         {
             this.httpListenerServer.SetLocalFile(fileID, filePath);
@@ -266,9 +271,6 @@ namespace MixItUp.Base.Services
         private const string OverlayFolderPath = "Overlay\\";
         private const string OverlayWebpageFilePath = OverlayFolderPath + "Overlay.html";
 
-        private const string WebSocketWrapperScriptReplacementString = "<script src=\"webSocketWrapper.js\"></script>";
-        private const string WebSocketWrapperFilePath = OverlayFolderPath + "WebSocketWrapper.js";
-
         private const string OverlayFilesWebPath = "overlay/files/";
 
         private string webPageInstance;
@@ -282,6 +284,19 @@ namespace MixItUp.Base.Services
             this.ReplaceScriptTag("jquery-3.6.0.min.js");
             this.ReplaceScriptTag("webSocketWrapper.js");
             this.ReplaceScriptTag("video.min.js");
+        }
+
+        public string GetURLForFile(string filePath, string fileType)
+        {
+            if (ServiceManager.Get<IFileService>().IsURLPath(filePath))
+            {
+                return filePath;
+            }
+
+            string id = Guid.NewGuid().ToString();
+            this.localFiles[id] = filePath;
+
+            return string.Format("/overlay/files/{0}/{1}?nonce={2}", fileType, id, Guid.NewGuid());
         }
 
         public void SetLocalFile(string id, string filepath)
