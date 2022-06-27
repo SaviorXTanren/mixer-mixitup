@@ -64,6 +64,10 @@
                 <OverlayControls:OverlayImageItemV3Control DataContext="{Binding ImageItemViewModel}" />
             </Grid>
 
+            <Grid Grid.Row="0" Visibility="{Binding ShowVideoItem, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <OverlayControls:OverlayVideoItemV3Control DataContext="{Binding VideoItemViewModel}" />
+            </Grid>
+
             <Grid Grid.Row="2" x:Name="AdditionalOptionsGrid">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />

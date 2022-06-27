@@ -44,6 +44,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             {
                 case OverlayItemV3Type.Text: this.HTML = OverlayTextItemV3Model.DefaultHTML; break;
                 case OverlayItemV3Type.Image: this.HTML = OverlayImageItemV3Model.DefaultHTML; break;
+                case OverlayItemV3Type.Video: this.HTML = OverlayVideoItemV3Model.DefaultHTML; break;
             }
 
             if (!string.IsNullOrEmpty(this.HTML))

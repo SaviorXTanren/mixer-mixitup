@@ -10,6 +10,7 @@ namespace MixItUp.Base.Model.Overlay
     {
         Text,
         Image,
+        Video,
     }
 
     [DataContract]

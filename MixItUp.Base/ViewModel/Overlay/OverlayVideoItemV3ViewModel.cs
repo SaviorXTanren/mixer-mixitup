@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
-    public class OverlayImageItemV3ViewModel : OverlayItemV3ViewModelBase
+    public class OverlayVideoItemV3ViewModel : OverlayItemV3ViewModelBase
     {
         public string FilePath
         {
@@ -39,27 +39,51 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private int height;
 
+        public int Volume
+        {
+            get { return this.volume; }
+            set
+            {
+                this.volume = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int volume = 100;
+
+        public bool Loop
+        {
+            get { return this.loop; }
+            set
+            {
+                this.loop = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool loop;
+
         public ICommand BrowseFilePathCommand { get; set; }
 
-        public OverlayImageItemV3ViewModel()
-            : base(OverlayItemV3Type.Image)
+        public OverlayVideoItemV3ViewModel()
+            : base(OverlayItemV3Type.Video)
         {
             this.SetCommands();
         }
 
-        public OverlayImageItemV3ViewModel(OverlayImageItemV3Model item)
+        public OverlayVideoItemV3ViewModel(OverlayVideoItemV3Model item)
             : base(item)
         {
             this.FilePath = item.FilePath;
             this.width = item.Width;
             this.height = item.Height;
+            this.Volume = (int)(item.Volume * 100);
+            this.Loop = item.Loop;
 
             this.SetCommands();
         }
 
-        public OverlayImageItemV3Model GetItem()
+        public OverlayVideoItemV3Model GetItem()
         {
-            OverlayImageItemV3Model result = new OverlayImageItemV3Model()
+            OverlayVideoItemV3Model result = new OverlayVideoItemV3Model()
             {
                 HTML = this.HTML,
                 CSS = this.CSS,
@@ -68,6 +92,8 @@ namespace MixItUp.Base.ViewModel.Overlay
                 FilePath = this.FilePath,
                 Width = this.width,
                 Height = this.height,
+                Volume = ((double)this.Volume) / 100.0,
+                Loop = this.Loop
             };
 
             return result;
@@ -77,7 +103,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             this.BrowseFilePathCommand = this.CreateCommand(() =>
             {
-                string filepath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(ServiceManager.Get<IFileService>().ImageFileFilter());
+                string filepath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(ServiceManager.Get<IFileService>().VideoFileFilter());
                 if (!string.IsNullOrEmpty(filepath))
                 {
                     this.FilePath = filepath;

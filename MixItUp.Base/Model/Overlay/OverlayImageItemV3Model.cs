@@ -8,10 +8,10 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayImageItemV3Model : OverlayItemV3ModelBase
     {
-        public const string DefaultHTML = "<img src=\"{ImagePath}\" style=\"{Width} {Height}\" />";
+        public const string DefaultHTML = "<img src=\"{FilePath}\" style=\"{Width} {Height}\" />";
 
         [DataMember]
-        public string ImagePath { get; set; }
+        public string FilePath { get; set; }
 
         public OverlayImageItemV3Model() : base(OverlayItemV3Type.Image) { }
 
@@ -19,7 +19,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             item = await base.GetProcessedItem(item, overlayEndpointService, parameters);
 
-            item.HTML = ReplaceProperty(item.HTML, "ImagePath", overlayEndpointService.GetURLForLocalFile(this.ImagePath, "image"));
+            item.HTML = ReplaceProperty(item.HTML, "FilePath", overlayEndpointService.GetURLForLocalFile(this.FilePath, "image"));
 
             return item;
         }

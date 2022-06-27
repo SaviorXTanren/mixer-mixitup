@@ -787,6 +787,9 @@
     <Compile Include="Controls\Overlay\OverlayTextItemV3Control.xaml.cs">
       <DependentUpon>OverlayTextItemV3Control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Overlay\OverlayVideoItemV3Control.xaml.cs">
+      <DependentUpon>OverlayVideoItemV3Control.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Deprecated\Controls\Overlay\OverlayChatMessagesListItemControl.xaml.cs">
       <DependentUpon>OverlayChatMessagesListItemControl.xaml</DependentUpon>
     </Compile>
@@ -1585,6 +1588,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayTextItemV3Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayVideoItemV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
