@@ -76,6 +76,10 @@
                 <OverlayControls:OverlayHTMLItemV3Control DataContext="{Binding HTMLItemViewModel}" />
             </Grid>
 
+            <Grid Grid.Row="0" Visibility="{Binding ShowWebPageItem, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <OverlayControls:OverlayWebPageItemV3Control DataContext="{Binding WebPageItemViewModel}" />
+            </Grid>
+
             <Grid Grid.Row="2" x:Name="AdditionalOptionsGrid">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />

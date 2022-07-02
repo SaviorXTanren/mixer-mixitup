@@ -13,6 +13,7 @@ namespace MixItUp.Base.Model.Overlay
         Video,
         YouTube,
         HTML,
+        WebPage,
     }
 
     [DataContract]

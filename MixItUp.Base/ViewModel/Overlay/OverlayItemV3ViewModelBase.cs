@@ -47,6 +47,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayItemV3Type.Video: this.HTML = OverlayVideoItemV3Model.DefaultHTML; break;
                 case OverlayItemV3Type.YouTube: this.HTML = OverlayYouTubeItemV3Model.DefaultHTML; break;
                 case OverlayItemV3Type.HTML: this.HTML = OverlayHTMLItemV3Model.DefaultHTML; break;
+                case OverlayItemV3Type.WebPage: this.HTML = OverlayWebPageItemV3Model.DefaultHTML; break;
             }
 
             if (!string.IsNullOrEmpty(this.HTML))

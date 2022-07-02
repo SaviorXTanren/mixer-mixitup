@@ -793,6 +793,9 @@
     <Compile Include="Controls\Overlay\OverlayVideoItemV3Control.xaml.cs">
       <DependentUpon>OverlayVideoItemV3Control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Overlay\OverlayWebPageItemV3Control.xaml.cs">
+      <DependentUpon>OverlayWebPageItemV3Control.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Overlay\OverlayYouTubeItemV3Control.xaml.cs">
       <DependentUpon>OverlayYouTubeItemV3Control.xaml</DependentUpon>
     </Compile>
@@ -1602,6 +1605,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayVideoItemV3Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayWebPageItemV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

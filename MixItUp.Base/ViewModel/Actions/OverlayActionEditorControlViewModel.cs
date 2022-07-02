@@ -18,6 +18,7 @@ namespace MixItUp.Base.ViewModel.Actions
         Video,
         YouTube,
         HTML,
+        WebPage,
     }
 
     [Obsolete]
@@ -42,6 +43,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged("ShowVideoItem");
                 this.NotifyPropertyChanged("ShowYouTubeItem");
                 this.NotifyPropertyChanged("ShowHTMLItem");
+                this.NotifyPropertyChanged("ShowWebPageItem");
             }
         }
         private OverlayActionTypeEnum selectedActionType;
@@ -71,7 +73,7 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string selectedOverlayEndpoint;
 
-        public bool ShowItemProperties { get { return this.ShowTextItem || this.ShowImageItem || this.ShowVideoItem || this.ShowYouTubeItem || this.ShowHTMLItem; } }
+        public bool ShowItemProperties { get { return this.ShowTextItem || this.ShowImageItem || this.ShowVideoItem || this.ShowYouTubeItem || this.ShowHTMLItem || this.ShowWebPageItem; } }
 
         public bool ShowTextItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Text; } }
 
@@ -137,6 +139,19 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private OverlayHTMLItemV3ViewModel htmlItemViewModel = new OverlayHTMLItemV3ViewModel();
+
+        public bool ShowWebPageItem { get { return this.SelectedActionType == OverlayActionTypeEnum.WebPage; } }
+
+        public OverlayWebPageItemV3ViewModel WebPageItemViewModel
+        {
+            get { return this.webPageItemViewModel; }
+            set
+            {
+                this.webPageItemViewModel = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayWebPageItemV3ViewModel webPageItemViewModel = new OverlayWebPageItemV3ViewModel();
 
         public OverlayItemPositionV3ViewModel ItemPosition
         {
@@ -248,6 +263,11 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.SelectedActionType = OverlayActionTypeEnum.HTML;
                     this.HTMLItemViewModel = new OverlayHTMLItemV3ViewModel((OverlayHTMLItemV3Model)action.OverlayItemV3);
                 }
+                else if (action.OverlayItemV3.Type == OverlayItemV3Type.WebPage)
+                {
+                    this.SelectedActionType = OverlayActionTypeEnum.WebPage;
+                    this.WebPageItemViewModel = new OverlayWebPageItemV3ViewModel((OverlayWebPageItemV3Model)action.OverlayItemV3);
+                }
             }
         }
 
@@ -311,6 +331,10 @@ namespace MixItUp.Base.ViewModel.Actions
                 else if (this.SelectedActionType == OverlayActionTypeEnum.HTML)
                 {
                     item = this.HTMLItemViewModel.GetItem();
+                }
+                else if (this.SelectedActionType == OverlayActionTypeEnum.WebPage)
+                {
+                    item = this.WebPageItemViewModel.GetItem();
                 }
 
                 if (item != null)
