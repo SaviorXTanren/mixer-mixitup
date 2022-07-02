@@ -72,6 +72,10 @@
                 <OverlayControls:OverlayYouTubeItemV3Control DataContext="{Binding YouTubeItemViewModel}" />
             </Grid>
 
+            <Grid Grid.Row="0" Visibility="{Binding ShowHTMLItem, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <OverlayControls:OverlayHTMLItemV3Control DataContext="{Binding HTMLItemViewModel}" />
+            </Grid>
+
             <Grid Grid.Row="2" x:Name="AdditionalOptionsGrid">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />

@@ -17,6 +17,7 @@ namespace MixItUp.Base.ViewModel.Actions
         Image,
         Video,
         YouTube,
+        HTML,
     }
 
     [Obsolete]
@@ -40,6 +41,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged("ShowImageItem");
                 this.NotifyPropertyChanged("ShowVideoItem");
                 this.NotifyPropertyChanged("ShowYouTubeItem");
+                this.NotifyPropertyChanged("ShowHTMLItem");
             }
         }
         private OverlayActionTypeEnum selectedActionType;
@@ -69,7 +71,7 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string selectedOverlayEndpoint;
 
-        public bool ShowItemProperties { get { return this.ShowTextItem || this.ShowImageItem || this.ShowVideoItem || this.ShowYouTubeItem; } }
+        public bool ShowItemProperties { get { return this.ShowTextItem || this.ShowImageItem || this.ShowVideoItem || this.ShowYouTubeItem || this.ShowHTMLItem; } }
 
         public bool ShowTextItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Text; } }
 
@@ -122,6 +124,19 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private OverlayYouTubeItemV3ViewModel youTubeItemViewModel = new OverlayYouTubeItemV3ViewModel();
+
+        public bool ShowHTMLItem { get { return this.SelectedActionType == OverlayActionTypeEnum.HTML; } }
+
+        public OverlayHTMLItemV3ViewModel HTMLItemViewModel
+        {
+            get { return this.htmlItemViewModel; }
+            set
+            {
+                this.htmlItemViewModel = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayHTMLItemV3ViewModel htmlItemViewModel = new OverlayHTMLItemV3ViewModel();
 
         public OverlayItemPositionV3ViewModel ItemPosition
         {
@@ -228,6 +243,11 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.SelectedActionType = OverlayActionTypeEnum.YouTube;
                     this.YouTubeItemViewModel = new OverlayYouTubeItemV3ViewModel((OverlayYouTubeItemV3Model)action.OverlayItemV3);
                 }
+                else if (action.OverlayItemV3.Type == OverlayItemV3Type.HTML)
+                {
+                    this.SelectedActionType = OverlayActionTypeEnum.HTML;
+                    this.HTMLItemViewModel = new OverlayHTMLItemV3ViewModel((OverlayHTMLItemV3Model)action.OverlayItemV3);
+                }
             }
         }
 
@@ -287,6 +307,10 @@ namespace MixItUp.Base.ViewModel.Actions
                 else if (this.SelectedActionType == OverlayActionTypeEnum.YouTube)
                 {
                     item = this.YouTubeItemViewModel.GetItem();
+                }
+                else if (this.SelectedActionType == OverlayActionTypeEnum.HTML)
+                {
+                    item = this.HTMLItemViewModel.GetItem();
                 }
 
                 if (item != null)
