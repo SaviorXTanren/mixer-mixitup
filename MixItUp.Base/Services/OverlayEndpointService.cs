@@ -152,24 +152,76 @@ namespace MixItUp.Base.Services
             this.batchPackets.Clear();
         }
 
-        public async Task SendBasicItem(OverlayItemV3ModelBase item, CommandParametersModel parameters)
+        public async Task SendItem(OverlayItemV3ModelBase item, CommandParametersModel parameters)
         {
-            if (item != null)
+            try
             {
-                try
+                if (item != null)
                 {
-                    OverlayOutputV3Model processedItem = await item.GetProcessedItem(this, parameters);
-                    if (processedItem != null)
+                    if (item.Type == OverlayItemV3Type.YouTube)
                     {
-                        await this.SendPacket("Basic", JObject.FromObject(processedItem));
+                        JObject jobj = JObject.FromObject(item);
+                        await PerformTextReplacements(jobj, parameters);
+                        await this.SendPacket("YouTube", jobj);
+                    }
+                    else
+                    {
+                        OverlayOutputV3Model processedItem = await item.GetProcessedItem(this, parameters);
+                        if (processedItem != null)
+                        {
+                            await this.SendPacket("Basic", JObject.FromObject(processedItem));
+                        }
                     }
                 }
-                catch (Exception ex)
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
+        private async Task PerformTextReplacements(JObject jobj, CommandParametersModel parameters)
+        {
+            if (jobj != null)
+            {
+                foreach (string key in jobj.GetKeys())
                 {
-                    Logger.Log(ex);
+                    if (jobj[key].Type == JTokenType.String)
+                    {
+                        jobj[key] = await ReplaceStringWithSpecialModifiers(jobj[key].ToString(), parameters);
+                    }
+                    else if (jobj[key].Type == JTokenType.Object)
+                    {
+                        await this.PerformTextReplacements((JObject)jobj[key], parameters);
+                    }
                 }
             }
         }
+
+        private async Task<string> ReplaceStringWithSpecialModifiers(string str, CommandParametersModel parameters)
+        {
+            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, encode: false);
+            await siString.ReplaceCommonSpecialModifiers(parameters);
+            return siString.ToString();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         public async Task ShowItem(OverlayItemModelBase item, CommandParametersModel parameters)
         {

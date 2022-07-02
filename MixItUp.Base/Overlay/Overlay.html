@@ -84,6 +84,14 @@
 
                         mainOverlayDiv.appendChild(addedElement);
                     }
+                    else if (packet.type == 'YouTube') {
+                        youtubePacket(packet.data);
+
+                        var addedElement = document.createElement('div');
+                        addedElement.innerHTML = packet.data.HTML;
+
+                        mainOverlayDiv.appendChild(addedElement);
+                    }
                 }
             }
             catch (err) { logException(err); }
@@ -92,14 +100,14 @@
         function youtubePacket(data) {
             if (youtubeIFrameAPIReady) {
                 var addedElement = document.createElement('div');
-                addedElement.id = data.FilePath;
+                addedElement.id = data.ID;
 
-                addWaitRemoveElement(data, addedElement);
+                mainOverlayDiv.appendChild(addedElement);
 
                 var youtubeVideoPlayer = new YT.Player(addedElement.id, {
                     height: data.Height,
                     width: data.Width,
-                    videoId: data.FilePath,
+                    videoId: data.VideoID,
                     playerVars: { 'controls': 0, 'modestbranding': 1, 'start': data.StartTime },
                     events: {
                         'onReady': function () {

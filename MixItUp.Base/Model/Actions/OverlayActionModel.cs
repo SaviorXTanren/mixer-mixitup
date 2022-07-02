@@ -92,7 +92,7 @@ namespace MixItUp.Base.Model.Actions
                 OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlay(overlayName);
                 if (overlay != null)
                 {
-                    await overlay.SendBasicItem(this.OverlayItemV3, parameters);
+                    await overlay.SendItem(this.OverlayItemV3, parameters);
                 }
             }
         }
