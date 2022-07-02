@@ -24,7 +24,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Text="{Binding FilePath}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ImageFilePath}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding FilePath}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VideoFilePath}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <Button Grid.Column="2" Command="{Binding BrowseFilePathCommand}" Content="{x:Static resx:Resources.Browse}"/>
 
