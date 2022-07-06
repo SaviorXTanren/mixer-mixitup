@@ -170,7 +170,14 @@ namespace MixItUp.Base.ViewModel.Commands
             {
                 triggerSeparator = new char[] { ';' };
             }
-            return new HashSet<string>(this.Triggers.Split(triggerSeparator, StringSplitOptions.RemoveEmptyEntries));
+
+            var triggers = this.Triggers.Split(triggerSeparator, StringSplitOptions.RemoveEmptyEntries).Select(s => s);
+            if (this.IncludeExclamation)
+            {
+                triggers = triggers.Select(s => s.StartsWith("!") ? s.Substring(1) : s);
+            }
+
+            return new HashSet<string>(triggers);
         }
 
         public override Dictionary<string, string> GetTestSpecialIdentifiers() { return ChatCommandModel.GetChatTestSpecialIdentifiers(); }
