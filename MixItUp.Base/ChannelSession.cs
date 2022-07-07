@@ -73,7 +73,6 @@ namespace MixItUp.Base
             ServiceManager.Add(new IFTTTService());
             ServiceManager.Add(new PatreonService());
             ServiceManager.Add(new DiscordService());
-            ServiceManager.Add(new TwitterService());
             ServiceManager.Add(new PixelChatService());
             ServiceManager.Add(new VTubeStudioService());
             try
@@ -318,7 +317,7 @@ namespace MixItUp.Base
                 if (ChannelSession.Settings.ExtraLifeTeamID > 0) { externalServiceToConnect[ServiceManager.Get<ExtraLifeService>()] = new OAuthTokenModel(); }
                 if (ChannelSession.Settings.PatreonOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<PatreonService>()] = ChannelSession.Settings.PatreonOAuthToken; }
                 if (ChannelSession.Settings.DiscordOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<DiscordService>()] = ChannelSession.Settings.DiscordOAuthToken; }
-                if (ChannelSession.Settings.TwitterOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<TwitterService>()] = ChannelSession.Settings.TwitterOAuthToken; }
+                if (ChannelSession.Settings.TwitterOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<ITwitterService>()] = ChannelSession.Settings.TwitterOAuthToken; }
                 if (ChannelSession.Settings.PixelChatOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<PixelChatService>()] = ChannelSession.Settings.PixelChatOAuthToken; }
                 if (ChannelSession.Settings.VTubeStudioOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<VTubeStudioService>()] = ChannelSession.Settings.VTubeStudioOAuthToken; }
                 if (ChannelSession.Settings.EnableVoicemodStudio) { externalServiceToConnect[ServiceManager.Get<IVoicemodService>()] = null; }

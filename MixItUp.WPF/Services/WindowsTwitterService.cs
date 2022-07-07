@@ -1,67 +1,20 @@
 ﻿using LinqToTwitter;
-using MixItUp.Base.Model;
-using MixItUp.Base.Services.Twitch;
+using MixItUp.Base;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
-using Newtonsoft.Json;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.Services.External
+namespace MixItUp.WPF.Services
 {
-    [DataContract]
-    public class Tweet
-    {
-        [DataMember]
-        public ulong ID { get; set; }
-
-        [DataMember]
-        public ulong UserID { get; set; }
-
-        [DataMember]
-        public string UserName { get; set; }
-
-        [DataMember]
-        public string Text { get; set; }
-
-        [DataMember]
-        public DateTimeOffset DateTime { get; set; }
-
-        [DataMember]
-        public List<string> Links { get; set; }
-
-        [JsonIgnore]
-        public string TweetLink { get { return string.Format("https://twitter.com/{0}/status/{1}", this.UserName, this.ID); } }
-
-        public Tweet()
-        {
-            this.Links = new List<string>();
-        }
-
-        public bool IsStreamTweet
-        {
-            get
-            {
-                bool result = false;
-                StreamingPlatforms.ForEachPlatform(p =>
-                {
-                    if (StreamingPlatforms.GetPlatformSessionService(p).IsConnected && this.Links.Any(l => l.ToLower().Contains(StreamingPlatforms.GetPlatformSessionService(p).ChannelLink)))
-                    {
-                        result = true;
-                    }
-                });
-                return result;
-            }
-        }
-    }
-
-    public class TwitterService : OAuthExternalServiceBase
+    public class WindowsTwitterService : OAuthExternalServiceBase, ITwitterService
     {
         private const string ClientID = "gV0xMGKNgAaaqQ0XnR4JoX91U";
 
@@ -72,7 +25,7 @@ namespace MixItUp.Base.Services.External
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-        public TwitterService() : base("") { }
+        public WindowsTwitterService() : base("") { }
 
         public override string Name { get { return MixItUp.Base.Resources.Twitter; } }
 
@@ -84,7 +37,7 @@ namespace MixItUp.Base.Services.External
                 {
                     CredentialStore = new InMemoryCredentialStore
                     {
-                        ConsumerKey = TwitterService.ClientID,
+                        ConsumerKey = WindowsTwitterService.ClientID,
                         ConsumerSecret = ServiceManager.Get<SecretsService>().GetSecret("TwitterSecret"),
                     },
                     GoToTwitterAuthorization = pageLink => ProcessHelper.LaunchLink(pageLink),
@@ -120,7 +73,7 @@ namespace MixItUp.Base.Services.External
                 {
                     CredentialStore = new SingleUserInMemoryCredentialStore
                     {
-                        ConsumerKey = TwitterService.ClientID,
+                        ConsumerKey = WindowsTwitterService.ClientID,
                         ConsumerSecret = ServiceManager.Get<SecretsService>().GetSecret("TwitterSecret"),
 
                         AccessToken = token.accessToken,
