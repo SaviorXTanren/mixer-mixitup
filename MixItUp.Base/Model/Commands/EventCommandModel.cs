@@ -127,6 +127,27 @@ namespace MixItUp.Base.Model.Commands
                     specialIdentifiers[TrovoChatSpellViewModel.SpellValueSpecialIdentifier] = "50";
                     break;
 
+                // YouTube
+                case EventTypeEnum.YouTubeChannelNewMember:
+                    specialIdentifiers["usersubplan"] = "Plan Name";
+                    break;
+                case EventTypeEnum.YouTubeChannelMemberMilestone:
+                    specialIdentifiers["message"] = "Test Message";
+                    specialIdentifiers["usersubmonths"] = "5";
+                    specialIdentifiers["usersubplan"] = "Plan Name";
+                    break;
+                case EventTypeEnum.YouTubeChannelMembershipGifted:
+                    specialIdentifiers["usersubplan"] = "Plan Name";
+                    break;
+                case EventTypeEnum.YouTubeChannelMassMembershipGifted:
+                    break;
+                case EventTypeEnum.YouTubeChannelSuperChat:
+                    specialIdentifiers["amountnumber"] = "1.23";
+                    specialIdentifiers["amount"] = "$1.23";
+                    specialIdentifiers["tier"] = "1";
+                    specialIdentifiers["message"] = "Test Message";
+                    break;
+
                 // Chat
                 case EventTypeEnum.ChatUserTimeout:
                     specialIdentifiers["timeoutlength"] = "5m";
