@@ -11741,6 +11741,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mute On/Off.
+        /// </summary>
+        public static string MuteOnOff {
+            get {
+                return ResourceManager.GetString("MuteOnOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mute/Unmute Self.
         /// </summary>
         public static string MuteSelf {

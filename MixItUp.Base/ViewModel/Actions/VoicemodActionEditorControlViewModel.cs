@@ -39,7 +39,7 @@ namespace MixItUp.Base.ViewModel.Actions
             get
             {
                 return this.SelectedActionType == VoicemodActionTypeEnum.VoiceChangerOnOff || this.SelectedActionType == VoicemodActionTypeEnum.BeepSoundOnOff ||
-                    this.SelectedActionType == VoicemodActionTypeEnum.HearMyselfOnOff;
+                    this.SelectedActionType == VoicemodActionTypeEnum.HearMyselfOnOff || this.SelectedActionType == VoicemodActionTypeEnum.MuteOnOff;
             }
         }
 
@@ -180,6 +180,10 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.SelectedActionType == VoicemodActionTypeEnum.HearMyselfOnOff)
             {
                 return Task.FromResult<ActionModelBase>(VoicemodActionModel.CreateForHearMyselfOnOff(this.State));
+            }
+            else if (this.SelectedActionType == VoicemodActionTypeEnum.MuteOnOff)
+            {
+                return Task.FromResult<ActionModelBase>(VoicemodActionModel.CreateForMuteOnOff(this.State));
             }
             return Task.FromResult<ActionModelBase>(null);
         }

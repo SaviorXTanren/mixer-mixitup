@@ -8868,4 +8868,7 @@ via Twitch, it's a "your mileage may very" situation.</value>
   <data name="ShadowSize" xml:space="preserve">
     <value>Shadow Size</value>
   </data>
+  <data name="MuteOnOff" xml:space="preserve">
+    <value>Mute On/Off</value>
+  </data>
 </root>
