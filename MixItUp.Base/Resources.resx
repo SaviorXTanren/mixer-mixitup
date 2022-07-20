@@ -8889,4 +8889,7 @@ via Twitch, it's a "your mileage may vary" situation.</value>
   <data name="ChineseTraditional" xml:space="preserve">
     <value>Chinese (Traditional)</value>
   </data>
+  <data name="MuteOnOff" xml:space="preserve">
+    <value>Mute On/Off</value>
+  </data>
 </root>
