@@ -8892,4 +8892,16 @@ via Twitch, it's a "your mileage may vary" situation.</value>
   <data name="MuteOnOff" xml:space="preserve">
     <value>Mute On/Off</value>
   </data>
+  <data name="ImageSource" xml:space="preserve">
+    <value>Image Source</value>
+  </data>
+  <data name="MediaSource" xml:space="preserve">
+    <value>Media Source</value>
+  </data>
+  <data name="StreamingSoftwareActionMissingImageSourceFilePath" xml:space="preserve">
+    <value>Streaming Software Action: Missing image source file path</value>
+  </data>
+  <data name="StreamingSoftwareActionMissingMediaSourceFilePath" xml:space="preserve">
+    <value>Streaming Software Action: Missing media source file path</value>
+  </data>
 </root>

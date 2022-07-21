@@ -138,6 +138,10 @@ namespace MixItUp.Base.Services.External
 
         public Task SetSourceFilterVisibility(string sourceName, string filterName, bool visibility) { return Task.CompletedTask; }
 
+        public Task SetImageSourceFilePath(string sceneName, string sourceName, string filePath) { return Task.CompletedTask; }
+
+        public Task SetMediaSourceFilePath(string sceneName, string sourceName, string filePath) { return Task.CompletedTask; }
+
         public async Task SetWebBrowserSourceURL(string sceneName, string sourceName, string url)
         {
             await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitWebBrowserSource() { sceneName = sceneName, sourceName = sourceName, webBrowserUrl = url })));

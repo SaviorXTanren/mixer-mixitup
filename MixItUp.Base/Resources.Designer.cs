@@ -9399,6 +9399,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Image Source.
+        /// </summary>
+        public static string ImageSource {
+            get {
+                return ResourceManager.GetString("ImageSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Import Actions From File.
         /// </summary>
         public static string ImportActions {
@@ -11008,6 +11017,15 @@ namespace MixItUp.Base {
         public static string MediaPrevious {
             get {
                 return ResourceManager.GetString("MediaPrevious", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Media Source.
+        /// </summary>
+        public static string MediaSource {
+            get {
+                return ResourceManager.GetString("MediaSource", resourceCulture);
             }
         }
         
@@ -17385,6 +17403,24 @@ namespace MixItUp.Base {
         public static string StreamingSoftwareActionMissingFilter {
             get {
                 return ResourceManager.GetString("StreamingSoftwareActionMissingFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streaming Software Action: Missing image source file path.
+        /// </summary>
+        public static string StreamingSoftwareActionMissingImageSourceFilePath {
+            get {
+                return ResourceManager.GetString("StreamingSoftwareActionMissingImageSourceFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streaming Software Action: Missing media source file path.
+        /// </summary>
+        public static string StreamingSoftwareActionMissingMediaSourceFilePath {
+            get {
+                return ResourceManager.GetString("StreamingSoftwareActionMissingMediaSourceFilePath", resourceCulture);
             }
         }
         

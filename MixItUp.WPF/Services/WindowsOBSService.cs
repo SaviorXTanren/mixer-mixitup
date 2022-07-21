@@ -221,6 +221,38 @@ namespace MixItUp.WPF.Services
             });
         }
 
+        public async Task SetImageSourceFilePath(string sceneName, string sourceName, string filePath)
+        {
+            Logger.Log(LogLevel.Debug, "Setting image source file path - " + sourceName);
+
+            await this.SetSourceVisibility(sceneName, sourceName, visibility: false);
+
+            await this.OBSCommandTimeoutWrapper((cancellationToken) =>
+            {
+                SourceSettings properties = this.OBSWebsocket.GetSourceSettings(sourceName);
+                properties.Settings["file"] = filePath;
+                this.OBSWebsocket.SetSourceSettings(sourceName, properties.Settings);
+
+                return true;
+            });
+        }
+
+        public async Task SetMediaSourceFilePath(string sceneName, string sourceName, string filePath)
+        {
+            Logger.Log(LogLevel.Debug, "Setting media source file path - " + sourceName);
+
+            await this.SetSourceVisibility(sceneName, sourceName, visibility: false);
+
+            await this.OBSCommandTimeoutWrapper((cancellationToken) =>
+            {
+                SourceSettings properties = this.OBSWebsocket.GetSourceSettings(sourceName);
+                properties.Settings["local_file"] = filePath;
+                this.OBSWebsocket.SetSourceSettings(sourceName, properties.Settings);
+
+                return true;
+            });
+        }
+
         public async Task SetWebBrowserSourceURL(string sceneName, string sourceName, string url)
         {
             Logger.Log(LogLevel.Debug, "Setting web browser URL - " + sourceName);
