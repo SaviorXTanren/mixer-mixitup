@@ -236,35 +236,70 @@ namespace MixItUp.Base.Services.External
 
         public Task SetSourceFilterVisibility(string sourceName, string filterName, bool visibility) { return Task.CompletedTask; }
 
+        public async Task SetImageSourceFilePath(string sceneName, string sourceName, string filePath)
+        {
+            StreamlabsOBSSceneItem sceneItem = await this.GetSceneItem(sceneName, sourceName);
+            if (sceneItem != null)
+            {
+                StreamlabsOBSSource source = await this.GetItemSource(sceneItem);
+                if (source != null && source.Type.Equals("image_source"))
+                {
+                    IEnumerable<JObject> properties = await this.GetSourceProperties(source);
+                    if (properties != null)
+                    {
+                        JObject property = properties.FirstOrDefault(p => p.TryGetValue("name", out JToken name) && name != null && string.Equals(name.ToString(), "file"));
+                        if (property != null)
+                        {
+                            property["value"] = filePath;
+                        }
+
+                        await this.SetSourceProperties(source, properties);
+                    }
+                }
+            }
+        }
+
+        public async Task SetMediaSourceFilePath(string sceneName, string sourceName, string filePath)
+        {
+            StreamlabsOBSSceneItem sceneItem = await this.GetSceneItem(sceneName, sourceName);
+            if (sceneItem != null)
+            {
+                StreamlabsOBSSource source = await this.GetItemSource(sceneItem);
+                if (source != null && source.Type.Equals("ffmpeg_source"))
+                {
+                    IEnumerable<JObject> properties = await this.GetSourceProperties(source);
+                    if (properties != null)
+                    {
+                        JObject property = properties.FirstOrDefault(p => p.TryGetValue("name", out JToken name) && name != null && string.Equals(name.ToString(), "local_file"));
+                        if (property != null)
+                        {
+                            property["value"] = filePath;
+                        }
+
+                        await this.SetSourceProperties(source, properties);
+                    }
+                }
+            }
+        }
+
         public async Task SetWebBrowserSourceURL(string sceneName, string sourceName, string url)
         {
             StreamlabsOBSSceneItem sceneItem = await this.GetSceneItem(sceneName, sourceName);
             if (sceneItem != null)
             {
-                StreamlabsOBSRequest getSourceRequest = new StreamlabsOBSRequest("getSource", sceneItem.ResourceID);
-                getSourceRequest.Arguments.Add(sceneItem.SourceID);
-                StreamlabsOBSSource source = await this.GetResult<StreamlabsOBSSource>(getSourceRequest);
+                StreamlabsOBSSource source = await this.GetItemSource(sceneItem);
                 if (source != null && source.Type.Equals("browser_source"))
                 {
-                    IEnumerable<JObject> properties = await this.GetArrayResult<JObject>(new StreamlabsOBSRequest("getPropertiesFormData", source.ResourceID));
+                    IEnumerable<JObject> properties = await this.GetSourceProperties(source);
                     if (properties != null)
                     {
-                        foreach (JObject property in properties)
+                        JObject property = properties.FirstOrDefault(p => p.TryGetValue("name", out JToken name) && name != null && string.Equals(name.ToString(), "url"));
+                        if (property != null)
                         {
-                            if (property["name"] != null && property["name"].ToString().Equals("url"))
-                            {
-                                property["value"] = url;
-                            }
+                            property["value"] = url;
                         }
 
-                        StreamlabsOBSRequest setSourcePropertiesRequest = new StreamlabsOBSRequest("setPropertiesFormData", source.ResourceID);
-                        JArray array = new JArray();
-                        foreach (JObject property in properties)
-                        {
-                            array.Add(property);
-                        }
-                        setSourcePropertiesRequest.Arguments.Add(array);
-                        await this.SendAndReceive(setSourcePropertiesRequest);
+                        await this.SetSourceProperties(source, properties);
                     }
                 }
             }
@@ -346,6 +381,30 @@ namespace MixItUp.Base.Services.External
                 return sceneItems.FirstOrDefault(s => s.Name.Equals(sourceName));
             }
             return null;
+        }
+
+        private async Task<StreamlabsOBSSource> GetItemSource(StreamlabsOBSSceneItem sceneItem)
+        {
+            StreamlabsOBSRequest getSourceRequest = new StreamlabsOBSRequest("getSource", sceneItem.ResourceID);
+            getSourceRequest.Arguments.Add(sceneItem.SourceID);
+            return await this.GetResult<StreamlabsOBSSource>(getSourceRequest);
+        }
+
+        private async Task<IEnumerable<JObject>> GetSourceProperties(StreamlabsOBSSource source)
+        {
+            return await this.GetArrayResult<JObject>(new StreamlabsOBSRequest("getPropertiesFormData", source.ResourceID));
+        }
+
+        private async Task SetSourceProperties(StreamlabsOBSSource source, IEnumerable<JObject> properties)
+        {
+            StreamlabsOBSRequest setSourcePropertiesRequest = new StreamlabsOBSRequest("setPropertiesFormData", source.ResourceID);
+            JArray array = new JArray();
+            foreach (JObject property in properties)
+            {
+                array.Add(property);
+            }
+            setSourcePropertiesRequest.Arguments.Add(array);
+            await this.SendAndReceive(setSourcePropertiesRequest);
         }
 
         private async Task<T> GetResult<T>(StreamlabsOBSRequest request)

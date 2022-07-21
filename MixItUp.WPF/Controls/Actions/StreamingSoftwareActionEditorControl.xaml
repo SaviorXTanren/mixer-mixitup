@@ -109,6 +109,30 @@
                 </Grid>
             </Grid>
 
+            <Grid Grid.Row="2" Visibility="{Binding ShowImageSourceGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" Text="{Binding SourceImageFilePath}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ImageFilePath}" />
+
+                <Button Grid.Column="2" x:Name="SourceImageBrowseButton" Click="SourceImageBrowseButton_Click" Content="{x:Static resx:Resources.Browse}"/>
+            </Grid>
+
+            <Grid Grid.Row="2" Visibility="{Binding ShowMediaSourceGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" Text="{Binding SourceMediaFilePath}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VideoFilePath}" />
+
+                <Button Grid.Column="2" x:Name="SourceVideoBrowseButton" Click="SourceVideoBrowseButton_Click" Content="{x:Static resx:Resources.Browse}"/>
+            </Grid>
+
             <Grid Grid.Row="2" Visibility="{Binding ShowWebBrowserSourceGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
