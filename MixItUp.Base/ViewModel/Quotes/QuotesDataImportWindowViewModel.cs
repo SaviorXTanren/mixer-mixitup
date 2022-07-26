@@ -199,7 +199,7 @@ namespace MixItUp.Base.ViewModel.Quotes
                                 int quoteID = -1;
                                 if (!this.GetIntValueFromLineColumn(MixItUp.Base.Resources.QuoteID, line, out quoteID))
                                 {
-                                    if (this.columnDictionary[MixItUp.Base.Resources.Quote].ColumnNumber.HasValue)
+                                    if (this.columnDictionary[MixItUp.Base.Resources.QuoteID].ColumnNumber.HasValue)
                                     {
                                         Logger.Log(LogLevel.Error, "User Data Import Failure - " + line);
                                         failures++;
