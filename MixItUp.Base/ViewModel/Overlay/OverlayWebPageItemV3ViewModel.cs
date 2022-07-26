@@ -47,7 +47,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.height = item.Height;
         }
 
-        public OverlayWebPageItemV3Model GetItem()
+        public override OverlayItemV3ModelBase GetItem()
         {
             OverlayWebPageItemV3Model result = new OverlayWebPageItemV3Model()
             {

@@ -1,0 +1,137 @@
+﻿<UserControl x:Class="MixItUp.WPF.Controls.Overlay.OverlayItemContainerV3Control"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Util:LocalizationConverter x:Key="LocalizationConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+
+    <TabControl SnapsToDevicePixels="True" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" MaterialDesign:NavigationRailAssist.ShowSelectionBackground="True">
+        <TabItem Header="{x:Static resx:Resources.Details}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <ContentControl Grid.Row="0" x:Name="ItemContentControl" />
+
+                <Grid Grid.Row="2" x:Name="AdditionalOptionsGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Style="{StaticResource DefaultBorder}">
+                        <local:OverlayItemPositionV3Control x:Name="ItemPosition" DataContext="{Binding ItemPosition}" Margin="10" />
+                    </Border>
+
+                    <Border Grid.Column="1" Style="{StaticResource DefaultBorder}">
+                        <Grid Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="15" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="15" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBox Grid.Row="0" Text="{Binding ItemDuration}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DurationSec}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
+
+                            <Grid Grid.Row="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel x:Name="AnimationsMayNotWork" Grid.Row="0" Grid.ColumnSpan="3" Margin="0,0,0,10" Orientation="Vertical">
+                                    <TextBlock Foreground="Red" HorizontalAlignment="Center" Text="{x:Static resx:Resources.OverlayWarning1}"/>
+                                    <TextBlock Foreground="Red" HorizontalAlignment="Center" Text="{x:Static resx:Resources.OverlayWarning2}"/>
+                                    <TextBlock>
+                                        <Hyperlink NavigateUri="https://wiki.mixitupapp.com/services/overlay#windows-settings-overlay-animation-issue" RequestNavigate="Hyperlink_RequestNavigate">
+                                            <TextBlock Text="{x:Static resx:Resources.OverlayWarning3}"/>
+                                        </Hyperlink>
+                                    </TextBlock>
+                                </StackPanel>
+
+                                <ComboBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding EntranceAnimations}" SelectedItem="{Binding SelectedEntranceAnimation}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.EntranceAnimation}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+
+                                <ComboBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding ExitAnimations}" SelectedItem="{Binding SelectedExitAnimation}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ExitAnimation}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </Grid>
+
+                            <ComboBox Grid.Row="4" ItemsSource="{Binding VisibleAnimations}" SelectedItem="{Binding SelectedVisibleAnimation}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VisibleAnimation}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+        </TabItem>
+
+        <TabItem Header="{x:Static resx:Resources.HTML}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Style="{StaticResource DefaultBorder}">
+                    <TextBox Text="{Binding HTML}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.HTML}" Style="{StaticResource MultiLineTextBox}" Height="400" />
+                </Border>
+            </Grid>
+        </TabItem>
+
+        <TabItem Header="{x:Static resx:Resources.CSS}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Style="{StaticResource DefaultBorder}">
+                    <TextBox Text="{Binding CSS}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CSS}" Style="{StaticResource MultiLineTextBox}" Height="400" />
+                </Border>
+            </Grid>
+        </TabItem>
+
+        <TabItem Header="{x:Static resx:Resources.Javascript}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Style="{StaticResource DefaultBorder}">
+                    <TextBox Text="{Binding Javascript}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Javascript}" Style="{StaticResource MultiLineTextBox}" Height="400" />
+                </Border>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</UserControl>

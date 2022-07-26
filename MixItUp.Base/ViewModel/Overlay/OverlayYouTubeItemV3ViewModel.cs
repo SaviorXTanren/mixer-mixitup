@@ -71,7 +71,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.Volume = (int)(item.Volume * 100);
         }
 
-        public OverlayYouTubeItemV3Model GetItem()
+        public override OverlayItemV3ModelBase GetItem()
         {
             string videoID = this.VideoID;
             videoID = videoID.Replace("https://www.youtube.com/watch?v=", "");

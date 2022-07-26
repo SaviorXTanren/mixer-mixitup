@@ -214,6 +214,39 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private OverlayItemEffectVisibleAnimationTypeEnum selectedVisibleAnimation;
 
+        public string HTML
+        {
+            get { return this.html; }
+            set
+            {
+                this.html = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string html;
+
+        public string CSS
+        {
+            get { return this.css; }
+            set
+            {
+                this.css = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string css;
+
+        public string Javascript
+        {
+            get { return this.javascript; }
+            set
+            {
+                this.javascript = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string javascript;
+
         public OverlayActionEditorControlViewModel(OverlayActionModel action)
             : base(action)
         {
@@ -268,6 +301,14 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.SelectedActionType = OverlayActionTypeEnum.WebPage;
                     this.WebPageItemViewModel = new OverlayWebPageItemV3ViewModel((OverlayWebPageItemV3Model)action.OverlayItemV3);
                 }
+
+                OverlayItemV3ViewModelBase itemViewModel = this.GetItemViewModel();
+                if (itemViewModel != null)
+                {
+                    this.HTML = itemViewModel.HTML;
+                    this.CSS = itemViewModel.CSS;
+                    this.Javascript = itemViewModel.Javascript;
+                }
             }
         }
 
@@ -311,40 +352,48 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             if (this.ShowItemProperties)
             {
-                OverlayItemV3ModelBase item = null;
-                if (this.SelectedActionType == OverlayActionTypeEnum.Text)
+                OverlayItemV3ViewModelBase itemViewModel = this.GetItemViewModel();
+                if (itemViewModel != null)
                 {
-                    item = this.TextItemViewModel.GetItem();
-                }
-                else if (this.SelectedActionType == OverlayActionTypeEnum.Image)
-                {
-                    item = this.ImageItemViewModel.GetItem();
-                }
-                else if (this.SelectedActionType == OverlayActionTypeEnum.Video)
-                {
-                    item = this.VideoItemViewModel.GetItem();
-                }
-                else if (this.SelectedActionType == OverlayActionTypeEnum.YouTube)
-                {
-                    item = this.YouTubeItemViewModel.GetItem();
-                }
-                else if (this.SelectedActionType == OverlayActionTypeEnum.HTML)
-                {
-                    item = this.HTMLItemViewModel.GetItem();
-                }
-                else if (this.SelectedActionType == OverlayActionTypeEnum.WebPage)
-                {
-                    item = this.WebPageItemViewModel.GetItem();
-                }
+                    OverlayItemV3ModelBase item = itemViewModel.GetItem();
+                    if (item != null)
+                    {
+                        this.ItemPosition.SetPosition(item);
 
-                if (item != null)
-                {
-                    this.ItemPosition.SetPosition(item);
-
-                    return Task.FromResult<ActionModelBase>(new OverlayActionModel(this.SelectedOverlayEndpoint, item));
+                        return Task.FromResult<ActionModelBase>(new OverlayActionModel(this.SelectedOverlayEndpoint, item));
+                    }
                 }
             }
             return Task.FromResult<ActionModelBase>(null);
+        }
+
+        private OverlayItemV3ViewModelBase GetItemViewModel()
+        {
+            if (this.SelectedActionType == OverlayActionTypeEnum.Text)
+            {
+                return this.TextItemViewModel;
+            }
+            else if (this.SelectedActionType == OverlayActionTypeEnum.Image)
+            {
+                return this.ImageItemViewModel;
+            }
+            else if (this.SelectedActionType == OverlayActionTypeEnum.Video)
+            {
+                return this.VideoItemViewModel;
+            }
+            else if (this.SelectedActionType == OverlayActionTypeEnum.YouTube)
+            {
+                return this.YouTubeItemViewModel;
+            }
+            else if (this.SelectedActionType == OverlayActionTypeEnum.HTML)
+            {
+                return this.HTMLItemViewModel;
+            }
+            else if (this.SelectedActionType == OverlayActionTypeEnum.WebPage)
+            {
+                return this.WebPageItemViewModel;
+            }
+            return null;
         }
     }
 }

@@ -3,7 +3,7 @@ using MixItUp.Base.ViewModels;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
-    public class OverlayItemV3ViewModelBase : UIViewModelBase
+    public abstract class OverlayItemV3ViewModelBase : UIViewModelBase
     {
         public string HTML
         {
@@ -62,5 +62,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.CSS = item.CSS;
             this.Javascript = item.Javascript;
         }
+
+        public abstract OverlayItemV3ModelBase GetItem();
     }
 }

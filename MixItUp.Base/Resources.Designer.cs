@@ -3439,6 +3439,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CSS.
+        /// </summary>
+        public static string CSS {
+            get {
+                return ResourceManager.GetString("CSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cumulative Months Subbed.
         /// </summary>
         public static string CumulativeMonthsSubbed {
@@ -10088,6 +10097,15 @@ namespace MixItUp.Base {
         public static string Japanese {
             get {
                 return ResourceManager.GetString("Japanese", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Javascript.
+        /// </summary>
+        public static string Javascript {
+            get {
+                return ResourceManager.GetString("Javascript", resourceCulture);
             }
         }
         

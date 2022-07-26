@@ -8883,4 +8883,10 @@ via Twitch, it's a "your mileage may very" situation.</value>
   <data name="StreamingSoftwareActionMissingMediaSourceFilePath" xml:space="preserve">
     <value>Streaming Software Action: Missing media source file path</value>
   </data>
+  <data name="CSS" xml:space="preserve">
+    <value>CSS</value>
+  </data>
+  <data name="Javascript" xml:space="preserve">
+    <value>Javascript</value>
+  </data>
 </root>

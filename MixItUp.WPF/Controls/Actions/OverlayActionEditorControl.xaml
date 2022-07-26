@@ -50,106 +50,17 @@
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowItemGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+            <OverlayControls:OverlayItemContainerV3Control Visibility="{Binding ShowTextItem, Converter={StaticResource BooleanToVisibilityConverter}}" DataContext="{Binding TextItemViewModel}" />
 
-            <Grid Grid.Row="0" Visibility="{Binding ShowTextItem, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <OverlayControls:OverlayTextItemV3Control DataContext="{Binding TextItemViewModel}" />
-            </Grid>
+            <OverlayControls:OverlayItemContainerV3Control Visibility="{Binding ShowImageItem, Converter={StaticResource BooleanToVisibilityConverter}}" DataContext="{Binding ImageItemViewModel}" />
 
-            <Grid Grid.Row="0" Visibility="{Binding ShowImageItem, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <OverlayControls:OverlayImageItemV3Control DataContext="{Binding ImageItemViewModel}" />
-            </Grid>
+            <OverlayControls:OverlayItemContainerV3Control Visibility="{Binding ShowVideoItem, Converter={StaticResource BooleanToVisibilityConverter}}" DataContext="{Binding VideoItemViewModel}" />
 
-            <Grid Grid.Row="0" Visibility="{Binding ShowVideoItem, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <OverlayControls:OverlayVideoItemV3Control DataContext="{Binding VideoItemViewModel}" />
-            </Grid>
+            <OverlayControls:OverlayItemContainerV3Control Visibility="{Binding ShowYouTubeItem, Converter={StaticResource BooleanToVisibilityConverter}}" DataContext="{Binding YouTubeItemViewModel}" />
 
-            <Grid Grid.Row="0" Visibility="{Binding ShowYouTubeItem, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <OverlayControls:OverlayYouTubeItemV3Control DataContext="{Binding YouTubeItemViewModel}" />
-            </Grid>
+            <OverlayControls:OverlayItemContainerV3Control Visibility="{Binding ShowHTMLItem, Converter={StaticResource BooleanToVisibilityConverter}}" DataContext="{Binding HTMLItemViewModel}" />
 
-            <Grid Grid.Row="0" Visibility="{Binding ShowHTMLItem, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <OverlayControls:OverlayHTMLItemV3Control DataContext="{Binding HTMLItemViewModel}" />
-            </Grid>
-
-            <Grid Grid.Row="0" Visibility="{Binding ShowWebPageItem, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <OverlayControls:OverlayWebPageItemV3Control DataContext="{Binding WebPageItemViewModel}" />
-            </Grid>
-
-            <Grid Grid.Row="2" x:Name="AdditionalOptionsGrid">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <Border Grid.Column="0" Style="{StaticResource DefaultBorder}">
-                    <OverlayControls:OverlayItemPositionV3Control x:Name="ItemPosition" DataContext="{Binding ItemPosition}" Margin="10" />
-                </Border>
-
-                <Border Grid.Column="1" Style="{StaticResource DefaultBorder}">
-                    <Grid Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="15" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="15" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-
-                        <TextBox Grid.Row="0" Text="{Binding ItemDuration}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DurationSec}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
-
-                        <Grid Grid.Row="2">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="30" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <StackPanel x:Name="AnimationsMayNotWork" Grid.Row="0" Grid.ColumnSpan="3" Margin="0,0,0,10" Orientation="Vertical">
-                                <TextBlock Foreground="Red" HorizontalAlignment="Center" Text="{x:Static resx:Resources.OverlayWarning1}"/>
-                                <TextBlock Foreground="Red" HorizontalAlignment="Center" Text="{x:Static resx:Resources.OverlayWarning2}"/>
-                                <TextBlock>
-                                <Hyperlink NavigateUri="https://wiki.mixitupapp.com/services/overlay#windows-settings-overlay-animation-issue" RequestNavigate="Hyperlink_RequestNavigate">
-                                    <TextBlock Text="{x:Static resx:Resources.OverlayWarning3}"/>
-                                </Hyperlink>
-                            </TextBlock>
-                            </StackPanel>
-
-                            <ComboBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding EntranceAnimations}" SelectedItem="{Binding SelectedEntranceAnimation}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.EntranceAnimation}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-
-                            <ComboBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding ExitAnimations}" SelectedItem="{Binding SelectedExitAnimation}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ExitAnimation}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                        </Grid>
-
-                        <ComboBox Grid.Row="4" ItemsSource="{Binding VisibleAnimations}" SelectedItem="{Binding SelectedVisibleAnimation}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VisibleAnimation}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                    </Grid>
-                </Border>
-            </Grid>
+            <OverlayControls:OverlayItemContainerV3Control Visibility="{Binding ShowWebPageItem, Converter={StaticResource BooleanToVisibilityConverter}}" DataContext="{Binding WebPageItemViewModel}" />
         </Grid>
     </Grid>
 </local:ActionEditorControlBase>
