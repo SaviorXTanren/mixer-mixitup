@@ -6,6 +6,7 @@ using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Mock;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
@@ -75,6 +76,7 @@ namespace MixItUp.Base
             ServiceManager.Add(new DiscordService());
             ServiceManager.Add(new PixelChatService());
             ServiceManager.Add(new VTubeStudioService());
+            ServiceManager.Add(new TwitchStatusService());
             try
             {
                 Type voicemodServiceType = Type.GetType("MixItUp.Base.Services.External.VoicemodService");
@@ -85,10 +87,15 @@ namespace MixItUp.Base
             }
             catch (Exception ex) { Logger.Log(ex); }
 
-            ServiceManager.Add(new TwitchSessionService());
-            ServiceManager.Add(new TwitchChatService());
-            ServiceManager.Add(new TwitchEventService());
-            ServiceManager.Add(new TwitchStatusService());
+            ServiceManager.Add(new MockSessionService());
+            ServiceManager.Add(new MockChatService());
+
+            //ServiceManager.Add(new TwitchSessionService());
+            //ServiceManager.Add(new TwitchChatService());
+            //ServiceManager.Add(new TwitchEventService());
+
+            ServiceManager.Add<TwitchSessionService>(ServiceManager.Get<MockSessionService>());
+            ServiceManager.Add<TwitchChatService>(ServiceManager.Get<MockChatService>());
 
             ServiceManager.Add(new YouTubeSessionService());
             ServiceManager.Add(new YouTubeChatService());

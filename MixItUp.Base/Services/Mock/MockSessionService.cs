@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
@@ -7,27 +8,44 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.Services.Mock
 {
-    public class MockSessionService : IStreamingPlatformSessionService
+    public class MockSessionService : TwitchSessionService, IStreamingPlatformSessionService
     {
-        private const string GamingCategorySlug = "gaming";
+        public static UserModel user = new UserModel()
+        {
+            id = "1",
+            login = "testuser",
+            display_name = "TestUser",
+            broadcaster_type = "partner",
+            profile_image_url = "https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUp-Logo-Base-WhiteXS.png",
+        };
 
-        public MockPlatformService UserConnection { get; private set; }
-        public MockPlatformService BotConnection { get; private set; }
+        public static UserModel bot = new UserModel()
+        {
+            id = "2",
+            login = "testbot",
+            display_name = "TestBot",
+            broadcaster_type = "partner",
+            profile_image_url = "https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUp-Logo-Base-WhiteXS.png",
+        };
 
-        public bool IsConnected { get { return this.UserConnection != null; } }
-        public bool IsBotConnected { get { return this.BotConnection != null; } }
+        public new MockPlatformService UserConnection { get; private set; }
+        public new MockPlatformService BotConnection { get; private set; }
 
-        public string UserID { get { return "0"; } }
-        public string Username { get { return "Test User"; } }
-        public string BotID { get { return "1"; } }
-        public string Botname { get { return "Test Bot"; } }
-        public string ChannelID { get { return "2"; } }
-        public string ChannelLink { get { return "https://mixitupapp.com"; } }
+        public new bool IsConnected { get { return this.UserConnection != null; } }
+        public new bool IsBotConnected { get { return this.BotConnection != null; } }
 
-        public StreamingPlatformAccountModel UserAccount
+        public new string UserID { get { return user.id; } }
+        public new string Username { get { return user.login; } }
+        public new string BotID { get { return bot.id; } }
+        public new string Botname { get { return bot.login; } }
+        public new string ChannelID { get { return user.id; } }
+        public new string ChannelLink { get { return "https://mixitupapp.com"; } }
+
+        public new StreamingPlatformAccountModel UserAccount
         {
             get
             {
@@ -35,11 +53,11 @@ namespace MixItUp.Base.Services.Mock
                 {
                     ID = this.UserID,
                     Username = this.Username,
-                    AvatarURL = "https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUp-Logo-Base-WhiteXS.png"
+                    AvatarURL = user.profile_image_url,
                 };
             }
         }
-        public StreamingPlatformAccountModel BotAccount
+        public new StreamingPlatformAccountModel BotAccount
         {
             get
             {
@@ -47,14 +65,14 @@ namespace MixItUp.Base.Services.Mock
                 {
                     ID = this.BotID,
                     Username = this.Botname,
-                    AvatarURL = "https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUp-Logo-Base-WhiteXS.png"
+                    AvatarURL = bot.profile_image_url,
                 };
             }
         }
 
-        public bool IsLive { get { return true; } }
+        public new bool IsLive { get { return true; } }
 
-        public async Task<Result> ConnectUser()
+        public new async Task<Result> ConnectUser()
         {
             Result<MockPlatformService> result = await MockPlatformService.ConnectUser();
             if (result.Success)
@@ -64,7 +82,7 @@ namespace MixItUp.Base.Services.Mock
             return result;
         }
 
-        public async Task<Result> ConnectBot()
+        public new async Task<Result> ConnectBot()
         {
             Result<MockPlatformService> result = await MockPlatformService.ConnectBot();
             if (result.Success)
@@ -74,13 +92,13 @@ namespace MixItUp.Base.Services.Mock
             return result;
         }
 
-        public async Task<Result> Connect(SettingsV3Model settings)
+        public new async Task<Result> Connect(SettingsV3Model settings)
         {
-            if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Mock].IsEnabled)
+            if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].IsEnabled)
             {
                 Result userResult = null;
 
-                Result<MockPlatformService> mockResult = await MockPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Mock].UserOAuthToken);
+                Result<MockPlatformService> mockResult = await MockPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken);
                 if (mockResult.Success)
                 {
                     this.UserConnection = mockResult.Value;
@@ -93,9 +111,9 @@ namespace MixItUp.Base.Services.Mock
 
                 if (userResult.Success)
                 {
-                    if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Mock].BotOAuthToken != null)
+                    if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken != null)
                     {
-                        mockResult = await MockPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Mock].BotOAuthToken);
+                        mockResult = await MockPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken);
                         if (mockResult.Success)
                         {
                             this.BotConnection = mockResult.Value;
@@ -108,7 +126,7 @@ namespace MixItUp.Base.Services.Mock
                 }
                 else
                 {
-                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Mock].ClearUserData();
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ClearUserData();
                     return userResult;
                 }
 
@@ -117,40 +135,40 @@ namespace MixItUp.Base.Services.Mock
             return new Result();
         }
 
-        public async Task DisconnectUser(SettingsV3Model settings)
+        public new async Task DisconnectUser(SettingsV3Model settings)
         {
             await this.DisconnectBot(settings);
 
-            await ServiceManager.Get<MockChatEventService>().DisconnectUser();
+            await ServiceManager.Get<MockChatService>().DisconnectUser();
 
             this.UserConnection = null;
 
-            if (settings.StreamingPlatformAuthentications.TryGetValue(StreamingPlatformTypeEnum.Mock, out var streamingPlatform))
+            if (settings.StreamingPlatformAuthentications.TryGetValue(StreamingPlatformTypeEnum.Twitch, out var streamingPlatform))
             {
                 streamingPlatform.ClearUserData();
             }
         }
 
-        public async Task DisconnectBot(SettingsV3Model settings)
+        public new async Task DisconnectBot(SettingsV3Model settings)
         {
-            await ServiceManager.Get<MockChatEventService>().DisconnectBot();
+            await ServiceManager.Get<MockChatService>().DisconnectBot();
 
             this.BotConnection = null;
 
-            if (settings.StreamingPlatformAuthentications.TryGetValue(StreamingPlatformTypeEnum.Mock, out var streamingPlatform))
+            if (settings.StreamingPlatformAuthentications.TryGetValue(StreamingPlatformTypeEnum.Twitch, out var streamingPlatform))
             {
                 streamingPlatform.ClearBotData();
             }
         }
 
-        public async Task<Result> InitializeUser(SettingsV3Model settings)
+        public new async Task<Result> InitializeUser(SettingsV3Model settings)
         {
             if (this.UserConnection != null)
             {
                 try
                 {
                     List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
-                    platformServiceTasks.Add(ServiceManager.Get<MockChatEventService>().ConnectUser());
+                    platformServiceTasks.Add(ServiceManager.Get<MockChatService>().ConnectUser());
 
                     await Task.WhenAll(platformServiceTasks);
 
@@ -170,11 +188,11 @@ namespace MixItUp.Base.Services.Mock
             return new Result();
         }
 
-        public async Task<Result> InitializeBot(SettingsV3Model settings)
+        public new async Task<Result> InitializeBot(SettingsV3Model settings)
         {
             if (this.BotConnection != null)
             {
-                Result result = await ServiceManager.Get<MockChatEventService>().ConnectBot();
+                Result result = await ServiceManager.Get<MockChatService>().ConnectBot();
                 if (!result.Success)
                 {
                     return result;
@@ -183,59 +201,59 @@ namespace MixItUp.Base.Services.Mock
             return new Result();
         }
 
-        public async Task CloseUser()
+        public new async Task CloseUser()
         {
-            await ServiceManager.Get<MockChatEventService>().DisconnectUser();
+            await ServiceManager.Get<MockChatService>().DisconnectUser();
         }
 
-        public async Task CloseBot()
+        public new async Task CloseBot()
         {
-            await ServiceManager.Get<MockChatEventService>().DisconnectBot();
+            await ServiceManager.Get<MockChatService>().DisconnectBot();
         }
 
-        public void SaveSettings(SettingsV3Model settings)
+        public new void SaveSettings(SettingsV3Model settings)
         {
             if (this.UserConnection != null)
             {
-                if (!settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Mock))
+                if (!settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch))
                 {
-                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Mock] = new StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum.Mock);
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = new StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum.Twitch);
                 }
 
-                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Mock].UserOAuthToken = new OAuthTokenModel();
-                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Mock].UserID = this.UserID;
-                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Mock].ChannelID = this.ChannelID;
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = new OAuthTokenModel();
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID = this.UserID;
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ChannelID = this.ChannelID;
 
                 if (this.BotConnection != null)
                 {
-                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Mock].BotOAuthToken = new OAuthTokenModel();
-                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Mock].BotID = this.BotID;
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = new OAuthTokenModel();
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotID = this.BotID;
                 }
             }
         }
 
-        public Task RefreshUser()
+        public new Task RefreshUser()
         {
             return Task.CompletedTask;
         }
 
-        public Task RefreshChannel()
+        public new Task RefreshChannel()
         {
             return Task.CompletedTask;
         }
 
-        public Task<string> GetTitle()
+        public new Task<string> GetTitle()
         {
             return Task.FromResult("Test Title");
         }
 
-        public Task<bool> SetTitle(string title) { return Task.FromResult(false); }
+        public new Task<bool> SetTitle(string title) { return Task.FromResult(false); }
 
-        public Task<string> GetGame()
+        public new Task<string> GetGame()
         {
             return Task.FromResult("Test Game");
         }
 
-        public Task<bool> SetGame(string gameName) { return Task.FromResult(false); }
+        public new Task<bool> SetGame(string gameName) { return Task.FromResult(false); }
     }
 }

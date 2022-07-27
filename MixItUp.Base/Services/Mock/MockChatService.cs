@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -10,30 +11,30 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Mock
 {
-    public class MockChatEventService : StreamingPlatformServiceBase
+    public class MockChatService : TwitchChatService
     {
         private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
 
         private List<ChatMessageViewModel> messages = new List<ChatMessageViewModel>();
 
-        public override string Name { get { return "Mock Chat/Event"; } }
+        public override string Name { get { return "Mock Chat"; } }
 
-        public Task<Result> ConnectUser() { return Task.FromResult(new Result()); }
+        public new Task<Result> ConnectUser() { return Task.FromResult(new Result()); }
 
-        public Task<Result> ConnectBot() { return Task.FromResult(new Result()); }
+        public new Task<Result> ConnectBot() { return Task.FromResult(new Result()); }
 
-        public Task DisconnectUser() { return Task.CompletedTask; }
+        public new Task DisconnectUser() { return Task.CompletedTask; }
 
-        public Task DisconnectBot() { return Task.CompletedTask; }
+        public new Task DisconnectBot() { return Task.CompletedTask; }
 
-        public async Task SendMessage(string message, bool sendAsStreamer = false)
+        public new async Task SendMessage(string message, bool sendAsStreamer = false, string replyMessageID = null)
         {
             await this.messageSemaphore.WaitAndRelease(async () =>
             {
-                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Mock,
+                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch,
                     (sendAsStreamer) ? ServiceManager.Get<MockSessionService>().Username : ServiceManager.Get<MockSessionService>().Botname);
 
-                ChatMessageViewModel messageViewModel = new ChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.Mock, user);
+                ChatMessageViewModel messageViewModel = new ChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.Twitch, user);
 
                 this.messages.Add(messageViewModel);
 
@@ -41,7 +42,7 @@ namespace MixItUp.Base.Services.Mock
             });
         }
 
-        public Task<bool> DeleteMessage(ChatMessageViewModel message)
+        public new Task<bool> DeleteMessage(ChatMessageViewModel message)
         {
             this.messages.Remove(message);
 

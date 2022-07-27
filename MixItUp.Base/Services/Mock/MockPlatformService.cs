@@ -1,22 +1,24 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Util;
 using StreamingClient.Base.Model.OAuth;
 using System.Threading.Tasks;
+using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.Services.Mock
 {
-    public class MockPlatformService : StreamingPlatformServiceBase
+    public class MockPlatformService : TwitchPlatformService
     {
-        public static Task<Result<MockPlatformService>> Connect(OAuthTokenModel token)
+        public new static Task<Result<MockPlatformService>> Connect(OAuthTokenModel token)
         {
             return Task.FromResult(new Result<MockPlatformService>(new MockPlatformService()));
         }
 
-        public static async Task<Result<MockPlatformService>> ConnectUser()
+        public new static async Task<Result<MockPlatformService>> ConnectUser()
         {
             return await MockPlatformService.Connect();
         }
 
-        public static async Task<Result<MockPlatformService>> ConnectBot()
+        public new static async Task<Result<MockPlatformService>> ConnectBot()
         {
             return await MockPlatformService.Connect();
         }
@@ -28,6 +30,36 @@ namespace MixItUp.Base.Services.Mock
 
         public override string Name { get { return MixItUp.Base.Resources.MockConnection; } }
 
-        public MockPlatformService() { }
+        public MockPlatformService() : base(null) { }
+
+        public new Task<UserModel> GetNewAPICurrentUser() { return Task.FromResult(MockSessionService.user); }
+
+        public new Task<UserModel> GetNewAPIUserByID(string userID)
+        {
+            UserModel user = null;
+            if (string.Equals(MockSessionService.user.id, userID))
+            {
+                user = MockSessionService.user;
+            }
+            else if (string.Equals(MockSessionService.bot.id, userID))
+            {
+                user = MockSessionService.bot;
+            }
+            return Task.FromResult(user);
+        }
+
+        public new Task<UserModel> GetNewAPIUserByLogin(string login)
+        {
+            UserModel user = null;
+            if (string.Equals(MockSessionService.user.login, login))
+            {
+                user = MockSessionService.user;
+            }
+            else if (string.Equals(MockSessionService.bot.login, login))
+            {
+                user = MockSessionService.bot;
+            }
+            return Task.FromResult(user);
+        }
     }
 }
