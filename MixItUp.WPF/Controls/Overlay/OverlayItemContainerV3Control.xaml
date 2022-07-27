@@ -1,19 +1,20 @@
-﻿<UserControl x:Class="MixItUp.WPF.Controls.Overlay.OverlayItemContainerV3Control"
+﻿<Controls:LoadingControlBase x:Class="MixItUp.WPF.Controls.Overlay.OverlayItemContainerV3Control"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:OverlayControls="clr-namespace:MixItUp.WPF.Controls.Overlay"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
-             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.Resources>
-        <Util:LocalizationConverter x:Key="LocalizationConverter"/>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-    </UserControl.Resources>
-
+    <Controls:LoadingControlBase.Resources>
+        <Util:LocalizationConverter x:Key="LocalizationConverter" />
+    </Controls:LoadingControlBase.Resources>
+    
     <TabControl SnapsToDevicePixels="True" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" MaterialDesign:NavigationRailAssist.ShowSelectionBackground="True">
         <TabItem Header="{x:Static resx:Resources.Details}">
             <Grid>
@@ -23,7 +24,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <ContentControl Grid.Row="0" x:Name="ItemContentControl" />
+                <ContentControl Grid.Row="0" Content="{Binding}" />
 
                 <Grid Grid.Row="2" x:Name="AdditionalOptionsGrid">
                     <Grid.ColumnDefinitions>
@@ -32,7 +33,7 @@
                     </Grid.ColumnDefinitions>
 
                     <Border Grid.Column="0" Style="{StaticResource DefaultBorder}">
-                        <local:OverlayItemPositionV3Control x:Name="ItemPosition" DataContext="{Binding ItemPosition}" Margin="10" />
+                        <OverlayControls:OverlayItemPositionV3Control x:Name="ItemPosition" DataContext="{Binding ItemPosition}" Margin="10" />
                     </Border>
 
                     <Border Grid.Column="1" Style="{StaticResource DefaultBorder}">
@@ -134,4 +135,4 @@
             </Grid>
         </TabItem>
     </TabControl>
-</UserControl>
+</Controls:LoadingControlBase>

@@ -50,17 +50,17 @@
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowItemGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <OverlayControls:OverlayItemContainerV3Control Visibility="{Binding ShowTextItem, Converter={StaticResource BooleanToVisibilityConverter}}" DataContext="{Binding TextItemViewModel}" />
+            <OverlayControls:OverlayTextItemV3Control Visibility="{Binding ShowTextItem, Converter={StaticResource BooleanToVisibilityConverter}}" DataContext="{Binding TextItemViewModel}" />
 
-            <OverlayControls:OverlayItemContainerV3Control Visibility="{Binding ShowImageItem, Converter={StaticResource BooleanToVisibilityConverter}}" DataContext="{Binding ImageItemViewModel}" />
+            <OverlayControls:OverlayImageItemV3Control Visibility="{Binding ShowImageItem, Converter={StaticResource BooleanToVisibilityConverter}}" DataContext="{Binding ImageItemViewModel}" />
 
-            <OverlayControls:OverlayItemContainerV3Control Visibility="{Binding ShowVideoItem, Converter={StaticResource BooleanToVisibilityConverter}}" DataContext="{Binding VideoItemViewModel}" />
+            <OverlayControls:OverlayVideoItemV3Control Visibility="{Binding ShowVideoItem, Converter={StaticResource BooleanToVisibilityConverter}}" DataContext="{Binding VideoItemViewModel}" />
 
-            <OverlayControls:OverlayItemContainerV3Control Visibility="{Binding ShowYouTubeItem, Converter={StaticResource BooleanToVisibilityConverter}}" DataContext="{Binding YouTubeItemViewModel}" />
+            <OverlayControls:OverlayYouTubeItemV3Control Visibility="{Binding ShowYouTubeItem, Converter={StaticResource BooleanToVisibilityConverter}}" DataContext="{Binding YouTubeItemViewModel}" />
 
-            <OverlayControls:OverlayItemContainerV3Control Visibility="{Binding ShowHTMLItem, Converter={StaticResource BooleanToVisibilityConverter}}" DataContext="{Binding HTMLItemViewModel}" />
+            <OverlayControls:OverlayHTMLItemV3Control Visibility="{Binding ShowHTMLItem, Converter={StaticResource BooleanToVisibilityConverter}}" DataContext="{Binding HTMLItemViewModel}" />
 
-            <OverlayControls:OverlayItemContainerV3Control Visibility="{Binding ShowWebPageItem, Converter={StaticResource BooleanToVisibilityConverter}}" DataContext="{Binding WebPageItemViewModel}" />
+            <OverlayControls:OverlayWebPageItemV3Control Visibility="{Binding ShowWebPageItem, Converter={StaticResource BooleanToVisibilityConverter}}" DataContext="{Binding WebPageItemViewModel}" />
         </Grid>
     </Grid>
 </local:ActionEditorControlBase>
