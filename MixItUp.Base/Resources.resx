@@ -8862,4 +8862,7 @@ via Twitch, it's a "your mileage may vary" situation.</value>
   <data name="TrovoChannelSpellCast" xml:space="preserve">
     <value>Trovo Channel Spell Cast</value>
   </data>
+  <data name="MockConnection" xml:space="preserve">
+    <value>Mock Connection</value>
+  </data>
 </root>

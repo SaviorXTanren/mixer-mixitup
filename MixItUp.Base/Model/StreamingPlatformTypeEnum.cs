@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Mock;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
@@ -23,6 +24,8 @@ namespace MixItUp.Base.Model
         Facebook = 6,
 
         All = 99999,
+
+        Mock = 100000,
     }
 
     public static class StreamingPlatforms
@@ -60,6 +63,7 @@ namespace MixItUp.Base.Model
             else if (platform == StreamingPlatformTypeEnum.YouTube) { return ServiceManager.Get<YouTubeSessionService>(); }
             else if (platform == StreamingPlatformTypeEnum.Glimesh) { return ServiceManager.Get<GlimeshSessionService>(); }
             else if (platform == StreamingPlatformTypeEnum.Trovo) { return ServiceManager.Get<TrovoSessionService>(); }
+            else if (platform == StreamingPlatformTypeEnum.Mock) { return ServiceManager.Get<MockSessionService>(); }
             return null;
         }
 

@@ -11309,6 +11309,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mock Connection.
+        /// </summary>
+        public static string MockConnection {
+            get {
+                return ResourceManager.GetString("MockConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mod.
         /// </summary>
         public static string Mod {

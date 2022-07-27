@@ -4,6 +4,7 @@ using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Mock;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
@@ -138,6 +139,11 @@ namespace MixItUp.Base.Services
                     {
                         await ServiceManager.Get<TrovoChatEventService>().SendMessage(message, sendAsStreamer);
                     }
+
+                    if (platform == StreamingPlatformTypeEnum.Mock)
+                    {
+                        await ServiceManager.Get<MockChatEventService>().SendMessage(message, sendAsStreamer);
+                    }
                 }
             }
         }
@@ -191,6 +197,10 @@ namespace MixItUp.Base.Services
                 else if (message.Platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshChatEventService>().IsUserConnected)
                 {
                     await ServiceManager.Get<GlimeshChatEventService>().DeleteMessage(message);
+                }
+                else if (message.Platform == StreamingPlatformTypeEnum.Mock)
+                {
+                    await ServiceManager.Get<MockChatEventService>().DeleteMessage(message);
                 }
             }
 
