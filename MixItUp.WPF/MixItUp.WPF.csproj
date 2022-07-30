@@ -1124,7 +1124,6 @@
     <Compile Include="Util\RegistryHelpers.cs" />
     <Compile Include="Util\StrikethroughConverter.cs" />
     <Compile Include="Util\FrameworkElementHelpers.cs" />
-    <Compile Include="Util\InstalledFonts.cs" />
     <Compile Include="Util\InverseBooleanConverter.cs" />
     <Compile Include="Util\LocalizationConverter.cs" />
     <Compile Include="Util\LogicalTreeHelpers.cs" />

@@ -16,74 +16,78 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Controls:LoadingControlBase.Resources>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <OverlayControls:OverlayItemContainerV3Control>
+        <OverlayControls:OverlayItemContainerV3Control.ContentControl>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-        <TextBox Text="{Binding Text}" Grid.Row="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Text}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Text="{Binding Text}" Grid.Row="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Text}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="150" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-            <TextBox Text="{Binding FontSize}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontSize}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Text="{Binding FontSize}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontSize}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <ComboBox x:Name="FontNamesComboBox" Text="{Binding FontName}" Grid.Column="2" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                    <ComboBox Text="{Binding FontName}" ItemsSource="{Binding Fonts}" Grid.Column="2" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-            <TextBox Text="{Binding FontColor}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Text="{Binding FontColor}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <ListBox Grid.Column="6" SelectionMode="Extended" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
-                <ListBoxItem x:Name="TextBoldCheckBox" IsSelected="{Binding Bold}">
-                    <MaterialDesign:PackIcon Kind="FormatBold" Style="{StaticResource DarkLightBackgroundPackIcon}" />
-                </ListBoxItem>
-                <ListBoxItem x:Name="TextItalicCheckBox" IsSelected="{Binding Italic}">
-                    <MaterialDesign:PackIcon Kind="FormatItalic" Style="{StaticResource DarkLightBackgroundPackIcon}" />
-                </ListBoxItem>
-                <ListBoxItem x:Name="TextUnderlineCheckBox" IsSelected="{Binding Underline}">
-                    <MaterialDesign:PackIcon Kind="FormatUnderline" Style="{StaticResource DarkLightBackgroundPackIcon}" />
-                </ListBoxItem>
-            </ListBox>
-        </Grid>
+                    <ListBox Grid.Column="6" SelectionMode="Extended" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
+                        <ListBoxItem IsSelected="{Binding Bold}">
+                            <MaterialDesign:PackIcon Kind="FormatBold" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding Italic}">
+                            <MaterialDesign:PackIcon Kind="FormatItalic" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding Underline}">
+                            <MaterialDesign:PackIcon Kind="FormatUnderline" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                    </ListBox>
+                </Grid>
 
-        <Grid Grid.Row="4">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="150" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+                <Grid Grid.Row="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-            <TextBox Text="{Binding ShadowColor}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ShadowColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Text="{Binding ShadowColor}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ShadowColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Text="{Binding Width}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Width}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Text="{Binding Width}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Width}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <ListBox Grid.Column="4" SelectionMode="Single" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
-                <ListBoxItem x:Name="TextLeftAlignmentCheckBox" IsSelected="{Binding LeftAlignment}">
-                    <MaterialDesign:PackIcon Kind="FormatAlignLeft" Style="{StaticResource DarkLightBackgroundPackIcon}" />
-                </ListBoxItem>
-                <ListBoxItem x:Name="TextCenterAlignmentCheckBox" IsSelected="{Binding CenterAlignment}">
-                    <MaterialDesign:PackIcon Kind="FormatAlignCenter" Style="{StaticResource DarkLightBackgroundPackIcon}" />
-                </ListBoxItem>
-                <ListBoxItem x:Name="TextRightAlignmentCheckBox" IsSelected="{Binding RightAlignment}">
-                    <MaterialDesign:PackIcon Kind="FormatAlignRight" Style="{StaticResource DarkLightBackgroundPackIcon}" />
-                </ListBoxItem>
-                <ListBoxItem x:Name="TextJustifyAlignmentCheckBox" IsSelected="{Binding JustifyAlignment}">
-                    <MaterialDesign:PackIcon Kind="FormatAlignJustify" Style="{StaticResource DarkLightBackgroundPackIcon}" />
-                </ListBoxItem>
-            </ListBox>
-        </Grid>
-    </Grid>
+                    <ListBox Grid.Column="4" SelectionMode="Single" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
+                        <ListBoxItem IsSelected="{Binding LeftAlignment}">
+                            <MaterialDesign:PackIcon Kind="FormatAlignLeft" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding CenterAlignment}">
+                            <MaterialDesign:PackIcon Kind="FormatAlignCenter" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding RightAlignment}">
+                            <MaterialDesign:PackIcon Kind="FormatAlignRight" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                        <ListBoxItem IsSelected="{Binding JustifyAlignment}">
+                            <MaterialDesign:PackIcon Kind="FormatAlignJustify" Style="{StaticResource DarkLightBackgroundPackIcon}" />
+                        </ListBoxItem>
+                    </ListBox>
+                </Grid>
+            </Grid>
+        </OverlayControls:OverlayItemContainerV3Control.ContentControl>
+    </OverlayControls:OverlayItemContainerV3Control>
 </Controls:LoadingControlBase>

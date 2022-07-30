@@ -7,37 +7,42 @@
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:OverlayControls="clr-namespace:MixItUp.WPF.Controls.Overlay"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <OverlayControls:OverlayItemContainerV3Control>
+        <OverlayControls:OverlayItemContainerV3Control.ContentControl>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-            <TextBox Text="{Binding URL}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.WebPageURL}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Text="{Binding URL}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.WebPageURL}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-        </Grid>
+                </Grid>
 
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="150" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="150" />
-            </Grid.ColumnDefinitions>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="150" />
+                    </Grid.ColumnDefinitions>
 
-            <TextBox Text="{Binding Width}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Width}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Text="{Binding Width}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Width}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Text="{Binding Height}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Height}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-        </Grid>
-    </Grid>
+                    <TextBox Text="{Binding Height}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Height}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                </Grid>
+            </Grid>
+        </OverlayControls:OverlayItemContainerV3Control.ContentControl>
+    </OverlayControls:OverlayItemContainerV3Control>
 </Controls:LoadingControlBase>

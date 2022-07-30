@@ -1,7 +1,4 @@
-﻿using MixItUp.WPF.Util;
-using System.Threading.Tasks;
-
-namespace MixItUp.WPF.Controls.Overlay
+﻿namespace MixItUp.WPF.Controls.Overlay
 {
     /// <summary>
     /// Interaction logic for OverlayTextItemV3Control.xaml
@@ -11,13 +8,6 @@ namespace MixItUp.WPF.Controls.Overlay
         public OverlayTextItemV3Control()
         {
             InitializeComponent();
-        }
-
-        protected override async Task OnLoaded()
-        {
-            this.FontNamesComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
-
-            await base.OnLoaded();
         }
     }
 }

@@ -4,6 +4,8 @@ using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Text;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -307,5 +309,22 @@ namespace MixItUp.WPF.Services
         public string GetApplicationDirectory() { return Path.GetDirectoryName(typeof(IFileService).Assembly.Location); }
 
         public string GetApplicationVersion() { return Assembly.GetEntryAssembly().GetName().Version.ToString().Trim(); }
+
+        public IEnumerable<string> GetInstalledFonts()
+        {
+            using (InstalledFontCollection fontsCollection = new InstalledFontCollection())
+            {
+                FontFamily[] fontFamilies = fontsCollection.Families;
+                List<string> fonts = new List<string>();
+                foreach (FontFamily font in fontFamilies)
+                {
+                    if (!string.IsNullOrEmpty(font.Name))
+                    {
+                        fonts.Add(font.Name);
+                    }
+                }
+                return fonts;
+            }
+        }
     }
 }

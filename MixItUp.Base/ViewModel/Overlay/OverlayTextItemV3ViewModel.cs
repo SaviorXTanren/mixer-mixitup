@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Services;
+using System.Collections.Generic;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
@@ -36,6 +38,11 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
         }
         private string fontName;
+
+        public IEnumerable<string> Fonts
+        {
+            get { return ServiceManager.Get<IFileService>().GetInstalledFonts(); }
+        }
 
         public string FontColor
         {

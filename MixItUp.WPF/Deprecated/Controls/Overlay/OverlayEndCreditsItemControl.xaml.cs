@@ -1,5 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Overlay;
-using MixItUp.WPF.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.ViewModel.Overlay;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Overlay
@@ -22,8 +22,8 @@ namespace MixItUp.WPF.Controls.Overlay
 
         protected override async Task OnLoaded()
         {
-            this.SectionTextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
-            this.ItemTextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
+            this.SectionTextFontComboBox.ItemsSource = ServiceManager.Get<IFileService>().GetInstalledFonts();
+            this.ItemTextFontComboBox.ItemsSource = ServiceManager.Get<IFileService>().GetInstalledFonts();
 
             await base.OnLoaded();
         }
