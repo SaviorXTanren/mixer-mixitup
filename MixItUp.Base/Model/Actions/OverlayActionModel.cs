@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Actions
 {
-    [Obsolete]
     [DataContract]
     public class OverlayActionModel : ActionModelBase
     {

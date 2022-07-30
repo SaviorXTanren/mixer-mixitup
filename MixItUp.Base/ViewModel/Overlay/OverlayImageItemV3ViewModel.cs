@@ -57,7 +57,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.SetCommands();
         }
 
-        public override OverlayItemV3ModelBase GetItem()
+        protected override OverlayItemV3ModelBase GetItemInternal()
         {
             OverlayImageItemV3Model result = new OverlayImageItemV3Model()
             {

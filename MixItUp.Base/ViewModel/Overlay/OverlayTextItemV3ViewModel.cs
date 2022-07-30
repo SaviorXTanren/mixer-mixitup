@@ -180,7 +180,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.width = item.Width;
         }
 
-        public override OverlayItemV3ModelBase GetItem()
+        protected override OverlayItemV3ModelBase GetItemInternal()
         {
             OverlayTextItemV3Model result = new OverlayTextItemV3Model()
             {

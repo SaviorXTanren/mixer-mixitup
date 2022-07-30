@@ -8,7 +8,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public OverlayHTMLItemV3ViewModel(OverlayHTMLItemV3Model item) : base(item) { }
 
-        public override OverlayItemV3ModelBase GetItem()
+        protected override OverlayItemV3ModelBase GetItemInternal()
         {
             return new OverlayHTMLItemV3Model()
             {

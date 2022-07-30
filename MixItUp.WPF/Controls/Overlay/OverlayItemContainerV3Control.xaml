@@ -17,7 +17,7 @@
     
     <TabControl SnapsToDevicePixels="True" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" MaterialDesign:NavigationRailAssist.ShowSelectionBackground="True">
         <TabItem Header="{x:Static resx:Resources.Details}">
-            <Grid>
+            <Grid Margin="0,15,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="10" />
