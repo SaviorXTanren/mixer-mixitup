@@ -15,7 +15,7 @@
     <!--<link href="video-js.css" rel="stylesheet">-->
     <script src="video.min.js"></script>
 
-    <!--<link rel="stylesheet" type="text/css" href="animate.min.css">-->
+    <link rel="stylesheet" type="text/css" href="animate.min.css">
 
     <script src="https://code.responsivevoice.org/responsivevoice.js?key=PkwySfvE"></script>
 </head>
@@ -53,18 +53,17 @@
             // We create a Promise and return it
             new Promise((resolve, reject) => {
                 const animationName = `${prefix}${animation}`;
-                const node = document.querySelector(element);
 
-                node.classList.add(`${prefix}animated`, animationName);
+                element.classList.add(`${prefix}animated`, animationName);
 
                 // When the animation ends, we clean the classes and resolve the Promise
                 function handleAnimationEnd(event) {
                     event.stopPropagation();
-                    node.classList.remove(`${prefix}animated`, animationName);
+                    element.classList.remove(`${prefix}animated`, animationName);
                     resolve('Animation ended');
                 }
 
-                node.addEventListener('animationend', handleAnimationEnd, { once: true });
+                element.addEventListener('animationend', handleAnimationEnd, { once: true });
             });
 
         function connectionOpened() {
@@ -82,48 +81,54 @@
                         var addedElement = document.createElement('div');
                         addedElement.innerHTML = packet.data.HTML;
 
-                        mainOverlayDiv.appendChild(addedElement);
+                        processBasic(packet.data, addedElement);
                     }
                     else if (packet.type == 'YouTube') {
-                        youtubePacket(packet.data);
+                        if (youtubeIFrameAPIReady) {
+                            var addedElement = document.createElement('div');
+                            addedElement.id = data.ID;
 
-                        var addedElement = document.createElement('div');
-                        addedElement.innerHTML = packet.data.HTML;
+                            processBasic(packet.data, addedElement);
 
-                        mainOverlayDiv.appendChild(addedElement);
+                            var youtubeVideoPlayer = new YT.Player(addedElement.id, {
+                                height: data.Height,
+                                width: data.Width,
+                                videoId: data.VideoID,
+                                playerVars: { 'controls': 0, 'modestbranding': 1, 'start': data.StartTime },
+                                events: {
+                                    'onReady': function () {
+                                        youtubeVideoPlayer.setVolume(data.Volume);
+                                        youtubeVideoPlayer.setLoop(false);
+                                        youtubeVideoPlayer.frameBorder = 0;
+                                        youtubeVideoPlayer.playVideo();
+                                    },
+                                    'onStateChange': function (event) {
+                                        if (event.data == YT.PlayerState.ENDED) {
+                                            event.target.destroy();
+                                        }
+                                    }
+                                }
+                            });
+                        }
                     }
                 }
             }
             catch (err) { logException(err); }
         }
 
-        function youtubePacket(data) {
-            if (youtubeIFrameAPIReady) {
-                var addedElement = document.createElement('div');
-                addedElement.id = data.ID;
+        function processBasic(data, div) {
+            mainOverlayDiv.appendChild(addedElement);
 
-                mainOverlayDiv.appendChild(addedElement);
+            animateCSS(addedElement, data.EntranceAnimation.AnimateCSSAnimationName).then((message) => {
 
-                var youtubeVideoPlayer = new YT.Player(addedElement.id, {
-                    height: data.Height,
-                    width: data.Width,
-                    videoId: data.VideoID,
-                    playerVars: { 'controls': 0, 'modestbranding': 1, 'start': data.StartTime },
-                    events: {
-                        'onReady': function () {
-                            youtubeVideoPlayer.setVolume(data.Volume);
-                            youtubeVideoPlayer.setLoop(false);
-                            youtubeVideoPlayer.frameBorder = 0;
-                            youtubeVideoPlayer.playVideo();
-                        },
-                        'onStateChange': function (event) {
-                            if (event.data == YT.PlayerState.ENDED) {
-                                event.target.destroy();
-                            }
-                        }
-                    }
+                animateCSS(addedElement, data.VisibleAnimation.AnimateCSSAnimationName).then((message) => {
+
+                    animateCSS(addedElement, data.ExitAnimation.AnimateCSSAnimationName).then((message) => {
+
+                        mainOverlayDiv.removeChild(addedElement);
+                    });
                 });
-            }
+            });
         }
 
         function logException(err) {
@@ -137,4 +142,4 @@
         openWebsocketConnection();
     </script>
 </body>
-</html >
+</html>

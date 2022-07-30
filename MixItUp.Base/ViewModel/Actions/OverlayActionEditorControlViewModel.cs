@@ -34,15 +34,14 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.selectedActionType = value;
                 this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("OverlayNotEnabled");
-                this.NotifyPropertyChanged("OverlayEnabled");
-                this.NotifyPropertyChanged("ShowItemProperties");
-                this.NotifyPropertyChanged("ShowTextItem");
-                this.NotifyPropertyChanged("ShowImageItem");
-                this.NotifyPropertyChanged("ShowVideoItem");
-                this.NotifyPropertyChanged("ShowYouTubeItem");
-                this.NotifyPropertyChanged("ShowHTMLItem");
-                this.NotifyPropertyChanged("ShowWebPageItem");
+                this.NotifyPropertyChanged(nameof(OverlayNotEnabled));
+                this.NotifyPropertyChanged(nameof(OverlayEnabled));
+                this.NotifyPropertyChanged(nameof(ShowTextItem));
+                this.NotifyPropertyChanged(nameof(ShowImageItem));
+                this.NotifyPropertyChanged(nameof(ShowVideoItem));
+                this.NotifyPropertyChanged(nameof(ShowYouTubeItem));
+                this.NotifyPropertyChanged(nameof(ShowHTMLItem));
+                this.NotifyPropertyChanged(nameof(ShowWebPageItem));
             }
         }
         private OverlayActionTypeEnum selectedActionType;
@@ -71,8 +70,6 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private string selectedOverlayEndpoint;
-
-        public bool ShowItemProperties { get { return this.ShowTextItem || this.ShowImageItem || this.ShowVideoItem || this.ShowYouTubeItem || this.ShowHTMLItem || this.ShowWebPageItem; } }
 
         public bool ShowTextItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Text; } }
 
@@ -245,7 +242,11 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override Task<ActionModelBase> GetActionInternal()
         {
-            if (this.ShowItemProperties)
+            if (false)
+            {
+
+            }
+            else
             {
                 OverlayItemV3ViewModelBase itemViewModel = this.GetItemViewModel();
                 if (itemViewModel != null)

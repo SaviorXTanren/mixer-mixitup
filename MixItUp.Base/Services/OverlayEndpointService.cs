@@ -336,6 +336,8 @@ namespace MixItUp.Base.Services
             this.ReplaceScriptTag("jquery-3.6.0.min.js");
             this.ReplaceScriptTag("webSocketWrapper.js");
             this.ReplaceScriptTag("video.min.js");
+
+            this.ReplaceCSSStyleSheetTag("animate.min.css");
         }
 
         public string GetURLForFile(string filePath, string fileType)
@@ -448,6 +450,11 @@ namespace MixItUp.Base.Services
         private void ReplaceScriptTag(string fileName)
         {
             this.webPageInstance = this.webPageInstance.Replace($"<script src=\"{fileName}\"></script>", $"<script>{File.ReadAllText(OverlayFolderPath + fileName)}</script>");
+        }
+
+        private void ReplaceCSSStyleSheetTag(string fileName)
+        {
+            this.webPageInstance = this.webPageInstance.Replace($"<link rel=\"stylesheet\" type=\"text/css\" href=\"{fileName}\">", $"<style>{File.ReadAllText(OverlayFolderPath + fileName)}</style>");
         }
     }
 

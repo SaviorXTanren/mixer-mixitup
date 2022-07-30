@@ -119,6 +119,15 @@ namespace MixItUp.Base.Model.Overlay
                 result.HTML = ReplaceProperty(result.HTML, "Height", $"height: auto;");
             }
 
+            result.EntranceAnimation = this.EntranceAnimation;
+            result.EntranceAnimation.ApplyAnimationReplacements(result);
+
+            result.VisibleAnimation = this.VisibleAnimation;
+            result.VisibleAnimation.ApplyAnimationReplacements(result);
+
+            result.ExitAnimation = this.ExitAnimation;
+            result.ExitAnimation.ApplyAnimationReplacements(result);
+
             return await this.GetProcessedItem(result, overlayEndpointService, parameters);
         }
 

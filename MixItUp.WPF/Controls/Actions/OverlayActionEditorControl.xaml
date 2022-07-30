@@ -49,30 +49,28 @@
             </TextBlock>
         </Grid>
 
-        <Grid Grid.Row="2" Visibility="{Binding ShowItemGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Grid Visibility="{Binding ShowTextItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-                <OverlayControls:OverlayTextItemV3Control DataContext="{Binding TextItemViewModel}" />
-            </Grid>
+        <Grid Grid.Row="2" Visibility="{Binding ShowTextItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+            <OverlayControls:OverlayTextItemV3Control DataContext="{Binding TextItemViewModel}" />
+        </Grid>
 
-            <Grid Visibility="{Binding ShowImageItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-                <OverlayControls:OverlayImageItemV3Control DataContext="{Binding ImageItemViewModel}" />
-            </Grid>
+        <Grid Grid.Row="2" Visibility="{Binding ShowImageItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+            <OverlayControls:OverlayImageItemV3Control DataContext="{Binding ImageItemViewModel}" />
+        </Grid>
 
-            <Grid Visibility="{Binding ShowVideoItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-                <OverlayControls:OverlayVideoItemV3Control DataContext="{Binding VideoItemViewModel}" />
-            </Grid>
+        <Grid Grid.Row="2" Visibility="{Binding ShowVideoItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+            <OverlayControls:OverlayVideoItemV3Control DataContext="{Binding VideoItemViewModel}" />
+        </Grid>
 
-            <Grid Visibility="{Binding ShowYouTubeItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-                <OverlayControls:OverlayYouTubeItemV3Control DataContext="{Binding YouTubeItemViewModel}" />
-            </Grid>
+        <Grid Grid.Row="2" Visibility="{Binding ShowYouTubeItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+            <OverlayControls:OverlayYouTubeItemV3Control DataContext="{Binding YouTubeItemViewModel}" />
+        </Grid>
 
-            <Grid Visibility="{Binding ShowHTMLItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-                <OverlayControls:OverlayHTMLItemV3Control DataContext="{Binding HTMLItemViewModel}" />
-            </Grid>
+        <Grid Grid.Row="2" Visibility="{Binding ShowHTMLItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+            <OverlayControls:OverlayHTMLItemV3Control DataContext="{Binding HTMLItemViewModel}" />
+        </Grid>
 
-            <Grid Visibility="{Binding ShowWebPageItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-                <OverlayControls:OverlayWebPageItemV3Control DataContext="{Binding WebPageItemViewModel}" />
-            </Grid>
+        <Grid Grid.Row="2" Visibility="{Binding ShowWebPageItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+            <OverlayControls:OverlayWebPageItemV3Control DataContext="{Binding WebPageItemViewModel}" />
         </Grid>
     </Grid>
 </local:ActionEditorControlBase>

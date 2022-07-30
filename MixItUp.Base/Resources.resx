@@ -8889,4 +8889,139 @@ via Twitch, it's a "your mileage may very" situation.</value>
   <data name="Javascript" xml:space="preserve">
     <value>Javascript</value>
   </data>
+  <data name="BackInDown" xml:space="preserve">
+    <value>Back In Down</value>
+  </data>
+  <data name="BackInLeft" xml:space="preserve">
+    <value>Back In Left</value>
+  </data>
+  <data name="BackInRight" xml:space="preserve">
+    <value>Back In Right</value>
+  </data>
+  <data name="BackInUp" xml:space="preserve">
+    <value>Back In Up</value>
+  </data>
+  <data name="BackOutDown" xml:space="preserve">
+    <value>Back Out Down</value>
+  </data>
+  <data name="BackOutLeft" xml:space="preserve">
+    <value>Back Out Left</value>
+  </data>
+  <data name="BackOutRight" xml:space="preserve">
+    <value>Back Out Right</value>
+  </data>
+  <data name="BackOutUp" xml:space="preserve">
+    <value>Back Out Up</value>
+  </data>
+  <data name="FadeInBottomLeft" xml:space="preserve">
+    <value>Fade In Bottom Left</value>
+  </data>
+  <data name="FadeInBottomRight" xml:space="preserve">
+    <value>Fade In Bottom Right</value>
+  </data>
+  <data name="FadeInDownBig" xml:space="preserve">
+    <value>Fade In Down Big</value>
+  </data>
+  <data name="FadeInLeftBig" xml:space="preserve">
+    <value>Fade In Left Big</value>
+  </data>
+  <data name="FadeInRightBig" xml:space="preserve">
+    <value>Fade In Right Big</value>
+  </data>
+  <data name="FadeInTopLeft" xml:space="preserve">
+    <value>Fade In Top Left</value>
+  </data>
+  <data name="FadeInTopRight" xml:space="preserve">
+    <value>Fade In Top Right</value>
+  </data>
+  <data name="FadeInUpBig" xml:space="preserve">
+    <value>Fade In Up Big</value>
+  </data>
+  <data name="FadeOutBottomLeft" xml:space="preserve">
+    <value>Fade Out Bottom Left</value>
+  </data>
+  <data name="FadeOutBottomRight" xml:space="preserve">
+    <value>Fade Out Bottom Right</value>
+  </data>
+  <data name="FadeOutDownBig" xml:space="preserve">
+    <value>Fade Out Down Big</value>
+  </data>
+  <data name="FadeOutLeftBig" xml:space="preserve">
+    <value>Fade Out Left Big</value>
+  </data>
+  <data name="FadeOutRightBig" xml:space="preserve">
+    <value>Fade Out Right Big</value>
+  </data>
+  <data name="FadeOutTopLeft" xml:space="preserve">
+    <value>Fade Out Top Left</value>
+  </data>
+  <data name="FadeOutTopRight" xml:space="preserve">
+    <value>Fade Out Top Right</value>
+  </data>
+  <data name="FadeOutUpBig" xml:space="preserve">
+    <value>Fade Out Up Big</value>
+  </data>
+  <data name="HeadShake" xml:space="preserve">
+    <value>Head Shake</value>
+  </data>
+  <data name="HeartBeat" xml:space="preserve">
+    <value>Heart Beat</value>
+  </data>
+  <data name="LightSpeedInLeft" xml:space="preserve">
+    <value>Light Speed In Left</value>
+  </data>
+  <data name="LightSpeedInRight" xml:space="preserve">
+    <value>Light Speed In Right</value>
+  </data>
+  <data name="LightSpeedOutLeft" xml:space="preserve">
+    <value>Light Speed Out Left</value>
+  </data>
+  <data name="LightSpeedOutRight" xml:space="preserve">
+    <value>Light Speed Out Right</value>
+  </data>
+  <data name="RotateInDownLeft" xml:space="preserve">
+    <value>Rotate In Down Left</value>
+  </data>
+  <data name="RotateInDownRight" xml:space="preserve">
+    <value>Rotate In Down Right</value>
+  </data>
+  <data name="RotateInUpLeft" xml:space="preserve">
+    <value>Rotate In Up Left</value>
+  </data>
+  <data name="RotateInUpRight" xml:space="preserve">
+    <value>Rotate In Up Right</value>
+  </data>
+  <data name="RotateOutDownLeft" xml:space="preserve">
+    <value>Rotate Out Down Left</value>
+  </data>
+  <data name="RotateOutDownRight" xml:space="preserve">
+    <value>Rotate Out Down Right</value>
+  </data>
+  <data name="RotateOutUpLeft" xml:space="preserve">
+    <value>Rotate Out Up Left</value>
+  </data>
+  <data name="RotateOutUpRight" xml:space="preserve">
+    <value>Rotate Out Up Right</value>
+  </data>
+  <data name="ShakeX" xml:space="preserve">
+    <value>Shake X</value>
+  </data>
+  <data name="ShakeY" xml:space="preserve">
+    <value>Shake Y</value>
+  </data>
+  <data name="AnimateCSS" xml:space="preserve">
+    <value>Animate.css</value>
+  </data>
+  <data name="Animation" xml:space="preserve">
+    <value>Animation</value>
+  </data>
+  <data name="AnimationLibrary" xml:space="preserve">
+    <value>Animation Library</value>
+  </data>
+  <data name="Entrance" xml:space="preserve">
+    <value>Entrance</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
 </root>

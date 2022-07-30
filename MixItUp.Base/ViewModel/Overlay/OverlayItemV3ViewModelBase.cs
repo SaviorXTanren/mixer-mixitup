@@ -1,8 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.ViewModels;
-using StreamingClient.Base.Util;
-using System;
-using System.Collections.Generic;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
@@ -19,6 +16,39 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private OverlayItemPositionV3ViewModel itemPosition = new OverlayItemPositionV3ViewModel();
 
+        public OverlayItemAnimationV3ViewModel EntranceAnimation
+        {
+            get { return this.entranceAnimation; }
+            set
+            {
+                this.entranceAnimation = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayItemAnimationV3ViewModel entranceAnimation = new OverlayItemAnimationV3ViewModel();
+
+        public OverlayItemAnimationV3ViewModel VisibleAnimation
+        {
+            get { return this.visibleAnimation; }
+            set
+            {
+                this.visibleAnimation = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayItemAnimationV3ViewModel visibleAnimation = new OverlayItemAnimationV3ViewModel();
+
+        public OverlayItemAnimationV3ViewModel ExitAnimation
+        {
+            get { return this.exitAnimation; }
+            set
+            {
+                this.exitAnimation = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayItemAnimationV3ViewModel exitAnimation = new OverlayItemAnimationV3ViewModel();
+
         public string ItemDuration
         {
             get { return this.itemDuration; }
@@ -29,54 +59,6 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
         }
         private string itemDuration;
-
-        [Obsolete]
-        public IEnumerable<OverlayItemEffectEntranceAnimationTypeEnum> EntranceAnimations { get { return EnumHelper.GetEnumList<OverlayItemEffectEntranceAnimationTypeEnum>(); } }
-
-        [Obsolete]
-        public OverlayItemEffectEntranceAnimationTypeEnum SelectedEntranceAnimation
-        {
-            get { return this.selectedEntranceAnimation; }
-            set
-            {
-                this.selectedEntranceAnimation = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        [Obsolete]
-        private OverlayItemEffectEntranceAnimationTypeEnum selectedEntranceAnimation;
-
-        [Obsolete]
-        public IEnumerable<OverlayItemEffectExitAnimationTypeEnum> ExitAnimations { get { return EnumHelper.GetEnumList<OverlayItemEffectExitAnimationTypeEnum>(); } }
-
-        [Obsolete]
-        public OverlayItemEffectExitAnimationTypeEnum SelectedExitAnimation
-        {
-            get { return this.selectedExitAnimation; }
-            set
-            {
-                this.selectedExitAnimation = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        [Obsolete]
-        private OverlayItemEffectExitAnimationTypeEnum selectedExitAnimation;
-
-        [Obsolete]
-        public IEnumerable<OverlayItemEffectVisibleAnimationTypeEnum> VisibleAnimations { get { return EnumHelper.GetEnumList<OverlayItemEffectVisibleAnimationTypeEnum>(); } }
-
-        [Obsolete]
-        public OverlayItemEffectVisibleAnimationTypeEnum SelectedVisibleAnimation
-        {
-            get { return this.selectedVisibleAnimation; }
-            set
-            {
-                this.selectedVisibleAnimation = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        [Obsolete]
-        private OverlayItemEffectVisibleAnimationTypeEnum selectedVisibleAnimation;
 
         public string HTML
         {
@@ -127,8 +109,6 @@ namespace MixItUp.Base.ViewModel.Overlay
             {
                 this.HTML = OverlayItemV3ModelBase.ReplaceProperty(OverlayItemV3ModelBase.PositionedHTML, OverlayItemV3ModelBase.InnerHTMLProperty, this.HTML);
             }
-
-            this.ItemPosition = new OverlayItemPositionV3ViewModel();
         }
 
         public OverlayItemV3ViewModelBase(OverlayItemV3ModelBase item)
@@ -138,6 +118,10 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.Javascript = item.Javascript;
 
             this.ItemPosition = new OverlayItemPositionV3ViewModel(item);
+
+            this.EntranceAnimation = new OverlayItemAnimationV3ViewModel(item.EntranceAnimation);
+            this.VisibleAnimation = new OverlayItemAnimationV3ViewModel(item.VisibleAnimation);
+            this.ExitAnimation = new OverlayItemAnimationV3ViewModel(item.ExitAnimation);
         }
 
         public OverlayItemV3ModelBase GetItem()
@@ -145,6 +129,10 @@ namespace MixItUp.Base.ViewModel.Overlay
             OverlayItemV3ModelBase item = this.GetItemInternal();
 
             this.ItemPosition.SetPosition(item);
+
+            this.EntranceAnimation.SetAnimation(item.EntranceAnimation);
+            this.VisibleAnimation.SetAnimation(item.VisibleAnimation);
+            this.ExitAnimation.SetAnimation(item.ExitAnimation);
 
             return item;
         }
