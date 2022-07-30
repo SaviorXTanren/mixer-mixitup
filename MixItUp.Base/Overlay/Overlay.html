@@ -116,7 +116,7 @@
             catch (err) { logException(err); }
         }
 
-        function processBasic(data, div) {
+        function processBasic(data, addedElement) {
             mainOverlayDiv.appendChild(addedElement);
 
             animateCSS(addedElement, data.EntranceAnimation.AnimateCSSAnimationName).then((message) => {
