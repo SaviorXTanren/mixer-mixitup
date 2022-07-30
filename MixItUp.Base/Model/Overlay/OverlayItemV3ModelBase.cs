@@ -67,21 +67,41 @@ namespace MixItUp.Base.Model.Overlay
             {
                 zIndexCounter++;
                 result.HTML = ReplaceProperty(result.HTML, "Layer", zIndexCounter.ToString());
+                result.CSS = ReplaceProperty(result.CSS, "Layer", zIndexCounter.ToString());
+                result.Javascript = ReplaceProperty(result.Javascript, "Layer", zIndexCounter.ToString());
             }
             else
             {
                 result.HTML = ReplaceProperty(result.HTML, "Layer", this.Layer.ToString());
+                result.CSS = ReplaceProperty(result.CSS, "Layer", this.Layer.ToString());
+                result.Javascript = ReplaceProperty(result.Javascript, "Layer", this.Layer.ToString());
             }
 
             result.HTML = ReplaceProperty(result.HTML, "XPosition", this.XPosition.ToString());
+            result.CSS = ReplaceProperty(result.CSS, "XPosition", this.XPosition.ToString());
+            result.Javascript = ReplaceProperty(result.Javascript, "XPosition", this.XPosition.ToString());
+
             result.HTML = ReplaceProperty(result.HTML, "YPosition", this.YPosition.ToString());
+            result.CSS = ReplaceProperty(result.CSS, "YPosition", this.YPosition.ToString());
+            result.Javascript = ReplaceProperty(result.Javascript, "YPosition", this.YPosition.ToString());
+
             result.HTML = ReplaceProperty(result.HTML, "PositionType", this.IsPercentagePosition ? "%" : "px");
+            result.CSS = ReplaceProperty(result.CSS, "PositionType", this.IsPercentagePosition ? "%" : "px");
+            result.Javascript = ReplaceProperty(result.Javascript, "PositionType", this.IsPercentagePosition ? "%" : "px");
+
             result.HTML = ReplaceProperty(result.HTML, "XTranslation", this.XTranslation.ToString());
+            result.CSS = ReplaceProperty(result.CSS, "XTranslation", this.XTranslation.ToString());
+            result.HTML = ReplaceProperty(result.HTML, "XTranslation", this.XTranslation.ToString());
+
             result.HTML = ReplaceProperty(result.HTML, "YTranslation", this.YTranslation.ToString());
+            result.CSS = ReplaceProperty(result.CSS, "YTranslation", this.YTranslation.ToString());
+            result.Javascript = ReplaceProperty(result.Javascript, "YTranslation", this.YTranslation.ToString());
 
             if (this.Width > 0)
             {
                 result.HTML = ReplaceProperty(result.HTML, "Width", $"width: {this.Width}px;");
+                result.CSS = ReplaceProperty(result.CSS, "Width", $"{this.Width}px");
+                result.Javascript = ReplaceProperty(result.Javascript, "Width", $"{this.Width}px");
             }
             else
             {
@@ -91,6 +111,8 @@ namespace MixItUp.Base.Model.Overlay
             if (this.Height > 0)
             {
                 result.HTML = ReplaceProperty(result.HTML, "Height", $"height: {this.Height}px;");
+                result.CSS = ReplaceProperty(result.CSS, "Height", $"{this.Height}px");
+                result.Javascript = ReplaceProperty(result.Javascript, "Height", $"{this.Height}px");
             }
             else
             {

@@ -20,6 +20,8 @@ namespace MixItUp.Base.Model.Overlay
             item = await base.GetProcessedItem(item, overlayEndpointService, parameters);
 
             item.HTML = ReplaceProperty(item.HTML, "FilePath", overlayEndpointService.GetURLForLocalFile(this.FilePath, "image"));
+            item.CSS = ReplaceProperty(item.CSS, "FilePath", overlayEndpointService.GetURLForLocalFile(this.FilePath, "image"));
+            item.Javascript = ReplaceProperty(item.Javascript, "FilePath", overlayEndpointService.GetURLForLocalFile(this.FilePath, "image"));
 
             return item;
         }

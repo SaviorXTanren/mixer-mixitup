@@ -27,7 +27,12 @@ namespace MixItUp.Base.Model.Overlay
             item = await base.GetProcessedItem(item, overlayEndpointService, parameters);
 
             item.HTML = ReplaceProperty(item.HTML, "FilePath", overlayEndpointService.GetURLForLocalFile(this.FilePath, "video"));
+            item.CSS = ReplaceProperty(item.CSS, "FilePath", overlayEndpointService.GetURLForLocalFile(this.FilePath, "video"));
+            item.Javascript = ReplaceProperty(item.Javascript, "FilePath", overlayEndpointService.GetURLForLocalFile(this.FilePath, "video"));
+
             item.HTML = ReplaceProperty(item.HTML, "Volume", this.Volume.ToString());
+            item.CSS = ReplaceProperty(item.CSS, "Volume", this.Volume.ToString());
+            item.Javascript = ReplaceProperty(item.Javascript, "Volume", this.Volume.ToString());
 
             if (this.Loop)
             {
@@ -48,6 +53,8 @@ namespace MixItUp.Base.Model.Overlay
                 extension = "mp4";
             }
             item.HTML = ReplaceProperty(item.HTML, "VideoExtension", extension);
+            item.CSS = ReplaceProperty(item.CSS, "VideoExtension", extension);
+            item.Javascript = ReplaceProperty(item.Javascript, "VideoExtension", extension);
 
             return item;
         }
