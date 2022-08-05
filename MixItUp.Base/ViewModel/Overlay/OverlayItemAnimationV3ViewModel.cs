@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
-using StreamingClient.Base.Util;
 using System.Collections.Generic;
 
 namespace MixItUp.Base.ViewModel.Overlay
@@ -12,7 +12,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
     public class OverlayItemAnimationV3ViewModel : UIViewModelBase
     {
-        public IEnumerable<OverlayItemAnimationLibraryType> AnimationLibraries { get { return EnumHelper.GetEnumList<OverlayItemAnimationLibraryType>(); } }
+        public IEnumerable<OverlayItemAnimationLibraryType> AnimationLibraries { get { return EnumLocalizationHelper.GetSortedEnumList<OverlayItemAnimationLibraryType>(); } }
 
         public OverlayItemAnimationLibraryType SelectedAnimationLibrary
         {
@@ -30,7 +30,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public bool IsAnimateCSSVisible { get { return this.SelectedAnimationLibrary == OverlayItemAnimationLibraryType.AnimateCSS; } }
 
-        public IEnumerable<OverlayAnimateCSSAnimationType> AnimateCSSAnimations { get { return EnumHelper.GetEnumList<OverlayAnimateCSSAnimationType>(); } }
+        public IEnumerable<OverlayAnimateCSSAnimationType> AnimateCSSAnimations { get { return EnumLocalizationHelper.GetSortedEnumList<OverlayAnimateCSSAnimationType>(); } }
 
         public OverlayAnimateCSSAnimationType SelectedAnimatedCSSAnimation
         {
