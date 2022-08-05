@@ -81,7 +81,7 @@
                         var addedElement = document.createElement('div');
                         addedElement.innerHTML = packet.data.HTML;
 
-                        processBasic(packet.data, addedElement);
+                        processBasic(packet.data, addedElement.firstChild);
                     }
                     else if (packet.type == 'YouTube') {
                         if (youtubeIFrameAPIReady) {
