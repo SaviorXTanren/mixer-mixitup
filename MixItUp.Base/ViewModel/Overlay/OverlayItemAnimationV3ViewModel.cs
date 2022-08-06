@@ -2,6 +2,7 @@
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
@@ -12,6 +13,8 @@ namespace MixItUp.Base.ViewModel.Overlay
 
     public class OverlayItemAnimationV3ViewModel : UIViewModelBase
     {
+        private static IEnumerable<OverlayAnimateCSSAnimationType> animateCSSAnimations = null;
+
         public IEnumerable<OverlayItemAnimationLibraryType> AnimationLibraries { get { return EnumLocalizationHelper.GetSortedEnumList<OverlayItemAnimationLibraryType>(); } }
 
         public OverlayItemAnimationLibraryType SelectedAnimationLibrary
@@ -30,7 +33,20 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public bool IsAnimateCSSVisible { get { return this.SelectedAnimationLibrary == OverlayItemAnimationLibraryType.AnimateCSS; } }
 
-        public IEnumerable<OverlayAnimateCSSAnimationType> AnimateCSSAnimations { get { return EnumLocalizationHelper.GetSortedEnumList<OverlayAnimateCSSAnimationType>(); } }
+        public IEnumerable<OverlayAnimateCSSAnimationType> AnimateCSSAnimations
+        {
+            get
+            {
+                if (OverlayItemAnimationV3ViewModel.animateCSSAnimations == null)
+                {
+                    List<OverlayAnimateCSSAnimationType> animations = new List<OverlayAnimateCSSAnimationType>(EnumLocalizationHelper.GetSortedEnumList<OverlayAnimateCSSAnimationType>());
+                    animations.Remove(OverlayAnimateCSSAnimationType.None);
+                    animations.Insert(0, OverlayAnimateCSSAnimationType.None);
+                    OverlayItemAnimationV3ViewModel.animateCSSAnimations = animations;
+                }
+                return OverlayItemAnimationV3ViewModel.animateCSSAnimations;
+            }
+        }
 
         public OverlayAnimateCSSAnimationType SelectedAnimatedCSSAnimation
         {
