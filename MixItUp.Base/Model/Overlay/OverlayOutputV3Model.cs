@@ -1,10 +1,14 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Overlay
 {
     [DataContract]
     public class OverlayOutputV3Model
     {
+        [DataMember]
+        public Guid ID { get; set; }
+
         [DataMember]
         public string HTML { get; set; } = string.Empty;
         [DataMember]

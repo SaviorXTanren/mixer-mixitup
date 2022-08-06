@@ -2,7 +2,6 @@
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {

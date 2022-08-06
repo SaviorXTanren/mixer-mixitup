@@ -52,18 +52,23 @@
         const animateCSS = (element, animation, prefix = 'animate__') =>
             // We create a Promise and return it
             new Promise((resolve, reject) => {
-                const animationName = `${prefix}${animation}`;
+                if (animation != null && animation) {
+                    const animationName = `${prefix}${animation}`;
 
-                element.classList.add(`${prefix}animated`, animationName);
+                    element.classList.add(`${prefix}animated`, animationName);
 
-                // When the animation ends, we clean the classes and resolve the Promise
-                function handleAnimationEnd(event) {
-                    event.stopPropagation();
-                    element.classList.remove(`${prefix}animated`, animationName);
+                    // When the animation ends, we clean the classes and resolve the Promise
+                    function handleAnimationEnd(event) {
+                        event.stopPropagation();
+                        element.classList.remove(`${prefix}animated`, animationName);
+                        resolve('Animation ended');
+                    }
+
+                    element.addEventListener('animationend', handleAnimationEnd, { once: true });
+                }
+                else {
                     resolve('Animation ended');
                 }
-
-                element.addEventListener('animationend', handleAnimationEnd, { once: true });
             });
 
         function connectionOpened() {
@@ -120,6 +125,13 @@
             var duration = parseFloat(data.Duration);
             if (duration != NaN) {
 
+                addedElement.classList.add(data.ID);
+
+                var style = null;
+                if (data.CSS != null && data.CSS) {
+                    style = addCSS(data.CSS);
+                }
+
                 mainOverlayDiv.appendChild(addedElement);
 
                 animateCSS(addedElement, data.EntranceAnimation.AnimateCSSAnimationName).then((message) => {
@@ -133,6 +145,10 @@
                             animateCSS(addedElement, data.ExitAnimation.AnimateCSSAnimationName).then((message) => {
 
                                 mainOverlayDiv.removeChild(addedElement);
+
+                                if (style != null) {
+                                    document.head.removeChild(style);
+                                }
                             });
 
                         }, (duration * 1000) / 2);
@@ -143,7 +159,23 @@
             }
         }
 
+        function addCSS(css) {
+            var style = document.createElement('style');
+            style.setAttribute('type', 'text/css');
+
+            if (style.styleSheet) {   // IE
+                style.styleSheet.cssText = css;
+            } else {                // the world
+                style.appendChild(document.createTextNode(css));
+            }
+
+            document.head.appendChild(style);
+
+            return style;
+        }
+
         function logException(err) {
+            console.error(err);
             logToSessionStorage(err);
         }
 

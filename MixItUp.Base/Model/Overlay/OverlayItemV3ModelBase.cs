@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -59,6 +60,7 @@ namespace MixItUp.Base.Model.Overlay
         public async Task<OverlayOutputV3Model> GetProcessedItem(OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
         {
             OverlayOutputV3Model result = new OverlayOutputV3Model();
+            result.ID = Guid.NewGuid();
             result.HTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.HTML, parameters);
             result.CSS = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.CSS, parameters);
             result.Javascript = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.Javascript, parameters);
