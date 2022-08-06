@@ -20,7 +20,7 @@ namespace MixItUp.Base.Model.Overlay
     public abstract class OverlayItemV3ModelBase : OverlayOutputV3Model
     {
         public const string InnerHTMLProperty = "InnerHTML";
-        public const string PositionedHTML = "<div style=\"position: absolute; margin: 0px; z-index: {Layer}; left: {XPosition}{PositionType}; top: {YPosition}{PositionType}; transform: translate({XTranslation}%, {YTranslation}%); {Width} {Height}\">{InnerHTML}</div>";
+        public const string PositionedHTML = "<div style=\"position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;\"><div style=\"position: absolute; margin: 0px; left: {XPosition}{PositionType}; top: {YPosition}{PositionType}; transform: translate({XTranslation}%, {YTranslation}%); {Width} {Height}\">{InnerHTML}</div></div>";
 
         public static int zIndexCounter = 0;
 
@@ -118,6 +118,8 @@ namespace MixItUp.Base.Model.Overlay
             {
                 result.HTML = ReplaceProperty(result.HTML, "Height", $"height: auto;");
             }
+
+            result.Duration = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.Duration, parameters);
 
             result.EntranceAnimation = this.EntranceAnimation;
             result.EntranceAnimation.ApplyAnimationReplacements(result);

@@ -163,14 +163,6 @@ namespace MixItUp.Base.ViewModel.Actions
 
             if (action.OverlayItemV3 != null)
             {
-                //if (action.OverlayItem.Effects != null)
-                //{
-                //    this.ItemDuration = action.OverlayItem.Effects.Duration;
-                //    this.SelectedEntranceAnimation = action.OverlayItem.Effects.EntranceAnimation;
-                //    this.SelectedVisibleAnimation = action.OverlayItem.Effects.VisibleAnimation;
-                //    this.SelectedExitAnimation = action.OverlayItem.Effects.ExitAnimation;
-                //}
-
                 if (action.OverlayItemV3.Type == OverlayItemV3Type.Text)
                 {
                     this.SelectedActionType = OverlayActionTypeEnum.Text;

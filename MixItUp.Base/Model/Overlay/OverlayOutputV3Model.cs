@@ -13,6 +13,9 @@ namespace MixItUp.Base.Model.Overlay
         public string Javascript { get; set; } = string.Empty;
 
         [DataMember]
+        public string Duration { get; set; }
+
+        [DataMember]
         public OverlayItemAnimationV3Model EntranceAnimation { get; set; } = new OverlayItemAnimationV3Model();
         [DataMember]
         public OverlayItemAnimationV3Model VisibleAnimation { get; set; } = new OverlayItemAnimationV3Model();

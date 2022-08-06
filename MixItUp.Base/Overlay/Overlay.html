@@ -117,18 +117,30 @@
         }
 
         function processBasic(data, addedElement) {
-            mainOverlayDiv.appendChild(addedElement);
+            var duration = parseFloat(data.Duration);
+            if (duration != NaN) {
 
-            animateCSS(addedElement, data.EntranceAnimation.AnimateCSSAnimationName).then((message) => {
+                mainOverlayDiv.appendChild(addedElement);
 
-                animateCSS(addedElement, data.VisibleAnimation.AnimateCSSAnimationName).then((message) => {
+                animateCSS(addedElement, data.EntranceAnimation.AnimateCSSAnimationName).then((message) => {
 
-                    animateCSS(addedElement, data.ExitAnimation.AnimateCSSAnimationName).then((message) => {
+                    setTimeout(function () {
 
-                        mainOverlayDiv.removeChild(addedElement);
-                    });
+                        animateCSS(addedElement, data.VisibleAnimation.AnimateCSSAnimationName).then((message) => { });
+
+                        setTimeout(function () {
+
+                            animateCSS(addedElement, data.ExitAnimation.AnimateCSSAnimationName).then((message) => {
+
+                                mainOverlayDiv.removeChild(addedElement);
+                            });
+
+                        }, (duration * 1000) / 2);
+
+                    }, (duration * 1000) / 2);
+
                 });
-            });
+            }
         }
 
         function logException(err) {

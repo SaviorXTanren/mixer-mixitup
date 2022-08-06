@@ -37,30 +37,39 @@
             <Button Grid.Column="0" Command="{Binding SimplePositionCommand}" IsEnabled="{Binding IsSimplePosition, Converter={StaticResource InverseBooleanConverter}}" Content="{x:Static resx:Resources.Simple}"/>
             <Button Grid.Column="1" Command="{Binding PercentagePositionCommand}" IsEnabled="{Binding IsPercentagePosition, Converter={StaticResource InverseBooleanConverter}}" Content="{x:Static resx:Resources.Percentage}"/>
             <Button Grid.Column="2" Command="{Binding PixelPositionCommand}" IsEnabled="{Binding IsPixelPosition, Converter={StaticResource InverseBooleanConverter}}" Content="{x:Static resx:Resources.Pixels}"/>
-
         </Grid>
 
         <Grid Grid.Row="4" HorizontalAlignment="Center" Visibility="{Binding IsSimplePosition, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+            
+            <Grid Grid.Column="0" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-            <Controls:IconButton Grid.Column="0" Grid.Row="0" Icon="ArrowTopLeft" Command="{Binding TopLeftSimplePositionCommand}" IsEnabled="{Binding IsTopLeftSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
-            <Controls:IconButton Grid.Column="1" Grid.Row="0" Icon="ArrowUp" Command="{Binding TopMiddleSimplePositionCommand}" IsEnabled="{Binding IsTopMiddleSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
-            <Controls:IconButton Grid.Column="2" Grid.Row="0" Icon="ArrowTopRight" Command="{Binding TopRightSimplePositionCommand}" IsEnabled="{Binding IsTopRightSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
-            <Controls:IconButton Grid.Column="0" Grid.Row="1" Icon="ArrowLeft" Command="{Binding MiddleLeftSimplePositionCommand}" IsEnabled="{Binding IsMiddleLeftSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
-            <Controls:IconButton Grid.Column="1" Grid.Row="1" Icon="ImageFilterCenterFocus" Command="{Binding MiddleMiddleSimplePositionCommand}" IsEnabled="{Binding IsMiddleMiddleSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
-            <Controls:IconButton Grid.Column="2" Grid.Row="1" Icon="ArrowRight" Command="{Binding MiddleRightSimplePositionCommand}" IsEnabled="{Binding IsMiddleRightSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
-            <Controls:IconButton Grid.Column="0" Grid.Row="2" Icon="ArrowBottomLeft" Command="{Binding BottomLeftSimplePositionCommand}" IsEnabled="{Binding IsBottomLeftSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
-            <Controls:IconButton Grid.Column="1" Grid.Row="2" Icon="ArrowDown" Command="{Binding BottomMiddleSimplePositionCommand}" IsEnabled="{Binding IsBottomMiddleSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
-            <Controls:IconButton Grid.Column="2" Grid.Row="2" Icon="ArrowBottomRight" Command="{Binding BottomRightSimplePositionCommand}" IsEnabled="{Binding IsBottomRightSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="0" Grid.Row="0" Icon="ArrowTopLeft" Command="{Binding TopLeftSimplePositionCommand}" IsEnabled="{Binding IsTopLeftSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="1" Grid.Row="0" Icon="ArrowUp" Command="{Binding TopMiddleSimplePositionCommand}" IsEnabled="{Binding IsTopMiddleSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="2" Grid.Row="0" Icon="ArrowTopRight" Command="{Binding TopRightSimplePositionCommand}" IsEnabled="{Binding IsTopRightSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="0" Grid.Row="1" Icon="ArrowLeft" Command="{Binding MiddleLeftSimplePositionCommand}" IsEnabled="{Binding IsMiddleLeftSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="1" Grid.Row="1" Icon="ImageFilterCenterFocus" Command="{Binding MiddleMiddleSimplePositionCommand}" IsEnabled="{Binding IsMiddleMiddleSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="2" Grid.Row="1" Icon="ArrowRight" Command="{Binding MiddleRightSimplePositionCommand}" IsEnabled="{Binding IsMiddleRightSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="0" Grid.Row="2" Icon="ArrowBottomLeft" Command="{Binding BottomLeftSimplePositionCommand}" IsEnabled="{Binding IsBottomLeftSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="1" Grid.Row="2" Icon="ArrowDown" Command="{Binding BottomMiddleSimplePositionCommand}" IsEnabled="{Binding IsBottomMiddleSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+                <Controls:IconButton Grid.Column="2" Grid.Row="2" Icon="ArrowBottomRight" Command="{Binding BottomRightSimplePositionCommand}" IsEnabled="{Binding IsBottomRightSimplePosition, Converter={StaticResource InverseBooleanConverter}}" />
+            </Grid>
+
+            <TextBox Text="{Binding Duration}" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LengthSeconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
         </Grid>
 
         <Grid Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,15,0,0" Visibility="{Binding IsPercentagePosition, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -90,7 +99,17 @@
 
             </Grid>
 
-            <TextBox Grid.Row="2" Text="{Binding Layer}" HorizontalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LayerPosition}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" Text="{Binding Layer}" HorizontalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LayerPosition}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+
+                <TextBox Grid.Column="2" Text="{Binding Duration}" HorizontalAlignment="Center" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LengthSeconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+            </Grid>
         </Grid>
 
         <Grid Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,15,0,0" Visibility="{Binding IsPixelPosition, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -112,7 +131,17 @@
                 <TextBox Text="{Binding Vertical}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TopPixelPosition}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
             </Grid>
 
-            <TextBox Grid.Row="2" Text="{Binding Layer}" HorizontalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LayerPosition}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" Text="{Binding Layer}" HorizontalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LayerPosition}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+
+                <TextBox Grid.Column="2" Text="{Binding Duration}" HorizontalAlignment="Center" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LengthSeconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+            </Grid>
         </Grid>
     </Grid>
 </Controls:LoadingControlBase>

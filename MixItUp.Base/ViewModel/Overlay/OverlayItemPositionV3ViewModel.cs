@@ -19,18 +19,18 @@ namespace MixItUp.Base.ViewModel.Overlay
             {
                 this.positionType = value;
                 this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("IsSimplePosition");
-                this.NotifyPropertyChanged("IsPercentagePosition");
-                this.NotifyPropertyChanged("IsPixelPosition");
-                this.NotifyPropertyChanged("IsTopLeftSimplePosition");
-                this.NotifyPropertyChanged("IsTopMiddleSimplePosition");
-                this.NotifyPropertyChanged("IsTopRightSimplePosition");
-                this.NotifyPropertyChanged("IsMiddleLeftSimplePosition");
-                this.NotifyPropertyChanged("IsMiddleMiddleSimplePosition");
-                this.NotifyPropertyChanged("IsMiddleRightSimplePosition");
-                this.NotifyPropertyChanged("IsBottomLeftSimplePosition");
-                this.NotifyPropertyChanged("IsBottomMiddleSimplePosition");
-                this.NotifyPropertyChanged("IsBottomRightSimplePosition");
+                this.NotifyPropertyChanged(nameof(IsSimplePosition));
+                this.NotifyPropertyChanged(nameof(IsPercentagePosition));
+                this.NotifyPropertyChanged(nameof(IsPixelPosition));
+                this.NotifyPropertyChanged(nameof(IsTopLeftSimplePosition));
+                this.NotifyPropertyChanged(nameof(IsTopMiddleSimplePosition));
+                this.NotifyPropertyChanged(nameof(IsTopRightSimplePosition));
+                this.NotifyPropertyChanged(nameof(IsMiddleLeftSimplePosition));
+                this.NotifyPropertyChanged(nameof(IsMiddleMiddleSimplePosition));
+                this.NotifyPropertyChanged(nameof(IsMiddleRightSimplePosition));
+                this.NotifyPropertyChanged(nameof(IsBottomLeftSimplePosition));
+                this.NotifyPropertyChanged(nameof(IsBottomMiddleSimplePosition));
+                this.NotifyPropertyChanged(nameof(IsBottomRightSimplePosition));
             }
         }
         private OverlayItemPositionV3Type positionType;
@@ -63,7 +63,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             set
             {
                 this.horizontal = value;
-                this.NotifyPropertyChanged("Horizontal");
+                this.NotifyPropertyChanged();
             }
         }
         private int horizontal;
@@ -74,7 +74,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             set
             {
                 this.vertical = value;
-                this.NotifyPropertyChanged("Vertical");
+                this.NotifyPropertyChanged();
             }
         }
         private int vertical;
@@ -85,10 +85,21 @@ namespace MixItUp.Base.ViewModel.Overlay
             set
             {
                 this.layer = value;
-                this.NotifyPropertyChanged("Layer");
+                this.NotifyPropertyChanged();
             }
         }
         private int layer;
+
+        public string Duration
+        {
+            get { return this.duration; }
+            set
+            {
+                this.duration = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string duration;
 
         public ICommand SimplePositionCommand { get; set; }
         public ICommand PercentagePositionCommand { get; set; }
@@ -111,6 +122,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.PositionType = OverlayItemPositionV3Type.Percentage;
             this.Horizontal = 50;
             this.Vertical = 50;
+            this.Duration = "5";
         }
 
         public OverlayItemPositionV3ViewModel(OverlayItemV3ModelBase position)
@@ -122,6 +134,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.Horizontal = position.XPosition;
             this.Vertical = position.YPosition;
             this.Layer = position.Layer;
+            this.Duration = position.Duration;
         }
 
         public void SetPosition(OverlayItemV3ModelBase position)
@@ -130,6 +143,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             position.XPosition = this.Horizontal;
             position.YPosition = this.Vertical;
             position.Layer = this.Layer;
+            position.Duration = this.Duration;
 
             if (position.IsPercentagePosition)
             {

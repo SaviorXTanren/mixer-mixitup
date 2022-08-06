@@ -26,6 +26,7 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public bool ShowWidget { get; set; }
 
+        [Obsolete]
         public OverlayActionModel(string overlayName, OverlayItemModelBase overlayItem)
             : base(ActionTypeEnum.Overlay)
         {
@@ -72,6 +73,7 @@ namespace MixItUp.Base.Model.Actions
         {
             if (this.WidgetID != Guid.Empty)
             {
+#pragma warning disable CS0612 // Type or member is obsolete
                 OverlayWidgetModel widget = ChannelSession.Settings.OverlayWidgets.FirstOrDefault(w => w.Item.ID.Equals(this.WidgetID));
                 if (widget != null)
                 {
@@ -84,6 +86,7 @@ namespace MixItUp.Base.Model.Actions
                         await widget.Disable();
                     }
                 }
+#pragma warning restore CS0612 // Type or member is obsolete
             }
             else
             {
