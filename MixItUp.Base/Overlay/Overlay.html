@@ -126,11 +126,7 @@
             if (duration != NaN) {
 
                 addedElement.classList.add(data.ID);
-
-                var style = null;
-                if (data.CSS != null && data.CSS) {
-                    style = addCSS(data.CSS);
-                }
+                var style = addCSS(data.CSS, data.ID);
 
                 mainOverlayDiv.appendChild(addedElement);
 
@@ -159,19 +155,22 @@
             }
         }
 
-        function addCSS(css) {
-            var style = document.createElement('style');
-            style.setAttribute('type', 'text/css');
+        function addCSS(css, id) {
+            if (css != null && css) {
+                var style = document.createElement('style');
+                style.setAttribute('type', 'text/css');
 
-            if (style.styleSheet) {   // IE
-                style.styleSheet.cssText = css;
-            } else {                // the world
-                style.appendChild(document.createTextNode(css));
+                if (style.styleSheet) {   // IE
+                    style.styleSheet.cssText = css;
+                } else {                // the world
+                    style.appendChild(document.createTextNode(css));
+                }
+
+                document.head.appendChild(style);
+
+                return style;
             }
-
-            document.head.appendChild(style);
-
-            return style;
+            return null;
         }
 
         function logException(err) {

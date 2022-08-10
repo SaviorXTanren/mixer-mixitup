@@ -7,7 +7,7 @@ namespace MixItUp.Base.Model.Overlay
     public class OverlayOutputV3Model
     {
         [DataMember]
-        public Guid ID { get; set; }
+        public string ID { get; set; }
 
         [DataMember]
         public string HTML { get; set; } = string.Empty;
