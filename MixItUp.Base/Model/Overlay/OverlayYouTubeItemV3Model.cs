@@ -5,7 +5,7 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayYouTubeItemV3Model : OverlayItemV3ModelBase
     {
-        public const string DefaultHTML = "";
+        public const string DefaultHTML = "<div id=\"{ID}\" />";
 
         [DataMember]
         public string VideoID { get; set; }
@@ -14,7 +14,7 @@ namespace MixItUp.Base.Model.Overlay
         public int StartTime { get; set; }
 
         [DataMember]
-        public double Volume { get; set; }
+        public int Volume { get; set; }
 
         public OverlayYouTubeItemV3Model() : base(OverlayItemV3Type.YouTube) { }
     }

@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
+using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -16,7 +17,9 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayTextItemV3Model : OverlayItemV3ModelBase
     {
-        public const string DefaultHTML = "<p style=\"font-size: {FontSize}px; color: {FontColor}; font-family: '{FontFamily}'; font-weight: {FontWeight}; text-decoration: {TextDecoration}; font-style: {FontStyle}; text-align: {TextAlignment}; {Shadow}\">{Text}</p>";
+        public static readonly string DefaultHTML = "<p style=\"font-size: {FontSize}px; color: {FontColor}; font-family: '{FontFamily}'; font-weight: {FontWeight}; text-decoration: {TextDecoration}; font-style: {FontStyle}; text-align: {TextAlignment}; {Shadow}\">" + Environment.NewLine +
+            "{Text}" + Environment.NewLine +
+            "</p>";
 
         [DataMember]
         public string Text { get; set; }

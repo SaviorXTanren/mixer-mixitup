@@ -90,18 +90,18 @@
                     else if (packet.type == 'YouTube') {
                         if (youtubeIFrameAPIReady) {
                             var addedElement = document.createElement('div');
-                            addedElement.id = data.ID;
+                            addedElement.innerHTML = packet.data.HTML;
 
-                            processBasic(packet.data, addedElement);
+                            processBasic(packet.data, addedElement.firstChild);
 
-                            var youtubeVideoPlayer = new YT.Player(addedElement.id, {
-                                height: data.Height,
-                                width: data.Width,
-                                videoId: data.VideoID,
-                                playerVars: { 'controls': 0, 'modestbranding': 1, 'start': data.StartTime },
+                            var youtubeVideoPlayer = new YT.Player(packet.data.ID, {
+                                height: packet.data.Height,
+                                width: packet.data.Width,
+                                videoId: packet.data.VideoID,
+                                playerVars: { 'controls': 0, 'modestbranding': 1, 'start': packet.data.StartTime },
                                 events: {
                                     'onReady': function () {
-                                        youtubeVideoPlayer.setVolume(data.Volume);
+                                        youtubeVideoPlayer.setVolume(packet.data.Volume);
                                         youtubeVideoPlayer.setLoop(false);
                                         youtubeVideoPlayer.frameBorder = 0;
                                         youtubeVideoPlayer.playVideo();

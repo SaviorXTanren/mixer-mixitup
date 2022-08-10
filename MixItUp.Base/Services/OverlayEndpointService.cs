@@ -158,16 +158,18 @@ namespace MixItUp.Base.Services
             {
                 if (item != null)
                 {
-                    if (item.Type == OverlayItemV3Type.YouTube)
+                    OverlayOutputV3Model processedItem = await item.GetProcessedItem(this, parameters);
+                    if (processedItem != null)
                     {
-                        JObject jobj = JObject.FromObject(item);
-                        await PerformTextReplacements(jobj, parameters);
-                        await this.SendPacket("YouTube", jobj);
-                    }
-                    else
-                    {
-                        OverlayOutputV3Model processedItem = await item.GetProcessedItem(this, parameters);
-                        if (processedItem != null)
+                        if (item.Type == OverlayItemV3Type.YouTube)
+                        {
+                            JObject jobj = JObject.FromObject(item);
+                            jobj.Merge(JObject.FromObject(processedItem), new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Replace });
+                            await PerformTextReplacements(jobj, parameters);
+
+                            await this.SendPacket("YouTube", jobj);
+                        }
+                        else
                         {
                             await this.SendPacket("Basic", JObject.FromObject(processedItem));
                         }

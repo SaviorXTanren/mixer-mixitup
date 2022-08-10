@@ -21,7 +21,11 @@ namespace MixItUp.Base.Model.Overlay
     public abstract class OverlayItemV3ModelBase : OverlayOutputV3Model
     {
         public const string InnerHTMLProperty = "InnerHTML";
-        public const string PositionedHTML = "<div style=\"position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;\"><div style=\"position: absolute; margin: 0px; left: {XPosition}{PositionType}; top: {YPosition}{PositionType}; transform: translate({XTranslation}%, {YTranslation}%); {Width} {Height}\">{InnerHTML}</div></div>";
+        public static readonly string PositionedHTML = "<div style=\"position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px; z-index: {Layer}\">" + Environment.NewLine +
+            "<div style=\"position: absolute; margin: 0px; left: {XPosition}{PositionType}; top: {YPosition}{PositionType}; transform: translate({XTranslation}%, {YTranslation}%); {Width} {Height}\">" + Environment.NewLine +
+            "{InnerHTML}" + Environment.NewLine +
+            "</div>" + Environment.NewLine +
+            "</div>";
 
         public static int zIndexCounter = 0;
 
@@ -64,6 +68,10 @@ namespace MixItUp.Base.Model.Overlay
             result.HTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.HTML, parameters);
             result.CSS = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.CSS, parameters);
             result.Javascript = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.Javascript, parameters);
+
+            result.HTML = ReplaceProperty(result.HTML, "ID", result.ID);
+            result.CSS = ReplaceProperty(result.CSS, "ID", result.ID);
+            result.Javascript = ReplaceProperty(result.Javascript, "ID", result.ID);
 
             if (this.Layer == 0)
             {

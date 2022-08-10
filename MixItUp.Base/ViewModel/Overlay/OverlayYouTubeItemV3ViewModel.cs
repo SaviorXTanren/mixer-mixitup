@@ -68,7 +68,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.StartTime = item.StartTime;
             this.width = item.Width;
             this.height = item.Height;
-            this.Volume = (int)(item.Volume * 100);
+            this.Volume = item.Volume;
         }
 
         protected override OverlayItemV3ModelBase GetItemInternal()
@@ -91,7 +91,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 StartTime = this.StartTime,
                 Width = this.width,
                 Height = this.height,
-                Volume = ((double)this.Volume) / 100.0,
+                Volume = this.Volume,
             };
 
             return result;

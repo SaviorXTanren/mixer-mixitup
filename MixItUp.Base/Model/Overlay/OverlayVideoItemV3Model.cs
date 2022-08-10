@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
+using System;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -9,7 +10,9 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayVideoItemV3Model : OverlayItemV3ModelBase
     {
-        public const string DefaultHTML = "<video onloadstart=\"this.volume={Volume}\" allow=\"autoplay; encrypted-media\" autoplay {Loop} style=\"{Width} {Height}\"><source src=\"{FilePath}\" type=\"video/{VideoExtension}\" /></video>";
+        public static readonly string DefaultHTML = "<video onloadstart=\"this.volume={Volume}\" allow=\"autoplay; encrypted-media\" autoplay {Loop} style=\"{Width} {Height}\">" + Environment.NewLine + 
+            "<source src=\"{FilePath}\" type=\"video/{VideoExtension}\" />" + Environment.NewLine + 
+            "</video>";
 
         [DataMember]
         public string FilePath { get; set; }
