@@ -50,7 +50,7 @@
                         <ListBoxItem IsSelected="{Binding Bold}">
                             <MaterialDesign:PackIcon Kind="FormatBold" Style="{StaticResource DarkLightBackgroundPackIcon}" />
                         </ListBoxItem>
-                        <ListBoxItem IsSelected="{Binding Italic}">
+                        <ListBoxItem IsSelected="{Binding Italics}">
                             <MaterialDesign:PackIcon Kind="FormatItalic" Style="{StaticResource DarkLightBackgroundPackIcon}" />
                         </ListBoxItem>
                         <ListBoxItem IsSelected="{Binding Underline}">

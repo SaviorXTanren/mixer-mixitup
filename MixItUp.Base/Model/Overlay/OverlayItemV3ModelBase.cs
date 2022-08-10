@@ -2,8 +2,6 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -26,9 +24,6 @@ namespace MixItUp.Base.Model.Overlay
         public const string PositionedHTML = "<div style=\"position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;\"><div style=\"position: absolute; margin: 0px; left: {XPosition}{PositionType}; top: {YPosition}{PositionType}; transform: translate({XTranslation}%, {YTranslation}%); {Width} {Height}\">{InnerHTML}</div></div>";
 
         public static int zIndexCounter = 0;
-
-        private static char[] CSSBracesSplit = new char[] { '{', '}' };
-        private static char[] CSSSelectorSplit = new char[] { ',' };
 
         public static string ReplaceProperty(string text, string name, string value)
         {

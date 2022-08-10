@@ -105,7 +105,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayItemV3Type.WebPage: this.HTML = OverlayWebPageItemV3Model.DefaultHTML; break;
             }
 
-            if (!string.IsNullOrEmpty(this.HTML))
+            if (!string.IsNullOrWhiteSpace(this.HTML))
             {
                 this.HTML = OverlayItemV3ModelBase.ReplaceProperty(OverlayItemV3ModelBase.PositionedHTML, OverlayItemV3ModelBase.InnerHTMLProperty, this.HTML);
             }

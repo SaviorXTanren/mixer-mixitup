@@ -35,7 +35,6 @@
     </div>
 
     <script>
-
         var mainOverlayDiv = document.getElementById('mainOverlay');
         var noConnectionDiv = document.getElementById('noConnectionDiv');
         var noTextToSpeechDiv = document.getElementById('noTextToSpeechDiv');
@@ -125,6 +124,8 @@
             var duration = parseFloat(data.Duration);
             if (duration != NaN) {
 
+                var script = addJavascript(data.Javascript, data.ID);
+
                 addedElement.classList.add(data.ID);
                 var style = addCSS(data.CSS, data.ID);
 
@@ -144,6 +145,10 @@
 
                                 if (style != null) {
                                     document.head.removeChild(style);
+                                }
+
+                                if (script != null) {
+                                    document.body.removeChild(script);
                                 }
                             });
 
@@ -169,6 +174,20 @@
                 document.head.appendChild(style);
 
                 return style;
+            }
+            return null;
+        }
+
+        function addJavascript(javascript, id) {
+            if (javascript != null && javascript) {
+                var script = document.createElement('script');
+                script.setAttribute('type', 'text/javascript');
+
+                script.text = javascript;
+
+                document.body.appendChild(script);
+
+                return script;
             }
             return null;
         }
