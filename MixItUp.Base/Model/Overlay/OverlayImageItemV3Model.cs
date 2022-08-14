@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -19,9 +20,12 @@ namespace MixItUp.Base.Model.Overlay
         {
             item = await base.GetProcessedItem(item, overlayEndpointService, parameters);
 
-            item.HTML = ReplaceProperty(item.HTML, "FilePath", overlayEndpointService.GetURLForLocalFile(this.FilePath, "image"));
-            item.CSS = ReplaceProperty(item.CSS, "FilePath", overlayEndpointService.GetURLForLocalFile(this.FilePath, "image"));
-            item.Javascript = ReplaceProperty(item.Javascript, "FilePath", overlayEndpointService.GetURLForLocalFile(this.FilePath, "image"));
+            string filepath = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.FilePath, parameters);
+            filepath = RandomHelper.PickRandomFileFromDelimitedString(filepath);
+
+            item.HTML = ReplaceProperty(item.HTML, "FilePath", overlayEndpointService.GetURLForLocalFile(filepath, "image"));
+            item.CSS = ReplaceProperty(item.CSS, "FilePath", overlayEndpointService.GetURLForLocalFile(filepath, "image"));
+            item.Javascript = ReplaceProperty(item.Javascript, "FilePath", overlayEndpointService.GetURLForLocalFile(filepath, "image"));
 
             return item;
         }

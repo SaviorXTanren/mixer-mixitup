@@ -228,9 +228,25 @@ namespace MixItUp.WPF.Services
             fileDialog.Filter = filter;
             fileDialog.CheckFileExists = true;
             fileDialog.CheckPathExists = true;
+
             if (fileDialog.ShowDialog() == true)
             {
                 return fileDialog.FileName;
+            }
+            return null;
+        }
+
+        public IEnumerable<string> ShowMultiselectOpenFileDialog(string filter)
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Filter = filter;
+            fileDialog.CheckFileExists = true;
+            fileDialog.CheckPathExists = true;
+            fileDialog.Multiselect = true;
+
+            if (fileDialog.ShowDialog() == true && fileDialog.FileNames != null && fileDialog.FileNames.Length > 0 && !string.IsNullOrWhiteSpace(fileDialog.FileNames[0]))
+            {
+                return fileDialog.FileNames;
             }
             return null;
         }

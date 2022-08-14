@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using System;
 using System.IO;
 using System.Runtime.Serialization;
@@ -29,9 +30,12 @@ namespace MixItUp.Base.Model.Overlay
         {
             item = await base.GetProcessedItem(item, overlayEndpointService, parameters);
 
-            item.HTML = ReplaceProperty(item.HTML, "FilePath", overlayEndpointService.GetURLForLocalFile(this.FilePath, "video"));
-            item.CSS = ReplaceProperty(item.CSS, "FilePath", overlayEndpointService.GetURLForLocalFile(this.FilePath, "video"));
-            item.Javascript = ReplaceProperty(item.Javascript, "FilePath", overlayEndpointService.GetURLForLocalFile(this.FilePath, "video"));
+            string filepath = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.FilePath, parameters);
+            filepath = RandomHelper.PickRandomFileFromDelimitedString(filepath);
+
+            item.HTML = ReplaceProperty(item.HTML, "FilePath", overlayEndpointService.GetURLForLocalFile(filepath, "video"));
+            item.CSS = ReplaceProperty(item.CSS, "FilePath", overlayEndpointService.GetURLForLocalFile(filepath, "video"));
+            item.Javascript = ReplaceProperty(item.Javascript, "FilePath", overlayEndpointService.GetURLForLocalFile(filepath, "video"));
 
             item.HTML = ReplaceProperty(item.HTML, "Volume", this.Volume.ToString());
             item.CSS = ReplaceProperty(item.CSS, "Volume", this.Volume.ToString());
@@ -46,7 +50,7 @@ namespace MixItUp.Base.Model.Overlay
                 item.HTML = ReplaceProperty(item.HTML, "Loop", string.Empty);
             }
 
-            string extension = Path.GetExtension(this.FilePath);
+            string extension = Path.GetExtension(filepath);
             if (!string.IsNullOrEmpty(extension))
             {
                 extension = extension.Substring(1);

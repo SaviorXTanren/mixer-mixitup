@@ -32,6 +32,7 @@ namespace MixItUp.Base.Services
 
         string ShowOpenFileDialog();
         string ShowOpenFileDialog(string filter);
+        IEnumerable<string> ShowMultiselectOpenFileDialog(string filter);
 
         string ShowSaveFileDialog(string fileName);
         string ShowSaveFileDialog(string fileName, string filter);

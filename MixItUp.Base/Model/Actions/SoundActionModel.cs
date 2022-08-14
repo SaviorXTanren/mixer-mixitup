@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Runtime.Serialization;
@@ -33,6 +34,8 @@ namespace MixItUp.Base.Model.Actions
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             string audioFilePath = await ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
+
+            audioFilePath = RandomHelper.PickRandomFileFromDelimitedString(audioFilePath);
 
             if (!ServiceManager.Get<IFileService>().IsURLPath(audioFilePath) && !ServiceManager.Get<IFileService>().FileExists(audioFilePath))
             {

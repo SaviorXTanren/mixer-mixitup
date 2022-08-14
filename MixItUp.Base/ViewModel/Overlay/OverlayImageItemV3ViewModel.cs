@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Overlay
@@ -77,10 +78,10 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             this.BrowseFilePathCommand = this.CreateCommand(() =>
             {
-                string filepath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(ServiceManager.Get<IFileService>().ImageFileFilter());
-                if (!string.IsNullOrEmpty(filepath))
+                IEnumerable<string> filepaths = ServiceManager.Get<IFileService>().ShowMultiselectOpenFileDialog(ServiceManager.Get<IFileService>().ImageFileFilter());
+                if (filepaths != null)
                 {
-                    this.FilePath = filepath;
+                    this.FilePath = string.Join("|", filepaths);
                 }
             });
         }
