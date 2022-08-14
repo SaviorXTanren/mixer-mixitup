@@ -114,55 +114,69 @@ namespace MixItUp.Base.Model.Actions
 
         public static async Task ProcessJSONToSpecialIdentifiers(string body, Dictionary<string, string> jsonToSpecialIdentifiers, CommandParametersModel parameters)
         {
-            JToken jToken = JToken.Parse(body);
-
-            foreach (var kvp in jsonToSpecialIdentifiers)
+            try
             {
-                string key = await ReplaceStringWithSpecialModifiers(kvp.Key, parameters);
-                string[] splits = key.Split(new char[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
-                if (splits.Count() > 0)
+                JToken jToken = JToken.Parse(body);
+
+                foreach (var kvp in jsonToSpecialIdentifiers)
                 {
-                    JToken currentToken = jToken;
-                    for (int i = 0; i < splits.Count(); i++)
+                    try
                     {
-                        if (currentToken is JObject)
+                        string key = await ReplaceStringWithSpecialModifiers(kvp.Key, parameters);
+                        string[] splits = key.Split(new char[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
+                        if (splits.Count() > 0)
                         {
-                            JObject jobjToken = (JObject)currentToken;
-                            if (jobjToken.ContainsKey(splits[i]))
+                            JToken currentToken = jToken;
+                            for (int i = 0; i < splits.Count(); i++)
                             {
-                                currentToken = jobjToken[splits[i]];
+                                if (currentToken is JObject)
+                                {
+                                    JObject jobjToken = (JObject)currentToken;
+                                    if (jobjToken.ContainsKey(splits[i]))
+                                    {
+                                        currentToken = jobjToken[splits[i]];
+                                    }
+                                    else
+                                    {
+                                        currentToken = null;
+                                        break;
+                                    }
+                                }
+                                else if (currentToken is JArray)
+                                {
+                                    JArray jarrayToken = (JArray)currentToken;
+                                    if (int.TryParse(splits[i], out int index) && index >= 0 && index < jarrayToken.Count)
+                                    {
+                                        currentToken = jarrayToken[index];
+                                    }
+                                    else
+                                    {
+                                        currentToken = null;
+                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    currentToken = null;
+                                    break;
+                                }
                             }
-                            else
+
+                            if (currentToken != null)
                             {
-                                currentToken = null;
-                                break;
+                                parameters.SpecialIdentifiers[kvp.Value] = await ReplaceStringWithSpecialModifiers(HttpUtility.HtmlDecode(currentToken.ToString()), parameters);
                             }
-                        }
-                        else if (currentToken is JArray)
-                        {
-                            JArray jarrayToken = (JArray)currentToken;
-                            if (int.TryParse(splits[i], out int index) && index >= 0 && index < jarrayToken.Count)
-                            {
-                                currentToken = jarrayToken[index];
-                            }
-                            else
-                            {
-                                currentToken = null;
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            currentToken = null;
-                            break;
                         }
                     }
-
-                    if (currentToken != null)
+                    catch (Exception ex)
                     {
-                        parameters.SpecialIdentifiers[kvp.Value] = await ReplaceStringWithSpecialModifiers(HttpUtility.HtmlDecode(currentToken.ToString()), parameters);
+                        Logger.Log(ex);
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
     }

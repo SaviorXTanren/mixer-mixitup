@@ -58,7 +58,7 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (ServiceManager.Get<TwitterService>().IsConnected)
+            if (ServiceManager.Get<ITwitterService>().IsConnected)
             {
                 if (this.ActionType == TwitterActionTypeEnum.SendTweet)
                 {
@@ -73,7 +73,7 @@ namespace MixItUp.Base.Model.Actions
                             return;
                         }
 
-                        Result result = await ServiceManager.Get<TwitterService>().SendTweet(tweet, imagePath);
+                        Result result = await ServiceManager.Get<ITwitterService>().SendTweet(tweet, imagePath);
                         if (!result.Success)
                         {
                             await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorHeader + result.Message, parameters);
@@ -84,7 +84,7 @@ namespace MixItUp.Base.Model.Actions
                 {
                     string nameUpdate = await ReplaceStringWithSpecialModifiers(this.NameUpdate, parameters);
 
-                    Result result = await ServiceManager.Get<TwitterService>().UpdateName(nameUpdate);
+                    Result result = await ServiceManager.Get<ITwitterService>().UpdateName(nameUpdate);
                     if (!result.Success)
                     {
                         await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorHeader + result.Message, parameters);

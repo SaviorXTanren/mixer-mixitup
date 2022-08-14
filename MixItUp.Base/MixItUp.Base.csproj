@@ -40,7 +40,6 @@
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
     <PackageReference Include="Jace" Version="1.0.0" />
-    <PackageReference Include="linqtotwitter" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="StreamingClientLibrary.Glimesh" Version="1.0.0.18" />
     <PackageReference Include="StreamingClientLibrary.Trovo" Version="1.0.0.19" />

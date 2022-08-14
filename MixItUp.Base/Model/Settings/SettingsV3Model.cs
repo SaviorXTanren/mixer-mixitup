@@ -799,9 +799,9 @@ namespace MixItUp.Base.Model.Settings
             {
                 this.DiscordOAuthToken = ServiceManager.Get<DiscordService>().GetOAuthTokenCopy();
             }
-            if (ServiceManager.Get<TwitterService>().IsConnected)
+            if (ServiceManager.Get<ITwitterService>().IsConnected)
             {
-                this.TwitterOAuthToken = ServiceManager.Get<TwitterService>().GetOAuthTokenCopy();
+                this.TwitterOAuthToken = ServiceManager.Get<ITwitterService>().GetOAuthTokenCopy();
             }
             if (ServiceManager.Get<PixelChatService>().IsConnected)
             {
