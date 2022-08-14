@@ -8865,4 +8865,19 @@ via Twitch, it's a "your mileage may vary" situation.</value>
   <data name="MockConnection" xml:space="preserve">
     <value>Mock Connection</value>
   </data>
+  <data name="CopyMessage" xml:space="preserve">
+    <value>Copy Message</value>
+  </data>
+  <data name="DeleteMessage" xml:space="preserve">
+    <value>Delete Message</value>
+  </data>
+  <data name="GoToLink" xml:space="preserve">
+    <value>Go to Link</value>
+  </data>
+  <data name="UserInfo" xml:space="preserve">
+    <value>User Info</value>
+  </data>
+  <data name="WhisperUser" xml:space="preserve">
+    <value>WhisperUser</value>
+  </data>
 </root>
