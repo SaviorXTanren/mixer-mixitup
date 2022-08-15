@@ -120,13 +120,15 @@ namespace MixItUp.Base.Model.Overlay
 
         private OverlayEndpointService GetOverlay()
         {
-            string overlayName = (string.IsNullOrEmpty(this.OverlayName)) ? ServiceManager.Get<OverlayService>().DefaultOverlayName : this.OverlayName;
-            var overlays = ServiceManager.Get<OverlayService>().GetOverlayNames();
-            if (!overlays.Contains(overlayName))
-            {
-                this.OverlayName = ServiceManager.Get<OverlayService>().DefaultOverlayName;
-            }
-            return ServiceManager.Get<OverlayService>().GetOverlay(overlayName);
+            //string overlayName = (string.IsNullOrEmpty(this.OverlayName)) ? ServiceManager.Get<OverlayService>().DefaultOverlayName : this.OverlayName;
+            //var overlays = ServiceManager.Get<OverlayService>().GetOverlayNames();
+            //if (!overlays.Contains(overlayName))
+            //{
+            //    this.OverlayName = ServiceManager.Get<OverlayService>().DefaultOverlayName;
+            //}
+            //return ServiceManager.Get<OverlayService>().GetOverlay(overlayName);
+
+            return null;
         }
 
         private async void Item_OnChangeState(object sender, bool state)

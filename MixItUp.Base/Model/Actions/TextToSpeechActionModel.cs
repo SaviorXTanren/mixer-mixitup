@@ -129,7 +129,7 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlay(ServiceManager.Get<OverlayService>().DefaultOverlayName);
+            OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetDefaultOverlayEndpointService();
             if (overlay != null)
             {
                 string message = await ReplaceStringWithSpecialModifiers(this.Text, parameters);

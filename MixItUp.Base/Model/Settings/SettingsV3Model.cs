@@ -433,14 +433,18 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool EnableOverlay { get; set; }
         [DataMember]
-        public Dictionary<string, int> OverlayCustomNameAndPorts { get; set; } = new Dictionary<string, int>();
-        [DataMember]
         public string OverlaySourceName { get; set; }
+        [DataMember]
+        public List<OverlayEndpointV3Model> OverlayEndpointsV3 { get; set; } = new List<OverlayEndpointV3Model>();
+        [DataMember]
+        public List<OverlayWidgetV3Model> OverlayWidgetsV3 { get; set; } = new List<OverlayWidgetV3Model>();
 
         [DataMember]
-        public List<OverlayWidgetModel> OverlayWidgets { get; set; } = new List<OverlayWidgetModel>();
+        [Obsolete]
+        public Dictionary<string, int> OverlayCustomNameAndPorts { get; set; } = new Dictionary<string, int>();
         [DataMember]
-        public int OverlayWidgetRefreshTime { get; set; } = 5;
+        [Obsolete]
+        public List<OverlayWidgetModel> OverlayWidgets { get; set; } = new List<OverlayWidgetModel>();
 
         #endregion Overlay
 
@@ -927,6 +931,14 @@ namespace MixItUp.Base.Model.Settings
                     this.StreamingPlatformAuthentications[p] = new StreamingPlatformAuthenticationSettingsModel(p);
                 }
             });
+
+            if (this.OverlayEndpointsV3.Count == 0)
+            {
+                this.OverlayEndpointsV3.Add(new OverlayEndpointV3Model(OverlayEndpointV3Model.DefaultOverlayPort, OverlayEndpointV3Model.DefaultOverlayName)
+                {
+                    ID = Guid.Empty
+                });
+            }
 
             if (this.DashboardItems.Count < 4)
             {

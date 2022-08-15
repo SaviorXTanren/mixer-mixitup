@@ -63,11 +63,15 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <TextBox Grid.Column="0" Text="{Binding NewEndpointName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
 
-                <Button Grid.Column="2" Command="{Binding AddCommand}" Content="{x:Static resx:Resources.Add}"/>
+                <TextBox Grid.Column="2" Text="{Binding NewEndpointPortNumber}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PortNumber}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+
+                <Button Grid.Column="4" Command="{Binding AddCommand}" Content="{x:Static resx:Resources.Add}"/>
             </Grid>
         </Grid>
 

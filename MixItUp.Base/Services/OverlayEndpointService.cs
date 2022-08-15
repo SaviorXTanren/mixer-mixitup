@@ -62,8 +62,11 @@ namespace MixItUp.Base.Services
         public event EventHandler OnWebSocketConnectedOccurred = delegate { };
         public event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectedOccurred = delegate { };
 
-        public string Name { get; private set; }
-        public int Port { get; private set; }
+        public OverlayEndpointV3Model Model { get; private set; }
+
+        public Guid ID { get { return this.Model.ID; } }
+        public int PortNumber { get { return this.Model.PortNumber; } }
+        public string Name { get { return this.Model.Name; } }
 
         private OverlayHttpListenerServer httpListenerServer;
         private OverlayWebSocketHttpListenerServer webSocketServer;
@@ -71,15 +74,14 @@ namespace MixItUp.Base.Services
         private List<OverlayPacket> batchPackets = new List<OverlayPacket>();
         private bool isBatching = false;
 
-        public string HttpListenerServerAddress { get { return string.Format(ChannelSession.IsElevated ? AdministratorOverlayHttpListenerServerAddressFormat : RegularOverlayHttpListenerServerAddressFormat, this.Port); } }
-        public string WebSocketServerAddress { get { return string.Format(ChannelSession.IsElevated ? AdministratorOverlayWebSocketServerAddressFormat : RegularOverlayWebSocketServerAddressFormat, this.Port); } }
+        public string HttpListenerServerAddress { get { return string.Format(ChannelSession.IsElevated ? AdministratorOverlayHttpListenerServerAddressFormat : RegularOverlayHttpListenerServerAddressFormat, this.PortNumber); } }
+        public string WebSocketServerAddress { get { return string.Format(ChannelSession.IsElevated ? AdministratorOverlayWebSocketServerAddressFormat : RegularOverlayWebSocketServerAddressFormat, this.PortNumber); } }
 
         public int TotalConnectedClients { get { return this.webSocketServer.TotalConnectedClients; } }
 
-        public OverlayEndpointService(string name, int port)
+        public OverlayEndpointService(OverlayEndpointV3Model model)
         {
-            this.Name = name;
-            this.Port = port;
+            this.Model = model;
 
             this.httpListenerServer = new OverlayHttpListenerServer();
             this.webSocketServer = new OverlayWebSocketHttpListenerServer();
@@ -95,9 +97,9 @@ namespace MixItUp.Base.Services
                     this.webSocketServer.OnConnectedOccurred += WebSocketServer_OnConnectedOccurred;
                     this.webSocketServer.OnDisconnectOccurred += WebSocketServer_OnDisconnectOccurred;
 
-                    if (this.Name.Equals(ServiceManager.Get<OverlayService>().DefaultOverlayName) && !string.IsNullOrWhiteSpace(ChannelSession.Settings.OverlaySourceName))
+                    if (this.ID == Guid.Empty && !string.IsNullOrWhiteSpace(ChannelSession.Settings.OverlaySourceName))
                     {
-                        string overlayServerAddress = string.Format(OverlayEndpointService.RegularOverlayHttpListenerServerAddressFormat, this.Port);
+                        string overlayServerAddress = string.Format(OverlayEndpointService.RegularOverlayHttpListenerServerAddressFormat, this.PortNumber);
                         if (ServiceManager.Get<IOBSStudioService>().IsConnected)
                         {
                             await ServiceManager.Get<IOBSStudioService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: false);

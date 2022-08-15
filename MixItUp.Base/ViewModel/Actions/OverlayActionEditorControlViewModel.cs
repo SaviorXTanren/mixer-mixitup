@@ -50,26 +50,26 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool OverlayEnabled { get { return !this.OverlayNotEnabled; } }
 
-        public IEnumerable<string> OverlayEndpoints { get { return ServiceManager.Get<OverlayService>().GetOverlayNames(); } }
+        public IEnumerable<OverlayEndpointV3Model> OverlayEndpoints { get { return ServiceManager.Get<OverlayService>().GetOverlayEndpoints(); } }
 
-        public string SelectedOverlayEndpoint
+        public OverlayEndpointV3Model SelectedOverlayEndpoint
         {
             get { return this.selectedOverlayEndpoint; }
             set
             {
-                var overlays = ServiceManager.Get<OverlayService>().GetOverlayNames();
+                var overlays = ServiceManager.Get<OverlayService>().GetOverlayEndpoints();
                 if (overlays.Contains(value))
                 {
                     this.selectedOverlayEndpoint = value;
                 }
                 else
                 {
-                    this.selectedOverlayEndpoint = ServiceManager.Get<OverlayService>().DefaultOverlayName;
+                    this.selectedOverlayEndpoint = ServiceManager.Get<OverlayService>().GetDefaultOverlayEndpoint();
                 }
                 this.NotifyPropertyChanged();
             }
         }
-        private string selectedOverlayEndpoint;
+        private OverlayEndpointV3Model selectedOverlayEndpoint;
 
         public bool ShowTextItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Text; } }
 
@@ -152,13 +152,10 @@ namespace MixItUp.Base.ViewModel.Actions
         public OverlayActionEditorControlViewModel(OverlayActionModel action)
             : base(action)
         {
-            if (!string.IsNullOrEmpty(action.OverlayName))
+            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().GetOverlayEndpoint(action.OverlayEndpointID);
+            if (this.SelectedOverlayEndpoint == null)
             {
-                this.SelectedOverlayEndpoint = action.OverlayName;
-            }
-            else
-            {
-                this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().DefaultOverlayName;
+                this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().GetDefaultOverlayEndpoint();
             }
 
             if (action.OverlayItemV3 != null)
@@ -199,7 +196,7 @@ namespace MixItUp.Base.ViewModel.Actions
         public OverlayActionEditorControlViewModel()
             : base()
         {
-            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().DefaultOverlayName;
+            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().GetDefaultOverlayEndpoint();
         }
 
         public override Task<Result> Validate()
@@ -246,7 +243,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     OverlayItemV3ModelBase item = itemViewModel.GetItem();
                     if (item != null)
                     {
-                        return Task.FromResult<ActionModelBase>(new OverlayActionModel(this.SelectedOverlayEndpoint, item));
+                        return Task.FromResult<ActionModelBase>(new OverlayActionModel(this.SelectedOverlayEndpoint.ID, item));
                     }
                 }
             }

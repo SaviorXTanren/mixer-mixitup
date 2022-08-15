@@ -70,15 +70,15 @@ namespace MixItUp.Base.ViewModel.Overlay
             get { return this.selectedOverlayEndpoint; }
             set
             {
-                var overlays = ServiceManager.Get<OverlayService>().GetOverlayNames();
-                if (overlays.Contains(value))
-                {
-                    this.selectedOverlayEndpoint = value;
-                }
-                else
-                {
-                    this.selectedOverlayEndpoint = ServiceManager.Get<OverlayService>().DefaultOverlayName;
-                }
+                //var overlays = ServiceManager.Get<OverlayService>().GetOverlayNames();
+                //if (overlays.Contains(value))
+                //{
+                //    this.selectedOverlayEndpoint = value;
+                //}
+                //else
+                //{
+                //    this.selectedOverlayEndpoint = ServiceManager.Get<OverlayService>().DefaultOverlayName;
+                //}
                 this.NotifyPropertyChanged();
             }
         }
@@ -174,8 +174,8 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         private void Initialize()
         {
-            this.OverlayEndpoints.AddRange(ServiceManager.Get<OverlayService>().GetOverlayNames());
-            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().DefaultOverlayName;
+            //this.OverlayEndpoints.AddRange(ServiceManager.Get<OverlayService>().GetOverlayNames());
+            //this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().DefaultOverlayName;
         }
     }
 }

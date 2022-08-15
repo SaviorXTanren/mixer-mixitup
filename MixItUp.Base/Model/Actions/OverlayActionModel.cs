@@ -12,7 +12,10 @@ namespace MixItUp.Base.Model.Actions
     public class OverlayActionModel : ActionModelBase
     {
         [DataMember]
+        [Obsolete]
         public string OverlayName { get; set; }
+        [DataMember]
+        public Guid OverlayEndpointID { get; set; }
 
         [DataMember]
         [Obsolete]
@@ -27,35 +30,37 @@ namespace MixItUp.Base.Model.Actions
         public bool ShowWidget { get; set; }
 
         [Obsolete]
-        public OverlayActionModel(string overlayName, OverlayItemModelBase overlayItem)
+        public OverlayActionModel(Guid overlayEndpointID, OverlayItemModelBase overlayItem)
             : base(ActionTypeEnum.Overlay)
         {
-            var overlays = ServiceManager.Get<OverlayService>().GetOverlayNames();
-            if (overlays.Contains(overlayName))
-            {
-                this.OverlayName = overlayName;
-            }
-            else
-            {
-                this.OverlayName = ServiceManager.Get<OverlayService>().DefaultOverlayName;
-            }
+            //var overlays = ServiceManager.Get<OverlayService>().GetOverlayNames();
+            //if (overlays.Contains(overlayName))
+            //{
+            //    this.OverlayName = overlayName;
+            //}
+            //else
+            //{
+            //    this.OverlayName = ServiceManager.Get<OverlayService>().DefaultOverlayName;
+            //}
 
+            this.OverlayEndpointID = overlayEndpointID;
             this.OverlayItem = overlayItem;
         }
 
-        public OverlayActionModel(string overlayName, OverlayItemV3ModelBase overlayItem)
+        public OverlayActionModel(Guid overlayEndpointID, OverlayItemV3ModelBase overlayItem)
             : base(ActionTypeEnum.Overlay)
         {
-            var overlays = ServiceManager.Get<OverlayService>().GetOverlayNames();
-            if (overlays.Contains(overlayName))
-            {
-                this.OverlayName = overlayName;
-            }
-            else
-            {
-                this.OverlayName = ServiceManager.Get<OverlayService>().DefaultOverlayName;
-            }
+            //var overlays = ServiceManager.Get<OverlayService>().GetOverlayNames();
+            //if (overlays.Contains(overlayName))
+            //{
+            //    this.OverlayName = overlayName;
+            //}
+            //else
+            //{
+            //    this.OverlayName = ServiceManager.Get<OverlayService>().DefaultOverlayName;
+            //}
 
+            this.OverlayEndpointID = overlayEndpointID;
             this.OverlayItemV3 = overlayItem;
         }
 
@@ -90,8 +95,7 @@ namespace MixItUp.Base.Model.Actions
             }
             else
             {
-                string overlayName = (string.IsNullOrEmpty(this.OverlayName)) ? ServiceManager.Get<OverlayService>().DefaultOverlayName : this.OverlayName;
-                OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlay(overlayName);
+                OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlayEndpointService(this.OverlayEndpointID);
                 if (overlay != null)
                 {
                     await overlay.SendItem(this.OverlayItemV3, parameters);

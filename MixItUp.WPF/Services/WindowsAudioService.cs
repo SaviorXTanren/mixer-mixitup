@@ -33,7 +33,7 @@ namespace MixItUp.WPF.Services
 
                 if (this.MixItUpOverlay.Equals(deviceName))
                 {
-                    OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlay(ServiceManager.Get<OverlayService>().DefaultOverlayName);
+                    OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetDefaultOverlayEndpointService();
                     if (overlay != null)
                     {
                         var overlayItem = new OverlaySoundItemModel(filePath, volume);

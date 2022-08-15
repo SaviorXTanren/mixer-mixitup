@@ -17,28 +17,15 @@ namespace MixItUp.Base.Services
         public event EventHandler OnOverlayConnectedOccurred = delegate { };
         public event EventHandler<WebSocketCloseStatus> OnOverlayDisconnectedOccurred = delegate { };
 
-        private Dictionary<string, OverlayEndpointService> overlays = new Dictionary<string, OverlayEndpointService>();
+        private Dictionary<Guid, OverlayEndpointService> overlays = new Dictionary<Guid, OverlayEndpointService>();
 
         private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
-
-        public string DefaultOverlayName { get { return MixItUp.Base.Resources.Default; } }
-        public int DefaultOverlayPort { get { return 8111; } }
 
         public string Name { get { return "Overlay"; } }
 
         public bool IsConnected { get; private set; }
 
         private long updateSeconds = 0;
-
-        public IDictionary<string, int> AllOverlayNameAndPorts
-        {
-            get
-            {
-                Dictionary<string, int> results = new Dictionary<string, int>(ChannelSession.Settings.OverlayCustomNameAndPorts);
-                results.Add(ServiceManager.Get<OverlayService>().DefaultOverlayName, ServiceManager.Get<OverlayService>().DefaultOverlayPort);
-                return results;
-            }
-        }
 
         public async Task<Result> Connect()
         {
@@ -47,12 +34,12 @@ namespace MixItUp.Base.Services
                 this.IsConnected = false;
                 ChannelSession.Settings.EnableOverlay = false;
 
-                foreach (var kvp in this.AllOverlayNameAndPorts)
+                foreach (OverlayEndpointV3Model overlayEndpoint in this.GetOverlayEndpoints())
                 {
-                    if (!await this.AddOverlay(kvp.Key, kvp.Value))
+                    if (!await this.AddOverlayEndpoint(overlayEndpoint))
                     {
                         await this.Disconnect();
-                        return new Result(string.Format(Resources.OverlayAddFailed, kvp.Key));
+                        return new Result(string.Format(Resources.OverlayAddFailed, overlayEndpoint.Name));
                     }
                 }
 
@@ -75,53 +62,73 @@ namespace MixItUp.Base.Services
         public async Task Disconnect()
         {
             this.backgroundThreadCancellationTokenSource.Cancel();
-            foreach (string overlayName in this.GetOverlayNames())
+            foreach (OverlayEndpointV3Model overlayEndpoint in this.GetOverlayEndpoints())
             {
-                await this.RemoveOverlay(overlayName);
+                await this.RemoveOverlayEndpoint(overlayEndpoint.ID);
             }
             this.IsConnected = false;
             ChannelSession.Settings.EnableOverlay = false;
         }
 
-        public async Task<bool> AddOverlay(string name, int port)
+        public async Task<bool> AddOverlayEndpoint(OverlayEndpointV3Model overlayEndpoint)
         {
-            OverlayEndpointService overlay = new OverlayEndpointService(name, port);
+            OverlayEndpointService overlay = new OverlayEndpointService(overlayEndpoint);
             if (await overlay.Initialize())
             {
                 overlay.OnWebSocketConnectedOccurred += Overlay_OnWebSocketConnectedOccurred;
                 overlay.OnWebSocketDisconnectedOccurred += Overlay_OnWebSocketDisconnectedOccurred;
-                this.overlays[name] = overlay;
+                this.overlays[overlayEndpoint.ID] = overlay;
                 return true;
             }
-            await this.RemoveOverlay(name);
+            await this.RemoveOverlayEndpoint(overlayEndpoint.ID);
             return false;
         }
 
-        public async Task RemoveOverlay(string name)
+        public async Task RemoveOverlayEndpoint(Guid id)
         {
-            OverlayEndpointService overlay = this.GetOverlay(name);
+            OverlayEndpointService overlay = this.GetOverlayEndpointService(id);
             if (overlay != null)
             {
                 overlay.OnWebSocketConnectedOccurred -= Overlay_OnWebSocketConnectedOccurred;
                 overlay.OnWebSocketDisconnectedOccurred -= Overlay_OnWebSocketDisconnectedOccurred;
 
                 await overlay.Disconnect();
-                this.overlays.Remove(name);
+                this.overlays.Remove(id);
             }
         }
 
-        public OverlayEndpointService GetOverlay(string name)
+        public IEnumerable<OverlayEndpointV3Model> GetOverlayEndpoints()
         {
-            if (this.overlays.ContainsKey(name))
+            return ChannelSession.Settings.OverlayEndpointsV3;
+        }
+
+        public OverlayEndpointV3Model GetOverlayEndpoint(Guid id)
+        {
+            return this.GetOverlayEndpoints().FirstOrDefault(oe => oe.ID == id);
+        }
+
+        public OverlayEndpointV3Model GetDefaultOverlayEndpoint()
+        {
+            return this.GetOverlayEndpoint(Guid.Empty);
+        }
+
+        public OverlayEndpointService GetDefaultOverlayEndpointService()
+        {
+            OverlayEndpointV3Model overlayEndpoint = this.GetDefaultOverlayEndpoint();
+            if (overlayEndpoint != null)
             {
-                return this.overlays[name];
+                return this.GetOverlayEndpointService(overlayEndpoint.ID);
             }
             return null;
         }
 
-        public IEnumerable<string> GetOverlayNames()
+        public OverlayEndpointService GetOverlayEndpointService(Guid id)
         {
-            return this.overlays.Keys.ToList();
+            if (this.overlays.ContainsKey(id))
+            {
+                return this.overlays[id];
+            }
+            return null;
         }
 
         public async Task<int> TestConnections()
@@ -156,45 +163,45 @@ namespace MixItUp.Base.Services
 
             UserV2ViewModel user = ChannelSession.User;
 
-            foreach (var widgetGroup in ChannelSession.Settings.OverlayWidgets.GroupBy(ow => ow.OverlayName))
-            {
-                OverlayEndpointService overlay = this.GetOverlay(widgetGroup.Key);
-                if (overlay != null)
-                {
-                    overlay.StartBatching();
-                    foreach (OverlayWidgetModel widget in widgetGroup)
-                    {
-                        try
-                        {
-                            if (!widget.Item.IsInitialized)
-                            {
-                                await widget.Initialize();
-                            }
+            //foreach (var widgetGroup in ChannelSession.Settings.OverlayWidgets.GroupBy(ow => ow.OverlayName))
+            //{
+            //    OverlayEndpointService overlay = this.GetOverlay(widgetGroup.Key);
+            //    if (overlay != null)
+            //    {
+            //        overlay.StartBatching();
+            //        foreach (OverlayWidgetModel widget in widgetGroup)
+            //        {
+            //            try
+            //            {
+            //                if (!widget.Item.IsInitialized)
+            //                {
+            //                    await widget.Initialize();
+            //                }
 
-                            if (widget.IsEnabled)
-                            {
-                                if (!widget.Item.IsEnabled)
-                                {
-                                    await widget.Enable();
-                                }
-                                else if (widget.SupportsRefreshUpdating && widget.RefreshTime > 0 && (this.updateSeconds % widget.RefreshTime) == 0)
-                                {
-                                    await widget.UpdateItem();
-                                }
-                            }
-                            else
-                            {
-                                if (widget.Item.IsEnabled)
-                                {
-                                    await widget.Disable();
-                                }
-                            }
-                        }
-                        catch (Exception ex) { Logger.Log(ex); }
-                    }
-                    await overlay.EndBatching();
-                }
-            }
+            //                if (widget.IsEnabled)
+            //                {
+            //                    if (!widget.Item.IsEnabled)
+            //                    {
+            //                        await widget.Enable();
+            //                    }
+            //                    else if (widget.SupportsRefreshUpdating && widget.RefreshTime > 0 && (this.updateSeconds % widget.RefreshTime) == 0)
+            //                    {
+            //                        await widget.UpdateItem();
+            //                    }
+            //                }
+            //                else
+            //                {
+            //                    if (widget.Item.IsEnabled)
+            //                    {
+            //                        await widget.Disable();
+            //                    }
+            //                }
+            //            }
+            //            catch (Exception ex) { Logger.Log(ex); }
+            //        }
+            //        await overlay.EndBatching();
+            //    }
+            //}
 
             this.updateSeconds++;
         }
@@ -207,19 +214,19 @@ namespace MixItUp.Base.Services
             Logger.Log("Client connected to Overlay Endpoint - " + overlay.Name);
 
             overlay.StartBatching();
-            foreach (OverlayWidgetModel widget in ChannelSession.Settings.OverlayWidgets.Where(ow => ow.OverlayName.Equals(overlay.Name)))
-            {
-                try
-                {
-                    if (widget.IsEnabled)
-                    {
-                        await widget.ShowItem();
-                        await widget.LoadCachedData();
-                        await widget.UpdateItem();
-                    }
-                }
-                catch (Exception ex) { Logger.Log(ex); }
-            }
+            //foreach (OverlayWidgetModel widget in ChannelSession.Settings.OverlayWidgets.Where(ow => ow.OverlayName.Equals(overlay.Name)))
+            //{
+            //    try
+            //    {
+            //        if (widget.IsEnabled)
+            //        {
+            //            await widget.ShowItem();
+            //            await widget.LoadCachedData();
+            //            await widget.UpdateItem();
+            //        }
+            //    }
+            //    catch (Exception ex) { Logger.Log(ex); }
+            //}
             await overlay.EndBatching();
         }
 

@@ -1,7 +1,8 @@
-﻿using MixItUp.Base.Services;
+﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
-using System.Collections.ObjectModel;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -10,27 +11,28 @@ namespace MixItUp.Base.ViewModel.Settings
 {
     public class OverlayEndpointListingViewModel : UIViewModelBase
     {
-        public string Name { get; set; }
-        public int Port { get; set; }
+        public Guid ID { get { return this.model.ID; } }
+        public string Name { get { return this.model.Name; } }
+        public int PortNumber { get { return this.model.PortNumber; } }
 
-        public string Address { get { return string.Format(OverlayEndpointService.RegularOverlayHttpListenerServerAddressFormat, this.Port); } }
+        public string Address { get { return string.Format(OverlayEndpointService.RegularOverlayHttpListenerServerAddressFormat, this.PortNumber); } }
 
-        public bool CanDelete { get { return !ServiceManager.Get<OverlayService>().DefaultOverlayName.Equals(this.Name); } }
+        public bool CanDelete { get { return !OverlayEndpointV3Model.DefaultOverlayName.Equals(this.Name); } }
 
         public ICommand DeleteCommand { get; set; }
 
         private OverlaySettingsControlViewModel viewModel;
+        private OverlayEndpointV3Model model;
 
-        public OverlayEndpointListingViewModel(OverlaySettingsControlViewModel viewModel, string name, int port)
+        public OverlayEndpointListingViewModel(OverlaySettingsControlViewModel viewModel, OverlayEndpointV3Model model)
         {
             this.viewModel = viewModel;
-            this.Name = name;
-            this.Port = port;
+            this.model = model;
 
             this.DeleteCommand = this.CreateCommand(async () =>
             {
-                ChannelSession.Settings.OverlayCustomNameAndPorts.Remove(this.Name);
-                await ServiceManager.Get<OverlayService>().RemoveOverlay(this.Name);
+                await ServiceManager.Get<OverlayService>().RemoveOverlayEndpoint(this.model.ID);
+                ChannelSession.Settings.OverlayEndpointsV3.Remove(this.model);
                 this.viewModel.Endpoints.Remove(this);
             });
         }
@@ -51,31 +53,47 @@ namespace MixItUp.Base.ViewModel.Settings
         }
         private string newEndpointName;
 
+        public int NewEndpointPortNumber
+        {
+            get { return this.newEndpointPortNumber; }
+            set
+            {
+                this.newEndpointPortNumber = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int newEndpointPortNumber;
+
         public ICommand AddCommand { get; set; }
 
         public OverlaySettingsControlViewModel()
         {
             this.AddCommand = this.CreateCommand(async () =>
             {
-                if (!string.IsNullOrEmpty(this.NewEndpointName))
+                if (!string.IsNullOrEmpty(this.NewEndpointName) && this.NewEndpointPortNumber > 0 && this.NewEndpointPortNumber < Math.Pow(2, 16))
                 {
-                    if (!this.Endpoints.Any(p => p.Name.Equals(this.NewEndpointName)))
+                    if (!this.Endpoints.Any(e => e.Name.Equals(this.NewEndpointName)) && !this.Endpoints.Any(e => e.PortNumber == this.NewEndpointPortNumber))
                     {
-                        int port = this.Endpoints.Max(o => o.Port) + 1;
-                        OverlayEndpointListingViewModel overlay = new OverlayEndpointListingViewModel(this, this.NewEndpointName, port);
+                        OverlayEndpointV3Model overlayEndpoint = new OverlayEndpointV3Model(this.NewEndpointPortNumber, this.NewEndpointName);
 
-                        ChannelSession.Settings.OverlayCustomNameAndPorts[overlay.Name] = overlay.Port;
-                        await ServiceManager.Get<OverlayService>().AddOverlay(overlay.Name, overlay.Port);
-                        this.Endpoints.Add(overlay);
+                        if (await ServiceManager.Get<OverlayService>().AddOverlayEndpoint(overlayEndpoint))
+                        {
+                            ChannelSession.Settings.OverlayEndpointsV3.Add(overlayEndpoint);
+                            this.Endpoints.Add(new OverlayEndpointListingViewModel(this, overlayEndpoint));
+                        }
                     }
                 }
                 this.NewEndpointName = string.Empty;
+                this.NewEndpointPortNumber = this.Endpoints.Max(o => o.PortNumber) + 1;
             });
         }
 
         protected override Task OnOpenInternal()
         {
-            this.Endpoints.ClearAndAddRange(ServiceManager.Get<OverlayService>().AllOverlayNameAndPorts.OrderBy(kvp => kvp.Value).Select(kvp => new OverlayEndpointListingViewModel(this, kvp.Key, kvp.Value)));
+            this.Endpoints.ClearAndAddRange(ServiceManager.Get<OverlayService>().GetOverlayEndpoints().Select(oe => new OverlayEndpointListingViewModel(this, oe)));
+
+            this.NewEndpointPortNumber = this.Endpoints.Max(o => o.PortNumber) + 1;
+
             return Task.CompletedTask;
         }
     }
