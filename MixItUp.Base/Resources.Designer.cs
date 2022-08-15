@@ -3329,6 +3329,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copy Message.
+        /// </summary>
+        public static string CopyMessage {
+            get {
+                return ResourceManager.GetString("CopyMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copy URL.
         /// </summary>
         public static string CopyURL {
@@ -4159,6 +4168,15 @@ namespace MixItUp.Base {
         public static string DeleteItemPrompt {
             get {
                 return ResourceManager.GetString("DeleteItemPrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Message.
+        /// </summary>
+        public static string DeleteMessage {
+            get {
+                return ResourceManager.GetString("DeleteMessage", resourceCulture);
             }
         }
         
@@ -9116,6 +9134,15 @@ namespace MixItUp.Base {
         public static string GoalType {
             get {
                 return ResourceManager.GetString("GoalType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to Link.
+        /// </summary>
+        public static string GoToLink {
+            get {
+                return ResourceManager.GetString("GoToLink", resourceCulture);
             }
         }
         
@@ -21016,6 +21043,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User Info.
+        /// </summary>
+        public static string UserInfo {
+            get {
+                return ResourceManager.GetString("UserInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User Joined.
         /// </summary>
         public static string UserJoined {
@@ -22141,6 +22177,15 @@ namespace MixItUp.Base {
         public static string WhisperTooltip {
             get {
                 return ResourceManager.GetString("WhisperTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WhisperUser.
+        /// </summary>
+        public static string WhisperUser {
+            get {
+                return ResourceManager.GetString("WhisperUser", resourceCulture);
             }
         }
         
