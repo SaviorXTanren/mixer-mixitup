@@ -10,6 +10,10 @@ namespace MixItUp.Base.Model.Overlay
     {
         public const string DefaultHTML = "<iframe frameborder=\"0\" width=\"{WIDTH}\" height=\"{HEIGHT}\" src=\"{URL}\" />";
 
+        public static readonly string DefaultCSS = string.Empty;
+
+        public static readonly string DefaultJavascript = string.Empty;
+
         [DataMember]
         public string URL { get; set; }
 

@@ -97,17 +97,42 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             switch (type)
             {
-                case OverlayItemV3Type.Text: this.HTML = OverlayTextItemV3Model.DefaultHTML; break;
-                case OverlayItemV3Type.Image: this.HTML = OverlayImageItemV3Model.DefaultHTML; break;
-                case OverlayItemV3Type.Video: this.HTML = OverlayVideoItemV3Model.DefaultHTML; break;
-                case OverlayItemV3Type.YouTube: this.HTML = OverlayYouTubeItemV3Model.DefaultHTML; break;
-                case OverlayItemV3Type.HTML: this.HTML = OverlayHTMLItemV3Model.DefaultHTML; break;
-                case OverlayItemV3Type.WebPage: this.HTML = OverlayWebPageItemV3Model.DefaultHTML; break;
+                case OverlayItemV3Type.Text:
+                    this.HTML = OverlayTextItemV3Model.DefaultHTML;
+                    this.CSS = OverlayTextItemV3Model.DefaultCSS;
+                    this.Javascript = OverlayTextItemV3Model.DefaultJavascript;
+                    break;
+                case OverlayItemV3Type.Image:
+                    this.HTML = OverlayImageItemV3Model.DefaultHTML;
+                    this.CSS = OverlayImageItemV3Model.DefaultCSS;
+                    this.Javascript = OverlayImageItemV3Model.DefaultJavascript;
+                    break;
+                case OverlayItemV3Type.Video:
+                    this.HTML = OverlayVideoItemV3Model.DefaultHTML;
+                    this.CSS = OverlayVideoItemV3Model.DefaultCSS;
+                    this.Javascript = OverlayVideoItemV3Model.DefaultJavascript;
+                    break;
+                case OverlayItemV3Type.YouTube:
+                    this.HTML = OverlayYouTubeItemV3Model.DefaultHTML;
+                    this.CSS = OverlayYouTubeItemV3Model.DefaultCSS;
+                    this.Javascript = OverlayYouTubeItemV3Model.DefaultJavascript;
+                    break;
+                case OverlayItemV3Type.HTML:
+                    this.HTML = OverlayHTMLItemV3Model.DefaultHTML;
+                    this.CSS = OverlayHTMLItemV3Model.DefaultCSS;
+                    this.Javascript = OverlayHTMLItemV3Model.DefaultJavascript;
+                    break;
+                case OverlayItemV3Type.WebPage:
+                    this.HTML = OverlayWebPageItemV3Model.DefaultHTML;
+                    this.CSS = OverlayWebPageItemV3Model.DefaultCSS;
+                    this.Javascript = OverlayWebPageItemV3Model.DefaultJavascript;
+                    break;
             }
 
             if (!string.IsNullOrWhiteSpace(this.HTML))
             {
                 this.HTML = OverlayItemV3ModelBase.ReplaceProperty(OverlayItemV3ModelBase.PositionedHTML, OverlayItemV3ModelBase.InnerHTMLProperty, this.HTML);
+                this.CSS = OverlayItemV3ModelBase.PositionedCSS + this.CSS;
             }
         }
 

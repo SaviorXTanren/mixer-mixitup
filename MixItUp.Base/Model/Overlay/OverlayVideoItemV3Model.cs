@@ -11,9 +11,16 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayVideoItemV3Model : OverlayItemV3ModelBase
     {
-        public static readonly string DefaultHTML = "<video onloadstart=\"this.volume={Volume}\" allow=\"autoplay; encrypted-media\" autoplay {Loop} style=\"{Width} {Height}\">" + Environment.NewLine + 
-            "<source src=\"{FilePath}\" type=\"video/{VideoExtension}\" />" + Environment.NewLine + 
+        public static readonly string DefaultHTML = "<video id=\"video-{ID}\" onloadstart=\"this.volume={Volume}\" allow=\"autoplay; encrypted-media\" autoplay {Loop}>" + Environment.NewLine + 
+            "    <source src=\"{FilePath}\" type=\"video/{VideoExtension}\" />" + Environment.NewLine + 
             "</video>";
+
+        public static readonly string DefaultCSS = "#video-{ID} {" + Environment.NewLine +
+            "    width: {Width};" + Environment.NewLine +
+            "    height: {Height};" + Environment.NewLine +
+            "}";
+
+        public static readonly string DefaultJavascript = string.Empty;
 
         [DataMember]
         public string FilePath { get; set; }

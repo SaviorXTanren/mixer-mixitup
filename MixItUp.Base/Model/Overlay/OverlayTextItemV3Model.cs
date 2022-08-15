@@ -17,9 +17,22 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayTextItemV3Model : OverlayItemV3ModelBase
     {
-        public static readonly string DefaultHTML = "<p style=\"font-size: {FontSize}px; color: {FontColor}; font-family: '{FontFamily}'; font-weight: {FontWeight}; text-decoration: {TextDecoration}; font-style: {FontStyle}; text-align: {TextAlignment}; {Shadow}\">" + Environment.NewLine +
-            "{Text}" + Environment.NewLine +
+        public static readonly string DefaultHTML = "<p id=\"text-{ID}\">" + Environment.NewLine +
+            "    {Text}" + Environment.NewLine +
             "</p>";
+
+        public static readonly string DefaultCSS = "#text-{ID} {" + Environment.NewLine +
+            "    font-size: {FontSize}px;" + Environment.NewLine +
+            "    color: {FontColor};" + Environment.NewLine +
+            "    font-family: '{FontFamily}';" + Environment.NewLine +
+            "    font-weight: {FontWeight};" + Environment.NewLine +
+            "    text-decoration: {TextDecoration};" + Environment.NewLine +
+            "    font-style: {FontStyle};" + Environment.NewLine +
+            "    text-align: {TextAlignment};" + Environment.NewLine +
+            "    text-shadow: {Shadow};" + Environment.NewLine +
+            "}";
+
+        public static readonly string DefaultJavascript = string.Empty;
 
         [DataMember]
         public string Text { get; set; }
@@ -80,19 +93,15 @@ namespace MixItUp.Base.Model.Overlay
 
             if (!string.IsNullOrEmpty(this.ShadowColor))
             {
-                item.HTML = ReplaceProperty(item.HTML, "ShadowColor", this.ShadowColor);
-                item.CSS = ReplaceProperty(item.CSS, "ShadowColor", this.ShadowColor);
-                item.Javascript = ReplaceProperty(item.Javascript, "ShadowColor", this.ShadowColor);
-
-                item.HTML = ReplaceProperty(item.HTML, "Shadow", $"text-shadow: 2px 2px {this.ShadowColor};");
+                item.HTML = ReplaceProperty(item.HTML, "Shadow", $"2px 2px {this.ShadowColor}");
+                item.CSS = ReplaceProperty(item.CSS, "Shadow", $"2px 2px {this.ShadowColor}");
+                item.Javascript = ReplaceProperty(item.Javascript, "Shadow", $"2px 2px {this.ShadowColor}");
             }
             else
             {
-                item.HTML = ReplaceProperty(item.HTML, "ShadowColor", string.Empty);
-                item.CSS = ReplaceProperty(item.CSS, "ShadowColor", string.Empty);
-                item.Javascript = ReplaceProperty(item.Javascript, "ShadowColor", string.Empty);
-
-                item.HTML = ReplaceProperty(item.HTML, "Shadow", string.Empty);
+                item.HTML = ReplaceProperty(item.HTML, "Shadow", "none");
+                item.CSS = ReplaceProperty(item.CSS, "Shadow", "none");
+                item.Javascript = ReplaceProperty(item.Javascript, "Shadow", "none");
             }
 
             return item;

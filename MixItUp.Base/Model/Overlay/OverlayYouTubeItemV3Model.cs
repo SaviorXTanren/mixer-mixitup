@@ -7,6 +7,10 @@ namespace MixItUp.Base.Model.Overlay
     {
         public const string DefaultHTML = "<div id=\"{ID}\" />";
 
+        public static readonly string DefaultCSS = string.Empty;
+
+        public static readonly string DefaultJavascript = string.Empty;
+
         [DataMember]
         public string VideoID { get; set; }
 

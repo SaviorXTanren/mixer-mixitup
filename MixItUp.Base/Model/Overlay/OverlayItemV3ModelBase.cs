@@ -21,11 +21,36 @@ namespace MixItUp.Base.Model.Overlay
     public abstract class OverlayItemV3ModelBase : OverlayOutputV3Model
     {
         public const string InnerHTMLProperty = "InnerHTML";
-        public static readonly string PositionedHTML = "<div style=\"position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px; z-index: {Layer}\">" + Environment.NewLine +
-            "<div style=\"position: absolute; margin: 0px; left: {XPosition}{PositionType}; top: {YPosition}{PositionType}; transform: translate({XTranslation}%, {YTranslation}%); {Width} {Height}\">" + Environment.NewLine +
+
+        public static readonly string PositionedHTML = "<div id=\"outerdiv-{ID}\">" + Environment.NewLine +
+            "<div id=\"innerdiv-{ID}\">" + Environment.NewLine +
+            Environment.NewLine +
             "{InnerHTML}" + Environment.NewLine +
+            Environment.NewLine +
             "</div>" + Environment.NewLine +
             "</div>";
+
+        public static readonly string PositionedCSS = "#outerdiv-{ID} {" + Environment.NewLine +
+            "    position: absolute;" + Environment.NewLine +
+            "    width: 100%;" + Environment.NewLine +
+            "    max-width: 100%;" + Environment.NewLine +
+            "    min-width: 100%;" + Environment.NewLine +
+            "    height: 100%;" + Environment.NewLine +
+            "    max-height: 100%;" + Environment.NewLine +
+            "    min-height: 100%;" + Environment.NewLine +
+            "    margin: 0px;" + Environment.NewLine +
+            "    z-index: {Layer};" + Environment.NewLine +
+            "}" + Environment.NewLine +
+            Environment.NewLine +
+            "#innerdiv-{ID} {" + Environment.NewLine +
+            "    position: absolute;" + Environment.NewLine +
+            "    margin: 0px;" + Environment.NewLine +
+            "    left: {XPosition}{PositionType};" + Environment.NewLine +
+            "    top: {YPosition}{PositionType};" + Environment.NewLine +
+            "    transform: translate({XTranslation}%, {YTranslation}%);" + Environment.NewLine +
+            "    width: {Width};" + Environment.NewLine +
+            "    height: {Height};" + Environment.NewLine +
+            "}" + Environment.NewLine + Environment.NewLine;
 
         public static int zIndexCounter = 0;
 
@@ -101,7 +126,7 @@ namespace MixItUp.Base.Model.Overlay
 
             result.HTML = ReplaceProperty(result.HTML, "XTranslation", this.XTranslation.ToString());
             result.CSS = ReplaceProperty(result.CSS, "XTranslation", this.XTranslation.ToString());
-            result.HTML = ReplaceProperty(result.HTML, "XTranslation", this.XTranslation.ToString());
+            result.Javascript = ReplaceProperty(result.Javascript, "XTranslation", this.XTranslation.ToString());
 
             result.HTML = ReplaceProperty(result.HTML, "YTranslation", this.YTranslation.ToString());
             result.CSS = ReplaceProperty(result.CSS, "YTranslation", this.YTranslation.ToString());
@@ -109,24 +134,28 @@ namespace MixItUp.Base.Model.Overlay
 
             if (this.Width > 0)
             {
-                result.HTML = ReplaceProperty(result.HTML, "Width", $"width: {this.Width}px;");
+                result.HTML = ReplaceProperty(result.HTML, "Width", $"{this.Width}px");
                 result.CSS = ReplaceProperty(result.CSS, "Width", $"{this.Width}px");
                 result.Javascript = ReplaceProperty(result.Javascript, "Width", $"{this.Width}px");
             }
             else
             {
-                result.HTML = ReplaceProperty(result.HTML, "Width", $"width: auto;");
+                result.HTML = ReplaceProperty(result.HTML, "Width", "auto");
+                result.CSS = ReplaceProperty(result.CSS, "Width", "auto");
+                result.Javascript = ReplaceProperty(result.Javascript, "Width", "auto");
             }
 
             if (this.Height > 0)
             {
-                result.HTML = ReplaceProperty(result.HTML, "Height", $"height: {this.Height}px;");
+                result.HTML = ReplaceProperty(result.HTML, "Height", $"{this.Height}px");
                 result.CSS = ReplaceProperty(result.CSS, "Height", $"{this.Height}px");
                 result.Javascript = ReplaceProperty(result.Javascript, "Height", $"{this.Height}px");
             }
             else
             {
-                result.HTML = ReplaceProperty(result.HTML, "Height", $"height: auto;");
+                result.HTML = ReplaceProperty(result.HTML, "Height", "auto");
+                result.CSS = ReplaceProperty(result.CSS, "Height", "auto");
+                result.Javascript = ReplaceProperty(result.Javascript, "Height", "auto");
             }
 
             result.Duration = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.Duration, parameters);
