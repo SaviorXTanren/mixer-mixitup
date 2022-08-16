@@ -16,6 +16,7 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -336,6 +337,41 @@ namespace MixItUp.WPF.Controls.Chat
                 if (!message.IsWhisper)
                 {
                     await ServiceManager.Get<ChatService>().DeleteMessage(message);
+                }
+            }
+        }
+
+        private void ChatList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            MenuItem goToLinkMenuItem = LogicalTreeHelper.FindLogicalNode(this.ChatList.ContextMenu, "GoToLinkMenuItem") as MenuItem;
+
+            ChatMessageViewModel message = (e.AddedItems.Count == 0)
+                ? null
+                : e.AddedItems[0] as ChatMessageViewModel;
+
+            if (message != null && message.ContainsLink || ModerationService.LinkRegex.IsMatch(message.PlainTextMessage))
+            {
+                goToLinkMenuItem.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                goToLinkMenuItem.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void GoToLinkMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.ChatList.SelectedItem != null && this.ChatList.SelectedItem is ChatMessageViewModel)
+            {
+                ChatMessageViewModel message = (ChatMessageViewModel)this.ChatList.SelectedItem;
+                if (message.ContainsLink || ModerationService.LinkRegex.IsMatch(message.PlainTextMessage))
+                {
+                    // Get link and go!
+                    Match match = ModerationService.LinkRegex.Match(message.PlainTextMessage);
+                    if (match.Success && !string.IsNullOrWhiteSpace(match.Value))
+                    {
+                        ProcessHelper.LaunchLink(match.Value);
+                    }
                 }
             }
         }
