@@ -9042,4 +9042,16 @@ via Twitch, it's a "your mileage may vary" situation.</value>
   <data name="WhisperUser" xml:space="preserve">
     <value>WhisperUser</value>
   </data>
+  <data name="TwitchActionMessageMissing" xml:space="preserve">
+    <value>Twitch Action: A valid message must be specified</value>
+  </data>
+  <data name="SendChatAnnouncement" xml:space="preserve">
+    <value>Send Chat Announcement</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>Color</value>
+  </data>
+  <data name="Primary" xml:space="preserve">
+    <value>Primary</value>
+  </data>
 </root>
