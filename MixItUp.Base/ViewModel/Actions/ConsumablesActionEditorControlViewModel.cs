@@ -172,7 +172,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged();
             }
         }
-        private UserRoleEnum selectedUsersToApplyTo;
+        private UserRoleEnum selectedUsersToApplyTo = UserRoleEnum.User;
 
         public bool CanSelectUsersToApplyTo { get { return this.SelectedActionType == ConsumablesActionTypeEnum.AddToAllChatUsers || this.SelectedActionType == ConsumablesActionTypeEnum.SubtractFromAllChatUsers; } }
 
