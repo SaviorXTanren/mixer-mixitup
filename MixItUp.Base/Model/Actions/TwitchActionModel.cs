@@ -41,7 +41,17 @@ namespace MixItUp.Base.Model.Actions
         DisableSubscriberChat,
         SetTitle,
         SetGame,
-        SetCustomTags
+        SetCustomTags,
+        SendChatAnnouncement,
+    }
+
+    public enum TwitchAnnouncementColor
+    {
+        Primary = 0,
+        Blue,
+        Green,
+        Orange,
+        Purple
     }
 
     [DataContract]
@@ -54,6 +64,15 @@ namespace MixItUp.Base.Model.Actions
         public const int StreamMarkerMaxDescriptionLength = 140;
 
         private const string StartinCommercialBreakMessage = "Starting commercial break.";
+
+        private readonly Dictionary<TwitchAnnouncementColor, string> AnnouncementColorMap = new Dictionary<TwitchAnnouncementColor, string>
+        {
+            { TwitchAnnouncementColor.Primary, "primary" },
+            { TwitchAnnouncementColor.Blue, "blue" },
+            { TwitchAnnouncementColor.Green, "green" },
+            { TwitchAnnouncementColor.Orange, "orange" },
+            { TwitchAnnouncementColor.Purple, "purple" },
+        };
 
         public static readonly IEnumerable<int> SupportedAdLengths = new List<int>() { 30, 60, 90, 120, 150, 180 };
 
@@ -144,6 +163,14 @@ namespace MixItUp.Base.Model.Actions
             return action;
         }
 
+        public static TwitchActionModel CreateSendChatAnnouncementAction(string message, TwitchAnnouncementColor color)
+        {
+            TwitchActionModel actionModel = new TwitchActionModel(TwitchActionType.SendChatAnnouncement);
+            actionModel.Message = message;
+            actionModel.Color= color;
+            return actionModel;
+        }
+
         public static TwitchActionModel CreateAction(TwitchActionType type)
         {
             return new TwitchActionModel(type);
@@ -226,6 +253,12 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
+
+        [DataMember]
+        public string Message { get; set; }
+
+        [DataMember]
+        public TwitchAnnouncementColor Color { get; set; }
 
         private TwitchActionModel(TwitchActionType type)
             : base(ActionTypeEnum.Twitch)
@@ -594,6 +627,10 @@ namespace MixItUp.Base.Model.Actions
                 else if (this.ActionType == TwitchActionType.SetCustomTags)
                 {
                     await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateStreamTagsForChannel(ServiceManager.Get<TwitchSessionService>().User, this.CustomTags.Select(t => new TagModel() { tag_id = t }));
+                }
+                else if (this.ActionType == TwitchActionType.SendChatAnnouncement)
+                {
+                    await ServiceManager.Get<TwitchSessionService>().UserConnection.SendChatAnnouncement(ServiceManager.Get<TwitchSessionService>().User, Message, AnnouncementColorMap[Color]);
                 }
             }
         }

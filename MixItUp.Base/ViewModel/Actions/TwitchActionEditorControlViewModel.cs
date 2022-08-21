@@ -42,6 +42,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged("ShowSubActions");
                 this.NotifyPropertyChanged("ShowFollowersGrid");
                 this.NotifyPropertyChanged("ShowSlowChatGrid");
+                this.NotifyPropertyChanged("ShowSendAnnouncementGrid");
             }
         }
         private TwitchActionType selectedActionType;
@@ -415,6 +416,7 @@ namespace MixItUp.Base.ViewModel.Actions
         public bool ShowFollowersGrid { get { return this.SelectedActionType == TwitchActionType.EnableFollowersOnly; } }
 
         public bool ShowSlowChatGrid { get { return this.SelectedActionType == TwitchActionType.EnableSlowChat; } }
+        public bool ShowSendAnnouncementGrid { get { return this.SelectedActionType == TwitchActionType.SendChatAnnouncement; } }
 
         public string TimeLength
         {
@@ -426,6 +428,30 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private string timeLength;
+
+        public string Message
+        {
+            get { return this.message; }
+            set
+            {
+                this.message = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string message;
+
+        public IEnumerable<TwitchAnnouncementColor> AnnouncementColors { get { return EnumHelper.GetEnumList<TwitchAnnouncementColor>(); } }
+
+        public TwitchAnnouncementColor SelectedAnnouncementColor
+        {
+            get { return this.selectedAnnouncementColor; }
+            set
+            {
+                this.selectedAnnouncementColor = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private TwitchAnnouncementColor selectedAnnouncementColor = TwitchAnnouncementColor.Primary;
 
         public TwitchActionEditorControlViewModel(TwitchActionModel action)
             : base(action, action.Actions)
@@ -517,6 +543,11 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.ShowFollowersGrid || this.ShowSlowChatGrid)
             {
                 this.TimeLength = action.TimeLength;
+            }
+            else if (this.ShowSendAnnouncementGrid)
+            {
+                this.Message = action.Message;
+                this.SelectedAnnouncementColor = action.Color;
             }
         }
 
@@ -616,6 +647,13 @@ namespace MixItUp.Base.ViewModel.Actions
                     return new Result(MixItUp.Base.Resources.TwitchActionTimeLengthMissing);
                 }
             }
+            else if (this.ShowSendAnnouncementGrid)
+            {
+                if (string.IsNullOrEmpty(this.Message))
+                {
+                    return new Result(MixItUp.Base.Resources.TwitchActionMessageMissing);
+                }
+            }
             return await base.Validate();
         }
 
@@ -689,6 +727,10 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.ShowSlowChatGrid)
             {
                 return TwitchActionModel.CreateTimeAction(TwitchActionType.EnableSlowChat, this.TimeLength);
+            }
+            else if (this.ShowSendAnnouncementGrid)
+            {
+                return TwitchActionModel.CreateSendChatAnnouncementAction(this.Message, this.SelectedAnnouncementColor);
             }
             else
             {
