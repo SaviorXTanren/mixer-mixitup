@@ -2600,6 +2600,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Color.
+        /// </summary>
+        public static string Color {
+            get {
+                return ResourceManager.GetString("Color", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Color Scheme.
         /// </summary>
         public static string ColorScheme {
@@ -14351,6 +14360,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Primary.
+        /// </summary>
+        public static string Primary {
+            get {
+                return ResourceManager.GetString("Primary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Primary Currency.
         /// </summary>
         public static string PrimaryCurrency {
@@ -16397,6 +16415,15 @@ namespace MixItUp.Base {
         public static string SendAsStreamer {
             get {
                 return ResourceManager.GetString("SendAsStreamer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send Chat Announcement.
+        /// </summary>
+        public static string SendChatAnnouncement {
+            get {
+                return ResourceManager.GetString("SendChatAnnouncement", resourceCulture);
             }
         }
         
@@ -20003,6 +20030,15 @@ namespace MixItUp.Base {
         public static string TwitchActionCreatePredictionTwoChoices {
             get {
                 return ResourceManager.GetString("TwitchActionCreatePredictionTwoChoices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Action: A valid message must be specified.
+        /// </summary>
+        public static string TwitchActionMessageMissing {
+            get {
+                return ResourceManager.GetString("TwitchActionMessageMissing", resourceCulture);
             }
         }
         
