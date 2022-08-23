@@ -21,6 +21,8 @@ namespace MixItUp.Base.Model.Actions
         FastClip90Seconds,
         SetTitle,
         SetGame,
+        EnableSubscriberMode,
+        DisableSubscriberMode,
     }
 
     [DataContract]
@@ -143,6 +145,14 @@ namespace MixItUp.Base.Model.Actions
                 else if (this.ActionType == TrovoActionType.SetGame)
                 {
                     await ServiceManager.Get<TrovoSessionService>().SetGame(text);
+                }
+                else if (this.ActionType == TrovoActionType.EnableSubscriberMode)
+                {
+                    await ServiceManager.Get<TrovoChatEventService>().SubscriberMode(enable: true);
+                }
+                else if (this.ActionType == TrovoActionType.DisableSubscriberMode)
+                {
+                    await ServiceManager.Get<TrovoChatEventService>().SubscriberMode(enable: false);
                 }
             }
         }

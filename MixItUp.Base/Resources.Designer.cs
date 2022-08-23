@@ -4641,6 +4641,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disable Subscriber Mode.
+        /// </summary>
+        public static string DisableSubscriberMode {
+            get {
+                return ResourceManager.GetString("DisableSubscriberMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disable Title.
         /// </summary>
         public static string DisableTitle {
@@ -5168,6 +5177,15 @@ namespace MixItUp.Base {
         public static string EnableStreamlabsOBS {
             get {
                 return ResourceManager.GetString("EnableStreamlabsOBS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable Subscriber Mode.
+        /// </summary>
+        public static string EnableSubscriberMode {
+            get {
+                return ResourceManager.GetString("EnableSubscriberMode", resourceCulture);
             }
         }
         

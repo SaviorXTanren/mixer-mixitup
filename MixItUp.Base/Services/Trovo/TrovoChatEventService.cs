@@ -365,6 +365,18 @@ namespace MixItUp.Base.Services.Trovo
             }
         }
 
+        public async Task<bool> SubscriberMode(bool enable)
+        {
+            if (enable)
+            {
+                return await this.PerformChatCommand("subscribers");
+            }
+            else
+            {
+                return await this.PerformChatCommand("subscribersoff");
+            }
+        }
+
         public async Task<bool> AddRole(string username, string role) { return await this.PerformChatCommand($"addrole {role} {username}"); }
 
         public async Task<bool> RemoveRole(string username, string role) { return await this.PerformChatCommand($"removerole {role} {username}"); }
