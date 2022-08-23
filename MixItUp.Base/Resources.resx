@@ -9072,4 +9072,10 @@ via Twitch, it's a "your mileage may vary" situation.</value>
   <data name="Primary" xml:space="preserve">
     <value>Primary</value>
   </data>
+  <data name="DisableSubscriberMode" xml:space="preserve">
+    <value>Disable Subscriber Mode</value>
+  </data>
+  <data name="EnableSubscriberMode" xml:space="preserve">
+    <value>Enable Subscriber Mode</value>
+  </data>
 </root>

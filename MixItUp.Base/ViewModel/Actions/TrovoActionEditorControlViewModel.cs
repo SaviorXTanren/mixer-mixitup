@@ -204,6 +204,14 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateTextAction(TrovoActionType.SetGame, this.Text));
             }
+            else if (this.SelectedActionType == TrovoActionType.DisableSubscriberMode)
+            {
+                return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateBasicAction(TrovoActionType.DisableSubscriberMode));
+            }
+            else if (this.SelectedActionType == TrovoActionType.DisableSubscriberMode)
+            {
+                return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateBasicAction(TrovoActionType.DisableSubscriberMode));
+            }
             return Task.FromResult<ActionModelBase>(null);
         }
     }
