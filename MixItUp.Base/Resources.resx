@@ -8880,4 +8880,7 @@ via Twitch, it's a "your mileage may vary" situation.</value>
   <data name="WhisperUser" xml:space="preserve">
     <value>WhisperUser</value>
   </data>
+  <data name="UseV5Protocol" xml:space="preserve">
+    <value>Use V5 Protocol</value>
+  </data>
 </root>

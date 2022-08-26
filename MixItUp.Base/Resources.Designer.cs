@@ -20773,6 +20773,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use V5 Protocol.
+        /// </summary>
+        public static string UseV5Protocol {
+            get {
+                return ResourceManager.GetString("UseV5Protocol", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A valid amount greater than 0 must be specified.
         /// </summary>
         public static string ValidAmountGreaterThan0MustBeSpecified {
