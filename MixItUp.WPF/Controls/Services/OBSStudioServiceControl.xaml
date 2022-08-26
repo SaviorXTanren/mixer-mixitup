@@ -46,6 +46,8 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
@@ -68,6 +70,17 @@
 
                 <MaterialDesign:PackIcon Kind="KeyVariant" Style="{StaticResource DarkLightBackgroundPackIcon}" Grid.Column="0" VerticalAlignment="Center" />
                 <PasswordBox Grid.Column="2" x:Name="PasswordBox" Style="{StaticResource MaterialDesignPasswordBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Password}" />
+            </Grid>
+
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="{x:Static resx:Resources.UseV5Protocol}"/>
+                <ToggleButton Grid.Column="2" IsChecked="{Binding UseV5}" />
             </Grid>
         </Grid>
 
