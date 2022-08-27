@@ -130,6 +130,10 @@
 
                 mainOverlayDiv.appendChild(addedElement);
 
+                try {
+                    window[data.ID + "_load"]();
+                } catch (error) { }
+
                 animateCSS(addedElement, data.EntranceAnimation.AnimateCSSAnimationName).then((message) => {
 
                     setTimeout(function () {

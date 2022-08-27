@@ -206,13 +206,13 @@ namespace MixItUp.WPF.Services
 
             await this.SetSourceVisibility(sceneName, sourceName, visibility: false);
 
-            await this.OBSCommandTimeoutWrapper((cancellationToken) =>
+            await this.OBSCommandTimeoutWrapper<bool>((cancellationToken) =>
             {
                 SourceSettings properties = this.OBSWebsocket.GetSourceSettings(sourceName);
                 properties.Settings["file"] = filePath;
                 this.OBSWebsocket.SetSourceSettings(sourceName, properties.Settings);
 
-                return true;
+                return Task.FromResult(true);
             });
         }
 
@@ -222,13 +222,13 @@ namespace MixItUp.WPF.Services
 
             await this.SetSourceVisibility(sceneName, sourceName, visibility: false);
 
-            await this.OBSCommandTimeoutWrapper((cancellationToken) =>
+            await this.OBSCommandTimeoutWrapper<bool>((cancellationToken) =>
             {
                 SourceSettings properties = this.OBSWebsocket.GetSourceSettings(sourceName);
                 properties.Settings["local_file"] = filePath;
                 this.OBSWebsocket.SetSourceSettings(sourceName, properties.Settings);
 
-                return true;
+                return Task.FromResult(true);
             });
         }
 

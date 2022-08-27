@@ -42,7 +42,7 @@ namespace MixItUp.WPF.Controls.Overlay
             OverlayItemContainerV3Control control = (OverlayItemContainerV3Control)d;
             if (control != null)
             {
-                control.Content.Content = control.ContentControl;
+                control.InnerContent.Content = control.ContentControl;
             }
         }
     }

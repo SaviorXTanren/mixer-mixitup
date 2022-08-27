@@ -9063,4 +9063,97 @@ via Twitch, it's a "your mileage may vary" situation.</value>
   <data name="EnableSubscriberMode" xml:space="preserve">
     <value>Enable Subscriber Mode</value>
   </data>
+  <data name="OverlayTimerBasicDefaultJavascript" xml:space="preserve">
+    <value>function timerLoop(totalSeconds, displayFormat)
+{
+    var text = displayFormat;
+
+    var seconds = totalSeconds % 60;
+    if (seconds &lt; 10) { seconds = "0" + seconds }
+    text = text.replace("SS", totalSeconds);
+    text = text.replace("ss", seconds);
+
+    var totalMinutes = Math.floor(totalSeconds / 60);
+    var minutes = totalMinutes % 60;
+    if (minutes &lt; 10) { minutes = "0" + minutes }
+    text = text.replace("MM", totalMinutes);
+    text = text.replace("mm", minutes);
+
+    var totalHours = Math.floor(totalMinutes / 60);
+    var hours = totalHours % 24;
+    if (hours &lt; 10) { hours = "0" + hours }
+    text = text.replace("HH", totalHours);
+    text = text.replace("hh", hours);
+
+    var days = Math.floor(totalHours / 24);
+    text = text.replace("DD", hours);
+
+    document.getElementById("text-{ID}").innerHTML = text;
+
+    setTimeout(function () {
+       
+        totalSeconds--;
+        
+        if (totalSeconds &gt;= 0) {
+            timerLoop(totalSeconds, displayFormat);
+        }
+    }, 1000);
+}
+
+function {ID}_load()
+{
+   timerLoop({Duration}, "{DisplayFormat}");
+}</value>
+  </data>
+  <data name="OverlayImageDefaultCSS" xml:space="preserve">
+    <value>#image-{ID} {
+    width: {Width};
+    height: {Height};
+}</value>
+  </data>
+  <data name="OverlayImageDefaultHTML" xml:space="preserve">
+    <value>&lt;img id="image-{ID}" src="{FilePath}" /&gt;</value>
+  </data>
+  <data name="OverlayTextDefaultCSS" xml:space="preserve">
+    <value>#text-{ID} {
+    font-size: {FontSize}px;
+    color: {FontColor};
+    font-family: '{FontFamily}';
+    font-weight: {FontWeight};
+    text-decoration: {TextDecoration};
+    font-style: {FontStyle};
+    text-align: {TextAlignment};
+    text-shadow: {Shadow};
+}</value>
+  </data>
+  <data name="OverlayTextDefaultHTML" xml:space="preserve">
+    <value>&lt;p id="text-{ID}"&gt;
+    {Text}
+&lt;/p&gt;</value>
+  </data>
+  <data name="OverlayVideoDefaultCSS" xml:space="preserve">
+    <value>#video-{ID} {
+    width: {Width};
+    height: {Height};
+}</value>
+  </data>
+  <data name="OverlayVideoDefaultHTML" xml:space="preserve">
+    <value>&lt;video id="video-{ID}" onloadstart="this.volume={Volume}" allow="autoplay; encrypted-media" autoplay {Loop}&gt;
+    &lt;source src="{FilePath}" type="video/{VideoExtension}" /&gt;
+&lt;/video&gt;</value>
+  </data>
+  <data name="OverlayWebPageDefaultHTML" xml:space="preserve">
+    <value>&lt;iframe frameborder="0" width="{WIDTH}" height="{HEIGHT}" src="{URL}" /&gt;</value>
+  </data>
+  <data name="OverlayYouTubeDefaultHTML" xml:space="preserve">
+    <value>&lt;div id="{ID}" /&gt;</value>
+  </data>
+  <data name="DisplayFormat" xml:space="preserve">
+    <value>Display Format</value>
+  </data>
+  <data name="OverlayTimerBasicDefaultHTML" xml:space="preserve">
+    <value>&lt;p id="text-{ID}"&gt;
+    {Text}
+&lt;/p&gt;</value>
+  </data>
 </root>

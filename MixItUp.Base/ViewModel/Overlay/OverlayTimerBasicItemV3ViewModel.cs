@@ -2,15 +2,30 @@
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
-    public class OverlayTextItemV3ViewModel : OverlayVisualTextItemV3ViewModelBase
+    public class OverlayTimerBasicItemV3ViewModel : OverlayVisualTextItemV3ViewModelBase
     {
-        public OverlayTextItemV3ViewModel() : base(OverlayItemV3Type.Text) { }
+        public string DisplayFormat
+        {
+            get { return this.displayFormat; }
+            set
+            {
+                this.displayFormat = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string displayFormat;
 
-        public OverlayTextItemV3ViewModel(OverlayTextItemV3Model item) : base(item) { }
+        public OverlayTimerBasicItemV3ViewModel()
+            : base(OverlayItemV3Type.Timer)
+        {
+            this.DisplayFormat = OverlayTimerBasicItemV3Model.DefaultDisplayFormat;
+        }
+
+        public OverlayTimerBasicItemV3ViewModel(OverlayTimerBasicItemV3Model item) : base(item) { }
 
         protected override OverlayItemV3ModelBase GetItemInternal()
         {
-            OverlayTextItemV3Model result = new OverlayTextItemV3Model()
+            OverlayTimerBasicItemV3Model result = new OverlayTimerBasicItemV3Model()
             {
                 HTML = this.HTML,
                 CSS = this.CSS,
@@ -25,6 +40,8 @@ namespace MixItUp.Base.ViewModel.Overlay
                 Underline = this.Underline,
                 ShadowColor = this.ShadowColor,
                 Width = this.width,
+
+                DisplayFormat = this.DisplayFormat,
             };
 
             if (this.LeftAlignment)

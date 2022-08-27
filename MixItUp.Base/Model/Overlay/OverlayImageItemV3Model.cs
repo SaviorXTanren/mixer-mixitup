@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -10,13 +9,8 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayImageItemV3Model : OverlayItemV3ModelBase
     {
-        public const string DefaultHTML = "<img id=\"image-{ID}\" src=\"{FilePath}\" />";
-
-        public static readonly string DefaultCSS = "#image-{ID} {" + Environment.NewLine +
-            "    width: {Width};" + Environment.NewLine +
-            "    height: {Height};" + Environment.NewLine +
-            "}";
-
+        public static readonly string DefaultHTML = Resources.OverlayImageDefaultHTML;
+        public static readonly string DefaultCSS = Resources.OverlayImageDefaultCSS;
         public static readonly string DefaultJavascript = string.Empty;
 
         [DataMember]

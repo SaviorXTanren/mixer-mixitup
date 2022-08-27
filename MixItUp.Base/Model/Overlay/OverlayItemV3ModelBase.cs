@@ -15,6 +15,7 @@ namespace MixItUp.Base.Model.Overlay
         YouTube,
         HTML,
         WebPage,
+        Timer,
     }
 
     [DataContract]
@@ -89,7 +90,7 @@ namespace MixItUp.Base.Model.Overlay
         public async Task<OverlayOutputV3Model> GetProcessedItem(OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
         {
             OverlayOutputV3Model result = new OverlayOutputV3Model();
-            result.ID = Guid.NewGuid().ToString().Replace('-', 'X');
+            result.ID = "X" + Guid.NewGuid().ToString().Replace('-', 'X');
             result.HTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.HTML, parameters);
             result.CSS = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.CSS, parameters);
             result.Javascript = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.Javascript, parameters);
@@ -159,6 +160,9 @@ namespace MixItUp.Base.Model.Overlay
             }
 
             result.Duration = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.Duration, parameters);
+            result.HTML = ReplaceProperty(result.HTML, "Duration", result.Duration);
+            result.CSS = ReplaceProperty(result.CSS, "Duration", result.Duration);
+            result.Javascript = ReplaceProperty(result.Javascript, "Duration", result.Duration);
 
             result.EntranceAnimation = this.EntranceAnimation;
             result.EntranceAnimation.ApplyAnimationReplacements(result);

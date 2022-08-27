@@ -72,5 +72,9 @@
         <Grid Grid.Row="2" Visibility="{Binding ShowWebPageItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
             <OverlayControls:OverlayWebPageItemV3Control DataContext="{Binding WebPageItemViewModel}" />
         </Grid>
+
+        <Grid Grid.Row="2" Visibility="{Binding ShowTimerItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+            <OverlayControls:OverlayTimerItemV3Control DataContext="{Binding TimerItemViewModel}" />
+        </Grid>
     </Grid>
 </local:ActionEditorControlBase>

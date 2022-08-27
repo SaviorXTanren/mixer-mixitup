@@ -8,10 +8,8 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayWebPageItemV3Model : OverlayItemV3ModelBase
     {
-        public const string DefaultHTML = "<iframe frameborder=\"0\" width=\"{WIDTH}\" height=\"{HEIGHT}\" src=\"{URL}\" />";
-
+        public static readonly string DefaultHTML = Resources.OverlayWebPageDefaultHTML;
         public static readonly string DefaultCSS = string.Empty;
-
         public static readonly string DefaultJavascript = string.Empty;
 
         [DataMember]

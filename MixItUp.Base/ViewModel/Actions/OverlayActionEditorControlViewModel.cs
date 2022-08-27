@@ -19,6 +19,7 @@ namespace MixItUp.Base.ViewModel.Actions
         YouTube,
         HTML,
         WebPage,
+        Timer,
     }
 
     public class OverlayActionEditorControlViewModel : ActionEditorControlViewModelBase
@@ -42,6 +43,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged(nameof(ShowYouTubeItem));
                 this.NotifyPropertyChanged(nameof(ShowHTMLItem));
                 this.NotifyPropertyChanged(nameof(ShowWebPageItem));
+                this.NotifyPropertyChanged(nameof(ShowTimerItem));
             }
         }
         private OverlayActionTypeEnum selectedActionType;
@@ -149,6 +151,19 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private OverlayWebPageItemV3ViewModel webPageItemViewModel = new OverlayWebPageItemV3ViewModel();
 
+        public bool ShowTimerItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Timer; } }
+
+        public OverlayTimerBasicItemV3ViewModel TimerItemViewModel
+        {
+            get { return this.timerItemViewModel; }
+            set
+            {
+                this.timerItemViewModel = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayTimerBasicItemV3ViewModel timerItemViewModel = new OverlayTimerBasicItemV3ViewModel();
+
         public OverlayActionEditorControlViewModel(OverlayActionModel action)
             : base(action)
         {
@@ -189,6 +204,11 @@ namespace MixItUp.Base.ViewModel.Actions
                 {
                     this.SelectedActionType = OverlayActionTypeEnum.WebPage;
                     this.WebPageItemViewModel = new OverlayWebPageItemV3ViewModel((OverlayWebPageItemV3Model)action.OverlayItemV3);
+                }
+                else if (action.OverlayItemV3.Type == OverlayItemV3Type.Timer)
+                {
+                    this.SelectedActionType = OverlayActionTypeEnum.Timer;
+                    this.TimerItemViewModel = new OverlayTimerBasicItemV3ViewModel((OverlayTimerBasicItemV3Model)action.OverlayItemV3);
                 }
             }
         }
@@ -275,6 +295,10 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.SelectedActionType == OverlayActionTypeEnum.WebPage)
             {
                 return this.WebPageItemViewModel;
+            }
+            else if (this.SelectedActionType == OverlayActionTypeEnum.Timer)
+            {
+                return this.TimerItemViewModel;
             }
             return null;
         }

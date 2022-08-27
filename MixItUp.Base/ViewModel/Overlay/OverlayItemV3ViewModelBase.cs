@@ -127,6 +127,11 @@ namespace MixItUp.Base.ViewModel.Overlay
                     this.CSS = OverlayWebPageItemV3Model.DefaultCSS;
                     this.Javascript = OverlayWebPageItemV3Model.DefaultJavascript;
                     break;
+                case OverlayItemV3Type.Timer:
+                    this.HTML = OverlayTimerBasicItemV3Model.DefaultHTML;
+                    this.CSS = OverlayTimerBasicItemV3Model.DefaultCSS;
+                    this.Javascript = OverlayTimerBasicItemV3Model.DefaultJavascript;
+                    break;
             }
 
             if (!string.IsNullOrWhiteSpace(this.HTML))

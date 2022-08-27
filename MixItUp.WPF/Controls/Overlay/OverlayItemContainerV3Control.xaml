@@ -24,7 +24,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <ContentControl Grid.Row="0" x:Name="Content" />
+                <ContentControl Grid.Row="0" x:Name="InnerContent" />
 
                 <Grid Grid.Row="2" x:Name="AdditionalOptionsGrid">
                     <Grid.ColumnDefinitions>
