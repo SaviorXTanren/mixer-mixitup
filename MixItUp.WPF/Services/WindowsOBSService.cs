@@ -46,7 +46,7 @@ namespace MixItUp.WPF.Services
 
             await this.OBSCommandTimeoutWrapper(async (cancellationToken) =>
             {
-                if (ChannelSession.Settings.OBSStudioServerEnableV5)
+                try
                 {
                     this.OBSWebsocketV5.Disconnected -= OBSWebsocket_Disconnected;
                     var success = await this.OBSWebsocketV5.Connect(ChannelSession.Settings.OBSStudioServerIP, ChannelSession.Settings.OBSStudioServerPassword, cancellationToken);
@@ -57,20 +57,35 @@ namespace MixItUp.WPF.Services
                         return true;
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    this.OBSWebsocket.Disconnected -= OBSWebsocket_Disconnected;
-                    this.OBSWebsocket.Connect(ChannelSession.Settings.OBSStudioServerIP, ChannelSession.Settings.OBSStudioServerPassword);
-                    if (this.OBSWebsocket.IsConnected)
-                    {
-                        this.OBSWebsocket.Disconnected += OBSWebsocket_Disconnected;
-                        this.IsConnected = true;
-                        return true;
-                    }
+                    Logger.Log(ex);
                 }
-
                 return false;
             }, ConnectTimeoutInMilliseconds);
+
+            if (!this.IsConnected)
+            {
+                await this.OBSCommandTimeoutWrapper(async (cancellationToken) =>
+                {
+                    try
+                    {
+                        this.OBSWebsocket.Disconnected -= OBSWebsocket_Disconnected;
+                        this.OBSWebsocket.Connect(ChannelSession.Settings.OBSStudioServerIP, ChannelSession.Settings.OBSStudioServerPassword);
+                        if (this.OBSWebsocket.IsConnected)
+                        {
+                            this.OBSWebsocket.Disconnected += OBSWebsocket_Disconnected;
+                            this.IsConnected = true;
+                            return true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                    }
+                    return false;
+                }, ConnectTimeoutInMilliseconds);
+            }
 
             if (this.IsConnected)
             {

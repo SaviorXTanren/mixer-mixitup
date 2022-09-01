@@ -5591,7 +5591,7 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
     <value>The OBS Studio service allows you to directly interact with your instance of OBS Studio to perform changes to scenes and sources.</value>
   </data>
   <data name="OBSStudioInfo2" xml:space="preserve">
-    <value>OBS Studio 25.0 or higher is required and you must run the OBS WebSocket Installer.</value>
+    <value>OBS Studio connectivity can be enabled by heading to Tools -&gt; obs-websocket in OBS Studio and clicking on "Enable WebSocket server". Make sure "Enable Authentication" is un-checked or you have set a password in both OBS Studio and Mix It Up.</value>
   </data>
   <data name="OBSStudioSuccess" xml:space="preserve">
     <value>OBS Studio connection test successful!</value>
@@ -8880,7 +8880,7 @@ via Twitch, it's a "your mileage may vary" situation.</value>
   <data name="WhisperUser" xml:space="preserve">
     <value>WhisperUser</value>
   </data>
-  <data name="UseV5Protocol" xml:space="preserve">
-    <value>Use V5 Protocol</value>
+  <data name="OBSStudioOldProtocol" xml:space="preserve">
+    <value>Use Old Connection</value>
   </data>
 </root>
