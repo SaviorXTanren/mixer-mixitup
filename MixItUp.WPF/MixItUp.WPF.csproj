@@ -2241,9 +2241,6 @@
     <Resource Include="Assets\Images\Twitch-XS.png" />
     <Resource Include="Assets\Images\Glimesh-XS.png" />
     <Resource Include="Assets\Images\Trovo-XS.png" />
-    <Content Include="Assets\OBS\obs-websocket-4.9.1-Windows-Installer.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Logo.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

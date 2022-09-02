@@ -12731,11 +12731,20 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to OBS Studio 25.0 or higher is required and you must run the OBS WebSocket Installer..
+        ///   Looks up a localized string similar to OBS Studio connectivity can be enabled by heading to Tools -&gt; obs-websocket in OBS Studio and clicking on &quot;Enable WebSocket server&quot;. Make sure &quot;Enable Authentication&quot; is un-checked or you have set a password in both OBS Studio and Mix It Up..
         /// </summary>
         public static string OBSStudioInfo2 {
             get {
                 return ResourceManager.GetString("OBSStudioInfo2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Old Connection.
+        /// </summary>
+        public static string OBSStudioOldProtocol {
+            get {
+                return ResourceManager.GetString("OBSStudioOldProtocol", resourceCulture);
             }
         }
         
@@ -21444,15 +21453,6 @@ namespace MixItUp.Base {
         public static string UserWon {
             get {
                 return ResourceManager.GetString("UserWon", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Use V5 Protocol.
-        /// </summary>
-        public static string UseV5Protocol {
-            get {
-                return ResourceManager.GetString("UseV5Protocol", resourceCulture);
             }
         }
         

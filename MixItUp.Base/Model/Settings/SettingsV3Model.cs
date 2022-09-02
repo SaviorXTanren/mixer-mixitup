@@ -457,8 +457,6 @@ namespace MixItUp.Base.Model.Settings
         public string OBSStudioServerIP { get; set; }
         [DataMember]
         public string OBSStudioServerPassword { get; set; }
-        [DataMember]
-        public bool OBSStudioServerEnableV5 { get; set; }
 
         [DataMember]
         public bool EnableStreamlabsOBSConnection { get; set; }

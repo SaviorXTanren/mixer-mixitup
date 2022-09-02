@@ -8,7 +8,6 @@ namespace MixItUp.Base.ViewModel.Services
 {
     public class OBSStudioServiceControlViewModel : StreamingServiceControlViewModelBase
     {
-        public const string DefaultOBSStudioConnection = "ws://127.0.0.1:4444";
         public const string DefaultOBSStudio28Connection = "ws://127.0.0.1:4455";
 
         public string IPAddress
@@ -22,26 +21,6 @@ namespace MixItUp.Base.ViewModel.Services
         }
         private string ipAddress;
 
-        public bool UseV5
-        {
-            get { return this.useV5; }
-            set
-            {
-                this.useV5 = value;
-                this.NotifyPropertyChanged();
-
-                if (UseV5)
-                {
-                    IPAddress = IPAddress.Replace("4444", "4455");
-                }
-                else
-                {
-                    IPAddress = IPAddress.Replace("4455", "4444");
-                }
-            }
-        }
-        private bool useV5;
-
         public ICommand ConnectCommand { get; set; }
         public ICommand DisconnectCommand { get; set; }
         public ICommand TestConnectionCommand { get; set; }
@@ -53,14 +32,12 @@ namespace MixItUp.Base.ViewModel.Services
         public OBSStudioServiceControlViewModel()
             : base(Resources.OBSStudio)
         {
-            this.IPAddress = OBSStudioServiceControlViewModel.DefaultOBSStudioConnection;
-            this.UseV5 = ChannelSession.Settings.OBSStudioServerEnableV5;
+            this.IPAddress = OBSStudioServiceControlViewModel.DefaultOBSStudio28Connection;
 
             this.ConnectCommand = this.CreateCommand(async () =>
             {
                 ChannelSession.Settings.OBSStudioServerIP = this.IPAddress;
                 ChannelSession.Settings.OBSStudioServerPassword = this.Password();
-                ChannelSession.Settings.OBSStudioServerEnableV5 = this.UseV5;
 
                 Result result = await ServiceManager.Get<IOBSStudioService>().Connect();
                 if (result.Success)
