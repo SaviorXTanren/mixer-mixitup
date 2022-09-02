@@ -1086,6 +1086,7 @@
     <Compile Include="Services\DeveloperAPI\V2\CommandsV2Controller.cs" />
     <Compile Include="Services\DeveloperAPI\V2\UsersV2Controller.cs" />
     <Compile Include="Services\DeveloperAPI\WindowsDeveloperAPIService.cs" />
+    <Compile Include="Services\WindowsTwitterService.cs" />
     <Compile Include="Services\WindowsOvrStreamService.cs" />
     <Compile Include="Services\WindowsSocketIOConnection.cs" />
     <Compile Include="Services\WindowsOBSService.cs" />
@@ -2178,9 +2179,6 @@
     <Resource Include="Assets\Images\Twitch-XS.png" />
     <Resource Include="Assets\Images\Glimesh-XS.png" />
     <Resource Include="Assets\Images\Trovo-XS.png" />
-    <Content Include="Assets\OBS\obs-websocket-4.9.1-Windows-Installer.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Logo.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

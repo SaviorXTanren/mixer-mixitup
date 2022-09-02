@@ -403,9 +403,9 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (ServiceManager.Get<TwitterService>().IsConnected && this.ContainsSpecialIdentifier("tweet"))
+            if (ServiceManager.Get<ITwitterService>().IsConnected && this.ContainsSpecialIdentifier("tweet"))
             {
-                IEnumerable<Tweet> tweets = await ServiceManager.Get<TwitterService>().GetLatestTweets();
+                IEnumerable<Tweet> tweets = await ServiceManager.Get<ITwitterService>().GetLatestTweets();
                 if (tweets != null && tweets.Count() > 0)
                 {
                     Tweet latestTweet = tweets.FirstOrDefault();

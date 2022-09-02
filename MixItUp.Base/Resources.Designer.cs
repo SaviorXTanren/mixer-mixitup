@@ -2586,7 +2586,7 @@ namespace MixItUp.Base {
         ///built-in command locking system for this specific time it is run. This is to prevent what&apos;s known as a deadlock from occurring
         ///(command gets stuck and can&apos;t complete). This also means that other commands of the same type as the selected
         ///sub-command will be able to run at the same time if it&apos;s different than the current command. For example, if the selected
-        ///sub-command is an Action Group, then it wil [rest of string was truncated]&quot;;.
+        ///sub-command is an Action Group, then it [rest of string was truncated]&quot;;.
         /// </summary>
         public static string CommandActionWaitUntilCompleteHintText {
             get {
@@ -2661,7 +2661,7 @@ namespace MixItUp.Base {
         ///   Looks up a localized string similar to - Per Command Type: Each command type (Chat, Event, Timer, etc) has a lock that prevents other commands of the same type from running at the same time.
         ///- Per Action Type: Each action type (Chat, Sound, Conditional, etc) has a lock that prevents other commands also containing those actions from running at the same time.
         ///- Visual/Audio Actions: Commands containing visual/audio-based actions (Sound, Overlay, etc) share 1 lock while other commands will run as soon as they are triggered.
-        ///- Singular: All commands [rest of string was truncated]&quot;;.
+        ///- Singular: All comma [rest of string was truncated]&quot;;.
         /// </summary>
         public static string CommandLockSystemTooltip {
             get {
@@ -2800,7 +2800,7 @@ namespace MixItUp.Base {
         ///
         ///- Explain what the intent of your command is so that users can understand how they use their own assets in your commands.
         ///
-        ///- Upload these assets somewhere online and either use links to them in the actions themselves or include a link in the descripti [rest of string was truncated]&quot;;.
+        ///- Upload these assets somewhere online and either use links to them in the actions themselves or include a link in the descr [rest of string was truncated]&quot;;.
         /// </summary>
         public static string CommunityCommandsExternalAssetActionsDetected {
             get {
@@ -2849,7 +2849,7 @@ namespace MixItUp.Base {
         ///
         ///- Combine your other referenced commands into this command so users only need this one to fully use your setup.
         ///
-        ///- Upload the other commands needed for this command to work as well and reference their names in the  [rest of string was truncated]&quot;;.
+        ///- Upload the other commands needed for this command to work as well and reference their names in  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string CommunityCommandsOtherCommandReferencedDetected {
             get {
@@ -2902,7 +2902,7 @@ namespace MixItUp.Base {
         ///
         ///- The contents of these commands are appropriate for the general public and do not contain any sexually explicit material, hateful speech, or malicious processes.
         ///
-        ///Failure to meet the above could have your command removed and lead to blocking of the ability [rest of string was truncated]&quot;;.
+        ///Failure to meet the above could have your command removed and lead to blocking of the a [rest of string was truncated]&quot;;.
         /// </summary>
         public static string CommunityCommandsUploadAgreement {
             get {
@@ -3244,6 +3244,15 @@ namespace MixItUp.Base {
         public static string Copy {
             get {
                 return ResourceManager.GetString("Copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy Message.
+        /// </summary>
+        public static string CopyMessage {
+            get {
+                return ResourceManager.GetString("CopyMessage", resourceCulture);
             }
         }
         
@@ -4069,6 +4078,15 @@ namespace MixItUp.Base {
         public static string DeleteItemPrompt {
             get {
                 return ResourceManager.GetString("DeleteItemPrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Message.
+        /// </summary>
+        public static string DeleteMessage {
+            get {
+                return ResourceManager.GetString("DeleteMessage", resourceCulture);
             }
         }
         
@@ -5309,7 +5327,7 @@ namespace MixItUp.Base {
         /// <summary>
         ///   Looks up a localized string similar to By default, all user role requirements are hiearchy-based. This means that if a user has a role that is the requirement OR they have a role that is higher than the requirement, they will not be blocked by it. For example, if a role requirement is set to Subscriber, the user must either be a Subscriber or have a role that is higher on the list such as Mod or Channel Editor.
         ///
-        ///This setting will change all role requirements to be explicit and require that the user has that role in order to pass the check. For e [rest of string was truncated]&quot;;.
+        ///This setting will change all role requirements to be explicit and require that the user has that role in order to pass the check. For [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ExplicitUserRoleRequirementsTooltip {
             get {
@@ -7615,7 +7633,7 @@ namespace MixItUp.Base {
         /// <summary>
         ///   Looks up a localized string similar to The Treasure Defense game allows a user to start a winner-takes-all bet amongst all entered users. By default, the user that starts the game specifies how much the bet is and all subsequent users must bet that amount to join, with all winners of the game splitting the total payout equally.
         ///
-        ///After the time limit is up, a user from the participants is selected to be King. All other users are either then selected to be Knights or Thieves. It is the job of the King to pick one participant in hopes that they are [rest of string was truncated]&quot;;.
+        ///After the time limit is up, a user from the participants is selected to be King. All other users are either then selected to be Knights or Thieves. It is the job of the King to pick one participant in hopes that they a [rest of string was truncated]&quot;;.
         /// </summary>
         public static string GameCommandTreasureDefenseDescription {
             get {
@@ -7995,7 +8013,7 @@ namespace MixItUp.Base {
         /// <summary>
         ///   Looks up a localized string similar to The Volcano game allows a user to deposit a specific amount of currency into a volcano with the chance for a personal payout and a payout for all users in chat. The volcano goes through 3 stages as more and more currency is deposited into it and a different set of Deposit &amp; Status commands are used depending on what stage the Volcano is at.
         ///
-        ///Once the volcano reaches stage 3, each subsequent deposit has a chance to trigger an eruption. When an eruption occurs, the user who triggered it gets a specialized pay [rest of string was truncated]&quot;;.
+        ///Once the volcano reaches stage 3, each subsequent deposit has a chance to trigger an eruption. When an eruption occurs, the user who triggered it gets a specialized p [rest of string was truncated]&quot;;.
         /// </summary>
         public static string GameCommandVolcanoDescription {
             get {
@@ -8864,6 +8882,15 @@ namespace MixItUp.Base {
         public static string GoalType {
             get {
                 return ResourceManager.GetString("GoalType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to Link.
+        /// </summary>
+        public static string GoToLink {
+            get {
+                return ResourceManager.GetString("GoToLink", resourceCulture);
             }
         }
         
@@ -10868,7 +10895,7 @@ namespace MixItUp.Base {
         /// <summary>
         ///   Looks up a localized string similar to This option helps to ensure that only the regular Subscription Gifted OR Mass Subscription Gifted event commands are run depending on what the number is set to. This is designed to help reduce the spam of subscription gifted commands and provide a better experience for your stream. Note that this will cause the processing of Subscription Gifted &amp; Mass Subscription Gifted event commands to be slightly delayed, typically less than 10 seconds.
         ///
-        ///This setting also only applies to streaming platforms that support [rest of string was truncated]&quot;;.
+        ///This setting also only applies to streaming platforms that suppo [rest of string was truncated]&quot;;.
         /// </summary>
         public static string MassGiftedSubsFilterAmountTooltip {
             get {
@@ -11323,6 +11350,15 @@ namespace MixItUp.Base {
         public static string MixPlay {
             get {
                 return ResourceManager.GetString("MixPlay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mock Connection.
+        /// </summary>
+        public static string MockConnection {
+            get {
+                return ResourceManager.GetString("MockConnection", resourceCulture);
             }
         }
         
@@ -12317,11 +12353,20 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to OBS Studio 25.0 or higher is required and you must run the OBS WebSocket Installer..
+        ///   Looks up a localized string similar to OBS Studio connectivity can be enabled by heading to Tools -&gt; obs-websocket in OBS Studio and clicking on &quot;Enable WebSocket server&quot;. Make sure &quot;Enable Authentication&quot; is un-checked or you have set a password in both OBS Studio and Mix It Up..
         /// </summary>
         public static string OBSStudioInfo2 {
             get {
                 return ResourceManager.GetString("OBSStudioInfo2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Old Connection.
+        /// </summary>
+        public static string OBSStudioOldProtocol {
+            get {
+                return ResourceManager.GetString("OBSStudioOldProtocol", resourceCulture);
             }
         }
         
@@ -20557,6 +20602,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User Info.
+        /// </summary>
+        public static string UserInfo {
+            get {
+                return ResourceManager.GetString("UserInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User Joined.
         /// </summary>
         public static string UserJoined {
@@ -21677,11 +21731,20 @@ namespace MixItUp.Base {
         ///whispers to be used as a form of automated communication. There are severe restrictions placed on the
         ///amount of whispers that can be sent in a timeline that make it very impractical for use, as well as spam
         ///preventative measures if the user is not on your friends list on Twitch. So although you can send whispers
-        ///via Twitch, it&apos;s a &quot;your mileage may very&quot; situation..
+        ///via Twitch, it&apos;s a &quot;your mileage may vary&quot; situation..
         /// </summary>
         public static string WhisperTooltip {
             get {
                 return ResourceManager.GetString("WhisperTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WhisperUser.
+        /// </summary>
+        public static string WhisperUser {
+            get {
+                return ResourceManager.GetString("WhisperUser", resourceCulture);
             }
         }
         

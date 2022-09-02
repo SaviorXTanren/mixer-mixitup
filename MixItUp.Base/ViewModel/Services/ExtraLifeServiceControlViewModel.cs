@@ -163,15 +163,6 @@ namespace MixItUp.Base.ViewModel.Services
             this.IsConnected = ServiceManager.Get<ExtraLifeService>().IsConnected;
         }
 
-        protected override async Task OnOpenInternal()
-        {
-            if (this.IsConnected)
-            {
-                await this.GetTeamParticipants();
-                this.Participant = this.Participants.FirstOrDefault(p => p.participantID == ChannelSession.Settings.ExtraLifeParticipantID);
-            }
-        }
-
         private async Task GetTeamParticipants()
         {
             if (this.TeamID <= 0)

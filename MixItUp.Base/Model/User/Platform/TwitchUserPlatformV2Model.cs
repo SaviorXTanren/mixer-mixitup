@@ -188,15 +188,18 @@ namespace MixItUp.Base.Model.User.Platform
                     else if (this.HasTwitchBadge("artist-badge")) { this.RoleBadge = this.GetTwitchBadgeURL("artist-badge"); }
                     else if (this.HasTwitchBadge("no_audio")) { this.RoleBadge = this.GetTwitchBadgeURL("no_audio"); }
                     else if (this.HasTwitchBadge("no_video")) { this.RoleBadge = this.GetTwitchBadgeURL("no_video"); }
+                    else { this.RoleBadge = null; }
 
                     if (this.HasTwitchSubscriberFounderBadge) { this.SubscriberBadge = this.GetTwitchBadgeURL("founder"); }
                     else if (this.HasTwitchSubscriberBadge) { this.SubscriberBadge = this.GetTwitchBadgeURL("subscriber"); }
+                    else { this.SubscriberBadge = null; }
 
                     if (this.HasTwitchBadge("sub-gift-leader")) { this.SpecialtyBadge = this.GetTwitchBadgeURL("sub-gift-leader"); }
                     else if (this.HasTwitchBadge("bits-leader")) { this.SpecialtyBadge = this.GetTwitchBadgeURL("bits-leader"); }
                     else if (this.HasTwitchBadge("sub-gifter")) { this.SpecialtyBadge = this.GetTwitchBadgeURL("sub-gifter"); }
                     else if (this.HasTwitchBadge("bits")) { this.SpecialtyBadge = this.GetTwitchBadgeURL("bits"); }
                     else if (this.HasTwitchBadge("premium")) { this.SpecialtyBadge = this.GetTwitchBadgeURL("premium"); }
+                    else { this.SpecialtyBadge = null; }
                 }
             }
 

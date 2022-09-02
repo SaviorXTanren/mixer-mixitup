@@ -5591,7 +5591,7 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
     <value>The OBS Studio service allows you to directly interact with your instance of OBS Studio to perform changes to scenes and sources.</value>
   </data>
   <data name="OBSStudioInfo2" xml:space="preserve">
-    <value>OBS Studio 25.0 or higher is required and you must run the OBS WebSocket Installer.</value>
+    <value>OBS Studio connectivity can be enabled by heading to Tools -&gt; obs-websocket in OBS Studio and clicking on "Enable WebSocket server". Make sure "Enable Authentication" is un-checked or you have set a password in both OBS Studio and Mix It Up.</value>
   </data>
   <data name="OBSStudioSuccess" xml:space="preserve">
     <value>OBS Studio connection test successful!</value>
@@ -8725,7 +8725,7 @@ We will attempt to re-connect with the service when possible. If this continues,
 whispers to be used as a form of automated communication. There are severe restrictions placed on the
 amount of whispers that can be sent in a timeline that make it very impractical for use, as well as spam
 preventative measures if the user is not on your friends list on Twitch. So although you can send whispers
-via Twitch, it's a "your mileage may very" situation.</value>
+via Twitch, it's a "your mileage may vary" situation.</value>
   </data>
   <data name="AlertName" xml:space="preserve">
     <value>Alert Name</value>
@@ -8908,5 +8908,26 @@ via Twitch, it's a "your mileage may very" situation.</value>
   </data>
   <data name="ShowYouTubeSuperChat" xml:space="preserve">
     <value>Show YouTube Super Chat</value>
+  </data>
+  <data name="MockConnection" xml:space="preserve">
+    <value>Mock Connection</value>
+  </data>
+  <data name="CopyMessage" xml:space="preserve">
+    <value>Copy Message</value>
+  </data>
+  <data name="DeleteMessage" xml:space="preserve">
+    <value>Delete Message</value>
+  </data>
+  <data name="GoToLink" xml:space="preserve">
+    <value>Go to Link</value>
+  </data>
+  <data name="UserInfo" xml:space="preserve">
+    <value>User Info</value>
+  </data>
+  <data name="WhisperUser" xml:space="preserve">
+    <value>WhisperUser</value>
+  </data>
+  <data name="OBSStudioOldProtocol" xml:space="preserve">
+    <value>Use Old Connection</value>
   </data>
 </root>

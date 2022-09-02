@@ -8,7 +8,7 @@ namespace MixItUp.Base.ViewModel.Services
 {
     public class OBSStudioServiceControlViewModel : StreamingServiceControlViewModelBase
     {
-        public const string DefaultOBSStudioConnection = "ws://127.0.0.1:4444";
+        public const string DefaultOBSStudio28Connection = "ws://127.0.0.1:4455";
 
         public string IPAddress
         {
@@ -32,7 +32,7 @@ namespace MixItUp.Base.ViewModel.Services
         public OBSStudioServiceControlViewModel()
             : base(Resources.OBSStudio)
         {
-            this.IPAddress = OBSStudioServiceControlViewModel.DefaultOBSStudioConnection;
+            this.IPAddress = OBSStudioServiceControlViewModel.DefaultOBSStudio28Connection;
 
             this.ConnectCommand = this.CreateCommand(async () =>
             {
