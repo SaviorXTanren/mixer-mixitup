@@ -221,31 +221,29 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public override Task<Result> Validate()
         {
-            //if (this.SelectedActionType == OverlayActionTypeEnum.ShowHideWidget)
-            //{
-            //    //if (this.SelectedWidget == null)
-            //    //{
-            //    //    return Task.FromResult(new Result(MixItUp.Base.Resources.OverlayActionMissingWidget));
-            //    //}
-            //}
-            //else
-            //{
-            //    //if (this.ItemDuration <= 0)
-            //    //{
-            //    //    return Task.FromResult(new Result(MixItUp.Base.Resources.OverlayActionDurationInvalid));
-            //    //}
+            if (false)
+            {
 
-            //    //if (this.SelectedItemViewModel == null)
-            //    //{
-            //    //    return Task.FromResult(new Result(MixItUp.Base.Resources.OverlayActionItemInvalid));
-            //    //}
+            }
+            else
+            {
+                OverlayItemV3ViewModelBase itemViewModel = this.GetItemViewModel();
+                if (itemViewModel != null)
+                {
+                    Result result = itemViewModel.Validate();
+                    if (!result.Success)
+                    {
+                        return Task.FromResult<Result>(new Result(Resources.OverlayActionValidationErrorHeader + result.Message));
+                    }
 
-            //    //OverlayItemModelBase overlayItem = this.SelectedItemViewModel.GetOverlayItem();
-            //    //if (overlayItem == null)
-            //    //{
-            //    //    return Task.FromResult(new Result(MixItUp.Base.Resources.OverlayActionItemInvalid));
-            //    //}
-            //}
+                    result = itemViewModel.ItemPosition.Validate();
+                    if (!result.Success)
+                    {
+                        return Task.FromResult<Result>(result);
+                    }
+                }
+            }
+
             return Task.FromResult(new Result());
         }
 

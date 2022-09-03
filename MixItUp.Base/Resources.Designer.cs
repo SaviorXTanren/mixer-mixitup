@@ -13136,7 +13136,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Overlay Action: Duration must be greater than 0.
+        ///   Looks up a localized string similar to Overlay Action: Duration must be a valid value.
         /// </summary>
         public static string OverlayActionDurationInvalid {
             get {
@@ -13159,6 +13159,15 @@ namespace MixItUp.Base {
         public static string OverlayActionMissingWidget {
             get {
                 return ResourceManager.GetString("OverlayActionMissingWidget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Overlay Action: .
+        /// </summary>
+        public static string OverlayActionValidationErrorHeader {
+            get {
+                return ResourceManager.GetString("OverlayActionValidationErrorHeader", resourceCulture);
             }
         }
         
@@ -13301,6 +13310,59 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Missing file path.
+        /// </summary>
+        public static string OverlayMissingFilePath {
+            get {
+                return ResourceManager.GetString("OverlayMissingFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to #outerdiv-{ID} {
+        ///    position: absolute;
+        ///    width: 100%;
+        ///    max-width: 100%;
+        ///    min-width: 100%;
+        ///    height: 100%;
+        ///    max-height: 100%;
+        ///    min-height: 100%;
+        ///    margin: 0px;
+        ///    z-index: {Layer};
+        ///}
+        ///
+        ///#innerdiv-{ID} {
+        ///    position: absolute;
+        ///    margin: 0px;
+        ///    left: {XPosition}{PositionType};
+        ///    top: {YPosition}{PositionType};
+        ///    transform: translate({XTranslation}%, {YTranslation}%);
+        ///    width: {Width};
+        ///    height: {Height};
+        ///}.
+        /// </summary>
+        public static string OverlayPositionedItemDefaultCSS {
+            get {
+                return ResourceManager.GetString("OverlayPositionedItemDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div id=&quot;outerdiv-{ID}&quot;&gt;
+        ///&lt;div id=\&quot;innerdiv-{ID}\&quot;&gt;
+        ///
+        ///{InnerHTML}
+        ///
+        ///&lt;/div&gt;
+        ///&lt;/div&gt;.
+        /// </summary>
+        public static string OverlayPositionedItemDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayPositionedItemDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An overlay to use must be selected..
         /// </summary>
         public static string OverlayRequired {
@@ -13357,6 +13419,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Missing text.
+        /// </summary>
+        public static string OverlayTextMissingText {
+            get {
+                return ResourceManager.GetString("OverlayTextMissingText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;p id=&quot;text-{ID}&quot;&gt;
         ///    {Text}
         ///&lt;/p&gt;.
@@ -13388,6 +13459,15 @@ namespace MixItUp.Base {
         public static string OverlayTimerBasicDefaultJavascript {
             get {
                 return ResourceManager.GetString("OverlayTimerBasicDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing display format.
+        /// </summary>
+        public static string OverlayTimerMissingDisplayFormat {
+            get {
+                return ResourceManager.GetString("OverlayTimerMissingDisplayFormat", resourceCulture);
             }
         }
         
@@ -13447,6 +13527,15 @@ namespace MixItUp.Base {
         public static string OverlayWebPageDefaultHTML {
             get {
                 return ResourceManager.GetString("OverlayWebPageDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing url.
+        /// </summary>
+        public static string OverlayWebPageMissingURL {
+            get {
+                return ResourceManager.GetString("OverlayWebPageMissingURL", resourceCulture);
             }
         }
         
@@ -13636,6 +13725,15 @@ namespace MixItUp.Base {
         public static string OverlayYouTubeDefaultHTML {
             get {
                 return ResourceManager.GetString("OverlayYouTubeDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing video.
+        /// </summary>
+        public static string OverlayYouTubeMissingVideo {
+            get {
+                return ResourceManager.GetString("OverlayYouTubeMissingVideo", resourceCulture);
             }
         }
         

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Util;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
@@ -69,6 +70,16 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.width = item.Width;
             this.height = item.Height;
             this.Volume = item.Volume;
+        }
+
+        public override Result Validate()
+        {
+            if (string.IsNullOrWhiteSpace(this.VideoID))
+            {
+                return new Result(Resources.OverlayYouTubeMissingVideo);
+            }
+
+            return new Result();
         }
 
         protected override OverlayItemV3ModelBase GetItemInternal()

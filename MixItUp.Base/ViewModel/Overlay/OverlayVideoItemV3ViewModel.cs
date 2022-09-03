@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Windows.Input;
 
@@ -80,6 +81,16 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.Loop = item.Loop;
 
             this.SetCommands();
+        }
+
+        public override Result Validate()
+        {
+            if (string.IsNullOrWhiteSpace(this.FilePath))
+            {
+                return new Result(Resources.OverlayMissingFilePath);
+            }
+
+            return new Result();
         }
 
         protected override OverlayItemV3ModelBase GetItemInternal()

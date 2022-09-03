@@ -3671,7 +3671,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
     <comment>Manual</comment>
   </data>
   <data name="OverlayActionDurationInvalid" xml:space="preserve">
-    <value>Overlay Action: Duration must be greater than 0</value>
+    <value>Overlay Action: Duration must be a valid value</value>
     <comment>Manual</comment>
   </data>
   <data name="OverlayActionItemInvalid" xml:space="preserve">
@@ -9155,5 +9155,55 @@ function {ID}_load()
     <value>&lt;p id="text-{ID}"&gt;
     {Text}
 &lt;/p&gt;</value>
+  </data>
+  <data name="OverlayPositionedItemDefaultCSS" xml:space="preserve">
+    <value>#outerdiv-{ID} {
+    position: absolute;
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    min-height: 100%;
+    margin: 0px;
+    z-index: {Layer};
+}
+
+#innerdiv-{ID} {
+    position: absolute;
+    margin: 0px;
+    left: {XPosition}{PositionType};
+    top: {YPosition}{PositionType};
+    transform: translate({XTranslation}%, {YTranslation}%);
+    width: {Width};
+    height: {Height};
+}</value>
+  </data>
+  <data name="OverlayPositionedItemDefaultHTML" xml:space="preserve">
+    <value>&lt;div id="outerdiv-{ID}"&gt;
+&lt;div id=\"innerdiv-{ID}\"&gt;
+
+{InnerHTML}
+
+&lt;/div&gt;
+&lt;/div&gt;</value>
+  </data>
+  <data name="OverlayActionValidationErrorHeader" xml:space="preserve">
+    <value>Overlay Action: </value>
+  </data>
+  <data name="OverlayMissingFilePath" xml:space="preserve">
+    <value>Missing file path</value>
+  </data>
+  <data name="OverlayTextMissingText" xml:space="preserve">
+    <value>Missing text</value>
+  </data>
+  <data name="OverlayTimerMissingDisplayFormat" xml:space="preserve">
+    <value>Missing display format</value>
+  </data>
+  <data name="OverlayWebPageMissingURL" xml:space="preserve">
+    <value>Missing url</value>
+  </data>
+  <data name="OverlayYouTubeMissingVideo" xml:space="preserve">
+    <value>Missing video</value>
   </data>
 </root>

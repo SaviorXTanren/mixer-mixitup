@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Util;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
@@ -22,6 +23,16 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
 
         public OverlayTimerBasicItemV3ViewModel(OverlayTimerBasicItemV3Model item) : base(item) { }
+
+        public override Result Validate()
+        {
+            if (string.IsNullOrWhiteSpace(this.DisplayFormat))
+            {
+                return new Result(Resources.OverlayTimerMissingDisplayFormat);
+            }
+
+            return new Result();
+        }
 
         protected override OverlayItemV3ModelBase GetItemInternal()
         {

@@ -23,35 +23,8 @@ namespace MixItUp.Base.Model.Overlay
     {
         public const string InnerHTMLProperty = "InnerHTML";
 
-        public static readonly string PositionedHTML = "<div id=\"outerdiv-{ID}\">" + Environment.NewLine +
-            "<div id=\"innerdiv-{ID}\">" + Environment.NewLine +
-            Environment.NewLine +
-            "{InnerHTML}" + Environment.NewLine +
-            Environment.NewLine +
-            "</div>" + Environment.NewLine +
-            "</div>";
-
-        public static readonly string PositionedCSS = "#outerdiv-{ID} {" + Environment.NewLine +
-            "    position: absolute;" + Environment.NewLine +
-            "    width: 100%;" + Environment.NewLine +
-            "    max-width: 100%;" + Environment.NewLine +
-            "    min-width: 100%;" + Environment.NewLine +
-            "    height: 100%;" + Environment.NewLine +
-            "    max-height: 100%;" + Environment.NewLine +
-            "    min-height: 100%;" + Environment.NewLine +
-            "    margin: 0px;" + Environment.NewLine +
-            "    z-index: {Layer};" + Environment.NewLine +
-            "}" + Environment.NewLine +
-            Environment.NewLine +
-            "#innerdiv-{ID} {" + Environment.NewLine +
-            "    position: absolute;" + Environment.NewLine +
-            "    margin: 0px;" + Environment.NewLine +
-            "    left: {XPosition}{PositionType};" + Environment.NewLine +
-            "    top: {YPosition}{PositionType};" + Environment.NewLine +
-            "    transform: translate({XTranslation}%, {YTranslation}%);" + Environment.NewLine +
-            "    width: {Width};" + Environment.NewLine +
-            "    height: {Height};" + Environment.NewLine +
-            "}" + Environment.NewLine + Environment.NewLine;
+        public static readonly string PositionedHTML = Resources.OverlayPositionedItemDefaultHTML;
+        public static readonly string PositionedCSS = Resources.OverlayPositionedItemDefaultCSS;
 
         public static int zIndexCounter = 0;
 
@@ -91,9 +64,9 @@ namespace MixItUp.Base.Model.Overlay
         {
             OverlayOutputV3Model result = new OverlayOutputV3Model();
             result.ID = "X" + Guid.NewGuid().ToString().Replace('-', 'X');
-            result.HTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.HTML, parameters);
-            result.CSS = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.CSS, parameters);
-            result.Javascript = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.Javascript, parameters);
+            result.HTML = this.HTML;
+            result.CSS = this.CSS;
+            result.Javascript = this.Javascript;
 
             result.HTML = ReplaceProperty(result.HTML, "ID", result.ID);
             result.CSS = ReplaceProperty(result.CSS, "ID", result.ID);
@@ -173,7 +146,13 @@ namespace MixItUp.Base.Model.Overlay
             result.ExitAnimation = this.ExitAnimation;
             result.ExitAnimation.ApplyAnimationReplacements(result);
 
-            return await this.GetProcessedItem(result, overlayEndpointService, parameters);
+            result = await this.GetProcessedItem(result, overlayEndpointService, parameters);
+
+            result.HTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(result.HTML, parameters);
+            result.CSS = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(result.CSS, parameters);
+            result.Javascript = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(result.Javascript, parameters);
+
+            return result;
         }
 
         protected virtual Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)

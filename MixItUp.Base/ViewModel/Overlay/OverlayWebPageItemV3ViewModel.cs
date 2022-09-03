@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Util;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
@@ -45,6 +46,16 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.URL = item.URL;
             this.width = item.Width;
             this.height = item.Height;
+        }
+
+        public override Result Validate()
+        {
+            if (string.IsNullOrWhiteSpace(this.URL))
+            {
+                return new Result(Resources.OverlayWebPageMissingURL);
+            }
+
+            return new Result();
         }
 
         protected override OverlayItemV3ModelBase GetItemInternal()

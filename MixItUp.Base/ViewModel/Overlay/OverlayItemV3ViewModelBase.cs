@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 
 namespace MixItUp.Base.ViewModel.Overlay
@@ -153,6 +154,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.VisibleAnimation = new OverlayItemAnimationV3ViewModel(item.VisibleAnimation);
             this.ExitAnimation = new OverlayItemAnimationV3ViewModel(item.ExitAnimation);
         }
+
+        public virtual Result Validate() { return new Result(); }
 
         public OverlayItemV3ModelBase GetItem()
         {

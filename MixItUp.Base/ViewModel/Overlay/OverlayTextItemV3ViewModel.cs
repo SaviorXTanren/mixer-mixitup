@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Util;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
@@ -7,6 +8,16 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayTextItemV3ViewModel() : base(OverlayItemV3Type.Text) { }
 
         public OverlayTextItemV3ViewModel(OverlayTextItemV3Model item) : base(item) { }
+
+        public override Result Validate()
+        {
+            if (string.IsNullOrWhiteSpace(this.Text))
+            {
+                return new Result(Resources.OverlayTextMissingText);
+            }
+
+            return new Result();
+        }
 
         protected override OverlayItemV3ModelBase GetItemInternal()
         {

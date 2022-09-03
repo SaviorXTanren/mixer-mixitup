@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System.Windows.Input;
 
@@ -135,6 +136,16 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.Vertical = position.YPosition;
             this.Layer = position.Layer;
             this.Duration = position.Duration;
+        }
+
+        public Result Validate()
+        {
+            if (string.IsNullOrWhiteSpace(this.Duration))
+            {
+                return new Result(Resources.OverlayActionDurationInvalid);
+            }
+
+            return new Result();
         }
 
         public void SetPosition(OverlayItemV3ModelBase position)
