@@ -21,6 +21,7 @@ namespace MixItUp.Base.Model.Actions
 {
     public enum TwitchActionType
     {
+        [Obsolete]
         Host,
         Raid,
         VIPUser,
@@ -275,12 +276,7 @@ namespace MixItUp.Base.Model.Actions
         {
             if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
-                if (this.ActionType == TwitchActionType.Host)
-                {
-                    string channelName = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
-                    await ServiceManager.Get<ChatService>().SendMessage("/host @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
-                }
-                else if (this.ActionType == TwitchActionType.Raid)
+                if (this.ActionType == TwitchActionType.Raid)
                 {
                     string channelName = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
                     await ServiceManager.Get<ChatService>().SendMessage("/raid @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
