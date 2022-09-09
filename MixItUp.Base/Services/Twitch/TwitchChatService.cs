@@ -83,8 +83,6 @@ namespace MixItUp.Base.Services.Twitch
 
         private static List<string> ExcludedDiagnosticPacketLogging = new List<string>() { "PING", ChatMessagePacketModel.CommandID, ChatUserJoinPacketModel.CommandID, ChatUserLeavePacketModel.CommandID };
 
-        private const string HostChatMessageRegexPattern = "^\\w+ is now hosting you.$";
-
         private const string RaidUserNoticeMessageTypeID = "raid";
         private const string SubMysteryGiftUserNoticeMessageTypeID = "submysterygift";
         private const string SubGiftPaidUpgradeUserNoticeMessageTypeID = "giftpaidupgrade";
@@ -160,7 +158,6 @@ namespace MixItUp.Base.Services.Twitch
                         this.userClient.OnChatClearReceived += UserClient_OnChatClearReceived;
                         this.userClient.OnMessageReceived += UserClient_OnMessageReceived;
                         this.userClient.OnClearMessageReceived += UserClient_OnClearMessageReceived;
-                        this.userClient.OnHostTargetReceived += UserClient_OnHostTargetReceived;
 
                         this.userClient.OnUserListReceived += UserClient_OnUserListReceived;
                         await this.userClient.Connect();
@@ -214,7 +211,6 @@ namespace MixItUp.Base.Services.Twitch
                     this.userClient.OnChatClearReceived -= UserClient_OnChatClearReceived;
                     this.userClient.OnMessageReceived -= UserClient_OnMessageReceived;
                     this.userClient.OnClearMessageReceived -= UserClient_OnClearMessageReceived;
-                    this.userClient.OnHostTargetReceived -= UserClient_OnHostTargetReceived;
 
                     await this.userClient.Disconnect();
                 }
@@ -901,38 +897,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (message != null && !string.IsNullOrEmpty(message.Message))
             {
-                if (!string.IsNullOrEmpty(message.UserLogin) && message.UserLogin.Equals("jtv"))
-                {
-                    if (Regex.IsMatch(message.Message, TwitchChatService.HostChatMessageRegexPattern))
-                    {
-                        Logger.Log(LogLevel.Debug, JSONSerializerHelper.SerializeToString(message));
-
-                        string hosterUsername = message.Message.Substring(0, message.Message.IndexOf(' '));
-                        UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, hosterUsername, performPlatformSearch: true);
-                        if (user != null)
-                        {
-                            await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
-
-                            CommandParametersModel parameters = new CommandParametersModel(user);
-                            if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TwitchChannelHosted, parameters))
-                            {
-                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostUserData] = user.ID;
-
-                                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
-                                {
-                                    currency.AddAmount(user, currency.OnHostBonus);
-                                }
-
-                                GlobalEvents.HostOccurred(user);
-
-                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHosted, parameters);
-
-                                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertHosted, user.FullDisplayName), ChannelSession.Settings.AlertHostColor));
-                            }
-                        }
-                    }
-                }
-                else
+                if (string.IsNullOrEmpty(message.UserLogin) || !message.UserLogin.Equals("jtv"))
                 {
                     UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, message.UserID, performPlatformSearch: true);
                     await ServiceManager.Get<ChatService>().AddMessage(new TwitchChatMessageViewModel(message, user));
@@ -951,21 +916,6 @@ namespace MixItUp.Base.Services.Twitch
                 }
 
                 await ServiceManager.Get<ChatService>().DeleteMessage(new TwitchChatMessageViewModel(packet, user), externalDeletion: true);
-            }
-        }
-
-        private async void UserClient_OnHostTargetReceived(object sender, ChatHostTargetPacketModel packet)
-        {
-            if (ChannelSession.User == null)
-            {
-                // User has not been set yet (race condition), exit out early
-                return;
-            }
-
-            CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.Twitch);
-            if (packet.IsStartingHostMode && !ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TwitchChannelStreamStart, parameters))
-            {
-                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStop, parameters);
             }
         }
 

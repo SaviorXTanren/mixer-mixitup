@@ -51,6 +51,7 @@ namespace MixItUp.Base.Services
 
         TwitchChannelStreamStart = 200,
         TwitchChannelStreamStop = 201,
+        [Obsolete]
         TwitchChannelHosted = 202,
         TwitchChannelRaided = 203,
 
@@ -129,7 +130,7 @@ namespace MixItUp.Base.Services
 
             EventTypeEnum.ApplicationLaunch, EventTypeEnum.ApplicationExit,
 
-            EventTypeEnum.TwitchChannelStreamStart, EventTypeEnum.TwitchChannelStreamStop, EventTypeEnum.TwitchChannelFollowed, EventTypeEnum.TwitchChannelHosted, EventTypeEnum.TwitchChannelRaided, EventTypeEnum.TwitchChannelSubscribed, EventTypeEnum.TwitchChannelResubscribed,
+            EventTypeEnum.TwitchChannelStreamStart, EventTypeEnum.TwitchChannelStreamStop, EventTypeEnum.TwitchChannelFollowed, EventTypeEnum.TwitchChannelRaided, EventTypeEnum.TwitchChannelSubscribed, EventTypeEnum.TwitchChannelResubscribed,
 
             EventTypeEnum.TrovoChannelStreamStart, EventTypeEnum.TrovoChannelStreamStop, EventTypeEnum.TrovoChannelFollowed, EventTypeEnum.TrovoChannelRaided, EventTypeEnum.TrovoChannelSubscribed, EventTypeEnum.TrovoChannelResubscribed,
 

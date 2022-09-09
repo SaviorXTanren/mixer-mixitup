@@ -64,7 +64,7 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             get
             {
-                return this.SelectedActionType == TwitchActionType.Host || this.SelectedActionType == TwitchActionType.Raid ||
+                return this.SelectedActionType == TwitchActionType.Raid ||
                     this.SelectedActionType == TwitchActionType.VIPUser || this.SelectedActionType == TwitchActionType.UnVIPUser;
             }
         }
