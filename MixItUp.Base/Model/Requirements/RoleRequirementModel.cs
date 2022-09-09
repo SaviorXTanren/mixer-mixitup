@@ -80,7 +80,7 @@ namespace MixItUp.Base.Model.Requirements
 
         public override Task<Result> Validate(CommandParametersModel parameters)
         {
-            if (this.StreamingPlatform == StreamingPlatformTypeEnum.All || parameters.Platform == this.StreamingPlatform)
+            if (this.StreamingPlatform == StreamingPlatformTypeEnum.All || parameters.Platform == StreamingPlatformTypeEnum.All || parameters.Platform == this.StreamingPlatform)
             {
                 if (this.UserRoleList.Count > 0)
                 {
@@ -178,7 +178,7 @@ namespace MixItUp.Base.Model.Requirements
 
         private Result CreateErrorMessage(CommandParametersModel parameters)
         {
-            if (this.StreamingPlatform != StreamingPlatformTypeEnum.All && parameters.Platform != this.StreamingPlatform)
+            if (this.StreamingPlatform != StreamingPlatformTypeEnum.All && parameters.Platform != StreamingPlatformTypeEnum.All && parameters.Platform != this.StreamingPlatform)
             {
                 return new Result(string.Format(MixItUp.Base.Resources.RoleErrorIncorrectStreamingPlatform, this.StreamingPlatform));
             }
