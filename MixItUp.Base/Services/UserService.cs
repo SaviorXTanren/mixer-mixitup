@@ -334,6 +334,7 @@ namespace MixItUp.Base.Services
             ChannelSession.Settings.Users.ClearTracking();
 
             await ServiceManager.Get<IDatabaseService>().Write(ChannelSession.Settings.DatabaseFilePath, "DELETE FROM Users");
+            await ServiceManager.Get<IDatabaseService>().Write(ChannelSession.Settings.DatabaseFilePath, "DELETE FROM ImportedUsers");
         }
 
         public void SetUserData(UserV2Model userData)
