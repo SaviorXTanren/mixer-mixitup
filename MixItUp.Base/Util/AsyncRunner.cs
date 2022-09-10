@@ -7,6 +7,18 @@ namespace MixItUp.Base.Util
 {
     public static class AsyncRunner
     {
+        public static async Task RunAsync(Task task)
+        {
+            try
+            {
+                await task;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex, includeStackTrace: true);
+            }
+        }
+
         public static async Task<T> RunAsync<T>(Task<T> task)
         {
             try

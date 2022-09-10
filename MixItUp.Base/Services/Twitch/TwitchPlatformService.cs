@@ -38,9 +38,11 @@ namespace MixItUp.Base.Services.Twitch
             OAuthClientScopeEnum.channel__edit__commercial,
 
             OAuthClientScopeEnum.channel__manage__broadcast,
+            OAuthClientScopeEnum.channel__manage__moderators,
             OAuthClientScopeEnum.channel__manage__polls,
             OAuthClientScopeEnum.channel__manage__predictions,
             OAuthClientScopeEnum.channel__manage__redemptions,
+            OAuthClientScopeEnum.channel__manage__vips,
 
             OAuthClientScopeEnum.channel__moderate,
 
@@ -59,16 +61,19 @@ namespace MixItUp.Base.Services.Twitch
 
             OAuthClientScopeEnum.moderation__read,
 
-            OAuthClientScopeEnum.moderator__manage__banned_users,
             OAuthClientScopeEnum.moderator__read__chat_settings,
+
+            OAuthClientScopeEnum.moderator__manage__banned_users,
+            OAuthClientScopeEnum.moderator__manage__chat_messages,
             OAuthClientScopeEnum.moderator__manage__chat_settings,
             OAuthClientScopeEnum.moderator__manage__announcements,
 
             OAuthClientScopeEnum.user__edit,
 
             OAuthClientScopeEnum.user__manage__blocked_users,
-            OAuthClientScopeEnum.user__read__blocked_users,
+            OAuthClientScopeEnum.user__manage__whispers,
 
+            OAuthClientScopeEnum.user__read__blocked_users,
             OAuthClientScopeEnum.user__read__broadcast,
             OAuthClientScopeEnum.user__read__follows,
             OAuthClientScopeEnum.user__read__subscriptions,
@@ -218,6 +223,26 @@ namespace MixItUp.Base.Services.Twitch
         {
             await AsyncRunner.RunAsync(() => this.Connection.NewAPI.Chat.SendChatAnnouncement(channel.id, new AnnouncementModel { message = message, color = color }));
         }
+
+        public async Task RaidChannel(UserModel channel, UserModel targetChannel) { await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.RaidChannel(channel.id, targetChannel.id)); }
+
+        public async Task VIPUser(UserModel channel, UserModel user) { await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.VIPUser(channel.id, user.id)); }
+
+        public async Task UnVIPUser(UserModel channel, UserModel user) { await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.UnVIPUser(channel.id, user.id)); }
+
+        public async Task ModUser(UserModel channel, UserModel user) { await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.ModUser(channel.id, user.id)); }
+
+        public async Task UnmodUser(UserModel channel, UserModel user) { await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.UnmodUser(channel.id, user.id)); }
+
+        public async Task BanUser(UserModel channel, UserModel user, string reason) { await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.BanUser(channel.id, user.id, reason)); }
+
+        public async Task UnbanUser(UserModel channel, UserModel user) { await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.UnbanUser(channel.id, user.id)); }
+
+        public async Task TimeoutUser(UserModel channel, UserModel user, int duration, string reason) { await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.TimeoutUser(channel.id, user.id, duration, reason)); }
+
+        public async Task<ChatSettingsModel> GetChatSettings(UserModel channel) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.GetChatSettings(channel.id)); }
+
+        public async Task UpdateChatSettings(UserModel channel, ChatSettingsModel settings) { await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.UpdateChatSettings(channel.id, settings)); }
 
         public async Task<CreatedStreamMarkerModel> CreateStreamMarker(UserModel channel, string description) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Streams.CreateStreamMarker(channel, description)); }
 
