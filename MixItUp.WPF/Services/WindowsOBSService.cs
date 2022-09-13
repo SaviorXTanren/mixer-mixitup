@@ -645,7 +645,7 @@ namespace MixItUp.WPF.Services
 
         public async Task SetSourceRender(string sourceName, bool visibility, string sceneName)
         {
-            SceneItem sceneItem = await this.SearchForSceneItem(sourceName, visibility, sceneName);
+            SceneItem sceneItem = await this.SearchForSceneItem(sourceName, sceneName);
             if (sceneItem != null)
             {
                 OBSMessageSetSceneItemEnabledRequest setRequest = new OBSMessageSetSceneItemEnabledRequest(sceneItem.GroupName ?? sceneName, sceneItem.SceneItemId, visibility);
@@ -653,7 +653,7 @@ namespace MixItUp.WPF.Services
             }
         }
 
-        private async Task<SceneItem> SearchForSceneItem(string sourceName, bool visibility, string sceneName)
+        private async Task<SceneItem> SearchForSceneItem(string sourceName, string sceneName)
         {
             OBSMessageGetSceneItemListRequest request = new OBSMessageGetSceneItemListRequest(sceneName);
             string packet = await SendAndWait(request);
@@ -668,7 +668,12 @@ namespace MixItUp.WPF.Services
                         {
                             return sceneItem;
                         }
-                        else if (sceneItem.IsGroup.GetValueOrDefault())
+                    }
+
+                    // If we got here, then the item is not found, search groups (this is slow)
+                    foreach (SceneItem sceneItem in response?.Data?.Data.SceneItems)
+                    {
+                        if (sceneItem.IsGroup.GetValueOrDefault())
                         {
                             OBSMessageGetGroupSceneItemListRequest groupRequest = new OBSMessageGetGroupSceneItemListRequest(sceneItem.SourceName);
                             string groupPacket = await SendAndWait(groupRequest);
