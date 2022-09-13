@@ -470,9 +470,14 @@ namespace MixItUp.WPF.Services
 
     public class OBSWebsocketV5 : ClientWebSocketBase
     {
+        private const string SceneNameChangedEvent = "SceneNameChanged";
+        private const string SceneItemRemovedEvent = "SceneItemRemoved";
+
         private string password;
         private bool identified = false;
         private ConcurrentDictionary<Guid, string> responses = new ConcurrentDictionary<Guid, string>();
+
+        private ConcurrentDictionary<string, ConcurrentDictionary<string, SceneItem>> sceneSourceNameToSceneItemDictionary = new ConcurrentDictionary<string, ConcurrentDictionary<string, SceneItem>>();
 
         public event EventHandler Disconnected;
 
@@ -564,7 +569,6 @@ namespace MixItUp.WPF.Services
                 return response?.Data?.Data?.CurrentProgramSceneName ?? "Unknown";
             }
 
-
             return "Unknown";
         }
 
@@ -655,6 +659,22 @@ namespace MixItUp.WPF.Services
 
         private async Task<SceneItem> SearchForSceneItem(string sourceName, string sceneName)
         {
+            // Check our scene cache first
+            if (sceneSourceNameToSceneItemDictionary.TryGetValue(sceneName, out var sceneItems))
+            {
+                if (sceneItems.TryGetValue(sourceName, out var sceneItem))
+                {
+                    return sceneItem;
+                }
+            }
+            else
+            {
+                sceneSourceNameToSceneItemDictionary[sceneName] = new ConcurrentDictionary<string, SceneItem>();
+            }
+
+            // Failed hit, invalid the scene's cache
+            sceneSourceNameToSceneItemDictionary[sceneName].Clear();
+
             OBSMessageGetSceneItemListRequest request = new OBSMessageGetSceneItemListRequest(sceneName);
             string packet = await SendAndWait(request);
             if (!string.IsNullOrEmpty(packet))
@@ -662,6 +682,12 @@ namespace MixItUp.WPF.Services
                 OBSMessageGetSceneItemListResponse response = JSONSerializerHelper.DeserializeFromString<OBSMessageGetSceneItemListResponse>(packet);
                 if (response?.Data?.Data != null)
                 {
+                    // Cache all items first
+                    foreach (SceneItem sceneItem in response?.Data?.Data.SceneItems)
+                    {
+                        sceneSourceNameToSceneItemDictionary[sceneName][sourceName] = sceneItem;
+                    }
+                    
                     foreach (SceneItem sceneItem in response?.Data?.Data.SceneItems)
                     {
                         if (string.Equals(sceneItem.SourceName, sourceName, StringComparison.OrdinalIgnoreCase))
@@ -682,9 +708,15 @@ namespace MixItUp.WPF.Services
                                 OBSMessageGetGroupSceneItemListResponse groupResponse = JSONSerializerHelper.DeserializeFromString<OBSMessageGetGroupSceneItemListResponse>(groupPacket);
                                 if (groupResponse?.Data?.Data != null)
                                 {
+                                    // Cache all items first
                                     foreach (SceneItem groupSceneItem in groupResponse?.Data?.Data.SceneItems)
                                     {
                                         groupSceneItem.GroupName = sceneItem.SourceName;
+                                        sceneSourceNameToSceneItemDictionary[sceneName][sourceName] = groupSceneItem;
+                                    }
+
+                                    foreach (SceneItem groupSceneItem in groupResponse?.Data?.Data.SceneItems)
+                                    {
                                         if (string.Equals(groupSceneItem.SourceName, sourceName, StringComparison.OrdinalIgnoreCase))
                                         {
                                             return groupSceneItem;
@@ -712,6 +744,9 @@ namespace MixItUp.WPF.Services
                     case 2: // Identified
                         await HandleIdentified(JSONSerializerHelper.DeserializeFromString<OBSMessageIdentified>(packet));
                         break;
+                    case 5: // Event
+                        await HandleEvent(JSONSerializerHelper.DeserializeFromString<OBSMessageEvent>(packet));
+                        break;
                     case 7: // Response
                         await HandleResponse(packet);
                         break;
@@ -732,6 +767,29 @@ namespace MixItUp.WPF.Services
             if (this.responses.TryRemove(response.Data.RequestId, out string value))
             {
                 this.responses.TryAdd(response.Data.RequestId, packet);
+            }
+            return Task.CompletedTask;
+        }
+
+        private Task HandleEvent(OBSMessageEvent message)
+        {
+            switch (message.Data.EventType)
+            {
+                case SceneNameChangedEvent:
+                    if (message.Data.Data.TryGetValue("oldSceneName", out var oldSceneName))
+                    {
+                        sceneSourceNameToSceneItemDictionary.TryRemove(oldSceneName?.ToString(), out var value);
+                    }
+                    break;
+                case SceneItemRemovedEvent:
+                    if (message.Data.Data.TryGetValue("sceneName", out var removedSceneName) && message.Data.Data.TryGetValue("sourceName", out var removedSourceName))
+                    {
+                        if (sceneSourceNameToSceneItemDictionary.TryGetValue(removedSceneName?.ToString(), out var sceneItems))
+                        {
+                            sceneItems.TryRemove(removedSourceName?.ToString(), out var value);
+                        }
+                    }
+                    break;
             }
             return Task.CompletedTask;
         }
@@ -861,7 +919,7 @@ namespace MixItUp.WPF.Services
                 Data = new IdentifyData
                 {
                     RPCVersion = 1,
-                    EventSubscriptions = 0,
+                    EventSubscriptions = (1 << 2) | (1 << 7),   // Scene and Scene Items events
                 };
             }
         }
@@ -886,6 +944,20 @@ namespace MixItUp.WPF.Services
         {
             [JsonProperty("negotiatedRpcVersion")]
             public string NegotiatedRpcVersion { get; set; }
+        }
+
+        private class OBSMessageEvent : OBSMessage<EventData>
+        {
+        }
+
+        private class EventData
+        {
+            [JsonProperty("eventType")]
+            public string EventType { get; set; }
+            [JsonProperty("eventIntent")]
+            public int EventIntent { get; set; }
+            [JsonProperty("eventData")]
+            public JObject Data { get; set; }
         }
 
         private class OBSMessageToggleStreamRequest : OBSMessageRequest
