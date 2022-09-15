@@ -472,6 +472,8 @@ namespace MixItUp.WPF.Services
     {
         private const string SceneNameChangedEvent = "SceneNameChanged";
         private const string SceneItemRemovedEvent = "SceneItemRemoved";
+        private const string InputRemovedEvent = "InputRemoved";
+        private const string InputNameChangedEvent = "InputNameChanged";
 
         private string password;
         private bool identified = false;
@@ -790,6 +792,30 @@ namespace MixItUp.WPF.Services
                         }
                     }
                     break;
+                case InputRemovedEvent:
+                    if (message.Data.Data.TryGetValue("inputName", out var inputName))
+                    {
+                        foreach (var scene in sceneSourceNameToSceneItemDictionary.Keys.ToList())
+                        {
+                            if (sceneSourceNameToSceneItemDictionary.TryGetValue(scene, out var sceneItems))
+                            {
+                                sceneItems.TryRemove(inputName?.ToString(), out var value);
+                            }
+                        }
+                    }
+                    break;
+                case InputNameChangedEvent:
+                    if (message.Data.Data.TryGetValue("oldInputName", out var oldInputName) && message.Data.Data.TryGetValue("inputName", out var newInputName))
+                    {
+                        foreach (var scene in sceneSourceNameToSceneItemDictionary.Keys.ToList())
+                        {
+                            if (sceneSourceNameToSceneItemDictionary.TryGetValue(scene, out var sceneItems))
+                            {
+                                sceneItems.TryRemove(oldInputName?.ToString(), out var value);
+                            }
+                        }
+                    }
+                    break;
             }
             return Task.CompletedTask;
         }
@@ -919,7 +945,7 @@ namespace MixItUp.WPF.Services
                 Data = new IdentifyData
                 {
                     RPCVersion = 1,
-                    EventSubscriptions = (1 << 2) | (1 << 7),   // Scene and Scene Items events
+                    EventSubscriptions = (1 << 2) | (1 << 3) | (1 << 7),   // Scene, Input, Scene Items events
                 };
             }
         }
