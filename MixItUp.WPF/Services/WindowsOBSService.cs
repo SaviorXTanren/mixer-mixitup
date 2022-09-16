@@ -479,6 +479,8 @@ namespace MixItUp.WPF.Services
         private bool identified = false;
         private ConcurrentDictionary<Guid, string> responses = new ConcurrentDictionary<Guid, string>();
 
+        private SemaphoreSlim sendSemaphore = new SemaphoreSlim(1);
+
         private ConcurrentDictionary<string, ConcurrentDictionary<string, SceneItem>> sceneSourceNameToSceneItemDictionary = new ConcurrentDictionary<string, ConcurrentDictionary<string, SceneItem>>();
 
         public event EventHandler Disconnected;
@@ -828,7 +830,7 @@ namespace MixItUp.WPF.Services
 
         private async Task Send(OBSMessage message)
         {
-            await base.Send(JsonConvert.SerializeObject(message));
+            await this.sendSemaphore.WaitAndRelease(base.Send(JsonConvert.SerializeObject(message)));
         }
 
         private async Task<string> SendAndWait<T>(OBSMessageRequest<T> request)
