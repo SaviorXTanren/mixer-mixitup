@@ -8883,4 +8883,13 @@ via Twitch, it's a "your mileage may vary" situation.</value>
   <data name="OBSStudioOldProtocol" xml:space="preserve">
     <value>Use Old Connection</value>
   </data>
+  <data name="TwitchActionPollChoicesTooLong" xml:space="preserve">
+    <value>Poll choices must be 25 characters or less.</value>
+  </data>
+  <data name="TwitchActionPollTitleTooLong" xml:space="preserve">
+    <value>Poll titles must be 60 characters or less.</value>
+  </data>
+  <data name="TwitchActionPredictionOutcomesTooLong" xml:space="preserve">
+    <value>Prediction outcomes must be 25 characters or less.</value>
+  </data>
 </root>

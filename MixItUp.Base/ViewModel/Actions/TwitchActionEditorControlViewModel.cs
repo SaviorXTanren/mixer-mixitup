@@ -559,6 +559,11 @@ namespace MixItUp.Base.ViewModel.Actions
                     return new Result(MixItUp.Base.Resources.TwitchActionCreatePollMissingTitle);
                 }
 
+                if (this.PollTitle.Length > 60)
+                {
+                    return new Result(MixItUp.Base.Resources.TwitchActionPollTitleTooLong);
+                }
+
                 if (this.PollDurationSeconds <= 0)
                 {
                     return new Result(MixItUp.Base.Resources.TwitchActionCreatePollInvalidDuration);
@@ -567,6 +572,11 @@ namespace MixItUp.Base.ViewModel.Actions
                 if (string.IsNullOrEmpty(this.PollChoice1) || string.IsNullOrEmpty(this.PollChoice2))
                 {
                     return new Result(MixItUp.Base.Resources.TwitchActionCreatePollTwoOrMoreChoices);
+                }
+
+                if (this.PollChoice1.Length > 25 || this.PollChoice2.Length > 25 || this.PollChoice3.Length > 25 || this.PollChoice4.Length > 25)
+                {
+                    return new Result(MixItUp.Base.Resources.TwitchActionPollChoicesTooLong);
                 }
             }
             else if (this.ShowPredictionGrid)
@@ -589,6 +599,11 @@ namespace MixItUp.Base.ViewModel.Actions
                 if (string.IsNullOrEmpty(this.PredictionOutcome1) || string.IsNullOrEmpty(this.PredictionOutcome2))
                 {
                     return new Result(MixItUp.Base.Resources.TwitchActionCreatePredictionTwoChoices);
+                }
+
+                if (this.PredictionOutcome1.Length > 25 || this.PredictionOutcome2.Length > 25)
+                {
+                    return new Result(MixItUp.Base.Resources.TwitchActionPredictionOutcomesTooLong);
                 }
             }
             else if (this.ShowFollowersGrid || this.ShowSlowChatGrid)
