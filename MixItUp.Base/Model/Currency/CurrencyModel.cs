@@ -448,7 +448,7 @@ namespace MixItUp.Base.Model.Currency
                 else if (this.ResetInterval == CurrencyResetRateEnum.Weekly) { newResetDate = this.LastReset.AddDays(7); }
                 else if (this.ResetInterval == CurrencyResetRateEnum.Monthly) { newResetDate = this.LastReset.AddMonths(1); }
                 else if (this.ResetInterval == CurrencyResetRateEnum.Yearly) { newResetDate = this.LastReset.AddYears(1); }
-                return (newResetDate.Date < DateTimeOffset.Now.Date);
+                return (newResetDate.Date <= DateTimeOffset.Now.Date);
             }
             return false;
         }

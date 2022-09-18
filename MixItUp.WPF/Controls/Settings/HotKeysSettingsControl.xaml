@@ -89,9 +89,9 @@
         <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="4" BorderThickness="1" Width="550">
             <DataGrid x:Name="HotKeysDataGrid" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="{x:Static resx:Resources.HotKey}" Binding="{Binding HotKey}" IsReadOnly="True" Width="*" />
-                    <DataGridTextColumn Header="{x:Static resx:Resources.Command}" Binding="{Binding Command.Name}" IsReadOnly="True" Width="200" />
-                    <DataGridTemplateColumn Width="65">
+                    <DataGridTextColumn Header="{x:Static resx:Resources.HotKey}" Binding="{Binding HotKey}" IsReadOnly="True" Width="200" />
+                    <DataGridTextColumn Header="{x:Static resx:Resources.Command}" Binding="{Binding Command.Name}" IsReadOnly="True" Width="*" />
+                    <DataGridTemplateColumn Width="80">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Controls:IconButton Grid.Column="6" x:Name="DeleteHotKeyButton" Icon="Delete" Click="DeleteHotKeyButton_Click" Width="50" ToolTip="{x:Static resx:Resources.Delete}" />
