@@ -481,7 +481,7 @@ namespace MixItUp.WPF.Services
 
         private SemaphoreSlim sendSemaphore = new SemaphoreSlim(1);
 
-        private ConcurrentDictionary<string, ConcurrentDictionary<string, SceneItem>> sceneSourceNameToSceneItemDictionary = new ConcurrentDictionary<string, ConcurrentDictionary<string, SceneItem>>();
+        private ConcurrentDictionary<string, ConcurrentDictionary<string, SceneItem>> sceneSourceNameToSceneItemDictionary = new ConcurrentDictionary<string, ConcurrentDictionary<string, SceneItem>>(StringComparer.OrdinalIgnoreCase);
 
         public event EventHandler Disconnected;
 
@@ -673,7 +673,7 @@ namespace MixItUp.WPF.Services
             }
             else
             {
-                sceneSourceNameToSceneItemDictionary[sceneName] = new ConcurrentDictionary<string, SceneItem>();
+                sceneSourceNameToSceneItemDictionary[sceneName] = new ConcurrentDictionary<string, SceneItem>(StringComparer.OrdinalIgnoreCase);
             }
 
             // Failed hit, invalid the scene's cache
@@ -689,7 +689,7 @@ namespace MixItUp.WPF.Services
                     // Cache all items first
                     foreach (SceneItem sceneItem in response?.Data?.Data.SceneItems)
                     {
-                        sceneSourceNameToSceneItemDictionary[sceneName][sourceName] = sceneItem;
+                        sceneSourceNameToSceneItemDictionary[sceneName][sceneItem.SourceName] = sceneItem;
                     }
                     
                     foreach (SceneItem sceneItem in response?.Data?.Data.SceneItems)
@@ -716,7 +716,7 @@ namespace MixItUp.WPF.Services
                                     foreach (SceneItem groupSceneItem in groupResponse?.Data?.Data.SceneItems)
                                     {
                                         groupSceneItem.GroupName = sceneItem.SourceName;
-                                        sceneSourceNameToSceneItemDictionary[sceneName][sourceName] = groupSceneItem;
+                                        sceneSourceNameToSceneItemDictionary[sceneName][groupSceneItem.SourceName] = groupSceneItem;
                                     }
 
                                     foreach (SceneItem groupSceneItem in groupResponse?.Data?.Data.SceneItems)
@@ -782,7 +782,7 @@ namespace MixItUp.WPF.Services
                 case SceneNameChangedEvent:
                     if (message.Data.Data.TryGetValue("oldSceneName", out var oldSceneName))
                     {
-                        sceneSourceNameToSceneItemDictionary.TryRemove(oldSceneName?.ToString(), out var value);
+                        sceneSourceNameToSceneItemDictionary.TryRemove(oldSceneName?.ToString(), out var _);
                     }
                     break;
                 case SceneItemRemovedEvent:
@@ -790,7 +790,7 @@ namespace MixItUp.WPF.Services
                     {
                         if (sceneSourceNameToSceneItemDictionary.TryGetValue(removedSceneName?.ToString(), out var sceneItems))
                         {
-                            sceneItems.TryRemove(removedSourceName?.ToString(), out var value);
+                            sceneItems.TryRemove(removedSourceName?.ToString(), out var _);
                         }
                     }
                     break;
@@ -801,7 +801,7 @@ namespace MixItUp.WPF.Services
                         {
                             if (sceneSourceNameToSceneItemDictionary.TryGetValue(scene, out var sceneItems))
                             {
-                                sceneItems.TryRemove(inputName?.ToString(), out var value);
+                                sceneItems.TryRemove(inputName?.ToString(), out var _);
                             }
                         }
                     }
@@ -813,7 +813,7 @@ namespace MixItUp.WPF.Services
                         {
                             if (sceneSourceNameToSceneItemDictionary.TryGetValue(scene, out var sceneItems))
                             {
-                                sceneItems.TryRemove(oldInputName?.ToString(), out var value);
+                                sceneItems.TryRemove(oldInputName?.ToString(), out var _);
                             }
                         }
                     }
