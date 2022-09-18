@@ -66,7 +66,7 @@ namespace MixItUp.WPF.Services
 
             if (!this.IsConnected)
             {
-                await this.OBSCommandTimeoutWrapper(async (cancellationToken) =>
+                await this.OBSCommandTimeoutWrapper((cancellationToken) =>
                 {
                     try
                     {
@@ -76,14 +76,14 @@ namespace MixItUp.WPF.Services
                         {
                             this.OBSWebsocket.Disconnected += OBSWebsocket_Disconnected;
                             this.IsConnected = true;
-                            return true;
+                            return Task.FromResult(true);
                         }
                     }
                     catch (Exception ex)
                     {
                         Logger.Log(ex);
                     }
-                    return false;
+                    return Task.FromResult(false);
                 }, ConnectTimeoutInMilliseconds);
             }
 
@@ -470,9 +470,18 @@ namespace MixItUp.WPF.Services
 
     public class OBSWebsocketV5 : ClientWebSocketBase
     {
+        private const string SceneNameChangedEvent = "SceneNameChanged";
+        private const string SceneItemRemovedEvent = "SceneItemRemoved";
+        private const string InputRemovedEvent = "InputRemoved";
+        private const string InputNameChangedEvent = "InputNameChanged";
+
         private string password;
         private bool identified = false;
         private ConcurrentDictionary<Guid, string> responses = new ConcurrentDictionary<Guid, string>();
+
+        private SemaphoreSlim sendSemaphore = new SemaphoreSlim(1);
+
+        private ConcurrentDictionary<string, ConcurrentDictionary<string, SceneItem>> sceneSourceNameToSceneItemDictionary = new ConcurrentDictionary<string, ConcurrentDictionary<string, SceneItem>>();
 
         public event EventHandler Disconnected;
 
@@ -564,7 +573,6 @@ namespace MixItUp.WPF.Services
                 return response?.Data?.Data?.CurrentProgramSceneName ?? "Unknown";
             }
 
-
             return "Unknown";
         }
 
@@ -645,6 +653,32 @@ namespace MixItUp.WPF.Services
 
         public async Task SetSourceRender(string sourceName, bool visibility, string sceneName)
         {
+            SceneItem sceneItem = await this.SearchForSceneItem(sourceName, sceneName);
+            if (sceneItem != null)
+            {
+                OBSMessageSetSceneItemEnabledRequest setRequest = new OBSMessageSetSceneItemEnabledRequest(sceneItem.GroupName ?? sceneName, sceneItem.SceneItemId, visibility);
+                await Send(setRequest);
+            }
+        }
+
+        private async Task<SceneItem> SearchForSceneItem(string sourceName, string sceneName)
+        {
+            // Check our scene cache first
+            if (sceneSourceNameToSceneItemDictionary.TryGetValue(sceneName, out var sceneItems))
+            {
+                if (sceneItems.TryGetValue(sourceName, out var sceneItem))
+                {
+                    return sceneItem;
+                }
+            }
+            else
+            {
+                sceneSourceNameToSceneItemDictionary[sceneName] = new ConcurrentDictionary<string, SceneItem>();
+            }
+
+            // Failed hit, invalid the scene's cache
+            sceneSourceNameToSceneItemDictionary[sceneName].Clear();
+
             OBSMessageGetSceneItemListRequest request = new OBSMessageGetSceneItemListRequest(sceneName);
             string packet = await SendAndWait(request);
             if (!string.IsNullOrEmpty(packet))
@@ -652,19 +686,53 @@ namespace MixItUp.WPF.Services
                 OBSMessageGetSceneItemListResponse response = JSONSerializerHelper.DeserializeFromString<OBSMessageGetSceneItemListResponse>(packet);
                 if (response?.Data?.Data != null)
                 {
-                    foreach (SceneItem scene in response?.Data?.Data.SceneItems)
+                    // Cache all items first
+                    foreach (SceneItem sceneItem in response?.Data?.Data.SceneItems)
                     {
-                        if (string.Equals(scene.SourceName, sourceName, StringComparison.OrdinalIgnoreCase))
+                        sceneSourceNameToSceneItemDictionary[sceneName][sourceName] = sceneItem;
+                    }
+                    
+                    foreach (SceneItem sceneItem in response?.Data?.Data.SceneItems)
+                    {
+                        if (string.Equals(sceneItem.SourceName, sourceName, StringComparison.OrdinalIgnoreCase))
                         {
-                            OBSMessageSetSceneItemEnabledRequest setRequest = new OBSMessageSetSceneItemEnabledRequest(sceneName, scene.SceneItemId, visibility);
-                            await Send(setRequest);
-                            return;
+                            return sceneItem;
+                        }
+                    }
+
+                    // If we got here, then the item is not found, search groups (this is slow)
+                    foreach (SceneItem sceneItem in response?.Data?.Data.SceneItems)
+                    {
+                        if (sceneItem.IsGroup.GetValueOrDefault())
+                        {
+                            OBSMessageGetGroupSceneItemListRequest groupRequest = new OBSMessageGetGroupSceneItemListRequest(sceneItem.SourceName);
+                            string groupPacket = await SendAndWait(groupRequest);
+                            if (!string.IsNullOrEmpty(groupPacket))
+                            {
+                                OBSMessageGetGroupSceneItemListResponse groupResponse = JSONSerializerHelper.DeserializeFromString<OBSMessageGetGroupSceneItemListResponse>(groupPacket);
+                                if (groupResponse?.Data?.Data != null)
+                                {
+                                    // Cache all items first
+                                    foreach (SceneItem groupSceneItem in groupResponse?.Data?.Data.SceneItems)
+                                    {
+                                        groupSceneItem.GroupName = sceneItem.SourceName;
+                                        sceneSourceNameToSceneItemDictionary[sceneName][sourceName] = groupSceneItem;
+                                    }
+
+                                    foreach (SceneItem groupSceneItem in groupResponse?.Data?.Data.SceneItems)
+                                    {
+                                        if (string.Equals(groupSceneItem.SourceName, sourceName, StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            return groupSceneItem;
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
-
-
+            return null;
         }
 
         protected override async Task ProcessReceivedPacket(string packet)
@@ -679,6 +747,9 @@ namespace MixItUp.WPF.Services
                         break;
                     case 2: // Identified
                         await HandleIdentified(JSONSerializerHelper.DeserializeFromString<OBSMessageIdentified>(packet));
+                        break;
+                    case 5: // Event
+                        await HandleEvent(JSONSerializerHelper.DeserializeFromString<OBSMessageEvent>(packet));
                         break;
                     case 7: // Response
                         await HandleResponse(packet);
@@ -704,6 +775,53 @@ namespace MixItUp.WPF.Services
             return Task.CompletedTask;
         }
 
+        private Task HandleEvent(OBSMessageEvent message)
+        {
+            switch (message.Data.EventType)
+            {
+                case SceneNameChangedEvent:
+                    if (message.Data.Data.TryGetValue("oldSceneName", out var oldSceneName))
+                    {
+                        sceneSourceNameToSceneItemDictionary.TryRemove(oldSceneName?.ToString(), out var value);
+                    }
+                    break;
+                case SceneItemRemovedEvent:
+                    if (message.Data.Data.TryGetValue("sceneName", out var removedSceneName) && message.Data.Data.TryGetValue("sourceName", out var removedSourceName))
+                    {
+                        if (sceneSourceNameToSceneItemDictionary.TryGetValue(removedSceneName?.ToString(), out var sceneItems))
+                        {
+                            sceneItems.TryRemove(removedSourceName?.ToString(), out var value);
+                        }
+                    }
+                    break;
+                case InputRemovedEvent:
+                    if (message.Data.Data.TryGetValue("inputName", out var inputName))
+                    {
+                        foreach (var scene in sceneSourceNameToSceneItemDictionary.Keys.ToList())
+                        {
+                            if (sceneSourceNameToSceneItemDictionary.TryGetValue(scene, out var sceneItems))
+                            {
+                                sceneItems.TryRemove(inputName?.ToString(), out var value);
+                            }
+                        }
+                    }
+                    break;
+                case InputNameChangedEvent:
+                    if (message.Data.Data.TryGetValue("oldInputName", out var oldInputName) && message.Data.Data.TryGetValue("inputName", out var newInputName))
+                    {
+                        foreach (var scene in sceneSourceNameToSceneItemDictionary.Keys.ToList())
+                        {
+                            if (sceneSourceNameToSceneItemDictionary.TryGetValue(scene, out var sceneItems))
+                            {
+                                sceneItems.TryRemove(oldInputName?.ToString(), out var value);
+                            }
+                        }
+                    }
+                    break;
+            }
+            return Task.CompletedTask;
+        }
+
         private Task HandleIdentified(OBSMessageIdentified message)
         {
             this.identified = true;
@@ -712,7 +830,7 @@ namespace MixItUp.WPF.Services
 
         private async Task Send(OBSMessage message)
         {
-            await base.Send(JsonConvert.SerializeObject(message));
+            await this.sendSemaphore.WaitAndRelease(base.Send(JsonConvert.SerializeObject(message)));
         }
 
         private async Task<string> SendAndWait<T>(OBSMessageRequest<T> request)
@@ -829,7 +947,7 @@ namespace MixItUp.WPF.Services
                 Data = new IdentifyData
                 {
                     RPCVersion = 1,
-                    EventSubscriptions = 0,
+                    EventSubscriptions = (1 << 2) | (1 << 3) | (1 << 7),   // Scene, Input, Scene Items events
                 };
             }
         }
@@ -854,6 +972,20 @@ namespace MixItUp.WPF.Services
         {
             [JsonProperty("negotiatedRpcVersion")]
             public string NegotiatedRpcVersion { get; set; }
+        }
+
+        private class OBSMessageEvent : OBSMessage<EventData>
+        {
+        }
+
+        private class EventData
+        {
+            [JsonProperty("eventType")]
+            public string EventType { get; set; }
+            [JsonProperty("eventIntent")]
+            public int EventIntent { get; set; }
+            [JsonProperty("eventData")]
+            public JObject Data { get; set; }
         }
 
         private class OBSMessageToggleStreamRequest : OBSMessageRequest
@@ -952,6 +1084,34 @@ namespace MixItUp.WPF.Services
             public SceneItem[] SceneItems { get; set; }
         }
 
+        private class OBSMessageGetGroupSceneItemListRequest : OBSMessageRequest<GetGroupSceneItemListRequestData>
+        {
+            public OBSMessageGetGroupSceneItemListRequest(string groupName) : base()
+            {
+                this.Data.RequestType = "GetGroupSceneItemList";
+                this.Data.Data = new GetGroupSceneItemListRequestData
+                {
+                    SceneName = groupName,
+                };
+            }
+        }
+
+        private class GetGroupSceneItemListRequestData
+        {
+            [JsonProperty("sceneName")]
+            public string SceneName { get; set; }
+        }
+
+        private class OBSMessageGetGroupSceneItemListResponse : OBSMessageResponse<GetGroupSceneItemListResponseData>
+        {
+        }
+
+        private class GetGroupSceneItemListResponseData
+        {
+            [JsonProperty("sceneItems")]
+            public SceneItem[] SceneItems { get; set; }
+        }
+
         private class SceneItem
         {
             [JsonProperty("sceneItemId")]
@@ -962,6 +1122,11 @@ namespace MixItUp.WPF.Services
 
             [JsonProperty("sceneItemTransform")]
             public SceneItemTransform SceneItemTransform { get; set; }
+
+            [JsonProperty("isGroup")]
+            public bool? IsGroup { get; set; }
+
+            public string GroupName { get; set; }
         }
 
         private class SceneItemTransform

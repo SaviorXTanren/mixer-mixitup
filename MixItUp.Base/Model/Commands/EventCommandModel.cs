@@ -154,6 +154,7 @@ namespace MixItUp.Base.Model.Commands
                     break;
 
                 // Donation
+                case EventTypeEnum.GenericDonation:
                 case EventTypeEnum.StreamlabsDonation:
                 case EventTypeEnum.TiltifyDonation:
                 case EventTypeEnum.ExtraLifeDonation:

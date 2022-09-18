@@ -19575,6 +19575,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Poll choices must be 25 characters or less..
+        /// </summary>
+        public static string TwitchActionPollChoicesTooLong {
+            get {
+                return ResourceManager.GetString("TwitchActionPollChoicesTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Poll titles must be 60 characters or less..
+        /// </summary>
+        public static string TwitchActionPollTitleTooLong {
+            get {
+                return ResourceManager.GetString("TwitchActionPollTitleTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prediction outcomes must be 25 characters or less..
+        /// </summary>
+        public static string TwitchActionPredictionOutcomesTooLong {
+            get {
+                return ResourceManager.GetString("TwitchActionPredictionOutcomesTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Prediction titles must be 45 characters or less.
         /// </summary>
         public static string TwitchActionPredictionTitleTooLong {
