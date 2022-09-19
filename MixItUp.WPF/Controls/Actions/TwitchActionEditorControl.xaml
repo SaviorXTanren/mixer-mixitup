@@ -74,19 +74,8 @@
             <TextBox Grid.Column="10" VerticalAlignment="Center" Text="$clipurl" Style="{StaticResource TextBoxReadOnlySelectable}" />
         </Grid>
 
-        <Grid Grid.Row="2" Visibility="{Binding ShowStreamMarkerGrid, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="5" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <TextBox Grid.Column="0" Text="{Binding StreamMarkerDescription}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DescriptionOptional}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="500" />
-
-            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ShowInfoInChat}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
-            <ToggleButton Grid.Column="4" VerticalAlignment="Center" IsChecked="{Binding ShowInfoInChat}" />
+        <Grid Grid.Row="2" Visibility="{Binding ShowStreamMarkerGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TextBox Text="{Binding StreamMarkerDescription}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DescriptionOptional}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowUpdateChannelPointRewardGrid, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center">
