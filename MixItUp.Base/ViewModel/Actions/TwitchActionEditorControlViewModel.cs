@@ -659,7 +659,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowStreamMarkerGrid)
             {
-                return TwitchActionModel.CreateStreamMarkerAction(this.StreamMarkerDescription, this.ShowInfoInChat);
+                return TwitchActionModel.CreateStreamMarkerAction(this.StreamMarkerDescription);
             }
             else if (this.ShowUpdateChannelPointRewardGrid)
             {
