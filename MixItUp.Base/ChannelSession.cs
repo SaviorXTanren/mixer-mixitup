@@ -87,15 +87,15 @@ namespace MixItUp.Base
             }
             catch (Exception ex) { Logger.Log(ex); }
 
-            ServiceManager.Add(new MockSessionService());
-            ServiceManager.Add(new MockChatService());
+            ServiceManager.Add(new DemoSessionService());
+            ServiceManager.Add(new DemoChatService());
 
             //ServiceManager.Add(new TwitchSessionService());
             //ServiceManager.Add(new TwitchChatService());
             //ServiceManager.Add(new TwitchEventService());
 
-            ServiceManager.Add<TwitchSessionService>(ServiceManager.Get<MockSessionService>());
-            ServiceManager.Add<TwitchChatService>(ServiceManager.Get<MockChatService>());
+            ServiceManager.Add<TwitchSessionService>(ServiceManager.Get<DemoSessionService>());
+            ServiceManager.Add<TwitchChatService>(ServiceManager.Get<DemoChatService>());
 
             ServiceManager.Add(new YouTubeSessionService());
             ServiceManager.Add(new YouTubeChatService());

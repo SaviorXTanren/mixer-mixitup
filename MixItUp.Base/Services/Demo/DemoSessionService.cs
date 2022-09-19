@@ -12,7 +12,7 @@ using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.Services.Mock
 {
-    public class MockSessionService : TwitchSessionService, IStreamingPlatformSessionService
+    public class DemoSessionService : IStreamingPlatformSessionService
     {
         public static UserModel user = new UserModel()
         {
@@ -20,7 +20,7 @@ namespace MixItUp.Base.Services.Mock
             login = "testuser",
             display_name = "TestUser",
             broadcaster_type = "partner",
-            profile_image_url = "https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUp-Logo-Base-WhiteXS.png",
+            profile_image_url = "https://raw.githubusercontent.com/SaviorXTanren/mixer-mixitup/master/Branding/MixItUp-Logo-Base-WhiteSM.png",
         };
 
         public static UserModel bot = new UserModel()
@@ -28,24 +28,24 @@ namespace MixItUp.Base.Services.Mock
             id = "2",
             login = "testbot",
             display_name = "TestBot",
-            broadcaster_type = "partner",
-            profile_image_url = "https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUp-Logo-Base-WhiteXS.png",
+            broadcaster_type = "",
+            profile_image_url = "https://raw.githubusercontent.com/SaviorXTanren/mixer-mixitup/master/Branding/MixItUp-Logo-Base-WhiteSM.png",
         };
 
-        public new MockPlatformService UserConnection { get; private set; }
-        public new MockPlatformService BotConnection { get; private set; }
+        public DemoPlatformService UserConnection { get; private set; }
+        public DemoPlatformService BotConnection { get; private set; }
 
-        public new bool IsConnected { get { return this.UserConnection != null; } }
-        public new bool IsBotConnected { get { return this.BotConnection != null; } }
+        public bool IsConnected { get { return this.UserConnection != null; } }
+        public bool IsBotConnected { get { return this.BotConnection != null; } }
 
-        public new string UserID { get { return user.id; } }
-        public new string Username { get { return user.login; } }
-        public new string BotID { get { return bot.id; } }
-        public new string Botname { get { return bot.login; } }
-        public new string ChannelID { get { return user.id; } }
-        public new string ChannelLink { get { return "https://mixitupapp.com"; } }
+        public string UserID { get { return user.id; } }
+        public string Username { get { return user.login; } }
+        public string BotID { get { return bot.id; } }
+        public string Botname { get { return bot.login; } }
+        public string ChannelID { get { return user.id; } }
+        public string ChannelLink { get { return "https://mixitupapp.com"; } }
 
-        public new StreamingPlatformAccountModel UserAccount
+        public StreamingPlatformAccountModel UserAccount
         {
             get
             {
@@ -57,7 +57,7 @@ namespace MixItUp.Base.Services.Mock
                 };
             }
         }
-        public new StreamingPlatformAccountModel BotAccount
+        public StreamingPlatformAccountModel BotAccount
         {
             get
             {
@@ -70,11 +70,11 @@ namespace MixItUp.Base.Services.Mock
             }
         }
 
-        public new bool IsLive { get { return true; } }
+        public bool IsLive { get { return true; } }
 
-        public new async Task<Result> ConnectUser()
+        public async Task<Result> ConnectUser()
         {
-            Result<MockPlatformService> result = await MockPlatformService.ConnectUser();
+            Result<DemoPlatformService> result = await DemoPlatformService.ConnectUser();
             if (result.Success)
             {
                 this.UserConnection = result.Value;
@@ -82,9 +82,9 @@ namespace MixItUp.Base.Services.Mock
             return result;
         }
 
-        public new async Task<Result> ConnectBot()
+        public async Task<Result> ConnectBot()
         {
-            Result<MockPlatformService> result = await MockPlatformService.ConnectBot();
+            Result<DemoPlatformService> result = await DemoPlatformService.ConnectBot();
             if (result.Success)
             {
                 this.BotConnection = result.Value;
@@ -92,13 +92,13 @@ namespace MixItUp.Base.Services.Mock
             return result;
         }
 
-        public new async Task<Result> Connect(SettingsV3Model settings)
+        public async Task<Result> Connect(SettingsV3Model settings)
         {
             if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].IsEnabled)
             {
                 Result userResult = null;
 
-                Result<MockPlatformService> mockResult = await MockPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken);
+                Result<DemoPlatformService> mockResult = await DemoPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken);
                 if (mockResult.Success)
                 {
                     this.UserConnection = mockResult.Value;
@@ -113,7 +113,7 @@ namespace MixItUp.Base.Services.Mock
                 {
                     if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken != null)
                     {
-                        mockResult = await MockPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken);
+                        mockResult = await DemoPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken);
                         if (mockResult.Success)
                         {
                             this.BotConnection = mockResult.Value;
@@ -135,11 +135,11 @@ namespace MixItUp.Base.Services.Mock
             return new Result();
         }
 
-        public new async Task DisconnectUser(SettingsV3Model settings)
+        public async Task DisconnectUser(SettingsV3Model settings)
         {
             await this.DisconnectBot(settings);
 
-            await ServiceManager.Get<MockChatService>().DisconnectUser();
+            await ServiceManager.Get<DemoChatService>().DisconnectUser();
 
             this.UserConnection = null;
 
@@ -149,9 +149,9 @@ namespace MixItUp.Base.Services.Mock
             }
         }
 
-        public new async Task DisconnectBot(SettingsV3Model settings)
+        public async Task DisconnectBot(SettingsV3Model settings)
         {
-            await ServiceManager.Get<MockChatService>().DisconnectBot();
+            await ServiceManager.Get<DemoChatService>().DisconnectBot();
 
             this.BotConnection = null;
 
@@ -161,14 +161,14 @@ namespace MixItUp.Base.Services.Mock
             }
         }
 
-        public new async Task<Result> InitializeUser(SettingsV3Model settings)
+        public async Task<Result> InitializeUser(SettingsV3Model settings)
         {
             if (this.UserConnection != null)
             {
                 try
                 {
                     List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
-                    platformServiceTasks.Add(ServiceManager.Get<MockChatService>().ConnectUser());
+                    platformServiceTasks.Add(ServiceManager.Get<DemoChatService>().ConnectUser());
 
                     await Task.WhenAll(platformServiceTasks);
 
@@ -188,11 +188,11 @@ namespace MixItUp.Base.Services.Mock
             return new Result();
         }
 
-        public new async Task<Result> InitializeBot(SettingsV3Model settings)
+        public async Task<Result> InitializeBot(SettingsV3Model settings)
         {
             if (this.BotConnection != null)
             {
-                Result result = await ServiceManager.Get<MockChatService>().ConnectBot();
+                Result result = await ServiceManager.Get<DemoChatService>().ConnectBot();
                 if (!result.Success)
                 {
                     return result;
@@ -201,17 +201,17 @@ namespace MixItUp.Base.Services.Mock
             return new Result();
         }
 
-        public new async Task CloseUser()
+        public async Task CloseUser()
         {
-            await ServiceManager.Get<MockChatService>().DisconnectUser();
+            await ServiceManager.Get<DemoChatService>().DisconnectUser();
         }
 
-        public new async Task CloseBot()
+        public async Task CloseBot()
         {
-            await ServiceManager.Get<MockChatService>().DisconnectBot();
+            await ServiceManager.Get<DemoChatService>().DisconnectBot();
         }
 
-        public new void SaveSettings(SettingsV3Model settings)
+        public void SaveSettings(SettingsV3Model settings)
         {
             if (this.UserConnection != null)
             {
@@ -232,28 +232,28 @@ namespace MixItUp.Base.Services.Mock
             }
         }
 
-        public new Task RefreshUser()
+        public Task RefreshUser()
         {
             return Task.CompletedTask;
         }
 
-        public new Task RefreshChannel()
+        public Task RefreshChannel()
         {
             return Task.CompletedTask;
         }
 
-        public new Task<string> GetTitle()
+        public Task<string> GetTitle()
         {
             return Task.FromResult("Test Title");
         }
 
-        public new Task<bool> SetTitle(string title) { return Task.FromResult(false); }
+        public Task<bool> SetTitle(string title) { return Task.FromResult(false); }
 
-        public new Task<string> GetGame()
+        public Task<string> GetGame()
         {
             return Task.FromResult("Test Game");
         }
 
-        public new Task<bool> SetGame(string gameName) { return Task.FromResult(false); }
+        public Task<bool> SetGame(string gameName) { return Task.FromResult(false); }
     }
 }

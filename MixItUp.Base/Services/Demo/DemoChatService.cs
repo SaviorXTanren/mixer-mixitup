@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Mock
 {
-    public class MockChatService : TwitchChatService
+    public class DemoChatService : StreamingPlatformServiceBase
     {
         private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
 
@@ -32,7 +32,7 @@ namespace MixItUp.Base.Services.Mock
             await this.messageSemaphore.WaitAndRelease(async () =>
             {
                 UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch,
-                    (sendAsStreamer) ? ServiceManager.Get<MockSessionService>().Username : ServiceManager.Get<MockSessionService>().Botname);
+                    (sendAsStreamer) ? ServiceManager.Get<DemoSessionService>().Username : ServiceManager.Get<DemoSessionService>().Botname);
 
                 ChatMessageViewModel messageViewModel = new ChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.Twitch, user);
 
