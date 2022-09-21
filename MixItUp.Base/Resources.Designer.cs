@@ -3320,11 +3320,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This command is currently on cooldown, please wait another {0} hour(s)..
+        /// </summary>
+        public static string CooldownRequirementOnCooldownHours {
+            get {
+                return ResourceManager.GetString("CooldownRequirementOnCooldownHours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command is currently on cooldown, please wait another {0} minute(s)..
+        /// </summary>
+        public static string CooldownRequirementOnCooldownMinutes {
+            get {
+                return ResourceManager.GetString("CooldownRequirementOnCooldownMinutes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This command is currently on cooldown, please wait another {0} second(s)..
         /// </summary>
-        public static string CooldownRequirementOnCooldown {
+        public static string CooldownRequirementOnCooldownSeconds {
             get {
-                return ResourceManager.GetString("CooldownRequirementOnCooldown", resourceCulture);
+                return ResourceManager.GetString("CooldownRequirementOnCooldownSeconds", resourceCulture);
             }
         }
         

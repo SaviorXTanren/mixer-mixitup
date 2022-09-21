@@ -4919,7 +4919,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <value>The following chat trigger is already used in another command: {0}</value>
     <comment>Manual</comment>
   </data>
-  <data name="CooldownRequirementOnCooldown" xml:space="preserve">
+  <data name="CooldownRequirementOnCooldownSeconds" xml:space="preserve">
     <value>This command is currently on cooldown, please wait another {0} second(s).</value>
     <comment>Manual</comment>
   </data>
@@ -9214,5 +9214,11 @@ function {ID}_load()
   </data>
   <data name="OverlayYouTubeMissingVideo" xml:space="preserve">
     <value>Missing video</value>
+  </data>
+  <data name="CooldownRequirementOnCooldownMinutes" xml:space="preserve">
+    <value>This command is currently on cooldown, please wait another {0} minute(s).</value>
+  </data>
+  <data name="CooldownRequirementOnCooldownHours" xml:space="preserve">
+    <value>This command is currently on cooldown, please wait another {0} hour(s).</value>
   </data>
 </root>

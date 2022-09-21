@@ -383,7 +383,7 @@ namespace MixItUp.WPF.Controls.Chat
                 ChatMessageViewModel message = (ChatMessageViewModel)this.ChatList.SelectedItem;
                 if (message.User != null)
                 {
-                    this.viewModel.SendMessageText = $"/w @{message.User.Username} "
+                    this.viewModel.SendMessageText = $"/w @{message.User.Username} ";
                     this.ChatMessageTextBox.Focus();
                     this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
                 }

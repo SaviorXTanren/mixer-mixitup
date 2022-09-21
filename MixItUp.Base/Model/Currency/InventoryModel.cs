@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
@@ -449,10 +450,10 @@ namespace MixItUp.Base.Model.Currency
                         string arg1 = arguments.ElementAt(0);
                         if (arguments.Count() == 1 && arg1.Equals("list", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            if (this.shopListCooldown > DateTimeOffset.Now)
+                            Result cooldown = CooldownRequirementModel.GetCooldownAmountMessage(this.shopListCooldown);
+                            if (!cooldown.Success)
                             {
-                                int totalSeconds = (int)Math.Ceiling((this.shopListCooldown - DateTimeOffset.Now).TotalSeconds);
-                                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.CooldownRequirementOnCooldown, totalSeconds), user.Platform);
+                                await ServiceManager.Get<ChatService>().SendMessage(cooldown.Message, user.Platform);
                                 return;
                             }
                             this.shopListCooldown = DateTimeOffset.Now.AddSeconds(10);

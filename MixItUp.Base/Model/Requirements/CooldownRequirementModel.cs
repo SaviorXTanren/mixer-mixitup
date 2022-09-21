@@ -39,6 +39,32 @@ namespace MixItUp.Base.Model.Requirements
         [JsonIgnore]
         private LockedDictionary<Guid, DateTimeOffset> individualCooldowns = new LockedDictionary<Guid, DateTimeOffset>();
 
+        public static Result GetCooldownAmountMessage(DateTimeOffset cooldownTime)
+        {
+            if (cooldownTime > DateTimeOffset.Now)
+            {
+                int totalSeconds = (int)Math.Ceiling((cooldownTime - DateTimeOffset.Now).TotalSeconds);
+                if (totalSeconds > 0)
+                {
+                    TimeSpan timeSpan = TimeSpan.FromSeconds(totalSeconds);
+
+                    if (timeSpan.TotalHours >= 1.0)
+                    {
+                        return new Result(string.Format(MixItUp.Base.Resources.CooldownRequirementOnCooldownHours, timeSpan.Hours));
+                    }
+                    else if (timeSpan.TotalMinutes >= 1.0)
+                    {
+                        return new Result(string.Format(MixItUp.Base.Resources.CooldownRequirementOnCooldownMinutes, timeSpan.Minutes));
+                    }
+                    else
+                    {
+                        return new Result(string.Format(MixItUp.Base.Resources.CooldownRequirementOnCooldownSeconds, totalSeconds));
+                    }
+                }
+            }
+            return new Result();
+        }
+
         public CooldownRequirementModel(CooldownTypeEnum type, int amount, string groupName = null)
         {
             this.Type = type;
@@ -96,15 +122,7 @@ namespace MixItUp.Base.Model.Requirements
                 }
             }
 
-            if (cooldownTime > DateTimeOffset.Now)
-            {
-                int totalSeconds = (int)Math.Ceiling((cooldownTime - DateTimeOffset.Now).TotalSeconds);
-                if (totalSeconds > 0)
-                {
-                    return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.CooldownRequirementOnCooldown, totalSeconds)));
-                }
-            }
-            return Task.FromResult(new Result());
+            return Task.FromResult(CooldownRequirementModel.GetCooldownAmountMessage(cooldownTime));
         }
 
         public override async Task Perform(CommandParametersModel parameters)
