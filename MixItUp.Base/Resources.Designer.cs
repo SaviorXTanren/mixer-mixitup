@@ -12362,7 +12362,9 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to connect to OBS Studio web socket.
+        ///   Looks up a localized string similar to Failed to connect to OBS Studio web socket. Please make sure OBS Studio is running, the obs-websocket is enabled under the Tools menu, and the connection and password match your settings in OBS Studio.
+        ///
+        ///See the Wiki page on OBS Studio for further troubleshooting steps by clicking the &quot;?&quot; button on the OBS Studio tab header in Mix It Up..
         /// </summary>
         public static string OBSWebSocketFailed {
             get {

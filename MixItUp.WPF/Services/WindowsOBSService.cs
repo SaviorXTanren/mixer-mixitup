@@ -44,46 +44,52 @@ namespace MixItUp.WPF.Services
         {
             this.IsConnected = false;
 
-            await this.OBSCommandTimeoutWrapper(async (cancellationToken) =>
+            await this.OBSCommandTimeoutWrapper((cancellationToken) =>
             {
-                try
-                {
-                    this.OBSWebsocketV5.Disconnected -= OBSWebsocket_Disconnected;
-                    var success = await this.OBSWebsocketV5.Connect(ChannelSession.Settings.OBSStudioServerIP, ChannelSession.Settings.OBSStudioServerPassword, cancellationToken);
-                    if (success && this.OBSWebsocketV5.IsConnected)
-                    {
-                        this.OBSWebsocketV5.Disconnected += OBSWebsocket_Disconnected;
-                        this.IsConnected = true;
-                        return true;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
-                }
-                return false;
-            }, ConnectTimeoutInMilliseconds);
-
-            if (!this.IsConnected)
-            {
-                await this.OBSCommandTimeoutWrapper((cancellationToken) =>
+                return Task.Run(async () =>
                 {
                     try
                     {
-                        this.OBSWebsocket.Disconnected -= OBSWebsocket_Disconnected;
-                        this.OBSWebsocket.Connect(ChannelSession.Settings.OBSStudioServerIP, ChannelSession.Settings.OBSStudioServerPassword);
-                        if (this.OBSWebsocket.IsConnected)
+                        this.OBSWebsocketV5.Disconnected -= OBSWebsocket_Disconnected;
+                        var success = await this.OBSWebsocketV5.Connect(ChannelSession.Settings.OBSStudioServerIP, ChannelSession.Settings.OBSStudioServerPassword, cancellationToken);
+                        if (success && this.OBSWebsocketV5.IsConnected)
                         {
-                            this.OBSWebsocket.Disconnected += OBSWebsocket_Disconnected;
+                            this.OBSWebsocketV5.Disconnected += OBSWebsocket_Disconnected;
                             this.IsConnected = true;
-                            return Task.FromResult(true);
+                            return true;
                         }
                     }
                     catch (Exception ex)
                     {
                         Logger.Log(ex);
                     }
-                    return Task.FromResult(false);
+                    return false;
+                });
+            }, ConnectTimeoutInMilliseconds);
+
+            if (!this.IsConnected)
+            {
+                await this.OBSCommandTimeoutWrapper((cancellationToken) =>
+                {
+                    return Task.Run(() =>
+                    {
+                        try
+                        {
+                            this.OBSWebsocket.Disconnected -= OBSWebsocket_Disconnected;
+                            this.OBSWebsocket.Connect(ChannelSession.Settings.OBSStudioServerIP, ChannelSession.Settings.OBSStudioServerPassword);
+                            if (this.OBSWebsocket.IsConnected)
+                            {
+                                this.OBSWebsocket.Disconnected += OBSWebsocket_Disconnected;
+                                this.IsConnected = true;
+                                return Task.FromResult(true);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Log(ex);
+                        }
+                        return Task.FromResult(false);
+                    });
                 }, ConnectTimeoutInMilliseconds);
             }
 
