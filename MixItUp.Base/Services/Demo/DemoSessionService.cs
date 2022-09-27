@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Settings;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
@@ -10,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Users;
 
-namespace MixItUp.Base.Services.Mock
+namespace MixItUp.Base.Services.Demo
 {
     public class DemoSessionService : IStreamingPlatformSessionService
     {
@@ -94,11 +93,12 @@ namespace MixItUp.Base.Services.Mock
 
         public async Task<Result> Connect(SettingsV3Model settings)
         {
-            if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].IsEnabled)
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Demo].IsEnabled)
             {
                 Result userResult = null;
 
-                Result<DemoPlatformService> mockResult = await DemoPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken);
+                Result<DemoPlatformService> mockResult = await DemoPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Demo].UserOAuthToken);
                 if (mockResult.Success)
                 {
                     this.UserConnection = mockResult.Value;
@@ -111,9 +111,9 @@ namespace MixItUp.Base.Services.Mock
 
                 if (userResult.Success)
                 {
-                    if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken != null)
+                    if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Demo].BotOAuthToken != null)
                     {
-                        mockResult = await DemoPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken);
+                        mockResult = await DemoPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Demo].BotOAuthToken);
                         if (mockResult.Success)
                         {
                             this.BotConnection = mockResult.Value;
@@ -126,12 +126,13 @@ namespace MixItUp.Base.Services.Mock
                 }
                 else
                 {
-                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ClearUserData();
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Demo].ClearUserData();
                     return userResult;
                 }
 
                 return userResult;
             }
+#pragma warning restore CS0612 // Type or member is obsolete
             return new Result();
         }
 
@@ -143,10 +144,12 @@ namespace MixItUp.Base.Services.Mock
 
             this.UserConnection = null;
 
-            if (settings.StreamingPlatformAuthentications.TryGetValue(StreamingPlatformTypeEnum.Twitch, out var streamingPlatform))
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (settings.StreamingPlatformAuthentications.TryGetValue(StreamingPlatformTypeEnum.Demo, out var streamingPlatform))
             {
                 streamingPlatform.ClearUserData();
             }
+#pragma warning restore CS0612 // Type or member is obsolete
         }
 
         public async Task DisconnectBot(SettingsV3Model settings)
@@ -155,10 +158,12 @@ namespace MixItUp.Base.Services.Mock
 
             this.BotConnection = null;
 
-            if (settings.StreamingPlatformAuthentications.TryGetValue(StreamingPlatformTypeEnum.Twitch, out var streamingPlatform))
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (settings.StreamingPlatformAuthentications.TryGetValue(StreamingPlatformTypeEnum.Demo, out var streamingPlatform))
             {
                 streamingPlatform.ClearBotData();
             }
+#pragma warning restore CS0612 // Type or member is obsolete
         }
 
         public async Task<Result> InitializeUser(SettingsV3Model settings)
@@ -175,7 +180,7 @@ namespace MixItUp.Base.Services.Mock
                     if (platformServiceTasks.Any(c => !c.Result.Success))
                     {
                         string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
-                        return new Result(MixItUp.Base.Resources.GlimeshFailedToConnectHeader + Environment.NewLine + Environment.NewLine + errors);
+                        return new Result(MixItUp.Base.Resources.TwitchFailedToConnectHeader + Environment.NewLine + Environment.NewLine + errors);
                     }
                 }
                 catch (Exception ex)
@@ -215,20 +220,22 @@ namespace MixItUp.Base.Services.Mock
         {
             if (this.UserConnection != null)
             {
-                if (!settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch))
+#pragma warning disable CS0612 // Type or member is obsolete
+                if (!settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Demo))
                 {
-                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = new StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum.Twitch);
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Demo] = new StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum.Twitch);
                 }
 
-                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = new OAuthTokenModel();
-                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID = this.UserID;
-                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ChannelID = this.ChannelID;
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Demo].UserOAuthToken = new OAuthTokenModel();
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Demo].UserID = this.UserID;
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Demo].ChannelID = this.ChannelID;
 
                 if (this.BotConnection != null)
                 {
-                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = new OAuthTokenModel();
-                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotID = this.BotID;
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Demo].BotOAuthToken = new OAuthTokenModel();
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Demo].BotID = this.BotID;
                 }
+#pragma warning restore CS0612 // Type or member is obsolete
             }
         }
 

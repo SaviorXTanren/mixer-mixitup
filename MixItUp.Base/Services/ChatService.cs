@@ -4,7 +4,7 @@ using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Glimesh;
-using MixItUp.Base.Services.Mock;
+using MixItUp.Base.Services.Demo;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
@@ -139,6 +139,13 @@ namespace MixItUp.Base.Services
                     {
                         await ServiceManager.Get<TrovoChatEventService>().SendMessage(message, sendAsStreamer);
                     }
+
+#pragma warning disable CS0612 // Type or member is obsolete
+                    if (platform == StreamingPlatformTypeEnum.Demo)
+                    {
+                        await ServiceManager.Get<DemoChatService>().SendMessage(message, sendAsStreamer);
+                    }
+#pragma warning restore CS0612 // Type or member is obsolete
                 }
             }
         }
@@ -193,6 +200,12 @@ namespace MixItUp.Base.Services
                 {
                     await ServiceManager.Get<GlimeshChatEventService>().DeleteMessage(message);
                 }
+#pragma warning disable CS0612 // Type or member is obsolete
+                else if (message.Platform == StreamingPlatformTypeEnum.Demo)
+                {
+                    await ServiceManager.Get<DemoChatService>().DeleteMessage(message);
+                }
+#pragma warning restore CS0612 // Type or member is obsolete
             }
 
             if (!message.IsDeleted)

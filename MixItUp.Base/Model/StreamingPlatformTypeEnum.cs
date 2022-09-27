@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.Glimesh;
-using MixItUp.Base.Services.Mock;
+using MixItUp.Base.Services.Demo;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
@@ -47,7 +47,11 @@ namespace MixItUp.Base.Model
             StreamingPlatformTypeEnum.YouTube,
             StreamingPlatformTypeEnum.Trovo,
             StreamingPlatformTypeEnum.Glimesh,
+#if true
+#pragma warning disable CS0612 // Type or member is obsolete
             StreamingPlatformTypeEnum.Demo,
+#pragma warning restore CS0612 // Type or member is obsolete
+#endif
         };
 
         public static IEnumerable<StreamingPlatformTypeEnum> SelectablePlatforms { get; private set; } = new List<StreamingPlatformTypeEnum>()
@@ -57,7 +61,11 @@ namespace MixItUp.Base.Model
             StreamingPlatformTypeEnum.YouTube,
             StreamingPlatformTypeEnum.Trovo,
             StreamingPlatformTypeEnum.Glimesh,
+#if true
+#pragma warning disable CS0612 // Type or member is obsolete
             StreamingPlatformTypeEnum.Demo,
+#pragma warning restore CS0612 // Type or member is obsolete
+#endif
         };
 
         public static IStreamingPlatformSessionService GetPlatformSessionService(StreamingPlatformTypeEnum platform)
@@ -66,7 +74,9 @@ namespace MixItUp.Base.Model
             else if (platform == StreamingPlatformTypeEnum.YouTube) { return ServiceManager.Get<YouTubeSessionService>(); }
             else if (platform == StreamingPlatformTypeEnum.Glimesh) { return ServiceManager.Get<GlimeshSessionService>(); }
             else if (platform == StreamingPlatformTypeEnum.Trovo) { return ServiceManager.Get<TrovoSessionService>(); }
+#pragma warning disable CS0612 // Type or member is obsolete
             else if (platform == StreamingPlatformTypeEnum.Demo) { return ServiceManager.Get<DemoSessionService>(); }
+#pragma warning restore CS0612 // Type or member is obsolete
             return null;
         }
 
@@ -76,7 +86,9 @@ namespace MixItUp.Base.Model
             else if (platform == StreamingPlatformTypeEnum.YouTube) { return YouTubeLogoImageAssetFilePath; }
             else if (platform == StreamingPlatformTypeEnum.Trovo) { return TrovoLogoImageAssetFilePath; }
             else if (platform == StreamingPlatformTypeEnum.Glimesh) { return GlimeshLogoImageAssetFilePath; }
+#pragma warning disable CS0612 // Type or member is obsolete
             else if (platform == StreamingPlatformTypeEnum.Demo) { return TwitchLogoImageAssetFilePath; }
+#pragma warning restore CS0612 // Type or member is obsolete
             return string.Empty;
         }
 
@@ -86,7 +98,9 @@ namespace MixItUp.Base.Model
             else if (platform == StreamingPlatformTypeEnum.YouTube) { return YouTubeSmallLogoImageAssetFilePath; }
             else if (platform == StreamingPlatformTypeEnum.Trovo) { return TrovoSmallLogoImageAssetFilePath; }
             else if (platform == StreamingPlatformTypeEnum.Glimesh) { return GlimeshSmallLogoImageAssetFilePath; }
+#pragma warning disable CS0612 // Type or member is obsolete
             else if (platform == StreamingPlatformTypeEnum.Demo) { return TwitchSmallLogoImageAssetFilePath; }
+#pragma warning restore CS0612 // Type or member is obsolete
             return string.Empty;
         }
 

@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.Services.Mock
+namespace MixItUp.Base.Services.Demo
 {
     public class DemoChatService : StreamingPlatformServiceBase
     {
@@ -19,22 +19,30 @@ namespace MixItUp.Base.Services.Mock
 
         public override string Name { get { return "Mock Chat"; } }
 
-        public new Task<Result> ConnectUser() { return Task.FromResult(new Result()); }
+        public Task<Result> ConnectUser() { return Task.FromResult(new Result()); }
 
-        public new Task<Result> ConnectBot() { return Task.FromResult(new Result()); }
+        public Task<Result> ConnectBot() { return Task.FromResult(new Result()); }
 
-        public new Task DisconnectUser() { return Task.CompletedTask; }
+        public Task DisconnectUser() { return Task.CompletedTask; }
 
-        public new Task DisconnectBot() { return Task.CompletedTask; }
+        public Task DisconnectBot() { return Task.CompletedTask; }
 
-        public new async Task SendMessage(string message, bool sendAsStreamer = false, string replyMessageID = null)
+        public async Task SendMessage(string message, bool sendAsStreamer = false, string replyMessageID = null)
         {
             await this.messageSemaphore.WaitAndRelease(async () =>
             {
-                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch,
-                    (sendAsStreamer) ? ServiceManager.Get<DemoSessionService>().Username : ServiceManager.Get<DemoSessionService>().Botname);
+#pragma warning disable CS0612 // Type or member is obsolete
+                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Demo,
+                    (sendAsStreamer) ? ServiceManager.Get<DemoSessionService>().Username : ServiceManager.Get<DemoSessionService>().Botname,
+                    performPlatformSearch: true);
 
-                ChatMessageViewModel messageViewModel = new ChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.Twitch, user);
+                UserChatMessageViewModel messageViewModel = new UserChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.Demo, user);
+#pragma warning restore CS0612 // Type or member is obsolete
+
+                foreach (string part in message.Split(new char[] {' '}))
+                {
+                    messageViewModel.AddStringMessagePart(part);
+                }
 
                 this.messages.Add(messageViewModel);
 
@@ -42,7 +50,7 @@ namespace MixItUp.Base.Services.Mock
             });
         }
 
-        public new Task<bool> DeleteMessage(ChatMessageViewModel message)
+        public Task<bool> DeleteMessage(ChatMessageViewModel message)
         {
             this.messages.Remove(message);
 

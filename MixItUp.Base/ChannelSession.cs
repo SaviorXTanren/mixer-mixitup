@@ -6,7 +6,7 @@ using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Glimesh;
-using MixItUp.Base.Services.Mock;
+using MixItUp.Base.Services.Demo;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
@@ -32,6 +32,15 @@ namespace MixItUp.Base
 
         private static CancellationTokenSource sessionBackgroundCancellationTokenSource = new CancellationTokenSource();
         private static int sessionBackgroundTimer = 0;
+
+        public static bool IsDemo()
+        {
+            #if true
+                return true;
+            #else
+                return false;
+            #endif
+        }
 
         public static bool IsDebug()
         {
@@ -90,12 +99,9 @@ namespace MixItUp.Base
             ServiceManager.Add(new DemoSessionService());
             ServiceManager.Add(new DemoChatService());
 
-            //ServiceManager.Add(new TwitchSessionService());
-            //ServiceManager.Add(new TwitchChatService());
-            //ServiceManager.Add(new TwitchEventService());
-
-            ServiceManager.Add<TwitchSessionService>(ServiceManager.Get<DemoSessionService>());
-            ServiceManager.Add<TwitchChatService>(ServiceManager.Get<DemoChatService>());
+            ServiceManager.Add(new TwitchSessionService());
+            ServiceManager.Add(new TwitchChatService());
+            ServiceManager.Add(new TwitchEventService());
 
             ServiceManager.Add(new YouTubeSessionService());
             ServiceManager.Add(new YouTubeChatService());
@@ -259,6 +265,10 @@ namespace MixItUp.Base
                 {
                     ChannelSession.Settings.Name = ServiceManager.Get<TrovoSessionService>().Username;
                 }
+                else if (ServiceManager.Get<DemoSessionService>().IsConnected)
+                {
+                    ChannelSession.Settings.Name = ServiceManager.Get<DemoSessionService>().Username;
+                }
                 else
                 {
                     ChannelSession.Settings.Name = "Test";
@@ -298,6 +308,16 @@ namespace MixItUp.Base
                     if (ChannelSession.User == null)
                     {
                         ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(ServiceManager.Get<TrovoSessionService>().User));
+                    }
+                }
+                if (ChannelSession.User == null && ServiceManager.Get<DemoSessionService>().IsConnected)
+                {
+#pragma warning disable CS0612 // Type or member is obsolete
+                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Demo, ServiceManager.Get<DemoSessionService>().UserID);
+#pragma warning restore CS0612 // Type or member is obsolete
+                    if (ChannelSession.User == null)
+                    {
+                        ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new DemoUserPlatformV2Model(DemoSessionService.user));
                     }
                 }
 

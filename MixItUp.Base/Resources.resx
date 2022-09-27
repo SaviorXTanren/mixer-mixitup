@@ -8862,9 +8862,6 @@ via Twitch, it's a "your mileage may vary" situation.</value>
   <data name="TrovoChannelSpellCast" xml:space="preserve">
     <value>Trovo Channel Spell Cast</value>
   </data>
-  <data name="MockConnection" xml:space="preserve">
-    <value>Mock Connection</value>
-  </data>
   <data name="CopyMessage" xml:space="preserve">
     <value>Copy Message</value>
   </data>
@@ -8891,5 +8888,8 @@ via Twitch, it's a "your mileage may vary" situation.</value>
   </data>
   <data name="TwitchActionPredictionOutcomesTooLong" xml:space="preserve">
     <value>Prediction outcomes must be 25 characters or less.</value>
+  </data>
+  <data name="DemoConnection" xml:space="preserve">
+    <value>Demo Connection</value>
   </data>
 </root>

@@ -3,6 +3,7 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Demo;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
@@ -138,6 +139,16 @@ namespace MixItUp.Base.Services
                 {
                     throw new InvalidOperationException("Trovo does not support user look-up by user ID");
                 }
+#pragma warning disable CS0612 // Type or member is obsolete
+                else if (platform == StreamingPlatformTypeEnum.Demo && ServiceManager.Get<DemoSessionService>().UserConnection != null)
+                {
+                    var demoUser = await ServiceManager.Get<DemoSessionService>().UserConnection.GetUserByID(platformID);
+                    if (demoUser != null)
+                    {
+                        platformModel = new DemoUserPlatformV2Model(demoUser);
+                    }
+                }
+#pragma warning restore CS0612 // Type or member is obsolete
 
                 if (platformModel != null)
                 {
@@ -221,6 +232,16 @@ namespace MixItUp.Base.Services
                         platformModel = new TrovoUserPlatformV2Model(trovoUser);
                     }
                 }
+#pragma warning disable CS0612 // Type or member is obsolete
+                else if (platform == StreamingPlatformTypeEnum.Demo && ServiceManager.Get<DemoSessionService>().UserConnection != null)
+                {
+                    var demoUser = await ServiceManager.Get<DemoSessionService>().UserConnection.GetUserByLogin(platformUsername);
+                    if (demoUser != null)
+                    {
+                        platformModel = new DemoUserPlatformV2Model(demoUser);
+                    }
+                }
+#pragma warning restore CS0612 // Type or member is obsolete
 
                 if (platformModel != null)
                 {
@@ -278,6 +299,16 @@ namespace MixItUp.Base.Services
                     user = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(gUser));
                 }
             }
+#pragma warning disable CS0612 // Type or member is obsolete
+            else if (platform == StreamingPlatformTypeEnum.Demo)
+            {
+                var dUser = await ServiceManager.Get<DemoSessionService>().UserConnection.GetUserByLogin(username);
+                if (dUser != null)
+                {
+                    user = await ServiceManager.Get<UserService>().CreateUser(new DemoUserPlatformV2Model(dUser));
+                }
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
 
             return user;
         }

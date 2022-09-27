@@ -46,6 +46,11 @@ namespace MixItUp.WPF
                 }
             }
 
+            if (ChannelSession.IsDemo())
+            {
+                this.NewStreamerLoginButton.IsEnabled = false;
+            }
+
             this.ExistingStreamerComboBox.ItemsSource = streamerSettings;
 
             await this.CheckForUpdates();

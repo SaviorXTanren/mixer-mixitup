@@ -38,48 +38,55 @@ namespace MixItUp.Base.Services
             bool settingsLoadFailure = false;
 
             List<SettingsV3Model> allSettings = new List<SettingsV3Model>();
-            foreach (string filePath in Directory.GetFiles(SettingsV3Model.SettingsDirectoryName))
+            if (ChannelSession.IsDemo())
             {
-                if (filePath.EndsWith(SettingsV3Model.SettingsFileExtension))
+                allSettings.Add(SettingsV3Model.CreateDemoSettings());
+            }
+            else
+            {
+                foreach (string filePath in Directory.GetFiles(SettingsV3Model.SettingsDirectoryName))
                 {
-                    SettingsV3Model setting = null;
-                    try
+                    if (filePath.EndsWith(SettingsV3Model.SettingsFileExtension))
                     {
-                        setting = await this.LoadSettings(filePath);
-                        if (setting != null)
+                        SettingsV3Model setting = null;
+                        try
                         {
-                            allSettings.Add(setting);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Log(ex);
-                    }
-
-                    if (setting == null)
-                    {
-                        string localBackupFilePath = string.Format($"{filePath}.{SettingsV3Model.SettingsLocalBackupFileExtension}");
-                        if (File.Exists(localBackupFilePath))
-                        {
-                            try
+                            setting = await this.LoadSettings(filePath);
+                            if (setting != null)
                             {
-                                setting = await this.LoadSettings(localBackupFilePath);
-                                if (setting != null)
+                                allSettings.Add(setting);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Log(ex);
+                        }
+
+                        if (setting == null)
+                        {
+                            string localBackupFilePath = string.Format($"{filePath}.{SettingsV3Model.SettingsLocalBackupFileExtension}");
+                            if (File.Exists(localBackupFilePath))
+                            {
+                                try
                                 {
-                                    allSettings.Add(setting);
-                                    backupSettingsLoaded = true;
+                                    setting = await this.LoadSettings(localBackupFilePath);
+                                    if (setting != null)
+                                    {
+                                        allSettings.Add(setting);
+                                        backupSettingsLoaded = true;
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Logger.Log(ex);
                                 }
                             }
-                            catch (Exception ex)
-                            {
-                                Logger.Log(ex);
-                            }
                         }
-                    }
 
-                    if (setting == null)
-                    {
-                        settingsLoadFailure = true;
+                        if (setting == null)
+                        {
+                            settingsLoadFailure = true;
+                        }
                     }
                 }
             }

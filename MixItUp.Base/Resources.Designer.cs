@@ -4136,6 +4136,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Demo Connection.
+        /// </summary>
+        public static string DemoConnection {
+            get {
+                return ResourceManager.GetString("DemoConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Demote From Mod.
         /// </summary>
         public static string DemoteFromMod {
@@ -11332,15 +11341,6 @@ namespace MixItUp.Base {
         public static string MixPlay {
             get {
                 return ResourceManager.GetString("MixPlay", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mock Connection.
-        /// </summary>
-        public static string MockConnection {
-            get {
-                return ResourceManager.GetString("MockConnection", resourceCulture);
             }
         }
         

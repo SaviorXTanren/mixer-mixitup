@@ -4,21 +4,21 @@ using StreamingClient.Base.Model.OAuth;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Users;
 
-namespace MixItUp.Base.Services.Mock
+namespace MixItUp.Base.Services.Demo
 {
     public class DemoPlatformService : StreamingPlatformServiceBase
     {
-        public new static Task<Result<DemoPlatformService>> Connect(OAuthTokenModel token)
+        public static Task<Result<DemoPlatformService>> Connect(OAuthTokenModel token)
         {
             return Task.FromResult(new Result<DemoPlatformService>(new DemoPlatformService()));
         }
 
-        public new static async Task<Result<DemoPlatformService>> ConnectUser()
+        public static async Task<Result<DemoPlatformService>> ConnectUser()
         {
             return await DemoPlatformService.Connect();
         }
 
-        public new static async Task<Result<DemoPlatformService>> ConnectBot()
+        public static async Task<Result<DemoPlatformService>> ConnectBot()
         {
             return await DemoPlatformService.Connect();
         }
@@ -28,13 +28,13 @@ namespace MixItUp.Base.Services.Mock
             return Task.FromResult(new Result<DemoPlatformService>(new DemoPlatformService()));
         }
 
-        public override string Name { get { return MixItUp.Base.Resources.MockConnection; } }
+        public override string Name { get { return MixItUp.Base.Resources.DemoConnection; } }
 
-        public DemoPlatformService() : base(null) { }
+        public DemoPlatformService() { }
 
-        public new Task<UserModel> GetNewAPICurrentUser() { return Task.FromResult(DemoSessionService.user); }
+        public Task<UserModel> GetCurrentUser() { return Task.FromResult(DemoSessionService.user); }
 
-        public new Task<UserModel> GetNewAPIUserByID(string userID)
+        public Task<UserModel> GetUserByID(string userID)
         {
             UserModel user = null;
             if (string.Equals(DemoSessionService.user.id, userID))
@@ -45,10 +45,21 @@ namespace MixItUp.Base.Services.Mock
             {
                 user = DemoSessionService.bot;
             }
+            else
+            {
+                user = new UserModel()
+                {
+                    id = "user" + userID,
+                    login = "user" + userID,
+                    display_name = "User" + userID,
+                    broadcaster_type = "",
+                    profile_image_url = "https://raw.githubusercontent.com/SaviorXTanren/mixer-mixitup/master/Branding/MixItUp-Logo-Base-WhiteSM.png",
+                };
+            }
             return Task.FromResult(user);
         }
 
-        public new Task<UserModel> GetNewAPIUserByLogin(string login)
+        public Task<UserModel> GetUserByLogin(string login)
         {
             UserModel user = null;
             if (string.Equals(DemoSessionService.user.login, login))
@@ -58,6 +69,17 @@ namespace MixItUp.Base.Services.Mock
             else if (string.Equals(DemoSessionService.bot.login, login))
             {
                 user = DemoSessionService.bot;
+            }
+            else
+            {
+                user = new UserModel()
+                {
+                    id = login,
+                    login = login,
+                    display_name = login,
+                    broadcaster_type = "",
+                    profile_image_url = "https://raw.githubusercontent.com/SaviorXTanren/mixer-mixitup/master/Branding/MixItUp-Logo-Base-WhiteSM.png",
+                };
             }
             return Task.FromResult(user);
         }
