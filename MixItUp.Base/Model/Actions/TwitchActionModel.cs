@@ -48,7 +48,6 @@ namespace MixItUp.Base.Model.Actions
     public class TwitchActionModel : ActionModelBase
     {
         public const string ClipURLSpecialIdentifier = "clipurl";
-        public const string StreamMarkerURLSpecialIdentifier = "streammarkerurl";
         public const string PollChoiceSpecialIdentifier = "pollchoice";
         public const string PredictionOutcomeSpecialIdentifier = "predictionoutcome";
 
@@ -94,11 +93,10 @@ namespace MixItUp.Base.Model.Actions
             return action;
         }
 
-        public static TwitchActionModel CreateStreamMarkerAction(string description, bool showInfoInChat)
+        public static TwitchActionModel CreateStreamMarkerAction(string description)
         {
             TwitchActionModel actionModel = new TwitchActionModel(TwitchActionType.StreamMarker);
             actionModel.StreamMarkerDescription = description;
-            actionModel.ShowInfoInChat = showInfoInChat;
             return actionModel;
         }
 
@@ -323,16 +321,10 @@ namespace MixItUp.Base.Model.Actions
                     }
 
                     CreatedStreamMarkerModel streamMarker = await ServiceManager.Get<TwitchSessionService>().UserConnection.CreateStreamMarker(ServiceManager.Get<TwitchSessionService>().User, description);
-                    if (streamMarker != null)
+                    if (streamMarker == null)
                     {
-                        if (this.ShowInfoInChat)
-                        {
-                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.StreamMarkerCreatedMessage, streamMarker.URL), parameters);
-                        }
-                        parameters.SpecialIdentifiers[StreamMarkerURLSpecialIdentifier] = streamMarker.URL;
-                        return;
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StreamMarkerCreationFailed, parameters);
                     }
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StreamMarkerCreationFailed, parameters);
                 }
                 else if (this.ActionType == TwitchActionType.UpdateChannelPointReward)
                 {
