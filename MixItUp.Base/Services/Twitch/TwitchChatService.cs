@@ -158,7 +158,6 @@ namespace MixItUp.Base.Services.Twitch
                         this.userClient.OnChatClearReceived += UserClient_OnChatClearReceived;
                         this.userClient.OnMessageReceived += UserClient_OnMessageReceived;
                         this.userClient.OnClearMessageReceived += UserClient_OnClearMessageReceived;
-                        this.userClient.OnHostTargetReceived += UserClient_OnHostTargetReceived;
 
                         this.userClient.OnUserListReceived += UserClient_OnUserListReceived;
                         await this.userClient.Connect();
@@ -212,7 +211,6 @@ namespace MixItUp.Base.Services.Twitch
                     this.userClient.OnChatClearReceived -= UserClient_OnChatClearReceived;
                     this.userClient.OnMessageReceived -= UserClient_OnMessageReceived;
                     this.userClient.OnClearMessageReceived -= UserClient_OnClearMessageReceived;
-                    this.userClient.OnHostTargetReceived -= UserClient_OnHostTargetReceived;
 
                     await this.userClient.Disconnect();
                 }
@@ -944,21 +942,6 @@ namespace MixItUp.Base.Services.Twitch
                 }
 
                 await ServiceManager.Get<ChatService>().DeleteMessage(new TwitchChatMessageViewModel(packet, user), externalDeletion: true);
-            }
-        }
-
-        private async void UserClient_OnHostTargetReceived(object sender, ChatHostTargetPacketModel packet)
-        {
-            if (ChannelSession.User == null)
-            {
-                // User has not been set yet (race condition), exit out early
-                return;
-            }
-
-            CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.Twitch);
-            if (packet.IsStartingHostMode && !ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TwitchChannelStreamStart, parameters))
-            {
-                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStop, parameters);
             }
         }
 
