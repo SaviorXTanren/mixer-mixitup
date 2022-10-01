@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Services.Twitch;
-using MixItUp.Base.Util;
+﻿using MixItUp.Base.Util;
 using StreamingClient.Base.Model.OAuth;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Users;

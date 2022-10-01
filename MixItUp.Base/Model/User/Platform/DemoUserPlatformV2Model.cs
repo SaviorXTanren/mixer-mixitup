@@ -1,8 +1,6 @@
 ﻿using MixItUp.Base.ViewModel.Chat;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Users;
 
@@ -29,7 +27,7 @@ namespace MixItUp.Base.Model.User.Platform
 #pragma warning restore CS0612 // Type or member is obsolete
             this.Username = id;
             this.DisplayName = username;
-            this.AvatarLink = displayName;
+            this.AvatarLink = "Assets/Images/DemoAvatar.png";
         }
 
         [Obsolete]
@@ -45,7 +43,7 @@ namespace MixItUp.Base.Model.User.Platform
             this.ID = user.id;
             this.Username = user.login;
             this.DisplayName = user.display_name;
-            this.AvatarLink = user.profile_image_url;
+            this.AvatarLink = "Assets/Images/DemoAvatar.png";
         }
     }
 }

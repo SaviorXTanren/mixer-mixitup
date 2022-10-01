@@ -2172,6 +2172,9 @@
     <Resource Include="Assets\Images\Twitch-XS.png" />
     <Resource Include="Assets\Images\Glimesh-XS.png" />
     <Resource Include="Assets\Images\Trovo-XS.png" />
+    <Content Include="Assets\Images\DemoAvatar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Logo.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
