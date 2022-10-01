@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.WebSockets;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Twitch.Base.Clients;
@@ -174,7 +173,7 @@ namespace MixItUp.Base.Services.Twitch
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         AsyncRunner.RunAsyncBackground(this.ChatterJoinLeaveBackground, this.cancellationTokenSource.Token, 2500);
-                        AsyncRunner.RunAsyncBackground(this.TMIChatUpdateBackground, this.cancellationTokenSource.Token, 60000);
+                        AsyncRunner.RunAsyncBackground(this.ChatterUpdateBackground, this.cancellationTokenSource.Token, 60000);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                         await Task.Delay(3000);
@@ -506,14 +505,6 @@ namespace MixItUp.Base.Services.Twitch
             });
         }
 
-        public async Task<TwitchTMIChatModel> GetTMIChatUsers()
-        {
-            using (AdvancedHttpClient client = new AdvancedHttpClient())
-            {
-                return await client.GetAsync<TwitchTMIChatModel>($"https://tmi.twitch.tv/group/user/{ServiceManager.Get<TwitchSessionService>().Username}/chatters");
-            }
-        }
-
         private ChatClient GetChatClient(bool sendAsStreamer = false) { return (this.botClient != null && !sendAsStreamer) ? this.botClient : this.userClient; }
 
         private async Task ChatterJoinLeaveBackground(CancellationToken cancellationToken)
@@ -575,18 +566,11 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
-        private async Task TMIChatUpdateBackground(CancellationToken cancellationToken)
+        private async Task ChatterUpdateBackground(CancellationToken cancellationToken)
         {
-            TwitchTMIChatModel tmiChat = await GetTMIChatUsers();
+            IEnumerable<ChatterModel> chatterModels = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChatters(ServiceManager.Get<TwitchSessionService>().User);
 
-            HashSet<string> chatters = new HashSet<string>();
-            chatters.AddRange(tmiChat.chatters.admins);
-            chatters.AddRange(tmiChat.chatters.broadcaster);
-            chatters.AddRange(tmiChat.chatters.global_mods);
-            chatters.AddRange(tmiChat.chatters.moderators);
-            chatters.AddRange(tmiChat.chatters.staff);
-            chatters.AddRange(tmiChat.chatters.viewers);
-            chatters.AddRange(tmiChat.chatters.vips);
+            HashSet<string> chatters = new HashSet<string>(chatterModels.Select(c => c.user_login));
 
             HashSet<string> joinsToProcess = new HashSet<string>();
             List<UserV2ViewModel> leavesToProcess = new List<UserV2ViewModel>();

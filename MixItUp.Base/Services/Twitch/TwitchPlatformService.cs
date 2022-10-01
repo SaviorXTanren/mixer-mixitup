@@ -61,6 +61,7 @@ namespace MixItUp.Base.Services.Twitch
 
             OAuthClientScopeEnum.moderation__read,
 
+            OAuthClientScopeEnum.moderator__read__chatters,
             OAuthClientScopeEnum.moderator__read__chat_settings,
 
             OAuthClientScopeEnum.moderator__manage__banned_users,
@@ -239,6 +240,8 @@ namespace MixItUp.Base.Services.Twitch
         public async Task UnbanUser(UserModel channel, UserModel user) { await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.UnbanUser(channel.id, user.id)); }
 
         public async Task TimeoutUser(UserModel channel, UserModel user, int duration, string reason) { await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.TimeoutUser(channel.id, user.id, duration, reason)); }
+
+        public async Task<IEnumerable<ChatterModel>> GetChatters(UserModel channel) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.GetChatters(channel.id, maxResults: int.MaxValue)); }
 
         public async Task<ChatSettingsModel> GetChatSettings(UserModel channel) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.GetChatSettings(channel.id)); }
 
