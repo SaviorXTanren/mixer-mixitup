@@ -38,6 +38,19 @@ namespace MixItUp.Base.Model.User.Platform
                 if (channel != null)
                 {
                     this.SetChannelProperties(channel);
+
+                    Subscription subscription = await ServiceManager.Get<YouTubeSessionService>().UserConnection.CheckIfSubscribed(ServiceManager.Get<YouTubeSessionService>().ChannelID, this.ID);
+                    if (subscription != null)
+                    {
+                        this.Roles.Add(UserRoleEnum.YouTubeSubscriber);
+                        this.Roles.Add(UserRoleEnum.Follower);
+                        this.SubscribeDate = subscription.Snippet.PublishedAt.GetValueOrDefault();
+                    }
+                    else
+                    {
+                        this.Roles.Remove(UserRoleEnum.YouTubeSubscriber);
+                        this.Roles.Remove(UserRoleEnum.Follower);
+                    }
                 }
             }
         }
@@ -52,7 +65,16 @@ namespace MixItUp.Base.Model.User.Platform
 
             if (message.AuthorDetails.IsChatOwner.GetValueOrDefault()) { this.Roles.Add(UserRoleEnum.Streamer); } else { this.Roles.Remove(UserRoleEnum.Streamer); }
             if (message.AuthorDetails.IsChatModerator.GetValueOrDefault()) { this.Roles.Add(UserRoleEnum.Moderator); } else { this.Roles.Remove(UserRoleEnum.Moderator); }
-            if (message.AuthorDetails.IsChatSponsor.GetValueOrDefault()) { this.Roles.Add(UserRoleEnum.YouTubeMember); } else { this.Roles.Remove(UserRoleEnum.YouTubeMember); }
+            if (message.AuthorDetails.IsChatSponsor.GetValueOrDefault())
+            {
+                this.Roles.Add(UserRoleEnum.YouTubeMember);
+                this.Roles.Add(UserRoleEnum.Subscriber);
+            }
+            else
+            {
+                this.Roles.Remove(UserRoleEnum.YouTubeMember);
+                this.Roles.Remove(UserRoleEnum.Subscriber);
+            }
         }
 
         private void SetChannelProperties(Channel channel)

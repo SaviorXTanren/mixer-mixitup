@@ -109,6 +109,8 @@ namespace MixItUp.Base.Services.YouTube
 
         public async Task<IEnumerable<LiveChatModerator>> GetModerators(LiveBroadcast broadcast, int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.GetModerators(broadcast, maxResults)); }
 
+        public async Task<Subscription> CheckIfSubscribed(string channelID, string userID) { return await AsyncRunner.RunAsync(this.Connection.Subscriptions.CheckIfSubscribed(channelID, userID)); }
+
         // Chat
 
         public async Task<LiveChatMessagesResultModel> GetChatMessages(LiveBroadcast broadcast) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.GetMessages(broadcast)); }
