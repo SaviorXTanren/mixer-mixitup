@@ -1,5 +1,8 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Util;
 using StreamingClient.Base.Model.OAuth;
+using System;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Users;
 
@@ -7,6 +10,29 @@ namespace MixItUp.Base.Services.Demo
 {
     public class DemoPlatformService : StreamingPlatformServiceBase
     {
+        public static SettingsV3Model CreateDemoSettings()
+        {
+            SettingsV3Model settings = new SettingsV3Model("Demo");
+            settings.ID = new Guid("00000000-0000-0000-0000-000000000001");
+
+            ServiceManager.Get<IFileService>().DeleteFile(settings.DatabaseFilePath);
+
+#pragma warning disable CS0612 // Type or member is obsolete
+            settings.DefaultStreamingPlatform = StreamingPlatformTypeEnum.Demo;
+            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Demo] = new StreamingPlatformAuthenticationSettingsModel()
+            {
+                Type = StreamingPlatformTypeEnum.Demo,
+                UserID = ServiceManager.Get<DemoSessionService>().UserID,
+                BotID = ServiceManager.Get<DemoSessionService>().BotID,
+                ChannelID = ServiceManager.Get<DemoSessionService>().ChannelID,
+                UserOAuthToken = new OAuthTokenModel(),
+                BotOAuthToken = new OAuthTokenModel(),
+            };
+#pragma warning restore CS0612 // Type or member is obsolete
+
+            return settings;
+        }
+
         public static Task<Result<DemoPlatformService>> Connect(OAuthTokenModel token)
         {
             return Task.FromResult(new Result<DemoPlatformService>(new DemoPlatformService()));

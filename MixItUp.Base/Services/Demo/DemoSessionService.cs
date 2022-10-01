@@ -16,8 +16,8 @@ namespace MixItUp.Base.Services.Demo
         public static UserModel user = new UserModel()
         {
             id = "1",
-            login = "testuser",
-            display_name = "TestUser",
+            login = "streamer",
+            display_name = "Streamer",
             broadcaster_type = "partner",
             profile_image_url = "https://raw.githubusercontent.com/SaviorXTanren/mixer-mixitup/master/Branding/MixItUp-Logo-Base-WhiteSM.png",
         };
@@ -25,8 +25,8 @@ namespace MixItUp.Base.Services.Demo
         public static UserModel bot = new UserModel()
         {
             id = "2",
-            login = "testbot",
-            display_name = "TestBot",
+            login = "bot",
+            display_name = "Bot",
             broadcaster_type = "",
             profile_image_url = "https://raw.githubusercontent.com/SaviorXTanren/mixer-mixitup/master/Branding/MixItUp-Logo-Base-WhiteSM.png",
         };

@@ -5,6 +5,7 @@ using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services.Demo;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
@@ -40,7 +41,7 @@ namespace MixItUp.Base.Services
             List<SettingsV3Model> allSettings = new List<SettingsV3Model>();
             if (ChannelSession.IsDemo())
             {
-                allSettings.Add(SettingsV3Model.CreateDemoSettings());
+                allSettings.Add(DemoPlatformService.CreateDemoSettings());
             }
             else
             {

@@ -40,25 +40,6 @@ namespace MixItUp.Base.Model.Settings
 
         public const string SettingsBackupFileExtension = "miubackup";
 
-        public static SettingsV3Model CreateDemoSettings()
-        {
-            SettingsV3Model settings = new SettingsV3Model("Demo");
-            settings.ID = new Guid("00000000-0000-0000-0000-000000000001");
-#pragma warning disable CS0612 // Type or member is obsolete
-            settings.DefaultStreamingPlatform = StreamingPlatformTypeEnum.Demo;
-            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Demo] = new StreamingPlatformAuthenticationSettingsModel()
-            {
-                Type = StreamingPlatformTypeEnum.Demo,
-                UserID = ServiceManager.Get<DemoSessionService>().UserID,
-                BotID = ServiceManager.Get<DemoSessionService>().BotID,
-                ChannelID = ServiceManager.Get<DemoSessionService>().ChannelID,
-                UserOAuthToken = new OAuthTokenModel(),
-                BotOAuthToken = new OAuthTokenModel(),
-            };
-#pragma warning restore CS0612 // Type or member is obsolete
-            return settings;
-        }
-
         [DataMember]
         public int Version { get; set; } = SettingsV3Model.LatestVersion;
 
