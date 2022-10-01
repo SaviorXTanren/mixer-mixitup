@@ -115,6 +115,9 @@
                             });
                         }
                     }
+                    else if (packet.type == 'AdjustTime') {
+                        window[packet.data.ID + "_adjustTime"](packet.data.Time);
+                    }
                 }
             }
             catch (err) { logException(err); }

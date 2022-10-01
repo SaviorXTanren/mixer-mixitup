@@ -9075,8 +9075,13 @@ via Twitch, it's a "your mileage may vary" situation.</value>
     <value>Enable Subscriber Mode</value>
   </data>
   <data name="OverlayTimerDefaultJavascript" xml:space="preserve">
-    <value>function timerLoop(totalSeconds, endingSeconds, displayFormat)
+    <value>var {ID}_additionalTime = 0;
+
+function {ID}_timerLoop(totalSeconds, endingSeconds, displayFormat)
 {
+    totalSeconds += {ID}_additionalTime;
+    {ID}_additionalTime = 0;
+
     var text = displayFormat;
 
     var seconds = totalSeconds % 60;
@@ -9105,25 +9110,30 @@ via Twitch, it's a "your mileage may vary" situation.</value>
         if (endingSeconds &gt; 0) {
             totalSeconds++;
             if (totalSeconds &lt; endingSeconds) {
-                timerLoop(totalSeconds, endingSeconds, displayFormat);
+                {ID}_timerLoop(totalSeconds, endingSeconds, displayFormat);
             }        
         }
         else {
             totalSeconds--;
             if (totalSeconds &gt;= 0) {
-                timerLoop(totalSeconds, endingSeconds, displayFormat);
+                {ID}_timerLoop(totalSeconds, endingSeconds, displayFormat);
             }
         }
     }, 1000);
 }
 
+function {ID}_adjustTime(time)
+{
+    {ID}_additionalTime += time;
+}
+
 function {ID}_load()
 {
     if ({CountUp}) {
-        timerLoop(0, {Duration}, "{DisplayFormat}");  
+        {ID}_timerLoop(0, {Duration}, "{DisplayFormat}");  
     }
     else {
-        timerLoop({Duration}, 0, "{DisplayFormat}");
+        {ID}_timerLoop({Duration}, 0, "{DisplayFormat}");
     }
 }</value>
   </data>

@@ -13477,8 +13477,13 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to function timerLoop(totalSeconds, endingSeconds, displayFormat)
+        ///   Looks up a localized string similar to var {ID}_additionalTime = 0;
+        ///
+        ///function {ID}_timerLoop(totalSeconds, endingSeconds, displayFormat)
         ///{
+        ///    totalSeconds += {ID}_additionalTime;
+        ///    {ID}_additionalTime = 0;
+        ///
         ///    var text = displayFormat;
         ///
         ///    var seconds = totalSeconds % 60;
@@ -13488,11 +13493,7 @@ namespace MixItUp.Base {
         ///
         ///    var totalMinutes = Math.floor(totalSeconds / 60);
         ///    var minutes = totalMinutes % 60;
-        ///    if (minutes &lt; 10) { minutes = &quot;0&quot; + minutes }
-        ///    text = text.replace(&quot;MM&quot;, totalMinutes);
-        ///    text = text.replace(&quot;mm&quot;, minutes);
-        ///
-        ///  [rest of string was truncated]&quot;;.
+        ///    if (minutes &lt; 10) { minute [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayTimerDefaultJavascript {
             get {
