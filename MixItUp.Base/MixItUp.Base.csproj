@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Overlay\OverlayPageOld.html">
+    <Content Include="Deprecated\OverlayPageOld.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Overlay\webSocketWrapper.js">

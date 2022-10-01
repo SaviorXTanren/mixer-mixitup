@@ -1484,6 +1484,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Basic Timer.
+        /// </summary>
+        public static string BasicTimer {
+            get {
+                return ResourceManager.GetString("BasicTimer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Baud Rate.
         /// </summary>
         public static string BaudRate {
@@ -3460,6 +3469,15 @@ namespace MixItUp.Base {
         public static string CountersFolder {
             get {
                 return ResourceManager.GetString("CountersFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Count Up.
+        /// </summary>
+        public static string CountUp {
+            get {
+                return ResourceManager.GetString("CountUp", resourceCulture);
             }
         }
         
@@ -13369,7 +13387,7 @@ namespace MixItUp.Base {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;div id=&quot;outerdiv-{ID}&quot;&gt;
-        ///&lt;div id=\&quot;innerdiv-{ID}\&quot;&gt;
+        ///&lt;div id=&quot;innerdiv-{ID}&quot;&gt;
         ///
         ///{InnerHTML}
         ///
@@ -13452,14 +13470,14 @@ namespace MixItUp.Base {
         ///    {Text}
         ///&lt;/p&gt;.
         /// </summary>
-        public static string OverlayTimerBasicDefaultHTML {
+        public static string OverlayTimerDefaultHTML {
             get {
-                return ResourceManager.GetString("OverlayTimerBasicDefaultHTML", resourceCulture);
+                return ResourceManager.GetString("OverlayTimerDefaultHTML", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to function timerLoop(totalSeconds, displayFormat)
+        ///   Looks up a localized string similar to function timerLoop(totalSeconds, endingSeconds, displayFormat)
         ///{
         ///    var text = displayFormat;
         ///
@@ -13474,11 +13492,11 @@ namespace MixItUp.Base {
         ///    text = text.replace(&quot;MM&quot;, totalMinutes);
         ///    text = text.replace(&quot;mm&quot;, minutes);
         ///
-        ///    var totalHou [rest of string was truncated]&quot;;.
+        ///  [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string OverlayTimerBasicDefaultJavascript {
+        public static string OverlayTimerDefaultJavascript {
             get {
-                return ResourceManager.GetString("OverlayTimerBasicDefaultJavascript", resourceCulture);
+                return ResourceManager.GetString("OverlayTimerDefaultJavascript", resourceCulture);
             }
         }
         

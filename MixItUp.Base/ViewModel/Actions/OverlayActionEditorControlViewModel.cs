@@ -153,7 +153,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool ShowTimerItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Timer; } }
 
-        public OverlayTimerBasicItemV3ViewModel TimerItemViewModel
+        public OverlayTimerItemV3ViewModel TimerItemViewModel
         {
             get { return this.timerItemViewModel; }
             set
@@ -162,7 +162,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayTimerBasicItemV3ViewModel timerItemViewModel = new OverlayTimerBasicItemV3ViewModel();
+        private OverlayTimerItemV3ViewModel timerItemViewModel = new OverlayTimerItemV3ViewModel();
 
         public OverlayActionEditorControlViewModel(OverlayActionModel action)
             : base(action)
@@ -208,7 +208,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 else if (action.OverlayItemV3.Type == OverlayItemV3Type.Timer)
                 {
                     this.SelectedActionType = OverlayActionTypeEnum.Timer;
-                    this.TimerItemViewModel = new OverlayTimerBasicItemV3ViewModel((OverlayTimerBasicItemV3Model)action.OverlayItemV3);
+                    this.TimerItemViewModel = new OverlayTimerItemV3ViewModel((OverlayTimerItemV3Model)action.OverlayItemV3);
                 }
             }
         }

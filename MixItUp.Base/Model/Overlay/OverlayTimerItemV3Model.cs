@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace MixItUp.Base.Model.Overlay
 {
     [DataContract]
-    public class OverlayTimerBasicItemV3Model : OverlayVisualTextItemV3ModelBase
+    public class OverlayTimerItemV3Model : OverlayVisualTextItemV3ModelBase
     {
         public static readonly string DefaultDisplayFormat = $"{TotalMinutesDisplayFormat}:{SecondsDisplayFormat}";
 
@@ -22,22 +22,30 @@ namespace MixItUp.Base.Model.Overlay
         public const string TotalSecondsDisplayFormat = "SS";
         public const string SecondsDisplayFormat = "ss";
 
-        public static readonly string DefaultHTML = Resources.OverlayTimerBasicDefaultHTML;
+        public static readonly string DefaultHTML = Resources.OverlayTimerDefaultHTML;
         public static readonly string DefaultCSS = Resources.OverlayTextDefaultCSS;
-        public static readonly string DefaultJavascript = Resources.OverlayTimerBasicDefaultJavascript;
+        public static readonly string DefaultJavascript = Resources.OverlayTimerDefaultJavascript;
 
         [DataMember]
         public string DisplayFormat { get; set; }
+
+        [DataMember]
+        public bool CountUp { get; set; }
 
         [DataMember]
         public Guid TimerFinishedCommandID { get; set; }
         [DataMember]
         public bool AllowRepeatFinishedCommandTriggers { get; set; }
 
-        public OverlayTimerBasicItemV3Model() : base(OverlayItemV3Type.Timer) { }
+        public OverlayTimerItemV3Model() : base(OverlayItemV3Type.Timer) { }
 
         protected override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
         {
+            string countUp = this.CountUp.ToString().ToLower();
+            item.HTML = ReplaceProperty(item.HTML, "CountUp", countUp);
+            item.CSS = ReplaceProperty(item.CSS, "CountUp", countUp);
+            item.Javascript = ReplaceProperty(item.Javascript, "CountUp", countUp);
+
             item.HTML = ReplaceProperty(item.HTML, "DisplayFormat", this.DisplayFormat);
             item.CSS = ReplaceProperty(item.CSS, "DisplayFormat", this.DisplayFormat);
             item.Javascript = ReplaceProperty(item.Javascript, "DisplayFormat", this.DisplayFormat);

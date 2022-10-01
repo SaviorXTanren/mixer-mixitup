@@ -51,9 +51,13 @@
                         <ColumnDefinition Width="10" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="10" />
-                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="120" />
                         <ColumnDefinition Width="10" />
-                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <ListBox Grid.Column="0" SelectionMode="Extended" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
@@ -86,6 +90,10 @@
                     <TextBox Grid.Column="4" Text="{Binding ShadowColor}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ShadowColor}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                     <TextBox Grid.Column="6" Text="{Binding DisplayFormat}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DisplayFormat}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    <TextBlock Grid.Column="8" Text="{Binding Source={x:Static resx:Resources.CountUp}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
+                    <ToggleButton Grid.Column="10" IsChecked="{Binding CountUp}" />
+
                 </Grid>
             </Grid>
         </OverlayControls:OverlayItemContainerV3Control.ContentControl>

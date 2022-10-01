@@ -3,7 +3,7 @@ using MixItUp.Base.Util;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
-    public class OverlayTimerBasicItemV3ViewModel : OverlayVisualTextItemV3ViewModelBase
+    public class OverlayTimerItemV3ViewModel : OverlayVisualTextItemV3ViewModelBase
     {
         public string DisplayFormat
         {
@@ -16,13 +16,29 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string displayFormat;
 
-        public OverlayTimerBasicItemV3ViewModel()
+        public bool CountUp
+        {
+            get { return this.countUp; }
+            set
+            {
+                this.countUp = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool countUp;
+
+        public OverlayTimerItemV3ViewModel()
             : base(OverlayItemV3Type.Timer)
         {
-            this.DisplayFormat = OverlayTimerBasicItemV3Model.DefaultDisplayFormat;
+            this.DisplayFormat = OverlayTimerItemV3Model.DefaultDisplayFormat;
         }
 
-        public OverlayTimerBasicItemV3ViewModel(OverlayTimerBasicItemV3Model item) : base(item) { }
+        public OverlayTimerItemV3ViewModel(OverlayTimerItemV3Model item)
+            : base(item)
+        {
+            this.DisplayFormat = item.DisplayFormat;
+            this.CountUp = item.CountUp;
+        }
 
         public override Result Validate()
         {
@@ -36,7 +52,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         protected override OverlayItemV3ModelBase GetItemInternal()
         {
-            OverlayTimerBasicItemV3Model result = new OverlayTimerBasicItemV3Model()
+            OverlayTimerItemV3Model result = new OverlayTimerItemV3Model()
             {
                 HTML = this.HTML,
                 CSS = this.CSS,
@@ -53,6 +69,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 Width = this.width,
 
                 DisplayFormat = this.DisplayFormat,
+                CountUp = this.CountUp,
             };
 
             if (this.LeftAlignment)

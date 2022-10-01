@@ -9074,8 +9074,8 @@ via Twitch, it's a "your mileage may vary" situation.</value>
   <data name="EnableSubscriberMode" xml:space="preserve">
     <value>Enable Subscriber Mode</value>
   </data>
-  <data name="OverlayTimerBasicDefaultJavascript" xml:space="preserve">
-    <value>function timerLoop(totalSeconds, displayFormat)
+  <data name="OverlayTimerDefaultJavascript" xml:space="preserve">
+    <value>function timerLoop(totalSeconds, endingSeconds, displayFormat)
 {
     var text = displayFormat;
 
@@ -9102,18 +9102,29 @@ via Twitch, it's a "your mileage may vary" situation.</value>
     document.getElementById("text-{ID}").innerHTML = text;
 
     setTimeout(function () {
-       
-        totalSeconds--;
-        
-        if (totalSeconds &gt;= 0) {
-            timerLoop(totalSeconds, displayFormat);
+        if (endingSeconds &gt; 0) {
+            totalSeconds++;
+            if (totalSeconds &lt; endingSeconds) {
+                timerLoop(totalSeconds, endingSeconds, displayFormat);
+            }        
+        }
+        else {
+            totalSeconds--;
+            if (totalSeconds &gt;= 0) {
+                timerLoop(totalSeconds, endingSeconds, displayFormat);
+            }
         }
     }, 1000);
 }
 
 function {ID}_load()
 {
-   timerLoop({Duration}, "{DisplayFormat}");
+    if ({CountUp}) {
+        timerLoop(0, {Duration}, "{DisplayFormat}");  
+    }
+    else {
+        timerLoop({Duration}, 0, "{DisplayFormat}");
+    }
 }</value>
   </data>
   <data name="OverlayImageDefaultCSS" xml:space="preserve">
@@ -9162,7 +9173,7 @@ function {ID}_load()
   <data name="DisplayFormat" xml:space="preserve">
     <value>Display Format</value>
   </data>
-  <data name="OverlayTimerBasicDefaultHTML" xml:space="preserve">
+  <data name="OverlayTimerDefaultHTML" xml:space="preserve">
     <value>&lt;p id="text-{ID}"&gt;
     {Text}
 &lt;/p&gt;</value>
@@ -9192,7 +9203,7 @@ function {ID}_load()
   </data>
   <data name="OverlayPositionedItemDefaultHTML" xml:space="preserve">
     <value>&lt;div id="outerdiv-{ID}"&gt;
-&lt;div id=\"innerdiv-{ID}\"&gt;
+&lt;div id="innerdiv-{ID}"&gt;
 
 {InnerHTML}
 
@@ -9222,5 +9233,11 @@ function {ID}_load()
   </data>
   <data name="CooldownRequirementOnCooldownHours" xml:space="preserve">
     <value>This command is currently on cooldown, please wait another {0} hour(s).</value>
+  </data>
+  <data name="BasicTimer" xml:space="preserve">
+    <value>Basic Timer</value>
+  </data>
+  <data name="CountUp" xml:space="preserve">
+    <value>Count Up</value>
   </data>
 </root>
