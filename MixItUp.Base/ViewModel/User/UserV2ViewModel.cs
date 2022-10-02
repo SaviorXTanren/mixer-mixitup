@@ -563,7 +563,20 @@ namespace MixItUp.Base.ViewModel.User
 
         public PatreonCampaignMember PatreonUser
         {
-            get { return this.patreonUser; }
+            get
+            {
+                if (this.patreonUser != null)
+                {
+                    return this.patreonUser;
+                }
+
+                if (!string.IsNullOrEmpty(this.Model.PatreonUserID) && ServiceManager.Get<PatreonService>().IsConnected)
+                {
+                    this.patreonUser = ServiceManager.Get<PatreonService>().CampaignMembers.FirstOrDefault(m => this.Model.PatreonUserID.Equals(m.ID));
+                }
+
+                return this.patreonUser;
+            }
             set
             {
                 this.patreonUser = value;
