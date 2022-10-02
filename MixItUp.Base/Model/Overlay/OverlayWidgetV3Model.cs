@@ -1,5 +1,8 @@
-﻿using System;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
+using System;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -20,5 +23,27 @@ namespace MixItUp.Base.Model.Overlay
 
         [DataMember]
         public int RefreshTime { get; set; }
+
+        public async Task Enable()
+        {
+            await this.Item.Enable();
+
+            OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlayEndpointService(this.OverlayEndpointID);
+            if (overlay != null)
+            {
+                await overlay.SendItem(this.Item, new CommandParametersModel());
+            }
+        }
+
+        public async Task Disable()
+        {
+            await this.Item.Disable();
+
+            OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlayEndpointService(this.OverlayEndpointID);
+            if (overlay != null)
+            {
+                await overlay.SendItem(this.Item, new CommandParametersModel());
+            }
+        }
     }
 }

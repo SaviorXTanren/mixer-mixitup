@@ -184,6 +184,63 @@ namespace MixItUp.Base.Services
             }
         }
 
+        public async Task EnableWidget(OverlayWidgetV3Model widget, CommandParametersModel parameters)
+        {
+            try
+            {
+                if (widget.Item != null)
+                {
+                    OverlayOutputV3Model processedItem = await widget.Item.GetProcessedItem(this, parameters);
+                    if (processedItem != null)
+                    {
+                        await this.SendPacket("EnableWidget", JObject.FromObject(processedItem));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
+        public async Task DisableWidget(OverlayWidgetV3Model widget, CommandParametersModel parameters)
+        {
+            try
+            {
+                if (widget.Item != null)
+                {
+                    OverlayOutputV3Model processedItem = await widget.Item.GetProcessedItem(this, parameters);
+                    if (processedItem != null)
+                    {
+                        await this.SendPacket("DisableWidget", JObject.FromObject(processedItem));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
+        public async Task DisableWidget(OverlayWidgetV3Model widget, CommandParametersModel parameters)
+        {
+            try
+            {
+                if (widget.Item != null)
+                {
+                    OverlayOutputV3Model processedItem = await widget.Item.GetProcessedItem(this, parameters);
+                    if (processedItem != null)
+                    {
+                        await this.SendPacket("UpdateWidget", JObject.FromObject(processedItem));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
         private async Task PerformTextReplacements(JObject jobj, CommandParametersModel parameters)
         {
             if (jobj != null)

@@ -115,6 +115,12 @@
                             });
                         }
                     }
+                    else if (packet.Type == 'EnableWidget') {
+                    }
+                    else if (packet.Type == 'DisableWidget') {
+                    }
+                    else if (packet.Type == 'UpdateWidget') {
+                    }
                     else if (packet.type == 'AdjustTime') {
                         window[packet.data.ID + "_adjustTime"](packet.data.Time);
                     }
