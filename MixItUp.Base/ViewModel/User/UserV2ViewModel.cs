@@ -18,7 +18,6 @@ namespace MixItUp.Base.ViewModel.User
     public class UserV2ViewModel : UIViewModelBase, IEquatable<UserV2ViewModel>, IComparable<UserV2ViewModel>
     {
         public const string UserDefaultColor = "MaterialDesignBody";
-        public static readonly TimeSpan RefreshTimeSpan = TimeSpan.FromMinutes(5);
 
         public static UserV2ViewModel CreateUnassociated(string username = null) { return new UserV2ViewModel(StreamingPlatformTypeEnum.None, UserV2Model.CreateUnassociated(username)); }
 
@@ -666,7 +665,7 @@ namespace MixItUp.Base.ViewModel.User
             if (!this.IsUnassociated)
             {
                 TimeSpan lastUpdatedTimeSpan = DateTimeOffset.Now - this.LastUpdated;
-                if (force || lastUpdatedTimeSpan > RefreshTimeSpan)
+                if (force || lastUpdatedTimeSpan > this.PlatformModel.RefreshTimeSpan)
                 {
                     this.LastUpdated = DateTimeOffset.Now;
 

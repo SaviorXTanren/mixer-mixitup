@@ -30,6 +30,8 @@ namespace MixItUp.Base.Model.User.Platform
         [Obsolete]
         public YouTubeUserPlatformV2Model() : base() { }
 
+        public override TimeSpan RefreshTimeSpan { get { return TimeSpan.FromMinutes(10); } }
+
         public override async Task Refresh()
         {
             if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
