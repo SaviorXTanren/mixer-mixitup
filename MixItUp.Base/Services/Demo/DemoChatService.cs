@@ -21,10 +21,12 @@ namespace MixItUp.Base.Services.Demo
         {
             "Yo, how's the stream going?",
             "Hey!",
+            "!socials",
             "HAH, he got rekt",
             "Loving the stream, I'll catch you later!",
             "lol",
             "Hey, can I join next match?",
+            "!hi @viewer3",
             "Wow, this is boring...",
             "New here, wanted to say hi?",
             "Whatcha playing?",
