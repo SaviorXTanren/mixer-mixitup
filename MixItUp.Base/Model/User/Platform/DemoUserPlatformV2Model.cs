@@ -25,7 +25,8 @@ namespace MixItUp.Base.Model.User.Platform
 #pragma warning disable CS0612 // Type or member is obsolete
             this.Platform = StreamingPlatformTypeEnum.Demo;
 #pragma warning restore CS0612 // Type or member is obsolete
-            this.Username = id;
+            this.ID = id;
+            this.Username = username;
             this.DisplayName = username;
             this.AvatarLink = "Assets/Images/DemoAvatar.png";
         }
