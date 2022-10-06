@@ -62,16 +62,19 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             try
             {
-                this.WebhookCommands.Clear();
-
                 GetWebhooksResponseModel response = await ServiceManager.Get<MixItUpService>().GetWebhooks();
-                foreach (var webhook in response.Webhooks)
-                {
-                    var command = ServiceManager.Get<CommandService>().WebhookCommands.FirstOrDefault(c => c.ID == webhook.Id);
-                    this.WebhookCommands.Add(new WebhookCommandItemViewModel(webhook, command));
-                }
 
-                MaxNumberOfWebhooks = response.MaxNumberOfWebhooks;
+                lock (this.WebhookCommands)
+                {
+                    this.WebhookCommands.Clear();
+                    foreach (var webhook in response.Webhooks)
+                    {
+                        var command = ServiceManager.Get<CommandService>().WebhookCommands.FirstOrDefault(c => c.ID == webhook.Id);
+                        this.WebhookCommands.Add(new WebhookCommandItemViewModel(webhook, command));
+                    }
+
+                    MaxNumberOfWebhooks = response.MaxNumberOfWebhooks;
+                }
             }
             catch (Exception ex)
             {
