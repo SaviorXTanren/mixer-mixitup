@@ -94,7 +94,7 @@ namespace MixItUp.Base.Services.Demo
             commands.Add(GenerateEventCommand(EventTypeEnum.ChannelFollowed, new List<ActionModelBase>()
             {
                 new ChatActionModel("Thanks for the follow @$username!"),
-                new SoundActionModel("C:\\Mix It Up Demo\\Mega Man 8 - Stage Clear.mp3", 100)
+                new SoundActionModel("C:\\Mix It Up Demo\\Assets\\Mega Man 8 - Stage Clear.mp3", 100)
             }));
 
             commands.Add(GenerateEventCommand(EventTypeEnum.ChannelRaided, new List<ActionModelBase>()
@@ -105,7 +105,7 @@ namespace MixItUp.Base.Services.Demo
                     Position = new OverlayItemPositionModel(OverlayItemPositionType.Percentage, 50, 50, 0),
                     Effects = new OverlayItemEffectsModel(OverlayItemEffectEntranceAnimationTypeEnum.SlideInLeft, OverlayItemEffectVisibleAnimationTypeEnum.Bounce, OverlayItemEffectExitAnimationTypeEnum.SlideOutRight, 5)
                 }),
-                new SoundActionModel("C:\\Mix It Up Demo\\Rick & Morty - My Man.mp3", 100)
+                new SoundActionModel("C:\\Mix It Up Demo\\Assets\\Rick & Morty - My Man.mp3", 100)
             }));
 
             commands.Add(GenerateEventCommand(EventTypeEnum.ChannelSubscribed, new List<ActionModelBase>()
@@ -116,13 +116,13 @@ namespace MixItUp.Base.Services.Demo
                     Position = new OverlayItemPositionModel(OverlayItemPositionType.Percentage, 50, 50, 0),
                     Effects = new OverlayItemEffectsModel(OverlayItemEffectEntranceAnimationTypeEnum.ZoomIn, OverlayItemEffectVisibleAnimationTypeEnum.Swing, OverlayItemEffectExitAnimationTypeEnum.ZoomOut, 5)
                 }),
-                new SoundActionModel("C:\\Mix It Up Demo\\Boom Goes The Dynamite.mp3", 100)
+                new SoundActionModel("C:\\Mix It Up Demo\\Assets\\Boom Goes The Dynamite.mp3", 100)
             }));
             
             commands.Add(GenerateEventCommand(EventTypeEnum.ChannelSubscriptionGifted, new List<ActionModelBase>()
             {
                 new ChatActionModel("@$username just gifted out $usersubmonthsgifted subs to the channel!"),
-                new SoundActionModel("C:\\Mix It Up Demo\\Unfriggenbelievable.mp3", 100)
+                new SoundActionModel("C:\\Mix It Up Demo\\Assets\\Unfriggenbelievable.mp3", 100)
             }));
 
             await ServiceManager.Get<IDatabaseService>().BulkWrite(settings.DatabaseFilePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES($ID, $TypeID, $Data)",
