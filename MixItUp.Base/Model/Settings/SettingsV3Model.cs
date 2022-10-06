@@ -8,7 +8,6 @@ using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
-using MixItUp.Base.Services.Demo;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Dashboard;
 using Newtonsoft.Json;

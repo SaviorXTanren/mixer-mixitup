@@ -10,12 +10,14 @@ namespace MixItUp.Base.Services.Demo
 {
     public class DemoPlatformService : StreamingPlatformServiceBase
     {
-        public static SettingsV3Model CreateDemoSettings()
+        public static async Task<SettingsV3Model> CreateDemoSettings()
         {
             SettingsV3Model settings = new SettingsV3Model("Demo");
             settings.ID = new Guid("00000000-0000-0000-0000-000000000001");
 
-            ServiceManager.Get<IFileService>().DeleteFile(settings.DatabaseFilePath);
+            await ServiceManager.Get<IDatabaseService>().Write(settings.DatabaseFilePath, "DELETE FROM Commands");
+            await ServiceManager.Get<IDatabaseService>().Write(settings.DatabaseFilePath, "DELETE FROM Quotes");
+            await ServiceManager.Get<IDatabaseService>().Write(settings.DatabaseFilePath, "DELETE FROM Users");
 
 #pragma warning disable CS0612 // Type or member is obsolete
             settings.DefaultStreamingPlatform = StreamingPlatformTypeEnum.Demo;

@@ -41,7 +41,7 @@ namespace MixItUp.Base.Services
             List<SettingsV3Model> allSettings = new List<SettingsV3Model>();
             if (ChannelSession.IsDemo())
             {
-                allSettings.Add(DemoPlatformService.CreateDemoSettings());
+                allSettings.Add(await DemoPlatformService.CreateDemoSettings());
             }
             else
             {
