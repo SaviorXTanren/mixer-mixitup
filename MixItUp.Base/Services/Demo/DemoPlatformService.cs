@@ -18,6 +18,8 @@ namespace MixItUp.Base.Services.Demo
 {
     public class DemoPlatformService : StreamingPlatformServiceBase
     {
+        public const string DemoFolder = "C:\\Mix It Up Demo";
+
         public static async Task<SettingsV3Model> CreateDemoSettings()
         {
             SettingsV3Model settings = new SettingsV3Model("Demo");
@@ -58,14 +60,14 @@ namespace MixItUp.Base.Services.Demo
             commands.Add(GenerateChatCommand("Shoutout", "so", new List<ActionModelBase>()
             {
                 new ChatActionModel("Go check out @$username, they're an awesome streamer!"),
-                new OverlayActionModel(null, new OverlayImageItemModel("$useravatar", 400, 400)
+                new OverlayActionModel(null, new OverlayImageItemModel("C:\\Mix It Up Demo\\$useravatar", 400, 400)
                 {
                     Position = new OverlayItemPositionModel(OverlayItemPositionType.Percentage, 50, 40, 0),
                     Effects = new OverlayItemEffectsModel(OverlayItemEffectEntranceAnimationTypeEnum.ZoomIn, OverlayItemEffectVisibleAnimationTypeEnum.Swing, OverlayItemEffectExitAnimationTypeEnum.ZoomOut, 5)
                 }),
-                new OverlayActionModel(null, new OverlayTextItemModel("$username", "Black", 24, "Times New Roman", true, false, false, null)
+                new OverlayActionModel(null, new OverlayTextItemModel("$username", "White", 96, "Times New Roman", true, false, true, null)
                 {
-                    Position = new OverlayItemPositionModel(OverlayItemPositionType.Percentage, 50, 60, 0),
+                    Position = new OverlayItemPositionModel(OverlayItemPositionType.Percentage, 50, 75, 0),
                     Effects = new OverlayItemEffectsModel(OverlayItemEffectEntranceAnimationTypeEnum.ZoomIn, OverlayItemEffectVisibleAnimationTypeEnum.Swing, OverlayItemEffectExitAnimationTypeEnum.ZoomOut, 5)
                 })
             }));
@@ -100,7 +102,7 @@ namespace MixItUp.Base.Services.Demo
             commands.Add(GenerateEventCommand(EventTypeEnum.ChannelRaided, new List<ActionModelBase>()
             {
                 new ChatActionModel("@$username just raided us with $raidviewercount viewers!!!"),
-                new OverlayActionModel(null, new OverlayTextItemModel("Thanks for the raid $username!", "Black", 24, "Times New Roman", true, false, true, null)
+                new OverlayActionModel(null, new OverlayTextItemModel("Thanks for the raid $username!", "White", 96, "Times New Roman", true, false, true, null)
                 {
                     Position = new OverlayItemPositionModel(OverlayItemPositionType.Percentage, 50, 50, 0),
                     Effects = new OverlayItemEffectsModel(OverlayItemEffectEntranceAnimationTypeEnum.SlideInLeft, OverlayItemEffectVisibleAnimationTypeEnum.Bounce, OverlayItemEffectExitAnimationTypeEnum.SlideOutRight, 5)
@@ -111,7 +113,7 @@ namespace MixItUp.Base.Services.Demo
             commands.Add(GenerateEventCommand(EventTypeEnum.ChannelSubscribed, new List<ActionModelBase>()
             {
                 new ChatActionModel("@$username just $usersubtier subbed for the channel!"),
-                new OverlayActionModel(null, new OverlayImageItemModel("C:\\Mix It Up Demo\\Mega Man Clap.gif", 400, 400)
+                new OverlayActionModel(null, new OverlayImageItemModel("C:\\Mix It Up Demo\\Assets\\Mega Man Clap.gif", 400, 400)
                 {
                     Position = new OverlayItemPositionModel(OverlayItemPositionType.Percentage, 50, 50, 0),
                     Effects = new OverlayItemEffectsModel(OverlayItemEffectEntranceAnimationTypeEnum.ZoomIn, OverlayItemEffectVisibleAnimationTypeEnum.Swing, OverlayItemEffectExitAnimationTypeEnum.ZoomOut, 5)

@@ -26,11 +26,27 @@ namespace MixItUp.Base.Services.Demo
             "Loving the stream, I'll catch you later!",
             "lol",
             "Hey, can I join next match?",
-            "!hi @viewer3",
+            "!hi @nashii_x",
             "Wow, this is boring...",
-            "New here, wanted to say hi?",
+            "New here, wanted to say hi!",
             "Whatcha playing?",
             ":)",
+        };
+
+        private List<string> precannedUsers = new List<string>()
+        {
+            "SaviorXTanren",
+            "VerbatimT",
+            "MamaTamago",
+            "KacieStar",
+            "Nashii_X",
+            "TyrenDes",
+            "aaa162",
+            "WildWestDan",
+            "yaps",
+            "FutileRecipe",
+            "PerlStalker",
+            "MrLimeRunner"
         };
 
         public override string Name { get { return "Mock Chat"; } }
@@ -45,7 +61,7 @@ namespace MixItUp.Base.Services.Demo
                     {
                         await Task.Delay(15000);
 
-                        await this.GenerateAndAddMessage("Viewer" + (i + 1), precannedMessages[i]);
+                        await this.GenerateAndAddMessage(precannedUsers[i], precannedMessages[i]);
 
                         if (i % 2 == 1)
                         {
@@ -55,10 +71,10 @@ namespace MixItUp.Base.Services.Demo
 #pragma warning disable CS0612 // Type or member is obsolete
                             parameters.Platform = StreamingPlatformTypeEnum.Demo;
                             parameters.User = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Demo,
-                                "Viewer" + (i + 1),
+                                precannedUsers[i],
                                 performPlatformSearch: true);
                             parameters.TargetUser = parameters.User = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Demo,
-                                "Viewer" + i,
+                                precannedUsers[i - 1],
                                 performPlatformSearch: true);
 #pragma warning restore CS0612 // Type or member is obsolete
                             parameters.Arguments = new List<string>() { "Hello World!" };

@@ -1,5 +1,8 @@
-﻿using MixItUp.Base.ViewModel.Chat;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.Demo;
+using MixItUp.Base.ViewModel.Chat;
 using System;
+using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Users;
@@ -9,6 +12,8 @@ namespace MixItUp.Base.Model.User.Platform
     [DataContract]
     public class DemoUserPlatformV2Model : UserPlatformV2ModelBase
     {
+        public const string DemoAvatarFilePath = "Assets/Images/DemoAvatar.png";
+
         public DemoUserPlatformV2Model(UserModel user)
         {
 #pragma warning disable CS0612 // Type or member is obsolete
@@ -27,8 +32,12 @@ namespace MixItUp.Base.Model.User.Platform
 #pragma warning restore CS0612 // Type or member is obsolete
             this.ID = id;
             this.Username = username;
-            this.DisplayName = username;
-            this.AvatarLink = "Assets/Images/DemoAvatar.png";
+            this.DisplayName = displayName;
+            this.AvatarLink = DemoAvatarFilePath;
+            if (ServiceManager.Get<IFileService>().FileExists(this.GetSavedAvatarFilePath(username)))
+            {
+                this.AvatarLink = this.GetSavedAvatarFilePath(username);
+            }
         }
 
         [Obsolete]
@@ -44,7 +53,16 @@ namespace MixItUp.Base.Model.User.Platform
             this.ID = user.id;
             this.Username = user.login;
             this.DisplayName = user.display_name;
-            this.AvatarLink = "Assets/Images/DemoAvatar.png";
+            this.AvatarLink = DemoAvatarFilePath;
+            if (ServiceManager.Get<IFileService>().FileExists(this.GetSavedAvatarFilePath(user.login)))
+            {
+                this.AvatarLink = this.GetSavedAvatarFilePath(user.login);
+            }
+        }
+
+        private string GetSavedAvatarFilePath(string username)
+        {
+            return Path.Combine(DemoPlatformService.DemoFolder, "Assets", username + ".png");
         }
     }
 }
