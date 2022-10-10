@@ -57,7 +57,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool XSplitNotEnabled { get { return this.GetCurrentlySelectedStreamingSoftwareType() == StreamingSoftwareTypeEnum.XSplit && !ServiceManager.Get<XSplitService>().IsConnected; } }
 
-        public bool StreamlabsOBSNotEnabled { get { return this.GetCurrentlySelectedStreamingSoftwareType() == StreamingSoftwareTypeEnum.StreamlabsOBS && !ServiceManager.Get<StreamlabsOBSService>().IsConnected; } }
+        public bool StreamlabsOBSNotEnabled { get { return this.GetCurrentlySelectedStreamingSoftwareType() == StreamingSoftwareTypeEnum.StreamlabsDesktop && !ServiceManager.Get<StreamlabsDesktopService>().IsConnected; } }
 
         public bool ShowNotSupported
         {
@@ -87,7 +87,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 }
                 else if (this.SelectedActionType == StreamingSoftwareActionTypeEnum.SceneCollection)
                 {
-                    if (streamingSoftware == StreamingSoftwareTypeEnum.XSplit || streamingSoftware == StreamingSoftwareTypeEnum.StreamlabsOBS)
+                    if (streamingSoftware == StreamingSoftwareTypeEnum.XSplit || streamingSoftware == StreamingSoftwareTypeEnum.StreamlabsDesktop)
                     {
                         return true;
                     }
@@ -101,7 +101,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 }
                 else if (this.SelectedActionType == StreamingSoftwareActionTypeEnum.SourceFilterVisibility)
                 {
-                    if (streamingSoftware == StreamingSoftwareTypeEnum.XSplit || streamingSoftware == StreamingSoftwareTypeEnum.StreamlabsOBS)
+                    if (streamingSoftware == StreamingSoftwareTypeEnum.XSplit || streamingSoftware == StreamingSoftwareTypeEnum.StreamlabsDesktop)
                     {
                         return true;
                     }

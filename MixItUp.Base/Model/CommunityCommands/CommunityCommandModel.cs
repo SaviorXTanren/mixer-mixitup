@@ -34,7 +34,6 @@ namespace MixItUp.Base.Model.Store
         Translation,
         Twitter,
         Conditional,
-        [Name("StreamingSoftwareOBSSLOBS")]
         StreamingSoftware,
         Streamlabs,
         Command,

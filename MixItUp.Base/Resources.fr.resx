@@ -158,7 +158,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AccountsDetails" xml:space="preserve">
-    <value>Le compte Streamer est votre compte réel à partir duquel vous diffusez. Les comptes de robots sont des comptes distincts et facultatifs que vous pouvez utiliser pour envoyer des messages depuis votre chaîne. Les comptes de robots doivent être créés manuellement par vous et vous devez vous assurez d&apos;être connecté à eux avant d&apos;essayer de les connecter dans Mix It Up.</value>
+    <value>Le compte Streamer est votre compte réel à partir duquel vous diffusez. Les comptes de robots sont des comptes distincts et facultatifs que vous pouvez utiliser pour envoyer des messages depuis votre chaîne. Les comptes de robots doivent être créés manuellement par vous et vous devez vous assurez d'être connecté à eux avant d'essayer de les connecter dans Mix It Up.</value>
     <comment>Manual</comment>
   </data>
   <data name="AccountsWizardInstructions" xml:space="preserve">
@@ -206,7 +206,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AddInventory" xml:space="preserve">
-    <value>Ajouter à l&apos;inventaire</value>
+    <value>Ajouter à l'inventaire</value>
     <comment>Manual</comment>
   </data>
   <data name="AddItem" xml:space="preserve">
@@ -224,7 +224,7 @@
     <value>Ajouter une nouvelle variable</value>
   </data>
   <data name="AddOverlayWidget" xml:space="preserve">
-    <value>Ajouter un Widget à l&apos;Overlay</value>
+    <value>Ajouter un Widget à l'Overlay</value>
     <comment>Manual</comment>
   </data>
   <data name="AddQuote" xml:space="preserve">
@@ -311,7 +311,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
-    <value>Inclut automatiquement &quot;!&quot;</value>
+    <value>Inclut automatiquement "!"</value>
     <comment>Manual</comment>
   </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
@@ -331,7 +331,7 @@
     <comment>Manual</comment>
   </data>
   <data name="BackgroundColor" xml:space="preserve">
-    <value>Couleur de l&apos;arrière plan</value>
+    <value>Couleur de l'arrière plan</value>
     <comment>Manual</comment>
   </data>
   <data name="BackupRate" xml:space="preserve">
@@ -389,7 +389,7 @@
     <value>Nom du bouton</value>
   </data>
   <data name="BuyPrice" xml:space="preserve">
-    <value>Prix d&apos;achat</value>
+    <value>Prix d'achat</value>
     <comment>Manual</comment>
   </data>
   <data name="Cancel" xml:space="preserve">
@@ -453,7 +453,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ChatTriggersNoExclamationHintAssist" xml:space="preserve">
-    <value>Commande dans le chat ( &quot;!&quot; non nécessaire, espace séparé, point-virgule pour plusieurs mots)</value>
+    <value>Commande dans le chat ( "!" non nécessaire, espace séparé, point-virgule pour plusieurs mots)</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatWhisperSound" xml:space="preserve">
@@ -473,11 +473,11 @@
     <comment>Manual</comment>
   </data>
   <data name="ClearQueue" xml:space="preserve">
-    <value>Effacer la file d&apos;attente</value>
+    <value>Effacer la file d'attente</value>
     <comment>Manual</comment>
   </data>
   <data name="ClearUserData" xml:space="preserve">
-    <value>Effacer les données sur l&apos;utilisateur</value>
+    <value>Effacer les données sur l'utilisateur</value>
     <comment>Manual</comment>
   </data>
   <data name="Click" xml:space="preserve">
@@ -509,7 +509,7 @@
     <comment>Manual</comment>
   </data>
   <data name="CommandNoBang" xml:space="preserve">
-    <value>Commande (Pas besoin de &apos;!&apos;)</value>
+    <value>Commande (Pas besoin de '!')</value>
     <comment>Manual</comment>
   </data>
   <data name="Commands" xml:space="preserve">
@@ -566,7 +566,7 @@
     <comment>Manual</comment>
   </data>
   <data name="CumulativeMonthsSubbed" xml:space="preserve">
-    <value>Mois d&apos;abonnements cumulées </value>
+    <value>Mois d'abonnements cumulées </value>
     <comment>Manual</comment>
   </data>
   <data name="Currency" xml:space="preserve">
@@ -657,7 +657,7 @@
     <comment>Manual</comment>
   </data>
   <data name="DeductFromUserRunningCommand" xml:space="preserve">
-    <value>Déduire de la commande en cours d&apos;exécution de l&apos;utilisateur</value>
+    <value>Déduire de la commande en cours d'exécution de l'utilisateur</value>
     <comment>Manual</comment>
   </data>
   <data name="DeepOrange" xml:space="preserve">
@@ -816,8 +816,8 @@
     <value>Veuillez activer la connexion Streamlabs sur la page Services !</value>
     <comment>Manual</comment>
   </data>
-  <data name="EnableStreamlabsOBS" xml:space="preserve">
-    <value>Veuillez activer la connexion OBS Streamlabs sur la page Services !</value>
+  <data name="EnableStreamlabsDesktop" xml:space="preserve">
+    <value>Veuillez activer la connexion Desktop Streamlabs sur la page Services !</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableXSplit" xml:space="preserve">
@@ -1160,7 +1160,7 @@
     <comment>Manual</comment>
   </data>
   <data name="JSONValueName" xml:space="preserve">
-    <value>Nom de la valeur JSON (Utiliser &apos; &apos; pour les paramètres imbriqués)</value>
+    <value>Nom de la valeur JSON (Utiliser ' ' pour les paramètres imbriqués)</value>
     <comment>Manual</comment>
   </data>
   <data name="Keyboard" xml:space="preserve">
@@ -1560,7 +1560,7 @@
     <value>Pour plus d’informations :</value>
   </data>
   <data name="OverlayWarning3" xml:space="preserve">
-    <value>Paramètres Windows: Problème d’animation d&apos;overlay</value>
+    <value>Paramètres Windows: Problème d’animation d'overlay</value>
     <comment>Manual</comment>
   </data>
   <data name="OverlayWidgetEditor" xml:space="preserve">
@@ -1568,7 +1568,7 @@
     <comment>Manual</comment>
   </data>
   <data name="OverlayWidgetEditorInstructions" xml:space="preserve">
-    <value>Sélectionnez le type d&apos;overlay que vous souhaitez créer :</value>
+    <value>Sélectionnez le type d'overlay que vous souhaitez créer :</value>
     <comment>Manual</comment>
   </data>
   <data name="OverlayWidgets" xml:space="preserve">
@@ -1576,7 +1576,7 @@
     <comment>Manual</comment>
   </data>
   <data name="OverlayWidgetsRequireOverlay" xml:space="preserve">
-    <value>L&apos;overlay doit être activé dans le menu Services pour utiliser Overlay Widgets.</value>
+    <value>L'overlay doit être activé dans le menu Services pour utiliser Overlay Widgets.</value>
     <comment>Manual</comment>
   </data>
   <data name="OvrStream" xml:space="preserve">
@@ -1710,7 +1710,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ReadFromFile" xml:space="preserve">
-    <value>Lire à partir d&apos;un fichier</value>
+    <value>Lire à partir d'un fichier</value>
     <comment>Manual</comment>
   </data>
   <data name="ReadRandomLineFromFile" xml:space="preserve">
@@ -1864,7 +1864,7 @@
     <comment>Manual</comment>
   </data>
   <data name="SaveFailed" xml:space="preserve">
-    <value>L&apos;enregistrement a échoué, essayer une fois de plus ...</value>
+    <value>L'enregistrement a échoué, essayer une fois de plus ...</value>
     <comment>Manual</comment>
   </data>
   <data name="SaveToFile" xml:space="preserve">
@@ -2007,7 +2007,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ShowMessageTimestamp" xml:space="preserve">
-    <value>Afficher l&apos;horodatage du message</value>
+    <value>Afficher l'horodatage du message</value>
     <comment>Manual</comment>
   </data>
   <data name="ShowOnChatListContextMenu" xml:space="preserve">
@@ -2139,11 +2139,11 @@
     <comment>Manual</comment>
   </data>
   <data name="SubAge" xml:space="preserve">
-    <value>Durée d&apos;abonnement</value>
+    <value>Durée d'abonnement</value>
     <comment>Manual</comment>
   </data>
   <data name="SubBonus" xml:space="preserve">
-    <value>Bonus d&apos;abonnement</value>
+    <value>Bonus d'abonnement</value>
     <comment>Manual</comment>
   </data>
   <data name="SubmitABug" xml:space="preserve">
@@ -2155,7 +2155,7 @@
     <comment>Manual</comment>
   </data>
   <data name="SubscribeAge" xml:space="preserve">
-    <value>souscrire à l&apos;âge</value>
+    <value>souscrire à l'âge</value>
     <comment>Manual</comment>
   </data>
   <data name="Subscriber" xml:space="preserve">
@@ -2556,7 +2556,7 @@
     <comment>Manual</comment>
   </data>
   <data name="WhisperUserOptional" xml:space="preserve">
-    <value>Chuchotement à l&apos;utilisateur (facultatif)</value>
+    <value>Chuchotement à l'utilisateur (facultatif)</value>
     <comment>Manual</comment>
   </data>
   <data name="White" xml:space="preserve">
@@ -2709,7 +2709,7 @@
     <value>Purger</value>
   </data>
   <data name="Timeout" xml:space="preserve">
-    <value>Délai d&apos;expiration</value>
+    <value>Délai d'expiration</value>
     <comment>Manual</comment>
   </data>
   <data name="Imported" xml:space="preserve">
@@ -3558,10 +3558,6 @@ Par exemple, si cette option est activée et que le montant est défini sur 5, c
     <value>Démarrer/Arrêter le flux</value>
     <comment>Manual</comment>
   </data>
-  <data name="StreamlabsOBS" xml:space="preserve">
-    <value>Streamlabs OBS</value>
-    <comment>Manual</comment>
-  </data>
   <data name="TextSource" xml:space="preserve">
     <value>Source du texte</value>
     <comment>Manual</comment>
@@ -3682,10 +3678,6 @@ Fuzzy</comment>
   </data>
   <data name="OverlayActionMissingWidget" xml:space="preserve">
     <value>Action de superposition: widget manquant</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="StreamingSoftwareOBSSLOBS" xml:space="preserve">
-    <value>Logiciel de streaming (OBS, SLOBS)</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCurrencyRequirementAmountBetween" xml:space="preserve">
@@ -5726,13 +5718,13 @@ Activé. Vous pouvez penser que cela ressemble à basculer l’option « Déver
   <data name="StreamlabsInfo1" xml:space="preserve">
     <value>La connectivité du service Streamlabs vous permet d’effectuer des actions lorsqu’un don est reçu. Lorsque vous vous connectez, une page Web d’authentification s’ouvre vous demandant de vous connecter à Streamlabs et d’approuver Mix It Up pour accéder à vos informations.</value>
   </data>
-  <data name="StreamlabsOBSConnectionFailed" xml:space="preserve">
-    <value>Le test de connexion Streamlabs OBS a échoué, veuillez vous assurer que Streamlabs OBS est en cours d’exécution.</value>
+  <data name="StreamlabsDesktopConnectionFailed" xml:space="preserve">
+    <value>Le test de connexion Bureau Streamlabs a échoué, veuillez vous assurer que Bureau Streamlabs est en cours d’exécution.</value>
   </data>
-  <data name="StreamlabsOBSConnectionSuccess" xml:space="preserve">
-    <value>Test de connexion OBS Streamlabs réussi !</value>
+  <data name="StreamlabsDesktopConnectionSuccess" xml:space="preserve">
+    <value>Test de connexion Bureau Streamlabs réussi !</value>
   </data>
-  <data name="StreamlabsOBSInfo1" xml:space="preserve">
+  <data name="StreamlabsDesktopInfo1" xml:space="preserve">
     <value>Le service Streamlabs OBS vous permet d’interagir directement avec votre instance de Streamlabs OBS pour effectuer des modifications aux scènes et aux sources.</value>
   </data>
   <data name="Streamloots" xml:space="preserve">
@@ -6361,11 +6353,11 @@ Activé. Vous pouvez penser que cela ressemble à basculer l’option « Déver
   <data name="RainmakerChannelDataFailed" xml:space="preserve">
     <value>Impossible d’obtenir les données de canal</value>
   </data>
-  <data name="StreamlabsOBSAdminMaybe" xml:space="preserve">
-    <value>Streamlabs OBS peut s’exécuter en tant qu’administrateur et Mix It Up ne l’est pas. Essayez d’exécuter Mix It Up en tant qu’administrateur avant de vous connecter.</value>
+  <data name="StreamlabsDesktopAdminMaybe" xml:space="preserve">
+    <value>Bureau Streamlabs peut s’exécuter en tant qu’administrateur et Mix It Up ne l’est pas. Essayez d’exécuter Mix It Up en tant qu’administrateur avant de vous connecter.</value>
   </data>
-  <data name="StreamlabsOBSFailed" xml:space="preserve">
-    <value>Streamlabs OBS n’a pas pu être atteint</value>
+  <data name="StreamlabsDesktopFailed" xml:space="preserve">
+    <value>Bureau Streamlabs n’a pas pu être atteint</value>
   </data>
   <data name="StreamlabsWebSocketTokenFailed" xml:space="preserve">
     <value>Impossible d’obtenir le jeton de socket Web</value>
@@ -7940,7 +7932,7 @@ Les guillemets importés avec des ID qui correspondent aux guillemets existants 
     <value>Commande désactivée : !</value>
   </data>
   <data name="DiscordActionBlockedDueToRateLimiting" xml:space="preserve">
-    <value>L’action Discord que vous essayiez d’effectuer a été bloquée en raison d’un trop grand nombre de demandes. Assurez-vous que vous n’effectuez qu&apos;1 action Discord toutes les 30 secondes. Vous pouvez ajouter un bot Discord personnalisé sous la page Services pour contourner ce blocage.</value>
+    <value>L’action Discord que vous essayiez d’effectuer a été bloquée en raison d’un trop grand nombre de demandes. Assurez-vous que vous n’effectuez qu'1 action Discord toutes les 30 secondes. Vous pouvez ajouter un bot Discord personnalisé sous la page Services pour contourner ce blocage.</value>
   </data>
   <data name="ErrorCouldNotFindGame" xml:space="preserve">
     <value>Impossible de trouver le jeu spécifié</value>
@@ -8029,7 +8021,7 @@ Les guillemets importés avec des ID qui correspondent aux guillemets existants 
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
     <value>Vous devez spécifier « acheter » ou « vendre »</value>
-    <comment>{0} is the English word &apos;buy&apos;, {1} is the English word &apos;sell&apos;</comment>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
     <value>UTILISATION: liste {0} = Répertorie tous les articles disponibles à l’achat / vente ** {0} &lt;NOM DE L’ARTICLE&gt; = Répertorie le prix d’achat / vente de l’article ** {0} acheter &lt; NOM DE L’article&gt; [MONTANT] = Achète 1 ou le montant spécifié de l’article ** {0} vendre &lt;NOM DE L’article&gt; [MONTANT] = Vend 1 ou le montant spécifié de l’article</value>
@@ -8205,7 +8197,7 @@ Les guillemets importés avec des ID qui correspondent aux guillemets existants 
     <value>Commande mise à jour: !</value>
   </data>
   <data name="UserFollowAgeHeader" xml:space="preserve">
-    <value>{0}&apos;âge de suivi: </value>
+    <value>{0}'âge de suivi: </value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UserSubscribeAgeHeader" xml:space="preserve">
@@ -8710,7 +8702,7 @@ Nous tenterons de nous reconnecter au service lorsque cela sera possible. Si cel
     <value>Add User</value>
   </data>
   <data name="UsersUnableToFindUser" xml:space="preserve">
-    <value>Unable find the user &quot;{0}&quot;</value>
+    <value>Unable find the user "{0}"</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UsersSuccessfullyFoundUser" xml:space="preserve">
@@ -8728,7 +8720,7 @@ Nous tenterons de nous reconnecter au service lorsque cela sera possible. Si cel
 whispers to be used as a form of automated communication. There are severe restrictions placed on the
 amount of whispers that can be sent in a timeline that make it very impractical for use, as well as spam
 preventative measures if the user is not on your friends list on Twitch. So although you can send whispers
-via Twitch, it&apos;s a &quot;your mileage may very&quot; situation.</value>
+via Twitch, it's a "your mileage may very" situation.</value>
   </data>
   <data name="AlertName" xml:space="preserve">
     <value>Alert Name</value>

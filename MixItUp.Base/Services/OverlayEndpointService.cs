@@ -112,11 +112,11 @@ namespace MixItUp.Base.Services
                             await ServiceManager.Get<XSplitService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: true);
                         }
 
-                        if (ServiceManager.Get<StreamlabsOBSService>().IsConnected)
+                        if (ServiceManager.Get<StreamlabsDesktopService>().IsConnected)
                         {
-                            await ServiceManager.Get<StreamlabsOBSService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: false);
-                            await ServiceManager.Get<StreamlabsOBSService>().SetWebBrowserSourceURL(null, ChannelSession.Settings.OverlaySourceName, overlayServerAddress);
-                            await ServiceManager.Get<StreamlabsOBSService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: true);
+                            await ServiceManager.Get<StreamlabsDesktopService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: false);
+                            await ServiceManager.Get<StreamlabsDesktopService>().SetWebBrowserSourceURL(null, ChannelSession.Settings.OverlaySourceName, overlayServerAddress);
+                            await ServiceManager.Get<StreamlabsDesktopService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: true);
                         }
                     }
                     return true;

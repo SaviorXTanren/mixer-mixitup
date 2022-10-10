@@ -816,8 +816,8 @@
     <value>Please enable Streamlabs connection on the Services page!</value>
     <comment>Manual</comment>
   </data>
-  <data name="EnableStreamlabsOBS" xml:space="preserve">
-    <value>Please enable Streamlabs OBS connection on the Services page!</value>
+  <data name="EnableStreamlabsDesktop" xml:space="preserve">
+    <value>Please enable Streamlabs Desktop connection on the Services page!</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableXSplit" xml:space="preserve">
@@ -3558,10 +3558,6 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
     <value>Start/Stop Stream</value>
     <comment>Manual</comment>
   </data>
-  <data name="StreamlabsOBS" xml:space="preserve">
-    <value>Streamlabs OBS</value>
-    <comment>Manual</comment>
-  </data>
   <data name="TextSource" xml:space="preserve">
     <value>Text Source</value>
     <comment>Manual</comment>
@@ -3680,10 +3676,6 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   </data>
   <data name="OverlayActionMissingWidget" xml:space="preserve">
     <value>Overlay Action: Missing Widget</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="StreamingSoftwareOBSSLOBS" xml:space="preserve">
-    <value>Streaming Software (OBS, SLOBS)</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCurrencyRequirementAmountBetween" xml:space="preserve">
@@ -5723,14 +5715,14 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="StreamlabsInfo1" xml:space="preserve">
     <value>Streamlabs service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to Streamlabs and approve Mix It Up to access your information.</value>
   </data>
-  <data name="StreamlabsOBSConnectionFailed" xml:space="preserve">
-    <value>Streamlabs OBS connection test failed, please ensure that Streamlabs OBS is running.</value>
+  <data name="StreamlabsDesktopConnectionFailed" xml:space="preserve">
+    <value>Streamlabs Desktop connection test failed, please ensure that Streamlabs OBS is running.</value>
   </data>
-  <data name="StreamlabsOBSConnectionSuccess" xml:space="preserve">
-    <value>Streamlabs OBS connection test successful!</value>
+  <data name="StreamlabsDesktopConnectionSuccess" xml:space="preserve">
+    <value>Streamlabs Desktop connection test successful!</value>
   </data>
-  <data name="StreamlabsOBSInfo1" xml:space="preserve">
-    <value>The Streamlabs OBS service allows you to directly interact with your instance of Streamlabs OBS to perform changes to scenes and sources.</value>
+  <data name="StreamlabsDesktopInfo1" xml:space="preserve">
+    <value>The Streamlabs Desktop service allows you to directly interact with your instance of Streamlabs Desktop to perform changes to scenes and sources.</value>
   </data>
   <data name="Streamloots" xml:space="preserve">
     <value>Streamloots</value>
@@ -6360,11 +6352,11 @@ See the Wiki page on OBS Studio for further troubleshooting steps by clicking th
   <data name="RainmakerChannelDataFailed" xml:space="preserve">
     <value>Failed to get channel data</value>
   </data>
-  <data name="StreamlabsOBSAdminMaybe" xml:space="preserve">
-    <value>Streamlabs OBS might be running as administrator and Mix It Up is not. Try running Mix It Up as an Administrator before connecting.</value>
+  <data name="StreamlabsDesktopAdminMaybe" xml:space="preserve">
+    <value>Streamlabs Desktop might be running as administrator and Mix It Up is not. Try running Mix It Up as an Administrator before connecting.</value>
   </data>
-  <data name="StreamlabsOBSFailed" xml:space="preserve">
-    <value>Streamlabs OBS could not be reached</value>
+  <data name="StreamlabsDesktopFailed" xml:space="preserve">
+    <value>Streamlabs Desktop could not be reached</value>
   </data>
   <data name="StreamlabsWebSocketTokenFailed" xml:space="preserve">
     <value>Failed to get web socket token</value>

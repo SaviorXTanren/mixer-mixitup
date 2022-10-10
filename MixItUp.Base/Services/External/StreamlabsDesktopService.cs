@@ -148,7 +148,7 @@ namespace MixItUp.Base.Services.External
 
     #endregion Data Classes
 
-    public class StreamlabsOBSService : IStreamingSoftwareService, IDisposable
+    public class StreamlabsDesktopService : IStreamingSoftwareService, IDisposable
     {
         private const string ConnectionString = "slobs";
 
@@ -185,10 +185,10 @@ namespace MixItUp.Base.Services.External
             {
                 if (!ChannelSession.IsElevated)
                 {
-                    return new Result(Resources.StreamlabsOBSAdminMaybe);
+                    return new Result(Resources.StreamlabsDesktopAdminMaybe);
                 }
             }
-            return new Result(Resources.StreamlabsOBSFailed);
+            return new Result(Resources.StreamlabsDesktopFailed);
         }
 
         public Task Disconnect()

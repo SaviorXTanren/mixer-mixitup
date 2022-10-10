@@ -5046,11 +5046,11 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please enable Streamlabs OBS connection on the Services page!.
+        ///   Looks up a localized string similar to Please enable Streamlabs Desktop connection on the Services page!.
         /// </summary>
-        public static string EnableStreamlabsOBS {
+        public static string EnableStreamlabsDesktop {
             get {
-                return ResourceManager.GetString("EnableStreamlabsOBS", resourceCulture);
+                return ResourceManager.GetString("EnableStreamlabsDesktop", resourceCulture);
             }
         }
         
@@ -17416,15 +17416,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Streaming Software (OBS, SLOBS).
-        /// </summary>
-        public static string StreamingSoftwareOBSSLOBS {
-            get {
-                return ResourceManager.GetString("StreamingSoftwareOBSSLOBS", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Streaming Software Source Name.
         /// </summary>
         public static string StreamingSoftwareSourceName {
@@ -17470,6 +17461,51 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Streamlabs Desktop might be running as administrator and Mix It Up is not. Try running Mix It Up as an Administrator before connecting..
+        /// </summary>
+        public static string StreamlabsDesktopAdminMaybe {
+            get {
+                return ResourceManager.GetString("StreamlabsDesktopAdminMaybe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streamlabs Desktop connection test failed, please ensure that Streamlabs OBS is running..
+        /// </summary>
+        public static string StreamlabsDesktopConnectionFailed {
+            get {
+                return ResourceManager.GetString("StreamlabsDesktopConnectionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streamlabs Desktop connection test successful!.
+        /// </summary>
+        public static string StreamlabsDesktopConnectionSuccess {
+            get {
+                return ResourceManager.GetString("StreamlabsDesktopConnectionSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streamlabs Desktop could not be reached.
+        /// </summary>
+        public static string StreamlabsDesktopFailed {
+            get {
+                return ResourceManager.GetString("StreamlabsDesktopFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Streamlabs Desktop service allows you to directly interact with your instance of Streamlabs Desktop to perform changes to scenes and sources..
+        /// </summary>
+        public static string StreamlabsDesktopInfo1 {
+            get {
+                return ResourceManager.GetString("StreamlabsDesktopInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Streamlabs Donation.
         /// </summary>
         public static string StreamlabsDonation {
@@ -17484,60 +17520,6 @@ namespace MixItUp.Base {
         public static string StreamlabsInfo1 {
             get {
                 return ResourceManager.GetString("StreamlabsInfo1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Streamlabs OBS.
-        /// </summary>
-        public static string StreamlabsOBS {
-            get {
-                return ResourceManager.GetString("StreamlabsOBS", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Streamlabs OBS might be running as administrator and Mix It Up is not. Try running Mix It Up as an Administrator before connecting..
-        /// </summary>
-        public static string StreamlabsOBSAdminMaybe {
-            get {
-                return ResourceManager.GetString("StreamlabsOBSAdminMaybe", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Streamlabs OBS connection test failed, please ensure that Streamlabs OBS is running..
-        /// </summary>
-        public static string StreamlabsOBSConnectionFailed {
-            get {
-                return ResourceManager.GetString("StreamlabsOBSConnectionFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Streamlabs OBS connection test successful!.
-        /// </summary>
-        public static string StreamlabsOBSConnectionSuccess {
-            get {
-                return ResourceManager.GetString("StreamlabsOBSConnectionSuccess", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Streamlabs OBS could not be reached.
-        /// </summary>
-        public static string StreamlabsOBSFailed {
-            get {
-                return ResourceManager.GetString("StreamlabsOBSFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The Streamlabs OBS service allows you to directly interact with your instance of Streamlabs OBS to perform changes to scenes and sources..
-        /// </summary>
-        public static string StreamlabsOBSInfo1 {
-            get {
-                return ResourceManager.GetString("StreamlabsOBSInfo1", resourceCulture);
             }
         }
         
