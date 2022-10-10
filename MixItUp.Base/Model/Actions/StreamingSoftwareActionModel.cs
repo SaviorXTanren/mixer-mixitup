@@ -16,7 +16,7 @@ namespace MixItUp.Base.Model.Actions
 
         OBSStudio,
         XSplit,
-        StreamlabsOBS,
+        StreamlabsDesktop,
     }
 
     public enum StreamingSoftwareActionTypeEnum
@@ -89,11 +89,11 @@ namespace MixItUp.Base.Model.Actions
                     dimensions = await ServiceManager.Get<IOBSStudioService>().GetSourceDimensions(sceneName, sourceName);
                 }
             }
-            else if (softwareType == StreamingSoftwareTypeEnum.StreamlabsOBS)
+            else if (softwareType == StreamingSoftwareTypeEnum.StreamlabsDesktop)
             {
-                if (ServiceManager.Get<StreamlabsOBSService>().IsConnected || (await ServiceManager.Get<StreamlabsOBSService>().Connect()).Success)
+                if (ServiceManager.Get<StreamlabsDesktopService>().IsConnected || (await ServiceManager.Get<StreamlabsDesktopService>().Connect()).Success)
                 {
-                    dimensions = await ServiceManager.Get<StreamlabsOBSService>().GetSourceDimensions(sceneName, sourceName);
+                    dimensions = await ServiceManager.Get<StreamlabsDesktopService>().GetSourceDimensions(sceneName, sourceName);
                 }
             }
 
@@ -228,9 +228,9 @@ namespace MixItUp.Base.Model.Actions
             {
                 ssService = ServiceManager.Get<XSplitService>();
             }
-            else if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.StreamlabsOBS)
+            else if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.StreamlabsDesktop)
             {
-                ssService = ServiceManager.Get<StreamlabsOBSService>();
+                ssService = ServiceManager.Get<StreamlabsDesktopService>();
             }
 
             if (ssService != null && ssService.IsEnabled)

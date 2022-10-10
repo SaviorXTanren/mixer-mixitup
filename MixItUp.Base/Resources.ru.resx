@@ -311,7 +311,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
-    <value>Автом. доб. &quot;!&quot;</value>
+    <value>Автом. доб. "!"</value>
     <comment>Manual</comment>
   </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
@@ -453,7 +453,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ChatTriggersNoExclamationHintAssist" xml:space="preserve">
-    <value>Триггер(ы) для чата (&quot;!&quot; не требуется, разделять пробелами, точка с запятой для нескольких слов)</value>
+    <value>Триггер(ы) для чата ("!" не требуется, разделять пробелами, точка с запятой для нескольких слов)</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatWhisperSound" xml:space="preserve">
@@ -509,7 +509,7 @@
     <comment>Manual</comment>
   </data>
   <data name="CommandNoBang" xml:space="preserve">
-    <value>Команда (&apos;!&apos; не требуется)</value>
+    <value>Команда ('!' не требуется)</value>
     <comment>Manual</comment>
   </data>
   <data name="Commands" xml:space="preserve">
@@ -816,8 +816,8 @@
     <value>Пожалуйста, подключите Streamlabs в разделе Службы!</value>
     <comment>Manual</comment>
   </data>
-  <data name="EnableStreamlabsOBS" xml:space="preserve">
-    <value>Пожалуйста, подключите Streamlabs OBS в разделе Службы!</value>
+  <data name="EnableStreamlabsDesktop" xml:space="preserve">
+    <value>Пожалуйста, подключите Streamlabs Desktop в разделе Службы!</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableXSplit" xml:space="preserve">
@@ -1160,7 +1160,7 @@
     <comment>Manual</comment>
   </data>
   <data name="JSONValueName" xml:space="preserve">
-    <value>Имя значения JSON (использовать &apos;\&apos; для вложенных параметров)</value>
+    <value>Имя значения JSON (использовать '\' для вложенных параметров)</value>
     <comment>Manual</comment>
   </data>
   <data name="Keyboard" xml:space="preserve">
@@ -1734,7 +1734,7 @@
     <comment>Manual</comment>
   </data>
   <data name="RegularStatusOnlineViewingTime" xml:space="preserve">
-    <value>Время просмотра для статуса &quot;Регулярный&quot;</value>
+    <value>Время просмотра для статуса "Регулярный"</value>
     <comment>Manual</comment>
   </data>
   <data name="Release" xml:space="preserve">
@@ -1765,7 +1765,7 @@
     <value>Сообщать</value>
   </data>
   <data name="RequireClaim" xml:space="preserve">
-    <value>Требовать &quot;!claim&quot;</value>
+    <value>Требовать "!claim"</value>
     <comment>Manual</comment>
   </data>
   <data name="RequiredHours" xml:space="preserve">
@@ -3504,7 +3504,7 @@
     <comment>Manual</comment>
   </data>
   <data name="TwitterActionInvalidTweet" xml:space="preserve">
-    <value>Действия с Twitter: твит не может содержать какие-либо &quot;@&quot; теги</value>
+    <value>Действия с Twitter: твит не может содержать какие-либо "@" теги</value>
     <comment>Manual</comment>
   </data>
   <data name="TwitterActionMissingNameUpdate" xml:space="preserve">
@@ -3556,10 +3556,6 @@
   </data>
   <data name="StartStopStream" xml:space="preserve">
     <value>Запуск/остановка трансляции</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="StreamlabsOBS" xml:space="preserve">
-    <value>Streamlabs OBS</value>
     <comment>Manual</comment>
   </data>
   <data name="TextSource" xml:space="preserve">
@@ -3682,10 +3678,6 @@ Fuzzy</comment>
   </data>
   <data name="OverlayActionMissingWidget" xml:space="preserve">
     <value>Действия с оверлеем: Отсутствует виджет</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="StreamingSoftwareOBSSLOBS" xml:space="preserve">
-    <value>Стриминговое ПО (OBS, SLOBS)</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCurrencyRequirementAmountBetween" xml:space="preserve">
@@ -4265,11 +4257,11 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameLostExample" xml:space="preserve">
-    <value>Игра проиграна из-за слишком большого количества неудачных попыток; правильный ответ был &quot;$gamehangmananswer&quot;. Можно было выиграть $gametotalamount {0}!</value>
+    <value>Игра проиграна из-за слишком большого количества неудачных попыток; правильный ответ был "$gamehangmananswer". Можно было выиграть $gametotalamount {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameWonExample" xml:space="preserve">
-    <value>@$username угадал(а) последнюю букву в слове &quot;$gamehangmananswer&quot;, выиграв $gamepayout {0}!</value>
+    <value>@$username угадал(а) последнюю букву в слове "$gamehangmananswer", выиграв $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanMaxFailures" xml:space="preserve">
@@ -4368,7 +4360,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserSuccessExample" xml:space="preserve">
-    <value>@$username правильно угадал слово &quot;$gamewordscrambleanswer&quot; и ушёл с наградой в $gamepayout {0}!</value>
+    <value>@$username правильно угадал слово "$gamewordscrambleanswer" и ушёл с наградой в $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBegin" xml:space="preserve">
@@ -4376,7 +4368,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBeginExample" xml:space="preserve">
-    <value>Зашифрованное слово &quot;$gamewordscrambleword&quot;; расшифруйте его и введите первым в чате, чтобы выиграть!</value>
+    <value>Зашифрованное слово "$gamewordscrambleword"; расшифруйте его и введите первым в чате, чтобы выиграть!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScramblePrepare" xml:space="preserve">
@@ -4486,7 +4478,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseKingUserExample" xml:space="preserve">
-    <value>Король @$username добыл сокровища, но нуждается в рыцарях, чтобы защитить его! Воры или рыцари должны убедить короля, чтобы тот выбрал кого-то из них. Король должен ввести &quot;!treasure &lt;ИГРОК&gt;&quot; в чате, чтобы выбрать, кто будет защищать сокровища - рыцарь или вор!</value>
+    <value>Король @$username добыл сокровища, но нуждается в рыцарях, чтобы защитить его! Воры или рыцари должны убедить короля, чтобы тот выбрал кого-то из них. Король должен ввести "!treasure &lt;ИГРОК&gt;" в чате, чтобы выбрать, кто будет защищать сокровища - рыцарь или вор!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseKnightSelected" xml:space="preserve">
@@ -4604,7 +4596,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoPayoutExample" xml:space="preserve">
-    <value>Пока @$username бросает свой взнос в вулкан, происходит громкое извержение, разбрасывая $gamepayout {0} на земле! Вулкан взрывается монетами! Быстрее, напечатайте &quot;!volcano собрать&quot; в чате в ближайшие 30 секунд!</value>
+    <value>Пока @$username бросает свой взнос в вулкан, происходит громкое извержение, разбрасывая $gamepayout {0} на земле! Вулкан взрывается монетами! Быстрее, напечатайте "!volcano собрать" в чате в ближайшие 30 секунд!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoPayoutPercentageMustBePositive" xml:space="preserve">
@@ -5103,7 +5095,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserFailureExample" xml:space="preserve">
-    <value>Никто не смог угадать слово &quot;$gamewordscrambleanswer&quot;.</value>
+    <value>Никто не смог угадать слово "$gamewordscrambleanswer".</value>
     <comment>Manual</comment>
   </data>
   <data name="CommandGroupTimerIntervalMustBePositive" xml:space="preserve">
@@ -5237,7 +5229,7 @@ Fuzzy</comment>
   </data>
   <data name="CommandActionWaitUntilCompleteHintText" xml:space="preserve">
     <value>Чтобы действия команды ждали завершения выбранной суб-команды, эта субкоманда НЕ будет использовать
- встроенную систему блокировки команд для этого конкретного запуска. Это делается для того, чтобы не допустить возникновения тупика (команда &quot;застревает&quot; и не может быть завершена). Это также означает, что другие команды того же типа, что и выбранные субкоманды смогут работать в одно и то же время, если они отличаются от текущей команды. Например, если выбранная субкоманда является группой действий, другая группа действий также сможет работать одновременно с ней, если этот параметр включён. Это похоже на опцию &quot;Разблокировать команду&quot;, применяющийся только в данное конкретное время.</value>
+ встроенную систему блокировки команд для этого конкретного запуска. Это делается для того, чтобы не допустить возникновения тупика (команда "застревает" и не может быть завершена). Это также означает, что другие команды того же типа, что и выбранные субкоманды смогут работать в одно и то же время, если они отличаются от текущей команды. Например, если выбранная субкоманда является группой действий, другая группа действий также сможет работать одновременно с ней, если этот параметр включён. Это похоже на опцию "Разблокировать команду", применяющийся только в данное конкретное время.</value>
     <comment>Manual</comment>
   </data>
   <data name="Russian" xml:space="preserve">
@@ -5718,14 +5710,14 @@ Fuzzy</comment>
   <data name="StreamlabsInfo1" xml:space="preserve">
     <value>Подключение сервиса Streamlabs позволяет выполнять действия при получении пожертвования. Когда вы войдете в систему, откроется веб-страница аутентификации с просьбой войти в Streamlabs и одобрить Mix It Up для доступа к вашей информации.</value>
   </data>
-  <data name="StreamlabsOBSConnectionFailed" xml:space="preserve">
-    <value>Тест подключения Streamlabs OBS не удался, убедитесь, что Streamlabs OBS запущен.</value>
+  <data name="StreamlabsDesktopConnectionFailed" xml:space="preserve">
+    <value>Тест подключения Стримлабс Настольная не удался, убедитесь, что Streamlabs OBS запущен.</value>
   </data>
-  <data name="StreamlabsOBSConnectionSuccess" xml:space="preserve">
-    <value>Тест соединения Streamlabs OBS успешно прошел!</value>
+  <data name="StreamlabsDesktopConnectionSuccess" xml:space="preserve">
+    <value>Тест соединения Стримлабс Настольная успешно прошел!</value>
   </data>
-  <data name="StreamlabsOBSInfo1" xml:space="preserve">
-    <value>Служба Streamlabs OBS позволяет напрямую взаимодействовать с экземпляром Streamlabs OBS для внесения изменений в сцены и источники.</value>
+  <data name="StreamlabsDesktopInfo1" xml:space="preserve">
+    <value>Служба Стримлабс Настольная позволяет напрямую взаимодействовать с экземпляром Стримлабс Настольная для внесения изменений в сцены и источники.</value>
   </data>
   <data name="Streamloots" xml:space="preserve">
     <value>Streamloots</value>
@@ -6353,11 +6345,11 @@ Fuzzy</comment>
   <data name="RainmakerChannelDataFailed" xml:space="preserve">
     <value>Не удалось получить данные канала</value>
   </data>
-  <data name="StreamlabsOBSAdminMaybe" xml:space="preserve">
-    <value>Streamlabs OBS может работать от имени администратора, а Mix It Up — нет. Попробуйте запустить Mix It Up от имени администратора перед подключением.</value>
+  <data name="StreamlabsDesktopAdminMaybe" xml:space="preserve">
+    <value>Стримлабс Настольная может работать от имени администратора, а Mix It Up — нет. Попробуйте запустить Mix It Up от имени администратора перед подключением.</value>
   </data>
-  <data name="StreamlabsOBSFailed" xml:space="preserve">
-    <value>Не удалось связаться с OBS Streamlabs</value>
+  <data name="StreamlabsDesktopFailed" xml:space="preserve">
+    <value>Не удалось связаться с Стримлабс Настольная</value>
   </data>
   <data name="StreamlabsWebSocketTokenFailed" xml:space="preserve">
     <value>Не удалось получить маркер веб-сокета</value>
@@ -6851,7 +6843,7 @@ Fuzzy</comment>
     <value>{0} К+</value>
   </data>
   <data name="CommunityCommandsUploadCommunityCommand" xml:space="preserve">
-    <value>Команда &quot;Загрузить сообщество&quot;</value>
+    <value>Команда "Загрузить сообщество"</value>
   </data>
   <data name="CommandEditor" xml:space="preserve">
     <value>Редактор команд</value>
@@ -6968,7 +6960,7 @@ Fuzzy</comment>
     <value>Команда чата</value>
   </data>
   <data name="EventCommand" xml:space="preserve">
-    <value>Команда &quot;Событие&quot;</value>
+    <value>Команда "Событие"</value>
   </data>
   <data name="GameCommand" xml:space="preserve">
     <value>Команда игры</value>
@@ -6980,7 +6972,7 @@ Fuzzy</comment>
     <value>Команда таймера</value>
   </data>
   <data name="TwitchChannelPointsCommand" xml:space="preserve">
-    <value>Команда &quot;Точки канала Twitch&quot;</value>
+    <value>Команда "Точки канала Twitch"</value>
   </data>
   <data name="CommunityCommandsOtherCommandReferencedDetected" xml:space="preserve">
     <value>Следующая команда содержит действия, которые ссылаются на другие команды внутри нее (например, команда A запускает команду B с помощью командного действия). Когда эта команда загружена, она НЕ будет включать эти другие команды, на которые ссылаются, только текущую команду. Мы рекомендуем авторам сделать одно из следующих действий:
@@ -7449,7 +7441,7 @@ Fuzzy</comment>
     <value>ОШИБКА: Не удалось найти пользователя со следующим именем пользователя: {0}</value>
   </data>
   <data name="LinkAccountCommandPleaseConfirmLink" xml:space="preserve">
-    <value>Запущен процесс связывания аккаунта. Пожалуйста, повторно запустите команду на другой платформе с информацией о вашем текущем пользователе: &quot;!linkaccount {0} {1}&quot;</value>
+    <value>Запущен процесс связывания аккаунта. Пожалуйста, повторно запустите команду на другой платформе с информацией о вашем текущем пользователе: "!linkaccount {0} {1}"</value>
   </data>
   <data name="LinkAccountCommandUsage" xml:space="preserve">
     <value>Использование: !linkaccount &lt;PLATFORM&gt; &lt;ПОЛЬНОЕ ИМЯ ПОЛЬЗОВАТЕЛЯ&gt;</value>
@@ -8021,7 +8013,7 @@ Fuzzy</comment>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
     <value>Необходимо указать либо «купить», либо «продать»</value>
-    <comment>{0} is the English word &apos;buy&apos;, {1} is the English word &apos;sell&apos;</comment>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
     <value>ИСПОЛЬЗОВАНИЕ: {0} список = Список всех предметов, доступных для покупки/продажи ** {0} &lt;ИМЕНОВАНИЕ&gt; = Список цены покупки/продажи товара ** {0} купить &lt;ИМЯ &gt; [КОЛИЧЕСТВО] = Покупает 1 или указанное количество товара ** {0} продать &lt;НАЗВАНИЕ&gt; [СУММА] = Продает 1 или указанное количество товара</value>
@@ -8274,7 +8266,7 @@ Fuzzy</comment>
     <value>Напоминание о раздаче должно быть 0 или больше</value>
   </data>
   <data name="GiveawayWonTypeClaim" xml:space="preserve">
-    <value>@{0} вы выиграли раздачу; наберите &quot;!claim&quot; в чате!</value>
+    <value>@{0} вы выиграли раздачу; наберите "!claim" в чате!</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="GiveawayYouHaveAlreadyWon" xml:space="preserve">
@@ -8702,7 +8694,7 @@ Fuzzy</comment>
     <value>Add User</value>
   </data>
   <data name="UsersUnableToFindUser" xml:space="preserve">
-    <value>Unable find the user &quot;{0}&quot;</value>
+    <value>Unable find the user "{0}"</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UsersSuccessfullyFoundUser" xml:space="preserve">
@@ -8720,7 +8712,7 @@ Fuzzy</comment>
 whispers to be used as a form of automated communication. There are severe restrictions placed on the
 amount of whispers that can be sent in a timeline that make it very impractical for use, as well as spam
 preventative measures if the user is not on your friends list on Twitch. So although you can send whispers
-via Twitch, it&apos;s a &quot;your mileage may very&quot; situation.</value>
+via Twitch, it's a "your mileage may very" situation.</value>
   </data>
   <data name="AlertName" xml:space="preserve">
     <value>Alert Name</value>

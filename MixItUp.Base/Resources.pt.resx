@@ -311,7 +311,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
-    <value>Incluir automaticamente &quot;!&quot;</value>
+    <value>Incluir automaticamente "!"</value>
     <comment>Manual</comment>
   </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
@@ -453,7 +453,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ChatTriggersNoExclamationHintAssist" xml:space="preserve">
-    <value>Chat Trigger(s) (Sem &quot;!&quot; necessário, espaço seperado, semi-cólon para várias palavras)</value>
+    <value>Chat Trigger(s) (Sem "!" necessário, espaço seperado, semi-cólon para várias palavras)</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatWhisperSound" xml:space="preserve">
@@ -509,7 +509,7 @@
     <comment>Manual</comment>
   </data>
   <data name="CommandNoBang" xml:space="preserve">
-    <value>Comando (Não é necessário &apos;!&apos;</value>
+    <value>Comando (Não é necessário '!'</value>
     <comment>Manual</comment>
   </data>
   <data name="Commands" xml:space="preserve">
@@ -816,8 +816,8 @@
     <value>Por favor, habilite a conexão do Streamlabs na página Serviços!</value>
     <comment>Manual</comment>
   </data>
-  <data name="EnableStreamlabsOBS" xml:space="preserve">
-    <value>Por favor, habilite a conexão OBS do Streamlabs na página Serviços!</value>
+  <data name="EnableStreamlabsDesktop" xml:space="preserve">
+    <value>Por favor, habilite a conexão Desktop do Streamlabs na página Serviços!</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableXSplit" xml:space="preserve">
@@ -1160,7 +1160,7 @@
     <comment>Manual</comment>
   </data>
   <data name="JSONValueName" xml:space="preserve">
-    <value>Nome de valor JSON (Use &apos;\&apos; para parâmetros aninhados)</value>
+    <value>Nome de valor JSON (Use '\' para parâmetros aninhados)</value>
     <comment>Manual</comment>
   </data>
   <data name="Keyboard" xml:space="preserve">
@@ -1734,7 +1734,7 @@
     <comment>Manual</comment>
   </data>
   <data name="RegularStatusOnlineViewingTime" xml:space="preserve">
-    <value>Tempo de visualização on-line do status &quot;regular&quot;</value>
+    <value>Tempo de visualização on-line do status "regular"</value>
     <comment>Manual</comment>
   </data>
   <data name="Release" xml:space="preserve">
@@ -1765,7 +1765,7 @@
     <value>Relatório</value>
   </data>
   <data name="RequireClaim" xml:space="preserve">
-    <value>Requer &quot;!reivindicação&quot;</value>
+    <value>Requer "!reivindicação"</value>
     <comment>Manual</comment>
   </data>
   <data name="RequiredHours" xml:space="preserve">
@@ -3504,7 +3504,7 @@ Por exemplo, se essa opção estiver ativada e o valor for definido para 5, ent�
     <comment>Manual</comment>
   </data>
   <data name="TwitterActionInvalidTweet" xml:space="preserve">
-    <value>Ação do Twitter: Tweet não pode conter nenhuma tag &quot;@&quot;</value>
+    <value>Ação do Twitter: Tweet não pode conter nenhuma tag "@"</value>
     <comment>Manual</comment>
   </data>
   <data name="TwitterActionMissingNameUpdate" xml:space="preserve">
@@ -3556,10 +3556,6 @@ Por exemplo, se essa opção estiver ativada e o valor for definido para 5, ent�
   </data>
   <data name="StartStopStream" xml:space="preserve">
     <value>Fluxo de partida/parada</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="StreamlabsOBS" xml:space="preserve">
-    <value>Streamlabs OBS</value>
     <comment>Manual</comment>
   </data>
   <data name="TextSource" xml:space="preserve">
@@ -3682,10 +3678,6 @@ Fuzzy</comment>
   </data>
   <data name="OverlayActionMissingWidget" xml:space="preserve">
     <value>Ação de sobreposição: Widget ausente</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="StreamingSoftwareOBSSLOBS" xml:space="preserve">
-    <value>Streaming Software (OBS, SLOBS)</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCurrencyRequirementAmountBetween" xml:space="preserve">
@@ -4261,15 +4253,15 @@ Uma vez que o vulcão atinge o estágio 3, cada depósito subsequente tem a chan
     <value>Palpite falhou</value>
   </data>
   <data name="GameCommandHangmanFailedGuessExample" xml:space="preserve">
-    <value>@$username joga suas moedas no pote e adivinha &quot;$arg 1text&quot;... mas foi errado! $gamehangmancurrent</value>
+    <value>@$username joga suas moedas no pote e adivinha "$arg 1text"... mas foi errado! $gamehangmancurrent</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameLostExample" xml:space="preserve">
-    <value>O jogo está perdido com muitos palpites fracassados; a resposta correta foi &quot;$gamehangmananswer&quot;. Lá se vai $gametotalamount {0}!</value>
+    <value>O jogo está perdido com muitos palpites fracassados; a resposta correta foi "$gamehangmananswer". Lá se vai $gametotalamount {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameWonExample" xml:space="preserve">
-    <value>@$username tem a palavra secreta &quot;$gamehangmananswer&quot;, ganhando todo o pote de $gamepayout {0}!</value>
+    <value>@$username tem a palavra secreta "$gamehangmananswer", ganhando todo o pote de $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanMaxFailures" xml:space="preserve">
@@ -4368,7 +4360,7 @@ Uma vez que o vulcão atinge o estágio 3, cada depósito subsequente tem a chan
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserSuccessExample" xml:space="preserve">
-    <value>@$username adivinhou corretamente a palavra &quot;$gamewordscrambleanswer&quot; e saiu com uma recompensa de $gamepayout {0}!</value>
+    <value>@$username adivinhou corretamente a palavra "$gamewordscrambleanswer" e saiu com uma recompensa de $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBegin" xml:space="preserve">
@@ -4376,7 +4368,7 @@ Uma vez que o vulcão atinge o estágio 3, cada depósito subsequente tem a chan
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBeginExample" xml:space="preserve">
-    <value>A palavra mexida é &quot;$gamewordscrambleword&quot;; resolvê-lo e ser o primeiro a digitá-lo no bate-papo!</value>
+    <value>A palavra mexida é "$gamewordscrambleword"; resolvê-lo e ser o primeiro a digitá-lo no bate-papo!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScramblePrepare" xml:space="preserve">
@@ -4486,7 +4478,7 @@ Uma vez que o vulcão atinge o estágio 3, cada depósito subsequente tem a chan
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseKingUserExample" xml:space="preserve">
-    <value>O rei @$username descobriu o tesouro, mas precisa de alguém para defendê-lo! Os ladrões devem trabalhar para convencer o Rei a escolhê-los, todos os outros precisam evitar isso. O Rei deve digitar &quot;!treasure&lt;PLAYER&gt;&quot; no bate-papo para escolher quem defenderá o tesouro!</value>
+    <value>O rei @$username descobriu o tesouro, mas precisa de alguém para defendê-lo! Os ladrões devem trabalhar para convencer o Rei a escolhê-los, todos os outros precisam evitar isso. O Rei deve digitar "!treasure&lt;PLAYER&gt;" no bate-papo para escolher quem defenderá o tesouro!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseKnightSelected" xml:space="preserve">
@@ -4604,7 +4596,7 @@ Uma vez que o vulcão atinge o estágio 3, cada depósito subsequente tem a chan
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoPayoutExample" xml:space="preserve">
-    <value>Enquanto @$username deixa cair seu depósito no Vulcão, uma erupção alta ocorre e $gamepayout {0} pousar em cima deles! O Vulcão está explodindo moedas! Rápido, digite &quot;!volcano collect&quot; no bate-papo nos próximos 30 segundos!</value>
+    <value>Enquanto @$username deixa cair seu depósito no Vulcão, uma erupção alta ocorre e $gamepayout {0} pousar em cima deles! O Vulcão está explodindo moedas! Rápido, digite "!volcano collect" no bate-papo nos próximos 30 segundos!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoPayoutPercentageMustBePositive" xml:space="preserve">
@@ -5107,7 +5099,7 @@ Essa configuração mudará todos os requisitos de função para ser explícito 
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserFailureExample" xml:space="preserve">
-    <value>Ninguém adivinhou corretamente a palavra &quot;$gamewordscrambleanswer&quot;.</value>
+    <value>Ninguém adivinhou corretamente a palavra "$gamewordscrambleanswer".</value>
     <comment>Manual</comment>
   </data>
   <data name="CommandGroupTimerIntervalMustBePositive" xml:space="preserve">
@@ -5245,7 +5237,7 @@ sistema de bloqueio de comando incorporado para este tempo específico em que é
 (o comando fica preso e não consegue completar). Isso também significa que outros comandos do mesmo tipo do selecionado
 sub-comando será capaz de executar ao mesmo tempo se for diferente do comando atual. Por exemplo, se os selecionados
 sub-comando é um Grupo de Ação, então ainda será possível para outro Grupo de Ação para executar ao mesmo tempo, se este é
-Habilitado. Você pode pensar nisso como semelhante à opção &quot;Desbloquear Comando&quot;, mas em vez disso só se aplica a este momento específico.</value>
+Habilitado. Você pode pensar nisso como semelhante à opção "Desbloquear Comando", mas em vez disso só se aplica a este momento específico.</value>
     <comment>Manual</comment>
   </data>
   <data name="Russian" xml:space="preserve">
@@ -5480,7 +5472,7 @@ Habilitado. Você pode pensar nisso como semelhante à opção &quot;Desbloquear
     <value>A conectividade do serviço Extra Life permite que você acione eventos a partir de quando você ou sua equipe recebem uma doação.</value>
   </data>
   <data name="ExtraLifeInfo2" xml:space="preserve">
-    <value>Primeiro, visite a página da sua equipe no site da Vida Extra e perto do final da URL da Web, ele dirá &quot;teamID=______&quot;. Digite esse número na primeira caixa, clique em pesquisar, selecione seu nome na lista e clique no botão Entrar.</value>
+    <value>Primeiro, visite a página da sua equipe no site da Vida Extra e perto do final da URL da Web, ele dirá "teamID=______". Digite esse número na primeira caixa, clique em pesquisar, selecione seu nome na lista e clique no botão Entrar.</value>
   </data>
   <data name="ExtraLifeInvalidParticipant" xml:space="preserve">
     <value>Por favor, selecione um participante válido da Vida Extra.</value>
@@ -5704,7 +5696,7 @@ Habilitado. Você pode pensar nisso como semelhante à opção &quot;Desbloquear
     <value>Este plug-in do Stream Deck permite que você execute comandos Mix It Up diretamente do seu dispositivo Stream Deck, bem como outras informações de status sobre seu fluxo.</value>
   </data>
   <data name="StreamDeckInfo2" xml:space="preserve">
-    <value>Para começar, certifique-se de que o software Stream Deck seja atualizado para pelo menos a versão 4.0 &amp; o serviço de API do desenvolvedor está habilitado no Mix It Up. Para instalar o plugin Mix It Up, clique no &quot;Mais Ações...&quot; botão no canto inferior direito, em seguida, procure por &quot;Mix It Up&quot; na janela.</value>
+    <value>Para começar, certifique-se de que o software Stream Deck seja atualizado para pelo menos a versão 4.0 &amp; o serviço de API do desenvolvedor está habilitado no Mix It Up. Para instalar o plugin Mix It Up, clique no "Mais Ações..." botão no canto inferior direito, em seguida, procure por "Mix It Up" na janela.</value>
     <comment>Fuzzy</comment>
   </data>
   <data name="StreamElements" xml:space="preserve">
@@ -5726,14 +5718,14 @@ Habilitado. Você pode pensar nisso como semelhante à opção &quot;Desbloquear
   <data name="StreamlabsInfo1" xml:space="preserve">
     <value>A conectividade de serviço do Streamlabs permite que você realize ações quando uma doação é recebida. Ao fazer login, uma página da autenticação será aberta pedindo que você faça login no Streamlabs e aprove o Mix It Up para acessar suas informações.</value>
   </data>
-  <data name="StreamlabsOBSConnectionFailed" xml:space="preserve">
-    <value>O teste de conexão OBS do Streamlabs falhou, por favor, certifique-se de que o Streamlabs OBS está em execução.</value>
+  <data name="StreamlabsDesktopConnectionFailed" xml:space="preserve">
+    <value>O teste de conexão Streamlabs Desktop falhou, por favor, certifique-se de que o Streamlabs Desktop está em execução.</value>
   </data>
-  <data name="StreamlabsOBSConnectionSuccess" xml:space="preserve">
-    <value>Teste de conexão OBS do Streamlabs com sucesso!</value>
+  <data name="StreamlabsDesktopConnectionSuccess" xml:space="preserve">
+    <value>Teste de conexão Streamlabs Desktop com sucesso!</value>
   </data>
-  <data name="StreamlabsOBSInfo1" xml:space="preserve">
-    <value>O serviço OBS do Streamlabs permite que você interaja diretamente com sua instância do Streamlabs OBS para realizar alterações em cenas e fontes.</value>
+  <data name="StreamlabsDesktopInfo1" xml:space="preserve">
+    <value>O serviço Streamlabs Desktop permite que você interaja diretamente com sua instância do Streamlabs Desktop para realizar alterações em cenas e fontes.</value>
   </data>
   <data name="Streamloots" xml:space="preserve">
     <value>Streamloots</value>
@@ -6188,7 +6180,7 @@ Habilitado. Você pode pensar nisso como semelhante à opção &quot;Desbloquear
     <comment>{0} is the rank/currency name</comment>
   </data>
   <data name="RetroactivelyGivePointsPrompt2" xml:space="preserve">
-    <value>EX: Se a Taxa Online for &quot;1 por Hora&quot; e um usuário tiver 16 horas de visualização, então os pontos de {0} do usuário serão definidos para 16.</value>
+    <value>EX: Se a Taxa Online for "1 por Hora" e um usuário tiver 16 horas de visualização, então os pontos de {0} do usuário serão definidos para 16.</value>
     <comment>{0} is the rank/currency name</comment>
   </data>
   <data name="RetroactivelyGivePointsPrompt3" xml:space="preserve">
@@ -6361,11 +6353,11 @@ Habilitado. Você pode pensar nisso como semelhante à opção &quot;Desbloquear
   <data name="RainmakerChannelDataFailed" xml:space="preserve">
     <value>Falha ao obter dados do canal</value>
   </data>
-  <data name="StreamlabsOBSAdminMaybe" xml:space="preserve">
-    <value>Streamlabs OBS pode estar sendo executado como administrador e Mix It Up não é. Tente executar o Mix It Up como administrador antes de conectar.</value>
+  <data name="StreamlabDesktopAdminMaybe" xml:space="preserve">
+    <value>Streamlabs Desktop pode estar sendo executado como administrador e Mix It Up não é. Tente executar o Mix It Up como administrador antes de conectar.</value>
   </data>
-  <data name="StreamlabsOBSFailed" xml:space="preserve">
-    <value>Streamlabs OBS não pôde ser alcançado</value>
+  <data name="StreamlabsDesktopFailed" xml:space="preserve">
+    <value>Streamlabs Desktop não pôde ser alcançado</value>
   </data>
   <data name="StreamlabsWebSocketTokenFailed" xml:space="preserve">
     <value>Falha ao obter token de soquete web</value>
@@ -6434,7 +6426,7 @@ Habilitado. Você pode pensar nisso como semelhante à opção &quot;Desbloquear
     <value>Mostra uma barra de progresso para um objetivo especificado. O progresso é atualizado à medida que os eventos ocorrem ou no intervalo de atualização definido pelo usuário.</value>
   </data>
   <data name="OverlayWidgetStreamBossDescription" xml:space="preserve">
-    <value>Mostra um usuário do seu canal como um &quot;chefe&quot; que pode ser danificado realizando ações em seu canal até que eles sejam derrotados e um novo chefe seja selecionado. O dano é adicionado à medida que ocorre. Os identificadores especiais do Stream Boss podem ser usados em paralelo com este widget de sobreposição.</value>
+    <value>Mostra um usuário do seu canal como um "chefe" que pode ser danificado realizando ações em seu canal até que eles sejam derrotados e um novo chefe seja selecionado. O dano é adicionado à medida que ocorre. Os identificadores especiais do Stream Boss podem ser usados em paralelo com este widget de sobreposição.</value>
   </data>
   <data name="OverlayWidgetTextDescription" xml:space="preserve">
     <value>Mostra um bloco de texto. Atualizações com base no intervalo de atualização definido pelo usuário.</value>
@@ -6917,7 +6909,7 @@ O não cumprimento de um dos seguintes pode afetar a forma como os usuários ava
     <value>A conectividade do serviço Pixel Chat permite controlar vários elementos de suas sobreposições de bate-papo do Pixel e ativar funcionalidades específicas.</value>
   </data>
   <data name="PixelChatInfo2" xml:space="preserve">
-    <value>Para se conectar ao PixelChat, você precisará criar um Token de desenvolvedor. Isso pode ser encontrado indo para o perfil, clique em &quot;Exibir tokens&quot; e crie um novo Token de Desenvolvedor.</value>
+    <value>Para se conectar ao PixelChat, você precisará criar um Token de desenvolvedor. Isso pode ser encontrado indo para o perfil, clique em "Exibir tokens" e crie um novo Token de Desenvolvedor.</value>
   </data>
   <data name="PixelChatInvalidAPIKey" xml:space="preserve">
     <value>Por favor, insira uma chave de API de Pixel Chat válida.</value>
@@ -7457,7 +7449,7 @@ O não cumprimento de um dos seguintes pode afetar a forma como os usuários ava
     <value>ERRO: Não foi encontrado usuário com o seguinte nome de usuário: {0}</value>
   </data>
   <data name="LinkAccountCommandPleaseConfirmLink" xml:space="preserve">
-    <value>O processo de vinculação de contas começou. Por favor, re-execute o comando na outra plataforma com as informações do usuário atual: &quot;!linkaccount {0} {1}&quot;</value>
+    <value>O processo de vinculação de contas começou. Por favor, re-execute o comando na outra plataforma com as informações do usuário atual: "!linkaccount {0} {1}"</value>
   </data>
   <data name="LinkAccountCommandUsage" xml:space="preserve">
     <value>Uso: !linkaccount &lt;PLATFORM&gt; &lt;PLATFORM USERNAME&gt;</value>
@@ -8028,8 +8020,8 @@ As cotações importadas com IDs que correspondem às cotações existentes ser�
     <value>O item especificado não existe</value>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
-    <value>Você deve especificar &quot;comprar&quot; ou &quot;vender&quot;</value>
-    <comment>{0} is the English word &apos;buy&apos;, {1} is the English word &apos;sell&apos;</comment>
+    <value>Você deve especificar "comprar" ou "vender"</value>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
     <value>USO: {0} lista = Lista todos os itens disponíveis para compra/venda ** {0} &lt;ITEM NAME&gt; = Lista o preço de compra/venda do item ** {0} comprar &lt;ITE NOME DE M&gt; [QUANTIDADE] = Compra 1 ou o valor especificado do item ** {0} vender &lt;ITEM NAME&gt; [QUANTIDADE] = Vende 1 ou o valor especificado do item</value>
@@ -8282,7 +8274,7 @@ As cotações importadas com IDs que correspondem às cotações existentes ser�
     <value>O lembrete de sorteio deve ser 0 ou maior</value>
   </data>
   <data name="GiveawayWonTypeClaim" xml:space="preserve">
-    <value>@{0} você ganhou o sorteio; digitar &quot;!claim&quot; no bate-papo!</value>
+    <value>@{0} você ganhou o sorteio; digitar "!claim" no bate-papo!</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="GiveawayYouHaveAlreadyWon" xml:space="preserve">
@@ -8629,7 +8621,7 @@ Tentaremos nos reconectar com o serviço quando possível. Se isso continuar, po
     <value>Digamos que você queria fazer macarrão; você seguiria os passos na receita um após o outro até que você esteja feito. Você também seguiria cada passo na ordem em que eles são especificados. Por exemplo, você precisa aquecer a água antes de poder adicionar a massa.</value>
   </data>
   <data name="WizardCommands3" xml:space="preserve">
-    <value>Comandos são como uma receita e ações são os passos nessa receita. Digamos que você faça um comando de grito, quais são as coisas que ele deve fazer? Cada uma dessas &quot;coisas&quot; pode ser considerada como uma ação.</value>
+    <value>Comandos são como uma receita e ações são os passos nessa receita. Digamos que você faça um comando de grito, quais são as coisas que ele deve fazer? Cada uma dessas "coisas" pode ser considerada como uma ação.</value>
   </data>
   <data name="WizardCommands4" xml:space="preserve">
     <value>Neste exemplo, nosso comando shout out envia uma mensagem para conversar, toca um som, espera 10 segundos e, em seguida, mostra uma imagem. Cada um deles corresponde a um tipo de ação diferente (Chat, Som, Espera e Sobreposição).</value>
@@ -8710,7 +8702,7 @@ Tentaremos nos reconectar com o serviço quando possível. Se isso continuar, po
     <value>Add User</value>
   </data>
   <data name="UsersUnableToFindUser" xml:space="preserve">
-    <value>Unable find the user &quot;{0}&quot;</value>
+    <value>Unable find the user "{0}"</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UsersSuccessfullyFoundUser" xml:space="preserve">
@@ -8728,7 +8720,7 @@ Tentaremos nos reconectar com o serviço quando possível. Se isso continuar, po
 whispers to be used as a form of automated communication. There are severe restrictions placed on the
 amount of whispers that can be sent in a timeline that make it very impractical for use, as well as spam
 preventative measures if the user is not on your friends list on Twitch. So although you can send whispers
-via Twitch, it&apos;s a &quot;your mileage may very&quot; situation.</value>
+via Twitch, it's a "your mileage may very" situation.</value>
   </data>
   <data name="AlertName" xml:space="preserve">
     <value>Alert Name</value>

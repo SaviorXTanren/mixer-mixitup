@@ -311,7 +311,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
-    <value>自動インクルード &quot;!</value>
+    <value>自動インクルード "!</value>
     <comment>Manual</comment>
   </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
@@ -816,8 +816,8 @@
     <value>[サービス] ページでストリームラボ接続を有効にしてください。</value>
     <comment>Manual</comment>
   </data>
-  <data name="EnableStreamlabsOBS" xml:space="preserve">
-    <value>サービスページでストリームラボ OBS 接続を有効にしてください!</value>
+  <data name="EnableStreamlabsDesktop" xml:space="preserve">
+    <value>サービスページでストリームラボ Desktop 接続を有効にしてください!</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableXSplit" xml:space="preserve">
@@ -1160,7 +1160,7 @@
     <comment>Manual</comment>
   </data>
   <data name="JSONValueName" xml:space="preserve">
-    <value>JSON 値名 (入れ子になったパラメーターには &apos;\&apos; を使用)</value>
+    <value>JSON 値名 (入れ子になったパラメーターには '\' を使用)</value>
     <comment>Manual</comment>
   </data>
   <data name="Keyboard" xml:space="preserve">
@@ -1765,7 +1765,7 @@
     <value>報告</value>
   </data>
   <data name="RequireClaim" xml:space="preserve">
-    <value>要求 &quot;!クレーム&quot;</value>
+    <value>要求 "!クレーム"</value>
     <comment>Manual</comment>
   </data>
   <data name="RequiredHours" xml:space="preserve">
@@ -3558,10 +3558,6 @@
     <value>ストリームの開始/停止</value>
     <comment>Manual</comment>
   </data>
-  <data name="StreamlabsOBS" xml:space="preserve">
-    <value>Streamlabs OBS</value>
-    <comment>Manual</comment>
-  </data>
   <data name="TextSource" xml:space="preserve">
     <value>テキストソース</value>
     <comment>Manual</comment>
@@ -3682,10 +3678,6 @@ Fuzzy</comment>
   </data>
   <data name="OverlayActionMissingWidget" xml:space="preserve">
     <value>オーバーレイアクション: 見つからないウィジェット</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="StreamingSoftwareOBSSLOBS" xml:space="preserve">
-    <value>ストリーミングソフトウェア(OBS、スロブス)</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCurrencyRequirementAmountBetween" xml:space="preserve">
@@ -4269,7 +4261,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameWonExample" xml:space="preserve">
-    <value>@$usernameは、$gamepayout {0}の全体のポットを獲得し、秘密の言葉&quot;$gamehangmananswer&quot;を得た!</value>
+    <value>@$usernameは、$gamepayout {0}の全体のポットを獲得し、秘密の言葉"$gamehangmananswer"を得た!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanMaxFailures" xml:space="preserve">
@@ -5245,7 +5237,7 @@ Fuzzy</comment>
 (コマンドがスタックし、完了できません)。これは、選択したコマンドと同じ種類の他のコマンドも意味します。
 サブコマンドは、現在のコマンドと異なる場合、同時に実行することができます。たとえば、選択した
 サブコマンドはアクショングループですが、この場合は別のアクショングループを同時に実行することができます。
-有効。&quot;Unlock Command&quot; オプションを切り替えるのと似ていますが、この特定の時間にのみ適用されます。</value>
+有効。"Unlock Command" オプションを切り替えるのと似ていますが、この特定の時間にのみ適用されます。</value>
     <comment>Manual</comment>
   </data>
   <data name="Russian" xml:space="preserve">
@@ -5726,14 +5718,14 @@ Fuzzy</comment>
   <data name="StreamlabsInfo1" xml:space="preserve">
     <value>Streamlabs サービス接続では、寄付を受け取ったときにアクションを実行できます。ログインすると、認証ウェブページが開き、Streamlabsにログインし、情報にアクセスするためにMix It Upを承認するように求める。</value>
   </data>
-  <data name="StreamlabsOBSConnectionFailed" xml:space="preserve">
-    <value>ストリームラボ OBS 接続テストに失敗しました。</value>
+  <data name="StreamlabsDesktopConnectionFailed" xml:space="preserve">
+    <value>ストリームラボデスクトップ接続テストに失敗しました。</value>
   </data>
-  <data name="StreamlabsOBSConnectionSuccess" xml:space="preserve">
-    <value>ストリームラボ OBS 接続テストが成功しました!</value>
+  <data name="StreamlabsDesktopConnectionSuccess" xml:space="preserve">
+    <value>ストリームラボデスクトップ接続テストが成功しました!</value>
   </data>
-  <data name="StreamlabsOBSInfo1" xml:space="preserve">
-    <value>Streamlabs OBS サービスを使用すると、Streamlabs OBS のインスタンスと直接対話して、シーンやソースに対する変更を実行できます。</value>
+  <data name="StreamlabsDesktopInfo1" xml:space="preserve">
+    <value>ストリームラボデスクトップサービスを使用すると、ストリームラボデスクトップのインスタンスと直接対話して、シーンやソースに対する変更を実行できます。</value>
   </data>
   <data name="Streamloots" xml:space="preserve">
     <value>Streamloots</value>
@@ -6361,11 +6353,11 @@ Fuzzy</comment>
   <data name="RainmakerChannelDataFailed" xml:space="preserve">
     <value>チャネル データの取得に失敗しました</value>
   </data>
-  <data name="StreamlabsOBSAdminMaybe" xml:space="preserve">
-    <value>ストリームラボ OBS は管理者として実行されている可能性があり、ミックス・イット・アップは実行されません。接続する前に、管理者として Mix It Up を実行してみてください。</value>
+  <data name="StreamlabsDesktopAdminMaybe" xml:space="preserve">
+    <value>ストリームラボデスクトップは管理者として実行されている可能性があり、ミックス・イット・アップは実行されません。接続する前に、管理者として Mix It Up を実行してみてください。</value>
   </data>
-  <data name="StreamlabsOBSFailed" xml:space="preserve">
-    <value>ストリームラボ OBS に到達できませんでした</value>
+  <data name="StreamlabsDesktopFailed" xml:space="preserve">
+    <value>ストリームラボデスクトップに到達できませんでした</value>
   </data>
   <data name="StreamlabsWebSocketTokenFailed" xml:space="preserve">
     <value>Web ソケット トークンを取得できませんでした</value>
@@ -6434,7 +6426,7 @@ Fuzzy</comment>
     <value>指定した目標の進行状況バーを表示します。進行状況は、イベントが発生した場合、またはユーザー定義の更新間隔で更新されます。</value>
   </data>
   <data name="OverlayWidgetStreamBossDescription" xml:space="preserve">
-    <value>チャンネルのユーザーを&quot;ボス&quot;として表示します。損傷は発生時に追加されます。ストリームボス特別識別子は、このオーバーレイウィジェットと並行して使用することができます。</value>
+    <value>チャンネルのユーザーを"ボス"として表示します。損傷は発生時に追加されます。ストリームボス特別識別子は、このオーバーレイウィジェットと並行して使用することができます。</value>
   </data>
   <data name="OverlayWidgetTextDescription" xml:space="preserve">
     <value>テキストのブロックを表示します。ユーザー定義の更新間隔に基づいて更新します。</value>
@@ -7457,7 +7449,7 @@ Fuzzy</comment>
     <value>エラー: 次のユーザー名を持つユーザーが見つかりませんでした: {0}</value>
   </data>
   <data name="LinkAccountCommandPleaseConfirmLink" xml:space="preserve">
-    <value>アカウントのリンク処理を開始しました。現在のユーザーの情報を使用して、他のプラットフォームでコマンドを再実行してください: &quot;!linkaccount {0} {1}&quot;</value>
+    <value>アカウントのリンク処理を開始しました。現在のユーザーの情報を使用して、他のプラットフォームでコマンドを再実行してください: "!linkaccount {0} {1}"</value>
   </data>
   <data name="LinkAccountCommandUsage" xml:space="preserve">
     <value>使用法: !リンクアカウント&lt;PLATFORM&gt;&lt;プラットフォームユーザー名&gt;</value>
@@ -8028,8 +8020,8 @@ Mix It Up の実行中にまだチャンネルにアクセスしていないユ�
     <value>指定したアイテムは存在しません</value>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
-    <value>&quot;買い&quot; または &quot;売り&quot; のいずれかを指定する必要があります。</value>
-    <comment>{0} is the English word &apos;buy&apos;, {1} is the English word &apos;sell&apos;</comment>
+    <value>"買い" または "売り" のいずれかを指定する必要があります。</value>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
     <value>使用法: {0}リスト = 購入/販売に利用可能なすべての商品を一覧表示します {0} ** {0} &lt;ITEM NAME&gt; = 購入&lt;ITEM NAME&gt; [AMOUNT] = 購入1または {0}商品の指定金額&lt;商品名&gt; [金額] = 1 または指定金額を販売します</value>
@@ -8710,7 +8702,7 @@ Mix It Up の実行中にまだチャンネルにアクセスしていないユ�
     <value>Add User</value>
   </data>
   <data name="UsersUnableToFindUser" xml:space="preserve">
-    <value>Unable find the user &quot;{0}&quot;</value>
+    <value>Unable find the user "{0}"</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UsersSuccessfullyFoundUser" xml:space="preserve">
@@ -8728,7 +8720,7 @@ Mix It Up の実行中にまだチャンネルにアクセスしていないユ�
 whispers to be used as a form of automated communication. There are severe restrictions placed on the
 amount of whispers that can be sent in a timeline that make it very impractical for use, as well as spam
 preventative measures if the user is not on your friends list on Twitch. So although you can send whispers
-via Twitch, it&apos;s a &quot;your mileage may very&quot; situation.</value>
+via Twitch, it's a "your mileage may very" situation.</value>
   </data>
   <data name="AlertName" xml:space="preserve">
     <value>Alert Name</value>

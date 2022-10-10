@@ -311,7 +311,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
-    <value>Automatisch &quot;!&quot; Toevoegen</value>
+    <value>Automatisch "!" Toevoegen</value>
     <comment>Manual</comment>
   </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
@@ -453,7 +453,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ChatTriggersNoExclamationHintAssist" xml:space="preserve">
-    <value>Chattrigger(s) (Geen &quot;!&quot; nodig, spatie gescheiden, puntkomma voor multi-woorden)</value>
+    <value>Chattrigger(s) (Geen "!" nodig, spatie gescheiden, puntkomma voor multi-woorden)</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatWhisperSound" xml:space="preserve">
@@ -509,7 +509,7 @@
     <comment>Manual</comment>
   </data>
   <data name="CommandNoBang" xml:space="preserve">
-    <value>Opdracht (Geen &apos;!&apos; nodig)</value>
+    <value>Opdracht (Geen '!' nodig)</value>
     <comment>Manual</comment>
   </data>
   <data name="Commands" xml:space="preserve">
@@ -816,8 +816,8 @@
     <value>Schakel Streamlabs-verbinding in op de Services pagina!</value>
     <comment>Manual</comment>
   </data>
-  <data name="EnableStreamlabsOBS" xml:space="preserve">
-    <value>Schakel Streamlabs OBS-verbinding in op de Services pagina!</value>
+  <data name="EnableStreamlabsDesktop" xml:space="preserve">
+    <value>Schakel Streamlabs Desktop-verbinding in op de Services pagina!</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableXSplit" xml:space="preserve">
@@ -1160,7 +1160,7 @@
     <comment>Manual</comment>
   </data>
   <data name="JSONValueName" xml:space="preserve">
-    <value>JSON-Waardenaam (Gebruik &apos;\&apos; voor geneste parameters)</value>
+    <value>JSON-Waardenaam (Gebruik '\' voor geneste parameters)</value>
     <comment>Manual</comment>
   </data>
   <data name="Keyboard" xml:space="preserve">
@@ -1546,7 +1546,7 @@
     <comment>Manual</comment>
   </data>
   <data name="OverlayImagesAndVideos" xml:space="preserve">
-    <value>Overlay (Afbeeldingen &amp; Video&apos;s)</value>
+    <value>Overlay (Afbeeldingen &amp; Video's)</value>
     <comment>Manual</comment>
   </data>
   <data name="Overlays" xml:space="preserve">
@@ -1734,7 +1734,7 @@
     <comment>Manual</comment>
   </data>
   <data name="RegularStatusOnlineViewingTime" xml:space="preserve">
-    <value>&quot;Normale&quot; Status Online Kijktijd</value>
+    <value>"Normale" Status Online Kijktijd</value>
     <comment>Manual</comment>
   </data>
   <data name="Release" xml:space="preserve">
@@ -1765,7 +1765,7 @@
     <value>Rapport</value>
   </data>
   <data name="RequireClaim" xml:space="preserve">
-    <value>Vereist &quot;!claim&quot;</value>
+    <value>Vereist "!claim"</value>
     <comment>Manual</comment>
   </data>
   <data name="RequiredHours" xml:space="preserve">
@@ -2225,7 +2225,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ThemesAndColors" xml:space="preserve">
-    <value>Thema&apos;s &amp; Kleuren</value>
+    <value>Thema's &amp; Kleuren</value>
     <comment>Manual</comment>
   </data>
   <data name="ThreeLeft" xml:space="preserve">
@@ -3505,7 +3505,7 @@ Als deze optie bijvoorbeeld is ingeschakeld en het bedrag is ingesteld op 5, wor
     <comment>Manual</comment>
   </data>
   <data name="TwitterActionInvalidTweet" xml:space="preserve">
-    <value>Twitter-actie: Tweet mag geen &quot;@&quot;-tags bevatten</value>
+    <value>Twitter-actie: Tweet mag geen "@"-tags bevatten</value>
     <comment>Manual</comment>
   </data>
   <data name="TwitterActionMissingNameUpdate" xml:space="preserve">
@@ -3557,10 +3557,6 @@ Als deze optie bijvoorbeeld is ingeschakeld en het bedrag is ingesteld op 5, wor
   </data>
   <data name="StartStopStream" xml:space="preserve">
     <value>Stream Starten/Stoppen</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="StreamlabsOBS" xml:space="preserve">
-    <value>Streamlabs OBS</value>
     <comment>Manual</comment>
   </data>
   <data name="TextSource" xml:space="preserve">
@@ -3683,10 +3679,6 @@ Fuzzy</comment>
   </data>
   <data name="OverlayActionMissingWidget" xml:space="preserve">
     <value>Overlay-actie: Ontbrekende widget</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="StreamingSoftwareOBSSLOBS" xml:space="preserve">
-    <value>Streaming Software (OBS, SLOBS)</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCurrencyRequirementAmountBetween" xml:space="preserve">
@@ -3924,7 +3916,7 @@ Nadat de tijdslimiet is verstreken, wordt een gebruiker van de deelnemers gesele
     <value>Vulkaan</value>
   </data>
   <data name="GameCommandVolcanoDescription" xml:space="preserve">
-    <value>Met het Vulkaan-spel kan een gebruiker een specifieke hoeveelheid valuta in een vulkaan storten met de kans op een persoonlijke uitbetaling en een uitbetaling voor alle gebruikers in de chat. De vulkaan doorloopt 3 fasen naarmate er meer en meer valuta in wordt gestort en een andere set deposit &amp; status-commando&apos;s wordt gebruikt, afhankelijk van het stadium waarin de vulkaan zich bevindt.
+    <value>Met het Vulkaan-spel kan een gebruiker een specifieke hoeveelheid valuta in een vulkaan storten met de kans op een persoonlijke uitbetaling en een uitbetaling voor alle gebruikers in de chat. De vulkaan doorloopt 3 fasen naarmate er meer en meer valuta in wordt gestort en een andere set deposit &amp; status-commando's wordt gebruikt, afhankelijk van het stadium waarin de vulkaan zich bevindt.
 
 Zodra de vulkaan stadium 3 bereikt, heeft elke volgende afzetting een kans om een uitbarsting te veroorzaken. Wanneer een uitbarsting optreedt, krijgt de gebruiker die het heeft geactiveerd een gespecialiseerde uitbetaling voor hen. Na de uitbarsting hebben alle gebruikers de kans om uitgebarsten valuta te verzamelen tijdens de verzameltijdslimiet. Nadat het verzamelen is voltooid, wordt de inhoud van de vulkaan teruggezet naar 0.</value>
     <comment>Manual</comment>
@@ -4262,15 +4254,15 @@ Zodra de vulkaan stadium 3 bereikt, heeft elke volgende afzetting een kans om ee
     <value>Mislukte Gok</value>
   </data>
   <data name="GameCommandHangmanFailedGuessExample" xml:space="preserve">
-    <value>@$username laat hun munten in de pot vallen en raadt &quot;$arg1text&quot;... maar het was fout! $gamehangmancurrent</value>
+    <value>@$username laat hun munten in de pot vallen en raadt "$arg1text"... maar het was fout! $gamehangmancurrent</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameLostExample" xml:space="preserve">
-    <value>Het spel is verloren met te veel mislukte gokken; het juiste antwoord was &quot;$gamehangmananswer&quot;. Daar gaat $gametotalamount {0}!</value>
+    <value>Het spel is verloren met te veel mislukte gokken; het juiste antwoord was "$gamehangmananswer". Daar gaat $gametotalamount {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameWonExample" xml:space="preserve">
-    <value>@$username kreeg het geheime woord &quot;$gamehangmananswer&quot; en won de hele pot $gamepayout {0}!</value>
+    <value>@$username kreeg het geheime woord "$gamehangmananswer" en won de hele pot $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanMaxFailures" xml:space="preserve">
@@ -4369,7 +4361,7 @@ Zodra de vulkaan stadium 3 bereikt, heeft elke volgende afzetting een kans om ee
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserSuccessExample" xml:space="preserve">
-    <value>@$username raadde het woord &quot;$gamewordscrambleanswer&quot; correct en liep weg met een overvloed aan $gamepayout {0}!</value>
+    <value>@$username raadde het woord "$gamewordscrambleanswer" correct en liep weg met een overvloed aan $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBegin" xml:space="preserve">
@@ -4377,7 +4369,7 @@ Zodra de vulkaan stadium 3 bereikt, heeft elke volgende afzetting een kans om ee
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBeginExample" xml:space="preserve">
-    <value>Het vervormde woord is &quot;$gamewordscrambleword&quot;; los het op en typ het als eerste in de chat!</value>
+    <value>Het vervormde woord is "$gamewordscrambleword"; los het op en typ het als eerste in de chat!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScramblePrepare" xml:space="preserve">
@@ -4487,7 +4479,7 @@ Zodra de vulkaan stadium 3 bereikt, heeft elke volgende afzetting een kans om ee
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseKingUserExample" xml:space="preserve">
-    <value>Koning @$username heeft de schat ontdekt maar heeft iemand nodig om hem te verdedigen! De dieven moeten werken om de koning te overtuigen om ze te kiezen, de rest moet dat voorkomen. De Koning moet &quot;!schat &lt;PLAYER&gt;&quot; in de chat typen om te kiezen wie de schat zal verdedigen!</value>
+    <value>Koning @$username heeft de schat ontdekt maar heeft iemand nodig om hem te verdedigen! De dieven moeten werken om de koning te overtuigen om ze te kiezen, de rest moet dat voorkomen. De Koning moet "!schat &lt;PLAYER&gt;" in de chat typen om te kiezen wie de schat zal verdedigen!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseKnightSelected" xml:space="preserve">
@@ -4605,7 +4597,7 @@ Zodra de vulkaan stadium 3 bereikt, heeft elke volgende afzetting een kans om ee
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoPayoutExample" xml:space="preserve">
-    <value>Terwijl @$username hun bijdrage in de vulkaan laten vallen, vindt er een luide uitbarsting plaats en landt $gamepayout {0} bovenop hen! De vulkaan explodeert munten! Snel, typ &quot;!volcano collect&quot; in chat in de volgende 30 seconden!</value>
+    <value>Terwijl @$username hun bijdrage in de vulkaan laten vallen, vindt er een luide uitbarsting plaats en landt $gamepayout {0} bovenop hen! De vulkaan explodeert munten! Snel, typ "!volcano collect" in chat in de volgende 30 seconden!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoPayoutPercentageMustBePositive" xml:space="preserve">
@@ -5024,7 +5016,7 @@ dat dit onvoorziene problemen kan veroorzaken, dus wees voorzichtig.</value>
     <value>Er moet ten minste 1 valutavereiste worden ingesteld</value>
   </data>
   <data name="GamesNoCurrenciesExist" xml:space="preserve">
-    <value>** Geen Valuta&apos;s gedetecteerd, sommige spellen vereisen een valuta **</value>
+    <value>** Geen Valuta's gedetecteerd, sommige spellen vereisen een valuta **</value>
     <comment>Manual</comment>
   </data>
   <data name="InventoryDoesNotExist" xml:space="preserve">
@@ -5108,7 +5100,7 @@ Met deze instelling worden alle rolvereisten expliciet gewijzigd en moet de gebr
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserFailureExample" xml:space="preserve">
-    <value>Niemand heeft het woord &quot;$gamewordscrambleanswer&quot; correct geraden.</value>
+    <value>Niemand heeft het woord "$gamewordscrambleanswer" correct geraden.</value>
     <comment>Manual</comment>
   </data>
   <data name="CommandGroupTimerIntervalMustBePositive" xml:space="preserve">
@@ -5246,7 +5238,7 @@ ingebouwde opdracht vergrendelingssysteem voor deze specifieke tijd uitgevoerd. 
 (commando loopt vast en kan niet worden voltooid). Dit betekent ook dat andere opdrachten van hetzelfde type als de geselecteerde
 subopdracht kan tegelijkertijd worden uitgevoerd als deze anders is dan de huidige opdracht. Bijvoorbeeld als de geselecteerde
 subopdracht een Actiegroep is, dan is het nog steeds mogelijk dat een andere Actiegroep tegelijkertijd wordt uitgevoerd als dit is 
-Ingeschakeld. Je kunt het vergelijkbaar zien als het schakelen tussen de optie &quot;Opdracht ontgrendelen&quot;, maar dit is in plaats daarvan alleen van toepassing voor deze specifieke tijd.</value>
+Ingeschakeld. Je kunt het vergelijkbaar zien als het schakelen tussen de optie "Opdracht ontgrendelen", maar dit is in plaats daarvan alleen van toepassing voor deze specifieke tijd.</value>
     <comment>Manual</comment>
   </data>
   <data name="Russian" xml:space="preserve">
@@ -5456,7 +5448,7 @@ Ingeschakeld. Je kunt het vergelijkbaar zien als het schakelen tussen de optie &
     <value>De Developer API maakt geavanceerde interactie met Mix It Up mogelijk vanuit andere toepassingen die op uw computer worden uitgevoerd met behulp van een reeks REST API-services. Zie voor meer informatie hierover de Developer API Wiki pagina.</value>
   </data>
   <data name="DeveloperAPIWarning" xml:space="preserve">
-    <value>WAARSCHUWING: Hierdoor luisteren de ontwikkelaars-API&apos;s op alle adressen en kan Mix It Up worden geopend voor bellers van buiten jouw netwerk. Gebruik deze optie alleen als je weet wat je doet!</value>
+    <value>WAARSCHUWING: Hierdoor luisteren de ontwikkelaars-API's op alle adressen en kan Mix It Up worden geopend voor bellers van buiten jouw netwerk. Gebruik deze optie alleen als je weet wat je doet!</value>
   </data>
   <data name="DiscordInfo1" xml:space="preserve">
     <value>Met de discord-serviceconnectiviteit kun je informatie over jouw Discord-account krijgen, berichten naar kanalen verzenden en de audio van spraakkanalen bedienen. Wanneer je je aanmeldt, wordt een verificatiewebpagina geopend waarin je wordt gevraagd in te loggen bij Discord en Mix It Up goed te keuren om toegang te krijgen tot jouw gegevens.</value>
@@ -5481,7 +5473,7 @@ Ingeschakeld. Je kunt het vergelijkbaar zien als het schakelen tussen de optie &
     <value>Met de Extra Life serviceconnectiviteit kun je gebeurtenissen activeren vanaf het moment dat jij of jouw team een donatie ontvangt.</value>
   </data>
   <data name="ExtraLifeInfo2" xml:space="preserve">
-    <value>Ga eerst naar de pagina van jouw team op de Extra Life-website en aan het einde van de web-URL staat er &quot;teamID = _____&quot;. Typ dat nummer in het eerste vak, klik op Zoeken, selecteer jouw naam in de lijst en klik vervolgens op de knop Aanmelden.</value>
+    <value>Ga eerst naar de pagina van jouw team op de Extra Life-website en aan het einde van de web-URL staat er "teamID = _____". Typ dat nummer in het eerste vak, klik op Zoeken, selecteer jouw naam in de lijst en klik vervolgens op de knop Aanmelden.</value>
   </data>
   <data name="ExtraLifeInvalidParticipant" xml:space="preserve">
     <value>Selecteer een geldige Extra Life deelnemer.</value>
@@ -5705,7 +5697,7 @@ Ingeschakeld. Je kunt het vergelijkbaar zien als het schakelen tussen de optie &
     <value>Met deze Stream Deck plug-in kun je Mix It Up-opdrachten rechtstreeks vanaf je Stream Deck-apparaat uitvoeren, evenals andere statusinformatie over je stream.</value>
   </data>
   <data name="StreamDeckInfo2" xml:space="preserve">
-    <value>Om aan de slag te gaan, moet je ervoor zorgen dat de Stream Deck software is bijgewerkt naar ten minste versie 4.0 en dat de Developer API-service is ingeschakeld in Mix It Up. Om de Mix It Up plugin te installeren, klik op de &quot;Meer acties...&quot; in de rechterbenedenhoek en zoek vervolgens naar &quot;Mix It Up&quot; in het venster.</value>
+    <value>Om aan de slag te gaan, moet je ervoor zorgen dat de Stream Deck software is bijgewerkt naar ten minste versie 4.0 en dat de Developer API-service is ingeschakeld in Mix It Up. Om de Mix It Up plugin te installeren, klik op de "Meer acties..." in de rechterbenedenhoek en zoek vervolgens naar "Mix It Up" in het venster.</value>
     <comment>Fuzzy</comment>
   </data>
   <data name="StreamElements" xml:space="preserve">
@@ -5727,14 +5719,14 @@ Ingeschakeld. Je kunt het vergelijkbaar zien als het schakelen tussen de optie &
   <data name="StreamlabsInfo1" xml:space="preserve">
     <value>Streamlabs-serviceconnectiviteit kun je acties uitvoeren wanneer een donatie wordt ontvangen. Wanneer je je aanmeldt, wordt een verificatiewebpagina geopend waarin je wordt gevraagd je aan te melden bij Streamlabs en Mix It Up goed te keuren om toegang te krijgen tot jouw gegevens.</value>
   </data>
-  <data name="StreamlabsOBSConnectionFailed" xml:space="preserve">
-    <value>Streamlabs OBS verbindingstest is mislukt, zorg ervoor dat Streamlabs OBS actief is.</value>
+  <data name="StreamlabsDesktopConnectionFailed" xml:space="preserve">
+    <value>Streamlabs Desktop verbindingstest is mislukt, zorg ervoor dat Streamlabs Desktop actief is.</value>
   </data>
-  <data name="StreamlabsOBSConnectionSuccess" xml:space="preserve">
-    <value>Streamlabs OBS verbindingstest geslaagd!</value>
+  <data name="StreamlabsDesktopConnectionSuccess" xml:space="preserve">
+    <value>Streamlabs Desktop verbindingstest geslaagd!</value>
   </data>
-  <data name="StreamlabsOBSInfo1" xml:space="preserve">
-    <value>Met de Streamlabs OBS service kun je rechtstreeks communiceren met jouw exemplaar van Streamlabs OBS om wijzigingen in scènes en bronnen uit te voeren.</value>
+  <data name="StreamlabsDesktopInfo1" xml:space="preserve">
+    <value>Met de Streamlabs Desktop service kun je rechtstreeks communiceren met jouw exemplaar van Streamlabs Desktop om wijzigingen in scènes en bronnen uit te voeren.</value>
   </data>
   <data name="Streamloots" xml:space="preserve">
     <value>Streamloots</value>
@@ -6189,7 +6181,7 @@ Ingeschakeld. Je kunt het vergelijkbaar zien als het schakelen tussen de optie &
     <comment>{0} is the rank/currency name</comment>
   </data>
   <data name="RetroactivelyGivePointsPrompt2" xml:space="preserve">
-    <value>BIJVOORBEELD: Als het online tarief &quot;1 per uur&quot; is en een gebruiker 16 kijkuren heeft, worden de {0} punten van die gebruiker ingesteld op 16.</value>
+    <value>BIJVOORBEELD: Als het online tarief "1 per uur" is en een gebruiker 16 kijkuren heeft, worden de {0} punten van die gebruiker ingesteld op 16.</value>
     <comment>{0} is the rank/currency name</comment>
   </data>
   <data name="RetroactivelyGivePointsPrompt3" xml:space="preserve">
@@ -6362,11 +6354,11 @@ Ingeschakeld. Je kunt het vergelijkbaar zien als het schakelen tussen de optie &
   <data name="RainmakerChannelDataFailed" xml:space="preserve">
     <value>Kan kanaalgegevens niet ophalen</value>
   </data>
-  <data name="StreamlabsOBSAdminMaybe" xml:space="preserve">
-    <value>Streamlabs OBS wordt mogelijk uitgevoerd als beheerder en Mix It Up niet. Probeer Mix It Up uit te voeren als beheerder voordat je verbinding maakt.</value>
+  <data name="StreamlabsDesktopAdminMaybe" xml:space="preserve">
+    <value>Streamlabs Desktop wordt mogelijk uitgevoerd als beheerder en Mix It Up niet. Probeer Mix It Up uit te voeren als beheerder voordat je verbinding maakt.</value>
   </data>
-  <data name="StreamlabsOBSFailed" xml:space="preserve">
-    <value>Streamlabs OBS kan niet worden bereikt</value>
+  <data name="StreamlabsDesktopFailed" xml:space="preserve">
+    <value>Streamlabs Desktop kan niet worden bereikt</value>
   </data>
   <data name="StreamlabsWebSocketTokenFailed" xml:space="preserve">
     <value>Kan web socket token niet krijgen</value>
@@ -6435,7 +6427,7 @@ Ingeschakeld. Je kunt het vergelijkbaar zien als het schakelen tussen de optie &
     <value>Hiermee wordt een voortgangsbalk voor een opgegeven doel weergegeven. De voortgang wordt bijgewerkt wanneer gebeurtenissen plaatsvinden of op het door de gebruiker gedefinieerde vernieuwingsinterval.</value>
   </data>
   <data name="OverlayWidgetStreamBossDescription" xml:space="preserve">
-    <value>Toont een gebruiker van je kanaal als een &apos;baas&apos; die kan worden beschadigd door acties in je kanaal uit te voeren totdat ze zijn verslagen en een nieuwe baas is geselecteerd. Schade wordt toegevoegd als het zich voordoet. De Stream Baas Special Identifiers kunnen parallel met deze overlay-widget worden gebruikt.</value>
+    <value>Toont een gebruiker van je kanaal als een 'baas' die kan worden beschadigd door acties in je kanaal uit te voeren totdat ze zijn verslagen en een nieuwe baas is geselecteerd. Schade wordt toegevoegd als het zich voordoet. De Stream Baas Special Identifiers kunnen parallel met deze overlay-widget worden gebruikt.</value>
   </data>
   <data name="OverlayWidgetTextDescription" xml:space="preserve">
     <value>Hiermee wordt een tekstblok weergegeven. Vernieuwt op basis van door de gebruiker gedefinieerd vernieuwingsinterval.</value>
@@ -6917,7 +6909,7 @@ Als je een van de volgende handelingen niet uitvoert, kan dit van invloed zijn o
     <value>Dankzij de connectiviteit van de Pixel Chat service kun je verschillende elementen van je Pixel Chat-overlays bedienen en specifieke functionaliteit activeren.</value>
   </data>
   <data name="PixelChatInfo2" xml:space="preserve">
-    <value>Als je verbinding wilt maken met PixelChat, moet je een ontwikkelaarstoken maken. Dit kan worden gevonden door naar het profiel te gaan, op &quot;Tokens bekijken&quot; te klikken en een nieuw ontwikkelaarstoken te maken.</value>
+    <value>Als je verbinding wilt maken met PixelChat, moet je een ontwikkelaarstoken maken. Dit kan worden gevonden door naar het profiel te gaan, op "Tokens bekijken" te klikken en een nieuw ontwikkelaarstoken te maken.</value>
   </data>
   <data name="PixelChatInvalidAPIKey" xml:space="preserve">
     <value>Voer een geldige Pixel Chat API sleutel in.</value>
@@ -7457,7 +7449,7 @@ Als je een van de volgende handelingen niet uitvoert, kan dit van invloed zijn o
     <value>FOUT: Kan gebruiker met de volgende gebruikersnaam niet vinden: {0}</value>
   </data>
   <data name="LinkAccountCommandPleaseConfirmLink" xml:space="preserve">
-    <value>Het proces voor het koppelen van accounts is gestart. Voer de opdracht opnieuw uit op het andere platform met de informatie van uw huidige gebruiker: &quot;!linkaccount {0} {1}&quot;</value>
+    <value>Het proces voor het koppelen van accounts is gestart. Voer de opdracht opnieuw uit op het andere platform met de informatie van uw huidige gebruiker: "!linkaccount {0} {1}"</value>
   </data>
   <data name="LinkAccountCommandUsage" xml:space="preserve">
     <value>Gebruik: !linkaccount &lt;PLATFORM&gt; &lt;PLATFORM GEBRUIKERSNAAM&gt;</value>
@@ -7859,7 +7851,7 @@ Mislukte importen kunnen te wijten zijn aan ongeldige gegevens of het niet vinde
     <value>Succesvolle import: {0}
 Mislukte import: {1}
 
-Geïmporteerde citaten met ID&apos;s die overeenkomen met bestaande citaten, worden gewijzigd in het volgende maximumaantal. Mislukte import kan te wijten zijn aan ongeldige gegevens of opmaak. Neem indien nodig contact op met de ondersteuning voor verdere hulp hierbij.</value>
+Geïmporteerde citaten met ID's die overeenkomen met bestaande citaten, worden gewijzigd in het volgende maximumaantal. Mislukte import kan te wijten zijn aan ongeldige gegevens of opmaak. Neem indien nodig contact op met de ondersteuning voor verdere hulp hierbij.</value>
     <comment>{0} is the number of successes, {1} is the number of failures</comment>
   </data>
   <data name="HearMyselfOnOff" xml:space="preserve">
@@ -8028,8 +8020,8 @@ Geïmporteerde citaten met ID&apos;s die overeenkomen met bestaande citaten, wor
     <value>Het item dat je hebt opgegeven, bestaat niet</value>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
-    <value>Je moet &quot;kopen&quot; of &quot;verkopen&quot; opgeven</value>
-    <comment>{0} is the English word &apos;buy&apos;, {1} is the English word &apos;sell&apos;</comment>
+    <value>Je moet "kopen" of "verkopen" opgeven</value>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
     <value>GEBRUIK: {0} lijst = Geeft alle items weer die beschikbaar zijn om te kopen / verkopen ** {0} &lt;ITEM NAAM&gt; = Geeft de koop / verkoopprijs voor het object weer ** {0} koop &lt;ITEM NAAM&gt; [BEDRAG] = Koopt 1 of het opgegeven bedrag van het item ** {0} verkopen &lt;ITEM NAAM&gt; [BEDRAG] = Verkoopt 1 of het opgegeven bedrag van het item</value>
@@ -8091,7 +8083,7 @@ Geïmporteerde citaten met ID&apos;s die overeenkomen met bestaande citaten, wor
     <value>Dit kanaal gebruikt de Mix It Up-app om hun stream te verbeteren. Bekijk http://mixitupapp.com voor meer informatie!</value>
   </data>
   <data name="PreMadeChatCommandMixItUpCommands" xml:space="preserve">
-    <value>Alle vooraf gemaakte Mix It Up chat commando&apos;s zijn hier te vinden: https://wiki.mixitupapp.com/commands/pre-made-chat-commands. Voor opdrachten die specifiek zijn voor deze stream, vraag je de streamer/moderator.</value>
+    <value>Alle vooraf gemaakte Mix It Up chat commando's zijn hier te vinden: https://wiki.mixitupapp.com/commands/pre-made-chat-commands. Voor opdrachten die specifiek zijn voor deze stream, vraag je de streamer/moderator.</value>
   </data>
   <data name="PreMadeChatCommandQuotesNotEnabled" xml:space="preserve">
     <value>Citaten moeten zijn ingeschakeld en er moet ten minste één prijsopgave worden toegevoegd om deze functie te laten werken.</value>
@@ -8139,7 +8131,7 @@ Geïmporteerde citaten met ID&apos;s die overeenkomen met bestaande citaten, wor
     <value>Starttijd: </value>
   </data>
   <data name="StreamerAgeHeader" xml:space="preserve">
-    <value>{0}&apos;s Streamer Leeftijd: </value>
+    <value>{0}'s Streamer Leeftijd: </value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="StreamingPlatformIncorrectAccount" xml:space="preserve">
@@ -8205,11 +8197,11 @@ Geïmporteerde citaten met ID&apos;s die overeenkomen met bestaande citaten, wor
     <value>Bijgewerkte Opdracht: !</value>
   </data>
   <data name="UserFollowAgeHeader" xml:space="preserve">
-    <value>{0}&apos;s Volger Leeftijd: </value>
+    <value>{0}'s Volger Leeftijd: </value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UserSubscribeAgeHeader" xml:space="preserve">
-    <value>{0}&apos;s Abonnee Leeftijd: </value>
+    <value>{0}'s Abonnee Leeftijd: </value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="ValidAmountGreaterThan0MustBeSpecified" xml:space="preserve">
@@ -8282,7 +8274,7 @@ Geïmporteerde citaten met ID&apos;s die overeenkomen met bestaande citaten, wor
     <value>De winactie herinnering moet 0 of hoger zijn</value>
   </data>
   <data name="GiveawayWonTypeClaim" xml:space="preserve">
-    <value>@{0} je hebt de winactie gewonnen; typ &quot;!claim&quot; in de chat!</value>
+    <value>@{0} je hebt de winactie gewonnen; typ "!claim" in de chat!</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="GiveawayYouHaveAlreadyWon" xml:space="preserve">
@@ -8629,7 +8621,7 @@ We zullen proberen indien mogelijk opnieuw verbinding te maken met de service. A
     <value>Stel dat je wat pasta wilde maken; je zou de stappen in het recept achter elkaar volgen totdat je klaar bent. Je zou ook elke stap volgen in de volgorde waarin ze zijn opgegeven. Je moet bijvoorbeeld het water verwarmen voordat je de pasta kunt toevoegen.</value>
   </data>
   <data name="WizardCommands3" xml:space="preserve">
-    <value>Opdrachten zijn als een recept en acties zijn de stappen in dat recept. Laten we zeggen dat je een shout-out commando maakt, wat zijn de dingen die het zou moeten doen? Elk van die &quot;dingen&quot; kan worden gezien als een actie.</value>
+    <value>Opdrachten zijn als een recept en acties zijn de stappen in dat recept. Laten we zeggen dat je een shout-out commando maakt, wat zijn de dingen die het zou moeten doen? Elk van die "dingen" kan worden gezien als een actie.</value>
   </data>
   <data name="WizardCommands4" xml:space="preserve">
     <value>In dit voorbeeld stuurt onze opdracht shout-out een bericht naar chat, speelt een geluid af, wacht 10 seconden en toont vervolgens een afbeelding. Elk van deze komt overeen met een ander actietype (Chat, Geluid, Wachten en Overlay).</value>
@@ -8662,7 +8654,7 @@ We zullen proberen indien mogelijk opnieuw verbinding te maken met de service. A
     <value>Ons YouTube account bevat veel tutorials die door ons en onze community zijn gemaakt om je te helpen coole creaties te maken of te laten zien.</value>
   </data>
   <data name="WizardIntro6" xml:space="preserve">
-    <value>Onze Wiki pagina&apos;s bevatten gedetailleerde informatie over veel van de verschillende functies die beschikbaar zijn in de hele app.</value>
+    <value>Onze Wiki pagina's bevatten gedetailleerde informatie over veel van de verschillende functies die beschikbaar zijn in de hele app.</value>
   </data>
   <data name="WizardNext" xml:space="preserve">
     <value>Volgende &gt;</value>
@@ -8710,7 +8702,7 @@ We zullen proberen indien mogelijk opnieuw verbinding te maken met de service. A
     <value>Gebruiker Toevoegen</value>
   </data>
   <data name="UsersUnableToFindUser" xml:space="preserve">
-    <value>Niet in staat om de gebruiker &quot;{0}&quot; te vinden</value>
+    <value>Niet in staat om de gebruiker "{0}" te vinden</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UsersSuccessfullyFoundUser" xml:space="preserve">
@@ -8724,7 +8716,7 @@ We zullen proberen indien mogelijk opnieuw verbinding te maken met de service. A
     <value>Chat Gebruiker Ingang Opdracht</value>
   </data>
   <data name="WhisperTooltip" xml:space="preserve">
-    <value>Fluisterberichten zijn ondersteund door Twitch, maar wordt erg afgeraden om te gebruiken. Twitch is niet van plan om fluisterberichten te gebruiken als een vorm van automatische communicatie. Er zijn strenge beperkingen voor de hoeveelheid fluisterberichten dat verzonden kan worden binnen een tijdlijn evenals spam preventie maatregelen als de gebruiker niet op je Twitch vriendenlijst staat, maakt dit het onpraktisch te gebruiken. Dus hoewel je fluisterberichten kan verzenden via Twitch, is het een &quot;de kilometerstand kan variëren&quot; situatie.</value>
+    <value>Fluisterberichten zijn ondersteund door Twitch, maar wordt erg afgeraden om te gebruiken. Twitch is niet van plan om fluisterberichten te gebruiken als een vorm van automatische communicatie. Er zijn strenge beperkingen voor de hoeveelheid fluisterberichten dat verzonden kan worden binnen een tijdlijn evenals spam preventie maatregelen als de gebruiker niet op je Twitch vriendenlijst staat, maakt dit het onpraktisch te gebruiken. Dus hoewel je fluisterberichten kan verzenden via Twitch, is het een "de kilometerstand kan variëren" situatie.</value>
   </data>
   <data name="AlertName" xml:space="preserve">
     <value>Alert Naam</value>

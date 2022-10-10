@@ -114,11 +114,11 @@ namespace MixItUp.Base.Services
                             await ServiceManager.Get<XSplitService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: true);
                         }
 
-                        if (ServiceManager.Get<StreamlabsOBSService>().IsConnected)
+                        if (ServiceManager.Get<StreamlabsDesktopService>().IsConnected)
                         {
-                            await ServiceManager.Get<StreamlabsOBSService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: false);
-                            await ServiceManager.Get<StreamlabsOBSService>().SetWebBrowserSourceURL(null, ChannelSession.Settings.OverlaySourceName, overlayServerAddress);
-                            await ServiceManager.Get<StreamlabsOBSService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: true);
+                            await ServiceManager.Get<StreamlabsDesktopService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: false);
+                            await ServiceManager.Get<StreamlabsDesktopService>().SetWebBrowserSourceURL(null, ChannelSession.Settings.OverlaySourceName, overlayServerAddress);
+                            await ServiceManager.Get<StreamlabsDesktopService>().SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: true);
                         }
                     }
                     return true;
@@ -213,25 +213,6 @@ namespace MixItUp.Base.Services
                     if (processedItem != null)
                     {
                         await this.SendPacket("DisableWidget", JObject.FromObject(processedItem));
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-        }
-
-        public async Task DisableWidget(OverlayWidgetV3Model widget, CommandParametersModel parameters)
-        {
-            try
-            {
-                if (widget.Item != null)
-                {
-                    OverlayOutputV3Model processedItem = await widget.Item.GetProcessedItem(this, parameters);
-                    if (processedItem != null)
-                    {
-                        await this.SendPacket("UpdateWidget", JObject.FromObject(processedItem));
                     }
                 }
             }
