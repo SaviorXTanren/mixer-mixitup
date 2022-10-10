@@ -31,7 +31,20 @@ namespace MixItUp.Base.Model.Overlay
             OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlayEndpointService(this.OverlayEndpointID);
             if (overlay != null)
             {
-                await overlay.SendItem(this.Item, new CommandParametersModel());
+                await overlay.EnableWidget(this, new CommandParametersModel());
+            }
+        }
+
+        public async Task Refresh()
+        {
+            CommandParametersModel parameters = new CommandParametersModel();
+
+            await this.Item.Update(parameters);
+
+            OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlayEndpointService(this.OverlayEndpointID);
+            if (overlay != null)
+            {
+                //await overlay.UpdateItem(this.Item, parameters);
             }
         }
 
@@ -42,7 +55,7 @@ namespace MixItUp.Base.Model.Overlay
             OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlayEndpointService(this.OverlayEndpointID);
             if (overlay != null)
             {
-                await overlay.SendItem(this.Item, new CommandParametersModel());
+                await overlay.DisableWidget(this, new CommandParametersModel());
             }
         }
     }

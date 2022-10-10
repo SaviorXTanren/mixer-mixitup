@@ -62,6 +62,8 @@ namespace MixItUp.Base.Model.Overlay
 
         public virtual Task Enable() { return Task.CompletedTask; }
 
+        public virtual Task Update(CommandParametersModel parameters) { return Task.CompletedTask; }
+
         public virtual Task Disable() { return Task.CompletedTask; }
 
         public async Task<OverlayOutputV3Model> GetProcessedItem(OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
