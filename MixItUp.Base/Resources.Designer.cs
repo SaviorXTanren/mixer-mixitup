@@ -3592,20 +3592,20 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CSS.
-        /// </summary>
-        public static string CSS {
-            get {
-                return ResourceManager.GetString("CSS", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to C#.
         /// </summary>
         public static string CSharp {
             get {
                 return ResourceManager.GetString("CSharp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CSS.
+        /// </summary>
+        public static string CSS {
+            get {
+                return ResourceManager.GetString("CSS", resourceCulture);
             }
         }
         
@@ -10497,15 +10497,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Javascript.
-        /// </summary>
-        public static string Javascript {
-            get {
-                return ResourceManager.GetString("Javascript", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Jello.
         /// </summary>
         public static string Jello {
@@ -16529,6 +16520,30 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to using System;
+        ///            
+        ///namespace CustomNamespace
+        ///{
+        ///    public class CustomClass
+        ///    {
+        ///        public object Run()
+        ///        {
+        ///            // Your code goes here
+        ///            System.Console.WriteLine(&quot;Hello World!&quot;);
+        ///
+        ///            // Return any data here that you&apos;d like to use
+        ///            return 0;
+        ///        }
+        ///    }
+        ///}.
+        /// </summary>
+        public static string ScriptActionCSharpDefaultScriptTemplate {
+            get {
+                return ResourceManager.GetString("ScriptActionCSharpDefaultScriptTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Script Error: {0}.
         /// </summary>
         public static string ScriptActionFailedCompile {
@@ -16538,11 +16553,41 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to function run()
+        ///{
+        ///    // Your code goes here
+        ///    var text = &apos;Hello World!&apos;;
+        ///
+        ///    // Return any data here that you&apos;d like to use
+        ///    return 0;
+        ///}.
+        /// </summary>
+        public static string ScriptActionJavascriptDefaultScriptTemplate {
+            get {
+                return ResourceManager.GetString("ScriptActionJavascriptDefaultScriptTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Script Action: Missing script.
         /// </summary>
         public static string ScriptActionMissingScript {
             get {
                 return ResourceManager.GetString("ScriptActionMissingScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to def run():
+        ///    # Your code goes here
+        ///    print &apos;Hello World!&apos;
+        ///
+        ///    # Return any data here that you&apos;d like to use
+        ///    return 0.
+        /// </summary>
+        public static string ScriptActionPythonDefaultScriptTemplate {
+            get {
+                return ResourceManager.GetString("ScriptActionPythonDefaultScriptTemplate", resourceCulture);
             }
         }
         

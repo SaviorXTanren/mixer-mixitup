@@ -19,42 +19,6 @@ namespace MixItUp.Base.Model.Actions
     {
         public const string OutputSpecialIdentifier = "scriptresult";
 
-        public const string CSharpDefaultScriptTemplate =
-@"using System;
-            
-namespace CustomNamespace
-{
-    public class CustomClass
-    {
-        public object Run()
-        {
-            // Your code goes here
-            System.Console.WriteLine(""Hello World!"");
-
-            // Return any data here that you'd like to use
-            return 0;
-        }
-    }
-}";
-
-        public const string PythonDefaultScriptTemplate =
-@"def run():
-    # Your code goes here
-    print 'Hello World!'
-
-    # Return any data here that you'd like to use
-    return 0";
-
-        public const string JavascriptDefaultScriptTemplate =
-@"function run()
-{
-    // Your code goes here
-    var text = 'Hello World!';
-
-    // Return any data here that you'd like to use
-    return 0;
-}";
-
         [DataMember]
         public ScriptActionType ActionType { get; set; }
 

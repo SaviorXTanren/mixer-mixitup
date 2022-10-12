@@ -9245,9 +9245,6 @@ function {ID}_load()
   <data name="CSharp" xml:space="preserve">
     <value>C#</value>
   </data>
-  <data name="Javascript" xml:space="preserve">
-    <value>Javascript</value>
-  </data>
   <data name="Python" xml:space="preserve">
     <value>Python</value>
   </data>
@@ -9263,5 +9260,41 @@ function {ID}_load()
   <data name="ScriptActionFailedCompile" xml:space="preserve">
     <value>Script Error: {0}</value>
     <comment>{0} is the series of script errors</comment>
+  </data>
+  <data name="ScriptActionCSharpDefaultScriptTemplate" xml:space="preserve">
+    <value>using System;
+            
+namespace CustomNamespace
+{
+    public class CustomClass
+    {
+        public object Run()
+        {
+            // Your code goes here
+            System.Console.WriteLine("Hello World!");
+
+            // Return any data here that you'd like to use
+            return 0;
+        }
+    }
+}</value>
+  </data>
+  <data name="ScriptActionJavascriptDefaultScriptTemplate" xml:space="preserve">
+    <value>function run()
+{
+    // Your code goes here
+    var text = 'Hello World!';
+
+    // Return any data here that you'd like to use
+    return 0;
+}</value>
+  </data>
+  <data name="ScriptActionPythonDefaultScriptTemplate" xml:space="preserve">
+    <value>def run():
+    # Your code goes here
+    print 'Hello World!'
+
+    # Return any data here that you'd like to use
+    return 0</value>
   </data>
 </root>

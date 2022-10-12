@@ -21,15 +21,15 @@ namespace MixItUp.Base.ViewModel.Actions
 
                 if (this.SelectedActionType == ScriptActionType.CSharp)
                 {
-                    this.Script = ScriptActionModel.CSharpDefaultScriptTemplate;
+                    this.Script = Resources.ScriptActionCSharpDefaultScriptTemplate;
                 }
                 else if (this.SelectedActionType == ScriptActionType.Python)
                 {
-                    this.Script = ScriptActionModel.PythonDefaultScriptTemplate;
+                    this.Script = Resources.ScriptActionPythonDefaultScriptTemplate;
                 }
                 else if (this.SelectedActionType == ScriptActionType.Javascript)
                 {
-                    this.Script = ScriptActionModel.JavascriptDefaultScriptTemplate;
+                    this.Script = Resources.ScriptActionJavascriptDefaultScriptTemplate;
                 }
             }
         }
