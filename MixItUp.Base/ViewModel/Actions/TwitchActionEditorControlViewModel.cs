@@ -605,7 +605,10 @@ namespace MixItUp.Base.ViewModel.Actions
                     return new Result(MixItUp.Base.Resources.TwitchActionCreatePollTwoOrMoreChoices);
                 }
 
-                if (this.PollChoice1.Length > 25 || this.PollChoice2.Length > 25 || this.PollChoice3.Length > 25 || this.PollChoice4.Length > 25)
+                if ((!string.IsNullOrEmpty(this.PollChoice1) && this.PollChoice1.Length > 25) ||
+                    (!string.IsNullOrEmpty(this.PollChoice2) && this.PollChoice2.Length > 25) ||
+                    (!string.IsNullOrEmpty(this.PollChoice3) && this.PollChoice3.Length > 25) ||
+                    (!string.IsNullOrEmpty(this.PollChoice4) && this.PollChoice4.Length > 25))
                 {
                     return new Result(MixItUp.Base.Resources.TwitchActionPollChoicesTooLong);
                 }
