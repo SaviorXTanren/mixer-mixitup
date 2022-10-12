@@ -16,6 +16,7 @@ namespace MixItUp.Base.Model.Overlay
         HTML,
         WebPage,
         Timer,
+        Label,
     }
 
     [DataContract]
