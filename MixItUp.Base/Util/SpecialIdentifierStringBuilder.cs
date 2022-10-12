@@ -241,8 +241,8 @@ namespace MixItUp.Base.Util
                     case Model.Actions.StreamingSoftwareTypeEnum.XSplit:
                         ssService = ServiceManager.Get<XSplitService>();
                         break;
-                    case Model.Actions.StreamingSoftwareTypeEnum.StreamlabsOBS:
-                        ssService = ServiceManager.Get<StreamlabsOBSService>();
+                    case Model.Actions.StreamingSoftwareTypeEnum.StreamlabsDesktop:
+                        ssService = ServiceManager.Get<StreamlabsDesktopService>();
                         break;
                 }
 

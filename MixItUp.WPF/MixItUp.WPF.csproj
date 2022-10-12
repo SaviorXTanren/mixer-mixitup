@@ -962,8 +962,8 @@
     <Compile Include="Controls\Services\RainmakerServiceControl.xaml.cs">
       <DependentUpon>RainmakerServiceControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Services\StreamlabsOBSServiceControl.xaml.cs">
-      <DependentUpon>StreamlabsOBSServiceControl.xaml</DependentUpon>
+    <Compile Include="Controls\Services\StreamlabsDesktopServiceControl.xaml.cs">
+      <DependentUpon>StreamlabsDesktopServiceControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Services\StreamlabsServiceControl.xaml.cs">
       <DependentUpon>StreamlabsServiceControl.xaml</DependentUpon>
@@ -1815,7 +1815,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Services\StreamlabsOBSServiceControl.xaml">
+    <Page Include="Controls\Services\StreamlabsDesktopServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
