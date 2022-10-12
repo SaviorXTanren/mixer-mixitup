@@ -43,7 +43,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Enable()
         {
-            GlobalEvents.OnGameQueueUpdated += GlobalEvents_OnGameQueueUpdated;
+            GameQueueService.OnGameQueueUpdated += GameQueueService_OnGameQueueUpdated;
 
             await base.Enable();
         }
@@ -52,12 +52,12 @@ namespace MixItUp.Base.Model.Overlay
         {
             this.lastUsers.Clear();
 
-            GlobalEvents.OnGameQueueUpdated -= GlobalEvents_OnGameQueueUpdated;
+            GameQueueService.OnGameQueueUpdated -= GameQueueService_OnGameQueueUpdated;
 
             await base.Disable();
         }
 
-        private async void GlobalEvents_OnGameQueueUpdated(object sender, System.EventArgs e)
+        private async void GameQueueService_OnGameQueueUpdated(object sender, System.EventArgs e)
         {
             await this.AddGameQueueUsers(ServiceManager.Get<GameQueueService>().Queue);
         }

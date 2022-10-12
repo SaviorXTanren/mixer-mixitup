@@ -490,7 +490,7 @@ namespace MixItUp.Base.Services.Trovo
 
                         await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelFollowed, parameters);
 
-                        GlobalEvents.FollowOccurred(user);
+                        EventService.FollowOccurred(user);
 
                         await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertFollow, user.DisplayName), ChannelSession.Settings.AlertFollowColor));
                     }
@@ -539,12 +539,12 @@ namespace MixItUp.Base.Services.Trovo
 
                         if (subMessage.IsResub)
                         {
-                            GlobalEvents.ResubscribeOccurred(new Tuple<UserV2ViewModel, int>(user, 1));
+                            EventService.ResubscribeOccurred(user, 1);
                             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertResubscribed, user.DisplayName, subMessage.Months), ChannelSession.Settings.AlertSubColor));
                         }
                         else
                         {
-                            GlobalEvents.SubscribeOccurred(user);
+                            EventService.SubscribeOccurred(user);
                             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertSubscribed, user.DisplayName), ChannelSession.Settings.AlertSubColor));
                         }
                     }
@@ -620,7 +620,7 @@ namespace MixItUp.Base.Services.Trovo
 
                         await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertSubscriptionGifted, user.DisplayName, giftee.DisplayName), ChannelSession.Settings.AlertGiftedSubColor));
 
-                        GlobalEvents.SubscriptionGiftedOccurred(user, giftee);
+                        EventService.SubscriptionGiftedOccurred(user, giftee);
                     }
                 }
                 else if (message.type == ChatMessageTypeEnum.WelcomeMessageFromRaid)
@@ -649,7 +649,7 @@ namespace MixItUp.Base.Services.Trovo
                                 }
                             }
 
-                            GlobalEvents.RaidOccurred(user, raidCount);
+                            EventService.RaidOccurred(user, raidCount);
 
                             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelRaided, parameters);
 

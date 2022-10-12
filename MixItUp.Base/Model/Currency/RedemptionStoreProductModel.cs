@@ -88,6 +88,9 @@ namespace MixItUp.Base.Model.Currency
     [DataContract]
     public class RedemptionStorePurchaseModel
     {
+        public static event EventHandler OnRedemptionStorePurchasesUpdated = delegate { };
+        public static void RedemptionStorePurchasesUpdated() { OnRedemptionStorePurchasesUpdated(null, new EventArgs()); }
+
         public static async Task Purchase(UserV2ViewModel user, IEnumerable<string> arguments)
         {
             if (arguments.Count() == 0)
@@ -157,7 +160,7 @@ namespace MixItUp.Base.Model.Currency
                                 await ServiceManager.Get<CommandService>().Queue(command, u);
                             }
 
-                            GlobalEvents.RedemptionStorePurchasesUpdated();
+                            RedemptionStorePurchaseModel.RedemptionStorePurchasesUpdated();
                         }
                     }
                 }
@@ -280,7 +283,7 @@ namespace MixItUp.Base.Model.Currency
                     this.State = RedemptionStorePurchaseRedemptionState.AutoRedeemed;
                 }
             }
-            GlobalEvents.RedemptionStorePurchasesUpdated();
+            RedemptionStorePurchaseModel.RedemptionStorePurchasesUpdated();
         }
 
         public async Task Refund()
@@ -301,7 +304,7 @@ namespace MixItUp.Base.Model.Currency
         public void Remove()
         {
             ChannelSession.Settings.RedemptionStorePurchases.Remove(this);
-            GlobalEvents.RedemptionStorePurchasesUpdated();
+            RedemptionStorePurchaseModel.RedemptionStorePurchasesUpdated();
         }
     }
 }

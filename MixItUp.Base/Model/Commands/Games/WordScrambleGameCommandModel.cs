@@ -137,7 +137,7 @@ namespace MixItUp.Base.Model.Commands.Games
                         return;
                     }
 
-                    GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
+                    ChatService.OnChatMessageReceived += ChatService_OnChatMessageReceived;
 
                     await this.RunSubCommand(this.WordScrambleBeginCommand, this.runParameters);
 
@@ -147,7 +147,7 @@ namespace MixItUp.Base.Model.Commands.Games
                         return;
                     }
 
-                    GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
+                    ChatService.OnChatMessageReceived -= ChatService_OnChatMessageReceived;
 
                     if (!string.IsNullOrEmpty(this.runWord))
                     {
@@ -175,7 +175,7 @@ namespace MixItUp.Base.Model.Commands.Games
             await this.Requirements.Refund(parameters);
         }
 
-        private async void GlobalEvents_OnChatMessageReceived(object sender, ViewModel.Chat.ChatMessageViewModel message)
+        private async void ChatService_OnChatMessageReceived(object sender, ViewModel.Chat.ChatMessageViewModel message)
         {
             try
             {

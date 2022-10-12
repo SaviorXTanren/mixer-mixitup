@@ -785,7 +785,7 @@ namespace MixItUp.Base.Services.Twitch
                             }
                         }
 
-                        GlobalEvents.RaidOccurred(user, userNotice.RaidViewerCount);
+                        EventService.RaidOccurred(user, userNotice.RaidViewerCount);
 
                         parameters.SpecialIdentifiers["raidviewercount"] = userNotice.RaidViewerCount.ToString();
                         await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelRaided, parameters);

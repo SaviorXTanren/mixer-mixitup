@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services.Twitch;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
@@ -47,16 +48,16 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Enable()
         {
-            GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
-            GlobalEvents.OnChatMessageDeleted += GlobalEvents_OnChatMessageDeleted;
+            ChatService.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
+            ChatService.OnChatMessageDeleted += GlobalEvents_OnChatMessageDeleted;
 
             await base.Enable();
         }
 
         public override async Task Disable()
         {
-            GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
-            GlobalEvents.OnChatMessageDeleted -= GlobalEvents_OnChatMessageDeleted;
+            ChatService.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
+            ChatService.OnChatMessageDeleted -= GlobalEvents_OnChatMessageDeleted;
 
             await base.Disable();
         }

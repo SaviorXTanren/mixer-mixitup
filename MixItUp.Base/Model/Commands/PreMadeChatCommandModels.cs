@@ -414,8 +414,6 @@ namespace MixItUp.Base.Model.Commands
                     ChannelSession.Settings.Quotes.Add(quote);
                     await ChannelSession.SaveSettings();
 
-                    GlobalEvents.QuoteAdded(quote);
-
                     await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.QuoteAddedHeader + quote.ToString(), parameters);
                 }
                 else

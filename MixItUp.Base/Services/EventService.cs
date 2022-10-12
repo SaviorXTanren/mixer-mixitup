@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -124,6 +125,27 @@ namespace MixItUp.Base.Services
 
     public class EventService
     {
+        public static event EventHandler<UserV2ViewModel> OnFollowOccurred = delegate { };
+        public static void FollowOccurred(UserV2ViewModel user) { OnFollowOccurred(null, user); }
+
+        public static event EventHandler<Tuple<UserV2ViewModel, int>> OnRaidOccurred = delegate { };
+        public static void RaidOccurred(UserV2ViewModel user, int viewers) { OnRaidOccurred(null, new Tuple<UserV2ViewModel, int>(user, viewers)); }
+
+        public static event EventHandler<UserV2ViewModel> OnSubscribeOccurred = delegate { };
+        public static void SubscribeOccurred(UserV2ViewModel user) { OnSubscribeOccurred(null, user); }
+
+        public static event EventHandler<Tuple<UserV2ViewModel, int>> OnResubscribeOccurred = delegate { };
+        public static void ResubscribeOccurred(UserV2ViewModel user, int months) { OnResubscribeOccurred(null, new Tuple<UserV2ViewModel, int>(user, months)); }
+
+        public static event EventHandler<Tuple<UserV2ViewModel, UserV2ViewModel>> OnSubscriptionGiftedOccurred = delegate { };
+        public static void SubscriptionGiftedOccurred(UserV2ViewModel gifter, UserV2ViewModel receiver) { OnSubscriptionGiftedOccurred(null, new Tuple<UserV2ViewModel, UserV2ViewModel>(gifter, receiver)); }
+
+        public static event EventHandler<UserDonationModel> OnDonationOccurred = delegate { };
+        public static void DonationOccurred(UserDonationModel donation) { OnDonationOccurred(null, donation); }
+
+        public static event EventHandler<TwitchUserBitsCheeredModel> OnBitsCheeredOccurred = delegate { };
+        public static void BitsCheeredOccurred(TwitchUserBitsCheeredModel bitsCheer) { OnBitsCheeredOccurred(null, bitsCheer); }
+
         private static HashSet<EventTypeEnum> singleUseTracking = new HashSet<EventTypeEnum>()
         {
             EventTypeEnum.ChatUserFirstJoin, EventTypeEnum.ChatUserJoined, EventTypeEnum.ChatUserLeft,
@@ -179,7 +201,7 @@ namespace MixItUp.Base.Services
 
             try
             {
-                GlobalEvents.DonationOccurred(donation);
+                EventService.DonationOccurred(donation);
             }
             catch (Exception ex)
             {

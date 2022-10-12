@@ -343,7 +343,7 @@ namespace MixItUp.Base.Model.Actions
                                 }
                                 parameters.SpecialIdentifiers[ClipURLSpecialIdentifier] = clip.url;
 
-                                GlobalEvents.TwitchClipCreated(clip);
+                                TwitchPlatformService.TwitchClipCreated(clip);
                                 return;
                             }
                         }

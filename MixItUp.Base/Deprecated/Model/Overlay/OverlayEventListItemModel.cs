@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -71,30 +73,30 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.ItemTypes.Contains(OverlayEventListItemTypeEnum.Followers))
             {
-                GlobalEvents.OnFollowOccurred += GlobalEvents_OnFollowOccurred;
+                EventService.OnFollowOccurred += GlobalEvents_OnFollowOccurred;
             }
             if (this.ItemTypes.Contains(OverlayEventListItemTypeEnum.Hosts))
             {
-                GlobalEvents.OnHostOccurred += GlobalEvents_OnHostOccurred;
+
             }
             if (this.ItemTypes.Contains(OverlayEventListItemTypeEnum.Raids))
             {
-                GlobalEvents.OnRaidOccurred += GlobalEvents_OnRaidOccurred;
+                EventService.OnRaidOccurred += GlobalEvents_OnRaidOccurred;
             }
             if (this.ItemTypes.Contains(OverlayEventListItemTypeEnum.Subscribers))
             {
-                GlobalEvents.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
-                GlobalEvents.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
-                GlobalEvents.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
+                EventService.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
+                EventService.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
+                EventService.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
             }
             if (this.ItemTypes.Contains(OverlayEventListItemTypeEnum.Donations))
             {
-                GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
-                GlobalEvents.OnStreamlootsPurchaseOccurred += GlobalEvents_OnStreamlootsPurchaseOccurred;
+                EventService.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
+                StreamlootsService.OnStreamlootsPurchaseOccurred += GlobalEvents_OnStreamlootsPurchaseOccurred;
             }
             if (this.ItemTypes.Contains(OverlayEventListItemTypeEnum.Bits))
             {
-                GlobalEvents.OnBitsOccurred += GlobalEvents_OnBitsOccurred;
+                EventService.OnBitsCheeredOccurred += GlobalEvents_OnBitsOccurred;
             }
 
             await base.Enable();
@@ -102,15 +104,14 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Disable()
         {
-            GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
-            GlobalEvents.OnHostOccurred -= GlobalEvents_OnHostOccurred;
-            GlobalEvents.OnRaidOccurred -= GlobalEvents_OnRaidOccurred;
-            GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
-            GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
-            GlobalEvents.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
-            GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
-            GlobalEvents.OnStreamlootsPurchaseOccurred -= GlobalEvents_OnStreamlootsPurchaseOccurred;
-            GlobalEvents.OnBitsOccurred -= GlobalEvents_OnBitsOccurred;
+            EventService.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
+            EventService.OnRaidOccurred -= GlobalEvents_OnRaidOccurred;
+            EventService.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
+            EventService.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
+            EventService.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
+            EventService.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
+            StreamlootsService.OnStreamlootsPurchaseOccurred -= GlobalEvents_OnStreamlootsPurchaseOccurred;
+            EventService.OnBitsCheeredOccurred -= GlobalEvents_OnBitsOccurred;
 
             await base.Disable();
         }

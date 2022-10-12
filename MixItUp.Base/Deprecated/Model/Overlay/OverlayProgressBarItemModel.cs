@@ -145,21 +145,21 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     this.CurrentAmount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetFollowerCount(ServiceManager.Get<TwitchSessionService>().User);
                 }
-                GlobalEvents.OnFollowOccurred += GlobalEvents_OnFollowOccurred;
+                EventService.OnFollowOccurred += GlobalEvents_OnFollowOccurred;
             }
             else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Subscribers)
             {
-                GlobalEvents.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
-                GlobalEvents.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
-                GlobalEvents.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
+                EventService.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
+                EventService.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
+                EventService.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
             }
             else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Donations)
             {
-                GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
+                EventService.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
             }
             else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Bits)
             {
-                GlobalEvents.OnBitsOccurred += GlobalEvents_OnBitsOccurred;
+                EventService.OnBitsCheeredOccurred += GlobalEvents_OnBitsOccurred;
             }
 
             await base.Enable();
@@ -167,12 +167,12 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Disable()
         {
-            GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
-            GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
-            GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
-            GlobalEvents.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
-            GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
-            GlobalEvents.OnBitsOccurred -= GlobalEvents_OnBitsOccurred;
+            EventService.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
+            EventService.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
+            EventService.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
+            EventService.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
+            EventService.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
+            EventService.OnBitsCheeredOccurred -= GlobalEvents_OnBitsOccurred;
 
             await base.Disable();
         }

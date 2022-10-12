@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
@@ -204,11 +205,11 @@ namespace MixItUp.Base.Model.Commands.Games
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
             {
-                GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
+                ChatService.OnChatMessageReceived += ChatService_OnChatMessageReceived;
 
                 await this.DelayNoThrow(this.TimeLimit * 1000, cancellationToken);
 
-                GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
+                ChatService.OnChatMessageReceived -= ChatService_OnChatMessageReceived;
 
                 List<CommandParametersModel> winners = new List<CommandParametersModel>();
                 foreach (var kvp in this.runUserSelections.ToList())
@@ -240,7 +241,7 @@ namespace MixItUp.Base.Model.Commands.Games
             await this.RunSubCommand(this.StartedCommand, this.runParameters);
         }
 
-        private async void GlobalEvents_OnChatMessageReceived(object sender, ViewModel.Chat.ChatMessageViewModel message)
+        private async void ChatService_OnChatMessageReceived(object sender, ViewModel.Chat.ChatMessageViewModel message)
         {
             try
             {

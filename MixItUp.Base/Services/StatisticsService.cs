@@ -38,15 +38,13 @@ namespace MixItUp.Base.Services
         {
             this.StartTime = DateTimeOffset.Now;
 
-            GlobalEvents.OnFollowOccurred += Constellation_OnFollowOccurred;
-            GlobalEvents.OnHostOccurred += Constellation_OnHostedOccurred;
-            GlobalEvents.OnRaidOccurred += GlobalEvents_OnRaidOccurred;
-            GlobalEvents.OnSubscribeOccurred += Constellation_OnSubscribedOccurred;
-            GlobalEvents.OnResubscribeOccurred += Constellation_OnResubscribedOccurred;
-            GlobalEvents.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
-
-            GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
-            GlobalEvents.OnBitsOccurred += GlobalEvents_OnBitsOccurred;
+            EventService.OnFollowOccurred += EventService_OnFollowOccurred;
+            EventService.OnRaidOccurred += GlobalEvents_OnRaidOccurred;
+            EventService.OnSubscribeOccurred += Constellation_OnSubscribedOccurred;
+            EventService.OnResubscribeOccurred += Constellation_OnResubscribedOccurred;
+            EventService.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
+            EventService.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
+            EventService.OnBitsCheeredOccurred += GlobalEvents_OnBitsOccurred;
 
             this.ViewerTracker = new TrackedNumberStatisticDataTrackerModel(Resources.Viewers, "Eye", (StatisticDataTrackerModelBase stats) =>
             {
@@ -120,7 +118,7 @@ namespace MixItUp.Base.Services
             this.Statistics.Add(this.BitsTracker);
         }
 
-        private void Constellation_OnFollowOccurred(object sender, UserV2ViewModel e)
+        private void EventService_OnFollowOccurred(object sender, UserV2ViewModel e)
         {
             this.FollowTracker.OnStatisticEventOccurred(e.Username);
         }

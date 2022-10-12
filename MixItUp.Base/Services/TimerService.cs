@@ -32,7 +32,7 @@ namespace MixItUp.Base.Services
             {
                 this.isInitialized = true;
 
-                GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
+                ChatService.OnChatMessageReceived += ChatService_OnChatMessageReceived;
 
                 await this.RebuildTimerGroups();
 
@@ -91,7 +91,7 @@ namespace MixItUp.Base.Services
             });
         }
 
-        private void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
+        private void ChatService_OnChatMessageReceived(object sender, ChatMessageViewModel message)
         {
             if (message is UserChatMessageViewModel)
             {

@@ -31,6 +31,9 @@ namespace MixItUp.Base.Services.Twitch
     {
         public const string ClientID = "50ipfqzuqbv61wujxcm80zyzqwoqp1";
 
+        public static event EventHandler<ClipModel> OnTwitchClipCreated = delegate { };
+        public static void TwitchClipCreated(ClipModel clip) { OnTwitchClipCreated(null, clip); }
+
         public static readonly List<OAuthClientScopeEnum> StreamerScopes = new List<OAuthClientScopeEnum>()
         {
             OAuthClientScopeEnum.bits__read,

@@ -350,7 +350,7 @@ namespace MixItUp.Base.Services.Twitch
 
                     await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelFollowed, parameters);
 
-                    GlobalEvents.FollowOccurred(user);
+                    EventService.FollowOccurred(user);
 
                     await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertFollow, user.FullDisplayName), ChannelSession.Settings.AlertFollowColor));
                 }
@@ -401,7 +401,7 @@ namespace MixItUp.Base.Services.Twitch
                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelSubscribed, parameters);
             }
 
-            GlobalEvents.SubscribeOccurred(subEvent.User);
+            EventService.SubscribeOccurred(subEvent.User);
 
             if (subEvent.IsGiftedUpgrade)
             {
@@ -577,7 +577,7 @@ namespace MixItUp.Base.Services.Twitch
                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelBitsCheered, parameters);
             }
             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertTwitchBitsCheered, user.FullDisplayName, bitsCheered.Amount), ChannelSession.Settings.AlertTwitchBitsCheeredColor));
-            GlobalEvents.BitsOccurred(bitsCheered);
+            EventService.BitsCheeredOccurred(bitsCheered);
         }
 
         private async void PubSub_OnSubscribedReceived(object sender, PubSubSubscriptionsEventModel packet)
@@ -635,7 +635,7 @@ namespace MixItUp.Base.Services.Twitch
                     }
                 }
 
-                GlobalEvents.ResubscribeOccurred(new Tuple<UserV2ViewModel, int>(user, months));
+                EventService.ResubscribeOccurred(user, months);
                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertResubscribedTier, user.FullDisplayName, months, planTier), ChannelSession.Settings.AlertSubColor));
             }
         }
@@ -767,7 +767,7 @@ namespace MixItUp.Base.Services.Twitch
                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(giftedSubEvent.Gifter, string.Format(MixItUp.Base.Resources.AlertSubscriptionGiftedTier, giftedSubEvent.Gifter.FullDisplayName, giftedSubEvent.PlanTier, giftedSubEvent.Receiver.FullDisplayName), ChannelSession.Settings.AlertGiftedSubColor));
             }
 
-            GlobalEvents.SubscriptionGiftedOccurred(giftedSubEvent.Gifter, giftedSubEvent.Receiver);
+            EventService.SubscriptionGiftedOccurred(giftedSubEvent.Gifter, giftedSubEvent.Receiver);
         }
 
         private async Task ProcessMassGiftedSub(TwitchMassGiftedSubEventModel massGiftedSubEvent)

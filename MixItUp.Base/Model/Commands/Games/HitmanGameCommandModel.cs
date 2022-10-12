@@ -123,7 +123,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     await DelayNoThrow(5000, cancellationToken);
 
-                    GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
+                    ChatService.OnChatMessageReceived += ChatService_OnChatMessageReceived;
 
                     await this.RunSubCommand(this.HitmanAppearsCommand, this.runParameters);
 
@@ -132,7 +132,7 @@ namespace MixItUp.Base.Model.Commands.Games
                         await DelayNoThrow(1000, cancellationToken);
                     }
 
-                    GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
+                    ChatService.OnChatMessageReceived -= ChatService_OnChatMessageReceived;
 
                     if (this.gameActive && !string.IsNullOrEmpty(this.runHitmanName))
                     {
@@ -162,7 +162,7 @@ namespace MixItUp.Base.Model.Commands.Games
             await this.Requirements.Refund(parameters);
         }
 
-        private async void GlobalEvents_OnChatMessageReceived(object sender, ViewModel.Chat.ChatMessageViewModel message)
+        private async void ChatService_OnChatMessageReceived(object sender, ViewModel.Chat.ChatMessageViewModel message)
         {
             try
             {

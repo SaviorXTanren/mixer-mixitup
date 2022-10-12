@@ -178,7 +178,7 @@ namespace MixItUp.Base.ViewModel.Chat
                 this.ScrollingLockChanged(this, new EventArgs());
             });
 
-            GlobalEvents.OnChatVisualSettingsChanged += GlobalEvents_OnChatVisualSettingsChanged;
+            ChatService.OnChatVisualSettingsChanged += ChatService_OnChatVisualSettingsChanged;
             ServiceManager.Get<ChatService>().ChatCommandsReprocessed += Chat_ChatCommandsReprocessed;
         }
 
@@ -221,7 +221,7 @@ namespace MixItUp.Base.ViewModel.Chat
             this.NotifyPropertyChanged("SendAsOptions");
         }
 
-        private void GlobalEvents_OnChatVisualSettingsChanged(object sender, EventArgs e)
+        private void ChatService_OnChatVisualSettingsChanged(object sender, EventArgs e)
         {
             this.NotifyPropertyChanged("AlternationCount");
         }

@@ -3,6 +3,7 @@ using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,8 @@ namespace MixItUp.Base.Services
     public class GameQueueService
     {
         private const string QueuePositionSpecialIdentifier = "queueposition";
+
+        public static event EventHandler OnGameQueueUpdated = delegate { };
 
         private LockedList<CommandParametersModel> queue = new LockedList<CommandParametersModel>();
 
@@ -58,7 +61,8 @@ namespace MixItUp.Base.Services
                 parameters.SpecialIdentifiers[QueuePositionSpecialIdentifier] = this.GetUserPosition(parameters.User).ToString();
                 await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GameQueueUserJoinedCommandID, parameters);
             }
-            GlobalEvents.GameQueueUpdated();
+
+            GameQueueService.OnGameQueueUpdated(this, new EventArgs());
         }
 
         public async Task JoinFront(CommandParametersModel parameters)
@@ -70,7 +74,8 @@ namespace MixItUp.Base.Services
                 parameters.SpecialIdentifiers[QueuePositionSpecialIdentifier] = this.GetUserPosition(parameters.User).ToString();
                 await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GameQueueUserJoinedCommandID, parameters);
             }
-            GlobalEvents.GameQueueUpdated();
+
+            GameQueueService.OnGameQueueUpdated(this, new EventArgs());
         }
 
         public Task Leave(CommandParametersModel parameters)
@@ -79,7 +84,7 @@ namespace MixItUp.Base.Services
             if (p != null)
             {
                 this.queue.Remove(p);
-                GlobalEvents.GameQueueUpdated();
+                GameQueueService.OnGameQueueUpdated(this, new EventArgs());
             }
             return Task.CompletedTask;
         }
@@ -90,7 +95,7 @@ namespace MixItUp.Base.Services
             if (p != null)
             {
                 this.queue.MoveUp(p);
-                GlobalEvents.GameQueueUpdated();
+                GameQueueService.OnGameQueueUpdated(this, new EventArgs());
             }
             return Task.CompletedTask;
         }
@@ -101,7 +106,7 @@ namespace MixItUp.Base.Services
             if (p != null)
             {
                 this.queue.MoveDown(p);
-                GlobalEvents.GameQueueUpdated();
+                GameQueueService.OnGameQueueUpdated(this, new EventArgs());
             }
             return Task.CompletedTask;
         }
@@ -113,7 +118,7 @@ namespace MixItUp.Base.Services
                 CommandParametersModel parameters = this.queue.ElementAt(0);
                 this.queue.Remove(parameters);
                 await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GameQueueUserSelectedCommandID, parameters);
-                GlobalEvents.GameQueueUpdated();
+                GameQueueService.OnGameQueueUpdated(this, new EventArgs());
             }
         }
 
@@ -126,7 +131,7 @@ namespace MixItUp.Base.Services
                 {
                     this.queue.Remove(parameters);
                     await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GameQueueUserSelectedCommandID, parameters);
-                    GlobalEvents.GameQueueUpdated();
+                    GameQueueService.OnGameQueueUpdated(this, new EventArgs());
                     return;
                 }
             }
@@ -141,7 +146,7 @@ namespace MixItUp.Base.Services
                 CommandParametersModel parameters = this.queue.ElementAt(index);
                 this.queue.Remove(parameters);
                 await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.GameQueueUserSelectedCommandID, parameters);
-                GlobalEvents.GameQueueUpdated();
+                GameQueueService.OnGameQueueUpdated(this, new EventArgs());
             }
         }
 
@@ -194,7 +199,7 @@ namespace MixItUp.Base.Services
         public Task Clear()
         {
             this.queue.Clear();
-            GlobalEvents.GameQueueUpdated();
+            GameQueueService.OnGameQueueUpdated(this, new EventArgs());
             return Task.CompletedTask;
         }
 

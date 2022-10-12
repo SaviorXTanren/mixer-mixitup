@@ -28,6 +28,15 @@ namespace MixItUp.Base.Services
         private const string ChatEventLogDirectoryName = "ChatEventLogs";
         private const string ChatEventLogFileNameFormat = "ChatEventLog-{0}.txt";
 
+        public static event EventHandler OnChatVisualSettingsChanged = delegate { };
+        public static void ChatVisualSettingsChanged() { OnChatVisualSettingsChanged(null, new EventArgs()); }
+
+        public static event EventHandler<ChatMessageViewModel> OnChatMessageReceived = delegate { };
+        public static void ChatMessageReceived(ChatMessageViewModel message) { OnChatMessageReceived(null, message); }
+
+        public static event EventHandler<string> OnChatMessageDeleted = delegate { };
+        public static void ChatMessageDeleted(string messageID) { OnChatMessageDeleted(null, messageID); }
+
         public static string SplitLargeMessage(string message, int maxLength, out string subMessage)
         {
             subMessage = null;
@@ -214,7 +223,7 @@ namespace MixItUp.Base.Services
                 await this.RemoveMessage(message);
             }
 
-            GlobalEvents.ChatMessageDeleted(message.ID);
+            ChatService.ChatMessageDeleted(message.ID);
         }
 
         public async Task ClearMessages(StreamingPlatformTypeEnum platform)
@@ -545,7 +554,7 @@ namespace MixItUp.Base.Services
                         }
                     }
 
-                    GlobalEvents.ChatMessageReceived(message);
+                    ChatService.ChatMessageReceived(message);
 
                     await this.WriteToChatEventLog(message);
 

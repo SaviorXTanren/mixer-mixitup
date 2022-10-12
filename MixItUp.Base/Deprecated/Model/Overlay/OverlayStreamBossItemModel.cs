@@ -184,29 +184,29 @@ namespace MixItUp.Base.Model.Overlay
 
             if (this.FollowBonus > 0.0)
             {
-                GlobalEvents.OnFollowOccurred += GlobalEvents_OnFollowOccurred;
+                EventService.OnFollowOccurred += GlobalEvents_OnFollowOccurred;
             }
             if (this.HostBonus > 0.0)
             {
-                GlobalEvents.OnHostOccurred += GlobalEvents_OnHostOccurred;
+
             }
             if (this.RaidBonus > 0.0)
             {
-                GlobalEvents.OnRaidOccurred += GlobalEvents_OnRaidOccurred;
+                EventService.OnRaidOccurred += GlobalEvents_OnRaidOccurred;
             }
             if (this.SubscriberBonus > 0.0)
             {
-                GlobalEvents.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
-                GlobalEvents.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
-                GlobalEvents.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
+                EventService.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
+                EventService.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
+                EventService.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
             }
             if (this.DonationBonus > 0.0)
             {
-                GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
+                EventService.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
             }
             if (this.BitsBonus > 0.0)
             {
-                GlobalEvents.OnBitsOccurred += GlobalEvents_OnBitsOccurred;
+                EventService.OnBitsCheeredOccurred += GlobalEvents_OnBitsOccurred;
             }
 
             await base.Enable();
@@ -214,14 +214,13 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Disable()
         {
-            GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
-            GlobalEvents.OnHostOccurred -= GlobalEvents_OnHostOccurred;
-            GlobalEvents.OnRaidOccurred -= GlobalEvents_OnRaidOccurred;
-            GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
-            GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
-            GlobalEvents.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
-            GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
-            GlobalEvents.OnBitsOccurred -= GlobalEvents_OnBitsOccurred;
+            EventService.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
+            EventService.OnRaidOccurred -= GlobalEvents_OnRaidOccurred;
+            EventService.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
+            EventService.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
+            EventService.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
+            EventService.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
+            EventService.OnBitsCheeredOccurred -= GlobalEvents_OnBitsOccurred;
 
             await base.Disable();
         }

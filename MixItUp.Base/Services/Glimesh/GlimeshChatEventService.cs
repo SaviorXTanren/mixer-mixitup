@@ -445,7 +445,7 @@ namespace MixItUp.Base.Services.Glimesh
 
                     await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.GlimeshChannelFollowed, parameters);
 
-                    GlobalEvents.FollowOccurred(user);
+                    EventService.FollowOccurred(user);
 
                     await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertFollow, user.DisplayName), ChannelSession.Settings.AlertFollowColor));
                 }
