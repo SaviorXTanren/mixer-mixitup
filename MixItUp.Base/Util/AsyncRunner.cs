@@ -75,6 +75,22 @@ namespace MixItUp.Base.Util
             }, token);
         }
 
+        public static Task<T> RunAsyncBackground<T>(Func<CancellationToken, Task<T>> backgroundTask, CancellationToken token)
+        {
+            return Task.Run(async () =>
+            {
+                try
+                {
+                    return await backgroundTask(token);
+                }
+                catch (ThreadAbortException) { }
+                catch (OperationCanceledException) {  }
+                catch (Exception ex) { Logger.Log(ex); }
+
+                return default(T);
+            }, token);
+        }
+
         public static Task RunAsyncBackground(Func<CancellationToken, Task> backgroundTask, CancellationToken token, int delayInMilliseconds)
         {
             return Task.Run(async () =>

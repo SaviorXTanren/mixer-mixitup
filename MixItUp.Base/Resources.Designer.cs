@@ -3601,6 +3601,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to C#.
+        /// </summary>
+        public static string CSharp {
+            get {
+                return ResourceManager.GetString("CSharp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cumulative Months Subbed.
         /// </summary>
         public static string CumulativeMonthsSubbed {
@@ -10488,6 +10497,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Javascript.
+        /// </summary>
+        public static string Javascript {
+            get {
+                return ResourceManager.GetString("Javascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Jello.
         /// </summary>
         public static string Jello {
@@ -14875,6 +14893,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Python.
+        /// </summary>
+        public static string Python {
+            get {
+                return ResourceManager.GetString("Python", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Quantity.
         /// </summary>
         public static string Quantity {
@@ -16489,6 +16516,33 @@ namespace MixItUp.Base {
         public static string ScreenPosition {
             get {
                 return ResourceManager.GetString("ScreenPosition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Script.
+        /// </summary>
+        public static string Script {
+            get {
+                return ResourceManager.GetString("Script", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Script Error: {0}.
+        /// </summary>
+        public static string ScriptActionFailedCompile {
+            get {
+                return ResourceManager.GetString("ScriptActionFailedCompile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Script Action: Missing script.
+        /// </summary>
+        public static string ScriptActionMissingScript {
+            get {
+                return ResourceManager.GetString("ScriptActionMissingScript", resourceCulture);
             }
         }
         
@@ -21986,6 +22040,15 @@ namespace MixItUp.Base {
         public static string VisualAudioActions {
             get {
                 return ResourceManager.GetString("VisualAudioActions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visual Basic.
+        /// </summary>
+        public static string VisualBasic {
+            get {
+                return ResourceManager.GetString("VisualBasic", resourceCulture);
             }
         }
         
