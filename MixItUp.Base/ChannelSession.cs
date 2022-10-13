@@ -25,6 +25,9 @@ namespace MixItUp.Base
 {
     public static class ChannelSession
     {
+        public static event EventHandler OnRestartRequested = delegate { };
+        public static void RestartRequested() { OnRestartRequested(null, new EventArgs()); }
+
         public static ApplicationSettingsV2Model AppSettings { get; private set; }
         public static SettingsV3Model Settings { get; private set; }
         public static UserV2ViewModel User { get; private set; }
@@ -481,13 +484,13 @@ namespace MixItUp.Base
         public static void DisconnectionOccurred(string serviceName)
         {
             Logger.Log(LogLevel.Error, serviceName + " Service disconnection occurred");
-            GlobalEvents.ServiceDisconnect(serviceName);
+            ServiceManager.ServiceDisconnect(serviceName);
         }
 
         public static void ReconnectionOccurred(string serviceName)
         {
             Logger.Log(LogLevel.Error, serviceName + " Service reconnection successful");
-            GlobalEvents.ServiceReconnect(serviceName);
+            ServiceManager.ServiceReconnect(serviceName);
         }
 
         private static async Task SessionBackgroundTask(CancellationToken cancellationToken)

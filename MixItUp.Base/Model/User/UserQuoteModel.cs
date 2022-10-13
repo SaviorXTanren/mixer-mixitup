@@ -13,6 +13,9 @@ namespace MixItUp.Base.Model.User
         public const string QuoteGameSpecialIdentifier = "quotegame";
         public const string QuoteDateTimeSpecialIdentifier = "quotedatetime";
 
+        public static event EventHandler<UserQuoteModel> OnQuoteAdded = delegate { };
+        public static void QuoteAdded(UserQuoteModel quote) { OnQuoteAdded(null, quote); }
+
         [DataMember]
         public int ID { get; set; }
 

@@ -34,8 +34,6 @@ namespace MixItUp.WPF
 
         protected override async Task OnLoaded()
         {
-            GlobalEvents.OnShowMessageBox += GlobalEvents_OnShowMessageBox;
-
             this.Title += " - v" + Assembly.GetEntryAssembly().GetName().Version.ToString();
 
             if (ProcessHelper.GetProcessesByName("MixItUp").Count() > 1)
@@ -167,14 +165,6 @@ namespace MixItUp.WPF
                 this.Hide();
                 this.Close();
             }
-        }
-
-        private async void GlobalEvents_OnShowMessageBox(object sender, string message)
-        {
-            await this.RunAsyncOperation(async () =>
-            {
-                await DialogHelper.ShowMessage(message);
-            });
         }
 
         private Task<bool> ShowLicenseAgreement()

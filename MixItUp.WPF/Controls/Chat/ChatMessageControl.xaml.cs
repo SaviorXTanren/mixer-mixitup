@@ -1,9 +1,7 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.Chat.Glimesh;
-using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.Twitch;
 using StreamingClient.Base.Util;
 using System;
@@ -30,10 +28,10 @@ namespace MixItUp.WPF.Controls.Chat
             this.Loaded += ChatMessageControl_Loaded;
             this.DataContextChanged += ChatMessageControl_DataContextChanged;
 
-            GlobalEvents.OnChatVisualSettingsChanged += GlobalEvents_OnChatVisualSettingsChanged;
+            ChatService.OnChatVisualSettingsChanged += ChatService_OnChatVisualSettingsChanged;
         }
 
-        private void GlobalEvents_OnChatVisualSettingsChanged(object sender, EventArgs e)
+        private void ChatService_OnChatVisualSettingsChanged(object sender, EventArgs e)
         {
             if (this.Message != null)
             {

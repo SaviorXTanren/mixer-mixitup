@@ -286,7 +286,7 @@ namespace MixItUp.Base.Services.Glimesh
 
                                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.GlimeshChannelSubscribed, parameters);
 
-                                GlobalEvents.SubscribeOccurred(user);
+                                EventService.SubscribeOccurred(user);
 
                                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertSubscribed, user.DisplayName), ChannelSession.Settings.AlertSubColor));
                             }
@@ -343,7 +343,7 @@ namespace MixItUp.Base.Services.Glimesh
 
                                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertSubscriptionGifted, user.DisplayName, giftee.DisplayName), ChannelSession.Settings.AlertGiftedSubColor));
 
-                                GlobalEvents.SubscriptionGiftedOccurred(user, giftee);
+                                EventService.SubscriptionGiftedOccurred(user, giftee);
                             }
                         }
                         else if (Regex.IsMatch(messagePacket.Message, DonationMessageContentsFormat, RegexOptions.IgnoreCase))

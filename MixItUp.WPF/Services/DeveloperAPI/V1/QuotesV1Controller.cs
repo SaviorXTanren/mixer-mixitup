@@ -63,7 +63,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
             ChannelSession.Settings.Quotes.Add(newQuote);
             await ChannelSession.SaveSettings();
 
-            GlobalEvents.QuoteAdded(newQuote);
+            UserQuoteModel.QuoteAdded(newQuote);
 
             return QuoteFromUserQuoteViewModel(newQuote);
         }

@@ -23,7 +23,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             InitializeComponent();
 
-            GlobalEvents.OnQuoteAdded += GlobalEvents_OnQuoteAdded;
+            UserQuoteModel.OnQuoteAdded += GlobalEvents_OnQuoteAdded;
         }
 
         protected override async Task InitializeInternal()

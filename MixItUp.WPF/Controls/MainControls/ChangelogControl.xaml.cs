@@ -18,7 +18,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             InitializeComponent();
 
-            GlobalEvents.OnMainMenuStateChanged += GlobalEvents_OnMainMenuStateChanged;
+            MainMenuControl.OnMainMenuStateChanged += MainMenuControl_OnMainMenuStateChanged;
         }
 
         protected override async Task InitializeInternal()
@@ -42,7 +42,7 @@ namespace MixItUp.WPF.Controls.MainControls
             await base.InitializeInternal();
         }
 
-        private void GlobalEvents_OnMainMenuStateChanged(object sender, bool state)
+        private void MainMenuControl_OnMainMenuStateChanged(object sender, bool state)
         {
             this.ChangelogWebBrowser.Visibility = (state) ? Visibility.Collapsed : Visibility.Visible;
         }

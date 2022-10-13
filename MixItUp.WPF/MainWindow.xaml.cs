@@ -39,7 +39,7 @@ namespace MixItUp.WPF
         {
             InitializeComponent();
 
-            GlobalEvents.OnRestartRequested += GlobalEvents_OnRestartRequested;
+            ChannelSession.OnRestartRequested += ChannelSession_OnRestartRequested;
 
             this.Closing += MainWindow_Closing;
             this.Initialize(this.StatusBar);
@@ -226,7 +226,7 @@ namespace MixItUp.WPF
             }
         }
 
-        private void GlobalEvents_OnRestartRequested(object sender, EventArgs e) { this.Restart(); }
+        private void ChannelSession_OnRestartRequested(object sender, EventArgs e) { this.Restart(); }
 
         private async void ActivationProtocolHandler_OnCommunityCommandActivation(object sender, Guid commandID)
         {
