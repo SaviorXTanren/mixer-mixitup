@@ -96,6 +96,24 @@ namespace MixItUp.Base.Services
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
+        public int GetViewerCount()
+        {
+            int viewerCount = 0;
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected && ServiceManager.Get<TwitchSessionService>().IsLive)
+            {
+                viewerCount += (int)ServiceManager.Get<TwitchSessionService>().Stream?.viewer_count;
+            }
+            if (ServiceManager.Get<TrovoSessionService>().IsConnected && ServiceManager.Get<TrovoSessionService>().IsLive)
+            {
+                viewerCount += (int)ServiceManager.Get<TrovoSessionService>().Channel?.current_viewers;
+            }
+            if (ServiceManager.Get<GlimeshSessionService>().IsConnected && ServiceManager.Get<GlimeshSessionService>().IsLive)
+            {
+                viewerCount += ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.countViewers ?? 0;
+            }
+            return viewerCount;
+        }
+
         public async Task SendMessage(string message, bool sendAsStreamer = false, string replyMessageID = null)
         {
             await StreamingPlatforms.ForEachPlatform(async (p) =>

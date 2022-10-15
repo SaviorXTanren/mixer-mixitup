@@ -111,7 +111,7 @@ namespace MixItUp.Base.Model.Overlay
             }
             if (this.BitsBonus > 0.0)
             {
-                EventService.OnBitsCheeredOccurred += GlobalEvents_OnBitsOccurred;
+                EventService.OnTwitchBitsCheeredOccurred += GlobalEvents_OnBitsOccurred;
             }
 
             this.timeLeft = 0;
@@ -133,7 +133,7 @@ namespace MixItUp.Base.Model.Overlay
             EventService.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             EventService.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
             EventService.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
-            EventService.OnBitsCheeredOccurred -= GlobalEvents_OnBitsOccurred;
+            EventService.OnTwitchBitsCheeredOccurred -= GlobalEvents_OnBitsOccurred;
 
             this.timeLeft = 0;
             this.stackedTime = 0;

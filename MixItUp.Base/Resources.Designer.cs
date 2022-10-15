@@ -13348,6 +13348,28 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;p id=&quot;text-{ID}&quot;&gt;
+        ///    {Amount}
+        ///&lt;/p&gt;.
+        /// </summary>
+        public static string OverlayLabelAmountDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayLabelAmountDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;p id=&quot;text-{ID}&quot;&gt;
+        ///    {Username} - {Amount}
+        ///&lt;/p&gt;.
+        /// </summary>
+        public static string OverlayLabelUsernameAmountDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayLabelUsernameAmountDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New Leader.
         /// </summary>
         public static string OverlayLeaderboardNewLeader {

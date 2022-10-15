@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Services;
+using System;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -9,6 +10,9 @@ namespace MixItUp.Base.Model.Settings
     public class CounterModel
     {
         public const string CounterFolderName = "Counters";
+
+        public static event EventHandler<CounterModel> OnCounterUpdated = delegate { };
+        public static void CounterUpdated(CounterModel counter) { OnCounterUpdated(null, counter); }
 
         public static void CreateCounter(string name, bool saveToFile, bool resetOnLoad)
         {
@@ -47,6 +51,7 @@ namespace MixItUp.Base.Model.Settings
             {
                 await this.SaveAmountToFile();
             }
+            CounterUpdated(this);
         }
 
         public async Task UpdateAmount(double amount) { await this.SetAmount(this.Amount + amount); }

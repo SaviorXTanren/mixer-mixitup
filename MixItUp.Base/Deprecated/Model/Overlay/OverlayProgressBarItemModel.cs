@@ -159,7 +159,7 @@ namespace MixItUp.Base.Model.Overlay
             }
             else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Bits)
             {
-                EventService.OnBitsCheeredOccurred += GlobalEvents_OnBitsOccurred;
+                EventService.OnTwitchBitsCheeredOccurred += GlobalEvents_OnBitsOccurred;
             }
 
             await base.Enable();
@@ -172,7 +172,7 @@ namespace MixItUp.Base.Model.Overlay
             EventService.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             EventService.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
             EventService.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
-            EventService.OnBitsCheeredOccurred -= GlobalEvents_OnBitsOccurred;
+            EventService.OnTwitchBitsCheeredOccurred -= GlobalEvents_OnBitsOccurred;
 
             await base.Disable();
         }

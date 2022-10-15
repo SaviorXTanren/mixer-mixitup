@@ -44,7 +44,7 @@ namespace MixItUp.Base.Services
             EventService.OnResubscribeOccurred += Constellation_OnResubscribedOccurred;
             EventService.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
             EventService.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
-            EventService.OnBitsCheeredOccurred += GlobalEvents_OnBitsOccurred;
+            EventService.OnTwitchBitsCheeredOccurred += GlobalEvents_OnBitsOccurred;
 
             this.ViewerTracker = new TrackedNumberStatisticDataTrackerModel(Resources.Viewers, "Eye", (StatisticDataTrackerModelBase stats) =>
             {

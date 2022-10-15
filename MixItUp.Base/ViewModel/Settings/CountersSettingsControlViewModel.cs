@@ -23,7 +23,9 @@ namespace MixItUp.Base.ViewModel.Settings
                 {
                     value = 0;
                 }
-                this.model.Amount = value;
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                this.model.SetAmount(value);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 this.NotifyPropertyChanged();
             }
         }

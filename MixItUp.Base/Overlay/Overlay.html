@@ -94,10 +94,17 @@
 
                             processBasic(packet.data, addedElement.firstChild);
 
+                            var videoID = packet.data.VideoID;
+                            videoID = videoID.replace("https://www.youtube.com/watch?v=", "");
+                            videoID = videoID.replace("https://youtu.be/", "");
+                            if (videoID.includes("&")) {
+                                videoID = videoID.substring(0, videoID.indexOf("&"));
+                            }
+
                             var youtubeVideoPlayer = new YT.Player(packet.data.ID, {
                                 height: packet.data.Height,
                                 width: packet.data.Width,
-                                videoId: packet.data.VideoID,
+                                videoId: videoID,
                                 playerVars: { 'controls': 0, 'modestbranding': 1, 'start': packet.data.StartTime },
                                 events: {
                                     'onReady': function () {

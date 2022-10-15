@@ -184,13 +184,13 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task EnableWidget(OverlayWidgetV3Model widget, CommandParametersModel parameters)
+        public async Task EnableWidget(OverlayWidgetV3ModelBase widget, CommandParametersModel parameters)
         {
             try
             {
-                if (widget.Item != null)
+                if (widget != null)
                 {
-                    OverlayOutputV3Model processedItem = await widget.Item.GetProcessedItem(this, parameters);
+                    OverlayOutputV3Model processedItem = await widget.GetProcessedItem(this, parameters);
                     if (processedItem != null)
                     {
                         await this.SendPacket("EnableWidget", JObject.FromObject(processedItem));
@@ -203,13 +203,32 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task DisableWidget(OverlayWidgetV3Model widget, CommandParametersModel parameters)
+        public async Task UpdateWidget(OverlayWidgetV3ModelBase widget, CommandParametersModel parameters)
         {
             try
             {
-                if (widget.Item != null)
+                if (widget != null)
                 {
-                    OverlayOutputV3Model processedItem = await widget.Item.GetProcessedItem(this, parameters);
+                    OverlayOutputV3Model processedItem = await widget.GetProcessedItem(this, parameters);
+                    if (processedItem != null)
+                    {
+                        await this.SendPacket("UpdateWidget", JObject.FromObject(processedItem));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
+        public async Task DisableWidget(OverlayWidgetV3ModelBase widget, CommandParametersModel parameters)
+        {
+            try
+            {
+                if (widget != null)
+                {
+                    OverlayOutputV3Model processedItem = await widget.GetProcessedItem(this, parameters);
                     if (processedItem != null)
                     {
                         await this.SendPacket("DisableWidget", JObject.FromObject(processedItem));

@@ -151,21 +151,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         private void RefreshNumbers()
         {
-            int viewerCount = 0;
-            if (ServiceManager.Get<TwitchSessionService>().IsConnected && ServiceManager.Get<TwitchSessionService>().IsLive)
-            {
-                viewerCount += (int)ServiceManager.Get<TwitchSessionService>().Stream?.viewer_count;
-            }
-            if (ServiceManager.Get<TrovoSessionService>().IsConnected && ServiceManager.Get<TrovoSessionService>().IsLive)
-            {
-                viewerCount += (int)ServiceManager.Get<TrovoSessionService>().Channel?.current_viewers;
-            }
-            if (ServiceManager.Get<GlimeshSessionService>().IsConnected && ServiceManager.Get<GlimeshSessionService>().IsLive)
-            {
-                viewerCount += ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.countViewers ?? 0;
-            }
-            this.ViewersCount = viewerCount;
-
+            this.ViewersCount = ServiceManager.Get<ChatService>().GetViewerCount();
             this.ChattersCount = ServiceManager.Get<UserService>().ActiveUserCount;
         }
 

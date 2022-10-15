@@ -295,7 +295,7 @@ namespace MixItUp.Base.Model.Overlay
             }
             if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Bits))
             {
-                EventService.OnBitsCheeredOccurred += GlobalEvents_OnBitsOccurred;
+                EventService.OnTwitchBitsCheeredOccurred += GlobalEvents_OnBitsOccurred;
             }
             return base.Initialize();
         }
@@ -309,7 +309,7 @@ namespace MixItUp.Base.Model.Overlay
             EventService.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             EventService.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
             EventService.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
-            EventService.OnBitsCheeredOccurred -= GlobalEvents_OnBitsOccurred;
+            EventService.OnTwitchBitsCheeredOccurred -= GlobalEvents_OnBitsOccurred;
             return Task.CompletedTask;
         }
 

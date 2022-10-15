@@ -84,14 +84,6 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         protected override OverlayItemV3ModelBase GetItemInternal()
         {
-            string videoID = this.VideoID;
-            videoID = videoID.Replace("https://www.youtube.com/watch?v=", "");
-            videoID = videoID.Replace("https://youtu.be/", "");
-            if (videoID.Contains("&"))
-            {
-                videoID = videoID.Substring(0, videoID.IndexOf("&"));
-            }
-
             OverlayYouTubeItemV3Model result = new OverlayYouTubeItemV3Model()
             {
                 HTML = this.HTML,

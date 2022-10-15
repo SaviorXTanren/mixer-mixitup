@@ -2,6 +2,7 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -16,7 +17,6 @@ namespace MixItUp.Base.Model.Overlay
         HTML,
         WebPage,
         Timer,
-        Label,
     }
 
     [DataContract]
@@ -29,10 +29,9 @@ namespace MixItUp.Base.Model.Overlay
 
         public static int zIndexCounter = 0;
 
-        public static string ReplaceProperty(string text, string name, string value)
-        {
-            return text.Replace($"{{{name}}}", value);
-        }
+        public static string GenerateOverlayItemID() { return "X" + Guid.NewGuid().ToString().Replace('-', 'X'); }
+
+        public static string ReplaceProperty(string text, string name, string value) { return text.Replace($"{{{name}}}", value); }
 
         [DataMember]
         public OverlayItemV3Type Type { get; set; }
@@ -61,16 +60,16 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayItemV3ModelBase(OverlayItemV3Type type) { this.Type = type; }
 
-        public virtual Task Enable() { return Task.CompletedTask; }
-
-        public virtual Task Update(CommandParametersModel parameters) { return Task.CompletedTask; }
-
-        public virtual Task Disable() { return Task.CompletedTask; }
-
-        public async Task<OverlayOutputV3Model> GetProcessedItem(OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
+        public async Task<OverlayOutputV3Model> GetProcessedItem(OverlayEndpointService overlayEndpointService, CommandParametersModel parameters, Dictionary<string, string> replacements = null)
         {
             OverlayOutputV3Model result = new OverlayOutputV3Model();
-            result.ID = "X" + Guid.NewGuid().ToString().Replace('-', 'X');
+
+            result.ID = this.ID;
+            if (string.IsNullOrWhiteSpace(result.ID))
+            {
+                result.ID = GenerateOverlayItemID();
+            }
+
             result.HTML = this.HTML;
             result.CSS = this.CSS;
             result.Javascript = this.Javascript;
@@ -154,6 +153,16 @@ namespace MixItUp.Base.Model.Overlay
             result.ExitAnimation.ApplyAnimationReplacements(result);
 
             result = await this.GetProcessedItem(result, overlayEndpointService, parameters);
+
+            if (replacements != null)
+            {
+                foreach (var kvp in replacements)
+                {
+                    result.HTML = ReplaceProperty(result.HTML, kvp.Key, kvp.Value);
+                    result.CSS = ReplaceProperty(result.CSS, kvp.Key, kvp.Value);
+                    result.Javascript = ReplaceProperty(result.Javascript, kvp.Key, kvp.Value);
+                }
+            }
 
             result.HTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(result.HTML, parameters);
             result.CSS = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(result.CSS, parameters);

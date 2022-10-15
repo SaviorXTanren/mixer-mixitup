@@ -91,7 +91,7 @@ namespace MixItUp.Base.Model.Overlay
             }
             if (this.TickerTapeType == OverlayTickerTapeItemTypeEnum.Bits)
             {
-                EventService.OnBitsCheeredOccurred += GlobalEvents_OnBitsOccurred;
+                EventService.OnTwitchBitsCheeredOccurred += GlobalEvents_OnBitsOccurred;
             }
 
             await base.Enable();
@@ -104,7 +104,7 @@ namespace MixItUp.Base.Model.Overlay
             EventService.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
             EventService.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             EventService.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
-            EventService.OnBitsCheeredOccurred -= GlobalEvents_OnBitsOccurred;
+            EventService.OnTwitchBitsCheeredOccurred -= GlobalEvents_OnBitsOccurred;
 
             await base.Disable();
         }

@@ -4,6 +4,7 @@ using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
@@ -140,11 +141,17 @@ namespace MixItUp.Base.Services
         public static event EventHandler<Tuple<UserV2ViewModel, UserV2ViewModel>> OnSubscriptionGiftedOccurred = delegate { };
         public static void SubscriptionGiftedOccurred(UserV2ViewModel gifter, UserV2ViewModel receiver) { OnSubscriptionGiftedOccurred(null, new Tuple<UserV2ViewModel, UserV2ViewModel>(gifter, receiver)); }
 
+        public static event EventHandler<Tuple<UserV2ViewModel, int>> OnMassSubscriptionsGiftedOccurred = delegate { };
+        public static void MassSubscriptionsGiftedOccurred(UserV2ViewModel gifter, int amount) { OnMassSubscriptionsGiftedOccurred(null, new Tuple<UserV2ViewModel, int>(gifter, amount)); }
+
         public static event EventHandler<UserDonationModel> OnDonationOccurred = delegate { };
         public static void DonationOccurred(UserDonationModel donation) { OnDonationOccurred(null, donation); }
 
-        public static event EventHandler<TwitchUserBitsCheeredModel> OnBitsCheeredOccurred = delegate { };
-        public static void BitsCheeredOccurred(TwitchUserBitsCheeredModel bitsCheer) { OnBitsCheeredOccurred(null, bitsCheer); }
+        public static event EventHandler<TwitchUserBitsCheeredModel> OnTwitchBitsCheeredOccurred = delegate { };
+        public static void TwitchBitsCheeredOccurred(TwitchUserBitsCheeredModel bitsCheer) { OnTwitchBitsCheeredOccurred(null, bitsCheer); }
+
+        public static event EventHandler<TrovoChatSpellViewModel> OnTrovoSpellCastOccurred = delegate { };
+        public static void TrovoSpellCastOccurred(TrovoChatSpellViewModel spell) { OnTrovoSpellCastOccurred(null, spell); }
 
         private static HashSet<EventTypeEnum> singleUseTracking = new HashSet<EventTypeEnum>()
         {

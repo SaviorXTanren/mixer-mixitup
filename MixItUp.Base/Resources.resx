@@ -9300,4 +9300,14 @@ namespace CustomNamespace
   <data name="CommunityCommandsScriptActionsNotSupported" xml:space="preserve">
     <value>Commands containing Script actions are not supported for uploading to the Community Commands feature. Due to the complexity of scripts and the ability for them to have malicious intent for users, we do not support uploading them through Community Commands to ensure users are protected. You can optionally instead export your command to a file and share it out with users through other means.</value>
   </data>
+  <data name="OverlayLabelAmountDefaultHTML" xml:space="preserve">
+    <value>&lt;p id="text-{ID}"&gt;
+    {Amount}
+&lt;/p&gt;</value>
+  </data>
+  <data name="OverlayLabelUsernameAmountDefaultHTML" xml:space="preserve">
+    <value>&lt;p id="text-{ID}"&gt;
+    {Username} - {Amount}
+&lt;/p&gt;</value>
+  </data>
 </root>
