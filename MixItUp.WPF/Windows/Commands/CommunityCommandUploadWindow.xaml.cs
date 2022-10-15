@@ -26,6 +26,7 @@ namespace MixItUp.WPF.Windows.Commands
 
         private CommunityCommandUploadModel uploadCommand;
 
+        private bool commandContainsScript;
         private bool commandContainsMedia;
         private bool commandReferencesOtherCommand;
 
@@ -109,6 +110,11 @@ namespace MixItUp.WPF.Windows.Commands
                 this.NameTextBox.Text = this.uploadCommand.Name;
                 this.DescriptionTextBox.Text = this.uploadCommand.Description;
 
+                if (this.uploadCommand.Tags.Contains(CommunityCommandTagEnum.Script))
+                {
+                    this.commandContainsScript = true;
+                }
+
                 if (this.uploadCommand.Tags.Contains(CommunityCommandTagEnum.Sound) || this.uploadCommand.Tags.Contains(CommunityCommandTagEnum.Overlay) ||
                     this.uploadCommand.Tags.Contains(CommunityCommandTagEnum.File) || this.uploadCommand.Tags.Contains(CommunityCommandTagEnum.ExternalProgram))
                 {
@@ -150,6 +156,12 @@ namespace MixItUp.WPF.Windows.Commands
             {
                 try
                 {
+                    if (this.commandContainsScript)
+                    {
+                        await DialogHelper.ShowMessage(MixItUp.Base.Resources.CommunityCommandsScriptActionsNotSupported);
+                        return;
+                    }
+
                     if (this.commandContainsMedia)
                     {
                         if (!await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.CommunityCommandsExternalAssetActionsDetected))

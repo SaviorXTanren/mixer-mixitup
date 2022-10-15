@@ -47,6 +47,8 @@ namespace MixItUp.Base.Model.Store
         Voicemod,
         YouTube,
         Trovo,
+        PolyPop,
+        Script,
 
         // Command Tags
         ChatCommand = 1000,

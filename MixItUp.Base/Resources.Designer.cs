@@ -2995,6 +2995,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Commands containing Script actions are not supported for uploading to the Community Commands feature. Due to the complexity of scripts and the ability for them to have malicious intent for users, we do not support uploading them through Community Commands to ensure users are protected. You can optionally instead export your command to a file and share it out with users through other means..
+        /// </summary>
+        public static string CommunityCommandsScriptActionsNotSupported {
+            get {
+                return ResourceManager.GetString("CommunityCommandsScriptActionsNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to By uploading a command to the Community Command service, you agree to the following:
         ///
         ///- Any external assets used or referenced in this command are owned by me and I am granting permission for others to use them or available freely for use to the public.
