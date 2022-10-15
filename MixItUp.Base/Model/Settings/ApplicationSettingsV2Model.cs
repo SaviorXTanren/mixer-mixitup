@@ -15,7 +15,7 @@ namespace MixItUp.Base.Model.Settings
 
         public static async Task<ApplicationSettingsV2Model> Load()
         {
-            ApplicationSettingsV2Model settings = new ApplicationSettingsV2Model();
+            ApplicationSettingsV2Model settings = null;
             if (ServiceManager.Get<IFileService>().FileExists(ApplicationSettingsFileName))
             {
                 try
@@ -26,6 +26,11 @@ namespace MixItUp.Base.Model.Settings
                 {
                     Logger.Log(ex);
                 }
+            }
+
+            if (settings == null)
+            {
+                settings = new ApplicationSettingsV2Model();
             }
 
             if (settings.ForceResetPreviewProgram)
