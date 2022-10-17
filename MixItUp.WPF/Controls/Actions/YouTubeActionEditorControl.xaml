@@ -41,7 +41,7 @@
 
             <TextBox Grid.Row="0" Text="{Binding Title}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Title}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Grid.Row="2" Text="{Binding Description}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Description}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Row="2" Text="{Binding Description}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Description}" Style="{StaticResource MultiLineTextBox}" Height="200" />
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowAmountGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
