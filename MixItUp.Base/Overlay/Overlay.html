@@ -39,6 +39,8 @@
         var noConnectionDiv = document.getElementById('noConnectionDiv');
         var noTextToSpeechDiv = document.getElementById('noTextToSpeechDiv');
 
+        var widgets = new Map();
+
         // YouTube player
         var youtubeIFrameAPIReady = false;
         var youtubeVideoPlayer;
@@ -123,12 +125,21 @@
                         }
                     }
                     else if (packet.Type == 'EnableWidget') {
-                    }
-                    else if (packet.Type == 'DisableWidget') {
+                        var widget = {};
+                        if (!widgets.has(data.ID)) {
+                            widgets.set(data.ID, widget);
+
+                            widget.MainDiv = document.createElement('div');
+                            widget.Items = [];
+
+                            addWaitRemoveElement(data, widget.MainDiv);
+                        }
                     }
                     else if (packet.Type == 'UpdateWidget') {
                     }
-                    else if (packet.type == 'AdjustTime') {
+                    else if (packet.Type == 'DisableWidget') {
+                    }
+                    else if (packet.type == 'TimerAdjustTime') {
                         window[packet.data.ID + "_adjustTime"](packet.data.Time);
                     }
                 }
