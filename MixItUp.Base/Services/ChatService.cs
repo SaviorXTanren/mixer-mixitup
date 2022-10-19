@@ -519,7 +519,8 @@ namespace MixItUp.Base.Services
                         if (!this.userEntranceCommands.Contains(message.User.ID))
                         {
                             this.userEntranceCommands.Add(message.User.ID);
-                            if (ChannelSession.Settings.GetCommand(message.User.EntranceCommandID) != null)
+                            CommandModelBase customEntranceCommand = ChannelSession.Settings.GetCommand(message.User.EntranceCommandID);
+                            if (customEntranceCommand != null && customEntranceCommand.IsEnabled)
                             {
                                 await ServiceManager.Get<CommandService>().Queue(message.User.EntranceCommandID, new CommandParametersModel(message));
                             }
