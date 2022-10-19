@@ -145,6 +145,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </EmbeddedResource>
 
+    <EmbeddedResource Update="Resources.zh-TW.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
+
     <EmbeddedResource Update="Resources.qps-ploc.resx">
       <DependentUpon>Resources.resx</DependentUpon>
     </EmbeddedResource>
