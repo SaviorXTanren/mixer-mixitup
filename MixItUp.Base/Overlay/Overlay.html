@@ -120,17 +120,16 @@
                     }
                     else if (packet.Type == 'EnableWidget') {
                         if (!widgets.has(data.ID)) {
-                            var widget = {};
-                            widgets.set(data.ID, widget);
-
-                            widget.Script = addJavascript(data.Javascript, data.ID);
-                            widget.CSS = addCSS(data.CSS, data.ID);
-                            widget.HTML = addHTML(data.HTML, data.ID);
+                            widgets.set(data.ID, addItem(data));
                         }
                     }
                     else if (packet.Type == 'UpdateWidget') {
                     }
                     else if (packet.Type == 'DisableWidget') {
+                        if (widgets.has(data.ID)) {
+                            removeItem(widgets.get(data.ID));
+                            widgets.delete(data.ID);
+                        }
                     }
                     else if (packet.type == 'TimerAdjustTime') {
                         window[packet.data.ID + "_adjustTime"](packet.data.Time);
@@ -144,33 +143,23 @@
             var duration = parseFloat(data.Duration);
             if (duration != NaN) {
 
-                var script = addJavascript(data.Javascript, data.ID);
-                var style = addCSS(data.CSS, data.ID);
-                var html = addHTML(data.HTML, data.ID);
+                var item = addItem(data);
 
                 try {
                     window[data.ID + "_load"]();
                 } catch (error) { }
 
-                animateCSS(html, data.EntranceAnimation.AnimateCSSAnimationName).then((message) => {
+                animateCSS(item.HTML, data.EntranceAnimation.AnimateCSSAnimationName).then((message) => {
 
                     setTimeout(function () {
 
-                        animateCSS(html, data.VisibleAnimation.AnimateCSSAnimationName).then((message) => { });
+                        animateCSS(item.HTML, data.VisibleAnimation.AnimateCSSAnimationName).then((message) => { });
 
                         setTimeout(function () {
 
-                            animateCSS(html, data.ExitAnimation.AnimateCSSAnimationName).then((message) => {
+                            animateCSS(item.HTML, data.ExitAnimation.AnimateCSSAnimationName).then((message) => {
 
-                                mainOverlayDiv.removeChild(html);
-
-                                if (style != null) {
-                                    document.head.removeChild(style);
-                                }
-
-                                if (script != null) {
-                                    document.body.removeChild(script);
-                                }
+                                removeItem(item);
                             });
 
                         }, (duration * 1000) / 2);
@@ -181,7 +170,17 @@
             }
         }
 
-        function addHTML(html, id) {
+        function addItem(data) {
+            var item = {};
+
+            item.Script = addJavascript(data.Javascript);
+            item.Style = addCSS(data.CSS);
+            item.HTML = addHTML(data.HTML);
+
+            return item;
+        }
+
+        function addHTML(html) {
             var addedElement = document.createElement('div');
             addedElement.innerHTML = html;
             addedElement = addedElement.firstChild;
@@ -191,7 +190,7 @@
             return addedElement;
         }
 
-        function addCSS(css, id) {
+        function addCSS(css) {
             if (css != null && css) {
                 var style = document.createElement('style');
                 style.setAttribute('type', 'text/css');
@@ -209,7 +208,7 @@
             return null;
         }
 
-        function addJavascript(javascript, id) {
+        function addJavascript(javascript) {
             if (javascript != null && javascript) {
                 var script = document.createElement('script');
                 script.setAttribute('type', 'text/javascript');
@@ -221,6 +220,20 @@
                 return script;
             }
             return null;
+        }
+
+        function removeItem(item) {
+            if (item.HTML != null) {
+                mainOverlayDiv.removeChild(item.HTML);
+            }
+
+            if (item.Style != null) {
+                document.head.removeChild(item.Style);
+            }
+
+            if (item.Script != null) {
+                document.body.removeChild(item.Script);
+            }
         }
 
         function logException(err) {
