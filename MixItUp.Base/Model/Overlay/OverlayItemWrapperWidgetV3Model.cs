@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -12,15 +13,12 @@ namespace MixItUp.Base.Model.Overlay
     public class OverlayItemWrapperWidgetV3Model : OverlayWidgetV3ModelBase
     {
         [DataMember]
-        public OverlayItemV3ModelBase Item { get; set; }
-
-        [DataMember]
         public int RefreshTime { get; set; }
 
         private CancellationTokenSource refreshCancellationTokenSource;
 
-        public OverlayItemWrapperWidgetV3Model(OverlayWidgetV3Type type, string name, Guid overlayEndpointID, OverlayItemV3ModelBase item, int refreshTime)
-            : base(type, name, overlayEndpointID)
+        public OverlayItemWrapperWidgetV3Model(string name, Guid overlayEndpointID, OverlayItemV3ModelBase item, int refreshTime)
+            : base(name, overlayEndpointID, item)
         {
             this.Item = item;
             this.RefreshTime = refreshTime;
@@ -48,7 +46,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 do
                 {
-                    await this.Update();
+                    await this.Update("UpdateStatic", new JObject());
 
                     await Task.Delay(1000 * this.RefreshTime);
 

@@ -8,6 +8,7 @@ using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -47,16 +48,16 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayLabelWidgetV3Type LabelType { get; set; }
 
         [DataMember]
-        public OverlayTextItemV3Model Item { get; set; }
+        public OverlayTextItemV3Model TextItem { get; set; }
 
         private CancellationTokenSource refreshCancellationTokenSource;
 
         private long trackingAmount = 0;
 
         public OverlayLabelWidgetV3Model(string name, Guid overlayEndpointID, OverlayTextItemV3Model item)
-            : base(OverlayWidgetV3Type.Label, name, overlayEndpointID)
+            : base(name, overlayEndpointID, item)
         {
-            this.Item = item;
+            this.TextItem = item;
         }
 
         public override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
@@ -66,6 +67,16 @@ namespace MixItUp.Base.Model.Overlay
 
         protected override async Task EnableInternal()
         {
+            if (!this.CurrentReplacements.ContainsKey(UsernameReplacementKey))
+            {
+                this.CurrentReplacements[UsernameReplacementKey] = String.Empty;
+            }
+
+            if (!this.CurrentReplacements.ContainsKey(AmountReplacementKey))
+            {
+                this.CurrentReplacements[AmountReplacementKey] = String.Empty;
+            }
+
             if (this.LabelType == OverlayLabelWidgetV3Type.Viewers || this.LabelType == OverlayLabelWidgetV3Type.Chatters)
             {
                 if (this.refreshCancellationTokenSource != null)
@@ -79,7 +90,7 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     do
                     {
-                        string old = this.Item.Text;
+                        string old = this.TextItem.Text;
 
                         if (this.LabelType == OverlayLabelWidgetV3Type.Viewers)
                         {
@@ -90,7 +101,7 @@ namespace MixItUp.Base.Model.Overlay
                             this.CurrentReplacements[AmountReplacementKey] = ServiceManager.Get<UserService>().ActiveUserCount.ToString();
                         }
 
-                        if (!string.Equals(old, this.Item.Text))
+                        if (!string.Equals(old, this.TextItem.Text))
                         {
                             await this.Update();
                         }
@@ -314,6 +325,14 @@ namespace MixItUp.Base.Model.Overlay
         {
             this.CurrentReplacements[AmountReplacementKey] = counter.Amount.ToString();
             await this.Update();
+        }
+
+        private async Task Update()
+        {
+            JObject jobj = new JObject();
+            jobj[UsernameReplacementKey] = this.CurrentReplacements[UsernameReplacementKey];
+            jobj[AmountReplacementKey] = this.CurrentReplacements[AmountReplacementKey];
+            await this.Update("UpdateLabel", jobj);
         }
     }
 }

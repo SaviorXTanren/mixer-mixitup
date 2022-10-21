@@ -84,17 +84,11 @@
             try {
                 if (packet != null && typeof packet.type !== 'undefined') {
                     if (packet.type == 'Basic') {
-                        var addedElement = document.createElement('div');
-                        addedElement.innerHTML = packet.data.HTML;
-
-                        processBasic(packet.data, addedElement.firstChild);
+                        processBasic(packet.data);
                     }
                     else if (packet.type == 'YouTube') {
                         if (youtubeIFrameAPIReady) {
-                            var addedElement = document.createElement('div');
-                            addedElement.innerHTML = packet.data.HTML;
-
-                            processBasic(packet.data, addedElement.firstChild);
+                            processBasic(packet.data);
 
                             var videoID = packet.data.VideoID;
                             videoID = videoID.replace("https://www.youtube.com/watch?v=", "");
@@ -125,14 +119,13 @@
                         }
                     }
                     else if (packet.Type == 'EnableWidget') {
-                        var widget = {};
                         if (!widgets.has(data.ID)) {
+                            var widget = {};
                             widgets.set(data.ID, widget);
 
-                            widget.MainDiv = document.createElement('div');
-                            widget.Items = [];
-
-                            addWaitRemoveElement(data, widget.MainDiv);
+                            widget.Script = addJavascript(data.Javascript, data.ID);
+                            widget.CSS = addCSS(data.CSS, data.ID);
+                            widget.HTML = addHTML(data.HTML, data.ID);
                         }
                     }
                     else if (packet.Type == 'UpdateWidget') {
@@ -147,31 +140,29 @@
             catch (err) { logException(err); }
         }
 
-        function processBasic(data, addedElement) {
+        function processBasic(data) {
             var duration = parseFloat(data.Duration);
             if (duration != NaN) {
 
                 var script = addJavascript(data.Javascript, data.ID);
-
                 var style = addCSS(data.CSS, data.ID);
-
-                mainOverlayDiv.appendChild(addedElement);
+                var html = addHTML(data.HTML, data.ID);
 
                 try {
                     window[data.ID + "_load"]();
                 } catch (error) { }
 
-                animateCSS(addedElement, data.EntranceAnimation.AnimateCSSAnimationName).then((message) => {
+                animateCSS(html, data.EntranceAnimation.AnimateCSSAnimationName).then((message) => {
 
                     setTimeout(function () {
 
-                        animateCSS(addedElement, data.VisibleAnimation.AnimateCSSAnimationName).then((message) => { });
+                        animateCSS(html, data.VisibleAnimation.AnimateCSSAnimationName).then((message) => { });
 
                         setTimeout(function () {
 
-                            animateCSS(addedElement, data.ExitAnimation.AnimateCSSAnimationName).then((message) => {
+                            animateCSS(html, data.ExitAnimation.AnimateCSSAnimationName).then((message) => {
 
-                                mainOverlayDiv.removeChild(addedElement);
+                                mainOverlayDiv.removeChild(html);
 
                                 if (style != null) {
                                     document.head.removeChild(style);
@@ -188,6 +179,16 @@
 
                 });
             }
+        }
+
+        function addHTML(html, id) {
+            var addedElement = document.createElement('div');
+            addedElement.innerHTML = html;
+            addedElement = addedElement.firstChild;
+
+            mainOverlayDiv.appendChild(addedElement);
+
+            return addedElement;
         }
 
         function addCSS(css, id) {

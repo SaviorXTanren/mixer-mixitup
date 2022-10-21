@@ -203,17 +203,16 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task UpdateWidget(OverlayWidgetV3ModelBase widget, CommandParametersModel parameters)
+        public async Task UpdateWidget(OverlayWidgetV3ModelBase widget, string type, JObject jobj, CommandParametersModel parameters)
         {
             try
             {
-                if (widget != null)
+                if (widget != null && !string.IsNullOrWhiteSpace(type) && jobj != null)
                 {
-                    OverlayOutputV3Model processedItem = await widget.GetProcessedItem(this, parameters);
-                    if (processedItem != null)
-                    {
-                        await this.SendPacket("UpdateWidget", JObject.FromObject(processedItem));
-                    }
+                    await PerformTextReplacements(jobj, parameters);
+                    jobj["ID"] = widget.ID;
+                    jobj["Type"] = type;
+                    await this.SendPacket("UpdateWidget", jobj);
                 }
             }
             catch (Exception ex)
@@ -249,7 +248,9 @@ namespace MixItUp.Base.Services
                 {
                     if (jobj[key].Type == JTokenType.String)
                     {
-                        jobj[key] = await ReplaceStringWithSpecialModifiers(jobj[key].ToString(), parameters);
+                        SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(jobj[key].ToString(), encode: false);
+                        await siString.ReplaceCommonSpecialModifiers(parameters);
+                        jobj[key] = siString.ToString();
                     }
                     else if (jobj[key].Type == JTokenType.Object)
                     {
@@ -257,13 +258,6 @@ namespace MixItUp.Base.Services
                     }
                 }
             }
-        }
-
-        private async Task<string> ReplaceStringWithSpecialModifiers(string str, CommandParametersModel parameters)
-        {
-            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, encode: false);
-            await siString.ReplaceCommonSpecialModifiers(parameters);
-            return siString.ToString();
         }
 
 

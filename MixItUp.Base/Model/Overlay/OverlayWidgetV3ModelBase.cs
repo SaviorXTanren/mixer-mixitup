@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -7,26 +8,11 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
-    public enum OverlayWidgetV3Type
-    {
-        Text,
-        Image,
-        Video,
-        YouTube,
-        HTML,
-        WebPage,
-        Timer,
-        Label,
-    }
-
     [DataContract]
     public abstract class OverlayWidgetV3ModelBase
     {
         [DataMember]
         public string ID { get; set; } = OverlayItemV3ModelBase.GenerateOverlayItemID();
-
-        [DataMember]
-        public OverlayWidgetV3Type Type { get; set; }
 
         [DataMember]
         public string Name { get; set; }
@@ -35,13 +21,21 @@ namespace MixItUp.Base.Model.Overlay
         public Guid OverlayEndpointID { get; set; }
 
         [DataMember]
+        public OverlayItemV3ModelBase Item { get; set; }
+
+        [DataMember]
+        public OverlayItemV3Type Type { get { return this.Item.Type; } }
+
+        [DataMember]
         public Dictionary<string, string> CurrentReplacements { get; set; } = new Dictionary<string, string>();
 
-        public OverlayWidgetV3ModelBase(OverlayWidgetV3Type type, string name, Guid overlayEndpointID)
+        public OverlayWidgetV3ModelBase(string name, Guid overlayEndpointID, OverlayItemV3ModelBase item)
         {
-            this.Type = type;
             this.Name = name;
             this.OverlayEndpointID = overlayEndpointID;
+            this.Item = item;
+
+            this.Item.ID = this.ID;
         }
 
         [Obsolete]
@@ -58,12 +52,12 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        public async Task Update()
+        public async Task Update(string type, JObject data)
         {
             OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlayEndpointService(this.OverlayEndpointID);
             if (overlay != null)
             {
-                await overlay.UpdateWidget(this, new CommandParametersModel());
+                await overlay.UpdateWidget(this, type, data, new CommandParametersModel());
             }
         }
 

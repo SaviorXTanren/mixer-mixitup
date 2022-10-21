@@ -17,6 +17,7 @@ namespace MixItUp.Base.Model.Overlay
         HTML,
         WebPage,
         Timer,
+        Label,
     }
 
     [DataContract]
@@ -56,7 +57,7 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int Layer { get; set; }
 
-        private OverlayItemV3ModelBase() { }
+        protected OverlayItemV3ModelBase() { }
 
         public OverlayItemV3ModelBase(OverlayItemV3Type type) { this.Type = type; }
 
