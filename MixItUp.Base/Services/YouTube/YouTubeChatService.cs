@@ -4,6 +4,8 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
+using MixItUp.Base.Services.External;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.YouTube;
@@ -92,6 +94,9 @@ namespace MixItUp.Base.Services.YouTube
         public IEnumerable<YouTubeChatEmoteModel> Emotes { get; private set; } = new List<YouTubeChatEmoteModel>();
         public Dictionary<string, YouTubeChatEmoteModel> EmoteDictionary { get; private set; } = new Dictionary<string, YouTubeChatEmoteModel>();
 
+        public IDictionary<string, BetterTTVEmoteModel> BetterTTVEmotes { get { return this.betterTTVEmotes; } }
+        private Dictionary<string, BetterTTVEmoteModel> betterTTVEmotes = new Dictionary<string, BetterTTVEmoteModel>();
+
         private Dictionary<string, YouTubeMembershipsGiftedModel> userGiftedMembershipDictionary = new Dictionary<string, YouTubeMembershipsGiftedModel>();
 
         public override string Name { get { return "YouTube Chat"; } }
@@ -107,18 +112,31 @@ namespace MixItUp.Base.Services.YouTube
                 {
                     try
                     {
-                        this.EmoteDictionary.Clear();
-                        this.Emotes = await this.GetChatEmotes();
-                        if (this.Emotes != null)
+                        List<Task> initializationTasks = new List<Task>();
+
+                        initializationTasks.Add(Task.Run(async () =>
                         {
-                            foreach (YouTubeChatEmoteModel emote in this.Emotes)
+                            this.EmoteDictionary.Clear();
+                            this.Emotes = await this.GetChatEmotes();
+                            if (this.Emotes != null)
                             {
-                                foreach (string shortcut in emote.shortcuts)
+                                foreach (YouTubeChatEmoteModel emote in this.Emotes)
                                 {
-                                    this.EmoteDictionary[shortcut] = emote;
+                                    foreach (string shortcut in emote.shortcuts)
+                                    {
+                                        this.EmoteDictionary[shortcut] = emote;
+                                    }
                                 }
                             }
+                        }));
+
+                        if (ChannelSession.Settings.ShowBetterTTVEmotes)
+                        {
+                            initializationTasks.Add(ServiceManager.Get<BetterTTVService>().DownloadGlobalBetterTTVEmotes());
+                            initializationTasks.Add(ServiceManager.Get<BetterTTVService>().DownloadYouTubeBetterTTVEmotes(ServiceManager.Get<YouTubeSessionService>().ChannelID));
                         }
+
+                        await Task.WhenAll(initializationTasks);
 
                         this.messageBackgroundPollingTokenSource = new CancellationTokenSource();
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed

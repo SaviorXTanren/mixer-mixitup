@@ -1,6 +1,7 @@
 ﻿using Google.Apis.YouTube.v3.Data;
 using MixItUp.Base.Model;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -42,6 +43,10 @@ namespace MixItUp.Base.ViewModel.Chat.YouTube
                             this.MessageParts[this.MessageParts.Count - 1] = new YouTubeChatEmoteViewModel(ServiceManager.Get<YouTubeChatService>().EmoteDictionary[emote]);
                         }
                     }
+                }
+                else if (ChannelSession.Settings.ShowBetterTTVEmotes && ServiceManager.Get<BetterTTVService>().BetterTTVEmotes.ContainsKey(part))
+                {
+                    this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<BetterTTVService>().BetterTTVEmotes[part];
                 }
                 else if (part.StartsWith("@") || !string.IsNullOrEmpty(currentUserTag))
                 {

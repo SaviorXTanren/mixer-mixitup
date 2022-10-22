@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -25,7 +26,10 @@ namespace MixItUp.Base.Services.External
 
     public class BetterTTVService
     {
-        public async Task<IEnumerable<BetterTTVEmoteModel>> GetGlobalBetterTTVEmotes()
+        public IReadOnlyDictionary<string, BetterTTVEmoteModel> BetterTTVEmotes { get { return this.betterTTVEmotes; } }
+        private ConcurrentDictionary<string, BetterTTVEmoteModel> betterTTVEmotes = new ConcurrentDictionary<string, BetterTTVEmoteModel>();
+
+        public async Task DownloadGlobalBetterTTVEmotes()
         {
             try
             {
@@ -36,20 +40,21 @@ namespace MixItUp.Base.Services.External
                     HttpResponseMessage response = await client.GetAsync("https://api.betterttv.net/3/cached/emotes/global");
                     if (response.IsSuccessStatusCode)
                     {
-                        return await response.ProcessResponse<List<BetterTTVEmoteModel>>();
+                        foreach (BetterTTVEmoteModel emote in await response.ProcessResponse<List<BetterTTVEmoteModel>>())
+                        {
+                            this.betterTTVEmotes[emote.code] = emote;
+                        }
                     }
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
-
-            return new List<BetterTTVEmoteModel>();
         }
 
-        public async Task<IEnumerable<BetterTTVEmoteModel>> GetTwitchBetterTTVEmotes(string twitchID) { return await this.GetPlatformBetterTTVEmotes("twitch/" + twitchID); }
+        public async Task DownloadTwitchBetterTTVEmotes(string twitchID) { await this.DownloadPlatformBetterTTVEmotes("twitch/" + twitchID); }
 
-        public async Task<IEnumerable<BetterTTVEmoteModel>> GetYouTubeBetterTTVEmotes(string youtubeID) { return await this.GetPlatformBetterTTVEmotes("youtube/" + youtubeID); }
+        public async Task DownloadYouTubeBetterTTVEmotes(string youtubeID) { await this.DownloadPlatformBetterTTVEmotes("youtube/" + youtubeID); }
 
-        private async Task<IEnumerable<BetterTTVEmoteModel>> GetPlatformBetterTTVEmotes(string subUrl)
+        private async Task DownloadPlatformBetterTTVEmotes(string subUrl)
         {
             List<BetterTTVEmoteModel> emotes = new List<BetterTTVEmoteModel>();
 
@@ -80,7 +85,10 @@ namespace MixItUp.Base.Services.External
             }
             catch (Exception ex) { Logger.Log(ex); }
 
-            return emotes;
+            foreach (BetterTTVEmoteModel emote in emotes)
+            {
+                this.betterTTVEmotes[emote.code] = emote;
+            }
         }
     }
 }

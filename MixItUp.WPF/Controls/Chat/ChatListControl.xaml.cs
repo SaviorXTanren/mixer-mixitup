@@ -202,7 +202,7 @@ namespace MixItUp.WPF.Controls.Chat
                                 Dictionary<string, object> emotes = new Dictionary<string, object>();
                                 if (ChannelSession.Settings.ShowBetterTTVEmotes)
                                 {
-                                    foreach (var kvp in ServiceManager.Get<TwitchChatService>().BetterTTVEmotes)
+                                    foreach (var kvp in ServiceManager.Get<BetterTTVService>().BetterTTVEmotes)
                                     {
                                         emotes[kvp.Key] = kvp.Value;
                                     }
