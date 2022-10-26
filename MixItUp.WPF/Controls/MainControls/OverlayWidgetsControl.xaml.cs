@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System;
+using MixItUp.Base.Services;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -87,11 +89,30 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.viewModel.DisableWidget(FrameworkElementHelpers.GetDataContext<OverlayWidgetModel>(sender));
         }
 
-        private void AddOverlayWidgetButton_Click(object sender, RoutedEventArgs e)
+        private async void AddOverlayWidgetButton_Click(object sender, RoutedEventArgs e)
         {
-            OverlayWidgetEditorWindow window = new OverlayWidgetEditorWindow();
-            window.Closed += Window_Closed;
-            window.Show();
+            OverlayLabelWidgetV3Model widget = new OverlayLabelWidgetV3Model("Test", Guid.Empty, new OverlayTextItemV3Model()
+            {
+                CSS = OverlayLabelWidgetV3Model.DefaultCSS,
+                FontColor = "Red",
+                FontName = "Arial",
+                FontSize = 100,
+                Javascript = OverlayLabelWidgetV3Model.DefaultJavascript,
+                HTML = OverlayLabelWidgetV3Model.DefaultAmountHTML,
+                Type = OverlayItemV3Type.Label,
+                XPosition = 50,
+                YPosition = 50,
+                IsPercentagePosition = true
+            })
+            {
+                LabelType = OverlayLabelWidgetV3Type.Counter,
+            };
+
+            await widget.Enable();
+
+            //OverlayWidgetEditorWindow window = new OverlayWidgetEditorWindow();
+            //window.Closed += Window_Closed;
+            //window.Show();
         }
     }
 }

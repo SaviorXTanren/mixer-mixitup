@@ -13348,9 +13348,9 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;text-{ID}&quot;&gt;
-        ///    {Amount}
-        ///&lt;/p&gt;.
+        ///   Looks up a localized string similar to &lt;p id=&quot;label-amount-{ID}&quot;&gt;
+        ///        {Amount}
+        ///    &lt;/p&gt;.
         /// </summary>
         public static string OverlayLabelAmountDefaultHTML {
             get {
@@ -13359,13 +13359,50 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to function {ID}_update(username, amount)
+        ///{
+        ///    var usernameElement = document.getElementById(&quot;label-username-{ID}&quot;);
+        ///    if (usernameElement != null) {
+        ///        usernameElement.innerHTML = username; 
+        ///    }
+        ///    
+        ///    var amountElement = document.getElementById(&quot;label-amount-{ID}&quot;);
+        ///    if (amountElement != null) {
+        ///        amountElement.innerHTML = amount; 
+        ///    }
+        ///}.
+        /// </summary>
+        public static string OverlayLabelDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayLabelDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;p id=&quot;text-{ID}&quot;&gt;
-        ///    {Username} - {Amount}
+        ///    &lt;span id=&quot;label-username-{ID}&quot;&gt;
+        ///        {Username}
+        ///    &lt;/span&gt;
+        ///    -
+        ///    &lt;span id=&quot;label-amount-{ID}&quot;&gt;
+        ///        {Amount}
+        ///    &lt;/span&gt;
         ///&lt;/p&gt;.
         /// </summary>
         public static string OverlayLabelUsernameAmountDefaultHTML {
             get {
                 return ResourceManager.GetString("OverlayLabelUsernameAmountDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;p id=&quot;label-username-{ID}&quot;&gt;
+        ///    {Username}
+        ///&lt;/p&gt;.
+        /// </summary>
+        public static string OverlayLabelUsernameDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayLabelUsernameDefaultHTML", resourceCulture);
             }
         }
         

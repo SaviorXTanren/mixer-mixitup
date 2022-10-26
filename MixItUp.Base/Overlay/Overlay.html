@@ -83,28 +83,29 @@
         function packetReceived(packet) {
             try {
                 if (packet != null && typeof packet.type !== 'undefined') {
+                    var data = packet.data;
                     if (packet.type == 'Basic') {
-                        processBasic(packet.data);
+                        processBasic(data);
                     }
                     else if (packet.type == 'YouTube') {
                         if (youtubeIFrameAPIReady) {
-                            processBasic(packet.data);
+                            processBasic(data);
 
-                            var videoID = packet.data.VideoID;
+                            var videoID = data.VideoID;
                             videoID = videoID.replace("https://www.youtube.com/watch?v=", "");
                             videoID = videoID.replace("https://youtu.be/", "");
                             if (videoID.includes("&")) {
                                 videoID = videoID.substring(0, videoID.indexOf("&"));
                             }
 
-                            var youtubeVideoPlayer = new YT.Player(packet.data.ID, {
-                                height: packet.data.Height,
-                                width: packet.data.Width,
+                            var youtubeVideoPlayer = new YT.Player(data.ID, {
+                                height: data.Height,
+                                width: data.Width,
                                 videoId: videoID,
-                                playerVars: { 'controls': 0, 'modestbranding': 1, 'start': packet.data.StartTime },
+                                playerVars: { 'controls': 0, 'modestbranding': 1, 'start': data.StartTime },
                                 events: {
                                     'onReady': function () {
-                                        youtubeVideoPlayer.setVolume(packet.data.Volume);
+                                        youtubeVideoPlayer.setVolume(data.Volume);
                                         youtubeVideoPlayer.setLoop(false);
                                         youtubeVideoPlayer.frameBorder = 0;
                                         youtubeVideoPlayer.playVideo();
@@ -118,21 +119,24 @@
                             });
                         }
                     }
-                    else if (packet.Type == 'EnableWidget') {
+                    else if (packet.type == 'EnableWidget') {
                         if (!widgets.has(data.ID)) {
                             widgets.set(data.ID, addItem(data));
                         }
                     }
-                    else if (packet.Type == 'UpdateWidget') {
+                    else if (packet.type == 'UpdateWidget') {
+                        if (data.Type == 'TimerAdjustTime') {
+                            window[data.ID + "_adjustTime"](data.Time);
+                        }
+                        else if (data.Type == 'LabelUpdate') {
+                            window[data.ID + "_update"](data.Username, data.Amount);
+                        }
                     }
-                    else if (packet.Type == 'DisableWidget') {
+                    else if (packet.type == 'DisableWidget') {
                         if (widgets.has(data.ID)) {
                             removeItem(widgets.get(data.ID));
                             widgets.delete(data.ID);
                         }
-                    }
-                    else if (packet.type == 'TimerAdjustTime') {
-                        window[packet.data.ID + "_adjustTime"](packet.data.Time);
                     }
                 }
             }

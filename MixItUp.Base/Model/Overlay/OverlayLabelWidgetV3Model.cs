@@ -40,9 +40,10 @@ namespace MixItUp.Base.Model.Overlay
         public const string AmountReplacementKey = "Amount";
 
         public static readonly string DefaultAmountHTML = Resources.OverlayLabelAmountDefaultHTML;
+        public static readonly string DefaultUsernameHTML = Resources.OverlayLabelUsernameDefaultHTML;
         public static readonly string DefaultUsernameAmountHTML = Resources.OverlayLabelUsernameAmountDefaultHTML;
         public static readonly string DefaultCSS = Resources.OverlayTextDefaultCSS;
-        public static readonly string DefaultJavascript = string.Empty;
+        public static readonly string DefaultJavascript = Resources.OverlayLabelDefaultJavascript;
 
         [DataMember]
         public OverlayLabelWidgetV3Type LabelType { get; set; }
@@ -130,6 +131,8 @@ namespace MixItUp.Base.Model.Overlay
                     {
                         this.trackingAmount = (await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetFollowingUsers(ServiceManager.Get<GlimeshSessionService>().User, int.MaxValue)).Count();
                     }
+
+                    this.CurrentReplacements[AmountReplacementKey] = this.trackingAmount.ToString();
                 }
             }
             else if (this.LabelType == OverlayLabelWidgetV3Type.LatestRaid)
@@ -156,6 +159,8 @@ namespace MixItUp.Base.Model.Overlay
                     {
                         this.trackingAmount = 0;
                     }
+
+                    this.CurrentReplacements[AmountReplacementKey] = this.trackingAmount.ToString();
                 }
             }
             else if (this.LabelType == OverlayLabelWidgetV3Type.LatestDonation)
@@ -174,7 +179,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 CounterModel.OnCounterUpdated += CounterModel_OnCounterUpdated;
             }
-            await base.Enable();
+            await base.EnableInternal();
         }
 
         protected override async Task DisableInternal()
@@ -221,7 +226,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 CounterModel.OnCounterUpdated -= CounterModel_OnCounterUpdated;
             }
-            await base.Disable();
+            await base.DisableInternal();
         }
 
         private async void EventService_OnFollowOccurred(object sender, UserV2ViewModel user)
@@ -332,7 +337,7 @@ namespace MixItUp.Base.Model.Overlay
             JObject jobj = new JObject();
             jobj[UsernameReplacementKey] = this.CurrentReplacements[UsernameReplacementKey];
             jobj[AmountReplacementKey] = this.CurrentReplacements[AmountReplacementKey];
-            await this.Update("UpdateLabel", jobj);
+            await this.Update("LabelUpdate", jobj);
         }
     }
 }

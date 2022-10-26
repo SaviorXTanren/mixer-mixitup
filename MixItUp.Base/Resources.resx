@@ -9301,13 +9301,38 @@ namespace CustomNamespace
     <value>Commands containing Script actions are not supported for uploading to the Community Commands feature. Due to the complexity of scripts and the ability for them to have malicious intent for users, we do not support uploading them through Community Commands to ensure users are protected. You can optionally instead export your command to a file and share it out with users through other means.</value>
   </data>
   <data name="OverlayLabelAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="text-{ID}"&gt;
-    {Amount}
-&lt;/p&gt;</value>
+    <value>&lt;p id="label-amount-{ID}"&gt;
+        {Amount}
+    &lt;/p&gt;</value>
   </data>
   <data name="OverlayLabelUsernameAmountDefaultHTML" xml:space="preserve">
     <value>&lt;p id="text-{ID}"&gt;
-    {Username} - {Amount}
+    &lt;span id="label-username-{ID}"&gt;
+        {Username}
+    &lt;/span&gt;
+    -
+    &lt;span id="label-amount-{ID}"&gt;
+        {Amount}
+    &lt;/span&gt;
 &lt;/p&gt;</value>
+  </data>
+  <data name="OverlayLabelUsernameDefaultHTML" xml:space="preserve">
+    <value>&lt;p id="label-username-{ID}"&gt;
+    {Username}
+&lt;/p&gt;</value>
+  </data>
+  <data name="OverlayLabelDefaultJavascript" xml:space="preserve">
+    <value>function {ID}_update(username, amount)
+{
+    var usernameElement = document.getElementById("label-username-{ID}");
+    if (usernameElement != null) {
+        usernameElement.innerHTML = username; 
+    }
+    
+    var amountElement = document.getElementById("label-amount-{ID}");
+    if (amountElement != null) {
+        amountElement.innerHTML = amount; 
+    }
+}</value>
   </data>
 </root>
