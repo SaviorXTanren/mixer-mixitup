@@ -17,6 +17,17 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private OverlayItemPositionV3ViewModel itemPosition = new OverlayItemPositionV3ViewModel();
 
+        public string Duration
+        {
+            get { return this.duration; }
+            set
+            {
+                this.duration = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string duration;
+
         public OverlayItemAnimationV3ViewModel EntranceAnimation
         {
             get { return this.entranceAnimation; }
@@ -140,6 +151,8 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.HTML = OverlayItemV3ModelBase.ReplaceProperty(OverlayItemV3ModelBase.PositionedHTML, OverlayItemV3ModelBase.InnerHTMLProperty, this.HTML);
                 this.CSS = OverlayItemV3ModelBase.PositionedCSS + this.CSS;
             }
+
+            this.Duration = "5";
         }
 
         public OverlayItemV3ViewModelBase(OverlayItemV3ModelBase item)
@@ -149,20 +162,27 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.Javascript = item.Javascript;
 
             this.ItemPosition = new OverlayItemPositionV3ViewModel(item);
-
+            this.Duration = item.Duration;
             this.EntranceAnimation = new OverlayItemAnimationV3ViewModel(item.EntranceAnimation);
             this.VisibleAnimation = new OverlayItemAnimationV3ViewModel(item.VisibleAnimation);
             this.ExitAnimation = new OverlayItemAnimationV3ViewModel(item.ExitAnimation);
         }
 
-        public virtual Result Validate() { return new Result(); }
+        public virtual Result Validate()
+        {
+            if (string.IsNullOrWhiteSpace(this.Duration))
+            {
+                return new Result(Resources.OverlayActionDurationInvalid);
+            }
+            return new Result();
+        }
 
         public OverlayItemV3ModelBase GetItem()
         {
             OverlayItemV3ModelBase item = this.GetItemInternal();
 
             this.ItemPosition.SetPosition(item);
-
+            item.Duration = this.Duration;
             this.EntranceAnimation.SetAnimation(item.EntranceAnimation);
             this.VisibleAnimation.SetAnimation(item.VisibleAnimation);
             this.ExitAnimation.SetAnimation(item.ExitAnimation);

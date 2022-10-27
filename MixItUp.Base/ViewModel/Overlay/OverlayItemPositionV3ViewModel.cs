@@ -91,17 +91,6 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private int layer;
 
-        public string Duration
-        {
-            get { return this.duration; }
-            set
-            {
-                this.duration = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private string duration;
-
         public ICommand SimplePositionCommand { get; set; }
         public ICommand PercentagePositionCommand { get; set; }
         public ICommand PixelPositionCommand { get; set; }
@@ -123,7 +112,6 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.PositionType = OverlayItemPositionV3Type.Percentage;
             this.Horizontal = 50;
             this.Vertical = 50;
-            this.Duration = "5";
         }
 
         public OverlayItemPositionV3ViewModel(OverlayItemV3ModelBase position)
@@ -135,16 +123,10 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.Horizontal = position.XPosition;
             this.Vertical = position.YPosition;
             this.Layer = position.Layer;
-            this.Duration = position.Duration;
         }
 
         public Result Validate()
         {
-            if (string.IsNullOrWhiteSpace(this.Duration))
-            {
-                return new Result(Resources.OverlayActionDurationInvalid);
-            }
-
             return new Result();
         }
 
@@ -154,7 +136,6 @@ namespace MixItUp.Base.ViewModel.Overlay
             position.XPosition = this.Horizontal;
             position.YPosition = this.Vertical;
             position.Layer = this.Layer;
-            position.Duration = this.Duration;
 
             if (position.IsPercentagePosition)
             {

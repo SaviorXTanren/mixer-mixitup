@@ -13030,6 +13030,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to On Update.
+        /// </summary>
+        public static string OnUpdate {
+            get {
+                return ResourceManager.GetString("OnUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to On User Rank Up.
         /// </summary>
         public static string OnUserRankChanged {

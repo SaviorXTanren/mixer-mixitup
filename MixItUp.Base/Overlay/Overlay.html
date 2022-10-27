@@ -147,6 +147,10 @@
             var duration = parseFloat(data.Duration);
             if (duration != NaN) {
 
+                if (duration <= 0) {
+                    duration = 0;
+                }
+
                 var item = addItem(data);
 
                 try {

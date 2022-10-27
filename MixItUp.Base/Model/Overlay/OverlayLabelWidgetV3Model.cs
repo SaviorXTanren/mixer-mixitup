@@ -49,6 +49,9 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayLabelWidgetV3Type LabelType { get; set; }
 
         [DataMember]
+        public string CounterName { get; set; }
+
+        [DataMember]
         public OverlayTextItemV3Model TextItem { get; set; }
 
         private CancellationTokenSource refreshCancellationTokenSource;
@@ -328,8 +331,11 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void CounterModel_OnCounterUpdated(object sender, CounterModel counter)
         {
-            this.CurrentReplacements[AmountReplacementKey] = counter.Amount.ToString();
-            await this.Update();
+            if (string.Equals(counter.Name, this.CounterName, StringComparison.OrdinalIgnoreCase))
+            {
+                this.CurrentReplacements[AmountReplacementKey] = counter.Amount.ToString();
+                await this.Update();
+            }
         }
 
         private async Task Update()

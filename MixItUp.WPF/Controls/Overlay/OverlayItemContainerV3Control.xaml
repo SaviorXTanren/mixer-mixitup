@@ -37,7 +37,29 @@
                     </Border>
 
                     <Border Grid.Column="1" Style="{StaticResource DefaultBorder}">
-                        <OverlayControls:OverlayItemAnimationV3Control x:Name="ItemAnimation" Margin="10" />
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="5" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBox Text="{Binding Duration}" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DurationSec}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" Margin="0,5" />
+
+                            <TabControl Grid.Row="2" SnapsToDevicePixels="True" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" MaterialDesign:NavigationRailAssist.ShowSelectionBackground="True">
+                                <TabItem Header="{x:Static resx:Resources.Entrance}" DataContext="{Binding EntranceAnimation}">
+                                    <OverlayControls:OverlayItemAnimationV3Control Margin="10" />
+                                </TabItem>
+
+                                <TabItem Header="{x:Static resx:Resources.Visible}" DataContext="{Binding VisibleAnimation}">
+                                    <OverlayControls:OverlayItemAnimationV3Control Margin="10" />
+                                </TabItem>
+
+                                <TabItem Header="{x:Static resx:Resources.Exit}" DataContext="{Binding ExitAnimation}">
+                                    <OverlayControls:OverlayItemAnimationV3Control Margin="10" />
+                                </TabItem>
+                            </TabControl>
+                        </Grid>
                     </Border>
                 </Grid>
             </Grid>
