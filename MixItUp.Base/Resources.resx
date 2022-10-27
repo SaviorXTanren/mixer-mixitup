@@ -9130,16 +9130,16 @@ function {ID}_load()
 }</value>
   </data>
   <data name="OverlayImageDefaultCSS" xml:space="preserve">
-    <value>#image-{ID} {
+    <value>.image-{ID} {
     width: {Width};
     height: {Height};
 }</value>
   </data>
   <data name="OverlayImageDefaultHTML" xml:space="preserve">
-    <value>&lt;img id="image-{ID}" src="{FilePath}" /&gt;</value>
+    <value>&lt;img id="image-{ID}" class="image-{ID}" src="{FilePath}" /&gt;</value>
   </data>
   <data name="OverlayTextDefaultCSS" xml:space="preserve">
-    <value>#text-{ID} {
+    <value>.text-{ID} {
     font-size: {FontSize}px;
     color: {FontColor};
     font-family: '{FontFamily}';
@@ -9151,18 +9151,18 @@ function {ID}_load()
 }</value>
   </data>
   <data name="OverlayTextDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="text-{ID}"&gt;
+    <value>&lt;p id="text-{ID}" class="text-{ID}"&gt;
     {Text}
 &lt;/p&gt;</value>
   </data>
   <data name="OverlayVideoDefaultCSS" xml:space="preserve">
-    <value>#video-{ID} {
+    <value>.video-{ID} {
     width: {Width};
     height: {Height};
 }</value>
   </data>
   <data name="OverlayVideoDefaultHTML" xml:space="preserve">
-    <value>&lt;video id="video-{ID}" onloadstart="this.volume={Volume}" allow="autoplay; encrypted-media" autoplay {Loop}&gt;
+    <value>&lt;video id="video-{ID}" class="video-{ID}" onloadstart="this.volume={Volume}" allow="autoplay; encrypted-media" autoplay {Loop}&gt;
     &lt;source src="{FilePath}" type="video/{VideoExtension}" /&gt;
 &lt;/video&gt;</value>
   </data>
@@ -9176,12 +9176,12 @@ function {ID}_load()
     <value>Display Format</value>
   </data>
   <data name="OverlayTimerDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="text-{ID}"&gt;
+    <value>&lt;p id="text-{ID}" class="text-{ID}"&gt;
     {Text}
 &lt;/p&gt;</value>
   </data>
   <data name="OverlayPositionedItemDefaultCSS" xml:space="preserve">
-    <value>#outerdiv-{ID} {
+    <value>.outerdiv-{ID} {
     position: absolute;
     width: 100%;
     max-width: 100%;
@@ -9193,7 +9193,7 @@ function {ID}_load()
     z-index: {Layer};
 }
 
-#innerdiv-{ID} {
+.innerdiv-{ID} {
     position: absolute;
     margin: 0px;
     left: {XPosition}{PositionType};
@@ -9204,8 +9204,8 @@ function {ID}_load()
 }</value>
   </data>
   <data name="OverlayPositionedItemDefaultHTML" xml:space="preserve">
-    <value>&lt;div id="outerdiv-{ID}"&gt;
-&lt;div id="innerdiv-{ID}"&gt;
+    <value>&lt;div id="outerdiv-{ID}" class="outerdiv-{ID}"&gt;
+&lt;div id="innerdiv-{ID}" class="innerdiv-{ID}"&gt;
 
 {InnerHTML}
 
@@ -9301,23 +9301,23 @@ namespace CustomNamespace
     <value>Commands containing Script actions are not supported for uploading to the Community Commands feature. Due to the complexity of scripts and the ability for them to have malicious intent for users, we do not support uploading them through Community Commands to ensure users are protected. You can optionally instead export your command to a file and share it out with users through other means.</value>
   </data>
   <data name="OverlayLabelAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="label-amount-{ID}"&gt;
+    <value>&lt;p id="label-amount-{ID}" class="text-{ID}"&gt;
         {Amount}
-    &lt;/p&gt;</value>
+&lt;/p&gt;</value>
   </data>
   <data name="OverlayLabelUsernameAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="text-{ID}"&gt;
-    &lt;span id="label-username-{ID}"&gt;
+    <value>&lt;p class="text-{ID}"&gt;
+    &lt;span id="label-username-{ID}" class="text-{ID}"&gt;
         {Username}
     &lt;/span&gt;
     -
-    &lt;span id="label-amount-{ID}"&gt;
+    &lt;span id="label-amount-{ID}" class="text-{ID}"&gt;
         {Amount}
     &lt;/span&gt;
 &lt;/p&gt;</value>
   </data>
   <data name="OverlayLabelUsernameDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="label-username-{ID}"&gt;
+    <value>&lt;p id="label-username-{ID}" class="text-{ID}"&gt;
     {Username}
 &lt;/p&gt;</value>
   </data>

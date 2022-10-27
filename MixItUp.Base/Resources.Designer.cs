@@ -13273,7 +13273,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to #image-{ID} {
+        ///   Looks up a localized string similar to .image-{ID} {
         ///    width: {Width};
         ///    height: {Height};
         ///}.
@@ -13285,7 +13285,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;img id=&quot;image-{ID}&quot; src=&quot;{FilePath}&quot; /&gt;.
+        ///   Looks up a localized string similar to &lt;img id=&quot;image-{ID}&quot; class=&quot;image-{ID}&quot; src=&quot;{FilePath}&quot; /&gt;.
         /// </summary>
         public static string OverlayImageDefaultHTML {
             get {
@@ -13348,9 +13348,9 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;label-amount-{ID}&quot;&gt;
+        ///   Looks up a localized string similar to &lt;p id=&quot;label-amount-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
         ///        {Amount}
-        ///    &lt;/p&gt;.
+        ///&lt;/p&gt;.
         /// </summary>
         public static string OverlayLabelAmountDefaultHTML {
             get {
@@ -13379,12 +13379,12 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;text-{ID}&quot;&gt;
-        ///    &lt;span id=&quot;label-username-{ID}&quot;&gt;
+        ///   Looks up a localized string similar to &lt;p class=&quot;text-{ID}&quot;&gt;
+        ///    &lt;span id=&quot;label-username-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
         ///        {Username}
         ///    &lt;/span&gt;
         ///    -
-        ///    &lt;span id=&quot;label-amount-{ID}&quot;&gt;
+        ///    &lt;span id=&quot;label-amount-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
         ///        {Amount}
         ///    &lt;/span&gt;
         ///&lt;/p&gt;.
@@ -13396,7 +13396,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;label-username-{ID}&quot;&gt;
+        ///   Looks up a localized string similar to &lt;p id=&quot;label-username-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
         ///    {Username}
         ///&lt;/p&gt;.
         /// </summary>
@@ -13434,7 +13434,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to #outerdiv-{ID} {
+        ///   Looks up a localized string similar to .outerdiv-{ID} {
         ///    position: absolute;
         ///    width: 100%;
         ///    max-width: 100%;
@@ -13446,7 +13446,7 @@ namespace MixItUp.Base {
         ///    z-index: {Layer};
         ///}
         ///
-        ///#innerdiv-{ID} {
+        ///.innerdiv-{ID} {
         ///    position: absolute;
         ///    margin: 0px;
         ///    left: {XPosition}{PositionType};
@@ -13463,8 +13463,8 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;outerdiv-{ID}&quot;&gt;
-        ///&lt;div id=&quot;innerdiv-{ID}&quot;&gt;
+        ///   Looks up a localized string similar to &lt;div id=&quot;outerdiv-{ID}&quot; class=&quot;outerdiv-{ID}&quot;&gt;
+        ///&lt;div id=&quot;innerdiv-{ID}&quot; class=&quot;innerdiv-{ID}&quot;&gt;
         ///
         ///{InnerHTML}
         ///
@@ -13505,7 +13505,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to #text-{ID} {
+        ///   Looks up a localized string similar to .text-{ID} {
         ///    font-size: {FontSize}px;
         ///    color: {FontColor};
         ///    font-family: &apos;{FontFamily}&apos;;
@@ -13523,7 +13523,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;text-{ID}&quot;&gt;
+        ///   Looks up a localized string similar to &lt;p id=&quot;text-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
         ///    {Text}
         ///&lt;/p&gt;.
         /// </summary>
@@ -13543,7 +13543,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;text-{ID}&quot;&gt;
+        ///   Looks up a localized string similar to &lt;p id=&quot;text-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
         ///    {Text}
         ///&lt;/p&gt;.
         /// </summary>
@@ -13588,7 +13588,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to #video-{ID} {
+        ///   Looks up a localized string similar to .video-{ID} {
         ///    width: {Width};
         ///    height: {Height};
         ///}.
@@ -13600,7 +13600,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;video id=&quot;video-{ID}&quot; onloadstart=&quot;this.volume={Volume}&quot; allow=&quot;autoplay; encrypted-media&quot; autoplay {Loop}&gt;
+        ///   Looks up a localized string similar to &lt;video id=&quot;video-{ID}&quot; class=&quot;video-{ID}&quot; onloadstart=&quot;this.volume={Volume}&quot; allow=&quot;autoplay; encrypted-media&quot; autoplay {Loop}&gt;
         ///    &lt;source src=&quot;{FilePath}&quot; type=&quot;video/{VideoExtension}&quot; /&gt;
         ///&lt;/video&gt;.
         /// </summary>
