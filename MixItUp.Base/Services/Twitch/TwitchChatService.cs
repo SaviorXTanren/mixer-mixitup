@@ -116,6 +116,8 @@ namespace MixItUp.Base.Services.Twitch
 
         private HashSet<string> initialUserLogins = new HashSet<string>();
 
+        private HashSet<string> userBans = new HashSet<string>();
+
         private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
 
         public TwitchChatService() { }
@@ -858,14 +860,19 @@ namespace MixItUp.Base.Services.Twitch
             }
             else if (chatClear.IsBan)
             {
-                CommandParametersModel parameters = new CommandParametersModel();
-                parameters.Arguments.Add("@" + user.Username);
-                parameters.TargetUser = user;
-                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserBan, parameters);
+                if (!userBans.Contains(user.Username))
+                {
+                    userBans.Add(user.Username);
 
-                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertBanned, user.FullDisplayName), ChannelSession.Settings.AlertModerationColor));
+                    CommandParametersModel parameters = new CommandParametersModel();
+                    parameters.Arguments.Add("@" + user.Username);
+                    parameters.TargetUser = user;
+                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserBan, parameters);
 
-                await ServiceManager.Get<UserService>().RemoveActiveUser(user.ID);
+                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertBanned, user.FullDisplayName), ChannelSession.Settings.AlertModerationColor));
+
+                    await ServiceManager.Get<UserService>().RemoveActiveUser(user.ID);
+                }
             }
         }
 

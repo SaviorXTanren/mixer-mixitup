@@ -75,11 +75,24 @@ namespace MixItUp.Base.Model.Actions
                     httpClient.DefaultRequestHeaders.Add("Trovo-UserID", ServiceManager.Get<TrovoSessionService>()?.UserID ?? string.Empty);
                     httpClient.DefaultRequestHeaders.Add("Trovo-UserLogin", ServiceManager.Get<TrovoSessionService>().Username ?? string.Empty);
 
-                    using (HttpResponseMessage response = await httpClient.GetAsync(await ReplaceStringWithSpecialModifiers(this.Url, parameters, encode: true)))
+                    string targetUrl = await ReplaceStringWithSpecialModifiers(this.Url, parameters, encode: true);
+                    using (HttpResponseMessage response = await httpClient.GetAsync(targetUrl))
                     {
                         if (response.IsSuccessStatusCode)
                         {
                             await this.ProcessContents(parameters, await response.Content.ReadAsStringAsync());
+                        }
+                        else
+                        {
+                            string body = string.Empty;
+                            try
+                            {
+                                body = await response.Content.ReadAsStringAsync();
+                            }
+                            catch { }
+
+                            Logger.Log(LogLevel.Error, $"{nameof(WebRequestActionModel)}: Failed to call '{targetUrl}'. Status code: {response.StatusCode}");
+                            Logger.Log(LogLevel.Error, $"Response Body: {body}");
                         }
                     }
                 }

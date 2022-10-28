@@ -9048,6 +9048,9 @@ via Twitch, it's a "your mileage may vary" situation.</value>
   <data name="TwitchActionPredictionOutcomesTooLong" xml:space="preserve">
     <value>Prediction outcomes must be 25 characters or less.</value>
   </data>
+  <data name="ChineseTraditional" xml:space="preserve">
+    <value>Chinese (Traditional)</value>
+  </data>
   <data name="TwitchActionMessageMissing" xml:space="preserve">
     <value>Twitch Action: A valid message must be specified</value>
   </data>
