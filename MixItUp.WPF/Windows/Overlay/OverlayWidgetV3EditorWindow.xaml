@@ -1,0 +1,87 @@
+﻿<Windows:LoadingWindowBase x:Class="MixItUp.WPF.Windows.Overlay.OverlayWidgetV3EditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MixItUp.WPF.Windows.Overlay"
+        xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
+        xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+        xmlns:OverlayControls="clr-namespace:MixItUp.WPF.Controls.Overlay"
+        xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+        xmlns:Util="clr-namespace:MixItUp.WPF.Util"
+        mc:Ignorable="d"
+        Title="OverlayWidgetV3EditorWindow" Height="450" Width="800">
+    <Windows:LoadingWindowBase.Resources>
+        <Util:LocalizationConverter x:Key="LocalizationConverter" />
+    </Windows:LoadingWindowBase.Resources>
+
+    <TabControl SnapsToDevicePixels="True" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" MaterialDesign:NavigationRailAssist.ShowSelectionBackground="True">
+        <TabItem Header="{x:Static resx:Resources.Details}">
+            <Grid Margin="0,15,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <ContentControl Grid.Row="0" x:Name="InnerContent" />
+
+                <Grid Grid.Row="2" x:Name="AdditionalOptionsGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Style="{StaticResource DefaultBorder}">
+                        <OverlayControls:OverlayItemPositionV3Control x:Name="ItemPosition" DataContext="{Binding ItemPosition}" Margin="10" />
+                    </Border>
+
+                    <Border Grid.Column="1" Style="{StaticResource DefaultBorder}">
+                        <TabControl Grid.Row="2" SnapsToDevicePixels="True" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" MaterialDesign:NavigationRailAssist.ShowSelectionBackground="True">
+                            <TabItem Header="{x:Static resx:Resources.OnUpdate}" DataContext="{Binding OnUpdateAnimation}">
+                                <OverlayControls:OverlayItemAnimationV3Control Margin="10" />
+                            </TabItem>
+                        </TabControl>
+                    </Border>
+                </Grid>
+            </Grid>
+        </TabItem>
+
+        <TabItem Header="{x:Static resx:Resources.HTML}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Style="{StaticResource DefaultBorder}">
+                    <TextBox Text="{Binding HTML}" Style="{StaticResource MultiLineTextBox}" Height="250" />
+                </Border>
+            </Grid>
+        </TabItem>
+
+        <TabItem Header="{x:Static resx:Resources.CSS}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Style="{StaticResource DefaultBorder}">
+                    <TextBox Text="{Binding CSS}" Style="{StaticResource MultiLineTextBox}" Height="250" />
+                </Border>
+            </Grid>
+        </TabItem>
+
+        <TabItem Header="{x:Static resx:Resources.Javascript}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Style="{StaticResource DefaultBorder}">
+                    <TextBox Text="{Binding Javascript}" Style="{StaticResource MultiLineTextBox}" Height="250" />
+                </Border>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</Windows:LoadingWindowBase>

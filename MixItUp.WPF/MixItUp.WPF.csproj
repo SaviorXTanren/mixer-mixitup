@@ -1211,8 +1211,11 @@
     <Compile Include="Windows\OAuth\OAuthWebBrowserWindow.xaml.cs">
       <DependentUpon>OAuthWebBrowserWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Overlay\OverlayWidgetEditorWindow.xaml.cs">
+    <Compile Include="Deprecated\Windows\Overlay\OverlayWidgetEditorWindow.xaml.cs">
       <DependentUpon>OverlayWidgetEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Overlay\OverlayWidgetV3EditorWindow.xaml.cs">
+      <DependentUpon>OverlayWidgetV3EditorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\PopOut\PopOutWindow.xaml.cs">
       <DependentUpon>PopOutWindow.xaml</DependentUpon>
@@ -2179,7 +2182,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\Overlay\OverlayWidgetEditorWindow.xaml">
+    <Page Include="Deprecated\Windows\Overlay\OverlayWidgetEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Overlay\OverlayWidgetV3EditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
