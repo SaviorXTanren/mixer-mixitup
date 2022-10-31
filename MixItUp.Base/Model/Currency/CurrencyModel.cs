@@ -449,10 +449,10 @@ namespace MixItUp.Base.Model.Currency
                     if (this.ResetInterval == CurrencyResetRateEnum.Weekly)
                     {
                         newResetDate = new DateTime(this.LastReset.Year, this.LastReset.Month, this.LastReset.Day);
-                        while (newResetDate.DayOfWeek != this.ResetStartCadence.DayOfWeek)
+                        do
                         {
                             newResetDate.AddDays(1);
-                        }
+                        } while (newResetDate.DayOfWeek != this.ResetStartCadence.DayOfWeek);
                     }
                     else if (this.ResetInterval == CurrencyResetRateEnum.Monthly)
                     {
