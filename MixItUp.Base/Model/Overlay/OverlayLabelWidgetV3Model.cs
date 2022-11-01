@@ -58,11 +58,14 @@ namespace MixItUp.Base.Model.Overlay
 
         private long trackingAmount = 0;
 
-        public OverlayLabelWidgetV3Model(string name, Guid overlayEndpointID, OverlayTextItemV3Model item)
-            : base(name, overlayEndpointID, item)
+        public OverlayLabelWidgetV3Model(string id, string name, Guid overlayEndpointID, OverlayTextItemV3Model item)
+            : base(id, name, overlayEndpointID, item)
         {
             this.TextItem = item;
         }
+
+        [Obsolete]
+        public OverlayLabelWidgetV3Model() { }
 
         public override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
         {

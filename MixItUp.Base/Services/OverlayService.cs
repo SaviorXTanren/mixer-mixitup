@@ -104,7 +104,7 @@ namespace MixItUp.Base.Services
 
         public OverlayEndpointV3Model GetOverlayEndpoint(Guid id)
         {
-            return this.GetOverlayEndpoints().FirstOrDefault(oe => oe.ID == id);
+            return this.GetOverlayEndpoints().FirstOrDefault(oe => oe.ID == id) ?? this.GetDefaultOverlayEndpoint();
         }
 
         public OverlayEndpointV3Model GetDefaultOverlayEndpoint()

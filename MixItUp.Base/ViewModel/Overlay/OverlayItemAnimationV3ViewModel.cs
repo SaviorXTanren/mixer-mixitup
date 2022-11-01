@@ -12,6 +12,8 @@ namespace MixItUp.Base.ViewModel.Overlay
 
     public class OverlayItemAnimationV3ViewModel : UIViewModelBase
     {
+        public string Name { get; set; }
+
         private static IEnumerable<OverlayAnimateCSSAnimationType> animateCSSAnimations = null;
 
         public IEnumerable<OverlayItemAnimationLibraryType> AnimationLibraries { get { return EnumLocalizationHelper.GetSortedEnumList<OverlayItemAnimationLibraryType>(); } }
@@ -58,9 +60,13 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private OverlayAnimateCSSAnimationType selectedAnimatedCSSAnimation;
 
-        public OverlayItemAnimationV3ViewModel() { }
+        public OverlayItemAnimationV3ViewModel(string name)
+        {
+            this.Name = name;
+        }
 
-        public OverlayItemAnimationV3ViewModel(OverlayItemAnimationV3Model animation)
+        public OverlayItemAnimationV3ViewModel(string name, OverlayItemAnimationV3Model animation)
+            : this(name)
         {
             if (animation.AnimateCSSAnimation != OverlayAnimateCSSAnimationType.None)
             {

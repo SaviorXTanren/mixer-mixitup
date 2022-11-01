@@ -29,8 +29,9 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public Dictionary<string, string> CurrentReplacements { get; set; } = new Dictionary<string, string>();
 
-        public OverlayWidgetV3ModelBase(string name, Guid overlayEndpointID, OverlayItemV3ModelBase item)
+        public OverlayWidgetV3ModelBase(string id, string name, Guid overlayEndpointID, OverlayItemV3ModelBase item)
         {
+            this.ID = id;
             this.Name = name;
             this.OverlayEndpointID = overlayEndpointID;
             this.Item = item;

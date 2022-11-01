@@ -46,18 +46,17 @@
 
                             <TextBox Text="{Binding Duration}" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DurationSec}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" Margin="0,5" />
 
-                            <TabControl Grid.Row="2" SnapsToDevicePixels="True" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" MaterialDesign:NavigationRailAssist.ShowSelectionBackground="True">
-                                <TabItem Header="{x:Static resx:Resources.Entrance}" DataContext="{Binding EntranceAnimation}">
-                                    <OverlayControls:OverlayItemAnimationV3Control Margin="10" />
-                                </TabItem>
-
-                                <TabItem Header="{x:Static resx:Resources.Visible}" DataContext="{Binding VisibleAnimation}">
-                                    <OverlayControls:OverlayItemAnimationV3Control Margin="10" />
-                                </TabItem>
-
-                                <TabItem Header="{x:Static resx:Resources.Exit}" DataContext="{Binding ExitAnimation}">
-                                    <OverlayControls:OverlayItemAnimationV3Control Margin="10" />
-                                </TabItem>
+                            <TabControl Grid.Row="2" ItemsSource="{Binding Animations}" SelectedIndex="0" SnapsToDevicePixels="True" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" MaterialDesign:NavigationRailAssist.ShowSelectionBackground="True">
+                                <TabControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}" />
+                                    </DataTemplate>
+                                </TabControl.ItemTemplate>
+                                <TabControl.ContentTemplate>
+                                    <DataTemplate>
+                                        <OverlayControls:OverlayItemAnimationV3Control Margin="10" DataContext="{Binding}" />
+                                    </DataTemplate>
+                                </TabControl.ContentTemplate>
                             </TabControl>
                         </Grid>
                     </Border>

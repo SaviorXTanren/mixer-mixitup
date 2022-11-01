@@ -38,10 +38,17 @@
                     </Border>
 
                     <Border Grid.Column="1" Style="{StaticResource DefaultBorder}">
-                        <TabControl Grid.Row="2" SnapsToDevicePixels="True" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" MaterialDesign:NavigationRailAssist.ShowSelectionBackground="True">
-                            <TabItem Header="{x:Static resx:Resources.OnUpdate}" DataContext="{Binding OnUpdateAnimation}">
-                                <OverlayControls:OverlayItemAnimationV3Control Margin="10" />
-                            </TabItem>
+                        <TabControl Grid.Row="2" ItemsSource="{Binding Animations}" SelectedIndex="0" SnapsToDevicePixels="True" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" MaterialDesign:NavigationRailAssist.ShowSelectionBackground="True">
+                            <TabControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" />
+                                </DataTemplate>
+                            </TabControl.ItemTemplate>
+                            <TabControl.ContentTemplate>
+                                <DataTemplate>
+                                    <OverlayControls:OverlayItemAnimationV3Control Margin="10" DataContext="{Binding}" />
+                                </DataTemplate>
+                            </TabControl.ContentTemplate>
                         </TabControl>
                     </Border>
                 </Grid>
