@@ -17,8 +17,8 @@ namespace MixItUp.Base.Model.Overlay
 
         private CancellationTokenSource refreshCancellationTokenSource;
 
-        public OverlayItemWrapperWidgetV3Model(string name, Guid overlayEndpointID, OverlayItemV3ModelBase item, int refreshTime)
-            : base(name, overlayEndpointID, item)
+        public OverlayItemWrapperWidgetV3Model(string id, string name, Guid overlayEndpointID, OverlayItemV3ModelBase item, int refreshTime)
+            : base(id, name, overlayEndpointID, item)
         {
             this.Item = item;
             this.RefreshTime = refreshTime;
