@@ -191,6 +191,11 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public override async Task<Result> Validate()
         {
+            if (this.Clauses.Count == 0)
+            {
+                return new Result(MixItUp.Base.Resources.ConditionalActionAtLeastOneClause);
+            }
+
             foreach (ConditionalClauseViewModel clause in this.Clauses)
             {
                 if (!clause.Validate())

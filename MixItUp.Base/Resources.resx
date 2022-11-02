@@ -9341,4 +9341,7 @@ namespace CustomNamespace
   <data name="OnUpdate" xml:space="preserve">
     <value>On Update</value>
   </data>
+  <data name="ConditionalActionAtLeastOneClause" xml:space="preserve">
+    <value>Conditional Action: At least one clause must be added</value>
+  </data>
 </root>

@@ -3100,6 +3100,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Conditional Action: At least one clause must be added.
+        /// </summary>
+        public static string ConditionalActionAtLeastOneClause {
+            get {
+                return ResourceManager.GetString("ConditionalActionAtLeastOneClause", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Conditional Action: Clause missing value.
         /// </summary>
         public static string ConditionalActionClauseMissingValue {
