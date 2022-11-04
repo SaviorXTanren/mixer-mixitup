@@ -516,7 +516,7 @@ namespace MixItUp.Base.Services
                             await ServiceManager.Get<IAudioService>().Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, ChannelSession.Settings.NotificationChatMessageSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
                         }
 
-                        if (!this.userEntranceCommands.Contains(message.User.ID))
+                        if (!message.User.IsSpecialtyExcluded && !this.userEntranceCommands.Contains(message.User.ID))
                         {
                             this.userEntranceCommands.Add(message.User.ID);
                             CommandModelBase customEntranceCommand = ChannelSession.Settings.GetCommand(message.User.EntranceCommandID);
