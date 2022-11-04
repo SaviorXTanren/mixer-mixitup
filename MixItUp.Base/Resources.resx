@@ -9344,4 +9344,7 @@ namespace CustomNamespace
   <data name="ConditionalActionAtLeastOneClause" xml:space="preserve">
     <value>Conditional Action: At least one clause must be added</value>
   </data>
+  <data name="HypeTrainLevelUp" xml:space="preserve">
+    <value>Hype Train Level Up - Reached Level {0}</value>
+  </data>
 </root>
