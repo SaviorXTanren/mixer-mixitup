@@ -71,6 +71,7 @@ namespace MixItUp.Base.Services
         [Obsolete]
         TwitchChannelHypeTrainProgress = 281,
         TwitchChannelHypeTrainEnd = 282,
+        TwitchChannelHypeTrainLevelUp = 283,
 
         // 300 = YouTube
 

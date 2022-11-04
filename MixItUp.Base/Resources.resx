@@ -9078,4 +9078,282 @@ via Twitch, it's a "your mileage may vary" situation.</value>
   <data name="EnableSubscriberMode" xml:space="preserve">
     <value>Enable Subscriber Mode</value>
   </data>
+  <data name="OverlayTimerDefaultJavascript" xml:space="preserve">
+    <value>var {ID}_additionalTime = 0;
+
+function {ID}_timerLoop(totalSeconds, endingSeconds, displayFormat)
+{
+    totalSeconds += {ID}_additionalTime;
+    {ID}_additionalTime = 0;
+
+    var text = displayFormat;
+
+    var seconds = totalSeconds % 60;
+    if (seconds &lt; 10) { seconds = "0" + seconds }
+    text = text.replace("SS", totalSeconds);
+    text = text.replace("ss", seconds);
+
+    var totalMinutes = Math.floor(totalSeconds / 60);
+    var minutes = totalMinutes % 60;
+    if (minutes &lt; 10) { minutes = "0" + minutes }
+    text = text.replace("MM", totalMinutes);
+    text = text.replace("mm", minutes);
+
+    var totalHours = Math.floor(totalMinutes / 60);
+    var hours = totalHours % 24;
+    if (hours &lt; 10) { hours = "0" + hours }
+    text = text.replace("HH", totalHours);
+    text = text.replace("hh", hours);
+
+    var days = Math.floor(totalHours / 24);
+    text = text.replace("DD", hours);
+
+    document.getElementById("text-{ID}").innerHTML = text;
+
+    setTimeout(function () {
+        if (endingSeconds &gt; 0) {
+            totalSeconds++;
+            if (totalSeconds &lt; endingSeconds) {
+                {ID}_timerLoop(totalSeconds, endingSeconds, displayFormat);
+            }        
+        }
+        else {
+            totalSeconds--;
+            if (totalSeconds &gt;= 0) {
+                {ID}_timerLoop(totalSeconds, endingSeconds, displayFormat);
+            }
+        }
+    }, 1000);
+}
+
+function {ID}_adjustTime(time)
+{
+    {ID}_additionalTime += time;
+}
+
+function {ID}_load()
+{
+    if ({CountUp}) {
+        {ID}_timerLoop(0, {Duration}, "{DisplayFormat}");  
+    }
+    else {
+        {ID}_timerLoop({Duration}, 0, "{DisplayFormat}");
+    }
+}</value>
+  </data>
+  <data name="OverlayImageDefaultCSS" xml:space="preserve">
+    <value>.image-{ID} {
+    width: {Width};
+    height: {Height};
+}</value>
+  </data>
+  <data name="OverlayImageDefaultHTML" xml:space="preserve">
+    <value>&lt;img id="image-{ID}" class="image-{ID}" src="{FilePath}" /&gt;</value>
+  </data>
+  <data name="OverlayTextDefaultCSS" xml:space="preserve">
+    <value>.text-{ID} {
+    font-size: {FontSize}px;
+    color: {FontColor};
+    font-family: '{FontFamily}';
+    font-weight: {FontWeight};
+    text-decoration: {TextDecoration};
+    font-style: {FontStyle};
+    text-align: {TextAlignment};
+    text-shadow: {Shadow};
+}</value>
+  </data>
+  <data name="OverlayTextDefaultHTML" xml:space="preserve">
+    <value>&lt;p id="text-{ID}" class="text-{ID}"&gt;
+    {Text}
+&lt;/p&gt;</value>
+  </data>
+  <data name="OverlayVideoDefaultCSS" xml:space="preserve">
+    <value>.video-{ID} {
+    width: {Width};
+    height: {Height};
+}</value>
+  </data>
+  <data name="OverlayVideoDefaultHTML" xml:space="preserve">
+    <value>&lt;video id="video-{ID}" class="video-{ID}" onloadstart="this.volume={Volume}" allow="autoplay; encrypted-media" autoplay {Loop}&gt;
+    &lt;source src="{FilePath}" type="video/{VideoExtension}" /&gt;
+&lt;/video&gt;</value>
+  </data>
+  <data name="OverlayWebPageDefaultHTML" xml:space="preserve">
+    <value>&lt;iframe frameborder="0" width="{WIDTH}" height="{HEIGHT}" src="{URL}" /&gt;</value>
+  </data>
+  <data name="OverlayYouTubeDefaultHTML" xml:space="preserve">
+    <value>&lt;div id="{ID}" /&gt;</value>
+  </data>
+  <data name="DisplayFormat" xml:space="preserve">
+    <value>Display Format</value>
+  </data>
+  <data name="OverlayTimerDefaultHTML" xml:space="preserve">
+    <value>&lt;p id="text-{ID}" class="text-{ID}"&gt;
+    {Text}
+&lt;/p&gt;</value>
+  </data>
+  <data name="OverlayPositionedItemDefaultCSS" xml:space="preserve">
+    <value>.outerdiv-{ID} {
+    position: absolute;
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    min-height: 100%;
+    margin: 0px;
+    z-index: {Layer};
+}
+
+.innerdiv-{ID} {
+    position: absolute;
+    margin: 0px;
+    left: {XPosition}{PositionType};
+    top: {YPosition}{PositionType};
+    transform: translate({XTranslation}%, {YTranslation}%);
+    width: {Width};
+    height: {Height};
+}</value>
+  </data>
+  <data name="OverlayPositionedItemDefaultHTML" xml:space="preserve">
+    <value>&lt;div id="outerdiv-{ID}" class="outerdiv-{ID}"&gt;
+&lt;div id="innerdiv-{ID}" class="innerdiv-{ID}"&gt;
+
+{InnerHTML}
+
+&lt;/div&gt;
+&lt;/div&gt;</value>
+  </data>
+  <data name="OverlayActionValidationErrorHeader" xml:space="preserve">
+    <value>Overlay Action: </value>
+  </data>
+  <data name="OverlayMissingFilePath" xml:space="preserve">
+    <value>Missing file path</value>
+  </data>
+  <data name="OverlayTextMissingText" xml:space="preserve">
+    <value>Missing text</value>
+  </data>
+  <data name="OverlayTimerMissingDisplayFormat" xml:space="preserve">
+    <value>Missing display format</value>
+  </data>
+  <data name="OverlayWebPageMissingURL" xml:space="preserve">
+    <value>Missing url</value>
+  </data>
+  <data name="OverlayYouTubeMissingVideo" xml:space="preserve">
+    <value>Missing video</value>
+  </data>
+  <data name="CooldownRequirementOnCooldownMinutes" xml:space="preserve">
+    <value>This command is currently on cooldown, please wait another {0} minute(s).</value>
+  </data>
+  <data name="CooldownRequirementOnCooldownHours" xml:space="preserve">
+    <value>This command is currently on cooldown, please wait another {0} hour(s).</value>
+  </data>
+  <data name="BasicTimer" xml:space="preserve">
+    <value>Basic Timer</value>
+  </data>
+  <data name="CountUp" xml:space="preserve">
+    <value>Count Up</value>
+  </data>
+  <data name="CSharp" xml:space="preserve">
+    <value>C#</value>
+  </data>
+  <data name="Python" xml:space="preserve">
+    <value>Python</value>
+  </data>
+  <data name="Script" xml:space="preserve">
+    <value>Script</value>
+  </data>
+  <data name="ScriptActionMissingScript" xml:space="preserve">
+    <value>Script Action: Missing script</value>
+  </data>
+  <data name="VisualBasic" xml:space="preserve">
+    <value>Visual Basic</value>
+  </data>
+  <data name="ScriptActionFailedCompile" xml:space="preserve">
+    <value>Script Error: {0}</value>
+    <comment>{0} is the series of script errors</comment>
+  </data>
+  <data name="ScriptActionCSharpDefaultScriptTemplate" xml:space="preserve">
+    <value>using System;
+            
+namespace CustomNamespace
+{
+    public class CustomClass
+    {
+        public object Run()
+        {
+            // Your code goes here
+            System.Console.WriteLine("Hello World!");
+
+            // Return any data here that you'd like to use
+            return 0;
+        }
+    }
+}</value>
+  </data>
+  <data name="ScriptActionJavascriptDefaultScriptTemplate" xml:space="preserve">
+    <value>function run()
+{
+    // Your code goes here
+    var text = 'Hello World!';
+
+    // Return any data here that you'd like to use
+    return 0;
+}</value>
+  </data>
+  <data name="ScriptActionPythonDefaultScriptTemplate" xml:space="preserve">
+    <value>def run():
+    # Your code goes here
+    print 'Hello World!'
+
+    # Return any data here that you'd like to use
+    return 0</value>
+  </data>
+  <data name="CommunityCommandsScriptActionsNotSupported" xml:space="preserve">
+    <value>Commands containing Script actions are not supported for uploading to the Community Commands feature. Due to the complexity of scripts and the ability for them to have malicious intent for users, we do not support uploading them through Community Commands to ensure users are protected. You can optionally instead export your command to a file and share it out with users through other means.</value>
+  </data>
+  <data name="OverlayLabelAmountDefaultHTML" xml:space="preserve">
+    <value>&lt;p id="label-amount-{ID}" class="text-{ID}"&gt;
+        {Amount}
+&lt;/p&gt;</value>
+  </data>
+  <data name="OverlayLabelUsernameAmountDefaultHTML" xml:space="preserve">
+    <value>&lt;p class="text-{ID}"&gt;
+    &lt;span id="label-username-{ID}" class="text-{ID}"&gt;
+        {Username}
+    &lt;/span&gt;
+    -
+    &lt;span id="label-amount-{ID}" class="text-{ID}"&gt;
+        {Amount}
+    &lt;/span&gt;
+&lt;/p&gt;</value>
+  </data>
+  <data name="OverlayLabelUsernameDefaultHTML" xml:space="preserve">
+    <value>&lt;p id="label-username-{ID}" class="text-{ID}"&gt;
+    {Username}
+&lt;/p&gt;</value>
+  </data>
+  <data name="OverlayLabelDefaultJavascript" xml:space="preserve">
+    <value>function {ID}_update(username, amount)
+{
+    var usernameElement = document.getElementById("label-username-{ID}");
+    if (usernameElement != null) {
+        usernameElement.innerHTML = username; 
+    }
+    
+    var amountElement = document.getElementById("label-amount-{ID}");
+    if (amountElement != null) {
+        amountElement.innerHTML = amount; 
+    }
+}</value>
+  </data>
+  <data name="OnUpdate" xml:space="preserve">
+    <value>On Update</value>
+  </data>
+  <data name="ConditionalActionAtLeastOneClause" xml:space="preserve">
+    <value>Conditional Action: At least one clause must be added</value>
+  </data>
+  <data name="HypeTrainLevelUp" xml:space="preserve">
+    <value>Hype Train Level Up - Reached Level {0}</value>
+  </data>
 </root>

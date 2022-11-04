@@ -163,6 +163,8 @@ namespace MixItUp.Base.Services.Twitch
     {
         public const string PrimeSubPlan = "Prime";
 
+        private int lastHypeTrainLevel = 1;
+
         public static int GetSubTierNumberFromText(string subPlan)
         {
             if (!string.IsNullOrEmpty(subPlan) && int.TryParse(subPlan, out int subPlanNumber) && subPlanNumber >= 1000)
@@ -333,6 +335,12 @@ namespace MixItUp.Base.Services.Twitch
                 message.Payload.Session.Id);
 
             await eventSub.CreateSubscription(
+                EventSubTypesEnum.ChannelHypeTrainProgress,
+                "websocket",
+                new Dictionary<string, string> { { "broadcaster_user_id", twitchSession.UserID } },
+                message.Payload.Session.Id);
+
+            await eventSub.CreateSubscription(
                 EventSubTypesEnum.ChannelHypeTrainEnd,
                 "websocket",
                 new Dictionary<string, string> { { "broadcaster_user_id", twitchSession.UserID } },
@@ -360,6 +368,9 @@ namespace MixItUp.Base.Services.Twitch
                     break;
                 case "channel.hype_train.begin":
                     await HandleHypeTrainBegin(message.Payload.Event);
+                    break;
+                case "channel.hype_train.progress":
+                    await HandleHypeTrainProgress(message.Payload.Event);
                     break;
                 case "channel.hype_train.end":
                     await HandleHypeTrainEnd(message.Payload.Event);
@@ -394,6 +405,8 @@ namespace MixItUp.Base.Services.Twitch
 
         private async Task HandleHypeTrainBegin(JObject payload)
         {
+            this.lastHypeTrainLevel = 1;
+
             int totalPoints = payload["total"].Value<int>();
             int levelPoints = payload["progress"].Value<int>();
             int levelGoal = payload["goal"].Value<int>();
@@ -405,6 +418,27 @@ namespace MixItUp.Base.Services.Twitch
             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeTrainBegin, new CommandParametersModel(ChannelSession.User, eventCommandSpecialIdentifiers));
 
             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, MixItUp.Base.Resources.HypeTrainStarted, ChannelSession.Settings.AlertTwitchHypeTrainColor));
+        }
+
+        private async Task HandleHypeTrainProgress(JObject payload)
+        {
+            int level = payload["level"].Value<int>();
+            if (level > this.lastHypeTrainLevel)
+            {
+                this.lastHypeTrainLevel = level;
+                int totalPoints = payload["total"].Value<int>();
+                int levelPoints = payload["progress"].Value<int>();
+                int levelGoal = payload["goal"].Value<int>();
+
+                Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
+                eventCommandSpecialIdentifiers["hypetraintotalpoints"] = totalPoints.ToString();
+                eventCommandSpecialIdentifiers["hypetrainlevelpoints"] = levelPoints.ToString();
+                eventCommandSpecialIdentifiers["hypetrainlevelgoal"] = levelGoal.ToString();
+                eventCommandSpecialIdentifiers["hypetrainlevel"] = level.ToString();
+                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeTrainLevelUp, new CommandParametersModel(ChannelSession.User, eventCommandSpecialIdentifiers));
+
+                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, string.Format(MixItUp.Base.Resources.HypeTrainLevelUp, level.ToString()), ChannelSession.Settings.AlertTwitchHypeTrainColor));
+            }
         }
 
         private async Task HandleHypeTrainEnd(JObject payload)

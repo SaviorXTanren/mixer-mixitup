@@ -9318,6 +9318,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hype Train Level Up - Reached Level {0}.
+        /// </summary>
+        public static string HypeTrainLevelUp {
+            get {
+                return ResourceManager.GetString("HypeTrainLevelUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hype Train Started.
         /// </summary>
         public static string HypeTrainStarted {
