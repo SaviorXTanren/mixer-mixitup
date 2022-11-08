@@ -22,6 +22,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using Twitch.Base.Models.NewAPI.Bits;
+using Twitch.Base.Models.NewAPI.Clips;
 using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.Util
@@ -692,6 +693,16 @@ namespace MixItUp.Base.Util
                 {
                     long subPoints = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscriberPoints(ServiceManager.Get<TwitchSessionService>().User);
                     this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.TwitchSpecialIdentifierHeader + "subpoints", subPoints.ToString());
+                }
+
+                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TwitchSpecialIdentifierHeader + "cliprandom"))
+                {
+                    IEnumerable<ClipModel> clips = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClips(ServiceManager.Get<TwitchSessionService>().User, maxResults: int.MaxValue);
+                    if (clips != null && clips.Count() > 0)
+                    {
+                        ClipModel randomClip = clips.Random();
+                        this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.TwitchSpecialIdentifierHeader + "cliprandom", randomClip.url);
+                    }
                 }
             }
 
