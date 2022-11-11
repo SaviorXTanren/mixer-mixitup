@@ -9347,4 +9347,78 @@ namespace CustomNamespace
   <data name="HypeTrainLevelUp" xml:space="preserve">
     <value>Hype Train Level Up - Reached Level {0}</value>
   </data>
+  <data name="Resubscriber" xml:space="preserve">
+    <value>Resubscriber</value>
+  </data>
+  <data name="Donation" xml:space="preserve">
+    <value>Donation</value>
+  </data>
+  <data name="OverlayEventListDefaultCSS" xml:space="preserve">
+    <value>.
+
+.item-{ID} {
+    position: relative;
+    border-style: solid;
+    border-width: 5px;
+    border-color: {BorderColor};
+    background-color: {BackgroundColor};
+    width: {Width};
+    height: {Height};
+}
+
+.details-{ID} {
+    position: absolute;
+    top: 35%;
+    left: 5%;
+    width: 50%;
+    float: left;
+    text-align: left;
+    font-weight: bold;
+    margin: auto;
+    transform: translate(0, -50%);
+    font-size: {FontSize}px;
+    color: {FontColor};
+    font-family: '{FontFamily}';
+    font-weight: {FontWeight};
+    text-decoration: {TextDecoration};
+    font-style: {FontStyle};
+    text-shadow: {Shadow};
+}
+
+.subdetails-{ID} {
+    position: absolute;
+    top: 80%;
+    right: 5%;
+    width: 50%;
+    text-align: right;
+    white-space: nowrap;
+    margin: auto;
+    transform: translate(0, -50%);
+    font-size: {FontSize}px;
+    color: {FontColor};
+    font-family: '{FontFamily}';
+    font-weight: {FontWeight};
+    text-decoration: {TextDecoration};
+    font-style: {FontStyle};
+    text-shadow: {Shadow};
+}</value>
+  </data>
+  <data name="OverlayEventListDefaultHTML" xml:space="preserve">
+    <value>&lt;div id="list-{ID}" class="list-{ID}"&gt;
+
+&lt;/div&gt;
+
+&lt;script id="item" type="text/template"&gt;
+    &lt;div class="item-{ID}"&gt;
+        &lt;p class="details-{ID}"&gt;{Details}&lt;/p&gt;
+        &lt;p class="subdetails-{ID}"&gt;{SubDetails}&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/script&gt;</value>
+  </data>
+  <data name="OverlayEventListDefaultJavascript" xml:space="preserve">
+    <value>function {ID}_add(type, details, subdetails)
+{
+
+}</value>
+  </data>
 </root>

@@ -131,6 +131,9 @@
                         else if (data.Type == 'LabelUpdate') {
                             window[data.ID + "_update"](data.Username, data.Amount);
                         }
+                        else if (data.Type == 'EventListAdd') {
+                            window[data.ID + "_add"](data.Type, data.Details, data.SubDetails);
+                        }
                     }
                     else if (packet.type == 'DisableWidget') {
                         if (widgets.has(data.ID)) {

@@ -4893,6 +4893,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Donation.
+        /// </summary>
+        public static string Donation {
+            get {
+                return ResourceManager.GetString("Donation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Donation Bonus.
         /// </summary>
         public static string DonationBonus {
@@ -13309,6 +13318,69 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        ///
+        ///.item-{ID} {
+        ///    position: relative;
+        ///    border-style: solid;
+        ///    border-width: 5px;
+        ///    border-color: {BorderColor};
+        ///    background-color: {BackgroundColor};
+        ///    width: {Width};
+        ///    height: {Height};
+        ///}
+        ///
+        ///.details-{ID} {
+        ///    position: absolute;
+        ///    top: 35%;
+        ///    left: 5%;
+        ///    width: 50%;
+        ///    float: left;
+        ///    text-align: left;
+        ///    font-weight: bold;
+        ///    margin: auto;
+        ///    transform: translate(0, -50%);
+        ///    font-size: {FontSize}px;
+        ///    color: {FontColor};
+        ///    font-family: &apos;{FontFamily [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayEventListDefaultCSS {
+            get {
+                return ResourceManager.GetString("OverlayEventListDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div id=&quot;list-{ID}&quot; class=&quot;list-{ID}&quot;&gt;
+        ///
+        ///&lt;/div&gt;
+        ///
+        ///&lt;script id=&quot;item&quot; type=&quot;text/template&quot;&gt;
+        ///    &lt;div class=&quot;item-{ID}&quot;&gt;
+        ///        &lt;p class=&quot;details-{ID}&quot;&gt;{Details}&lt;/p&gt;
+        ///        &lt;p class=&quot;subdetails-{ID}&quot;&gt;{SubDetails}&lt;/p&gt;
+        ///    &lt;/div&gt;
+        ///&lt;/script&gt;.
+        /// </summary>
+        public static string OverlayEventListDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayEventListDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to function {ID}_add(type, details, subdetails)
+        ///{
+        ///
+        ///}.
+        /// </summary>
+        public static string OverlayEventListDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayEventListDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .image-{ID} {
         ///    width: {Width};
         ///    height: {Height};
@@ -15990,6 +16062,15 @@ namespace MixItUp.Base {
         public static string ResubscribedAmount {
             get {
                 return ResourceManager.GetString("ResubscribedAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resubscriber.
+        /// </summary>
+        public static string Resubscriber {
+            get {
+                return ResourceManager.GetString("Resubscriber", resourceCulture);
             }
         }
         
