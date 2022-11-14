@@ -299,7 +299,11 @@ namespace MixItUp.Base.Services.Glimesh
             return Task.FromResult(this.User?.channel?.title);
         }
 
-        public Task<bool> SetTitle(string title) { return Task.FromResult(false); }
+        public async Task<bool> SetTitle(string title)
+        {
+            await ServiceManager.Get<GlimeshSessionService>().UserConnection.UpdateStreamInfo(this.ChannelID, title);
+            return true;
+        }
 
         public Task<string> GetGame()
         {
