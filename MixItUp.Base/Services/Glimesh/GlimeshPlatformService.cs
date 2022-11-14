@@ -19,6 +19,8 @@ namespace MixItUp.Base.Services.Glimesh
         {
             OAuthClientScopeEnum.publicinfo,
             OAuthClientScopeEnum.chat,
+            OAuthClientScopeEnum.follow,
+            OAuthClientScopeEnum.stream_info
         };
 
         public static readonly List<OAuthClientScopeEnum> BotScopes = new List<OAuthClientScopeEnum>()
@@ -118,5 +120,7 @@ namespace MixItUp.Base.Services.Glimesh
         public async Task<ChannelModel> GetChannelByID(string channelID) { return await AsyncRunner.RunAsync(this.Connection.Channel.GetChannelByID(channelID)); }
 
         public async Task<ChannelModel> GetChannelByName(string username) { return await AsyncRunner.RunAsync(this.Connection.Channel.GetChannelByName(username)); }
+
+        public async Task UpdateStreamInfo(string channelID, string title) { await AsyncRunner.RunAsync(this.Connection.Stream.UpdateStreamInfo(channelID, title)); }
     }
 }
