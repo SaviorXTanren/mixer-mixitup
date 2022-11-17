@@ -343,6 +343,8 @@ namespace MixItUp.Base.Services
                 this.signalRConnection.Disconnected -= SignalRConnection_Disconnected;
 
                 await this.signalRConnection.Disconnect();
+
+                this.signalRConnection = null;
             }
         }
 
