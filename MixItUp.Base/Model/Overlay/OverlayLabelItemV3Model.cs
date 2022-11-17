@@ -34,7 +34,7 @@ namespace MixItUp.Base.Model.Overlay
     }
 
     [DataContract]
-    public class OverlayLabelWidgetV3Model : OverlayWidgetV3ModelBase
+    public class OverlayLabelItemV3Model : OverlayVisualTextItemV3ModelBase
     {
         public const string UsernameReplacementKey = "Username";
         public const string AmountReplacementKey = "Amount";
@@ -58,14 +58,14 @@ namespace MixItUp.Base.Model.Overlay
 
         private long trackingAmount = 0;
 
-        public OverlayLabelWidgetV3Model(string id, string name, Guid overlayEndpointID, OverlayTextItemV3Model item)
+        public OverlayLabelItemV3Model(string id, string name, Guid overlayEndpointID, OverlayTextItemV3Model item)
             : base(id, name, overlayEndpointID, item)
         {
             this.TextItem = item;
         }
 
         [Obsolete]
-        public OverlayLabelWidgetV3Model() { }
+        public OverlayLabelItemV3Model() { }
 
         public override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
         {

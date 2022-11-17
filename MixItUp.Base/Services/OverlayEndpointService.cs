@@ -160,21 +160,37 @@ namespace MixItUp.Base.Services
             {
                 if (item != null)
                 {
+                    if (item.Type == OverlayItemV3Type.YouTube)
+                    {
+                        OverlayOutputV3Model processedItem = await item.GetProcessedItem(this, parameters);
+                        JObject jobj = JObject.FromObject(item);
+                        jobj.Merge(JObject.FromObject(processedItem), new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Replace });
+                        await PerformTextReplacements(jobj, parameters);
+
+                        await this.SendPacket("YouTube", jobj);
+                    }
+                    else
+                    {
+                        await this.SendItem("Basic", item, parameters);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
+        public async Task SendItem(string type, OverlayItemV3ModelBase item, CommandParametersModel parameters)
+        {
+            try
+            {
+                if (item != null)
+                {
                     OverlayOutputV3Model processedItem = await item.GetProcessedItem(this, parameters);
                     if (processedItem != null)
                     {
-                        if (item.Type == OverlayItemV3Type.YouTube)
-                        {
-                            JObject jobj = JObject.FromObject(item);
-                            jobj.Merge(JObject.FromObject(processedItem), new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Replace });
-                            await PerformTextReplacements(jobj, parameters);
-
-                            await this.SendPacket("YouTube", jobj);
-                        }
-                        else
-                        {
-                            await this.SendPacket("Basic", JObject.FromObject(processedItem));
-                        }
+                        await this.SendPacket(type, JObject.FromObject(processedItem));
                     }
                 }
             }
@@ -184,54 +200,16 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task EnableWidget(OverlayWidgetV3ModelBase widget, CommandParametersModel parameters)
+        public async Task SendJObject(string type, string id, JObject jobj, CommandParametersModel parameters)
         {
             try
             {
-                if (widget != null)
-                {
-                    OverlayOutputV3Model processedItem = await widget.GetProcessedItem(this, parameters);
-                    if (processedItem != null)
-                    {
-                        await this.SendPacket("EnableWidget", JObject.FromObject(processedItem));
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-        }
-
-        public async Task UpdateWidget(OverlayWidgetV3ModelBase widget, string type, JObject jobj, CommandParametersModel parameters)
-        {
-            try
-            {
-                if (widget != null && !string.IsNullOrWhiteSpace(type) && jobj != null)
+                if (!string.IsNullOrWhiteSpace(type) && !string.IsNullOrWhiteSpace(id) && jobj != null)
                 {
                     await PerformTextReplacements(jobj, parameters);
-                    jobj["ID"] = widget.ID;
+                    jobj["ID"] = id;
                     jobj["Type"] = type;
-                    await this.SendPacket("UpdateWidget", jobj);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-        }
-
-        public async Task DisableWidget(OverlayWidgetV3ModelBase widget, CommandParametersModel parameters)
-        {
-            try
-            {
-                if (widget != null)
-                {
-                    OverlayOutputV3Model processedItem = await widget.GetProcessedItem(this, parameters);
-                    if (processedItem != null)
-                    {
-                        await this.SendPacket("DisableWidget", JObject.FromObject(processedItem));
-                    }
+                    await this.SendPacket(type, jobj);
                 }
             }
             catch (Exception ex)

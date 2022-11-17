@@ -86,7 +86,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().GetDefaultOverlayEndpoint();
         }
 
-        public OverlayWidgetV3ViewModelBase(OverlayWidgetV3ModelBase widget)
+        public OverlayWidgetV3ViewModelBase(OverlayWidgetV3Model widget)
         {
             this.ID = widget.ID;
             this.Name = widget.Name;
@@ -133,15 +133,15 @@ namespace MixItUp.Base.ViewModel.Overlay
             return this.Item.Validate();
         }
 
-        public OverlayWidgetV3ModelBase GetItem()
+        public OverlayWidgetV3Model GetItem()
         {
-            OverlayWidgetV3ModelBase widget = this.GetItemInternal();
+            OverlayWidgetV3Model widget = this.GetItemInternal();
 
             this.ItemPosition.SetPosition(widget.Item);
 
             return widget;
         }
 
-        protected abstract OverlayWidgetV3ModelBase GetItemInternal();
+        protected abstract OverlayWidgetV3Model GetItemInternal();
     }
 }

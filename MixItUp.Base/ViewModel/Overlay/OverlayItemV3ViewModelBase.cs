@@ -148,9 +148,9 @@ namespace MixItUp.Base.ViewModel.Overlay
                     this.Javascript = OverlayTimerItemV3Model.DefaultJavascript;
                     break;
                 case OverlayItemV3Type.Label:
-                    this.HTML = OverlayLabelWidgetV3Model.DefaultUsernameHTML;
-                    this.CSS = OverlayLabelWidgetV3Model.DefaultCSS;
-                    this.Javascript = OverlayLabelWidgetV3Model.DefaultJavascript;
+                    this.HTML = OverlayLabelItemV3Model.DefaultUsernameHTML;
+                    this.CSS = OverlayLabelItemV3Model.DefaultCSS;
+                    this.Javascript = OverlayLabelItemV3Model.DefaultJavascript;
                     break;
             }
 

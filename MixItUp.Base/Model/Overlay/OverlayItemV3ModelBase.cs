@@ -61,6 +61,10 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayItemV3ModelBase(OverlayItemV3Type type) { this.Type = type; }
 
+        public virtual Task Enable() { return Task.CompletedTask; }
+
+        public virtual Task Disable() { return Task.CompletedTask; }
+
         public async Task<OverlayOutputV3Model> GetProcessedItem(OverlayEndpointService overlayEndpointService, CommandParametersModel parameters, Dictionary<string, string> replacements = null)
         {
             OverlayOutputV3Model result = new OverlayOutputV3Model();

@@ -23,7 +23,7 @@ namespace MixItUp.Base.Model.Overlay
     }
 
     [DataContract]
-    public class OverlayEventListWidgetV3Model : OverlayWidgetV3ModelBase
+    public class OverlayEventListWidgetV3Model : OverlayListItemV3ModelBase
     {
         public const string TypeReplacementKey = "Type";
         public const string DetailsReplacementKey = "Details";

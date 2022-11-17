@@ -437,7 +437,7 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public List<OverlayEndpointV3Model> OverlayEndpointsV3 { get; set; } = new List<OverlayEndpointV3Model>();
         [DataMember]
-        public List<OverlayWidgetV3ModelBase> OverlayWidgetsV3 { get; set; } = new List<OverlayWidgetV3ModelBase>();
+        public List<OverlayWidgetV3Model> OverlayWidgetsV3 { get; set; } = new List<OverlayWidgetV3Model>();
 
         [DataMember]
         [Obsolete]
