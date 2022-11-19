@@ -13318,9 +13318,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
-        ///
-        ///.item-{ID} {
+        ///   Looks up a localized string similar to .item-{ID} {
         ///    position: relative;
         ///    border-style: solid;
         ///    border-width: 5px;
@@ -13342,7 +13340,8 @@ namespace MixItUp.Base {
         ///    transform: translate(0, -50%);
         ///    font-size: {FontSize}px;
         ///    color: {FontColor};
-        ///    font-family: &apos;{FontFamily [rest of string was truncated]&quot;;.
+        ///    font-family: &apos;{FontFamily}&apos;;
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEventListDefaultCSS {
             get {
@@ -13355,12 +13354,12 @@ namespace MixItUp.Base {
         ///
         ///&lt;/div&gt;
         ///
-        ///&lt;script id=&quot;item&quot; type=&quot;text/template&quot;&gt;
-        ///    &lt;div class=&quot;item-{ID}&quot;&gt;
-        ///        &lt;p class=&quot;details-{ID}&quot;&gt;{Details}&lt;/p&gt;
-        ///        &lt;p class=&quot;subdetails-{ID}&quot;&gt;{SubDetails}&lt;/p&gt;
+        ///&lt;template id=&quot;item-{ID}&quot;&gt;
+        ///    &lt;div class=&apos;item-{ID}&apos;&gt;
+        ///        &lt;p class=&apos;details-{ID}&apos;&gt;{Details}&lt;/p&gt;
+        ///        &lt;p class=&apos;subdetails-{ID}&apos;&gt;{SubDetails}&lt;/p&gt;
         ///    &lt;/div&gt;
-        ///&lt;/script&gt;.
+        ///&lt;/template&gt;.
         /// </summary>
         public static string OverlayEventListDefaultHTML {
             get {
@@ -13371,8 +13370,21 @@ namespace MixItUp.Base {
         /// <summary>
         ///   Looks up a localized string similar to function {ID}_add(type, details, subdetails)
         ///{
+        ///    var list = document.getElementById(&quot;list-{ID}&quot;);
         ///
-        ///}.
+        ///    var itemTemplate = document.querySelector(&quot;#item-{ID}&quot;);
+        ///    const item = itemTemplate.content.cloneNode(true);
+        ///    
+        ///    var detailsElement = item.querySelector(&quot;.details-{ID}&quot;);
+        ///    detailsElement.innerHTML = details;
+        ///    
+        ///    var subdetailsElement = item.querySelector(&quot;.subdetails-{ID}&quot;);
+        ///    subdetailsElement.innerHTML = subdetails;
+        ///
+        ///    list.appendChild(item);
+        ///}
+        ///
+        ///function {ID}_removeO [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEventListDefaultJavascript {
             get {

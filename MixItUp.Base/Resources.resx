@@ -9354,9 +9354,7 @@ namespace CustomNamespace
     <value>Donation</value>
   </data>
   <data name="OverlayEventListDefaultCSS" xml:space="preserve">
-    <value>.
-
-.item-{ID} {
+    <value>.item-{ID} {
     position: relative;
     border-style: solid;
     border-width: 5px;
@@ -9408,18 +9406,37 @@ namespace CustomNamespace
 
 &lt;/div&gt;
 
-&lt;script id="item" type="text/template"&gt;
-    &lt;div class="item-{ID}"&gt;
-        &lt;p class="details-{ID}"&gt;{Details}&lt;/p&gt;
-        &lt;p class="subdetails-{ID}"&gt;{SubDetails}&lt;/p&gt;
+&lt;template id="item-{ID}"&gt;
+    &lt;div class='item-{ID}'&gt;
+        &lt;p class='details-{ID}'&gt;{Details}&lt;/p&gt;
+        &lt;p class='subdetails-{ID}'&gt;{SubDetails}&lt;/p&gt;
     &lt;/div&gt;
-&lt;/script&gt;</value>
+&lt;/template&gt;</value>
   </data>
   <data name="OverlayEventListDefaultJavascript" xml:space="preserve">
     <value>function {ID}_add(type, details, subdetails)
 {
+    var list = document.getElementById("list-{ID}");
 
-}</value>
+    var itemTemplate = document.querySelector("#item-{ID}");
+    const item = itemTemplate.content.cloneNode(true);
+    
+    var detailsElement = item.querySelector(".details-{ID}");
+    detailsElement.innerHTML = details;
+    
+    var subdetailsElement = item.querySelector(".subdetails-{ID}");
+    subdetailsElement.innerHTML = subdetails;
+
+    list.appendChild(item);
+}
+
+function {ID}_removeOldest()
+{
+    var list = document.getElementById("list-{ID}");
+    list.removeChild(list.firstElementChild);
+}
+
+{ID}_add({Type}, {Details}, {SubDetails});</value>
   </data>
   <data name="TwitchChannelHypeTrainLevelUp" xml:space="preserve">
     <value>Twitch Channel Hype Train Level Up</value>
