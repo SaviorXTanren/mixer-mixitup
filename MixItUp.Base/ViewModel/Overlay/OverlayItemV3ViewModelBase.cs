@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
+using System;
 using System.Collections.Generic;
 
 namespace MixItUp.Base.ViewModel.Overlay
@@ -157,7 +158,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             if (!string.IsNullOrWhiteSpace(this.HTML))
             {
                 this.HTML = OverlayItemV3ModelBase.ReplaceProperty(OverlayItemV3ModelBase.PositionedHTML, OverlayItemV3ModelBase.InnerHTMLProperty, this.HTML);
-                this.CSS = OverlayItemV3ModelBase.PositionedCSS + this.CSS;
+                this.CSS = OverlayItemV3ModelBase.PositionedCSS + Environment.NewLine + Environment.NewLine + this.CSS;
             }
 
             this.Animations.Add(this.EntranceAnimation);

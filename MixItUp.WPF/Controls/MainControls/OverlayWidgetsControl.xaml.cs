@@ -91,7 +91,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void AddOverlayWidgetButton_Click(object sender, RoutedEventArgs e)
         {
-            OverlayLabelItemV3Model widget = new OverlayLabelItemV3Model(OverlayItemV3ModelBase.GenerateOverlayItemID(), "Test", Guid.Empty, new OverlayTextItemV3Model()
+            OverlayLabelItemV3Model widget = new OverlayLabelItemV3Model(OverlayLabelWidgetV3Type.Counter)
             {
                 CSS = OverlayLabelItemV3Model.DefaultCSS,
                 FontColor = "Red",
@@ -103,9 +103,6 @@ namespace MixItUp.WPF.Controls.MainControls
                 XPosition = 50,
                 YPosition = 50,
                 IsPercentagePosition = true
-            })
-            {
-                LabelType = OverlayLabelWidgetV3Type.Counter,
             };
 
             await widget.Enable();

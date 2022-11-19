@@ -20770,6 +20770,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel Hype Train Level Up.
+        /// </summary>
+        public static string TwitchChannelHypeTrainLevelUp {
+            get {
+                return ResourceManager.GetString("TwitchChannelHypeTrainLevelUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Twitch Channel Hype Train Progress.
         /// </summary>
         public static string TwitchChannelHypeTrainProgress {

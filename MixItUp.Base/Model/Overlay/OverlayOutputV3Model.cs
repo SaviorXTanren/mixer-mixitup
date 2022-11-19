@@ -26,6 +26,7 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public OverlayItemAnimationV3Model ExitAnimation { get; set; } = new OverlayItemAnimationV3Model();
 
-        public string TextID { get { return "X" + this.ID.ToString().Replace('-', 'X'); } }
+        [DataMember]
+        public string TextID { get { return "X" + this.ID.ToString().Replace('-', 'X'); } set { } }
     }
 }

@@ -9421,4 +9421,7 @@ namespace CustomNamespace
 
 }</value>
   </data>
+  <data name="TwitchChannelHypeTrainLevelUp" xml:space="preserve">
+    <value>Twitch Channel Hype Train Level Up</value>
+  </data>
 </root>

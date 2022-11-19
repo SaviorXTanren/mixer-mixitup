@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.ViewModel.Chat.Trovo;
@@ -22,6 +23,17 @@ namespace MixItUp.Base.Model.Overlay
     }
 
     [DataContract]
+    public class OverlayEventListEventV3Model
+    {
+        [DataMember]
+        public string Type { get; set; }
+        [DataMember]
+        public string Details { get; set; }
+        [DataMember]
+        public string SubDetails { get; set; }
+    }
+
+    [DataContract]
     public class OverlayEventListWidgetV3Model : OverlayListItemV3ModelBase
     {
         public const string TypeReplacementKey = "Type";
@@ -34,6 +46,9 @@ namespace MixItUp.Base.Model.Overlay
 
         [DataMember]
         public HashSet<OverlayEventListWidgetV3Type> EventTypes { get; set; } = new HashSet<OverlayEventListWidgetV3Type>();
+
+        [DataMember]
+        public List<OverlayEventListEventV3Model> Events { get; set; } = new List<OverlayEventListEventV3Model>();
 
         public OverlayEventListWidgetV3Model(HashSet<OverlayEventListWidgetV3Type> eventTypes)
             : base(OverlayItemV3Type.EventList)
@@ -116,84 +131,68 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void EventService_OnFollowOccurred(object sender, UserV2ViewModel user)
         {
-            this.CurrentReplacements[TypeReplacementKey] = MixItUp.Base.Resources.Follow;
-            this.CurrentReplacements[DetailsReplacementKey] = user.DisplayName;
-            await this.Update();
+            await this.AddEvent(MixItUp.Base.Resources.Follow, user.DisplayName, user: user);
         }
 
         private async void EventService_OnRaidOccurred(object sender, Tuple<UserV2ViewModel, int> raid)
         {
-            this.CurrentReplacements[TypeReplacementKey] = MixItUp.Base.Resources.Raid;
-            this.CurrentReplacements[DetailsReplacementKey] = raid.Item1.DisplayName;
-            this.CurrentReplacements[SubDetailsReplacementKey] = raid.Item2.ToString();
-            await this.Update();
+            await this.AddEvent(MixItUp.Base.Resources.Raid, raid.Item1.DisplayName, subDetails: raid.Item2.ToString(), user: raid.Item1);
         }
 
         private async void EventService_OnSubscribeOccurred(object sender, UserV2ViewModel user)
         {
-            this.CurrentReplacements[TypeReplacementKey] = MixItUp.Base.Resources.Subscriber;
-            this.CurrentReplacements[DetailsReplacementKey] = user.DisplayName;
-            await this.Update();
+            await this.AddEvent(MixItUp.Base.Resources.Subscriber, user.DisplayName, user: user);
         }
 
         private async void EventService_OnResubscribeOccurred(object sender, Tuple<UserV2ViewModel, int> resubscribe)
         {
-            this.CurrentReplacements[TypeReplacementKey] = MixItUp.Base.Resources.Resubscriber;
-            this.CurrentReplacements[DetailsReplacementKey] = resubscribe.Item1.DisplayName;
-            this.CurrentReplacements[SubDetailsReplacementKey] = resubscribe.Item2.ToString();
-            await this.Update();
+            await this.AddEvent(MixItUp.Base.Resources.Resubscriber, resubscribe.Item1.DisplayName, subDetails: resubscribe.Item2.ToString(), user: resubscribe.Item1);
         }
 
         private async void EventService_OnSubscriptionGiftedOccurred(object sender, Tuple<UserV2ViewModel, UserV2ViewModel> subscriptionGifted)
         {
-            this.CurrentReplacements[TypeReplacementKey] = MixItUp.Base.Resources.GiftedSub;
-            this.CurrentReplacements[DetailsReplacementKey] = subscriptionGifted.Item1.DisplayName;
-            this.CurrentReplacements[SubDetailsReplacementKey] = subscriptionGifted.Item2.DisplayName;
-            await this.Update();
+            await this.AddEvent(MixItUp.Base.Resources.GiftedSub, subscriptionGifted.Item1.DisplayName, subDetails: subscriptionGifted.Item2.DisplayName, user: subscriptionGifted.Item1);
         }
 
         private async void EventService_OnMassSubscriptionsGiftedOccurred(object sender, Tuple<UserV2ViewModel, int> massSubscriptionsGifted)
         {
-            this.CurrentReplacements[TypeReplacementKey] = MixItUp.Base.Resources.GiftedSubs;
-            this.CurrentReplacements[DetailsReplacementKey] = massSubscriptionsGifted.Item1.DisplayName;
-            this.CurrentReplacements[SubDetailsReplacementKey] = massSubscriptionsGifted.Item2.ToString();
-            await this.Update();
+            await this.AddEvent(MixItUp.Base.Resources.GiftedSubs, massSubscriptionsGifted.Item1.DisplayName, subDetails: massSubscriptionsGifted.Item2.ToString(), user: massSubscriptionsGifted.Item1);
         }
 
         private async void EventService_OnDonationOccurred(object sender, UserDonationModel donation)
         {
-            this.CurrentReplacements[TypeReplacementKey] = MixItUp.Base.Resources.Donation;
-            this.CurrentReplacements[DetailsReplacementKey] = donation.User.DisplayName;
-            this.CurrentReplacements[SubDetailsReplacementKey] = donation.AmountText;
-            await this.Update();
+            await this.AddEvent(MixItUp.Base.Resources.Donation, donation.User.DisplayName, subDetails: donation.AmountText, user: donation.User);
         }
 
         private async void EventService_OnTwitchBitsCheeredOccurred(object sender, TwitchUserBitsCheeredModel bitsCheered)
         {
-            this.CurrentReplacements[TypeReplacementKey] = MixItUp.Base.Resources.BitsCheered;
-            this.CurrentReplacements[DetailsReplacementKey] = bitsCheered.User.DisplayName;
-            this.CurrentReplacements[SubDetailsReplacementKey] = bitsCheered.Amount.ToString();
-            await this.Update();
+            await this.AddEvent(MixItUp.Base.Resources.BitsCheered, bitsCheered.User.DisplayName, subDetails: bitsCheered.Amount.ToString(), user: bitsCheered.User);
         }
 
         private async void EventService_OnTrovoSpellCastOccurred(object sender, TrovoChatSpellViewModel spell)
         {
             if (spell.IsElixir)
             {
-                this.CurrentReplacements[TypeReplacementKey] = MixItUp.Base.Resources.TrovoSpell;
-                this.CurrentReplacements[DetailsReplacementKey] = spell.User.DisplayName;
-                this.CurrentReplacements[SubDetailsReplacementKey] = spell.ValueTotal.ToString();
-                await this.Update();
+                await this.AddEvent(MixItUp.Base.Resources.TrovoSpell, spell.User.DisplayName, subDetails: spell.ValueTotal.ToString(), user: spell.User);
             }
         }
 
-        private async Task Update()
+        private async Task AddEvent(string type, string details, string subDetails = null, UserV2ViewModel user = null)
         {
-            JObject jobj = new JObject();
-            jobj[TypeReplacementKey] = this.CurrentReplacements[TypeReplacementKey];
-            jobj[DetailsReplacementKey] = this.CurrentReplacements[DetailsReplacementKey];
-            jobj[SubDetailsReplacementKey] = this.CurrentReplacements[SubDetailsReplacementKey];
-            await this.Update("EventListAdd", jobj);
+            this.Events.Add(new OverlayEventListEventV3Model()
+            {
+                Type = type,
+                Details = details,
+                SubDetails = subDetails
+            });
+
+            await this.Update("EventListAdd", new Dictionary<string, string>()
+            {
+                { TypeReplacementKey, type },
+                { DetailsReplacementKey, details },
+                { SubDetailsReplacementKey, subDetails }
+            },
+            new CommandParametersModel(user));
         }
     }
 }
