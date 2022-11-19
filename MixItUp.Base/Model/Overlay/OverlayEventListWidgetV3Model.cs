@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.ViewModel.Chat.Trovo;
@@ -36,24 +35,16 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public HashSet<OverlayEventListWidgetV3Type> EventTypes { get; set; } = new HashSet<OverlayEventListWidgetV3Type>();
 
-        [DataMember]
-        public OverlayTextItemV3Model TextItem { get; set; }
-
-        public OverlayEventListWidgetV3Model(string id, string name, Guid overlayEndpointID, OverlayTextItemV3Model item)
-            : base(id, name, overlayEndpointID, item)
+        public OverlayEventListWidgetV3Model(HashSet<OverlayEventListWidgetV3Type> eventTypes)
+            : base(OverlayItemV3Type.EventList)
         {
-            this.TextItem = item;
+            this.EventTypes = eventTypes;
         }
 
         [Obsolete]
-        public OverlayEventListWidgetV3Model() { }
+        public OverlayEventListWidgetV3Model() : base(OverlayItemV3Type.EventList) { }
 
-        public override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
-        {
-            return await this.Item.GetProcessedItem(overlayEndpointService, parameters, this.CurrentReplacements);
-        }
-
-        protected override async Task EnableInternal()
+        public override async Task Enable()
         {
             foreach (OverlayEventListWidgetV3Type eventType in this.EventTypes)
             {
@@ -85,10 +76,10 @@ namespace MixItUp.Base.Model.Overlay
                 }
             }
 
-            await base.EnableInternal();
+            await base.Enable();
         }
 
-        protected override async Task DisableInternal()
+        public override async Task Disable()
         {
             foreach (OverlayEventListWidgetV3Type eventType in this.EventTypes)
             {
@@ -120,7 +111,7 @@ namespace MixItUp.Base.Model.Overlay
                 }
             }
 
-            await base.DisableInternal();
+            await base.Disable();
         }
 
         private async void EventService_OnFollowOccurred(object sender, UserV2ViewModel user)

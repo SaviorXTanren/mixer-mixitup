@@ -9,7 +9,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 {
     public abstract class OverlayWidgetV3ViewModelBase : UIViewModelBase
     {
-        public string ID { get; set; }
+        public Guid ID { get; set; }
 
         public string Name { get; set; }
 
@@ -53,7 +53,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public OverlayWidgetV3ViewModelBase(OverlayItemV3Type type)
         {
-            this.ID = OverlayItemV3ModelBase.GenerateOverlayItemID();
+            this.ID = Guid.NewGuid();
 
             switch (type)
             {
@@ -86,7 +86,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().GetDefaultOverlayEndpoint();
         }
 
-        public OverlayWidgetV3ViewModelBase(OverlayWidgetV3Model widget)
+        public OverlayWidgetV3ViewModelBase(OverlayItemV3ModelBase widget)
         {
             this.ID = widget.ID;
             this.Name = widget.Name;
@@ -95,28 +95,28 @@ namespace MixItUp.Base.ViewModel.Overlay
             switch (widget.Type)
             {
                 case OverlayItemV3Type.Text:
-                    this.Item = new OverlayTextItemV3ViewModel((OverlayTextItemV3Model)widget.Item);
+                    this.Item = new OverlayTextItemV3ViewModel((OverlayTextItemV3Model)widget);
                     break;
                 case OverlayItemV3Type.Image:
-                    this.Item = new OverlayImageItemV3ViewModel((OverlayImageItemV3Model)widget.Item);
+                    this.Item = new OverlayImageItemV3ViewModel((OverlayImageItemV3Model)widget);
                     break;
                 case OverlayItemV3Type.Video:
-                    this.Item = new OverlayVideoItemV3ViewModel((OverlayVideoItemV3Model)widget.Item);
+                    this.Item = new OverlayVideoItemV3ViewModel((OverlayVideoItemV3Model)widget);
                     break;
                 case OverlayItemV3Type.YouTube:
-                    this.Item = new OverlayYouTubeItemV3ViewModel((OverlayYouTubeItemV3Model)widget.Item);
+                    this.Item = new OverlayYouTubeItemV3ViewModel((OverlayYouTubeItemV3Model)widget);
                     break;
                 case OverlayItemV3Type.HTML:
-                    this.Item = new OverlayHTMLItemV3ViewModel((OverlayHTMLItemV3Model)widget.Item);
+                    this.Item = new OverlayHTMLItemV3ViewModel((OverlayHTMLItemV3Model)widget);
                     break;
                 case OverlayItemV3Type.WebPage:
-                    this.Item = new OverlayWebPageItemV3ViewModel((OverlayWebPageItemV3Model)widget.Item);
+                    this.Item = new OverlayWebPageItemV3ViewModel((OverlayWebPageItemV3Model)widget);
                     break;
                 case OverlayItemV3Type.Timer:
-                    this.Item = new OverlayTimerItemV3ViewModel((OverlayTimerItemV3Model)widget.Item);
+                    this.Item = new OverlayTimerItemV3ViewModel((OverlayTimerItemV3Model)widget);
                     break;
                 case OverlayItemV3Type.Label:
-                    this.Item = new OverlayTextItemV3ViewModel((OverlayTextItemV3Model)widget.Item);
+                    this.Item = new OverlayTextItemV3ViewModel((OverlayTextItemV3Model)widget);
                     break;
             }
 
@@ -133,15 +133,15 @@ namespace MixItUp.Base.ViewModel.Overlay
             return this.Item.Validate();
         }
 
-        public OverlayWidgetV3Model GetItem()
+        public OverlayItemV3ModelBase GetItem()
         {
-            OverlayWidgetV3Model widget = this.GetItemInternal();
+            OverlayItemV3ModelBase widget = this.GetItemInternal();
 
-            this.ItemPosition.SetPosition(widget.Item);
+            this.ItemPosition.SetPosition(widget);
 
             return widget;
         }
 
-        protected abstract OverlayWidgetV3Model GetItemInternal();
+        protected abstract OverlayItemV3ModelBase GetItemInternal();
     }
 }

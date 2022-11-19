@@ -10,6 +10,7 @@ using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -36,12 +37,12 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayLabelItemV3Model : OverlayVisualTextItemV3ModelBase
     {
-        public const string UsernameReplacementKey = "Username";
+        public const string NameReplacementKey = "Name";
         public const string AmountReplacementKey = "Amount";
 
         public static readonly string DefaultAmountHTML = Resources.OverlayLabelAmountDefaultHTML;
-        public static readonly string DefaultUsernameHTML = Resources.OverlayLabelUsernameDefaultHTML;
-        public static readonly string DefaultUsernameAmountHTML = Resources.OverlayLabelUsernameAmountDefaultHTML;
+        public static readonly string DefaultNameHTML = Resources.OverlayLabelNameDefaultHTML;
+        public static readonly string DefaultNameAmountHTML = Resources.OverlayLabelNameAmountDefaultHTML;
         public static readonly string DefaultCSS = Resources.OverlayTextDefaultCSS;
         public static readonly string DefaultJavascript = Resources.OverlayLabelDefaultJavascript;
 
@@ -52,38 +53,25 @@ namespace MixItUp.Base.Model.Overlay
         public string CounterName { get; set; }
 
         [DataMember]
-        public OverlayTextItemV3Model TextItem { get; set; }
+        public string CurrentName { get; set; }
+        [DataMember]
+        public string CurrentAmount { get; set; }
 
         private CancellationTokenSource refreshCancellationTokenSource;
 
         private long trackingAmount = 0;
 
-        public OverlayLabelItemV3Model(string id, string name, Guid overlayEndpointID, OverlayTextItemV3Model item)
-            : base(id, name, overlayEndpointID, item)
+        public OverlayLabelItemV3Model(OverlayLabelWidgetV3Type labelType)
+            : base(OverlayItemV3Type.Label)
         {
-            this.TextItem = item;
+            this.LabelType = labelType;
         }
 
         [Obsolete]
-        public OverlayLabelItemV3Model() { }
+        public OverlayLabelItemV3Model() : base(OverlayItemV3Type.Label) { }
 
-        public override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
+        public override async Task Enable()
         {
-            return await this.Item.GetProcessedItem(overlayEndpointService, parameters, this.CurrentReplacements);
-        }
-
-        protected override async Task EnableInternal()
-        {
-            if (!this.CurrentReplacements.ContainsKey(UsernameReplacementKey))
-            {
-                this.CurrentReplacements[UsernameReplacementKey] = String.Empty;
-            }
-
-            if (!this.CurrentReplacements.ContainsKey(AmountReplacementKey))
-            {
-                this.CurrentReplacements[AmountReplacementKey] = String.Empty;
-            }
-
             if (this.LabelType == OverlayLabelWidgetV3Type.Viewers || this.LabelType == OverlayLabelWidgetV3Type.Chatters)
             {
                 if (this.refreshCancellationTokenSource != null)
@@ -97,18 +85,18 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     do
                     {
-                        string old = this.TextItem.Text;
+                        string old = this.Text;
 
                         if (this.LabelType == OverlayLabelWidgetV3Type.Viewers)
                         {
-                            this.CurrentReplacements[AmountReplacementKey] = ServiceManager.Get<ChatService>().GetViewerCount().ToString();
+                            this.CurrentAmount = ServiceManager.Get<ChatService>().GetViewerCount().ToString();
                         }
                         else if (this.LabelType == OverlayLabelWidgetV3Type.Chatters)
                         {
-                            this.CurrentReplacements[AmountReplacementKey] = ServiceManager.Get<UserService>().ActiveUserCount.ToString();
+                            this.CurrentAmount = ServiceManager.Get<UserService>().ActiveUserCount.ToString();
                         }
 
-                        if (!string.Equals(old, this.TextItem.Text))
+                        if (!string.Equals(old, this.Text))
                         {
                             await this.Update();
                         }
@@ -138,7 +126,7 @@ namespace MixItUp.Base.Model.Overlay
                         this.trackingAmount = (await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetFollowingUsers(ServiceManager.Get<GlimeshSessionService>().User, int.MaxValue)).Count();
                     }
 
-                    this.CurrentReplacements[AmountReplacementKey] = this.trackingAmount.ToString();
+                    this.CurrentAmount = this.trackingAmount.ToString();
                 }
             }
             else if (this.LabelType == OverlayLabelWidgetV3Type.LatestRaid)
@@ -166,7 +154,7 @@ namespace MixItUp.Base.Model.Overlay
                         this.trackingAmount = 0;
                     }
 
-                    this.CurrentReplacements[AmountReplacementKey] = this.trackingAmount.ToString();
+                    this.CurrentAmount = this.trackingAmount.ToString();
                 }
             }
             else if (this.LabelType == OverlayLabelWidgetV3Type.LatestDonation)
@@ -185,10 +173,11 @@ namespace MixItUp.Base.Model.Overlay
             {
                 CounterModel.OnCounterUpdated += CounterModel_OnCounterUpdated;
             }
-            await base.EnableInternal();
+
+            await base.Enable();
         }
 
-        protected override async Task DisableInternal()
+        public override async Task Disable()
         {
             if (this.LabelType == OverlayLabelWidgetV3Type.Viewers || this.LabelType == OverlayLabelWidgetV3Type.Chatters)
             {
@@ -232,27 +221,43 @@ namespace MixItUp.Base.Model.Overlay
             {
                 CounterModel.OnCounterUpdated -= CounterModel_OnCounterUpdated;
             }
-            await base.DisableInternal();
+
+            await base.Disable();
+        }
+
+        protected override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
+        {
+            item = await base.GetProcessedItem(item, overlayEndpointService, parameters);
+
+            item.HTML = ReplaceProperty(item.HTML, "Name", this.CurrentName);
+            item.CSS = ReplaceProperty(item.CSS, "Name", this.CurrentName);
+            item.Javascript = ReplaceProperty(item.Javascript, "Name", this.CurrentName);
+
+            item.HTML = ReplaceProperty(item.HTML, "Amount", this.CurrentAmount);
+            item.CSS = ReplaceProperty(item.CSS, "Amount", this.CurrentAmount);
+            item.Javascript = ReplaceProperty(item.Javascript, "Amount", this.CurrentAmount);
+
+            return item;
         }
 
         private async void EventService_OnFollowOccurred(object sender, UserV2ViewModel user)
         {
             if (this.LabelType == OverlayLabelWidgetV3Type.LastestFollower)
             {
-                this.CurrentReplacements[UsernameReplacementKey] = user.DisplayName;
+                this.CurrentName = user.DisplayName;
             }
             else if (this.LabelType == OverlayLabelWidgetV3Type.TotalFollowers)
             {
                 this.trackingAmount++;
-                this.CurrentReplacements[AmountReplacementKey] = this.trackingAmount.ToString();
+                this.CurrentAmount = this.trackingAmount.ToString();
             }
             await this.Update();
         }
 
         private async void EventService_OnRaidOccurred(object sender, Tuple<UserV2ViewModel, int> raid)
         {
-            this.CurrentReplacements[UsernameReplacementKey] = raid.Item1.DisplayName;
-            this.CurrentReplacements[AmountReplacementKey] = raid.Item2.ToString();
+            this.CurrentName = raid.Item1.DisplayName;
+            this.CurrentAmount = raid.Item2.ToString();
             await this.Update();
         }
 
@@ -260,13 +265,13 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.LabelType == OverlayLabelWidgetV3Type.LatestSubscriber)
             {
-                this.CurrentReplacements[UsernameReplacementKey] = user.DisplayName;
-                this.CurrentReplacements[AmountReplacementKey] = 1.ToString();
+                this.CurrentName = user.DisplayName;
+                this.CurrentAmount = 1.ToString();
             }
             else if (this.LabelType == OverlayLabelWidgetV3Type.TotalSubscribers)
             {
                 this.trackingAmount++;
-                this.CurrentReplacements[AmountReplacementKey] = this.trackingAmount.ToString();
+                this.CurrentAmount = this.trackingAmount.ToString();
             }
             await this.Update();
         }
@@ -275,13 +280,13 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.LabelType == OverlayLabelWidgetV3Type.LatestSubscriber)
             {
-                this.CurrentReplacements[UsernameReplacementKey] = resubscribe.Item1.DisplayName;
-                this.CurrentReplacements[AmountReplacementKey] = resubscribe.Item2.ToString();
+                this.CurrentName = resubscribe.Item1.DisplayName;
+                this.CurrentAmount = resubscribe.Item2.ToString();
             }
             else if (this.LabelType == OverlayLabelWidgetV3Type.TotalSubscribers)
             {
                 this.trackingAmount++;
-                this.CurrentReplacements[AmountReplacementKey] = this.trackingAmount.ToString();
+                this.CurrentAmount = this.trackingAmount.ToString();
             }
             await this.Update();
         }
@@ -290,13 +295,13 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.LabelType == OverlayLabelWidgetV3Type.LatestSubscriber)
             {
-                this.CurrentReplacements[AmountReplacementKey] = subscriptionGifted.Item2.DisplayName;
-                this.CurrentReplacements[AmountReplacementKey] = 1.ToString();
+                this.CurrentName = subscriptionGifted.Item2.DisplayName;
+                this.CurrentAmount = 1.ToString();
             }
             else if (this.LabelType == OverlayLabelWidgetV3Type.TotalSubscribers)
             {
                 this.trackingAmount++;
-                this.CurrentReplacements[AmountReplacementKey] = this.trackingAmount.ToString();
+                this.CurrentAmount = this.trackingAmount.ToString();
             }
             await this.Update();
         }
@@ -304,21 +309,21 @@ namespace MixItUp.Base.Model.Overlay
         private async void EventService_OnMassSubscriptionsGiftedOccurred(object sender, Tuple<UserV2ViewModel, int> massSubscriptionsGifted)
         {
             this.trackingAmount += massSubscriptionsGifted.Item2;
-            this.CurrentReplacements[AmountReplacementKey] = this.trackingAmount.ToString();
+            this.CurrentAmount = this.trackingAmount.ToString();
             await this.Update();
         }
 
         private async void EventService_OnDonationOccurred(object sender, UserDonationModel donation)
         {
-            this.CurrentReplacements[UsernameReplacementKey] = donation.User.DisplayName;
-            this.CurrentReplacements[AmountReplacementKey] = donation.AmountText;
+            this.CurrentName = donation.User.DisplayName;
+            this.CurrentAmount = donation.AmountText;
             await this.Update();
         }
 
         private async void EventService_OnTwitchBitsCheeredOccurred(object sender, TwitchUserBitsCheeredModel bitsCheered)
         {
-            this.CurrentReplacements[UsernameReplacementKey] = bitsCheered.User.DisplayName;
-            this.CurrentReplacements[AmountReplacementKey] = bitsCheered.Amount.ToString();
+            this.CurrentName = bitsCheered.User.DisplayName;
+            this.CurrentAmount = bitsCheered.Amount.ToString();
             await this.Update();
         }
 
@@ -326,8 +331,8 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (spell.IsElixir)
             {
-                this.CurrentReplacements[UsernameReplacementKey] = spell.User.DisplayName;
-                this.CurrentReplacements[AmountReplacementKey] = spell.ValueTotal.ToString();
+                this.CurrentName = spell.User.DisplayName;
+                this.CurrentAmount = spell.ValueTotal.ToString();
                 await this.Update();
             }
         }
@@ -336,17 +341,21 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (string.Equals(counter.Name, this.CounterName, StringComparison.OrdinalIgnoreCase))
             {
-                this.CurrentReplacements[AmountReplacementKey] = counter.Amount.ToString();
+                this.CurrentAmount = counter.Amount.ToString();
                 await this.Update();
             }
         }
 
         private async Task Update()
         {
-            JObject jobj = new JObject();
-            jobj[UsernameReplacementKey] = this.CurrentReplacements[UsernameReplacementKey];
-            jobj[AmountReplacementKey] = this.CurrentReplacements[AmountReplacementKey];
-            await this.Update("LabelUpdate", jobj);
+            await this.Update(
+                "LabelUpdate",
+                new Dictionary<string, string>()
+                {
+                    { NameReplacementKey, this.CurrentName },
+                    { AmountReplacementKey, this.CurrentAmount }
+                },
+                new CommandParametersModel());
         }
     }
 }

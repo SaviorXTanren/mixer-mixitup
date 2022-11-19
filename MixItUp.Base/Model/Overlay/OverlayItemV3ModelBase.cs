@@ -1,9 +1,11 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
@@ -18,6 +20,7 @@ namespace MixItUp.Base.Model.Overlay
         WebPage,
         Timer,
         Label,
+        EventList
     }
 
     [DataContract]
@@ -30,9 +33,13 @@ namespace MixItUp.Base.Model.Overlay
 
         public static int zIndexCounter = 0;
 
-        public static string GenerateOverlayItemID() { return "X" + Guid.NewGuid().ToString().Replace('-', 'X'); }
+        public static string ReplaceProperty(string text, string name, string value) { return text.Replace($"{{{name}}}", value ?? string.Empty); }
 
-        public static string ReplaceProperty(string text, string name, string value) { return text.Replace($"{{{name}}}", value); }
+        [DataMember]
+        public string Name { get; set; }
+
+        [DataMember]
+        public Guid OverlayEndpointID { get; set; }
 
         [DataMember]
         public OverlayItemV3Type Type { get; set; }
@@ -57,31 +64,98 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int Layer { get; set; }
 
+        [DataMember]
+        public int RefreshTime { get; set; }
+
+        private CancellationTokenSource refreshCancellationTokenSource;
+
         protected OverlayItemV3ModelBase() { }
 
         public OverlayItemV3ModelBase(OverlayItemV3Type type) { this.Type = type; }
 
-        public virtual Task Enable() { return Task.CompletedTask; }
+        public virtual async Task Enable()
+        {
+            OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlayEndpointService(this.OverlayEndpointID);
+            if (overlay != null)
+            {
+                await overlay.SendItem("Enable", this, new CommandParametersModel());
+            }
 
-        public virtual Task Disable() { return Task.CompletedTask; }
+            if (this.RefreshTime > 0)
+            {
+                if (this.refreshCancellationTokenSource != null)
+                {
+                    this.refreshCancellationTokenSource.Cancel();
+                }
+                this.refreshCancellationTokenSource = new CancellationTokenSource();
 
-        public async Task<OverlayOutputV3Model> GetProcessedItem(OverlayEndpointService overlayEndpointService, CommandParametersModel parameters, Dictionary<string, string> replacements = null)
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                {
+                    do
+                    {
+                        await Task.Delay(1000 * this.RefreshTime);
+
+                        await this.Update("Update", null, new CommandParametersModel());
+
+                    } while (!cancellationToken.IsCancellationRequested);
+
+                }, this.refreshCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            }
+        }
+
+        public virtual async Task Update(string type, Dictionary<string, string> data, CommandParametersModel parameters)
+        {
+            JObject jobj = new JObject();
+            if (data != null)
+            {
+                foreach (var kvp in data)
+                {
+                    jobj[kvp.Key] = kvp.Value;
+                }
+            }
+
+            OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlayEndpointService(this.OverlayEndpointID);
+            if (overlay != null)
+            {
+                await overlay.SendJObject(type, this.TextID, jobj, parameters);
+            }
+        }
+
+        public virtual async Task Disable()
+        {
+            if (this.refreshCancellationTokenSource != null)
+            {
+                this.refreshCancellationTokenSource.Cancel();
+            }
+            this.refreshCancellationTokenSource = null;
+
+            OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlayEndpointService(this.OverlayEndpointID);
+            if (overlay != null)
+            {
+                await overlay.SendItem("Disable", this, new CommandParametersModel());
+            }
+        }
+
+        public async Task<OverlayOutputV3Model> GetProcessedItem(OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
         {
             OverlayOutputV3Model result = new OverlayOutputV3Model();
 
             result.ID = this.ID;
-            if (string.IsNullOrWhiteSpace(result.ID))
+            if (result.ID == Guid.Empty)
             {
-                result.ID = GenerateOverlayItemID();
+                result.ID = Guid.NewGuid();
             }
 
             result.HTML = this.HTML;
             result.CSS = this.CSS;
             result.Javascript = this.Javascript;
 
-            result.HTML = ReplaceProperty(result.HTML, "ID", result.ID);
-            result.CSS = ReplaceProperty(result.CSS, "ID", result.ID);
-            result.Javascript = ReplaceProperty(result.Javascript, "ID", result.ID);
+            string id = result.TextID;
+            result.HTML = ReplaceProperty(result.HTML, "ID", id);
+            result.CSS = ReplaceProperty(result.CSS, "ID", id);
+            result.Javascript = ReplaceProperty(result.Javascript, "ID", id);
 
             if (this.Layer == 0)
             {
@@ -158,16 +232,6 @@ namespace MixItUp.Base.Model.Overlay
             result.ExitAnimation.ApplyAnimationReplacements(result);
 
             result = await this.GetProcessedItem(result, overlayEndpointService, parameters);
-
-            if (replacements != null)
-            {
-                foreach (var kvp in replacements)
-                {
-                    result.HTML = ReplaceProperty(result.HTML, kvp.Key, kvp.Value);
-                    result.CSS = ReplaceProperty(result.CSS, kvp.Key, kvp.Value);
-                    result.Javascript = ReplaceProperty(result.Javascript, kvp.Key, kvp.Value);
-                }
-            }
 
             result.HTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(result.HTML, parameters);
             result.CSS = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(result.CSS, parameters);

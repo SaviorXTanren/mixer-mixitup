@@ -13467,11 +13467,11 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to function {ID}_update(username, amount)
+        ///   Looks up a localized string similar to function {ID}_update(name, amount)
         ///{
-        ///    var usernameElement = document.getElementById(&quot;label-username-{ID}&quot;);
-        ///    if (usernameElement != null) {
-        ///        usernameElement.innerHTML = username; 
+        ///    var nameElement = document.getElementById(&quot;label-name-{ID}&quot;);
+        ///    if (nameElement != null) {
+        ///        nameElement.innerHTML = name;
         ///    }
         ///    
         ///    var amountElement = document.getElementById(&quot;label-amount-{ID}&quot;);
@@ -13488,7 +13488,7 @@ namespace MixItUp.Base {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;p class=&quot;text-{ID}&quot;&gt;
-        ///    &lt;span id=&quot;label-username-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
+        ///    &lt;span id=&quot;label-name-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
         ///        {Username}
         ///    &lt;/span&gt;
         ///    -
@@ -13497,20 +13497,20 @@ namespace MixItUp.Base {
         ///    &lt;/span&gt;
         ///&lt;/p&gt;.
         /// </summary>
-        public static string OverlayLabelUsernameAmountDefaultHTML {
+        public static string OverlayLabelNameAmountDefaultHTML {
             get {
-                return ResourceManager.GetString("OverlayLabelUsernameAmountDefaultHTML", resourceCulture);
+                return ResourceManager.GetString("OverlayLabelNameAmountDefaultHTML", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;label-username-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
+        ///   Looks up a localized string similar to &lt;p id=&quot;label-name-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
         ///    {Username}
         ///&lt;/p&gt;.
         /// </summary>
-        public static string OverlayLabelUsernameDefaultHTML {
+        public static string OverlayLabelNameDefaultHTML {
             get {
-                return ResourceManager.GetString("OverlayLabelUsernameDefaultHTML", resourceCulture);
+                return ResourceManager.GetString("OverlayLabelNameDefaultHTML", resourceCulture);
             }
         }
         

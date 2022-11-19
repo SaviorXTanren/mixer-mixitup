@@ -7,7 +7,7 @@ namespace MixItUp.Base.Model.Overlay
     public class OverlayOutputV3Model
     {
         [DataMember]
-        public string ID { get; set; }
+        public Guid ID { get; set; }
 
         [DataMember]
         public string HTML { get; set; } = string.Empty;
@@ -25,5 +25,7 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayItemAnimationV3Model VisibleAnimation { get; set; } = new OverlayItemAnimationV3Model();
         [DataMember]
         public OverlayItemAnimationV3Model ExitAnimation { get; set; } = new OverlayItemAnimationV3Model();
+
+        public string TextID { get { return "X" + this.ID.ToString().Replace('-', 'X'); } }
     }
 }

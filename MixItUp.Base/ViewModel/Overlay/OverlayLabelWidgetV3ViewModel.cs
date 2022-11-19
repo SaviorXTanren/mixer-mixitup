@@ -11,7 +11,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         }
 
-        public OverlayLabelWidgetV3ViewModel(OverlayLabelItemV3Model widget)
+        public OverlayLabelWidgetV3ViewModel(OverlayItemV3ModelBase widget)
             : base(widget)
         {
 
@@ -29,9 +29,12 @@ namespace MixItUp.Base.ViewModel.Overlay
             return result;
         }
 
-        protected override OverlayWidgetV3Model GetItemInternal()
+        protected override OverlayItemV3ModelBase GetItemInternal()
         {
-            OverlayLabelItemV3Model widget = new OverlayLabelItemV3Model(this.ID, this.Name, this.OverlayEndpointID, (OverlayTextItemV3Model)this.Item.GetItem());
+            OverlayLabelItemV3Model widget = (OverlayLabelItemV3Model)this.Item.GetItem();
+            widget.ID = this.ID;
+            widget.Name = this.Name;
+            widget.OverlayEndpointID = this.OverlayEndpointID;
 
             widget.LabelType = OverlayLabelWidgetV3Type.Counter;
 

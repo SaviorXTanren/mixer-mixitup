@@ -9308,9 +9308,9 @@ namespace CustomNamespace
         {Amount}
 &lt;/p&gt;</value>
   </data>
-  <data name="OverlayLabelUsernameAmountDefaultHTML" xml:space="preserve">
+  <data name="OverlayLabelNameAmountDefaultHTML" xml:space="preserve">
     <value>&lt;p class="text-{ID}"&gt;
-    &lt;span id="label-username-{ID}" class="text-{ID}"&gt;
+    &lt;span id="label-name-{ID}" class="text-{ID}"&gt;
         {Username}
     &lt;/span&gt;
     -
@@ -9319,17 +9319,17 @@ namespace CustomNamespace
     &lt;/span&gt;
 &lt;/p&gt;</value>
   </data>
-  <data name="OverlayLabelUsernameDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="label-username-{ID}" class="text-{ID}"&gt;
+  <data name="OverlayLabelNameDefaultHTML" xml:space="preserve">
+    <value>&lt;p id="label-name-{ID}" class="text-{ID}"&gt;
     {Username}
 &lt;/p&gt;</value>
   </data>
   <data name="OverlayLabelDefaultJavascript" xml:space="preserve">
-    <value>function {ID}_update(username, amount)
+    <value>function {ID}_update(name, amount)
 {
-    var usernameElement = document.getElementById("label-username-{ID}");
-    if (usernameElement != null) {
-        usernameElement.innerHTML = username; 
+    var nameElement = document.getElementById("label-name-{ID}");
+    if (nameElement != null) {
+        nameElement.innerHTML = name;
     }
     
     var amountElement = document.getElementById("label-amount-{ID}");
