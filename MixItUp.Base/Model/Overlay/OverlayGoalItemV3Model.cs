@@ -245,16 +245,14 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async Task Update(double amount)
+        private async Task Update()
         {
-
-
             await this.Update(
                 "GoalUpdate",
                 new Dictionary<string, string>()
                 {
                     { nameof(this.CurrentAmount), this.CurrentAmount },
-                    { "Percentage", this.GoalAmount },
+                    { nameof(this.GoalAmount), this.GoalAmount },
                     { nameof(this.Width), this.Width.ToString() },
                 },
                 new CommandParametersModel());

@@ -13445,8 +13445,10 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to function update_{ID}(amount, percentage, width)
+        ///   Looks up a localized string similar to function update_{ID}(amount, goal, width)
         ///{
+        ///    var percentage = (amount / goal)
+        ///
         ///    var textElement = document.getElementById(&quot;text-{ID}&quot;);
         ///    if (textElement != null) {
         ///        textElement.innerHTML = amount + &quot; (&quot; + Math.round(percentage * 100) + &quot;%)&quot;; 
@@ -13454,11 +13456,11 @@ namespace MixItUp.Base {
         ///    
         ///    var progressElement = document.getElementById(&quot;progress-{ID}&quot;);
         ///    if (progressElement != null) {
-        ///        progressElement.style.width = Math.min(percentage * width, width) + &quot;px&quot;;
+        ///        progressElement.style.width = Math.min(Math.round(percentage * width), width) + &quot;px&quot;;
         ///    }
         ///}
         ///
-        ///update_{ID}({CurrentAmount}, {Percentage}, {Width});.
+        ///update_{ID}({CurrentA [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayGoalDefaultJavascript {
             get {

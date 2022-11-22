@@ -9485,8 +9485,10 @@ function {ID}_removeOldest()
 &lt;p id="text-{ID}" class="text-{ID}" /&gt;</value>
   </data>
   <data name="OverlayGoalDefaultJavascript" xml:space="preserve">
-    <value>function update_{ID}(amount, percentage, width)
+    <value>function update_{ID}(amount, goal, width)
 {
+    var percentage = (amount / goal)
+
     var textElement = document.getElementById("text-{ID}");
     if (textElement != null) {
         textElement.innerHTML = amount + " (" + Math.round(percentage * 100) + "%)"; 
@@ -9494,11 +9496,11 @@ function {ID}_removeOldest()
     
     var progressElement = document.getElementById("progress-{ID}");
     if (progressElement != null) {
-        progressElement.style.width = Math.min(percentage * width, width) + "px";
+        progressElement.style.width = Math.min(Math.round(percentage * width), width) + "px";
     }
 }
 
-update_{ID}({CurrentAmount}, {Percentage}, {Width});</value>
+update_{ID}({CurrentAmount}, {GoalAmount}, {Width});</value>
   </data>
   <data name="TwitchChannelCharityDonation" xml:space="preserve">
     <value>Twitch Channel Charity Donation</value>
