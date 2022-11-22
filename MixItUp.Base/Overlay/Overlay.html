@@ -124,22 +124,23 @@
                             widgets.set(data.TextID, addItem(data));
                         }
                     }
-                    else if (packet.type == 'UpdateWidget') {
-                        if (data.Type == 'TimerAdjustTime') {
-                            window[data.TextID + "_adjustTime"](data.Time);
-                        }
-                        else if (data.Type == 'LabelUpdate') {
-                            window[data.TextID + "_update"](data.Username, data.Amount);
-                        }
-                        else if (data.Type == 'EventListAdd') {
-                            window[data.TextID + "_add"](data.Type, data.Details, data.SubDetails);
-                        }
-                    }
                     else if (packet.type == 'DisableWidget') {
                         if (widgets.has(data.TextID)) {
                             removeItem(widgets.get(data.TextID));
                             widgets.delete(data.TextID);
                         }
+                    }
+                    else if (data.Type == 'TimerAdjustTime') {
+                        window[data.TextID + "_adjustTime"](data.Time);
+                    }
+                    else if (data.Type == 'LabelUpdate') {
+                        window[data.TextID + "_update"](data.Username, data.Amount);
+                    }
+                    else if (data.Type == 'EventListAdd') {
+                        window[data.TextID + "_add"](data.Type, data.Details, data.SubDetails);
+                    }
+                    else if (data.Type == 'GoalUpdate') {
+                        window[data.TextID + "_update"](data.CurrentAmount, data.GoalAmount, data.Width);
                     }
                 }
             }

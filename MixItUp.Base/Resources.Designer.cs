@@ -13372,6 +13372,10 @@ namespace MixItUp.Base {
         ///{
         ///    var list = document.getElementById(&quot;list-{ID}&quot;);
         ///
+        ///    if (list.childElementCount &gt; {MaxToShow}) {
+        ///        {ID}_removeOldest();
+        ///    }
+        ///
         ///    var itemTemplate = document.querySelector(&quot;#item-{ID}&quot;);
         ///    const item = itemTemplate.content.cloneNode(true);
         ///    
@@ -13379,16 +13383,77 @@ namespace MixItUp.Base {
         ///    detailsElement.innerHTML = details;
         ///    
         ///    var subdetailsElement = item.querySelector(&quot;.subdetails-{ID}&quot;);
-        ///    subdetailsElement.innerHTML = subdetails;
-        ///
-        ///    list.appendChild(item);
-        ///}
-        ///
-        ///function {ID}_removeO [rest of string was truncated]&quot;;.
+        ///    subdetailsEl [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEventListDefaultJavascript {
             get {
                 return ResourceManager.GetString("OverlayEventListDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .background-{ID}
+        ///{
+        ///    position: absolute;
+        ///    background-color: {BackgroundColor};
+        ///    width: {Width}px;
+        ///    height: {Height}px;
+        ///}
+        ///
+        ///.progress-{ID}
+        ///{
+        ///    position: absolute;
+        ///    background-color: {ProgressColor};
+        ///    height: {Height}px;
+        ///}
+        ///
+        ///.text-{ID} {
+        ///    position: absolute;
+        ///    font-size: {FontSize}px;
+        ///    color: {FontColor};
+        ///    font-family: &apos;{FontFamily}&apos;;
+        ///    font-weight: {FontWeight};
+        ///    text-decoration: {TextDecoration};
+        ///    font-style: {FontStyle};
+        ///    text-align: {TextAlignm [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayGoalDefaultCSS {
+            get {
+                return ResourceManager.GetString("OverlayGoalDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div class=&quot;background-{ID}&quot;&gt;
+        ///  &lt;div id=&quot;progress-{ID}&quot; class=&quot;progress-{ID}&quot; /&gt;
+        ///&lt;/div&gt;
+        ///&lt;p id=&quot;text-{ID}&quot; class=&quot;text-{ID}&quot; /&gt;.
+        /// </summary>
+        public static string OverlayGoalDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayGoalDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to function update_{ID}(amount, percentage, width)
+        ///{
+        ///    var textElement = document.getElementById(&quot;text-{ID}&quot;);
+        ///    if (textElement != null) {
+        ///        textElement.innerHTML = amount + &quot; (&quot; + Math.round(percentage * 100) + &quot;%)&quot;; 
+        ///    }
+        ///    
+        ///    var progressElement = document.getElementById(&quot;progress-{ID}&quot;);
+        ///    if (progressElement != null) {
+        ///        progressElement.style.width = Math.min(percentage * width, width) + &quot;px&quot;;
+        ///    }
+        ///}
+        ///
+        ///update_{ID}({CurrentAmount}, {Percentage}, {Width});.
+        /// </summary>
+        public static string OverlayGoalDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayGoalDefaultJavascript", resourceCulture);
             }
         }
         

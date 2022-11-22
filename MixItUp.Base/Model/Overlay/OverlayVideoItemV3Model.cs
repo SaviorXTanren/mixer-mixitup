@@ -32,21 +32,21 @@ namespace MixItUp.Base.Model.Overlay
             string filepath = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.FilePath, parameters);
             filepath = RandomHelper.PickRandomFileFromDelimitedString(filepath);
 
-            item.HTML = ReplaceProperty(item.HTML, "FilePath", overlayEndpointService.GetURLForLocalFile(filepath, "video"));
-            item.CSS = ReplaceProperty(item.CSS, "FilePath", overlayEndpointService.GetURLForLocalFile(filepath, "video"));
-            item.Javascript = ReplaceProperty(item.Javascript, "FilePath", overlayEndpointService.GetURLForLocalFile(filepath, "video"));
+            item.HTML = ReplaceProperty(item.HTML, nameof(this.FilePath), overlayEndpointService.GetURLForLocalFile(filepath, "video"));
+            item.CSS = ReplaceProperty(item.CSS, nameof(this.FilePath), overlayEndpointService.GetURLForLocalFile(filepath, "video"));
+            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.FilePath), overlayEndpointService.GetURLForLocalFile(filepath, "video"));
 
-            item.HTML = ReplaceProperty(item.HTML, "Volume", this.Volume.ToString());
-            item.CSS = ReplaceProperty(item.CSS, "Volume", this.Volume.ToString());
-            item.Javascript = ReplaceProperty(item.Javascript, "Volume", this.Volume.ToString());
+            item.HTML = ReplaceProperty(item.HTML, nameof(this.Volume), this.Volume.ToString());
+            item.CSS = ReplaceProperty(item.CSS, nameof(this.Volume), this.Volume.ToString());
+            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.Volume), this.Volume.ToString());
 
             if (this.Loop)
             {
-                item.HTML = ReplaceProperty(item.HTML, "Loop", "loop");
+                item.HTML = ReplaceProperty(item.HTML, nameof(this.Loop), "loop");
             }
             else
             {
-                item.HTML = ReplaceProperty(item.HTML, "Loop", string.Empty);
+                item.HTML = ReplaceProperty(item.HTML, nameof(this.Loop), string.Empty);
             }
 
             string extension = Path.GetExtension(filepath);

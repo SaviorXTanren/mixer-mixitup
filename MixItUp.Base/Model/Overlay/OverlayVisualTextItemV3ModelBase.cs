@@ -41,21 +41,21 @@ namespace MixItUp.Base.Model.Overlay
         {
             item = await base.GetProcessedItem(item, overlayEndpointService, parameters);
 
-            item.HTML = ReplaceProperty(item.HTML, "Text", this.Text);
-            item.CSS = ReplaceProperty(item.CSS, "Text", this.Text);
-            item.Javascript = ReplaceProperty(item.Javascript, "Text", this.Text);
+            item.HTML = ReplaceProperty(item.HTML, nameof(this.Text), this.Text);
+            item.CSS = ReplaceProperty(item.CSS, nameof(this.Text), this.Text);
+            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.Text), this.Text);
 
-            item.HTML = ReplaceProperty(item.HTML, "FontSize", this.FontSize.ToString());
-            item.CSS = ReplaceProperty(item.CSS, "FontSize", this.FontSize.ToString());
-            item.Javascript = ReplaceProperty(item.Javascript, "FontSize", this.FontSize.ToString());
+            item.HTML = ReplaceProperty(item.HTML, nameof(this.FontSize), this.FontSize.ToString());
+            item.CSS = ReplaceProperty(item.CSS, nameof(this.FontSize), this.FontSize.ToString());
+            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.FontSize), this.FontSize.ToString());
 
             item.HTML = ReplaceProperty(item.HTML, "FontFamily", this.FontName);
             item.CSS = ReplaceProperty(item.CSS, "FontFamily", this.FontName);
             item.Javascript = ReplaceProperty(item.Javascript, "FontFamily", this.FontName);
 
-            item.HTML = ReplaceProperty(item.HTML, "FontColor", this.FontColor);
-            item.CSS = ReplaceProperty(item.CSS, "FontColor", this.FontColor);
-            item.Javascript = ReplaceProperty(item.Javascript, "FontColor", this.FontColor);
+            item.HTML = ReplaceProperty(item.HTML, nameof(this.FontColor), this.FontColor);
+            item.CSS = ReplaceProperty(item.CSS, nameof(this.FontColor), this.FontColor);
+            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.FontColor), this.FontColor);
 
             item.HTML = ReplaceProperty(item.HTML, "FontWeight", this.Bold ? "bold" : "normal");
             item.CSS = ReplaceProperty(item.CSS, "FontWeight", this.Bold ? "bold" : "normal");
@@ -69,9 +69,9 @@ namespace MixItUp.Base.Model.Overlay
             item.CSS = ReplaceProperty(item.CSS, "FontStyle", this.Italics ? "italic" : "normal");
             item.Javascript = ReplaceProperty(item.Javascript, "FontStyle", this.Italics ? "italic" : "normal");
 
-            item.HTML = ReplaceProperty(item.HTML, "TextAlignment", this.TextAlignment.ToString().ToLower());
-            item.CSS = ReplaceProperty(item.CSS, "TextAlignment", this.TextAlignment.ToString().ToLower());
-            item.Javascript = ReplaceProperty(item.Javascript, "TextAlignment", this.TextAlignment.ToString().ToLower());
+            item.HTML = ReplaceProperty(item.HTML, nameof(this.TextAlignment), this.TextAlignment.ToString().ToLower());
+            item.CSS = ReplaceProperty(item.CSS, nameof(this.TextAlignment), this.TextAlignment.ToString().ToLower());
+            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.TextAlignment), this.TextAlignment.ToString().ToLower());
 
             if (!string.IsNullOrEmpty(this.ShadowColor))
             {

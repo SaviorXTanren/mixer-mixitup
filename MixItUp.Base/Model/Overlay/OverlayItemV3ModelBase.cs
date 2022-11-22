@@ -20,7 +20,8 @@ namespace MixItUp.Base.Model.Overlay
         WebPage,
         Timer,
         Label,
-        EventList
+        EventList,
+        Goal,
     }
 
     [DataContract]
@@ -153,74 +154,74 @@ namespace MixItUp.Base.Model.Overlay
             result.Javascript = this.Javascript;
 
             string id = result.TextID;
-            result.HTML = ReplaceProperty(result.HTML, "ID", id);
-            result.CSS = ReplaceProperty(result.CSS, "ID", id);
-            result.Javascript = ReplaceProperty(result.Javascript, "ID", id);
+            result.HTML = ReplaceProperty(result.HTML, nameof(this.ID), id);
+            result.CSS = ReplaceProperty(result.CSS, nameof(this.ID), id);
+            result.Javascript = ReplaceProperty(result.Javascript, nameof(this.ID), id);
 
             if (this.Layer == 0)
             {
                 zIndexCounter++;
-                result.HTML = ReplaceProperty(result.HTML, "Layer", zIndexCounter.ToString());
-                result.CSS = ReplaceProperty(result.CSS, "Layer", zIndexCounter.ToString());
-                result.Javascript = ReplaceProperty(result.Javascript, "Layer", zIndexCounter.ToString());
+                result.HTML = ReplaceProperty(result.HTML, nameof(this.Layer), zIndexCounter.ToString());
+                result.CSS = ReplaceProperty(result.CSS, nameof(this.Layer), zIndexCounter.ToString());
+                result.Javascript = ReplaceProperty(result.Javascript, nameof(this.Layer), zIndexCounter.ToString());
             }
             else
             {
-                result.HTML = ReplaceProperty(result.HTML, "Layer", this.Layer.ToString());
-                result.CSS = ReplaceProperty(result.CSS, "Layer", this.Layer.ToString());
-                result.Javascript = ReplaceProperty(result.Javascript, "Layer", this.Layer.ToString());
+                result.HTML = ReplaceProperty(result.HTML, nameof(this.Layer), this.Layer.ToString());
+                result.CSS = ReplaceProperty(result.CSS, nameof(this.Layer), this.Layer.ToString());
+                result.Javascript = ReplaceProperty(result.Javascript, nameof(this.Layer), this.Layer.ToString());
             }
 
-            result.HTML = ReplaceProperty(result.HTML, "XPosition", this.XPosition.ToString());
-            result.CSS = ReplaceProperty(result.CSS, "XPosition", this.XPosition.ToString());
-            result.Javascript = ReplaceProperty(result.Javascript, "XPosition", this.XPosition.ToString());
+            result.HTML = ReplaceProperty(result.HTML, nameof(this.XPosition), this.XPosition.ToString());
+            result.CSS = ReplaceProperty(result.CSS, nameof(this.XPosition), this.XPosition.ToString());
+            result.Javascript = ReplaceProperty(result.Javascript, nameof(this.XPosition), this.XPosition.ToString());
 
-            result.HTML = ReplaceProperty(result.HTML, "YPosition", this.YPosition.ToString());
-            result.CSS = ReplaceProperty(result.CSS, "YPosition", this.YPosition.ToString());
-            result.Javascript = ReplaceProperty(result.Javascript, "YPosition", this.YPosition.ToString());
+            result.HTML = ReplaceProperty(result.HTML, nameof(this.YPosition), this.YPosition.ToString());
+            result.CSS = ReplaceProperty(result.CSS, nameof(this.YPosition), this.YPosition.ToString());
+            result.Javascript = ReplaceProperty(result.Javascript, nameof(this.YPosition), this.YPosition.ToString());
 
             result.HTML = ReplaceProperty(result.HTML, "PositionType", this.IsPercentagePosition ? "%" : "px");
             result.CSS = ReplaceProperty(result.CSS, "PositionType", this.IsPercentagePosition ? "%" : "px");
             result.Javascript = ReplaceProperty(result.Javascript, "PositionType", this.IsPercentagePosition ? "%" : "px");
 
-            result.HTML = ReplaceProperty(result.HTML, "XTranslation", this.XTranslation.ToString());
-            result.CSS = ReplaceProperty(result.CSS, "XTranslation", this.XTranslation.ToString());
-            result.Javascript = ReplaceProperty(result.Javascript, "XTranslation", this.XTranslation.ToString());
+            result.HTML = ReplaceProperty(result.HTML, nameof(this.XTranslation), this.XTranslation.ToString());
+            result.CSS = ReplaceProperty(result.CSS, nameof(this.XTranslation), this.XTranslation.ToString());
+            result.Javascript = ReplaceProperty(result.Javascript, nameof(this.XTranslation), this.XTranslation.ToString());
 
-            result.HTML = ReplaceProperty(result.HTML, "YTranslation", this.YTranslation.ToString());
-            result.CSS = ReplaceProperty(result.CSS, "YTranslation", this.YTranslation.ToString());
-            result.Javascript = ReplaceProperty(result.Javascript, "YTranslation", this.YTranslation.ToString());
+            result.HTML = ReplaceProperty(result.HTML, nameof(this.YTranslation), this.YTranslation.ToString());
+            result.CSS = ReplaceProperty(result.CSS, nameof(this.YTranslation), this.YTranslation.ToString());
+            result.Javascript = ReplaceProperty(result.Javascript, nameof(this.YTranslation), this.YTranslation.ToString());
 
             if (this.Width > 0)
             {
-                result.HTML = ReplaceProperty(result.HTML, "Width", $"{this.Width}px");
-                result.CSS = ReplaceProperty(result.CSS, "Width", $"{this.Width}px");
-                result.Javascript = ReplaceProperty(result.Javascript, "Width", $"{this.Width}px");
+                result.HTML = ReplaceProperty(result.HTML, nameof(this.Width), $"{this.Width}px");
+                result.CSS = ReplaceProperty(result.CSS, nameof(this.Width), $"{this.Width}px");
+                result.Javascript = ReplaceProperty(result.Javascript, nameof(this.Width), $"{this.Width}px");
             }
             else
             {
-                result.HTML = ReplaceProperty(result.HTML, "Width", "auto");
-                result.CSS = ReplaceProperty(result.CSS, "Width", "auto");
-                result.Javascript = ReplaceProperty(result.Javascript, "Width", "auto");
+                result.HTML = ReplaceProperty(result.HTML, nameof(this.Width), "auto");
+                result.CSS = ReplaceProperty(result.CSS, nameof(this.Width), "auto");
+                result.Javascript = ReplaceProperty(result.Javascript, nameof(this.Width), "auto");
             }
 
             if (this.Height > 0)
             {
-                result.HTML = ReplaceProperty(result.HTML, "Height", $"{this.Height}px");
-                result.CSS = ReplaceProperty(result.CSS, "Height", $"{this.Height}px");
-                result.Javascript = ReplaceProperty(result.Javascript, "Height", $"{this.Height}px");
+                result.HTML = ReplaceProperty(result.HTML, nameof(this.Height), $"{this.Height}px");
+                result.CSS = ReplaceProperty(result.CSS, nameof(this.Height), $"{this.Height}px");
+                result.Javascript = ReplaceProperty(result.Javascript, nameof(this.Height), $"{this.Height}px");
             }
             else
             {
-                result.HTML = ReplaceProperty(result.HTML, "Height", "auto");
-                result.CSS = ReplaceProperty(result.CSS, "Height", "auto");
-                result.Javascript = ReplaceProperty(result.Javascript, "Height", "auto");
+                result.HTML = ReplaceProperty(result.HTML, nameof(this.Height), "auto");
+                result.CSS = ReplaceProperty(result.CSS, nameof(this.Height), "auto");
+                result.Javascript = ReplaceProperty(result.Javascript, nameof(this.Height), "auto");
             }
 
             result.Duration = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.Duration, parameters);
-            result.HTML = ReplaceProperty(result.HTML, "Duration", result.Duration);
-            result.CSS = ReplaceProperty(result.CSS, "Duration", result.Duration);
-            result.Javascript = ReplaceProperty(result.Javascript, "Duration", result.Duration);
+            result.HTML = ReplaceProperty(result.HTML, nameof(this.Duration), result.Duration);
+            result.CSS = ReplaceProperty(result.CSS, nameof(this.Duration), result.Duration);
+            result.Javascript = ReplaceProperty(result.Javascript, nameof(this.Duration), result.Duration);
 
             result.EntranceAnimation = this.EntranceAnimation;
             result.EntranceAnimation.ApplyAnimationReplacements(result);

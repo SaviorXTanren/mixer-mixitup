@@ -9418,6 +9418,10 @@ namespace CustomNamespace
 {
     var list = document.getElementById("list-{ID}");
 
+    if (list.childElementCount &gt; {MaxToShow}) {
+        {ID}_removeOldest();
+    }
+
     var itemTemplate = document.querySelector("#item-{ID}");
     const item = itemTemplate.content.cloneNode(true);
     
@@ -9434,11 +9438,63 @@ function {ID}_removeOldest()
 {
     var list = document.getElementById("list-{ID}");
     list.removeChild(list.firstElementChild);
-}
-
-{ID}_add({Type}, {Details}, {SubDetails});</value>
+}</value>
   </data>
   <data name="TwitchChannelHypeTrainLevelUp" xml:space="preserve">
     <value>Twitch Channel Hype Train Level Up</value>
+  </data>
+  <data name="OverlayGoalDefaultCSS" xml:space="preserve">
+    <value>.background-{ID}
+{
+    position: absolute;
+    background-color: {BackgroundColor};
+    width: {Width}px;
+    height: {Height}px;
+}
+
+.progress-{ID}
+{
+    position: absolute;
+    background-color: {ProgressColor};
+    height: {Height}px;
+}
+
+.text-{ID} {
+    position: absolute;
+    font-size: {FontSize}px;
+    color: {FontColor};
+    font-family: '{FontFamily}';
+    font-weight: {FontWeight};
+    text-decoration: {TextDecoration};
+    font-style: {FontStyle};
+    text-align: {TextAlignment};
+    text-shadow: {Shadow};
+    left: 50%;
+    top: 50%;
+    margin: auto;
+    transform: translate(-50%, -50%);
+}</value>
+  </data>
+  <data name="OverlayGoalDefaultHTML" xml:space="preserve">
+    <value>&lt;div class="background-{ID}"&gt;
+  &lt;div id="progress-{ID}" class="progress-{ID}" /&gt;
+&lt;/div&gt;
+&lt;p id="text-{ID}" class="text-{ID}" /&gt;</value>
+  </data>
+  <data name="OverlayGoalDefaultJavascript" xml:space="preserve">
+    <value>function update_{ID}(amount, percentage, width)
+{
+    var textElement = document.getElementById("text-{ID}");
+    if (textElement != null) {
+        textElement.innerHTML = amount + " (" + Math.round(percentage * 100) + "%)"; 
+    }
+    
+    var progressElement = document.getElementById("progress-{ID}");
+    if (progressElement != null) {
+        progressElement.style.width = Math.min(percentage * width, width) + "px";
+    }
+}
+
+update_{ID}({CurrentAmount}, {Percentage}, {Width});</value>
   </data>
 </root>

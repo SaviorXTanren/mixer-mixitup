@@ -21,9 +21,9 @@ namespace MixItUp.Base.Model.Overlay
         {
             item = await base.GetProcessedItem(item, overlayEndpointService, parameters);
 
-            item.HTML = ReplaceProperty(item.HTML, "URL", this.URL);
-            item.CSS = ReplaceProperty(item.CSS, "URL", this.URL);
-            item.Javascript = ReplaceProperty(item.Javascript, "URL", this.URL);
+            item.HTML = ReplaceProperty(item.HTML, nameof(this.URL), this.URL);
+            item.CSS = ReplaceProperty(item.CSS, nameof(this.URL), this.URL);
+            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.URL), this.URL);
 
             return item;
         }

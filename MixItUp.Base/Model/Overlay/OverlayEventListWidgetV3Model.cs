@@ -4,7 +4,6 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.User;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -36,10 +35,6 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayEventListWidgetV3Model : OverlayListItemV3ModelBase
     {
-        public const string TypeReplacementKey = "Type";
-        public const string DetailsReplacementKey = "Details";
-        public const string SubDetailsReplacementKey = "SubDetails";
-
         public static readonly string DefaultHTML = Resources.OverlayEventListDefaultHTML;
         public static readonly string DefaultCSS = Resources.OverlayEventListDefaultCSS;
         public static readonly string DefaultJavascript = Resources.OverlayEventListDefaultJavascript;
@@ -48,7 +43,7 @@ namespace MixItUp.Base.Model.Overlay
         public HashSet<OverlayEventListWidgetV3Type> EventTypes { get; set; } = new HashSet<OverlayEventListWidgetV3Type>();
 
         [DataMember]
-        public List<OverlayEventListEventV3Model> Events { get; set; } = new List<OverlayEventListEventV3Model>();
+        public List<OverlayEventListEventV3Model> CurrentEvents { get; set; } = new List<OverlayEventListEventV3Model>();
 
         public OverlayEventListWidgetV3Model(HashSet<OverlayEventListWidgetV3Type> eventTypes)
             : base(OverlayItemV3Type.EventList)
@@ -76,6 +71,7 @@ namespace MixItUp.Base.Model.Overlay
                     EventService.OnSubscribeOccurred += EventService_OnSubscribeOccurred;
                     EventService.OnResubscribeOccurred += EventService_OnResubscribeOccurred;
                     EventService.OnSubscriptionGiftedOccurred += EventService_OnSubscriptionGiftedOccurred;
+                    EventService.OnMassSubscriptionsGiftedOccurred += EventService_OnMassSubscriptionsGiftedOccurred;
                 }
                 else if (eventType == OverlayEventListWidgetV3Type.Donation)
                 {
@@ -111,6 +107,7 @@ namespace MixItUp.Base.Model.Overlay
                     EventService.OnSubscribeOccurred -= EventService_OnSubscribeOccurred;
                     EventService.OnResubscribeOccurred -= EventService_OnResubscribeOccurred;
                     EventService.OnSubscriptionGiftedOccurred -= EventService_OnSubscriptionGiftedOccurred;
+                    EventService.OnMassSubscriptionsGiftedOccurred -= EventService_OnMassSubscriptionsGiftedOccurred;
                 }
                 else if (eventType == OverlayEventListWidgetV3Type.Donation)
                 {
@@ -127,6 +124,31 @@ namespace MixItUp.Base.Model.Overlay
             }
 
             await base.Disable();
+        }
+
+        public async Task AddEvent(string type, string details, string subDetails = null, UserV2ViewModel user = null)
+        {
+            OverlayEventListEventV3Model newEvent = new OverlayEventListEventV3Model()
+            {
+                Type = type,
+                Details = details,
+                SubDetails = subDetails
+            };
+
+            this.CurrentEvents.Add(newEvent);
+
+            if (this.CurrentEvents.Count > this.MaxToShow)
+            {
+                this.CurrentEvents.RemoveAt(0);
+            }
+
+            await this.Update("EventListAdd", new Dictionary<string, string>()
+            {
+                { nameof(newEvent.Type), newEvent.Type },
+                { nameof(newEvent.Details), newEvent.Details },
+                { nameof(newEvent.SubDetails), newEvent.SubDetails }
+            },
+            new CommandParametersModel(user));
         }
 
         private async void EventService_OnFollowOccurred(object sender, UserV2ViewModel user)
@@ -175,24 +197,6 @@ namespace MixItUp.Base.Model.Overlay
             {
                 await this.AddEvent(MixItUp.Base.Resources.TrovoSpell, spell.User.DisplayName, subDetails: spell.ValueTotal.ToString(), user: spell.User);
             }
-        }
-
-        private async Task AddEvent(string type, string details, string subDetails = null, UserV2ViewModel user = null)
-        {
-            this.Events.Add(new OverlayEventListEventV3Model()
-            {
-                Type = type,
-                Details = details,
-                SubDetails = subDetails
-            });
-
-            await this.Update("EventListAdd", new Dictionary<string, string>()
-            {
-                { TypeReplacementKey, type },
-                { DetailsReplacementKey, details },
-                { SubDetailsReplacementKey, subDetails }
-            },
-            new CommandParametersModel(user));
         }
     }
 }

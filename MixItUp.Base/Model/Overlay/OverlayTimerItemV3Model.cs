@@ -42,13 +42,13 @@ namespace MixItUp.Base.Model.Overlay
         protected override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
         {
             string countUp = this.CountUp.ToString().ToLower();
-            item.HTML = ReplaceProperty(item.HTML, "CountUp", countUp);
-            item.CSS = ReplaceProperty(item.CSS, "CountUp", countUp);
-            item.Javascript = ReplaceProperty(item.Javascript, "CountUp", countUp);
+            item.HTML = ReplaceProperty(item.HTML, nameof(this.CountUp), countUp);
+            item.CSS = ReplaceProperty(item.CSS, nameof(this.CountUp), countUp);
+            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.CountUp), countUp);
 
-            item.HTML = ReplaceProperty(item.HTML, "DisplayFormat", this.DisplayFormat);
-            item.CSS = ReplaceProperty(item.CSS, "DisplayFormat", this.DisplayFormat);
-            item.Javascript = ReplaceProperty(item.Javascript, "DisplayFormat", this.DisplayFormat);
+            item.HTML = ReplaceProperty(item.HTML, nameof(this.DisplayFormat), this.DisplayFormat);
+            item.CSS = ReplaceProperty(item.CSS, nameof(this.DisplayFormat), this.DisplayFormat);
+            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.DisplayFormat), this.DisplayFormat);
 
             item = await base.GetProcessedItem(item, overlayEndpointService, parameters);
 

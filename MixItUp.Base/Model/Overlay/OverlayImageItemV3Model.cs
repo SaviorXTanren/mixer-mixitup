@@ -25,9 +25,9 @@ namespace MixItUp.Base.Model.Overlay
             string filepath = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.FilePath, parameters);
             filepath = RandomHelper.PickRandomFileFromDelimitedString(filepath);
 
-            item.HTML = ReplaceProperty(item.HTML, "FilePath", overlayEndpointService.GetURLForLocalFile(filepath, "image"));
-            item.CSS = ReplaceProperty(item.CSS, "FilePath", overlayEndpointService.GetURLForLocalFile(filepath, "image"));
-            item.Javascript = ReplaceProperty(item.Javascript, "FilePath", overlayEndpointService.GetURLForLocalFile(filepath, "image"));
+            item.HTML = ReplaceProperty(item.HTML, nameof(this.FilePath), overlayEndpointService.GetURLForLocalFile(filepath, "image"));
+            item.CSS = ReplaceProperty(item.CSS, nameof(this.FilePath), overlayEndpointService.GetURLForLocalFile(filepath, "image"));
+            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.FilePath), overlayEndpointService.GetURLForLocalFile(filepath, "image"));
 
             return item;
         }
