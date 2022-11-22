@@ -982,13 +982,17 @@ namespace MixItUp.Base.Util
                             if (tUser != null)
                             {
                                 Task<Twitch.Base.Models.NewAPI.Channels.ChannelInformationModel> tChannel = ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelInformation(tUser);
-                                Task<GameModel> game = ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIGameByID(ServiceManager.Get<TwitchSessionService>().Channel?.game_id);
                                 Task<Twitch.Base.Models.NewAPI.Streams.StreamModel> stream = ServiceManager.Get<TwitchSessionService>().UserConnection.GetStream(tUser);
 
-                                await Task.WhenAll(tChannel, game, stream);
+                                await Task.WhenAll(tChannel, stream);
+
+                                if (this.ContainsSpecialIdentifier(userStreamHeader + "gameimage"))
+                                {
+                                    Task<GameModel> game = ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIGameByID(tChannel.Result?.game_id);
+                                    this.ReplaceSpecialIdentifier(userStreamHeader + "gameimage", game.Result?.box_art_url);
+                                }
 
                                 this.ReplaceSpecialIdentifier(userStreamHeader + "title", tChannel.Result?.title);
-                                this.ReplaceSpecialIdentifier(userStreamHeader + "gameimage", game.Result?.box_art_url);
                                 this.ReplaceSpecialIdentifier(userStreamHeader + "game", tChannel.Result?.game_name);
                                 this.ReplaceSpecialIdentifier(userStreamHeader + "islive", (stream.Result != null).ToString());
                             }
