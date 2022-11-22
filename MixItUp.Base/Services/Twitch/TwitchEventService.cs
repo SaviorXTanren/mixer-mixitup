@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Twitch.Base;
 using Twitch.Base.Clients;
 using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.Clients.EventSub;
@@ -310,40 +309,24 @@ namespace MixItUp.Base.Services.Twitch
                 await eventSub.DeleteSubscription(sub.id);
             }
 
-            await eventSub.CreateSubscription(
-                EventSubTypesEnum.ChannelFollow,
-                "websocket",
-                new Dictionary<string, string> { { "broadcaster_user_id", twitchSession.UserID } },
-                message.Payload.Session.Id);
+            await this.RegisterEventSubSubscription("channel.follow", message);
 
-            await eventSub.CreateSubscription(
-                EventSubTypesEnum.StreamOnline,
-                "websocket",
-                new Dictionary<string, string> { { "broadcaster_user_id", twitchSession.UserID } },
-                message.Payload.Session.Id);
+            await this.RegisterEventSubSubscription("stream.online", message);
+            await this.RegisterEventSubSubscription("stream.offline", message);
 
-            await eventSub.CreateSubscription(
-                EventSubTypesEnum.StreamOffline,
-                "websocket",
-                new Dictionary<string, string> { { "broadcaster_user_id", twitchSession.UserID } },
-                message.Payload.Session.Id);
+            await this.RegisterEventSubSubscription("channel.hype_train.begin", message);
+            await this.RegisterEventSubSubscription("channel.hype_train.progress", message);
+            await this.RegisterEventSubSubscription("channel.hype_train.end", message);
 
-            await eventSub.CreateSubscription(
-                EventSubTypesEnum.ChannelHypeTrainBegin,
-                "websocket",
-                new Dictionary<string, string> { { "broadcaster_user_id", twitchSession.UserID } },
-                message.Payload.Session.Id);
+            await this.RegisterEventSubSubscription("channel.charity_campaign.donate", message);
+        }
 
-            await eventSub.CreateSubscription(
-                EventSubTypesEnum.ChannelHypeTrainProgress,
+        private async Task RegisterEventSubSubscription(string type, WelcomeMessage message)
+        {
+            await ServiceManager.Get<TwitchSessionService>().UserConnection.Connection.NewAPI.EventSub.CreateSubscription(
+                type,
                 "websocket",
-                new Dictionary<string, string> { { "broadcaster_user_id", twitchSession.UserID } },
-                message.Payload.Session.Id);
-
-            await eventSub.CreateSubscription(
-                EventSubTypesEnum.ChannelHypeTrainEnd,
-                "websocket",
-                new Dictionary<string, string> { { "broadcaster_user_id", twitchSession.UserID } },
+                new Dictionary<string, string> { { "broadcaster_user_id", ServiceManager.Get<TwitchSessionService>().UserID } },
                 message.Payload.Session.Id);
         }
 
@@ -374,6 +357,9 @@ namespace MixItUp.Base.Services.Twitch
                     break;
                 case "channel.hype_train.end":
                     await HandleHypeTrainEnd(message.Payload.Event);
+                    break;
+                case "channel.charity_campaign.donate":
+                    await HandleCharityCampaignDonation(message.Payload.Event);
                     break;
             }
         }
@@ -452,6 +438,47 @@ namespace MixItUp.Base.Services.Twitch
             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeTrainEnd, new CommandParametersModel(ChannelSession.User, eventCommandSpecialIdentifiers));
 
             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, string.Format(MixItUp.Base.Resources.HypeTrainEndedReachedLevel, level.ToString()), ChannelSession.Settings.AlertTwitchHypeTrainColor));
+        }
+
+        private async Task HandleCharityCampaignDonation(JObject payload)
+        {
+            string userID = payload["user_id"].Value<string>();
+            string username = payload["user_login"].Value<string>();
+            string userDisplayName = payload["user_name"].Value<string>();
+
+            string charityName = payload["charity_name"].Value<string>();
+            string charityImage = payload["charity_logo"].Value<string>();
+
+            JObject donationAmountJObj = payload["amount"] as JObject;
+            if (donationAmountJObj != null)
+            {
+                double donationAmountRaw = donationAmountJObj["value"].Value<int>();
+                double decimalPlaces = donationAmountJObj["decimal_places"].Value<int>();
+
+                double donationAmount = donationAmountRaw;
+                if (decimalPlaces > 0)
+                {
+                    donationAmount = donationAmount / Math.Pow(10, decimalPlaces);
+                }
+
+                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, userID);
+                if (user == null)
+                {
+                    user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(userID, username, userDisplayName));
+                }
+
+                await ServiceManager.Get<TwitchEventService>().AddFollow(user);
+
+                Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
+                eventCommandSpecialIdentifiers[SpecialIdentifierStringBuilder.DonationAmountNumberDigitsSpecialIdentifier] = donationAmountRaw.ToString();
+                eventCommandSpecialIdentifiers[SpecialIdentifierStringBuilder.DonationAmountNumberSpecialIdentifier] = donationAmount.ToString();
+                eventCommandSpecialIdentifiers[SpecialIdentifierStringBuilder.DonationAmountSpecialIdentifier] = donationAmount.ToCurrencyString();
+                eventCommandSpecialIdentifiers["charityname"] = charityName;
+                eventCommandSpecialIdentifiers["charityimage"] = charityImage;
+                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelCharityDonation, new CommandParametersModel(user, eventCommandSpecialIdentifiers));
+
+                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, string.Format(MixItUp.Base.Resources.AlertTwitchCharityDonation, user.DisplayName, donationAmount.ToCurrencyString()), ChannelSession.Settings.AlertDonationColor));
+            }
         }
 
         private void EventSub_OnKeepAliveMessageReceived(object sender, KeepAliveMessage e)

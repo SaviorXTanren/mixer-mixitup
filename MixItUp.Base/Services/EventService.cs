@@ -66,6 +66,7 @@ namespace MixItUp.Base.Services
 
         TwitchChannelBitsCheered = 270,
         TwitchChannelPointsRedeemed = 271,
+        TwitchChannelCharityDonation = 272,
 
         TwitchChannelHypeTrainBegin = 280,
         [Obsolete]
@@ -177,6 +178,7 @@ namespace MixItUp.Base.Services
             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(parameters.User, string.Format(MixItUp.Base.Resources.AlertDonated, parameters.User.FullDisplayName, donation.AmountText), ChannelSession.Settings.AlertDonationColor));
 
             await ServiceManager.Get<EventService>().PerformEvent(type, parameters);
+            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.GenericDonation, parameters);
 
             try
             {

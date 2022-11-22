@@ -9356,4 +9356,160 @@ namespace CustomNamespace
   <data name="HypeTrainLevelUp" xml:space="preserve">
     <value>Hype Train Level Up - Reached Level {0}</value>
   </data>
+  <data name="Resubscriber" xml:space="preserve">
+    <value>Resubscriber</value>
+  </data>
+  <data name="Donation" xml:space="preserve">
+    <value>Donation</value>
+  </data>
+  <data name="OverlayEventListDefaultCSS" xml:space="preserve">
+    <value>.item-{ID} {
+    position: relative;
+    border-style: solid;
+    border-width: 5px;
+    border-color: {BorderColor};
+    background-color: {BackgroundColor};
+    width: {Width};
+    height: {Height};
+}
+
+.details-{ID} {
+    position: absolute;
+    top: 35%;
+    left: 5%;
+    width: 50%;
+    float: left;
+    text-align: left;
+    font-weight: bold;
+    margin: auto;
+    transform: translate(0, -50%);
+    font-size: {FontSize}px;
+    color: {FontColor};
+    font-family: '{FontFamily}';
+    font-weight: {FontWeight};
+    text-decoration: {TextDecoration};
+    font-style: {FontStyle};
+    text-shadow: {Shadow};
+}
+
+.subdetails-{ID} {
+    position: absolute;
+    top: 80%;
+    right: 5%;
+    width: 50%;
+    text-align: right;
+    white-space: nowrap;
+    margin: auto;
+    transform: translate(0, -50%);
+    font-size: {FontSize}px;
+    color: {FontColor};
+    font-family: '{FontFamily}';
+    font-weight: {FontWeight};
+    text-decoration: {TextDecoration};
+    font-style: {FontStyle};
+    text-shadow: {Shadow};
+}</value>
+  </data>
+  <data name="OverlayEventListDefaultHTML" xml:space="preserve">
+    <value>&lt;div id="list-{ID}" class="list-{ID}"&gt;
+
+&lt;/div&gt;
+
+&lt;template id="item-{ID}"&gt;
+    &lt;div class='item-{ID}'&gt;
+        &lt;p class='details-{ID}'&gt;{Details}&lt;/p&gt;
+        &lt;p class='subdetails-{ID}'&gt;{SubDetails}&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/template&gt;</value>
+  </data>
+  <data name="OverlayEventListDefaultJavascript" xml:space="preserve">
+    <value>function {ID}_add(type, details, subdetails)
+{
+    var list = document.getElementById("list-{ID}");
+
+    if (list.childElementCount &gt; {MaxToShow}) {
+        {ID}_removeOldest();
+    }
+
+    var itemTemplate = document.querySelector("#item-{ID}");
+    const item = itemTemplate.content.cloneNode(true);
+    
+    var detailsElement = item.querySelector(".details-{ID}");
+    detailsElement.innerHTML = details;
+    
+    var subdetailsElement = item.querySelector(".subdetails-{ID}");
+    subdetailsElement.innerHTML = subdetails;
+
+    list.appendChild(item);
+}
+
+function {ID}_removeOldest()
+{
+    var list = document.getElementById("list-{ID}");
+    list.removeChild(list.firstElementChild);
+}</value>
+  </data>
+  <data name="TwitchChannelHypeTrainLevelUp" xml:space="preserve">
+    <value>Twitch Channel Hype Train Level Up</value>
+  </data>
+  <data name="AlertTwitchCharityDonation" xml:space="preserve">
+    <value>{0} Donated {1} To The Twitch Charity</value>
+  </data>
+  <data name="OverlayGoalDefaultCSS" xml:space="preserve">
+    <value>.background-{ID}
+{
+    position: absolute;
+    background-color: {BackgroundColor};
+    width: {Width}px;
+    height: {Height}px;
+}
+
+.progress-{ID}
+{
+    position: absolute;
+    background-color: {ProgressColor};
+    height: {Height}px;
+}
+
+.text-{ID} {
+    position: absolute;
+    font-size: {FontSize}px;
+    color: {FontColor};
+    font-family: '{FontFamily}';
+    font-weight: {FontWeight};
+    text-decoration: {TextDecoration};
+    font-style: {FontStyle};
+    text-align: {TextAlignment};
+    text-shadow: {Shadow};
+    left: 50%;
+    top: 50%;
+    margin: auto;
+    transform: translate(-50%, -50%);
+}</value>
+  </data>
+  <data name="OverlayGoalDefaultHTML" xml:space="preserve">
+    <value>&lt;div class="background-{ID}"&gt;
+  &lt;div id="progress-{ID}" class="progress-{ID}" /&gt;
+&lt;/div&gt;
+&lt;p id="text-{ID}" class="text-{ID}" /&gt;</value>
+  </data>
+  <data name="OverlayGoalDefaultJavascript" xml:space="preserve">
+    <value>function update_{ID}(amount, percentage, width)
+{
+    var textElement = document.getElementById("text-{ID}");
+    if (textElement != null) {
+        textElement.innerHTML = amount + " (" + Math.round(percentage * 100) + "%)"; 
+    }
+    
+    var progressElement = document.getElementById("progress-{ID}");
+    if (progressElement != null) {
+        progressElement.style.width = Math.min(percentage * width, width) + "px";
+    }
+}
+
+update_{ID}({CurrentAmount}, {Percentage}, {Width});</value>
+  </data>
+  <data name="TwitchChannelCharityDonation" xml:space="preserve">
+    <value>Twitch Channel Charity Donation</value>
+  </data>
 </root>
