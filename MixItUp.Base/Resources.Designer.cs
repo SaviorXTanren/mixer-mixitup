@@ -808,6 +808,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} Donated {1} To The Twitch Charity.
+        /// </summary>
+        public static string AlertTwitchCharityDonation {
+            get {
+                return ResourceManager.GetString("AlertTwitchCharityDonation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All.
         /// </summary>
         public static string All {
@@ -20798,6 +20807,15 @@ namespace MixItUp.Base {
         public static string TwitchChannelBitsCheered {
             get {
                 return ResourceManager.GetString("TwitchChannelBitsCheered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel Charity Donation.
+        /// </summary>
+        public static string TwitchChannelCharityDonation {
+            get {
+                return ResourceManager.GetString("TwitchChannelCharityDonation", resourceCulture);
             }
         }
         

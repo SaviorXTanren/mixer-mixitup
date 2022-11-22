@@ -9443,6 +9443,9 @@ function {ID}_removeOldest()
   <data name="TwitchChannelHypeTrainLevelUp" xml:space="preserve">
     <value>Twitch Channel Hype Train Level Up</value>
   </data>
+  <data name="AlertTwitchCharityDonation" xml:space="preserve">
+    <value>{0} Donated {1} To The Twitch Charity</value>
+  </data>
   <data name="OverlayGoalDefaultCSS" xml:space="preserve">
     <value>.background-{ID}
 {
@@ -9496,5 +9499,8 @@ function {ID}_removeOldest()
 }
 
 update_{ID}({CurrentAmount}, {Percentage}, {Width});</value>
+  </data>
+  <data name="TwitchChannelCharityDonation" xml:space="preserve">
+    <value>Twitch Channel Charity Donation</value>
   </data>
 </root>
