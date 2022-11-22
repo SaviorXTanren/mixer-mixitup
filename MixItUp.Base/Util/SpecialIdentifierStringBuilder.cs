@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Twitch.Base.Models.NewAPI.Bits;
 using Twitch.Base.Models.NewAPI.Clips;
+using Twitch.Base.Models.NewAPI.Games;
 using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.Util
@@ -466,10 +467,18 @@ namespace MixItUp.Base.Util
 
                 if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
+                    if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "gameimage"))
+                    {
+                        GameModel game = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIGameByID(ServiceManager.Get<TwitchSessionService>().Channel?.game_id);
+                        if (game != null)
+                        {
+                            this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gameimage", game.box_art_url);
+                        }
+                    }
+
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "islive", ServiceManager.Get<TwitchSessionService>().IsLive.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<TwitchSessionService>().Stream?.viewer_count.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<TwitchSessionService>().Channel?.title);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gameimage", ServiceManager.Get<TwitchSessionService>().Stream?.thumbnail_url);
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceManager.Get<TwitchSessionService>().Channel?.game_name);
 
                     if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount"))
@@ -972,12 +981,16 @@ namespace MixItUp.Base.Util
                             Twitch.Base.Models.NewAPI.Users.UserModel tUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(twitchUser.ID);
                             if (tUser != null)
                             {
-                                Twitch.Base.Models.NewAPI.Channels.ChannelInformationModel tChannel = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelInformation(tUser);
-                                Twitch.Base.Models.NewAPI.Streams.StreamModel stream = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStream(tUser);
+                                Task<Twitch.Base.Models.NewAPI.Channels.ChannelInformationModel> tChannel = ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelInformation(tUser);
+                                Task<GameModel> game = ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIGameByID(ServiceManager.Get<TwitchSessionService>().Channel?.game_id);
+                                Task<Twitch.Base.Models.NewAPI.Streams.StreamModel> stream = ServiceManager.Get<TwitchSessionService>().UserConnection.GetStream(tUser);
 
-                                this.ReplaceSpecialIdentifier(userStreamHeader + "title", tChannel?.title);
-                                this.ReplaceSpecialIdentifier(userStreamHeader + "game", tChannel?.game_name);
-                                this.ReplaceSpecialIdentifier(userStreamHeader + "islive", (stream != null).ToString());
+                                await Task.WhenAll(tChannel, game, stream);
+
+                                this.ReplaceSpecialIdentifier(userStreamHeader + "title", tChannel.Result?.title);
+                                this.ReplaceSpecialIdentifier(userStreamHeader + "gameimage", game.Result?.box_art_url);
+                                this.ReplaceSpecialIdentifier(userStreamHeader + "game", tChannel.Result?.game_name);
+                                this.ReplaceSpecialIdentifier(userStreamHeader + "islive", (stream.Result != null).ToString());
                             }
                         }
                     }
