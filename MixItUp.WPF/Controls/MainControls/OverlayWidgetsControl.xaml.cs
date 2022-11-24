@@ -91,14 +91,14 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void AddOverlayWidgetButton_Click(object sender, RoutedEventArgs e)
         {
-            OverlayLabelItemV3Model widget = new OverlayLabelItemV3Model(OverlayLabelWidgetV3Type.Counter)
+            OverlayLabelV3Model widget = new OverlayLabelV3Model(OverlayLabelWidgetV3Type.Counter)
             {
-                CSS = OverlayLabelItemV3Model.DefaultCSS,
+                CSS = OverlayLabelV3Model.DefaultCSS,
                 FontColor = "Red",
                 FontName = "Arial",
                 FontSize = 100,
-                Javascript = OverlayLabelItemV3Model.DefaultJavascript,
-                HTML = OverlayLabelItemV3Model.DefaultAmountHTML,
+                Javascript = OverlayLabelV3Model.DefaultJavascript,
+                HTML = OverlayLabelV3Model.DefaultAmountHTML,
                 Type = OverlayItemV3Type.Label,
                 XPosition = 50,
                 YPosition = 50,

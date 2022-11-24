@@ -20,11 +20,11 @@ namespace MixItUp.Base.Model.Overlay
         public string Duration { get; set; }
 
         [DataMember]
-        public OverlayItemAnimationV3Model EntranceAnimation { get; set; } = new OverlayItemAnimationV3Model();
+        public OverlayAnimationV3Model EntranceAnimation { get; set; } = new OverlayAnimationV3Model();
         [DataMember]
-        public OverlayItemAnimationV3Model VisibleAnimation { get; set; } = new OverlayItemAnimationV3Model();
+        public OverlayAnimationV3Model VisibleAnimation { get; set; } = new OverlayAnimationV3Model();
         [DataMember]
-        public OverlayItemAnimationV3Model ExitAnimation { get; set; } = new OverlayItemAnimationV3Model();
+        public OverlayAnimationV3Model ExitAnimation { get; set; } = new OverlayAnimationV3Model();
 
         [DataMember]
         public string TextID { get { return "X" + this.ID.ToString().Replace('-', 'X'); } set { } }

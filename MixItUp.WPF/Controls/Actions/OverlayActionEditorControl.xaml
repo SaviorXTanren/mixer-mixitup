@@ -50,31 +50,31 @@
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowTextItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <OverlayControls:OverlayTextItemV3Control DataContext="{Binding TextItemViewModel}" />
+            <OverlayControls:OverlayTextV3Control DataContext="{Binding TextItemViewModel}" />
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowImageItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <OverlayControls:OverlayImageItemV3Control DataContext="{Binding ImageItemViewModel}" />
+            <OverlayControls:OverlayImageV3Control DataContext="{Binding ImageItemViewModel}" />
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowVideoItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <OverlayControls:OverlayVideoItemV3Control DataContext="{Binding VideoItemViewModel}" />
+            <OverlayControls:OverlayVideoV3Control DataContext="{Binding VideoItemViewModel}" />
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowYouTubeItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <OverlayControls:OverlayYouTubeItemV3Control DataContext="{Binding YouTubeItemViewModel}" />
+            <OverlayControls:OverlayYouTubeV3Control DataContext="{Binding YouTubeItemViewModel}" />
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowHTMLItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <OverlayControls:OverlayHTMLItemV3Control DataContext="{Binding HTMLItemViewModel}" />
+            <OverlayControls:OverlayHTMLV3Control DataContext="{Binding HTMLItemViewModel}" />
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowWebPageItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <OverlayControls:OverlayWebPageItemV3Control DataContext="{Binding WebPageItemViewModel}" />
+            <OverlayControls:OverlayWebPageV3Control DataContext="{Binding WebPageItemViewModel}" />
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowTimerItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <OverlayControls:OverlayTimerItemV3Control DataContext="{Binding TimerItemViewModel}" />
+            <OverlayControls:OverlayTimerV3Control DataContext="{Binding TimerItemViewModel}" />
         </Grid>
     </Grid>
 </local:ActionEditorControlBase>

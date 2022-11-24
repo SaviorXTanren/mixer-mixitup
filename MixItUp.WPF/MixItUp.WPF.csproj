@@ -816,35 +816,35 @@
     <Compile Include="Controls\MainControls\UsersControl.xaml.cs">
       <DependentUpon>UsersControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayHTMLItemV3Control.xaml.cs">
-      <DependentUpon>OverlayHTMLItemV3Control.xaml</DependentUpon>
+    <Compile Include="Controls\Overlay\OverlayHTMLV3Control.xaml.cs">
+      <DependentUpon>OverlayHTMLV3Control.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayImageItemV3Control.xaml.cs">
-      <DependentUpon>OverlayImageItemV3Control.xaml</DependentUpon>
+    <Compile Include="Controls\Overlay\OverlayImageV3Control.xaml.cs">
+      <DependentUpon>OverlayImageV3Control.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayItemAnimationV3Control.xaml.cs">
-      <DependentUpon>OverlayItemAnimationV3Control.xaml</DependentUpon>
+    <Compile Include="Controls\Overlay\OverlayAnimationV3Control.xaml.cs">
+      <DependentUpon>OverlayAnimationV3Control.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Overlay\OverlayItemContainerV3Control.xaml.cs">
       <DependentUpon>OverlayItemContainerV3Control.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayItemPositionV3Control.xaml.cs">
-      <DependentUpon>OverlayItemPositionV3Control.xaml</DependentUpon>
+    <Compile Include="Controls\Overlay\OverlayPositionV3Control.xaml.cs">
+      <DependentUpon>OverlayPositionV3Control.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayTextItemV3Control.xaml.cs">
-      <DependentUpon>OverlayTextItemV3Control.xaml</DependentUpon>
+    <Compile Include="Controls\Overlay\OverlayTextV3Control.xaml.cs">
+      <DependentUpon>OverlayTextV3Control.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayTimerItemV3Control.xaml.cs">
-      <DependentUpon>OverlayTimerItemV3Control.xaml</DependentUpon>
+    <Compile Include="Controls\Overlay\OverlayTimerV3Control.xaml.cs">
+      <DependentUpon>OverlayTimerV3Control.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayVideoItemV3Control.xaml.cs">
-      <DependentUpon>OverlayVideoItemV3Control.xaml</DependentUpon>
+    <Compile Include="Controls\Overlay\OverlayVideoV3Control.xaml.cs">
+      <DependentUpon>OverlayVideoV3Control.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayWebPageItemV3Control.xaml.cs">
-      <DependentUpon>OverlayWebPageItemV3Control.xaml</DependentUpon>
+    <Compile Include="Controls\Overlay\OverlayWebPageV3Control.xaml.cs">
+      <DependentUpon>OverlayWebPageV3Control.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayYouTubeItemV3Control.xaml.cs">
-      <DependentUpon>OverlayYouTubeItemV3Control.xaml</DependentUpon>
+    <Compile Include="Controls\Overlay\OverlayYouTubeV3Control.xaml.cs">
+      <DependentUpon>OverlayYouTubeV3Control.xaml</DependentUpon>
     </Compile>
     <Compile Include="Deprecated\Controls\Overlay\OverlayChatMessagesListItemControl.xaml.cs">
       <DependentUpon>OverlayChatMessagesListItemControl.xaml</DependentUpon>
@@ -1644,15 +1644,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayHTMLItemV3Control.xaml">
+    <Page Include="Controls\Overlay\OverlayHTMLV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayImageItemV3Control.xaml">
+    <Page Include="Controls\Overlay\OverlayImageV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayItemAnimationV3Control.xaml">
+    <Page Include="Controls\Overlay\OverlayAnimationV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1660,27 +1660,27 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayItemPositionV3Control.xaml">
+    <Page Include="Controls\Overlay\OverlayPositionV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayTextItemV3Control.xaml">
+    <Page Include="Controls\Overlay\OverlayTextV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayTimerItemV3Control.xaml">
+    <Page Include="Controls\Overlay\OverlayTimerV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayVideoItemV3Control.xaml">
+    <Page Include="Controls\Overlay\OverlayVideoV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayWebPageItemV3Control.xaml">
+    <Page Include="Controls\Overlay\OverlayWebPageV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayYouTubeItemV3Control.xaml">
+    <Page Include="Controls\Overlay\OverlayYouTubeV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

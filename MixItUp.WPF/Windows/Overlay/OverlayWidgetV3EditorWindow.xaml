@@ -34,7 +34,7 @@
                     </Grid.ColumnDefinitions>
 
                     <Border Grid.Column="0" Style="{StaticResource DefaultBorder}">
-                        <OverlayControls:OverlayItemPositionV3Control x:Name="ItemPosition" DataContext="{Binding ItemPosition}" Margin="10" />
+                        <OverlayControls:OverlayPositionV3Control x:Name="ItemPosition" DataContext="{Binding ItemPosition}" Margin="10" />
                     </Border>
 
                     <Border Grid.Column="1" Style="{StaticResource DefaultBorder}">
@@ -46,7 +46,7 @@
                             </TabControl.ItemTemplate>
                             <TabControl.ContentTemplate>
                                 <DataTemplate>
-                                    <OverlayControls:OverlayItemAnimationV3Control Margin="10" DataContext="{Binding}" />
+                                    <OverlayControls:OverlayAnimationV3Control Margin="10" DataContext="{Binding}" />
                                 </DataTemplate>
                             </TabControl.ContentTemplate>
                         </TabControl>

@@ -8,16 +8,27 @@ namespace MixItUp.Base.ViewModel.Overlay
 {
     public abstract class OverlayItemV3ViewModelBase : UIViewModelBase
     {
-        public OverlayItemPositionV3ViewModel ItemPosition
+        public OverlayItemV3Type Type
         {
-            get { return this.itemPosition; }
+            get { return this.type; }
             set
             {
-                this.itemPosition = value;
+                this.type = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayItemPositionV3ViewModel itemPosition = new OverlayItemPositionV3ViewModel();
+        private OverlayItemV3Type type;
+
+        public OverlayPositionV3ViewModel Position
+        {
+            get { return this.position; }
+            set
+            {
+                this.position = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayPositionV3ViewModel position = new OverlayPositionV3ViewModel();
 
         public string Duration
         {
@@ -30,7 +41,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string duration;
 
-        public OverlayItemAnimationV3ViewModel EntranceAnimation
+        public OverlayAnimationV3ViewModel EntranceAnimation
         {
             get { return this.entranceAnimation; }
             set
@@ -39,9 +50,9 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayItemAnimationV3ViewModel entranceAnimation = new OverlayItemAnimationV3ViewModel(Resources.Entrance);
+        private OverlayAnimationV3ViewModel entranceAnimation = new OverlayAnimationV3ViewModel(Resources.Entrance);
 
-        public OverlayItemAnimationV3ViewModel VisibleAnimation
+        public OverlayAnimationV3ViewModel VisibleAnimation
         {
             get { return this.visibleAnimation; }
             set
@@ -50,9 +61,9 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayItemAnimationV3ViewModel visibleAnimation = new OverlayItemAnimationV3ViewModel(Resources.Visible);
+        private OverlayAnimationV3ViewModel visibleAnimation = new OverlayAnimationV3ViewModel(Resources.Visible);
 
-        public OverlayItemAnimationV3ViewModel ExitAnimation
+        public OverlayAnimationV3ViewModel ExitAnimation
         {
             get { return this.exitAnimation; }
             set
@@ -61,9 +72,9 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayItemAnimationV3ViewModel exitAnimation = new OverlayItemAnimationV3ViewModel(Resources.Exit);
+        private OverlayAnimationV3ViewModel exitAnimation = new OverlayAnimationV3ViewModel(Resources.Exit);
 
-        public List<OverlayItemAnimationV3ViewModel> Animations { get; private set; } = new List<OverlayItemAnimationV3ViewModel>();
+        public List<OverlayAnimationV3ViewModel> Animations { get; private set; } = new List<OverlayAnimationV3ViewModel>();
 
         public string ItemDuration
         {
@@ -111,47 +122,58 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public OverlayItemV3ViewModelBase(OverlayItemV3Type type)
         {
-            switch (type)
+            this.Type = type;
+            switch (this.Type)
             {
                 case OverlayItemV3Type.Text:
-                    this.HTML = OverlayTextItemV3Model.DefaultHTML;
-                    this.CSS = OverlayTextItemV3Model.DefaultCSS;
-                    this.Javascript = OverlayTextItemV3Model.DefaultJavascript;
+                    this.HTML = OverlayTextV3Model.DefaultHTML;
+                    this.CSS = OverlayTextV3Model.DefaultCSS;
+                    this.Javascript = OverlayTextV3Model.DefaultJavascript;
                     break;
                 case OverlayItemV3Type.Image:
-                    this.HTML = OverlayImageItemV3Model.DefaultHTML;
-                    this.CSS = OverlayImageItemV3Model.DefaultCSS;
-                    this.Javascript = OverlayImageItemV3Model.DefaultJavascript;
+                    this.HTML = OverlayImageV3Model.DefaultHTML;
+                    this.CSS = OverlayImageV3Model.DefaultCSS;
+                    this.Javascript = OverlayImageV3Model.DefaultJavascript;
                     break;
                 case OverlayItemV3Type.Video:
-                    this.HTML = OverlayVideoItemV3Model.DefaultHTML;
-                    this.CSS = OverlayVideoItemV3Model.DefaultCSS;
-                    this.Javascript = OverlayVideoItemV3Model.DefaultJavascript;
+                    this.HTML = OverlayVideoV3Model.DefaultHTML;
+                    this.CSS = OverlayVideoV3Model.DefaultCSS;
+                    this.Javascript = OverlayVideoV3Model.DefaultJavascript;
                     break;
                 case OverlayItemV3Type.YouTube:
-                    this.HTML = OverlayYouTubeItemV3Model.DefaultHTML;
-                    this.CSS = OverlayYouTubeItemV3Model.DefaultCSS;
-                    this.Javascript = OverlayYouTubeItemV3Model.DefaultJavascript;
+                    this.HTML = OverlayYouTubeV3Model.DefaultHTML;
+                    this.CSS = OverlayYouTubeV3Model.DefaultCSS;
+                    this.Javascript = OverlayYouTubeV3Model.DefaultJavascript;
                     break;
                 case OverlayItemV3Type.HTML:
-                    this.HTML = OverlayHTMLItemV3Model.DefaultHTML;
-                    this.CSS = OverlayHTMLItemV3Model.DefaultCSS;
-                    this.Javascript = OverlayHTMLItemV3Model.DefaultJavascript;
+                    this.HTML = OverlayHTMLV3Model.DefaultHTML;
+                    this.CSS = OverlayHTMLV3Model.DefaultCSS;
+                    this.Javascript = OverlayHTMLV3Model.DefaultJavascript;
                     break;
                 case OverlayItemV3Type.WebPage:
-                    this.HTML = OverlayWebPageItemV3Model.DefaultHTML;
-                    this.CSS = OverlayWebPageItemV3Model.DefaultCSS;
-                    this.Javascript = OverlayWebPageItemV3Model.DefaultJavascript;
+                    this.HTML = OverlayWebPageV3Model.DefaultHTML;
+                    this.CSS = OverlayWebPageV3Model.DefaultCSS;
+                    this.Javascript = OverlayWebPageV3Model.DefaultJavascript;
                     break;
                 case OverlayItemV3Type.Timer:
-                    this.HTML = OverlayTimerItemV3Model.DefaultHTML;
-                    this.CSS = OverlayTimerItemV3Model.DefaultCSS;
-                    this.Javascript = OverlayTimerItemV3Model.DefaultJavascript;
+                    this.HTML = OverlayTimerV3Model.DefaultHTML;
+                    this.CSS = OverlayTimerV3Model.DefaultCSS;
+                    this.Javascript = OverlayTimerV3Model.DefaultJavascript;
                     break;
                 case OverlayItemV3Type.Label:
-                    this.HTML = OverlayLabelItemV3Model.DefaultNameHTML;
-                    this.CSS = OverlayLabelItemV3Model.DefaultCSS;
-                    this.Javascript = OverlayLabelItemV3Model.DefaultJavascript;
+                    this.HTML = OverlayLabelV3Model.DefaultNameHTML;
+                    this.CSS = OverlayLabelV3Model.DefaultCSS;
+                    this.Javascript = OverlayLabelV3Model.DefaultJavascript;
+                    break;
+                case OverlayItemV3Type.EventList:
+                    this.HTML = OverlayEventListV3Model.DefaultHTML;
+                    this.CSS = OverlayEventListV3Model.DefaultCSS;
+                    this.Javascript = OverlayEventListV3Model.DefaultJavascript;
+                    break;
+                case OverlayItemV3Type.Goal:
+                    this.HTML = OverlayGoalV3Model.DefaultHTML;
+                    this.CSS = OverlayGoalV3Model.DefaultCSS;
+                    this.Javascript = OverlayGoalV3Model.DefaultJavascript;
                     break;
             }
 
@@ -174,11 +196,11 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.CSS = item.CSS;
             this.Javascript = item.Javascript;
 
-            this.ItemPosition = new OverlayItemPositionV3ViewModel(item);
+            this.Position = new OverlayPositionV3ViewModel(item);
             this.Duration = item.Duration;
-            this.EntranceAnimation = new OverlayItemAnimationV3ViewModel(Resources.Entrance, item.EntranceAnimation);
-            this.VisibleAnimation = new OverlayItemAnimationV3ViewModel(Resources.Visible, item.VisibleAnimation);
-            this.ExitAnimation = new OverlayItemAnimationV3ViewModel(Resources.Exit, item.ExitAnimation);
+            this.EntranceAnimation = new OverlayAnimationV3ViewModel(Resources.Entrance, item.EntranceAnimation);
+            this.VisibleAnimation = new OverlayAnimationV3ViewModel(Resources.Visible, item.VisibleAnimation);
+            this.ExitAnimation = new OverlayAnimationV3ViewModel(Resources.Exit, item.ExitAnimation);
 
             this.Animations.Add(this.EntranceAnimation);
             this.Animations.Add(this.VisibleAnimation);
@@ -198,7 +220,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             OverlayItemV3ModelBase item = this.GetItemInternal();
 
-            this.ItemPosition.SetPosition(item);
+            this.Position.SetPosition(item);
             item.Duration = this.Duration;
             this.EntranceAnimation.SetAnimation(item.EntranceAnimation);
             this.VisibleAnimation.SetAnimation(item.VisibleAnimation);
