@@ -92,7 +92,7 @@
                     <TabItem Header="{x:Static resx:Resources.HTML}">
                         <Grid>
                             <Border Style="{StaticResource DefaultBorder}">
-                                <TextBox Text="{Binding HTML}" Style="{StaticResource MultiLineTextBox}" MinHeight="250" />
+                                <OverlayControls:OverlayTextEditorV3Control DataContext="{Binding HTML}" />
                             </Border>
                         </Grid>
                     </TabItem>
@@ -100,7 +100,7 @@
                     <TabItem Header="{x:Static resx:Resources.CSS}">
                         <Grid>
                             <Border Style="{StaticResource DefaultBorder}">
-                                <TextBox Text="{Binding CSS}" Style="{StaticResource MultiLineTextBox}" MinHeight="250" />
+                                <OverlayControls:OverlayTextEditorV3Control DataContext="{Binding CSS}" />
                             </Border>
                         </Grid>
                     </TabItem>
@@ -108,7 +108,7 @@
                     <TabItem Header="{x:Static resx:Resources.Javascript}">
                         <Grid>
                             <Border Style="{StaticResource DefaultBorder}">
-                                <TextBox Text="{Binding Javascript}" Style="{StaticResource MultiLineTextBox}" MinHeight="250" />
+                                <OverlayControls:OverlayTextEditorV3Control DataContext="{Binding Javascript}" />
                             </Border>
                         </Grid>
                     </TabItem>

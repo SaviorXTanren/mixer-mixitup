@@ -834,6 +834,9 @@
     <Compile Include="Controls\Overlay\OverlayPositionV3Control.xaml.cs">
       <DependentUpon>OverlayPositionV3Control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Overlay\OverlayTextEditorV3Control.xaml.cs">
+      <DependentUpon>OverlayTextEditorV3Control.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Overlay\OverlayTextV3Control.xaml.cs">
       <DependentUpon>OverlayTextV3Control.xaml</DependentUpon>
     </Compile>
@@ -1668,6 +1671,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayPositionV3Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayTextEditorV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

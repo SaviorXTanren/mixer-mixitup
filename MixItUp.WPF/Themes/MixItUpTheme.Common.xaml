@@ -90,6 +90,10 @@
         <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
     </Style>
 
+    <Style x:Key="OverlayEditorMultiLineTextBox" TargetType="TextBox" BasedOn="{StaticResource MultiLineTextBox}">
+        <Setter Property="FontFamily" Value="Courier New" />
+    </Style>
+
     <Style x:Key="DefaultBorder" TargetType="Border">
         <Setter Property="BorderBrush" Value="{StaticResource PrimaryHueMidBrush}" />
         <Setter Property="BorderThickness" Value="1" />
