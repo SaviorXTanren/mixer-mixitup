@@ -93,7 +93,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                     this.Item = new OverlayTimerV3ViewModel();
                     break;
                 case OverlayItemV3Type.Label:
-                    this.Item = new OverlayTextV3ViewModel();
+                    this.Item = new OverlayLabelV3ViewModel();
                     break;
                 case OverlayItemV3Type.EventList:
                     this.Item = new OverlayEventListV3ViewModel();

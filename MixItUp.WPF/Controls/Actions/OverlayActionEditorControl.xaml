@@ -50,31 +50,59 @@
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowTextItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <OverlayControls:OverlayTextV3Control DataContext="{Binding TextItemViewModel}" />
+            <OverlayControls:OverlayItemContainerV3Control DataContext="{Binding TextItemViewModel}">
+                <OverlayControls:OverlayItemContainerV3Control.ContentControl>
+                    <OverlayControls:OverlayTextV3Control />
+                </OverlayControls:OverlayItemContainerV3Control.ContentControl>
+            </OverlayControls:OverlayItemContainerV3Control>
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowImageItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <OverlayControls:OverlayImageV3Control DataContext="{Binding ImageItemViewModel}" />
+            <OverlayControls:OverlayItemContainerV3Control DataContext="{Binding ImageItemViewModel}">
+                <OverlayControls:OverlayItemContainerV3Control.ContentControl>
+                    <OverlayControls:OverlayImageV3Control />
+                </OverlayControls:OverlayItemContainerV3Control.ContentControl>
+            </OverlayControls:OverlayItemContainerV3Control>
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowVideoItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <OverlayControls:OverlayVideoV3Control DataContext="{Binding VideoItemViewModel}" />
+            <OverlayControls:OverlayItemContainerV3Control DataContext="{Binding VideoItemViewModel}">
+                <OverlayControls:OverlayItemContainerV3Control.ContentControl>
+                    <OverlayControls:OverlayVideoV3Control />
+                </OverlayControls:OverlayItemContainerV3Control.ContentControl>
+            </OverlayControls:OverlayItemContainerV3Control>
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowYouTubeItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <OverlayControls:OverlayYouTubeV3Control DataContext="{Binding YouTubeItemViewModel}" />
+            <OverlayControls:OverlayItemContainerV3Control DataContext="{Binding YouTubeItemViewModel}">
+                <OverlayControls:OverlayItemContainerV3Control.ContentControl>
+                    <OverlayControls:OverlayYouTubeV3Control />
+                </OverlayControls:OverlayItemContainerV3Control.ContentControl>
+            </OverlayControls:OverlayItemContainerV3Control>
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowHTMLItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <OverlayControls:OverlayHTMLV3Control DataContext="{Binding HTMLItemViewModel}" />
+            <OverlayControls:OverlayItemContainerV3Control DataContext="{Binding HTMLItemViewModel}">
+                <OverlayControls:OverlayItemContainerV3Control.ContentControl>
+                    <OverlayControls:OverlayHTMLV3Control />
+                </OverlayControls:OverlayItemContainerV3Control.ContentControl>
+            </OverlayControls:OverlayItemContainerV3Control>
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowWebPageItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <OverlayControls:OverlayWebPageV3Control DataContext="{Binding WebPageItemViewModel}" />
+            <OverlayControls:OverlayItemContainerV3Control DataContext="{Binding WebPageItemViewModel}">
+                <OverlayControls:OverlayItemContainerV3Control.ContentControl>
+                    <OverlayControls:OverlayWebPageV3Control />
+                </OverlayControls:OverlayItemContainerV3Control.ContentControl>
+            </OverlayControls:OverlayItemContainerV3Control>
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowTimerItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <OverlayControls:OverlayTimerV3Control DataContext="{Binding TimerItemViewModel}" />
+            <OverlayControls:OverlayItemContainerV3Control DataContext="{Binding TimerItemViewModel}">
+                <OverlayControls:OverlayItemContainerV3Control.ContentControl>
+                    <OverlayControls:OverlayTimerV3Control />
+                </OverlayControls:OverlayItemContainerV3Control.ContentControl>
+            </OverlayControls:OverlayItemContainerV3Control>
         </Grid>
     </Grid>
 </local:ActionEditorControlBase>

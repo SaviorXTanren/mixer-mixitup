@@ -11,9 +11,5 @@
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <OverlayControls:OverlayItemContainerV3Control>
-        <OverlayControls:OverlayItemContainerV3Control.ContentControl>
-            <Grid></Grid>
-        </OverlayControls:OverlayItemContainerV3Control.ContentControl>
-    </OverlayControls:OverlayItemContainerV3Control>
+    <Grid />
 </Controls:LoadingControlBase>

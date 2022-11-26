@@ -57,7 +57,7 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <ContentControl Grid.Row="0" x:Name="InnerContent" />
+                            <ContentControl Grid.Row="0" x:Name="InnerContent" Content="{Binding ItemControl}" DataContext="{Binding Item}" />
 
                             <Grid Grid.Row="2" x:Name="AdditionalOptionsGrid">
                                 <Grid.ColumnDefinitions>
