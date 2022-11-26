@@ -84,7 +84,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayTextV3ViewModel textItemViewModel = new OverlayTextV3ViewModel(addDefaultAnimation: true);
+        private OverlayTextV3ViewModel textItemViewModel = new OverlayTextV3ViewModel();
 
         public bool ShowImageItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Image; } }
 
@@ -97,7 +97,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayImageV3ViewModel imageItemViewModel = new OverlayImageV3ViewModel(addDefaultAnimation: true);
+        private OverlayImageV3ViewModel imageItemViewModel = new OverlayImageV3ViewModel();
 
         public bool ShowVideoItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Video; } }
 
@@ -110,7 +110,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayVideoV3ViewModel videoItemViewModel = new OverlayVideoV3ViewModel(addDefaultAnimation: true);
+        private OverlayVideoV3ViewModel videoItemViewModel = new OverlayVideoV3ViewModel();
 
         public bool ShowYouTubeItem { get { return this.SelectedActionType == OverlayActionTypeEnum.YouTube; } }
 
@@ -123,7 +123,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayYouTubeV3ViewModel youTubeItemViewModel = new OverlayYouTubeV3ViewModel(addDefaultAnimation: true);
+        private OverlayYouTubeV3ViewModel youTubeItemViewModel = new OverlayYouTubeV3ViewModel();
 
         public bool ShowHTMLItem { get { return this.SelectedActionType == OverlayActionTypeEnum.HTML; } }
 
@@ -136,7 +136,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayHTMLV3ViewModel htmlItemViewModel = new OverlayHTMLV3ViewModel(addDefaultAnimation: true);
+        private OverlayHTMLV3ViewModel htmlItemViewModel = new OverlayHTMLV3ViewModel();
 
         public bool ShowWebPageItem { get { return this.SelectedActionType == OverlayActionTypeEnum.WebPage; } }
 
@@ -149,7 +149,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayWebPageV3ViewModel webPageItemViewModel = new OverlayWebPageV3ViewModel(addDefaultAnimation: true);
+        private OverlayWebPageV3ViewModel webPageItemViewModel = new OverlayWebPageV3ViewModel();
 
         public bool ShowTimerItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Timer; } }
 
@@ -162,7 +162,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayTimerV3ViewModel timerItemViewModel = new OverlayTimerV3ViewModel(addDefaultAnimation: true);
+        private OverlayTimerV3ViewModel timerItemViewModel = new OverlayTimerV3ViewModel();
 
         public OverlayActionEditorControlViewModel(OverlayActionModel action)
             : base(action)
@@ -217,6 +217,14 @@ namespace MixItUp.Base.ViewModel.Actions
             : base()
         {
             this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().GetDefaultOverlayEndpoint();
+
+            this.TextItemViewModel.AddOverlayActionAnimations();
+            this.ImageItemViewModel.AddOverlayActionAnimations();
+            this.VideoItemViewModel.AddOverlayActionAnimations();
+            this.YouTubeItemViewModel.AddOverlayActionAnimations();
+            this.HTMLItemViewModel.AddOverlayActionAnimations();
+            this.WebPageItemViewModel.AddOverlayActionAnimations();
+            this.TimerItemViewModel.AddOverlayActionAnimations();
         }
 
         public override Task<Result> Validate()

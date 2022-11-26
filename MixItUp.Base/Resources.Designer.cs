@@ -394,6 +394,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Added.
+        /// </summary>
+        public static string Added {
+            get {
+                return ResourceManager.GetString("Added", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Inventory.
         /// </summary>
         public static string AddInventory {
@@ -10668,6 +10677,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lastest Follower.
+        /// </summary>
+        public static string LastestFollower {
+            get {
+                return ResourceManager.GetString("LastestFollower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last Quote.
         /// </summary>
         public static string LastQuote {
@@ -10695,11 +10713,56 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Latest Donation.
+        /// </summary>
+        public static string LatestDonation {
+            get {
+                return ResourceManager.GetString("LatestDonation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Latest Raid.
+        /// </summary>
+        public static string LatestRaid {
+            get {
+                return ResourceManager.GetString("LatestRaid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Latest Release.
         /// </summary>
         public static string LatestRelease {
             get {
                 return ResourceManager.GetString("LatestRelease", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Latest Subscriber.
+        /// </summary>
+        public static string LatestSubscriber {
+            get {
+                return ResourceManager.GetString("LatestSubscriber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Latest Trovo Elixir.
+        /// </summary>
+        public static string LatestTrovoElixir {
+            get {
+                return ResourceManager.GetString("LatestTrovoElixir", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Latest Twitch Bits.
+        /// </summary>
+        public static string LatestTwitchBits {
+            get {
+                return ResourceManager.GetString("LatestTwitchBits", resourceCulture);
             }
         }
         
@@ -13555,6 +13618,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A valid counter must be selected.
+        /// </summary>
+        public static string OverlayLabelCounterNotSelected {
+            get {
+                return ResourceManager.GetString("OverlayLabelCounterNotSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to function {ID}_update(name, amount)
         ///{
         ///    var nameElement = document.getElementById(&quot;label-name-{ID}&quot;);
@@ -15049,6 +15121,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Progress.
+        /// </summary>
+        public static string Progress {
+            get {
+                return ResourceManager.GetString("Progress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Goal/Progress Bar.
         /// </summary>
         public static string ProgressBar {
@@ -15840,6 +15921,15 @@ namespace MixItUp.Base {
         public static string RemoveAnimation {
             get {
                 return ResourceManager.GetString("RemoveAnimation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Removed.
+        /// </summary>
+        public static string Removed {
+            get {
+                return ResourceManager.GetString("Removed", resourceCulture);
             }
         }
         
@@ -19966,11 +20056,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Total Followers.
+        /// </summary>
+        public static string TotalFollowers {
+            get {
+                return ResourceManager.GetString("TotalFollowers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Total Follows:.
         /// </summary>
         public static string TotalFollowsHeader {
             get {
                 return ResourceManager.GetString("TotalFollowsHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Subscribers.
+        /// </summary>
+        public static string TotalSubscribers {
+            get {
+                return ResourceManager.GetString("TotalSubscribers", resourceCulture);
             }
         }
         
@@ -21542,6 +21650,15 @@ namespace MixItUp.Base {
         public static string UpdateCommand {
             get {
                 return ResourceManager.GetString("UpdateCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updated.
+        /// </summary>
+        public static string Updated {
+            get {
+                return ResourceManager.GetString("Updated", resourceCulture);
             }
         }
         

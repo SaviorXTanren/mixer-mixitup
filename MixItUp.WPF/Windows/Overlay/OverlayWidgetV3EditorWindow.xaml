@@ -15,6 +15,7 @@
         Height="600" Width="800">
     <Windows:LoadingWindowBase.Resources>
         <Util:LocalizationConverter x:Key="LocalizationConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Windows:LoadingWindowBase.Resources>
 
     <Grid>
@@ -48,18 +49,19 @@
                     <ComboBox Grid.Column="2" Visibility="{Binding OverlayEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding OverlayEndpoints}" SelectedItem="{Binding SelectedOverlayEndpoint}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayEndpoints}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
                 </Grid>
 
-                <TabControl Grid.Row="2" SnapsToDevicePixels="True" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" MaterialDesign:NavigationRailAssist.ShowSelectionBackground="True">
+                <TabControl Grid.Row="2" DataContext="{Binding Item}" SnapsToDevicePixels="True" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" MaterialDesign:NavigationRailAssist.ShowSelectionBackground="True">
                     <TabItem Header="{x:Static resx:Resources.Details}">
-                        <Grid Margin="0,15,0,0">
+                        <Grid >
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="10" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <ContentControl Grid.Row="0" x:Name="InnerContent" Content="{Binding ItemControl}" DataContext="{Binding Item}" />
+                            <Border Grid.Row="0" Style="{StaticResource DefaultBorder}">
+                                <ContentControl x:Name="InnerContent" Margin="10,15" />
+                            </Border>
 
-                            <Grid Grid.Row="2" x:Name="AdditionalOptionsGrid">
+                            <Grid Grid.Row="1" x:Name="AdditionalOptionsGrid">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
@@ -70,7 +72,7 @@
                                 </Border>
 
                                 <Border Grid.Column="1" Style="{StaticResource DefaultBorder}">
-                                    <TabControl Grid.Row="2" ItemsSource="{Binding Animations}" SelectedIndex="0" SnapsToDevicePixels="True" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" MaterialDesign:NavigationRailAssist.ShowSelectionBackground="True">
+                                    <TabControl ItemsSource="{Binding Animations}" Visibility="{Binding HasAnimations, Converter={StaticResource BooleanToVisibilityConverter}}" SelectedIndex="0" SnapsToDevicePixels="True" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" MaterialDesign:NavigationRailAssist.ShowSelectionBackground="True">
                                         <TabControl.ItemTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding DisplayName}" />
@@ -89,36 +91,24 @@
 
                     <TabItem Header="{x:Static resx:Resources.HTML}">
                         <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-
                             <Border Style="{StaticResource DefaultBorder}">
-                                <TextBox Text="{Binding HTML}" Style="{StaticResource MultiLineTextBox}" Height="250" />
+                                <TextBox Text="{Binding HTML}" Style="{StaticResource MultiLineTextBox}" MinHeight="250" />
                             </Border>
                         </Grid>
                     </TabItem>
 
                     <TabItem Header="{x:Static resx:Resources.CSS}">
                         <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-
                             <Border Style="{StaticResource DefaultBorder}">
-                                <TextBox Text="{Binding CSS}" Style="{StaticResource MultiLineTextBox}" Height="250" />
+                                <TextBox Text="{Binding CSS}" Style="{StaticResource MultiLineTextBox}" MinHeight="250" />
                             </Border>
                         </Grid>
                     </TabItem>
 
                     <TabItem Header="{x:Static resx:Resources.Javascript}">
                         <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-
                             <Border Style="{StaticResource DefaultBorder}">
-                                <TextBox Text="{Binding Javascript}" Style="{StaticResource MultiLineTextBox}" Height="250" />
+                                <TextBox Text="{Binding Javascript}" Style="{StaticResource MultiLineTextBox}" MinHeight="250" />
                             </Border>
                         </Grid>
                     </TabItem>

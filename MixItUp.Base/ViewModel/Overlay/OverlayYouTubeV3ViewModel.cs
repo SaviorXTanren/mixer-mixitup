@@ -60,7 +60,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private int volume = 100;
 
-        public OverlayYouTubeV3ViewModel(bool addDefaultAnimation = false) : base(OverlayItemV3Type.YouTube, addDefaultAnimation) { }
+        public OverlayYouTubeV3ViewModel() : base(OverlayItemV3Type.YouTube) { }
 
         public OverlayYouTubeV3ViewModel(OverlayYouTubeV3Model item)
             : base(item)

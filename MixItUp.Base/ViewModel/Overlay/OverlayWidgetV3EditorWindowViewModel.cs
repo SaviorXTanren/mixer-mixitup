@@ -28,27 +28,6 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private OverlayEndpointV3Model selectedOverlayEndpoint;
 
-        public OverlayPositionV3ViewModel Position
-        {
-            get { return this.Item.Position; }
-            set
-            {
-                this.Item.Position = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-
-        public OverlayItemV3ViewModelBase Item
-        {
-            get { return this.item; }
-            set
-            {
-                this.item = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private OverlayItemV3ViewModelBase item;
-
         public int RefreshTime
         {
             get { return this.refreshTime; }
@@ -60,7 +39,16 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private int refreshTime;
 
-        public List<OverlayAnimationV3ViewModel> Animations { get { return this.Item.Animations; } }
+        public OverlayItemV3ViewModelBase Item
+        {
+            get { return this.item; }
+            set
+            {
+                this.item = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayItemV3ViewModelBase item;
 
         public OverlayItemV3ModelBase oldItem;
 

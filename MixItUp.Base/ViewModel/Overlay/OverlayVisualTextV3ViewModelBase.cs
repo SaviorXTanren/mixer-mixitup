@@ -161,8 +161,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         protected int width;
 
-        public OverlayVisualTextV3ViewModelBase(OverlayItemV3Type type, bool addDefaultAnimation = false)
-            : base(type, addDefaultAnimation)
+        public OverlayVisualTextV3ViewModelBase(OverlayItemV3Type type)
+            : base(type)
         {
             this.FontSize = 24;
             this.FontName = "Arial";

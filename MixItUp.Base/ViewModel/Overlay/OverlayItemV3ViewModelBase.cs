@@ -43,6 +43,8 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public List<OverlayAnimationV3ViewModel> Animations { get; private set; } = new List<OverlayAnimationV3ViewModel>();
 
+        public bool HasAnimations { get { return this.Animations.Count > 0; } }
+
         public string ItemDuration
         {
             get { return this.itemDuration; }
@@ -87,7 +89,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string javascript;
 
-        public OverlayItemV3ViewModelBase(OverlayItemV3Type type, bool addDefaultAnimations = false)
+        public OverlayItemV3ViewModelBase(OverlayItemV3Type type)
         {
             this.Type = type;
             switch (this.Type)
@@ -151,13 +153,6 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
 
             this.Duration = "5";
-
-            if (addDefaultAnimations)
-            {
-                this.Animations.Add(new OverlayAnimationV3ViewModel(OverlayAnimationV3Model.EntranceAnimationName));
-                this.Animations.Add(new OverlayAnimationV3ViewModel(OverlayAnimationV3Model.VisibleAnimationName));
-                this.Animations.Add(new OverlayAnimationV3ViewModel(OverlayAnimationV3Model.ExitAniamtionName));
-            }
         }
 
         public OverlayItemV3ViewModelBase(OverlayItemV3ModelBase item)
@@ -173,6 +168,26 @@ namespace MixItUp.Base.ViewModel.Overlay
             {
                 this.Animations.Add(new OverlayAnimationV3ViewModel(animation.Value));
             }
+            this.NotifyPropertyChanged(nameof(this.HasAnimations));
+        }
+
+        public void AddOverlayActionAnimations()
+        {
+            this.AddAnimations(new List<string>() { OverlayAnimationV3Model.EntranceAnimationName, OverlayAnimationV3Model.VisibleAnimationName, OverlayAnimationV3Model.ExitAniamtionName });
+        }
+
+        public void AddEntranceExitAnimations()
+        {
+            this.AddAnimations(new List<string>() { OverlayAnimationV3Model.EntranceAnimationName, OverlayAnimationV3Model.ExitAniamtionName });
+        }
+
+        public void AddAnimations(IEnumerable<string> animationNames)
+        {
+            foreach (string animationName in animationNames)
+            {
+                this.Animations.Add(new OverlayAnimationV3ViewModel(animationName));
+            }
+            this.NotifyPropertyChanged(nameof(this.HasAnimations));
         }
 
         public virtual Result Validate()

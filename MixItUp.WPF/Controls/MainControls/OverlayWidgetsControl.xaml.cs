@@ -1,15 +1,11 @@
 ﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Overlay;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System;
-using MixItUp.Base.Services;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -107,7 +103,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             //await widget.Enable();
 
-            OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(OverlayItemV3Type.Text);
+            OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(OverlayItemV3Type.Label);
             window.Closed += Window_Closed;
             window.Show();
         }

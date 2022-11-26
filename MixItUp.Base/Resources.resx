@@ -9505,4 +9505,43 @@ update_{ID}({CurrentAmount}, {GoalAmount}, {Width});</value>
   <data name="TwitchChannelCharityDonation" xml:space="preserve">
     <value>Twitch Channel Charity Donation</value>
   </data>
+  <data name="Added" xml:space="preserve">
+    <value>Added</value>
+  </data>
+  <data name="Removed" xml:space="preserve">
+    <value>Removed</value>
+  </data>
+  <data name="Progress" xml:space="preserve">
+    <value>Progress</value>
+  </data>
+  <data name="Updated" xml:space="preserve">
+    <value>Updated</value>
+  </data>
+  <data name="OverlayLabelCounterNotSelected" xml:space="preserve">
+    <value>A valid counter must be selected</value>
+  </data>
+  <data name="LastestFollower" xml:space="preserve">
+    <value>Lastest Follower</value>
+  </data>
+  <data name="LatestDonation" xml:space="preserve">
+    <value>Latest Donation</value>
+  </data>
+  <data name="LatestRaid" xml:space="preserve">
+    <value>Latest Raid</value>
+  </data>
+  <data name="LatestSubscriber" xml:space="preserve">
+    <value>Latest Subscriber</value>
+  </data>
+  <data name="LatestTrovoElixir" xml:space="preserve">
+    <value>Latest Trovo Elixir</value>
+  </data>
+  <data name="LatestTwitchBits" xml:space="preserve">
+    <value>Latest Twitch Bits</value>
+  </data>
+  <data name="TotalFollowers" xml:space="preserve">
+    <value>Total Followers</value>
+  </data>
+  <data name="TotalSubscribers" xml:space="preserve">
+    <value>Total Subscribers</value>
+  </data>
 </root>

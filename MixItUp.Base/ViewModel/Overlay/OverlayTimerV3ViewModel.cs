@@ -27,8 +27,8 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private bool countUp;
 
-        public OverlayTimerV3ViewModel(bool addDefaultAnimation = false)
-            : base(OverlayItemV3Type.Timer, addDefaultAnimation)
+        public OverlayTimerV3ViewModel()
+            : base(OverlayItemV3Type.Timer)
         {
             this.DisplayFormat = OverlayTimerV3Model.DefaultDisplayFormat;
         }
