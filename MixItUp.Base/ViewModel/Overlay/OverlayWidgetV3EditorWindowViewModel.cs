@@ -7,7 +7,7 @@ using System;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
-    public class OverlayWidgetV3WindowViewModel : UIViewModelBase
+    public class OverlayWidgetV3EditorWindowViewModel : UIViewModelBase
     {
         public Guid ID { get; set; }
 
@@ -49,9 +49,22 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private OverlayItemV3ViewModelBase item;
 
-        public List<OverlayAnimationV3ViewModel> Animations { get; private set; } = new List<OverlayAnimationV3ViewModel>();
+        public int RefreshTime
+        {
+            get { return this.refreshTime; }
+            set
+            {
+                this.refreshTime = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int refreshTime;
 
-        public OverlayWidgetV3WindowViewModel(OverlayItemV3Type type)
+        public List<OverlayAnimationV3ViewModel> Animations { get { return this.Item.Animations; } }
+
+        public OverlayItemV3ModelBase oldItem;
+
+        public OverlayWidgetV3EditorWindowViewModel(OverlayItemV3Type type)
         {
             this.ID = Guid.NewGuid();
             this.Type = type;
@@ -93,11 +106,14 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().GetDefaultOverlayEndpoint();
         }
 
-        public OverlayWidgetV3WindowViewModel(OverlayItemV3ModelBase item)
+        public OverlayWidgetV3EditorWindowViewModel(OverlayItemV3ModelBase item)
         {
+            this.oldItem = item;
+
             this.ID = item.ID;
             this.Name = item.Name;
             this.Type = item.Type;
+            this.RefreshTime = item.RefreshTime;
 
             this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().GetOverlayEndpoint(item.OverlayEndpointID);
 
@@ -153,6 +169,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             item.ID = this.ID;
             item.Name = this.Name;
             item.OverlayEndpointID = this.SelectedOverlayEndpoint.ID;
+            item.RefreshTime = this.RefreshTime;
 
             return item;
         }

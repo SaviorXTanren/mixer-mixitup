@@ -5,10 +5,12 @@ namespace MixItUp.Base.ViewModel.Overlay
 {
     public class OverlayLabelV3ViewModel : OverlayItemV3ViewModelBase
     {
+        public const string UpdatedAnimationName = "Updated";
+
         public OverlayLabelV3ViewModel()
             : base(OverlayItemV3Type.Label)
         {
-
+            this.Animations.Add(new OverlayAnimationV3ViewModel(OverlayLabelV3ViewModel.UpdatedAnimationName));
         }
 
         public OverlayLabelV3ViewModel(OverlayLabelV3Model item)

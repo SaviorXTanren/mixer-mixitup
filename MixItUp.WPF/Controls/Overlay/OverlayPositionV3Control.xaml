@@ -21,7 +21,7 @@
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.ScreenPosition}"/>
@@ -39,7 +39,7 @@
             <Button Grid.Column="2" Command="{Binding PixelPositionCommand}" IsEnabled="{Binding IsPixelPosition, Converter={StaticResource InverseBooleanConverter}}" Content="{x:Static resx:Resources.Pixels}"/>
         </Grid>
 
-        <Grid Grid.Row="4" HorizontalAlignment="Center" Visibility="{Binding IsSimplePosition, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Grid Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsSimplePosition, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />

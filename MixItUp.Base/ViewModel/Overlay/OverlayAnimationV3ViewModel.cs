@@ -12,7 +12,18 @@ namespace MixItUp.Base.ViewModel.Overlay
 
     public class OverlayAnimationV3ViewModel : UIViewModelBase
     {
-        public string Name { get; set; }
+        public string Name
+        {
+            get { return this.name; }
+            set
+            {
+                this.name = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string name;
+
+        public string DisplayName { get { return Resources.ResourceManager.GetString(this.Name, Resources.Culture); } }
 
         private static IEnumerable<OverlayAnimateCSSAnimationType> animateCSSAnimations = null;
 
@@ -65,8 +76,8 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.Name = name;
         }
 
-        public OverlayAnimationV3ViewModel(string name, OverlayAnimationV3Model animation)
-            : this(name)
+        public OverlayAnimationV3ViewModel(OverlayAnimationV3Model animation)
+            : this(animation.Name)
         {
             if (animation.AnimateCSSAnimation != OverlayAnimateCSSAnimationType.None)
             {
@@ -75,12 +86,16 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
         }
 
-        public void SetAnimation(OverlayAnimationV3Model animation)
+        public OverlayAnimationV3Model GetAnimation()
         {
+            OverlayAnimationV3Model animation = new OverlayAnimationV3Model(this.Name);
+
             if (this.IsAnimateCSSVisible && this.SelectedAnimatedCSSAnimation != OverlayAnimateCSSAnimationType.None)
             {
                 animation.AnimateCSSAnimation = this.SelectedAnimatedCSSAnimation;
             }
+
+            return animation;
         }
     }
 }

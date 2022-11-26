@@ -65,8 +65,8 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public ICommand BrowseFilePathCommand { get; set; }
 
-        public OverlayVideoV3ViewModel()
-            : base(OverlayItemV3Type.Video)
+        public OverlayVideoV3ViewModel(bool addDefaultAnimation = false)
+            : base(OverlayItemV3Type.Video, addDefaultAnimation)
         {
             this.SetCommands();
         }

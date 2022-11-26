@@ -38,7 +38,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private int height;
 
-        public OverlayWebPageV3ViewModel() : base(OverlayItemV3Type.WebPage) { }
+        public OverlayWebPageV3ViewModel(bool addDefaultAnimation = false) : base(OverlayItemV3Type.WebPage, addDefaultAnimation) { }
 
         public OverlayWebPageV3ViewModel(OverlayWebPageV3Model item)
             : base(item)

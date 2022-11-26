@@ -4,7 +4,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 {
     public class OverlayHTMLV3ViewModel : OverlayItemV3ViewModelBase
     {
-        public OverlayHTMLV3ViewModel() : base(OverlayItemV3Type.HTML) { }
+        public OverlayHTMLV3ViewModel(bool addDefaultAnimation = false) : base(OverlayItemV3Type.HTML, addDefaultAnimation) { }
 
         public OverlayHTMLV3ViewModel(OverlayHTMLV3Model item) : base(item) { }
 

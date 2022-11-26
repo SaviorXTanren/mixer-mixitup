@@ -130,6 +130,13 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayAnimationV3Model
     {
+        public const string EntranceAnimationName = "Entrance";
+        public const string VisibleAnimationName = "Visible";
+        public const string ExitAniamtionName = "Exit";
+
+        [DataMember]
+        public string Name { get; set; }
+
         [DataMember]
         public OverlayAnimateCSSAnimationType AnimateCSSAnimation { get; set; }
         [DataMember]
@@ -155,6 +162,14 @@ namespace MixItUp.Base.Model.Overlay
                 return string.Empty;
             }
         }
+
+        public OverlayAnimationV3Model(string name)
+        {
+            this.Name = name;
+        }
+
+        [Obsolete]
+        public OverlayAnimationV3Model() { }
 
         public void ApplyAnimationReplacements(OverlayOutputV3Model output)
         {

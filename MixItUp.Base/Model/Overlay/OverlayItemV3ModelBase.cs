@@ -223,14 +223,11 @@ namespace MixItUp.Base.Model.Overlay
             result.CSS = ReplaceProperty(result.CSS, nameof(this.Duration), result.Duration);
             result.Javascript = ReplaceProperty(result.Javascript, nameof(this.Duration), result.Duration);
 
-            result.EntranceAnimation = this.EntranceAnimation;
-            result.EntranceAnimation.ApplyAnimationReplacements(result);
-
-            result.VisibleAnimation = this.VisibleAnimation;
-            result.VisibleAnimation.ApplyAnimationReplacements(result);
-
-            result.ExitAnimation = this.ExitAnimation;
-            result.ExitAnimation.ApplyAnimationReplacements(result);
+            foreach (var animation in this.Animations)
+            {
+                result.Animations[animation.Key] = animation.Value;
+                animation.Value.ApplyAnimationReplacements(result);
+            }
 
             result = await this.GetProcessedItem(result, overlayEndpointService, parameters);
 

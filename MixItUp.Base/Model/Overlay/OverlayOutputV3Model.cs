@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Overlay
@@ -20,11 +21,7 @@ namespace MixItUp.Base.Model.Overlay
         public string Duration { get; set; }
 
         [DataMember]
-        public OverlayAnimationV3Model EntranceAnimation { get; set; } = new OverlayAnimationV3Model();
-        [DataMember]
-        public OverlayAnimationV3Model VisibleAnimation { get; set; } = new OverlayAnimationV3Model();
-        [DataMember]
-        public OverlayAnimationV3Model ExitAnimation { get; set; } = new OverlayAnimationV3Model();
+        public Dictionary<string, OverlayAnimationV3Model> Animations { get; set; } = new Dictionary<string, OverlayAnimationV3Model>();
 
         [DataMember]
         public string TextID { get { return "X" + this.ID.ToString().Replace('-', 'X'); } set { } }

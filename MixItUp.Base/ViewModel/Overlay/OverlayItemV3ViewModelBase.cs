@@ -41,39 +41,6 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string duration;
 
-        public OverlayAnimationV3ViewModel EntranceAnimation
-        {
-            get { return this.entranceAnimation; }
-            set
-            {
-                this.entranceAnimation = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private OverlayAnimationV3ViewModel entranceAnimation = new OverlayAnimationV3ViewModel(Resources.Entrance);
-
-        public OverlayAnimationV3ViewModel VisibleAnimation
-        {
-            get { return this.visibleAnimation; }
-            set
-            {
-                this.visibleAnimation = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private OverlayAnimationV3ViewModel visibleAnimation = new OverlayAnimationV3ViewModel(Resources.Visible);
-
-        public OverlayAnimationV3ViewModel ExitAnimation
-        {
-            get { return this.exitAnimation; }
-            set
-            {
-                this.exitAnimation = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private OverlayAnimationV3ViewModel exitAnimation = new OverlayAnimationV3ViewModel(Resources.Exit);
-
         public List<OverlayAnimationV3ViewModel> Animations { get; private set; } = new List<OverlayAnimationV3ViewModel>();
 
         public string ItemDuration
@@ -120,7 +87,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string javascript;
 
-        public OverlayItemV3ViewModelBase(OverlayItemV3Type type)
+        public OverlayItemV3ViewModelBase(OverlayItemV3Type type, bool addDefaultAnimations = false)
         {
             this.Type = type;
             switch (this.Type)
@@ -183,11 +150,14 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.CSS = OverlayItemV3ModelBase.PositionedCSS + Environment.NewLine + Environment.NewLine + this.CSS;
             }
 
-            this.Animations.Add(this.EntranceAnimation);
-            this.Animations.Add(this.VisibleAnimation);
-            this.Animations.Add(this.ExitAnimation);
-
             this.Duration = "5";
+
+            if (addDefaultAnimations)
+            {
+                this.Animations.Add(new OverlayAnimationV3ViewModel(OverlayAnimationV3Model.EntranceAnimationName));
+                this.Animations.Add(new OverlayAnimationV3ViewModel(OverlayAnimationV3Model.VisibleAnimationName));
+                this.Animations.Add(new OverlayAnimationV3ViewModel(OverlayAnimationV3Model.ExitAniamtionName));
+            }
         }
 
         public OverlayItemV3ViewModelBase(OverlayItemV3ModelBase item)
@@ -198,13 +168,11 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             this.Position = new OverlayPositionV3ViewModel(item);
             this.Duration = item.Duration;
-            this.EntranceAnimation = new OverlayAnimationV3ViewModel(Resources.Entrance, item.EntranceAnimation);
-            this.VisibleAnimation = new OverlayAnimationV3ViewModel(Resources.Visible, item.VisibleAnimation);
-            this.ExitAnimation = new OverlayAnimationV3ViewModel(Resources.Exit, item.ExitAnimation);
 
-            this.Animations.Add(this.EntranceAnimation);
-            this.Animations.Add(this.VisibleAnimation);
-            this.Animations.Add(this.ExitAnimation);
+            foreach (var animation in item.Animations)
+            {
+                this.Animations.Add(new OverlayAnimationV3ViewModel(animation.Value));
+            }
         }
 
         public virtual Result Validate()
@@ -222,9 +190,11 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             this.Position.SetPosition(item);
             item.Duration = this.Duration;
-            this.EntranceAnimation.SetAnimation(item.EntranceAnimation);
-            this.VisibleAnimation.SetAnimation(item.VisibleAnimation);
-            this.ExitAnimation.SetAnimation(item.ExitAnimation);
+
+            foreach (var animation in this.Animations)
+            {
+                item.Animations[animation.Name] = animation.GetAnimation();
+            }
 
             return item;
         }

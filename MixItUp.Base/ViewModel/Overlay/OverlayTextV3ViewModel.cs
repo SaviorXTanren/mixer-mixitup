@@ -5,7 +5,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 {
     public class OverlayTextV3ViewModel : OverlayVisualTextV3ViewModelBase
     {
-        public OverlayTextV3ViewModel() : base(OverlayItemV3Type.Text) { }
+        public OverlayTextV3ViewModel(bool addDefaultAnimation = false) : base(OverlayItemV3Type.Text, addDefaultAnimation) { }
 
         public OverlayTextV3ViewModel(OverlayTextV3Model item) : base(item) { }
 
