@@ -318,16 +318,17 @@ namespace MixItUp.Base.Services.Twitch
             await this.RegisterEventSubSubscription("channel.hype_train.progress", message);
             await this.RegisterEventSubSubscription("channel.hype_train.end", message);
 
-            await this.RegisterEventSubSubscription("channel.charity_campaign.donate", message);
+            await this.RegisterEventSubSubscription("channel.charity_campaign.donate", message, "beta");
         }
 
-        private async Task RegisterEventSubSubscription(string type, WelcomeMessage message)
+        private async Task RegisterEventSubSubscription(string type, WelcomeMessage message, string version = null)
         {
             await ServiceManager.Get<TwitchSessionService>().UserConnection.Connection.NewAPI.EventSub.CreateSubscription(
                 type,
                 "websocket",
                 new Dictionary<string, string> { { "broadcaster_user_id", ServiceManager.Get<TwitchSessionService>().UserID } },
-                message.Payload.Session.Id);
+                message.Payload.Session.Id,
+                version: version);
         }
 
         private async void EventSub_OnRevocationMessageReceived(object sender, RevocationMessage e)

@@ -233,7 +233,7 @@ namespace MixItUp.WPF.Services
                 properties.Settings["file"] = filePath;
                 this.OBSWebsocket.SetSourceSettings(sourceName, properties.Settings);
 
-                return true;
+                return Task.FromResult(true);
             });
         }
 
@@ -249,7 +249,7 @@ namespace MixItUp.WPF.Services
                 properties.Settings["local_file"] = filePath;
                 this.OBSWebsocket.SetSourceSettings(sourceName, properties.Settings);
 
-                return true;
+                return Task.FromResult(true);
             });
         }
 

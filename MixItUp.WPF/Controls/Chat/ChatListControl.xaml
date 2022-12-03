@@ -22,7 +22,6 @@
                 <MenuItem x:Name="MessageDeleteMenuItem" Header="{x:Static resx:Resources.DeleteMessage}" Click="MessageDeleteMenuItem_Click" />
                 <MenuItem x:Name="GoToLinkMenuItem" Visibility="Collapsed" Header="{x:Static resx:Resources.GoToLink}" Click="GoToLinkMenuItem_Click" />
                 <Separator />
-                <MenuItem x:Name="MessageWhisperUserMenuItem" Header="{x:Static resx:Resources.WhisperUser}" Click="MessageWhisperUserMenuItem_Click" />
                 <MenuItem x:Name="UserInformationMenuItem" Header="{x:Static resx:Resources.UserInfo}" Click="UserInformationMenuItem_Click" />
             </ContextMenu>
 
