@@ -1,0 +1,73 @@
+# ==================================================================================================
+# GENERAL SETTINGS
+# ==================================================================================================
+
+# Package type. Must be plugin4 for plugins.
+type: plugin4
+
+# Name of the plugin.
+name: MixItUp
+
+# Name that is displayed in the Loupedeck configuration application.
+displayName: Mix It Up
+
+# Name of the plugin library file.
+pluginFileName: MixItUp.LoupedeckPlugin.dll
+
+# Plugin version.
+version: 0.1
+
+# Author of the plugin. The author can be a company or an individual developer.
+author: Blazing Cacti LLC
+
+# Copyright information.
+copyright: Copyright © 2022 Blazing Cacti LLC. All rights reserved.
+
+
+# ==================================================================================================
+# PLUGIN PROPERTIES
+# ==================================================================================================
+
+# Location of plugin files on Windows (relative to the plugin base directory).
+# This parameter is required to support Windows.
+pluginFolderWin: win
+
+# Location of plugin files on macOS (relative to the plugin base directory).
+# This parameter is required to support Mac.
+#pluginFolderMac: mac
+
+# List of supported devices.
+supportedDevices:
+    # LoupedeckCtFamily covers the following devices: Loupedeck CT, Live and Live S, and Razer Stream Controller.
+    - LoupedeckCtFamily
+
+    # LoupedeckPlusFamily covers Loupedeck+ device. Uncomment the following line to support Loupedeck+.
+    #- LoupedeckPlusFamily
+
+# List of plugin capabilities.
+pluginCapabilities:
+    # Uncomment the following line if this plugin is an application plugin.
+    - HasApplication
+
+    # Uncomment the following line if the plugin sends keyboard shortcuts to the target application.
+    #- ActivatesApplication
+
+
+# ==================================================================================================
+# LOUPEDECK MARKETPLACE SETTINGS
+# ==================================================================================================
+
+# Name of the license that the plugin is licensed under. Select the one that you prefer.
+# NOTE: GPL license is not compatible with Loupedeck Marketplace.
+license: MIT
+
+# URL of the plugin license.
+licenseUrl: https://opensource.org/licenses/MIT
+
+# URL of the support page where the users can send improvement suggestions and report bugs.
+# The URL is shown in Loupedeck Marketplace. The page can be for example a GitHub issues page.
+# NOTE: This setting is recommended when publishing the plugin in Loupedeck Marketplace.
+#supportPageUrl: https://github.com/myusername/myplugin/issues
+
+# URL of the plugin homepage. The URL is shown in Loupedeck Marketplace.
+#homePageUrl: https://github.com/myusername/myplugin
