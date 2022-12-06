@@ -318,7 +318,7 @@ namespace MixItUp.Base.Services.Twitch
             await this.RegisterEventSubSubscription("channel.hype_train.progress", message);
             await this.RegisterEventSubSubscription("channel.hype_train.end", message);
 
-            await this.RegisterEventSubSubscription("channel.charity_campaign.donate", message, "beta");
+            //await this.RegisterEventSubSubscription("channel.charity_campaign.donate", message, "beta");
         }
 
         private async Task RegisterEventSubSubscription(string type, WelcomeMessage message, string version = null)
