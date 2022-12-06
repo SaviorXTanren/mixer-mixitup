@@ -345,213 +345,31 @@ namespace MixItUp.Base.Services
             }
             else if (currentVersion < SettingsV3Model.LatestVersion)
             {
-                await SettingsV3Upgrader.Version4Upgrade(currentVersion, filePath);
+                await SettingsV3Upgrader.Version5Upgrade(currentVersion, filePath);
             }
             SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
             settings.Version = SettingsV3Model.LatestVersion;
             return settings;
         }
 
-        public static async Task Version4Upgrade(int version, string filePath)
+        public static async Task Version5Upgrade(int version, string filePath)
         {
-            if (version < 4)
+            if (version < 5)
             {
                 string fileData = await ServiceManager.Get<IFileService>().ReadFile(filePath);
-                fileData = fileData.Replace("MixItUp.Base.Model.User.UserRoleEnum", "MixItUp.Base.Model.User.OldUserRoleEnum");
-
                 SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
                 await settings.Initialize();
 
-                bool tableExists = false;
-                await ServiceManager.Get<IDatabaseService>().Read(settings.DatabaseFilePath, "SELECT name FROM sqlite_master WHERE type='table' AND name='ImportedUsers'", (row) =>
+                if (settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch))
                 {
-                    tableExists = true;
-                });
-
-                if (!tableExists)
-                {
-                    await ServiceManager.Get<IDatabaseService>().Write(settings.DatabaseFilePath, "CREATE TABLE \"ImportedUsers\" (\"ID\" TEXT NOT NULL, \"Platform\" INTEGER NOT NULL, \"PlatformID\" TEXT, \"PlatformUsername\" TEXT, \"Data\" TEXT NOT NULL, UNIQUE(\"Platform\",\"PlatformID\",\"PlatformUsername\"), PRIMARY KEY(\"ID\"))");
+                    // Force OAuth token reset for new scopes
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = null;
                 }
 
-                foreach (StreamingPlatformTypeEnum type in settings.StreamingPlatformAuthentications.Keys.ToList())
-                {
-                    if (type != StreamingPlatformTypeEnum.Twitch)
-                    {
-                        settings.StreamingPlatformAuthentications.Remove(type);
-                    }
-                }
-                settings.DefaultStreamingPlatform = StreamingPlatformTypeEnum.Twitch;
-
-#pragma warning disable CS0612 // Type or member is obsolete
-                settings.MassGiftedSubsFilterAmount = settings.TwitchMassGiftedSubsFilterAmount;
-
-                settings.AlertTwitchBitsCheeredColor = settings.AlertBitsCheeredColor;
-                settings.AlertTwitchChannelPointsColor = settings.AlertChannelPointsColor;
-                settings.AlertTwitchHypeTrainColor = settings.AlertHypeTrainColor;
-
-                settings.ModerationFilteredWordsExcemptUserRole = UserRoles.ConvertFromOldRole(settings.ModerationFilteredWordsExcempt);
-                settings.ModerationChatTextExcemptUserRole = UserRoles.ConvertFromOldRole(settings.ModerationChatTextExcempt);
-                settings.ModerationBlockLinksExcemptUserRole = UserRoles.ConvertFromOldRole(settings.ModerationBlockLinksExcempt);
-                settings.ModerationChatInteractiveParticipationExcemptUserRole = UserRoles.ConvertFromOldRole(settings.ModerationChatInteractiveParticipationExcempt);
-
-                if (settings.GiveawayRequirementsSet?.Role != null)
-                {
-                    settings.GiveawayRequirementsSet.Role.UserRole = UserRoles.ConvertFromOldRole(settings.GiveawayRequirementsSet.Role.Role);
-                }
-
-                foreach (var title in settings.UserTitles)
-                {
-                    title.UserRole = UserRoles.ConvertFromOldRole(title.Role);
-                }
-
-                List<HotKeyConfiguration> hotKeyConfigurations = settings.HotKeys.Values.ToList();
-                settings.HotKeys.Clear();
-                foreach (HotKeyConfiguration hotKey in hotKeyConfigurations)
-                {
-                    hotKey.VirtualKey = ServiceManager.Get<IInputService>().ConvertOldKeyEnum(hotKey.Key);
-                    settings.HotKeys[hotKey.ToString()] = hotKey;
-                }
-
-                foreach (var kvp in settings.CustomUsernameColors)
-                {
-                    UserRoleEnum newRole = UserRoles.ConvertFromOldRole(kvp.Key);
-                    settings.CustomUsernameRoleColors[newRole] = kvp.Value;
-                }
-
-                foreach (var kvp in settings.RedemptionStoreProducts)
-                {
-                    kvp.Value.Requirements.Role.UpgradeFromOldRoles();
-                }
-
-                foreach (var kvp in settings.StreamPass)
-                {
-                    kvp.Value.UserPermission = UserRoles.ConvertFromOldRole(kvp.Value.Permission);
-                }
-
-                foreach (var commandSettings in settings.PreMadeChatCommandSettings)
-                {
-                    commandSettings.UserRole = UserRoles.ConvertFromOldRole(commandSettings.Role);
-                }
-
-                List<UserDataModel> oldUserData = new List<UserDataModel>();
-                await ServiceManager.Get<IDatabaseService>().Read(settings.DatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
-                {
-                    oldUserData.Add(JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString()));
-                });
-
-                foreach (UserDataModel oldUser in oldUserData)
-                {
-                    UserV2Model user = oldUser.ToV2Model();
-                    if (user != null)
-                    {
-                        settings.Users[user.ID] = user;
-                    }
-                    else
-                    {
-                        settings.Users.Remove(oldUser.ID);
-                    }
-                }
-
-                foreach (CommandModelBase command in settings.Commands.Values)
-                {
-                    SettingsV3Upgrader.MultiPlatformCommandUpgrade(command);
-                    settings.Commands.ManualValueChanged(command.ID);
-                }
-#pragma warning restore CS0612 // Type or member is obsolete
+                // Overlay upgrades
 
                 await ServiceManager.Get<SettingsService>().Save(settings);
             }
-        }
-
-        public static void MultiPlatformCommandUpgrade(CommandModelBase command)
-        {
-#pragma warning disable CS0612 // Type or member is obsolete
-            if (command is BetGameCommandModel)
-            {
-                BetGameCommandModel gCommand = (BetGameCommandModel)command;
-                gCommand.StarterUserRole = UserRoles.ConvertFromOldRole(gCommand.StarterRole);
-
-                foreach (GameOutcomeModel outcome in gCommand.BetOptions)
-                {
-                    outcome.UpgradeProbabilitySettings();
-                }
-            }
-            else if (command is BidGameCommandModel)
-            {
-                BidGameCommandModel gCommand = (BidGameCommandModel)command;
-                gCommand.StarterUserRole = UserRoles.ConvertFromOldRole(gCommand.StarterRole);
-            }
-            else if (command is DuelGameCommandModel)
-            {
-                DuelGameCommandModel gCommand = (DuelGameCommandModel)command;
-                gCommand.SuccessfulOutcome.UpgradeProbabilitySettings();
-            }
-            else if (command is HeistGameCommandModel)
-            {
-                HeistGameCommandModel gCommand = (HeistGameCommandModel)command;
-                gCommand.UserSuccessOutcome.UpgradeProbabilitySettings();
-            }
-            else if (command is RouletteGameCommandModel)
-            {
-                RouletteGameCommandModel gCommand = (RouletteGameCommandModel)command;
-                gCommand.UserSuccessOutcome.UpgradeProbabilitySettings();
-            }
-            else if (command is StealGameCommandModel)
-            {
-                StealGameCommandModel gCommand = (StealGameCommandModel)command;
-                gCommand.SuccessfulOutcome.UpgradeProbabilitySettings();
-            }
-            else if (command is SpinGameCommandModel)
-            {
-                SpinGameCommandModel gCommand = (SpinGameCommandModel)command;
-                foreach (GameOutcomeModel outcome in gCommand.Outcomes)
-                {
-                    outcome.UpgradeProbabilitySettings();
-                }
-            }
-            else if (command is SlotMachineGameCommandModel)
-            {
-                SlotMachineGameCommandModel gCommand = (SlotMachineGameCommandModel)command;
-                foreach (SlotMachineGameOutcomeModel outcome in gCommand.Outcomes)
-                {
-                    outcome.UpgradeProbabilitySettings();
-                }
-            }
-
-            foreach (RequirementModelBase requirement in command.Requirements.Requirements)
-            {
-                if (requirement is RoleRequirementModel)
-                {
-                    RoleRequirementModel rRequirement = (RoleRequirementModel)requirement;
-                    rRequirement.UpgradeFromOldRoles();
-                }
-            }
-
-            foreach (ActionModelBase action in command.Actions)
-            {
-                if (action is ConsumablesActionModel)
-                {
-                    ConsumablesActionModel cAction = (ConsumablesActionModel)action;
-                    cAction.UserRoleToApplyTo = UserRoles.ConvertFromOldRole(cAction.UsersToApplyTo);
-                }
-                else if (action is GameQueueActionModel)
-                {
-                    GameQueueActionModel gqAction = (GameQueueActionModel)action;
-                    if (gqAction.RoleRequirement != null)
-                    {
-                        gqAction.RoleRequirement.UpgradeFromOldRoles();
-                    }
-                }
-                else if (action is InputActionModel)
-                {
-                    InputActionModel iAction = (InputActionModel)action;
-                    if (iAction.Key.HasValue)
-                    {
-                        iAction.VirtualKey = ServiceManager.Get<IInputService>().ConvertOldKeyEnum(iAction.Key.GetValueOrDefault());
-                    }
-                }
-            }
-#pragma warning restore CS0612 // Type or member is obsolete
         }
 
         public static async Task<int> GetSettingsVersion(string filePath)
