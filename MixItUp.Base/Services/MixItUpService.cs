@@ -258,12 +258,23 @@ namespace MixItUp.Base.Services
             return Task.FromResult(new OAuthTokenModel { accessToken = this.accessToken });
         }
 
-#if DEBUG
-        // Change to DEV for local API testing
-        protected override string GetBaseAddress() => MixItUpService.MixItUpAPIEndpoint;
-#else
-        protected override string GetBaseAddress() => MixItUpService.MixItUpAPIEndpoint;
-#endif
+        protected override string GetBaseAddress()
+        {
+            //if (ChannelSession.IsDebug())
+            //{
+            //    return MixItUpService.DevMixItUpAPIEndpoint;
+            //}
+            return MixItUpService.MixItUpAPIEndpoint;
+        }
+
+        protected string GetSingalRAddress()
+        {
+            //if (ChannelSession.IsDebug())
+            //{
+            //    return MixItUpService.DevMixItUpSignalRHubEndpoint;
+            //}
+            return MixItUpService.MixItUpSignalRHubEndpoint;
+        }
 
         private async Task EnsureLogin()
         {
@@ -299,12 +310,7 @@ namespace MixItUp.Base.Services
             {
                 if (this.signalRConnection == null)
                 {
-#if DEBUG
-                    // Change to DEV for local API testing
-                    this.signalRConnection = new SignalRConnection(MixItUpSignalRHubEndpoint);
-#else
-                    this.signalRConnection = new SignalRConnection(MixItUpSignalRHubEndpoint);
-#endif
+                    this.signalRConnection = new SignalRConnection(this.GetSingalRAddress());
 
                     this.signalRConnection.Listen("TriggerWebhook", (Guid id, string payload) =>
                     {
