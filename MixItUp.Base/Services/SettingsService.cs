@@ -7,12 +7,14 @@ using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,6 +26,18 @@ namespace MixItUp.Base.Services
         Daily,
         Weekly,
         Monthly,
+    }
+
+    public static class OAuthTokenModelStaticMethods
+    {
+        public static void Reset(this OAuthTokenModel token)
+        {
+            if (token != null)
+            {
+                token.accessToken = String.Empty;
+                token.refreshToken = String.Empty;
+            }
+        }
     }
 
     public class SettingsService
@@ -360,13 +374,11 @@ namespace MixItUp.Base.Services
                 SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
                 await settings.Initialize();
 
-                if (settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch))
+                if (settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch) && settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken != null)
                 {
                     // Force OAuth token reset for new scopes
-                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = null;
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.Reset();
                 }
-
-                // Overlay upgrades
 
                 await ServiceManager.Get<SettingsService>().Save(settings);
             }

@@ -129,6 +129,12 @@ namespace MixItUp.Base.Services.Glimesh
                         return new Result(MixItUp.Base.Resources.GlimeshFailedToGetUserData);
                     }
 
+                    this.Channel = await this.UserConnection.GetChannelByID(this.User.channel.id);
+                    if (this.Channel == null)
+                    {
+                        return new Result(MixItUp.Base.Resources.GlimeshFailedToGetUserData);
+                    }
+
                     if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].BotOAuthToken != null)
                     {
                         glimeshResult = await GlimeshPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].BotOAuthToken);
