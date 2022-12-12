@@ -80,8 +80,8 @@
     <Reference Include="ExcelDataReader.DataSet, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
       <HintPath>..\packages\ExcelDataReader.DataSet.3.6.0\lib\net35\ExcelDataReader.DataSet.dll</HintPath>
     </Reference>
-    <Reference Include="Glimesh.Base, Version=1.0.0.19, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StreamingClientLibrary.Glimesh.1.0.0.19\lib\netstandard2.0\Glimesh.Base.dll</HintPath>
+    <Reference Include="Glimesh.Base, Version=1.0.0.20, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamingClientLibrary.Glimesh.1.0.0.20\lib\netstandard2.0\Glimesh.Base.dll</HintPath>
     </Reference>
     <Reference Include="GongSolutions.WPF.DragDrop, Version=2.0.0.0, Culture=neutral, PublicKeyToken=91f1945125b7a587, processorArchitecture=MSIL">
       <HintPath>..\packages\gong-wpf-dragdrop.2.3.2\lib\net46\GongSolutions.WPF.DragDrop.dll</HintPath>
@@ -275,8 +275,8 @@
     <Reference Include="SQLitePCLRaw.provider.dynamic_cdecl, Version=2.0.7.1395, Culture=neutral, PublicKeyToken=b68184102cba0b3b, processorArchitecture=MSIL">
       <HintPath>..\packages\SQLitePCLRaw.provider.dynamic_cdecl.2.0.7\lib\netstandard2.0\SQLitePCLRaw.provider.dynamic_cdecl.dll</HintPath>
     </Reference>
-    <Reference Include="StreamingClient.Base, Version=1.0.0.9, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StreamingClientLibrary.Twitch.1.0.0.57\lib\netstandard2.0\StreamingClient.Base.dll</HintPath>
+    <Reference Include="StreamingClient.Base, Version=1.0.0.10, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamingClientLibrary.YouTube.1.0.0.15\lib\netstandard2.0\StreamingClient.Base.dll</HintPath>
     </Reference>
     <Reference Include="SuperSocket.ClientEngine, Version=0.10.0.0, Culture=neutral, PublicKeyToken=ee9af13f57f00acc, processorArchitecture=MSIL">
       <HintPath>..\packages\SuperSocket.ClientEngine.Core.0.10.0\lib\net45\SuperSocket.ClientEngine.dll</HintPath>
@@ -446,11 +446,11 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="Trovo.Base, Version=1.0.0.20, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StreamingClientLibrary.Trovo.1.0.0.20\lib\netstandard2.0\Trovo.Base.dll</HintPath>
+    <Reference Include="Trovo.Base, Version=1.0.0.21, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamingClientLibrary.Trovo.1.0.0.21\lib\netstandard2.0\Trovo.Base.dll</HintPath>
     </Reference>
-    <Reference Include="Twitch.Base, Version=1.0.0.57, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StreamingClientLibrary.Twitch.1.0.0.57\lib\netstandard2.0\Twitch.Base.dll</HintPath>
+    <Reference Include="Twitch.Base, Version=1.0.0.58, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamingClientLibrary.Twitch.1.0.0.58\lib\netstandard2.0\Twitch.Base.dll</HintPath>
     </Reference>
     <Reference Include="websocket-sharp, Version=1.0.1.0, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
       <HintPath>..\packages\WebSocketSharp-netstandard.1.0.1\lib\net45\websocket-sharp.dll</HintPath>
@@ -464,8 +464,8 @@
     <Reference Include="WpfAnimatedGif, Version=2.0.0.0, Culture=neutral, PublicKeyToken=9e7cd3b544a090dc, processorArchitecture=MSIL">
       <HintPath>..\packages\WpfAnimatedGif.2.0.2\lib\net40\WpfAnimatedGif.dll</HintPath>
     </Reference>
-    <Reference Include="YouTube.Base, Version=1.0.0.14, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StreamingClientLibrary.YouTube.1.0.0.14\lib\netstandard2.0\YouTube.Base.dll</HintPath>
+    <Reference Include="YouTube.Base, Version=1.0.0.15, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamingClientLibrary.YouTube.1.0.0.15\lib\netstandard2.0\YouTube.Base.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
