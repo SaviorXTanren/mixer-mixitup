@@ -451,7 +451,7 @@ namespace MixItUp.Base.Model.Currency
                         newResetDate = new DateTime(this.LastReset.Year, this.LastReset.Month, this.LastReset.Day);
                         do
                         {
-                            newResetDate.AddDays(1);
+                            newResetDate = newResetDate.AddDays(1);
                         } while (newResetDate.DayOfWeek != this.ResetStartCadence.DayOfWeek);
                     }
                     else if (this.ResetInterval == CurrencyResetRateEnum.Monthly)
