@@ -9045,21 +9045,6 @@ via Twitch, it's a "your mileage may vary" situation.</value>
   <data name="Exit" xml:space="preserve">
     <value>Exit</value>
   </data>
-  <data name="CopyMessage" xml:space="preserve">
-    <value>Copy Message</value>
-  </data>
-  <data name="DeleteMessage" xml:space="preserve">
-    <value>Delete Message</value>
-  </data>
-  <data name="GoToLink" xml:space="preserve">
-    <value>Go to Link</value>
-  </data>
-  <data name="UserInfo" xml:space="preserve">
-    <value>User Info</value>
-  </data>
-  <data name="WhisperUser" xml:space="preserve">
-    <value>WhisperUser</value>
-  </data>
   <data name="TwitchActionMessageMissing" xml:space="preserve">
     <value>Twitch Action: A valid message must be specified</value>
   </data>
@@ -9511,5 +9496,8 @@ update_{ID}({CurrentAmount}, {Percentage}, {Width});</value>
   </data>
   <data name="TwitchChannelCharityDonation" xml:space="preserve">
     <value>Twitch Channel Charity Donation</value>
+  </data>
+  <data name="TwitchEventServiceFailedToConnectEventSub" xml:space="preserve">
+    <value>Failed to connect to Twitch Event Sub service</value>
   </data>
 </root>

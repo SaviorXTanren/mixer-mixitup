@@ -202,6 +202,7 @@ namespace MixItUp.Base.Services.Twitch
 
         private PubSubClient pubSub;
         private EventSubClient eventSub;
+        private bool eventSubSubscriptionsConnected = false;
 
         private CancellationTokenSource cancellationTokenSource;
 
@@ -240,6 +241,7 @@ namespace MixItUp.Base.Services.Twitch
                         this.eventSub.OnNotificationMessageReceived += EventSub_OnNotificationMessageReceived;
                         this.eventSub.OnRevocationMessageReceived += EventSub_OnRevocationMessageReceived;
 
+                        this.eventSubSubscriptionsConnected = false;
                         await this.eventSub.Connect();
 
                         this.pubSub = new PubSubClient(ServiceManager.Get<TwitchSessionService>().UserConnection.Connection);
@@ -284,6 +286,16 @@ namespace MixItUp.Base.Services.Twitch
                         AsyncRunner.RunAsyncBackground(this.BackgroundGiftedSubProcessor, this.cancellationTokenSource.Token, 3000);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
+                        for (int i = 0; !this.eventSubSubscriptionsConnected && i < 5; i++)
+                        {
+                            await Task.Delay(1000);
+                        }
+
+                        if (!this.eventSubSubscriptionsConnected)
+                        {
+                            return new Result(Resources.TwitchEventServiceFailedToConnectEventSub);
+                        }
+
                         this.IsConnected = true;
 
                         return new Result();
@@ -300,35 +312,52 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void EventSub_OnWelcomeMessageReceived(object sender, WelcomeMessage message)
         {
-            TwitchSessionService twitchSession = ServiceManager.Get<TwitchSessionService>();
-            EventSubService eventSub = twitchSession.UserConnection.Connection.NewAPI.EventSub;
-
-            IEnumerable<EventSubSubscriptionModel> allSubs = await eventSub.GetSubscriptions();
-            foreach (EventSubSubscriptionModel sub in allSubs)
+            try
             {
-                await eventSub.DeleteSubscription(sub.id);
+                TwitchSessionService twitchSession = ServiceManager.Get<TwitchSessionService>();
+                EventSubService eventSub = twitchSession.UserConnection.Connection.NewAPI.EventSub;
+
+                IEnumerable<EventSubSubscriptionModel> allSubs = await eventSub.GetSubscriptions();
+                foreach (EventSubSubscriptionModel sub in allSubs)
+                {
+                    await eventSub.DeleteSubscription(sub.id);
+                }
+
+                await this.RegisterEventSubSubscription("channel.follow", message);
+
+                await this.RegisterEventSubSubscription("stream.online", message);
+                await this.RegisterEventSubSubscription("stream.offline", message);
+
+                await this.RegisterEventSubSubscription("channel.hype_train.begin", message);
+                await this.RegisterEventSubSubscription("channel.hype_train.progress", message);
+                await this.RegisterEventSubSubscription("channel.hype_train.end", message);
+
+                await this.RegisterEventSubSubscription("channel.charity_campaign.donate", message, "beta");
+
+                this.eventSubSubscriptionsConnected = true;
             }
-
-            await this.RegisterEventSubSubscription("channel.follow", message);
-
-            await this.RegisterEventSubSubscription("stream.online", message);
-            await this.RegisterEventSubSubscription("stream.offline", message);
-
-            await this.RegisterEventSubSubscription("channel.hype_train.begin", message);
-            await this.RegisterEventSubSubscription("channel.hype_train.progress", message);
-            await this.RegisterEventSubSubscription("channel.hype_train.end", message);
-
-            await this.RegisterEventSubSubscription("channel.charity_campaign.donate", message, "beta");
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
         private async Task RegisterEventSubSubscription(string type, WelcomeMessage message, string version = null)
         {
-            await ServiceManager.Get<TwitchSessionService>().UserConnection.Connection.NewAPI.EventSub.CreateSubscription(
-                type,
-                "websocket",
-                new Dictionary<string, string> { { "broadcaster_user_id", ServiceManager.Get<TwitchSessionService>().UserID } },
-                message.Payload.Session.Id,
-                version: version);
+            try
+            {
+                await ServiceManager.Get<TwitchSessionService>().UserConnection.Connection.NewAPI.EventSub.CreateSubscription(
+                    type,
+                    "websocket",
+                    new Dictionary<string, string> { { "broadcaster_user_id", ServiceManager.Get<TwitchSessionService>().UserID } },
+                    message.Payload.Session.Id,
+                    version: version);
+            }
+            catch (Exception)
+            {
+                Logger.Log(LogLevel.Error, $"Failed to connect EventSub for {type}");
+                throw;
+            }
         }
 
         private async void EventSub_OnRevocationMessageReceived(object sender, RevocationMessage e)
