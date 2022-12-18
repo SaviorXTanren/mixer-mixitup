@@ -17,6 +17,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MixItUp.WPF.Services
 {
@@ -227,11 +228,24 @@ namespace MixItUp.WPF.Services
 
             await this.SetSourceVisibility(sceneName, sourceName, visibility: false);
 
-            await this.OBSCommandTimeoutWrapper((cancellationToken) =>
+            await this.OBSCommandTimeoutWrapper(async (cancellationToken) =>
             {
-                SourceSettings properties = this.OBSWebsocket.GetSourceSettings(sourceName);
-                properties.Settings["file"] = filePath;
-                this.OBSWebsocket.SetSourceSettings(sourceName, properties.Settings);
+                if (this.OBSWebsocket.IsConnected)
+                {
+                    SourceSettings properties = this.OBSWebsocket.GetSourceSettings(sourceName);
+                    properties.Settings["file"] = filePath;
+                    this.OBSWebsocket.SetSourceSettings(sourceName, properties.Settings);
+                }
+
+                if (this.OBSWebsocketV5.IsConnected)
+                {
+                    JObject settings = await this.OBSWebsocketV5.GetSourceSettings(sourceName);
+                    if (settings != null)
+                    {
+                        settings["file"] = filePath;
+                        await this.OBSWebsocketV5.SetSourceSettings(sourceName, settings);
+                    }
+                }
 
                 return Task.FromResult(true);
             });
@@ -243,11 +257,24 @@ namespace MixItUp.WPF.Services
 
             await this.SetSourceVisibility(sceneName, sourceName, visibility: false);
 
-            await this.OBSCommandTimeoutWrapper((cancellationToken) =>
+            await this.OBSCommandTimeoutWrapper(async (cancellationToken) =>
             {
-                SourceSettings properties = this.OBSWebsocket.GetSourceSettings(sourceName);
-                properties.Settings["local_file"] = filePath;
-                this.OBSWebsocket.SetSourceSettings(sourceName, properties.Settings);
+                if (this.OBSWebsocket.IsConnected)
+                {
+                    SourceSettings properties = this.OBSWebsocket.GetSourceSettings(sourceName);
+                    properties.Settings["local_file"] = filePath;
+                    this.OBSWebsocket.SetSourceSettings(sourceName, properties.Settings);
+                }
+
+                if (this.OBSWebsocketV5.IsConnected)
+                {
+                    JObject settings = await this.OBSWebsocketV5.GetSourceSettings(sourceName);
+                    if (settings != null)
+                    {
+                        settings["local_file"] = filePath;
+                        await this.OBSWebsocketV5.SetSourceSettings(sourceName, settings);
+                    }
+                }
 
                 return Task.FromResult(true);
             });
@@ -675,6 +702,20 @@ namespace MixItUp.WPF.Services
                     }
                 }
             }
+        }
+
+        public async Task<JObject> GetSourceSettings(string sourceName)
+        {
+            OBSMessageGetInputSettingsRequest request = new OBSMessageGetInputSettingsRequest(sourceName);
+
+            string packet = await SendAndWait(request);
+            if (!string.IsNullOrEmpty(packet))
+            {
+                OBSMessageGetInputSettingsResponse response = JSONSerializerHelper.DeserializeFromString<OBSMessageGetInputSettingsResponse>(packet);
+                return response?.Data?.Data?.InputSettings;
+            }
+
+            return null;
         }
 
         public async Task SetSourceSettings(string sourceName, JObject settings)
@@ -1256,6 +1297,36 @@ namespace MixItUp.WPF.Services
 
             [JsonProperty("sceneItemEnabled")]
             public bool SceneItemEnabled { get; set; }
+        }
+
+        private class OBSMessageGetInputSettingsRequest : OBSMessageRequest<GetInputSettingsData>
+        {
+            public OBSMessageGetInputSettingsRequest(string sourceName) : base()
+            {
+                this.Data.RequestType = "GetInputSettings";
+                this.Data.Data = new GetInputSettingsData
+                {
+                    InputName = sourceName
+                };
+            }
+        }
+
+        private class GetInputSettingsData
+        {
+            [JsonProperty("inputName")]
+            public string InputName { get; set; }
+        }
+
+        private class OBSMessageGetInputSettingsResponse : OBSMessageResponse<GetInputSettingsResponseData>
+        {
+        }
+
+        private class GetInputSettingsResponseData
+        {
+            [JsonProperty("inputSettings")]
+            public JObject InputSettings { get; set; }
+            [JsonProperty("inputKind")]
+            public string InputKind { get; set; }
         }
 
         private class OBSMessageSetInputSettingsRequest : OBSMessageRequest<SetInputSettingsData>
