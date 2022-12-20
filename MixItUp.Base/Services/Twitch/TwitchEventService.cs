@@ -497,8 +497,6 @@ namespace MixItUp.Base.Services.Twitch
                     user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(userID, username, userDisplayName));
                 }
 
-                await ServiceManager.Get<TwitchEventService>().AddFollow(user);
-
                 Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
                 eventCommandSpecialIdentifiers[SpecialIdentifierStringBuilder.DonationAmountNumberDigitsSpecialIdentifier] = donationAmountRaw.ToString();
                 eventCommandSpecialIdentifiers[SpecialIdentifierStringBuilder.DonationAmountNumberSpecialIdentifier] = donationAmount.ToString();
