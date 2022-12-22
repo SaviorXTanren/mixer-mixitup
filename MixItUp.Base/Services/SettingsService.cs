@@ -367,9 +367,9 @@ namespace MixItUp.Base.Services
             return settings;
         }
 
-        public static async Task Version5Upgrade(int version, string filePath)
+        public static async Task Version6Upgrade(int version, string filePath)
         {
-            if (version < 5)
+            if (version < 6)
             {
                 string fileData = await ServiceManager.Get<IFileService>().ReadFile(filePath);
                 SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);

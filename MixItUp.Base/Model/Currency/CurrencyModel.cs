@@ -456,11 +456,13 @@ namespace MixItUp.Base.Model.Currency
                     }
                     else if (this.ResetInterval == CurrencyResetRateEnum.Monthly)
                     {
-                        newResetDate = new DateTime(this.LastReset.Year, this.LastReset.Month, this.ResetStartCadence.Day);
+                        int day = Math.Min(this.ResetStartCadence.Day, DateTime.DaysInMonth(this.LastReset.Year, this.LastReset.Month));
+                        newResetDate = new DateTime(this.LastReset.Year, this.LastReset.Month, day);
                     }
                     else if (this.ResetInterval == CurrencyResetRateEnum.Yearly)
                     {
-                        newResetDate = new DateTime(this.LastReset.Year, this.ResetStartCadence.Month, this.ResetStartCadence.Day);
+                        int day = Math.Min(this.ResetStartCadence.Day, DateTime.DaysInMonth(this.LastReset.Year, this.ResetStartCadence.Month));
+                        newResetDate = new DateTime(this.LastReset.Year, this.ResetStartCadence.Month, day);
                     }
                 }
                 else

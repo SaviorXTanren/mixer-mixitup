@@ -9544,4 +9544,7 @@ update_{ID}({CurrentAmount}, {GoalAmount}, {Width});</value>
   <data name="TotalSubscribers" xml:space="preserve">
     <value>Total Subscribers</value>
   </data>
+  <data name="TwitchEventServiceFailedToConnectEventSub" xml:space="preserve">
+    <value>Failed to connect to Twitch Event Sub service</value>
+  </data>
 </root>

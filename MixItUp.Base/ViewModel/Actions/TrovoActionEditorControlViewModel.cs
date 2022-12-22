@@ -204,9 +204,9 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateTextAction(TrovoActionType.SetGame, this.Text));
             }
-            else if (this.SelectedActionType == TrovoActionType.DisableSubscriberMode)
+            else if (this.SelectedActionType == TrovoActionType.EnableSubscriberMode)
             {
-                return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateBasicAction(TrovoActionType.DisableSubscriberMode));
+                return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateBasicAction(TrovoActionType.EnableSubscriberMode));
             }
             else if (this.SelectedActionType == TrovoActionType.DisableSubscriberMode)
             {
