@@ -158,6 +158,56 @@ namespace MixItUp.Base.Services.Twitch
         public string DisplayName { get; set; }
     }
 
+    public class TwitchCharityDonationModel
+    {
+        public string UserID { get; set; }
+        public string Username { get; set; }
+        public string DisplayName { get; set; }
+
+        public string CharityName { get; set; }
+        public string CharityImage { get; set; }
+
+        public double Amount { get; set; }
+        public double AmountDecimalPlaces { get; set; }
+
+        public TwitchCharityDonationModel(JObject payload)
+        {
+            this.UserID = payload["user_id"].Value<string>();
+            this.Username = payload["user_login"].Value<string>();
+            this.DisplayName = payload["user_name"].Value<string>();
+
+            this.CharityName = payload["charity_name"].Value<string>();
+            this.CharityImage = payload["charity_logo"].Value<string>();
+
+            JObject donationAmountJObj = payload["amount"] as JObject;
+            if (donationAmountJObj != null)
+            {
+                this.Amount = donationAmountJObj["value"].Value<int>();
+                this.AmountDecimalPlaces = donationAmountJObj["decimal_places"].Value<int>();
+                if (this.AmountDecimalPlaces > 0)
+                {
+                    this.Amount = this.Amount / Math.Pow(10, this.Amount);
+                }
+            }
+        }
+
+        public UserDonationModel ToGenericDonation()
+        {
+            return new UserDonationModel()
+            {
+                Source = UserDonationSourceEnum.Twitch,
+                Platform = StreamingPlatformTypeEnum.Twitch,
+
+                ID = Guid.NewGuid().ToString(),
+                Username = this.Username,
+
+                Amount = this.Amount,
+
+                DateTime = DateTimeOffset.Now,
+            };
+        }
+    }
+
     public class TwitchEventService : StreamingPlatformServiceBase
     {
         public const string PrimeSubPlan = "Prime";
@@ -472,41 +522,13 @@ namespace MixItUp.Base.Services.Twitch
 
         private async Task HandleCharityCampaignDonation(JObject payload)
         {
-            string userID = payload["user_id"].Value<string>();
-            string username = payload["user_login"].Value<string>();
-            string userDisplayName = payload["user_name"].Value<string>();
+            TwitchCharityDonationModel donation = new TwitchCharityDonationModel(payload);
 
-            string charityName = payload["charity_name"].Value<string>();
-            string charityImage = payload["charity_logo"].Value<string>();
+            Dictionary<string, string> additionalSpecialIdentifiers = new Dictionary<string, string>();
+            additionalSpecialIdentifiers["charityname"] = donation.CharityName;
+            additionalSpecialIdentifiers["charityimage"] = donation.CharityImage;
 
-            JObject donationAmountJObj = payload["amount"] as JObject;
-            if (donationAmountJObj != null)
-            {
-                double donationAmountRaw = donationAmountJObj["value"].Value<int>();
-                double decimalPlaces = donationAmountJObj["decimal_places"].Value<int>();
-
-                double donationAmount = donationAmountRaw;
-                if (decimalPlaces > 0)
-                {
-                    donationAmount = donationAmount / Math.Pow(10, decimalPlaces);
-                }
-
-                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, userID);
-                if (user == null)
-                {
-                    user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(userID, username, userDisplayName));
-                }
-
-                Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
-                eventCommandSpecialIdentifiers[SpecialIdentifierStringBuilder.DonationAmountNumberDigitsSpecialIdentifier] = donationAmountRaw.ToString();
-                eventCommandSpecialIdentifiers[SpecialIdentifierStringBuilder.DonationAmountNumberSpecialIdentifier] = donationAmount.ToString();
-                eventCommandSpecialIdentifiers[SpecialIdentifierStringBuilder.DonationAmountSpecialIdentifier] = donationAmount.ToCurrencyString();
-                eventCommandSpecialIdentifiers["charityname"] = charityName;
-                eventCommandSpecialIdentifiers["charityimage"] = charityImage;
-                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelCharityDonation, new CommandParametersModel(user, eventCommandSpecialIdentifiers));
-
-                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, string.Format(MixItUp.Base.Resources.AlertTwitchCharityDonation, user.DisplayName, donationAmount.ToCurrencyString()), ChannelSession.Settings.AlertDonationColor));
-            }
+            await EventService.ProcessDonationEvent(EventTypeEnum.TwitchChannelCharityDonation, donation.ToGenericDonation(), additionalSpecialIdentifiers: additionalSpecialIdentifiers);
         }
 
         private void EventSub_OnKeepAliveMessageReceived(object sender, KeepAliveMessage e)
