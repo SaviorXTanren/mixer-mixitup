@@ -20,6 +20,7 @@ using Twitch.Base.Clients;
 using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.NewAPI.Bits;
 using Twitch.Base.Models.NewAPI.Chat;
+using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.Services.Twitch
 {
@@ -402,13 +403,15 @@ namespace MixItUp.Base.Services.Twitch
             await this.messageSemaphore.WaitAndRelease(async () =>
             {
                 ChatClient client = this.GetChatClient(sendAsStreamer);
+                UserModel sender = (!sendAsStreamer && ServiceManager.Get<TwitchSessionService>().IsBotConnected) ? ServiceManager.Get<TwitchSessionService>().Bot : ServiceManager.Get<TwitchSessionService>().User;
+                UserModel receiver = user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).GetTwitchNewAPIUserModel();
                 if (client != null)
                 {
                     string subMessage = null;
                     do
                     {
                         message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
-                        await client.SendWhisperMessage(ServiceManager.Get<TwitchSessionService>().User, user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).GetTwitchNewAPIUserModel(), message);
+                        await client.SendWhisperMessage(sender, receiver, message);
                         message = subMessage;
                         await Task.Delay(500);
                     }
