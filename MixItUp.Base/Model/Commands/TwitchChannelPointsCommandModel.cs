@@ -6,6 +6,7 @@ namespace MixItUp.Base.Model.Commands
     [DataContract]
     public class TwitchChannelPointsCommandModel : CommandModelBase
     {
+        [DataMember]
         public Guid ChannelPointRewardID { get; set; } = Guid.Empty;
 
         public TwitchChannelPointsCommandModel(string name, Guid channelPointRewardID)
