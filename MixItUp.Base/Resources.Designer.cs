@@ -1511,15 +1511,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Basic Timer.
-        /// </summary>
-        public static string BasicTimer {
-            get {
-                return ResourceManager.GetString("BasicTimer", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Baud Rate.
         /// </summary>
         public static string BaudRate {
@@ -3406,24 +3397,6 @@ namespace MixItUp.Base {
         public static string CooldownRequirementOnCooldownSeconds {
             get {
                 return ResourceManager.GetString("CooldownRequirementOnCooldownSeconds", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to This command is currently on cooldown, please wait another {0} hour(s)..
-        /// </summary>
-        public static string CooldownRequirementOnCooldownHours {
-            get {
-                return ResourceManager.GetString("CooldownRequirementOnCooldownHours", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to This command is currently on cooldown, please wait another {0} minute(s)..
-        /// </summary>
-        public static string CooldownRequirementOnCooldownMinutes {
-            get {
-                return ResourceManager.GetString("CooldownRequirementOnCooldownMinutes", resourceCulture);
             }
         }
         
@@ -14127,24 +14100,6 @@ namespace MixItUp.Base {
         public static string OverlayWidgetYouTubeDescription {
             get {
                 return ResourceManager.GetString("OverlayWidgetYouTubeDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;{ID}&quot; /&gt;.
-        /// </summary>
-        public static string OverlayYouTubeDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayYouTubeDefaultHTML", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Missing video.
-        /// </summary>
-        public static string OverlayYouTubeMissingVideo {
-            get {
-                return ResourceManager.GetString("OverlayYouTubeMissingVideo", resourceCulture);
             }
         }
         

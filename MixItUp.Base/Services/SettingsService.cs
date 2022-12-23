@@ -359,7 +359,6 @@ namespace MixItUp.Base.Services
             }
             else if (currentVersion < SettingsV3Model.LatestVersion)
             {
-                await SettingsV3Upgrader.Version5Upgrade(currentVersion, filePath);
                 await SettingsV3Upgrader.Version6Upgrade(currentVersion, filePath);
             }
             SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
@@ -380,20 +379,6 @@ namespace MixItUp.Base.Services
                     // Force OAuth token reset for new scopes
                     settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.Reset();
                 }
-
-                await ServiceManager.Get<SettingsService>().Save(settings);
-            }
-        }
-
-        public static async Task Version6Upgrade(int version, string filePath)
-        {
-            if (version < 6)
-            {
-                string fileData = await ServiceManager.Get<IFileService>().ReadFile(filePath);
-                SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
-                await settings.Initialize();
-
-
 
                 await ServiceManager.Get<SettingsService>().Save(settings);
             }
