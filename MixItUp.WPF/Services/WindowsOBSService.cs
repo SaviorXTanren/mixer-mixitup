@@ -247,7 +247,7 @@ namespace MixItUp.WPF.Services
                     }
                 }
 
-                return Task.FromResult(true);
+                return true;
             });
         }
 
@@ -276,7 +276,7 @@ namespace MixItUp.WPF.Services
                     }
                 }
 
-                return Task.FromResult(true);
+                return true;
             });
         }
 
