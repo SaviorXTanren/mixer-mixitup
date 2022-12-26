@@ -13390,6 +13390,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to At least one event type must be selected.
+        /// </summary>
+        public static string OverlayEventListAtLeastOneEventTypeMustBeSelected {
+            get {
+                return ResourceManager.GetString("OverlayEventListAtLeastOneEventTypeMustBeSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .item-{ID} {
         ///    position: relative;
         ///    border-style: solid;

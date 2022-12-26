@@ -9547,4 +9547,7 @@ update_{ID}({CurrentAmount}, {GoalAmount}, {Width});</value>
   <data name="TwitchEventServiceFailedToConnectEventSub" xml:space="preserve">
     <value>Failed to connect to Twitch Event Sub service</value>
   </data>
+  <data name="OverlayEventListAtLeastOneEventTypeMustBeSelected" xml:space="preserve">
+    <value>At least one event type must be selected</value>
+  </data>
 </root>

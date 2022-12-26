@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
-    public enum OverlayEventListWidgetV3Type
+    public enum OverlayEventListV3Type
     {
         Follow,
         Raid,
@@ -19,6 +19,9 @@ namespace MixItUp.Base.Model.Overlay
         Donation,
         TwitchBits,
         TrovoElixir,
+
+        [Obsolete]
+        Custom = 99,
     }
 
     [DataContract]
@@ -35,17 +38,20 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayEventListV3Model : OverlayListV3ModelBase
     {
+        public const string AddedAnimationName = "Added";
+        public const string RemovedAnimationName = "Removed";
+
         public static readonly string DefaultHTML = Resources.OverlayEventListDefaultHTML;
         public static readonly string DefaultCSS = Resources.OverlayEventListDefaultCSS;
         public static readonly string DefaultJavascript = Resources.OverlayEventListDefaultJavascript;
 
         [DataMember]
-        public HashSet<OverlayEventListWidgetV3Type> EventTypes { get; set; } = new HashSet<OverlayEventListWidgetV3Type>();
+        public HashSet<OverlayEventListV3Type> EventTypes { get; set; } = new HashSet<OverlayEventListV3Type>();
 
         [DataMember]
         public List<OverlayEventListEventV3Model> CurrentEvents { get; set; } = new List<OverlayEventListEventV3Model>();
 
-        public OverlayEventListV3Model(HashSet<OverlayEventListWidgetV3Type> eventTypes)
+        public OverlayEventListV3Model(HashSet<OverlayEventListV3Type> eventTypes)
             : base(OverlayItemV3Type.EventList)
         {
             this.EventTypes = eventTypes;
@@ -56,32 +62,32 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Enable()
         {
-            foreach (OverlayEventListWidgetV3Type eventType in this.EventTypes)
+            foreach (OverlayEventListV3Type eventType in this.EventTypes)
             {
-                if (eventType == OverlayEventListWidgetV3Type.Follow)
+                if (eventType == OverlayEventListV3Type.Follow)
                 {
                     EventService.OnFollowOccurred += EventService_OnFollowOccurred;
                 }
-                else if (eventType == OverlayEventListWidgetV3Type.Raid)
+                else if (eventType == OverlayEventListV3Type.Raid)
                 {
                     EventService.OnRaidOccurred += EventService_OnRaidOccurred;
                 }
-                else if (eventType == OverlayEventListWidgetV3Type.Subscriber)
+                else if (eventType == OverlayEventListV3Type.Subscriber)
                 {
                     EventService.OnSubscribeOccurred += EventService_OnSubscribeOccurred;
                     EventService.OnResubscribeOccurred += EventService_OnResubscribeOccurred;
                     EventService.OnSubscriptionGiftedOccurred += EventService_OnSubscriptionGiftedOccurred;
                     EventService.OnMassSubscriptionsGiftedOccurred += EventService_OnMassSubscriptionsGiftedOccurred;
                 }
-                else if (eventType == OverlayEventListWidgetV3Type.Donation)
+                else if (eventType == OverlayEventListV3Type.Donation)
                 {
                     EventService.OnDonationOccurred += EventService_OnDonationOccurred;
                 }
-                else if (eventType == OverlayEventListWidgetV3Type.TwitchBits)
+                else if (eventType == OverlayEventListV3Type.TwitchBits)
                 {
                     EventService.OnTwitchBitsCheeredOccurred += EventService_OnTwitchBitsCheeredOccurred;
                 }
-                else if (eventType == OverlayEventListWidgetV3Type.TrovoElixir)
+                else if (eventType == OverlayEventListV3Type.TrovoElixir)
                 {
                     EventService.OnTrovoSpellCastOccurred += EventService_OnTrovoSpellCastOccurred;
                 }
@@ -92,32 +98,32 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Disable()
         {
-            foreach (OverlayEventListWidgetV3Type eventType in this.EventTypes)
+            foreach (OverlayEventListV3Type eventType in this.EventTypes)
             {
-                if (eventType == OverlayEventListWidgetV3Type.Follow)
+                if (eventType == OverlayEventListV3Type.Follow)
                 {
                     EventService.OnFollowOccurred -= EventService_OnFollowOccurred;
                 }
-                else if (eventType == OverlayEventListWidgetV3Type.Raid)
+                else if (eventType == OverlayEventListV3Type.Raid)
                 {
                     EventService.OnRaidOccurred -= EventService_OnRaidOccurred;
                 }
-                else if (eventType == OverlayEventListWidgetV3Type.Subscriber)
+                else if (eventType == OverlayEventListV3Type.Subscriber)
                 {
                     EventService.OnSubscribeOccurred -= EventService_OnSubscribeOccurred;
                     EventService.OnResubscribeOccurred -= EventService_OnResubscribeOccurred;
                     EventService.OnSubscriptionGiftedOccurred -= EventService_OnSubscriptionGiftedOccurred;
                     EventService.OnMassSubscriptionsGiftedOccurred -= EventService_OnMassSubscriptionsGiftedOccurred;
                 }
-                else if (eventType == OverlayEventListWidgetV3Type.Donation)
+                else if (eventType == OverlayEventListV3Type.Donation)
                 {
                     EventService.OnDonationOccurred -= EventService_OnDonationOccurred;
                 }
-                else if (eventType == OverlayEventListWidgetV3Type.TwitchBits)
+                else if (eventType == OverlayEventListV3Type.TwitchBits)
                 {
                     EventService.OnTwitchBitsCheeredOccurred -= EventService_OnTwitchBitsCheeredOccurred;
                 }
-                else if (eventType == OverlayEventListWidgetV3Type.TrovoElixir)
+                else if (eventType == OverlayEventListV3Type.TrovoElixir)
                 {
                     EventService.OnTrovoSpellCastOccurred -= EventService_OnTrovoSpellCastOccurred;
                 }
