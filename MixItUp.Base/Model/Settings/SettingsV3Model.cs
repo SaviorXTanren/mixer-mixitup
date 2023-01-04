@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -848,18 +849,27 @@ namespace MixItUp.Base.Model.Settings
             await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "REPLACE INTO Quotes(ID, Quote, GameName, DateTime) VALUES($ID, $Quote, $GameName, $DateTime)",
                 this.Quotes.GetAddedChangedValues().Select(q => new Dictionary<string, object>() { { "$ID", q.ID.ToString() }, { "$Quote", q.Quote }, { "$GameName", q.GameName }, { "$DateTime", q.DateTime.ToString() } }));
 
-            await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "DELETE FROM ImportedUsers WHERE ID = $ID",
-                this.ImportedUsers.GetRemovedValues().Select(u => new Dictionary<string, object>() { { "$ID", u.ToString() } }));
+            try
+            {
+                await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "DELETE FROM ImportedUsers WHERE ID = $ID",
+                    this.ImportedUsers.GetRemovedValues().Select(u => new Dictionary<string, object>() { { "$ID", u.ToString() } }));
 
-            await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "REPLACE INTO ImportedUsers(ID, Platform, PlatformID, PlatformUsername, Data) VALUES($ID, $Platform, $PlatformID, $PlatformUsername, $Data)",
-                this.ImportedUsers.GetAddedChangedValues().Select(u => new Dictionary<string, object>()
-                {
+                await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "REPLACE INTO ImportedUsers(ID, Platform, PlatformID, PlatformUsername, Data) VALUES($ID, $Platform, $PlatformID, $PlatformUsername, $Data)",
+                    this.ImportedUsers.GetAddedChangedValues().Select(u => new Dictionary<string, object>()
+                    {
                     { "$ID", u.ID.ToString() },
                     { "$Platform", (int)u.Platform },
                     { "$PlatformID", u.PlatformID },
                     { "$PlatformUsername", u.PlatformUsername },
                     { "$Data", JSONSerializerHelper.SerializeToString(u) }
-                }));
+                    }));
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                await CreateUserImportTable();
+
+            }
 
             await ServiceManager.Get<IDatabaseService>().CompressDb(this.DatabaseFilePath);
         }
@@ -890,22 +900,44 @@ namespace MixItUp.Base.Model.Settings
         {
             UserImportModel userImport = null;
 
-            await ServiceManager.Get<IDatabaseService>().Read(ChannelSession.Settings.DatabaseFilePath,
-                $"SELECT * FROM ImportedUsers WHERE Platform = @Platform AND (PlatformID = @PlatformID OR PlatformUsername = @PlatformUsername)",
-                new Dictionary<string, object>()
-                {
-                    { "Platform", (int)platform },
-                    { "PlatformID", platformID },
-                    { "PlatformUsername", platformUsername }
-                },
-                (Dictionary<string, object> data) =>
+            try
             {
-                userImport = JSONSerializerHelper.DeserializeFromString<UserImportModel>(data["Data"].ToString());
-                this.ImportedUsers[userImport.ID] = userImport;
-                this.ImportedUsers.ClearTracking(userImport.ID);
-            });
+                await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath,
+                    $"SELECT * FROM ImportedUsers WHERE Platform = @Platform AND (PlatformID = @PlatformID OR PlatformUsername = @PlatformUsername)",
+                    new Dictionary<string, object>()
+                    {
+                        { "Platform", (int)platform },
+                        { "PlatformID", platformID },
+                        { "PlatformUsername", platformUsername }
+                    },
+                    (Dictionary<string, object> data) =>
+                    {
+                        userImport = JSONSerializerHelper.DeserializeFromString<UserImportModel>(data["Data"].ToString());
+                        this.ImportedUsers[userImport.ID] = userImport;
+                        this.ImportedUsers.ClearTracking(userImport.ID);
+                    });
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                await CreateUserImportTable();
+            }
 
             return userImport;
+        }
+
+        public async Task CreateUserImportTable()
+        {
+            bool tableExists = false;
+            await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT name FROM sqlite_master WHERE type='table' AND name='ImportedUsers'", (row) =>
+            {
+                tableExists = true;
+            });
+
+            if (!tableExists)
+            {
+                await ServiceManager.Get<IDatabaseService>().Write(this.DatabaseFilePath, "CREATE TABLE \"ImportedUsers\" (\"ID\" TEXT NOT NULL, \"Platform\" INTEGER NOT NULL, \"PlatformID\" TEXT, \"PlatformUsername\" TEXT, \"Data\" TEXT NOT NULL, UNIQUE(\"Platform\",\"PlatformID\",\"PlatformUsername\"), PRIMARY KEY(\"ID\"))");
+            }
         }
 
         public CommandModelBase GetCommand(Guid id) { return this.Commands.ContainsKey(id) ? this.Commands[id] : null; }
