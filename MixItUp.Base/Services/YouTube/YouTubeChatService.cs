@@ -82,9 +82,9 @@ namespace MixItUp.Base.Services.YouTube
         private const string MessageDeletedEventMessageType = "messageDeletedEvent";
         private const string UserBannedEventMessageType = "userBannedEvent";
 
-        private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
+        private string nextMessagesToken = null;
 
-        private HashSet<string> messageIDs = new HashSet<string>();
+        private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
 
         private CancellationTokenSource messageBackgroundPollingTokenSource;
         private int messagePollingInterval = 5000;
@@ -283,29 +283,31 @@ namespace MixItUp.Base.Services.YouTube
                 {
                     if (ServiceManager.Get<YouTubeSessionService>().IsLive)
                     {
-                        LiveChatMessagesResultModel result = await this.GetConnection(sendAsStreamer: true).GetChatMessages(ServiceManager.Get<YouTubeSessionService>().Broadcast);
+                        LiveChatMessagesResultModel result = await this.GetConnection(sendAsStreamer: true).GetChatMessages(ServiceManager.Get<YouTubeSessionService>().Broadcast, this.nextMessagesToken);
                         if (result != null)
                         {
-                            List<LiveChatMessage> newMessages = new List<LiveChatMessage>();
-                            foreach (LiveChatMessage message in result.Messages)
+                            // Only process messages after the first time polling chat so we don't re-trigger commands on old messages
+                            if (this.nextMessagesToken != null)
                             {
-                                if (!messageIDs.Contains(message.Id))
+                                List<LiveChatMessage> newMessages = new List<LiveChatMessage>();
+                                foreach (LiveChatMessage message in result.Messages)
                                 {
                                     newMessages.Add(message);
-                                    messageIDs.Add(message.Id);
+                                }
+
+                                if (newMessages.Count > 0)
+                                {
+                                    await this.ProcessMessages(newMessages);
+
+                                    this.messagePollingInterval = Math.Max((int)result.PollingInterval, MinMessagePollingInterval);
+                                }
+                                else
+                                {
+                                    this.messagePollingInterval = Math.Min(this.messagePollingInterval + 1000, MaxMessagePollingInterval);
                                 }
                             }
 
-                            if (newMessages.Count > 0)
-                            {
-                                await this.ProcessMessages(newMessages);
-
-                                this.messagePollingInterval = Math.Max((int)result.PollingInterval, MinMessagePollingInterval);
-                            }
-                            else
-                            {
-                                this.messagePollingInterval = Math.Min(this.messagePollingInterval + 1000, MaxMessagePollingInterval);
-                            }
+                            this.nextMessagesToken = result.NextResultsToken;
 
                             await Task.Delay(this.messagePollingInterval);
                         }

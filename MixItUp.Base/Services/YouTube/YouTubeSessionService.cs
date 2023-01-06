@@ -70,6 +70,8 @@ namespace MixItUp.Base.Services.YouTube
                 {
                     return new Result(MixItUp.Base.Resources.YouTubeFailedToGetUserData);
                 }
+
+                await this.RefreshChannel();
             }
             return result;
         }
@@ -113,6 +115,8 @@ namespace MixItUp.Base.Services.YouTube
                     {
                         return new Result(MixItUp.Base.Resources.YouTubeFailedToGetUserData);
                     }
+
+                    await this.RefreshChannel();
 
                     if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].BotOAuthToken != null)
                     {
@@ -296,20 +300,24 @@ namespace MixItUp.Base.Services.YouTube
                     this.Video = video;
                 }
 
-                CommandParametersModel parameters = new CommandParametersModel();
-                if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.YouTubeChannelStreamStart, parameters))
+                if (ChannelSession.User != null)
                 {
                     if (this.Broadcast.Snippet.ActualStartTime.HasValue && this.launchDateTime < this.Broadcast.Snippet.ActualStartTime)
                     {
-                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStart, parameters);
+                        CommandParametersModel parameters = new CommandParametersModel();
+                        if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.YouTubeChannelStreamStart, parameters))
+                        {
+                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStart, parameters);
+                        }
                     }
-                }
 
-                if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.YouTubeChannelStreamStop, parameters))
-                {
                     if (this.Broadcast.Snippet.ActualEndTime.HasValue && this.launchDateTime < this.Broadcast.Snippet.ActualEndTime)
                     {
-                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStop, parameters);
+                        CommandParametersModel parameters = new CommandParametersModel();
+                        if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.YouTubeChannelStreamStop, parameters))
+                        {
+                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStop, parameters);
+                        }
                     }
                 }
             }

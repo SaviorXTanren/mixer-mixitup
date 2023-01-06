@@ -113,7 +113,7 @@ namespace MixItUp.Base.Services.YouTube
 
         // Chat
 
-        public async Task<LiveChatMessagesResultModel> GetChatMessages(LiveBroadcast broadcast) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.GetMessages(broadcast)); }
+        public async Task<LiveChatMessagesResultModel> GetChatMessages(LiveBroadcast broadcast, string nextResultsToken = null) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.GetMessages(broadcast, nextResultsToken: nextResultsToken)); }
 
         public async Task<LiveChatMessage> SendChatMessage(LiveBroadcast broadcast, string message) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.SendMessage(broadcast, message)); }
 
