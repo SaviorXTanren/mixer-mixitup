@@ -23,6 +23,7 @@ namespace MixItUp.Base.Model.User
         JustGiving,
         StreamElements,
         Glimesh,
+        Twitch,
     }
 
     [DataContract]

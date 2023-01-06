@@ -51,6 +51,7 @@ namespace MixItUp.Base.Services
 
         TwitchChannelStreamStart = 200,
         TwitchChannelStreamStop = 201,
+        [Obsolete]
         TwitchChannelHosted = 202,
         TwitchChannelRaided = 203,
 
@@ -65,11 +66,13 @@ namespace MixItUp.Base.Services
 
         TwitchChannelBitsCheered = 270,
         TwitchChannelPointsRedeemed = 271,
+        TwitchChannelCharityDonation = 272,
 
         TwitchChannelHypeTrainBegin = 280,
         [Obsolete]
         TwitchChannelHypeTrainProgress = 281,
         TwitchChannelHypeTrainEnd = 282,
+        TwitchChannelHypeTrainLevelUp = 283,
 
         // 300 = YouTube
 
@@ -142,7 +145,7 @@ namespace MixItUp.Base.Services
 
             EventTypeEnum.ApplicationLaunch, EventTypeEnum.ApplicationExit,
 
-            EventTypeEnum.TwitchChannelStreamStart, EventTypeEnum.TwitchChannelStreamStop, EventTypeEnum.TwitchChannelFollowed, EventTypeEnum.TwitchChannelHosted, EventTypeEnum.TwitchChannelRaided, EventTypeEnum.TwitchChannelSubscribed, EventTypeEnum.TwitchChannelResubscribed,
+            EventTypeEnum.TwitchChannelStreamStart, EventTypeEnum.TwitchChannelStreamStop, EventTypeEnum.TwitchChannelFollowed, EventTypeEnum.TwitchChannelRaided, EventTypeEnum.TwitchChannelSubscribed, EventTypeEnum.TwitchChannelResubscribed,
 
             EventTypeEnum.YouTubeChannelStreamStart, EventTypeEnum.YouTubeChannelStreamStop, EventTypeEnum.YouTubeChannelNewMember, EventTypeEnum.YouTubeChannelMemberMilestone,
 
@@ -190,6 +193,7 @@ namespace MixItUp.Base.Services
             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(parameters.User, string.Format(MixItUp.Base.Resources.AlertDonated, parameters.User.FullDisplayName, donation.AmountText), ChannelSession.Settings.AlertDonationColor));
 
             await ServiceManager.Get<EventService>().PerformEvent(type, parameters);
+            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.GenericDonation, parameters);
 
             try
             {

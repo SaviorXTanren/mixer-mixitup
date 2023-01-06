@@ -305,7 +305,11 @@ namespace MixItUp.Base.ViewModel.MainControls
                 {
                     if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage("/raid @" + this.Name, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                        UserModel targetChannel = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(this.Name);
+                        if (targetChannel != null)
+                        {
+                            await ServiceManager.Get<TwitchSessionService>().UserConnection.RaidChannel(ServiceManager.Get<TwitchSessionService>().User, targetChannel);
+                        }
                     }
                     else if (this.Platform == StreamingPlatformTypeEnum.Trovo)
                     {

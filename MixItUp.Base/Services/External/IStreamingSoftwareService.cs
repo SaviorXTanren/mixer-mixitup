@@ -18,6 +18,8 @@ namespace MixItUp.Base.Services.External
 
         Task SetSourceVisibility(string sceneName, string sourceName, bool visibility);
         Task SetSourceFilterVisibility(string sourceName, string filterName, bool visibility);
+        Task SetImageSourceFilePath(string sceneName, string sourceName, string filePath);
+        Task SetMediaSourceFilePath(string sceneName, string sourceName, string filePath);
         Task SetWebBrowserSourceURL(string sceneName, string sourceName, string url);
         Task SetSourceDimensions(string sceneName, string sourceName, StreamingSoftwareSourceDimensionsModel dimensions);
         Task<StreamingSoftwareSourceDimensionsModel> GetSourceDimensions(string sceneName, string sourceName);

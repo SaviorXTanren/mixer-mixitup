@@ -25,6 +25,7 @@ namespace MixItUp.Base.Services.External
 
         public override Task Disconnect()
         {
+            this.token = null;
             return Task.CompletedTask;
         }
 

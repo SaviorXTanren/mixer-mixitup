@@ -34,6 +34,7 @@ namespace MixItUp.Base.Services.External
 
         Task BeepSoundOnOff(bool state);
         Task HearMyselfOnOff(bool state);
+        Task MuteOnOff(bool state);
 
         Task<IEnumerable<VoicemodMemeModel>> GetMemeSounds();
         Task PlayMemeSound(string fileName);
@@ -63,6 +64,8 @@ namespace MixItUp.Base.Services.External
         public Task BeepSoundOnOff(bool state) { return Task.CompletedTask; }
 
         public Task HearMyselfOnOff(bool state) { return Task.CompletedTask; }
+
+        public Task MuteOnOff(bool state) { return Task.CompletedTask; }
 
         public Task<IEnumerable<VoicemodMemeModel>> GetMemeSounds() { return Task.FromResult<IEnumerable<VoicemodMemeModel>>(new List<VoicemodMemeModel>()); }
 

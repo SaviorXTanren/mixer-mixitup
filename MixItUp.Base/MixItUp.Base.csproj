@@ -40,11 +40,11 @@
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
     <PackageReference Include="Jace" Version="1.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="StreamingClientLibrary.Glimesh" Version="1.0.0.18" />
-    <PackageReference Include="StreamingClientLibrary.Trovo" Version="1.0.0.19" />
-    <PackageReference Include="StreamingClientLibrary.Twitch" Version="1.0.0.48" />
-    <PackageReference Include="StreamingClientLibrary.YouTube" Version="1.0.0.14" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="StreamingClientLibrary.Glimesh" Version="1.0.0.20" />
+    <PackageReference Include="StreamingClientLibrary.Trovo" Version="1.0.0.21" />
+    <PackageReference Include="StreamingClientLibrary.Twitch" Version="1.0.0.62" />
+    <PackageReference Include="StreamingClientLibrary.YouTube" Version="1.0.0.15" />
     <PackageReference Include="System.IO.Ports" Version="6.0.0" />
   </ItemGroup>
 
@@ -142,6 +142,10 @@
     </EmbeddedResource>
     
     <EmbeddedResource Update="Resources.uk-UA.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
+
+    <EmbeddedResource Update="Resources.zh-TW.resx">
       <DependentUpon>Resources.resx</DependentUpon>
     </EmbeddedResource>
 

@@ -377,20 +377,6 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
-        private void MessageWhisperUserMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            if (this.ChatList.SelectedItem != null && this.ChatList.SelectedItem is ChatMessageViewModel)
-            {
-                ChatMessageViewModel message = (ChatMessageViewModel)this.ChatList.SelectedItem;
-                if (message.User != null)
-                {
-                    this.viewModel.SendMessageText = $"/w @{message.User.Username} ";
-                    this.ChatMessageTextBox.Focus();
-                    this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
-                }
-            }
-        }
-
         private async void UserInformationMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (this.ChatList.SelectedItem != null && this.ChatList.SelectedItem is ChatMessageViewModel)

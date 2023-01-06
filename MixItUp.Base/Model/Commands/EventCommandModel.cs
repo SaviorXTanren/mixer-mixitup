@@ -98,7 +98,13 @@ namespace MixItUp.Base.Model.Commands
                 case EventTypeEnum.TwitchChannelHypeTrainBegin:
                     specialIdentifiers["hypetraintotalpoints"] = "1";
                     specialIdentifiers["hypetrainlevelpoints"] = "123";
-                    specialIdentifiers["hypetrainlevelgoal"] = "5";
+                    specialIdentifiers["hypetrainlevelgoal"] = "500";
+                    break;
+                case EventTypeEnum.TwitchChannelHypeTrainLevelUp:
+                    specialIdentifiers["hypetraintotalpoints"] = "1";
+                    specialIdentifiers["hypetrainlevelpoints"] = "123";
+                    specialIdentifiers["hypetrainlevelgoal"] = "500";
+                    specialIdentifiers["hypetrainlevel"] = "2";
                     break;
                 case EventTypeEnum.TwitchChannelHypeTrainEnd:
                     specialIdentifiers["hypetraintotallevel"] = "5";

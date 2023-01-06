@@ -5771,7 +5771,7 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
     <value>[!!! Ţïţℓè HŢMĻ Šţ¥ℓè !!!]</value>
   </data>
   <data name="TopPixelPosition" xml:space="preserve">
-    <value>[!!! ŢôƥÞïжèℓ Þôšïţïôñ !!!]</value>
+    <value>[!!! Ţôƥ Þïжèℓ Þôšïţïôñ !!!]</value>
   </data>
   <data name="TotalToShow" xml:space="preserve">
     <value>[!!! Ţôţáℓ Ţô Šĥôω !!!]</value>
@@ -8857,6 +8857,168 @@ Wè ωïℓℓ áţţè₥ƥţ ţô řè-çôññèçţ ωïţĥ ţĥè šèřƲ
   <data name="MockConnection" xml:space="preserve">
     <value>[!!! Môçƙ Çôññèçţïôñ !!!]</value>
   </data>
+  <data name="ShadowColor" xml:space="preserve">
+    <value>[!!! Šĥáδôω Çôℓôř !!!]</value>
+  </data>
+  <data name="ShadowSize" xml:space="preserve">
+    <value>[!!! Šĥáδôω Šïƺè !!!]</value>
+  </data>
+  <data name="MuteOnOff" xml:space="preserve">
+    <value>[!!! Múţè Óñ/Óƒƒ !!!]</value>
+  </data>
+  <data name="ImageSource" xml:space="preserve">
+    <value>[!!! Ì₥áĝè Šôúřçè !!!]</value>
+  </data>
+  <data name="MediaSource" xml:space="preserve">
+    <value>[!!! Mèδïá Šôúřçè !!!]</value>
+  </data>
+  <data name="StreamingSoftwareActionMissingImageSourceFilePath" xml:space="preserve">
+    <value>[!!! Šţřèá₥ïñĝ Šôƒţωářè Âçţïôñ: Mïššïñĝ ï₥áĝè šôúřçè ƒïℓè ƥáţĥ !!!]</value>
+  </data>
+  <data name="StreamingSoftwareActionMissingMediaSourceFilePath" xml:space="preserve">
+    <value>[!!! Šţřèá₥ïñĝ Šôƒţωářè Âçţïôñ: Mïššïñĝ ₥èδïá šôúřçè ƒïℓè ƥáţĥ !!!]</value>
+  </data>
+  <data name="CSS" xml:space="preserve">
+    <value>[!!! ÇŠŠ !!!]</value>
+  </data>
+  <data name="Javascript" xml:space="preserve">
+    <value>[!!! JáƲášçřïƥţ !!!]</value>
+  </data>
+  <data name="BackInDown" xml:space="preserve">
+    <value>[!!! ßáçƙ Ìñ Ðôωñ !!!]</value>
+  </data>
+  <data name="BackInLeft" xml:space="preserve">
+    <value>[!!! ßáçƙ Ìñ Ļèƒţ !!!]</value>
+  </data>
+  <data name="BackInRight" xml:space="preserve">
+    <value>[!!! ßáçƙ Ìñ Rïĝĥţ !!!]</value>
+  </data>
+  <data name="BackInUp" xml:space="preserve">
+    <value>[!!! ßáçƙ Ìñ Ûƥ !!!]</value>
+  </data>
+  <data name="BackOutDown" xml:space="preserve">
+    <value>[!!! ßáçƙ Óúţ Ðôωñ !!!]</value>
+  </data>
+  <data name="BackOutLeft" xml:space="preserve">
+    <value>[!!! ßáçƙ Óúţ Ļèƒţ !!!]</value>
+  </data>
+  <data name="BackOutRight" xml:space="preserve">
+    <value>[!!! ßáçƙ Óúţ Rïĝĥţ !!!]</value>
+  </data>
+  <data name="BackOutUp" xml:space="preserve">
+    <value>[!!! ßáçƙ Óúţ Ûƥ !!!]</value>
+  </data>
+  <data name="FadeInBottomLeft" xml:space="preserve">
+    <value>[!!! Fáδè Ìñ ßôţţô₥ Ļèƒţ !!!]</value>
+  </data>
+  <data name="FadeInBottomRight" xml:space="preserve">
+    <value>[!!! Fáδè Ìñ ßôţţô₥ Rïĝĥţ !!!]</value>
+  </data>
+  <data name="FadeInDownBig" xml:space="preserve">
+    <value>[!!! Fáδè Ìñ Ðôωñ ßïĝ !!!]</value>
+  </data>
+  <data name="FadeInLeftBig" xml:space="preserve">
+    <value>[!!! Fáδè Ìñ Ļèƒţ ßïĝ !!!]</value>
+  </data>
+  <data name="FadeInRightBig" xml:space="preserve">
+    <value>[!!! Fáδè Ìñ Rïĝĥţ ßïĝ !!!]</value>
+  </data>
+  <data name="FadeInTopLeft" xml:space="preserve">
+    <value>[!!! Fáδè Ìñ Ţôƥ Ļèƒţ !!!]</value>
+  </data>
+  <data name="FadeInTopRight" xml:space="preserve">
+    <value>[!!! Fáδè Ìñ Ţôƥ Rïĝĥţ !!!]</value>
+  </data>
+  <data name="FadeInUpBig" xml:space="preserve">
+    <value>[!!! Fáδè Ìñ Ûƥ ßïĝ !!!]</value>
+  </data>
+  <data name="FadeOutBottomLeft" xml:space="preserve">
+    <value>[!!! Fáδè Óúţ ßôţţô₥ Ļèƒţ !!!]</value>
+  </data>
+  <data name="FadeOutBottomRight" xml:space="preserve">
+    <value>[!!! Fáδè Óúţ ßôţţô₥ Rïĝĥţ !!!]</value>
+  </data>
+  <data name="FadeOutDownBig" xml:space="preserve">
+    <value>[!!! Fáδè Óúţ Ðôωñ ßïĝ !!!]</value>
+  </data>
+  <data name="FadeOutLeftBig" xml:space="preserve">
+    <value>[!!! Fáδè Óúţ Ļèƒţ ßïĝ !!!]</value>
+  </data>
+  <data name="FadeOutRightBig" xml:space="preserve">
+    <value>[!!! Fáδè Óúţ Rïĝĥţ ßïĝ !!!]</value>
+  </data>
+  <data name="FadeOutTopLeft" xml:space="preserve">
+    <value>[!!! Fáδè Óúţ Ţôƥ Ļèƒţ !!!]</value>
+  </data>
+  <data name="FadeOutTopRight" xml:space="preserve">
+    <value>[!!! Fáδè Óúţ Ţôƥ Rïĝĥţ !!!]</value>
+  </data>
+  <data name="FadeOutUpBig" xml:space="preserve">
+    <value>[!!! Fáδè Óúţ Ûƥ ßïĝ !!!]</value>
+  </data>
+  <data name="HeadShake" xml:space="preserve">
+    <value>[!!! Hèáδ Šĥáƙè !!!]</value>
+  </data>
+  <data name="HeartBeat" xml:space="preserve">
+    <value>[!!! Hèářţ ßèáţ !!!]</value>
+  </data>
+  <data name="LightSpeedInLeft" xml:space="preserve">
+    <value>[!!! Ļïĝĥţ Šƥèèδ Ìñ Ļèƒţ !!!]</value>
+  </data>
+  <data name="LightSpeedInRight" xml:space="preserve">
+    <value>[!!! Ļïĝĥţ Šƥèèδ Ìñ Rïĝĥţ !!!]</value>
+  </data>
+  <data name="LightSpeedOutLeft" xml:space="preserve">
+    <value>[!!! Ļïĝĥţ Šƥèèδ Óúţ Ļèƒţ !!!]</value>
+  </data>
+  <data name="LightSpeedOutRight" xml:space="preserve">
+    <value>[!!! Ļïĝĥţ Šƥèèδ Óúţ Rïĝĥţ !!!]</value>
+  </data>
+  <data name="RotateInDownLeft" xml:space="preserve">
+    <value>[!!! Rôţáţè Ìñ Ðôωñ Ļèƒţ !!!]</value>
+  </data>
+  <data name="RotateInDownRight" xml:space="preserve">
+    <value>[!!! Rôţáţè Ìñ Ðôωñ Rïĝĥţ !!!]</value>
+  </data>
+  <data name="RotateInUpLeft" xml:space="preserve">
+    <value>[!!! Rôţáţè Ìñ Ûƥ Ļèƒţ !!!]</value>
+  </data>
+  <data name="RotateInUpRight" xml:space="preserve">
+    <value>[!!! Rôţáţè Ìñ Ûƥ Rïĝĥţ !!!]</value>
+  </data>
+  <data name="RotateOutDownLeft" xml:space="preserve">
+    <value>[!!! Rôţáţè Óúţ Ðôωñ Ļèƒţ !!!]</value>
+  </data>
+  <data name="RotateOutDownRight" xml:space="preserve">
+    <value>[!!! Rôţáţè Óúţ Ðôωñ Rïĝĥţ !!!]</value>
+  </data>
+  <data name="RotateOutUpLeft" xml:space="preserve">
+    <value>[!!! Rôţáţè Óúţ Ûƥ Ļèƒţ !!!]</value>
+  </data>
+  <data name="RotateOutUpRight" xml:space="preserve">
+    <value>[!!! Rôţáţè Óúţ Ûƥ Rïĝĥţ !!!]</value>
+  </data>
+  <data name="ShakeX" xml:space="preserve">
+    <value>[!!! Šĥáƙè X !!!]</value>
+  </data>
+  <data name="ShakeY" xml:space="preserve">
+    <value>[!!! Šĥáƙè Ý !!!]</value>
+  </data>
+  <data name="AnimateCSS" xml:space="preserve">
+    <value>[!!! Âñï₥áţè.çšš !!!]</value>
+  </data>
+  <data name="Animation" xml:space="preserve">
+    <value>[!!! Âñï₥áţïôñ !!!]</value>
+  </data>
+  <data name="AnimationLibrary" xml:space="preserve">
+    <value>[!!! Âñï₥áţïôñ Ļïβřář¥ !!!]</value>
+  </data>
+  <data name="Entrance" xml:space="preserve">
+    <value>[!!! Éñţřáñçè !!!]</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>[!!! Éжïţ !!!]</value>
+  </data>
   <data name="CopyMessage" xml:space="preserve">
     <value>[!!! Çôƥ¥ Mèššáĝè !!!]</value>
   </data>
@@ -8871,5 +9033,17 @@ Wè ωïℓℓ áţţè₥ƥţ ţô řè-çôññèçţ ωïţĥ ţĥè šèřƲ
   </data>
   <data name="WhisperUser" xml:space="preserve">
     <value>[!!! WĥïšƥèřÛšèř !!!]</value>
+  </data>
+  <data name="TwitchActionMessageMissing" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Âçţïôñ: Â Ʋáℓïδ ₥èššáĝè ₥úšţ βè šƥèçïƒïèδ !!!]</value>
+  </data>
+  <data name="SendChatAnnouncement" xml:space="preserve">
+    <value>[!!! Šèñδ Çĥáţ Âññôúñçè₥èñţ !!!]</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>[!!! Çôℓôř !!!]</value>
+  </data>
+  <data name="Primary" xml:space="preserve">
+    <value>[!!! Þřï₥ář¥ !!!]</value>
   </data>
 </root>

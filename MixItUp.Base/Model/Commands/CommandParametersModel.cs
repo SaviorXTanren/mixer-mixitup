@@ -98,6 +98,11 @@ namespace MixItUp.Base.Model.Commands
                 this.Platform = this.User.Platform;
             }
 
+            if (this.Platform == StreamingPlatformTypeEnum.None)
+            {
+                this.Platform = StreamingPlatformTypeEnum.All;
+            }    
+
             this.SpecialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = this.Platform.ToString();
         }
 

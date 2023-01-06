@@ -161,7 +161,7 @@ namespace MixItUp.Base.Services
 
         public async Task Whisper(string username, StreamingPlatformTypeEnum platform, string message, bool sendAsStreamer = false)
         {
-            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(platform, username);
+            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(platform, username, performPlatformSearch: true);
             if (user != null)
             {
                 await this.Whisper(user, message, sendAsStreamer);
@@ -529,10 +529,11 @@ namespace MixItUp.Base.Services
                             await ServiceManager.Get<IAudioService>().Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, ChannelSession.Settings.NotificationChatMessageSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
                         }
 
-                        if (!this.userEntranceCommands.Contains(message.User.ID))
+                        if (!message.User.IsSpecialtyExcluded && !this.userEntranceCommands.Contains(message.User.ID))
                         {
                             this.userEntranceCommands.Add(message.User.ID);
-                            if (ChannelSession.Settings.GetCommand(message.User.EntranceCommandID) != null)
+                            CommandModelBase customEntranceCommand = ChannelSession.Settings.GetCommand(message.User.EntranceCommandID);
+                            if (customEntranceCommand != null && customEntranceCommand.IsEnabled)
                             {
                                 await ServiceManager.Get<CommandService>().Queue(message.User.EntranceCommandID, new CommandParametersModel(message));
                             }

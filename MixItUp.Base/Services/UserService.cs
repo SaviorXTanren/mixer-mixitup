@@ -317,6 +317,10 @@ namespace MixItUp.Base.Services
                 {
                     this.platformUserIDLookups[pUser.Platform].Remove(pUser.ID);
                     this.platformUsernameLookups[pUser.Platform].Remove(pUser.Username.ToLower());
+                    if (pUser.Platform == StreamingPlatformTypeEnum.Trovo)
+                    {
+                        this.platformUsernameLookups[pUser.Platform].Remove(pUser.DisplayName.ToLower());
+                    }
                 }
                 this.activeUsers.Remove(user.ID);
 
@@ -334,6 +338,7 @@ namespace MixItUp.Base.Services
             ChannelSession.Settings.Users.ClearTracking();
 
             await ServiceManager.Get<IDatabaseService>().Write(ChannelSession.Settings.DatabaseFilePath, "DELETE FROM Users");
+            await ServiceManager.Get<IDatabaseService>().Write(ChannelSession.Settings.DatabaseFilePath, "DELETE FROM ImportedUsers");
         }
 
         public void SetUserData(UserV2Model userData)
@@ -358,6 +363,10 @@ namespace MixItUp.Base.Services
                         UserPlatformV2ModelBase platformModel = userData.GetPlatformData<UserPlatformV2ModelBase>(platform);
                         this.platformUserIDLookups[platform][platformModel.ID] = userData.ID;
                         this.platformUsernameLookups[platform][platformModel.Username.ToLower()] = userData.ID;
+                        if (platformModel.Platform == StreamingPlatformTypeEnum.Trovo)
+                        {
+                            this.platformUsernameLookups[platform][platformModel.DisplayName.ToLower()] = userData.ID;
+                        }
                     }
                 }
             }

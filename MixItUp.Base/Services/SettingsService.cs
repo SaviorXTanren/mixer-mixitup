@@ -7,12 +7,14 @@ using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,6 +26,18 @@ namespace MixItUp.Base.Services
         Daily,
         Weekly,
         Monthly,
+    }
+
+    public static class OAuthTokenModelStaticMethods
+    {
+        public static void Reset(this OAuthTokenModel token)
+        {
+            if (token != null)
+            {
+                token.accessToken = String.Empty;
+                token.refreshToken = String.Empty;
+            }
+        }
     }
 
     public class SettingsService
@@ -345,119 +359,26 @@ namespace MixItUp.Base.Services
             }
             else if (currentVersion < SettingsV3Model.LatestVersion)
             {
-                await SettingsV3Upgrader.Version4Upgrade(currentVersion, filePath);
+                await SettingsV3Upgrader.Version6Upgrade(currentVersion, filePath);
             }
             SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
             settings.Version = SettingsV3Model.LatestVersion;
             return settings;
         }
 
-        public static async Task Version4Upgrade(int version, string filePath)
+        public static async Task Version6Upgrade(int version, string filePath)
         {
-            if (version < 4)
+            if (version < 6)
             {
                 string fileData = await ServiceManager.Get<IFileService>().ReadFile(filePath);
-                fileData = fileData.Replace("MixItUp.Base.Model.User.UserRoleEnum", "MixItUp.Base.Model.User.OldUserRoleEnum");
-
                 SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
                 await settings.Initialize();
 
-                bool tableExists = false;
-                await ServiceManager.Get<IDatabaseService>().Read(settings.DatabaseFilePath, "SELECT name FROM sqlite_master WHERE type='table' AND name='ImportedUsers'", (row) =>
+                if (settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch) && settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken != null)
                 {
-                    tableExists = true;
-                });
-
-                if (!tableExists)
-                {
-                    await ServiceManager.Get<IDatabaseService>().Write(settings.DatabaseFilePath, "CREATE TABLE \"ImportedUsers\" (\"ID\" TEXT NOT NULL, \"Platform\" INTEGER NOT NULL, \"PlatformID\" TEXT, \"PlatformUsername\" TEXT, \"Data\" TEXT NOT NULL, UNIQUE(\"Platform\",\"PlatformID\",\"PlatformUsername\"), PRIMARY KEY(\"ID\"))");
+                    // Force OAuth token reset for new scopes
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.Reset();
                 }
-
-                foreach (StreamingPlatformTypeEnum type in settings.StreamingPlatformAuthentications.Keys.ToList())
-                {
-                    if (type != StreamingPlatformTypeEnum.Twitch)
-                    {
-                        settings.StreamingPlatformAuthentications.Remove(type);
-                    }
-                }
-                settings.DefaultStreamingPlatform = StreamingPlatformTypeEnum.Twitch;
-
-#pragma warning disable CS0612 // Type or member is obsolete
-                settings.MassGiftedSubsFilterAmount = settings.TwitchMassGiftedSubsFilterAmount;
-
-                settings.AlertTwitchBitsCheeredColor = settings.AlertBitsCheeredColor;
-                settings.AlertTwitchChannelPointsColor = settings.AlertChannelPointsColor;
-                settings.AlertTwitchHypeTrainColor = settings.AlertHypeTrainColor;
-
-                settings.ModerationFilteredWordsExcemptUserRole = UserRoles.ConvertFromOldRole(settings.ModerationFilteredWordsExcempt);
-                settings.ModerationChatTextExcemptUserRole = UserRoles.ConvertFromOldRole(settings.ModerationChatTextExcempt);
-                settings.ModerationBlockLinksExcemptUserRole = UserRoles.ConvertFromOldRole(settings.ModerationBlockLinksExcempt);
-                settings.ModerationChatInteractiveParticipationExcemptUserRole = UserRoles.ConvertFromOldRole(settings.ModerationChatInteractiveParticipationExcempt);
-
-                if (settings.GiveawayRequirementsSet?.Role != null)
-                {
-                    settings.GiveawayRequirementsSet.Role.UserRole = UserRoles.ConvertFromOldRole(settings.GiveawayRequirementsSet.Role.Role);
-                }
-
-                foreach (var title in settings.UserTitles)
-                {
-                    title.UserRole = UserRoles.ConvertFromOldRole(title.Role);
-                }
-
-                List<HotKeyConfiguration> hotKeyConfigurations = settings.HotKeys.Values.ToList();
-                settings.HotKeys.Clear();
-                foreach (HotKeyConfiguration hotKey in hotKeyConfigurations)
-                {
-                    hotKey.VirtualKey = ServiceManager.Get<IInputService>().ConvertOldKeyEnum(hotKey.Key);
-                    settings.HotKeys[hotKey.ToString()] = hotKey;
-                }
-
-                foreach (var kvp in settings.CustomUsernameColors)
-                {
-                    UserRoleEnum newRole = UserRoles.ConvertFromOldRole(kvp.Key);
-                    settings.CustomUsernameRoleColors[newRole] = kvp.Value;
-                }
-
-                foreach (var kvp in settings.RedemptionStoreProducts)
-                {
-                    kvp.Value.Requirements.Role.UpgradeFromOldRoles();
-                }
-
-                foreach (var kvp in settings.StreamPass)
-                {
-                    kvp.Value.UserPermission = UserRoles.ConvertFromOldRole(kvp.Value.Permission);
-                }
-
-                foreach (var commandSettings in settings.PreMadeChatCommandSettings)
-                {
-                    commandSettings.UserRole = UserRoles.ConvertFromOldRole(commandSettings.Role);
-                }
-
-                List<UserDataModel> oldUserData = new List<UserDataModel>();
-                await ServiceManager.Get<IDatabaseService>().Read(settings.DatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
-                {
-                    oldUserData.Add(JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString()));
-                });
-
-                foreach (UserDataModel oldUser in oldUserData)
-                {
-                    UserV2Model user = oldUser.ToV2Model();
-                    if (user != null)
-                    {
-                        settings.Users[user.ID] = user;
-                    }
-                    else
-                    {
-                        settings.Users.Remove(oldUser.ID);
-                    }
-                }
-
-                foreach (CommandModelBase command in settings.Commands.Values)
-                {
-                    SettingsV3Upgrader.MultiPlatformCommandUpgrade(command);
-                    settings.Commands.ManualValueChanged(command.ID);
-                }
-#pragma warning restore CS0612 // Type or member is obsolete
 
                 await ServiceManager.Get<SettingsService>().Save(settings);
             }

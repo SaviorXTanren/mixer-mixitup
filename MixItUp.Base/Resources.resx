@@ -8933,4 +8933,618 @@ via Twitch, it's a "your mileage may vary" situation.</value>
   <data name="TwitchActionPredictionOutcomesTooLong" xml:space="preserve">
     <value>Prediction outcomes must be 25 characters or less.</value>
   </data>
+  <data name="ChineseTraditional" xml:space="preserve">
+    <value>Chinese (Traditional)</value>
+  </data>
+  <data name="MuteOnOff" xml:space="preserve">
+    <value>Mute On/Off</value>
+  </data>
+  <data name="ImageSource" xml:space="preserve">
+    <value>Image Source</value>
+  </data>
+  <data name="MediaSource" xml:space="preserve">
+    <value>Media Source</value>
+  </data>
+  <data name="StreamingSoftwareActionMissingImageSourceFilePath" xml:space="preserve">
+    <value>Streaming Software Action: Missing image source file path</value>
+  </data>
+  <data name="StreamingSoftwareActionMissingMediaSourceFilePath" xml:space="preserve">
+    <value>Streaming Software Action: Missing media source file path</value>
+  </data>
+  <data name="CSS" xml:space="preserve">
+    <value>CSS</value>
+  </data>
+  <data name="Javascript" xml:space="preserve">
+    <value>Javascript</value>
+  </data>
+  <data name="BackInDown" xml:space="preserve">
+    <value>Back In Down</value>
+  </data>
+  <data name="BackInLeft" xml:space="preserve">
+    <value>Back In Left</value>
+  </data>
+  <data name="BackInRight" xml:space="preserve">
+    <value>Back In Right</value>
+  </data>
+  <data name="BackInUp" xml:space="preserve">
+    <value>Back In Up</value>
+  </data>
+  <data name="BackOutDown" xml:space="preserve">
+    <value>Back Out Down</value>
+  </data>
+  <data name="BackOutLeft" xml:space="preserve">
+    <value>Back Out Left</value>
+  </data>
+  <data name="BackOutRight" xml:space="preserve">
+    <value>Back Out Right</value>
+  </data>
+  <data name="BackOutUp" xml:space="preserve">
+    <value>Back Out Up</value>
+  </data>
+  <data name="FadeInBottomLeft" xml:space="preserve">
+    <value>Fade In Bottom Left</value>
+  </data>
+  <data name="FadeInBottomRight" xml:space="preserve">
+    <value>Fade In Bottom Right</value>
+  </data>
+  <data name="FadeInDownBig" xml:space="preserve">
+    <value>Fade In Down Big</value>
+  </data>
+  <data name="FadeInLeftBig" xml:space="preserve">
+    <value>Fade In Left Big</value>
+  </data>
+  <data name="FadeInRightBig" xml:space="preserve">
+    <value>Fade In Right Big</value>
+  </data>
+  <data name="FadeInTopLeft" xml:space="preserve">
+    <value>Fade In Top Left</value>
+  </data>
+  <data name="FadeInTopRight" xml:space="preserve">
+    <value>Fade In Top Right</value>
+  </data>
+  <data name="FadeInUpBig" xml:space="preserve">
+    <value>Fade In Up Big</value>
+  </data>
+  <data name="FadeOutBottomLeft" xml:space="preserve">
+    <value>Fade Out Bottom Left</value>
+  </data>
+  <data name="FadeOutBottomRight" xml:space="preserve">
+    <value>Fade Out Bottom Right</value>
+  </data>
+  <data name="FadeOutDownBig" xml:space="preserve">
+    <value>Fade Out Down Big</value>
+  </data>
+  <data name="FadeOutLeftBig" xml:space="preserve">
+    <value>Fade Out Left Big</value>
+  </data>
+  <data name="FadeOutRightBig" xml:space="preserve">
+    <value>Fade Out Right Big</value>
+  </data>
+  <data name="FadeOutTopLeft" xml:space="preserve">
+    <value>Fade Out Top Left</value>
+  </data>
+  <data name="FadeOutTopRight" xml:space="preserve">
+    <value>Fade Out Top Right</value>
+  </data>
+  <data name="FadeOutUpBig" xml:space="preserve">
+    <value>Fade Out Up Big</value>
+  </data>
+  <data name="HeadShake" xml:space="preserve">
+    <value>Head Shake</value>
+  </data>
+  <data name="HeartBeat" xml:space="preserve">
+    <value>Heart Beat</value>
+  </data>
+  <data name="LightSpeedInLeft" xml:space="preserve">
+    <value>Light Speed In Left</value>
+  </data>
+  <data name="LightSpeedInRight" xml:space="preserve">
+    <value>Light Speed In Right</value>
+  </data>
+  <data name="LightSpeedOutLeft" xml:space="preserve">
+    <value>Light Speed Out Left</value>
+  </data>
+  <data name="LightSpeedOutRight" xml:space="preserve">
+    <value>Light Speed Out Right</value>
+  </data>
+  <data name="RotateInDownLeft" xml:space="preserve">
+    <value>Rotate In Down Left</value>
+  </data>
+  <data name="RotateInDownRight" xml:space="preserve">
+    <value>Rotate In Down Right</value>
+  </data>
+  <data name="RotateInUpLeft" xml:space="preserve">
+    <value>Rotate In Up Left</value>
+  </data>
+  <data name="RotateInUpRight" xml:space="preserve">
+    <value>Rotate In Up Right</value>
+  </data>
+  <data name="RotateOutDownLeft" xml:space="preserve">
+    <value>Rotate Out Down Left</value>
+  </data>
+  <data name="RotateOutDownRight" xml:space="preserve">
+    <value>Rotate Out Down Right</value>
+  </data>
+  <data name="RotateOutUpLeft" xml:space="preserve">
+    <value>Rotate Out Up Left</value>
+  </data>
+  <data name="RotateOutUpRight" xml:space="preserve">
+    <value>Rotate Out Up Right</value>
+  </data>
+  <data name="ShakeX" xml:space="preserve">
+    <value>Shake X</value>
+  </data>
+  <data name="ShakeY" xml:space="preserve">
+    <value>Shake Y</value>
+  </data>
+  <data name="AnimateCSS" xml:space="preserve">
+    <value>Animate.css</value>
+  </data>
+  <data name="Animation" xml:space="preserve">
+    <value>Animation</value>
+  </data>
+  <data name="AnimationLibrary" xml:space="preserve">
+    <value>Animation Library</value>
+  </data>
+  <data name="Entrance" xml:space="preserve">
+    <value>Entrance</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="TwitchActionMessageMissing" xml:space="preserve">
+    <value>Twitch Action: A valid message must be specified</value>
+  </data>
+  <data name="SendChatAnnouncement" xml:space="preserve">
+    <value>Send Chat Announcement</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>Color</value>
+  </data>
+  <data name="Primary" xml:space="preserve">
+    <value>Primary</value>
+  </data>
+  <data name="DisableSubscriberMode" xml:space="preserve">
+    <value>Disable Subscriber Mode</value>
+  </data>
+  <data name="EnableSubscriberMode" xml:space="preserve">
+    <value>Enable Subscriber Mode</value>
+  </data>
+  <data name="OverlayTimerDefaultJavascript" xml:space="preserve">
+    <value>var {ID}_additionalTime = 0;
+
+function {ID}_timerLoop(totalSeconds, endingSeconds, displayFormat)
+{
+    totalSeconds += {ID}_additionalTime;
+    {ID}_additionalTime = 0;
+
+    var text = displayFormat;
+
+    var seconds = totalSeconds % 60;
+    if (seconds &lt; 10) { seconds = "0" + seconds }
+    text = text.replace("SS", totalSeconds);
+    text = text.replace("ss", seconds);
+
+    var totalMinutes = Math.floor(totalSeconds / 60);
+    var minutes = totalMinutes % 60;
+    if (minutes &lt; 10) { minutes = "0" + minutes }
+    text = text.replace("MM", totalMinutes);
+    text = text.replace("mm", minutes);
+
+    var totalHours = Math.floor(totalMinutes / 60);
+    var hours = totalHours % 24;
+    if (hours &lt; 10) { hours = "0" + hours }
+    text = text.replace("HH", totalHours);
+    text = text.replace("hh", hours);
+
+    var days = Math.floor(totalHours / 24);
+    text = text.replace("DD", hours);
+
+    document.getElementById("text-{ID}").innerHTML = text;
+
+    setTimeout(function () {
+        if (endingSeconds &gt; 0) {
+            totalSeconds++;
+            if (totalSeconds &lt; endingSeconds) {
+                {ID}_timerLoop(totalSeconds, endingSeconds, displayFormat);
+            }        
+        }
+        else {
+            totalSeconds--;
+            if (totalSeconds &gt;= 0) {
+                {ID}_timerLoop(totalSeconds, endingSeconds, displayFormat);
+            }
+        }
+    }, 1000);
+}
+
+function {ID}_adjustTime(time)
+{
+    {ID}_additionalTime += time;
+}
+
+function {ID}_load()
+{
+    if ({CountUp}) {
+        {ID}_timerLoop(0, {Duration}, "{DisplayFormat}");  
+    }
+    else {
+        {ID}_timerLoop({Duration}, 0, "{DisplayFormat}");
+    }
+}</value>
+  </data>
+  <data name="OverlayImageDefaultCSS" xml:space="preserve">
+    <value>.image-{ID} {
+    width: {Width};
+    height: {Height};
+}</value>
+  </data>
+  <data name="OverlayImageDefaultHTML" xml:space="preserve">
+    <value>&lt;img id="image-{ID}" class="image-{ID}" src="{FilePath}" /&gt;</value>
+  </data>
+  <data name="OverlayTextDefaultCSS" xml:space="preserve">
+    <value>.text-{ID} {
+    font-size: {FontSize}px;
+    color: {FontColor};
+    font-family: '{FontFamily}';
+    font-weight: {FontWeight};
+    text-decoration: {TextDecoration};
+    font-style: {FontStyle};
+    text-align: {TextAlignment};
+    text-shadow: {Shadow};
+}</value>
+  </data>
+  <data name="OverlayTextDefaultHTML" xml:space="preserve">
+    <value>&lt;p id="text-{ID}" class="text-{ID}"&gt;
+    {Text}
+&lt;/p&gt;</value>
+  </data>
+  <data name="OverlayVideoDefaultCSS" xml:space="preserve">
+    <value>.video-{ID} {
+    width: {Width};
+    height: {Height};
+}</value>
+  </data>
+  <data name="OverlayVideoDefaultHTML" xml:space="preserve">
+    <value>&lt;video id="video-{ID}" class="video-{ID}" onloadstart="this.volume={Volume}" allow="autoplay; encrypted-media" autoplay {Loop}&gt;
+    &lt;source src="{FilePath}" type="video/{VideoExtension}" /&gt;
+&lt;/video&gt;</value>
+  </data>
+  <data name="OverlayWebPageDefaultHTML" xml:space="preserve">
+    <value>&lt;iframe frameborder="0" width="{WIDTH}" height="{HEIGHT}" src="{URL}" /&gt;</value>
+  </data>
+  <data name="OverlayYouTubeDefaultHTML" xml:space="preserve">
+    <value>&lt;div id="{ID}" /&gt;</value>
+  </data>
+  <data name="DisplayFormat" xml:space="preserve">
+    <value>Display Format</value>
+  </data>
+  <data name="OverlayTimerDefaultHTML" xml:space="preserve">
+    <value>&lt;p id="text-{ID}" class="text-{ID}"&gt;
+    {Text}
+&lt;/p&gt;</value>
+  </data>
+  <data name="OverlayPositionedItemDefaultCSS" xml:space="preserve">
+    <value>.outerdiv-{ID} {
+    position: absolute;
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    min-height: 100%;
+    margin: 0px;
+    z-index: {Layer};
+}
+
+.innerdiv-{ID} {
+    position: absolute;
+    margin: 0px;
+    left: {XPosition}{PositionType};
+    top: {YPosition}{PositionType};
+    transform: translate({XTranslation}%, {YTranslation}%);
+    width: {Width};
+    height: {Height};
+}</value>
+  </data>
+  <data name="OverlayPositionedItemDefaultHTML" xml:space="preserve">
+    <value>&lt;div id="outerdiv-{ID}" class="outerdiv-{ID}"&gt;
+&lt;div id="innerdiv-{ID}" class="innerdiv-{ID}"&gt;
+
+{InnerHTML}
+
+&lt;/div&gt;
+&lt;/div&gt;</value>
+  </data>
+  <data name="OverlayActionValidationErrorHeader" xml:space="preserve">
+    <value>Overlay Action: </value>
+  </data>
+  <data name="OverlayMissingFilePath" xml:space="preserve">
+    <value>Missing file path</value>
+  </data>
+  <data name="OverlayTextMissingText" xml:space="preserve">
+    <value>Missing text</value>
+  </data>
+  <data name="OverlayTimerMissingDisplayFormat" xml:space="preserve">
+    <value>Missing display format</value>
+  </data>
+  <data name="OverlayWebPageMissingURL" xml:space="preserve">
+    <value>Missing url</value>
+  </data>
+  <data name="OverlayYouTubeMissingVideo" xml:space="preserve">
+    <value>Missing video</value>
+  </data>
+  <data name="CooldownRequirementOnCooldownMinutes" xml:space="preserve">
+    <value>This command is currently on cooldown, please wait another {0} minute(s).</value>
+  </data>
+  <data name="CooldownRequirementOnCooldownHours" xml:space="preserve">
+    <value>This command is currently on cooldown, please wait another {0} hour(s).</value>
+  </data>
+  <data name="BasicTimer" xml:space="preserve">
+    <value>Basic Timer</value>
+  </data>
+  <data name="CountUp" xml:space="preserve">
+    <value>Count Up</value>
+  </data>
+  <data name="CSharp" xml:space="preserve">
+    <value>C#</value>
+  </data>
+  <data name="Python" xml:space="preserve">
+    <value>Python</value>
+  </data>
+  <data name="Script" xml:space="preserve">
+    <value>Script</value>
+  </data>
+  <data name="ScriptActionMissingScript" xml:space="preserve">
+    <value>Script Action: Missing script</value>
+  </data>
+  <data name="VisualBasic" xml:space="preserve">
+    <value>Visual Basic</value>
+  </data>
+  <data name="ScriptActionFailedCompile" xml:space="preserve">
+    <value>Script Error: {0}</value>
+    <comment>{0} is the series of script errors</comment>
+  </data>
+  <data name="ScriptActionCSharpDefaultScriptTemplate" xml:space="preserve">
+    <value>using System;
+            
+namespace CustomNamespace
+{
+    public class CustomClass
+    {
+        public object Run()
+        {
+            // Your code goes here
+            System.Console.WriteLine("Hello World!");
+
+            // Return any data here that you'd like to use
+            return 0;
+        }
+    }
+}</value>
+  </data>
+  <data name="ScriptActionJavascriptDefaultScriptTemplate" xml:space="preserve">
+    <value>function run()
+{
+    // Your code goes here
+    var text = 'Hello World!';
+
+    // Return any data here that you'd like to use
+    return 0;
+}</value>
+  </data>
+  <data name="ScriptActionPythonDefaultScriptTemplate" xml:space="preserve">
+    <value>def run():
+    # Your code goes here
+    print 'Hello World!'
+
+    # Return any data here that you'd like to use
+    return 0</value>
+  </data>
+  <data name="CommunityCommandsScriptActionsNotSupported" xml:space="preserve">
+    <value>Commands containing Script actions are not supported for uploading to the Community Commands feature. Due to the complexity of scripts and the ability for them to have malicious intent for users, we do not support uploading them through Community Commands to ensure users are protected. You can optionally instead export your command to a file and share it out with users through other means.</value>
+  </data>
+  <data name="OverlayLabelAmountDefaultHTML" xml:space="preserve">
+    <value>&lt;p id="label-amount-{ID}" class="text-{ID}"&gt;
+        {Amount}
+&lt;/p&gt;</value>
+  </data>
+  <data name="OverlayLabelUsernameAmountDefaultHTML" xml:space="preserve">
+    <value>&lt;p class="text-{ID}"&gt;
+    &lt;span id="label-username-{ID}" class="text-{ID}"&gt;
+        {Username}
+    &lt;/span&gt;
+    -
+    &lt;span id="label-amount-{ID}" class="text-{ID}"&gt;
+        {Amount}
+    &lt;/span&gt;
+&lt;/p&gt;</value>
+  </data>
+  <data name="OverlayLabelUsernameDefaultHTML" xml:space="preserve">
+    <value>&lt;p id="label-username-{ID}" class="text-{ID}"&gt;
+    {Username}
+&lt;/p&gt;</value>
+  </data>
+  <data name="OverlayLabelDefaultJavascript" xml:space="preserve">
+    <value>function {ID}_update(username, amount)
+{
+    var usernameElement = document.getElementById("label-username-{ID}");
+    if (usernameElement != null) {
+        usernameElement.innerHTML = username; 
+    }
+    
+    var amountElement = document.getElementById("label-amount-{ID}");
+    if (amountElement != null) {
+        amountElement.innerHTML = amount; 
+    }
+}</value>
+  </data>
+  <data name="OnUpdate" xml:space="preserve">
+    <value>On Update</value>
+  </data>
+  <data name="ConditionalActionAtLeastOneClause" xml:space="preserve">
+    <value>Conditional Action: At least one clause must be added</value>
+  </data>
+  <data name="HypeTrainLevelUp" xml:space="preserve">
+    <value>Hype Train Level Up - Reached Level {0}</value>
+  </data>
+  <data name="Resubscriber" xml:space="preserve">
+    <value>Resubscriber</value>
+  </data>
+  <data name="Donation" xml:space="preserve">
+    <value>Donation</value>
+  </data>
+  <data name="OverlayEventListDefaultCSS" xml:space="preserve">
+    <value>.item-{ID} {
+    position: relative;
+    border-style: solid;
+    border-width: 5px;
+    border-color: {BorderColor};
+    background-color: {BackgroundColor};
+    width: {Width};
+    height: {Height};
+}
+
+.details-{ID} {
+    position: absolute;
+    top: 35%;
+    left: 5%;
+    width: 50%;
+    float: left;
+    text-align: left;
+    font-weight: bold;
+    margin: auto;
+    transform: translate(0, -50%);
+    font-size: {FontSize}px;
+    color: {FontColor};
+    font-family: '{FontFamily}';
+    font-weight: {FontWeight};
+    text-decoration: {TextDecoration};
+    font-style: {FontStyle};
+    text-shadow: {Shadow};
+}
+
+.subdetails-{ID} {
+    position: absolute;
+    top: 80%;
+    right: 5%;
+    width: 50%;
+    text-align: right;
+    white-space: nowrap;
+    margin: auto;
+    transform: translate(0, -50%);
+    font-size: {FontSize}px;
+    color: {FontColor};
+    font-family: '{FontFamily}';
+    font-weight: {FontWeight};
+    text-decoration: {TextDecoration};
+    font-style: {FontStyle};
+    text-shadow: {Shadow};
+}</value>
+  </data>
+  <data name="OverlayEventListDefaultHTML" xml:space="preserve">
+    <value>&lt;div id="list-{ID}" class="list-{ID}"&gt;
+
+&lt;/div&gt;
+
+&lt;template id="item-{ID}"&gt;
+    &lt;div class='item-{ID}'&gt;
+        &lt;p class='details-{ID}'&gt;{Details}&lt;/p&gt;
+        &lt;p class='subdetails-{ID}'&gt;{SubDetails}&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/template&gt;</value>
+  </data>
+  <data name="OverlayEventListDefaultJavascript" xml:space="preserve">
+    <value>function {ID}_add(type, details, subdetails)
+{
+    var list = document.getElementById("list-{ID}");
+
+    if (list.childElementCount &gt; {MaxToShow}) {
+        {ID}_removeOldest();
+    }
+
+    var itemTemplate = document.querySelector("#item-{ID}");
+    const item = itemTemplate.content.cloneNode(true);
+    
+    var detailsElement = item.querySelector(".details-{ID}");
+    detailsElement.innerHTML = details;
+    
+    var subdetailsElement = item.querySelector(".subdetails-{ID}");
+    subdetailsElement.innerHTML = subdetails;
+
+    list.appendChild(item);
+}
+
+function {ID}_removeOldest()
+{
+    var list = document.getElementById("list-{ID}");
+    list.removeChild(list.firstElementChild);
+}</value>
+  </data>
+  <data name="TwitchChannelHypeTrainLevelUp" xml:space="preserve">
+    <value>Twitch Channel Hype Train Level Up</value>
+  </data>
+  <data name="AlertTwitchCharityDonation" xml:space="preserve">
+    <value>{0} Donated {1} To The Twitch Charity</value>
+  </data>
+  <data name="OverlayGoalDefaultCSS" xml:space="preserve">
+    <value>.background-{ID}
+{
+    position: absolute;
+    background-color: {BackgroundColor};
+    width: {Width}px;
+    height: {Height}px;
+}
+
+.progress-{ID}
+{
+    position: absolute;
+    background-color: {ProgressColor};
+    height: {Height}px;
+}
+
+.text-{ID} {
+    position: absolute;
+    font-size: {FontSize}px;
+    color: {FontColor};
+    font-family: '{FontFamily}';
+    font-weight: {FontWeight};
+    text-decoration: {TextDecoration};
+    font-style: {FontStyle};
+    text-align: {TextAlignment};
+    text-shadow: {Shadow};
+    left: 50%;
+    top: 50%;
+    margin: auto;
+    transform: translate(-50%, -50%);
+}</value>
+  </data>
+  <data name="OverlayGoalDefaultHTML" xml:space="preserve">
+    <value>&lt;div class="background-{ID}"&gt;
+  &lt;div id="progress-{ID}" class="progress-{ID}" /&gt;
+&lt;/div&gt;
+&lt;p id="text-{ID}" class="text-{ID}" /&gt;</value>
+  </data>
+  <data name="OverlayGoalDefaultJavascript" xml:space="preserve">
+    <value>function update_{ID}(amount, percentage, width)
+{
+    var textElement = document.getElementById("text-{ID}");
+    if (textElement != null) {
+        textElement.innerHTML = amount + " (" + Math.round(percentage * 100) + "%)"; 
+    }
+    
+    var progressElement = document.getElementById("progress-{ID}");
+    if (progressElement != null) {
+        progressElement.style.width = Math.min(percentage * width, width) + "px";
+    }
+}
+
+update_{ID}({CurrentAmount}, {Percentage}, {Width});</value>
+  </data>
+  <data name="TwitchChannelCharityDonation" xml:space="preserve">
+    <value>Twitch Channel Charity Donation</value>
+  </data>
+  <data name="TwitchEventServiceFailedToConnectEventSub" xml:space="preserve">
+    <value>Failed to connect to Twitch Event Sub service</value>
+  </data>
 </root>

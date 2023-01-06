@@ -443,12 +443,47 @@ namespace MixItUp.Base.Model.Currency
         {
             if (this.ResetInterval != CurrencyResetRateEnum.Never)
             {
+                if (this.LastReset == DateTimeOffset.MinValue)
+                {
+                    return true;
+                }
+
                 DateTimeOffset newResetDate = DateTimeOffset.MinValue;
-                if (this.ResetInterval == CurrencyResetRateEnum.Daily) { newResetDate = this.LastReset.AddDays(1); }
-                else if (this.ResetInterval == CurrencyResetRateEnum.Weekly) { newResetDate = this.LastReset.AddDays(7); }
-                else if (this.ResetInterval == CurrencyResetRateEnum.Monthly) { newResetDate = this.LastReset.AddMonths(1); }
-                else if (this.ResetInterval == CurrencyResetRateEnum.Yearly) { newResetDate = this.LastReset.AddYears(1); }
-                return (newResetDate.Date <= DateTimeOffset.Now.Date);
+                if (this.ResetStartCadence != DateTimeOffset.MinValue)
+                {
+                    if (this.ResetInterval == CurrencyResetRateEnum.Weekly)
+                    {
+                        newResetDate = new DateTime(this.LastReset.Year, this.LastReset.Month, this.LastReset.Day);
+                        do
+                        {
+                            newResetDate = newResetDate.AddDays(1);
+                        } while (newResetDate.DayOfWeek != this.ResetStartCadence.DayOfWeek);
+                    }
+                    else if (this.ResetInterval == CurrencyResetRateEnum.Monthly)
+                    {
+                        int day = Math.Min(this.ResetStartCadence.Day, DateTime.DaysInMonth(this.LastReset.Year, this.LastReset.Month));
+                        newResetDate = new DateTime(this.LastReset.Year, this.LastReset.Month, day);
+                        newResetDate = newResetDate.AddMonths(1);
+                    }
+                    else if (this.ResetInterval == CurrencyResetRateEnum.Yearly)
+                    {
+                        int day = Math.Min(this.ResetStartCadence.Day, DateTime.DaysInMonth(this.LastReset.Year, this.ResetStartCadence.Month));
+                        newResetDate = new DateTime(this.LastReset.Year, this.ResetStartCadence.Month, day);
+                        newResetDate = newResetDate.AddYears(1);
+                    }
+                }
+                else
+                {
+                    if (this.ResetInterval == CurrencyResetRateEnum.Daily) { newResetDate = this.LastReset.AddDays(1); }
+                    else if (this.ResetInterval == CurrencyResetRateEnum.Weekly){ newResetDate = this.LastReset.AddDays(7); }
+                    else if (this.ResetInterval == CurrencyResetRateEnum.Monthly) { newResetDate = this.LastReset.AddMonths(1); }
+                    else if (this.ResetInterval == CurrencyResetRateEnum.Yearly) { newResetDate = this.LastReset.AddYears(1); }
+                }
+
+                if (newResetDate != DateTimeOffset.MinValue)
+                {
+                    return (newResetDate.Date <= DateTimeOffset.Now.Date);
+                }
             }
             return false;
         }

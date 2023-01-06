@@ -7,6 +7,7 @@ using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -176,6 +177,7 @@ namespace MixItUp.Base.Services
             {
                 if (!command.IsEnabled || !command.HasWork)
                 {
+                    Logger.Log(LogLevel.Debug, $"Command is not enabled/has not work: {command.ID} - {command.Name}");
                     return;
                 }
 
@@ -343,11 +345,16 @@ namespace MixItUp.Base.Services
                     }
                 }
             }
+
+            Logger.Log(LogLevel.Debug, $"Command validation status: {command.ID} - {command.Name} - {validationResult.ToString()}");
+
             return validationResult;
         }
 
         private async Task QueueInternal(CommandInstanceModel commandInstance)
         {
+            Logger.Log(LogLevel.Debug, $"Starting command queuing: {commandInstance.CommandID} - {commandInstance.Name}");
+
             CommandTypeEnum type = commandInstance.QueueCommandType;
             if (commandInstance.DontQueue)
             {

@@ -14,13 +14,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Twitch.Base.Clients;
 using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.NewAPI.Bits;
 using Twitch.Base.Models.NewAPI.Chat;
+using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.Services.Twitch
 {
@@ -69,8 +69,6 @@ namespace MixItUp.Base.Services.Twitch
 
         private static List<string> ExcludedDiagnosticPacketLogging = new List<string>() { "PING", ChatMessagePacketModel.CommandID, ChatUserJoinPacketModel.CommandID, ChatUserLeavePacketModel.CommandID };
 
-        private const string HostChatMessageRegexPattern = "^\\w+ is now hosting you.$";
-
         private const string RaidUserNoticeMessageTypeID = "raid";
         private const string SubMysteryGiftUserNoticeMessageTypeID = "submysterygift";
         private const string SubGiftPaidUpgradeUserNoticeMessageTypeID = "giftpaidupgrade";
@@ -101,6 +99,8 @@ namespace MixItUp.Base.Services.Twitch
         private HashSet<string> userLeaveEvents = new HashSet<string>();
 
         private HashSet<string> initialUserLogins = new HashSet<string>();
+
+        private HashSet<string> userBans = new HashSet<string>();
 
         private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
 
@@ -157,7 +157,7 @@ namespace MixItUp.Base.Services.Twitch
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         AsyncRunner.RunAsyncBackground(this.ChatterJoinLeaveBackground, this.cancellationTokenSource.Token, 2500);
-                        AsyncRunner.RunAsyncBackground(this.TMIChatUpdateBackground, this.cancellationTokenSource.Token, 60000);
+                        AsyncRunner.RunAsyncBackground(this.ChatterUpdateBackground, this.cancellationTokenSource.Token, 60000);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                         await Task.Delay(3000);
@@ -386,13 +386,15 @@ namespace MixItUp.Base.Services.Twitch
             await this.messageSemaphore.WaitAndRelease(async () =>
             {
                 ChatClient client = this.GetChatClient(sendAsStreamer);
+                UserModel sender = (!sendAsStreamer && ServiceManager.Get<TwitchSessionService>().IsBotConnected) ? ServiceManager.Get<TwitchSessionService>().Bot : ServiceManager.Get<TwitchSessionService>().User;
+                UserModel receiver = user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).GetTwitchNewAPIUserModel();
                 if (client != null)
                 {
                     string subMessage = null;
                     do
                     {
                         message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
-                        await client.SendWhisperMessage(ServiceManager.Get<TwitchSessionService>().User, user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).GetTwitchNewAPIUserModel(), message);
+                        await client.SendWhisperMessage(sender, receiver, message);
                         message = subMessage;
                         await Task.Delay(500);
                     }
@@ -462,7 +464,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.BanUser(ServiceManager.Get<TwitchSessionService>().User, user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).GetTwitchNewAPIUserModel());
+                    await this.userClient.BanUser(ServiceManager.Get<TwitchSessionService>().User, user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).GetTwitchNewAPIUserModel(), "Manual Ban from Mix It Up");
                 }
             });
         }
@@ -487,14 +489,6 @@ namespace MixItUp.Base.Services.Twitch
                     await this.userClient.RunCommercial(ServiceManager.Get<TwitchSessionService>().User, lengthInSeconds);
                 }
             });
-        }
-
-        public async Task<TwitchTMIChatModel> GetTMIChatUsers()
-        {
-            using (AdvancedHttpClient client = new AdvancedHttpClient())
-            {
-                return await client.GetAsync<TwitchTMIChatModel>($"https://tmi.twitch.tv/group/user/{ServiceManager.Get<TwitchSessionService>().Username}/chatters");
-            }
         }
 
         private ChatClient GetChatClient(bool sendAsStreamer = false) { return (this.botClient != null && !sendAsStreamer) ? this.botClient : this.userClient; }
@@ -558,18 +552,11 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
-        private async Task TMIChatUpdateBackground(CancellationToken cancellationToken)
+        private async Task ChatterUpdateBackground(CancellationToken cancellationToken)
         {
-            TwitchTMIChatModel tmiChat = await GetTMIChatUsers();
+            IEnumerable<ChatterModel> chatterModels = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChatters(ServiceManager.Get<TwitchSessionService>().User);
 
-            HashSet<string> chatters = new HashSet<string>();
-            chatters.AddRange(tmiChat.chatters.admins);
-            chatters.AddRange(tmiChat.chatters.broadcaster);
-            chatters.AddRange(tmiChat.chatters.global_mods);
-            chatters.AddRange(tmiChat.chatters.moderators);
-            chatters.AddRange(tmiChat.chatters.staff);
-            chatters.AddRange(tmiChat.chatters.viewers);
-            chatters.AddRange(tmiChat.chatters.vips);
+            HashSet<string> chatters = new HashSet<string>(chatterModels.Select(c => c.user_login));
 
             HashSet<string> joinsToProcess = new HashSet<string>();
             List<UserV2ViewModel> leavesToProcess = new List<UserV2ViewModel>();
@@ -816,14 +803,19 @@ namespace MixItUp.Base.Services.Twitch
             }
             else if (chatClear.IsBan)
             {
-                CommandParametersModel parameters = new CommandParametersModel();
-                parameters.Arguments.Add("@" + user.Username);
-                parameters.TargetUser = user;
-                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserBan, parameters);
+                if (!userBans.Contains(user.Username))
+                {
+                    userBans.Add(user.Username);
 
-                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertBanned, user.FullDisplayName), ChannelSession.Settings.AlertModerationColor));
+                    CommandParametersModel parameters = new CommandParametersModel();
+                    parameters.Arguments.Add("@" + user.Username);
+                    parameters.TargetUser = user;
+                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserBan, parameters);
 
-                await ServiceManager.Get<UserService>().RemoveActiveUser(user.ID);
+                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertBanned, user.FullDisplayName), ChannelSession.Settings.AlertModerationColor));
+
+                    await ServiceManager.Get<UserService>().RemoveActiveUser(user.ID);
+                }
             }
         }
 
@@ -831,38 +823,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (message != null && !string.IsNullOrEmpty(message.Message))
             {
-                if (!string.IsNullOrEmpty(message.UserLogin) && message.UserLogin.Equals("jtv"))
-                {
-                    if (Regex.IsMatch(message.Message, TwitchChatService.HostChatMessageRegexPattern))
-                    {
-                        Logger.Log(LogLevel.Debug, JSONSerializerHelper.SerializeToString(message));
-
-                        string hosterUsername = message.Message.Substring(0, message.Message.IndexOf(' '));
-                        UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, hosterUsername, performPlatformSearch: true);
-                        if (user != null)
-                        {
-                            await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
-
-                            CommandParametersModel parameters = new CommandParametersModel(user);
-                            if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TwitchChannelHosted, parameters))
-                            {
-                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostUserData] = user.ID;
-
-                                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
-                                {
-                                    currency.AddAmount(user, currency.OnHostBonus);
-                                }
-
-                                GlobalEvents.HostOccurred(user);
-
-                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHosted, parameters);
-
-                                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertHosted, user.FullDisplayName), ChannelSession.Settings.AlertHostColor));
-                            }
-                        }
-                    }
-                }
-                else
+                if (string.IsNullOrEmpty(message.UserLogin) || !message.UserLogin.Equals("jtv"))
                 {
                     UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, message.UserID, performPlatformSearch: true);
                     await ServiceManager.Get<ChatService>().AddMessage(new TwitchChatMessageViewModel(message, user));

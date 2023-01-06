@@ -98,17 +98,18 @@ namespace MixItUp.Base.ViewModel.Actions
         public DiscordActionEditorControlViewModel(DiscordActionModel action)
             : base(action)
         {
-            if (action.ActionType == DiscordActionTypeEnum.SendMessage)
+            this.SelectedActionType = action.ActionType;
+            if (this.SelectedActionType == DiscordActionTypeEnum.SendMessage)
             {
                 this.existingSelectedChannel = action.ChannelID;
                 this.ChatMessage = action.MessageText;
                 this.UploadFilePath = action.FilePath;
             }
-            else if (action.ActionType == DiscordActionTypeEnum.MuteSelf)
+            else if (this.SelectedActionType == DiscordActionTypeEnum.MuteSelf)
             {
                 this.MuteSelf = action.ShouldMuteDeafen;
             }
-            else if (action.ActionType == DiscordActionTypeEnum.DeafenSelf)
+            else if (this.SelectedActionType == DiscordActionTypeEnum.DeafenSelf)
             {
                 this.DeafenSelf = action.ShouldMuteDeafen;
             }

@@ -11,16 +11,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Ads;
 using Twitch.Base.Models.NewAPI.ChannelPoints;
+using Twitch.Base.Models.NewAPI.Chat;
 using Twitch.Base.Models.NewAPI.Clips;
 using Twitch.Base.Models.NewAPI.Polls;
 using Twitch.Base.Models.NewAPI.Predictions;
 using Twitch.Base.Models.NewAPI.Streams;
 using Twitch.Base.Models.NewAPI.Tags;
+using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.Model.Actions
 {
     public enum TwitchActionType
     {
+        [Obsolete]
         Host,
         Raid,
         VIPUser,
@@ -41,7 +44,17 @@ namespace MixItUp.Base.Model.Actions
         DisableSubscriberChat,
         SetTitle,
         SetGame,
-        SetCustomTags
+        SetCustomTags,
+        SendChatAnnouncement,
+    }
+
+    public enum TwitchAnnouncementColor
+    {
+        Primary = 0,
+        Blue,
+        Green,
+        Orange,
+        Purple
     }
 
     [DataContract]
@@ -54,6 +67,15 @@ namespace MixItUp.Base.Model.Actions
         public const int StreamMarkerMaxDescriptionLength = 140;
 
         private const string StartinCommercialBreakMessage = "Starting commercial break.";
+
+        private readonly Dictionary<TwitchAnnouncementColor, string> AnnouncementColorMap = new Dictionary<TwitchAnnouncementColor, string>
+        {
+            { TwitchAnnouncementColor.Primary, "primary" },
+            { TwitchAnnouncementColor.Blue, "blue" },
+            { TwitchAnnouncementColor.Green, "green" },
+            { TwitchAnnouncementColor.Orange, "orange" },
+            { TwitchAnnouncementColor.Purple, "purple" },
+        };
 
         public static readonly IEnumerable<int> SupportedAdLengths = new List<int>() { 30, 60, 90, 120, 150, 180 };
 
@@ -144,6 +166,14 @@ namespace MixItUp.Base.Model.Actions
             return action;
         }
 
+        public static TwitchActionModel CreateSendChatAnnouncementAction(string message, TwitchAnnouncementColor color)
+        {
+            TwitchActionModel actionModel = new TwitchActionModel(TwitchActionType.SendChatAnnouncement);
+            actionModel.Message = message;
+            actionModel.Color= color;
+            return actionModel;
+        }
+
         public static TwitchActionModel CreateAction(TwitchActionType type)
         {
             return new TwitchActionModel(type);
@@ -227,6 +257,12 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
 
+        [DataMember]
+        public string Message { get; set; }
+
+        [DataMember]
+        public TwitchAnnouncementColor Color { get; set; }
+
         private TwitchActionModel(TwitchActionType type)
             : base(ActionTypeEnum.Twitch)
         {
@@ -240,15 +276,14 @@ namespace MixItUp.Base.Model.Actions
         {
             if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
-                if (this.ActionType == TwitchActionType.Host)
+                if (this.ActionType == TwitchActionType.Raid)
                 {
                     string channelName = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
-                    await ServiceManager.Get<ChatService>().SendMessage("/host @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
-                }
-                else if (this.ActionType == TwitchActionType.Raid)
-                {
-                    string channelName = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
-                    await ServiceManager.Get<ChatService>().SendMessage("/raid @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                    UserModel targetChannel = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(channelName);
+                    if (targetChannel != null)
+                    {
+                        await ServiceManager.Get<TwitchSessionService>().UserConnection.RaidChannel(ServiceManager.Get<TwitchSessionService>().User, targetChannel);
+                    }
                 }
                 else if (this.ActionType == TwitchActionType.RunAd)
                 {
@@ -276,13 +311,17 @@ namespace MixItUp.Base.Model.Actions
 
                     if (!string.IsNullOrEmpty(targetUsername))
                     {
-                        if (this.ActionType == TwitchActionType.VIPUser)
+                        UserModel targetUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(targetUsername);
+                        if (targetUser != null)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage("/vip @" + targetUsername, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
-                        }
-                        else if (this.ActionType == TwitchActionType.UnVIPUser)
-                        {
-                            await ServiceManager.Get<ChatService>().SendMessage("/unvip @" + targetUsername, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                            if (this.ActionType == TwitchActionType.VIPUser)
+                            {
+                                await ServiceManager.Get<TwitchSessionService>().UserConnection.VIPUser(ServiceManager.Get<TwitchSessionService>().User, targetUser);
+                            }
+                            else if (this.ActionType == TwitchActionType.UnVIPUser)
+                            {
+                                await ServiceManager.Get<TwitchSessionService>().UserConnection.UnVIPUser(ServiceManager.Get<TwitchSessionService>().User, targetUser);
+                            }
                         }
                     }
                 }
@@ -543,43 +582,57 @@ namespace MixItUp.Base.Model.Actions
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     }
                 }
-                else if (this.ActionType == TwitchActionType.EnableSlowChat || this.ActionType == TwitchActionType.EnableFollowersOnly)
+                else if (this.ActionType == TwitchActionType.EnableSlowChat || this.ActionType == TwitchActionType.DisableSlowChat ||
+                    this.ActionType == TwitchActionType.EnableEmoteOnly || this.ActionType == TwitchActionType.DisableEmoteOnly ||
+                    this.ActionType == TwitchActionType.EnableFollowersOnly || this.ActionType == TwitchActionType.DisableFollowersOnly ||
+                    this.ActionType == TwitchActionType.EnableSubscribersChat || this.ActionType == TwitchActionType.DisableSubscriberChat)
                 {
-                    if (int.TryParse(await ReplaceStringWithSpecialModifiers(this.TimeLength, parameters), out int timeLength) && timeLength > 0)
+                    ChatSettingsModel settings = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChatSettings(ServiceManager.Get<TwitchSessionService>().User);
+                    if (settings != null)
                     {
-                        if (this.ActionType == TwitchActionType.EnableSlowChat)
+                        if (this.ActionType == TwitchActionType.EnableSlowChat || this.ActionType == TwitchActionType.EnableFollowersOnly)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage("/slow " + timeLength, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                            if (int.TryParse(await ReplaceStringWithSpecialModifiers(this.TimeLength, parameters), out int timeLength) && timeLength > 0)
+                            {
+                                if (this.ActionType == TwitchActionType.EnableSlowChat)
+                                {
+                                    settings.slow_mode = true;
+                                    settings.slow_mode_wait_time = timeLength;
+                                }
+                                else if (this.ActionType == TwitchActionType.EnableFollowersOnly)
+                                {
+                                    settings.follower_mode = true;
+                                    settings.follower_mode_duration = timeLength;
+                                }
+                            }
                         }
-                        else if (this.ActionType == TwitchActionType.EnableFollowersOnly)
+                        else if (this.ActionType == TwitchActionType.DisableSlowChat)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage("/followers " + timeLength, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                            settings.slow_mode = false;
                         }
+                        else if (this.ActionType == TwitchActionType.DisableFollowersOnly)
+                        {
+                            settings.follower_mode = false;
+                        }
+                        else if (this.ActionType == TwitchActionType.EnableEmoteOnly)
+                        {
+                            settings.emote_mode = true;
+                        }
+                        else if (this.ActionType == TwitchActionType.DisableEmoteOnly)
+                        {
+                            settings.emote_mode = false;
+                        }
+                        else if (this.ActionType == TwitchActionType.EnableSubscribersChat)
+                        {
+                            settings.subscriber_mode = true;
+                        }
+                        else if (this.ActionType == TwitchActionType.DisableSubscriberChat)
+                        {
+                            settings.subscriber_mode = false;
+                        }
+
+                        await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateChatSettings(ServiceManager.Get<TwitchSessionService>().User, settings);
                     }
-                }
-                else if (this.ActionType == TwitchActionType.EnableEmoteOnly)
-                {
-                    await ServiceManager.Get<ChatService>().SendMessage("/emoteonly", sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
-                }
-                else if (this.ActionType == TwitchActionType.DisableEmoteOnly)
-                {
-                    await ServiceManager.Get<ChatService>().SendMessage("/emoteonlyoff", sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
-                }
-                else if (this.ActionType == TwitchActionType.DisableFollowersOnly)
-                {
-                    await ServiceManager.Get<ChatService>().SendMessage("/followersoff", sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
-                }
-                else if (this.ActionType == TwitchActionType.DisableSlowChat)
-                {
-                    await ServiceManager.Get<ChatService>().SendMessage("/slowoff", sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
-                }
-                else if (this.ActionType == TwitchActionType.EnableSubscribersChat)
-                {
-                    await ServiceManager.Get<ChatService>().SendMessage("/subscribers", sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
-                }
-                else if (this.ActionType == TwitchActionType.DisableSubscriberChat)
-                {
-                    await ServiceManager.Get<ChatService>().SendMessage("/subscribersoff", sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
                 }
                 else if (this.ActionType == TwitchActionType.SetTitle)
                 {
@@ -594,6 +647,11 @@ namespace MixItUp.Base.Model.Actions
                 else if (this.ActionType == TwitchActionType.SetCustomTags)
                 {
                     await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateStreamTagsForChannel(ServiceManager.Get<TwitchSessionService>().User, this.CustomTags.Select(t => new TagModel() { tag_id = t }));
+                }
+                else if (this.ActionType == TwitchActionType.SendChatAnnouncement)
+                {
+                    string text = await ReplaceStringWithSpecialModifiers(this.Message, parameters);
+                    await ServiceManager.Get<TwitchSessionService>().UserConnection.SendChatAnnouncement(ServiceManager.Get<TwitchSessionService>().User, text, AnnouncementColorMap[Color]);
                 }
             }
         }

@@ -48,6 +48,12 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public override Task<CommandModelBase> CreateNewCommand() { return Task.FromResult<CommandModelBase>(new TwitchChannelPointsCommandModel(this.ChannelPointReward.title, this.ChannelPointReward.id)); }
 
+        public override async Task UpdateExistingCommand(CommandModelBase command)
+        {
+            await base.UpdateExistingCommand(command);
+            ((TwitchChannelPointsCommandModel)command).ChannelPointRewardID = this.ChannelPointReward.id;
+        }
+
         public override Task SaveCommandToSettings(CommandModelBase command)
         {
             ServiceManager.Get<CommandService>().TwitchChannelPointsCommands.Remove((TwitchChannelPointsCommandModel)this.existingCommand);

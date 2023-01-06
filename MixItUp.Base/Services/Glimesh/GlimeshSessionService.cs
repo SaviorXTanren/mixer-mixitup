@@ -20,6 +20,7 @@ namespace MixItUp.Base.Services.Glimesh
 
         public UserModel User { get; private set; }
         public UserModel Bot { get; private set; }
+        public ChannelModel Channel { get; private set; }
 
         public HashSet<string> Moderators { get; private set; } = new HashSet<string>();
 
@@ -30,7 +31,7 @@ namespace MixItUp.Base.Services.Glimesh
         public string Username { get { return this.User?.username; } }
         public string BotID { get { return this.Bot?.id; } }
         public string Botname { get { return this.Bot?.username; } }
-        public string ChannelID { get { return this.User?.channel?.id; } }
+        public string ChannelID { get { return this.Channel?.id; } }
         public string ChannelLink { get { return string.Format("glimesh.tv/{0}", this.Username?.ToLower()); } }
 
         public StreamingPlatformAccountModel UserAccount
@@ -78,6 +79,12 @@ namespace MixItUp.Base.Services.Glimesh
                 {
                     return new Result(MixItUp.Base.Resources.GlimeshFailedToGetUserData);
                 }
+
+                this.Channel = await this.UserConnection.GetChannelByID(this.User.channel.id);
+                if (this.Channel == null)
+                {
+                    return new Result(MixItUp.Base.Resources.GlimeshFailedToGetUserData);
+                }
             }
             return result;
         }
@@ -118,6 +125,12 @@ namespace MixItUp.Base.Services.Glimesh
                 {
                     this.User = await this.UserConnection.GetCurrentUser();
                     if (this.User == null)
+                    {
+                        return new Result(MixItUp.Base.Resources.GlimeshFailedToGetUserData);
+                    }
+
+                    this.Channel = await this.UserConnection.GetChannelByID(this.User.channel.id);
+                    if (this.Channel == null)
                     {
                         return new Result(MixItUp.Base.Resources.GlimeshFailedToGetUserData);
                     }
@@ -283,40 +296,51 @@ namespace MixItUp.Base.Services.Glimesh
             }
         }
 
-        public Task RefreshChannel()
+        public async Task RefreshChannel()
         {
-            this.Moderators.Clear();
-            foreach (ChannelModeratorModel moderator in this.User.channel.moderators.Items)
+            var channel = await this.UserConnection.GetChannelByID(this.User.channel.id);
+            if (channel != null)
             {
-                this.Moderators.Add(moderator.user.id);
+                this.Channel = channel;
             }
 
-            return Task.CompletedTask;
+            if (this.Channel != null)
+            {
+                this.Moderators.Clear();
+                foreach (ChannelModeratorModel moderator in this.Channel.moderators.Items)
+                {
+                    this.Moderators.Add(moderator.user.id);
+                }
+            }
         }
 
         public Task<string> GetTitle()
         {
-            return Task.FromResult(this.User?.channel?.title);
+            return Task.FromResult(this.Channel?.title);
         }
 
-        public Task<bool> SetTitle(string title) { return Task.FromResult(false); }
+        public async Task<bool> SetTitle(string title)
+        {
+            await ServiceManager.Get<GlimeshSessionService>().UserConnection.UpdateStreamInfo(this.ChannelID, title);
+            return true;
+        }
 
         public Task<string> GetGame()
         {
-            if (this.User?.channel?.subcategory != null)
+            if (this.Channel?.subcategory != null)
             {
-                if (GamingCategorySlug.Equals(this.User?.channel?.category?.slug))
+                if (GamingCategorySlug.Equals(this.Channel?.category?.slug))
                 {
-                    return Task.FromResult(this.User?.channel?.subcategory?.name);
+                    return Task.FromResult(this.Channel?.subcategory?.name);
                 }
                 else
                 {
-                    return Task.FromResult($"{this.User?.channel?.category?.name} - {this.User?.channel?.subcategory?.name}");
+                    return Task.FromResult($"{this.Channel?.category?.name} - {this.Channel?.subcategory?.name}");
                 }
             }
             else
             {
-                return Task.FromResult(this.User?.channel?.category?.name);
+                return Task.FromResult(this.Channel?.category?.name);
             }
         }
 

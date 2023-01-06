@@ -108,6 +108,20 @@ namespace MixItUp.Base.Model.Commands
             }
         }
 
+        [JsonIgnore]
+        public string Name
+        {
+            get
+            {
+                CommandModelBase command = this.Command;
+                if (command != null)
+                {
+                    return command.Name;
+                }
+                return string.Empty;
+            }
+        }
+
         public CommandInstanceModel(CommandModelBase command) : this(command, new CommandParametersModel()) { }
 
         public CommandInstanceModel(CommandModelBase command, CommandParametersModel parameters)

@@ -50,6 +50,15 @@ namespace MixItUp.Base.Model.Actions
                 replacementText = await this.ProcessStringFunction(replacementText, "length", (text) => { return Task.FromResult(text.Length.ToString()); });
                 replacementText = await this.ProcessStringFunction(replacementText, "urlencode", (text) => { return Task.FromResult(HttpUtility.UrlEncode(text)); });
                 replacementText = await this.ProcessStringFunction(replacementText, "uriescape", (text) => { return Task.FromResult(Uri.EscapeDataString(text)); });
+                replacementText = await this.ProcessStringFunction(replacementText, "replace", (text) =>
+                {
+                    string[] splits = text.Split(new char[] { ',' });
+                    if (splits != null && splits.Length == 3)
+                    {
+                        return Task.FromResult(splits[0].Replace(splits[1], splits[2]));
+                    }
+                    return Task.FromResult(text);
+                });
             }
 
             if (this.ShouldProcessMath)
