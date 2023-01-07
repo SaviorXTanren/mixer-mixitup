@@ -103,7 +103,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             //await widget.Enable();
 
-            OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(OverlayItemV3Type.Label);
+            OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(OverlayItemV3Type.Text);
             window.Closed += Window_Closed;
             window.Show();
         }

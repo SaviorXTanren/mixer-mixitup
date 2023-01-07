@@ -46,12 +46,12 @@
 
                     <TextBox Text="{Binding Name}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                    <ComboBox Grid.Column="2" Visibility="{Binding OverlayEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding OverlayEndpoints}" SelectedItem="{Binding SelectedOverlayEndpoint}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayEndpoints}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                    <ComboBox Grid.Column="2" ItemsSource="{Binding OverlayEndpoints}" SelectedItem="{Binding SelectedOverlayEndpoint}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayEndpoints}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
                 </Grid>
 
                 <TabControl Grid.Row="2" DataContext="{Binding Item}" SnapsToDevicePixels="True" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" MaterialDesign:NavigationRailAssist.ShowSelectionBackground="True">
                     <TabItem Header="{x:Static resx:Resources.Details}">
-                        <Grid >
+                        <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -92,7 +92,7 @@
                     <TabItem Header="{x:Static resx:Resources.HTML}">
                         <Grid>
                             <Border Style="{StaticResource DefaultBorder}">
-                                <OverlayControls:OverlayTextEditorV3Control DataContext="{Binding HTML}" />
+                                <TextBox Text="{Binding HTML}" Style="{StaticResource OverlayEditorMultiLineTextBox}" MinHeight="250" />
                             </Border>
                         </Grid>
                     </TabItem>
@@ -100,7 +100,7 @@
                     <TabItem Header="{x:Static resx:Resources.CSS}">
                         <Grid>
                             <Border Style="{StaticResource DefaultBorder}">
-                                <OverlayControls:OverlayTextEditorV3Control DataContext="{Binding CSS}" />
+                                <TextBox Text="{Binding CSS}" Style="{StaticResource OverlayEditorMultiLineTextBox}" MinHeight="250" />
                             </Border>
                         </Grid>
                     </TabItem>
@@ -108,13 +108,13 @@
                     <TabItem Header="{x:Static resx:Resources.Javascript}">
                         <Grid>
                             <Border Style="{StaticResource DefaultBorder}">
-                                <OverlayControls:OverlayTextEditorV3Control DataContext="{Binding Javascript}" />
+                                <TextBox Text="{Binding Javascript}" Style="{StaticResource OverlayEditorMultiLineTextBox}" MinHeight="250" />
                             </Border>
                         </Grid>
                     </TabItem>
                 </TabControl>
 
-                <Controls:IconButton x:Name="SaveButton" Grid.Row="10" HorizontalAlignment="Center" Click="SaveButton_Click" Width="80" Icon="ContentSave" />
+                <Controls:IconButton x:Name="SaveButton" Grid.Row="4" HorizontalAlignment="Center" Click="SaveButton_Click" Width="80" Icon="ContentSave" />
             </Grid>
         </ScrollViewer>
 

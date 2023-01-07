@@ -11,7 +11,16 @@ namespace MixItUp.Base.ViewModel.Overlay
     {
         public Guid ID { get; set; }
 
-        public string Name { get; set; }
+        public string Name
+        {
+            get { return this.name; }
+            set
+            {
+                this.name = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string name;
 
         public OverlayItemV3Type Type { get; set; }
 
@@ -55,6 +64,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayWidgetV3EditorWindowViewModel(OverlayItemV3Type type)
         {
             this.ID = Guid.NewGuid();
+            this.Name = "Foo";
             this.Type = type;
 
             switch (type)
