@@ -88,15 +88,9 @@ namespace MixItUp.WPF.Windows.Overlay
                 return;
             }
 
-            OverlayItemV3ModelBase item = this.viewModel.GetItem();
-            if (item != null)
-            {
-                if (this.viewModel.oldItem != null)
-                {
-                    ChannelSession.Settings.OverlayWidgetsV3.Remove(this.viewModel.oldItem);
-                }
-                ChannelSession.Settings.OverlayWidgetsV3.Add(item);
-            }
+            await this.viewModel.Save();
+
+            this.Close();
         }
     }
 }

@@ -38,6 +38,7 @@ namespace MixItUp.Base.Model.Overlay
     {
         public const string NameReplacementKey = "Name";
         public const string AmountReplacementKey = "Amount";
+        public const string UpdateFunctionReplacementKey = "UpdateFunction";
 
         public static readonly string DefaultAmountHTML = Resources.OverlayLabelAmountDefaultHTML;
         public static readonly string DefaultNameHTML = Resources.OverlayLabelNameDefaultHTML;
@@ -171,6 +172,10 @@ namespace MixItUp.Base.Model.Overlay
             else if (this.LabelType == OverlayLabelWidgetV3Type.Counter)
             {
                 CounterModel.OnCounterUpdated += CounterModel_OnCounterUpdated;
+                if (ChannelSession.Settings.Counters.TryGetValue(this.CounterName, out CounterModel counter))
+                {
+                    this.CurrentAmount = counter.Amount.ToString();
+                }
             }
 
             await base.Enable();
@@ -352,7 +357,7 @@ namespace MixItUp.Base.Model.Overlay
                 new Dictionary<string, string>()
                 {
                     { NameReplacementKey, this.CurrentName },
-                    { AmountReplacementKey, this.CurrentAmount }
+                    { AmountReplacementKey, this.CurrentAmount },
                 },
                 new CommandParametersModel());
         }

@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
 using System;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
@@ -64,7 +65,6 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayWidgetV3EditorWindowViewModel(OverlayItemV3Type type)
         {
             this.ID = Guid.NewGuid();
-            this.Name = "Foo";
             this.Type = type;
 
             switch (type)
@@ -150,7 +150,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
         }
 
-        public virtual Result Validate()
+        public Result Validate()
         {
             if (string.IsNullOrWhiteSpace(this.Name))
             {
@@ -158,6 +158,19 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
 
             return this.Item.Validate();
+        }
+
+        public async Task Save()
+        {
+            OverlayItemV3ModelBase item = this.GetItem();
+            if (item != null)
+            {
+                if (this.oldItem != null)
+                {
+                    await ServiceManager.Get<OverlayService>().RemoveOverlayWidget(this.oldItem);                
+                }
+                await ServiceManager.Get<OverlayService>().AddOverlayWidget(item);
+            }
         }
 
         public OverlayItemV3ModelBase GetItem()

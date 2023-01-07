@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
-    public class OverlayLabelV3ViewModel : OverlayItemV3ViewModelBase
+    public class OverlayLabelV3ViewModel : OverlayVisualTextV3ViewModelBase
     {
         public const string UpdatedAnimationName = "Updated";
 
@@ -105,15 +105,46 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         protected override OverlayItemV3ModelBase GetItemInternal()
         {
-            OverlayLabelV3Model item = (OverlayLabelV3Model)this.GetItem();
-
-            item.LabelType = this.SelectedLabelType;
-            if (this.SelectedLabelType == OverlayLabelWidgetV3Type.Counter)
+            OverlayLabelV3Model result = new OverlayLabelV3Model(this.SelectedLabelType)
             {
-                item.CounterName = this.SelectedCounter.Name;
+                HTML = this.HTML,
+                CSS = this.CSS,
+                Javascript = this.Javascript,
+
+                Text = this.Text,
+                FontSize = this.FontSize,
+                FontName = this.FontName,
+                FontColor = this.FontColor,
+                Bold = this.Bold,
+                Italics = this.Italics,
+                Underline = this.Underline,
+                ShadowColor = this.ShadowColor,
+                Width = this.width,
+            };
+
+            if (this.LeftAlignment)
+            {
+                result.TextAlignment = OverlayVisualTextItemV3AlignmentTypeEnum.Left;
+            }
+            else if (this.CenterAlignment)
+            {
+                result.TextAlignment = OverlayVisualTextItemV3AlignmentTypeEnum.Center;
+            }
+            else if (this.RightAlignment)
+            {
+                result.TextAlignment = OverlayVisualTextItemV3AlignmentTypeEnum.Right;
+            }
+            else if (this.JustifyAlignment)
+            {
+                result.TextAlignment = OverlayVisualTextItemV3AlignmentTypeEnum.Justify;
             }
 
-            return item;
+            if (this.SelectedLabelType == OverlayLabelWidgetV3Type.Counter)
+            {
+                result.CounterName = this.SelectedCounter.Name;
+            }
+
+            return result;
         }
 
         private void Initialize()

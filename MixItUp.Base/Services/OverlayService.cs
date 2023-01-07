@@ -141,6 +141,18 @@ namespace MixItUp.Base.Services
             return this.GetOverlayWidgets().FirstOrDefault(w => w.ID.Equals(id));
         }
 
+        public async Task AddOverlayWidget(OverlayItemV3ModelBase widget)
+        {
+            ChannelSession.Settings.OverlayWidgetsV3.Add(widget);
+            await widget.Enable();
+        }
+
+        public async Task RemoveOverlayWidget(OverlayItemV3ModelBase widget)
+        {
+            await widget.Disable();
+            ChannelSession.Settings.OverlayWidgetsV3.Remove(widget);
+        }
+
         public async Task<int> TestConnections()
         {
             int count = 0;

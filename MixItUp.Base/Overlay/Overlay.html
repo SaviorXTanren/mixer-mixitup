@@ -84,10 +84,10 @@
             try {
                 if (packet != null && typeof packet.type !== 'undefined') {
                     var data = packet.data;
-                    if (packet.type == 'Basic') {
+                    if (packet.type === 'Basic') {
                         processBasic(data);
                     }
-                    else if (packet.type == 'YouTube') {
+                    else if (packet.type === 'YouTube') {
                         if (youtubeIFrameAPIReady) {
                             processBasic(data);
 
@@ -98,7 +98,7 @@
                                 videoID = videoID.substring(0, videoID.indexOf("&"));
                             }
 
-                            var youtubeVideoPlayer = new YT.Player(data.TextID, {
+                            var youtubeVideoPlayer = new YT.Player(data.ID, {
                                 height: data.Height,
                                 width: data.Width,
                                 videoId: videoID,
@@ -119,28 +119,35 @@
                             });
                         }
                     }
-                    else if (packet.type == 'EnableWidget') {
-                        if (!widgets.has(data.TextID)) {
-                            widgets.set(data.TextID, addItem(data));
+                    else if (packet.type === 'Enable') {
+                        if (!widgets.has(data.ID)) {
+                            widgets.set(data.ID, addItem(data));
                         }
                     }
-                    else if (packet.type == 'DisableWidget') {
-                        if (widgets.has(data.TextID)) {
-                            removeItem(widgets.get(data.TextID));
-                            widgets.delete(data.TextID);
+                    else if (packet.type === 'Update') {
+                        if (widgets.has(data.ID)) {
+                            removeItem(widgets.get(data.ID));
+                            widgets.delete(data.ID);
+                        }
+                        widgets.set(data.ID, addItem(data));
+                    }
+                    else if (packet.type === 'Disable') {
+                        if (widgets.has(data.ID)) {
+                            removeItem(widgets.get(data.ID));
+                            widgets.delete(data.ID);
                         }
                     }
-                    else if (data.Type == 'TimerAdjustTime') {
-                        window[data.TextID + "_adjustTime"](data.Time);
+                    else if (packet.type === 'TimerAdjustTime') {
+                        window[data.ID + "_adjustTime"](data.Time);
                     }
-                    else if (data.Type == 'LabelUpdate') {
-                        window[data.TextID + "_update"](data.Username, data.Amount);
+                    else if (packet.type === 'LabelUpdate') {
+                        window[data.ID + "_update"](data.Username, data.Amount);
                     }
-                    else if (data.Type == 'EventListAdd') {
-                        window[data.TextID + "_add"](data.Type, data.Details, data.SubDetails);
+                    else if (packet.type === 'EventListAdd') {
+                        window[data.ID + "_add"](data.Type, data.Details, data.SubDetails);
                     }
-                    else if (data.Type == 'GoalUpdate') {
-                        window[data.TextID + "_update"](data.CurrentAmount, data.GoalAmount, data.Width);
+                    else if (packet.type === 'GoalUpdate') {
+                        window[data.ID + "_update"](data.CurrentAmount, data.GoalAmount, data.Width);
                     }
                 }
             }
@@ -158,7 +165,7 @@
                 var item = addItem(data);
 
                 try {
-                    window[data.TextID + "_load"]();
+                    window[data.ID + "_load"]();
                 } catch (error) { }
 
                 animateCSS(item.HTML, data.EntranceAnimation.AnimateCSSAnimationName).then((message) => {
