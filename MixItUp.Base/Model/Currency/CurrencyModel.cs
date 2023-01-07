@@ -443,6 +443,11 @@ namespace MixItUp.Base.Model.Currency
         {
             if (this.ResetInterval != CurrencyResetRateEnum.Never)
             {
+                if (this.LastReset == DateTimeOffset.MinValue)
+                {
+                    return true;
+                }
+
                 DateTimeOffset newResetDate = DateTimeOffset.MinValue;
                 if (this.ResetStartCadence != DateTimeOffset.MinValue)
                 {
@@ -458,11 +463,13 @@ namespace MixItUp.Base.Model.Currency
                     {
                         int day = Math.Min(this.ResetStartCadence.Day, DateTime.DaysInMonth(this.LastReset.Year, this.LastReset.Month));
                         newResetDate = new DateTime(this.LastReset.Year, this.LastReset.Month, day);
+                        newResetDate = newResetDate.AddMonths(1);
                     }
                     else if (this.ResetInterval == CurrencyResetRateEnum.Yearly)
                     {
                         int day = Math.Min(this.ResetStartCadence.Day, DateTime.DaysInMonth(this.LastReset.Year, this.ResetStartCadence.Month));
                         newResetDate = new DateTime(this.LastReset.Year, this.ResetStartCadence.Month, day);
+                        newResetDate = newResetDate.AddYears(1);
                     }
                 }
                 else

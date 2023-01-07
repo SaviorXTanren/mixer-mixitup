@@ -650,7 +650,8 @@ namespace MixItUp.Base.Model.Actions
                 }
                 else if (this.ActionType == TwitchActionType.SendChatAnnouncement)
                 {
-                    await ServiceManager.Get<TwitchSessionService>().UserConnection.SendChatAnnouncement(ServiceManager.Get<TwitchSessionService>().User, Message, AnnouncementColorMap[Color]);
+                    string text = await ReplaceStringWithSpecialModifiers(this.Message, parameters);
+                    await ServiceManager.Get<TwitchSessionService>().UserConnection.SendChatAnnouncement(ServiceManager.Get<TwitchSessionService>().User, text, AnnouncementColorMap[Color]);
                 }
             }
         }
