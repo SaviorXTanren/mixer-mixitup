@@ -5,6 +5,8 @@ using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
+using StreamingClient.Base.Util;
+using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
@@ -23,7 +25,32 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string name;
 
-        public OverlayItemV3Type Type { get; set; }
+        public IEnumerable<OverlayItemV3Type> Types { get { return EnumHelper.GetEnumList<OverlayItemV3Type>(); } }
+
+        public OverlayItemV3Type SelectedType
+        {
+            get { return this.selectedType; }
+            set
+            {
+                this.selectedType = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayItemV3Type selectedType;
+
+        public bool IsTypeSelected
+        {
+            get { return this.isTypeSelected; }
+            set
+            {
+                this.isTypeSelected = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged(nameof(IsTypeNotSelected));
+            }
+        }
+        private bool isTypeSelected;
+
+        public bool IsTypeNotSelected { get { return !this.IsTypeSelected; } }
 
         public IEnumerable<OverlayEndpointV3Model> OverlayEndpoints { get; set; } = ServiceManager.Get<OverlayService>().GetOverlayEndpoints();
 
@@ -62,12 +89,63 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public OverlayItemV3ModelBase oldItem;
 
-        public OverlayWidgetV3EditorWindowViewModel(OverlayItemV3Type type)
+        public OverlayWidgetV3EditorWindowViewModel()
         {
             this.ID = Guid.NewGuid();
-            this.Type = type;
+            this.SelectedType = OverlayItemV3Type.Label;
+            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().GetDefaultOverlayEndpoint();
+        }
 
-            switch (type)
+        public OverlayWidgetV3EditorWindowViewModel(OverlayItemV3ModelBase item)
+        {
+            this.oldItem = item;
+
+            this.IsTypeSelected = true;
+
+            this.ID = item.ID;
+            this.Name = item.Name;
+            this.SelectedType = item.Type;
+            this.RefreshTime = item.RefreshTime;
+            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().GetOverlayEndpoint(item.OverlayEndpointID);
+
+            switch (this.SelectedType)
+            {
+                case OverlayItemV3Type.Text:
+                    this.Item = new OverlayTextV3ViewModel((OverlayTextV3Model)item);
+                    break;
+                case OverlayItemV3Type.Image:
+                    this.Item = new OverlayImageV3ViewModel((OverlayImageV3Model)item);
+                    break;
+                case OverlayItemV3Type.Video:
+                    this.Item = new OverlayVideoV3ViewModel((OverlayVideoV3Model)item);
+                    break;
+                case OverlayItemV3Type.YouTube:
+                    this.Item = new OverlayYouTubeV3ViewModel((OverlayYouTubeV3Model)item);
+                    break;
+                case OverlayItemV3Type.HTML:
+                    this.Item = new OverlayHTMLV3ViewModel((OverlayHTMLV3Model)item);
+                    break;
+                case OverlayItemV3Type.WebPage:
+                    this.Item = new OverlayWebPageV3ViewModel((OverlayWebPageV3Model)item);
+                    break;
+                case OverlayItemV3Type.Timer:
+                    this.Item = new OverlayTimerV3ViewModel((OverlayTimerV3Model)item);
+                    break;
+                case OverlayItemV3Type.Label:
+                    this.Item = new OverlayLabelV3ViewModel((OverlayLabelV3Model)item);
+                    break;
+                case OverlayItemV3Type.EventList:
+                    this.Item = new OverlayEventListV3ViewModel((OverlayEventListV3Model)item);
+                    break;
+                case OverlayItemV3Type.Goal:
+                    this.Item = new OverlayGoalV3ViewModel((OverlayGoalV3Model)item);
+                    break;
+            }
+        }
+
+        public void TypeSelected()
+        {
+            switch (this.SelectedType)
             {
                 case OverlayItemV3Type.Text:
                     this.Item = new OverlayTextV3ViewModel();
@@ -101,53 +179,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                     break;
             }
 
-            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().GetDefaultOverlayEndpoint();
-        }
-
-        public OverlayWidgetV3EditorWindowViewModel(OverlayItemV3ModelBase item)
-        {
-            this.oldItem = item;
-
-            this.ID = item.ID;
-            this.Name = item.Name;
-            this.Type = item.Type;
-            this.RefreshTime = item.RefreshTime;
-
-            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().GetOverlayEndpoint(item.OverlayEndpointID);
-
-            switch (this.Type)
-            {
-                case OverlayItemV3Type.Text:
-                    this.Item = new OverlayTextV3ViewModel((OverlayTextV3Model)item);
-                    break;
-                case OverlayItemV3Type.Image:
-                    this.Item = new OverlayImageV3ViewModel((OverlayImageV3Model)item);
-                    break;
-                case OverlayItemV3Type.Video:
-                    this.Item = new OverlayVideoV3ViewModel((OverlayVideoV3Model)item);
-                    break;
-                case OverlayItemV3Type.YouTube:
-                    this.Item = new OverlayYouTubeV3ViewModel((OverlayYouTubeV3Model)item);
-                    break;
-                case OverlayItemV3Type.HTML:
-                    this.Item = new OverlayHTMLV3ViewModel((OverlayHTMLV3Model)item);
-                    break;
-                case OverlayItemV3Type.WebPage:
-                    this.Item = new OverlayWebPageV3ViewModel((OverlayWebPageV3Model)item);
-                    break;
-                case OverlayItemV3Type.Timer:
-                    this.Item = new OverlayTimerV3ViewModel((OverlayTimerV3Model)item);
-                    break;
-                case OverlayItemV3Type.Label:
-                    this.Item = new OverlayLabelV3ViewModel((OverlayLabelV3Model)item);
-                    break;
-                case OverlayItemV3Type.EventList:
-                    this.Item = new OverlayEventListV3ViewModel((OverlayEventListV3Model)item);
-                    break;
-                case OverlayItemV3Type.Goal:
-                    this.Item = new OverlayGoalV3ViewModel((OverlayGoalV3Model)item);
-                    break;
-            }
+            this.IsTypeSelected = true;
         }
 
         public Result Validate()

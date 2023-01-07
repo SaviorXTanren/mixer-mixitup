@@ -87,23 +87,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void AddOverlayWidgetButton_Click(object sender, RoutedEventArgs e)
         {
-            //OverlayLabelV3Model widget = new OverlayLabelV3Model(OverlayLabelWidgetV3Type.Counter)
-            //{
-            //    CSS = OverlayLabelV3Model.DefaultCSS,
-            //    FontColor = "Red",
-            //    FontName = "Arial",
-            //    FontSize = 100,
-            //    Javascript = OverlayLabelV3Model.DefaultJavascript,
-            //    HTML = OverlayLabelV3Model.DefaultAmountHTML,
-            //    Type = OverlayItemV3Type.Label,
-            //    XPosition = 50,
-            //    YPosition = 50,
-            //    IsPercentagePosition = true
-            //};
-
-            //await widget.Enable();
-
-            OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(OverlayItemV3Type.Label);
+            OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow();
             window.Closed += Window_Closed;
             window.Show();
         }

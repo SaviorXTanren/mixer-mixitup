@@ -13,9 +13,9 @@ namespace MixItUp.WPF.Windows.Overlay
     {
         private OverlayWidgetV3EditorWindowViewModel viewModel;
 
-        public OverlayWidgetV3EditorWindow(OverlayItemV3Type type)
+        public OverlayWidgetV3EditorWindow()
         {
-            this.viewModel = new OverlayWidgetV3EditorWindowViewModel(type);
+            this.viewModel = new OverlayWidgetV3EditorWindowViewModel();
 
             InitializeComponent();
 
@@ -38,7 +38,10 @@ namespace MixItUp.WPF.Windows.Overlay
             await this.viewModel.OnOpen();
             await base.OnLoaded();
 
-            this.AssignOverlayTypeControl(this.viewModel.Type);
+            if (this.viewModel.IsTypeSelected)
+            {
+                this.AssignOverlayTypeControl(this.viewModel.SelectedType);
+            }
         }
 
         private void AssignOverlayTypeControl(OverlayItemV3Type type)
@@ -76,6 +79,12 @@ namespace MixItUp.WPF.Windows.Overlay
                     this.InnerContent.Content = new OverlayGoalV3Control();
                     break;
             }
+        }
+
+        private void TypeSelectedButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.viewModel.TypeSelected();
+            this.AssignOverlayTypeControl(this.viewModel.SelectedType);
         }
 
         private async void SaveButton_Click(object sender, System.Windows.RoutedEventArgs e)
