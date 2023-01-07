@@ -46,17 +46,17 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                OverlayWidgetModel widget = FrameworkElementHelpers.GetDataContext<OverlayWidgetModel>(sender);
+                OverlayWidgetViewModel widget = FrameworkElementHelpers.GetDataContext<OverlayWidgetViewModel>(sender);
                 await this.viewModel.PlayWidget(widget);
             });
         }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            OverlayWidgetModel widget = FrameworkElementHelpers.GetDataContext<OverlayWidgetModel>(sender);
+            OverlayWidgetViewModel widget = FrameworkElementHelpers.GetDataContext<OverlayWidgetViewModel>(sender);
             if (widget != null)
             {
-                OverlayWidgetEditorWindow window = new OverlayWidgetEditorWindow(widget);
+                OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(widget.Item);
                 window.Closed += Window_Closed;
                 window.Show();
             }
@@ -68,7 +68,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.DeleteWidgetPrompt))
                 {
-                    OverlayWidgetModel widget = FrameworkElementHelpers.GetDataContext<OverlayWidgetModel>(sender);
+                    OverlayWidgetViewModel widget = FrameworkElementHelpers.GetDataContext<OverlayWidgetViewModel>(sender);
                     await this.viewModel.DeleteWidget(widget);
                     await this.viewModel.OnVisible();
                 }
@@ -77,15 +77,15 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void EnableDisableToggleSwitch_Checked(object sender, RoutedEventArgs e)
         {
-            await this.viewModel.EnableWidget(FrameworkElementHelpers.GetDataContext<OverlayWidgetModel>(sender));
+            await this.viewModel.EnableWidget(FrameworkElementHelpers.GetDataContext<OverlayWidgetViewModel>(sender));
         }
 
         private async void EnableDisableToggleSwitch_Unchecked(object sender, RoutedEventArgs e)
         {
-            await this.viewModel.DisableWidget(FrameworkElementHelpers.GetDataContext<OverlayWidgetModel>(sender));
+            await this.viewModel.DisableWidget(FrameworkElementHelpers.GetDataContext<OverlayWidgetViewModel>(sender));
         }
 
-        private async void AddOverlayWidgetButton_Click(object sender, RoutedEventArgs e)
+        private void AddOverlayWidgetButton_Click(object sender, RoutedEventArgs e)
         {
             //OverlayLabelV3Model widget = new OverlayLabelV3Model(OverlayLabelWidgetV3Type.Counter)
             //{

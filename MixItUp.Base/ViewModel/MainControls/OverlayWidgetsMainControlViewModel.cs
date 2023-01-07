@@ -1,84 +1,100 @@
 ﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Util;
-using System.Collections.Generic;
+using MixItUp.Base.ViewModels;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.MainControls
 {
+    public class OverlayWidgetViewModel : UIViewModelBase
+    {
+        public OverlayItemV3ModelBase Item { get; set; }
+
+        public string Name { get { return this.Item.Name; } }
+
+        public string OverlayName
+        {
+            get
+            {
+                OverlayEndpointV3Model endpointService = ServiceManager.Get<OverlayService>().GetOverlayEndpoint(this.Item.OverlayEndpointID);
+                if (endpointService != null)
+                {
+                    return endpointService.Name;
+                }
+                return null;
+            }
+        }
+
+        public bool IsEnabled
+        {
+            get { return this.Item.IsEnabled; }
+            set
+            {
+                this.Item.IsEnabled = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+
+        public OverlayWidgetViewModel(OverlayItemV3ModelBase item)
+        {
+            this.Item = item;
+        }
+    }
+
     public class OverlayWidgetsMainControlViewModel : WindowControlViewModelBase
     {
         public bool OverlayEnabled { get { return ChannelSession.Settings.EnableOverlay; } }
         public bool OverlayNotEnabled { get { return !this.OverlayEnabled; } }
 
-        public ThreadSafeObservableCollection<OverlayWidgetModel> OverlayWidgets { get; private set; } = new ThreadSafeObservableCollection<OverlayWidgetModel>();
+        public ThreadSafeObservableCollection<OverlayWidgetViewModel> OverlayWidgets { get; private set; } = new ThreadSafeObservableCollection<OverlayWidgetViewModel>();
 
         public OverlayWidgetsMainControlViewModel(MainWindowViewModel windowViewModel) : base(windowViewModel) { }
 
         public void Refresh()
         {
-            List<OverlayWidgetModel> toBeRemoved = new List<OverlayWidgetModel>();
-            List<OverlayWidgetModel> widgets = new List<OverlayWidgetModel>();
-            foreach (OverlayWidgetModel widget in ChannelSession.Settings.OverlayWidgets.OrderBy(c => c.OverlayName).ThenBy(c => c.Name))
-            {
-                if (EnumHelper.IsObsolete(widget.Item.ItemType))
-                {
-                    toBeRemoved.Add(widget);
-                }
-                else
-                {
-                    widgets.Add(widget);
-                }
-            }
-
-            this.OverlayWidgets.ClearAndAddRange(widgets);
-
-            foreach (OverlayWidgetModel widget in toBeRemoved)
-            {
-                ChannelSession.Settings.OverlayWidgets.Remove(widget);
-            }
+            this.OverlayWidgets.ClearAndAddRange(ChannelSession.Settings.OverlayWidgetsV3.Select(w => new OverlayWidgetViewModel(w)));
 
             this.NotifyPropertyChanges();
         }
 
-        public async Task PlayWidget(OverlayWidgetModel widget)
+        public async Task PlayWidget(OverlayWidgetViewModel widget)
         {
-            if (widget != null && widget.SupportsTestData)
-            {
-                await widget.HideItem();
+            //if (widget != null && widget.SupportsTestData)
+            //{
+            //    await widget.HideItem();
 
-                await widget.LoadTestData();
+            //    await widget.LoadTestData();
 
-                await Task.Delay(5000);
+            //    await Task.Delay(5000);
 
-                await widget.HideItem();
-            }
+            //    await widget.HideItem();
+            //}
         }
 
-        public async Task DeleteWidget(OverlayWidgetModel widget)
+        public async Task DeleteWidget(OverlayWidgetViewModel widget)
         {
             if (widget != null)
             {
-                await widget.Disable();
-                ChannelSession.Settings.OverlayWidgets.Remove(widget);
+                this.OverlayWidgets.Remove(widget);
+                await ServiceManager.Get<OverlayService>().RemoveOverlayWidget(widget.Item);
                 await ChannelSession.SaveSettings();
             }
         }
 
-        public async Task EnableWidget(OverlayWidgetModel widget)
+        public async Task EnableWidget(OverlayWidgetViewModel widget)
         {
-            if (widget != null && !widget.IsEnabled)
+            if (widget != null && !widget.Item.IsEnabled)
             {
-                await widget.Enable();
+                await widget.Item.Enable();
             }
         }
 
-        public async Task DisableWidget(OverlayWidgetModel widget)
+        public async Task DisableWidget(OverlayWidgetViewModel widget)
         {
-            if (widget != null && widget.IsEnabled)
+            if (widget != null && widget.Item.IsEnabled)
             {
-                await widget.Disable();
+                await widget.Item.Disable();
             }
         }
 

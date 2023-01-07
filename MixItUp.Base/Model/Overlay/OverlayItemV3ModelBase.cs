@@ -67,6 +67,8 @@ namespace MixItUp.Base.Model.Overlay
 
         [DataMember]
         public int RefreshTime { get; set; }
+        [DataMember]
+        public bool IsEnabled { get; set; }
 
         private CancellationTokenSource refreshCancellationTokenSource;
 
@@ -76,6 +78,8 @@ namespace MixItUp.Base.Model.Overlay
 
         public virtual async Task Enable()
         {
+            this.IsEnabled = true;
+
             OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlayEndpointService(this.OverlayEndpointID);
             if (overlay != null)
             {
@@ -137,6 +141,8 @@ namespace MixItUp.Base.Model.Overlay
             {
                 await overlay.SendItem("Disable", this, new CommandParametersModel());
             }
+
+            this.IsEnabled = false;
         }
 
         public async Task<OverlayOutputV3Model> GetProcessedItem(OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
