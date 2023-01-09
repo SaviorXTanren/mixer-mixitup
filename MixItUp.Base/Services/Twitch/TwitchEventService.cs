@@ -186,7 +186,7 @@ namespace MixItUp.Base.Services.Twitch
                 this.AmountDecimalPlaces = donationAmountJObj["decimal_places"].Value<int>();
                 if (this.AmountDecimalPlaces > 0)
                 {
-                    this.Amount = this.Amount / Math.Pow(10, this.Amount);
+                    this.Amount = this.Amount / Math.Pow(10, this.AmountDecimalPlaces);
                 }
             }
         }
