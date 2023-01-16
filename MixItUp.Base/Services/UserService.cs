@@ -492,7 +492,6 @@ namespace MixItUp.Base.Services
                 }
 
                 usersAdded = true;
-                user.UpdateLastActivity();
 
                 lock (displayUsersLock)
                 {
@@ -507,7 +506,6 @@ namespace MixItUp.Base.Services
                 CommandParametersModel parameters = new CommandParametersModel(user);
                 if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.ChatUserJoined, parameters))
                 {
-                    user.UpdateLastActivity();
                     user.Model.TotalStreamsWatched++;
                     await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserJoined, parameters);
 
