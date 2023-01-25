@@ -9500,4 +9500,7 @@ update_{ID}({CurrentAmount}, {Percentage}, {Width});</value>
   <data name="TwitchEventServiceFailedToConnectEventSub" xml:space="preserve">
     <value>Failed to connect to Twitch Event Sub service</value>
   </data>
+  <data name="SendShoutout" xml:space="preserve">
+    <value>Send Shoutout</value>
+  </data>
 </root>

@@ -66,10 +66,11 @@ namespace MixItUp.Base.Services.Twitch
             OAuthClientScopeEnum.moderator__read__chatters,
             OAuthClientScopeEnum.moderator__read__chat_settings,
 
+            OAuthClientScopeEnum.moderator__manage__announcements,
             OAuthClientScopeEnum.moderator__manage__banned_users,
             OAuthClientScopeEnum.moderator__manage__chat_messages,
             OAuthClientScopeEnum.moderator__manage__chat_settings,
-            OAuthClientScopeEnum.moderator__manage__announcements,
+            OAuthClientScopeEnum.moderator__manage__shoutouts,
 
             OAuthClientScopeEnum.user__edit,
 
@@ -222,10 +223,9 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<bool> UpdateStreamTagsForChannel(UserModel channel, IEnumerable<TagModel> tags) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Tags.UpdateStreamTags(channel, tags)); }
 
-        public async Task SendChatAnnouncement(UserModel channel, string message, string color)
-        {
-            await AsyncRunner.RunAsync(() => this.Connection.NewAPI.Chat.SendChatAnnouncement(channel.id, new AnnouncementModel { message = message, color = color }));
-        }
+        public async Task SendChatAnnouncement(UserModel channel, string message, string color) { await AsyncRunner.RunAsync(() => this.Connection.NewAPI.Chat.SendChatAnnouncement(channel.id, new AnnouncementModel { message = message, color = color })); }
+
+        public async Task SendShoutout(UserModel channel, UserModel targetChannel) { await AsyncRunner.RunAsync(() => this.Connection.NewAPI.Chat.SendShoutout(channel.id, targetChannel.id)); }
 
         public async Task RaidChannel(UserModel channel, UserModel targetChannel) { await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.RaidChannel(channel.id, targetChannel.id)); }
 
