@@ -17207,6 +17207,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Send Shoutout.
+        /// </summary>
+        public static string SendShoutout {
+            get {
+                return ResourceManager.GetString("SendShoutout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Send Tweet.
         /// </summary>
         public static string SendTweet {

@@ -46,6 +46,7 @@ namespace MixItUp.Base.Model.Actions
         SetGame,
         SetCustomTags,
         SendChatAnnouncement,
+        SendShoutout,
     }
 
     public enum TwitchAnnouncementColor
@@ -652,6 +653,27 @@ namespace MixItUp.Base.Model.Actions
                 {
                     string text = await ReplaceStringWithSpecialModifiers(this.Message, parameters);
                     await ServiceManager.Get<TwitchSessionService>().UserConnection.SendChatAnnouncement(ServiceManager.Get<TwitchSessionService>().User, text, AnnouncementColorMap[Color]);
+                }
+                else if (this.ActionType == TwitchActionType.SendShoutout)
+                {
+                    string targetUsername = null;
+                    if (!string.IsNullOrEmpty(this.Username))
+                    {
+                        targetUsername = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                    }
+                    else
+                    {
+                        targetUsername = parameters.User.Username;
+                    }
+
+                    if (!string.IsNullOrEmpty(targetUsername))
+                    {
+                        UserModel targetUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(targetUsername);
+                        if (targetUser != null)
+                        {
+                            await ServiceManager.Get<TwitchSessionService>().UserConnection.SendShoutout(ServiceManager.Get<TwitchSessionService>().User, targetUser);
+                        }
+                    }
                 }
             }
         }

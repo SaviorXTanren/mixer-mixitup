@@ -9550,4 +9550,7 @@ update_{ID}({CurrentAmount}, {GoalAmount}, {Width});</value>
   <data name="OverlayEventListAtLeastOneEventTypeMustBeSelected" xml:space="preserve">
     <value>At least one event type must be selected</value>
   </data>
+  <data name="SendShoutout" xml:space="preserve">
+    <value>Send Shoutout</value>
+  </data>
 </root>
