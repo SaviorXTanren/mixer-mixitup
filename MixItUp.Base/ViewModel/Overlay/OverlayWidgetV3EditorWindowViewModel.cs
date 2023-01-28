@@ -143,7 +143,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
         }
 
-        public void TypeSelected()
+        public async Task TypeSelected()
         {
             switch (this.SelectedType)
             {
@@ -180,6 +180,9 @@ namespace MixItUp.Base.ViewModel.Overlay
             }
 
             this.IsTypeSelected = true;
+
+            await this.Item.OnOpen();
+            await this.Item.OnVisible();
         }
 
         public Result Validate()
@@ -215,6 +218,30 @@ namespace MixItUp.Base.ViewModel.Overlay
             item.RefreshTime = this.RefreshTime;
 
             return item;
+        }
+
+        protected override async Task OnOpenInternal()
+        {
+            if (this.Item != null)
+            {
+                await this.Item.OnOpen();
+            }
+        }
+
+        protected override async Task OnVisibleInternal()
+        {
+            if (this.Item != null)
+            {
+                await this.Item.OnVisible();
+            }
+        }
+
+        protected override async Task OnClosedInternal()
+        {
+            if (this.Item != null)
+            {
+                await this.Item.OnClosed();
+            }
         }
     }
 }

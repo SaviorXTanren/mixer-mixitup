@@ -35,13 +35,13 @@ namespace MixItUp.WPF.Windows.Overlay
         {
             this.DataContext = this.viewModel;
 
-            await this.viewModel.OnOpen();
-            await base.OnLoaded();
-
             if (this.viewModel.IsTypeSelected)
             {
                 this.AssignOverlayTypeControl(this.viewModel.SelectedType);
             }
+
+            await this.viewModel.OnOpen();
+            await base.OnLoaded();
         }
 
         private void AssignOverlayTypeControl(OverlayItemV3Type type)
@@ -81,9 +81,9 @@ namespace MixItUp.WPF.Windows.Overlay
             }
         }
 
-        private void TypeSelectedButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async void TypeSelectedButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            this.viewModel.TypeSelected();
+            await this.viewModel.TypeSelected();
             this.AssignOverlayTypeControl(this.viewModel.SelectedType);
         }
 

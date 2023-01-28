@@ -20506,7 +20506,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Elixir.
+        ///   Looks up a localized string similar to Trovo Elixir.
         /// </summary>
         public static string TrovoElixir {
             get {
@@ -20908,6 +20908,15 @@ namespace MixItUp.Base {
         public static string TwitchAffiliate {
             get {
                 return ResourceManager.GetString("TwitchAffiliate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Bits.
+        /// </summary>
+        public static string TwitchBits {
+            get {
+                return ResourceManager.GetString("TwitchBits", resourceCulture);
             }
         }
         

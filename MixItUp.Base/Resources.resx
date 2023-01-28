@@ -7313,7 +7313,7 @@ Failure to do one of the following could effect how users rate &amp; review your
     <value>Show Twitch Hype Train</value>
   </data>
   <data name="TrovoElixir" xml:space="preserve">
-    <value>Elixir</value>
+    <value>Trovo Elixir</value>
   </data>
   <data name="TrovoMana" xml:space="preserve">
     <value>Mana</value>
@@ -9552,5 +9552,8 @@ update_{ID}({CurrentAmount}, {GoalAmount}, {Width});</value>
   </data>
   <data name="SendShoutout" xml:space="preserve">
     <value>Send Shoutout</value>
+  </data>
+  <data name="TwitchBits" xml:space="preserve">
+    <value>Twitch Bits</value>
   </data>
 </root>

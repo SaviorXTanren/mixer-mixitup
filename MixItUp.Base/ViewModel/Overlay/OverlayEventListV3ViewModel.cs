@@ -29,11 +29,35 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             this.Type = type;
         }
+
+        public override string ToString() { return this.Name; }
     }
 
-    public class OverlayEventListV3ViewModel : OverlayItemV3ViewModelBase
+    public class OverlayEventListV3ViewModel : OverlayVisualTextV3ViewModelBase
     {
         public List<OverlayEventListV3TypeViewModel> EventTypes { get; set; } = new List<OverlayEventListV3TypeViewModel>();
+
+        public string BackgroundColor
+        {
+            get { return this.backgroundColor; }
+            set
+            {
+                this.backgroundColor = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string backgroundColor;
+
+        public string BorderColor
+        {
+            get { return this.borderColor; }
+            set
+            {
+                this.borderColor = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string borderColor;
 
         private OverlayEventListV3Model item;
 
@@ -87,7 +111,25 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         protected override OverlayItemV3ModelBase GetItemInternal()
         {
-            OverlayEventListV3Model item = (OverlayEventListV3Model)this.GetItem();
+            OverlayEventListV3Model item = new OverlayEventListV3Model(new HashSet<OverlayEventListV3Type>(this.EventTypes.Where(e => e.IsSelected).Select(e => e.Type)))
+            {
+                HTML = this.HTML,
+                CSS = this.CSS,
+                Javascript = this.Javascript,
+
+                Text = this.Text,
+                FontSize = this.FontSize,
+                FontName = this.FontName,
+                FontColor = this.FontColor,
+                Bold = this.Bold,
+                Italics = this.Italics,
+                Underline = this.Underline,
+                ShadowColor = this.ShadowColor,
+                Width = this.width,
+
+                BackgroundColor = this.BackgroundColor,
+                BorderColor = this.BorderColor
+            };
 
             foreach (OverlayEventListV3TypeViewModel type in this.EventTypes)
             {
