@@ -260,6 +260,7 @@ namespace MixItUp.Base.Services.Twitch
 
         private List<TwitchGiftedSubEventModel> pendingGiftedSubs = new List<TwitchGiftedSubEventModel>();
         private List<TwitchMassGiftedSubEventModel> pendingMassGiftedSubs = new List<TwitchMassGiftedSubEventModel>();
+        private HashSet<string> channelPointRewardRedeems = new HashSet<string>();
 
         public override string Name { get { return MixItUp.Base.Resources.TwitchEvents; } }
 
@@ -1099,6 +1100,12 @@ namespace MixItUp.Base.Services.Twitch
         private async void PubSub_OnChannelPointsRedeemed(object sender, PubSubChannelPointsRedemptionEventModel packet)
         {
             PubSubChannelPointsRedeemedEventModel redemption = packet.redemption;
+
+            if (channelPointRewardRedeems.Contains(redemption.id))
+            {
+                return;
+            }
+            channelPointRewardRedeems.Add(redemption.id);
 
             UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, redemption.user.id);
             if (user == null)
