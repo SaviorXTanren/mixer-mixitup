@@ -581,8 +581,6 @@ namespace MixItUp.Base.Services.Twitch
                     this.eventSub.OnKeepAliveMessageReceived -= EventSub_OnKeepAliveMessageReceived;
                     this.eventSub.OnNotificationMessageReceived -= EventSub_OnNotificationMessageReceived;
                     this.eventSub.OnRevocationMessageReceived -= EventSub_OnRevocationMessageReceived;
-
-                    await this.eventSub.Disconnect();
                 }
 
                 if (this.pubSub != null)
@@ -603,7 +601,15 @@ namespace MixItUp.Base.Services.Twitch
                     this.pubSub.OnSubscribedReceived -= PubSub_OnSubscribedReceived;
                     this.pubSub.OnSubscriptionsGiftedReceived -= PubSub_OnSubscriptionsGiftedReceived;
                     this.pubSub.OnChannelPointsRedeemed -= PubSub_OnChannelPointsRedeemed;
+                }
 
+                if (this.eventSub != null)
+                {
+                    await this.eventSub.Disconnect();
+                }
+
+                if (this.pubSub != null)
+                {
                     await this.pubSub.Disconnect();
                 }
 
