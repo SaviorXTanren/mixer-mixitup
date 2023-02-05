@@ -479,6 +479,7 @@ namespace MixItUp.Base.Util
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "islive", ServiceManager.Get<TwitchSessionService>().IsLive.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<TwitchSessionService>().Stream?.viewer_count.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<TwitchSessionService>().Channel?.title);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gamename", ServiceManager.Get<TwitchSessionService>().Channel?.game_name);
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceManager.Get<TwitchSessionService>().Channel?.game_name);
 
                     if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount"))
@@ -534,6 +535,7 @@ namespace MixItUp.Base.Util
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<TrovoSessionService>().Channel?.current_viewers.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<TrovoSessionService>().Channel?.live_title);
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceManager.Get<TrovoSessionService>().Channel?.category_name);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gamename", ServiceManager.Get<TrovoSessionService>().Channel?.category_name);
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", ServiceManager.Get<TrovoSessionService>().Channel?.followers.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount", ServiceManager.Get<TrovoSessionService>().Channel?.subscriber_num.ToString());
                 }
@@ -543,6 +545,7 @@ namespace MixItUp.Base.Util
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.countViewers.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<GlimeshSessionService>().User?.channel?.title);
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.category?.name);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gamename", ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.category?.name);
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", ServiceManager.Get<GlimeshSessionService>().User?.countFollowers);
                 }
 
@@ -993,6 +996,7 @@ namespace MixItUp.Base.Util
                                 }
 
                                 this.ReplaceSpecialIdentifier(userStreamHeader + "title", tChannel.Result?.title);
+                                this.ReplaceSpecialIdentifier(userStreamHeader + "gamename", tChannel.Result?.game_name);
                                 this.ReplaceSpecialIdentifier(userStreamHeader + "game", tChannel.Result?.game_name);
                                 this.ReplaceSpecialIdentifier(userStreamHeader + "islive", (stream.Result != null).ToString());
                             }
@@ -1021,6 +1025,7 @@ namespace MixItUp.Base.Util
                                 Trovo.Base.Models.Channels.ChannelModel tChannel = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetChannelByID(tUser.channel_id);
 
                                 this.ReplaceSpecialIdentifier(userStreamHeader + "title", tChannel?.live_title);
+                                this.ReplaceSpecialIdentifier(userStreamHeader + "gamename", tChannel?.category_name);
                                 this.ReplaceSpecialIdentifier(userStreamHeader + "game", tChannel?.category_name);
                                 this.ReplaceSpecialIdentifier(userStreamHeader + "islive", tChannel?.is_live.ToString());
                             }
@@ -1034,6 +1039,7 @@ namespace MixItUp.Base.Util
                             Glimesh.Base.Models.Channels.ChannelModel gChannel = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetChannelByName(glimeshUser.Username);
 
                             this.ReplaceSpecialIdentifier(userStreamHeader + "title", gChannel?.title);
+                            this.ReplaceSpecialIdentifier(userStreamHeader + "gamename", gChannel?.stream?.category?.name);
                             this.ReplaceSpecialIdentifier(userStreamHeader + "game", gChannel?.stream?.category?.name);
                             this.ReplaceSpecialIdentifier(userStreamHeader + "islive", gChannel?.IsLive.ToString());
                         }
