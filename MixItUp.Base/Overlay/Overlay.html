@@ -144,7 +144,7 @@
                         window[data.ID + "_update"](data.Username, data.Amount);
                     }
                     else if (packet.type === 'EventListAdd') {
-                        window[data.ID + "_add"](data.Type, data.Details, data.SubDetails);
+                        window[data.ID + "_add"](data.EventType, data.Details, data.SubDetails);
                     }
                     else if (packet.type === 'GoalUpdate') {
                         window[data.ID + "_update"](data.CurrentAmount, data.GoalAmount, data.Width);

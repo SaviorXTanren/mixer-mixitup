@@ -13,6 +13,11 @@ namespace MixItUp.Base.Model.Overlay
         public string BackgroundColor { get; set; }
 
         [DataMember]
+        public int ItemHeight { get; set; }
+        [DataMember]
+        public int ItemWidth { get; set; }
+
+        [DataMember]
         public int MaxToShow { get; set; }
 
         public OverlayListV3ModelBase(OverlayItemV3Type type) : base(type) { }
@@ -28,6 +33,14 @@ namespace MixItUp.Base.Model.Overlay
             item.HTML = ReplaceProperty(item.HTML, nameof(this.BackgroundColor), this.BackgroundColor);
             item.CSS = ReplaceProperty(item.CSS, nameof(this.BackgroundColor), this.BackgroundColor);
             item.Javascript = ReplaceProperty(item.Javascript, nameof(this.BackgroundColor), this.BackgroundColor);
+
+            item.HTML = ReplaceProperty(item.HTML, nameof(this.ItemHeight), this.ItemHeight.ToString());
+            item.CSS = ReplaceProperty(item.CSS, nameof(this.ItemHeight), this.ItemHeight.ToString());
+            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.ItemHeight), this.ItemHeight.ToString());
+
+            item.HTML = ReplaceProperty(item.HTML, nameof(this.ItemWidth), this.ItemWidth.ToString());
+            item.CSS = ReplaceProperty(item.CSS, nameof(this.ItemWidth), this.ItemWidth.ToString());
+            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.ItemWidth), this.ItemWidth.ToString());
 
             item.HTML = ReplaceProperty(item.HTML, nameof(this.MaxToShow), this.MaxToShow.ToString());
             item.CSS = ReplaceProperty(item.CSS, nameof(this.MaxToShow), this.MaxToShow.ToString());

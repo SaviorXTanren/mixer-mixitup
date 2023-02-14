@@ -28,7 +28,7 @@ namespace MixItUp.Base.Model.Overlay
     public class OverlayEventListEventV3Model
     {
         [DataMember]
-        public string Type { get; set; }
+        public string EventType { get; set; }
         [DataMember]
         public string Details { get; set; }
         [DataMember]
@@ -132,11 +132,11 @@ namespace MixItUp.Base.Model.Overlay
             await base.Disable();
         }
 
-        public async Task AddEvent(string type, string details, string subDetails = null, UserV2ViewModel user = null)
+        public async Task AddEvent(string eventType, string details, string subDetails = null, UserV2ViewModel user = null)
         {
             OverlayEventListEventV3Model newEvent = new OverlayEventListEventV3Model()
             {
-                Type = type,
+                EventType = eventType,
                 Details = details,
                 SubDetails = subDetails
             };
@@ -150,11 +150,31 @@ namespace MixItUp.Base.Model.Overlay
 
             await this.Update("EventListAdd", new Dictionary<string, string>()
             {
-                { nameof(newEvent.Type), newEvent.Type },
+                { nameof(newEvent.EventType), newEvent.EventType },
                 { nameof(newEvent.Details), newEvent.Details },
                 { nameof(newEvent.SubDetails), newEvent.SubDetails }
             },
             new CommandParametersModel(user));
+        }
+
+        protected override async Task TestInternal()
+        {
+            this.EventService_OnFollowOccurred(this, ChannelSession.User);
+            await Task.Delay(1000);
+            this.EventService_OnRaidOccurred(this, new Tuple<UserV2ViewModel, int>(ChannelSession.User, 10));
+            await Task.Delay(1000);
+            this.EventService_OnSubscribeOccurred(this, ChannelSession.User);
+            await Task.Delay(1000);
+            this.EventService_OnResubscribeOccurred(this, new Tuple<UserV2ViewModel, int>(ChannelSession.User, 2));
+            await Task.Delay(1000);
+            this.EventService_OnDonationOccurred(this, new UserDonationModel()
+            {
+                User = ChannelSession.User,
+                Type = "Test",
+                Amount = 12.34,
+                Message = "Hello World",
+            });
+            await Task.Delay(1000);
         }
 
         private async void EventService_OnFollowOccurred(object sender, UserV2ViewModel user)
@@ -174,7 +194,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void EventService_OnResubscribeOccurred(object sender, Tuple<UserV2ViewModel, int> resubscribe)
         {
-            await this.AddEvent(MixItUp.Base.Resources.Resubscriber, resubscribe.Item1.DisplayName, subDetails: resubscribe.Item2.ToString(), user: resubscribe.Item1);
+            await this.AddEvent(MixItUp.Base.Resources.Resubscriber, resubscribe.Item1.DisplayName, subDetails: $"{resubscribe.Item2.ToString()} {Resources.Months}", user: resubscribe.Item1);
         }
 
         private async void EventService_OnSubscriptionGiftedOccurred(object sender, Tuple<UserV2ViewModel, UserV2ViewModel> subscriptionGifted)
@@ -184,7 +204,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void EventService_OnMassSubscriptionsGiftedOccurred(object sender, Tuple<UserV2ViewModel, int> massSubscriptionsGifted)
         {
-            await this.AddEvent(MixItUp.Base.Resources.GiftedSubs, massSubscriptionsGifted.Item1.DisplayName, subDetails: massSubscriptionsGifted.Item2.ToString(), user: massSubscriptionsGifted.Item1);
+            await this.AddEvent(MixItUp.Base.Resources.GiftedSubs, massSubscriptionsGifted.Item1.DisplayName, subDetails: $"{massSubscriptionsGifted.Item2.ToString()} {Resources.SubsGifted}", user: massSubscriptionsGifted.Item1);
         }
 
         private async void EventService_OnDonationOccurred(object sender, UserDonationModel donation)
@@ -194,14 +214,14 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void EventService_OnTwitchBitsCheeredOccurred(object sender, TwitchUserBitsCheeredModel bitsCheered)
         {
-            await this.AddEvent(MixItUp.Base.Resources.BitsCheered, bitsCheered.User.DisplayName, subDetails: bitsCheered.Amount.ToString(), user: bitsCheered.User);
+            await this.AddEvent(MixItUp.Base.Resources.BitsCheered, bitsCheered.User.DisplayName, subDetails: $"{bitsCheered.Amount.ToString()} {Resources.Bits}", user: bitsCheered.User);
         }
 
         private async void EventService_OnTrovoSpellCastOccurred(object sender, TrovoChatSpellViewModel spell)
         {
             if (spell.IsElixir)
             {
-                await this.AddEvent(MixItUp.Base.Resources.TrovoSpell, spell.User.DisplayName, subDetails: spell.ValueTotal.ToString(), user: spell.User);
+                await this.AddEvent(MixItUp.Base.Resources.TrovoSpell, spell.User.DisplayName, subDetails: $"{spell.ValueTotal.ToString()} {Resources.Elixir}", user: spell.User);
             }
         }
     }

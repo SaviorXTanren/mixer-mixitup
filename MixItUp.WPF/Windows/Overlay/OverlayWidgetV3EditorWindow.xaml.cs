@@ -1,7 +1,10 @@
-﻿using MixItUp.Base.Model.Overlay;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Overlay;
 using MixItUp.WPF.Controls.Overlay;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Windows.Overlay
@@ -99,6 +102,27 @@ namespace MixItUp.WPF.Windows.Overlay
             await this.viewModel.Save();
 
             this.Close();
+        }
+
+        private async void TestButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Result result = this.viewModel.Validate();
+            if (!result.Success)
+            {
+                await DialogHelper.ShowFailedResult(result);
+                return;
+            }
+
+            OverlayItemV3ModelBase item = this.viewModel.GetItem();
+
+            CommandParametersModel parameters = CommandParametersModel.GetTestParameters(new Dictionary<string, string>());
+            parameters = await DialogHelper.ShowEditTestCommandParametersDialog(parameters);
+            if (parameters == null)
+            {
+                return;
+            }
+
+            await item.Test();
         }
     }
 }

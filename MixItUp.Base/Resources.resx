@@ -9360,13 +9360,13 @@ namespace CustomNamespace
     border-width: 5px;
     border-color: {BorderColor};
     background-color: {BackgroundColor};
-    width: {Width};
-    height: {Height};
+    width: {ItemWidth};
+    height: {ItemHeight};
 }
 
-.details-{ID} {
+.eventtype-{ID} {
     position: absolute;
-    top: 35%;
+    top: 25%;
     left: 5%;
     width: 50%;
     float: left;
@@ -9383,12 +9383,31 @@ namespace CustomNamespace
     text-shadow: {Shadow};
 }
 
-.subdetails-{ID} {
+.details-{ID} {
     position: absolute;
-    top: 80%;
+    top: 75%;
     right: 5%;
     width: 50%;
+    float: left;
     text-align: right;
+    font-weight: bold;
+    margin: auto;
+    transform: translate(0, -50%);
+    font-size: {FontSize}px;
+    color: {FontColor};
+    font-family: '{FontFamily}';
+    font-weight: {FontWeight};
+    text-decoration: {TextDecoration};
+    font-style: {FontStyle};
+    text-shadow: {Shadow};
+}
+
+.subdetails-{ID} {
+    position: absolute;
+    top: 75%;
+    left: 5%;
+    width: 50%;
+    text-align: left;
     white-space: nowrap;
     margin: auto;
     transform: translate(0, -50%);
@@ -9408,13 +9427,14 @@ namespace CustomNamespace
 
 &lt;template id="item-{ID}"&gt;
     &lt;div class='item-{ID}'&gt;
+        &lt;p class='eventtype-{ID}'&gt;{EventType}&lt;/p&gt;
         &lt;p class='details-{ID}'&gt;{Details}&lt;/p&gt;
         &lt;p class='subdetails-{ID}'&gt;{SubDetails}&lt;/p&gt;
     &lt;/div&gt;
 &lt;/template&gt;</value>
   </data>
   <data name="OverlayEventListDefaultJavascript" xml:space="preserve">
-    <value>function {ID}_add(type, details, subdetails)
+    <value>function {ID}_add(eventType, details, subdetails)
 {
     var list = document.getElementById("list-{ID}");
 
@@ -9425,6 +9445,9 @@ namespace CustomNamespace
     var itemTemplate = document.querySelector("#item-{ID}");
     const item = itemTemplate.content.cloneNode(true);
     
+    var eventTypeElement = item.querySelector(".eventtype-{ID}");
+    eventTypeElement.innerHTML = eventType;
+
     var detailsElement = item.querySelector(".details-{ID}");
     detailsElement.innerHTML = details;
     
@@ -9555,5 +9578,20 @@ update_{ID}({CurrentAmount}, {GoalAmount}, {Width});</value>
   </data>
   <data name="TwitchBits" xml:space="preserve">
     <value>Twitch Bits</value>
+  </data>
+  <data name="OverlayHeightMustBeValidValue" xml:space="preserve">
+    <value>Height must be a valid value</value>
+  </data>
+  <data name="OverlayMaxToShowMustBeValidValue" xml:space="preserve">
+    <value>Max To Show must be a valid value</value>
+  </data>
+  <data name="MaxToShow" xml:space="preserve">
+    <value>Max To Show</value>
+  </data>
+  <data name="Elixir" xml:space="preserve">
+    <value>Elixir</value>
+  </data>
+  <data name="OverlayWidthMustBeValidValue" xml:space="preserve">
+    <value>Width must be a valid value</value>
   </data>
 </root>

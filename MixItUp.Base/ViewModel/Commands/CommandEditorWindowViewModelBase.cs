@@ -63,15 +63,6 @@ namespace MixItUp.Base.ViewModel.Commands
                 {
                     return;
                 }
-
-                var emptyKeys = parameters.SpecialIdentifiers
-                    .Where(kvp => string.IsNullOrWhiteSpace(kvp.Value))
-                    .Select(kvp => kvp.Key)
-                    .ToArray();
-                foreach (var key in emptyKeys)
-                {
-                    parameters.SpecialIdentifiers.Remove(key);
-                }
             }
 
             await ServiceManager.Get<CommandService>().RunDirectly(new CommandInstanceModel(command, parameters));
@@ -90,15 +81,6 @@ namespace MixItUp.Base.ViewModel.Commands
                 if (parameters == null)
                 {
                     return;
-                }
-
-                var emptyKeys = parameters.SpecialIdentifiers
-                    .Where(kvp => string.IsNullOrWhiteSpace(kvp.Value))
-                    .Select(kvp => kvp.Key)
-                    .ToArray();
-                foreach (var key in emptyKeys)
-                {
-                    parameters.SpecialIdentifiers.Remove(key);
                 }
             }
 

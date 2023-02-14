@@ -145,6 +145,13 @@ namespace MixItUp.Base.Model.Overlay
             this.IsEnabled = false;
         }
 
+        public virtual async Task Test()
+        {
+            await this.Enable();
+            await this.TestInternal();
+            await this.Disable();
+        }
+
         public async Task<OverlayOutputV3Model> GetProcessedItem(OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
         {
             OverlayOutputV3Model result = new OverlayOutputV3Model();
@@ -242,6 +249,11 @@ namespace MixItUp.Base.Model.Overlay
             result.Javascript = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(result.Javascript, parameters);
 
             return result;
+        }
+
+        protected virtual async Task TestInternal()
+        {
+            await Task.Delay(5000);
         }
 
         protected virtual Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)

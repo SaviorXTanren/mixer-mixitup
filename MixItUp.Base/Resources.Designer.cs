@@ -5100,6 +5100,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Elixir.
+        /// </summary>
+        public static string Elixir {
+            get {
+                return ResourceManager.GetString("Elixir", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Empty the Jar.
         /// </summary>
         public static string EmptyJar {
@@ -11507,6 +11516,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Max To Show.
+        /// </summary>
+        public static string MaxToShow {
+            get {
+                return ResourceManager.GetString("MaxToShow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Max Value.
         /// </summary>
         public static string MaxValue {
@@ -13405,13 +13423,13 @@ namespace MixItUp.Base {
         ///    border-width: 5px;
         ///    border-color: {BorderColor};
         ///    background-color: {BackgroundColor};
-        ///    width: {Width};
-        ///    height: {Height};
+        ///    width: {ItemWidth};
+        ///    height: {ItemHeight};
         ///}
         ///
-        ///.details-{ID} {
+        ///.eventtype-{ID} {
         ///    position: absolute;
-        ///    top: 35%;
+        ///    top: 25%;
         ///    left: 5%;
         ///    width: 50%;
         ///    float: left;
@@ -13421,8 +13439,7 @@ namespace MixItUp.Base {
         ///    transform: translate(0, -50%);
         ///    font-size: {FontSize}px;
         ///    color: {FontColor};
-        ///    font-family: &apos;{FontFamily}&apos;;
-        /// [rest of string was truncated]&quot;;.
+        ///    font-family: &apos;{FontF [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEventListDefaultCSS {
             get {
@@ -13437,6 +13454,7 @@ namespace MixItUp.Base {
         ///
         ///&lt;template id=&quot;item-{ID}&quot;&gt;
         ///    &lt;div class=&apos;item-{ID}&apos;&gt;
+        ///        &lt;p class=&apos;eventtype-{ID}&apos;&gt;{EventType}&lt;/p&gt;
         ///        &lt;p class=&apos;details-{ID}&apos;&gt;{Details}&lt;/p&gt;
         ///        &lt;p class=&apos;subdetails-{ID}&apos;&gt;{SubDetails}&lt;/p&gt;
         ///    &lt;/div&gt;
@@ -13449,7 +13467,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to function {ID}_add(type, details, subdetails)
+        ///   Looks up a localized string similar to function {ID}_add(eventType, details, subdetails)
         ///{
         ///    var list = document.getElementById(&quot;list-{ID}&quot;);
         ///
@@ -13460,11 +13478,11 @@ namespace MixItUp.Base {
         ///    var itemTemplate = document.querySelector(&quot;#item-{ID}&quot;);
         ///    const item = itemTemplate.content.cloneNode(true);
         ///    
+        ///    var eventTypeElement = item.querySelector(&quot;.eventtype-{ID}&quot;);
+        ///    eventTypeElement.innerHTML = eventType;
+        ///
         ///    var detailsElement = item.querySelector(&quot;.details-{ID}&quot;);
-        ///    detailsElement.innerHTML = details;
-        ///    
-        ///    var subdetailsElement = item.querySelector(&quot;.subdetails-{ID}&quot;);
-        ///    subdetailsEl [rest of string was truncated]&quot;;.
+        ///    detailsEl [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEventListDefaultJavascript {
             get {
@@ -13537,6 +13555,15 @@ namespace MixItUp.Base {
         public static string OverlayGoalDefaultJavascript {
             get {
                 return ResourceManager.GetString("OverlayGoalDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Height must be a valid value.
+        /// </summary>
+        public static string OverlayHeightMustBeValidValue {
+            get {
+                return ResourceManager.GetString("OverlayHeightMustBeValidValue", resourceCulture);
             }
         }
         
@@ -13689,6 +13716,15 @@ namespace MixItUp.Base {
         public static string OverlayLeaderboardNewLeader {
             get {
                 return ResourceManager.GetString("OverlayLeaderboardNewLeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max To Show must be a valid value.
+        /// </summary>
+        public static string OverlayMaxToShowMustBeValidValue {
+            get {
+                return ResourceManager.GetString("OverlayMaxToShowMustBeValidValue", resourceCulture);
             }
         }
         
@@ -14109,6 +14145,15 @@ namespace MixItUp.Base {
         public static string OverlayWidgetYouTubeDescription {
             get {
                 return ResourceManager.GetString("OverlayWidgetYouTubeDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Width must be a valid value.
+        /// </summary>
+        public static string OverlayWidthMustBeValidValue {
+            get {
+                return ResourceManager.GetString("OverlayWidthMustBeValidValue", resourceCulture);
             }
         }
         

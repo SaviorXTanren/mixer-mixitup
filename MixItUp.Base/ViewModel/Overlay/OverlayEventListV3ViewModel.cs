@@ -33,7 +33,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         public override string ToString() { return this.Name; }
     }
 
-    public class OverlayEventListV3ViewModel : OverlayVisualTextV3ViewModelBase
+    public class OverlayEventListV3ViewModel : OverlayListV3ViewModelBase
     {
         public List<OverlayEventListV3TypeViewModel> EventTypes { get; set; } = new List<OverlayEventListV3TypeViewModel>();
 
@@ -125,10 +125,13 @@ namespace MixItUp.Base.ViewModel.Overlay
                 Italics = this.Italics,
                 Underline = this.Underline,
                 ShadowColor = this.ShadowColor,
-                Width = this.width,
 
                 BackgroundColor = this.BackgroundColor,
-                BorderColor = this.BorderColor
+                BorderColor = this.BorderColor,
+
+                ItemHeight = this.ItemHeight,
+                ItemWidth = this.ItemWidth,
+                MaxToShow = this.MaxToShow
             };
 
             foreach (OverlayEventListV3TypeViewModel type in this.EventTypes)

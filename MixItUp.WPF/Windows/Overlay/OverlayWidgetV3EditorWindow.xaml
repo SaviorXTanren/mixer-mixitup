@@ -141,7 +141,17 @@
                         </TabItem>
                     </TabControl>
 
-                    <Controls:IconButton x:Name="SaveButton" Grid.Row="4" HorizontalAlignment="Center" Click="SaveButton_Click" Width="80" Icon="ContentSave" />
+                    <Grid Grid.Row="4" HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Controls:IconButton x:Name="SaveButton" Grid.Column="0" Click="SaveButton_Click" Width="50" Icon="ContentSave" />
+
+                        <Controls:IconButton x:Name="TestButton" Grid.Column="2" Click="TestButton_Click" Width="50" Icon="Play" />
+                    </Grid>
                 </Grid>
             </ScrollViewer>
 
