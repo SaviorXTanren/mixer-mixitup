@@ -5,6 +5,28 @@ namespace MixItUp.Base.ViewModel.Overlay
 {
     public abstract class OverlayListV3ViewModelBase : OverlayVisualTextV3ViewModelBase
     {
+        public string BackgroundColor
+        {
+            get { return this.backgroundColor; }
+            set
+            {
+                this.backgroundColor = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string backgroundColor;
+
+        public string BorderColor
+        {
+            get { return this.borderColor; }
+            set
+            {
+                this.borderColor = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string borderColor;
+
         public int ItemHeight
         {
             get { return this.itemHeight; }

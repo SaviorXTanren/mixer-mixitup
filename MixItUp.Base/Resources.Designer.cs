@@ -13372,6 +13372,99 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .list-{ID} {
+        ///    width: {ItemWidth};
+        ///    {FullHeight}
+        ///}
+        ///
+        ///.item-{ID} {
+        ///    position: relative;
+        ///    border-style: solid;
+        ///    border-width: 5px;
+        ///    border-color: {BorderColor};
+        ///    background-color: {BackgroundColor};
+        ///    width: {ItemWidth};
+        ///    {IndividualHeight}
+        ///}
+        ///
+        ///.message-{ID} {
+        ///    padding: 10px;
+        ///    margin: auto;
+        ///}
+        ///
+        ///.messagebadge-{ID} {
+        ///    vertical-align: middle;
+        ///    padding-right: 2px;
+        ///    width: auto;
+        ///    height: {FontSize}px;
+        ///}
+        ///
+        ///.messageavatar-{ID} {
+        ///    vertical-align: m [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayChatDefaultCSS {
+            get {
+                return ResourceManager.GetString("OverlayChatDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div id=&quot;list-{ID}&quot; class=&quot;list-{ID}&quot;&gt;
+        ///
+        ///&lt;/div&gt;
+        ///
+        ///&lt;template id=&quot;item-{ID}&quot;&gt;
+        ///    &lt;div class=&apos;item-{ID}&apos;&gt;
+        ///        &lt;p class=&apos;message-{ID}&apos;&gt;&lt;/p&gt;
+        ///    &lt;/div&gt;
+        ///&lt;/template&gt;
+        ///
+        ///&lt;template id=&quot;messagebadge-{ID}&quot;&gt;
+        ///    &lt;img class=&apos;messagebadge-{ID}&apos; /&gt;
+        ///&lt;/template&gt;
+        ///
+        ///&lt;template id=&quot;messageavatar-{ID}&quot;&gt;
+        ///    &lt;img class=&apos;messageavatar-{ID}&apos; /&gt;
+        ///&lt;/template&gt;
+        ///
+        ///&lt;template id=&quot;messageusername-{ID}&quot;&gt;
+        ///    &lt;span class=&apos;messageusername-{ID}&apos;&gt;&lt;/span&gt;
+        ///&lt;/template&gt;
+        ///
+        ///&lt;template id=&quot;messagetext-{ID}&quot;&gt;
+        ///    &lt;span class=&apos;message [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayChatDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayChatDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to function {ID}_add(user, messageParts)
+        ///{
+        ///    var list = document.getElementById(&quot;list-{ID}&quot;);
+        ///
+        ///    if ({ShowMaxMessagesOnly})
+        ///    {
+        ///        if (list.childElementCount &gt; {MaxToShow})
+        ///        {
+        ///            {ID}_removeOldest();
+        ///        }
+        ///    }
+        ///
+        ///    var itemTemplate = document.querySelector(&quot;#item-{ID}&quot;);
+        ///    var messageBadgeTemplate = document.querySelector(&quot;#messagebadge-{ID}&quot;);
+        ///    var messageAvatarTemplate = document.querySelector(&quot;#messageavatar-{ID}&quot;);
+        ///    var messageUsernameTemplate = docum [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayChatDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayChatDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Overlay connection test failed, please ensure you have the Mix It Up Overlay page visible and running in your streaming software..
         /// </summary>
         public static string OverlayConnectionFailed1 {
@@ -13417,29 +13510,35 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .item-{ID} {
+        ///   Looks up a localized string similar to .list-{ID} {
+        ///    width: {ItemWidth};
+        ///    {FullHeight}
+        ///}
+        ///
+        ///.item-{ID} {
         ///    position: relative;
         ///    border-style: solid;
         ///    border-width: 5px;
         ///    border-color: {BorderColor};
         ///    background-color: {BackgroundColor};
         ///    width: {ItemWidth};
-        ///    height: {ItemHeight};
+        ///    {IndividualHeight}
         ///}
         ///
-        ///.eventtype-{ID} {
-        ///    position: absolute;
-        ///    top: 25%;
-        ///    left: 5%;
-        ///    width: 50%;
-        ///    float: left;
-        ///    text-align: left;
-        ///    font-weight: bold;
+        ///.message-{ID} {
+        ///    padding: 10px;
         ///    margin: auto;
-        ///    transform: translate(0, -50%);
-        ///    font-size: {FontSize}px;
-        ///    color: {FontColor};
-        ///    font-family: &apos;{FontF [rest of string was truncated]&quot;;.
+        ///}
+        ///
+        ///.messagebadge-{ID} {
+        ///    vertical-align: middle;
+        ///    padding-right: 2px;
+        ///    width: auto;
+        ///    height: {FontSize}px;
+        ///}
+        ///
+        ///.messageavatar-{ID} {
+        ///    vertical-align: m [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEventListDefaultCSS {
             get {

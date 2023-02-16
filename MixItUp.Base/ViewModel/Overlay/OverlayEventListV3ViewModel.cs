@@ -37,28 +37,6 @@ namespace MixItUp.Base.ViewModel.Overlay
     {
         public List<OverlayEventListV3TypeViewModel> EventTypes { get; set; } = new List<OverlayEventListV3TypeViewModel>();
 
-        public string BackgroundColor
-        {
-            get { return this.backgroundColor; }
-            set
-            {
-                this.backgroundColor = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private string backgroundColor;
-
-        public string BorderColor
-        {
-            get { return this.borderColor; }
-            set
-            {
-                this.borderColor = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private string borderColor;
-
         private OverlayEventListV3Model item;
 
         public OverlayEventListV3ViewModel()

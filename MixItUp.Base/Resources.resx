@@ -9354,45 +9354,56 @@ namespace CustomNamespace
     <value>Donation</value>
   </data>
   <data name="OverlayEventListDefaultCSS" xml:space="preserve">
-    <value>.item-{ID} {
+    <value>.list-{ID} {
+    width: {ItemWidth};
+    {FullHeight}
+}
+
+.item-{ID} {
     position: relative;
     border-style: solid;
     border-width: 5px;
     border-color: {BorderColor};
     background-color: {BackgroundColor};
     width: {ItemWidth};
-    height: {ItemHeight};
+    {IndividualHeight}
 }
 
-.eventtype-{ID} {
-    position: absolute;
-    top: 25%;
-    left: 5%;
-    width: 50%;
-    float: left;
-    text-align: left;
+.message-{ID} {
+    padding: 10px;
+    margin: auto;
+}
+
+.messagebadge-{ID} {
+    vertical-align: middle;
+    padding-right: 2px;
+    width: auto;
+    height: {FontSize}px;
+}
+
+.messageavatar-{ID} {
+    vertical-align: middle;
+    padding-right: 2px;
+    width: auto;
+    height: {FontSize}px;
+}
+
+.messageusername-{ID} {
+    vertical-align: middle;
+    word-wrap: break-word;
+    font-size: {FontSize}px;
+    font-family: '{FontFamily}';
     font-weight: bold;
-    margin: auto;
-    transform: translate(0, -50%);
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: '{FontFamily}';
-    font-weight: {FontWeight};
     text-decoration: {TextDecoration};
     font-style: {FontStyle};
     text-shadow: {Shadow};
 }
 
-.details-{ID} {
-    position: absolute;
-    top: 75%;
-    right: 5%;
-    width: 50%;
-    float: left;
-    text-align: right;
+.messagetext-{ID} {
+    vertical-align: middle;
+    margin-left: 10px;
+    word-wrap: break-word;
     font-weight: bold;
-    margin: auto;
-    transform: translate(0, -50%);
     font-size: {FontSize}px;
     color: {FontColor};
     font-family: '{FontFamily}';
@@ -9402,22 +9413,11 @@ namespace CustomNamespace
     text-shadow: {Shadow};
 }
 
-.subdetails-{ID} {
-    position: absolute;
-    top: 75%;
-    left: 5%;
-    width: 50%;
-    text-align: left;
-    white-space: nowrap;
-    margin: auto;
-    transform: translate(0, -50%);
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: '{FontFamily}';
-    font-weight: {FontWeight};
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-shadow: {Shadow};
+.messageemote-{ID} {
+   vertical-align: middle;
+   margin-left: 10px;
+   width: auto;
+   height: {FontSize}px;
 }</value>
   </data>
   <data name="OverlayEventListDefaultHTML" xml:space="preserve">
@@ -9593,5 +9593,168 @@ update_{ID}({CurrentAmount}, {GoalAmount}, {Width});</value>
   </data>
   <data name="OverlayWidthMustBeValidValue" xml:space="preserve">
     <value>Width must be a valid value</value>
+  </data>
+  <data name="OverlayChatDefaultHTML" xml:space="preserve">
+    <value>&lt;div id="list-{ID}" class="list-{ID}"&gt;
+
+&lt;/div&gt;
+
+&lt;template id="item-{ID}"&gt;
+    &lt;div class='item-{ID}'&gt;
+        &lt;p class='message-{ID}'&gt;&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;template id="messagebadge-{ID}"&gt;
+    &lt;img class='messagebadge-{ID}' /&gt;
+&lt;/template&gt;
+
+&lt;template id="messageavatar-{ID}"&gt;
+    &lt;img class='messageavatar-{ID}' /&gt;
+&lt;/template&gt;
+
+&lt;template id="messageusername-{ID}"&gt;
+    &lt;span class='messageusername-{ID}'&gt;&lt;/span&gt;
+&lt;/template&gt;
+
+&lt;template id="messagetext-{ID}"&gt;
+    &lt;span class='messagetext-{ID}'&gt;&lt;/span&gt;
+&lt;/template&gt;
+
+&lt;template id="messageemote-{ID}"&gt;
+    &lt;img class='messageemote-{ID}' /&gt;
+&lt;/template&gt;</value>
+  </data>
+  <data name="OverlayChatDefaultCSS" xml:space="preserve">
+    <value>.list-{ID} {
+    width: {ItemWidth};
+    {FullHeight}
+}
+
+.item-{ID} {
+    position: relative;
+    border-style: solid;
+    border-width: 5px;
+    border-color: {BorderColor};
+    background-color: {BackgroundColor};
+    width: {ItemWidth};
+    {IndividualHeight}
+}
+
+.message-{ID} {
+    padding: 10px;
+    margin: auto;
+}
+
+.messagebadge-{ID} {
+    vertical-align: middle;
+    padding-right: 2px;
+    width: auto;
+    height: {FontSize}px;
+}
+
+.messageavatar-{ID} {
+    vertical-align: middle;
+    padding-right: 2px;
+    width: auto;
+    height: {FontSize}px;
+}
+
+.messageusername-{ID} {
+    vertical-align: middle;
+    word-wrap: break-word;
+    font-size: {FontSize}px;
+    font-family: '{FontFamily}';
+    font-weight: bold;
+    text-decoration: {TextDecoration};
+    font-style: {FontStyle};
+    text-shadow: {Shadow};
+}
+
+.messagetext-{ID} {
+    vertical-align: middle;
+    margin-left: 10px;
+    word-wrap: break-word;
+    font-weight: bold;
+    font-size: {FontSize}px;
+    color: {FontColor};
+    font-family: '{FontFamily}';
+    font-weight: {FontWeight};
+    text-decoration: {TextDecoration};
+    font-style: {FontStyle};
+    text-shadow: {Shadow};
+}
+
+.messageemote-{ID} {
+   vertical-align: middle;
+   margin-left: 10px;
+   width: auto;
+   height: {TEXT_SIZE}px;
+}</value>
+  </data>
+  <data name="OverlayChatDefaultJavascript" xml:space="preserve">
+    <value>function {ID}_add(user, messageParts)
+{
+    var list = document.getElementById("list-{ID}");
+
+    if ({ShowMaxMessagesOnly})
+    {
+        if (list.childElementCount &gt; {MaxToShow})
+        {
+            {ID}_removeOldest();
+        }
+    }
+
+    var itemTemplate = document.querySelector("#item-{ID}");
+    var messageBadgeTemplate = document.querySelector("#messagebadge-{ID}");
+    var messageAvatarTemplate = document.querySelector("#messageavatar-{ID}");
+    var messageUsernameTemplate = document.querySelector("#messageusername-{ID}");
+    var messageTextTemplate = document.querySelector("#messagetext-{ID}");
+    var messageEmoteTemplate = document.querySelector("#messageemote-{ID}");
+    
+    const item = itemTemplate.content.cloneNode(true);
+    var messageElement = item.querySelector(".message-{ID}");
+    
+    const messageRoleBadge = messageBadgeTemplate.content.cloneNode(true);
+    messageRoleBadge.src = user.PlatformRoleBadgeLink;
+    messageElement.appendChild(messageRoleBadge);
+    
+    const messageSubBadge = messageBadgeTemplate.content.cloneNode(true);
+    messageSubBadge.src = user.PlatformSubscriberBadgeLink;
+    messageElement.appendChild(messageSubBadge);
+    
+    const messageAvatar = messageAvatarTemplate.content.cloneNode(true);
+    messageAvatar.src = user.AvatarLink;
+    messageElement.appendChild(messageAvatar);
+    
+    const messageUsername = messageUsernameTemplate.content.cloneNode(true);
+    messageUsername.style.color = user.Color;
+    messageUsername.innerHTML = user.DisplayName;
+    messageElement.appendChild(messageUsername);
+    
+    messageParts.forEach(messagePart =&gt;
+    {
+        if (messagePart.Type === 'text')
+        {
+            const messageText = messageTextTemplate.content.cloneNode(true);
+            messageUsername.innerHTML = messagePart.Text;
+            messageElement.appendChild(messageText);
+        }
+        else if (messagePart.Type === 'image')
+        {
+            const messageEmote = messageEmoteTemplate.content.cloneNode(true);
+            messageEmote.src = messagePart.URL;
+            messageElement.appendChild(messageEmote);      
+        }
+    });
+
+    list.appendChild(item);
+}
+
+function {ID}_removeOldest()
+{
+    var list = document.getElementById("list-{ID}");
+    list.removeChild(list.firstElementChild);
+}</value>
   </data>
 </root>

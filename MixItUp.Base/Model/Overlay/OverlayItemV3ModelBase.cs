@@ -22,6 +22,7 @@ namespace MixItUp.Base.Model.Overlay
         Label,
         EventList,
         Goal,
+        Chat,
     }
 
     [DataContract]
