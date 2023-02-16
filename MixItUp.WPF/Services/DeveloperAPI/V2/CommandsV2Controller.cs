@@ -99,7 +99,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V2
                 return BadRequest($"Unknown platform: {parameters.Platform}");
             }
 
-            await ServiceManager.Get<CommandService>().Queue(commandId, new CommandParametersModel(platform: platform, arguments: parameters.Arguments, specialIdentifiers: parameters.SpecialIdentifiers));
+            await ServiceManager.Get<CommandService>().Queue(commandId, new CommandParametersModel(platform: platform, arguments: CommandParametersModel.GenerateArguments(parameters.Arguments), specialIdentifiers: parameters.SpecialIdentifiers));
 
             return Ok();
         }

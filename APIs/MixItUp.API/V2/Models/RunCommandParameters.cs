@@ -10,7 +10,7 @@ namespace MixItUp.API.V2.Models
         public string Platform { get; set; }
 
         [DataMember]
-        public IEnumerable<string> Arguments { get; set; } = null;
+        public string Arguments { get; set; } = null;
 
         [DataMember]
         public Dictionary<string, string> SpecialIdentifiers { get; set; } = null;
