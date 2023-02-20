@@ -308,15 +308,18 @@ namespace MixItUp.Base.ViewModel.User
         public bool ShowPlatformBadge { get { return true; } }
 
         public DateTimeOffset? AccountDate { get { return this.PlatformModel.AccountDate; } set { this.PlatformModel.AccountDate = value; } }
+        public string AccountDateString { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().ToFriendlyDateString() : MixItUp.Base.Resources.Unknown; } }
         public string AccountAgeString { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.Unknown; } }
         public int AccountDays { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().TotalDaysFromNow() : 0; } }
 
         public DateTimeOffset? FollowDate { get { return this.PlatformModel.FollowDate; } set { this.PlatformModel.FollowDate = value; } }
+        public string FollowDateString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().ToFriendlyDateString() : MixItUp.Base.Resources.NotFollowing; } }
         public string FollowAgeString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.NotFollowing; } }
         public int FollowDays { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().TotalDaysFromNow() : 0; } }
         public int FollowMonths { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().TotalMonthsFromNow() : 0; } }
 
         public DateTimeOffset? SubscribeDate { get { return this.PlatformModel.SubscribeDate; } set { this.PlatformModel.SubscribeDate = value; } }
+        public string SubscribeDateString { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().ToFriendlyDateString() : MixItUp.Base.Resources.NotSubscribed; } }
         public string SubscribeAgeString { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().GetAge() : MixItUp.Base.Resources.NotSubscribed; } }
         public int SubscribeDays { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().TotalDaysFromNow() : 0; } }
         public int SubscribeMonths { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow() : 0; } }
