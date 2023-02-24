@@ -223,6 +223,10 @@ namespace MixItUp.Base.ViewModel.User
                                 if (this.columnDictionary[MixItUp.Base.Resources.PlatformUsername].ArrayNumber >= 0)
                                 {
                                     platformUsername = line[this.columnDictionary[MixItUp.Base.Resources.PlatformUsername].ArrayNumber];
+                                    if (platformUsername != null)
+                                    {
+                                        platformUsername = platformUsername.ToLower();
+                                    }
                                 }
 
                                 UserV2ViewModel user = null;
@@ -280,7 +284,7 @@ namespace MixItUp.Base.ViewModel.User
                                         Platform = this.SelectedPlatform,
                                         PlatformID = platformID,
                                         PlatformUsername = platformUsername,
-                                        OnlineViewingMinutes = hours + (minutes * 60),
+                                        OnlineViewingMinutes = minutes + (hours * 60),
                                         CurrencyAmounts = currencies
                                     };
 
