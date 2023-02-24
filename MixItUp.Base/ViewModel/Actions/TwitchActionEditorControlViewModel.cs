@@ -454,6 +454,17 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private TwitchAnnouncementColor selectedAnnouncementColor = TwitchAnnouncementColor.Primary;
 
+        public bool SendAnnouncementAsStreamer
+        {
+            get { return this.sendAnnouncementAsStreamer; }
+            set
+            {
+                this.sendAnnouncementAsStreamer = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool sendAnnouncementAsStreamer = true;
+
         public TwitchActionEditorControlViewModel(TwitchActionModel action)
             : base(action, action.Actions)
         {
@@ -549,6 +560,7 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.Message = action.Message;
                 this.SelectedAnnouncementColor = action.Color;
+                this.SendAnnouncementAsStreamer = action.SendAnnouncementAsStreamer;
             }
         }
 
@@ -731,7 +743,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowSendAnnouncementGrid)
             {
-                return TwitchActionModel.CreateSendChatAnnouncementAction(this.Message, this.SelectedAnnouncementColor);
+                return TwitchActionModel.CreateSendChatAnnouncementAction(this.Message, this.SelectedAnnouncementColor, this.SendAnnouncementAsStreamer);
             }
             else
             {

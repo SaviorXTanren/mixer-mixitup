@@ -90,7 +90,8 @@ namespace MixItUp.Base
 
             ServiceManager.Add(new TwitchSessionService());
             ServiceManager.Add(new TwitchChatService());
-            ServiceManager.Add(new TwitchEventService());
+            ServiceManager.Add(new TwitchEventSubService());
+            ServiceManager.Add(new TwitchPubSubService());
             ServiceManager.Add(new TwitchStatusService());
 
             ServiceManager.Add(new YouTubeSessionService());

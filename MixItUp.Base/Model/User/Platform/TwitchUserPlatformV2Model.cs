@@ -113,7 +113,7 @@ namespace MixItUp.Base.Model.User.Platform
                     if (subscription != null)
                     {
                         this.Roles.Add(UserRoleEnum.Subscriber);
-                        this.SubscriberTier = TwitchEventService.GetSubTierNumberFromText(subscription.tier);
+                        this.SubscriberTier = TwitchPubSubService.GetSubTierNumberFromText(subscription.tier);
                         // TODO: No subscription data from this API. https://twitch.uservoice.com/forums/310213-developers/suggestions/43806120-add-subscription-date-to-subscription-apis
                         //this.SubscribeDate = TwitchPlatformService.GetTwitchDateTime(subscription.created_at);
                     }

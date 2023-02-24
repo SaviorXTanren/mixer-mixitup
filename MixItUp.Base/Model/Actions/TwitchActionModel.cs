@@ -167,11 +167,12 @@ namespace MixItUp.Base.Model.Actions
             return action;
         }
 
-        public static TwitchActionModel CreateSendChatAnnouncementAction(string message, TwitchAnnouncementColor color)
+        public static TwitchActionModel CreateSendChatAnnouncementAction(string message, TwitchAnnouncementColor color, bool sendAsStreamer)
         {
             TwitchActionModel actionModel = new TwitchActionModel(TwitchActionType.SendChatAnnouncement);
             actionModel.Message = message;
             actionModel.Color= color;
+            actionModel.SendAnnouncementAsStreamer = sendAsStreamer;
             return actionModel;
         }
 
@@ -263,6 +264,9 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public TwitchAnnouncementColor Color { get; set; }
+
+        [DataMember]
+        public bool SendAnnouncementAsStreamer { get; set; } = true;
 
         private TwitchActionModel(TwitchActionType type)
             : base(ActionTypeEnum.Twitch)
@@ -652,7 +656,15 @@ namespace MixItUp.Base.Model.Actions
                 else if (this.ActionType == TwitchActionType.SendChatAnnouncement)
                 {
                     string text = await ReplaceStringWithSpecialModifiers(this.Message, parameters);
-                    await ServiceManager.Get<TwitchSessionService>().UserConnection.SendChatAnnouncement(ServiceManager.Get<TwitchSessionService>().User, text, AnnouncementColorMap[Color]);
+
+                    if (SendAnnouncementAsStreamer || ServiceManager.Get<TwitchSessionService>().Bot == null)
+                    {
+                        await ServiceManager.Get<TwitchSessionService>().UserConnection.SendChatAnnouncement(ServiceManager.Get<TwitchSessionService>().User, ServiceManager.Get<TwitchSessionService>().User, text, AnnouncementColorMap[Color]);
+                    }
+                    else
+                    {
+                        await ServiceManager.Get<TwitchSessionService>().BotConnection.SendChatAnnouncement(ServiceManager.Get<TwitchSessionService>().User, ServiceManager.Get<TwitchSessionService>().Bot, text, AnnouncementColorMap[Color]);
+                    }
                 }
                 else if (this.ActionType == TwitchActionType.SendShoutout)
                 {
