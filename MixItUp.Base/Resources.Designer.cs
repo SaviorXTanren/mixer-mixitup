@@ -21018,20 +21018,20 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Twitch Events.
-        /// </summary>
-        public static string TwitchEvents {
-            get {
-                return ResourceManager.GetString("TwitchEvents", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Failed to connect to Twitch Event Sub service.
         /// </summary>
         public static string TwitchEventServiceFailedToConnectEventSub {
             get {
                 return ResourceManager.GetString("TwitchEventServiceFailedToConnectEventSub", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Event Sub.
+        /// </summary>
+        public static string TwitchEventSub {
+            get {
+                return ResourceManager.GetString("TwitchEventSub", resourceCulture);
             }
         }
         

@@ -807,7 +807,7 @@ namespace MixItUp.Base.Services.Twitch
                         gifter = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, userNotice.UserID.ToString(), performPlatformSearch: true);
                         gifter.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).SetUserProperties(userNotice);
                     }
-                    await ServiceManager.Get<TwitchEventService>().AddMassGiftedSub(new TwitchMassGiftedSubEventModel(userNotice, gifter));
+                    await ServiceManager.Get<TwitchPubSubService>().AddMassGiftedSub(new TwitchMassGiftedSubEventModel(userNotice, gifter));
                 }
                 else if (SubGiftPaidUpgradeUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
                 {
@@ -818,7 +818,7 @@ namespace MixItUp.Base.Services.Twitch
                     }
                     user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).SetUserProperties(userNotice);
 
-                    await ServiceManager.Get<TwitchEventService>().AddSub(new TwitchSubEventModel(user, userNotice));
+                    await ServiceManager.Get<TwitchPubSubService>().AddSub(new TwitchSubEventModel(user, userNotice));
                 }
                 else if (AnnouncementUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
                 {
