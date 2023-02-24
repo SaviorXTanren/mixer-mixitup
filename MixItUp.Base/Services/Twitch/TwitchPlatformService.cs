@@ -95,6 +95,8 @@ namespace MixItUp.Base.Services.Twitch
             OAuthClientScopeEnum.chat__edit,
             OAuthClientScopeEnum.chat__read,
 
+            OAuthClientScopeEnum.moderator__manage__announcements,
+
             OAuthClientScopeEnum.user__edit,
 
             OAuthClientScopeEnum.whispers__read,
@@ -223,7 +225,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<bool> UpdateStreamTagsForChannel(UserModel channel, IEnumerable<TagModel> tags) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Tags.UpdateStreamTags(channel, tags)); }
 
-        public async Task SendChatAnnouncement(UserModel channel, string message, string color) { await AsyncRunner.RunAsync(() => this.Connection.NewAPI.Chat.SendChatAnnouncement(channel.id, new AnnouncementModel { message = message, color = color })); }
+        public async Task SendChatAnnouncement(UserModel channel, UserModel sendAsUser, string message, string color) { await AsyncRunner.RunAsync(() => this.Connection.NewAPI.Chat.SendChatAnnouncement(channel.id, sendAsUser.id, new AnnouncementModel { message = message, color = color })); }
 
         public async Task SendShoutout(UserModel channel, UserModel targetChannel) { await AsyncRunner.RunAsync(() => this.Connection.NewAPI.Chat.SendShoutout(channel.id, targetChannel.id)); }
 

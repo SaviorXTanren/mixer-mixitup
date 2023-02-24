@@ -8421,8 +8421,8 @@ NOTE: This may require you to opt-in to the Preview build from the General tab i
   <data name="TwitchConnection" xml:space="preserve">
     <value>Twitch Connection</value>
   </data>
-  <data name="TwitchEvents" xml:space="preserve">
-    <value>Twitch Events</value>
+  <data name="TwitchEventSub" xml:space="preserve">
+    <value>Twitch Event Sub</value>
   </data>
   <data name="TwitchFailedToConnect" xml:space="preserve">
     <value>Failed to establish connection to Twitch</value>

@@ -1,14 +1,11 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Actions;
-using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Twitch.Base.Models.NewAPI.Channels;
 using Twitch.Base.Models.NewAPI.Games;
 using Twitch.Base.Models.NewAPI.Streams;
@@ -166,7 +163,8 @@ namespace MixItUp.Base.Services.Twitch
             await this.DisconnectBot(settings);
 
             await ServiceManager.Get<TwitchChatService>().DisconnectUser();
-            await ServiceManager.Get<TwitchEventService>().Disconnect();
+            await ServiceManager.Get<TwitchEventSubService>().Disconnect(true);
+            await ServiceManager.Get<TwitchPubSubService>().Disconnect();
 
             this.UserConnection = null;
 
@@ -221,7 +219,7 @@ namespace MixItUp.Base.Services.Twitch
 
                         List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
                         platformServiceTasks.Add(ServiceManager.Get<TwitchChatService>().ConnectUser());
-                        platformServiceTasks.Add(ServiceManager.Get<TwitchEventService>().Connect());
+                        platformServiceTasks.Add(ServiceManager.Get<TwitchPubSubService>().Connect());
                         platformServiceTasks.Add(ServiceManager.Get<TwitchSessionService>().SetStreamTagsCache());
 
                         await Task.WhenAll(platformServiceTasks);
@@ -231,6 +229,9 @@ namespace MixItUp.Base.Services.Twitch
                             string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
                             return new Result(MixItUp.Base.Resources.TwitchFailedToConnectHeader + Environment.NewLine + Environment.NewLine + errors);
                         }
+
+                        // Let's start this in the background and not block
+                        await ServiceManager.Get<TwitchEventSubService>().TryConnect();
 
                         await ServiceManager.Get<TwitchChatService>().Initialize();
                     }
@@ -262,7 +263,8 @@ namespace MixItUp.Base.Services.Twitch
         {
             await ServiceManager.Get<TwitchChatService>().DisconnectUser();
 
-            await ServiceManager.Get<TwitchEventService>().Disconnect();
+            await ServiceManager.Get<TwitchEventSubService>().Disconnect(true);
+            await ServiceManager.Get<TwitchPubSubService>().Disconnect();
         }
 
         public async Task CloseBot()
