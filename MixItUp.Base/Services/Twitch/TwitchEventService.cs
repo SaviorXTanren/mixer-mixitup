@@ -307,7 +307,7 @@ namespace MixItUp.Base.Services.Twitch
 
         private readonly IReadOnlyDictionary<string, string> DesiredSubscriptionsAndVersions = new Dictionary<string, string>(StringComparer.Ordinal)
         {
-            { "channel.follow", null },
+            { "channel.follow", "2" },
 
             { "stream.online", null },
             { "stream.offline", null },
@@ -316,7 +316,7 @@ namespace MixItUp.Base.Services.Twitch
             { "channel.hype_train.progress", null },
             { "channel.hype_train.end", null },
 
-            { "channel.charity_campaign.donate", "beta" },
+            { "channel.charity_campaign.donate", null },
         };
 
         private async void EventSub_OnWelcomeMessageReceived(object sender, WelcomeMessage message)
@@ -362,11 +362,15 @@ namespace MixItUp.Base.Services.Twitch
                 await ServiceManager.Get<TwitchSessionService>().UserConnection.Connection.NewAPI.EventSub.CreateSubscription(
                     type,
                     "websocket",
-                    new Dictionary<string, string> { { "broadcaster_user_id", ServiceManager.Get<TwitchSessionService>().UserID } },
+                    new Dictionary<string, string>
+                    {
+                        { "broadcaster_user_id", ServiceManager.Get<TwitchSessionService>().UserID },
+                        { "moderator_user_id", ServiceManager.Get<TwitchSessionService>().UserID }
+                    },
                     message.Payload.Session.Id,
                     version: version);
             }
-            catch (Exception)
+            catch (HttpRestRequestException ex)
             {
                 Logger.Log(LogLevel.Error, $"Failed to connect EventSub for {type}");
                 throw;
@@ -692,6 +696,7 @@ namespace MixItUp.Base.Services.Twitch
 
         private List<TwitchGiftedSubEventModel> pendingGiftedSubs = new List<TwitchGiftedSubEventModel>();
         private List<TwitchMassGiftedSubEventModel> pendingMassGiftedSubs = new List<TwitchMassGiftedSubEventModel>();
+        private HashSet<string> channelPointRewardRedeems = new HashSet<string>();
 
         public override string Name { get { return MixItUp.Base.Resources.TwitchPubSub; } }
 
