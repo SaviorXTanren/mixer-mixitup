@@ -266,7 +266,7 @@ namespace MixItUp.Base.Model.Actions
         public TwitchAnnouncementColor Color { get; set; }
 
         [DataMember]
-        public bool SendAnnouncementAsStreamer { get; set; }
+        public bool SendAnnouncementAsStreamer { get; set; } = true;
 
         private TwitchActionModel(TwitchActionType type)
             : base(ActionTypeEnum.Twitch)

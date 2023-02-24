@@ -463,7 +463,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged();
             }
         }
-        private bool sendAnnouncementAsStreamer;
+        private bool sendAnnouncementAsStreamer = true;
 
         public TwitchActionEditorControlViewModel(TwitchActionModel action)
             : base(action, action.Actions)
