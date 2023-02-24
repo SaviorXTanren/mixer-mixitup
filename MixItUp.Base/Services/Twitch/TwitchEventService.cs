@@ -240,8 +240,6 @@ namespace MixItUp.Base.Services.Twitch
                             this.eventSub.OnTextReceivedOccurred += EventSub_OnTextReceivedOccurred;
                         }
 
-                        this.eventSub.OnDisconnectOccurred += EventSub_OnDisconnectOccurred;
-
                         this.eventSub.OnWelcomeMessageReceived += EventSub_OnWelcomeMessageReceived;
                         this.eventSub.OnReconnectMessageReceived += EventSub_OnReconnectMessageReceived;
                         this.eventSub.OnKeepAliveMessageReceived += EventSub_OnKeepAliveMessageReceived;
@@ -249,6 +247,7 @@ namespace MixItUp.Base.Services.Twitch
                         this.eventSub.OnRevocationMessageReceived += EventSub_OnRevocationMessageReceived;
 
                         this.eventSubSubscriptionsConnected = false;
+
                         await this.eventSub.Connect();
 
                         await Task.Delay(2500);
@@ -264,6 +263,8 @@ namespace MixItUp.Base.Services.Twitch
                         }
 
                         this.IsConnected = true;
+
+                        this.eventSub.OnDisconnectOccurred += EventSub_OnDisconnectOccurred;
 
                         return new Result();
                     }
@@ -300,6 +301,20 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
+        private readonly IReadOnlyDictionary<string, string> DesiredSubscriptionsAndVersions = new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            { "channel.follow", null },
+
+            { "stream.online", null },
+            { "stream.offline", null },
+
+            { "channel.hype_train.begin", null },
+            { "channel.hype_train.progress", null },
+            { "channel.hype_train.end", null },
+
+            { "channel.charity_campaign.donate", "beta" },
+        };
+
         private async void EventSub_OnWelcomeMessageReceived(object sender, WelcomeMessage message)
         {
             try
@@ -308,21 +323,25 @@ namespace MixItUp.Base.Services.Twitch
                 EventSubService eventSub = twitchSession.UserConnection.Connection.NewAPI.EventSub;
 
                 IEnumerable<EventSubSubscriptionModel> allSubs = await eventSub.GetSubscriptions();
+                HashSet<string> missingSubs = new HashSet<string>(DesiredSubscriptionsAndVersions.Keys, StringComparer.OrdinalIgnoreCase);
                 foreach (EventSubSubscriptionModel sub in allSubs)
                 {
-                    await eventSub.DeleteSubscription(sub.id);
+                    if (DesiredSubscriptionsAndVersions.ContainsKey(sub.type) && string.Equals(sub.status, "connected", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Sub exists and is connected, remove from missing
+                        missingSubs.Remove(sub.type);
+                    }
+                    else
+                    {
+                        // Got a sub we don't want, delete
+                        await eventSub.DeleteSubscription(sub.id);
+                    }
                 }
 
-                await this.RegisterEventSubSubscription("channel.follow", message);
-
-                await this.RegisterEventSubSubscription("stream.online", message);
-                await this.RegisterEventSubSubscription("stream.offline", message);
-
-                await this.RegisterEventSubSubscription("channel.hype_train.begin", message);
-                await this.RegisterEventSubSubscription("channel.hype_train.progress", message);
-                await this.RegisterEventSubSubscription("channel.hype_train.end", message);
-
-                await this.RegisterEventSubSubscription("channel.charity_campaign.donate", message, "beta");
+                foreach (string missingSub in missingSubs)
+                {
+                    await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub]);
+                }
 
                 this.eventSubSubscriptionsConnected = true;
             }
@@ -514,12 +533,12 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (this.eventSub != null)
                 {
+                    this.eventSub.OnDisconnectOccurred -= EventSub_OnDisconnectOccurred;
+
                     if (ChannelSession.AppSettings.DiagnosticLogging)
                     {
                         this.eventSub.OnTextReceivedOccurred -= EventSub_OnTextReceivedOccurred;
                     }
-
-                    this.eventSub.OnDisconnectOccurred -= EventSub_OnDisconnectOccurred;
 
                     this.eventSub.OnWelcomeMessageReceived -= EventSub_OnWelcomeMessageReceived;
                     this.eventSub.OnReconnectMessageReceived -= EventSub_OnReconnectMessageReceived;
