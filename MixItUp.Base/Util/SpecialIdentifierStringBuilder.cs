@@ -392,10 +392,10 @@ namespace MixItUp.Base.Util
                     {
                         await this.ReplaceNumberBasedRegexSpecialIdentifier(QuoteSpecialIdentifierHeader + SpecialIdentifierNumberRegexPattern, (index) =>
                         {
-                            if (index > 0 && index <= ChannelSession.Settings.Quotes.Count)
+                            UserQuoteModel quote = ChannelSession.Settings.Quotes.SingleOrDefault(q => q.ID == index);
+                            if (quote != null)
                             {
-                                index--;
-                                return Task.FromResult(ChannelSession.Settings.Quotes[index].ToString());
+                                return Task.FromResult(quote.ToString());
                             }
                             return Task.FromResult<string>(null);
                         });
