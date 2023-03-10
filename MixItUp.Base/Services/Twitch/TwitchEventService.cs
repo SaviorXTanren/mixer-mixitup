@@ -312,7 +312,7 @@ namespace MixItUp.Base.Services.Twitch
             { "channel.hype_train.progress", null },
             { "channel.hype_train.end", null },
 
-            { "channel.charity_campaign.donate", "beta" },
+            { "channel.charity_campaign.donate", null },
         };
 
         private async void EventSub_OnWelcomeMessageReceived(object sender, WelcomeMessage message)
@@ -362,10 +362,12 @@ namespace MixItUp.Base.Services.Twitch
                     message.Payload.Session.Id,
                     version: version);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Logger.Log(ex);
                 Logger.Log(LogLevel.Error, $"Failed to connect EventSub for {type}");
-                throw;
+
+                // Note: Do not re-throw, but log and move on, better to miss some events than to cause a retry loop
             }
         }
 
