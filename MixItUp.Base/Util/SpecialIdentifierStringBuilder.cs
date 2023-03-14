@@ -216,6 +216,8 @@ namespace MixItUp.Base.Util
             foreach (CounterModel counter in ChannelSession.Settings.Counters.Values.OrderByDescending(c => c.Name))
             {
                 this.ReplaceSpecialIdentifier(counter.Name, counter.Amount.ToString());
+                this.ReplaceSpecialIdentifier(counter.Name + "display", counter.Amount.ToNumberDisplayString());
+                
             }
 
             this.ReplaceSpecialIdentifier("dayoftheweek", DateTimeOffset.Now.DayOfWeek.ToString());

@@ -89,5 +89,7 @@ namespace MixItUp.Base.Util
         public static string ToCurrencyString(this double number) { return string.Format("{0:C}", Math.Round(number, 2)); }
 
         public static string ToNumberDisplayString(this int number) { return number.ToString("N0"); }
+
+        public static string ToNumberDisplayString(this double number) { return (Math.Floor(number) == number) ? ((int)number).ToString("N0") : number.ToString("N"); }
     }
 }
