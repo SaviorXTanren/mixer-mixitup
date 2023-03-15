@@ -68,6 +68,12 @@ namespace MixItUp.Base.Model.Actions
                     targetUser = parameters.User;
                 }
 
+                string moderationReason = MixItUp.Base.Resources.ManualModerationStrike;
+                if (!string.IsNullOrEmpty(this.ModerationReason))
+                {
+                    moderationReason = await ReplaceStringWithSpecialModifiers(this.ModerationReason, parameters);
+                }
+
                 if (targetUser != null)
                 {
                     if (this.ActionType == ModerationActionTypeEnum.PurgeUser)
@@ -76,7 +82,7 @@ namespace MixItUp.Base.Model.Actions
                     }
                     else if (this.ActionType == ModerationActionTypeEnum.BanUser)
                     {
-                        await ServiceManager.Get<ChatService>().BanUser(targetUser);
+                        await ServiceManager.Get<ChatService>().BanUser(targetUser, moderationReason);
                     }
                     else if (this.ActionType == ModerationActionTypeEnum.UnbanUser)
                     {
@@ -92,11 +98,6 @@ namespace MixItUp.Base.Model.Actions
                     }
                     else if (this.ActionType == ModerationActionTypeEnum.AddModerationStrike)
                     {
-                        string moderationReason = MixItUp.Base.Resources.ManualModerationStrike;
-                        if (!string.IsNullOrEmpty(this.ModerationReason))
-                        {
-                            moderationReason = await ReplaceStringWithSpecialModifiers(this.ModerationReason, parameters);
-                        }
                         await targetUser.AddModerationStrike(moderationReason);
                     }
                     else if (this.ActionType == ModerationActionTypeEnum.RemoveModerationStrike)
@@ -110,7 +111,7 @@ namespace MixItUp.Base.Model.Actions
                             string timeAmountString = await ReplaceStringWithSpecialModifiers(this.TimeoutAmount, parameters);
                             if (uint.TryParse(timeAmountString, out uint timeAmount))
                             {
-                                await ServiceManager.Get<ChatService>().TimeoutUser(targetUser, timeAmount);
+                                await ServiceManager.Get<ChatService>().TimeoutUser(targetUser, timeAmount, moderationReason);
                             }
                         }
                     }

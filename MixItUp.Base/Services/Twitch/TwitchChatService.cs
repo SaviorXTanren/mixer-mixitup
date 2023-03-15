@@ -464,24 +464,24 @@ namespace MixItUp.Base.Services.Twitch
             });
         }
 
-        public async Task TimeoutUser(UserV2ViewModel user, int lengthInSeconds)
+        public async Task TimeoutUser(UserV2ViewModel user, int lengthInSeconds, string reason = null)
         {
             await AsyncRunner.RunAsync(async () =>
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.TimeoutUser(ServiceManager.Get<TwitchSessionService>().User, user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).GetTwitchNewAPIUserModel(), lengthInSeconds);
+                    await this.userClient.TimeoutUser(ServiceManager.Get<TwitchSessionService>().User, user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).GetTwitchNewAPIUserModel(), lengthInSeconds, string.IsNullOrEmpty(reason) ? "Manual Timeout from Mix It Up" : reason);
                 }
             });
         }
 
-        public async Task BanUser(UserV2ViewModel user)
+        public async Task BanUser(UserV2ViewModel user, string reason = null)
         {
             await AsyncRunner.RunAsync(async () =>
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.BanUser(ServiceManager.Get<TwitchSessionService>().User, user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).GetTwitchNewAPIUserModel(), "Manual Ban from Mix It Up");
+                    await this.userClient.BanUser(ServiceManager.Get<TwitchSessionService>().User, user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).GetTwitchNewAPIUserModel(), string.IsNullOrEmpty(reason) ? "Manual Ban from Mix It Up" : reason);
                 }
             });
         }

@@ -283,11 +283,11 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task TimeoutUser(UserV2ViewModel user, uint durationInSeconds)
+        public async Task TimeoutUser(UserV2ViewModel user, uint durationInSeconds, string reason = null)
         {
             if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchChatService>().IsUserConnected)
             {
-                await ServiceManager.Get<TwitchChatService>().TimeoutUser(user, (int)durationInSeconds);
+                await ServiceManager.Get<TwitchChatService>().TimeoutUser(user, (int)durationInSeconds, reason);
             }
 
             if (user.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeChatService>().IsUserConnected)
@@ -344,7 +344,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task BanUser(UserV2ViewModel user)
+        public async Task BanUser(UserV2ViewModel user, string reason = null)
         {
             if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchChatService>().IsUserConnected)
             {
