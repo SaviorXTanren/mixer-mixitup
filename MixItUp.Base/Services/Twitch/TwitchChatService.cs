@@ -850,6 +850,7 @@ namespace MixItUp.Base.Services.Twitch
             if (chatClear.IsClear)
             {
                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, MixItUp.Base.Resources.ChatCleared, ChannelSession.Settings.AlertModerationColor));
+                ChatService.ChatCleared();
             }
             else if (chatClear.IsTimeout)
             {

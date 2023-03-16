@@ -37,6 +37,9 @@ namespace MixItUp.Base.Services
         public static event EventHandler<string> OnChatMessageDeleted = delegate { };
         public static void ChatMessageDeleted(string messageID) { OnChatMessageDeleted(null, messageID); }
 
+        public static event EventHandler OnChatCleared = delegate { };
+        public static void ChatCleared() { OnChatCleared(null, new EventArgs()); }
+
         public static string SplitLargeMessage(string message, int maxLength, out string subMessage)
         {
             subMessage = null;
@@ -273,6 +276,8 @@ namespace MixItUp.Base.Services
                 this.messagesLookup.Clear();
                 this.Messages.Clear();
             }
+
+            ChatService.ChatCleared();
         }
 
         public async Task PurgeUser(UserV2ViewModel user)

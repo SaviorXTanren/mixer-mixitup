@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Chat;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -64,6 +65,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             ChatService.OnChatMessageReceived += ChatService_OnChatMessageReceived;
             ChatService.OnChatMessageDeleted += ChatService_OnChatMessageDeleted;
+            ChatService.OnChatCleared += ChatService_OnChatCleared;
 
             await base.Enable();
         }
@@ -72,6 +74,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             ChatService.OnChatMessageReceived -= ChatService_OnChatMessageReceived;
             ChatService.OnChatMessageDeleted -= ChatService_OnChatMessageDeleted;
+            ChatService.OnChatCleared -= ChatService_OnChatCleared;
 
             await base.Disable();
         }
@@ -82,7 +85,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 ChatMessageViewModel message = new ChatMessageViewModel(Guid.NewGuid().ToString(), ChannelSession.Settings.DefaultStreamingPlatform, ChannelSession.User);
                 message.AddStringMessagePart("This is test message #" + i);
-                this.ChatService_OnChatMessageReceived(this, message);
+                await this.SendMessage(message);
                 await Task.Delay(1000);
             }
         }
@@ -119,14 +122,37 @@ namespace MixItUp.Base.Model.Overlay
             return item;
         }
 
-        private void ChatService_OnChatMessageReceived(object sender, ChatMessageViewModel message)
+        private async void ChatService_OnChatMessageReceived(object sender, ChatMessageViewModel message)
         {
-
+            if (!message.IsWhisper && !message.IsDeleted)
+            {
+                await this.SendMessage(message);
+            }
         }
 
-        private void ChatService_OnChatMessageDeleted(object sender, string messageID)
+        private async void ChatService_OnChatMessageDeleted(object sender, string messageID)
         {
+            await this.Update("ChatDelete", new Dictionary<string, string>()
+            {
+                { "MessageID", messageID }
+            },
+            new CommandParametersModel());
+        }
 
+        private async void ChatService_OnChatCleared(object sender, EventArgs e)
+        {
+            await this.Update("ChatClear", new Dictionary<string, string>() { }, new CommandParametersModel());
+        }
+
+        private async Task SendMessage(ChatMessageViewModel message)
+        {
+            await this.Update("ChatAdd", new Dictionary<string, string>()
+            {
+                { "MessageID", message.ID },
+                { nameof(message.Platform), message.Platform.ToString() },
+                { nameof(message.MessageParts), JSONSerializerHelper.SerializeToString(message.MessageParts) }
+            },
+            new CommandParametersModel(message.User));
         }
     }
 }
