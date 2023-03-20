@@ -13372,12 +13372,12 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .list-{ID} {
+        ///   Looks up a localized string similar to .list {
         ///    width: {ItemWidth};
         ///    {FullHeight}
         ///}
         ///
-        ///.item-{ID} {
+        ///.item {
         ///    position: relative;
         ///    border-style: solid;
         ///    border-width: 5px;
@@ -13387,20 +13387,21 @@ namespace MixItUp.Base {
         ///    {IndividualHeight}
         ///}
         ///
-        ///.message-{ID} {
+        ///.message {
         ///    padding: 10px;
         ///    margin: auto;
         ///}
         ///
-        ///.messagebadge-{ID} {
+        ///.messagebadge {
         ///    vertical-align: middle;
         ///    padding-right: 2px;
         ///    width: auto;
         ///    height: {FontSize}px;
         ///}
         ///
-        ///.messageavatar-{ID} {
-        ///    vertical-align: m [rest of string was truncated]&quot;;.
+        ///.messageavatar {
+        ///    vertical-align: middle;
+        ///    padding-right [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayChatDefaultCSS {
             get {
@@ -13409,30 +13410,34 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;list-{ID}&quot; class=&quot;list-{ID}&quot;&gt;
+        ///   Looks up a localized string similar to &lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;
         ///
         ///&lt;/div&gt;
         ///
-        ///&lt;template id=&quot;item-{ID}&quot;&gt;
-        ///    &lt;div class=&apos;item-{ID}&apos;&gt;
-        ///        &lt;p class=&apos;message-{ID}&apos;&gt;&lt;/p&gt;
+        ///&lt;template id=&quot;item&quot;&gt;
+        ///    &lt;div class=&quot;item&quot;&gt;
+        ///        &lt;p class=&quot;message&quot;&gt;&lt;/p&gt;
         ///    &lt;/div&gt;
         ///&lt;/template&gt;
         ///
-        ///&lt;template id=&quot;messagebadge-{ID}&quot;&gt;
-        ///    &lt;img class=&apos;messagebadge-{ID}&apos; /&gt;
+        ///&lt;template id=&quot;messagebadge&quot;&gt;
+        ///    &lt;img class=&quot;messagebadge&quot; /&gt;
         ///&lt;/template&gt;
         ///
-        ///&lt;template id=&quot;messageavatar-{ID}&quot;&gt;
-        ///    &lt;img class=&apos;messageavatar-{ID}&apos; /&gt;
+        ///&lt;template id=&quot;messageavatar&quot;&gt;
+        ///    &lt;img class=&quot;messageavatar&quot; /&gt;
         ///&lt;/template&gt;
         ///
-        ///&lt;template id=&quot;messageusername-{ID}&quot;&gt;
-        ///    &lt;span class=&apos;messageusername-{ID}&apos;&gt;&lt;/span&gt;
+        ///&lt;template id=&quot;messageusername&quot;&gt;
+        ///    &lt;span class=&quot;messageusername&quot;&gt;&lt;/span&gt;
         ///&lt;/template&gt;
         ///
-        ///&lt;template id=&quot;messagetext-{ID}&quot;&gt;
-        ///    &lt;span class=&apos;message [rest of string was truncated]&quot;;.
+        ///&lt;template id=&quot;messagetext&quot;&gt;
+        ///    &lt;span class=&quot;messagetext&quot;&gt;&lt;/span&gt;
+        ///&lt;/template&gt;
+        ///
+        ///&lt;template id=&quot;messageemote&quot;&gt;
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayChatDefaultHTML {
             get {
@@ -13441,22 +13446,22 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to function {ID}_add(user, messageParts)
+        ///   Looks up a localized string similar to function add(user, messageParts)
         ///{
-        ///    var list = document.getElementById(&quot;list-{ID}&quot;);
+        ///    var list = document.getElementById(&quot;list&quot;);
         ///
         ///    if ({ShowMaxMessagesOnly})
         ///    {
         ///        if (list.childElementCount &gt; {MaxToShow})
         ///        {
-        ///            {ID}_removeOldest();
+        ///            removeOldest();
         ///        }
         ///    }
         ///
-        ///    var itemTemplate = document.querySelector(&quot;#item-{ID}&quot;);
-        ///    var messageBadgeTemplate = document.querySelector(&quot;#messagebadge-{ID}&quot;);
-        ///    var messageAvatarTemplate = document.querySelector(&quot;#messageavatar-{ID}&quot;);
-        ///    var messageUsernameTemplate = docum [rest of string was truncated]&quot;;.
+        ///    var itemTemplate = document.querySelector(&quot;#item&quot;);
+        ///    var messageBadgeTemplate = document.querySelector(&quot;#messagebadge&quot;);
+        ///    var messageAvatarTemplate = document.querySelector(&quot;#messageavatar&quot;);
+        ///    var messageUsernameTemplate = document.querySelector(&quot;#messageuse [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayChatDefaultJavascript {
             get {
@@ -13510,12 +13515,12 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .list-{ID} {
+        ///   Looks up a localized string similar to .list {
         ///    width: {ItemWidth};
         ///    {FullHeight}
         ///}
         ///
-        ///.item-{ID} {
+        ///.item {
         ///    position: relative;
         ///    border-style: solid;
         ///    border-width: 5px;
@@ -13525,20 +13530,21 @@ namespace MixItUp.Base {
         ///    {IndividualHeight}
         ///}
         ///
-        ///.message-{ID} {
+        ///.message {
         ///    padding: 10px;
         ///    margin: auto;
         ///}
         ///
-        ///.messagebadge-{ID} {
+        ///.messagebadge {
         ///    vertical-align: middle;
         ///    padding-right: 2px;
         ///    width: auto;
         ///    height: {FontSize}px;
         ///}
         ///
-        ///.messageavatar-{ID} {
-        ///    vertical-align: m [rest of string was truncated]&quot;;.
+        ///.messageavatar {
+        ///    vertical-align: middle;
+        ///    padding-right [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEventListDefaultCSS {
             get {
@@ -13547,15 +13553,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;list-{ID}&quot; class=&quot;list-{ID}&quot;&gt;
+        ///   Looks up a localized string similar to &lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;
         ///
         ///&lt;/div&gt;
         ///
-        ///&lt;template id=&quot;item-{ID}&quot;&gt;
-        ///    &lt;div class=&apos;item-{ID}&apos;&gt;
-        ///        &lt;p class=&apos;eventtype-{ID}&apos;&gt;{EventType}&lt;/p&gt;
-        ///        &lt;p class=&apos;details-{ID}&apos;&gt;{Details}&lt;/p&gt;
-        ///        &lt;p class=&apos;subdetails-{ID}&apos;&gt;{SubDetails}&lt;/p&gt;
+        ///&lt;template id=&quot;item&quot;&gt;
+        ///    &lt;div class=&quot;item&quot;&gt;
+        ///        &lt;p class=&quot;eventtype&quot;&gt;{EventType}&lt;/p&gt;
+        ///        &lt;p class=&quot;details&quot;&gt;{Details}&lt;/p&gt;
+        ///        &lt;p class=&quot;subdetails&quot;&gt;{SubDetails}&lt;/p&gt;
         ///    &lt;/div&gt;
         ///&lt;/template&gt;.
         /// </summary>
@@ -13566,22 +13572,23 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to function {ID}_add(eventType, details, subdetails)
+        ///   Looks up a localized string similar to function add(eventType, details, subdetails)
         ///{
-        ///    var list = document.getElementById(&quot;list-{ID}&quot;);
+        ///    var list = document.getElementById(&quot;list&quot;);
         ///
         ///    if (list.childElementCount &gt; {MaxToShow}) {
-        ///        {ID}_removeOldest();
+        ///        removeOldest();
         ///    }
         ///
-        ///    var itemTemplate = document.querySelector(&quot;#item-{ID}&quot;);
+        ///    var itemTemplate = document.querySelector(&quot;#item&quot;);
         ///    const item = itemTemplate.content.cloneNode(true);
         ///    
-        ///    var eventTypeElement = item.querySelector(&quot;.eventtype-{ID}&quot;);
+        ///    var eventTypeElement = item.querySelector(&quot;.eventtype&quot;);
         ///    eventTypeElement.innerHTML = eventType;
         ///
-        ///    var detailsElement = item.querySelector(&quot;.details-{ID}&quot;);
-        ///    detailsEl [rest of string was truncated]&quot;;.
+        ///    var detailsElement = item.querySelector(&quot;.details&quot;);
+        ///    detailsElement.innerHTML = details;
+        ///   [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayEventListDefaultJavascript {
             get {
@@ -13590,7 +13597,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .background-{ID}
+        ///   Looks up a localized string similar to .background
         ///{
         ///    position: absolute;
         ///    background-color: {BackgroundColor};
@@ -13598,14 +13605,14 @@ namespace MixItUp.Base {
         ///    height: {Height}px;
         ///}
         ///
-        ///.progress-{ID}
+        ///.progress
         ///{
         ///    position: absolute;
         ///    background-color: {ProgressColor};
         ///    height: {Height}px;
         ///}
         ///
-        ///.text-{ID} {
+        ///.text {
         ///    position: absolute;
         ///    font-size: {FontSize}px;
         ///    color: {FontColor};
@@ -13613,7 +13620,8 @@ namespace MixItUp.Base {
         ///    font-weight: {FontWeight};
         ///    text-decoration: {TextDecoration};
         ///    font-style: {FontStyle};
-        ///    text-align: {TextAlignm [rest of string was truncated]&quot;;.
+        ///    text-align: {TextAlignment};
+        ///    text [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayGoalDefaultCSS {
             get {
@@ -13622,10 +13630,10 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div class=&quot;background-{ID}&quot;&gt;
-        ///  &lt;div id=&quot;progress-{ID}&quot; class=&quot;progress-{ID}&quot; /&gt;
+        ///   Looks up a localized string similar to &lt;div class=&quot;background&quot;&gt;
+        ///  &lt;div id=&quot;progress&quot; class=&quot;progress&quot; /&gt;
         ///&lt;/div&gt;
-        ///&lt;p id=&quot;text-{ID}&quot; class=&quot;text-{ID}&quot; /&gt;.
+        ///&lt;p id=&quot;text&quot; class=&quot;text&quot; /&gt;.
         /// </summary>
         public static string OverlayGoalDefaultHTML {
             get {
@@ -13634,22 +13642,22 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to function update_{ID}(amount, goal, width)
+        ///   Looks up a localized string similar to function update(amount, goal, width)
         ///{
         ///    var percentage = (amount / goal)
         ///
-        ///    var textElement = document.getElementById(&quot;text-{ID}&quot;);
+        ///    var textElement = document.getElementById(&quot;text&quot;);
         ///    if (textElement != null) {
         ///        textElement.innerHTML = amount + &quot; (&quot; + Math.round(percentage * 100) + &quot;%)&quot;; 
         ///    }
         ///    
-        ///    var progressElement = document.getElementById(&quot;progress-{ID}&quot;);
+        ///    var progressElement = document.getElementById(&quot;progress&quot;);
         ///    if (progressElement != null) {
         ///        progressElement.style.width = Math.min(Math.round(percentage * width), width) + &quot;px&quot;;
         ///    }
         ///}
         ///
-        ///update_{ID}({CurrentA [rest of string was truncated]&quot;;.
+        ///update({CurrentAmount}, {GoalAmount} [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayGoalDefaultJavascript {
             get {
@@ -13667,7 +13675,18 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .image-{ID} {
+        ///   Looks up a localized string similar to &lt;div id=&quot;div-{ID}&quot; style=&quot;display: block; position: absolute; top: 0px; left: 0px&quot;&gt;
+        ///    &lt;iframe id=&quot;iframe-{ID}&quot; frameborder=&quot;0&quot; allowtransparency=&quot;yes&quot; scrolling=&quot;no&quot; style=&quot;border: none; width: 100%; height: 100%; position: absolute; top: 0px; left: 0px; margin: 0; padding: 0;&quot; /&gt;
+        ///&lt;/div&gt;.
+        /// </summary>
+        public static string OverlayIFrameContainerDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayIFrameContainerDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .image {
         ///    width: {Width};
         ///    height: {Height};
         ///}.
@@ -13679,7 +13698,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;img id=&quot;image-{ID}&quot; class=&quot;image-{ID}&quot; src=&quot;{FilePath}&quot; /&gt;.
+        ///   Looks up a localized string similar to &lt;img id=&quot;image&quot; class=&quot;image&quot; src=&quot;{FilePath}&quot; /&gt;.
         /// </summary>
         public static string OverlayImageDefaultHTML {
             get {
@@ -13742,7 +13761,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;label-amount-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
+        ///   Looks up a localized string similar to &lt;p id=&quot;label-amount&quot; class=&quot;text&quot;&gt;
         ///        {Amount}
         ///&lt;/p&gt;.
         /// </summary>
@@ -13762,14 +13781,14 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to function {ID}_update(name, amount)
+        ///   Looks up a localized string similar to function update(name, amount)
         ///{
-        ///    var nameElement = document.getElementById(&quot;label-name-{ID}&quot;);
+        ///    var nameElement = document.getElementById(&quot;label-name&quot;);
         ///    if (nameElement != null) {
         ///        nameElement.innerHTML = name;
         ///    }
         ///    
-        ///    var amountElement = document.getElementById(&quot;label-amount-{ID}&quot;);
+        ///    var amountElement = document.getElementById(&quot;label-amount&quot;);
         ///    if (amountElement != null) {
         ///        amountElement.innerHTML = amount; 
         ///    }
@@ -13782,12 +13801,12 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p class=&quot;text-{ID}&quot;&gt;
-        ///    &lt;span id=&quot;label-name-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
+        ///   Looks up a localized string similar to &lt;p class=&quot;text&quot;&gt;
+        ///    &lt;span id=&quot;label-name&quot; class=&quot;text&quot;&gt;
         ///        {Username}
         ///    &lt;/span&gt;
         ///    -
-        ///    &lt;span id=&quot;label-amount-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
+        ///    &lt;span id=&quot;label-amount&quot; class=&quot;text&quot;&gt;
         ///        {Amount}
         ///    &lt;/span&gt;
         ///&lt;/p&gt;.
@@ -13799,7 +13818,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;label-name-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
+        ///   Looks up a localized string similar to &lt;p id=&quot;label-name&quot; class=&quot;text&quot;&gt;
         ///    {Username}
         ///&lt;/p&gt;.
         /// </summary>
@@ -13846,7 +13865,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .outerdiv-{ID} {
+        ///   Looks up a localized string similar to .outerdiv {
         ///    position: absolute;
         ///    width: 100%;
         ///    max-width: 100%;
@@ -13858,7 +13877,7 @@ namespace MixItUp.Base {
         ///    z-index: {Layer};
         ///}
         ///
-        ///.innerdiv-{ID} {
+        ///.innerdiv {
         ///    position: absolute;
         ///    margin: 0px;
         ///    left: {XPosition}{PositionType};
@@ -13875,8 +13894,8 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;outerdiv-{ID}&quot; class=&quot;outerdiv-{ID}&quot;&gt;
-        ///&lt;div id=&quot;innerdiv-{ID}&quot; class=&quot;innerdiv-{ID}&quot;&gt;
+        ///   Looks up a localized string similar to &lt;div id=&quot;outerdiv&quot; class=&quot;outerdiv&quot;&gt;
+        ///&lt;div id=&quot;innerdiv&quot; class=&quot;innerdiv&quot;&gt;
         ///
         ///{InnerHTML}
         ///
@@ -13917,7 +13936,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .text-{ID} {
+        ///   Looks up a localized string similar to .text {
         ///    font-size: {FontSize}px;
         ///    color: {FontColor};
         ///    font-family: &apos;{FontFamily}&apos;;
@@ -13935,7 +13954,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;text-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
+        ///   Looks up a localized string similar to &lt;p id=&quot;text&quot; class=&quot;text&quot;&gt;
         ///    {Text}
         ///&lt;/p&gt;.
         /// </summary>
@@ -13955,7 +13974,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;text-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
+        ///   Looks up a localized string similar to &lt;p id=&quot;text&quot; class=&quot;text&quot;&gt;
         ///    {Text}
         ///&lt;/p&gt;.
         /// </summary>
@@ -13966,12 +13985,12 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to var {ID}_additionalTime = 0;
+        ///   Looks up a localized string similar to var additionalTime = 0;
         ///
-        ///function {ID}_timerLoop(totalSeconds, endingSeconds, displayFormat)
+        ///function timerLoop(totalSeconds, endingSeconds, displayFormat)
         ///{
-        ///    totalSeconds += {ID}_additionalTime;
-        ///    {ID}_additionalTime = 0;
+        ///    totalSeconds += additionalTime;
+        ///    additionalTime = 0;
         ///
         ///    var text = displayFormat;
         ///
@@ -13982,7 +14001,7 @@ namespace MixItUp.Base {
         ///
         ///    var totalMinutes = Math.floor(totalSeconds / 60);
         ///    var minutes = totalMinutes % 60;
-        ///    if (minutes &lt; 10) { minute [rest of string was truncated]&quot;;.
+        ///    if (minutes &lt; 10) { minutes = &quot;0&quot; + minutes }        /// [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayTimerDefaultJavascript {
             get {
@@ -14012,7 +14031,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;video id=&quot;video-{ID}&quot; class=&quot;video-{ID}&quot; onloadstart=&quot;this.volume={Volume}&quot; allow=&quot;autoplay; encrypted-media&quot; autoplay {Loop}&gt;
+        ///   Looks up a localized string similar to &lt;video id=&quot;video&quot; class=&quot;video&quot; onloadstart=&quot;this.volume={Volume}&quot; allow=&quot;autoplay; encrypted-media&quot; autoplay {Loop}&gt;
         ///    &lt;source src=&quot;{FilePath}&quot; type=&quot;video/{VideoExtension}&quot; /&gt;
         ///&lt;/video&gt;.
         /// </summary>
@@ -14050,7 +14069,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;iframe frameborder=&quot;0&quot; width=&quot;{WIDTH}&quot; height=&quot;{HEIGHT}&quot; src=&quot;{URL}&quot; /&gt;.
+        ///   Looks up a localized string similar to &lt;iframe frameborder=&quot;0&quot; allowtransparency=&quot;yes&quot; scrolling=&quot;no&quot; width=&quot;{WIDTH}&quot; height=&quot;{HEIGHT}&quot; src=&quot;{URL}&quot; /&gt;.
         /// </summary>
         public static string OverlayWebPageDefaultHTML {
             get {

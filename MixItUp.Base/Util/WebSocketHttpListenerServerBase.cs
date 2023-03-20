@@ -65,13 +65,20 @@ namespace MixItUp.Base.Util
                 if (listenerContext.Request.IsWebSocketRequest)
                 {
                     WebSocketServerBase webSocketServer = this.CreateWebSocketServer(listenerContext);
-                    this.webSocketServers.Add(webSocketServer);
-                    webSocketServer.OnConnectedOccurred += WebSocketServer_OnConnectedOccurred;
-                    webSocketServer.OnDisconnectOccurred += WebSocketServer_OnDisconnectOccurred;
+                    if (webSocketServer != null)
+                    {
+                        this.webSocketServers.Add(webSocketServer);
+                        webSocketServer.OnConnectedOccurred += WebSocketServer_OnConnectedOccurred;
+                        webSocketServer.OnDisconnectOccurred += WebSocketServer_OnDisconnectOccurred;
 
-                    await webSocketServer.Initialize();
+                        await webSocketServer.Initialize();
 
-                    listenerContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                        listenerContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                    }
+                    else
+                    {
+                        listenerContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    }
                 }
                 else
                 {

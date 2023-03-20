@@ -42,7 +42,7 @@ namespace MixItUp.Base.Util
 
                 if (ChannelSession.AppSettings.DiagnosticLogging)
                 {
-                    await this.Send(new WebSocketPacket() { type = "debug" });
+                    await this.Send(new WebSocketPacket() { type = "Debug" });
                 }
 
                 this.OnConnectedOccurred(this, new EventArgs());
@@ -61,7 +61,7 @@ namespace MixItUp.Base.Util
         {
             this.connectionTestSuccessful = false;
 
-            await this.Send(new WebSocketPacket() { type = "test" });
+            await this.Send(new WebSocketPacket() { type = "Test" });
 
             await this.WaitForSuccess(() => this.connectionTestSuccessful);
 
@@ -88,11 +88,11 @@ namespace MixItUp.Base.Util
             if (!string.IsNullOrEmpty(packetJSON))
             {
                 JObject packetObj = JObject.Parse(packetJSON);
-                if (packetObj["type"].ToString().Equals("exception"))
+                if (packetObj["Type"].ToString().Equals("Exception"))
                 {
-                    Logger.Log("WebSocket Client Exception: " + packetObj["data"].ToString());
+                    Logger.Log("WebSocket Client Exception: " + packetObj["Data"].ToString());
                 }
-                else if (packetObj["type"].ToString().Equals("test"))
+                else if (packetObj["Type"].ToString().Equals("Test"))
                 {
                     this.connectionTestSuccessful = true;
                 }

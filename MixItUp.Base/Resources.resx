@@ -9070,12 +9070,12 @@ via Twitch, it's a "your mileage may vary" situation.</value>
     <value>Enable Subscriber Mode</value>
   </data>
   <data name="OverlayTimerDefaultJavascript" xml:space="preserve">
-    <value>var {ID}_additionalTime = 0;
+    <value>var additionalTime = 0;
 
-function {ID}_timerLoop(totalSeconds, endingSeconds, displayFormat)
+function timerLoop(totalSeconds, endingSeconds, displayFormat)
 {
-    totalSeconds += {ID}_additionalTime;
-    {ID}_additionalTime = 0;
+    totalSeconds += additionalTime;
+    additionalTime = 0;
 
     var text = displayFormat;
 
@@ -9099,50 +9099,50 @@ function {ID}_timerLoop(totalSeconds, endingSeconds, displayFormat)
     var days = Math.floor(totalHours / 24);
     text = text.replace("DD", hours);
 
-    document.getElementById("text-{ID}").innerHTML = text;
+    document.getElementById("text").innerHTML = text;
 
     setTimeout(function () {
         if (endingSeconds &gt; 0) {
             totalSeconds++;
             if (totalSeconds &lt; endingSeconds) {
-                {ID}_timerLoop(totalSeconds, endingSeconds, displayFormat);
+                timerLoop(totalSeconds, endingSeconds, displayFormat);
             }        
         }
         else {
             totalSeconds--;
             if (totalSeconds &gt;= 0) {
-                {ID}_timerLoop(totalSeconds, endingSeconds, displayFormat);
+                timerLoop(totalSeconds, endingSeconds, displayFormat);
             }
         }
     }, 1000);
 }
 
-function {ID}_adjustTime(time)
+function adjustTime(time)
 {
-    {ID}_additionalTime += time;
+    additionalTime += time;
 }
 
-function {ID}_load()
+function load()
 {
     if ({CountUp}) {
-        {ID}_timerLoop(0, {Duration}, "{DisplayFormat}");  
+        timerLoop(0, {Duration}, "{DisplayFormat}");  
     }
     else {
-        {ID}_timerLoop({Duration}, 0, "{DisplayFormat}");
+        timerLoop({Duration}, 0, "{DisplayFormat}");
     }
 }</value>
   </data>
   <data name="OverlayImageDefaultCSS" xml:space="preserve">
-    <value>.image-{ID} {
+    <value>.image {
     width: {Width};
     height: {Height};
 }</value>
   </data>
   <data name="OverlayImageDefaultHTML" xml:space="preserve">
-    <value>&lt;img id="image-{ID}" class="image-{ID}" src="{FilePath}" /&gt;</value>
+    <value>&lt;img id="image" class="image" src="{FilePath}" /&gt;</value>
   </data>
   <data name="OverlayTextDefaultCSS" xml:space="preserve">
-    <value>.text-{ID} {
+    <value>.text {
     font-size: {FontSize}px;
     color: {FontColor};
     font-family: '{FontFamily}';
@@ -9154,7 +9154,7 @@ function {ID}_load()
 }</value>
   </data>
   <data name="OverlayTextDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="text-{ID}" class="text-{ID}"&gt;
+    <value>&lt;p id="text" class="text"&gt;
     {Text}
 &lt;/p&gt;</value>
   </data>
@@ -9165,12 +9165,12 @@ function {ID}_load()
 }</value>
   </data>
   <data name="OverlayVideoDefaultHTML" xml:space="preserve">
-    <value>&lt;video id="video-{ID}" class="video-{ID}" onloadstart="this.volume={Volume}" allow="autoplay; encrypted-media" autoplay {Loop}&gt;
+    <value>&lt;video id="video" class="video" onloadstart="this.volume={Volume}" allow="autoplay; encrypted-media" autoplay {Loop}&gt;
     &lt;source src="{FilePath}" type="video/{VideoExtension}" /&gt;
 &lt;/video&gt;</value>
   </data>
   <data name="OverlayWebPageDefaultHTML" xml:space="preserve">
-    <value>&lt;iframe frameborder="0" width="{WIDTH}" height="{HEIGHT}" src="{URL}" /&gt;</value>
+    <value>&lt;iframe frameborder="0" allowtransparency="yes" scrolling="no" width="{WIDTH}" height="{HEIGHT}" src="{URL}" /&gt;</value>
   </data>
   <data name="OverlayYouTubeDefaultHTML" xml:space="preserve">
     <value>&lt;div id="{ID}" /&gt;</value>
@@ -9179,12 +9179,12 @@ function {ID}_load()
     <value>Display Format</value>
   </data>
   <data name="OverlayTimerDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="text-{ID}" class="text-{ID}"&gt;
+    <value>&lt;p id="text" class="text"&gt;
     {Text}
 &lt;/p&gt;</value>
   </data>
   <data name="OverlayPositionedItemDefaultCSS" xml:space="preserve">
-    <value>.outerdiv-{ID} {
+    <value>.outerdiv {
     position: absolute;
     width: 100%;
     max-width: 100%;
@@ -9196,7 +9196,7 @@ function {ID}_load()
     z-index: {Layer};
 }
 
-.innerdiv-{ID} {
+.innerdiv {
     position: absolute;
     margin: 0px;
     left: {XPosition}{PositionType};
@@ -9207,8 +9207,8 @@ function {ID}_load()
 }</value>
   </data>
   <data name="OverlayPositionedItemDefaultHTML" xml:space="preserve">
-    <value>&lt;div id="outerdiv-{ID}" class="outerdiv-{ID}"&gt;
-&lt;div id="innerdiv-{ID}" class="innerdiv-{ID}"&gt;
+    <value>&lt;div id="outerdiv" class="outerdiv"&gt;
+&lt;div id="innerdiv" class="innerdiv"&gt;
 
 {InnerHTML}
 
@@ -9304,35 +9304,35 @@ namespace CustomNamespace
     <value>Commands containing Script actions are not supported for uploading to the Community Commands feature. Due to the complexity of scripts and the ability for them to have malicious intent for users, we do not support uploading them through Community Commands to ensure users are protected. You can optionally instead export your command to a file and share it out with users through other means.</value>
   </data>
   <data name="OverlayLabelAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="label-amount-{ID}" class="text-{ID}"&gt;
+    <value>&lt;p id="label-amount" class="text"&gt;
         {Amount}
 &lt;/p&gt;</value>
   </data>
   <data name="OverlayLabelNameAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p class="text-{ID}"&gt;
-    &lt;span id="label-name-{ID}" class="text-{ID}"&gt;
+    <value>&lt;p class="text"&gt;
+    &lt;span id="label-name" class="text"&gt;
         {Username}
     &lt;/span&gt;
     -
-    &lt;span id="label-amount-{ID}" class="text-{ID}"&gt;
+    &lt;span id="label-amount" class="text"&gt;
         {Amount}
     &lt;/span&gt;
 &lt;/p&gt;</value>
   </data>
   <data name="OverlayLabelNameDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="label-name-{ID}" class="text-{ID}"&gt;
+    <value>&lt;p id="label-name" class="text"&gt;
     {Username}
 &lt;/p&gt;</value>
   </data>
   <data name="OverlayLabelDefaultJavascript" xml:space="preserve">
-    <value>function {ID}_update(name, amount)
+    <value>function update(name, amount)
 {
-    var nameElement = document.getElementById("label-name-{ID}");
+    var nameElement = document.getElementById("label-name");
     if (nameElement != null) {
         nameElement.innerHTML = name;
     }
     
-    var amountElement = document.getElementById("label-amount-{ID}");
+    var amountElement = document.getElementById("label-amount");
     if (amountElement != null) {
         amountElement.innerHTML = amount; 
     }
@@ -9354,12 +9354,12 @@ namespace CustomNamespace
     <value>Donation</value>
   </data>
   <data name="OverlayEventListDefaultCSS" xml:space="preserve">
-    <value>.list-{ID} {
+    <value>.list {
     width: {ItemWidth};
     {FullHeight}
 }
 
-.item-{ID} {
+.item {
     position: relative;
     border-style: solid;
     border-width: 5px;
@@ -9369,26 +9369,26 @@ namespace CustomNamespace
     {IndividualHeight}
 }
 
-.message-{ID} {
+.message {
     padding: 10px;
     margin: auto;
 }
 
-.messagebadge-{ID} {
+.messagebadge {
     vertical-align: middle;
     padding-right: 2px;
     width: auto;
     height: {FontSize}px;
 }
 
-.messageavatar-{ID} {
+.messageavatar {
     vertical-align: middle;
     padding-right: 2px;
     width: auto;
     height: {FontSize}px;
 }
 
-.messageusername-{ID} {
+.messageusername {
     vertical-align: middle;
     word-wrap: break-word;
     font-size: {FontSize}px;
@@ -9399,7 +9399,7 @@ namespace CustomNamespace
     text-shadow: {Shadow};
 }
 
-.messagetext-{ID} {
+.messagetext {
     vertical-align: middle;
     margin-left: 10px;
     word-wrap: break-word;
@@ -9413,7 +9413,7 @@ namespace CustomNamespace
     text-shadow: {Shadow};
 }
 
-.messageemote-{ID} {
+.messageemote {
    vertical-align: middle;
    margin-left: 10px;
    width: auto;
@@ -9421,45 +9421,45 @@ namespace CustomNamespace
 }</value>
   </data>
   <data name="OverlayEventListDefaultHTML" xml:space="preserve">
-    <value>&lt;div id="list-{ID}" class="list-{ID}"&gt;
+    <value>&lt;div id="list" class="list"&gt;
 
 &lt;/div&gt;
 
-&lt;template id="item-{ID}"&gt;
-    &lt;div class='item-{ID}'&gt;
-        &lt;p class='eventtype-{ID}'&gt;{EventType}&lt;/p&gt;
-        &lt;p class='details-{ID}'&gt;{Details}&lt;/p&gt;
-        &lt;p class='subdetails-{ID}'&gt;{SubDetails}&lt;/p&gt;
+&lt;template id="item"&gt;
+    &lt;div class="item"&gt;
+        &lt;p class="eventtype"&gt;{EventType}&lt;/p&gt;
+        &lt;p class="details"&gt;{Details}&lt;/p&gt;
+        &lt;p class="subdetails"&gt;{SubDetails}&lt;/p&gt;
     &lt;/div&gt;
 &lt;/template&gt;</value>
   </data>
   <data name="OverlayEventListDefaultJavascript" xml:space="preserve">
-    <value>function {ID}_add(eventType, details, subdetails)
+    <value>function add(eventType, details, subdetails)
 {
-    var list = document.getElementById("list-{ID}");
+    var list = document.getElementById("list");
 
     if (list.childElementCount &gt; {MaxToShow}) {
-        {ID}_removeOldest();
+        removeOldest();
     }
 
-    var itemTemplate = document.querySelector("#item-{ID}");
+    var itemTemplate = document.querySelector("#item");
     const item = itemTemplate.content.cloneNode(true);
     
-    var eventTypeElement = item.querySelector(".eventtype-{ID}");
+    var eventTypeElement = item.querySelector(".eventtype");
     eventTypeElement.innerHTML = eventType;
 
-    var detailsElement = item.querySelector(".details-{ID}");
+    var detailsElement = item.querySelector(".details");
     detailsElement.innerHTML = details;
     
-    var subdetailsElement = item.querySelector(".subdetails-{ID}");
+    var subdetailsElement = item.querySelector(".subdetails");
     subdetailsElement.innerHTML = subdetails;
 
     list.appendChild(item);
 }
 
-function {ID}_removeOldest()
+function removeOldest()
 {
-    var list = document.getElementById("list-{ID}");
+    var list = document.getElementById("list");
     list.removeChild(list.firstElementChild);
 }</value>
   </data>
@@ -9470,7 +9470,7 @@ function {ID}_removeOldest()
     <value>{0} Donated {1} To The Twitch Charity</value>
   </data>
   <data name="OverlayGoalDefaultCSS" xml:space="preserve">
-    <value>.background-{ID}
+    <value>.background
 {
     position: absolute;
     background-color: {BackgroundColor};
@@ -9478,14 +9478,14 @@ function {ID}_removeOldest()
     height: {Height}px;
 }
 
-.progress-{ID}
+.progress
 {
     position: absolute;
     background-color: {ProgressColor};
     height: {Height}px;
 }
 
-.text-{ID} {
+.text {
     position: absolute;
     font-size: {FontSize}px;
     color: {FontColor};
@@ -9502,28 +9502,28 @@ function {ID}_removeOldest()
 }</value>
   </data>
   <data name="OverlayGoalDefaultHTML" xml:space="preserve">
-    <value>&lt;div class="background-{ID}"&gt;
-  &lt;div id="progress-{ID}" class="progress-{ID}" /&gt;
+    <value>&lt;div class="background"&gt;
+  &lt;div id="progress" class="progress" /&gt;
 &lt;/div&gt;
-&lt;p id="text-{ID}" class="text-{ID}" /&gt;</value>
+&lt;p id="text" class="text" /&gt;</value>
   </data>
   <data name="OverlayGoalDefaultJavascript" xml:space="preserve">
-    <value>function update_{ID}(amount, goal, width)
+    <value>function update(amount, goal, width)
 {
     var percentage = (amount / goal)
 
-    var textElement = document.getElementById("text-{ID}");
+    var textElement = document.getElementById("text");
     if (textElement != null) {
         textElement.innerHTML = amount + " (" + Math.round(percentage * 100) + "%)"; 
     }
     
-    var progressElement = document.getElementById("progress-{ID}");
+    var progressElement = document.getElementById("progress");
     if (progressElement != null) {
         progressElement.style.width = Math.min(Math.round(percentage * width), width) + "px";
     }
 }
 
-update_{ID}({CurrentAmount}, {GoalAmount}, {Width});</value>
+update({CurrentAmount}, {GoalAmount}, {Width});</value>
   </data>
   <data name="TwitchChannelCharityDonation" xml:space="preserve">
     <value>Twitch Channel Charity Donation</value>
@@ -9595,43 +9595,43 @@ update_{ID}({CurrentAmount}, {GoalAmount}, {Width});</value>
     <value>Width must be a valid value</value>
   </data>
   <data name="OverlayChatDefaultHTML" xml:space="preserve">
-    <value>&lt;div id="list-{ID}" class="list-{ID}"&gt;
+    <value>&lt;div id="list" class="list"&gt;
 
 &lt;/div&gt;
 
-&lt;template id="item-{ID}"&gt;
-    &lt;div class='item-{ID}'&gt;
-        &lt;p class='message-{ID}'&gt;&lt;/p&gt;
+&lt;template id="item"&gt;
+    &lt;div class="item"&gt;
+        &lt;p class="message"&gt;&lt;/p&gt;
     &lt;/div&gt;
 &lt;/template&gt;
 
-&lt;template id="messagebadge-{ID}"&gt;
-    &lt;img class='messagebadge-{ID}' /&gt;
+&lt;template id="messagebadge"&gt;
+    &lt;img class="messagebadge" /&gt;
 &lt;/template&gt;
 
-&lt;template id="messageavatar-{ID}"&gt;
-    &lt;img class='messageavatar-{ID}' /&gt;
+&lt;template id="messageavatar"&gt;
+    &lt;img class="messageavatar" /&gt;
 &lt;/template&gt;
 
-&lt;template id="messageusername-{ID}"&gt;
-    &lt;span class='messageusername-{ID}'&gt;&lt;/span&gt;
+&lt;template id="messageusername"&gt;
+    &lt;span class="messageusername"&gt;&lt;/span&gt;
 &lt;/template&gt;
 
-&lt;template id="messagetext-{ID}"&gt;
-    &lt;span class='messagetext-{ID}'&gt;&lt;/span&gt;
+&lt;template id="messagetext"&gt;
+    &lt;span class="messagetext"&gt;&lt;/span&gt;
 &lt;/template&gt;
 
-&lt;template id="messageemote-{ID}"&gt;
-    &lt;img class='messageemote-{ID}' /&gt;
+&lt;template id="messageemote"&gt;
+    &lt;img class="messageemote" /&gt;
 &lt;/template&gt;</value>
   </data>
   <data name="OverlayChatDefaultCSS" xml:space="preserve">
-    <value>.list-{ID} {
+    <value>.list {
     width: {ItemWidth};
     {FullHeight}
 }
 
-.item-{ID} {
+.item {
     position: relative;
     border-style: solid;
     border-width: 5px;
@@ -9641,26 +9641,26 @@ update_{ID}({CurrentAmount}, {GoalAmount}, {Width});</value>
     {IndividualHeight}
 }
 
-.message-{ID} {
+.message {
     padding: 10px;
     margin: auto;
 }
 
-.messagebadge-{ID} {
+.messagebadge {
     vertical-align: middle;
     padding-right: 2px;
     width: auto;
     height: {FontSize}px;
 }
 
-.messageavatar-{ID} {
+.messageavatar {
     vertical-align: middle;
     padding-right: 2px;
     width: auto;
     height: {FontSize}px;
 }
 
-.messageusername-{ID} {
+.messageusername {
     vertical-align: middle;
     word-wrap: break-word;
     font-size: {FontSize}px;
@@ -9671,7 +9671,7 @@ update_{ID}({CurrentAmount}, {GoalAmount}, {Width});</value>
     text-shadow: {Shadow};
 }
 
-.messagetext-{ID} {
+.messagetext {
     vertical-align: middle;
     margin-left: 10px;
     word-wrap: break-word;
@@ -9685,7 +9685,7 @@ update_{ID}({CurrentAmount}, {GoalAmount}, {Width});</value>
     text-shadow: {Shadow};
 }
 
-.messageemote-{ID} {
+.messageemote {
    vertical-align: middle;
    margin-left: 10px;
    width: auto;
@@ -9693,27 +9693,27 @@ update_{ID}({CurrentAmount}, {GoalAmount}, {Width});</value>
 }</value>
   </data>
   <data name="OverlayChatDefaultJavascript" xml:space="preserve">
-    <value>function {ID}_add(user, messageParts)
+    <value>function add(user, messageParts)
 {
-    var list = document.getElementById("list-{ID}");
+    var list = document.getElementById("list");
 
     if ({ShowMaxMessagesOnly})
     {
         if (list.childElementCount &gt; {MaxToShow})
         {
-            {ID}_removeOldest();
+            removeOldest();
         }
     }
 
-    var itemTemplate = document.querySelector("#item-{ID}");
-    var messageBadgeTemplate = document.querySelector("#messagebadge-{ID}");
-    var messageAvatarTemplate = document.querySelector("#messageavatar-{ID}");
-    var messageUsernameTemplate = document.querySelector("#messageusername-{ID}");
-    var messageTextTemplate = document.querySelector("#messagetext-{ID}");
-    var messageEmoteTemplate = document.querySelector("#messageemote-{ID}");
+    var itemTemplate = document.querySelector("#item");
+    var messageBadgeTemplate = document.querySelector("#messagebadge");
+    var messageAvatarTemplate = document.querySelector("#messageavatar");
+    var messageUsernameTemplate = document.querySelector("#messageusername");
+    var messageTextTemplate = document.querySelector("#messagetext");
+    var messageEmoteTemplate = document.querySelector("#messageemote");
     
     const item = itemTemplate.content.cloneNode(true);
-    var messageElement = item.querySelector(".message-{ID}");
+    var messageElement = item.querySelector(".message");
     
     const messageRoleBadge = messageBadgeTemplate.content.cloneNode(true);
     messageRoleBadge.src = user.PlatformRoleBadgeLink;
@@ -9751,10 +9751,15 @@ update_{ID}({CurrentAmount}, {GoalAmount}, {Width});</value>
     list.appendChild(item);
 }
 
-function {ID}_removeOldest()
+function removeOldest()
 {
-    var list = document.getElementById("list-{ID}");
+    var list = document.getElementById("list");
     list.removeChild(list.firstElementChild);
 }</value>
+  </data>
+  <data name="OverlayIFrameContainerDefaultHTML" xml:space="preserve">
+    <value>&lt;div id="div-{ID}" style="display: block; position: absolute; top: 0px; left: 0px"&gt;
+    &lt;iframe id="iframe-{ID}" frameborder="0" allowtransparency="yes" scrolling="no" style="border: none; width: 100%; height: 100%; position: absolute; top: 0px; left: 0px; margin: 0; padding: 0;" /&gt;
+&lt;/div&gt;</value>
   </data>
 </root>

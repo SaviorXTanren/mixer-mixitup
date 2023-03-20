@@ -20,18 +20,18 @@ function openWebsocketConnectionWithAddress(address, port) {
         // When the connection is open, send some data to the server
         connection.onopen = function () {
             connectionOpened();
-            sendPacket('ping', '');
+            sendPacket('Ping', '');
         };
 
         // Log messages from the server
         connection.onmessage = function (e) {
             var packet = getDataFromJSON(e.data);
             if (packet !== null && typeof packet.type !== 'undefined') {
-                if (packet.type === "debug") {
+                if (packet.type === "Debug") {
                     isDebug = true;
                 }
-                else if (packet.type === "test") {
-                    sendPacket('test', '');
+                else if (packet.type === "Test") {
+                    sendPacket('Test', '');
                 }
             }
             packetReceived(packet);
@@ -53,7 +53,7 @@ function openWebsocketConnectionWithAddress(address, port) {
 function sendPacket(type, data) {
     try {
         if (connection !== null && connection.readyState === WebSocket.OPEN) {
-            var packet = { type: type, data: data };
+            var packet = { Type: type, Data: data };
             connection.send(JSON.stringify(packet));
         }
     }
