@@ -370,10 +370,12 @@ namespace MixItUp.Base.Services.Twitch
                     message.Payload.Session.Id,
                     version: version);
             }
-            catch (HttpRestRequestException ex)
+            catch (Exception ex)
             {
+                Logger.Log(ex);
                 Logger.Log(LogLevel.Error, $"Failed to connect EventSub for {type}");
-                throw;
+
+                // Note: Do not re-throw, but log and move on, better to miss some events than to cause a retry loop
             }
         }
 
