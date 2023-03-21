@@ -9173,7 +9173,7 @@ function load()
     <value>&lt;iframe frameborder="0" allowtransparency="yes" scrolling="no" width="{WIDTH}" height="{HEIGHT}" src="{URL}" /&gt;</value>
   </data>
   <data name="OverlayYouTubeDefaultHTML" xml:space="preserve">
-    <value>&lt;div id="{ID}" /&gt;</value>
+    <value>&lt;div id="youtube" /&gt;</value>
   </data>
   <data name="DisplayFormat" xml:space="preserve">
     <value>Display Format</value>
@@ -9757,9 +9757,87 @@ function removeOldest()
     list.removeChild(list.firstElementChild);
 }</value>
   </data>
-  <data name="OverlayIFrameContainerDefaultHTML" xml:space="preserve">
-    <value>&lt;div id="div-{ID}" style="display: block; position: absolute; top: 0px; left: 0px"&gt;
-    &lt;iframe id="iframe-{ID}" frameborder="0" allowtransparency="yes" scrolling="no" style="border: none; width: 100%; height: 100%; position: absolute; top: 0px; left: 0px; margin: 0; padding: 0;" /&gt;
-&lt;/div&gt;</value>
+  <data name="OverlayBasicIFrameTemplate" xml:space="preserve">
+    <value>&lt;!DOCTYPE html&gt;
+
+&lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
+&lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
+    &lt;link rel="shortcut icon" type="image/x-icon" href="https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUp-Logo-Base-WhiteXS.png" /&gt;
+
+    &lt;script src="jquery-3.6.0.min.js"&gt;&lt;/script&gt;
+    &lt;script src="webSocketWrapper.js"&gt;&lt;/script&gt;
+
+    &lt;script src="video.min.js"&gt;&lt;/script&gt;
+
+    &lt;link rel="stylesheet" type="text/css" href="animate.min.css"&gt;
+
+    &lt;style type="text/css"&gt;
+        {CSS}
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body style="background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;"&gt;
+
+    &lt;div id="content" style="position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;"&gt;
+        {HTML}
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        const animateCSS = (element, animation, prefix = 'animate__') =&gt;
+            // We create a Promise and return it
+            new Promise((resolve, reject) =&gt; {
+                if (animation != null &amp;&amp; animation) {
+                    const animationName = `${prefix}${animation}`;
+
+                    element.classList.add(`${prefix}animated`, animationName);
+
+                    // When the animation ends, we clean the classes and resolve the Promise
+                    function handleAnimationEnd(event) {
+                        event.stopPropagation();
+                        element.classList.remove(`${prefix}animated`, animationName);
+                        resolve('Animation ended');
+                    }
+
+                    element.addEventListener('animationend', handleAnimationEnd, { once: true });
+                }
+                else {
+                    resolve('Animation ended');
+                }
+            });
+
+        {Javascript}
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</value>
+    <comment>{HTML} is the HTML replacement, {CSS} is the CSS replacement, {Javascript} is the Javascript replacement</comment>
+  </data>
+  <data name="OverlayYouTubeDefaultJavascript" xml:space="preserve">
+    <value>function onYouTubeIframeAPIReady() {
+    var youtubeVideoPlayer = new YT.Player("youtube", {
+        height: {Height},
+        width: {Width},
+        videoId: {VideoID},
+        playerVars: { 'controls': 0, 'modestbranding': 1, 'start': {StartTime} },
+        events: {
+            'onReady': function () {
+                youtubeVideoPlayer.setVolume({Volume});
+                youtubeVideoPlayer.setLoop(false);
+                youtubeVideoPlayer.frameBorder = 0;
+                youtubeVideoPlayer.playVideo();
+            },
+            'onStateChange': function (event) {
+                if (event.data == YT.PlayerState.ENDED) {
+                    event.target.destroy();
+                }
+            }
+        }
+    });
+}
+
+var youtubePlayerScript = document.createElement('script');
+youtubePlayerScript.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(youtubePlayerScript, firstScriptTag);</value>
   </data>
 </root>

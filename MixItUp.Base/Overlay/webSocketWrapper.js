@@ -1,21 +1,17 @@
 var connection;
 var isDebug = false;
 
-function openWebsocketConnection() {
-    openWebsocketConnectionWithAddress(window.location.hostname, window.location.port);
+function openWebsocketConnection(path) {
+    openWebsocketConnectionWithAddressPort(window.location.hostname, window.location.port, path);
 }
 
-function openWebsocketConnectionWithPort(port) {
-    openWebsocketConnectionWithAddress(window.location.hostname, port);
-}
-
-function openWebsocketConnectionWithAddress(address, port) {
+function openWebsocketConnectionWithAddressPort(address, port, path) {
     try {
         var protocol = "ws";
         if (window.location.protocol === "https:") {
             protocol = "wss";
         }
-        connection = new WebSocket(protocol + "://" + address + ":" + port + "/ws/");
+        connection = new WebSocket(protocol + "://" + address + ":" + port + path);
 
         // When the connection is open, send some data to the server
         connection.onopen = function () {
@@ -26,11 +22,11 @@ function openWebsocketConnectionWithAddress(address, port) {
         // Log messages from the server
         connection.onmessage = function (e) {
             var packet = getDataFromJSON(e.data);
-            if (packet !== null && typeof packet.type !== 'undefined') {
-                if (packet.type === "Debug") {
+            if (packet !== null && typeof packet.Type !== 'undefined') {
+                if (packet.Type === "Debug") {
                     isDebug = true;
                 }
-                else if (packet.type === "Test") {
+                else if (packet.Type === "Test") {
                     sendPacket('Test', '');
                 }
             }
@@ -44,7 +40,7 @@ function openWebsocketConnectionWithAddress(address, port) {
 
         connection.onclose = function (e) {
             connectionClosed();
-            setTimeout(function () { openWebsocketConnection(port); }, 1000);
+            setTimeout(function () { openWebsocketConnectionWithAddressPort(address, port, path); }, 1000);
         };
     }
     catch (err) { logToSessionStorage(err); }

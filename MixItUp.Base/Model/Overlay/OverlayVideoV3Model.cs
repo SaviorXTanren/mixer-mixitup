@@ -25,16 +25,16 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayVideoV3Model() : base(OverlayItemV3Type.Video) { }
 
-        protected override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
+        protected override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, CommandParametersModel parameters)
         {
-            item = await base.GetProcessedItem(item, overlayEndpointService, parameters);
+            item = await base.GetProcessedItem(item, parameters);
 
             string filepath = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.FilePath, parameters);
             filepath = RandomHelper.PickRandomFileFromDelimitedString(filepath);
 
-            item.HTML = ReplaceProperty(item.HTML, nameof(this.FilePath), overlayEndpointService.GetURLForLocalFile(filepath, "video"));
-            item.CSS = ReplaceProperty(item.CSS, nameof(this.FilePath), overlayEndpointService.GetURLForLocalFile(filepath, "video"));
-            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.FilePath), overlayEndpointService.GetURLForLocalFile(filepath, "video"));
+            item.HTML = ReplaceProperty(item.HTML, nameof(this.FilePath), ServiceManager.Get<OverlayV3Service>().GetURLForFile(filepath, "video"));
+            item.CSS = ReplaceProperty(item.CSS, nameof(this.FilePath), ServiceManager.Get<OverlayV3Service>().GetURLForFile(filepath, "video"));
+            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.FilePath), ServiceManager.Get<OverlayV3Service>().GetURLForFile(filepath, "video"));
 
             item.HTML = ReplaceProperty(item.HTML, nameof(this.Volume), this.Volume.ToString());
             item.CSS = ReplaceProperty(item.CSS, nameof(this.Volume), this.Volume.ToString());

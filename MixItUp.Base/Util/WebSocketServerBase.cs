@@ -21,6 +21,11 @@ namespace MixItUp.Base.Util
         /// The ID of the packet.
         /// </summary>
         public uint id { get; set; }
+
+        /// <summary>
+        /// The type of packet.
+        /// </summary>
+        public string Type { get { return this.type; } set { this.type = value; } }
     }
 
     public abstract class WebSocketServerBase : WebSocketBase

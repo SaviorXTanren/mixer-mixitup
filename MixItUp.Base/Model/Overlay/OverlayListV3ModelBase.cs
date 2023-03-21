@@ -22,9 +22,9 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayListV3ModelBase(OverlayItemV3Type type) : base(type) { }
 
-        protected override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
+        protected override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, CommandParametersModel parameters)
         {
-            item = await base.GetProcessedItem(item, overlayEndpointService, parameters);
+            item = await base.GetProcessedItem(item, parameters);
 
             item.HTML = ReplaceProperty(item.HTML, nameof(this.BorderColor), this.BorderColor);
             item.CSS = ReplaceProperty(item.CSS, nameof(this.BorderColor), this.BorderColor);

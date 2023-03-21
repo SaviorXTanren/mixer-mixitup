@@ -95,10 +95,10 @@ namespace MixItUp.Base.Model.Actions
             }
             else
             {
-                OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlayEndpointService(this.OverlayEndpointID);
+                OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
                 if (overlay != null)
                 {
-                    await overlay.SendItem(this.OverlayItemV3, parameters);
+                    await overlay.SendBasic(this.OverlayItemV3, parameters);
                 }
             }
         }

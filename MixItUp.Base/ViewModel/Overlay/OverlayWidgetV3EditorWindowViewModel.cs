@@ -52,7 +52,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public bool IsTypeNotSelected { get { return !this.IsTypeSelected; } }
 
-        public IEnumerable<OverlayEndpointV3Model> OverlayEndpoints { get; set; } = ServiceManager.Get<OverlayService>().GetOverlayEndpoints();
+        public IEnumerable<OverlayEndpointV3Model> OverlayEndpoints { get; set; } = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoints();
 
         public OverlayEndpointV3Model SelectedOverlayEndpoint
         {
@@ -93,7 +93,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             this.ID = Guid.NewGuid();
             this.SelectedType = OverlayItemV3Type.Label;
-            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().GetDefaultOverlayEndpoint();
+            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
         }
 
         public OverlayWidgetV3EditorWindowViewModel(OverlayItemV3ModelBase item)
@@ -106,7 +106,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.Name = item.Name;
             this.SelectedType = item.Type;
             this.RefreshTime = item.RefreshTime;
-            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().GetOverlayEndpoint(item.OverlayEndpointID);
+            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoint(item.OverlayEndpointID);
 
             switch (this.SelectedType)
             {
@@ -202,9 +202,9 @@ namespace MixItUp.Base.ViewModel.Overlay
             {
                 if (this.oldItem != null)
                 {
-                    await ServiceManager.Get<OverlayService>().RemoveOverlayWidget(this.oldItem);                
+                    //await ServiceManager.Get<OverlayV3Service>().RemoveOverlayWidget(this.oldItem);                
                 }
-                await ServiceManager.Get<OverlayService>().AddOverlayWidget(item);
+                //await ServiceManager.Get<OverlayV3Service>().AddOverlayWidget(item);
             }
         }
 

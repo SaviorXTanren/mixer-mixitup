@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Services;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -17,9 +16,9 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayWebPageV3Model() : base(OverlayItemV3Type.WebPage) { }
 
-        protected override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
+        protected override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, CommandParametersModel parameters)
         {
-            item = await base.GetProcessedItem(item, overlayEndpointService, parameters);
+            item = await base.GetProcessedItem(item, parameters);
 
             item.HTML = ReplaceProperty(item.HTML, nameof(this.URL), this.URL);
             item.CSS = ReplaceProperty(item.CSS, nameof(this.URL), this.URL);

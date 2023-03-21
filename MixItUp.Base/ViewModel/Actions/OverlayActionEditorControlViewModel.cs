@@ -48,25 +48,25 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private OverlayActionTypeEnum selectedActionType;
 
-        public bool OverlayNotEnabled { get { return !ServiceManager.Get<OverlayService>().IsConnected; } }
+        public bool OverlayNotEnabled { get { return !ServiceManager.Get<OverlayV3Service>().IsConnected; } }
 
         public bool OverlayEnabled { get { return !this.OverlayNotEnabled; } }
 
-        public IEnumerable<OverlayEndpointV3Model> OverlayEndpoints { get { return ServiceManager.Get<OverlayService>().GetOverlayEndpoints(); } }
+        public IEnumerable<OverlayEndpointV3Model> OverlayEndpoints { get { return ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoints(); } }
 
         public OverlayEndpointV3Model SelectedOverlayEndpoint
         {
             get { return this.selectedOverlayEndpoint; }
             set
             {
-                var overlays = ServiceManager.Get<OverlayService>().GetOverlayEndpoints();
+                var overlays = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoints();
                 if (overlays.Contains(value))
                 {
                     this.selectedOverlayEndpoint = value;
                 }
                 else
                 {
-                    this.selectedOverlayEndpoint = ServiceManager.Get<OverlayService>().GetDefaultOverlayEndpoint();
+                    this.selectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
                 }
                 this.NotifyPropertyChanged();
             }
@@ -167,10 +167,10 @@ namespace MixItUp.Base.ViewModel.Actions
         public OverlayActionEditorControlViewModel(OverlayActionModel action)
             : base(action)
         {
-            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().GetOverlayEndpoint(action.OverlayEndpointID);
+            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoint(action.OverlayEndpointID);
             if (this.SelectedOverlayEndpoint == null)
             {
-                this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().GetDefaultOverlayEndpoint();
+                this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
             }
 
             if (action.OverlayItemV3 != null)
@@ -216,7 +216,7 @@ namespace MixItUp.Base.ViewModel.Actions
         public OverlayActionEditorControlViewModel()
             : base()
         {
-            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().GetDefaultOverlayEndpoint();
+            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
 
             this.TextItemViewModel.AddOverlayActionAnimations();
             this.ImageItemViewModel.AddOverlayActionAnimations();

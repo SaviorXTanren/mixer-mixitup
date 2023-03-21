@@ -11,27 +11,59 @@ using Newtonsoft.Json.Linq;
 using MixItUp.Base.Model.Overlay;
 using System.Linq;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Model.Commands;
 
 namespace MixItUp.Base.Services
 {
     public class OverlayV3Packet : WebSocketPacket
     {
-        public string Type { get; set; }
+        public JArray Data { get; set; } = new JArray();
 
-        public JArray Data { get; set; }
+        public OverlayV3Packet() { }
+        
+        public OverlayV3Packet(string type, object data)
+        {
+            this.Type = type;
+            this.Data.Add(JObject.FromObject(data));
+        }
+
+        public OverlayV3Packet(string type, IEnumerable<object> data)
+        {
+            this.Type = type;
+            foreach (object d in data)
+            {
+                this.Data.Add(JObject.FromObject(data));
+            }
+        }
     }
 
-    public class OverlayV3Service : ServiceBase
+    public static class OverlayV3WebPage
     {
-        public const string RegularOverlayWidgetHttpListenerServerAddressFormat = "http://localhost:{0}/widget/";
-        public const string RegularOverlayWidgetWebSocketServerAddressFormat = "http://localhost:{0}/widget/ws/";
+        public const string OverlayFolderPath = "Overlay\\";
 
-        public const string AdministratorOverlayWidgetHttpListenerServerAddressFormat = "http://*:{0}/widget/";
-        public const string AdministratorOverlayWidgetWebSocketServerAddressFormat = "http://*:{0}/widget/ws/";
+        public static async Task<string> GetHTMLFromFile(string filePath) { return await GetHTMLFromTemplate(await ServiceManager.Get<IFileService>().ReadFile(filePath)); }
 
+        public static async Task<string> GetHTMLFromTemplate(string template)
+        {
+            string output = template;
+
+            output = await OverlayOutputV3Model.ReplaceScriptTag(output, "jquery-3.6.0.min.js", OverlayFolderPath + "jquery-3.6.0.min.js");
+            output = await OverlayOutputV3Model.ReplaceScriptTag(output, "webSocketWrapper.js", OverlayFolderPath + "webSocketWrapper.js");
+            output = await OverlayOutputV3Model.ReplaceScriptTag(output, "video.min.js", OverlayFolderPath + "video.min.js");
+
+            output = await OverlayOutputV3Model.ReplaceCSSStyleSheetTag(output, "animate.min.css", OverlayFolderPath + "animate.min.css");
+
+            return output;
+        }
+    }
+
+    public class OverlayV3Service : ServiceBase, IExternalService
+    {
         public override string Name { get { return Resources.Overlay; } }
 
-        private Dictionary<Guid, OverlayV3EndpointService> overlays = new Dictionary<Guid, OverlayV3EndpointService>();
+        public bool IsConnected { get; private set; }
+
+        private Dictionary<Guid, OverlayEndpointV3Service> overlays = new Dictionary<Guid, OverlayEndpointV3Service>();
 
         public override Task<Result> Enable()
         {
@@ -83,9 +115,35 @@ namespace MixItUp.Base.Services
             return Task.FromResult(new Result());
         }
 
+        public async Task<int> TestConnections()
+        {
+            int count = 0;
+            foreach (OverlayEndpointV3Service overlay in this.overlays.Values)
+            {
+                count += await overlay.TestConnection();
+            }
+            return count;
+        }
+
+        public void StartBatching()
+        {
+            foreach (OverlayEndpointV3Service overlay in this.overlays.Values)
+            {
+                overlay.StartBatching();
+            }
+        }
+
+        public async Task EndBatching()
+        {
+            foreach (OverlayEndpointV3Service overlay in this.overlays.Values)
+            {
+                await overlay.EndBatching();
+            }
+        }
+
         public async Task<bool> AddOverlayEndpoint(OverlayEndpointV3Model overlayEndpoint)
         {
-            OverlayV3EndpointService overlay = new OverlayV3EndpointService(overlayEndpoint);
+            OverlayEndpointV3Service overlay = new OverlayEndpointV3Service(overlayEndpoint);
             if (await overlay.Initialize())
             {
                 overlay.OnWebSocketConnectedOccurred += Overlay_OnWebSocketConnectedOccurred;
@@ -99,7 +157,7 @@ namespace MixItUp.Base.Services
 
         public async Task RemoveOverlayEndpoint(Guid id)
         {
-            OverlayV3EndpointService overlay = this.GetOverlayEndpointService(id);
+            OverlayEndpointV3Service overlay = this.GetOverlayEndpointService(id);
             if (overlay != null)
             {
                 overlay.OnWebSocketConnectedOccurred -= Overlay_OnWebSocketConnectedOccurred;
@@ -125,7 +183,7 @@ namespace MixItUp.Base.Services
             return this.GetOverlayEndpoint(Guid.Empty);
         }
 
-        public OverlayV3EndpointService GetDefaultOverlayEndpointService()
+        public OverlayEndpointV3Service GetDefaultOverlayEndpointService()
         {
             OverlayEndpointV3Model overlayEndpoint = this.GetDefaultOverlayEndpoint();
             if (overlayEndpoint != null)
@@ -135,7 +193,7 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        public OverlayV3EndpointService GetOverlayEndpointService(Guid id)
+        public OverlayEndpointV3Service GetOverlayEndpointService(Guid id)
         {
             if (this.overlays.ContainsKey(id))
             {
@@ -144,9 +202,13 @@ namespace MixItUp.Base.Services
             return null;
         }
 
+        public string GetURLForFile(string filePath, string fileType) { return this.GetDefaultOverlayEndpointService().GetURLForFile(filePath, fileType); }
+
+        public void SetLocalFile(string id, string filePath) { this.GetDefaultOverlayEndpointService().SetLocalFile(id, filePath); }
+
         private async void Overlay_OnWebSocketConnectedOccurred(object sender, EventArgs e)
         {
-            OverlayV3EndpointService overlay = (OverlayV3EndpointService)sender;
+            OverlayEndpointV3Service overlay = (OverlayEndpointV3Service)sender;
             //this.OnOverlayConnectedOccurred(overlay, new EventArgs());
 
             //Logger.Log("Client connected to Overlay Endpoint - " + overlay.Name);
@@ -170,20 +232,31 @@ namespace MixItUp.Base.Services
 
         private void Overlay_OnWebSocketDisconnectedOccurred(object sender, WebSocketCloseStatus closeStatus)
         {
-            OverlayV3EndpointService overlay = (OverlayV3EndpointService)sender;
+            OverlayEndpointV3Service overlay = (OverlayEndpointV3Service)sender;
             //this.OnOverlayDisconnectedOccurred(overlay, closeStatus);
 
             Logger.Log("Client disconnect from Overlay Endpoint - " + overlay.Name);
         }
+
+        Task IExternalService.Disconnect()
+        {
+            throw new NotImplementedException();
+        }
     }
 
-    public class OverlayV3EndpointService
+    public class OverlayEndpointV3Service
     {
         public const string RegularOverlayHttpListenerServerAddressFormat = "http://localhost:{0}/overlay/";
         public const string RegularOverlayWebSocketServerAddressFormat = "http://localhost:{0}/overlay/ws/";
 
         public const string AdministratorOverlayHttpListenerServerAddressFormat = "http://*:{0}/overlay/";
         public const string AdministratorOverlayWebSocketServerAddressFormat = "http://*:{0}/overlay/ws/";
+
+        public const string RegularOverlayWidgetHttpListenerServerAddressFormat = "http://localhost:{0}/widget/";
+        public const string RegularOverlayWidgetWebSocketServerAddressFormat = "http://localhost:{0}/widget/ws/";
+
+        public const string AdministratorOverlayWidgetHttpListenerServerAddressFormat = "http://*:{0}/widget/";
+        public const string AdministratorOverlayWidgetWebSocketServerAddressFormat = "http://*:{0}/widget/ws/";
 
         public event EventHandler OnWebSocketConnectedOccurred = delegate { };
         public event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectedOccurred = delegate { };
@@ -202,10 +275,10 @@ namespace MixItUp.Base.Services
         private OverlayV3HttpListenerServer httpListenerServer;
         private OverlayV3WebSocketHttpListenerServer webSocketServer;
 
-        private List<OverlayV3Packet> batchPackets = new List<OverlayV3Packet>();
+        private List<object> batchPackets = new List<object>();
         private bool isBatching = false;
 
-        public OverlayV3EndpointService(OverlayEndpointV3Model model)
+        public OverlayEndpointV3Service(OverlayEndpointV3Model model)
         {
             this.Model = model;
 
@@ -270,15 +343,48 @@ namespace MixItUp.Base.Services
             this.isBatching = true;
         }
 
+        public async Task SendBasic(OverlayItemV3ModelBase item, CommandParametersModel parameters)
+        {
+            try
+            {
+                if (item != null)
+                {
+                    await this.SendBasic(await item.GetProcessedItem(parameters));
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
+        public async Task SendBasic(OverlayOutputV3Model output)
+        {
+            await this.httpListenerServer.SetHTMLData(output.ID.ToString(), output.GenerateFullHTMLOutput());
+
+            if (this.isBatching)
+            {
+                this.batchPackets.Add(new OverlayBasicOutputV3Model(output));
+            }
+            else
+            {
+                await this.webSocketServer.Send(new OverlayV3Packet("Basic", new OverlayBasicOutputV3Model(output)));
+            }
+        }
+
         public async Task EndBatching()
         {
             this.isBatching = false;
             if (batchPackets.Count > 0)
             {
-                await this.webSocketServer.Send(new OverlayPacket("Batch", JArray.FromObject(this.batchPackets.ToList())));
+                await this.webSocketServer.Send(new OverlayV3Packet("Basic", JArray.FromObject(this.batchPackets.ToList())));
             }
             this.batchPackets.Clear();
         }
+
+        public string GetURLForFile(string filePath, string fileType) { return this.httpListenerServer.GetURLForFile(filePath, fileType); }
+
+        public void SetLocalFile(string id, string filePath) { this.httpListenerServer.SetLocalFile(id, filePath); }
 
         private void WebSocketServer_OnConnectedOccurred(object sender, EventArgs e)
         {
@@ -293,25 +399,17 @@ namespace MixItUp.Base.Services
 
     public class OverlayV3HttpListenerServer : LocalHttpListenerServer
     {
-        private const string OverlayFolderPath = "Overlay\\";
-        private const string OverlayWebpageFilePath = OverlayFolderPath + "Overlay.html";
+        private const string OverlayWebpageFilePath = OverlayV3WebPage.OverlayFolderPath + "Overlay.html";
 
+        private const string OverlayDataWebPath = "overlay/data/";
         private const string OverlayFilesWebPath = "overlay/files/";
 
         private string webPageInstance;
 
         private Dictionary<string, string> localFiles = new Dictionary<string, string>();
+        private Dictionary<string, string> htmlData = new Dictionary<string, string>();
 
-        public OverlayV3HttpListenerServer()
-        {
-            this.webPageInstance = File.ReadAllText(OverlayWebpageFilePath);
-
-            this.ReplaceScriptTag("jquery-3.6.0.min.js");
-            this.ReplaceScriptTag("webSocketWrapper.js");
-            this.ReplaceScriptTag("video.min.js");
-
-            this.ReplaceCSSStyleSheetTag("animate.min.css");
-        }
+        public OverlayV3HttpListenerServer() { }
 
         public string GetURLForFile(string filePath, string fileType)
         {
@@ -323,15 +421,20 @@ namespace MixItUp.Base.Services
             string id = Guid.NewGuid().ToString();
             this.localFiles[id] = filePath;
 
-            return string.Format("/overlay/files/{0}/{1}?nonce={2}", fileType, id, Guid.NewGuid());
+            return string.Format("/{0}{1}/{2}?nonce={3}", OverlayFilesWebPath, fileType, id, Guid.NewGuid());
         }
 
-        public void SetLocalFile(string id, string filepath)
+        public void SetLocalFile(string id, string filePath)
         {
-            if (!ServiceManager.Get<IFileService>().IsURLPath(filepath))
+            if (!ServiceManager.Get<IFileService>().IsURLPath(filePath))
             {
-                this.localFiles[id] = filepath;
+                this.localFiles[id] = filePath;
             }
+        }
+
+        public async Task SetHTMLData(string id, string data)
+        {
+            this.htmlData[id] = await OverlayV3WebPage.GetHTMLFromTemplate(data);
         }
 
         protected override async Task ProcessConnection(HttpListenerContext listenerContext)
@@ -343,7 +446,19 @@ namespace MixItUp.Base.Services
 
                 if (url.Equals("overlay"))
                 {
+                    if (string.IsNullOrEmpty(this.webPageInstance))
+                    {
+                        this.webPageInstance = await OverlayV3WebPage.GetHTMLFromFile(OverlayWebpageFilePath);
+                    }
                     await this.CloseConnection(listenerContext, HttpStatusCode.OK, this.webPageInstance);
+                }
+                else if (url.StartsWith(OverlayDataWebPath))
+                {
+                    string id = url.Replace(OverlayDataWebPath, string.Empty);
+                    if (this.htmlData.ContainsKey(id))
+                    {
+                        await this.CloseConnection(listenerContext, HttpStatusCode.OK, this.htmlData[id]);
+                    }
                 }
                 else if (url.StartsWith(OverlayFilesWebPath))
                 {
@@ -419,33 +534,23 @@ namespace MixItUp.Base.Services
             catch (HttpListenerException ex) { Logger.Log(LogLevel.Debug, ex); }
             catch (Exception ex) { Logger.Log(ex); }
         }
-
-        private void ReplaceScriptTag(string fileName)
-        {
-            this.webPageInstance = this.webPageInstance.Replace($"<script src=\"{fileName}\"></script>", $"<script>{File.ReadAllText(OverlayFolderPath + fileName)}</script>");
-        }
-
-        private void ReplaceCSSStyleSheetTag(string fileName)
-        {
-            this.webPageInstance = this.webPageInstance.Replace($"<link rel=\"stylesheet\" type=\"text/css\" href=\"{fileName}\">", $"<style>{File.ReadAllText(OverlayFolderPath + fileName)}</style>");
-        }
     }
 
     public class OverlayV3WebSocketHttpListenerServer : WebSocketHttpListenerServerBase
     {
         public OverlayV3WebSocketHttpListenerServer() { }
 
+        public async Task Send(OverlayV3Packet packet) { await base.Send(JSONSerializerHelper.SerializeToString(packet)); }
+
         protected override WebSocketServerBase CreateWebSocketServer(HttpListenerContext listenerContext)
         {
-            return new OverlayWebSocketServer(listenerContext);
+            return new OverlayV3WebSocketServer(listenerContext);
         }
     }
 
     public class OverlayV3WebSocketServer : WebSocketServerBase
     {
         public OverlayV3WebSocketServer(HttpListenerContext listenerContext) : base(listenerContext) { }
-
-        public async Task Send(OverlayV3Packet packet) { await this.Send(JSONSerializerHelper.SerializeToString(packet)); }
 
         protected override Task ProcessReceivedPacket(string packetJSON)
         {

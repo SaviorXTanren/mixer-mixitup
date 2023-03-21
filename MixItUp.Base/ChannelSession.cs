@@ -63,7 +63,7 @@ namespace MixItUp.Base
             ServiceManager.Add(new GameQueueService());
             ServiceManager.Add(new GiveawayService());
             ServiceManager.Add(new SerialService());
-            ServiceManager.Add(new OverlayService());
+            ServiceManager.Add(new OverlayV3Service());
 
             ServiceManager.Add(new StreamlabsDesktopService());
             ServiceManager.Add(new XSplitService());
@@ -330,7 +330,7 @@ namespace MixItUp.Base
                 if (ServiceManager.Get<XSplitService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<XSplitService>()] = null; }
                 if (!string.IsNullOrEmpty(ChannelSession.Settings.OvrStreamServerIP)) { externalServiceToConnect[ServiceManager.Get<IOvrStreamService>()] = null; }
                 if (ChannelSession.Settings.PolyPopPortNumber > 0) { externalServiceToConnect[ServiceManager.Get<PolyPopService>()] = null; }
-                if (ChannelSession.Settings.EnableOverlay) { externalServiceToConnect[ServiceManager.Get<OverlayService>()] = null; }
+                if (ChannelSession.Settings.EnableOverlay) { externalServiceToConnect[ServiceManager.Get<OverlayV3Service>()] = null; }
                 if (ChannelSession.Settings.EnableDeveloperAPI) { externalServiceToConnect[ServiceManager.Get<IDeveloperAPIService>()] = null; }
 
                 if (externalServiceToConnect.Count > 0)

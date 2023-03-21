@@ -28,13 +28,15 @@ namespace MixItUp.Base.Util
             base.Stop();
         }
 
-        public async Task Send(WebSocketPacket packet)
+        public async Task Send(WebSocketPacket packet) { await this.Send(JSONSerializerHelper.SerializeToString(packet)); }
+
+        public async Task Send(string packet)
         {
             try
             {
                 foreach (WebSocketServerBase webSocketServer in this.webSocketServers)
                 {
-                    Logger.Log(LogLevel.Debug, "Sending Web Socket Packet - " + JSONSerializerHelper.SerializeToString(packet));
+                    Logger.Log(LogLevel.Debug, "Sending Web Socket Packet - " + packet);
 
                     await webSocketServer.Send(packet);
                 }

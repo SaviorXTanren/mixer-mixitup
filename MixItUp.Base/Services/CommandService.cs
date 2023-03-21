@@ -511,18 +511,18 @@ namespace MixItUp.Base.Services
                     }
 
                     ActionModelBase action = actions[i];
-                    if (action is OverlayActionModel && ServiceManager.Get<OverlayService>().IsConnected)
+                    if (action is OverlayActionModel && ServiceManager.Get<OverlayV3Service>().IsConnected)
                     {
-                        ServiceManager.Get<OverlayService>().StartBatching();
+                        ServiceManager.Get<OverlayV3Service>().StartBatching();
                     }
 
                     await action.Perform(parameters);
 
-                    if (action is OverlayActionModel && ServiceManager.Get<OverlayService>().IsConnected)
+                    if (action is OverlayActionModel && ServiceManager.Get<OverlayV3Service>().IsConnected)
                     {
                         if (i == (actions.Count - 1) || !(actions[i + 1] is OverlayActionModel))
                         {
-                            await ServiceManager.Get<OverlayService>().EndBatching();
+                            await ServiceManager.Get<OverlayV3Service>().EndBatching();
                         }
                     }
                 }

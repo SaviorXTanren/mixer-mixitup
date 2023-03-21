@@ -162,7 +162,7 @@ namespace MixItUp.Base.Services
                 {
                     if (item.Type == OverlayItemV3Type.YouTube)
                     {
-                        OverlayOutputV3Model processedItem = await item.GetProcessedItem(this, parameters);
+                        OverlayOutputV3Model processedItem = await item.GetProcessedItem(parameters);
                         JObject jobj = JObject.FromObject(item);
                         jobj.Merge(JObject.FromObject(processedItem), new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Replace });
                         await PerformTextReplacements(jobj, parameters);
@@ -187,7 +187,7 @@ namespace MixItUp.Base.Services
             {
                 if (item != null)
                 {
-                    OverlayOutputV3Model processedItem = await item.GetProcessedItem(this, parameters);
+                    OverlayOutputV3Model processedItem = await item.GetProcessedItem(parameters);
                     if (processedItem != null)
                     {
                         await this.SendPacket(type, JObject.FromObject(processedItem));

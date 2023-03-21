@@ -13372,6 +13372,28 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///
+        ///&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+        ///&lt;head&gt;
+        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
+        ///    &lt;link rel=&quot;shortcut icon&quot; type=&quot;image/x-icon&quot; href=&quot;https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUp-Logo-Base-WhiteXS.png&quot; /&gt;
+        ///
+        ///    &lt;script src=&quot;jquery-3.6.0.min.js&quot;&gt;&lt;/script&gt;
+        ///    &lt;script src=&quot;webSocketWrapper.js&quot;&gt;&lt;/script&gt;
+        ///
+        ///    &lt;script src=&quot;video.min.js&quot;&gt;&lt;/script&gt;
+        ///
+        ///    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;animate [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayBasicIFrameTemplate {
+            get {
+                return ResourceManager.GetString("OverlayBasicIFrameTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .list {
         ///    width: {ItemWidth};
         ///    {FullHeight}
@@ -13671,17 +13693,6 @@ namespace MixItUp.Base {
         public static string OverlayHeightMustBeValidValue {
             get {
                 return ResourceManager.GetString("OverlayHeightMustBeValidValue", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;div-{ID}&quot; style=&quot;display: block; position: absolute; top: 0px; left: 0px&quot;&gt;
-        ///    &lt;iframe id=&quot;iframe-{ID}&quot; frameborder=&quot;0&quot; allowtransparency=&quot;yes&quot; scrolling=&quot;no&quot; style=&quot;border: none; width: 100%; height: 100%; position: absolute; top: 0px; left: 0px; margin: 0; padding: 0;&quot; /&gt;
-        ///&lt;/div&gt;.
-        /// </summary>
-        public static string OverlayIFrameContainerDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayIFrameContainerDefaultHTML", resourceCulture);
             }
         }
         
@@ -14276,11 +14287,31 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;{ID}&quot; /&gt;.
+        ///   Looks up a localized string similar to &lt;div id=&quot;youtube&quot; /&gt;.
         /// </summary>
         public static string OverlayYouTubeDefaultHTML {
             get {
                 return ResourceManager.GetString("OverlayYouTubeDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to function onYouTubeIframeAPIReady() {
+        ///    var youtubeVideoPlayer = new YT.Player(&quot;youtube&quot;, {
+        ///        height: {Height},
+        ///        width: {Width},
+        ///        videoId: {VideoID},
+        ///        playerVars: { &apos;controls&apos;: 0, &apos;modestbranding&apos;: 1, &apos;start&apos;: {StartTime} },
+        ///        events: {
+        ///            &apos;onReady&apos;: function () {
+        ///                youtubeVideoPlayer.setVolume({Volume});
+        ///                youtubeVideoPlayer.setLoop(false);
+        ///                youtubeVideoPlayer.frameBorder = 0;
+        ///                youtubeVideoPlayer [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayYouTubeDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayYouTubeDefaultJavascript", resourceCulture);
             }
         }
         

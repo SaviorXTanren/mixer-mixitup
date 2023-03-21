@@ -17,7 +17,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             get
             {
-                OverlayEndpointV3Model endpointService = ServiceManager.Get<OverlayService>().GetOverlayEndpoint(this.Item.OverlayEndpointID);
+                OverlayEndpointV3Model endpointService = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoint(this.Item.OverlayEndpointID);
                 if (endpointService != null)
                 {
                     return endpointService.Name;
@@ -77,7 +77,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             if (widget != null)
             {
                 this.OverlayWidgets.Remove(widget);
-                await ServiceManager.Get<OverlayService>().RemoveOverlayWidget(widget.Item);
+                //await ServiceManager.Get<OverlayV3Service>().RemoveOverlayWidget(widget.Item);
                 await ChannelSession.SaveSettings();
             }
         }

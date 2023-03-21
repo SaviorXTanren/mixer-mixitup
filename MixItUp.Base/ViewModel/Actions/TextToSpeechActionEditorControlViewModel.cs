@@ -10,7 +10,7 @@ namespace MixItUp.Base.ViewModel.Actions
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.TextToSpeech; } }
 
-        public bool OverlayNotEnabled { get { return !ServiceManager.Get<OverlayService>().IsConnected; } }
+        public bool OverlayNotEnabled { get { return !ServiceManager.Get<OverlayV3Service>().IsConnected; } }
 
         public IEnumerable<string> Voices { get { return TextToSpeechActionModel.AvailableVoices; } }
 

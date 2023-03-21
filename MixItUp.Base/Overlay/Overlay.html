@@ -4,7 +4,6 @@
 <head>
     <meta charset="utf-8" />
     <title>Mix It Up - Overlay</title>
-    <link rel="shortcut icon" type="image/x-icon" href="https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUp-Logo-Base-WhiteXS.png" />
 
     <script src="jquery-3.6.0.min.js"></script>
     <script src="webSocketWrapper.js"></script>
@@ -13,18 +12,14 @@
 </head>
 <body style="background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;">
 
-    <template id="iframeContainer">
-        <div style="display: block; position: absolute; top: 0px; left: 0px">
-            <iframe class="iframeContainer" frameborder="0" allowtransparency="yes" scrolling="no" style="border: none; width: 100%; height: 100%; position: absolute; top: 0px; left: 0px; margin: 0; padding: 0;" />
-        </div>
-    </template>
-
     <div id="mainOverlay" style="position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;"></div>
 
     <div id="noConnectionDiv" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); visibility: hidden">
         <h1 style="font-size: 100px; color: red; text-align: center">No Connection To</h1>
         <h1 style="font-size: 100px; color: red; text-align: center">Mix It Up Overlay!</h1>
     </div>
+
+    <p id="connectionTest" style="visibility: hidden; font-size: 100px; color: red; white-space: nowrap; position: absolute; margin: 0px; left: 50%; top: 50%; transform: translate(-50%, -50%);">Connection Test!</p>
 
     <div id="noTextToSpeechDiv" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); visibility: hidden">
         <h1 style="font-size: 100px; color: red; text-align: center">This Browser Does</h1>
@@ -49,29 +44,38 @@
 
         function packetReceived(packet) {
             try {
-                if (packet != null && typeof packet.Type !== 'undefined' && typeof packet.Data !== 'undefined' && packet.Data.length > 0) {
-                    if (packet.Type === 'Add') {
-                        for (var i = 0; i < packet.Data.length; i++) {
-                            processAdd(packet.Data[i]);
+                if (packet != null && typeof packet.Type !== 'undefined') {
+                    if (typeof packet.Data !== 'undefined' && packet.Data.length > 0) {
+                        if (packet.Type === 'Add') {
+                            for (var i = 0; i < packet.Data.length; i++) {
+                                processAdd(packet.Data[i]);
+                            }
                         }
-                    }
-                    else if (packet.Type === 'Remove') {
-                        for (var i = 0; i < packet.Data.length; i++) {
-                            processRemove(packet.Data[i]);
+                        else if (packet.Type === 'Remove') {
+                            for (var i = 0; i < packet.Data.length; i++) {
+                                processRemove(packet.Data[i]);
+                            }
                         }
-                    }
-                    else if (packet.Type === 'Basic') {
-                        for (var i = 0; i < packet.Data.length; i++) {
-                            processBasic(packet.Data[i]);
+                        else if (packet.Type === 'Basic') {
+                            for (var i = 0; i < packet.Data.length; i++) {
+                                processBasic(packet.Data[i]);
+                            }
                         }
-                    }
-                    else if (packet.Type === 'TextToSpeech') {
-                        var data = packet.Data[0];
+                        else if (packet.Type === 'TextToSpeech') {
+                            var data = packet.Data[0];
 
-                        responsiveVoice.forcedFallbackMode = true;
-                        if (responsiveVoice.voiceSupport()) {
-                            responsiveVoice.speak(data.Text, data.Voice, { pitch: data.Pitch, rate: data.Rate, volume: data.Volume });
+                            responsiveVoice.forcedFallbackMode = true;
+                            if (responsiveVoice.voiceSupport()) {
+                                responsiveVoice.speak(data.Text, data.Voice, { pitch: data.Pitch, rate: data.Rate, volume: data.Volume });
+                            }
                         }
+                    }
+                    else if (packet.Type == 'Test') {
+                        var connectionTest = document.getElementById("connectionTest");
+                        connectionTest.style.visibility = 'visible';
+                        setTimeout(function () {
+                            connectionTest.style.visibility = 'hidden';
+                        }, 3000);
                     }
                 }
             }
@@ -80,15 +84,11 @@
 
         function processAdd(data) {
             if (!iframes.has(data.ID)) {
-                var itemTemplate = document.querySelector("#iframeContainer");
-                const item = itemTemplate.content.cloneNode(true);
+                var iframeContainer = createIFrameContainer(data.URL);
 
-                var iframeContainer = item.querySelector(".iframeContainer");
-                iframeContainer.srcdoc = data.Content;
+                mainOverlayDiv.appendChild(iframeContainer);
 
-                mainOverlayDiv.appendChild(item);
-
-                iframes.set(data.ID, item);
+                iframes.set(data.ID, iframeContainer);
             }
         }
 
@@ -108,19 +108,28 @@
                     duration = 0;
                 }
 
-                var itemTemplate = document.querySelector("#iframeContainer");
-                const item = itemTemplate.content.cloneNode(true);
-
-                var iframeContainer = item.querySelector(".iframeContainer");
-                iframeContainer.onload = function () {
+                var iframeContainer = createIFrameContainer(data.URL);
+                iframeContainer.firstChild.onload = function () {
                     setTimeout(function () {
-                        mainOverlayDiv.removeChild(item);
-                    }, duration);
+                        mainOverlayDiv.removeChild(iframeContainer);
+                    }, duration * 1000);
                 }
-                iframeContainer.srcdoc = data.Content;
 
-                mainOverlayDiv.appendChild(item);
+                mainOverlayDiv.appendChild(iframeContainer);
             }
+        }
+
+        function createIFrameContainer(url) {
+            var div = document.createElement("div");
+            div.style = "display: block; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; margin: 0; padding: 0";
+
+            var iframe = document.createElement("iframe");
+            iframe.style = "position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; margin: 0; padding: 0; border: none;";
+            iframe.src = url;
+
+            div.appendChild(iframe);
+
+            return div;
         }
 
         function logException(err) {
@@ -128,7 +137,7 @@
             logToSessionStorage(err);
         }
 
-        openWebsocketConnection();
+        openWebsocketConnection("/overlay/ws/");
     </script>
 </body>
 </html>

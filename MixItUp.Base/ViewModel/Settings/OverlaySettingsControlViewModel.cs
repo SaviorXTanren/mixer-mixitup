@@ -76,7 +76,7 @@ namespace MixItUp.Base.ViewModel.Settings
                     {
                         OverlayEndpointV3Model overlayEndpoint = new OverlayEndpointV3Model(this.NewEndpointPortNumber, this.NewEndpointName);
 
-                        if (await ServiceManager.Get<OverlayService>().AddOverlayEndpoint(overlayEndpoint))
+                        if (await ServiceManager.Get<OverlayV3Service>().AddOverlayEndpoint(overlayEndpoint))
                         {
                             ChannelSession.Settings.OverlayEndpointsV3.Add(overlayEndpoint);
                             this.Endpoints.Add(new OverlayEndpointListingViewModel(this, overlayEndpoint));
@@ -90,7 +90,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
         protected override Task OnOpenInternal()
         {
-            this.Endpoints.ClearAndAddRange(ServiceManager.Get<OverlayService>().GetOverlayEndpoints().Select(oe => new OverlayEndpointListingViewModel(this, oe)));
+            this.Endpoints.ClearAndAddRange(ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoints().Select(oe => new OverlayEndpointListingViewModel(this, oe)));
 
             this.NewEndpointPortNumber = this.Endpoints.Max(o => o.PortNumber) + 1;
 

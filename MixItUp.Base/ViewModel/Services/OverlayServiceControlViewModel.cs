@@ -28,10 +28,28 @@ namespace MixItUp.Base.ViewModel.Services
         {
             this.ConnectCommand = this.CreateCommand(async () =>
             {
-                Result result = await ServiceManager.Get<OverlayService>().Connect();
+                //Result result = await ServiceManager.Get<OverlayService>().Connect();
+                //if (result.Success)
+                //{
+                //    this.IsConnected = true;
+                //}
+                //else
+                //{
+                //    await this.ShowConnectFailureMessage(result);
+                //}
+
+                Result result = await ServiceManager.Get<OverlayV3Service>().Enable();
                 if (result.Success)
                 {
-                    this.IsConnected = true;
+                    result = await ServiceManager.Get<OverlayV3Service>().Connect();
+                    if (result.Success)
+                    {
+                        this.IsConnected = true;
+                    }
+                    else
+                    {
+                        await this.ShowConnectFailureMessage(result);
+                    }
                 }
                 else
                 {
@@ -41,13 +59,14 @@ namespace MixItUp.Base.ViewModel.Services
 
             this.DisconnectCommand = this.CreateCommand(async () =>
             {
-                await ServiceManager.Get<OverlayService>().Disconnect();
+                await ServiceManager.Get<OverlayV3Service>().Disconnect();
+                await ServiceManager.Get<OverlayV3Service>().Disable();
                 this.IsConnected = false;
             });
 
             this.TestConnectionCommand = this.CreateCommand(async () =>
             {
-                int total = await ServiceManager.Get<OverlayService>().TestConnections();
+                int total = await ServiceManager.Get<OverlayV3Service>().TestConnections();
                 if (total > 0)
                 {
                     await DialogHelper.ShowMessage(Resources.OverlayConnectionSuccess + Environment.NewLine + Environment.NewLine + string.Format(Resources.OverlaysConnected, total));
@@ -61,7 +80,7 @@ namespace MixItUp.Base.ViewModel.Services
                 }
             });
 
-            this.IsConnected = ServiceManager.Get<OverlayService>().IsConnected;
+            this.IsConnected = ServiceManager.Get<OverlayV3Service>().State == ServiceState.Connected;
         }
     }
 }

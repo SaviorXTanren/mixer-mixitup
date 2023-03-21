@@ -35,8 +35,6 @@ namespace MixItUp.Base.Model.Overlay
 
         public static int zIndexCounter = 0;
 
-        public static string ReplaceProperty(string text, string name, string value) { return text.Replace($"{{{name}}}", value ?? string.Empty); }
-
         [DataMember]
         public string Name { get; set; }
 
@@ -81,10 +79,10 @@ namespace MixItUp.Base.Model.Overlay
         {
             this.IsEnabled = true;
 
-            OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlayEndpointService(this.OverlayEndpointID);
+            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
             if (overlay != null)
             {
-                await overlay.SendItem("Enable", this, new CommandParametersModel());
+                //await overlay.SendItem("Enable", this, new CommandParametersModel());
             }
 
             if (this.RefreshTime > 0)
@@ -122,10 +120,10 @@ namespace MixItUp.Base.Model.Overlay
                 }
             }
 
-            OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlayEndpointService(this.OverlayEndpointID);
+            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
             if (overlay != null)
             {
-                await overlay.SendJObject(type, this.TextID, jobj, parameters);
+                //await overlay.SendJObject(type, this.TextID, jobj, parameters);
             }
         }
 
@@ -137,10 +135,10 @@ namespace MixItUp.Base.Model.Overlay
             }
             this.refreshCancellationTokenSource = null;
 
-            OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlayEndpointService(this.OverlayEndpointID);
+            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
             if (overlay != null)
             {
-                await overlay.SendItem("Disable", this, new CommandParametersModel());
+                //await overlay.SendItem("Disable", this, new CommandParametersModel());
             }
 
             this.IsEnabled = false;
@@ -153,7 +151,7 @@ namespace MixItUp.Base.Model.Overlay
             await this.Disable();
         }
 
-        public async Task<OverlayOutputV3Model> GetProcessedItem(OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
+        public async Task<OverlayOutputV3Model> GetProcessedItem(CommandParametersModel parameters)
         {
             OverlayOutputV3Model result = new OverlayOutputV3Model();
 
@@ -167,10 +165,10 @@ namespace MixItUp.Base.Model.Overlay
             result.CSS = this.CSS;
             result.Javascript = this.Javascript;
 
-            string id = result.TextID;
-            result.HTML = ReplaceProperty(result.HTML, nameof(this.ID), id);
-            result.CSS = ReplaceProperty(result.CSS, nameof(this.ID), id);
-            result.Javascript = ReplaceProperty(result.Javascript, nameof(this.ID), id);
+            //string id = result.TextID;
+            //result.HTML = ReplaceProperty(result.HTML, nameof(this.ID), id);
+            //result.CSS = ReplaceProperty(result.CSS, nameof(this.ID), id);
+            //result.Javascript = ReplaceProperty(result.Javascript, nameof(this.ID), id);
 
             if (this.Layer == 0)
             {
@@ -243,7 +241,7 @@ namespace MixItUp.Base.Model.Overlay
                 animation.Value.ApplyAnimationReplacements(result);
             }
 
-            result = await this.GetProcessedItem(result, overlayEndpointService, parameters);
+            result = await this.GetProcessedItem(result, parameters);
 
             result.HTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(result.HTML, parameters);
             result.CSS = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(result.CSS, parameters);
@@ -257,7 +255,7 @@ namespace MixItUp.Base.Model.Overlay
             await Task.Delay(5000);
         }
 
-        protected virtual Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
+        protected virtual Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, CommandParametersModel parameters)
         {
             return Task.FromResult(item);
         }

@@ -138,6 +138,11 @@ namespace MixItUp.Base.Model.Overlay
         public string Name { get; set; }
 
         [DataMember]
+        public double Timing { get; set; }
+        [DataMember]
+        public int MillisecondTiming { get { return (int)(this.Timing * 1000.0); } set { } }
+
+        [DataMember]
         public OverlayAnimateCSSAnimationType AnimateCSSAnimation { get; set; }
         [DataMember]
         public string AnimateCSSAnimationName

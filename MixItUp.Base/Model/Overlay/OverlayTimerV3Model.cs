@@ -39,7 +39,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayTimerV3Model() : base(OverlayItemV3Type.Timer) { }
 
-        protected override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
+        protected override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, CommandParametersModel parameters)
         {
             string countUp = this.CountUp.ToString().ToLower();
             item.HTML = ReplaceProperty(item.HTML, nameof(this.CountUp), countUp);
@@ -50,7 +50,7 @@ namespace MixItUp.Base.Model.Overlay
             item.CSS = ReplaceProperty(item.CSS, nameof(this.DisplayFormat), this.DisplayFormat);
             item.Javascript = ReplaceProperty(item.Javascript, nameof(this.DisplayFormat), this.DisplayFormat);
 
-            item = await base.GetProcessedItem(item, overlayEndpointService, parameters);
+            item = await base.GetProcessedItem(item, parameters);
 
             return item;
         }

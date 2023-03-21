@@ -154,9 +154,9 @@ namespace MixItUp.Base.Model.Overlay
             await base.Disable();
         }
 
-        protected override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, OverlayEndpointService overlayEndpointService, CommandParametersModel parameters)
+        protected override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, CommandParametersModel parameters)
         {
-            item = await base.GetProcessedItem(item, overlayEndpointService, parameters);
+            item = await base.GetProcessedItem(item, parameters);
 
             item.HTML = ReplaceProperty(item.HTML, nameof(this.CurrentAmount), this.CurrentAmount);
             item.CSS = ReplaceProperty(item.CSS, nameof(this.CurrentAmount), this.CurrentAmount);
