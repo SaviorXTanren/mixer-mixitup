@@ -596,7 +596,7 @@ namespace MixItUp.Base.Services
 
                             if (!commandTriggered && userOnlyTriggersToCommands.Count > 0)
                             {
-                                commandTriggered = await this.CheckForChatCommandAndRun(message, userOnlyTriggersToCommands);
+                                commandTriggered = await this.CheckForChatCommandAndRun(message, userOnlyTriggersToCommands, ignoreTriggerLengthCheck: true);
                             }
 
                             if (!commandTriggered && userOnlyWildcardCommands.Count > 0)
@@ -697,13 +697,13 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private async Task<bool> CheckForChatCommandAndRun(ChatMessageViewModel message, Dictionary<string, CommandModelBase> commands)
+        private async Task<bool> CheckForChatCommandAndRun(ChatMessageViewModel message, Dictionary<string, CommandModelBase> commands, bool ignoreTriggerLengthCheck = false)
         {
             string[] messageParts = message.PlainTextMessage.Split(new char[] { ' ' });
             for (int i = 0; i < messageParts.Length; i++)
             {
                 string commandCheck = string.Join(" ", messageParts.Take(i + 1)).ToLower();
-                if (commandCheck.Length > this.longestTrigger)
+                if (!ignoreTriggerLengthCheck && commandCheck.Length > this.longestTrigger)
                 {
                     return false;
                 }
