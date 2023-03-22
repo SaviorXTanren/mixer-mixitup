@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -230,6 +231,7 @@ namespace MixItUp.Base.Model.Overlay
             }
 
             result.Duration = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.Duration, parameters);
+
             result.HTML = ReplaceProperty(result.HTML, nameof(this.Duration), result.Duration);
             result.CSS = ReplaceProperty(result.CSS, nameof(this.Duration), result.Duration);
             result.Javascript = ReplaceProperty(result.Javascript, nameof(this.Duration), result.Duration);
@@ -237,7 +239,6 @@ namespace MixItUp.Base.Model.Overlay
             foreach (var animation in this.Animations)
             {
                 result.Animations[animation.Key] = animation.Value;
-                animation.Value.ApplyAnimationReplacements(result);
             }
 
             result = await this.GetProcessedItem(result, parameters);

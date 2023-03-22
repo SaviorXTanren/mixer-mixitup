@@ -13372,20 +13372,44 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to animateCSS(maindiv, &apos;{AnimateCSSAnimationName}&apos;);.
+        /// </summary>
+        public static string OverlayAnimateCSSJavascript {
+            get {
+                return ResourceManager.GetString("OverlayAnimateCSSJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to setTimeout(function () {
+        ///    {Animation}
+        ///}, {MillisecondTiming});.
+        /// </summary>
+        public static string OverlayAnimationTimedWrapperJavascript {
+            get {
+                return ResourceManager.GetString("OverlayAnimationTimedWrapperJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
         ///
         ///&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
         ///&lt;head&gt;
         ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
         ///    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
-        ///    &lt;link rel=&quot;shortcut icon&quot; type=&quot;image/x-icon&quot; href=&quot;https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUp-Logo-Base-WhiteXS.png&quot; /&gt;
         ///
         ///    &lt;script src=&quot;jquery-3.6.0.min.js&quot;&gt;&lt;/script&gt;
-        ///    &lt;script src=&quot;webSocketWrapper.js&quot;&gt;&lt;/script&gt;
         ///
         ///    &lt;script src=&quot;video.min.js&quot;&gt;&lt;/script&gt;
         ///
-        ///    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;animate [rest of string was truncated]&quot;;.
+        ///    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;animate.min.css&quot;&gt;
+        ///
+        ///    &lt;style type=&quot;text/css&quot;&gt;
+        ///        {CSS}
+        ///    &lt;/style&gt;
+        ///&lt;/head&gt;
+        ///&lt;body style=&quot;background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100 [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayBasicIFrameTemplate {
             get {
@@ -13876,7 +13900,19 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .contentdiv {
+        ///   Looks up a localized string similar to .maindiv {
+        ///    position: absolute;
+        ///    width: 100%;
+        ///    max-width: 100%;
+        ///    min-width: 100%;
+        ///    height: 100%;
+        ///    max-height: 100%;
+        ///    min-height: 100%;
+        ///    margin: 0px;
+        ///    z-index: {Layer};
+        ///}
+        ///
+        ///.contentdiv {
         ///    position: absolute;
         ///    margin: 0px;
         ///    left: {XPosition}{PositionType};
@@ -13893,10 +13929,12 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;contentdiv&quot; class=&quot;contentdiv&quot;&gt;
+        ///   Looks up a localized string similar to &lt;div id=&quot;maindiv&quot; class=&quot;maindiv&quot;&gt;
+        ///&lt;div id=&quot;contentdiv&quot; class=&quot;contentdiv&quot;&gt;
         ///
         ///{InnerHTML}
         ///
+        ///&lt;/div&gt;
         ///&lt;/div&gt;.
         /// </summary>
         public static string OverlayPositionedItemDefaultHTML {

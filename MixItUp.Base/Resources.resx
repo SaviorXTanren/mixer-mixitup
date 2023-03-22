@@ -9200,7 +9200,19 @@ else {
 &lt;/p&gt;</value>
   </data>
   <data name="OverlayPositionedItemDefaultCSS" xml:space="preserve">
-    <value>.contentdiv {
+    <value>.maindiv {
+    position: absolute;
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    min-height: 100%;
+    margin: 0px;
+    z-index: {Layer};
+}
+
+.contentdiv {
     position: absolute;
     margin: 0px;
     left: {XPosition}{PositionType};
@@ -9211,10 +9223,12 @@ else {
 }</value>
   </data>
   <data name="OverlayPositionedItemDefaultHTML" xml:space="preserve">
-    <value>&lt;div id="contentdiv" class="contentdiv"&gt;
+    <value>&lt;div id="maindiv" class="maindiv"&gt;
+&lt;div id="contentdiv" class="contentdiv"&gt;
 
 {InnerHTML}
 
+&lt;/div&gt;
 &lt;/div&gt;</value>
   </data>
   <data name="OverlayActionValidationErrorHeader" xml:space="preserve">
@@ -9763,10 +9777,8 @@ function removeOldest()
 &lt;head&gt;
     &lt;meta charset="utf-8" /&gt;
     &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
-    &lt;link rel="shortcut icon" type="image/x-icon" href="https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUp-Logo-Base-WhiteXS.png" /&gt;
 
     &lt;script src="jquery-3.6.0.min.js"&gt;&lt;/script&gt;
-    &lt;script src="webSocketWrapper.js"&gt;&lt;/script&gt;
 
     &lt;script src="video.min.js"&gt;&lt;/script&gt;
 
@@ -9781,6 +9793,8 @@ function removeOldest()
     {HTML}
 
     &lt;script&gt;
+        var maindiv = document.getElementById("maindiv");
+        
         const animateCSS = (element, animation, prefix = 'animate__') =&gt;
             // We create a Promise and return it
             new Promise((resolve, reject) =&gt; {
@@ -9802,11 +9816,21 @@ function removeOldest()
                     resolve('Animation ended');
                 }
             });
-
+        
+        {Animations}
+        
         {Javascript}
     &lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;</value>
-    <comment>{HTML} is the HTML replacement, {CSS} is the CSS replacement, {Javascript} is the Javascript replacement</comment>
+    <comment>{HTML} is the HTML replacement, {CSS} is the CSS replacement, {Animations} is the Javascript animation calls, {Javascript} is the Javascript replacement</comment>
+  </data>
+  <data name="OverlayAnimateCSSJavascript" xml:space="preserve">
+    <value>animateCSS(maindiv, '{AnimateCSSAnimationName}');</value>
+  </data>
+  <data name="OverlayAnimationTimedWrapperJavascript" xml:space="preserve">
+    <value>setTimeout(function () {
+    {Animation}
+}, {MillisecondTiming});</value>
   </data>
 </root>
