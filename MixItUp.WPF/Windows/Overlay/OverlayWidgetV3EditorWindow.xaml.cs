@@ -66,9 +66,6 @@ namespace MixItUp.WPF.Windows.Overlay
                 case OverlayItemV3Type.HTML:
                     this.InnerContent.Content = new OverlayHTMLV3Control();
                     break;
-                case OverlayItemV3Type.WebPage:
-                    this.InnerContent.Content = new OverlayWebPageV3Control();
-                    break;
                 case OverlayItemV3Type.Timer:
                     this.InnerContent.Content = new OverlayTimerV3Control();
                     break;

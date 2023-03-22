@@ -98,7 +98,14 @@ namespace MixItUp.Base.Model.Actions
                 OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
                 if (overlay != null)
                 {
-                    await overlay.SendBasic(this.OverlayItemV3, parameters);
+                    if (this.OverlayItemV3.Type == OverlayItemV3Type.YouTube)
+                    {
+                        await overlay.SendYouTube(this.OverlayItemV3, parameters);
+                    }
+                    else
+                    {
+                        await overlay.SendBasic(this.OverlayItemV3, parameters);
+                    }
                 }
             }
         }

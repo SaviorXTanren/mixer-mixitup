@@ -17,7 +17,6 @@ namespace MixItUp.Base.Model.Overlay
         Video,
         YouTube,
         HTML,
-        WebPage,
         Timer,
         Label,
         EventList,
@@ -165,10 +164,10 @@ namespace MixItUp.Base.Model.Overlay
             result.CSS = this.CSS;
             result.Javascript = this.Javascript;
 
-            //string id = result.TextID;
-            //result.HTML = ReplaceProperty(result.HTML, nameof(this.ID), id);
-            //result.CSS = ReplaceProperty(result.CSS, nameof(this.ID), id);
-            //result.Javascript = ReplaceProperty(result.Javascript, nameof(this.ID), id);
+            string id = result.ID.ToString();
+            result.HTML = ReplaceProperty(result.HTML, nameof(this.ID), id);
+            result.CSS = ReplaceProperty(result.CSS, nameof(this.ID), id);
+            result.Javascript = ReplaceProperty(result.Javascript, nameof(this.ID), id);
 
             if (this.Layer == 0)
             {

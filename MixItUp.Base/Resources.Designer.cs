@@ -13876,19 +13876,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .outerdiv {
-        ///    position: absolute;
-        ///    width: 100%;
-        ///    max-width: 100%;
-        ///    min-width: 100%;
-        ///    height: 100%;
-        ///    max-height: 100%;
-        ///    min-height: 100%;
-        ///    margin: 0px;
-        ///    z-index: {Layer};
-        ///}
-        ///
-        ///.innerdiv {
+        ///   Looks up a localized string similar to .contentdiv {
         ///    position: absolute;
         ///    margin: 0px;
         ///    left: {XPosition}{PositionType};
@@ -13905,12 +13893,10 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;outerdiv&quot; class=&quot;outerdiv&quot;&gt;
-        ///&lt;div id=&quot;innerdiv&quot; class=&quot;innerdiv&quot;&gt;
+        ///   Looks up a localized string similar to &lt;div id=&quot;contentdiv&quot; class=&quot;contentdiv&quot;&gt;
         ///
         ///{InnerHTML}
         ///
-        ///&lt;/div&gt;
         ///&lt;/div&gt;.
         /// </summary>
         public static string OverlayPositionedItemDefaultHTML {
@@ -14076,24 +14062,6 @@ namespace MixItUp.Base {
         public static string OverlayWarning3 {
             get {
                 return ResourceManager.GetString("OverlayWarning3", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;iframe frameborder=&quot;0&quot; allowtransparency=&quot;yes&quot; scrolling=&quot;no&quot; width=&quot;{WIDTH}&quot; height=&quot;{HEIGHT}&quot; src=&quot;{URL}&quot; /&gt;.
-        /// </summary>
-        public static string OverlayWebPageDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayWebPageDefaultHTML", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Missing url.
-        /// </summary>
-        public static string OverlayWebPageMissingURL {
-            get {
-                return ResourceManager.GetString("OverlayWebPageMissingURL", resourceCulture);
             }
         }
         
@@ -14287,31 +14255,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;youtube&quot; /&gt;.
-        /// </summary>
-        public static string OverlayYouTubeDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayYouTubeDefaultHTML", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to function onYouTubeIframeAPIReady() {
-        ///    var youtubeVideoPlayer = new YT.Player(&quot;youtube&quot;, {
-        ///        height: {Height},
-        ///        width: {Width},
-        ///        videoId: {VideoID},
+        ///   Looks up a localized string similar to &lt;div id=&quot;youtube-{ID}&quot; /&gt;
+        ///
+        ///&lt;script&gt;
+        ///    var youtubeVideoPlayer = new YT.Player(&quot;youtube-{ID}&quot;, {
+        ///        height: {HeightNumber},
+        ///        width: {WidthNumber},
+        ///        videoId: &apos;{VideoID}&apos;,
         ///        playerVars: { &apos;controls&apos;: 0, &apos;modestbranding&apos;: 1, &apos;start&apos;: {StartTime} },
         ///        events: {
         ///            &apos;onReady&apos;: function () {
         ///                youtubeVideoPlayer.setVolume({Volume});
         ///                youtubeVideoPlayer.setLoop(false);
         ///                youtubeVideoPlayer.frameBorder = 0;
-        ///                youtubeVideoPlayer [rest of string was truncated]&quot;;.
+        ///               [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string OverlayYouTubeDefaultJavascript {
+        public static string OverlayYouTubeDefaultHTML {
             get {
-                return ResourceManager.GetString("OverlayYouTubeDefaultJavascript", resourceCulture);
+                return ResourceManager.GetString("OverlayYouTubeDefaultHTML", resourceCulture);
             }
         }
         

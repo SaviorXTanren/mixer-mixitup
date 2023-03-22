@@ -125,9 +125,6 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayItemV3Type.HTML:
                     this.Item = new OverlayHTMLV3ViewModel((OverlayHTMLV3Model)item);
                     break;
-                case OverlayItemV3Type.WebPage:
-                    this.Item = new OverlayWebPageV3ViewModel((OverlayWebPageV3Model)item);
-                    break;
                 case OverlayItemV3Type.Timer:
                     this.Item = new OverlayTimerV3ViewModel((OverlayTimerV3Model)item);
                     break;
@@ -161,9 +158,6 @@ namespace MixItUp.Base.ViewModel.Overlay
                     break;
                 case OverlayItemV3Type.HTML:
                     this.Item = new OverlayHTMLV3ViewModel();
-                    break;
-                case OverlayItemV3Type.WebPage:
-                    this.Item = new OverlayWebPageV3ViewModel();
                     break;
                 case OverlayItemV3Type.Timer:
                     this.Item = new OverlayTimerV3ViewModel();

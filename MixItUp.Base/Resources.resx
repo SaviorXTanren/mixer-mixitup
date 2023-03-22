@@ -9122,14 +9122,11 @@ function adjustTime(time)
     additionalTime += time;
 }
 
-function load()
-{
-    if ({CountUp}) {
-        timerLoop(0, {Duration}, "{DisplayFormat}");  
-    }
-    else {
-        timerLoop({Duration}, 0, "{DisplayFormat}");
-    }
+if ({CountUp}) {
+    timerLoop(0, {Duration}, "{DisplayFormat}");  
+}
+else {
+    timerLoop({Duration}, 0, "{DisplayFormat}");
 }</value>
   </data>
   <data name="OverlayImageDefaultCSS" xml:space="preserve">
@@ -9169,11 +9166,30 @@ function load()
     &lt;source src="{FilePath}" type="video/{VideoExtension}" /&gt;
 &lt;/video&gt;</value>
   </data>
-  <data name="OverlayWebPageDefaultHTML" xml:space="preserve">
-    <value>&lt;iframe frameborder="0" allowtransparency="yes" scrolling="no" width="{WIDTH}" height="{HEIGHT}" src="{URL}" /&gt;</value>
-  </data>
   <data name="OverlayYouTubeDefaultHTML" xml:space="preserve">
-    <value>&lt;div id="youtube" /&gt;</value>
+    <value>&lt;div id="youtube-{ID}" /&gt;
+
+&lt;script&gt;
+    var youtubeVideoPlayer = new YT.Player("youtube-{ID}", {
+        height: {HeightNumber},
+        width: {WidthNumber},
+        videoId: '{VideoID}',
+        playerVars: { 'controls': 0, 'modestbranding': 1, 'start': {StartTime} },
+        events: {
+            'onReady': function () {
+                youtubeVideoPlayer.setVolume({Volume});
+                youtubeVideoPlayer.setLoop(false);
+                youtubeVideoPlayer.frameBorder = 0;
+                youtubeVideoPlayer.playVideo();
+            },
+            'onStateChange': function (event) {
+                if (event.data == YT.PlayerState.ENDED) {
+                    event.target.destroy();
+                }
+            }
+        }
+    });
+&lt;/script&gt;</value>
   </data>
   <data name="DisplayFormat" xml:space="preserve">
     <value>Display Format</value>
@@ -9184,19 +9200,7 @@ function load()
 &lt;/p&gt;</value>
   </data>
   <data name="OverlayPositionedItemDefaultCSS" xml:space="preserve">
-    <value>.outerdiv {
-    position: absolute;
-    width: 100%;
-    max-width: 100%;
-    min-width: 100%;
-    height: 100%;
-    max-height: 100%;
-    min-height: 100%;
-    margin: 0px;
-    z-index: {Layer};
-}
-
-.innerdiv {
+    <value>.contentdiv {
     position: absolute;
     margin: 0px;
     left: {XPosition}{PositionType};
@@ -9207,12 +9211,10 @@ function load()
 }</value>
   </data>
   <data name="OverlayPositionedItemDefaultHTML" xml:space="preserve">
-    <value>&lt;div id="outerdiv" class="outerdiv"&gt;
-&lt;div id="innerdiv" class="innerdiv"&gt;
+    <value>&lt;div id="contentdiv" class="contentdiv"&gt;
 
 {InnerHTML}
 
-&lt;/div&gt;
 &lt;/div&gt;</value>
   </data>
   <data name="OverlayActionValidationErrorHeader" xml:space="preserve">
@@ -9226,9 +9228,6 @@ function load()
   </data>
   <data name="OverlayTimerMissingDisplayFormat" xml:space="preserve">
     <value>Missing display format</value>
-  </data>
-  <data name="OverlayWebPageMissingURL" xml:space="preserve">
-    <value>Missing url</value>
   </data>
   <data name="OverlayYouTubeMissingVideo" xml:space="preserve">
     <value>Missing video</value>
@@ -9779,9 +9778,7 @@ function removeOldest()
 &lt;/head&gt;
 &lt;body style="background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;"&gt;
 
-    &lt;div id="content" style="position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;"&gt;
-        {HTML}
-    &lt;/div&gt;
+    {HTML}
 
     &lt;script&gt;
         const animateCSS = (element, animation, prefix = 'animate__') =&gt;
@@ -9811,33 +9808,5 @@ function removeOldest()
 &lt;/body&gt;
 &lt;/html&gt;</value>
     <comment>{HTML} is the HTML replacement, {CSS} is the CSS replacement, {Javascript} is the Javascript replacement</comment>
-  </data>
-  <data name="OverlayYouTubeDefaultJavascript" xml:space="preserve">
-    <value>function onYouTubeIframeAPIReady() {
-    var youtubeVideoPlayer = new YT.Player("youtube", {
-        height: {Height},
-        width: {Width},
-        videoId: {VideoID},
-        playerVars: { 'controls': 0, 'modestbranding': 1, 'start': {StartTime} },
-        events: {
-            'onReady': function () {
-                youtubeVideoPlayer.setVolume({Volume});
-                youtubeVideoPlayer.setLoop(false);
-                youtubeVideoPlayer.frameBorder = 0;
-                youtubeVideoPlayer.playVideo();
-            },
-            'onStateChange': function (event) {
-                if (event.data == YT.PlayerState.ENDED) {
-                    event.target.destroy();
-                }
-            }
-        }
-    });
-}
-
-var youtubePlayerScript = document.createElement('script');
-youtubePlayerScript.src = "https://www.youtube.com/iframe_api";
-var firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(youtubePlayerScript, firstScriptTag);</value>
   </data>
 </root>

@@ -79,6 +79,16 @@ namespace MixItUp.Base.ViewModel.Overlay
                 return new Result(Resources.OverlayYouTubeMissingVideo);
             }
 
+            if (string.IsNullOrEmpty(this.Width))
+            {
+                return new Result(Resources.OverlayWidthMustBeValidValue);
+            }
+
+            if (string.IsNullOrEmpty(this.Height))
+            {
+                return new Result(Resources.OverlayHeightMustBeValidValue);
+            }
+
             return new Result();
         }
 
