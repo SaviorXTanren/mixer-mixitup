@@ -4379,6 +4379,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DeStream.
+        /// </summary>
+        public static string DeStream {
+            get {
+                return ResourceManager.GetString("DeStream", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Details.
         /// </summary>
         public static string Details {

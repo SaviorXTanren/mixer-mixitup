@@ -9828,6 +9828,9 @@ function removeOldest()
   <data name="OverlayAnimateCSSJavascript" xml:space="preserve">
     <value>animateCSS(maindiv, '{AnimateCSSAnimationName}');</value>
   </data>
+  <data name="DeStream" xml:space="preserve">
+    <value>DeStream</value>
+  </data>
   <data name="OverlayAnimationTimedWrapperJavascript" xml:space="preserve">
     <value>setTimeout(function () {
     {Animation}
