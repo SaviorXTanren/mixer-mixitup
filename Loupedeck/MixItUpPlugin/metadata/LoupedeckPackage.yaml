@@ -15,7 +15,7 @@ displayName: Mix It Up
 pluginFileName: MixItUp.LoupedeckPlugin.dll
 
 # Plugin version.
-version: 0.1
+version: 0.2
 
 # Author of the plugin. The author can be a company or an individual developer.
 author: Blazing Cacti LLC
