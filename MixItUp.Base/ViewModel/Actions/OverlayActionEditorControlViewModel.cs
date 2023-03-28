@@ -42,7 +42,6 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged(nameof(ShowVideoItem));
                 this.NotifyPropertyChanged(nameof(ShowYouTubeItem));
                 this.NotifyPropertyChanged(nameof(ShowHTMLItem));
-                this.NotifyPropertyChanged(nameof(ShowWebPageItem));
                 this.NotifyPropertyChanged(nameof(ShowTimerItem));
             }
         }
@@ -138,19 +137,6 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private OverlayHTMLV3ViewModel htmlItemViewModel = new OverlayHTMLV3ViewModel();
 
-        public bool ShowWebPageItem { get { return this.SelectedActionType == OverlayActionTypeEnum.WebPage; } }
-
-        public OverlayWebPageV3ViewModel WebPageItemViewModel
-        {
-            get { return this.webPageItemViewModel; }
-            set
-            {
-                this.webPageItemViewModel = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private OverlayWebPageV3ViewModel webPageItemViewModel = new OverlayWebPageV3ViewModel();
-
         public bool ShowTimerItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Timer; } }
 
         public OverlayTimerV3ViewModel TimerItemViewModel
@@ -200,11 +186,6 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.SelectedActionType = OverlayActionTypeEnum.HTML;
                     this.HTMLItemViewModel = new OverlayHTMLV3ViewModel((OverlayHTMLV3Model)action.OverlayItemV3);
                 }
-                else if (action.OverlayItemV3.Type == OverlayItemV3Type.WebPage)
-                {
-                    this.SelectedActionType = OverlayActionTypeEnum.WebPage;
-                    this.WebPageItemViewModel = new OverlayWebPageV3ViewModel((OverlayWebPageV3Model)action.OverlayItemV3);
-                }
                 else if (action.OverlayItemV3.Type == OverlayItemV3Type.Timer)
                 {
                     this.SelectedActionType = OverlayActionTypeEnum.Timer;
@@ -223,7 +204,6 @@ namespace MixItUp.Base.ViewModel.Actions
             this.VideoItemViewModel.AddOverlayActionAnimations();
             this.YouTubeItemViewModel.AddOverlayActionAnimations();
             this.HTMLItemViewModel.AddOverlayActionAnimations();
-            this.WebPageItemViewModel.AddOverlayActionAnimations();
             this.TimerItemViewModel.AddOverlayActionAnimations();
         }
 
@@ -297,10 +277,6 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.SelectedActionType == OverlayActionTypeEnum.HTML)
             {
                 return this.HTMLItemViewModel;
-            }
-            else if (this.SelectedActionType == OverlayActionTypeEnum.WebPage)
-            {
-                return this.WebPageItemViewModel;
             }
             else if (this.SelectedActionType == OverlayActionTypeEnum.Timer)
             {

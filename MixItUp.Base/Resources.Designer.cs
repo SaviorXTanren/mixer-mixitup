@@ -4379,6 +4379,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DeStream.
+        /// </summary>
+        public static string DeStream {
+            get {
+                return ResourceManager.GetString("DeStream", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Details.
         /// </summary>
         public static string Details {
@@ -13372,20 +13381,44 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to animateCSS(maindiv, &apos;{AnimateCSSAnimationName}&apos;);.
+        /// </summary>
+        public static string OverlayAnimateCSSJavascript {
+            get {
+                return ResourceManager.GetString("OverlayAnimateCSSJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to setTimeout(function () {
+        ///    {Animation}
+        ///}, {MillisecondTiming});.
+        /// </summary>
+        public static string OverlayAnimationTimedWrapperJavascript {
+            get {
+                return ResourceManager.GetString("OverlayAnimationTimedWrapperJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
         ///
         ///&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
         ///&lt;head&gt;
         ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
         ///    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
-        ///    &lt;link rel=&quot;shortcut icon&quot; type=&quot;image/x-icon&quot; href=&quot;https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUp-Logo-Base-WhiteXS.png&quot; /&gt;
         ///
         ///    &lt;script src=&quot;jquery-3.6.0.min.js&quot;&gt;&lt;/script&gt;
-        ///    &lt;script src=&quot;webSocketWrapper.js&quot;&gt;&lt;/script&gt;
         ///
         ///    &lt;script src=&quot;video.min.js&quot;&gt;&lt;/script&gt;
         ///
-        ///    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;animate [rest of string was truncated]&quot;;.
+        ///    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;animate.min.css&quot;&gt;
+        ///
+        ///    &lt;style type=&quot;text/css&quot;&gt;
+        ///        {CSS}
+        ///    &lt;/style&gt;
+        ///&lt;/head&gt;
+        ///&lt;body style=&quot;background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100 [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayBasicIFrameTemplate {
             get {
@@ -13876,7 +13909,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .outerdiv {
+        ///   Looks up a localized string similar to .maindiv {
         ///    position: absolute;
         ///    width: 100%;
         ///    max-width: 100%;
@@ -13888,7 +13921,7 @@ namespace MixItUp.Base {
         ///    z-index: {Layer};
         ///}
         ///
-        ///.innerdiv {
+        ///.contentdiv {
         ///    position: absolute;
         ///    margin: 0px;
         ///    left: {XPosition}{PositionType};
@@ -13905,8 +13938,8 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;outerdiv&quot; class=&quot;outerdiv&quot;&gt;
-        ///&lt;div id=&quot;innerdiv&quot; class=&quot;innerdiv&quot;&gt;
+        ///   Looks up a localized string similar to &lt;div id=&quot;maindiv&quot; class=&quot;maindiv&quot;&gt;
+        ///&lt;div id=&quot;contentdiv&quot; class=&quot;contentdiv&quot;&gt;
         ///
         ///{InnerHTML}
         ///
@@ -14076,24 +14109,6 @@ namespace MixItUp.Base {
         public static string OverlayWarning3 {
             get {
                 return ResourceManager.GetString("OverlayWarning3", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;iframe frameborder=&quot;0&quot; allowtransparency=&quot;yes&quot; scrolling=&quot;no&quot; width=&quot;{WIDTH}&quot; height=&quot;{HEIGHT}&quot; src=&quot;{URL}&quot; /&gt;.
-        /// </summary>
-        public static string OverlayWebPageDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayWebPageDefaultHTML", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Missing url.
-        /// </summary>
-        public static string OverlayWebPageMissingURL {
-            get {
-                return ResourceManager.GetString("OverlayWebPageMissingURL", resourceCulture);
             }
         }
         
@@ -14287,31 +14302,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;youtube&quot; /&gt;.
-        /// </summary>
-        public static string OverlayYouTubeDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayYouTubeDefaultHTML", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to function onYouTubeIframeAPIReady() {
-        ///    var youtubeVideoPlayer = new YT.Player(&quot;youtube&quot;, {
-        ///        height: {Height},
-        ///        width: {Width},
-        ///        videoId: {VideoID},
+        ///   Looks up a localized string similar to &lt;div id=&quot;youtube-{ID}&quot; /&gt;
+        ///
+        ///&lt;script&gt;
+        ///    var youtubeVideoPlayer = new YT.Player(&quot;youtube-{ID}&quot;, {
+        ///        height: {HeightNumber},
+        ///        width: {WidthNumber},
+        ///        videoId: &apos;{VideoID}&apos;,
         ///        playerVars: { &apos;controls&apos;: 0, &apos;modestbranding&apos;: 1, &apos;start&apos;: {StartTime} },
         ///        events: {
         ///            &apos;onReady&apos;: function () {
         ///                youtubeVideoPlayer.setVolume({Volume});
         ///                youtubeVideoPlayer.setLoop(false);
         ///                youtubeVideoPlayer.frameBorder = 0;
-        ///                youtubeVideoPlayer [rest of string was truncated]&quot;;.
+        ///               [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string OverlayYouTubeDefaultJavascript {
+        public static string OverlayYouTubeDefaultHTML {
             get {
-                return ResourceManager.GetString("OverlayYouTubeDefaultJavascript", resourceCulture);
+                return ResourceManager.GetString("OverlayYouTubeDefaultHTML", resourceCulture);
             }
         }
         

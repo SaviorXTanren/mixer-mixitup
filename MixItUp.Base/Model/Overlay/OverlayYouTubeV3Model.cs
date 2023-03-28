@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Util;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -9,7 +10,7 @@ namespace MixItUp.Base.Model.Overlay
     {
         public static readonly string DefaultHTML = Resources.OverlayYouTubeDefaultHTML;
         public static readonly string DefaultCSS = string.Empty;
-        public static readonly string DefaultJavascript = Resources.OverlayYouTubeDefaultJavascript;
+        public static readonly string DefaultJavascript = string.Empty;
 
         [DataMember]
         public string VideoID { get; set; }
@@ -26,11 +27,12 @@ namespace MixItUp.Base.Model.Overlay
         {
             item = await base.GetProcessedItem(item, parameters);
 
-            string videoID = this.VideoID.Replace("https://www.youtube.com/watch?v=", "");
-            videoID = this.VideoID.Replace("https://youtu.be/", "");
-            if (this.VideoID.Contains("&"))
+            string videoID = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.VideoID, parameters);
+            videoID = videoID.Replace("https://www.youtube.com/watch?v=", "");
+            videoID = videoID.Replace("https://youtu.be/", "");
+            if (videoID.Contains("&"))
             {
-                videoID = this.VideoID.Substring(0, videoID.IndexOf("&"));
+                videoID = videoID.Substring(0, videoID.IndexOf("&"));
             }
 
             item.HTML = ReplaceProperty(item.HTML, nameof(this.VideoID), videoID);
@@ -44,6 +46,14 @@ namespace MixItUp.Base.Model.Overlay
             item.HTML = ReplaceProperty(item.HTML, nameof(this.Volume), this.Volume.ToString());
             item.CSS = ReplaceProperty(item.CSS, nameof(this.Volume), this.Volume.ToString());
             item.Javascript = ReplaceProperty(item.Javascript, nameof(this.Volume), this.Volume.ToString());
+
+            item.HTML = ReplaceProperty(item.HTML, "HeightNumber", this.Height.ToString());
+            item.CSS = ReplaceProperty(item.CSS, "HeightNumber", this.Height.ToString());
+            item.Javascript = ReplaceProperty(item.Javascript, "HeightNumber", this.Height.ToString());
+
+            item.HTML = ReplaceProperty(item.HTML, "WidthNumber", this.Width.ToString());
+            item.CSS = ReplaceProperty(item.CSS, "WidthNumber", this.Width.ToString());
+            item.Javascript = ReplaceProperty(item.Javascript, "WidthNumber", this.Width.ToString());
 
             return item;
         }

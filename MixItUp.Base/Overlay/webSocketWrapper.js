@@ -15,7 +15,6 @@ function openWebsocketConnectionWithAddressPort(address, port, path) {
 
         // When the connection is open, send some data to the server
         connection.onopen = function () {
-            connectionOpened();
             sendPacket('Ping', '');
         };
 
@@ -39,7 +38,6 @@ function openWebsocketConnectionWithAddressPort(address, port, path) {
         };
 
         connection.onclose = function (e) {
-            connectionClosed();
             setTimeout(function () { openWebsocketConnectionWithAddressPort(address, port, path); }, 1000);
         };
     }

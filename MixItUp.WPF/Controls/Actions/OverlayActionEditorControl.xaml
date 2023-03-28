@@ -89,14 +89,6 @@
             </OverlayControls:OverlayItemContainerV3Control>
         </Grid>
 
-        <Grid Grid.Row="2" Visibility="{Binding ShowWebPageItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <OverlayControls:OverlayItemContainerV3Control DataContext="{Binding WebPageItemViewModel}">
-                <OverlayControls:OverlayItemContainerV3Control.ContentControl>
-                    <OverlayControls:OverlayWebPageV3Control />
-                </OverlayControls:OverlayItemContainerV3Control.ContentControl>
-            </OverlayControls:OverlayItemContainerV3Control>
-        </Grid>
-
         <Grid Grid.Row="2" Visibility="{Binding ShowTimerItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
             <OverlayControls:OverlayItemContainerV3Control DataContext="{Binding TimerItemViewModel}">
                 <OverlayControls:OverlayItemContainerV3Control.ContentControl>

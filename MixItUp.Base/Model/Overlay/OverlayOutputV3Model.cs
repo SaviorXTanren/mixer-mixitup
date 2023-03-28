@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
@@ -40,9 +41,18 @@ namespace MixItUp.Base.Model.Overlay
         public string GenerateFullHTMLOutput()
         {
             string content = Resources.OverlayBasicIFrameTemplate;
+
             content = OverlayOutputV3Model.ReplaceProperty(content, nameof(this.HTML), this.HTML);
             content = OverlayOutputV3Model.ReplaceProperty(content, nameof(this.CSS), this.CSS);
             content = OverlayOutputV3Model.ReplaceProperty(content, nameof(this.Javascript), this.Javascript);
+
+            StringBuilder animations = new StringBuilder();
+            foreach (var animation in this.Animations)
+            {
+                animations.AppendLine(animation.Value.GenerateAnimationJavascript());
+            }
+            content = OverlayOutputV3Model.ReplaceProperty(content, nameof(this.Animations), animations.ToString());
+
             return content;
         }
     }

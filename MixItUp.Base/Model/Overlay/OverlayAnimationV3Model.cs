@@ -176,16 +176,22 @@ namespace MixItUp.Base.Model.Overlay
         [Obsolete]
         public OverlayAnimationV3Model() { }
 
-        public void ApplyAnimationReplacements(OverlayOutputV3Model output)
+        public string GenerateAnimationJavascript()
         {
+            string output = string.Empty;
             if (this.AnimateCSSAnimation != OverlayAnimateCSSAnimationType.None)
             {
-                string animationName = this.AnimateCSSAnimationName;
-
-                output.HTML = OverlayItemV3ModelBase.ReplaceProperty(output.HTML, "AnimateCSSAnimationName", animationName);
-                output.CSS = OverlayItemV3ModelBase.ReplaceProperty(output.CSS, "AnimateCSSAnimationName", animationName);
-                output.Javascript = OverlayItemV3ModelBase.ReplaceProperty(output.Javascript, "AnimateCSSAnimationName", animationName);
+                output = Resources.OverlayAnimateCSSJavascript;
+                output = OverlayItemV3ModelBase.ReplaceProperty(output, nameof(this.AnimateCSSAnimationName), this.AnimateCSSAnimationName);
             }
+
+            if (!string.IsNullOrEmpty(output) && this.MillisecondTiming > 0)
+            {
+                output = OverlayItemV3ModelBase.ReplaceProperty(Resources.OverlayAnimationTimedWrapperJavascript, "Animation", output);
+                output = OverlayItemV3ModelBase.ReplaceProperty(output, nameof(this.MillisecondTiming), this.MillisecondTiming.ToString());
+            }
+
+            return output;
         }
     }
 }

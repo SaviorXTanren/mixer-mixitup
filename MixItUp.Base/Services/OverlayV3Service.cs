@@ -338,18 +338,24 @@ namespace MixItUp.Base.Services
 
         public async Task<int> TestConnection() { return await this.webSocketServer.TestConnection(); }
 
-        public void StartBatching()
-        {
-            this.isBatching = true;
-        }
-
         public async Task SendBasic(OverlayItemV3ModelBase item, CommandParametersModel parameters)
         {
             try
             {
                 if (item != null)
                 {
-                    await this.SendBasic(await item.GetProcessedItem(parameters));
+                    OverlayOutputV3Model output = await item.GetProcessedItem(parameters);
+
+                    await this.httpListenerServer.SetHTMLData(output.ID.ToString(), output.GenerateFullHTMLOutput());
+
+                    if (this.isBatching)
+                    {
+                        this.batchPackets.Add(new OverlayBasicOutputV3Model(output));
+                    }
+                    else
+                    {
+                        await this.webSocketServer.Send(new OverlayV3Packet("Basic", new OverlayBasicOutputV3Model(output)));
+                    }
                 }
             }
             catch (Exception ex)
@@ -358,18 +364,24 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task SendBasic(OverlayOutputV3Model output)
+        public async Task SendYouTube(OverlayItemV3ModelBase item, CommandParametersModel parameters)
         {
-            await this.httpListenerServer.SetHTMLData(output.ID.ToString(), output.GenerateFullHTMLOutput());
+            try
+            {
+                if (item != null)
+                {
+                    await this.webSocketServer.Send(new OverlayV3Packet("YouTube", await item.GetProcessedItem(parameters)));
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
 
-            if (this.isBatching)
-            {
-                this.batchPackets.Add(new OverlayBasicOutputV3Model(output));
-            }
-            else
-            {
-                await this.webSocketServer.Send(new OverlayV3Packet("Basic", new OverlayBasicOutputV3Model(output)));
-            }
+        public void StartBatching()
+        {
+            this.isBatching = true;
         }
 
         public async Task EndBatching()
@@ -455,9 +467,10 @@ namespace MixItUp.Base.Services
                 else if (url.StartsWith(OverlayDataWebPath))
                 {
                     string id = url.Replace(OverlayDataWebPath, string.Empty);
-                    if (this.htmlData.ContainsKey(id))
+                    if (this.htmlData.TryGetValue(id, out string data))
                     {
-                        await this.CloseConnection(listenerContext, HttpStatusCode.OK, this.htmlData[id]);
+                        this.htmlData.Remove(id);
+                        await this.CloseConnection(listenerContext, HttpStatusCode.OK, data);
                     }
                 }
                 else if (url.StartsWith(OverlayFilesWebPath))
