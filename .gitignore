@@ -199,3 +199,6 @@ FakesAssemblies/
 
 # Loupedeck build outputs
 *.lplug4
+
+# AVerMedia build outputs
+*.creatorCentral
