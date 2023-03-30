@@ -9795,6 +9795,16 @@ function removeOldest()
     &lt;script&gt;
         var maindiv = document.getElementById("maindiv");
         
+        function sendParentMessage(obj) {
+            window.top.postMessage(JSON.stringify(obj), '*');
+        }
+
+        window.onmessage = function (message) {
+            if (message != null) {
+                var obj = JSON.parse(message);
+            }
+        };
+        
         const animateCSS = (element, animation, prefix = 'animate__') =&gt;
             // We create a Promise and return it
             new Promise((resolve, reject) =&gt; {
@@ -9835,5 +9845,14 @@ function removeOldest()
     <value>setTimeout(function () {
     {Animation}
 }, {MillisecondTiming});</value>
+  </data>
+  <data name="OverlayAnimateCSSThenJavascript" xml:space="preserve">
+    <value>animateCSS(maindiv, '{AnimateCSSAnimationName}').then((message) =&gt; {
+    {PostAnimation}
+});</value>
+  </data>
+  <data name="OverlayIFrameSendParentMessageRemove" xml:space="preserve">
+    <value>maindiv.style.visibility='hidden'
+sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   </data>
 </root>

@@ -36,7 +36,9 @@ namespace MixItUp.Base.Model.Overlay
         public string Duration { get; set; }
 
         [DataMember]
-        public Dictionary<string, OverlayAnimationV3Model> Animations { get; set; } = new Dictionary<string, OverlayAnimationV3Model>();
+        public List<OverlayAnimationV3Model> Animations { get; set; } = new List<OverlayAnimationV3Model>();
+
+        public string TextID { get { return this.ID.ToString(); } }
 
         public string GenerateFullHTMLOutput()
         {
@@ -47,10 +49,9 @@ namespace MixItUp.Base.Model.Overlay
             content = OverlayOutputV3Model.ReplaceProperty(content, nameof(this.Javascript), this.Javascript);
 
             StringBuilder animations = new StringBuilder();
-            foreach (var animation in this.Animations)
-            {
-                animations.AppendLine(animation.Value.GenerateAnimationJavascript());
-            }
+            animations.AppendLine(this.Animations[0].GenerateEntranceAnimationJavascript());
+            animations.AppendLine(this.Animations[1].GenerateVisibleAnimationJavascript(this.Duration));
+            animations.AppendLine(this.Animations[2].GenerateExitAnimationJavascript(this.TextID, this.Duration));
             content = OverlayOutputV3Model.ReplaceProperty(content, nameof(this.Animations), animations.ToString());
 
             return content;
@@ -71,7 +72,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayBasicOutputV3Model(OverlayOutputV3Model output)
         {
-            this.ID = output.ID.ToString();
+            this.ID = output.TextID;
             this.URL = "data/" + this.ID;
             this.Duration = output.Duration;
         }

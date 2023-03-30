@@ -238,7 +238,7 @@ namespace MixItUp.Base.Model.Overlay
 
             foreach (var animation in this.Animations)
             {
-                result.Animations[animation.Key] = animation.Value;
+                result.Animations.Add(animation);
             }
 
             result = await this.GetProcessedItem(result, parameters);

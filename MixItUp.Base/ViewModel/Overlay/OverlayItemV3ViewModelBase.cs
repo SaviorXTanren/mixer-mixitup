@@ -161,19 +161,19 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             foreach (var animation in item.Animations)
             {
-                this.Animations.Add(new OverlayAnimationV3ViewModel(animation.Value));
+                this.Animations.Add(new OverlayAnimationV3ViewModel(animation));
             }
             this.NotifyPropertyChanged(nameof(this.HasAnimations));
         }
 
         public void AddOverlayActionAnimations()
         {
-            this.AddAnimations(new List<string>() { OverlayAnimationV3Model.EntranceAnimationName, OverlayAnimationV3Model.VisibleAnimationName, OverlayAnimationV3Model.ExitAniamtionName });
+            this.AddAnimations(new List<string>() { Resources.Entrance, Resources.Visible, Resources.Exit });
         }
 
         public void AddEntranceExitAnimations()
         {
-            this.AddAnimations(new List<string>() { OverlayAnimationV3Model.EntranceAnimationName, OverlayAnimationV3Model.ExitAniamtionName });
+            this.AddAnimations(new List<string>() { Resources.Entrance, Resources.Exit });
         }
 
         public void AddAnimations(IEnumerable<string> animationNames)
@@ -203,7 +203,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             foreach (var animation in this.Animations)
             {
-                item.Animations[animation.Name] = animation.GetAnimation();
+                item.Animations.Add(animation.GetAnimation());
             }
 
             return item;

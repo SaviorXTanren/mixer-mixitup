@@ -13390,6 +13390,17 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to animateCSS(maindiv, &apos;{AnimateCSSAnimationName}&apos;).then((message) =&gt; {
+        ///    {PostAnimation}
+        ///});.
+        /// </summary>
+        public static string OverlayAnimateCSSThenJavascript {
+            get {
+                return ResourceManager.GetString("OverlayAnimateCSSThenJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to setTimeout(function () {
         ///    {Animation}
         ///}, {MillisecondTiming});.
@@ -13726,6 +13737,16 @@ namespace MixItUp.Base {
         public static string OverlayHeightMustBeValidValue {
             get {
                 return ResourceManager.GetString("OverlayHeightMustBeValidValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to maindiv.style.visibility=&apos;hidden&apos;
+        ///sendParentMessage({ Type: &quot;Remove&quot;, ID: &quot;{ID}&quot; });.
+        /// </summary>
+        public static string OverlayIFrameSendParentMessageRemove {
+            get {
+                return ResourceManager.GetString("OverlayIFrameSendParentMessageRemove", resourceCulture);
             }
         }
         

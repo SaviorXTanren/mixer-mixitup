@@ -130,17 +130,8 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayAnimationV3Model
     {
-        public const string EntranceAnimationName = "Entrance";
-        public const string VisibleAnimationName = "Visible";
-        public const string ExitAniamtionName = "Exit";
-
         [DataMember]
         public string Name { get; set; }
-
-        [DataMember]
-        public double Timing { get; set; }
-        [DataMember]
-        public int MillisecondTiming { get { return (int)(this.Timing * 1000.0); } set { } }
 
         [DataMember]
         public OverlayAnimateCSSAnimationType AnimateCSSAnimation { get; set; }
@@ -176,21 +167,47 @@ namespace MixItUp.Base.Model.Overlay
         [Obsolete]
         public OverlayAnimationV3Model() { }
 
-        public string GenerateAnimationJavascript()
+        public string GenerateEntranceAnimationJavascript()
+        {
+            return this.GenerateAnimationJavascript();
+        }
+
+        public string GenerateVisibleAnimationJavascript(string totalDuration)
+        {
+            string output = this.GenerateAnimationJavascript();
+            if (!string.IsNullOrEmpty(output))
+            {
+                output = OverlayItemV3ModelBase.ReplaceProperty(Resources.OverlayAnimationTimedWrapperJavascript, "Animation", output);
+                output = OverlayItemV3ModelBase.ReplaceProperty(output, "MillisecondTiming", $"(({totalDuration} * 1000) / 2)");
+            }
+            return output;
+        }
+
+        public string GenerateExitAnimationJavascript(string id, string totalDuration)
+        {
+            string output = this.GenerateAnimationJavascript(includePostProcessingFunction: true);
+            if (!string.IsNullOrEmpty(output))
+            {
+                output = OverlayItemV3ModelBase.ReplaceProperty(Resources.OverlayAnimationTimedWrapperJavascript, "Animation", output);
+                output = OverlayItemV3ModelBase.ReplaceProperty(output, "PostAnimation", Resources.OverlayIFrameSendParentMessageRemove);
+            }
+            else
+            {
+                output = OverlayItemV3ModelBase.ReplaceProperty(Resources.OverlayAnimationTimedWrapperJavascript, "Animation", Resources.OverlayIFrameSendParentMessageRemove);
+            }
+            output = OverlayItemV3ModelBase.ReplaceProperty(output, "MillisecondTiming", $"({totalDuration} * 1000)");
+            output = OverlayItemV3ModelBase.ReplaceProperty(output, "ID", id);
+            return output;
+        }
+
+        private string GenerateAnimationJavascript(bool includePostProcessingFunction = false)
         {
             string output = string.Empty;
             if (this.AnimateCSSAnimation != OverlayAnimateCSSAnimationType.None)
             {
-                output = Resources.OverlayAnimateCSSJavascript;
+                output = includePostProcessingFunction ? Resources.OverlayAnimateCSSThenJavascript : Resources.OverlayAnimateCSSJavascript;
                 output = OverlayItemV3ModelBase.ReplaceProperty(output, nameof(this.AnimateCSSAnimationName), this.AnimateCSSAnimationName);
             }
-
-            if (!string.IsNullOrEmpty(output) && this.MillisecondTiming > 0)
-            {
-                output = OverlayItemV3ModelBase.ReplaceProperty(Resources.OverlayAnimationTimedWrapperJavascript, "Animation", output);
-                output = OverlayItemV3ModelBase.ReplaceProperty(output, nameof(this.MillisecondTiming), this.MillisecondTiming.ToString());
-            }
-
             return output;
         }
     }
