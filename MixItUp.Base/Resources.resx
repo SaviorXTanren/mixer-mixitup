@@ -9503,4 +9503,13 @@ update_{ID}({CurrentAmount}, {Percentage}, {Width});</value>
   <data name="SendShoutout" xml:space="preserve">
     <value>Send Shoutout</value>
   </data>
+  <data name="EndingAmountMustBeGreaterThanStartingAmount" xml:space="preserve">
+    <value>The ending amount must be greater than the starting amount</value>
+  </data>
+  <data name="TwitchBits" xml:space="preserve">
+    <value>Twitch Bits</value>
+  </data>
+  <data name="EndingAmount" xml:space="preserve">
+    <value>Ending Amount</value>
+  </data>
 </root>

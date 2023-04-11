@@ -1,0 +1,96 @@
+﻿<local:GroupedCommandsMainControlBase x:Class="MixItUp.WPF.Controls.MainControls.TwitchBitsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="500">
+    <local:MainControlBase.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </local:MainControlBase.Resources>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FilterByName}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+
+            <TextBox Grid.Column="2" x:Name="NameFilterTextBox" Width="150" TextChanged="NameFilterTextBox_TextChanged" />
+        </Grid>
+
+        <ScrollViewer Grid.Row="2" Visibility="{Binding ShowList, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
+            <DataGrid ItemsSource="{Binding DefaultGroup}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch" PreviewMouseWheel="DataGrid_PreviewMouseWheel">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
+                    <DataGridTextColumn Header="{x:Static resx:Resources.Amount}" Binding="{Binding AmountDisplay}" IsReadOnly="True" Width="*" />
+                    <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" MinWidth="230" Width="230">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CommandsControls:CommandListingButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </ScrollViewer>
+
+        <ScrollViewer Grid.Row="2" Visibility="{Binding ShowGroups, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
+            <ItemsControl ItemsSource="{Binding CommandGroups}" HorizontalContentAlignment="Stretch">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="{StaticResource PrimaryHueDarkBrush}" BorderThickness="1">
+                            <Expander VerticalContentAlignment="Top" HorizontalContentAlignment="Stretch" Visibility="{Binding HasCommands, Converter={StaticResource BooleanToVisibilityConverter}}" Background="{StaticResource PrimaryHueMidBrush}">
+                                <Expander.Header>
+                                    <Grid Background="Transparent">
+                                        <TextBlock HorizontalAlignment="Left" Text="{Binding DisplayName}" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" />
+
+                                        <ToggleButton Visibility="{Binding IsEnableSwitchToggable, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource MaterialDesignSwitchLightToggleButton}" HorizontalAlignment="Right" IsChecked="{Binding Path=IsEnabled}" />
+                                    </Grid>
+                                </Expander.Header>
+
+                                <DataGrid ItemsSource="{Binding Commands}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch" PreviewMouseWheel="DataGrid_PreviewMouseWheel">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
+                                        <DataGridTextColumn Header="{x:Static resx:Resources.Amount}" Binding="{Binding AmountDisplay}" IsReadOnly="True" Width="*" />
+                                        <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" MinWidth="230" Width="230">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <CommandsControls:CommandListingButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Expander>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <Grid Grid.Row="4" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}" MinWidth="140" />
+        </Grid>
+    </Grid>
+</local:GroupedCommandsMainControlBase>

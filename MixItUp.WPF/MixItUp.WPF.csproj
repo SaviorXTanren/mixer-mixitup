@@ -660,6 +660,9 @@
     <Compile Include="Controls\Commands\TrovoSpellCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>TrovoSpellCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Commands\TwitchBitsCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>TwitchBitsCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Commands\WebhookCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>WebhookCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -770,6 +773,9 @@
     </Compile>
     <Compile Include="Controls\MainControls\TrovoSpellsControl.xaml.cs">
       <DependentUpon>TrovoSpellsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\TwitchBitsControl.xaml.cs">
+      <DependentUpon>TwitchBitsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\WebhooksControl.xaml.cs">
       <DependentUpon>WebhooksControl.xaml</DependentUpon>
@@ -1412,6 +1418,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Commands\TwitchBitsCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Commands\WebhookCommandEditorDetailsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1553,6 +1563,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\TrovoSpellsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\TwitchBitsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -58,6 +58,7 @@ namespace MixItUp.Base.Model.Store
         GameCommand,
         Webhook,
         TrovoSpell,
+        TwitchBits,
 
         // Extra Tags
         [Obsolete]

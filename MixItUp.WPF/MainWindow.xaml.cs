@@ -131,6 +131,7 @@ namespace MixItUp.WPF
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Users, new UsersControl(), "https://wiki.mixitupapp.com/users");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.CurrencyRankInventory, new CurrencyRankInventoryControl(), "https://wiki.mixitupapp.com/consumables");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.TwitchChannelPoints, new TwitchChannelPointsControl(), "https://wiki.mixitupapp.com/commands/twitch-channel-point-commands");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.TwitchBits, new TwitchBitsControl(), "https://wiki.mixitupapp.com/commands/twitch-bits-commands");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.TrovoSpells, new TrovoSpellsControl(), "https://wiki.mixitupapp.com/commands/trovo-spell-commands");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.StreamlootsCards, new StreamlootsCardsControl(), "https://wiki.mixitupapp.com/commands/streamloots-card-commands");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.StreamPass, new StreamPassControl(), "https://wiki.mixitupapp.com/consumables/stream-pass");

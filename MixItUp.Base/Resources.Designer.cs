@@ -5343,6 +5343,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ending Amount.
+        /// </summary>
+        public static string EndingAmount {
+            get {
+                return ResourceManager.GetString("EndingAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The ending amount must be greater than the starting amount.
+        /// </summary>
+        public static string EndingAmountMustBeGreaterThanStartingAmount {
+            get {
+                return ResourceManager.GetString("EndingAmountMustBeGreaterThanStartingAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to English.
         /// </summary>
         public static string English {
@@ -20771,6 +20789,15 @@ namespace MixItUp.Base {
         public static string TwitchAffiliate {
             get {
                 return ResourceManager.GetString("TwitchAffiliate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Bits.
+        /// </summary>
+        public static string TwitchBits {
+            get {
+                return ResourceManager.GetString("TwitchBits", resourceCulture);
             }
         }
         
