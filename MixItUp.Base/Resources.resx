@@ -9512,4 +9512,13 @@ update_{ID}({CurrentAmount}, {Percentage}, {Width});</value>
   <data name="EndingAmount" xml:space="preserve">
     <value>Ending Amount</value>
   </data>
+  <data name="LoupeDeck" xml:space="preserve">
+    <value>LoupeDeck</value>
+  </data>
+  <data name="LoupeDeckInfo1" xml:space="preserve">
+    <value>This LoupeDeck plug-in allows you to run Mix It Up commands directly from your LoupeDeck device, as well as other status information about your stream.</value>
+  </data>
+  <data name="LoupeDeckInfo2" xml:space="preserve">
+    <value>To get started, ensure the LoupeDeck software is updated to the latest version &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the Marketplace icon at the top right of your LoupeDeck software, then search for "Mix It Up".</value>
+  </data>
 </root>

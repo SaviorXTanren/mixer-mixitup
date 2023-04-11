@@ -922,6 +922,9 @@
     <Compile Include="Controls\Services\JustGivingServiceControl.xaml.cs">
       <DependentUpon>JustGivingServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\LoupeDeckServiceControl.xaml.cs">
+      <DependentUpon>LoupeDeckServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\OvrStreamServiceControl.xaml.cs">
       <DependentUpon>OvrStreamServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1763,6 +1766,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\JustGivingServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\LoupeDeckServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

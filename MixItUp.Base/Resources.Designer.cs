@@ -11289,6 +11289,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to LoupeDeck.
+        /// </summary>
+        public static string LoupeDeck {
+            get {
+                return ResourceManager.GetString("LoupeDeck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This LoupeDeck plug-in allows you to run Mix It Up commands directly from your LoupeDeck device, as well as other status information about your stream..
+        /// </summary>
+        public static string LoupeDeckInfo1 {
+            get {
+                return ResourceManager.GetString("LoupeDeckInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To get started, ensure the LoupeDeck software is updated to the latest version &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the Marketplace icon at the top right of your LoupeDeck software, then search for &quot;Mix It Up&quot;..
+        /// </summary>
+        public static string LoupeDeckInfo2 {
+            get {
+                return ResourceManager.GetString("LoupeDeckInfo2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Magic 8 Ball.
         /// </summary>
         public static string MagicEightBall {
