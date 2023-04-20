@@ -55,6 +55,11 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public override Task<Result> Validate()
         {
+            if (string.IsNullOrWhiteSpace(this.Name))
+            {
+                return Task.FromResult(new Result(MixItUp.Base.Resources.ACommandNameMustBeSpecified));
+            }
+
             if (this.StartingAmount <= 0)
             {
                 return Task.FromResult(new Result(Resources.ValidAmountGreaterThan0MustBeSpecified));

@@ -686,7 +686,12 @@ namespace MixItUp.Base.Model.Settings
                     }
                     else if (type == CommandTypeEnum.TwitchBits)
                     {
-                        command = JSONSerializerHelper.DeserializeFromString<TwitchBitsCommandModel>(commandData);
+                        TwitchBitsCommandModel tbCommand = JSONSerializerHelper.DeserializeFromString<TwitchBitsCommandModel>(commandData);
+                        if (string.IsNullOrWhiteSpace(tbCommand.Name))
+                        {
+                            tbCommand.Name = tbCommand.AmountDisplay;
+                        }
+                        command = tbCommand;
                     }
 
                     if (command != null)
