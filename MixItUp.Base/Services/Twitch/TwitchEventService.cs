@@ -973,10 +973,10 @@ namespace MixItUp.Base.Services.Twitch
                 parameters.SpecialIdentifiers["isanonymous"] = bitsCheered.IsAnonymous.ToString();
                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelBitsCheered, parameters);
 
-                TwitchBitsCommandModel command = ServiceManager.Get<CommandService>().TwitchBitsCommands.FirstOrDefault(c => c.IsSingle && c.StartingAmount == bitsCheered.Amount);
+                TwitchBitsCommandModel command = ServiceManager.Get<CommandService>().TwitchBitsCommands.FirstOrDefault(c => c.IsEnabled && c.IsSingle && c.StartingAmount == bitsCheered.Amount);
                 if (command == null)
                 {
-                    command = ServiceManager.Get<CommandService>().TwitchBitsCommands.Where(c => c.IsRange).OrderBy(c => c.Range).FirstOrDefault(c => c.IsInRange(bitsCheered.Amount));
+                    command = ServiceManager.Get<CommandService>().TwitchBitsCommands.Where(c => c.IsEnabled && c.IsRange).OrderBy(c => c.Range).FirstOrDefault(c => c.IsInRange(bitsCheered.Amount));
                 }
 
                 if (command != null)
