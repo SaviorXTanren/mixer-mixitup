@@ -97,7 +97,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 return new Result(success: false);
             }
 
-            if (parameters.Arguments.Count != 1)
+            if (parameters.Arguments.Count == 0)
             {
                 return new Result(MixItUp.Base.Resources.GameCommandHangmanMissingGuess);
             }

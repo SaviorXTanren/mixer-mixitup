@@ -312,7 +312,7 @@ namespace MixItUp.Base.Services.Twitch
             { "channel.hype_train.progress", null },
             { "channel.hype_train.end", null },
 
-            { "channel.charity_campaign.donate", "beta" },
+            { "channel.charity_campaign.donate", null },
         };
 
         private async void EventSub_OnWelcomeMessageReceived(object sender, WelcomeMessage message)
@@ -362,10 +362,12 @@ namespace MixItUp.Base.Services.Twitch
                     message.Payload.Session.Id,
                     version: version);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Logger.Log(ex);
                 Logger.Log(LogLevel.Error, $"Failed to connect EventSub for {type}");
-                throw;
+
+                // Note: Do not re-throw, but log and move on, better to miss some events than to cause a retry loop
             }
         }
 
@@ -970,6 +972,17 @@ namespace MixItUp.Base.Services.Twitch
                 parameters.SpecialIdentifiers["message"] = bitsCheered.Message.PlainTextMessage;
                 parameters.SpecialIdentifiers["isanonymous"] = bitsCheered.IsAnonymous.ToString();
                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelBitsCheered, parameters);
+
+                TwitchBitsCommandModel command = ServiceManager.Get<CommandService>().TwitchBitsCommands.FirstOrDefault(c => c.IsEnabled && c.IsSingle && c.StartingAmount == bitsCheered.Amount);
+                if (command == null)
+                {
+                    command = ServiceManager.Get<CommandService>().TwitchBitsCommands.Where(c => c.IsEnabled && c.IsRange).OrderBy(c => c.Range).FirstOrDefault(c => c.IsInRange(bitsCheered.Amount));
+                }
+
+                if (command != null)
+                {
+                    await ServiceManager.Get<CommandService>().Queue(command, parameters);
+                }
             }
             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertTwitchBitsCheered, user.FullDisplayName, bitsCheered.Amount), ChannelSession.Settings.AlertTwitchBitsCheeredColor));
             GlobalEvents.BitsOccurred(bitsCheered);

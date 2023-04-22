@@ -5361,6 +5361,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ending Amount.
+        /// </summary>
+        public static string EndingAmount {
+            get {
+                return ResourceManager.GetString("EndingAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The ending amount must be greater than the starting amount.
+        /// </summary>
+        public static string EndingAmountMustBeGreaterThanStartingAmount {
+            get {
+                return ResourceManager.GetString("EndingAmountMustBeGreaterThanStartingAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to English.
         /// </summary>
         public static string English {
@@ -11285,6 +11303,33 @@ namespace MixItUp.Base {
         public static string Lose {
             get {
                 return ResourceManager.GetString("Lose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LoupeDeck.
+        /// </summary>
+        public static string LoupeDeck {
+            get {
+                return ResourceManager.GetString("LoupeDeck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This LoupeDeck plug-in allows you to run Mix It Up commands directly from your LoupeDeck device, as well as other status information about your stream..
+        /// </summary>
+        public static string LoupeDeckInfo1 {
+            get {
+                return ResourceManager.GetString("LoupeDeckInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To get started, ensure the LoupeDeck software is updated to the latest version &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the Marketplace icon at the top right of your LoupeDeck software, then search for &quot;Mix It Up&quot;..
+        /// </summary>
+        public static string LoupeDeckInfo2 {
+            get {
+                return ResourceManager.GetString("LoupeDeckInfo2", resourceCulture);
             }
         }
         
@@ -20807,6 +20852,15 @@ namespace MixItUp.Base {
         public static string TwitchAffiliate {
             get {
                 return ResourceManager.GetString("TwitchAffiliate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Bits.
+        /// </summary>
+        public static string TwitchBits {
+            get {
+                return ResourceManager.GetString("TwitchBits", resourceCulture);
             }
         }
         
