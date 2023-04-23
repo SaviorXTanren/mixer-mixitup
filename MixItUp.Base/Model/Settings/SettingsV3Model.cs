@@ -93,6 +93,8 @@ namespace MixItUp.Base.Model.Settings
         public OAuthTokenModel VTubeStudioOAuthToken { get; set; }
         [DataMember]
         public bool EnableVoicemodStudio { get; set; }
+        [DataMember]
+        public bool EnableCrowdControl { get; set; }
 
         #endregion Authentication
 

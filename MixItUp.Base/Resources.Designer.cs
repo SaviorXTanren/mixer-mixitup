@@ -3646,6 +3646,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Crowd Control.
+        /// </summary>
+        public static string CrowdControl {
+            get {
+                return ResourceManager.GetString("CrowdControl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to connect to Crowd Control service, please try again. If this persists, please visit the Mix It Up support Discord for further assistance..
+        /// </summary>
+        public static string CrowdControlFailedToConnectToService {
+            get {
+                return ResourceManager.GetString("CrowdControlFailedToConnectToService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A Twitch account must be connected in Mix It Up to use Crowd Control connectivity.
+        /// </summary>
+        public static string CrowdControlTwitchAccountMustBeConnected {
+            get {
+                return ResourceManager.GetString("CrowdControlTwitchAccountMustBeConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to C#.
         /// </summary>
         public static string CSharp {

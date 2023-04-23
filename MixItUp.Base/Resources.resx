@@ -9574,4 +9574,13 @@ update_{ID}({CurrentAmount}, {Percentage}, {Width});</value>
   <data name="UserEntranceCommandsOnlyWhenLive" xml:space="preserve">
     <value>Only run User Entrance Commands while live</value>
   </data>
+  <data name="CrowdControl" xml:space="preserve">
+    <value>Crowd Control</value>
+  </data>
+  <data name="CrowdControlFailedToConnectToService" xml:space="preserve">
+    <value>Failed to connect to Crowd Control service, please try again. If this persists, please visit the Mix It Up support Discord for further assistance.</value>
+  </data>
+  <data name="CrowdControlTwitchAccountMustBeConnected" xml:space="preserve">
+    <value>A Twitch account must be connected in Mix It Up to use Crowd Control connectivity</value>
+  </data>
 </root>
