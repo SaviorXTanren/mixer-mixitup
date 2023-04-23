@@ -3,6 +3,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -155,6 +156,10 @@ namespace MixItUp.Base.ViewModel.MainControls
             if (ServiceManager.Get<TwitchSessionService>().IsConnected && ServiceManager.Get<TwitchSessionService>().IsLive)
             {
                 viewerCount += (int)ServiceManager.Get<TwitchSessionService>().Stream?.viewer_count;
+            }
+            if (ServiceManager.Get<YouTubeSessionService>().IsConnected && ServiceManager.Get<YouTubeSessionService>().IsLive)
+            {
+                viewerCount += (int)ServiceManager.Get<YouTubeSessionService>().Video?.LiveStreamingDetails.ConcurrentViewers.GetValueOrDefault();
             }
             if (ServiceManager.Get<TrovoSessionService>().IsConnected && ServiceManager.Get<TrovoSessionService>().IsLive)
             {
