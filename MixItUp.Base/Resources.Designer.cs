@@ -808,6 +808,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} Donated {1} To The Twitch Charity.
+        /// </summary>
+        public static string AlertTwitchCharityDonation {
+            get {
+                return ResourceManager.GetString("AlertTwitchCharityDonation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} Super Chat - {1}.
         /// </summary>
         public static string AlertYouTubeSuperChat {
@@ -822,15 +831,6 @@ namespace MixItUp.Base {
         public static string AlertYouTubeSuperSticker {
             get {
                 return ResourceManager.GetString("AlertYouTubeSuperSticker", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} Donated {1} To The Twitch Charity.
-        /// </summary>
-        public static string AlertTwitchCharityDonation {
-            get {
-                return ResourceManager.GetString("AlertTwitchCharityDonation", resourceCulture);
             }
         }
         
@@ -23638,6 +23638,15 @@ namespace MixItUp.Base {
         public static string YouTubeMember {
             get {
                 return ResourceManager.GetString("YouTubeMember", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to YouTube Member Level.
+        /// </summary>
+        public static string YouTubeMemberLevel {
+            get {
+                return ResourceManager.GetString("YouTubeMemberLevel", resourceCulture);
             }
         }
         

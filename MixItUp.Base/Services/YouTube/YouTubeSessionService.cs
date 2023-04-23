@@ -335,7 +335,18 @@ namespace MixItUp.Base.Services.YouTube
 
         private async Task<Result> SetMembershipLevels()
         {
-            this.MembershipLevels.AddRange(await this.UserConnection.GetMembershipLevels());
+            try
+            {
+                IEnumerable<MembershipsLevel> membershipLevels = await this.UserConnection.GetMembershipLevels();
+                if (membershipLevels != null && membershipLevels.Count() > 0)
+                {
+                    this.MembershipLevels.AddRange(membershipLevels);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
             return new Result();
         }
     }
