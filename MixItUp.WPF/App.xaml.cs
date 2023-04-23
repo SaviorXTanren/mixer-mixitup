@@ -164,6 +164,7 @@ namespace MixItUp.WPF
             if (ChannelSession.IsDebug() || ChannelSession.AppSettings.DiagnosticLogging)
             {
                 Logger.SetLogLevel(LogLevel.Debug);
+                Logger.AlwaysLogFullStackTraceWithExceptions = true;
             }
             else
             {
