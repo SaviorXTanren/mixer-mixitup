@@ -1,7 +1,9 @@
 ﻿using Google.Apis.YouTube.v3.Data;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.YouTube;
+using MixItUp.Base.Util;
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -12,6 +14,11 @@ namespace MixItUp.Base.Model.User.Platform
     {
         [DataMember]
         public string YouTubeURL { get; set; }
+
+        [DataMember]
+        public HashSet<string> MemberLevels { get; set; } = new HashSet<string>();
+
+        private bool initialRefreshCompleted = false;
 
         public YouTubeUserPlatformV2Model(Channel channel)
         {
@@ -46,13 +53,20 @@ namespace MixItUp.Base.Model.User.Platform
                     {
                         this.Roles.Add(UserRoleEnum.YouTubeSubscriber);
                         this.Roles.Add(UserRoleEnum.Follower);
-                        this.SubscribeDate = subscription.Snippet.PublishedAt.GetValueOrDefault();
+                        this.FollowDate = subscription.Snippet.PublishedAt.GetValueOrDefault();
                     }
                     else
                     {
                         this.Roles.Remove(UserRoleEnum.YouTubeSubscriber);
                         this.Roles.Remove(UserRoleEnum.Follower);
                     }
+
+                    if (!this.initialRefreshCompleted)
+                    {
+                        await this.RefreshMembershipDetails();
+                    }
+
+                    this.initialRefreshCompleted = true;
                 }
             }
         }
@@ -76,6 +90,26 @@ namespace MixItUp.Base.Model.User.Platform
             {
                 this.Roles.Remove(UserRoleEnum.YouTubeMember);
                 this.Roles.Remove(UserRoleEnum.Subscriber);
+            }
+        }
+
+        public async Task RefreshMembershipDetails()
+        {
+            Member membership = await ServiceManager.Get<YouTubeSessionService>().UserConnection.CheckIfMember(this.ID);
+            if (membership != null)
+            {
+                this.Roles.Add(UserRoleEnum.YouTubeMember);
+                this.Roles.Add(UserRoleEnum.Subscriber);
+                this.SubscribeDate = DateTime.Parse(membership.Snippet.MembershipsDetails.MembershipsDuration.MemberSince);
+                this.MemberLevels.Clear();
+                this.MemberLevels.AddRange(membership.Snippet.MembershipsDetails.AccessibleLevels);
+            }
+            else
+            {
+                this.Roles.Remove(UserRoleEnum.YouTubeMember);
+                this.Roles.Remove(UserRoleEnum.Subscriber);
+                this.SubscribeDate = null;
+                this.MemberLevels.Clear();
             }
         }
 

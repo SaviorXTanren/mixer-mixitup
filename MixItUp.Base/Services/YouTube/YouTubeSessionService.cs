@@ -19,6 +19,7 @@ namespace MixItUp.Base.Services.YouTube
         public Channel Bot { get; private set; }
         public LiveBroadcast Broadcast { get; private set; }
         public Video Video { get; private set; }
+        public List<MembershipsLevel> MembershipLevels { get; private set; } = new List<MembershipsLevel>();
 
         public bool IsConnected { get { return this.UserConnection != null; } }
         public bool IsBotConnected { get { return this.BotConnection != null; } }
@@ -192,6 +193,7 @@ namespace MixItUp.Base.Services.YouTube
 
                     List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
                     platformServiceTasks.Add(ServiceManager.Get<YouTubeChatService>().ConnectUser());
+                    platformServiceTasks.Add(this.SetMembershipLevels());
 
                     await Task.WhenAll(platformServiceTasks);
 
@@ -330,5 +332,11 @@ namespace MixItUp.Base.Services.YouTube
         public Task<string> GetGame() { return Task.FromResult(string.Empty); }
 
         public Task<bool> SetGame(string gameName) { return Task.FromResult(false); }
+
+        private async Task<Result> SetMembershipLevels()
+        {
+            this.MembershipLevels.AddRange(await this.UserConnection.GetMembershipLevels());
+            return new Result();
+        }
     }
 }

@@ -5,7 +5,6 @@ using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services.External;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.YouTube;
@@ -375,9 +374,10 @@ namespace MixItUp.Base.Services.YouTube
                                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
                                 user.Roles.Add(UserRoleEnum.YouTubeMember);
-                                // TODO
-                                //user.SubscriberTier = subMessage.Tier;
+                                user.Roles.Add(UserRoleEnum.Subscriber);
                                 user.SubscribeDate = DateTimeOffset.Now;
+                                user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).MemberLevels.Clear();
+                                user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).MemberLevels.Add(liveChatMessage.Snippet.NewSponsorDetails.MemberLevelName);
 
                                 foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                                 {
