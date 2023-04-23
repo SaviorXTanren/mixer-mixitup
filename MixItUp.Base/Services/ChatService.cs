@@ -532,14 +532,18 @@ namespace MixItUp.Base.Services
                         if (!this.userEntranceCommands.Contains(message.User.ID))
                         {
                             this.userEntranceCommands.Add(message.User.ID);
-                            CommandModelBase customEntranceCommand = ChannelSession.Settings.GetCommand(message.User.EntranceCommandID);
-                            if (customEntranceCommand != null && customEntranceCommand.IsEnabled)
+
+                            if (!ChannelSession.Settings.UserEntranceCommandsOnlyWhenLive || StreamingPlatforms.GetPlatformSessionService(message.User.Platform).IsLive)
                             {
-                                await ServiceManager.Get<CommandService>().Queue(message.User.EntranceCommandID, new CommandParametersModel(message));
-                            }
-                            else if (!message.User.IsSpecialtyExcluded)
-                            {
-                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserEntranceCommand, new CommandParametersModel(message));
+                                CommandModelBase customEntranceCommand = ChannelSession.Settings.GetCommand(message.User.EntranceCommandID);
+                                if (customEntranceCommand != null && customEntranceCommand.IsEnabled)
+                                {
+                                    await ServiceManager.Get<CommandService>().Queue(message.User.EntranceCommandID, new CommandParametersModel(message));
+                                }
+                                else if (!message.User.IsSpecialtyExcluded)
+                                {
+                                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserEntranceCommand, new CommandParametersModel(message));
+                                }
                             }
                         }
 

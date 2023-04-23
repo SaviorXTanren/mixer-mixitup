@@ -187,6 +187,8 @@ namespace MixItUp.Base.Model.Settings
         public CommandServiceLockTypeEnum CommandServiceLockType { get; set; } = CommandServiceLockTypeEnum.PerCommandType;
         [DataMember]
         public int MassGiftedSubsFilterAmount { get; set; } = 1;
+        [DataMember]
+        public bool UserEntranceCommandsOnlyWhenLive { get; set; } = false;
 
         [DataMember]
         public RequirementErrorCooldownTypeEnum RequirementErrorsCooldownType { get; set; } = RequirementErrorCooldownTypeEnum.Default;

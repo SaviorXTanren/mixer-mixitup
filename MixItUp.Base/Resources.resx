@@ -9571,4 +9571,7 @@ update_{ID}({CurrentAmount}, {Percentage}, {Width});</value>
   <data name="YouTubeMemberLevel" xml:space="preserve">
     <value>YouTube Member Level</value>
   </data>
+  <data name="UserEntranceCommandsOnlyWhenLive" xml:space="preserve">
+    <value>Only run User Entrance Commands while live</value>
+  </data>
 </root>

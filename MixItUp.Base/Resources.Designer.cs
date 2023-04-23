@@ -21832,6 +21832,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Only run User Entrance Commands while live.
+        /// </summary>
+        public static string UserEntranceCommandsOnlyWhenLive {
+            get {
+                return ResourceManager.GetString("UserEntranceCommandsOnlyWhenLive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}&apos;s Follow Age: .
         /// </summary>
         public static string UserFollowAgeHeader {
