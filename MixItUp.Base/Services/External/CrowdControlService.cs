@@ -1,7 +1,11 @@
-﻿using MixItUp.Base.Services.Twitch;
+﻿using Google.Apis.YouTubePartner.v1.Data;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
+using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.External
@@ -34,20 +38,47 @@ namespace MixItUp.Base.Services.External
         public string twitchAvatarURL { get; set; }
     }
 
+    public class CrowdControlWebSocket : ClientWebSocketBase
+    {
+        protected override async Task ProcessReceivedPacket(string packet)
+        {
+            if (!string.IsNullOrEmpty(packet) && !packet.StartsWith("0"))
+            {
+                if (packet.Equals("2"))
+                {
+                    await this.Send("3");
+                }
+                else
+                {
+                    //CrowdControlEffectUpdateMessage effectUpdate = JSONSerializerHelper.DeserializeFromString<CrowdControlEffectUpdateMessage>(data.ToString());
+                    //if (effectUpdate != null)
+                    //{
+                    //      "effect-initial"
+                    //}
+
+                    //CrowdControlCoinExchangeMessage coinExchange = JSONSerializerHelper.DeserializeFromString<CrowdControlCoinExchangeMessage>(data.ToString());
+                    //if (coinExchange != null)
+                    //{
+                    //      "coin-message"
+                    //}
+                }
+            }
+
+            Logger.Log(packet);
+        }
+    }
+
     public class CrowdControlService : IExternalService
     {
-        private const string ConnectionURL = "wss://overlay-socket.crowdcontrol.live";
+        private const string ConnectionURL = "wss://overlay-socket.crowdcontrol.live/socket.io/?EIO=4&transport=websocket";
 
         public string Name { get { return Resources.CrowdControl; } }
 
         public bool IsConnected { get; private set; }
 
-        private ISocketIOConnection socket;
+        private CrowdControlWebSocket socket;
 
-        public CrowdControlService(ISocketIOConnection socket)
-        {
-            this.socket = socket;
-        }
+        public CrowdControlService() { }
 
         public async Task<Result> Connect()
         {
@@ -58,46 +89,12 @@ namespace MixItUp.Base.Services.External
 
             try
             {
-                this.socket.Listen("effect-initial", (data) =>
+                this.socket = new CrowdControlWebSocket();
+                this.socket.OnDisconnectOccurred += Socket_OnDisconnectOccurred;
+                if (await this.socket.Connect(CrowdControlService.ConnectionURL))
                 {
-                    try
-                    {
-                        if (data != null)
-                        {
-                            CrowdControlEffectUpdateMessage effectUpdate = JSONSerializerHelper.DeserializeFromString<CrowdControlEffectUpdateMessage>(data.ToString());
-                            if (effectUpdate != null)
-                            {
-
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Log(ex);
-                    }
-                });
-
-                this.socket.Listen("coin-message", (data) =>
-                {
-                    try
-                    {
-                        if (data != null)
-                        {
-                            CrowdControlCoinExchangeMessage coinExchange = JSONSerializerHelper.DeserializeFromString<CrowdControlCoinExchangeMessage>(data.ToString());
-                            if (coinExchange != null)
-                            {
-
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Log(ex);
-                    }
-                });
-
-                await this.socket.Connect(CrowdControlService.ConnectionURL);
-
+                    //await this.socket.Send("[\"events\",\"DamagedPlushie\"]");
+                }
             }
             catch (Exception ex)
             {
@@ -106,9 +103,18 @@ namespace MixItUp.Base.Services.External
             return new Result(Resources.CrowdControlFailedToConnectToService);
         }
 
-        public Task Disconnect()
+        private async void Socket_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
         {
-            throw new NotImplementedException();
+            await this.Disconnect();
+        }
+
+        public async Task Disconnect()
+        {
+            if (this.socket != null)
+            {
+                await this.socket.Disconnect();
+            }
+            this.socket = null;
         }
     }
 }
