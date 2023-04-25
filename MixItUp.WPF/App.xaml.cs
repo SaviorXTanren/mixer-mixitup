@@ -161,10 +161,10 @@ namespace MixItUp.WPF
             }
 
             Logger.ForceLog(LogLevel.Information, "Application Version: " + ServiceManager.Get<IFileService>().GetApplicationVersion());
+            Logger.AlwaysLogFullStackTraceWithExceptions = true;
             if (ChannelSession.IsDebug() || ChannelSession.AppSettings.DiagnosticLogging)
             {
                 Logger.SetLogLevel(LogLevel.Debug);
-                Logger.AlwaysLogFullStackTraceWithExceptions = true;
             }
             else
             {
