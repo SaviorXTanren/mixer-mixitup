@@ -17459,6 +17459,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Shell Execute.
+        /// </summary>
+        public static string ShellExecute {
+            get {
+                return ResourceManager.GetString("ShellExecute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Shift.
         /// </summary>
         public static string Shift {
