@@ -3,12 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Users"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Ellipse x:Name="ProfileAvatarContainer">
         <Ellipse.Fill>
-            <ImageBrush x:Name="ProfileAvatarImage"/>
+            <ImageBrush ImageSource="{Binding AvatarLink}" />
         </Ellipse.Fill>
     </Ellipse>
 </UserControl>
