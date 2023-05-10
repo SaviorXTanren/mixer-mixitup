@@ -430,6 +430,11 @@ namespace MixItUp.Base.Services
                     await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(message.User);
                 }
 
+                if (message.ProcessingTime > 500)
+                {
+                    Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message (AFTER USER ADD/UPDATE): {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
+                }
+
                 // Add message to chat list
                 bool showMessage = true;
                 if (ChannelSession.Settings.HideBotMessages && message.User != null && message.Platform != StreamingPlatformTypeEnum.None)
@@ -463,11 +468,21 @@ namespace MixItUp.Base.Services
                     }
                 }
 
+                if (message.ProcessingTime > 500)
+                {
+                    Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message (AFTER ALERTS): {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
+                }
+
                 // Post message processing
 
                 if (message is UserChatMessageViewModel && message.User != null)
                 {
                     await message.User.Refresh();
+
+                    if (message.ProcessingTime > 500)
+                    {
+                        Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message (AFTER USER REFRESH): {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
+                    }
 
                     if (message.IsWhisper)
                     {
@@ -516,6 +531,11 @@ namespace MixItUp.Base.Services
                             await ServiceManager.Get<IAudioService>().Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, ChannelSession.Settings.NotificationChatMessageSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
                         }
 
+                        if (message.ProcessingTime > 500)
+                        {
+                            Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message (AFTER MODERATION/NOTIFICATIONS): {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
+                        }
+
                         if (!this.userEntranceCommands.Contains(message.User.ID))
                         {
                             this.userEntranceCommands.Add(message.User.ID);
@@ -544,11 +564,21 @@ namespace MixItUp.Base.Services
                                 primaryTaggedUser.TotalTimesTagged++;
                             }
                         }
+
+                        if (message.ProcessingTime > 500)
+                        {
+                            Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message (AFTER EVENT COMMANDS): {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
+                        }
                     }
 
                     GlobalEvents.ChatMessageReceived(message);
 
                     await this.WriteToChatEventLog(message);
+
+                    if (message.ProcessingTime > 500)
+                    {
+                        Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message (AFTER CHAT MESSAGE GLOBAL EVENT): {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
+                    }
 
                     IEnumerable<string> arguments = null;
 #pragma warning disable CS0612 // Type or member is obsolete
@@ -629,6 +659,11 @@ namespace MixItUp.Base.Services
                                     break;
                                 }
                             }
+                        }
+
+                        if (message.ProcessingTime > 500)
+                        {
+                            Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message (AFTER CHAT COMMAND PROCESSING): {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
                         }
                     }
 
