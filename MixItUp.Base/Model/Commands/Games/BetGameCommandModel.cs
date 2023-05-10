@@ -14,6 +14,7 @@ namespace MixItUp.Base.Model.Commands.Games
     [DataContract]
     public class BetGameCommandModel : GameCommandModelBase
     {
+        public const string GameBetOptionSpecialIdentifier = "gamebetoption";
         public const string GameBetOptionsSpecialIdentifier = "gamebetoptions";
         public const string GameBetWinningOptionSpecialIdentifier = "gamebetwinningoption";
 
@@ -189,6 +190,8 @@ namespace MixItUp.Base.Model.Commands.Games
             int.TryParse(parameters.Arguments[0], out int choice);
             this.runUsers[parameters.User] = parameters;
             this.runUserSelections[parameters.User] = choice;
+
+            parameters.SpecialIdentifiers[BetGameCommandModel.GameBetOptionSpecialIdentifier] = this.BetOptions[choice - 1].Name;
 
             await this.RunSubCommand(this.UserJoinCommand, parameters);
             await this.PerformCooldown(parameters);
