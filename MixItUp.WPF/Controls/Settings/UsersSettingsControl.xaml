@@ -51,7 +51,7 @@
 
         <TextBlock Grid.Row="6" Text="{x:Static resx:Resources.UserTitles}" HorizontalAlignment="Center" />
 
-        <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="8" BorderThickness="1" Width="450">
+        <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="8" BorderThickness="1">
             <DataGrid ItemsSource="{Binding Titles}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />

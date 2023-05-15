@@ -86,7 +86,7 @@
             <Button x:Name="AddHotKeyButton" Grid.Column="2" MinWidth="60" Click="AddHotKeyButton_Click" Content="{x:Static resx:Resources.Add}"/>
         </Grid>
 
-        <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="4" BorderThickness="1" Width="550">
+        <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="4" BorderThickness="1" Margin="20">
             <DataGrid x:Name="HotKeysDataGrid" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="{x:Static resx:Resources.HotKey}" Binding="{Binding HotKey}" IsReadOnly="True" Width="200" />
