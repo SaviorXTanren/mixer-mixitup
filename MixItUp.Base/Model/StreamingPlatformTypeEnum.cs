@@ -85,6 +85,19 @@ namespace MixItUp.Base.Model
             return string.Empty;
         }
 
+        public static IEnumerable<StreamingPlatformTypeEnum> GetConnectedPlatforms()
+        {
+            List<StreamingPlatformTypeEnum> platforms = new List<StreamingPlatformTypeEnum>();
+            foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
+            {
+                if (StreamingPlatforms.GetPlatformSessionService(platform).IsConnected)
+                {
+                    platforms.Add(platform);
+                }
+            }
+            return platforms;
+        }
+
         public static void ForEachPlatform(Action<StreamingPlatformTypeEnum> action)
         {
             foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.SupportedPlatforms)
