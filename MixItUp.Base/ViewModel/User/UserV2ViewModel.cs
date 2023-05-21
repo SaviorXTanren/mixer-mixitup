@@ -687,11 +687,17 @@ namespace MixItUp.Base.ViewModel.User
 
                     await this.platformModel.Refresh();
 
+                    double refreshTime = (DateTimeOffset.Now - refreshStart).TotalMilliseconds;
+                    if (refreshTime > 1000)
+                    {
+                        Logger.Log(LogLevel.Error, string.Format("Long user refresh time detected for the following user (Platform refresh): {0} - {1} - {2} ms", this.ID, this.Username, refreshTime));
+                    }
+
                     this.RefreshPatreonProperties();
 
                     this.ClearCachedProperties();
 
-                    double refreshTime = (DateTimeOffset.Now - refreshStart).TotalMilliseconds;
+                    refreshTime = (DateTimeOffset.Now - refreshStart).TotalMilliseconds;
                     Logger.Log($"User refresh time: {refreshTime} ms");
                     if (refreshTime > 1000)
                     {
