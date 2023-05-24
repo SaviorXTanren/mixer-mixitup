@@ -15914,6 +15914,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove Specific Text From File.
+        /// </summary>
+        public static string RemoveSpecificTextFromFile {
+            get {
+                return ResourceManager.GetString("RemoveSpecificTextFromFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove User Role.
         /// </summary>
         public static string RemoveUserRole {
@@ -15946,6 +15955,15 @@ namespace MixItUp.Base {
         public static string ReplacementText {
             get {
                 return ResourceManager.GetString("ReplacementText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replace Text In File.
+        /// </summary>
+        public static string ReplaceTextInFile {
+            get {
+                return ResourceManager.GetString("ReplaceTextInFile", resourceCulture);
             }
         }
         
@@ -19492,6 +19510,15 @@ namespace MixItUp.Base {
         public static string TextSource {
             get {
                 return ResourceManager.GetString("TextSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text To Remove.
+        /// </summary>
+        public static string TextToRemove {
+            get {
+                return ResourceManager.GetString("TextToRemove", resourceCulture);
             }
         }
         
