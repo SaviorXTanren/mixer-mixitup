@@ -241,7 +241,15 @@ namespace MixItUp.Base.Model.Commands
                 await ServiceManager.Get<YouTubeSessionService>().RefreshChannel();
                 if (ServiceManager.Get<YouTubeSessionService>().IsLive)
                 {
-                    return new DateTimeOffset(ServiceManager.Get<YouTubeSessionService>().Broadcast.Snippet.ActualStartTime.GetValueOrDefault(), TimeSpan.Zero);
+                    if (ServiceManager.Get<YouTubeSessionService>().Broadcast.Snippet.ActualStartTime.HasValue)
+                    {
+                        DateTime dt = ServiceManager.Get<YouTubeSessionService>().Broadcast.Snippet.ActualStartTime.GetValueOrDefault();
+                        if (dt.Kind == DateTimeKind.Unspecified)
+                        {
+                            dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
+                        }
+                        return new DateTimeOffset(dt, (dt.Kind == DateTimeKind.Utc) ? TimeSpan.Zero : DateTimeOffset.Now.Offset);
+                    }
                 }
             }
 
