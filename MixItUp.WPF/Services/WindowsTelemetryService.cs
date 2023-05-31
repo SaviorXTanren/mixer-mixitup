@@ -1,5 +1,6 @@
 ﻿using Microsoft.ApplicationInsights;
 using MixItUp.Base;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
@@ -7,6 +8,7 @@ using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -59,14 +61,9 @@ namespace MixItUp.WPF.Services
             this.TrySendEvent(() => this.telemetryClient.TrackException(ex));
         }
 
-        public void TrackLogin(string userID, string userType)
+        public void TrackLogin(string userID, IEnumerable<StreamingPlatformTypeEnum> platforms)
         {
-            if (string.IsNullOrEmpty(userType))
-            {
-                userType = "Streamer";
-            }
-
-            this.TrySendEvent(() => this.telemetryClient.TrackEvent("Login", new Dictionary<string, string> { { "User Type", userType } }));
+            this.TrySendEvent(() => this.telemetryClient.TrackEvent("Login", new Dictionary<string, string> { { "Platforms", string.Join(", ", platforms.Select(p => p.ToString())) } }));
         }
 
         public void TrackCommand(CommandTypeEnum type, string details = null)

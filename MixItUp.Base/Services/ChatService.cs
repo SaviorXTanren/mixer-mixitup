@@ -443,7 +443,7 @@ namespace MixItUp.Base.Services
                     await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(message.User);
                 }
 
-                if (message.ProcessingTime > 500)
+                if (message.ProcessingTime > 1000)
                 {
                     Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message (AFTER USER ADD/UPDATE): {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
                 }
@@ -481,7 +481,7 @@ namespace MixItUp.Base.Services
                     }
                 }
 
-                if (message.ProcessingTime > 500)
+                if (message.ProcessingTime > 1000)
                 {
                     Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message (AFTER ALERTS): {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
                 }
@@ -492,7 +492,7 @@ namespace MixItUp.Base.Services
                 {
                     await message.User.Refresh();
 
-                    if (message.ProcessingTime > 500)
+                    if (message.ProcessingTime > 1000)
                     {
                         Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message (AFTER USER REFRESH): {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
                     }
@@ -544,7 +544,7 @@ namespace MixItUp.Base.Services
                             await ServiceManager.Get<IAudioService>().Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, ChannelSession.Settings.NotificationChatMessageSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
                         }
 
-                        if (message.ProcessingTime > 500)
+                        if (message.ProcessingTime > 1000)
                         {
                             Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message (AFTER MODERATION/NOTIFICATIONS): {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
                         }
@@ -582,7 +582,7 @@ namespace MixItUp.Base.Services
                             }
                         }
 
-                        if (message.ProcessingTime > 500)
+                        if (message.ProcessingTime > 1000)
                         {
                             Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message (AFTER EVENT COMMANDS): {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
                         }
@@ -592,7 +592,7 @@ namespace MixItUp.Base.Services
 
                     await this.WriteToChatEventLog(message);
 
-                    if (message.ProcessingTime > 500)
+                    if (message.ProcessingTime > 1000)
                     {
                         Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message (AFTER CHAT MESSAGE GLOBAL EVENT): {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
                     }
@@ -678,7 +678,7 @@ namespace MixItUp.Base.Services
                             }
                         }
 
-                        if (message.ProcessingTime > 500)
+                        if (message.ProcessingTime > 1000)
                         {
                             Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message (AFTER CHAT COMMAND PROCESSING): {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
                         }
@@ -710,7 +710,7 @@ namespace MixItUp.Base.Services
                 }
 
                 Logger.Log(LogLevel.Debug, string.Format("Message Processing Complete: {0} - {1} ms", message.ID, message.ProcessingTime));
-                if (message.ProcessingTime > 500)
+                if (message.ProcessingTime > 1000)
                 {
                     Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message: {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
                 }

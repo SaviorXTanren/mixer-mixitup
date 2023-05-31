@@ -30,7 +30,7 @@
 
             <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SerialDevices}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
-            <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="2" BorderThickness="1" Width="500">
+            <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="2" BorderThickness="1">
                 <ItemsControl x:Name="SerialDevicesListView" HorizontalAlignment="Center">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
