@@ -9533,4 +9533,7 @@ update_{ID}({CurrentAmount}, {Percentage}, {Width});</value>
   <data name="ReplaceTextInFile" xml:space="preserve">
     <value>Replace Text In File</value>
   </data>
+  <data name="TwitchCustomTagsMustMeetStandard" xml:space="preserve">
+    <value>Twitch custom tags must be 25 characters or less and only contain letters and numbers</value>
+  </data>
 </root>

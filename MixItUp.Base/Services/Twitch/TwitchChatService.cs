@@ -99,8 +99,8 @@ namespace MixItUp.Base.Services.Twitch
         public IDictionary<string, FrankerFaceZEmoteModel> FrankerFaceZEmotes { get { return this.frankerFaceZEmotes; } }
         private Dictionary<string, FrankerFaceZEmoteModel> frankerFaceZEmotes = new Dictionary<string, FrankerFaceZEmoteModel>();
 
-        public IDictionary<string, ChatBadgeSetModel> ChatBadges { get { return this.chatBadges; } }
-        private Dictionary<string, ChatBadgeSetModel> chatBadges = new Dictionary<string, ChatBadgeSetModel>();
+        public IDictionary<string, Dictionary<string, ChatBadgeModel>> ChatBadges { get { return this.chatBadges; } }
+        private Dictionary<string, Dictionary<string, ChatBadgeModel>> chatBadges = new Dictionary<string, Dictionary<string, ChatBadgeModel>>();
 
         public IEnumerable<TwitchBitsCheermoteViewModel> BitsCheermotes { get { return this.bitsCheermotes.ToList(); } }
         private List<TwitchBitsCheermoteViewModel> bitsCheermotes = new List<TwitchBitsCheermoteViewModel>();
@@ -343,12 +343,20 @@ namespace MixItUp.Base.Services.Twitch
 
             foreach (ChatBadgeSetModel badgeSet in globalChatBadgesTask.Result)
             {
-                this.chatBadges[badgeSet.id] = badgeSet;
+                this.chatBadges[badgeSet.set_id] = new Dictionary<string, ChatBadgeModel>();
+                foreach (ChatBadgeModel badge in badgeSet.versions)
+                {
+                    this.chatBadges[badgeSet.set_id][badge.id] = badge;
+                }
             }
 
             foreach (ChatBadgeSetModel badgeSet in channelChatBadgesTask.Result)
             {
-                this.chatBadges[badgeSet.id] = badgeSet;
+                this.chatBadges[badgeSet.set_id] = new Dictionary<string, ChatBadgeModel>();
+                foreach (ChatBadgeModel badge in badgeSet.versions)
+                {
+                    this.chatBadges[badgeSet.set_id][badge.id] = badge;
+                }
             }
 
             List<TwitchBitsCheermoteViewModel> cheermotes = new List<TwitchBitsCheermoteViewModel>();

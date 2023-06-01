@@ -21108,6 +21108,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twitch custom tags must be 25 characters or less and only contain letters and numbers.
+        /// </summary>
+        public static string TwitchCustomTagsMustMeetStandard {
+            get {
+                return ResourceManager.GetString("TwitchCustomTagsMustMeetStandard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to connect to Twitch Event Sub service.
         /// </summary>
         public static string TwitchEventServiceFailedToConnectEventSub {

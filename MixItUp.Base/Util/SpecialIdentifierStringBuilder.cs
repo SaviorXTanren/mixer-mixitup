@@ -492,25 +492,10 @@ namespace MixItUp.Base.Util
 
                     if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "twitchtags"))
                     {
-                        var tags = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStreamTagsForChannel(ServiceManager.Get<TwitchSessionService>().User);
+                        var tags = ServiceManager.Get<TwitchSessionService>().Channel.tags;
                         if (tags != null && tags.Count() > 0)
                         {
-                            string locale = Languages.GetLanguageLocale().ToLower();
-
-                            List<string> tagNames = new List<string>();
-                            foreach (var tag in tags)
-                            {
-                                if (tag.localization_names.TryGetValue(locale, out JToken tagName))
-                                {
-                                    tagNames.Add(tagName.ToString());
-                                }
-                                else if (tag.localization_names.TryGetValue("en-us", out tagName))
-                                {
-                                    tagNames.Add(tagName.ToString());
-                                }
-                            }
-
-                            this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "twitchtags", string.Join(", ", tagNames));
+                            this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "twitchtags", string.Join(", ", tags));
                         }
                     }
                 }

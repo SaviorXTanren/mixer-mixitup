@@ -56,6 +56,8 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             await this.TagEditor.OnOpen();
 
+            await this.TagEditor.LoadCurrentTags();
+
             await base.OnOpenInternal();
         }
 
@@ -67,7 +69,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 return result;
             }
 
-            if (!await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateStreamTagsForChannel(ServiceManager.Get<TwitchSessionService>().User, this.TagEditor.CustomTags.Select(t => t.Tag.Tag)))
+            if (!await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateChannelInformation(ServiceManager.Get<TwitchSessionService>().User, tags: this.TagEditor.CustomTags.Select(t => t.Tag)))
             {
                 return new Result(MixItUp.Base.Resources.TwitchFailedToUpdateCustomTags);
             }
@@ -95,16 +97,11 @@ namespace MixItUp.Base.ViewModel.MainControls
 
                     this.Category = this.currentGame.name;
                 }
-            }
 
-            this.TagEditor.ClearCustomTags();
-
-            List<TwitchTagViewModel> tags = new List<TwitchTagViewModel>();
-            foreach (TagModel tag in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStreamTagsForChannel(ServiceManager.Get<TwitchSessionService>().User))
-            {
-                if (!tag.is_auto)
+                this.TagEditor.ClearCustomTags();
+                foreach (string tag in this.ChannelInformation.tags)
                 {
-                    this.TagEditor.AddCustomTag(new TwitchTagModel(tag));
+                    this.TagEditor.AddCustomTag(tag);
                 }
             }
         }
