@@ -158,7 +158,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AccountsDetails" xml:space="preserve">
-    <value>Las cuentas de streamer son tu cuenta real desde la que estás transmitiendo. Las cuentas de bot son cuentas separadas y opcionales que puedes usar para enviar mensajes desde tu canal. Las cuentas de bots deben ser creadas manualmente por usted y debe asegurarse de haber iniciado sesión en ellas antes de intentar conectarlas en Mix It Up.</value>
+    <value>Las cuentas de streamer son tu cuenta real desde la que estás transmitiendo. Las cuentas de bot son cuentas separadas y opcionales que puedes usar para enviar mensajes desde tu canal. Las cuentas de bots deben ser creadas manualmente y debe asegurarse de haber iniciado sesión en ellas antes de intentar conectarlas en Mix It Up.</value>
     <comment>Manual</comment>
   </data>
   <data name="AccountsWizardInstructions" xml:space="preserve">
@@ -182,7 +182,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ActionGroups" xml:space="preserve">
-    <value>Grupos de acción</value>
+    <value>Grupos de Acción</value>
     <comment>Manual</comment>
   </data>
   <data name="Actions" xml:space="preserve">
@@ -198,7 +198,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AddCommand" xml:space="preserve">
-    <value>Comando Agregar</value>
+    <value>Añadir Comando</value>
     <comment>Manual</comment>
   </data>
   <data name="AddCurrencyRank" xml:space="preserve">
@@ -206,37 +206,37 @@
     <comment>Manual</comment>
   </data>
   <data name="AddInventory" xml:space="preserve">
-    <value>Agregar inventario</value>
+    <value>Añadir inventario</value>
     <comment>Manual</comment>
   </data>
   <data name="AddItem" xml:space="preserve">
-    <value>Agregar elemento</value>
+    <value>Añadir elemento</value>
     <comment>Manual</comment>
   </data>
   <data name="AddNewPair" xml:space="preserve">
-    <value>Agregar nuevo par</value>
+    <value>Añadir nuevo par</value>
   </data>
   <data name="AddNewRank" xml:space="preserve">
     <value>Añadir nuevo rango</value>
     <comment>Manual</comment>
   </data>
   <data name="AddNewVariable" xml:space="preserve">
-    <value>Agregar nueva variable</value>
+    <value>Añadir nueva variable</value>
   </data>
   <data name="AddOverlayWidget" xml:space="preserve">
-    <value>Agregar widget de superposición</value>
+    <value>Añadir widget de superposición</value>
     <comment>Manual</comment>
   </data>
   <data name="AddQuote" xml:space="preserve">
-    <value>Añadir presupuesto</value>
+    <value>Añadir cita</value>
     <comment>Manual</comment>
   </data>
   <data name="AddToAllChatUsers" xml:space="preserve">
-    <value>Agregar a todos los usuarios del chat</value>
+    <value>Añadir a todos los usuarios del chat</value>
     <comment>Manual</comment>
   </data>
   <data name="AddToSpecificUser" xml:space="preserve">
-    <value>Agregar a un usuario específico</value>
+    <value>Añadir a un usuario específico</value>
     <comment>Manual</comment>
   </data>
   <data name="AddToUser" xml:space="preserve">
@@ -259,7 +259,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AllowProfanity" xml:space="preserve">
-    <value>Permitir blasfemias</value>
+    <value>Permitir obscenidades</value>
     <comment>Manual</comment>
   </data>
   <data name="Alt" xml:space="preserve">
@@ -271,7 +271,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Amount" xml:space="preserve">
-    <value>Importe</value>
+    <value>Cantidad</value>
     <comment>Manual</comment>
   </data>
   <data name="AmountDonated" xml:space="preserve">
@@ -299,7 +299,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ApplyStrikes" xml:space="preserve">
-    <value>Aplicar Huelgas</value>
+    <value>Aplicar avisos</value>
     <comment>Manual</comment>
   </data>
   <data name="ApprovedDevices" xml:space="preserve">
@@ -311,11 +311,11 @@
     <comment>Manual</comment>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
-    <value>Incluir automáticamente "!"</value>
+    <value>Incluir automáticamente &quot;!&quot;</value>
     <comment>Manual</comment>
   </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
-    <value>Cuenta corriente de inicio de sesión automático</value>
+    <value>Iniciar sesión automáticamente en la cuenta actual</value>
     <comment>Manual</comment>
   </data>
   <data name="AutomatedSettingsBackupRate" xml:space="preserve">
@@ -323,7 +323,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AutomaticReset" xml:space="preserve">
-    <value>Restablecimiento automático</value>
+    <value>Reinicio automático</value>
     <comment>Manual</comment>
   </data>
   <data name="Average" xml:space="preserve">
@@ -335,7 +335,7 @@
     <comment>Manual</comment>
   </data>
   <data name="BackupRate" xml:space="preserve">
-    <value>Tasa de backup</value>
+    <value>Intervalo de copias de seguridad</value>
     <comment>Manual</comment>
   </data>
   <data name="BackupSettings" xml:space="preserve">
@@ -346,7 +346,7 @@
     <value>Copia de seguridad de la configuración actual</value>
   </data>
   <data name="Banned" xml:space="preserve">
-    <value>Proscrito</value>
+    <value>Baneado</value>
     <comment>Manual</comment>
   </data>
   <data name="BaudRate" xml:space="preserve">
@@ -382,7 +382,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Browse" xml:space="preserve">
-    <value>Hojear</value>
+    <value>Navegar</value>
     <comment>Manual</comment>
   </data>
   <data name="ButtonName" xml:space="preserve">
@@ -425,7 +425,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Chat" xml:space="preserve">
-    <value>Charlar</value>
+    <value>Chat</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatMessage" xml:space="preserve">
@@ -441,11 +441,11 @@
     <comment>Manual</comment>
   </data>
   <data name="ChatTaggedSound" xml:space="preserve">
-    <value>Chat etiquetado Sonido</value>
+    <value>Sonido de etiqueta de chat</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatTextModeration" xml:space="preserve">
-    <value>Moderación de texto de chat</value>
+    <value>Moderación de chat de texto</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatTriggersHintAssist" xml:space="preserve">
@@ -453,11 +453,11 @@
     <comment>Manual</comment>
   </data>
   <data name="ChatTriggersNoExclamationHintAssist" xml:space="preserve">
-    <value>Disparador(es) de chat (No se necesita "!", espacio separado, punto y coma para varias palabras)</value>
+    <value>Disparador(es) de chat (No se necesita &quot;!&quot;, espacio separado, punto y coma para varias palabras)</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatWhisperSound" xml:space="preserve">
-    <value>Sonido de chat Whisper</value>
+    <value>Sonido de susurro</value>
     <comment>Manual</comment>
   </data>
   <data name="ClearAllUserDataHeader" xml:space="preserve">
@@ -465,7 +465,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ClearChat" xml:space="preserve">
-    <value>Borrar chat</value>
+    <value>Limpiar chat</value>
     <comment>Manual</comment>
   </data>
   <data name="ClearChatConfirmation" xml:space="preserve">
@@ -489,7 +489,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ClosingPleaseWait" xml:space="preserve">
-    <value>Espere mientras Mix It Up guarda su configuración y se apaga ...</value>
+    <value>Espere mientras Mix It Up guarda su configuración y se cierra...</value>
     <comment>Manual</comment>
   </data>
   <data name="ColorScheme" xml:space="preserve">
@@ -501,7 +501,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Command" xml:space="preserve">
-    <value>Mandar</value>
+    <value>Comando</value>
     <comment>Manual</comment>
   </data>
   <data name="CommandGroup" xml:space="preserve">
@@ -509,7 +509,7 @@
     <comment>Manual</comment>
   </data>
   <data name="CommandNoBang" xml:space="preserve">
-    <value>Comando (No se necesita '!')</value>
+    <value>Comando (No se necesita &apos;!&apos;)</value>
     <comment>Manual</comment>
   </data>
   <data name="Commands" xml:space="preserve">
@@ -517,7 +517,7 @@
     <comment>Manual</comment>
   </data>
   <data name="CommandsRun" xml:space="preserve">
-    <value>Comandos Ejecutar</value>
+    <value>Ejecutar Comandos</value>
     <comment>Manual</comment>
   </data>
   <data name="Compare" xml:space="preserve">
@@ -548,10 +548,11 @@
     <comment>Manual</comment>
   </data>
   <data name="Cooldown" xml:space="preserve">
-    <value>Enfriamiento</value>
+    <value>Cooldown</value>
+    <comment>I think its a lot more clear to leave it like this</comment>
   </data>
   <data name="Cost" xml:space="preserve">
-    <value>Costar</value>
+    <value>Coste</value>
   </data>
   <data name="CounterCreateAndUpdate" xml:space="preserve">
     <value>Contador (Crear y actualizar)</value>
@@ -566,15 +567,15 @@
     <comment>Manual</comment>
   </data>
   <data name="CumulativeMonthsSubbed" xml:space="preserve">
-    <value>Meses acumulados subtitulados</value>
+    <value>Meses seguidos suscrito</value>
     <comment>Manual</comment>
   </data>
   <data name="Currency" xml:space="preserve">
-    <value>Divisa</value>
+    <value>Moneda</value>
     <comment>Manual</comment>
   </data>
   <data name="CurrencyCost" xml:space="preserve">
-    <value>Costo de la moneda</value>
+    <value>Coste de la moneda</value>
     <comment>Manual</comment>
   </data>
   <data name="CurrencyRank" xml:space="preserve">
@@ -601,7 +602,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Costumbre</value>
+    <value>Personalizado</value>
     <comment>Manual</comment>
   </data>
   <data name="CustomCommands" xml:space="preserve">
@@ -637,7 +638,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Dashboard" xml:space="preserve">
-    <value>Salpicadero</value>
+    <value>Panel</value>
     <comment>Manual</comment>
   </data>
   <data name="Date" xml:space="preserve">
@@ -653,19 +654,19 @@
     <comment>Manual</comment>
   </data>
   <data name="DeafenSelf" xml:space="preserve">
-    <value>Yo sordo/no sordo</value>
+    <value>Ensordecer/Quitar ensordecer</value>
     <comment>Manual</comment>
   </data>
   <data name="DeductFromUserRunningCommand" xml:space="preserve">
-    <value>Deducir del comando User Running</value>
+    <value>Deducir del usuario ejecutando el comando</value>
     <comment>Manual</comment>
   </data>
   <data name="DeepOrange" xml:space="preserve">
-    <value>Naranja profunda</value>
+    <value>Naranja intenso</value>
     <comment>Manual</comment>
   </data>
   <data name="DeepPurple" xml:space="preserve">
-    <value>Púrpura profundo</value>
+    <value>Púrpura intenso</value>
     <comment>Manual</comment>
   </data>
   <data name="Default" xml:space="preserve">
@@ -697,7 +698,7 @@
     <comment>Manual</comment>
   </data>
   <data name="DeleteCommand" xml:space="preserve">
-    <value>Comando Eliminar</value>
+    <value>Eliminar comando</value>
     <comment>Manual</comment>
   </data>
   <data name="Description" xml:space="preserve">
@@ -716,7 +717,7 @@
     <comment>Manual</comment>
   </data>
   <data name="DisableCommand" xml:space="preserve">
-    <value>Comando Deshabilitar</value>
+    <value>Deshabilitar comando</value>
     <comment>Manual</comment>
   </data>
   <data name="DisableCommandGroup" xml:space="preserve">
@@ -744,7 +745,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Donators" xml:space="preserve">
-    <value>Donantes</value>
+    <value>Donadores</value>
     <comment>Manual</comment>
   </data>
   <data name="DTR" xml:space="preserve">
@@ -764,7 +765,7 @@
     <comment>Manual</comment>
   </data>
   <data name="EditCommand" xml:space="preserve">
-    <value>Comando Editar</value>
+    <value>Editar comando</value>
     <comment>Manual</comment>
   </data>
   <data name="Enable" xml:space="preserve">
@@ -776,7 +777,7 @@
     <comment>Manual</comment>
   </data>
   <data name="EnableCommand" xml:space="preserve">
-    <value>Comando Habilitar</value>
+    <value>Habilitar comando</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableCommandGroup" xml:space="preserve">
@@ -787,18 +788,18 @@
     <value>Habilitar/Deshabilitar</value>
   </data>
   <data name="EnableDisableCommand" xml:space="preserve">
-    <value>Comando Habilitar/Deshabilitar</value>
+    <value>Habilitar/Deshabilitar comando</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableDisableQueue" xml:space="preserve">
     <value>Habilitar/Deshabilitar cola</value>
   </data>
   <data name="EnableIFTTT" xml:space="preserve">
-    <value>¡Habilite la conexión IFTTT en la página Servicios!</value>
+    <value>¡Habilite la conexión IFTTT en la sección Servicios!</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableOBS" xml:space="preserve">
-    <value>¡Habilite la conexión de OBS Studio en la página Servicios!</value>
+    <value>¡Habilite la conexión de OBS Studio en la sección Servicios!</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableOverlay" xml:space="preserve">
@@ -806,7 +807,7 @@
     <comment>Manual</comment>
   </data>
   <data name="EnableOvrStream" xml:space="preserve">
-    <value>¡Habilite OvrStream en la página Servicios!</value>
+    <value>¡Habilite OvrStream en la sección Servicios!</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableQueue" xml:space="preserve">
@@ -816,8 +817,8 @@
     <value>¡Habilite la conexión de Streamlabs en la página Servicios!</value>
     <comment>Manual</comment>
   </data>
-  <data name="EnableStreamlabsDesktop" xml:space="preserve">
-    <value>¡Habilite la conexión Desktop de Streamlabs en la página Servicios!</value>
+  <data name="EnableStreamlabsOBS" xml:space="preserve">
+    <value>¡Habilite la conexión OBS de Streamlabs en la página Servicios!</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableXSplit" xml:space="preserve">
@@ -833,7 +834,7 @@
     <comment>Manual</comment>
   </data>
   <data name="EnteredUsers" xml:space="preserve">
-    <value>Usuarios introducidos</value>
+    <value>Usuarios ingresados</value>
     <comment>Manual</comment>
   </data>
   <data name="EntranceAnimation" xml:space="preserve">
@@ -861,11 +862,11 @@
     <comment>Manual</comment>
   </data>
   <data name="ExemptFromRule" xml:space="preserve">
-    <value>Exento de regla</value>
+    <value>Exencidir de la regla</value>
     <comment>Manual</comment>
   </data>
   <data name="ExemptFromRuleAndStrikes" xml:space="preserve">
-    <value>Exento de reglas y huelgas</value>
+    <value>Exencidir de regla y huelgas</value>
     <comment>Manual</comment>
   </data>
   <data name="ExitAnimation" xml:space="preserve">
@@ -925,7 +926,7 @@
     <comment>Manual</comment>
   </data>
   <data name="FollowAge" xml:space="preserve">
-    <value>Sigue la edad</value>
+    <value>Tiempo de follow</value>
     <comment>Manual</comment>
   </data>
   <data name="Follower" xml:space="preserve">
@@ -972,11 +973,11 @@
     <comment>Manual</comment>
   </data>
   <data name="GetCurrent" xml:space="preserve">
-    <value>Ponerse al día</value>
+    <value>Obtener actual</value>
     <comment>Manual</comment>
   </data>
   <data name="Gifted" xml:space="preserve">
-    <value>Dotado</value>
+    <value>Regalado</value>
     <comment>Manual</comment>
   </data>
   <data name="Giveaway" xml:space="preserve">
@@ -984,7 +985,7 @@
     <comment>Manual</comment>
   </data>
   <data name="GiveawayItem" xml:space="preserve">
-    <value>Artículo de regalo</value>
+    <value>Artículo de sorteo</value>
     <comment>Manual</comment>
   </data>
   <data name="GlobalMod" xml:space="preserve">
@@ -1036,7 +1037,7 @@
     <comment>Manual</comment>
   </data>
   <data name="HideViewerAndChatterNumbers" xml:space="preserve">
-    <value>Ocultar números de visor y chatter</value>
+    <value>Ocultar número de espectadores y hablantes</value>
     <comment>Manual</comment>
   </data>
   <data name="HotKey" xml:space="preserve">
@@ -1044,7 +1045,7 @@
     <comment>Manual</comment>
   </data>
   <data name="HotKeys" xml:space="preserve">
-    <value>Teclas de acceso rápido</value>
+    <value>Atajos</value>
     <comment>Manual</comment>
   </data>
   <data name="Hours" xml:space="preserve">
@@ -1076,7 +1077,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Indigo" xml:space="preserve">
-    <value>Añil</value>
+    <value>Índigo</value>
     <comment>Manual</comment>
   </data>
   <data name="Individual" xml:space="preserve">
@@ -1112,31 +1113,31 @@
     <comment>Manual</comment>
   </data>
   <data name="IsRankSystem" xml:space="preserve">
-    <value>Es el sistema de rangos</value>
+    <value>Es sistema de rangos</value>
     <comment>Manual</comment>
   </data>
   <data name="Item1" xml:space="preserve">
-    <value>Tema 1</value>
+    <value>Objeto 1</value>
     <comment>Manual</comment>
   </data>
   <data name="Item2" xml:space="preserve">
-    <value>Tema 2</value>
+    <value>Objeto 2</value>
     <comment>Manual</comment>
   </data>
   <data name="Item3" xml:space="preserve">
-    <value>Tema 3</value>
+    <value>Objeto 3</value>
     <comment>Manual</comment>
   </data>
   <data name="Item4" xml:space="preserve">
-    <value>Tema 4</value>
+    <value>Objeto 4</value>
     <comment>Manual</comment>
   </data>
   <data name="ItemList" xml:space="preserve">
-    <value>Lista de artículos</value>
+    <value>Lista de objetos</value>
     <comment>Manual</comment>
   </data>
   <data name="ItemName" xml:space="preserve">
-    <value>Nombre del artículo</value>
+    <value>Nombre del objeto</value>
     <comment>Manual</comment>
   </data>
   <data name="ItemsBought" xml:space="preserve">
@@ -1144,23 +1145,23 @@
     <comment>Manual</comment>
   </data>
   <data name="ItemsSold" xml:space="preserve">
-    <value>Artículos vendidos</value>
+    <value>Objetos vendidos</value>
     <comment>Manual</comment>
   </data>
   <data name="ItemsTraded" xml:space="preserve">
-    <value>Artículos negociados</value>
+    <value>Objetos intercambiados</value>
     <comment>Manual</comment>
   </data>
   <data name="JoinFrontOfQueue" xml:space="preserve">
-    <value>Unirse al usuario frente de la cola</value>
+    <value>Usuario entra al inicio de la cola</value>
     <comment>Manual</comment>
   </data>
   <data name="JoinQueue" xml:space="preserve">
-    <value>Cola de unión de usuarios</value>
+    <value>Usuario entra a la cola</value>
     <comment>Manual</comment>
   </data>
   <data name="JSONValueName" xml:space="preserve">
-    <value>Nombre del valor JSON (use '\' para parámetros anidados)</value>
+    <value>Nombre del valor JSON (use &apos;\&apos; para parámetros anidados)</value>
     <comment>Manual</comment>
   </data>
   <data name="Keyboard" xml:space="preserve">
@@ -1225,7 +1226,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Light" xml:space="preserve">
-    <value>Luz</value>
+    <value>Claro</value>
     <comment>Manual</comment>
   </data>
   <data name="LightBlue" xml:space="preserve">
@@ -1245,7 +1246,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Live" xml:space="preserve">
-    <value>Vivir</value>
+    <value>En directo</value>
     <comment>Manual</comment>
   </data>
   <data name="Location" xml:space="preserve">
@@ -1268,7 +1269,7 @@
     <comment>Manual</comment>
   </data>
   <data name="MagicEightBall" xml:space="preserve">
-    <value>Bola Magic 8</value>
+    <value>Bola Mágica del 8</value>
     <comment>Manual</comment>
   </data>
   <data name="MakeGloballyUsable" xml:space="preserve">
@@ -1316,7 +1317,7 @@
     <value>Botón central</value>
   </data>
   <data name="Min" xml:space="preserve">
-    <value>Min</value>
+    <value>Mínimo</value>
   </data>
   <data name="MinimumChannelActivityMins" xml:space="preserve">
     <value>Actividad mínima del canal (mins)</value>
@@ -1335,7 +1336,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Minutes" xml:space="preserve">
-    <value>Acta</value>
+    <value>Minutos</value>
     <comment>Manual</comment>
   </data>
   <data name="MinValue" xml:space="preserve">
@@ -1347,11 +1348,11 @@
     <comment>Manual</comment>
   </data>
   <data name="MixItUpDashboard" xml:space="preserve">
-    <value>Mezclarlo - Panel de control</value>
+    <value>Mix It Up  - Panel de control</value>
     <comment>Manual</comment>
   </data>
   <data name="MixItUpOverlay" xml:space="preserve">
-    <value>Mezclarlo superposición</value>
+    <value>Overlay Mix It Up</value>
     <comment>Manual</comment>
   </data>
   <data name="MixPlay" xml:space="preserve">
@@ -1363,7 +1364,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ModBonus" xml:space="preserve">
-    <value>Bono Mod</value>
+    <value>Bonus de Mod</value>
     <comment>Manual</comment>
   </data>
   <data name="Moderation" xml:space="preserve">
@@ -1409,7 +1410,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Mute" xml:space="preserve">
-    <value>Mudo</value>
+    <value>Mutear</value>
     <comment>Manual</comment>
   </data>
   <data name="MuteSelf" xml:space="preserve">
@@ -1448,7 +1449,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Next" xml:space="preserve">
-    <value>Próximo</value>
+    <value>Siguiente</value>
     <comment>Manual</comment>
   </data>
   <data name="No" xml:space="preserve">
@@ -1476,7 +1477,7 @@
     <comment>Manual</comment>
   </data>
   <data name="OfflineRate" xml:space="preserve">
-    <value>Tarifa sin conexión</value>
+    <value>Tarifa offline</value>
     <comment>Manual</comment>
   </data>
   <data name="Ok" xml:space="preserve">
@@ -1491,15 +1492,15 @@
     <comment>Manual</comment>
   </data>
   <data name="OnFollow" xml:space="preserve">
-    <value>En Seguir</value>
+    <value>Al seguir</value>
     <comment>Manual</comment>
   </data>
   <data name="OnHost" xml:space="preserve">
-    <value>En el anfitrión</value>
+    <value>Al hostear</value>
     <comment>Manual</comment>
   </data>
   <data name="OnlineRate" xml:space="preserve">
-    <value>Tarifa en línea</value>
+    <value>Tarifa en stream</value>
     <comment>Manual</comment>
   </data>
   <data name="OnlyShowAlertsInDashboard" xml:space="preserve">
@@ -1507,15 +1508,15 @@
     <comment>Manual</comment>
   </data>
   <data name="OnSubscribe" xml:space="preserve">
-    <value>En Suscribirse</value>
+    <value>Al suscribirse</value>
     <comment>Manual</comment>
   </data>
   <data name="OnUserRankChanged" xml:space="preserve">
-    <value>En el rango de usuario hacia arriba</value>
+    <value>Al subir de rango</value>
     <comment>Manual</comment>
   </data>
   <data name="OnUserRankDown" xml:space="preserve">
-    <value>En el rango de usuario hacia abajo</value>
+    <value>Al bajar de rango</value>
     <comment>Manual</comment>
   </data>
   <data name="Operator" xml:space="preserve">
@@ -1538,19 +1539,19 @@
     <comment>Manual</comment>
   </data>
   <data name="Overlay" xml:space="preserve">
-    <value>Superponer</value>
+    <value>Overlay</value>
     <comment>Manual</comment>
   </data>
   <data name="OverlayEndpoints" xml:space="preserve">
-    <value>Extremos superpuestos</value>
+    <value>Extremos de Overlay</value>
     <comment>Manual</comment>
   </data>
   <data name="OverlayImagesAndVideos" xml:space="preserve">
-    <value>Superposición (imágenes y videos)</value>
+    <value>Overlay (imágenes y videos)</value>
     <comment>Manual</comment>
   </data>
   <data name="Overlays" xml:space="preserve">
-    <value>Superposiciones</value>
+    <value>Overlays</value>
     <comment>Manual</comment>
   </data>
   <data name="OverlayWarning1" xml:space="preserve">
@@ -1564,19 +1565,19 @@
     <comment>Manual</comment>
   </data>
   <data name="OverlayWidgetEditor" xml:space="preserve">
-    <value>Widget de superposición - Editor</value>
+    <value>Widget de overlay - Editor</value>
     <comment>Manual</comment>
   </data>
   <data name="OverlayWidgetEditorInstructions" xml:space="preserve">
-    <value>Seleccione el tipo de superposición que desea crear:</value>
+    <value>Seleccione el tipo de overlay que desea crear:</value>
     <comment>Manual</comment>
   </data>
   <data name="OverlayWidgets" xml:space="preserve">
-    <value>Widgets superpuestos</value>
+    <value>Widgets de overlay</value>
     <comment>Manual</comment>
   </data>
   <data name="OverlayWidgetsRequireOverlay" xml:space="preserve">
-    <value>La superposición debe estar habilitada en el menú Servicios para utilizar widgets de superposición.</value>
+    <value>El overlay debe estar habilitada en el menú Servicios para utilizar widgets de superposición.</value>
     <comment>Manual</comment>
   </data>
   <data name="OvrStream" xml:space="preserve">
@@ -1599,10 +1600,10 @@
     <comment>Manual</comment>
   </data>
   <data name="PerPerson" xml:space="preserve">
-    <value>Por cabeza</value>
+    <value>Por persona</value>
   </data>
   <data name="Pink" xml:space="preserve">
-    <value>Rosado</value>
+    <value>Rosa</value>
     <comment>Manual</comment>
   </data>
   <data name="Pitch" xml:space="preserve">
@@ -1617,7 +1618,7 @@
     <value>Nombre del puerto</value>
   </data>
   <data name="Position" xml:space="preserve">
-    <value>Pos</value>
+    <value>Posición</value>
     <comment>Manual</comment>
   </data>
   <data name="PreMade" xml:space="preserve">
@@ -1629,7 +1630,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Press" xml:space="preserve">
-    <value>Prensa</value>
+    <value>Pulsar</value>
     <comment>Manual</comment>
   </data>
   <data name="PrimaryCurrency" xml:space="preserve">
@@ -1688,11 +1689,11 @@
     <comment>Manual</comment>
   </data>
   <data name="QuoteFormatting" xml:space="preserve">
-    <value>Formato de cotización ($quotenumber, $quotetext, $quotegame $quotedatetime)</value>
+    <value>Formato de citas ($quotenumber, $quotetext, $quotegame $quotedatetime)</value>
     <comment>Manual</comment>
   </data>
   <data name="Quotes" xml:space="preserve">
-    <value>Presupuestos</value>
+    <value>Citas</value>
     <comment>Manual</comment>
   </data>
   <data name="Rank" xml:space="preserve">
@@ -1734,7 +1735,7 @@
     <comment>Manual</comment>
   </data>
   <data name="RegularStatusOnlineViewingTime" xml:space="preserve">
-    <value>Tiempo de visualización en línea del estado "regular"</value>
+    <value>Tiempo de visualización en línea del estado &quot;regular&quot;</value>
     <comment>Manual</comment>
   </data>
   <data name="Release" xml:space="preserve">
@@ -1762,10 +1763,10 @@
     <value>Texto de reemplazo</value>
   </data>
   <data name="Report" xml:space="preserve">
-    <value>Informe</value>
+    <value>Informar</value>
   </data>
   <data name="RequireClaim" xml:space="preserve">
-    <value>Requerir "!claim"</value>
+    <value>Requerir &quot;!claim&quot;</value>
     <comment>Manual</comment>
   </data>
   <data name="RequiredHours" xml:space="preserve">
@@ -1797,7 +1798,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ResetStrikesOnLaunch" xml:space="preserve">
-    <value>Restablecer ataques en el lanzamiento</value>
+    <value>Restablecer avisos en el lanzamiento</value>
     <comment>Manual</comment>
   </data>
   <data name="RestoreSettings" xml:space="preserve">
@@ -1832,7 +1833,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Roles" xml:space="preserve">
-    <value>Papeles</value>
+    <value>Roles</value>
     <comment>Manual</comment>
   </data>
   <data name="Rotation" xml:space="preserve">
@@ -1856,7 +1857,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Salvar</value>
+    <value>Guardar</value>
     <comment>Manual</comment>
   </data>
   <data name="SaveChatEventLogs" xml:space="preserve">
@@ -1894,7 +1895,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Seconds" xml:space="preserve">
-    <value>Sobras</value>
+    <value>Segundos</value>
     <comment>Manual</comment>
   </data>
   <data name="SecondValue" xml:space="preserve">
@@ -1902,7 +1903,7 @@
     <comment>Manual</comment>
   </data>
   <data name="SelectFirst" xml:space="preserve">
-    <value>Seleccione Usuario en la parte delantera de la cola</value>
+    <value>Seleccione usuario en la parte delantera de la cola</value>
     <comment>Manual</comment>
   </data>
   <data name="SelectFirstType" xml:space="preserve">
@@ -1959,7 +1960,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>Poner</value>
+    <value>Establecer</value>
     <comment>Manual</comment>
   </data>
   <data name="SetGame" xml:space="preserve">
@@ -1991,7 +1992,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ShopCommand" xml:space="preserve">
-    <value>Comando Tienda</value>
+    <value>Comando tienda</value>
     <comment>Manual</comment>
   </data>
   <data name="ShopCurrency" xml:space="preserve">
@@ -2011,7 +2012,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ShowOnChatListContextMenu" xml:space="preserve">
-    <value>Menú contextual Mostrar en la lista de chat</value>
+    <value>Menú contextual mostrar en la lista de chat</value>
     <comment>Manual</comment>
   </data>
   <data name="ShowUserJoinLeave" xml:space="preserve">
@@ -2079,7 +2080,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Staff" xml:space="preserve">
-    <value>Personal</value>
+    <value>Staff</value>
     <comment>Manual</comment>
   </data>
   <data name="StartGiveaway" xml:space="preserve">
@@ -2107,7 +2108,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Streamer" xml:space="preserve">
-    <value>Gallardete</value>
+    <value>Streamer</value>
     <comment>Manual</comment>
   </data>
   <data name="StreamerAccount" xml:space="preserve">
@@ -2123,7 +2124,7 @@
     <comment>Manual</comment>
   </data>
   <data name="StreamingSoftware" xml:space="preserve">
-    <value>Streaming Software</value>
+    <value>Software de streaming</value>
     <comment>Manual</comment>
   </data>
   <data name="Streamlabs" xml:space="preserve">
@@ -2135,15 +2136,15 @@
     <comment>Manual</comment>
   </data>
   <data name="StrikeCommands" xml:space="preserve">
-    <value>Comandos de ataque</value>
+    <value>Comandos de aviso</value>
     <comment>Manual</comment>
   </data>
   <data name="SubAge" xml:space="preserve">
-    <value>Sub edad</value>
+    <value>Edad de sub</value>
     <comment>Manual</comment>
   </data>
   <data name="SubBonus" xml:space="preserve">
-    <value>Sub Bono</value>
+    <value>Bonus de Sub</value>
     <comment>Manual</comment>
   </data>
   <data name="SubmitABug" xml:space="preserve">
@@ -2167,7 +2168,7 @@
     <comment>Manual</comment>
   </data>
   <data name="SubsGifted" xml:space="preserve">
-    <value>Subs Dotados</value>
+    <value>Subs regalados</value>
     <comment>Manual</comment>
   </data>
   <data name="SubsReceived" xml:space="preserve">
@@ -2199,7 +2200,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Teal" xml:space="preserve">
-    <value>Cerceta</value>
+    <value>Verde azulado</value>
     <comment>Manual</comment>
   </data>
   <data name="Team" xml:space="preserve">
@@ -2207,7 +2208,7 @@
     <comment>Manual</comment>
   </data>
   <data name="TestCommand" xml:space="preserve">
-    <value>Comando Test</value>
+    <value>Comando de prueba</value>
     <comment>Manual</comment>
   </data>
   <data name="Text" xml:space="preserve">
@@ -2233,7 +2234,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ThreeOrMoreStrikesCommand" xml:space="preserve">
-    <value>Comando de más de 3 ataques</value>
+    <value>Comando de más de 3 avisos</value>
     <comment>Manual</comment>
   </data>
   <data name="ThreeRight" xml:space="preserve">
@@ -2245,7 +2246,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Time" xml:space="preserve">
-    <value>Hora</value>
+    <value>Tiempo</value>
     <comment>Manual</comment>
   </data>
   <data name="TimeLeft" xml:space="preserve">
@@ -2323,7 +2324,7 @@
     <value>Dos</value>
   </data>
   <data name="TwoStrikesCommand" xml:space="preserve">
-    <value>Comando de 2 Ataques</value>
+    <value>Comando de 2 avisos</value>
     <comment>Manual</comment>
   </data>
   <data name="Type" xml:space="preserve">
@@ -2404,7 +2405,7 @@
     <comment>Manual</comment>
   </data>
   <data name="UserLeftChat" xml:space="preserve">
-    <value>{0} Chat izquierdo</value>
+    <value>{0} chat izquierdo</value>
     <comment>Manual</comment>
   </data>
   <data name="UserMetrics" xml:space="preserve">
@@ -2556,7 +2557,7 @@
     <comment>Manual</comment>
   </data>
   <data name="WhisperUserOptional" xml:space="preserve">
-    <value>Usuario de Whisper (opcional)</value>
+    <value>Susurrar al usuario (opcional)</value>
     <comment>Manual</comment>
   </data>
   <data name="White" xml:space="preserve">
@@ -2568,7 +2569,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Wildcards" xml:space="preserve">
-    <value>Comodines</value>
+    <value>Wildcards</value>
     <comment>Manual</comment>
   </data>
   <data name="Winner" xml:space="preserve">
@@ -2584,7 +2585,7 @@
     <comment>Manual</comment>
   </data>
   <data name="XLarge" xml:space="preserve">
-    <value>X-Grande</value>
+    <value>XL</value>
     <comment>Manual</comment>
   </data>
   <data name="XPosition" xml:space="preserve">
@@ -2596,7 +2597,7 @@
     <comment>Manual</comment>
   </data>
   <data name="XXLarge" xml:space="preserve">
-    <value>XX-Grande</value>
+    <value>XXL</value>
     <comment>Manual</comment>
   </data>
   <data name="Yearly" xml:space="preserve">
@@ -2646,7 +2647,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ChatUserLeft" xml:space="preserve">
-    <value>Usuario de chat dejado</value>
+    <value>Usuario del chat se fue</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatUserPurge" xml:space="preserve">
@@ -2654,7 +2655,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ExtraLifeDonation" xml:space="preserve">
-    <value>Donación de Vida Extra</value>
+    <value>Donación de Extra Life</value>
     <comment>Manual</comment>
   </data>
   <data name="JustGivingDonation" xml:space="preserve">
@@ -2698,18 +2699,18 @@
     <value>Donación de TreatStream</value>
   </data>
   <data name="RunAd" xml:space="preserve">
-    <value>Publicar anuncio</value>
+    <value>Poner anuncio</value>
     <comment>Manual</comment>
   </data>
   <data name="Ban" xml:space="preserve">
-    <value>Prohibición</value>
+    <value>Banear</value>
     <comment>Manual</comment>
   </data>
   <data name="Purge" xml:space="preserve">
     <value>Purga</value>
   </data>
   <data name="Timeout" xml:space="preserve">
-    <value>Interrupción</value>
+    <value>Vetar</value>
     <comment>Manual</comment>
   </data>
   <data name="Imported" xml:space="preserve">
@@ -2730,11 +2731,11 @@
     <value>Bono de donación</value>
   </data>
   <data name="FollowBonus" xml:space="preserve">
-    <value>Seguir Bono</value>
+    <value>Bonus de seguidor</value>
     <comment>Manual</comment>
   </data>
   <data name="HostBonus" xml:space="preserve">
-    <value>Bono de anfitrión</value>
+    <value>Bonus de hosteo</value>
     <comment>Manual</comment>
   </data>
   <data name="PointRates" xml:space="preserve">
@@ -2746,7 +2747,7 @@
     <comment>Manual</comment>
   </data>
   <data name="SubscribeBonus" xml:space="preserve">
-    <value>Bono de suscripción</value>
+    <value>Bonus de suscripción</value>
     <comment>Manual</comment>
   </data>
   <data name="AddCustomLevelUp" xml:space="preserve">
@@ -2791,7 +2792,7 @@
     <value>Empezar</value>
   </data>
   <data name="StreamPass" xml:space="preserve">
-    <value>Pase de transmisión</value>
+    <value>Stream Pass</value>
     <comment>Manual</comment>
   </data>
   <data name="Dutch" xml:space="preserve">
@@ -2830,7 +2831,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Viewing" xml:space="preserve">
-    <value>Visionado:</value>
+    <value>Viendo:</value>
     <comment>Manual</comment>
   </data>
   <data name="UserData" xml:space="preserve">
@@ -2859,7 +2860,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ModRedeemCommand" xml:space="preserve">
-    <value>Comando Mod Redeem</value>
+    <value>Comando de Mod reclamar</value>
     <comment>Manual</comment>
   </data>
   <data name="DefaultRedemption" xml:space="preserve">
@@ -2879,21 +2880,21 @@
     <comment>Manual</comment>
   </data>
   <data name="Redemption" xml:space="preserve">
-    <value>Redención</value>
+    <value>Canje</value>
   </data>
   <data name="ManualRedeem" xml:space="preserve">
     <value>Canje manual</value>
     <comment>Manual</comment>
   </data>
   <data name="Refund" xml:space="preserve">
-    <value>Reembolso</value>
+    <value>Reembolsar</value>
   </data>
   <data name="EditProducts" xml:space="preserve">
     <value>Editar productos</value>
     <comment>Manual</comment>
   </data>
   <data name="RedemptionStore" xml:space="preserve">
-    <value>Tienda de canje</value>
+    <value>Tienda de canjeos</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatPurchaseCommand" xml:space="preserve">
@@ -2955,7 +2956,7 @@
     <value>Pendiente</value>
   </data>
   <data name="Redeemed" xml:space="preserve">
-    <value>Redimido</value>
+    <value>Canjeado</value>
     <comment>Manual</comment>
   </data>
   <data name="ValidCurrencyMustBeSelected" xml:space="preserve">
@@ -2967,11 +2968,11 @@
     <comment>Manual</comment>
   </data>
   <data name="ValidCooldownAmountMustBeSpecified" xml:space="preserve">
-    <value>Se debe especificar una cantidad de enfriamiento válida</value>
+    <value>Se debe especificar una cantidad de cooldown válida</value>
     <comment>Manual</comment>
   </data>
   <data name="ValidCooldownGroupMustBeSpecified" xml:space="preserve">
-    <value>Se debe especificar un grupo de enfriamiento válido</value>
+    <value>Se debe especificar un grupo de cooldown válido</value>
     <comment>Manual</comment>
   </data>
   <data name="ValidInventoryItemAmountMustSpecified" xml:space="preserve">
@@ -3039,15 +3040,15 @@
     <value>Infinito</value>
   </data>
   <data name="ExportQuotes" xml:space="preserve">
-    <value>Cotizaciones de exportación</value>
+    <value>Exportar citas</value>
     <comment>Manual</comment>
   </data>
   <data name="RegularBonus" xml:space="preserve">
-    <value>Bono regular</value>
+    <value>Bonus de regular</value>
     <comment>Manual</comment>
   </data>
   <data name="YouDoNotHavePermissions" xml:space="preserve">
-    <value>No tiene permisos para hacerlo</value>
+    <value>No tiene permisos para hacer esto</value>
     <comment>Manual</comment>
   </data>
   <data name="RewardName" xml:space="preserve">
@@ -3067,7 +3068,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Tier" xml:space="preserve">
-    <value>Nivel</value>
+    <value>Tier</value>
     <comment>Manual</comment>
   </data>
   <data name="ClipCreationFailed" xml:space="preserve">
@@ -3084,11 +3085,11 @@
     <comment>Manual</comment>
   </data>
   <data name="BitsBonus" xml:space="preserve">
-    <value>Bono bits</value>
+    <value>Bonus de bits</value>
     <comment>Manual</comment>
   </data>
   <data name="BitsCheered" xml:space="preserve">
-    <value>Bits vitoreados</value>
+    <value>Bits lanzados</value>
     <comment>Manual</comment>
   </data>
   <data name="Tag" xml:space="preserve">
@@ -3099,10 +3100,10 @@
     <comment>Manual</comment>
   </data>
   <data name="OpenChannel" xml:space="preserve">
-    <value>Canal abierto</value>
+    <value>Abrir canal</value>
   </data>
   <data name="RaidChannel" xml:space="preserve">
-    <value>Canal Raid</value>
+    <value>Raidear canal</value>
     <comment>Manual</comment>
   </data>
   <data name="SameLanguage" xml:space="preserve">
@@ -3144,13 +3145,13 @@
     <value>3</value>
   </data>
   <data name="Tier1" xml:space="preserve">
-    <value>Nivel 1</value>
+    <value>Tier 1</value>
   </data>
   <data name="Tier2" xml:space="preserve">
-    <value>Nivel 2</value>
+    <value>Tier 2</value>
   </data>
   <data name="Tier3" xml:space="preserve">
-    <value>Nivel 3</value>
+    <value>Tier 3</value>
   </data>
   <data name="FailedToUpdateGame" xml:space="preserve">
     <value>No hemos podido actualizar tu juego porque no hemos podido encontrar un juego que coincida con ese nombre.</value>
@@ -3191,7 +3192,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ShowBitsCheered" xml:space="preserve">
-    <value>Show Bits Animados</value>
+    <value>Mostrar bits animados</value>
     <comment>Manual</comment>
   </data>
   <data name="ShowChannelPoints" xml:space="preserve">
@@ -3199,7 +3200,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ShowFollows" xml:space="preserve">
-    <value>Mostrar sigue</value>
+    <value>Mostrar seguidores</value>
     <comment>Manual</comment>
   </data>
   <data name="ShowGiftedSubs" xml:space="preserve">
@@ -3207,11 +3208,11 @@
     <comment>Manual</comment>
   </data>
   <data name="ShowHosts" xml:space="preserve">
-    <value>Mostrar anfitriones</value>
+    <value>Mostrar hosts</value>
     <comment>Manual</comment>
   </data>
   <data name="ShowMassGiftedSubs" xml:space="preserve">
-    <value>Mostrar subs superdotados en masa</value>
+    <value>Mostrar subs regalados masivos</value>
     <comment>Manual</comment>
   </data>
   <data name="ShowModeration" xml:space="preserve">
@@ -3255,7 +3256,7 @@
     <comment>Manual</comment>
   </data>
   <data name="PatreonBenefit" xml:space="preserve">
-    <value>Beneficio de Patreon</value>
+    <value>Beneficios de Patreon</value>
     <comment>Manual</comment>
   </data>
   <data name="UseCustomUsernameColors" xml:space="preserve">
@@ -3279,10 +3280,10 @@
     <comment>Manual</comment>
   </data>
   <data name="MassGiftedSubsFilterAmount" xml:space="preserve">
-    <value>Cantidad de filtro de subs dotados en masa</value>
+    <value>Cantidad de filtro de subs regalados en masa</value>
   </data>
   <data name="MassGiftedSubsFilterAmountTooltip" xml:space="preserve">
-    <value>Esta opción ayuda a garantizar que solo se ejecuten los comandos de eventos regulares Subscription Gifted OR Mass Subscription Gifted en función de en qué se establezca el número. Esto está diseñado para ayudar a reducir el spam de los comandos regalados por suscripción y proporcionar una mejor experiencia para su transmisión. Tenga en cuenta que esto hará que el procesamiento de los comandos de eventos Subscription Gifted &amp; Mass Subscription Gifted se retrase ligeramente, generalmente menos de 10 segundos.
+    <value>Esta opción ayuda a garantizar que solo se ejecuten los comandos de eventos regulares Suscripción Regalada O Suscripción Regalada masiva en función de en qué se establezca el número. Esto está diseñado para ayudar a reducir el spam de los comandos regalados por suscripción y proporcionar una mejor experiencia para su transmisión. Tenga en cuenta que esto hará que el procesamiento de los comandos de eventos Subscription Gifted &amp; Mass Subscription Gifted se retrase ligeramente, generalmente menos de 10 segundos.
 
 Esta configuración también solo se aplica a las plataformas de transmisión que admiten el regalo de varias suscripciones al mismo tiempo. Las plataformas de streaming que solo admiten el regalo de suscripciones individuales no aprovecharán esta configuración y solo usarán el comando de evento Gifted de suscripción regular.
 
@@ -3342,11 +3343,11 @@ Por ejemplo, si esta opción está habilitada y la cantidad se establece en 5, c
     <comment>Manual</comment>
   </data>
   <data name="CounterActionMissingName" xml:space="preserve">
-    <value>Contraacción: Falta el nombre del contador</value>
+    <value>Contador: Falta el nombre del contador</value>
     <comment>Manual</comment>
   </data>
   <data name="CounterActionMissingAmount" xml:space="preserve">
-    <value>Contraacción: Cantidad faltante</value>
+    <value>Contador: Cantidad faltante</value>
     <comment>Manual</comment>
   </data>
   <data name="Consumables" xml:space="preserve">
@@ -3364,11 +3365,11 @@ Por ejemplo, si esta opción está habilitada y la cantidad se establece en 5, c
     <comment>Manual</comment>
   </data>
   <data name="ConsumableActionSelectConsumable" xml:space="preserve">
-    <value>Acción consumible: se debe seleccionar un consumible válido</value>
+    <value>Acción consumible: Se debe seleccionar un consumible válido</value>
     <comment>Manual</comment>
   </data>
   <data name="ConsumableActionSelectInventoryItem" xml:space="preserve">
-    <value>Acción consumible: se debe seleccionar un artículo de inventario válido</value>
+    <value>Acción consumible: Se debe seleccionar un artículo de inventario válido</value>
     <comment>Manual</comment>
   </data>
   <data name="DiscordActionMissingChannel" xml:space="preserve">
@@ -3376,7 +3377,7 @@ Por ejemplo, si esta opción está habilitada y la cantidad se establece en 5, c
     <comment>Manual</comment>
   </data>
   <data name="DiscordActionMissingChatMessage" xml:space="preserve">
-    <value>Acción de discordia: Falta el mensaje de chat</value>
+    <value>Acción de discord: Falta el mensaje de chat</value>
     <comment>Manual</comment>
   </data>
   <data name="ExternalProgramActionMissingFilePath" xml:space="preserve">
@@ -3400,7 +3401,7 @@ Por ejemplo, si esta opción está habilitada y la cantidad se establece en 5, c
     <comment>Manual</comment>
   </data>
   <data name="AddModerationStrike" xml:space="preserve">
-    <value>Agregar huelga de moderación</value>
+    <value>Agregar aviso de moderación</value>
     <comment>Manual</comment>
   </data>
   <data name="BanUser" xml:space="preserve">
@@ -3408,7 +3409,7 @@ Por ejemplo, si esta opción está habilitada y la cantidad se establece en 5, c
     <comment>Manual</comment>
   </data>
   <data name="ModUser" xml:space="preserve">
-    <value>Usuario Mod</value>
+    <value>Dar mod</value>
     <comment>Manual</comment>
   </data>
   <data name="PurgeUser" xml:space="preserve">
@@ -3428,7 +3429,7 @@ Por ejemplo, si esta opción está habilitada y la cantidad se establece en 5, c
     <comment>Manual</comment>
   </data>
   <data name="UnmodUser" xml:space="preserve">
-    <value>Usuario Unmod</value>
+    <value>Quitar mod</value>
     <comment>Manual</comment>
   </data>
   <data name="ModerationActionMissingTimeoutAmount" xml:space="preserve">
@@ -3504,7 +3505,7 @@ Por ejemplo, si esta opción está habilitada y la cantidad se establece en 5, c
     <comment>Manual</comment>
   </data>
   <data name="TwitterActionInvalidTweet" xml:space="preserve">
-    <value>Acción de Twitter: Tweet no puede contener ninguna etiqueta "@"</value>
+    <value>Acción de Twitter: Tweet no puede contener ninguna etiqueta &quot;@&quot;</value>
     <comment>Manual</comment>
   </data>
   <data name="TwitterActionMissingNameUpdate" xml:space="preserve">
@@ -3563,7 +3564,7 @@ Por ejemplo, si esta opción está habilitada y la cantidad se establece en 5, c
     <comment>Manual</comment>
   </data>
   <data name="TextSource" xml:space="preserve">
-    <value>Origen de texto</value>
+    <value>Texto</value>
     <comment>Manual</comment>
   </data>
   <data name="WebBrowserSource" xml:space="preserve">
@@ -3602,7 +3603,7 @@ Por ejemplo, si esta opción está habilitada y la cantidad se establece en 5, c
     <value>Mostrar/Ocultar widget</value>
   </data>
   <data name="YouTube" xml:space="preserve">
-    <value>YouTube (en inglés)</value>
+    <value>YouTube</value>
   </data>
   <data name="ChatCommandInvalidTriggers" xml:space="preserve">
     <value>Los desencadenadores de chat solo pueden contener letras, números, espacios, símbolos y puntuación</value>
@@ -3612,12 +3613,12 @@ Por ejemplo, si esta opción está habilitada y la cantidad se establece en 5, c
     <comment>Manual</comment>
   </data>
   <data name="GameQueueUserJoinedCommandName" xml:space="preserve">
-    <value>Cola de juego utilizada Unida</value>
+    <value>Cola de Juegos Usuario Unido</value>
     <comment>Manual
 Fuzzy</comment>
   </data>
   <data name="GameQueueUserSelectedCommandName" xml:space="preserve">
-    <value>Cola de juegos utilizada seleccionada</value>
+    <value>Cola de juegos Usuario Seleccionado</value>
     <comment>Manual
 Fuzzy</comment>
   </data>
@@ -3634,7 +3635,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="ModerationStrikeCommandName" xml:space="preserve">
-    <value>Huelga de moderación</value>
+    <value>Aviso de moderación</value>
     <comment>Manual</comment>
   </data>
   <data name="RedemptionStoreDefaultRedemptionCommandName" xml:space="preserve">
@@ -3653,7 +3654,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GiveawayUserJoinedCommandName" xml:space="preserve">
-    <value>Usuario de Sorteo Unido</value>
+    <value>Usuario de sorteo unido</value>
     <comment>Manual</comment>
   </data>
   <data name="GiveawayWinnerSelectedCommandName" xml:space="preserve">
@@ -3661,27 +3662,31 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="ModerationStrike1CommandName" xml:space="preserve">
-    <value>Huelga de moderación 1</value>
+    <value>Aviso de moderación 1</value>
     <comment>Manual</comment>
   </data>
   <data name="ModerationStrike2CommandName" xml:space="preserve">
-    <value>Huelga de moderación 2</value>
+    <value>Aviso de moderación 2</value>
     <comment>Manual</comment>
   </data>
   <data name="ModerationStrike3CommandName" xml:space="preserve">
-    <value>Huelga de moderación 3+</value>
+    <value>Aviso de moderación 3+</value>
     <comment>Manual</comment>
   </data>
   <data name="OverlayActionDurationInvalid" xml:space="preserve">
-    <value>Acción de superposición: la duración debe ser mayor que 0</value>
+    <value>Acción de overlay: la duración debe ser mayor que 0</value>
     <comment>Manual</comment>
   </data>
   <data name="OverlayActionItemInvalid" xml:space="preserve">
-    <value>Acción de superposición: falta información requerida para el tipo de acción de superposición</value>
+    <value>Acción de overlay: falta información requerida para el tipo de acción de superposición</value>
     <comment>Manual</comment>
   </data>
   <data name="OverlayActionMissingWidget" xml:space="preserve">
-    <value>Acción de superposición: falta el widget</value>
+    <value>Acción de overlay: falta el widget</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamingSoftwareOBSSLOBS" xml:space="preserve">
+    <value>Software de transmisión (OBS, SLOBS)</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCurrencyRequirementAmountBetween" xml:space="preserve">
@@ -3711,7 +3716,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandLockBoxHigh" xml:space="preserve">
-    <value>Alto</value>
+    <value>alto</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandLockBoxIncorrectLength" xml:space="preserve">
@@ -3719,7 +3724,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandLockBoxLow" xml:space="preserve">
-    <value>Bajo</value>
+    <value>bajo</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandLockBoxNotNumber" xml:space="preserve">
@@ -3788,11 +3793,11 @@ Fuzzy</comment>
     <comment>{0} will be the command trigger</comment>
   </data>
   <data name="Bid" xml:space="preserve">
-    <value>Oferta</value>
+    <value>Apuestas</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandBidDescription" xml:space="preserve">
-    <value>El juego Bid permite a un usuario iniciar un concurso de pujas entre todos los usuarios para ganar un premio o privilegio especial. Un usuario debe pujar al menos 1 cantidad de moneda superior a la oferta más alta para convertirse en el postor líder. Cuando un usuario es superado en la oferta, recibe su moneda de apuesta de vuelta y el mejor postor cuando se agota el tiempo gana. Además, puede especificar qué roles de usuario pueden iniciar este juego para asegurarse de que no se abuse de él, como moderadores o solo superior.</value>
+    <value>El juego Apuestas permite a un usuario iniciar un concurso de pujas entre todos los usuarios para ganar un premio o privilegio especial. Un usuario debe pujar al menos 1 cantidad de moneda superior a la oferta más alta para convertirse en el postor líder. Cuando un usuario es superado en la oferta, recibe su moneda de apuesta de vuelta y el mejor postor cuando se agota el tiempo gana. Además, puede especificar qué roles de usuario pueden iniciar este juego para asegurarse de que no se abuse de él, como moderadores o solo superior.</value>
     <comment>Manual</comment>
   </data>
   <data name="CoinPusher" xml:space="preserve">
@@ -3800,7 +3805,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandCoinPusherDescription" xml:space="preserve">
-    <value>El juego Coin Pusher permite a un usuario depositar una cantidad específica de moneda en una máquina con la posibilidad de un gran pago. Se debe insertar una cantidad mínima de moneda en la máquina para permitir un pago y se puede especificar un porcentaje de pago mínimo y máximo cuando se produce un pago.</value>
+    <value>El juego Empujador de monedas permite a un usuario depositar una cantidad específica de moneda en una máquina con la posibilidad de un gran pago. Se debe insertar una cantidad mínima de moneda en la máquina para permitir un pago y se puede especificar un porcentaje de pago mínimo y máximo cuando se produce un pago.</value>
     <comment>Manual</comment>
   </data>
   <data name="Duel" xml:space="preserve">
@@ -3815,18 +3820,18 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanDescription" xml:space="preserve">
-    <value>El juego Hangman permite a los usuarios adivinar la combinación de letras de una palabra aleatoria para ganar un bote acumulado de moneda. Cada conjetura fallida pone la cantidad de moneda requerida en el bote y agrega una falla, mientras que una suposición correcta agrega la letra. La persona que adivina la última letra que falta obtiene toda la olla. Los usuarios tienen la capacidad de ver el estado del juego para ver cuánto es el bote y qué se ha adivinado ya.</value>
+    <value>El juego Verdugo permite a los usuarios adivinar la combinación de letras de una palabra aleatoria para ganar un bote acumulado de moneda. Cada conjetura fallida pone la cantidad de moneda requerida en el bote y agrega una falla, mientras que una suposición correcta agrega la letra. La persona que adivina la última letra que falta obtiene toda la olla. Los usuarios tienen la capacidad de ver el estado del juego para ver cuánto es el bote y qué se ha adivinado ya.</value>
     <comment>Manual</comment>
   </data>
   <data name="Heist" xml:space="preserve">
     <value>Robo</value>
   </data>
   <data name="GameCommandHeistDescription" xml:space="preserve">
-    <value>El juego Heist permite a un usuario iniciar una actividad grupal para que los usuarios apuesten individualmente cuando participan. Cada usuario tiene su propia oportunidad individual de tener éxito y recuperar más o fracasar y perder su apuesta.</value>
+    <value>El juego Robo permite a un usuario iniciar una actividad grupal para que los usuarios apuesten individualmente cuando participan. Cada usuario tiene su propia oportunidad individual de tener éxito y recuperar más o fracasar y perder su apuesta.</value>
     <comment>Manual</comment>
   </data>
   <data name="Hitman" xml:space="preserve">
-    <value>Asesino a sueldo</value>
+    <value>Hitman</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHitmanDescription" xml:space="preserve">
@@ -3838,7 +3843,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHotPotatoDescription" xml:space="preserve">
-    <value>El juego Hot Potato le da una bomba de papa a un jugador, que luego debe pasarla a otra persona antes de que explote. El usuario que pasó la bomba de papa por última vez se denomina ganador ($username) y el usuario que tenía la bomba de papa cuando explotó se denomina perdedor ($targetusername). De forma predeterminada, el paso de la bomba de patata se realiza aleatoriamente a un nuevo usuario, pero opcionalmente puede permitir que el pasador especifique a quién se lanza. También puede establecer si el límite de tiempo en la papa caliente se restablece con cada lanzamiento.</value>
+    <value>El juego Patata caliente le da una bomba de papa a un jugador, que luego debe pasarla a otra persona antes de que explote. El usuario que pasó la bomba de papa por última vez se denomina ganador ($username) y el usuario que tenía la bomba de papa cuando explotó se denomina perdedor ($targetusername). De forma predeterminada, el paso de la bomba de patata se realiza aleatoriamente a un nuevo usuario, pero opcionalmente puede permitir que el pasador especifique a quién se lanza. También puede establecer si el límite de tiempo en la papa caliente se restablece con cada lanzamiento.</value>
     <comment>Manual</comment>
   </data>
   <data name="LockBox" xml:space="preserve">
@@ -3846,7 +3851,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandLockBoxDescription" xml:space="preserve">
-    <value>El juego Lock Box te permite adivinar la combinación de una caja cerrada usando los números 0 - 9 que contiene una gran cantidad de moneda. Cada suposición fallida pone la cantidad de moneda requerida en la caja y da una pista a la combinación, mientras que una suposición correcta obtiene toda la moneda dentro. Los usuarios tienen la capacidad de ver el estado de la caja de seguridad para ver cuánto hay en ella e inspeccionar la caja de seguridad en busca de una pista sobre la combinación.</value>
+    <value>El juego Caja de seguridad te permite adivinar la combinación de una caja cerrada usando los números 0 - 9 que contiene una gran cantidad de moneda. Cada suposición fallida pone la cantidad de moneda requerida en la caja y da una pista a la combinación, mientras que una suposición correcta obtiene toda la moneda dentro. Los usuarios tienen la capacidad de ver el estado de la caja de seguridad para ver cuánto hay en ella e inspeccionar la caja de seguridad en busca de una pista sobre la combinación.</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandRoleProbabilityNotEqualTo100" xml:space="preserve">
@@ -3875,15 +3880,15 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="Spin" xml:space="preserve">
-    <value>Giro</value>
+    <value>Ruleta</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandSpinDescription" xml:space="preserve">
-    <value>El juego Spin elige un número aleatorio y selecciona un resultado basado en ese número. Además de seleccionar un pago para cada resultado, también puede ejecutar un comando personalizado para cada resultado.</value>
+    <value>El juego Ruleta elige un número aleatorio y selecciona un resultado basado en ese número. Además de seleccionar un pago para cada resultado, también puede ejecutar un comando personalizado para cada resultado.</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandSpinLoseExample" xml:space="preserve">
-    <value>Lo siento @$username, ¡perdiste el giro!</value>
+    <value>Lo siento @$username, ¡perdiste la ruleta!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandSpinWinExample" xml:space="preserve">
@@ -3895,14 +3900,14 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandStealDescription" xml:space="preserve">
-    <value>El juego Steal permite al usuario intentar robar moneda de otro usuario. Si tiene éxito, el usuario roba el monto de la apuesta del otro usuario. Si fallan, pierden la cantidad de la apuesta.</value>
+    <value>El juego Robo permite al usuario intentar robar moneda de otro usuario. Si tiene éxito, el usuario roba el monto de la apuesta del otro usuario. Si fallan, pierden la cantidad de la apuesta.</value>
     <comment>Manual</comment>
   </data>
   <data name="TreasureDefense" xml:space="preserve">
     <value>Defensa del tesoro</value>
   </data>
   <data name="GameCommandTreasureDefenseDescription" xml:space="preserve">
-    <value>El juego Treasure Defense permite a un usuario iniciar una apuesta en la que el ganador se lo lleva todo entre todos los usuarios inscritos. De forma predeterminada, el usuario que inicia el juego especifica cuánto es la apuesta y todos los usuarios posteriores deben apostar esa cantidad para unirse, con todos los ganadores del juego dividiendo el pago total por igual.
+    <value>El juego Defensa del tesoro permite a un usuario iniciar una apuesta en la que el ganador se lo lleva todo entre todos los usuarios inscritos. De forma predeterminada, el usuario que inicia el juego especifica cuánto es la apuesta y todos los usuarios posteriores deben apostar esa cantidad para unirse, con todos los ganadores del juego dividiendo el pago total por igual.
 
 Una vez finalizado el límite de tiempo, se selecciona a un usuario de los participantes para ser Rey. Todos los demás usuarios son seleccionados para ser Caballeros o Ladrones. Es el trabajo del Rey elegir a un participante con la esperanza de que sea un Caballero para defender el tesoro que encontraron. Si el Rey selecciona un Caballero, entonces el Rey y los Caballeros comparten las ganancias. Si el Rey selecciona a un Ladrón, entonces los Ladrones comparten las ganancias.</value>
     <comment>Manual</comment>
@@ -3919,7 +3924,7 @@ Una vez finalizado el límite de tiempo, se selecciona a un usuario de los parti
     <value>Volcán</value>
   </data>
   <data name="GameCommandVolcanoDescription" xml:space="preserve">
-    <value>El juego Volcano permite a un usuario depositar una cantidad específica de moneda en un volcán con la posibilidad de un pago personal y un pago para todos los usuarios en el chat. El volcán pasa por 3 etapas a medida que se deposita más y más moneda en él y se utiliza un conjunto diferente de comandos de depósito y estado dependiendo de la etapa en la que se encuentre el volcán.
+    <value>El juego Volcán permite a un usuario depositar una cantidad específica de moneda en un volcán con la posibilidad de un pago personal y un pago para todos los usuarios en el chat. El volcán pasa por 3 etapas a medida que se deposita más y más moneda en él y se utiliza un conjunto diferente de comandos de depósito y estado dependiendo de la etapa en la que se encuentre el volcán.
 
 Una vez que el volcán alcanza la etapa 3, cada depósito posterior tiene la oportunidad de desencadenar una erupción. Cuando ocurre una erupción, el usuario que la desencadenó obtiene un pago especializado por ellos. Después de la erupción, todos los usuarios tienen la oportunidad de recolectar la moneda erupcionada durante el límite de tiempo de recolección. Una vez finalizada la recolección, el contenido del volcán se restablece a 0.</value>
     <comment>Manual</comment>
@@ -3929,7 +3934,7 @@ Una vez que el volcán alcanza la etapa 3, cada depósito posterior tiene la opo
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleDescription" xml:space="preserve">
-    <value>El juego Word Scramble permite a un usuario iniciar una apuesta en la que el ganador se lo lleva todo entre todos los usuarios inscritos. Después del límite de tiempo inicial, aparecerá una palabra codificada en el chat. Si un usuario escribe la palabra sin descifrar en el chat dentro del límite de tiempo, gana todo el bote. De lo contrario, todos pierden su dinero.</value>
+    <value>El juego Lucha de palabras permite a un usuario iniciar una apuesta en la que el ganador se lo lleva todo entre todos los usuarios inscritos. Después del límite de tiempo inicial, aparecerá una palabra codificada en el chat. Si un usuario escribe la palabra sin descifrar en el chat dentro del límite de tiempo, gana todo el bote. De lo contrario, todos pierden su dinero.</value>
     <comment>Manual</comment>
   </data>
   <data name="Outcomes" xml:space="preserve">
@@ -3937,19 +3942,19 @@ Una vez que el volcán alcanza la etapa 3, cada depósito posterior tiene la opo
     <comment>Manual</comment>
   </data>
   <data name="ModChancePercentage" xml:space="preserve">
-    <value>Mod Chance %</value>
+    <value>Probabilidad Mod %</value>
     <comment>Manual</comment>
   </data>
   <data name="ModPayoutPercentage" xml:space="preserve">
-    <value>Mod Payout %</value>
+    <value>Pago Mod %</value>
     <comment>Manual</comment>
   </data>
   <data name="SubChancePercentage" xml:space="preserve">
-    <value>Sub Probabilidad %</value>
+    <value>Probabilidad de Sub %</value>
     <comment>Manual</comment>
   </data>
   <data name="SubPayoutPercentage" xml:space="preserve">
-    <value>Sub Pago %</value>
+    <value>Pago de Sub %</value>
     <comment>Manual</comment>
   </data>
   <data name="UserChancePercentage" xml:space="preserve">
@@ -4049,7 +4054,7 @@ Una vez que el volcán alcanza la etapa 3, cada depósito posterior tiene la opo
     <value>Símbolo</value>
   </data>
   <data name="AnyOrder" xml:space="preserve">
-    <value>Cualquier pedido</value>
+    <value>Cualquier orden</value>
   </data>
   <data name="AvailableSymbols" xml:space="preserve">
     <value>Símbolos disponibles</value>
@@ -4062,7 +4067,7 @@ Una vez que el volcán alcanza la etapa 3, cada depósito posterior tiene la opo
     <comment>Manual</comment>
   </data>
   <data name="GameCommandBidNewTopBidder" xml:space="preserve">
-    <value>Nuevo Top Bidder</value>
+    <value>Nuevo apostante top</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandBidNewTopBidderExample" xml:space="preserve">
@@ -4124,7 +4129,7 @@ Una vez que el volcán alcanza la etapa 3, cada depósito posterior tiene la opo
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHotPotatoPotatoExploded" xml:space="preserve">
-    <value>Papa explotada</value>
+    <value>Patata explotada</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHotPotatoResetTimeOnToss" xml:space="preserve">
@@ -4136,7 +4141,7 @@ Una vez que el volcán alcanza la etapa 3, cada depósito posterior tiene la opo
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHotPotatoTossedPotato" xml:space="preserve">
-    <value>Patata echada</value>
+    <value>Patata pasada</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandInitialAmount" xml:space="preserve">
@@ -4257,15 +4262,15 @@ Una vez que el volcán alcanza la etapa 3, cada depósito posterior tiene la opo
     <value>Conjetura fallida</value>
   </data>
   <data name="GameCommandHangmanFailedGuessExample" xml:space="preserve">
-    <value>@$username deja caer sus monedas en la olla y adivina "$arg 1texto"... ¡pero estaba mal! $gamehangmancurrent</value>
+    <value>@$username deja caer sus monedas en la olla y adivina &quot;$arg 1texto&quot;... ¡pero estaba mal! $gamehangmancurrent</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameLostExample" xml:space="preserve">
-    <value>El juego se pierde con demasiadas conjeturas fallidas; la respuesta correcta fue "$gamehangmananswer". ¡Ahí va $gametotalamount {0}!</value>
+    <value>El juego se pierde con demasiadas conjeturas fallidas; la respuesta correcta fue &quot;$gamehangmananswer&quot;. ¡Ahí va $gametotalamount {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameWonExample" xml:space="preserve">
-    <value>@$username obtuvo la palabra secreta "$gamehangmananswer", ¡ganando todo el bote de $gamepayout {0}!</value>
+    <value>@$username obtuvo la palabra secreta &quot;$gamehangmananswer&quot;, ¡ganando todo el bote de $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanMaxFailures" xml:space="preserve">
@@ -4364,7 +4369,7 @@ Una vez que el volcán alcanza la etapa 3, cada depósito posterior tiene la opo
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserSuccessExample" xml:space="preserve">
-    <value>@$username adivinó correctamente la palabra "$gamewordscrambleanswer" y se fue con una recompensa de $gamepayout {0}!</value>
+    <value>@$username adivinó correctamente la palabra &quot;$gamewordscrambleanswer&quot; y se fue con una recompensa de $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBegin" xml:space="preserve">
@@ -4372,7 +4377,7 @@ Una vez que el volcán alcanza la etapa 3, cada depósito posterior tiene la opo
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBeginExample" xml:space="preserve">
-    <value>La palabra revuelta es "$gamewordscrambleword"; ¡resuélvelo y sé el primero en escribirlo en el chat!</value>
+    <value>La palabra revuelta es &quot;$gamewordscrambleword&quot;; ¡resuélvelo y sé el primero en escribirlo en el chat!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScramblePrepare" xml:space="preserve">
@@ -4482,7 +4487,7 @@ Una vez que el volcán alcanza la etapa 3, cada depósito posterior tiene la opo
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseKingUserExample" xml:space="preserve">
-    <value>¡King @$username ha descubierto el tesoro pero necesita a alguien que lo defienda! Los ladrones deben trabajar para convencer al Rey de que los elija, todos los demás deben evitarlo. ¡El Rey debe escribir "!tesoro&lt;PLAYER&gt;" en el chat para elegir quién defenderá el tesoro!</value>
+    <value>¡King @$username ha descubierto el tesoro pero necesita a alguien que lo defienda! Los ladrones deben trabajar para convencer al Rey de que los elija, todos los demás deben evitarlo. ¡El Rey debe escribir &quot;!tesoro&lt;PLAYER&gt;&quot; en el chat para elegir quién defenderá el tesoro!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseKnightSelected" xml:space="preserve">
@@ -4600,7 +4605,7 @@ Una vez que el volcán alcanza la etapa 3, cada depósito posterior tiene la opo
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoPayoutExample" xml:space="preserve">
-    <value>A medida que @$username deja caer su depósito en el Volcán, se produce una fuerte erupción y $gamepayout {0} aterrizar sobre ellos. ¡El Volcán está explotando monedas! ¡Rápido, escriba "!volcano collect" en el chat en los próximos 30 segundos!</value>
+    <value>A medida que @$username deja caer su depósito en el Volcán, se produce una fuerte erupción y $gamepayout {0} aterrizar sobre ellos. ¡El Volcán está explotando monedas! ¡Rápido, escriba &quot;!volcano collect&quot; en el chat en los próximos 30 segundos!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoPayoutPercentageMustBePositive" xml:space="preserve">
@@ -5103,7 +5108,7 @@ Esta configuración cambiará todos los requisitos de rol para que sean explíci
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserFailureExample" xml:space="preserve">
-    <value>Nadie adivinó correctamente la palabra "$gamewordscrambleanswer".</value>
+    <value>Nadie adivinó correctamente la palabra &quot;$gamewordscrambleanswer&quot;.</value>
     <comment>Manual</comment>
   </data>
   <data name="CommandGroupTimerIntervalMustBePositive" xml:space="preserve">
@@ -5241,7 +5246,7 @@ sistema de bloqueo de comandos incorporado para este tiempo específico que se e
 (el comando se atasca y no se puede completar). Esto también significa que otros comandos del mismo tipo que el seleccionado
 el subcomando podrá ejecutarse al mismo tiempo si es diferente al comando actual. Por ejemplo, si el seleccionado
 El subcomando es un grupo de acciones, entonces todavía será posible que otro grupo de acciones se ejecute al mismo tiempo si esto es
-Habilitado. Puede pensar que es similar a alternar la opción "Desbloquear comando", pero en su lugar solo se aplica a este momento específico.</value>
+Habilitado. Puede pensar que es similar a alternar la opción &quot;Desbloquear comando&quot;, pero en su lugar solo se aplica a este momento específico.</value>
     <comment>Manual</comment>
   </data>
   <data name="Russian" xml:space="preserve">
@@ -5476,7 +5481,7 @@ Habilitado. Puede pensar que es similar a alternar la opción "Desbloquear coman
     <value>La conectividad del servicio Extra Life le permite activar eventos desde que usted o su equipo reciben una donación.</value>
   </data>
   <data name="ExtraLifeInfo2" xml:space="preserve">
-    <value>Primero, visite la página de su equipo en el sitio web de Extra Life y cerca del final de la URL web, dirá "teamID=_____". Escriba ese número en el primer cuadro, haga clic en buscar, seleccione su nombre de la lista y, a continuación, haga clic en el botón Iniciar sesión.</value>
+    <value>Primero, visite la página de su equipo en el sitio web de Extra Life y cerca del final de la URL web, dirá &quot;teamID=_____&quot;. Escriba ese número en el primer cuadro, haga clic en buscar, seleccione su nombre de la lista y, a continuación, haga clic en el botón Iniciar sesión.</value>
   </data>
   <data name="ExtraLifeInvalidParticipant" xml:space="preserve">
     <value>Seleccione un participante válido de Extra Life.</value>
@@ -5700,7 +5705,7 @@ Habilitado. Puede pensar que es similar a alternar la opción "Desbloquear coman
     <value>Este complemento de Stream Deck le permite ejecutar comandos de Mix It Up directamente desde su dispositivo Stream Deck, así como otra información de estado sobre su transmisión.</value>
   </data>
   <data name="StreamDeckInfo2" xml:space="preserve">
-    <value>Para comenzar, asegúrese de que el software Stream Deck esté actualizado al menos a la versión 4.0 y que el servicio Developer API esté habilitado en Mix It Up. Para instalar el plugin Mix It Up, haga clic en "Más acciones..." en la esquina inferior derecha, luego busque "Mezclar" en la ventana.</value>
+    <value>Para comenzar, asegúrese de que el software Stream Deck esté actualizado al menos a la versión 4.0 y que el servicio Developer API esté habilitado en Mix It Up. Para instalar el plugin Mix It Up, haga clic en &quot;Más acciones...&quot; en la esquina inferior derecha, luego busque &quot;Mix It Up&quot; en la ventana.</value>
     <comment>Fuzzy</comment>
   </data>
   <data name="StreamElements" xml:space="preserve">
@@ -5722,13 +5727,13 @@ Habilitado. Puede pensar que es similar a alternar la opción "Desbloquear coman
   <data name="StreamlabsInfo1" xml:space="preserve">
     <value>La conectividad del servicio Streamlabs le permite realizar acciones cuando se recibe una donación. Cuando inicie sesión, se abrirá una página web de autenticación pidiéndole que inicie sesión en Streamlabs y apruebe Mix It Up para acceder a su información.</value>
   </data>
-  <data name="StreamlabsDesktopConnectionFailed" xml:space="preserve">
+  <data name="StreamlabsOBSConnectionFailed" xml:space="preserve">
     <value>Error en la prueba de conexión de Streamlabs OBS, asegúrese de que Streamlabs OBS se esté ejecutando.</value>
   </data>
-  <data name="StreamlabsDesktopConnectionSuccess" xml:space="preserve">
+  <data name="StreamlabsOBSConnectionSuccess" xml:space="preserve">
     <value>¡La prueba de conexión OBS de Streamlabs fue exitosa!</value>
   </data>
-  <data name="StreamlabsDesktopInfo1" xml:space="preserve">
+  <data name="StreamlabsOBSInfo1" xml:space="preserve">
     <value>El servicio ObS de Streamlabs le permite interactuar directamente con su instancia de ObS de Streamlabs para realizar cambios en escenas y orígenes.</value>
   </data>
   <data name="Streamloots" xml:space="preserve">
@@ -6184,7 +6189,7 @@ Habilitado. Puede pensar que es similar a alternar la opción "Desbloquear coman
     <comment>{0} is the rank/currency name</comment>
   </data>
   <data name="RetroactivelyGivePointsPrompt2" xml:space="preserve">
-    <value>EJ: Si la tarifa en línea es "1 por hora" y un usuario tiene 16 horas de visualización, entonces los puntos de {0} de ese usuario se establecerán en 16.</value>
+    <value>EJ: Si la tarifa en línea es &quot;1 por hora&quot; y un usuario tiene 16 horas de visualización, entonces los puntos de {0} de ese usuario se establecerán en 16.</value>
     <comment>{0} is the rank/currency name</comment>
   </data>
   <data name="RetroactivelyGivePointsPrompt3" xml:space="preserve">
@@ -6357,10 +6362,10 @@ Habilitado. Puede pensar que es similar a alternar la opción "Desbloquear coman
   <data name="RainmakerChannelDataFailed" xml:space="preserve">
     <value>Error al obtener los datos del canal</value>
   </data>
-  <data name="StreamlabsDesktopAdminMaybe" xml:space="preserve">
+  <data name="StreamlabsOBSAdminMaybe" xml:space="preserve">
     <value>Streamlabs OBS podría estar ejecutándose como administrador y Mix It Up no lo está. Intente ejecutar Mix It Up como administrador antes de conectarse.</value>
   </data>
-  <data name="StreamlabsDesktopFailed" xml:space="preserve">
+  <data name="StreamlabsOBSFailed" xml:space="preserve">
     <value>No se pudo llegar a Streamlabs OBS</value>
   </data>
   <data name="StreamlabsWebSocketTokenFailed" xml:space="preserve">
@@ -6430,7 +6435,7 @@ Habilitado. Puede pensar que es similar a alternar la opción "Desbloquear coman
     <value>Muestra una barra de progreso para un objetivo especificado. El progreso se actualiza a medida que se producen eventos o en el intervalo de actualización definido por el usuario.</value>
   </data>
   <data name="OverlayWidgetStreamBossDescription" xml:space="preserve">
-    <value>Muestra a un usuario de tu canal como un "jefe" que puede dañarse al realizar acciones en tu canal hasta que sea derrotado y se seleccione un nuevo jefe. El daño se agrega a medida que ocurre. Los identificadores especiales de Stream Boss se pueden usar en paralelo con este widget de superposición.</value>
+    <value>Muestra a un usuario de tu canal como un &quot;jefe&quot; que puede dañarse al realizar acciones en tu canal hasta que sea derrotado y se seleccione un nuevo jefe. El daño se agrega a medida que ocurre. Los identificadores especiales de Stream Boss se pueden usar en paralelo con este widget de superposición.</value>
   </data>
   <data name="OverlayWidgetTextDescription" xml:space="preserve">
     <value>Muestra un bloque de texto. Se actualiza en función del intervalo de actualización definido por el usuario.</value>
@@ -6913,7 +6918,7 @@ Si no se realiza una de las siguientes acciones, podría afectar la forma en que
     <value>La conectividad del servicio Pixel Chat te permite controlar varios elementos de tus superposiciones de Pixel Chat y activar una funcionalidad específica.</value>
   </data>
   <data name="PixelChatInfo2" xml:space="preserve">
-    <value>Para conectarse a PixelChat, deberá crear un token de desarrollador. Esto se puede encontrar yendo al perfil, haciendo clic en "Ver tokens" y creando un nuevo token de desarrollador.</value>
+    <value>Para conectarse a PixelChat, deberá crear un token de desarrollador. Esto se puede encontrar yendo al perfil, haciendo clic en &quot;Ver tokens&quot; y creando un nuevo token de desarrollador.</value>
   </data>
   <data name="PixelChatInvalidAPIKey" xml:space="preserve">
     <value>Introduce una clave de API de Pixel Chat válida.</value>
@@ -7453,7 +7458,7 @@ Si no se realiza una de las siguientes acciones, podría afectar la forma en que
     <value>ERROR: No se pudo encontrar el usuario con el siguiente nombre de usuario: {0}</value>
   </data>
   <data name="LinkAccountCommandPleaseConfirmLink" xml:space="preserve">
-    <value>Se inició el proceso de vinculación de cuentas. Vuelva a ejecutar el comando en la otra plataforma con la información de su usuario actual: "!linkaccount {0} {1}"</value>
+    <value>Se inició el proceso de vinculación de cuentas. Vuelva a ejecutar el comando en la otra plataforma con la información de su usuario actual: &quot;!linkaccount {0} {1}&quot;</value>
   </data>
   <data name="LinkAccountCommandUsage" xml:space="preserve">
     <value>Uso: !linkaccount &lt;PLATFORM&gt; &lt;USUBREUSUARIO DE PLATAFORMA&gt;</value>
@@ -7834,19 +7839,19 @@ Las importaciones fallidas podrían deberse a datos no válidos o a la falta de 
     <value>ERROR: Ya existe un dispositivo con el nombre de puerto seleccionado.</value>
   </data>
   <data name="QuoteID" xml:space="preserve">
-    <value>ID de cotización</value>
+    <value>ID de cita</value>
   </data>
   <data name="QuotesDataFileRequiredColumns" xml:space="preserve">
-    <value>El archivo de datos debe incluir al menos la columna Presupuesto.</value>
+    <value>El archivo de datos debe incluir al menos la columna Cita.</value>
   </data>
   <data name="ImportQuotes" xml:space="preserve">
-    <value>Cotizaciones de importación</value>
+    <value>Importar citas</value>
   </data>
   <data name="QuotesDataImport" xml:space="preserve">
-    <value>Importación de datos de cotizaciones</value>
+    <value>Importación de datos de citas</value>
   </data>
   <data name="QuotesDataImportStep1" xml:space="preserve">
-    <value>Esto le permitirá importar sus datos de cotizaciones desde un archivo de texto sin formato o de hoja de cálculo. Para importar un archivo de hoja de cálculo, debe tener algún tipo de Microsoft Excel instalado. Tenga en cuenta que si ya existe una cotización con la misma IDENTIFICACIÓN en Mix It Up, la identificación de la cotización se actualizará al número más alto. En primer lugar, especifique el archivo desde el que desea importar los datos de usuario:</value>
+    <value>Esto le permitirá importar sus datos de citas desde un archivo de texto sin formato o de hoja de cálculo. Para importar un archivo de hoja de cálculo, debe tener algún tipo de Microsoft Excel instalado. Tenga en cuenta que si ya existe una cita con la misma IDENTIFICACIÓN en Mix It Up, la identificación de la cita se actualizará al número más alto. En primer lugar, especifique el archivo desde el que desea importar los datos de usuario:</value>
   </data>
   <data name="QuotesDataImportStep2" xml:space="preserve">
     <value>A continuación, deberá especificar el número de columna para cada valor del archivo de datos o dejarlo en blanco si ese valor no está presente.</value>
@@ -7855,7 +7860,7 @@ Las importaciones fallidas podrían deberse a datos no válidos o a la falta de 
     <value>Importaciones exitosas: {0}
 Importaciones fallidas: {1}
 
-Las cotizaciones importadas con ID que coincidan con las cotizaciones existentes se modificarán al siguiente número máximo. Las importaciones fallidas podrían deberse a datos o formatos no válidos. Póngase en contacto con el soporte técnico para obtener más ayuda con esto si es necesario.</value>
+Las citas importadas con ID que coincidan con las citas existentes se modificarán al siguiente número máximo. Las importaciones fallidas podrían deberse a datos o formatos no válidos. Póngase en contacto con el soporte técnico para obtener más ayuda con esto si es necesario.</value>
     <comment>{0} is the number of successes, {1} is the number of failures</comment>
   </data>
   <data name="HearMyselfOnOff" xml:space="preserve">
@@ -8024,8 +8029,8 @@ Las cotizaciones importadas con ID que coincidan con las cotizaciones existentes
     <value>El elemento especificado no existe</value>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
-    <value>Debe especificar "comprar" o "vender"</value>
-    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
+    <value>Debe especificar &quot;comprar&quot; o &quot;vender&quot;</value>
+    <comment>{0} is the English word &apos;buy&apos;, {1} is the English word &apos;sell&apos;</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
     <value>USO: {0} list = Lista los artículos disponibles para comprar/vender ** {0} &lt;NOMBRE DEL ARTÍCULO&gt; = Lista el precio de compra/venta del artículo ** {0} buy &lt;NOMBRE DEL ARTÍCULO&gt; [CANTIDAD] = Compra 1 o la cantidad indicada del artículo ** {0} sell &lt;NOMBRE DEL ARTÍCULO&gt; [CANTIDAD] = Vende 1 o la cantidad indicada del artículo</value>
@@ -8062,6 +8067,9 @@ Las cotizaciones importadas con ID que coincidan con las cotizaciones existentes
     <comment>{0} is the amount of the item
 {1} is the name of the item</comment>
   </data>
+  <data name="List" xml:space="preserve">
+    <value>Lista</value>
+  </data>
   <data name="NoGameFound" xml:space="preserve">
     <value>No se ha encontrado ningún juego</value>
   </data>
@@ -8090,10 +8098,10 @@ Las cotizaciones importadas con ID que coincidan con las cotizaciones existentes
     <value>Todos los comandos de chat prefabricados de Mix It Up se pueden encontrar aquí: https://wiki.mixitupapp.com/commands/pre-made-chat-commands. Para los comandos específicos de esta secuencia, pregunte a su streamer/moderador.</value>
   </data>
   <data name="PreMadeChatCommandQuotesNotEnabled" xml:space="preserve">
-    <value>Las cotizaciones deben estar habilitadas y se debe agregar al menos una cotización para que esta función funcione.</value>
+    <value>Las citas deben estar habilitadas y se debe agregar al menos una cita para que esta característica funcione.</value>
   </data>
   <data name="PreMadeChatCommandQuoteUnableToFind" xml:space="preserve">
-    <value>No se puede encontrar el número de cotización {0}.</value>
+    <value>No se puede encontrar el número de cita {0}.</value>
     <comment>{0} is the ID number of the quote</comment>
   </data>
   <data name="PreMadeChatCommandQuoteUsage" xml:space="preserve">
@@ -8278,7 +8286,7 @@ Las cotizaciones importadas con ID que coincidan con las cotizaciones existentes
     <value>El recordatorio de sorteo debe ser 0 o mayor</value>
   </data>
   <data name="GiveawayWonTypeClaim" xml:space="preserve">
-    <value>@{0} has ganado el sorteo; escriba "!claim" en el chat!</value>
+    <value>@{0} has ganado el sorteo; escriba &quot;!claim&quot; en el chat!</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="GiveawayYouHaveAlreadyWon" xml:space="preserve">
@@ -8625,7 +8633,7 @@ Intentaremos volver a conectarnos con el servicio cuando sea posible. Si esto co
     <value>Digamos que querías hacer un poco de pasta; seguirías los pasos de la receta uno tras otro hasta que hayas terminado. También seguiría cada paso en el orden en que se especifican. Por ejemplo, debe calentar el agua antes de poder agregar la pasta.</value>
   </data>
   <data name="WizardCommands3" xml:space="preserve">
-    <value>Los comandos son como una receta y las acciones son los pasos en esa receta. Digamos que haces un grito de orden, ¿cuáles son las cosas que debe hacer? Cada una de esas "cosas" puede ser pensada como una acción.</value>
+    <value>Los comandos son como una receta y las acciones son los pasos en esa receta. Digamos que haces un grito de orden, ¿cuáles son las cosas que debe hacer? Cada una de esas &quot;cosas&quot; puede ser pensada como una acción.</value>
   </data>
   <data name="WizardCommands4" xml:space="preserve">
     <value>En este ejemplo, nuestro comando shout out envía un mensaje para chatear, reproduce un sonido, espera 10 segundos y, a continuación, muestra una imagen. Cada uno de ellos corresponde a un tipo de acción diferente (Chat, Sonido, Espera y Superposición).</value>
@@ -8694,49 +8702,49 @@ Intentaremos volver a conectarnos con el servicio cuando sea posible. Si esto co
     <value>¿Desea descargar esta actualización?</value>
   </data>
   <data name="DeleteQuote" xml:space="preserve">
-    <value>Delete Quote</value>
+    <value>Borrar Cita</value>
   </data>
   <data name="PreMadeChatCommandDeleteQuoteUsage" xml:space="preserve">
-    <value>USAGE: !deletequote [QUOTE NUMBER]</value>
+    <value>USO: !deletequote [NRO DE CITA]</value>
   </data>
   <data name="QuoteDeletedHeader" xml:space="preserve">
-    <value>Quote Deleted: </value>
+    <value>Cita eliminada: </value>
   </data>
   <data name="AddUser" xml:space="preserve">
-    <value>Add User</value>
+    <value>Añadir Usuario</value>
   </data>
   <data name="UsersUnableToFindUser" xml:space="preserve">
-    <value>Unable find the user "{0}"</value>
+    <value>No se puede encontrar el usuario &quot;{0}&quot;</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UsersSuccessfullyFoundUser" xml:space="preserve">
-    <value>The user {0} was successfully found and added in to Mix It Up</value>
+    <value>El usuario {0} fue encontrado y añadido a Mix It Up</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="AddUserDescription" xml:space="preserve">
     <value>Select the streaming platform and the name of the user to find on there. If the user is found successfully, their user data will be added in to Mix It Up for you to be able to use.</value>
   </data>
   <data name="ChatUserEntranceCommand" xml:space="preserve">
-    <value>Chat User Entrance Command</value>
+    <value>Comando de Entrada de Usuario</value>
   </data>
   <data name="WhisperTooltip" xml:space="preserve">
     <value>Whispers are supported on Twitch, but are highly discouraged from being used. Twitch does not intend
 whispers to be used as a form of automated communication. There are severe restrictions placed on the
 amount of whispers that can be sent in a timeline that make it very impractical for use, as well as spam
 preventative measures if the user is not on your friends list on Twitch. So although you can send whispers
-via Twitch, it's a "your mileage may very" situation.</value>
+via Twitch, it&apos;s a &quot;your mileage may vary&quot; situation.</value>
   </data>
   <data name="AlertName" xml:space="preserve">
-    <value>Alert Name</value>
+    <value>Nombre de Alerta</value>
   </data>
   <data name="EnablePolyPop" xml:space="preserve">
-    <value>Please enable PolyPop on the Services page!</value>
+    <value>¡Por favor habilite PolyPop en la página de Servicios!</value>
   </data>
   <data name="PolyPop" xml:space="preserve">
     <value>PolyPop</value>
   </data>
   <data name="PolyPopActionMissingVariableName" xml:space="preserve">
-    <value>PolyPop Action: Missing variable name</value>
+    <value>Acción de PolyPop: Nombre de variable no encontrada</value>
   </data>
   <data name="PolyPopFailedToConnect" xml:space="preserve">
     <value>Failed to start web socket listening server for PolyPop</value>
@@ -8748,7 +8756,7 @@ via Twitch, it's a "your mileage may very" situation.</value>
     <value>To connect the service, you must download and install the Websocket plugin to your PolyPop installation. Full instructions can be found on the Wiki page for this service.</value>
   </data>
   <data name="WikiPage" xml:space="preserve">
-    <value>Wiki Page</value>
+    <value>Página de Wiki</value>
   </data>
   <data name="TrovoActionNameMissing" xml:space="preserve">
     <value>Trovo Action: A valid name must be specified</value>
@@ -8760,37 +8768,37 @@ via Twitch, it's a "your mileage may very" situation.</value>
     <value>Set Custom Tags</value>
   </data>
   <data name="HTMLFileFormatFilter" xml:space="preserve">
-    <value>HTML Files (*.html)|*.html|All files (*.*)|*.*</value>
+    <value>Archivos HTML (*.html)|*.html|Todos los archivos (*.*)|*.*</value>
   </data>
   <data name="ImageFileFormatFilter" xml:space="preserve">
-    <value>Image Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;|All files (*.*)|*.*</value>
+    <value>Archivos de imagen|*.bmp;*.gif;*.jpg;*.jpeg;*.png;|Todos los archivos (*.*)|*.*</value>
   </data>
   <data name="MixItUpBackupFileFormatFilter" xml:space="preserve">
-    <value>Mix It Up Backup|*.miubackup|All files (*.*)|*.*</value>
+    <value>Copia de Seguridad de Mix It Up|*.miubackup|Todos los archivos (*.*)|*.*</value>
   </data>
   <data name="MixItUpCommandFileFormatFilter" xml:space="preserve">
-    <value>Mix It Up Command|*.miucommand|All files (*.*)|*.*</value>
+    <value>Comandos Mix It Up|*.miucommand|Todos los archivos (*.*)|*.*</value>
   </data>
   <data name="SoundFileFormatFilter" xml:space="preserve">
-    <value>Sound Files|*.mp3;*.wav|All files (*.*)|*.*</value>
+    <value>Archivos de sonido|*.mp3;*.wav|Todos los archivos (*.*)|*.*</value>
   </data>
   <data name="TextFileFormatFilter" xml:space="preserve">
-    <value>Text Files|*.txt|All files (*.*)|*.*</value>
+    <value>Archivos de texto|*.txt|Todos los archivos (*.*)|*.*</value>
   </data>
   <data name="VideoFileFormatFilter" xml:space="preserve">
-    <value>Video Files|*.mp4;*.webm|All files (*.*)|*.*</value>
+    <value>Archivos de video|*.mp4;*.webm|Todos los archivos (*.*)|*.*</value>
   </data>
   <data name="PauseCommands" xml:space="preserve">
-    <value>Pause Commands</value>
+    <value>Pausar comandos</value>
   </data>
   <data name="UnpauseCommands" xml:space="preserve">
-    <value>Unpause Commands</value>
+    <value>Despausar comandos</value>
   </data>
   <data name="PauseCommandsConfirmation" xml:space="preserve">
     <value>This will pause all currently pending commands. Are you sure?</value>
   </data>
   <data name="ParticipantID" xml:space="preserve">
-    <value>Participant ID</value>
+    <value>ID de participante</value>
   </data>
   <data name="ExtraLifeInvalidParticipantId" xml:space="preserve">
     <value>Please enter a valid Extra Life participant ID.</value>
@@ -8799,10 +8807,10 @@ via Twitch, it's a "your mileage may very" situation.</value>
     <value>Backup file failed to generate. If this continues, please visit the Mix It Up support Discord for further assistance.</value>
   </data>
   <data name="Transparent" xml:space="preserve">
-    <value>Transparent</value>
+    <value>Transparente</value>
   </data>
   <data name="MixItUpServices" xml:space="preserve">
-    <value>Mix It Up Services</value>
+    <value>Servicios de Mix It Up</value>
   </data>
   <data name="DisableAnimatedEmotes" xml:space="preserve">
     <value>Disable Animated Emotes</value>
@@ -8823,19 +8831,19 @@ via Twitch, it's a "your mileage may very" situation.</value>
     <value>Failed to update custom Twitch tags</value>
   </data>
   <data name="Category" xml:space="preserve">
-    <value>Category</value>
+    <value>Categoría</value>
   </data>
   <data name="SameCategory" xml:space="preserve">
-    <value>Same Category</value>
+    <value>Misma Categoría</value>
   </data>
   <data name="CategoryHeader" xml:space="preserve">
-    <value>Category: </value>
+    <value>Categoría: </value>
   </data>
   <data name="NoCategoryFound" xml:space="preserve">
-    <value>No Category found</value>
+    <value>No se encuentra la categoría</value>
   </data>
   <data name="CategroryUpdatedHeader" xml:space="preserve">
-    <value>Category Updated: </value>
+    <value>Categoría actualizada: </value>
   </data>
   <data name="ErrorFailedToUpdateCategory" xml:space="preserve">
     <value>ERROR: Failed to update category</value>
@@ -8847,12 +8855,449 @@ via Twitch, it's a "your mileage may very" situation.</value>
     <value>Glimesh Channel Subscribed</value>
   </data>
   <data name="GlimeshChannelSubscriptionGifted" xml:space="preserve">
-    <value>Glimesh Channel Subscription Gifted</value>
+    <value>Regalo de suscripción de canal Glimesh</value>
   </data>
   <data name="GlimeshChannelDonation" xml:space="preserve">
-    <value>Glimesh Channel Donation</value>
+    <value>Donación de canal Glimesh</value>
   </data>
   <data name="MixItUpIsAlreadyRunning" xml:space="preserve">
     <value>Mix It Up is already running! Unless you meant to do this, please shut down any existing instances of Mix It Up before trying to run a new instance. Do you still want to continue running this instance of Mix It Up?</value>
+  </data>
+  <data name="EnableStreamlabsDesktop" xml:space="preserve">
+    <value></value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamlabsDesktopConnectionFailed" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="StreamlabsDesktopConnectionSuccess" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="StreamlabsDesktopInfo1" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="StreamlabsDesktopAdminMaybe" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="StreamlabsDesktopFailed" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TwitchEventSub" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TrovoChannelMagicChat" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TrovoChannelSpellCast" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="MockConnection" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="CopyMessage" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="DeleteMessage" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="GoToLink" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="UserInfo" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="WhisperUser" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OBSStudioOldProtocol" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TwitchActionPollChoicesTooLong" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TwitchActionPollTitleTooLong" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TwitchActionPredictionOutcomesTooLong" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ChineseTraditional" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="MuteOnOff" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ImageSource" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="MediaSource" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="StreamingSoftwareActionMissingImageSourceFilePath" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="StreamingSoftwareActionMissingMediaSourceFilePath" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="CSS" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="Javascript" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="BackInDown" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="BackInLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="BackInRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="BackInUp" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="BackOutDown" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="BackOutLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="BackOutRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="BackOutUp" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeInBottomLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeInBottomRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeInDownBig" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeInLeftBig" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeInRightBig" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeInTopLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeInTopRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeInUpBig" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeOutBottomLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeOutBottomRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeOutDownBig" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeOutLeftBig" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeOutRightBig" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeOutTopLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeOutTopRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeOutUpBig" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="HeadShake" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="HeartBeat" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="LightSpeedInLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="LightSpeedInRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="LightSpeedOutLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="LightSpeedOutRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="RotateInDownLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="RotateInDownRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="RotateInUpLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="RotateInUpRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="RotateOutDownLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="RotateOutDownRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="RotateOutUpLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="RotateOutUpRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ShakeX" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ShakeY" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="AnimateCSS" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="Animation" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="AnimationLibrary" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="Entrance" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TwitchActionMessageMissing" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="SendChatAnnouncement" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="Primary" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="DisableSubscriberMode" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="EnableSubscriberMode" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayTimerDefaultJavascript" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayImageDefaultCSS" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayImageDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayTextDefaultCSS" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayTextDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayVideoDefaultCSS" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayVideoDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayWebPageDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayYouTubeDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="DisplayFormat" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayTimerDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayPositionedItemDefaultCSS" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayPositionedItemDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayActionValidationErrorHeader" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayMissingFilePath" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayTextMissingText" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayTimerMissingDisplayFormat" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayWebPageMissingURL" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayYouTubeMissingVideo" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="CooldownRequirementOnCooldownMinutes" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="CooldownRequirementOnCooldownHours" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="BasicTimer" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="CountUp" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="CSharp" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="Python" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="Script" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ScriptActionMissingScript" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="VisualBasic" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ScriptActionFailedCompile" xml:space="preserve">
+    <value></value>
+    <comment>{0} is the series of script errors</comment>
+  </data>
+  <data name="ScriptActionCSharpDefaultScriptTemplate" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ScriptActionJavascriptDefaultScriptTemplate" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ScriptActionPythonDefaultScriptTemplate" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="CommunityCommandsScriptActionsNotSupported" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayLabelAmountDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayLabelUsernameAmountDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayLabelUsernameDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayLabelDefaultJavascript" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OnUpdate" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ConditionalActionAtLeastOneClause" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="HypeTrainLevelUp" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="Resubscriber" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="Donation" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayEventListDefaultCSS" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayEventListDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayEventListDefaultJavascript" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TwitchChannelHypeTrainLevelUp" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="AlertTwitchCharityDonation" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayGoalDefaultCSS" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayGoalDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayGoalDefaultJavascript" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TwitchChannelCharityDonation" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TwitchEventServiceFailedToConnectEventSub" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="SendShoutout" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="EndingAmountMustBeGreaterThanStartingAmount" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TwitchBits" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="EndingAmount" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="LoupeDeck" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="LoupeDeckInfo1" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="LoupeDeckInfo2" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ShellExecute" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="RemoveSpecificTextFromFile" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TextToRemove" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ReplaceTextInFile" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TwitchCustomTagsMustMeetStandard" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="StreamlabDesktopAdminMaybe" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ShadowColor" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ShadowSize" xml:space="preserve">
+    <value></value>
   </data>
 </root>
