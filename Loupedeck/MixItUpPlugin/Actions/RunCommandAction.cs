@@ -68,7 +68,7 @@ namespace MixItUp.LoupedeckPlugin
                 catch
                 {
                     this.ParametersChanged();
-                    this.Plugin.OnPluginStatusChanged(Loupedeck.PluginStatus.Error, "Mix It Up is not running or developer APIs are not enabled.");
+                    this.Plugin.OnPluginStatusChanged(Loupedeck.PluginStatus.Error, "Mix It Up is not running or developer APIs are not enabled.", "https://wiki.mixitupapp.com/en/services/loupedeck", "Loupedeck Plug-In Details");
                 }
 
                 await Task.Delay(5000);

@@ -1,0 +1,36 @@
+{
+    "Author": "Blazing Cacti LLC",
+    "Description": "Mix It Up: A top-tier stream bot with versatile tools for audience interaction, developed by a dedicated team of experts.",
+    "Name": "Mix It Up",
+    "UUID": "com.blazingcacti.widget.mixitup",
+    "Icon": "images/runCommand@2x.png",
+    "URL": "https://mixitupapp.com",
+    "Version": "0.0.0.1",
+    "Runtime": {
+        "win": {
+            "type": "web",
+            "target": "widget.html",
+            "MinimumVersion": "10.0"
+        }
+    },
+    "CreatorCentral": {
+        "MinimumVersion": "1.1",
+        "SDKVersion": 2
+    },
+    "Widgets": [
+        {
+            "Name": "Run Command",
+            "Icon": "images/runCommand@2x.png",
+            "Tooltip": "Run Command",
+            "UUID": "com.blazingcacti.widget.mixitup.runcommand",
+            "PropertyViewPath": "property.html",
+            "States": [
+                {
+                    "Image": "images/runCommand@2x.png",
+                    "Title": "Run Command"
+                }
+            ]
+        }
+    ]
+}
+
