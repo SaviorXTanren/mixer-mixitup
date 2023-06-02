@@ -2335,7 +2335,10 @@ rmdir /Q /S $(TargetDir)Logs\
 
 rmdir /Q /S $(TargetDir)ChatEventLogs\
 
-rmdir /Q /S $(TargetDir)Counters\</PostBuildEvent>
+rmdir /Q /S $(TargetDir)Counters\
+
+del $(TargetDir)MixItUp.zip
+</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
