@@ -695,7 +695,7 @@ namespace MixItUp.Base.ViewModel.Actions
                         await this.TagEditor.AddCustomTag(tag);
                     }
                 }
-                else
+                else if (ServiceManager.Get<TwitchSessionService>().Channel?.tags != null)
                 {
                     foreach (string tag in ServiceManager.Get<TwitchSessionService>().Channel.tags)
                     {

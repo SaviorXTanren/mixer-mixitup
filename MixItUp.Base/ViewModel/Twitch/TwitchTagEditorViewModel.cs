@@ -90,7 +90,7 @@ namespace MixItUp.Base.ViewModel.Twitch
 
         public async Task LoadCurrentTags()
         {
-            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected && ServiceManager.Get<TwitchSessionService>().Channel?.tags != null)
             {
                 this.CustomTags.Clear();
                 this.NotifyPropertyChanged("CanAddMoreTags");
