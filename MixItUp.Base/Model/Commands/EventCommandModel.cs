@@ -147,6 +147,7 @@ namespace MixItUp.Base.Model.Commands
                 case EventTypeEnum.JustGivingDonation:
                 case EventTypeEnum.StreamElementsDonation:
                 case EventTypeEnum.StreamElementsMerchPurchase:
+                case EventTypeEnum.TwitchChannelCharityDonation:
                     UserDonationModel donation = new UserDonationModel()
                     {
                         Amount = 12.34,
@@ -165,6 +166,7 @@ namespace MixItUp.Base.Model.Commands
                         case EventTypeEnum.JustGivingDonation: donation.Source = UserDonationSourceEnum.JustGiving; break;
                         case EventTypeEnum.StreamElementsDonation: donation.Source = UserDonationSourceEnum.StreamElements; break;
                         case EventTypeEnum.StreamElementsMerchPurchase: donation.Source = UserDonationSourceEnum.StreamElements; break;
+                        case EventTypeEnum.TwitchChannelCharityDonation: donation.Source = UserDonationSourceEnum.Twitch; break;
                     }
 
                     foreach (var kvp in donation.GetSpecialIdentifiers())
@@ -181,6 +183,12 @@ namespace MixItUp.Base.Model.Commands
                     {
                         specialIdentifiers["allitems"] = "Shirt x2, Mug x3, Hat x4";
                         specialIdentifiers["totalitems"] = "9";
+                    }
+
+                    if (eventType == EventTypeEnum.TwitchChannelCharityDonation)
+                    {
+                        specialIdentifiers["charityname"] = "Charity Name";
+                        specialIdentifiers["charityimage"] = genericImage;
                     }
                     break;
                 case EventTypeEnum.PatreonSubscribed:

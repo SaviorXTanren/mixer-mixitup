@@ -465,6 +465,8 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private bool sendAnnouncementAsStreamer = true;
 
+        private IEnumerable<string> existingTags = null;
+
         public TwitchActionEditorControlViewModel(TwitchActionModel action)
             : base(action, action.Actions)
         {
@@ -479,7 +481,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowSetCustomTagsGrid)
             {
-                this.TagEditor.SetExistingCustomTags(action.CustomTags);
+                this.existingTags = action.CustomTags;
             }
             else if (this.ShowAdGrid)
             {
@@ -685,6 +687,21 @@ namespace MixItUp.Base.ViewModel.Actions
                 {
                     this.ChannelPointReward = this.ChannelPointRewards.FirstOrDefault(c => c.id.Equals(this.existingChannelPointRewardID));
                 }
+
+                if (this.existingTags != null)
+                {
+                    foreach (string tag in this.existingTags)
+                    {
+                        await this.TagEditor.AddCustomTag(tag);
+                    }
+                }
+                else
+                {
+                    foreach (string tag in ServiceManager.Get<TwitchSessionService>().Channel.tags)
+                    {
+                        await this.TagEditor.AddCustomTag(tag);
+                    }
+                }
             }
             await base.OnOpenInternal();
         }
@@ -701,7 +718,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowSetCustomTagsGrid)
             {
-                return TwitchActionModel.CreateSetCustomTagsAction(this.TagEditor.CustomTags.Select(t => t.ID));
+                return TwitchActionModel.CreateSetCustomTagsAction(this.TagEditor.CustomTags.Select(t => t.Tag));
             }
             else if (this.ShowAdGrid)
             {

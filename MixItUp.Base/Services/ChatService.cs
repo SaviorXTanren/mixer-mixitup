@@ -462,6 +462,11 @@ namespace MixItUp.Base.Services
                     await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(message.User);
                 }
 
+                if (message.ProcessingTime > 1000)
+                {
+                    Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message (AFTER USER ADD/UPDATE): {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
+                }
+
                 // Add message to chat list
                 bool showMessage = true;
                 if (ChannelSession.Settings.HideBotMessages && message.User != null && message.Platform != StreamingPlatformTypeEnum.None)
@@ -495,11 +500,21 @@ namespace MixItUp.Base.Services
                     }
                 }
 
+                if (message.ProcessingTime > 1000)
+                {
+                    Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message (AFTER ALERTS): {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
+                }
+
                 // Post message processing
 
                 if (message is UserChatMessageViewModel && message.User != null)
                 {
                     await message.User.Refresh();
+
+                    if (message.ProcessingTime > 1000)
+                    {
+                        Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message (AFTER USER REFRESH): {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
+                    }
 
                     if (message.IsWhisper)
                     {
@@ -548,6 +563,11 @@ namespace MixItUp.Base.Services
                             await ServiceManager.Get<IAudioService>().Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, ChannelSession.Settings.NotificationChatMessageSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
                         }
 
+                        if (message.ProcessingTime > 1000)
+                        {
+                            Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message (AFTER MODERATION/NOTIFICATIONS): {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
+                        }
+
                         if (!this.userEntranceCommands.Contains(message.User.ID))
                         {
                             this.userEntranceCommands.Add(message.User.ID);
@@ -576,11 +596,21 @@ namespace MixItUp.Base.Services
                                 primaryTaggedUser.TotalTimesTagged++;
                             }
                         }
+
+                        if (message.ProcessingTime > 1000)
+                        {
+                            Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message (AFTER EVENT COMMANDS): {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
+                        }
                     }
 
                     ChatService.ChatMessageReceived(message);
 
                     await this.WriteToChatEventLog(message);
+
+                    if (message.ProcessingTime > 1000)
+                    {
+                        Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message (AFTER CHAT MESSAGE GLOBAL EVENT): {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
+                    }
 
                     IEnumerable<string> arguments = null;
 #pragma warning disable CS0612 // Type or member is obsolete
@@ -628,7 +658,7 @@ namespace MixItUp.Base.Services
 
                             if (!commandTriggered && userOnlyTriggersToCommands.Count > 0)
                             {
-                                commandTriggered = await this.CheckForChatCommandAndRun(message, userOnlyTriggersToCommands);
+                                commandTriggered = await this.CheckForChatCommandAndRun(message, userOnlyTriggersToCommands, ignoreTriggerLengthCheck: true);
                             }
 
                             if (!commandTriggered && userOnlyWildcardCommands.Count > 0)
@@ -662,6 +692,11 @@ namespace MixItUp.Base.Services
                                 }
                             }
                         }
+
+                        if (message.ProcessingTime > 1000)
+                        {
+                            Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message (AFTER CHAT COMMAND PROCESSING): {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
+                        }
                     }
 
                     foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.ToList())
@@ -690,7 +725,7 @@ namespace MixItUp.Base.Services
                 }
 
                 Logger.Log(LogLevel.Debug, string.Format("Message Processing Complete: {0} - {1} ms", message.ID, message.ProcessingTime));
-                if (message.ProcessingTime > 500)
+                if (message.ProcessingTime > 1000)
                 {
                     Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message: {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
                 }
@@ -729,13 +764,13 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private async Task<bool> CheckForChatCommandAndRun(ChatMessageViewModel message, Dictionary<string, CommandModelBase> commands)
+        private async Task<bool> CheckForChatCommandAndRun(ChatMessageViewModel message, Dictionary<string, CommandModelBase> commands, bool ignoreTriggerLengthCheck = false)
         {
             string[] messageParts = message.PlainTextMessage.Split(new char[] { ' ' });
             for (int i = 0; i < messageParts.Length; i++)
             {
                 string commandCheck = string.Join(" ", messageParts.Take(i + 1)).ToLower();
-                if (commandCheck.Length > this.longestTrigger)
+                if (!ignoreTriggerLengthCheck && commandCheck.Length > this.longestTrigger)
                 {
                     return false;
                 }

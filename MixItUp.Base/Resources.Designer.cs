@@ -5370,6 +5370,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ending Amount.
+        /// </summary>
+        public static string EndingAmount {
+            get {
+                return ResourceManager.GetString("EndingAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The ending amount must be greater than the starting amount.
+        /// </summary>
+        public static string EndingAmountMustBeGreaterThanStartingAmount {
+            get {
+                return ResourceManager.GetString("EndingAmountMustBeGreaterThanStartingAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to English.
         /// </summary>
         public static string English {
@@ -11352,6 +11370,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to LoupeDeck.
+        /// </summary>
+        public static string LoupeDeck {
+            get {
+                return ResourceManager.GetString("LoupeDeck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This LoupeDeck plug-in allows you to run Mix It Up commands directly from your LoupeDeck device, as well as other status information about your stream..
+        /// </summary>
+        public static string LoupeDeckInfo1 {
+            get {
+                return ResourceManager.GetString("LoupeDeckInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To get started, ensure the LoupeDeck software is updated to the latest version &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the Marketplace icon at the top right of your LoupeDeck software, then search for &quot;Mix It Up&quot;..
+        /// </summary>
+        public static string LoupeDeckInfo2 {
+            get {
+                return ResourceManager.GetString("LoupeDeckInfo2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Magic 8 Ball.
         /// </summary>
         public static string MagicEightBall {
@@ -16193,6 +16238,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove Specific Text From File.
+        /// </summary>
+        public static string RemoveSpecificTextFromFile {
+            get {
+                return ResourceManager.GetString("RemoveSpecificTextFromFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove User Role.
         /// </summary>
         public static string RemoveUserRole {
@@ -16225,6 +16279,15 @@ namespace MixItUp.Base {
         public static string ReplacementText {
             get {
                 return ResourceManager.GetString("ReplacementText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replace Text In File.
+        /// </summary>
+        public static string ReplaceTextInFile {
+            get {
+                return ResourceManager.GetString("ReplaceTextInFile", resourceCulture);
             }
         }
         
@@ -17752,6 +17815,15 @@ namespace MixItUp.Base {
         public static string ShakeY {
             get {
                 return ResourceManager.GetString("ShakeY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shell Execute.
+        /// </summary>
+        public static string ShellExecute {
+            get {
+                return ResourceManager.GetString("ShellExecute", resourceCulture);
             }
         }
         
@@ -19784,6 +19856,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Text To Remove.
+        /// </summary>
+        public static string TextToRemove {
+            get {
+                return ResourceManager.GetString("TextToRemove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Text To Save.
         /// </summary>
         public static string TextToSave {
@@ -21383,6 +21464,15 @@ namespace MixItUp.Base {
         public static string TwitchConnectionFailed {
             get {
                 return ResourceManager.GetString("TwitchConnectionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch custom tags must be 25 characters or less and only contain letters and numbers.
+        /// </summary>
+        public static string TwitchCustomTagsMustMeetStandard {
+            get {
+                return ResourceManager.GetString("TwitchCustomTagsMustMeetStandard", resourceCulture);
             }
         }
         

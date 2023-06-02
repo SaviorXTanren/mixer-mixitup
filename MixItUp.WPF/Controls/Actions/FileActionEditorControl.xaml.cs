@@ -18,7 +18,8 @@ namespace MixItUp.WPF.Controls.Actions
             if (this.DataContext is FileActionEditorControlViewModel)
             {
                 string filePath = null;
-                if (((FileActionEditorControlViewModel)this.DataContext).ShowSaveToFileGrid)
+                if (((FileActionEditorControlViewModel)this.DataContext).ShowSaveToFileGrid ||
+                    ((FileActionEditorControlViewModel)this.DataContext).ShowTextToRemoveGrid)
                 {
                     filePath = ServiceManager.Get<IFileService>().ShowSaveFileDialog(string.Empty);
                 }

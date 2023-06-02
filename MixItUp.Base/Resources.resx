@@ -9589,6 +9589,39 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
   <data name="SendShoutout" xml:space="preserve">
     <value>Send Shoutout</value>
   </data>
+  <data name="EndingAmountMustBeGreaterThanStartingAmount" xml:space="preserve">
+    <value>The ending amount must be greater than the starting amount</value>
+  </data>
+  <data name="TwitchBits" xml:space="preserve">
+    <value>Twitch Bits</value>
+  </data>
+  <data name="EndingAmount" xml:space="preserve">
+    <value>Ending Amount</value>
+  </data>
+  <data name="LoupeDeck" xml:space="preserve">
+    <value>LoupeDeck</value>
+  </data>
+  <data name="LoupeDeckInfo1" xml:space="preserve">
+    <value>This LoupeDeck plug-in allows you to run Mix It Up commands directly from your LoupeDeck device, as well as other status information about your stream.</value>
+  </data>
+  <data name="LoupeDeckInfo2" xml:space="preserve">
+    <value>To get started, ensure the LoupeDeck software is updated to the latest version &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the Marketplace icon at the top right of your LoupeDeck software, then search for "Mix It Up".</value>
+  </data>
+  <data name="ShellExecute" xml:space="preserve">
+    <value>Shell Execute</value>
+  </data>
+  <data name="RemoveSpecificTextFromFile" xml:space="preserve">
+    <value>Remove Specific Text From File</value>
+  </data>
+  <data name="TextToRemove" xml:space="preserve">
+    <value>Text To Remove</value>
+  </data>
+  <data name="ReplaceTextInFile" xml:space="preserve">
+    <value>Replace Text In File</value>
+  </data>
+  <data name="TwitchCustomTagsMustMeetStandard" xml:space="preserve">
+    <value>Twitch custom tags must be 25 characters or less and only contain letters and numbers</value>
+  </data>
   <data name="TwitchBits" xml:space="preserve">
     <value>Twitch Bits</value>
   </data>

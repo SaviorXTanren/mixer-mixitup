@@ -31,27 +31,37 @@ namespace MixItUp.Base.Services.External
 
         public async Task SendTrigger(string eventName, Dictionary<string, string> values)
         {
-            try
+            for (int i = 0; i < 3; i++) // Retry logic in case we fail due to a timeout issue
             {
-                using (AdvancedHttpClient client = new AdvancedHttpClient())
+                try
                 {
-                    JObject jobj = new JObject();
-                    foreach (var kvp in values)
+                    using (AdvancedHttpClient client = new AdvancedHttpClient())
                     {
-                        jobj[kvp.Key] = kvp.Value;
-                    }
-                    HttpContent content = new StringContent(JSONSerializerHelper.SerializeToString(jobj), Encoding.UTF8, "application/json");
+                        JObject jobj = new JObject();
+                        foreach (var kvp in values)
+                        {
+                            jobj[kvp.Key] = kvp.Value;
+                        }
+                        HttpContent content = new StringContent(JSONSerializerHelper.SerializeToString(jobj), Encoding.UTF8, "application/json");
 
-                    HttpResponseMessage response = await client.PostAsync(string.Format(WebHookURLFormat, eventName, this.token.accessToken), content);
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        Logger.Log(await response.Content.ReadAsStringAsync());
+                        HttpResponseMessage response = await client.PostAsync(string.Format(WebHookURLFormat, eventName, this.token.accessToken), content);
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            Logger.Log(await response.Content.ReadAsStringAsync());
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+
+                await Task.Delay(1000);
             }
         }
 

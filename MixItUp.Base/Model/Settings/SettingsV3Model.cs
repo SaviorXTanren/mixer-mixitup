@@ -688,6 +688,15 @@ namespace MixItUp.Base.Model.Settings
                     {
                         command = JSONSerializerHelper.DeserializeFromString<TrovoSpellCommandModel>(commandData);
                     }
+                    else if (type == CommandTypeEnum.TwitchBits)
+                    {
+                        TwitchBitsCommandModel tbCommand = JSONSerializerHelper.DeserializeFromString<TwitchBitsCommandModel>(commandData);
+                        if (string.IsNullOrWhiteSpace(tbCommand.Name))
+                        {
+                            tbCommand.Name = tbCommand.AmountDisplay;
+                        }
+                        command = tbCommand;
+                    }
 
                     if (command != null)
                     {

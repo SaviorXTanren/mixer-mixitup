@@ -11,6 +11,7 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.User
@@ -688,11 +689,30 @@ namespace MixItUp.Base.ViewModel.User
 
                     DateTimeOffset refreshStart = DateTimeOffset.Now;
 
-                    await this.platformModel.Refresh();
+                    CancellationTokenSource cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(2));
 
-                    this.RefreshPatreonProperties();
+                    try
+                    {
+                        await Task.Run(async () =>
+                        {
+                            await this.platformModel.Refresh();
 
-                    this.ClearCachedProperties();
+                            double platformRefreshTime = (DateTimeOffset.Now - refreshStart).TotalMilliseconds;
+                            if (platformRefreshTime > 1000)
+                            {
+                                Logger.Log(LogLevel.Error, string.Format("Long user refresh time detected for the following user (Platform refresh): {0} - {1} - {2} ms", this.ID, this.Username, platformRefreshTime));
+                            }
+
+                            this.RefreshPatreonProperties();
+
+                            this.ClearCachedProperties();
+                        }, cancellationTokenSource.Token);
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        Logger.Log(LogLevel.Error, "Refresh task cancelled due to taking too long to process, resetting last updated state and trying again later");
+                        this.LastUpdated = DateTimeOffset.MinValue;
+                    }
 
                     double refreshTime = (DateTimeOffset.Now - refreshStart).TotalMilliseconds;
                     Logger.Log($"User refresh time: {refreshTime} ms");

@@ -88,6 +88,10 @@ namespace MixItUp.WPF.Windows.Commands
                     this.editorDetailsControl = new ChatCommandEditorDetailsControl();
                     this.viewModel = new UserOnlyChatCommandEditorWindowViewModel((UserOnlyChatCommandModel)existingCommand);
                     break;
+                case CommandTypeEnum.TwitchBits:
+                    this.editorDetailsControl = new TwitchBitsCommandEditorDetailsControl();
+                    this.viewModel = new TwitchBitsCommandEditorWindowViewModel((TwitchBitsCommandModel)existingCommand);
+                    break;
             }
 
             this.importedActions = actions;
@@ -126,6 +130,10 @@ namespace MixItUp.WPF.Windows.Commands
                 case CommandTypeEnum.TrovoSpell:
                     this.editorDetailsControl = new TrovoSpellCommandEditorDetailsControl();
                     this.viewModel = new TrovoSpellCommandEditorWindowViewModel();
+                    break;
+                case CommandTypeEnum.TwitchBits:
+                    this.editorDetailsControl = new TwitchBitsCommandEditorDetailsControl();
+                    this.viewModel = new TwitchBitsCommandEditorWindowViewModel();
                     break;
                 case CommandTypeEnum.Custom:
                     this.editorDetailsControl = new CustomCommandEditorDetailsControl();

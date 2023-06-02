@@ -349,7 +349,7 @@ namespace MixItUp.WPF.Controls.Chat
                 ? null
                 : e.AddedItems[0] as ChatMessageViewModel;
 
-            if (message != null && message.ContainsLink || ModerationService.LinkRegex.IsMatch(message.PlainTextMessage))
+            if (message != null && (message.ContainsLink || ModerationService.LinkRegex.IsMatch(message.PlainTextMessage)))
             {
                 goToLinkMenuItem.Visibility = Visibility.Visible;
             }
