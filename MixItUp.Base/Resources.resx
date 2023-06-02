@@ -9592,9 +9592,6 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
   <data name="EndingAmountMustBeGreaterThanStartingAmount" xml:space="preserve">
     <value>The ending amount must be greater than the starting amount</value>
   </data>
-  <data name="TwitchBits" xml:space="preserve">
-    <value>Twitch Bits</value>
-  </data>
   <data name="EndingAmount" xml:space="preserve">
     <value>Ending Amount</value>
   </data>
