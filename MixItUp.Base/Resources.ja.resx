@@ -311,7 +311,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
-    <value>自動インクルード "!</value>
+    <value>自動インクルード &quot;!</value>
     <comment>Manual</comment>
   </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
@@ -816,8 +816,8 @@
     <value>[サービス] ページでストリームラボ接続を有効にしてください。</value>
     <comment>Manual</comment>
   </data>
-  <data name="EnableStreamlabsDesktop" xml:space="preserve">
-    <value>サービスページでストリームラボ Desktop 接続を有効にしてください!</value>
+  <data name="EnableStreamlabsOBS" xml:space="preserve">
+    <value>サービスページでストリームラボ OBS 接続を有効にしてください!</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableXSplit" xml:space="preserve">
@@ -1160,7 +1160,7 @@
     <comment>Manual</comment>
   </data>
   <data name="JSONValueName" xml:space="preserve">
-    <value>JSON 値名 (入れ子になったパラメーターには '\' を使用)</value>
+    <value>JSON 値名 (入れ子になったパラメーターには &apos;\&apos; を使用)</value>
     <comment>Manual</comment>
   </data>
   <data name="Keyboard" xml:space="preserve">
@@ -1765,7 +1765,7 @@
     <value>報告</value>
   </data>
   <data name="RequireClaim" xml:space="preserve">
-    <value>要求 "!クレーム"</value>
+    <value>要求 &quot;!クレーム&quot;</value>
     <comment>Manual</comment>
   </data>
   <data name="RequiredHours" xml:space="preserve">
@@ -3558,6 +3558,10 @@
     <value>ストリームの開始/停止</value>
     <comment>Manual</comment>
   </data>
+  <data name="StreamlabsOBS" xml:space="preserve">
+    <value>Streamlabs OBS</value>
+    <comment>Manual</comment>
+  </data>
   <data name="TextSource" xml:space="preserve">
     <value>テキストソース</value>
     <comment>Manual</comment>
@@ -3678,6 +3682,10 @@ Fuzzy</comment>
   </data>
   <data name="OverlayActionMissingWidget" xml:space="preserve">
     <value>オーバーレイアクション: 見つからないウィジェット</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamingSoftwareOBSSLOBS" xml:space="preserve">
+    <value>ストリーミングソフトウェア(OBS、スロブス)</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCurrencyRequirementAmountBetween" xml:space="preserve">
@@ -4261,7 +4269,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameWonExample" xml:space="preserve">
-    <value>@$usernameは、$gamepayout {0}の全体のポットを獲得し、秘密の言葉"$gamehangmananswer"を得た!</value>
+    <value>@$usernameは、$gamepayout {0}の全体のポットを獲得し、秘密の言葉&quot;$gamehangmananswer&quot;を得た!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanMaxFailures" xml:space="preserve">
@@ -5237,7 +5245,7 @@ Fuzzy</comment>
 (コマンドがスタックし、完了できません)。これは、選択したコマンドと同じ種類の他のコマンドも意味します。
 サブコマンドは、現在のコマンドと異なる場合、同時に実行することができます。たとえば、選択した
 サブコマンドはアクショングループですが、この場合は別のアクショングループを同時に実行することができます。
-有効。"Unlock Command" オプションを切り替えるのと似ていますが、この特定の時間にのみ適用されます。</value>
+有効。&quot;Unlock Command&quot; オプションを切り替えるのと似ていますが、この特定の時間にのみ適用されます。</value>
     <comment>Manual</comment>
   </data>
   <data name="Russian" xml:space="preserve">
@@ -5718,14 +5726,14 @@ Fuzzy</comment>
   <data name="StreamlabsInfo1" xml:space="preserve">
     <value>Streamlabs サービス接続では、寄付を受け取ったときにアクションを実行できます。ログインすると、認証ウェブページが開き、Streamlabsにログインし、情報にアクセスするためにMix It Upを承認するように求める。</value>
   </data>
-  <data name="StreamlabsDesktopConnectionFailed" xml:space="preserve">
-    <value>ストリームラボデスクトップ接続テストに失敗しました。</value>
+  <data name="StreamlabsOBSConnectionFailed" xml:space="preserve">
+    <value>ストリームラボ OBS 接続テストに失敗しました。</value>
   </data>
-  <data name="StreamlabsDesktopConnectionSuccess" xml:space="preserve">
-    <value>ストリームラボデスクトップ接続テストが成功しました!</value>
+  <data name="StreamlabsOBSConnectionSuccess" xml:space="preserve">
+    <value>ストリームラボ OBS 接続テストが成功しました!</value>
   </data>
-  <data name="StreamlabsDesktopInfo1" xml:space="preserve">
-    <value>ストリームラボデスクトップサービスを使用すると、ストリームラボデスクトップのインスタンスと直接対話して、シーンやソースに対する変更を実行できます。</value>
+  <data name="StreamlabsOBSInfo1" xml:space="preserve">
+    <value>Streamlabs OBS サービスを使用すると、Streamlabs OBS のインスタンスと直接対話して、シーンやソースに対する変更を実行できます。</value>
   </data>
   <data name="Streamloots" xml:space="preserve">
     <value>Streamloots</value>
@@ -6353,11 +6361,11 @@ Fuzzy</comment>
   <data name="RainmakerChannelDataFailed" xml:space="preserve">
     <value>チャネル データの取得に失敗しました</value>
   </data>
-  <data name="StreamlabsDesktopAdminMaybe" xml:space="preserve">
-    <value>ストリームラボデスクトップは管理者として実行されている可能性があり、ミックス・イット・アップは実行されません。接続する前に、管理者として Mix It Up を実行してみてください。</value>
+  <data name="StreamlabsOBSAdminMaybe" xml:space="preserve">
+    <value>ストリームラボ OBS は管理者として実行されている可能性があり、ミックス・イット・アップは実行されません。接続する前に、管理者として Mix It Up を実行してみてください。</value>
   </data>
-  <data name="StreamlabsDesktopFailed" xml:space="preserve">
-    <value>ストリームラボデスクトップに到達できませんでした</value>
+  <data name="StreamlabsOBSFailed" xml:space="preserve">
+    <value>ストリームラボ OBS に到達できませんでした</value>
   </data>
   <data name="StreamlabsWebSocketTokenFailed" xml:space="preserve">
     <value>Web ソケット トークンを取得できませんでした</value>
@@ -6426,7 +6434,7 @@ Fuzzy</comment>
     <value>指定した目標の進行状況バーを表示します。進行状況は、イベントが発生した場合、またはユーザー定義の更新間隔で更新されます。</value>
   </data>
   <data name="OverlayWidgetStreamBossDescription" xml:space="preserve">
-    <value>チャンネルのユーザーを"ボス"として表示します。損傷は発生時に追加されます。ストリームボス特別識別子は、このオーバーレイウィジェットと並行して使用することができます。</value>
+    <value>チャンネルのユーザーを&quot;ボス&quot;として表示します。損傷は発生時に追加されます。ストリームボス特別識別子は、このオーバーレイウィジェットと並行して使用することができます。</value>
   </data>
   <data name="OverlayWidgetTextDescription" xml:space="preserve">
     <value>テキストのブロックを表示します。ユーザー定義の更新間隔に基づいて更新します。</value>
@@ -7449,7 +7457,7 @@ Fuzzy</comment>
     <value>エラー: 次のユーザー名を持つユーザーが見つかりませんでした: {0}</value>
   </data>
   <data name="LinkAccountCommandPleaseConfirmLink" xml:space="preserve">
-    <value>アカウントのリンク処理を開始しました。現在のユーザーの情報を使用して、他のプラットフォームでコマンドを再実行してください: "!linkaccount {0} {1}"</value>
+    <value>アカウントのリンク処理を開始しました。現在のユーザーの情報を使用して、他のプラットフォームでコマンドを再実行してください: &quot;!linkaccount {0} {1}&quot;</value>
   </data>
   <data name="LinkAccountCommandUsage" xml:space="preserve">
     <value>使用法: !リンクアカウント&lt;PLATFORM&gt;&lt;プラットフォームユーザー名&gt;</value>
@@ -8020,8 +8028,8 @@ Mix It Up の実行中にまだチャンネルにアクセスしていないユ�
     <value>指定したアイテムは存在しません</value>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
-    <value>"買い" または "売り" のいずれかを指定する必要があります。</value>
-    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
+    <value>&quot;買い&quot; または &quot;売り&quot; のいずれかを指定する必要があります。</value>
+    <comment>{0} is the English word &apos;buy&apos;, {1} is the English word &apos;sell&apos;</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
     <value>使用法: {0}リスト = 購入/販売に利用可能なすべての商品を一覧表示します {0} ** {0} &lt;ITEM NAME&gt; = 購入&lt;ITEM NAME&gt; [AMOUNT] = 購入1または {0}商品の指定金額&lt;商品名&gt; [金額] = 1 または指定金額を販売します</value>
@@ -8057,6 +8065,9 @@ Mix It Up の実行中にまだチャンネルにアクセスしていないユ�
     <value>合計で{0} {1}のみ持つことができます</value>
     <comment>{0} is the amount of the item
 {1} is the name of the item</comment>
+  </data>
+  <data name="List" xml:space="preserve">
+    <value>リスト</value>
   </data>
   <data name="NoGameFound" xml:space="preserve">
     <value>ゲームが見つかりません</value>
@@ -8702,7 +8713,7 @@ Mix It Up の実行中にまだチャンネルにアクセスしていないユ�
     <value>Add User</value>
   </data>
   <data name="UsersUnableToFindUser" xml:space="preserve">
-    <value>Unable find the user "{0}"</value>
+    <value>Unable find the user &quot;{0}&quot;</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UsersSuccessfullyFoundUser" xml:space="preserve">
@@ -8720,7 +8731,7 @@ Mix It Up の実行中にまだチャンネルにアクセスしていないユ�
 whispers to be used as a form of automated communication. There are severe restrictions placed on the
 amount of whispers that can be sent in a timeline that make it very impractical for use, as well as spam
 preventative measures if the user is not on your friends list on Twitch. So although you can send whispers
-via Twitch, it's a "your mileage may very" situation.</value>
+via Twitch, it&apos;s a &quot;your mileage may vary&quot; situation.</value>
   </data>
   <data name="AlertName" xml:space="preserve">
     <value>Alert Name</value>
@@ -8850,5 +8861,442 @@ via Twitch, it's a "your mileage may very" situation.</value>
   </data>
   <data name="MixItUpIsAlreadyRunning" xml:space="preserve">
     <value>Mix It Up is already running! Unless you meant to do this, please shut down any existing instances of Mix It Up before trying to run a new instance. Do you still want to continue running this instance of Mix It Up?</value>
+  </data>
+  <data name="EnableStreamlabsDesktop" xml:space="preserve">
+    <value></value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamlabsDesktopConnectionFailed" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="StreamlabsDesktopConnectionSuccess" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="StreamlabsDesktopInfo1" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="StreamlabsDesktopAdminMaybe" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="StreamlabsDesktopFailed" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TwitchEventSub" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TrovoChannelMagicChat" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TrovoChannelSpellCast" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="MockConnection" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="CopyMessage" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="DeleteMessage" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="GoToLink" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="UserInfo" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="WhisperUser" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OBSStudioOldProtocol" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TwitchActionPollChoicesTooLong" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TwitchActionPollTitleTooLong" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TwitchActionPredictionOutcomesTooLong" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ChineseTraditional" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="MuteOnOff" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ImageSource" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="MediaSource" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="StreamingSoftwareActionMissingImageSourceFilePath" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="StreamingSoftwareActionMissingMediaSourceFilePath" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="CSS" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="Javascript" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="BackInDown" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="BackInLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="BackInRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="BackInUp" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="BackOutDown" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="BackOutLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="BackOutRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="BackOutUp" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeInBottomLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeInBottomRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeInDownBig" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeInLeftBig" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeInRightBig" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeInTopLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeInTopRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeInUpBig" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeOutBottomLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeOutBottomRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeOutDownBig" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeOutLeftBig" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeOutRightBig" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeOutTopLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeOutTopRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FadeOutUpBig" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="HeadShake" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="HeartBeat" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="LightSpeedInLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="LightSpeedInRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="LightSpeedOutLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="LightSpeedOutRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="RotateInDownLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="RotateInDownRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="RotateInUpLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="RotateInUpRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="RotateOutDownLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="RotateOutDownRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="RotateOutUpLeft" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="RotateOutUpRight" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ShakeX" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ShakeY" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="AnimateCSS" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="Animation" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="AnimationLibrary" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="Entrance" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TwitchActionMessageMissing" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="SendChatAnnouncement" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="Primary" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="DisableSubscriberMode" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="EnableSubscriberMode" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayTimerDefaultJavascript" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayImageDefaultCSS" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayImageDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayTextDefaultCSS" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayTextDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayVideoDefaultCSS" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayVideoDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayWebPageDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayYouTubeDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="DisplayFormat" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayTimerDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayPositionedItemDefaultCSS" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayPositionedItemDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayActionValidationErrorHeader" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayMissingFilePath" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayTextMissingText" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayTimerMissingDisplayFormat" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayWebPageMissingURL" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayYouTubeMissingVideo" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="CooldownRequirementOnCooldownMinutes" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="CooldownRequirementOnCooldownHours" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="BasicTimer" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="CountUp" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="CSharp" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="Python" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="Script" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ScriptActionMissingScript" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="VisualBasic" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ScriptActionFailedCompile" xml:space="preserve">
+    <value></value>
+    <comment>{0} is the series of script errors</comment>
+  </data>
+  <data name="ScriptActionCSharpDefaultScriptTemplate" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ScriptActionJavascriptDefaultScriptTemplate" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ScriptActionPythonDefaultScriptTemplate" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="CommunityCommandsScriptActionsNotSupported" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayLabelAmountDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayLabelUsernameAmountDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayLabelUsernameDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayLabelDefaultJavascript" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OnUpdate" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ConditionalActionAtLeastOneClause" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="HypeTrainLevelUp" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="Resubscriber" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="Donation" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayEventListDefaultCSS" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayEventListDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayEventListDefaultJavascript" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TwitchChannelHypeTrainLevelUp" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="AlertTwitchCharityDonation" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayGoalDefaultCSS" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayGoalDefaultHTML" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="OverlayGoalDefaultJavascript" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TwitchChannelCharityDonation" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TwitchEventServiceFailedToConnectEventSub" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="SendShoutout" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="EndingAmountMustBeGreaterThanStartingAmount" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TwitchBits" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="EndingAmount" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="LoupeDeck" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="LoupeDeckInfo1" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="LoupeDeckInfo2" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ShellExecute" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="RemoveSpecificTextFromFile" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TextToRemove" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ReplaceTextInFile" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="TwitchCustomTagsMustMeetStandard" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="StreamlabDesktopAdminMaybe" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ShadowColor" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ShadowSize" xml:space="preserve">
+    <value></value>
   </data>
 </root>
