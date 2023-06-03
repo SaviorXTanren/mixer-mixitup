@@ -99,9 +99,12 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
 
                 this.TagEditor.ClearCustomTags();
-                foreach (string tag in this.ChannelInformation.tags)
+                if (this.ChannelInformation.tags != null)
                 {
-                    this.TagEditor.AddCustomTag(tag);
+                    foreach (string tag in this.ChannelInformation.tags)
+                    {
+                        await this.TagEditor.AddCustomTag(tag);
+                    }
                 }
             }
         }

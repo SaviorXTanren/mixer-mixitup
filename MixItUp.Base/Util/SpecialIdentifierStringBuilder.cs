@@ -497,7 +497,7 @@ namespace MixItUp.Base.Util
 
                     if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "twitchtags"))
                     {
-                        var tags = ServiceManager.Get<TwitchSessionService>().Channel.tags;
+                        var tags = ServiceManager.Get<TwitchSessionService>().Channel?.tags;
                         if (tags != null && tags.Count() > 0)
                         {
                             this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "twitchtags", string.Join(", ", tags));

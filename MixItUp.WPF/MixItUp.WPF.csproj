@@ -2965,17 +2965,20 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>del $(TargetDir)ApplicationSettings.json
+    <PostBuildEvent>
+      del $(TargetDir)ApplicationSettings.json
 
-rmdir /Q /S $(TargetDir)Settings\
+      rmdir /Q /S $(TargetDir)Settings\
 
-rmdir /Q /S $(TargetDir)Logs\
+      rmdir /Q /S $(TargetDir)Logs\
 
-rmdir /Q /S $(TargetDir)ChatEventLogs\
+      rmdir /Q /S $(TargetDir)ChatEventLogs\
 
-rmdir /Q /S $(TargetDir)Counters\
+      rmdir /Q /S $(TargetDir)Counters\
 
-xcopy $(ProjectDir)Lib\ $(TargetDir)Lib\ /e /q /y</PostBuildEvent>
+      del $(TargetDir)MixItUp.zip
+
+      xcopy $(ProjectDir)Lib\ $(TargetDir)Lib\ /e /q /y</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
