@@ -76,8 +76,7 @@ namespace MixItUp.Base.Model.Actions
 
             if (this.ActionType == FileActionTypeEnum.ReadFromFile ||
                 this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
-                this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile ||
-                this.ActionType == FileActionTypeEnum.RemoveSpecificTextFromFile)
+                this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile)
             {
                 parameters.SpecialIdentifiers.Remove(this.TransferText);
             }
@@ -144,8 +143,7 @@ namespace MixItUp.Base.Model.Actions
                         if (lines.Count > lineIndex)
                         {
                             if (this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
-                                this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile || this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile ||
-                                this.ActionType == FileActionTypeEnum.RemoveSpecificTextFromFile)
+                                this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile || this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile)
                             {
                                 textToRead = lines[lineIndex];
                             }
@@ -162,8 +160,7 @@ namespace MixItUp.Base.Model.Actions
 
             if (this.ActionType == FileActionTypeEnum.ReadFromFile ||
                 this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
-                this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile ||
-                this.ActionType == FileActionTypeEnum.RemoveSpecificTextFromFile)
+                this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile)
             {
                 if (!string.IsNullOrEmpty(textToRead))
                 {
