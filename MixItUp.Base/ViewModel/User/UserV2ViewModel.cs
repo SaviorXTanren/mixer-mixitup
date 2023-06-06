@@ -27,8 +27,6 @@ namespace MixItUp.Base.ViewModel.User
         private UserV2Model model;
         private UserPlatformV2ModelBase platformModel;
 
-        private object cachePropertiesLock = new object();
-
         public UserV2ViewModel(UserV2Model model) : this(StreamingPlatformTypeEnum.None, model) { }
 
         public UserV2ViewModel(StreamingPlatformTypeEnum platform, UserV2Model model)
@@ -58,6 +56,8 @@ namespace MixItUp.Base.ViewModel.User
             {
                 throw new InvalidOperationException($"User data does not contain any platform data - {model.ID} - {platform}");
             }
+
+            this.ClearCachedProperties();
         }
 
         public UserV2Model Model { get { return this.model; } }
@@ -80,25 +80,14 @@ namespace MixItUp.Base.ViewModel.User
 
         public string FullDisplayName
         {
-            get
+            get { return this.fullDisplayName; }
+            set
             {
-                if (!string.IsNullOrEmpty(this.PlatformModel.DisplayName))
-                {
-                    if (!string.Equals(this.DisplayName, this.Username, StringComparison.OrdinalIgnoreCase))
-                    {
-                        return $"{this.DisplayName} ({this.Username})";
-                    }
-                    else
-                    {
-                        return this.DisplayName;
-                    }
-                }
-                else
-                {
-                    return this.Username;
-                }
+                this.fullDisplayName = value;
+                this.NotifyPropertyChanged();
             }
         }
+        private string fullDisplayName;
 
         public string AvatarLink { get { return this.PlatformModel.AvatarLink; } }
 
@@ -108,108 +97,51 @@ namespace MixItUp.Base.ViewModel.User
 
         public HashSet<UserRoleEnum> Roles { get { return this.PlatformModel.Roles; } }
 
-        public HashSet<UserRoleEnum> DisplayRoles
+        public HashSet<UserRoleEnum> DisplayRoles { get; private set; } = new HashSet<UserRoleEnum>();
+
+        public string Color
         {
-            get
+            get { return this.color; }
+            set
             {
-                HashSet<UserRoleEnum> roles = new HashSet<UserRoleEnum>(this.Roles);
-                if (roles.Count > 1)
-                {
-                    roles.Remove(UserRoleEnum.User);
-                }
-                if (roles.Contains(UserRoleEnum.Subscriber) || roles.Contains(UserRoleEnum.YouTubeSubscriber))
-                {
-                    roles.Remove(UserRoleEnum.Follower);
-                }
-                if (roles.Contains(UserRoleEnum.YouTubeMember))
-                {
-                    roles.Remove(UserRoleEnum.Subscriber);
-                }
-                if (roles.Contains(UserRoleEnum.TrovoSuperMod))
-                {
-                    roles.Remove(UserRoleEnum.Moderator);
-                }
-                if (roles.Contains(UserRoleEnum.Streamer))
-                {
-                    roles.Remove(UserRoleEnum.Subscriber);
-                }    
-                roles.Remove(UserRoleEnum.TwitchAffiliate);
-                roles.Remove(UserRoleEnum.TwitchPartner);
-                return roles;
+                this.color = value;
+                this.NotifyPropertyChanged();
             }
         }
+        private string color;
 
         public string RolesString
         {
-            get
+            get { return this.rolesString; }
+            set
             {
-                lock (this.rolesStringLock)
-                {
-                    if (this.rolesString == null)
-                    {
-                        List<string> displayRoles = new List<string>(this.Roles.OrderByDescending(r => r).Select(r => r.ToString()));
-                        //displayRoles.AddRange(this.CustomRoles);
-                        this.rolesString = string.Join(", ", displayRoles);
-                    }
-                    return this.rolesString;
-                }
-            }
-            private set
-            {
-                lock (this.rolesStringLock)
-                {
-                    this.rolesString = value;
-                }
+                this.rolesString = value;
+                this.NotifyPropertyChanged();
             }
         }
-        private string rolesString = null;
-        private object rolesStringLock = new object();
+        private string rolesString;
 
         public string DisplayRolesString
         {
-            get
+            get { return this.displayRolesString; }
+            set
             {
-                lock (this.displayRolesStringLock)
-                {
-                    if (this.displayRolesString == null)
-                    {
-                        List<string> displayRoles = new List<string>(this.DisplayRoles.OrderByDescending(r => r).Select(r => EnumLocalizationHelper.GetLocalizedName(r)));
-                        //displayRoles.AddRange(this.CustomRoles);
-                        this.displayRolesString = string.Join(", ", displayRoles);
-                    }
-                    return this.displayRolesString;
-                }
-            }
-            private set
-            {
-                lock (this.displayRolesStringLock)
-                {
-                    this.displayRolesString = value;
-                }
+                this.displayRolesString = value;
+                this.NotifyPropertyChanged();
             }
         }
-        private string displayRolesString = null;
-        private object displayRolesStringLock = new object();
+        private string displayRolesString;
 
         public UserRoleEnum PrimaryRole
         {
-            get
+            get { return this.primaryRole; }
+            set
             {
-                lock (cachePropertiesLock)
-                {
-#pragma warning disable CS0612 // Type or member is obsolete
-                    if (this.primaryRole == UserRoleEnum.Banned)
-#pragma warning restore CS0612 // Type or member is obsolete
-                    {
-                        this.primaryRole = this.Roles.Max();
-                    }
-                    return this.primaryRole;
-                }
+                this.primaryRole = value;
+                this.NotifyPropertyChanged();
             }
         }
-#pragma warning disable CS0612 // Type or member is obsolete
-        private UserRoleEnum primaryRole = UserRoleEnum.Banned;
-#pragma warning restore CS0612 // Type or member is obsolete
+        private UserRoleEnum primaryRole;
 
         public string PrimaryRoleString { get { return EnumLocalizationHelper.GetLocalizedName(this.PrimaryRole); } }
 
@@ -235,49 +167,6 @@ namespace MixItUp.Base.ViewModel.User
         public bool IsFollower { get { return this.HasRole(UserRoleEnum.Follower) || this.HasRole(UserRoleEnum.YouTubeSubscriber); } }
         public bool IsRegular { get { return this.HasRole(UserRoleEnum.Regular); } }
         public bool IsSubscriber { get { return this.IsPlatformSubscriber || this.IsExternalSubscriber; } }
-
-        public string Color
-        {
-            get
-            {
-                lock (cachePropertiesLock)
-                {
-                    if (this.color == null)
-                    {
-                        if (ChannelSession.Settings.UseCustomUsernameColors)
-                        {
-                            foreach (UserRoleEnum role in this.Roles.OrderByDescending(r => r))
-                            {
-                                if (ChannelSession.Settings.CustomUsernameRoleColors.ContainsKey(role))
-                                {
-                                    string name = ChannelSession.Settings.CustomUsernameRoleColors[role];
-                                    if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(name))
-                                    {
-                                        this.color = ColorSchemes.HTMLColorSchemeDictionary[name];
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-
-                        if (string.IsNullOrEmpty(this.color))
-                        {
-                            if (this.Platform == StreamingPlatformTypeEnum.Twitch)
-                            {
-                                this.color = ((TwitchUserPlatformV2Model)this.PlatformModel).Color;
-                            }
-                        }
-
-                        if (string.IsNullOrEmpty(this.color))
-                        {
-                            this.color = UserV2ViewModel.UserDefaultColor;
-                        }
-                    }
-                    return this.color;
-                }
-            }
-        }
-        private string color;
 
         public string ChannelLink
         {
@@ -535,26 +424,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public bool IsInChat { get; set; }
 
-        public string SortableID
-        {
-            get
-            {
-                lock (cachePropertiesLock)
-                {
-                    if (this.sortableID == null)
-                    {
-                        UserRoleEnum role = this.PrimaryRole;
-                        if (role < UserRoleEnum.Subscriber)
-                        {
-                            role = UserRoleEnum.User;
-                        }
-                        this.sortableID = (99999 - role) + "-" + this.Username + "-" + this.Platform.ToString();
-                    }
-                    return this.sortableID;
-                }
-            }
-        }
-        private string sortableID;
+        public string SortableID { get; private set; }
 
         public int WhispererNumber { get; set; }
 
@@ -840,16 +710,88 @@ namespace MixItUp.Base.ViewModel.User
 
         private void ClearCachedProperties()
         {
-            lock (cachePropertiesLock)
+            if (!string.IsNullOrEmpty(this.PlatformModel.DisplayName))
             {
-                this.rolesString = null;
-                this.displayRolesString = null;
-                this.color = null;
-                this.sortableID = null;
-#pragma warning disable CS0612 // Type or member is obsolete
-                this.primaryRole = UserRoleEnum.Banned;
-#pragma warning restore CS0612 // Type or member is obsolete
+                if (!string.Equals(this.DisplayName, this.Username, StringComparison.OrdinalIgnoreCase))
+                {
+                    this.FullDisplayName = $"{this.DisplayName} ({this.Username})";
+                }
+                else
+                {
+                    this.FullDisplayName = this.DisplayName;
+                }
             }
+            else
+            {
+                this.FullDisplayName = this.Username;
+            }
+
+            this.PrimaryRole = this.Roles.Max();
+
+            var displayRoles = new HashSet<UserRoleEnum>(this.Roles);
+            if (displayRoles.Count > 1)
+            {
+                displayRoles.Remove(UserRoleEnum.User);
+            }
+            if (displayRoles.Contains(UserRoleEnum.Subscriber) || displayRoles.Contains(UserRoleEnum.YouTubeSubscriber))
+            {
+                displayRoles.Remove(UserRoleEnum.Follower);
+            }
+            if (displayRoles.Contains(UserRoleEnum.YouTubeMember))
+            {
+                displayRoles.Remove(UserRoleEnum.Subscriber);
+            }
+            if (displayRoles.Contains(UserRoleEnum.TrovoSuperMod))
+            {
+                displayRoles.Remove(UserRoleEnum.Moderator);
+            }
+            if (displayRoles.Contains(UserRoleEnum.Streamer))
+            {
+                displayRoles.Remove(UserRoleEnum.Subscriber);
+            }
+            displayRoles.Remove(UserRoleEnum.TwitchAffiliate);
+            displayRoles.Remove(UserRoleEnum.TwitchPartner);
+            this.DisplayRoles = displayRoles;
+
+            var sortedRoles = this.DisplayRoles.OrderByDescending(r => r);
+            this.RolesString = string.Join(", ", sortedRoles.Select(r => r.ToString()));
+            this.DisplayRolesString = string.Join(", ", sortedRoles.Select(r => EnumLocalizationHelper.GetLocalizedName(r)));
+
+            if (ChannelSession.Settings.UseCustomUsernameColors)
+            {
+                foreach (UserRoleEnum role in this.Roles.OrderByDescending(r => r))
+                {
+                    if (ChannelSession.Settings.CustomUsernameRoleColors.ContainsKey(role))
+                    {
+                        string name = ChannelSession.Settings.CustomUsernameRoleColors[role];
+                        if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(name))
+                        {
+                            this.Color = ColorSchemes.HTMLColorSchemeDictionary[name];
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (string.IsNullOrEmpty(this.Color))
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                {
+                    this.Color = ((TwitchUserPlatformV2Model)this.PlatformModel).Color;
+                }
+            }
+
+            if (string.IsNullOrEmpty(this.Color))
+            {
+                this.Color = UserV2ViewModel.UserDefaultColor;
+            }
+
+            var sortRole = this.PrimaryRole;
+            if (sortRole < UserRoleEnum.Subscriber)
+            {
+                sortRole = UserRoleEnum.User;
+            }
+            this.SortableID = (99999 - sortRole) + "-" + this.Username + "-" + this.Platform.ToString();
         }
 
         public override bool Equals(object obj)
