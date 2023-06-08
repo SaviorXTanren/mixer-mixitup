@@ -23,7 +23,6 @@ namespace MixItUp.Base.Services.Twitch
         public UserModel Bot { get; set; }
         public ChannelInformationModel Channel { get; set; }
         public StreamModel Stream { get; set; }
-        public IEnumerable<TwitchTagModel> StreamTags { get; private set; }
 
         public bool IsConnected { get { return this.UserConnection != null; } }
         public bool IsBotConnected { get { return this.BotConnection != null; } }
@@ -220,7 +219,6 @@ namespace MixItUp.Base.Services.Twitch
                         List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
                         platformServiceTasks.Add(ServiceManager.Get<TwitchChatService>().ConnectUser());
                         platformServiceTasks.Add(ServiceManager.Get<TwitchPubSubService>().Connect());
-                        platformServiceTasks.Add(ServiceManager.Get<TwitchSessionService>().SetStreamTagsCache());
 
                         await Task.WhenAll(platformServiceTasks);
 
@@ -361,25 +359,6 @@ namespace MixItUp.Base.Services.Twitch
             }
             return false;
         }
-
-        public async Task<Result> SetStreamTagsCache()
-        {
-            SortedList<string, TwitchTagModel> tags = new SortedList<string, TwitchTagModel>();
-            foreach (TagModel tag in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStreamTags())
-            {
-                if (!tag.is_auto)
-                {
-                    TwitchTagModel tagModel = new TwitchTagModel(tag);
-                    if (!string.IsNullOrEmpty(tagModel.Name) && !tags.ContainsKey(tagModel.Name))
-                    {
-                        tags.Add(tagModel.Name, tagModel);
-                    }
-                }
-            }
-            this.StreamTags = tags.Values.ToList();
-
-            return new Result();
-        }
     }
 
     public static class TwitchNewAPIUserModelExtensions
@@ -403,35 +382,5 @@ namespace MixItUp.Base.Services.Twitch
         {
             return string.Equals(twitchUser.type, "global_mod", StringComparison.OrdinalIgnoreCase);
         }
-    }
-
-    public class TwitchTagModel
-    {
-        public TwitchTagModel(TagModel tag)
-        {
-            this.Tag = tag;
-
-            string languageLocale = Languages.GetLanguageLocale().ToLower();
-            if (this.Tag.localization_names.ContainsKey(languageLocale))
-            {
-                this.Name = (string)this.Tag.localization_names[languageLocale];
-            }
-            else
-            {
-                languageLocale = Languages.GetLanguageLocale(LanguageOptions.Default).ToLower();
-                if (this.Tag.localization_names.ContainsKey(languageLocale))
-                {
-                    this.Name = (string)this.Tag.localization_names[languageLocale];
-                }
-            }
-        }
-
-        public TagModel Tag { get; private set; }
-
-        public string ID { get { return this.Tag.tag_id; } }
-
-        public string Name { get; private set; }
-
-        public bool IsDeletable { get { return !this.Tag.is_auto; } }
     }
 }

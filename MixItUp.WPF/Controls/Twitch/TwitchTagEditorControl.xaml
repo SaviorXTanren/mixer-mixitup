@@ -26,14 +26,14 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <MaterialDesign:Chip Content="{Binding Name}" IsDeletable="{Binding IsDeletable}" DeleteCommand="{Binding DeleteTagCommand}" />
+                        <MaterialDesign:Chip Content="{Binding Tag}" IsDeletable="True" DeleteCommand="{Binding DeleteTagCommand}" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </Border>
 
-        <ComboBox Grid.Column="2" ItemsSource="{Binding Tags}" SelectedItem="{Binding SelectedTag}" DisplayMemberPath="Name" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Tag}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
+        <TextBox Grid.Column="2" Text="{Binding SelectedTag}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Tag}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" Height="40" />
 
-        <Button Grid.Column="4" Command="{Binding AddTagCommand}" IsEnabled="{Binding CanAddMoreTags}" Content="{MaterialDesign:PackIcon Add}" Padding="10,0" />
+        <Button Grid.Column="4" Command="{Binding AddTagCommand}" IsEnabled="{Binding CanAddMoreTags}" Content="{MaterialDesign:PackIcon Add}" Padding="10,0" Cursor="Hand" />
     </Grid>
 </UserControl>

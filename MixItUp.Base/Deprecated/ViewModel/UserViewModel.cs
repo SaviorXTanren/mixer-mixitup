@@ -962,7 +962,7 @@ namespace MixItUp.Base.ViewModel.User
             this.ClearDisplayProperties();
         }
 
-        private int GetTwitchBadgeVersion(string name)
+        private int GetTwitchBadgeID(string name)
         {
             if (this.Data.TwitchBadges != null && this.Data.TwitchBadges.TryGetValue(name, out int version))
             {
@@ -971,16 +971,16 @@ namespace MixItUp.Base.ViewModel.User
             return -1;
         }
 
-        private bool HasTwitchBadge(string name) { return this.GetTwitchBadgeVersion(name) >= 0; }
+        private bool HasTwitchBadge(string name) { return this.GetTwitchBadgeID(name) >= 0; }
 
         private ChatBadgeModel GetTwitchBadgeURL(string name)
         {
             if (ServiceManager.Get<TwitchChatService>().ChatBadges.ContainsKey(name))
             {
-                int versionID = this.GetTwitchBadgeVersion(name);
-                if (ServiceManager.Get<TwitchChatService>().ChatBadges[name].versions.ContainsKey(versionID.ToString()))
+                int id = this.GetTwitchBadgeID(name);
+                if (ServiceManager.Get<TwitchChatService>().ChatBadges[name].ContainsKey(id.ToString()))
                 {
-                    return ServiceManager.Get<TwitchChatService>().ChatBadges[name].versions[versionID.ToString()];
+                    return ServiceManager.Get<TwitchChatService>().ChatBadges[name][id.ToString()];
                 }
             }
             return null;
