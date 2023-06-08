@@ -119,8 +119,7 @@ namespace MixItUp.Base.Model.Actions
                         newArguments = parameters.Arguments;
                     }
 
-                    CommandParametersModel copyParameters = parameters.Duplicate();
-                    copyParameters.Arguments = newArguments;
+                    CommandParametersModel copyParameters = parameters.Duplicate(newArguments);
 
                     CommandInstanceModel commandInstance = new CommandInstanceModel(command, copyParameters);
                     if (this.WaitForCommandToFinish)

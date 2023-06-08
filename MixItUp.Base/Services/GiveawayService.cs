@@ -222,8 +222,7 @@ namespace MixItUp.Base.Services
             {
                 if (this.TimeLeft > 0 && this.Winner == null && this.giveawayCommand.DoesMessageMatchTriggers(message, out IEnumerable<string> arguments))
                 {
-                    CommandParametersModel parameters = new CommandParametersModel(message);
-                    parameters.Arguments = new List<string>(arguments);
+                    CommandParametersModel parameters = new CommandParametersModel(message, new List<string>(arguments));
                     int entries = 1;
 
                     if (pastWinners.Contains(message.User.ID))

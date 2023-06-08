@@ -773,8 +773,7 @@ namespace MixItUp.Base.Services
         {
             Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
 
-            CommandParametersModel parameters = new CommandParametersModel(message);
-            parameters.Arguments = new List<string>(arguments);   // Overwrite arguments to account for variable argument length for commands
+            CommandParametersModel parameters = new CommandParametersModel(message, arguments); // Overwrite arguments to account for variable argument length for commands
             await ServiceManager.Get<CommandService>().Queue(command, parameters);
 
             SettingsRequirementModel settings = command.Requirements.Settings;

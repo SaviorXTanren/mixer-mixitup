@@ -70,7 +70,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 if (parameters.User == this.runParameters.TargetUser)
                 {
                     this.targetParameters = parameters;
-                    this.targetParameters.Arguments = this.runParameters.Arguments;
+                    this.targetParameters.SetArguments(this.runParameters.Arguments);
 
                     this.gameActive = false;
 

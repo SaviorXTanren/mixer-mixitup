@@ -1005,11 +1005,10 @@ namespace MixItUp.Base.Services.Twitch
                 int months = Math.Max(packet.streak_months, packet.cumulative_months);
                 string planTier = TwitchPubSubService.GetSubTierNameFromText(packet.sub_plan);
 
-                CommandParametersModel parameters = new CommandParametersModel(user);
+                string message = (packet.sub_message.ContainsKey("message") && packet.sub_message["message"] != null) ? packet.sub_message["message"].ToString() : string.Empty;
+                CommandParametersModel parameters = new CommandParametersModel(user, new List<string>(message.Split(new char[] { ' ' })));
                 if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TwitchChannelResubscribed, parameters))
                 {
-                    string message = (packet.sub_message.ContainsKey("message") && packet.sub_message["message"] != null) ? packet.sub_message["message"].ToString() : string.Empty;
-                    parameters.Arguments = new List<string>(message.Split(new char[] { ' ' }));
                     parameters.SpecialIdentifiers["message"] = message;
                     parameters.SpecialIdentifiers["usersubmonths"] = months.ToString();
                     parameters.SpecialIdentifiers["usersubplanname"] = !string.IsNullOrEmpty(packet.sub_plan_name) ? packet.sub_plan_name : TwitchPubSubService.GetSubTierNameFromText(packet.sub_plan);
