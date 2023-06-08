@@ -14,7 +14,6 @@ using Trovo.Base.Models.Channels;
 using Twitch.Base.Models.NewAPI.Channels;
 using Twitch.Base.Models.NewAPI.Games;
 using Twitch.Base.Models.NewAPI.Streams;
-using Twitch.Base.Models.NewAPI.Tags;
 using Twitch.Base.Models.NewAPI.Teams;
 using Twitch.Base.Models.NewAPI.Users;
 
@@ -426,6 +425,21 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 return new Result(MixItUp.Base.Resources.FailedToUpdateChannelInformation);
             }
+
+            ChannelSession.Settings.RecentStreamTitles.Insert(0, this.Title);
+            while (ChannelSession.Settings.RecentStreamTitles.Count > 10)
+            {
+                ChannelSession.Settings.RecentStreamTitles.RemoveAt(ChannelSession.Settings.RecentStreamTitles.Count - 1);
+            }
+            ChannelSession.Settings.RecentStreamCategories.Insert(0, this.Category);
+            while (ChannelSession.Settings.RecentStreamCategories.Count > 10)
+            {
+                ChannelSession.Settings.RecentStreamCategories.RemoveAt(ChannelSession.Settings.RecentStreamCategories.Count - 1);
+            }
+
+            this.PastTitles.ClearAndAddRange(ChannelSession.Settings.RecentStreamTitles);
+            this.PastCategories.ClearAndAddRange(ChannelSession.Settings.RecentStreamCategories);
+
             return new Result();
         }
 
