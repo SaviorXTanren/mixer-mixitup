@@ -57,22 +57,22 @@ namespace MixItUp.Base.Services
         }
     }
 
-    public class OverlayV3Service : ServiceBase, IExternalService
+    public class OverlayV3Service : IExternalService
     {
-        public override string Name { get { return Resources.Overlay; } }
+        public string Name { get { return Resources.Overlay; } }
 
         public bool IsConnected { get; private set; }
 
         private Dictionary<Guid, OverlayEndpointV3Service> overlays = new Dictionary<Guid, OverlayEndpointV3Service>();
 
-        public override Task<Result> Enable()
+        public Task<Result> Enable()
         {
             ChannelSession.Settings.EnableOverlay = true;
-            this.State = ServiceState.Enabled;
+            this.IsConnected = true;
             return Task.FromResult(new Result());
         }
 
-        public override async Task<Result> Connect()
+        public async Task<Result> Connect()
         {
             try
             {
@@ -84,8 +84,6 @@ namespace MixItUp.Base.Services
                         return new Result(string.Format(Resources.OverlayAddFailed, overlayEndpoint.Name));
                     }
                 }
-
-                this.State = ServiceState.Connected;
                 ServiceManager.Get<ITelemetryService>().TrackService("Overlay");
                 return new Result();
             }
@@ -96,22 +94,17 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public override async Task<Result> Disconnect()
+        public async Task Disconnect()
         {
             foreach (OverlayEndpointV3Model overlayEndpoint in this.GetOverlayEndpoints())
             {
                 await this.RemoveOverlayEndpoint(overlayEndpoint.ID);
             }
-
-            this.State = ServiceState.Disconnected;
-
-            return new Result();
         }
 
-        public override Task<Result> Disable()
+        public Task<Result> Disable()
         {
             ChannelSession.Settings.EnableOverlay = false;
-            this.State = ServiceState.Disabled;
             return Task.FromResult(new Result());
         }
 
@@ -236,11 +229,6 @@ namespace MixItUp.Base.Services
             //this.OnOverlayDisconnectedOccurred(overlay, closeStatus);
 
             Logger.Log("Client disconnect from Overlay Endpoint - " + overlay.Name);
-        }
-
-        Task IExternalService.Disconnect()
-        {
-            throw new NotImplementedException();
         }
     }
 

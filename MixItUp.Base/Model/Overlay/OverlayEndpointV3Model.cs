@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MixItUp.Base.Services;
+using System;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Overlay
@@ -31,5 +32,7 @@ namespace MixItUp.Base.Model.Overlay
             this.PortNumber = portNumber;
             this.Name = name;
         }
+
+        public string Address { get { return string.Format(OverlayEndpointService.RegularOverlayHttpListenerServerAddressFormat, this.PortNumber); } }
     }
 }

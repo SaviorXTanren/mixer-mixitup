@@ -80,7 +80,7 @@ namespace MixItUp.Base.ViewModel.Services
                 }
             });
 
-            this.IsConnected = ServiceManager.Get<OverlayV3Service>().State == ServiceState.Connected;
+            this.IsConnected = ServiceManager.Get<OverlayV3Service>().IsConnected;
         }
     }
 }

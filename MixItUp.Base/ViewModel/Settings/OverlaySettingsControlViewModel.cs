@@ -12,12 +12,54 @@ namespace MixItUp.Base.ViewModel.Settings
     public class OverlayEndpointListingViewModel : UIViewModelBase
     {
         public Guid ID { get { return this.model.ID; } }
-        public string Name { get { return this.model.Name; } }
-        public int PortNumber { get { return this.model.PortNumber; } }
+        public string Name
+        {
+            get { return this.model.Name; }
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    if (!this.viewModel.Endpoints.Any(e => e.Name.Equals(value, StringComparison.OrdinalIgnoreCase) && e.ID != this.ID))
+                    {
+                        this.model.Name = value;
+                        this.NotifyPropertyChanged();
+                    }
+                }
+            }
+        }
+        public int PortNumber
+        {
+            get { return this.model.PortNumber; }
+            set
+            {
+                if (value > 0 && value < Math.Pow(2, 16))
+                {
+                    if (!this.viewModel.Endpoints.Any(e => e.PortNumber == this.PortNumber && e.ID != this.ID))
+                    {
+                        Task.Run(async () =>
+                        {
+                            await ServiceManager.Get<OverlayV3Service>().RemoveOverlayEndpoint(this.ID);
 
-        public string Address { get { return string.Format(OverlayEndpointService.RegularOverlayHttpListenerServerAddressFormat, this.PortNumber); } }
+                            int oldPortNumber = this.model.PortNumber;
+                            this.model.PortNumber = value;
 
-        public bool CanDelete { get { return !OverlayEndpointV3Model.DefaultOverlayName.Equals(this.Name); } }
+                            if (await ServiceManager.Get<OverlayV3Service>().AddOverlayEndpoint(this.model))
+                            {
+                                this.NotifyPropertyChanged();
+                            }
+                            else
+                            {
+                                this.model.PortNumber = oldPortNumber;
+                            }
+                        });
+                    }
+                }
+            }
+        }
+
+        public string Address { get { return this.model.Address; } }
+
+        public bool CanDelete { get { return this.ID != Guid.Empty; } }
 
         public ICommand DeleteCommand { get; set; }
 
