@@ -367,6 +367,21 @@ namespace MixItUp.Base.Services
             }
         }
 
+        public async Task SendResponsiveVoice(OverlayResponsiveVoiceTextToSpeechV3Model item)
+        {
+            try
+            {
+                if (item != null)
+                {
+                    await this.webSocketServer.Send(new OverlayV3Packet("ResponsiveVoice", await item.GetProcessedItem(new CommandParametersModel())));
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
         public void StartBatching()
         {
             this.isBatching = true;

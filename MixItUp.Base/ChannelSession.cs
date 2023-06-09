@@ -78,6 +78,7 @@ namespace MixItUp.Base
             ServiceManager.Add(new DiscordService());
             ServiceManager.Add(new PixelChatService());
             ServiceManager.Add(new VTubeStudioService());
+            ServiceManager.Add(new ResponsiveVoiceService());
             try
             {
                 Type voicemodServiceType = Type.GetType("MixItUp.Base.Services.External.VoicemodService");
