@@ -65,6 +65,12 @@
     <StartupObject>MixItUp.WPF.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AWSSDK.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
+      <HintPath>..\packages\AWSSDK.Core.3.7.107.4\lib\net45\AWSSDK.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="AWSSDK.Polly, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
+      <HintPath>..\packages\AWSSDK.Polly.3.7.107.6\lib\net45\AWSSDK.Polly.dll</HintPath>
+    </Reference>
     <Reference Include="EngineIoClientDotNet, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EngineIoClientDotNet.1.0.6\lib\net45\EngineIoClientDotNet.dll</HintPath>
     </Reference>
@@ -1147,6 +1153,7 @@
       <DependentUpon>ConfirmationDialogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
+    <Compile Include="Services\AmazonPollyService.cs" />
     <Compile Include="Services\WindowsScriptRunnerService.cs" />
     <Compile Include="Services\DeveloperAPI\V1\ChatV1Controller.cs" />
     <Compile Include="Services\DeveloperAPI\V1\QuotesV1Controller.cs" />
@@ -2965,7 +2972,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Analyzer Include="..\packages\AWSSDK.Polly.3.7.107.6\analyzers\dotnet\cs\AWSSDK.Polly.CodeAnalysis.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

@@ -57,6 +57,7 @@ namespace MixItUp.WPF
                 ServiceManager.Add<IOBSStudioService>(new WindowsOBSService());
                 ServiceManager.Add<ITwitterService>(new WindowsTwitterService());
                 ServiceManager.Add(new WindowsSpeechService());
+                ServiceManager.Add(new AmazonPollyService());
 
                 ChannelSession.Initialize().Wait();
 

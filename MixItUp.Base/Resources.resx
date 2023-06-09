@@ -9953,4 +9953,7 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="WindowsTextToSpeech" xml:space="preserve">
     <value>Windows Text To Speech</value>
   </data>
+  <data name="AmazonPolly" xml:space="preserve">
+    <value>Amazon Polly</value>
+  </data>
 </root>

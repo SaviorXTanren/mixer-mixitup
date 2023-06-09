@@ -880,6 +880,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Amazon Polly.
+        /// </summary>
+        public static string AmazonPolly {
+            get {
+                return ResourceManager.GetString("AmazonPolly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Amber.
         /// </summary>
         public static string Amber {
