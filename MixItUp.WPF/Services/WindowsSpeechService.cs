@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Services.External;
+using System;
 using System.Collections.Generic;
 using System.Speech.Synthesis;
 using System.Threading.Tasks;
@@ -37,7 +38,7 @@ namespace MixItUp.WPF.Services
             return voices;
         }
 
-        public async Task Speak(string text, string voice, int volume, int pitch, int rate, bool waitForFinish)
+        public async Task Speak(Guid overlayEndpointID, string text, string voice, int volume, int pitch, int rate, bool waitForFinish)
         {
             Task task = Task.Run(() =>
             {

@@ -1,17 +1,17 @@
-﻿using System.Net.WebSockets;
-using System;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
-using System.Threading.Tasks;
-using System.Net;
+using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using StreamingClient.Base.Util;
-using Newtonsoft.Json.Linq;
-using MixItUp.Base.Model.Overlay;
 using System.Linq;
-using MixItUp.Base.Services.External;
-using MixItUp.Base.Model.Commands;
+using System.Net;
+using System.Net.WebSockets;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
@@ -20,6 +20,22 @@ namespace MixItUp.Base.Services
         public JArray Data { get; set; } = new JArray();
 
         public OverlayV3Packet() { }
+
+        public OverlayV3Packet(string json)
+        {
+            this.Type = string.Empty;
+            this.Data = new JArray();
+
+            JObject jobj = JObject.Parse(json);
+            if (jobj.TryGetValue("Type", out JToken type))
+            {
+                this.Type = type.ToString();
+            }
+            if (jobj.TryGetValue("Data", out JToken data) && data is JArray)
+            {
+                this.Data = (JArray)data;
+            }
+        }
         
         public OverlayV3Packet(string type, object data)
         {
@@ -249,6 +265,8 @@ namespace MixItUp.Base.Services
         public event EventHandler OnWebSocketConnectedOccurred = delegate { };
         public event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectedOccurred = delegate { };
 
+        public event EventHandler<OverlayV3Packet> OnPacketReceived = delegate { };
+
         public OverlayEndpointV3Model Model { get; private set; }
 
         public Guid ID { get { return this.Model.ID; } }
@@ -283,6 +301,7 @@ namespace MixItUp.Base.Services
                 {
                     this.webSocketServer.OnConnectedOccurred += WebSocketServer_OnConnectedOccurred;
                     this.webSocketServer.OnDisconnectOccurred += WebSocketServer_OnDisconnectOccurred;
+                    this.webSocketServer.OnPacketReceived += WebSocketServer_OnPacketReceived;
 
                     if (this.ID == Guid.Empty && !string.IsNullOrWhiteSpace(ChannelSession.Settings.OverlaySourceName))
                     {
@@ -319,6 +338,7 @@ namespace MixItUp.Base.Services
         {
             this.webSocketServer.OnConnectedOccurred -= WebSocketServer_OnConnectedOccurred;
             this.webSocketServer.OnDisconnectOccurred -= WebSocketServer_OnDisconnectOccurred;
+            this.webSocketServer.OnPacketReceived -= WebSocketServer_OnPacketReceived;
 
             this.httpListenerServer.Stop();
             await this.webSocketServer.Stop();
@@ -373,7 +393,7 @@ namespace MixItUp.Base.Services
             {
                 if (item != null)
                 {
-                    await this.webSocketServer.Send(new OverlayV3Packet("ResponsiveVoice", await item.GetProcessedItem(new CommandParametersModel())));
+                    await this.webSocketServer.Send(new OverlayV3Packet("ResponsiveVoice", item));
                 }
             }
             catch (Exception ex)
@@ -409,6 +429,11 @@ namespace MixItUp.Base.Services
         private void WebSocketServer_OnDisconnectOccurred(object sender, WebSocketCloseStatus closeStatus)
         {
             this.OnWebSocketDisconnectedOccurred(this, closeStatus);
+        }
+
+        private void WebSocketServer_OnPacketReceived(object sender, OverlayV3Packet packet)
+        {
+            this.OnPacketReceived(sender, packet);
         }
     }
 
@@ -554,22 +579,41 @@ namespace MixItUp.Base.Services
 
     public class OverlayV3WebSocketHttpListenerServer : WebSocketHttpListenerServerBase
     {
+        public event EventHandler<OverlayV3Packet> OnPacketReceived = delegate { };
+
         public OverlayV3WebSocketHttpListenerServer() { }
 
         public async Task Send(OverlayV3Packet packet) { await base.Send(JSONSerializerHelper.SerializeToString(packet)); }
 
+        public void PacketReceived(OverlayV3Packet packet) { this.OnPacketReceived(this, packet); }
+
         protected override WebSocketServerBase CreateWebSocketServer(HttpListenerContext listenerContext)
         {
-            return new OverlayV3WebSocketServer(listenerContext);
+            return new OverlayV3WebSocketServer(this, listenerContext);
         }
     }
 
     public class OverlayV3WebSocketServer : WebSocketServerBase
     {
-        public OverlayV3WebSocketServer(HttpListenerContext listenerContext) : base(listenerContext) { }
+        private OverlayV3WebSocketHttpListenerServer server;
+
+        public OverlayV3WebSocketServer(OverlayV3WebSocketHttpListenerServer server, HttpListenerContext listenerContext)
+            : base(listenerContext)
+        {
+            this.server = server;
+        }
 
         protected override Task ProcessReceivedPacket(string packetJSON)
         {
+            try
+            {
+                this.server.PacketReceived(new OverlayV3Packet(packetJSON));
+            }
+            catch (Exception)
+            {
+                Logger.Log("Bad Overlay Packet Parsing: " + packetJSON);
+            }
+
             return base.ProcessReceivedPacket(packetJSON);
         }
     }

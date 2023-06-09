@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -113,12 +114,39 @@ namespace MixItUp.Base.Services.External
 
         public IEnumerable<TextToSpeechVoice> GetVoices() { return ResponsiveVoiceService.AvailableVoices; }
 
-        public async Task Speak(string text, string voice, int volume, int pitch, int rate, bool waitForFinish)
+        private HashSet<string> completedRequests = new HashSet<string>();
+
+        public async Task Speak(Guid overlayEndpointID, string text, string voice, int volume, int pitch, int rate, bool waitForFinish)
         {
-            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpointService();
+            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(overlayEndpointID);
             if (overlay != null)
             {
-                await overlay.SendResponsiveVoice(new OverlayResponsiveVoiceTextToSpeechV3Model(text, voice, ((double)volume) / 100.0, ((double)pitch) / 100.0, ((double)rate) / 100.0, waitForFinish));
+                if (waitForFinish)
+                {
+                    overlay.OnPacketReceived += Overlay_OnPacketReceived;
+                }
+
+                OverlayResponsiveVoiceTextToSpeechV3Model ttsRequset = new OverlayResponsiveVoiceTextToSpeechV3Model(text, voice, ((double)volume) / 100.0, ((double)pitch) / 100.0, ((double)rate) / 100.0, waitForFinish);
+                await overlay.SendResponsiveVoice(ttsRequset);
+
+                if (waitForFinish)
+                {
+                    do
+                    {
+                        await Task.Delay(1000);
+                    } while (!this.completedRequests.Contains(ttsRequset.ID.ToString()));
+
+                    this.completedRequests.Remove(ttsRequset.ID.ToString());
+                    overlay.OnPacketReceived -= Overlay_OnPacketReceived;
+                }
+            }
+        }
+
+        private void Overlay_OnPacketReceived(object sender, OverlayV3Packet packet)
+        {
+            if (packet.Type.Equals("ResponseVoiceTextToSpeechComplete"))
+            {
+                this.completedRequests.Add(packet.Data.First.ToString());
             }
         }
     }

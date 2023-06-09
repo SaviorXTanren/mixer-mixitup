@@ -1,6 +1,5 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using System;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -29,43 +28,13 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayResponsiveVoiceTextToSpeechV3Model(string text, string voice, double volume, double pitch, double rate, bool waitForFinish)
         {
+            this.ID = Guid.NewGuid();
             this.Text = text;
             this.Voice = voice;
             this.Volume = volume;
             this.Pitch = pitch;
             this.Rate = rate;
             this.WaitForFinish = waitForFinish;
-        }
-
-        protected override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, CommandParametersModel parameters)
-        {
-            item = await base.GetProcessedItem(item, parameters);
-
-            item.HTML = ReplaceProperty(item.HTML, nameof(this.Text), this.Text);
-            item.CSS = ReplaceProperty(item.CSS, nameof(this.Text), this.Text);
-            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.Text), this.Text);
-
-            item.HTML = ReplaceProperty(item.HTML, nameof(this.Voice), this.Voice);
-            item.CSS = ReplaceProperty(item.CSS, nameof(this.Voice), this.Voice);
-            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.Voice), this.Voice);
-
-            item.HTML = ReplaceProperty(item.HTML, nameof(this.Volume), this.Volume.ToString());
-            item.CSS = ReplaceProperty(item.CSS, nameof(this.Volume), this.Volume.ToString());
-            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.Volume), this.Volume.ToString());
-
-            item.HTML = ReplaceProperty(item.HTML, nameof(this.Pitch), this.Pitch.ToString());
-            item.CSS = ReplaceProperty(item.CSS, nameof(this.Pitch), this.Pitch.ToString());
-            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.Pitch), this.Pitch.ToString());
-
-            item.HTML = ReplaceProperty(item.HTML, nameof(this.Rate), this.Rate.ToString());
-            item.CSS = ReplaceProperty(item.CSS, nameof(this.Rate), this.Rate.ToString());
-            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.Rate), this.Rate.ToString());
-
-            item.HTML = ReplaceProperty(item.HTML, nameof(this.WaitForFinish), this.WaitForFinish.ToString());
-            item.CSS = ReplaceProperty(item.CSS, nameof(this.WaitForFinish), this.WaitForFinish.ToString());
-            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.WaitForFinish), this.WaitForFinish.ToString());
-
-            return item;
         }
     }
 }

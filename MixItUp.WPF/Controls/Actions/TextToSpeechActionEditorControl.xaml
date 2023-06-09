@@ -28,7 +28,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="300" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="300" />
             </Grid.ColumnDefinitions>
 
             <ComboBox Grid.Column="0" ItemsSource="{Binding ProviderTypes}" SelectedItem="{Binding SelectedProviderType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
@@ -39,7 +39,11 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <TextBlock Grid.Column="2" Visibility="{Binding OverlayNotEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,10" Foreground="Red" Text="{x:Static resx:Resources.EnableOverlay}"/>
+            <Grid Grid.Column="2" Visibility="{Binding UsesOverlay, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right">
+                <TextBlock Visibility="{Binding OverlayNotEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Margin="0,0,0,10" Foreground="Red" Text="{x:Static resx:Resources.EnableOverlay}"/>
+
+                <ComboBox Visibility="{Binding OverlayEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding OverlayEndpoints}" SelectedItem="{Binding SelectedOverlayEndpoint}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverlayEndpoints}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="300" />
+            </Grid>
         </Grid>
 
         <Grid Grid.Row="2">

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
@@ -28,7 +29,36 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private TextToSpeechProviderType selectedProviderType = TextToSpeechProviderType.WindowsTextToSpeech;
 
-        public bool OverlayNotEnabled { get { return this.SelectedProviderType == TextToSpeechProviderType.WindowsTextToSpeech && !ServiceManager.Get<OverlayV3Service>().IsConnected; } }
+        public bool UsesOverlay
+        {
+            get
+            {
+                return this.SelectedProviderType == TextToSpeechProviderType.ResponsiveVoice;
+            }
+        }
+        public bool OverlayEnabled { get { return this.UsesOverlay && ServiceManager.Get<OverlayV3Service>().IsConnected; } }
+        public bool OverlayNotEnabled { get { return this.UsesOverlay && !ServiceManager.Get<OverlayV3Service>().IsConnected; } }
+
+        public IEnumerable<OverlayEndpointV3Model> OverlayEndpoints { get { return ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoints(); } }
+
+        public OverlayEndpointV3Model SelectedOverlayEndpoint
+        {
+            get { return this.selectedOverlayEndpoint; }
+            set
+            {
+                var overlays = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoints();
+                if (overlays.Contains(value))
+                {
+                    this.selectedOverlayEndpoint = value;
+                }
+                else
+                {
+                    this.selectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
+                }
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayEndpointV3Model selectedOverlayEndpoint;
 
         public ThreadSafeObservableCollection<TextToSpeechVoice> Voices { get; private set; } = new ThreadSafeObservableCollection<TextToSpeechVoice>();
 
@@ -111,6 +141,11 @@ namespace MixItUp.Base.ViewModel.Actions
             : base(action)
         {
             this.selectedProviderType = action.ProviderType;
+            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoint(action.OverlayEndpointID);
+            if (this.SelectedOverlayEndpoint == null)
+            {
+                this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
+            }
             this.SelectedVoice = this.Voices.FirstOrDefault(v => string.Equals(v.ID, action.Voice, StringComparison.OrdinalIgnoreCase));
             this.Text = action.Text;
             this.Volume = action.Volume;
@@ -122,6 +157,7 @@ namespace MixItUp.Base.ViewModel.Actions
         public TextToSpeechActionEditorControlViewModel()
             : base()
         {
+            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
             this.UpdateTextToSpeechProvider();
         }
 
@@ -155,7 +191,11 @@ namespace MixItUp.Base.ViewModel.Actions
             return Task.FromResult(new Result());
         }
 
-        protected override Task<ActionModelBase> GetActionInternal() { return Task.FromResult<ActionModelBase>(new TextToSpeechActionModel(this.SelectedProviderType, this.Text, this.SelectedVoice.ID, this.Volume, this.Pitch, this.Rate, this.WaitForFinish)); }
+        protected override Task<ActionModelBase> GetActionInternal()
+        {
+            return Task.FromResult<ActionModelBase>(new TextToSpeechActionModel(
+                this.SelectedProviderType, this.SelectedOverlayEndpoint.ID, this.Text, this.SelectedVoice.ID, this.Volume, this.Pitch, this.Rate, this.WaitForFinish));
+        }
 
         private void UpdateTextToSpeechProvider()
         {
@@ -163,6 +203,8 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 if (service.ProviderType == this.SelectedProviderType)
                 {
+                    this.NotifyPropertyChanged(nameof(this.UsesOverlay));
+                    this.NotifyPropertyChanged(nameof(this.OverlayEnabled));
                     this.NotifyPropertyChanged(nameof(this.OverlayNotEnabled));
 
                     string voiceID = (this.SelectedVoice != null) ? this.SelectedVoice.ID : null;
@@ -190,7 +232,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
                     this.RateMinimum = service.RateMinimum;
                     this.RateMaximum = service.RateMaximum;
-                    this.RateMinimum = this.RateChangable ? service.RateDefault : 0;
+                    this.Rate = this.RateChangable ? service.RateDefault : 0;
                     this.NotifyPropertyChanged(nameof(this.RateMinimum));
                     this.NotifyPropertyChanged(nameof(this.RateMaximum));
                     this.NotifyPropertyChanged(nameof(this.RateChangable));
