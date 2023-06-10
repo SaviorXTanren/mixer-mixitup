@@ -133,7 +133,7 @@ namespace MixItUp.Base.Services.External
                 {
                     do
                     {
-                        await Task.Delay(1000);
+                        await Task.Delay(100);
                     } while (!this.completedRequests.Contains(ttsRequset.ID.ToString()));
 
                     this.completedRequests.Remove(ttsRequset.ID.ToString());

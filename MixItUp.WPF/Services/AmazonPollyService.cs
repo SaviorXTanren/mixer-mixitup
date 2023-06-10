@@ -2,10 +2,12 @@
 using Amazon.Polly;
 using Amazon.Polly.Model;
 using Amazon.Runtime;
+using IronPython.Runtime;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -124,7 +126,13 @@ namespace MixItUp.WPF.Services
 
                     if (response.HttpStatusCode == HttpStatusCode.OK && response.AudioStream != null)
                     {
-                        // Play audio stream
+                        MemoryStream stream = new MemoryStream();
+                        using (response.AudioStream)
+                        {
+                            response.AudioStream.CopyTo(stream);
+                            stream.Position = 0;
+                        }
+                        await ServiceManager.Get<IAudioService>().Play(stream, volume, null, waitForFinish: true);
                     }
                 }
             }

@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
@@ -17,72 +16,92 @@ namespace MixItUp.WPF.Services
         public string DefaultAudioDevice { get { return MixItUp.Base.Resources.DefaultOutput; } }
         public string MixItUpOverlay { get { return MixItUp.Base.Resources.MixItUpOverlay; } }
 
-        public async Task Play(string filePath, int volume)
-        {
-            await ServiceManager.Get<IAudioService>().Play(filePath, volume, null);
-        }
-
-        public async Task Play(string filePath, int volume, string deviceName)
+        public async Task Play(string filePath, int volume, string deviceName, bool waitForFinish = false)
         {
             if (!string.IsNullOrEmpty(filePath))
             {
-                if (string.IsNullOrEmpty(deviceName))
-                {
-                    deviceName = ChannelSession.Settings.DefaultAudioOutput;
-                }
+                await this.PlayInternal(filePath, null, volume, deviceName, waitForFinish);
+            }
+        }
 
-                if (this.MixItUpOverlay.Equals(deviceName))
+        public async Task Play(Stream stream, int volume, string deviceName, bool waitForFinish = false)
+        {
+            if (stream != null && stream.CanRead)
+            {
+                await this.PlayInternal(null, stream, volume, deviceName, waitForFinish);
+            }
+        }
+
+        private async Task PlayInternal(string filePath, Stream stream, int volume, string deviceName, bool waitForFinish)
+        {
+            if (string.IsNullOrEmpty(deviceName))
+            {
+                deviceName = ChannelSession.Settings.DefaultAudioOutput;
+            }
+
+            if (this.MixItUpOverlay.Equals(deviceName))
+            {
+                OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpointService();
+                if (overlay != null)
                 {
-                    OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpointService();
-                    if (overlay != null)
+                    var overlayItem = new OverlaySoundItemModel(filePath, volume);
+                    //await overlay.ShowItem(overlayItem, new CommandParametersModel());
+                }
+            }
+            else
+            {
+                Task task = Task.Run(async () =>
+                {
+                    int deviceNumber = -1;
+                    if (!string.IsNullOrEmpty(deviceName))
                     {
-                        var overlayItem = new OverlaySoundItemModel(filePath, volume);
-                        //await overlay.ShowItem(overlayItem, new CommandParametersModel());
+                        deviceNumber = this.GetOutputDeviceID(deviceName);
                     }
-                }
-                else
-                {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    Task.Run(async () =>
+
+                    float floatVolume = MathHelper.Clamp(volume, 0, 100) / 100.0f;
+
+                    using (WaveOutEvent outputDevice = (deviceNumber < 0) ? new WaveOutEvent() : new WaveOutEvent() { DeviceNumber = deviceNumber })
                     {
-                        int deviceNumber = -1;
-                        if (!string.IsNullOrEmpty(deviceName))
+                        WaveStream waveStream = null;
+                        if (stream != null)
                         {
-                            deviceNumber = this.GetOutputDeviceID(deviceName);
+                            waveStream = new BlockAlignReductionStream(WaveFormatConversionStream.CreatePcmStream(new Mp3FileReader(stream)));
+                            outputDevice.Volume = floatVolume;
+                        }
+                        else if (File.Exists(filePath))
+                        {
+                            AudioFileReader audioFile = new AudioFileReader(filePath);
+                            audioFile.Volume = floatVolume;
+                            waveStream = audioFile;
+                        }
+                        else if (filePath.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            waveStream = new MediaFoundationReader(filePath);
+                            outputDevice.Volume = floatVolume;
                         }
 
-                        float floatVolume = MathHelper.Clamp(volume, 0, 100) / 100.0f;
-
-                        using (WaveOutEvent outputDevice = (deviceNumber < 0) ? new WaveOutEvent() : new WaveOutEvent() { DeviceNumber = deviceNumber })
+                        if (waveStream != null)
                         {
-                            WaveStream waveStream = null;
-                            if (File.Exists(filePath))
+                            outputDevice.Init(waveStream);
+                            outputDevice.Play();
+
+                            while (outputDevice.PlaybackState == PlaybackState.Playing)
                             {
-                                AudioFileReader audioFile = new AudioFileReader(filePath);
-                                audioFile.Volume = floatVolume;
-                                waveStream = audioFile;
-                            }
-                            else if (filePath.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                waveStream = new MediaFoundationReader(filePath);
-                                outputDevice.Volume = floatVolume;
+                                await Task.Delay(500);
                             }
 
-                            if (waveStream != null)
+                            waveStream.Dispose();
+                            if (stream != null)
                             {
-                                outputDevice.Init(waveStream);
-                                outputDevice.Play();
-
-                                while (outputDevice.PlaybackState == PlaybackState.Playing)
-                                {
-                                    await Task.Delay(500);
-                                }
-
-                                waveStream.Dispose();
+                                stream.Dispose();
                             }
                         }
-                    });
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    }
+                });
+
+                if (waitForFinish)
+                {
+                    await task;
                 }
             }
         }
