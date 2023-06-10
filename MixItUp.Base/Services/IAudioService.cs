@@ -11,7 +11,9 @@ namespace MixItUp.Base.Services
 
         Task Play(string filePath, int volume, string deviceName, bool waitForFinish = false);
 
-        Task Play(Stream stream, int volume, string deviceName, bool waitForFinish = false);
+        Task PlayMP3(Stream stream, int volume, string deviceName, bool waitForFinish = false);
+
+        Task PlayPCM(Stream stream, int volume, string deviceName, bool waitForFinish = false);
 
         IEnumerable<string> GetSelectableAudioDevices();
 

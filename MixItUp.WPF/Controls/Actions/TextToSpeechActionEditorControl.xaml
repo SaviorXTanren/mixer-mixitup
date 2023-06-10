@@ -39,6 +39,8 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
+            <ComboBox Grid.Column="2" Visibility="{Binding UsesAudioDevices}" ItemsSource="{Binding AudioDevices}" SelectedItem="{Binding SelectedAudioDevice}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AudioOutputDevice}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="300" />
+
             <Grid Grid.Column="2" Visibility="{Binding UsesOverlay, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right">
                 <TextBlock Visibility="{Binding OverlayNotEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Margin="0,0,0,10" Foreground="Red" Text="{x:Static resx:Resources.EnableOverlay}"/>
 

@@ -1,6 +1,9 @@
-﻿using MixItUp.Base.Services.External;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Speech.AudioFormat;
 using System.Speech.Synthesis;
 using System.Threading.Tasks;
 
@@ -38,27 +41,24 @@ namespace MixItUp.WPF.Services
             return voices;
         }
 
-        public async Task Speak(Guid overlayEndpointID, string text, string voice, int volume, int pitch, int rate, bool waitForFinish)
+        public async Task Speak(string outputDevice, Guid overlayEndpointID, string text, string voice, int volume, int pitch, int rate, bool waitForFinish)
         {
-            Task task = Task.Run(() =>
+            MemoryStream stream = new MemoryStream();
+            using (SpeechSynthesizer synthesizer = new SpeechSynthesizer())
             {
-                using (SpeechSynthesizer synthesizer = new SpeechSynthesizer())
+                synthesizer.SetOutputToAudioStream(stream, new SpeechAudioFormatInfo(EncodingFormat.Pcm, 88200, 16, 1, 16000, 2, null));
+                if (!string.IsNullOrWhiteSpace(voice))
                 {
-                    synthesizer.SetOutputToDefaultAudioDevice();
-                    if (!string.IsNullOrWhiteSpace(voice))
-                    {
-                        synthesizer.SelectVoice(voice);
-                    }
-                    synthesizer.Rate = rate;
-                    synthesizer.Volume = volume;
-                    synthesizer.Speak(text);
+                    synthesizer.SelectVoice(voice);
                 }
-            });
+                synthesizer.Rate = rate;
+                synthesizer.Volume = volume;
+                synthesizer.Speak(text);
 
-            if (waitForFinish)
-            {
-                await task;
+                stream.Position = 0;
             }
+
+            await ServiceManager.Get<IAudioService>().PlayPCM(stream, volume, outputDevice, waitForFinish);
         }
     }
 }

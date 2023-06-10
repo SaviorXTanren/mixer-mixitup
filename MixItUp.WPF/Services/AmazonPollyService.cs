@@ -105,7 +105,7 @@ namespace MixItUp.WPF.Services
 
         public IEnumerable<TextToSpeechVoice> GetVoices() { return AmazonPollyService.AvailableVoices; }
 
-        public async Task Speak(Guid overlayEndpointID, string text, string voice, int volume, int pitch, int rate, bool waitForFinish)
+        public async Task Speak(string outputDevice, Guid overlayEndpointID, string text, string voice, int volume, int pitch, int rate, bool waitForFinish)
         {
             BasicAWSCredentials credentials = new BasicAWSCredentials(AmazonPollyService.AccessKey, ServiceManager.Get<SecretsService>().GetSecret("AmazonAWSSecretKey"));
             using (AmazonPollyClient client = new AmazonPollyClient(credentials, RegionEndpoint.USWest2))
@@ -132,7 +132,7 @@ namespace MixItUp.WPF.Services
                             response.AudioStream.CopyTo(stream);
                             stream.Position = 0;
                         }
-                        await ServiceManager.Get<IAudioService>().Play(stream, volume, null, waitForFinish: true);
+                        await ServiceManager.Get<IAudioService>().PlayMP3(stream, volume, outputDevice, waitForFinish: true);
                     }
                 }
             }

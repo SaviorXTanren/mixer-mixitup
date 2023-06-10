@@ -43,6 +43,6 @@ namespace MixItUp.Base.Services.External
 
         IEnumerable<TextToSpeechVoice> GetVoices();
 
-        Task Speak(Guid overlayEndpointID, string text, string voice, int volume, int pitch, int rate, bool waitForFinish);
+        Task Speak(string outputDevice, Guid overlayEndpointID, string text, string voice, int volume, int pitch, int rate, bool waitForFinish);
     }
 }

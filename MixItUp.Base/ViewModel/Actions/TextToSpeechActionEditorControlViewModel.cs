@@ -29,6 +29,26 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private TextToSpeechProviderType selectedProviderType = TextToSpeechProviderType.WindowsTextToSpeech;
 
+        public bool UsesAudioDevices
+        {
+            get
+            {
+                return this.SelectedProviderType == TextToSpeechProviderType.WindowsTextToSpeech ||
+                    this.SelectedProviderType == TextToSpeechProviderType.AmazonPolly;
+            }
+        }
+        public ThreadSafeObservableCollection<string> AudioDevices { get; set; } = new ThreadSafeObservableCollection<string>();
+        public string SelectedAudioDevice
+        {
+            get { return this.selectedAudioDevice; }
+            set
+            {
+                this.selectedAudioDevice = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string selectedAudioDevice;
+
         public bool UsesOverlay
         {
             get
@@ -140,12 +160,16 @@ namespace MixItUp.Base.ViewModel.Actions
         public TextToSpeechActionEditorControlViewModel(TextToSpeechActionModel action)
             : base(action)
         {
+            this.AudioDevices.AddRange(ServiceManager.Get<IAudioService>().GetSelectableAudioDevices());
+            this.SelectedAudioDevice = (action.OutputDevice != null) ? action.OutputDevice : ServiceManager.Get<IAudioService>().DefaultAudioDevice;
+
             this.selectedProviderType = action.ProviderType;
             this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoint(action.OverlayEndpointID);
             if (this.SelectedOverlayEndpoint == null)
             {
                 this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
             }
+
             this.SelectedVoice = this.Voices.FirstOrDefault(v => string.Equals(v.ID, action.Voice, StringComparison.OrdinalIgnoreCase));
             this.Text = action.Text;
             this.Volume = action.Volume;
@@ -157,7 +181,11 @@ namespace MixItUp.Base.ViewModel.Actions
         public TextToSpeechActionEditorControlViewModel()
             : base()
         {
+            this.AudioDevices.AddRange(ServiceManager.Get<IAudioService>().GetSelectableAudioDevices());
+            this.SelectedAudioDevice = ServiceManager.Get<IAudioService>().DefaultAudioDevice;
+
             this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
+
             this.UpdateTextToSpeechProvider();
         }
 
@@ -193,8 +221,14 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override Task<ActionModelBase> GetActionInternal()
         {
-            return Task.FromResult<ActionModelBase>(new TextToSpeechActionModel(
-                this.SelectedProviderType, this.SelectedOverlayEndpoint.ID, this.Text, this.SelectedVoice.ID, this.Volume, this.Pitch, this.Rate, this.WaitForFinish));
+            string audioDevice = null;
+            if (this.UsesAudioDevices && !string.Equals(this.SelectedAudioDevice, ServiceManager.Get<IAudioService>().DefaultAudioDevice))
+            {
+                audioDevice = this.SelectedAudioDevice;
+            }
+
+            return Task.FromResult<ActionModelBase>(new TextToSpeechActionModel(this.SelectedProviderType, audioDevice, this.SelectedOverlayEndpoint.ID,
+                this.Text, this.SelectedVoice.ID, this.Volume, this.Pitch, this.Rate, this.WaitForFinish));
         }
 
         private void UpdateTextToSpeechProvider()
@@ -203,6 +237,8 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 if (service.ProviderType == this.SelectedProviderType)
                 {
+                    this.NotifyPropertyChanged(nameof(this.UsesAudioDevices));
+
                     this.NotifyPropertyChanged(nameof(this.UsesOverlay));
                     this.NotifyPropertyChanged(nameof(this.OverlayEnabled));
                     this.NotifyPropertyChanged(nameof(this.OverlayNotEnabled));

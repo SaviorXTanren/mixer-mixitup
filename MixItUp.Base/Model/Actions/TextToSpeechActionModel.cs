@@ -14,6 +14,8 @@ namespace MixItUp.Base.Model.Actions
         public TextToSpeechProviderType ProviderType { get; set; }
 
         [DataMember]
+        public string OutputDevice { get; set; }
+        [DataMember]
         public Guid OverlayEndpointID { get; set; }
 
         [DataMember]
@@ -32,10 +34,11 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public bool WaitForFinish { get; set; }
 
-        public TextToSpeechActionModel(TextToSpeechProviderType providerType, Guid overlayEndpointID, string text, string voice, int volume, int pitch, int rate, bool waitForFinish)
+        public TextToSpeechActionModel(TextToSpeechProviderType providerType, string outputDevice, Guid overlayEndpointID, string text, string voice, int volume, int pitch, int rate, bool waitForFinish)
             : base(ActionTypeEnum.TextToSpeech)
         {
             this.ProviderType = providerType;
+            this.OutputDevice = outputDevice;
             this.OverlayEndpointID = overlayEndpointID;
             this.Text = text;
             this.Voice = voice;
@@ -55,7 +58,7 @@ namespace MixItUp.Base.Model.Actions
             {
                 if (service.ProviderType == this.ProviderType)
                 {
-                    await service.Speak(this.OverlayEndpointID, message, this.Voice, this.Volume, this.Pitch, this.Rate, this.WaitForFinish);
+                    await service.Speak(this.OutputDevice, this.OverlayEndpointID, message, this.Voice, this.Volume, this.Pitch, this.Rate, this.WaitForFinish);
                     break;
                 }
             }
