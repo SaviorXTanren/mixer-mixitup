@@ -17,7 +17,7 @@ namespace MixItUp.WPF.Services
 {
     public class AmazonPollyService : ITextToSpeechService
     {
-        public const string AccessKey = "AKIA6LQACJSKZSQUOSOM";
+        public const string AccessKey = "AKIAWQIVQ74JEQWGFQ3A";
 
         public static readonly IEnumerable<TextToSpeechVoice> AvailableVoices = new List<TextToSpeechVoice>()
         {
