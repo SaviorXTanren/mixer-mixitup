@@ -728,6 +728,8 @@ namespace MixItUp.Base.ViewModel.User
 
             this.PrimaryRole = this.Roles.Max();
 
+            this.RolesString = string.Join(", ", this.Roles.OrderBy(r => r).Select(r => r.ToString()));
+
             var displayRoles = new HashSet<UserRoleEnum>(this.Roles);
             if (displayRoles.Count > 1)
             {
@@ -754,7 +756,6 @@ namespace MixItUp.Base.ViewModel.User
             this.DisplayRoles = displayRoles;
 
             var sortedRoles = this.DisplayRoles.OrderByDescending(r => r);
-            this.RolesString = string.Join(", ", sortedRoles.Select(r => r.ToString()));
             this.DisplayRolesString = string.Join(", ", sortedRoles.Select(r => EnumLocalizationHelper.GetLocalizedName(r)));
 
             if (ChannelSession.Settings.UseCustomUsernameColors)
