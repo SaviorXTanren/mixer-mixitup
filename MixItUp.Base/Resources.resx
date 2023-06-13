@@ -9956,4 +9956,22 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="AmazonPolly" xml:space="preserve">
     <value>Amazon Polly</value>
   </data>
+  <data name="TTSMonster" xml:space="preserve">
+    <value>TTS.Monster</value>
+  </data>
+  <data name="TTSMonsterFailedToGetVoices" xml:space="preserve">
+    <value>Failed to get available voices. Please ensure you correctly copied over your TTS.Monster Overlay URL</value>
+  </data>
+  <data name="TTSMonsterInvalidURL" xml:space="preserve">
+    <value>Please enter a valid TTS.Monster URL ({0}).</value>
+  </data>
+  <data name="TTSMonsterInfo1" xml:space="preserve">
+    <value>TTS.Monster service connectivity allows you to trigger Text to Speech audio in commands using voices provided by TTS.Monster's service. To connect to TTS.Monster, head to your TTS.Monster dashboard page, copy your Overlay URL in the top-left corner of the page into the text box, and click Log In.</value>
+  </data>
+  <data name="TTSMonsterInfo2" xml:space="preserve">
+    <value>TTS.Monster usage restrictions and limits are set by their service. For more information, please see the Mix It Up Wiki page on the TTS.Monster service.</value>
+  </data>
+  <data name="TTSMonsterOverlayURL" xml:space="preserve">
+    <value>TTS.Monster Overlay URL</value>
+  </data>
 </root>

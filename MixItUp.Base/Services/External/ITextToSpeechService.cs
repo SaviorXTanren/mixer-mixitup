@@ -8,6 +8,7 @@ namespace MixItUp.Base.Services.External
     {
         WindowsTextToSpeech,
         ResponsiveVoice,
+        TTSMonster,
         AmazonPolly,
     }
 

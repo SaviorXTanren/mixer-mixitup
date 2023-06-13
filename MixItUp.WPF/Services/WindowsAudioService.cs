@@ -90,7 +90,7 @@ namespace MixItUp.WPF.Services
                         stream.Dispose();
                         if (initialStream != null)
                         {
-                            stream.Dispose();
+                            initialStream.Dispose();
                         }
                     }
                 });

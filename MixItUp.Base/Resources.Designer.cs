@@ -21144,6 +21144,60 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TTS.Monster.
+        /// </summary>
+        public static string TTSMonster {
+            get {
+                return ResourceManager.GetString("TTSMonster", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to get available voices. Please ensure you correctly copied over your TTS.Monster Overlay URL.
+        /// </summary>
+        public static string TTSMonsterFailedToGetVoices {
+            get {
+                return ResourceManager.GetString("TTSMonsterFailedToGetVoices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TTS.Monster service connectivity allows you to trigger Text to Speech audio in commands using voices provided by TTS.Monster&apos;s service. To connect to TTS.Monster, head to your TTS.Monster dashboard page, copy your Overlay URL in the top-left corner of the page into the text box, and click Log In..
+        /// </summary>
+        public static string TTSMonsterInfo1 {
+            get {
+                return ResourceManager.GetString("TTSMonsterInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TTS.Monster usage restrictions and limits are set by their service. For more information, please see the Mix It Up Wiki page on the TTS.Monster service..
+        /// </summary>
+        public static string TTSMonsterInfo2 {
+            get {
+                return ResourceManager.GetString("TTSMonsterInfo2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter a valid TTS.Monster URL ({0})..
+        /// </summary>
+        public static string TTSMonsterInvalidURL {
+            get {
+                return ResourceManager.GetString("TTSMonsterInvalidURL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TTS.Monster Overlay URL.
+        /// </summary>
+        public static string TTSMonsterOverlayURL {
+            get {
+                return ResourceManager.GetString("TTSMonsterOverlayURL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tweet Image URL (Optional).
         /// </summary>
         public static string TweetImageURL {

@@ -93,6 +93,8 @@ namespace MixItUp.Base.Model.Settings
         public OAuthTokenModel VTubeStudioOAuthToken { get; set; }
         [DataMember]
         public bool EnableVoicemodStudio { get; set; }
+        [DataMember]
+        public OAuthTokenModel TTSMonsterOAuthToken { get; set; }
 
         #endregion Authentication
 
@@ -824,6 +826,10 @@ namespace MixItUp.Base.Model.Settings
             if (ServiceManager.Get<VTubeStudioService>().IsConnected)
             {
                 this.VTubeStudioOAuthToken = ServiceManager.Get<VTubeStudioService>().GetOAuthTokenCopy();
+            }
+            if (ServiceManager.Get<ITTSMonsterService>().IsConnected)
+            {
+                this.TTSMonsterOAuthToken = ServiceManager.Get<ITTSMonsterService>().GetOAuthTokenCopy();
             }
         }
 
