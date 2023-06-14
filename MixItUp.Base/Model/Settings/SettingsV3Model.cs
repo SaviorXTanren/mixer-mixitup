@@ -699,6 +699,10 @@ namespace MixItUp.Base.Model.Settings
                         }
                         command = tbCommand;
                     }
+                    else if (type == CommandTypeEnum.CrowdControlEffect)
+                    {
+                        command = JSONSerializerHelper.DeserializeFromString<CrowdControlEffectCommandModel>(commandData);
+                    }
 
                     if (command != null)
                     {

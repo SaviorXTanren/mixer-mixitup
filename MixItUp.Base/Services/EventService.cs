@@ -135,6 +135,7 @@ namespace MixItUp.Base.Services
         StreamlootsPackGifted = 1092,
         StreamElementsDonation = 1100,
         StreamElementsMerchPurchase = 1101,
+        CrowdControlEffectRedeemed = 1110,
     }
 
     public class EventService

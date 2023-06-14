@@ -1,76 +1,200 @@
-﻿using Google.Apis.YouTubePartner.v1.Data;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
-using System.Threading;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.External
 {
-    public class CrowdControlEffectUpdateMessage
+    public class CrowdControlGame
     {
-        public string channelID { get; set; }
+        public string gameID { get; set; }
+        public JToken name { get; set; }
+        public List<string> packets { get; set; } = new List<string>();
+
+        public string Name { get { return (this.name is JObject) ? this.name["public"].ToString() : this.name.ToString(); } }
+    }
+
+    public class CrowdControlGamePack
+    {
+        public CrowdControlGame game { get; set; }
+        public string gamePackID { get; set; }
+        public CrowdControlGamePackMetadata meta { get; set; }
+        public Dictionary<string, Dictionary<string, CrowdControlGamePackEffect>> effects { get; set; } = new Dictionary<string, Dictionary<string, CrowdControlGamePackEffect>>();
+
+        public List<CrowdControlGamePackEffect> AllEffects { get; set; } = new List<CrowdControlGamePackEffect>();
+    }
+
+    public class CrowdControlGamePackMetadata
+    {
+        public string visibility { get; set; }
+        public string name { get; set; }
+    }
+
+    public class CrowdControlGamePackEffect
+    {
         public string id { get; set; }
-        public int state { get; set; }
-        public object effect { get; set; }
-        public int completedAt { get; set; }
-        public string type { get; set; }
+        public string name { get; set; }
+        public string description { get; set; }
+        public int price { get; set; }
+        public JObject quantity { get; set; } = new JObject();
+        public JObject duration { get; set; } = new JObject();
+        public List<string> category { get; set; } = new List<string>();
+        public int moral { get; set; }
     }
 
-    public class CrowdControlCoinExchangeMessage
+    public class CrowdControlWebSocketPacket
     {
-        public string channelID { get; set; }
-        public bool playSFX { get; set; }
-        public bool anonymous { get; set; }
-        public int timestamp { get; set; }
+        public string domain { get; set; }
         public string type { get; set; }
-        public int amount { get; set; }
-        public CrowdControlViewer viewer { get; set; }
+        public JObject payload { get; set; }
     }
 
-    public class CrowdControlViewer
+    public class CrowdControlWebSocketSubscriptionResultModel
+    {
+        public List<string> success { get; set; } = new List<string>();
+        public List<string> failure { get; set; } = new List<string>();
+    }
+
+    public class CrowdControlWebSocketEffectSuccessModel
+    {
+        public string requestID { get; set; }
+        public CrowdControlWebSocketEffectDetailsModel effect { get; set; }
+        public CrowdControlWebSocketGameModel game { get; set; }
+        public int quantity { get; set; }
+        public CrowdControlWebSocketUserModel target { get; set; }
+        public CrowdControlWebSocketUserModel requester { get; set; }
+    }
+
+    public class CrowdControlWebSocketEffectDetailsModel
     {
         public string name { get; set; }
-        public string twitchID { get; set; }
-        public string twitchAvatarURL { get; set; }
+        public string description { get; set; }
+        public string effectID { get; set; }
+        public string type { get; set; }
+        public string image { get; set; }
+    }
+
+    public class CrowdControlWebSocketGameModel
+    {
+        public string gameID { get; set; }
+        public string name { get; set; }
+    }
+
+    public class CrowdControlWebSocketUserModel
+    {
+        public string ccUID { get; set; }
+        public string image { get; set; }
+        public string originID { get; set; }
+        public string profile { get; set; }
+        public string name { get; set; }
     }
 
     public class CrowdControlWebSocket : ClientWebSocketBase
     {
-        protected override async Task ProcessReceivedPacket(string packet)
-        {
-            if (!string.IsNullOrEmpty(packet) && !packet.StartsWith("0"))
-            {
-                if (packet.Equals("2"))
-                {
-                    await this.Send("3");
-                }
-                else
-                {
-                    //CrowdControlEffectUpdateMessage effectUpdate = JSONSerializerHelper.DeserializeFromString<CrowdControlEffectUpdateMessage>(data.ToString());
-                    //if (effectUpdate != null)
-                    //{
-                    //      "effect-initial"
-                    //}
+        public string SubscriptionTopic { get; private set; }
+        public bool Subscribed { get; private set; }
+        public List<string> ConnectionFailures { get; private set; } = new List<string>();
 
-                    //CrowdControlCoinExchangeMessage coinExchange = JSONSerializerHelper.DeserializeFromString<CrowdControlCoinExchangeMessage>(data.ToString());
-                    //if (coinExchange != null)
-                    //{
-                    //      "coin-message"
-                    //}
+        public async Task SendPublicConnect(string id)
+        {
+            this.SubscriptionTopic = "pub/" + id;
+            this.Subscribed = false;
+            this.ConnectionFailures.Clear();
+
+            JObject jobj = new JObject();
+            jobj["action"] = "subscribe";
+            jobj["data"] = "{\"topics\":[\"" + this.SubscriptionTopic + "\"]}";
+            await this.Send(JSONSerializerHelper.SerializeToString(jobj, includeObjectType: false));
+        }
+
+        protected override async Task ProcessReceivedPacket(string packetJSON)
+        {
+            try
+            {
+                CrowdControlWebSocketPacket packet = JSONSerializerHelper.DeserializeFromString<CrowdControlWebSocketPacket>(packetJSON);
+                if (packet != null)
+                {
+                    if (string.Equals(packet.type, "subscription-result", StringComparison.OrdinalIgnoreCase))
+                    {
+                        CrowdControlWebSocketSubscriptionResultModel subscription = packet.payload.ToObject<CrowdControlWebSocketSubscriptionResultModel>();
+                        if (subscription != null)
+                        {
+                            if (subscription.failure != null && subscription.failure.Count > 0)
+                            {
+                                this.ConnectionFailures.AddRange(subscription.failure);
+                            }
+                            else if (subscription.success != null && subscription.success.Contains(this.SubscriptionTopic))
+                            {
+                                this.Subscribed = true;
+                            }
+                        }
+                    }
+                    else if (string.Equals(packet.type, "effect-success", StringComparison.OrdinalIgnoreCase))
+                    {
+                        CrowdControlWebSocketEffectSuccessModel effect = packet.payload.ToObject<CrowdControlWebSocketEffectSuccessModel>();
+                        if (effect != null)
+                        {
+                            UserV2ViewModel requester = null;
+                            if (string.Equals(effect.requester.profile, StreamingPlatformTypeEnum.Twitch.ToString(), StringComparison.OrdinalIgnoreCase))
+                            {
+                                requester = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, effect.requester.originID);
+                            }
+                            else if (string.Equals(effect.requester.profile, StreamingPlatformTypeEnum.YouTube.ToString(), StringComparison.OrdinalIgnoreCase))
+                            {
+                                requester = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.YouTube, effect.requester.originID);
+                            }
+
+                            if (requester == null)
+                            {
+                                requester = UserV2ViewModel.CreateUnassociated(effect.requester.name);
+                            }
+
+                            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+                            specialIdentifiers["crowdcontroleffectid"] = effect.effect.effectID;
+                            specialIdentifiers["crowdcontroleffectname"] = effect.effect.name;
+                            specialIdentifiers["crowdcontroleffectdescription"] = effect.effect.description;
+                            specialIdentifiers["crowdcontroleffectimage"] = effect.effect.image;
+                            specialIdentifiers["crowdcontrolgamename"] = effect.game.name;
+
+                            CommandParametersModel parameters = new CommandParametersModel(requester, specialIdentifiers);
+
+                            CrowdControlEffectCommandModel command = ServiceManager.Get<CommandService>().CrowdControlEffectCommands.FirstOrDefault(c =>
+                                string.Equals(c.GameID, effect.game.gameID, StringComparison.OrdinalIgnoreCase) &&
+                                string.Equals(c.EffectID, effect.effect.effectID, StringComparison.OrdinalIgnoreCase));
+
+                            for (int i = 0; i < effect.quantity; i++)
+                            {
+                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.CrowdControlEffectRedeemed, parameters);
+                                if (command != null)
+                                {
+                                    await ServiceManager.Get<CommandService>().Queue(command, parameters);
+                                }
+                            }
+                        }
+                    }
                 }
             }
-
-            Logger.Log(packet);
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                Logger.Log("CrowdControl Service - Failed Packet Processing: " + packetJSON);
+            }
         }
     }
 
     public class CrowdControlService : IExternalService
     {
-        private const string ConnectionURL = "wss://overlay-socket.crowdcontrol.live/socket.io/?EIO=4&transport=websocket";
+        private const string ConnectionURL = "wss://r8073rtqd8.execute-api.us-east-1.amazonaws.com/staging";
 
         public string Name { get { return Resources.CrowdControl; } }
 
@@ -78,22 +202,71 @@ namespace MixItUp.Base.Services.External
 
         private CrowdControlWebSocket socket;
 
-        public CrowdControlService() { }
+        private string id;
+
+        private IEnumerable<CrowdControlGame> gamesCache = new List<CrowdControlGame>();
+
+        private Dictionary<string, IEnumerable<CrowdControlGamePackEffect>> gameEffects = new Dictionary<string, IEnumerable<CrowdControlGamePackEffect>>();
+
+        public CrowdControlService()
+        {
+            this.socket = new CrowdControlWebSocket();
+        }
 
         public async Task<Result> Connect()
         {
-            if (!ServiceManager.Get<TwitchSessionService>().IsConnected)
-            {
-                return new Result(Resources.CrowdControlTwitchAccountMustBeConnected);
-            }
-
             try
             {
-                this.socket = new CrowdControlWebSocket();
-                this.socket.OnDisconnectOccurred += Socket_OnDisconnectOccurred;
-                if (await this.socket.Connect(CrowdControlService.ConnectionURL))
+                this.id = null;
+                this.IsConnected = false;
+                await this.Disconnect();
+
+                if (ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
-                    //await this.socket.Send("[\"events\",\"DamagedPlushie\"]");
+                    this.id = await this.GetCrowdControlID(StreamingPlatformTypeEnum.Twitch.ToString(), ServiceManager.Get<TwitchSessionService>().UserID);
+                }
+                else if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
+                {
+                    this.id = await this.GetCrowdControlID(StreamingPlatformTypeEnum.YouTube.ToString(), ServiceManager.Get<YouTubeSessionService>().UserID);
+                }
+
+                if (string.IsNullOrEmpty(this.id))
+                {
+                    return new Result(Resources.CrowdControlTwitchAccountMustBeConnected);
+                }
+
+                if (this.gamesCache.Count() == 0)
+                {
+                    using (AdvancedHttpClient client = new AdvancedHttpClient())
+                    {
+                        this.gamesCache = await client.GetAsync<IEnumerable<CrowdControlGame>>("https://openapi.crowdcontrol.live/games");
+                        this.gamesCache = this.gamesCache.OrderBy(g => g.Name);
+                    }
+                }
+
+                if (ChannelSession.IsDebug())
+                {
+                    this.socket.OnSentOccurred += Socket_OnSentOccurred;
+                    this.socket.OnTextReceivedOccurred += Socket_OnTextReceivedOccurred;
+                }
+                this.socket.OnDisconnectOccurred += Socket_OnDisconnectOccurred;
+                await this.socket.Connect(CrowdControlService.ConnectionURL);
+
+                await this.socket.SendPublicConnect(this.id);
+
+                for (int i = 0; i < 5; i++)
+                {
+                    await Task.Delay(1000);
+                    if (this.socket.Subscribed)
+                    {
+                        this.IsConnected = true;
+                        return new Result();
+                    }
+                    else if (this.socket.ConnectionFailures.Count > 0)
+                    {
+                        await this.Disconnect();
+                        return new Result(string.Join(" - ", this.socket.ConnectionFailures));
+                    }
                 }
             }
             catch (Exception ex)
@@ -103,18 +276,81 @@ namespace MixItUp.Base.Services.External
             return new Result(Resources.CrowdControlFailedToConnectToService);
         }
 
-        private async void Socket_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
+        public async Task Disconnect()
+        {
+            this.IsConnected = false;
+            if (ChannelSession.IsDebug())
+            {
+                this.socket.OnSentOccurred -= Socket_OnSentOccurred;
+                this.socket.OnTextReceivedOccurred -= Socket_OnTextReceivedOccurred;
+            }
+            this.socket.OnDisconnectOccurred -= Socket_OnDisconnectOccurred;
+            await this.socket.Disconnect();
+        }
+
+        public IEnumerable<CrowdControlGame> GetGames() { return this.gamesCache; }
+
+        public async Task<IEnumerable<CrowdControlGamePackEffect>> GetGameEffects(CrowdControlGame game)
+        {
+            if (this.gameEffects.ContainsKey(game.gameID))
+            {
+                return this.gameEffects[game.gameID];
+            }
+
+            try
+            {
+                using (AdvancedHttpClient client = new AdvancedHttpClient())
+                {
+                    IEnumerable<CrowdControlGamePack> gamePacks = await client.GetAsync<IEnumerable<CrowdControlGamePack>>($"https://openapi.crowdcontrol.live/games/{game.gameID}/packs");
+                    if (gamePacks != null)
+                    {
+                        Dictionary<string, CrowdControlGamePackEffect> effects = new Dictionary<string, CrowdControlGamePackEffect>();
+                        foreach (CrowdControlGamePack gamePack in gamePacks)
+                        {
+                            foreach (var kvp in gamePack.effects["game"])
+                            {
+                                kvp.Value.id = kvp.Key;
+                                effects[kvp.Key] = kvp.Value;
+                            }
+                        }
+                        this.gameEffects[game.gameID] = effects.Values.OrderBy(e => e.name);
+                        return this.gameEffects[game.gameID];
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            return new List<CrowdControlGamePackEffect>();
+        }
+
+        private async Task<string> GetCrowdControlID(string platform, string platformID)
+        {
+            using (AdvancedHttpClient client = new AdvancedHttpClient())
+            {
+                JObject jobj = await client.GetJObjectAsync($"https://staging-openapi.crowdcontrol.live/user/{platform.ToLower()}/{platformID}/id");
+                if (jobj != null && jobj.TryGetValue("ccUID", out JToken id))
+                {
+                    return id.ToString();
+                }
+            }
+            return null;
+        }
+
+        private async void Socket_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
             await this.Disconnect();
         }
 
-        public async Task Disconnect()
+        private void Socket_OnSentOccurred(object sender, string e)
         {
-            if (this.socket != null)
-            {
-                await this.socket.Disconnect();
-            }
-            this.socket = null;
+            Logger.Log("CrowdControl Service - Packet Sent: " + e);
+        }
+
+        private void Socket_OnTextReceivedOccurred(object sender, string e)
+        {
+            Logger.Log("CrowdControl Service - Packet Received: " + e);
         }
     }
 }

@@ -599,6 +599,9 @@
     <Compile Include="Controls\Commands\CommandListingButtonsControl.xaml.cs">
       <DependentUpon>CommandListingButtonsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Commands\CrowdControlEffectCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>CrowdControlEffectCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Commands\CustomCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>CustomCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -764,6 +767,9 @@
     <Compile Include="Controls\MainControls\CommunityCommandsControl.xaml.cs">
       <DependentUpon>CommunityCommandsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MainControls\CrowdControlControl.xaml.cs">
+      <DependentUpon>CrowdControlControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MainControls\CurrencyRankInventoryControl.xaml.cs">
       <DependentUpon>CurrencyRankInventoryControl.xaml</DependentUpon>
     </Compile>
@@ -915,6 +921,9 @@
     </Compile>
     <Compile Include="Controls\Requirements\ThresholdRequirementControl.xaml.cs">
       <DependentUpon>ThresholdRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\CrowdControlServiceControl.xaml.cs">
+      <DependentUpon>CrowdControlServiceControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Services\IFTTTServiceControl.xaml.cs">
       <DependentUpon>IFTTTServiceControl.xaml</DependentUpon>
@@ -1341,6 +1350,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Commands\CrowdControlEffectCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Commands\CustomCommandEditorDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1557,6 +1570,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\MainControls\CrowdControlControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MainControls\CurrencyRankInventoryControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1758,6 +1775,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Requirements\ThresholdRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\CrowdControlServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

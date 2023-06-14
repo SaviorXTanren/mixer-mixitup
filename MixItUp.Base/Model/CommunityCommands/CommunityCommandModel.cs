@@ -59,6 +59,7 @@ namespace MixItUp.Base.Model.Store
         Webhook,
         TrovoSpell,
         TwitchBits,
+        CrowdControlEffect,
 
         // Extra Tags
         [Obsolete]

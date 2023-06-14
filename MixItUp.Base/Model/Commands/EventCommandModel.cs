@@ -234,6 +234,12 @@ namespace MixItUp.Base.Model.Commands
                 case EventTypeEnum.StreamlootsPackGifted:
                     specialIdentifiers["streamlootspurchasequantity"] = "1";
                     break;
+                case EventTypeEnum.CrowdControlEffectRedeemed:
+                    foreach (var kvp in CrowdControlEffectCommandModel.GetEffectTestSpecialIdentifiers())
+                    {
+                        specialIdentifiers[kvp.Key] = kvp.Value;
+                    }
+                    break;
             }
 
             int eventNumber = (int)eventType;
