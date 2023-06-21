@@ -9974,4 +9974,7 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="TTSMonsterOverlayURL" xml:space="preserve">
     <value>TTS.Monster Overlay URL</value>
   </data>
+  <data name="EnableTTSMonster" xml:space="preserve">
+    <value>Please enable TTS.Monster on the Services page!</value>
+  </data>
 </root>

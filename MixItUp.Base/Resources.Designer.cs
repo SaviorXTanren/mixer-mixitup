@@ -5361,6 +5361,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enable TTS.Monster on the Services page!.
+        /// </summary>
+        public static string EnableTTSMonster {
+            get {
+                return ResourceManager.GetString("EnableTTSMonster", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please enable XSplit connection on the Services page!.
         /// </summary>
         public static string EnableXSplit {

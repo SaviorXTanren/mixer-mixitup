@@ -38,6 +38,17 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.SelectedProviderType == TextToSpeechProviderType.TTSMonster;
             }
         }
+        public bool AudioDeviceServiceConnected
+        { 
+            get
+            {
+                if (this.SelectedProviderType == TextToSpeechProviderType.TTSMonster)
+                {
+                    return !this.TTSMonsterNotEnabled;
+                }
+                return true;
+            }
+        }
         public ThreadSafeObservableCollection<string> AudioDevices { get; set; } = new ThreadSafeObservableCollection<string>();
         public string SelectedAudioDevice
         {
@@ -50,13 +61,7 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string selectedAudioDevice;
 
-        public bool UsesOverlay
-        {
-            get
-            {
-                return this.SelectedProviderType == TextToSpeechProviderType.ResponsiveVoice;
-            }
-        }
+        public bool UsesOverlay { get { return this.SelectedProviderType == TextToSpeechProviderType.ResponsiveVoice; } }
         public bool OverlayEnabled { get { return this.UsesOverlay && ServiceManager.Get<OverlayV3Service>().IsConnected; } }
         public bool OverlayNotEnabled { get { return this.UsesOverlay && !ServiceManager.Get<OverlayV3Service>().IsConnected; } }
 
@@ -80,6 +85,8 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private OverlayEndpointV3Model selectedOverlayEndpoint;
+
+        public bool TTSMonsterNotEnabled { get { return this.SelectedProviderType == TextToSpeechProviderType.TTSMonster && !ServiceManager.Get<ITTSMonsterService>().IsConnected; } }
 
         public ThreadSafeObservableCollection<TextToSpeechVoice> Voices { get; private set; } = new ThreadSafeObservableCollection<TextToSpeechVoice>();
 
@@ -239,10 +246,13 @@ namespace MixItUp.Base.ViewModel.Actions
                 if (service.ProviderType == this.SelectedProviderType)
                 {
                     this.NotifyPropertyChanged(nameof(this.UsesAudioDevices));
+                    this.NotifyPropertyChanged(nameof(this.AudioDeviceServiceConnected));
 
                     this.NotifyPropertyChanged(nameof(this.UsesOverlay));
                     this.NotifyPropertyChanged(nameof(this.OverlayEnabled));
                     this.NotifyPropertyChanged(nameof(this.OverlayNotEnabled));
+
+                    this.NotifyPropertyChanged(nameof(this.TTSMonsterNotEnabled));
 
                     string voiceID = (this.SelectedVoice != null) ? this.SelectedVoice.ID : null;
                     this.Voices.ClearAndAddRange(service.GetVoices());
