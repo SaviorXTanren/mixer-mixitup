@@ -79,31 +79,31 @@ namespace MixItUp.Base.Services
         public override async Task<IEnumerable<StreamingPlatformStatusModel>> GetCurrentIncidents()
         {
             List<StreamingPlatformStatusModel> incidents = new List<StreamingPlatformStatusModel>();
-            try
-            {
-                StatusPageUnresolvedIncidents unresolvedIncidents = null;
-                using (AdvancedHttpClient client = new AdvancedHttpClient())
-                {
-                    unresolvedIncidents = await client.GetAsync<StatusPageUnresolvedIncidents>(this.statusFeedLink);
-                }
+            //try
+            //{
+            //    StatusPageUnresolvedIncidents unresolvedIncidents = null;
+            //    using (AdvancedHttpClient client = new AdvancedHttpClient())
+            //    {
+            //        unresolvedIncidents = await client.GetAsync<StatusPageUnresolvedIncidents>(this.statusFeedLink);
+            //    }
 
-                if (unresolvedIncidents != null && unresolvedIncidents.incidents != null && unresolvedIncidents.incidents.Count > 0)
-                {
-                    foreach (StatusPageUnresolvedIncident incident in unresolvedIncidents.incidents)
-                    {
-                        if (incident.incident_updates != null && incident.incident_updates.Count > 0)
-                        {
-                            StatusPageUnresolvedIncidentUpdate latestUpdate = incident.incident_updates.OrderByDescending(i => i.updated_at).FirstOrDefault();
-                            if (latestUpdate != null)
-                            {
-                                incidents.Add(new StreamingPlatformStatusModel(this.platform, incident.name, latestUpdate.body, latestUpdate.updated_at, incident.shortlink));
-                            }
-                        }
-                    }
-                }
-                return incidents;
-            }
-            catch (Exception ex) { Logger.Log(ex); }
+            //    if (unresolvedIncidents != null && unresolvedIncidents.incidents != null && unresolvedIncidents.incidents.Count > 0)
+            //    {
+            //        foreach (StatusPageUnresolvedIncident incident in unresolvedIncidents.incidents)
+            //        {
+            //            if (incident.incident_updates != null && incident.incident_updates.Count > 0)
+            //            {
+            //                StatusPageUnresolvedIncidentUpdate latestUpdate = incident.incident_updates.OrderByDescending(i => i.updated_at).FirstOrDefault();
+            //                if (latestUpdate != null)
+            //                {
+            //                    incidents.Add(new StreamingPlatformStatusModel(this.platform, incident.name, latestUpdate.body, latestUpdate.updated_at, incident.shortlink));
+            //                }
+            //            }
+            //        }
+            //    }
+            //    return incidents;
+            //}
+            //catch (Exception ex) { Logger.Log(ex); }
             return incidents;
         }
     }
