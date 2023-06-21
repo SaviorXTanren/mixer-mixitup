@@ -54,7 +54,7 @@ namespace MixItUp.WPF.Controls.Overlay
             CustomCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<CustomCommandModel>();
             if (command != null)
             {
-                ((OverlayLeaderboardListItemViewModel)this.ViewModel).NewLeaderCommand = null;
+                ((OverlayProgressBarItemViewModel)this.ViewModel).OnGoalReachedCommand = null;
             }
         }
 
