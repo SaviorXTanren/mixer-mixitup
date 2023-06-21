@@ -68,8 +68,6 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public OAuthTokenModel StreamElementsOAuthToken { get; set; }
         [DataMember]
-        public OAuthTokenModel TwitterOAuthToken { get; set; }
-        [DataMember]
         public OAuthTokenModel DiscordOAuthToken { get; set; }
         [DataMember]
         public OAuthTokenModel TiltifyOAuthToken { get; set; }
@@ -808,10 +806,6 @@ namespace MixItUp.Base.Model.Settings
             if (ServiceManager.Get<DiscordService>().IsConnected)
             {
                 this.DiscordOAuthToken = ServiceManager.Get<DiscordService>().GetOAuthTokenCopy();
-            }
-            if (ServiceManager.Get<ITwitterService>().IsConnected)
-            {
-                this.TwitterOAuthToken = ServiceManager.Get<ITwitterService>().GetOAuthTokenCopy();
             }
             if (ServiceManager.Get<PixelChatService>().IsConnected)
             {

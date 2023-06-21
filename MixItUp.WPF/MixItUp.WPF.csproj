@@ -134,12 +134,6 @@
     <Reference Include="Jace, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Jace.1.0.0\lib\netstandard1.6\Jace.dll</HintPath>
     </Reference>
-    <Reference Include="LinqToTwitter.AspNet, Version=5.0.0.14073, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\linqtotwitter.5.0.0\lib\net461\LinqToTwitter.AspNet.dll</HintPath>
-    </Reference>
-    <Reference Include="LinqToTwitter.netstandard, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\linqtotwitter.5.0.0\lib\net461\LinqToTwitter.netstandard.dll</HintPath>
-    </Reference>
     <Reference Include="MaterialDesignColors, Version=2.0.1.2556, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.2.0.1\lib\net452\MaterialDesignColors.dll</HintPath>
     </Reference>
@@ -560,9 +554,6 @@
     </Compile>
     <Compile Include="Controls\Actions\TwitchActionEditorControl.xaml.cs">
       <DependentUpon>TwitchActionEditorControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Actions\TwitterActionEditorControl.xaml.cs">
-      <DependentUpon>TwitterActionEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Actions\VoicemodActionEditorControl.xaml.cs">
       <DependentUpon>VoicemodActionEditorControl.xaml</DependentUpon>
@@ -986,9 +977,6 @@
     <Compile Include="Controls\Services\TreatStreamServiceControl.xaml.cs">
       <DependentUpon>TreatStreamServiceControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Services\TwitterServiceControl.xaml.cs">
-      <DependentUpon>TwitterServiceControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Services\VoicemodServiceControl.xaml.cs">
       <DependentUpon>VoicemodServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1100,7 +1088,6 @@
     <Compile Include="Services\DeveloperAPI\V2\CommandsV2Controller.cs" />
     <Compile Include="Services\DeveloperAPI\V2\UsersV2Controller.cs" />
     <Compile Include="Services\DeveloperAPI\WindowsDeveloperAPIService.cs" />
-    <Compile Include="Services\WindowsTwitterService.cs" />
     <Compile Include="Services\WindowsOvrStreamService.cs" />
     <Compile Include="Services\WindowsSocketIOConnection.cs" />
     <Compile Include="Services\WindowsOBSService.cs" />
@@ -1290,10 +1277,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\TwitchActionEditorControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Actions\TwitterActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1852,10 +1835,6 @@
     <Page Include="Controls\Services\TreatStreamServiceControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\Services\TwitterServiceControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\VoicemodServiceControl.xaml">
       <SubType>Designer</SubType>

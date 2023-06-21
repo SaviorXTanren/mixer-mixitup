@@ -70,7 +70,6 @@ namespace MixItUp.Base.ViewModel.Actions
                         case ActionTypeEnum.TextToSpeech: editorViewModel = new TextToSpeechActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Trovo: editorViewModel = new TrovoActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Twitch: editorViewModel = new TwitchActionEditorControlViewModel(); break;
-                        case ActionTypeEnum.Twitter: editorViewModel = new TwitterActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Voicemod: editorViewModel = new VoicemodActionEditorControlViewModel(); break;
                         case ActionTypeEnum.VTubeStudio: editorViewModel = new VTubeStudioActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Wait: editorViewModel = new WaitActionEditorControlViewModel(); break;
@@ -150,7 +149,6 @@ namespace MixItUp.Base.ViewModel.Actions
                 case ActionTypeEnum.TextToSpeech: editorViewModel = new TextToSpeechActionEditorControlViewModel((TextToSpeechActionModel)action); break;
                 case ActionTypeEnum.Trovo: editorViewModel = new TrovoActionEditorControlViewModel((TrovoActionModel)action); break;
                 case ActionTypeEnum.Twitch: editorViewModel = new TwitchActionEditorControlViewModel((TwitchActionModel)action); break;
-                case ActionTypeEnum.Twitter: editorViewModel = new TwitterActionEditorControlViewModel((TwitterActionModel)action); break;
                 case ActionTypeEnum.Voicemod: editorViewModel = new VoicemodActionEditorControlViewModel((VoicemodActionModel)action); break;
                 case ActionTypeEnum.VTubeStudio: editorViewModel = new VTubeStudioActionEditorControlViewModel((VTubeStudioActionModel)action); break;
                 case ActionTypeEnum.Wait: editorViewModel = new WaitActionEditorControlViewModel((WaitActionModel)action); break;

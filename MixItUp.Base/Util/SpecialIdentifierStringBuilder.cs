@@ -401,33 +401,6 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (ServiceManager.Get<ITwitterService>().IsConnected && this.ContainsSpecialIdentifier("tweet"))
-            {
-                IEnumerable<Tweet> tweets = await ServiceManager.Get<ITwitterService>().GetLatestTweets();
-                if (tweets != null && tweets.Count() > 0)
-                {
-                    Tweet latestTweet = tweets.FirstOrDefault();
-                    DateTimeOffset latestTweetLocalTime = latestTweet.DateTime.ToCorrectLocalTime();
-
-                    this.ReplaceSpecialIdentifier("tweetlatesturl", latestTweet.TweetLink);
-                    this.ReplaceSpecialIdentifier("tweetlatesttext", latestTweet.Text);
-                    this.ReplaceSpecialIdentifier("tweetlatestdatetime", latestTweetLocalTime.ToString("g"));
-                    this.ReplaceSpecialIdentifier("tweetlatestdate", latestTweetLocalTime.ToString("d"));
-                    this.ReplaceSpecialIdentifier("tweetlatesttime", latestTweetLocalTime.ToString("t"));
-
-                    Tweet streamTweet = tweets.FirstOrDefault(t => t.IsStreamTweet);
-                    if (streamTweet != null)
-                    {
-                        DateTimeOffset streamTweetLocalTime = streamTweet.DateTime.ToCorrectLocalTime();
-                        this.ReplaceSpecialIdentifier("tweetstreamurl", streamTweet.TweetLink);
-                        this.ReplaceSpecialIdentifier("tweetstreamtext", streamTweet.Text);
-                        this.ReplaceSpecialIdentifier("tweetstreamdatetime", streamTweetLocalTime.ToString("g"));
-                        this.ReplaceSpecialIdentifier("tweetstreamdate", streamTweetLocalTime.ToString("d"));
-                        this.ReplaceSpecialIdentifier("tweetstreamtime", streamTweetLocalTime.ToString("t"));
-                    }
-                }
-            }
-
             if (ServiceManager.Get<ExtraLifeService>().IsConnected && this.ContainsSpecialIdentifier(ExtraLifeSpecialIdentifierHeader))
             {
                 ExtraLifeTeam team = await ServiceManager.Get<ExtraLifeService>().GetTeam();
