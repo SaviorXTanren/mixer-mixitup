@@ -162,7 +162,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AccountsWizardInstructions" xml:space="preserve">
-    <value>Let&apos;s get started by signing in to the accounts you use on each Streaming Platform. Select the options below for each account you want to log in. You can revisit these options later by going to the Accounts page.</value>
+    <value>Let's get started by signing in to the accounts you use on each Streaming Platform. Select the options below for each account you want to log in. You can revisit these options later by going to the Accounts page.</value>
     <comment>Manual</comment>
   </data>
   <data name="AccountWeek" xml:space="preserve">
@@ -311,7 +311,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
-    <value>Auto-Include &quot;!&quot;</value>
+    <value>Auto-Include "!"</value>
     <comment>Manual</comment>
   </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
@@ -453,7 +453,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ChatTriggersNoExclamationHintAssist" xml:space="preserve">
-    <value>Chat Trigger(s) (No &quot;!&quot; needed, space seperated, semi-colon for multi-word)</value>
+    <value>Chat Trigger(s) (No "!" needed, space seperated, semi-colon for multi-word)</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatWhisperSound" xml:space="preserve">
@@ -509,7 +509,7 @@
     <comment>Manual</comment>
   </data>
   <data name="CommandNoBang" xml:space="preserve">
-    <value>Command (No &apos;!&apos; needed)</value>
+    <value>Command (No '!' needed)</value>
     <comment>Manual</comment>
   </data>
   <data name="Commands" xml:space="preserve">
@@ -1160,7 +1160,7 @@
     <comment>Manual</comment>
   </data>
   <data name="JSONValueName" xml:space="preserve">
-    <value>JSON Value Name (Use &apos;\&apos; for nested parameters)</value>
+    <value>JSON Value Name (Use '\' for nested parameters)</value>
     <comment>Manual</comment>
   </data>
   <data name="Keyboard" xml:space="preserve">
@@ -1670,7 +1670,7 @@
     <value>Question</value>
   </data>
   <data name="QueuePosition" xml:space="preserve">
-    <value>User&apos;s Queue Position</value>
+    <value>User's Queue Position</value>
     <comment>Manual</comment>
   </data>
   <data name="QueueStatus" xml:space="preserve">
@@ -1734,7 +1734,7 @@
     <comment>Manual</comment>
   </data>
   <data name="RegularStatusOnlineViewingTime" xml:space="preserve">
-    <value>&quot;Regular&quot; Status Online Viewing Time</value>
+    <value>"Regular" Status Online Viewing Time</value>
     <comment>Manual</comment>
   </data>
   <data name="Release" xml:space="preserve">
@@ -1765,7 +1765,7 @@
     <value>Report</value>
   </data>
   <data name="RequireClaim" xml:space="preserve">
-    <value>Require &quot;!claim&quot;</value>
+    <value>Require "!claim"</value>
     <comment>Manual</comment>
   </data>
   <data name="RequiredHours" xml:space="preserve">
@@ -2388,11 +2388,11 @@
     <value>User Data Import</value>
   </data>
   <data name="UserDataStep1" xml:space="preserve">
-    <value>This will allow you to import your channel&apos;s user data from either a plain-text or spreadsheet file. To import a spreadsheet file, you must have some form of Microsoft Excel installed. Note that this WILL OVERWRITE existing user data in Mix It Up. First, specify the file that you want to import the User data from:</value>
+    <value>This will allow you to import your channel's user data from either a plain-text or spreadsheet file. To import a spreadsheet file, you must have some form of Microsoft Excel installed. Note that this WILL OVERWRITE existing user data in Mix It Up. First, specify the file that you want to import the User data from:</value>
     <comment>Manual</comment>
   </data>
   <data name="UserDataStep2" xml:space="preserve">
-    <value>Next, you&apos;ll need to specify the column number for each value in your data file or leave it blank if that value is not present. Note that the data file is required to have at least either the username and/or Twitch ID:</value>
+    <value>Next, you'll need to specify the column number for each value in your data file or leave it blank if that value is not present. Note that the data file is required to have at least either the username and/or Twitch ID:</value>
     <comment>Manual</comment>
   </data>
   <data name="UserJoined" xml:space="preserve">
@@ -3179,7 +3179,7 @@
     <value>Delete Chat Message When Run</value>
   </data>
   <data name="DontDeleteChatMessageWhenRun" xml:space="preserve">
-    <value>Don&apos;t Delete Chat Message When Run</value>
+    <value>Don't Delete Chat Message When Run</value>
     <comment>Manual</comment>
   </data>
   <data name="UnlockAllCommandTypesTooltip" xml:space="preserve">
@@ -3504,7 +3504,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
     <comment>Manual</comment>
   </data>
   <data name="TwitterActionInvalidTweet" xml:space="preserve">
-    <value>Twitter Action: Tweet can not contain any &quot;@&quot; tags</value>
+    <value>Twitter Action: Tweet can not contain any "@" tags</value>
     <comment>Manual</comment>
   </data>
   <data name="TwitterActionMissingNameUpdate" xml:space="preserve">
@@ -3729,7 +3729,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoAlreadyCollected" xml:space="preserve">
-    <value>You&apos;ve already collected your share</value>
+    <value>You've already collected your share</value>
   </data>
   <data name="GameCommandVolcanoCollectUnderway" xml:space="preserve">
     <value>Collecting is currently underway, please wait until it has completed</value>
@@ -3782,7 +3782,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
     <comment>Manual</comment>
   </data>
   <data name="GameCommandBetDescription" xml:space="preserve">
-    <value>The Bet game allows a user to start a bet amongst all users over which option is correct. Each user who participates must specify which options you expect to win and how much they wish to bet. Once the time limit is completed, a user can specify what the correct answer is to the bet and all correct users will be rewarded. Additionally, you can specify what user roles can start &amp; answer this game to ensure it isn&apos;t abused, such as Moderators or higher only.</value>
+    <value>The Bet game allows a user to start a bet amongst all users over which option is correct. Each user who participates must specify which options you expect to win and how much they wish to bet. Once the time limit is completed, a user can specify what the correct answer is to the bet and all correct users will be rewarded. Additionally, you can specify what user roles can start &amp; answer this game to ensure it isn't abused, such as Moderators or higher only.</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandBetAnswerExample" xml:space="preserve">
@@ -3794,7 +3794,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
     <comment>Manual</comment>
   </data>
   <data name="GameCommandBidDescription" xml:space="preserve">
-    <value>The Bid game allows a user to start a bidding competition amongst all users to win a prize or special privilege. A user must bid at least 1 currency amount higher than the highest bid to become the leading bidder. When a user is outbid, they receive their bet currency back and the highest bidder when time runs out wins. Additionally, you can specify what user roles can start this game to ensure it isn&apos;t abused, such as Moderators or higher only.</value>
+    <value>The Bid game allows a user to start a bidding competition amongst all users to win a prize or special privilege. A user must bid at least 1 currency amount higher than the highest bid to become the leading bidder. When a user is outbid, they receive their bet currency back and the highest bidder when time runs out wins. Additionally, you can specify what user roles can start this game to ensure it isn't abused, such as Moderators or higher only.</value>
     <comment>Manual</comment>
   </data>
   <data name="CoinPusher" xml:space="preserve">
@@ -3832,7 +3832,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHitmanDescription" xml:space="preserve">
-    <value>The Hitman game allows a user to start a winner-takes-all bet amongst all entered users. After the initial time limit, a hitman with a specific name will appear in chat. If a user types the hitman&apos;s name in chat within the time limit, they win the entire pot. Otherwise, everyone loses their money.</value>
+    <value>The Hitman game allows a user to start a winner-takes-all bet amongst all entered users. After the initial time limit, a hitman with a specific name will appear in chat. If a user types the hitman's name in chat within the time limit, they win the entire pot. Otherwise, everyone loses their money.</value>
     <comment>Manual</comment>
   </data>
   <data name="HotPotato" xml:space="preserve">
@@ -4156,7 +4156,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandLockBoxFailureExample" xml:space="preserve">
-    <value>@$username drops their coins into and try their combo $arg1text...but the box doesn&apos;t unlock. Their guess was too $gamelockboxhint.</value>
+    <value>@$username drops their coins into and try their combo $arg1text...but the box doesn't unlock. Their guess was too $gamelockboxhint.</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandLockBoxInspectionArgmentExample" xml:space="preserve">
@@ -4184,7 +4184,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandLockBoxStatusExample" xml:space="preserve">
-    <value>After shaking the box for a bit, you guess there&apos;s about $gametotalamount {0} inside it.</value>
+    <value>After shaking the box for a bit, you guess there's about $gametotalamount {0} inside it.</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandLockBoxSuccessfulExample" xml:space="preserve">
@@ -4199,7 +4199,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <value>Not Enough Players</value>
   </data>
   <data name="GameCommandNotEnoughPlayersExample" xml:space="preserve">
-    <value>@$username couldn&apos;t get enough users to join in...</value>
+    <value>@$username couldn't get enough users to join in...</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandSettings" xml:space="preserve">
@@ -4259,15 +4259,15 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <value>Failed Guess</value>
   </data>
   <data name="GameCommandHangmanFailedGuessExample" xml:space="preserve">
-    <value>@$username drops their coins into the pot and guesses &quot;$arg1text&quot;...but it was wrong! $gamehangmancurrent</value>
+    <value>@$username drops their coins into the pot and guesses "$arg1text"...but it was wrong! $gamehangmancurrent</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameLostExample" xml:space="preserve">
-    <value>The game is lost with too many failed guesses; the correct answer was &quot;$gamehangmananswer&quot;. There goes $gametotalamount {0}!</value>
+    <value>The game is lost with too many failed guesses; the correct answer was "$gamehangmananswer". There goes $gametotalamount {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameWonExample" xml:space="preserve">
-    <value>@$username got the secret word &quot;$gamehangmananswer&quot;, winning the whole pot of $gamepayout {0}!</value>
+    <value>@$username got the secret word "$gamehangmananswer", winning the whole pot of $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanMaxFailures" xml:space="preserve">
@@ -4279,7 +4279,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanStatusExample" xml:space="preserve">
-    <value>So far, you&apos;ve gotten $gamehangmancurrent correct &amp; guessed $gamehangmanfailedguesses wrong. Looking into the pot, you see $gametotalamount {0} inside it.</value>
+    <value>So far, you've gotten $gamehangmancurrent correct &amp; guessed $gamehangmanfailedguesses wrong. Looking into the pot, you see $gametotalamount {0} inside it.</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanSuccessfulGuess" xml:space="preserve">
@@ -4290,7 +4290,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHitmanAppearsExample" xml:space="preserve">
-    <value>It&apos;s hitman $gamehitmanname! Quick, type $gamehitmanname in chat!</value>
+    <value>It's hitman $gamehitmanname! Quick, type $gamehitmanname in chat!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHitmanApproachingExample" xml:space="preserve">
@@ -4330,7 +4330,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandRussianRouletteGameCompleteExample" xml:space="preserve">
-    <value>The dust settles after a grueling match-up and...It&apos;s $gamewinners! Total Amount Per Winner: $gamepayout {0}!</value>
+    <value>The dust settles after a grueling match-up and...It's $gamewinners! Total Amount Per Winner: $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandRussianRouletteMaxWinners" xml:space="preserve">
@@ -4366,7 +4366,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserSuccessExample" xml:space="preserve">
-    <value>@$username correctly guessed the word &quot;$gamewordscrambleanswer&quot; and walked away with a bounty of $gamepayout {0}!</value>
+    <value>@$username correctly guessed the word "$gamewordscrambleanswer" and walked away with a bounty of $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBegin" xml:space="preserve">
@@ -4374,7 +4374,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBeginExample" xml:space="preserve">
-    <value>The scrambled word is &quot;$gamewordscrambleword&quot;; solve it and be the first to type it in chat!</value>
+    <value>The scrambled word is "$gamewordscrambleword"; solve it and be the first to type it in chat!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScramblePrepare" xml:space="preserve">
@@ -4394,7 +4394,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandBetBetsClosedExample" xml:space="preserve">
-    <value>All bets are now closed! Let&apos;s wait and see what the result is...</value>
+    <value>All bets are now closed! Let's wait and see what the result is...</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandBetGameCompleteExample" xml:space="preserve">
@@ -4484,7 +4484,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseKingUserExample" xml:space="preserve">
-    <value>King @$username has discovered the treasure but needs someone to defend it! The thieves must work to convince the King to pick them, everyone else needs to prevent that. The King must type &quot;!treasure &lt;PLAYER&gt;&quot; in chat to pick who will defend the treasure!</value>
+    <value>King @$username has discovered the treasure but needs someone to defend it! The thieves must work to convince the King to pick them, everyone else needs to prevent that. The King must type "!treasure &lt;PLAYER&gt;" in chat to pick who will defend the treasure!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseKnightSelected" xml:space="preserve">
@@ -4499,7 +4499,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseKnightUserExample" xml:space="preserve">
-    <value>You&apos;ve been selected as a Knight; tell the King you are a Knight so you can defend the treasure!</value>
+    <value>You've been selected as a Knight; tell the King you are a Knight so you can defend the treasure!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseStartedExample" xml:space="preserve">
@@ -4526,7 +4526,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseThiefUserExample" xml:space="preserve">
-    <value>You&apos;ve been selected as a Thief; convince the King you are a Knight so you can steal the treasure!</value>
+    <value>You've been selected as a Thief; convince the King you are a Knight so you can steal the treasure!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTriviaAddQuestion" xml:space="preserve">
@@ -4602,7 +4602,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoPayoutExample" xml:space="preserve">
-    <value>As @$username drops their deposit into the Volcano, a loud eruption occurs and $gamepayout {0} land on top of them! The Volcano is exploding out coins! Quick, type &quot;!volcano collect&quot; in chat in the next 30 seconds!</value>
+    <value>As @$username drops their deposit into the Volcano, a loud eruption occurs and $gamepayout {0} land on top of them! The Volcano is exploding out coins! Quick, type "!volcano collect" in chat in the next 30 seconds!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoPayoutPercentageMustBePositive" xml:space="preserve">
@@ -4655,7 +4655,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <comment>Manual</comment>
   </data>
   <data name="GameQueueUserSelectedExample" xml:space="preserve">
-    <value>It&apos;s time to play @$username! Listen carefully for instructions on how to join...</value>
+    <value>It's time to play @$username! Listen carefully for instructions on how to join...</value>
     <comment>Manual</comment>
   </data>
   <data name="GiveawayStartedReminderExample" xml:space="preserve">
@@ -5105,7 +5105,7 @@ This setting will change all role requirements to be explicit and require that t
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserFailureExample" xml:space="preserve">
-    <value>No one correctly guessed the word &quot;$gamewordscrambleanswer&quot;.</value>
+    <value>No one correctly guessed the word "$gamewordscrambleanswer".</value>
     <comment>Manual</comment>
   </data>
   <data name="CommandGroupTimerIntervalMustBePositive" xml:space="preserve">
@@ -5239,11 +5239,11 @@ This setting will change all role requirements to be explicit and require that t
   </data>
   <data name="CommandActionWaitUntilCompleteHintText" xml:space="preserve">
     <value>To have the Command Action wait until the selected sub-command is completed, the sub-command WILL NOT use the
-built-in command locking system for this specific time it is run. This is to prevent what&apos;s known as a deadlock from occurring
-(command gets stuck and can&apos;t complete). This also means that other commands of the same type as the selected
-sub-command will be able to run at the same time if it&apos;s different than the current command. For example, if the selected
+built-in command locking system for this specific time it is run. This is to prevent what's known as a deadlock from occurring
+(command gets stuck and can't complete). This also means that other commands of the same type as the selected
+sub-command will be able to run at the same time if it's different than the current command. For example, if the selected
 sub-command is an Action Group, then it will still be possible for another Action Group to run at the same time if this is
-enabled. You can think of it as similar to toggling the &quot;Unlock Command&quot; option, but it instead only applies to this specific time.</value>
+enabled. You can think of it as similar to toggling the "Unlock Command" option, but it instead only applies to this specific time.</value>
     <comment>Manual</comment>
   </data>
   <data name="Russian" xml:space="preserve">
@@ -5478,7 +5478,7 @@ enabled. You can think of it as similar to toggling the &quot;Unlock Command&quo
     <value>Extra Life service connectivity allows you to trigger events from when you or your team receive a donation.</value>
   </data>
   <data name="ExtraLifeInfo2" xml:space="preserve">
-    <value>First, visit your team&apos;s page on the Extra Life website and near the end of the web URL, it will say &quot;teamID=_____&quot;. Type that number into the first box, click search, select your name from the list, then click Log In button.</value>
+    <value>First, visit your team's page on the Extra Life website and near the end of the web URL, it will say "teamID=_____". Type that number into the first box, click search, select your name from the list, then click Log In button.</value>
   </data>
   <data name="ExtraLifeInvalidParticipant" xml:space="preserve">
     <value>Please select a valid Extra Life participant.</value>
@@ -5591,7 +5591,7 @@ enabled. You can think of it as similar to toggling the &quot;Unlock Command&quo
     <value>The OBS Studio service allows you to directly interact with your instance of OBS Studio to perform changes to scenes and sources.</value>
   </data>
   <data name="OBSStudioInfo2" xml:space="preserve">
-    <value>OBS Studio connectivity can be enabled by heading to Tools -&gt; obs-websocket in OBS Studio and clicking on &quot;Enable WebSocket server&quot;. Make sure &quot;Enable Authentication&quot; is un-checked or you have set a password in both OBS Studio and Mix It Up.</value>
+    <value>OBS Studio connectivity can be enabled by heading to Tools -&gt; obs-websocket in OBS Studio and clicking on "Enable WebSocket server". Make sure "Enable Authentication" is un-checked or you have set a password in both OBS Studio and Mix It Up.</value>
   </data>
   <data name="OBSStudioSuccess" xml:space="preserve">
     <value>OBS Studio connection test successful!</value>
@@ -5702,7 +5702,7 @@ enabled. You can think of it as similar to toggling the &quot;Unlock Command&quo
     <value>This Stream Deck plug-in allows you to run Mix It Up commands directly from your Stream Deck device, as well as other status information about your stream.</value>
   </data>
   <data name="StreamDeckInfo2" xml:space="preserve">
-    <value>To get started, ensure the Stream Deck software is updated to at least version 4.0 &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the store icon at the top right of your Stream Deck software, then search for &quot;Mix It Up&quot; in the window.</value>
+    <value>To get started, ensure the Stream Deck software is updated to at least version 4.0 &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the store icon at the top right of your Stream Deck software, then search for "Mix It Up" in the window.</value>
   </data>
   <data name="StreamElements" xml:space="preserve">
     <value>StreamElements</value>
@@ -5904,7 +5904,7 @@ enabled. You can think of it as similar to toggling the &quot;Unlock Command&quo
     <comment>Manual</comment>
   </data>
   <data name="DeleteUserDataPrompt" xml:space="preserve">
-    <value>This will delete this user&apos;s data, which includes their Hours, Currency, Rank, &amp; Custom User Commands. Are you sure you want to do this?</value>
+    <value>This will delete this user's data, which includes their Hours, Currency, Rank, &amp; Custom User Commands. Are you sure you want to do this?</value>
   </data>
   <data name="DeleteWidgetPrompt" xml:space="preserve">
     <value>Are you sure you want to delete this widget?</value>
@@ -6185,7 +6185,7 @@ enabled. You can think of it as similar to toggling the &quot;Unlock Command&quo
     <comment>{0} is the rank/currency name</comment>
   </data>
   <data name="RetroactivelyGivePointsPrompt2" xml:space="preserve">
-    <value>EX: If the Online Rate is &quot;1 Per Hour&quot; and a user has 16 viewing hours, then that user&apos;s {0} points will be set to 16.</value>
+    <value>EX: If the Online Rate is "1 Per Hour" and a user has 16 viewing hours, then that user's {0} points will be set to 16.</value>
     <comment>{0} is the rank/currency name</comment>
   </data>
   <data name="RetroactivelyGivePointsPrompt3" xml:space="preserve">
@@ -6283,7 +6283,7 @@ enabled. You can think of it as similar to toggling the &quot;Unlock Command&quo
     <value>Every rank must have a unique name and minimum amount.</value>
   </data>
   <data name="UpgradePrompt1" xml:space="preserve">
-    <value>We&apos;ve detected an older version of your settings that needs to be upgraded to a newer format. Depending on the size, this could take some time to perform &amp; is required to use Mix It Up.</value>
+    <value>We've detected an older version of your settings that needs to be upgraded to a newer format. Depending on the size, this could take some time to perform &amp; is required to use Mix It Up.</value>
   </data>
   <data name="UpgradePrompt2" xml:space="preserve">
     <value>If you are ready to do this, please press Yes. Otherwise press No and close to the application to perform later.</value>
@@ -6339,7 +6339,7 @@ enabled. You can think of it as similar to toggling the &quot;Unlock Command&quo
   <data name="OBSWebSocketFailed" xml:space="preserve">
     <value>Failed to connect to OBS Studio web socket. Please make sure OBS Studio is running, the obs-websocket is enabled under the Tools menu, and the connection and password match your settings in OBS Studio.
 
-See the Wiki page on OBS Studio for further troubleshooting steps by clicking the &quot;?&quot; button on the OBS Studio tab header in Mix It Up.</value>
+See the Wiki page on OBS Studio for further troubleshooting steps by clicking the "?" button on the OBS Studio tab header in Mix It Up.</value>
   </data>
   <data name="OverlayAddFailed" xml:space="preserve">
     <value>Failed to add {0} overlay</value>
@@ -6433,7 +6433,7 @@ See the Wiki page on OBS Studio for further troubleshooting steps by clicking th
     <value>Shows a progress bar for a specified goal. Progress is updated as events occur or on user-defined refresh Interval.</value>
   </data>
   <data name="OverlayWidgetStreamBossDescription" xml:space="preserve">
-    <value>Shows a user from your channel as a &quot;boss&quot; that can be damaged by performing actions in your channel until they are defeated and a new boss is selected. Damage is added as it occurs. The Stream Boss Special Identifiers can be used in parallel with this overlay widget.</value>
+    <value>Shows a user from your channel as a "boss" that can be damaged by performing actions in your channel until they are defeated and a new boss is selected. Damage is added as it occurs. The Stream Boss Special Identifiers can be used in parallel with this overlay widget.</value>
   </data>
   <data name="OverlayWidgetTextDescription" xml:space="preserve">
     <value>Shows a block of text. Refreshes based on user-defined Refresh Interval.</value>
@@ -6578,9 +6578,9 @@ This can be done by clicking on Create Channel Point Reward on the Channel Point
     <value>Requirement Errors Cooldown Type</value>
   </data>
   <data name="RequirementErrorsCooldownTypeTooltip" xml:space="preserve">
-    <value>- Default: Each requirement for each command tracks it&apos;s own error message cooldown
-- Per Command: Each command tracks it&apos;s own error message cooldown for all of it&apos;s requirements
-- Per Requirement: Each requirement type tracks it&apos;s own error message cooldown across all commands
+    <value>- Default: Each requirement for each command tracks it's own error message cooldown
+- Per Command: Each command tracks it's own error message cooldown for all of it's requirements
+- Per Requirement: Each requirement type tracks it's own error message cooldown across all commands
 - Singular: One universal error message cooldown that applies to all commands &amp; requirements
 - None: No requirement error messages will be shown</value>
   </data>
@@ -6916,7 +6916,7 @@ Failure to do one of the following could effect how users rate &amp; review your
     <value>Pixel Chat service connectivity allows you to control various elements of your Pixel Chat Overlays and trigger specific functionality.</value>
   </data>
   <data name="PixelChatInfo2" xml:space="preserve">
-    <value>To connect to PixelChat, you will need to create a Developer Token. This can be found by going to the profile, click &quot;View Tokens&quot;, and create a new Developer Token.</value>
+    <value>To connect to PixelChat, you will need to create a Developer Token. This can be found by going to the profile, click "View Tokens", and create a new Developer Token.</value>
   </data>
   <data name="PixelChatInvalidAPIKey" xml:space="preserve">
     <value>Please enter a valid Pixel Chat API key.</value>
@@ -7111,7 +7111,7 @@ Failure to do one of the following could effect how users rate &amp; review your
     <value>Voicemod</value>
   </data>
   <data name="VoicemodInfo" xml:space="preserve">
-    <value>Voicemod connectivity allows you to control functionality in the Voicemod software, such as enabling/disabling voice changing and changing the voice you&apos;re using. Some functionality or features in Voicemod require a paid subscription. For more information, please visit the Voicemod website:</value>
+    <value>Voicemod connectivity allows you to control functionality in the Voicemod software, such as enabling/disabling voice changing and changing the voice you're using. Some functionality or features in Voicemod require a paid subscription. For more information, please visit the Voicemod website:</value>
   </data>
   <data name="VoiceChangerOnOff" xml:space="preserve">
     <value>Voice Change On/Off</value>
@@ -7456,7 +7456,7 @@ Failure to do one of the following could effect how users rate &amp; review your
     <value>ERROR: Could not find user with the following username: {0}</value>
   </data>
   <data name="LinkAccountCommandPleaseConfirmLink" xml:space="preserve">
-    <value>Account linking process started. Please re-run command on the other platform with your current user&apos;s information: &quot;!linkaccount {0} {1}&quot;</value>
+    <value>Account linking process started. Please re-run command on the other platform with your current user's information: "!linkaccount {0} {1}"</value>
   </data>
   <data name="LinkAccountCommandUsage" xml:space="preserve">
     <value>Usage: !linkaccount &lt;PLATFORM&gt; &lt;PLATFORM USERNAME&gt;</value>
@@ -7852,7 +7852,7 @@ Failed imports could be due to invalid data or failure to find their information
     <value>This will allow you to import your quotes data from either a plain-text or spreadsheet file. To import a spreadsheet file, you must have some form of Microsoft Excel installed. Note that if there already exists a quote with the same ID in Mix It Up, the quote ID will be updated to the highest number. First, specify the file that you want to import the User data from:</value>
   </data>
   <data name="QuotesDataImportStep2" xml:space="preserve">
-    <value>Next, you&apos;ll need to specify the column number for each value in your data file or leave it blank if that value is not present.</value>
+    <value>Next, you'll need to specify the column number for each value in your data file or leave it blank if that value is not present.</value>
   </data>
   <data name="QuotesImportResults" xml:space="preserve">
     <value>Successful Imports: {0}
@@ -8027,8 +8027,8 @@ Imported quotes with IDs that match existing quotes will altered to the next max
     <value>The item you specified does not exist</value>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
-    <value>You must specify either &quot;buy&quot; or &quot;sell&quot;</value>
-    <comment>{0} is the English word &apos;buy&apos;, {1} is the English word &apos;sell&apos;</comment>
+    <value>You must specify either "buy" or "sell"</value>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
     <value>USAGE: {0} list = Lists all the items available for buying/selling ** {0} &lt;ITEM NAME&gt; = Lists the buying/selling price for the item ** {0} buy &lt;ITEM NAME&gt; [AMOUNT] = Buys 1 or the amount specified of the item ** {0} sell &lt;ITEM NAME&gt; [AMOUNT] = Sells 1 or the amount specified of the item</value>
@@ -8141,7 +8141,7 @@ Imported quotes with IDs that match existing quotes will altered to the next max
     <value>Start Time: </value>
   </data>
   <data name="StreamerAgeHeader" xml:space="preserve">
-    <value>{0}&apos;s Streamer Age: </value>
+    <value>{0}'s Streamer Age: </value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="StreamingPlatformIncorrectAccount" xml:space="preserve">
@@ -8207,11 +8207,11 @@ Imported quotes with IDs that match existing quotes will altered to the next max
     <value>Updated Command: !</value>
   </data>
   <data name="UserFollowAgeHeader" xml:space="preserve">
-    <value>{0}&apos;s Follow Age: </value>
+    <value>{0}'s Follow Age: </value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UserSubscribeAgeHeader" xml:space="preserve">
-    <value>{0}&apos;s Subscribe Age: </value>
+    <value>{0}'s Subscribe Age: </value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="ValidAmountGreaterThan0MustBeSpecified" xml:space="preserve">
@@ -8284,7 +8284,7 @@ Imported quotes with IDs that match existing quotes will altered to the next max
     <value>The giveaway reminder must be 0 or greater</value>
   </data>
   <data name="GiveawayWonTypeClaim" xml:space="preserve">
-    <value>@{0} you&apos;ve won the giveaway; type &quot;!claim&quot; in chat!</value>
+    <value>@{0} you've won the giveaway; type "!claim" in chat!</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="GiveawayYouHaveAlreadyWon" xml:space="preserve">
@@ -8565,7 +8565,7 @@ We will attempt to re-connect with the service when possible. If this continues,
     <value>No settings file has been loaded</value>
   </data>
   <data name="ShowsUsersAmount" xml:space="preserve">
-    <value>Shows User&apos;s Amount</value>
+    <value>Shows User's Amount</value>
   </data>
   <data name="DonatedAmount" xml:space="preserve">
     <value>Donated {0}</value>
@@ -8628,10 +8628,10 @@ We will attempt to re-connect with the service when possible. If this continues,
     <value>Mix It Up uses a Command &amp; Action structure for everything throughout the app. Think of it similar to a recipe that you would follow to make food.</value>
   </data>
   <data name="WizardCommands2" xml:space="preserve">
-    <value>Let&apos;s say you wanted to make some pasta; you would follow the steps in the recipe one after the other until you&apos;re done. You also would follow every step in the order they are specified. For example, you need to heat the water before you can add the pasta.</value>
+    <value>Let's say you wanted to make some pasta; you would follow the steps in the recipe one after the other until you're done. You also would follow every step in the order they are specified. For example, you need to heat the water before you can add the pasta.</value>
   </data>
   <data name="WizardCommands3" xml:space="preserve">
-    <value>Commands are like a recipe and actions are the steps in that recipe. Let&apos;s say you make a shout out command, what are the things it should do? Each of those &quot;things&quot; can be thought of as an action.</value>
+    <value>Commands are like a recipe and actions are the steps in that recipe. Let's say you make a shout out command, what are the things it should do? Each of those "things" can be thought of as an action.</value>
   </data>
   <data name="WizardCommands4" xml:space="preserve">
     <value>In this example, our shout out command sends a message to chat, plays a sound, waits 10 seconds, and then shows an image. Each of those correspond to a different action type (Chat, Sound, Wait, and Overlay).</value>
@@ -8640,10 +8640,10 @@ We will attempt to re-connect with the service when possible. If this continues,
     <value>Mix It Up is a desktop-only application, so your settings and data only exist on your computer. Therefore we encourge users to set up automatic backups for your settings to ensure you always have something to fall back to in the event of any issues:</value>
   </data>
   <data name="WizardFinal2" xml:space="preserve">
-    <value>Don&apos;t know how a feature works or want more info? Simply click on the Help icon on the top bar of the main window to find out more!</value>
+    <value>Don't know how a feature works or want more info? Simply click on the Help icon on the top bar of the main window to find out more!</value>
   </data>
   <data name="WizardFinal3" xml:space="preserve">
-    <value>Don&apos;t forget the following resources available to you for questions &amp; support:</value>
+    <value>Don't forget the following resources available to you for questions &amp; support:</value>
   </data>
   <data name="WizardFinal4" xml:space="preserve">
     <value>Thanks for using Mix It Up and we hope it meets all your needs!</value>
@@ -8712,7 +8712,7 @@ We will attempt to re-connect with the service when possible. If this continues,
     <value>Add User</value>
   </data>
   <data name="UsersUnableToFindUser" xml:space="preserve">
-    <value>Unable find the user &quot;{0}&quot;</value>
+    <value>Unable find the user "{0}"</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UsersSuccessfullyFoundUser" xml:space="preserve">
@@ -8730,7 +8730,7 @@ We will attempt to re-connect with the service when possible. If this continues,
 whispers to be used as a form of automated communication. There are severe restrictions placed on the
 amount of whispers that can be sent in a timeline that make it very impractical for use, as well as spam
 preventative measures if the user is not on your friends list on Twitch. So although you can send whispers
-via Twitch, it&apos;s a &quot;your mileage may vary&quot; situation.</value>
+via Twitch, it's a "your mileage may vary" situation.</value>
   </data>
   <data name="AlertName" xml:space="preserve">
     <value>Alert Name</value>
@@ -9107,26 +9107,26 @@ function timerLoop(totalSeconds, endingSeconds, displayFormat)
     var text = displayFormat;
 
     var seconds = totalSeconds % 60;
-    if (seconds &lt; 10) { seconds = &quot;0&quot; + seconds }
-    text = text.replace(&quot;SS&quot;, totalSeconds);
-    text = text.replace(&quot;ss&quot;, seconds);
+    if (seconds &lt; 10) { seconds = "0" + seconds }
+    text = text.replace("SS", totalSeconds);
+    text = text.replace("ss", seconds);
 
     var totalMinutes = Math.floor(totalSeconds / 60);
     var minutes = totalMinutes % 60;
-    if (minutes &lt; 10) { minutes = &quot;0&quot; + minutes }
-    text = text.replace(&quot;MM&quot;, totalMinutes);
-    text = text.replace(&quot;mm&quot;, minutes);
+    if (minutes &lt; 10) { minutes = "0" + minutes }
+    text = text.replace("MM", totalMinutes);
+    text = text.replace("mm", minutes);
 
     var totalHours = Math.floor(totalMinutes / 60);
     var hours = totalHours % 24;
-    if (hours &lt; 10) { hours = &quot;0&quot; + hours }
-    text = text.replace(&quot;HH&quot;, totalHours);
-    text = text.replace(&quot;hh&quot;, hours);
+    if (hours &lt; 10) { hours = "0" + hours }
+    text = text.replace("HH", totalHours);
+    text = text.replace("hh", hours);
 
     var days = Math.floor(totalHours / 24);
-    text = text.replace(&quot;DD&quot;, hours);
+    text = text.replace("DD", hours);
 
-    document.getElementById(&quot;text&quot;).innerHTML = text;
+    document.getElementById("text").innerHTML = text;
 
     setTimeout(function () {
         if (endingSeconds &gt; 0) {
@@ -9150,10 +9150,10 @@ function adjustTime(time)
 }
 
 if ({CountUp}) {
-    timerLoop(0, {Duration}, &quot;{DisplayFormat}&quot;);  
+    timerLoop(0, {Duration}, "{DisplayFormat}");  
 }
 else {
-    timerLoop({Duration}, 0, &quot;{DisplayFormat}&quot;);
+    timerLoop({Duration}, 0, "{DisplayFormat}");
 }</value>
   </data>
   <data name="OverlayImageDefaultCSS" xml:space="preserve">
@@ -9163,13 +9163,13 @@ else {
 }</value>
   </data>
   <data name="OverlayImageDefaultHTML" xml:space="preserve">
-    <value>&lt;img id=&quot;image&quot; class=&quot;image&quot; src=&quot;{FilePath}&quot; /&gt;</value>
+    <value>&lt;img id="image" class="image" src="{FilePath}" /&gt;</value>
   </data>
   <data name="OverlayTextDefaultCSS" xml:space="preserve">
     <value>.text {
     font-size: {FontSize}px;
     color: {FontColor};
-    font-family: &apos;{FontFamily}&apos;;
+    font-family: '{FontFamily}';
     font-weight: {FontWeight};
     text-decoration: {TextDecoration};
     font-style: {FontStyle};
@@ -9178,7 +9178,7 @@ else {
 }</value>
   </data>
   <data name="OverlayTextDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;text&quot; class=&quot;text&quot;&gt;
+    <value>&lt;p id="text" class="text"&gt;
     {Text}
 &lt;/p&gt;</value>
   </data>
@@ -9189,30 +9189,30 @@ else {
 }</value>
   </data>
   <data name="OverlayVideoDefaultHTML" xml:space="preserve">
-    <value>&lt;video id=&quot;video&quot; class=&quot;video&quot; onloadstart=&quot;this.volume={Volume}&quot; allow=&quot;autoplay; encrypted-media&quot; autoplay {Loop}&gt;
-    &lt;source src=&quot;{FilePath}&quot; type=&quot;video/{VideoExtension}&quot; /&gt;
+    <value>&lt;video id="video" class="video" onloadstart="this.volume={Volume}" allow="autoplay; encrypted-media" autoplay {Loop}&gt;
+    &lt;source src="{FilePath}" type="video/{VideoExtension}" /&gt;
 &lt;/video&gt;</value>
   </data>
   <data name="OverlayWebPageDefaultHTML" xml:space="preserve">
-    <value>&lt;iframe frameborder=&quot;0&quot; width=&quot;{WIDTH}&quot; height=&quot;{HEIGHT}&quot; src=&quot;{URL}&quot; /&gt;</value>
+    <value>&lt;iframe frameborder="0" width="{WIDTH}" height="{HEIGHT}" src="{URL}" /&gt;</value>
   </data>
   <data name="OverlayYouTubeDefaultHTML" xml:space="preserve">
-    <value>&lt;div id=&quot;youtube-{ID}&quot; /&gt;
+    <value>&lt;div id="youtube-{ID}" /&gt;
 
 &lt;script&gt;
-    var youtubeVideoPlayer = new YT.Player(&quot;youtube-{ID}&quot;, {
+    var youtubeVideoPlayer = new YT.Player("youtube-{ID}", {
         height: {HeightNumber},
         width: {WidthNumber},
-        videoId: &apos;{VideoID}&apos;,
-        playerVars: { &apos;controls&apos;: 0, &apos;modestbranding&apos;: 1, &apos;start&apos;: {StartTime} },
+        videoId: '{VideoID}',
+        playerVars: { 'controls': 0, 'modestbranding': 1, 'start': {StartTime} },
         events: {
-            &apos;onReady&apos;: function () {
+            'onReady': function () {
                 youtubeVideoPlayer.setVolume({Volume});
                 youtubeVideoPlayer.setLoop(false);
                 youtubeVideoPlayer.frameBorder = 0;
                 youtubeVideoPlayer.playVideo();
             },
-            &apos;onStateChange&apos;: function (event) {
+            'onStateChange': function (event) {
                 if (event.data == YT.PlayerState.ENDED) {
                     event.target.destroy();
                 }
@@ -9225,7 +9225,7 @@ else {
     <value>Display Format</value>
   </data>
   <data name="OverlayTimerDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;text&quot; class=&quot;text&quot;&gt;
+    <value>&lt;p id="text" class="text"&gt;
     {Text}
 &lt;/p&gt;</value>
   </data>
@@ -9253,8 +9253,8 @@ else {
 }</value>
   </data>
   <data name="OverlayPositionedItemDefaultHTML" xml:space="preserve">
-    <value>&lt;div id=&quot;maindiv&quot; class=&quot;maindiv&quot;&gt;
-&lt;div id=&quot;contentdiv&quot; class=&quot;contentdiv&quot;&gt;
+    <value>&lt;div id="maindiv" class="maindiv"&gt;
+&lt;div id="contentdiv" class="contentdiv"&gt;
 
 {InnerHTML}
 
@@ -9320,9 +9320,9 @@ namespace CustomNamespace
         public object Run()
         {
             // Your code goes here
-            System.Console.WriteLine(&quot;Hello World!&quot;);
+            System.Console.WriteLine("Hello World!");
 
-            // Return any data here that you&apos;d like to use
+            // Return any data here that you'd like to use
             return 0;
         }
     }
@@ -9332,53 +9332,53 @@ namespace CustomNamespace
     <value>function run()
 {
     // Your code goes here
-    var text = &apos;Hello World!&apos;;
+    var text = 'Hello World!';
 
-    // Return any data here that you&apos;d like to use
+    // Return any data here that you'd like to use
     return 0;
 }</value>
   </data>
   <data name="ScriptActionPythonDefaultScriptTemplate" xml:space="preserve">
     <value>def run():
     # Your code goes here
-    print &apos;Hello World!&apos;
+    print 'Hello World!'
 
-    # Return any data here that you&apos;d like to use
+    # Return any data here that you'd like to use
     return 0</value>
   </data>
   <data name="CommunityCommandsScriptActionsNotSupported" xml:space="preserve">
     <value>Commands containing Script actions are not supported for uploading to the Community Commands feature. Due to the complexity of scripts and the ability for them to have malicious intent for users, we do not support uploading them through Community Commands to ensure users are protected. You can optionally instead export your command to a file and share it out with users through other means.</value>
   </data>
   <data name="OverlayLabelAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;label-amount&quot; class=&quot;text&quot;&gt;
+    <value>&lt;p id="label-amount" class="text"&gt;
         {Amount}
 &lt;/p&gt;</value>
   </data>
   <data name="OverlayLabelUsernameAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p class=&quot;text-{ID}&quot;&gt;
-    &lt;span id=&quot;label-username-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
+    <value>&lt;p class="text-{ID}"&gt;
+    &lt;span id="label-username-{ID}" class="text-{ID}"&gt;
         {Username}
     &lt;/span&gt;
     -
-    &lt;span id=&quot;label-amount-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
+    &lt;span id="label-amount-{ID}" class="text-{ID}"&gt;
         {Amount}
     &lt;/span&gt;
 &lt;/p&gt;</value>
   </data>
   <data name="OverlayLabelUsernameDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;label-username-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
+    <value>&lt;p id="label-username-{ID}" class="text-{ID}"&gt;
     {Username}
 &lt;/p&gt;</value>
   </data>
   <data name="OverlayLabelDefaultJavascript" xml:space="preserve">
     <value>function update(name, amount)
 {
-    var nameElement = document.getElementById(&quot;label-name&quot;);
+    var nameElement = document.getElementById("label-name");
     if (nameElement != null) {
         nameElement.innerHTML = name;
     }
     
-    var amountElement = document.getElementById(&quot;label-amount&quot;);
+    var amountElement = document.getElementById("label-amount");
     if (amountElement != null) {
         amountElement.innerHTML = amount; 
     }
@@ -9438,7 +9438,7 @@ namespace CustomNamespace
     vertical-align: middle;
     word-wrap: break-word;
     font-size: {FontSize}px;
-    font-family: &apos;{FontFamily}&apos;;
+    font-family: '{FontFamily}';
     font-weight: bold;
     text-decoration: {TextDecoration};
     font-style: {FontStyle};
@@ -9452,7 +9452,7 @@ namespace CustomNamespace
     font-weight: bold;
     font-size: {FontSize}px;
     color: {FontColor};
-    font-family: &apos;{FontFamily}&apos;;
+    font-family: '{FontFamily}';
     font-weight: {FontWeight};
     text-decoration: {TextDecoration};
     font-style: {FontStyle};
@@ -9467,37 +9467,37 @@ namespace CustomNamespace
 }</value>
   </data>
   <data name="OverlayEventListDefaultHTML" xml:space="preserve">
-    <value>&lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;
+    <value>&lt;div id="list" class="list"&gt;
 
 &lt;/div&gt;
 
-&lt;template id=&quot;item&quot;&gt;
-    &lt;div class=&quot;item&quot;&gt;
-        &lt;p class=&quot;eventtype&quot;&gt;{EventType}&lt;/p&gt;
-        &lt;p class=&quot;details&quot;&gt;{Details}&lt;/p&gt;
-        &lt;p class=&quot;subdetails&quot;&gt;{SubDetails}&lt;/p&gt;
+&lt;template id="item"&gt;
+    &lt;div class="item"&gt;
+        &lt;p class="eventtype"&gt;{EventType}&lt;/p&gt;
+        &lt;p class="details"&gt;{Details}&lt;/p&gt;
+        &lt;p class="subdetails"&gt;{SubDetails}&lt;/p&gt;
     &lt;/div&gt;
 &lt;/template&gt;</value>
   </data>
   <data name="OverlayEventListDefaultJavascript" xml:space="preserve">
     <value>function add(eventType, details, subdetails)
 {
-    var list = document.getElementById(&quot;list&quot;);
+    var list = document.getElementById("list");
 
     if (list.childElementCount &gt; {MaxToShow}) {
         removeOldest();
     }
 
-    var itemTemplate = document.querySelector(&quot;#item&quot;);
+    var itemTemplate = document.querySelector("#item");
     const item = itemTemplate.content.cloneNode(true);
     
-    var eventTypeElement = item.querySelector(&quot;.eventtype&quot;);
+    var eventTypeElement = item.querySelector(".eventtype");
     eventTypeElement.innerHTML = eventType;
 
-    var detailsElement = item.querySelector(&quot;.details&quot;);
+    var detailsElement = item.querySelector(".details");
     detailsElement.innerHTML = details;
     
-    var subdetailsElement = item.querySelector(&quot;.subdetails&quot;);
+    var subdetailsElement = item.querySelector(".subdetails");
     subdetailsElement.innerHTML = subdetails;
 
     list.appendChild(item);
@@ -9505,7 +9505,7 @@ namespace CustomNamespace
 
 function removeOldest()
 {
-    var list = document.getElementById(&quot;list&quot;);
+    var list = document.getElementById("list");
     list.removeChild(list.firstElementChild);
 }</value>
   </data>
@@ -9535,7 +9535,7 @@ function removeOldest()
     position: absolute;
     font-size: {FontSize}px;
     color: {FontColor};
-    font-family: &apos;{FontFamily}&apos;;
+    font-family: '{FontFamily}';
     font-weight: {FontWeight};
     text-decoration: {TextDecoration};
     font-style: {FontStyle};
@@ -9548,24 +9548,24 @@ function removeOldest()
 }</value>
   </data>
   <data name="OverlayGoalDefaultHTML" xml:space="preserve">
-    <value>&lt;div class=&quot;background&quot;&gt;
-  &lt;div id=&quot;progress&quot; class=&quot;progress&quot; /&gt;
+    <value>&lt;div class="background"&gt;
+  &lt;div id="progress" class="progress" /&gt;
 &lt;/div&gt;
-&lt;p id=&quot;text&quot; class=&quot;text&quot; /&gt;</value>
+&lt;p id="text" class="text" /&gt;</value>
   </data>
   <data name="OverlayGoalDefaultJavascript" xml:space="preserve">
     <value>function update(amount, goal, width)
 {
     var percentage = (amount / goal)
 
-    var textElement = document.getElementById(&quot;text&quot;);
+    var textElement = document.getElementById("text");
     if (textElement != null) {
-        textElement.innerHTML = amount + &quot; (&quot; + Math.round(percentage * 100) + &quot;%)&quot;; 
+        textElement.innerHTML = amount + " (" + Math.round(percentage * 100) + "%)"; 
     }
     
-    var progressElement = document.getElementById(&quot;progress&quot;);
+    var progressElement = document.getElementById("progress");
     if (progressElement != null) {
-        progressElement.style.width = Math.min(Math.round(percentage * width), width) + &quot;px&quot;;
+        progressElement.style.width = Math.min(Math.round(percentage * width), width) + "px";
     }
 }
 
@@ -9596,7 +9596,7 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
     <value>This LoupeDeck plug-in allows you to run Mix It Up commands directly from your LoupeDeck device, as well as other status information about your stream.</value>
   </data>
   <data name="LoupeDeckInfo2" xml:space="preserve">
-    <value>To get started, ensure the LoupeDeck software is updated to the latest version &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the Marketplace icon at the top right of your LoupeDeck software, then search for &quot;Mix It Up&quot;.</value>
+    <value>To get started, ensure the LoupeDeck software is updated to the latest version &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the Marketplace icon at the top right of your LoupeDeck software, then search for "Mix It Up".</value>
   </data>
   <data name="ShellExecute" xml:space="preserve">
     <value>Shell Execute</value>
@@ -9627,18 +9627,18 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
     <comment>Manual</comment>
   </data>
   <data name="OverlayLabelNameAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p class=&quot;text&quot;&gt;
-    &lt;span id=&quot;label-name&quot; class=&quot;text&quot;&gt;
+    <value>&lt;p class="text"&gt;
+    &lt;span id="label-name" class="text"&gt;
         {Username}
     &lt;/span&gt;
     -
-    &lt;span id=&quot;label-amount&quot; class=&quot;text&quot;&gt;
+    &lt;span id="label-amount" class="text"&gt;
         {Amount}
     &lt;/span&gt;
 &lt;/p&gt;</value>
   </data>
   <data name="OverlayLabelNameDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;label-name&quot; class=&quot;text&quot;&gt;
+    <value>&lt;p id="label-name" class="text"&gt;
     {Username}
 &lt;/p&gt;</value>
   </data>
@@ -9700,34 +9700,34 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
     <value>Width must be a valid value</value>
   </data>
   <data name="OverlayChatDefaultHTML" xml:space="preserve">
-    <value>&lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;
+    <value>&lt;div id="list" class="list"&gt;
 
 &lt;/div&gt;
 
-&lt;template id=&quot;item&quot;&gt;
-    &lt;div class=&quot;item&quot;&gt;
-        &lt;p class=&quot;message&quot;&gt;&lt;/p&gt;
+&lt;template id="item"&gt;
+    &lt;div class="item"&gt;
+        &lt;p class="message"&gt;&lt;/p&gt;
     &lt;/div&gt;
 &lt;/template&gt;
 
-&lt;template id=&quot;messagebadge&quot;&gt;
-    &lt;img class=&quot;messagebadge&quot; /&gt;
+&lt;template id="messagebadge"&gt;
+    &lt;img class="messagebadge" /&gt;
 &lt;/template&gt;
 
-&lt;template id=&quot;messageavatar&quot;&gt;
-    &lt;img class=&quot;messageavatar&quot; /&gt;
+&lt;template id="messageavatar"&gt;
+    &lt;img class="messageavatar" /&gt;
 &lt;/template&gt;
 
-&lt;template id=&quot;messageusername&quot;&gt;
-    &lt;span class=&quot;messageusername&quot;&gt;&lt;/span&gt;
+&lt;template id="messageusername"&gt;
+    &lt;span class="messageusername"&gt;&lt;/span&gt;
 &lt;/template&gt;
 
-&lt;template id=&quot;messagetext&quot;&gt;
-    &lt;span class=&quot;messagetext&quot;&gt;&lt;/span&gt;
+&lt;template id="messagetext"&gt;
+    &lt;span class="messagetext"&gt;&lt;/span&gt;
 &lt;/template&gt;
 
-&lt;template id=&quot;messageemote&quot;&gt;
-    &lt;img class=&quot;messageemote&quot; /&gt;
+&lt;template id="messageemote"&gt;
+    &lt;img class="messageemote" /&gt;
 &lt;/template&gt;</value>
   </data>
   <data name="OverlayChatDefaultCSS" xml:space="preserve">
@@ -9769,7 +9769,7 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
     vertical-align: middle;
     word-wrap: break-word;
     font-size: {FontSize}px;
-    font-family: &apos;{FontFamily}&apos;;
+    font-family: '{FontFamily}';
     font-weight: bold;
     text-decoration: {TextDecoration};
     font-style: {FontStyle};
@@ -9783,7 +9783,7 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
     font-weight: bold;
     font-size: {FontSize}px;
     color: {FontColor};
-    font-family: &apos;{FontFamily}&apos;;
+    font-family: '{FontFamily}';
     font-weight: {FontWeight};
     text-decoration: {TextDecoration};
     font-style: {FontStyle};
@@ -9800,7 +9800,7 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
   <data name="OverlayChatDefaultJavascript" xml:space="preserve">
     <value>function add(user, messageParts)
 {
-    var list = document.getElementById(&quot;list&quot;);
+    var list = document.getElementById("list");
 
     if ({ShowMaxMessagesOnly})
     {
@@ -9810,15 +9810,15 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
         }
     }
 
-    var itemTemplate = document.querySelector(&quot;#item&quot;);
-    var messageBadgeTemplate = document.querySelector(&quot;#messagebadge&quot;);
-    var messageAvatarTemplate = document.querySelector(&quot;#messageavatar&quot;);
-    var messageUsernameTemplate = document.querySelector(&quot;#messageusername&quot;);
-    var messageTextTemplate = document.querySelector(&quot;#messagetext&quot;);
-    var messageEmoteTemplate = document.querySelector(&quot;#messageemote&quot;);
+    var itemTemplate = document.querySelector("#item");
+    var messageBadgeTemplate = document.querySelector("#messagebadge");
+    var messageAvatarTemplate = document.querySelector("#messageavatar");
+    var messageUsernameTemplate = document.querySelector("#messageusername");
+    var messageTextTemplate = document.querySelector("#messagetext");
+    var messageEmoteTemplate = document.querySelector("#messageemote");
     
     const item = itemTemplate.content.cloneNode(true);
-    var messageElement = item.querySelector(&quot;.message&quot;);
+    var messageElement = item.querySelector(".message");
     
     const messageRoleBadge = messageBadgeTemplate.content.cloneNode(true);
     messageRoleBadge.src = user.PlatformRoleBadgeLink;
@@ -9839,13 +9839,13 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
     
     messageParts.forEach(messagePart =&gt;
     {
-        if (messagePart.Type === &apos;text&apos;)
+        if (messagePart.Type === 'text')
         {
             const messageText = messageTextTemplate.content.cloneNode(true);
             messageUsername.innerHTML = messagePart.Text;
             messageElement.appendChild(messageText);
         }
-        else if (messagePart.Type === &apos;image&apos;)
+        else if (messagePart.Type === 'image')
         {
             const messageEmote = messageEmoteTemplate.content.cloneNode(true);
             messageEmote.src = messagePart.URL;
@@ -9858,37 +9858,37 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
 
 function removeOldest()
 {
-    var list = document.getElementById(&quot;list&quot;);
+    var list = document.getElementById("list");
     list.removeChild(list.firstElementChild);
 }</value>
   </data>
   <data name="OverlayBasicIFrameTemplate" xml:space="preserve">
     <value>&lt;!DOCTYPE html&gt;
 
-&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+&lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
 &lt;head&gt;
-    &lt;meta charset=&quot;utf-8&quot; /&gt;
+    &lt;meta charset="utf-8" /&gt;
     &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
 
-    &lt;script src=&quot;jquery-3.6.0.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src="jquery-3.6.0.min.js"&gt;&lt;/script&gt;
 
-    &lt;script src=&quot;video.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src="video.min.js"&gt;&lt;/script&gt;
 
-    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;animate.min.css&quot;&gt;
+    &lt;link rel="stylesheet" type="text/css" href="animate.min.css"&gt;
 
-    &lt;style type=&quot;text/css&quot;&gt;
+    &lt;style type="text/css"&gt;
         {CSS}
     &lt;/style&gt;
 &lt;/head&gt;
-&lt;body style=&quot;background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;&quot;&gt;
+&lt;body style="background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;"&gt;
 
     {HTML}
 
     &lt;script&gt;
-        var maindiv = document.getElementById(&quot;maindiv&quot;);
+        var maindiv = document.getElementById("maindiv");
         
         function sendParentMessage(obj) {
-            window.top.postMessage(JSON.stringify(obj), &apos;*&apos;);
+            window.top.postMessage(JSON.stringify(obj), '*');
         }
 
         window.onmessage = function (message) {
@@ -9897,7 +9897,7 @@ function removeOldest()
             }
         };
         
-        const animateCSS = (element, animation, prefix = &apos;animate__&apos;) =&gt;
+        const animateCSS = (element, animation, prefix = 'animate__') =&gt;
             // We create a Promise and return it
             new Promise((resolve, reject) =&gt; {
                 if (animation != null &amp;&amp; animation) {
@@ -9909,13 +9909,13 @@ function removeOldest()
                     function handleAnimationEnd(event) {
                         event.stopPropagation();
                         element.classList.remove(`${prefix}animated`, animationName);
-                        resolve(&apos;Animation ended&apos;);
+                        resolve('Animation ended');
                     }
 
-                    element.addEventListener(&apos;animationend&apos;, handleAnimationEnd, { once: true });
+                    element.addEventListener('animationend', handleAnimationEnd, { once: true });
                 }
                 else {
-                    resolve(&apos;Animation ended&apos;);
+                    resolve('Animation ended');
                 }
             });
         
@@ -9928,7 +9928,7 @@ function removeOldest()
     <comment>{HTML} is the HTML replacement, {CSS} is the CSS replacement, {Animations} is the Javascript animation calls, {Javascript} is the Javascript replacement</comment>
   </data>
   <data name="OverlayAnimateCSSJavascript" xml:space="preserve">
-    <value>animateCSS(maindiv, &apos;{AnimateCSSAnimationName}&apos;);</value>
+    <value>animateCSS(maindiv, '{AnimateCSSAnimationName}');</value>
   </data>
   <data name="DeStream" xml:space="preserve">
     <value>DeStream</value>
@@ -9939,12 +9939,18 @@ function removeOldest()
 }, {MillisecondTiming});</value>
   </data>
   <data name="OverlayAnimateCSSThenJavascript" xml:space="preserve">
-    <value>animateCSS(maindiv, &apos;{AnimateCSSAnimationName}&apos;).then((message) =&gt; {
+    <value>animateCSS(maindiv, '{AnimateCSSAnimationName}').then((message) =&gt; {
     {PostAnimation}
 });</value>
   </data>
   <data name="OverlayIFrameSendParentMessageRemove" xml:space="preserve">
-    <value>maindiv.style.visibility=&apos;hidden&apos;
-sendParentMessage({ Type: &quot;Remove&quot;, ID: &quot;{ID}&quot; });</value>
+    <value>maindiv.style.visibility='hidden'
+sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
+  </data>
+  <data name="ExistingProfile" xml:space="preserve">
+    <value>Existing Profile</value>
+  </data>
+  <data name="NewProfile" xml:space="preserve">
+    <value>New Profile</value>
   </data>
 </root>

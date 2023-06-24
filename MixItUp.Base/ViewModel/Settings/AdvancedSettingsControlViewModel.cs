@@ -37,21 +37,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
             this.RestoreSettings = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.RestoreASettingsBackup, MixItUp.Base.Resources.RestoreSettings, this.CreateCommand(async () =>
             {
-                string filePath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(string.Format("Mix It Up Settings V2 Backup (*.{0})|*.{0}|All files (*.*)|*.*", SettingsV3Model.SettingsBackupFileExtension));
-                if (!string.IsNullOrEmpty(filePath))
-                {
-                    Result<SettingsV3Model> result = await ServiceManager.Get<SettingsService>().RestorePackagedBackup(filePath);
-                    if (result.Success)
-                    {
-                        ChannelSession.AppSettings.BackupSettingsFilePath = filePath;
-                        ChannelSession.AppSettings.BackupSettingsToReplace = ChannelSession.Settings.ID;
-                        GlobalEvents.RestartRequested();
-                    }
-                    else
-                    {
-                        await DialogHelper.ShowMessage(result.Message);
-                    }
-                }
+                await SettingsV3Model.RestoreSettingsBackup();
             }));
 
             this.AutomaticBackupRate = new GenericComboBoxSettingsOptionControlViewModel<SettingsBackupRateEnum>(MixItUp.Base.Resources.AutomatedSettingsBackupRate, EnumHelper.GetEnumList<SettingsBackupRateEnum>(),

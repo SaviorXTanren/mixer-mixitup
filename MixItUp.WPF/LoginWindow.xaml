@@ -42,7 +42,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.Streamer}" Margin="0,8,0,8" Width="160">
+            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.ExistingProfile}" Margin="0,8,0,8" Width="160">
                 <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -58,8 +58,18 @@
 
             <Controls:StreamingPlatformStatusAlertControl Grid.Column="1" HorizontalAlignment="Center" />
 
-            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.NewStreamer}" Margin="0,8,0,8" Width="160">
-                <Button x:Name="NewStreamerLoginButton" Click="NewStreamerLoginButton_Click" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="80" Height="30" Content="{x:Static resx:Resources.NewStreamer}" />
+            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.NewProfile}" Margin="0,8,0,8" Width="160">
+                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Button Grid.Row="0" x:Name="NewStreamerLoginButton" Click="NewStreamerLoginButton_Click" MinWidth="80" Height="30" Content="{x:Static resx:Resources.NewStreamer}" />
+
+                    <Button Grid.Row="2" x:Name="RestoreBackupButton" Click="RestoreBackupButton_Click" MinWidth="80" Height="30" Content="{x:Static resx:Resources.RestoreSettings}" />
+                </Grid>
             </GroupBox>
 
         </Grid>

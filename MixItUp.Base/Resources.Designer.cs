@@ -3372,7 +3372,7 @@ namespace MixItUp.Base {
                 return ResourceManager.GetString("Cooldown", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to This command is currently on cooldown, please wait another {0} second(s)..
         /// </summary>
@@ -3381,7 +3381,7 @@ namespace MixItUp.Base {
                 return ResourceManager.GetString("CooldownRequirementOnCooldown", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to This command is currently on cooldown, please wait another {0} hour(s)..
         /// </summary>
@@ -5316,6 +5316,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enable Streamlabs OBS connection on the Services page!.
+        /// </summary>
+        public static string EnableStreamlabsOBS {
+            get {
+                return ResourceManager.GetString("EnableStreamlabsOBS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enable Subscriber Mode.
         /// </summary>
         public static string EnableSubscriberMode {
@@ -5573,6 +5582,15 @@ namespace MixItUp.Base {
         public static string ExemptFromRuleAndStrikes {
             get {
                 return ResourceManager.GetString("ExemptFromRuleAndStrikes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Existing Profile.
+        /// </summary>
+        public static string ExistingProfile {
+            get {
+                return ResourceManager.GetString("ExistingProfile", resourceCulture);
             }
         }
         
@@ -11208,6 +11226,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to List.
+        /// </summary>
+        public static string List {
+            get {
+                return ResourceManager.GetString("List", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to List Alignment.
         /// </summary>
         public static string ListAlignment {
@@ -12538,6 +12565,15 @@ namespace MixItUp.Base {
         public static string NewLeader {
             get {
                 return ResourceManager.GetString("NewLeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Profile.
+        /// </summary>
+        public static string NewProfile {
+            get {
+                return ResourceManager.GetString("NewProfile", resourceCulture);
             }
         }
         
@@ -13948,6 +13984,34 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;p class=&quot;text-{ID}&quot;&gt;
+        ///    &lt;span id=&quot;label-username-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
+        ///        {Username}
+        ///    &lt;/span&gt;
+        ///    -
+        ///    &lt;span id=&quot;label-amount-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
+        ///        {Amount}
+        ///    &lt;/span&gt;
+        ///&lt;/p&gt;.
+        /// </summary>
+        public static string OverlayLabelUsernameAmountDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayLabelUsernameAmountDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;p id=&quot;label-username-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
+        ///    {Username}
+        ///&lt;/p&gt;.
+        /// </summary>
+        public static string OverlayLabelUsernameDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayLabelUsernameDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New Leader.
         /// </summary>
         public static string OverlayLeaderboardNewLeader {
@@ -14184,6 +14248,24 @@ namespace MixItUp.Base {
         public static string OverlayWarning3 {
             get {
                 return ResourceManager.GetString("OverlayWarning3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;iframe frameborder=&quot;0&quot; width=&quot;{WIDTH}&quot; height=&quot;{HEIGHT}&quot; src=&quot;{URL}&quot; /&gt;.
+        /// </summary>
+        public static string OverlayWebPageDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayWebPageDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing url.
+        /// </summary>
+        public static string OverlayWebPageMissingURL {
+            get {
+                return ResourceManager.GetString("OverlayWebPageMissingURL", resourceCulture);
             }
         }
         
@@ -19001,6 +19083,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Streaming Software (OBS, SLOBS).
+        /// </summary>
+        public static string StreamingSoftwareOBSSLOBS {
+            get {
+                return ResourceManager.GetString("StreamingSoftwareOBSSLOBS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Streaming Software Source Name.
         /// </summary>
         public static string StreamingSoftwareSourceName {
@@ -19015,6 +19106,15 @@ namespace MixItUp.Base {
         public static string StreamIsCurrentlyOffline {
             get {
                 return ResourceManager.GetString("StreamIsCurrentlyOffline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streamlabs Desktop might be running as administrator and Mix It Up is not. Try running Mix It Up as an Administrator before connecting..
+        /// </summary>
+        public static string StreamlabDesktopAdminMaybe {
+            get {
+                return ResourceManager.GetString("StreamlabDesktopAdminMaybe", resourceCulture);
             }
         }
         
@@ -19105,6 +19205,60 @@ namespace MixItUp.Base {
         public static string StreamlabsInfo1 {
             get {
                 return ResourceManager.GetString("StreamlabsInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streamlabs OBS.
+        /// </summary>
+        public static string StreamlabsOBS {
+            get {
+                return ResourceManager.GetString("StreamlabsOBS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streamlabs OBS might be running as administrator and Mix It Up is not. Try running Mix It Up as an Administrator before connecting..
+        /// </summary>
+        public static string StreamlabsOBSAdminMaybe {
+            get {
+                return ResourceManager.GetString("StreamlabsOBSAdminMaybe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streamlabs OBS connection test failed, please ensure that Streamlabs OBS is running..
+        /// </summary>
+        public static string StreamlabsOBSConnectionFailed {
+            get {
+                return ResourceManager.GetString("StreamlabsOBSConnectionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streamlabs OBS connection test successful!.
+        /// </summary>
+        public static string StreamlabsOBSConnectionSuccess {
+            get {
+                return ResourceManager.GetString("StreamlabsOBSConnectionSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streamlabs OBS could not be reached.
+        /// </summary>
+        public static string StreamlabsOBSFailed {
+            get {
+                return ResourceManager.GetString("StreamlabsOBSFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Streamlabs OBS service allows you to directly interact with your instance of Streamlabs OBS to perform changes to scenes and sources..
+        /// </summary>
+        public static string StreamlabsOBSInfo1 {
+            get {
+                return ResourceManager.GetString("StreamlabsOBSInfo1", resourceCulture);
             }
         }
         
@@ -21482,6 +21636,15 @@ namespace MixItUp.Base {
         public static string TwitchCustomTagsMustMeetStandard {
             get {
                 return ResourceManager.GetString("TwitchCustomTagsMustMeetStandard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Events.
+        /// </summary>
+        public static string TwitchEvents {
+            get {
+                return ResourceManager.GetString("TwitchEvents", resourceCulture);
             }
         }
         
