@@ -9947,6 +9947,12 @@ function removeOldest()
     <value>maindiv.style.visibility='hidden'
 sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   </data>
+  <data name="ExistingProfile" xml:space="preserve">
+    <value>Existing Profile</value>
+  </data>
+  <data name="NewProfile" xml:space="preserve">
+    <value>New Profile</value>
+  </data>
   <data name="ResponsiveVoice" xml:space="preserve">
     <value>ResponsiveVoice</value>
   </data>

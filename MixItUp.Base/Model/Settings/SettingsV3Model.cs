@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -39,6 +38,25 @@ namespace MixItUp.Base.Model.Settings
         public const string SettingsLocalBackupFileExtension = "backup";
 
         public const string SettingsBackupFileExtension = "miubackup";
+
+        public static async Task RestoreSettingsBackup()
+        {
+            string filePath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(string.Format("Mix It Up Settings V2 Backup (*.{0})|*.{0}|All files (*.*)|*.*", SettingsV3Model.SettingsBackupFileExtension));
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                Result<SettingsV3Model> result = await ServiceManager.Get<SettingsService>().RestorePackagedBackup(filePath);
+                if (result.Success)
+                {
+                    ChannelSession.AppSettings.BackupSettingsFilePath = filePath;
+                    ChannelSession.AppSettings.BackupSettingsToReplace = (ChannelSession.Settings != null) ? ChannelSession.Settings.ID : Guid.Empty;
+                    GlobalEvents.RestartRequested();
+                }
+                else
+                {
+                    await DialogHelper.ShowMessage(result.Message);
+                }
+            }
+        }
 
         [DataMember]
         public int Version { get; set; } = SettingsV3Model.LatestVersion;

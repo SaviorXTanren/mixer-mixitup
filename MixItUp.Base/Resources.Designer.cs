@@ -5604,6 +5604,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Existing Profile.
+        /// </summary>
+        public static string ExistingProfile {
+            get {
+                return ResourceManager.GetString("ExistingProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Exit.
         /// </summary>
         public static string Exit {
@@ -12574,6 +12583,15 @@ namespace MixItUp.Base {
         public static string NewLeader {
             get {
                 return ResourceManager.GetString("NewLeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Profile.
+        /// </summary>
+        public static string NewProfile {
+            get {
+                return ResourceManager.GetString("NewProfile", resourceCulture);
             }
         }
         

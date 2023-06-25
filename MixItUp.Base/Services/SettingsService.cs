@@ -98,26 +98,29 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            if (!string.IsNullOrEmpty(ChannelSession.AppSettings.BackupSettingsFilePath) && ChannelSession.AppSettings.BackupSettingsToReplace != Guid.Empty)
+            if (!string.IsNullOrEmpty(ChannelSession.AppSettings.BackupSettingsFilePath))
             {
                 Logger.Log(LogLevel.Debug, "Restored settings file detected, starting restore process");
 
-                SettingsV3Model settings = allSettings.FirstOrDefault(s => s.ID.Equals(ChannelSession.AppSettings.BackupSettingsToReplace));
-                if (settings != null)
+                if (ChannelSession.AppSettings.BackupSettingsToReplace != Guid.Empty)
                 {
-                    File.Delete(settings.SettingsFilePath);
-                    File.Delete(settings.DatabaseFilePath);
+                    SettingsV3Model settings = allSettings.FirstOrDefault(s => s.ID.Equals(ChannelSession.AppSettings.BackupSettingsToReplace));
+                    if (settings != null)
+                    {
+                        File.Delete(settings.SettingsFilePath);
+                        File.Delete(settings.DatabaseFilePath);
 
-                    // Adding delay to ensure the above files are actually deleted
-                    await Task.Delay(2000);
-
-                    await ServiceManager.Get<IFileService>().UnzipFiles(ChannelSession.AppSettings.BackupSettingsFilePath, SettingsV3Model.SettingsDirectoryName);
-
-                    ChannelSession.AppSettings.BackupSettingsFilePath = null;
-                    ChannelSession.AppSettings.BackupSettingsToReplace = Guid.Empty;
-
-                    return await this.GetAllSettings();
+                        // Adding delay to ensure the above files are actually deleted
+                        await Task.Delay(2000);
+                    }
                 }
+
+                await ServiceManager.Get<IFileService>().UnzipFiles(ChannelSession.AppSettings.BackupSettingsFilePath, SettingsV3Model.SettingsDirectoryName);
+
+                ChannelSession.AppSettings.BackupSettingsFilePath = null;
+                ChannelSession.AppSettings.BackupSettingsToReplace = Guid.Empty;
+
+                return await this.GetAllSettings();
             }
             else if (ChannelSession.AppSettings.SettingsToDelete != Guid.Empty)
             {

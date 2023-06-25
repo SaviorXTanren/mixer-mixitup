@@ -22,6 +22,7 @@ namespace MixItUp.WPF
     {
         private MixItUpUpdateModel currentUpdate;
         private bool updateFound = false;
+        private bool restartApplication = false;
 
         private ObservableCollection<SettingsV3Model> streamerSettings = new ThreadSafeObservableCollection<SettingsV3Model>();
 
@@ -34,6 +35,9 @@ namespace MixItUp.WPF
 
         protected override async Task OnLoaded()
         {
+            GlobalEvents.OnShowMessageBox += GlobalEvents_OnShowMessageBox;
+            GlobalEvents.OnRestartRequested += GlobalEvents_OnRestartRequested;
+
             this.Title += " - v" + Assembly.GetEntryAssembly().GetName().Version.ToString();
 
             if (ProcessHelper.GetProcessesByName("MixItUp").Count() > 1)
@@ -165,6 +169,28 @@ namespace MixItUp.WPF
                 this.Hide();
                 this.Close();
             }
+        }
+
+        private async void RestoreBackupButton_Click(object sender, RoutedEventArgs e)
+        {
+            await SettingsV3Model.RestoreSettingsBackup();
+        }
+
+        private async void GlobalEvents_OnShowMessageBox(object sender, string message)
+        {
+            await this.RunAsyncOperation(async () =>
+            {
+                await DialogHelper.ShowMessage(message);
+            });
+        }
+
+        private async void GlobalEvents_OnRestartRequested(object sender, EventArgs e)
+        {
+            await ChannelSession.AppSettings.Save();
+
+            this.Close();
+
+            ProcessHelper.LaunchProgram(Application.ResourceAssembly.Location);
         }
 
         private Task<bool> ShowLicenseAgreement()
