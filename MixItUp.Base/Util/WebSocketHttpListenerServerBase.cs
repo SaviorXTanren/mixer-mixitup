@@ -28,8 +28,6 @@ namespace MixItUp.Base.Util
             base.Stop();
         }
 
-        public async Task Send(WebSocketPacket packet) { await this.Send(JSONSerializerHelper.SerializeToString(packet)); }
-
         public async Task Send(string packet)
         {
             try

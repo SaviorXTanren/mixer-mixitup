@@ -10,46 +10,41 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public class OverlayV3Packet : WebSocketPacket
+    public class OverlayV3Packet
     {
-        public JArray Data { get; set; } = new JArray();
+        public string ID { get; set;}
+
+        public string Type { get; set; }
+
+        public JObject Data { get; set; } = new JObject();
 
         public OverlayV3Packet() { }
 
         public OverlayV3Packet(string json)
         {
             this.Type = string.Empty;
-            this.Data = new JArray();
 
             JObject jobj = JObject.Parse(json);
             if (jobj.TryGetValue("Type", out JToken type))
             {
                 this.Type = type.ToString();
             }
-            if (jobj.TryGetValue("Data", out JToken data) && data is JArray)
+            if (jobj.TryGetValue("Data", out JToken data) && data is JObject)
             {
-                this.Data = (JArray)data;
+                this.Data = (JObject)data;
             }
         }
-        
+
         public OverlayV3Packet(string type, object data)
         {
             this.Type = type;
-            this.Data.Add(JObject.FromObject(data));
-        }
-
-        public OverlayV3Packet(string type, IEnumerable<object> data)
-        {
-            this.Type = type;
-            foreach (object d in data)
-            {
-                this.Data.Add(JObject.FromObject(data));
-            }
+            this.Data = JObject.FromObject(data);
         }
     }
 
@@ -281,7 +276,7 @@ namespace MixItUp.Base.Services
         private OverlayV3HttpListenerServer httpListenerServer;
         private OverlayV3WebSocketHttpListenerServer webSocketServer;
 
-        private List<object> batchPackets = new List<object>();
+        private List<OverlayV3Packet> batchPackets = new List<OverlayV3Packet>();
         private bool isBatching = false;
 
         public OverlayEndpointV3Service(OverlayEndpointV3Model model)
@@ -356,13 +351,14 @@ namespace MixItUp.Base.Services
 
                     await this.httpListenerServer.SetHTMLData(output.ID.ToString(), output.GenerateFullHTMLOutput());
 
+                    OverlayV3Packet packet = new OverlayV3Packet("Basic", new OverlayBasicOutputV3Model(output));
                     if (this.isBatching)
                     {
-                        this.batchPackets.Add(new OverlayBasicOutputV3Model(output));
+                        this.batchPackets.Add(packet);
                     }
                     else
                     {
-                        await this.webSocketServer.Send(new OverlayV3Packet("Basic", new OverlayBasicOutputV3Model(output)));
+                        await this.webSocketServer.Send(packet);
                     }
                 }
             }
@@ -378,7 +374,15 @@ namespace MixItUp.Base.Services
             {
                 if (item != null)
                 {
-                    await this.webSocketServer.Send(new OverlayV3Packet("YouTube", await item.GetProcessedItem(parameters)));
+                    OverlayV3Packet packet = new OverlayV3Packet("YouTube", await item.GetProcessedItem(parameters));
+                    if (this.isBatching)
+                    {
+                        this.batchPackets.Add(packet);
+                    }
+                    else
+                    {
+                        await this.webSocketServer.Send(packet);
+                    }
                 }
             }
             catch (Exception ex)
@@ -393,7 +397,15 @@ namespace MixItUp.Base.Services
             {
                 if (item != null)
                 {
-                    await this.webSocketServer.Send(new OverlayV3Packet("ResponsiveVoice", item));
+                    OverlayV3Packet packet = new OverlayV3Packet("ResponsiveVoice", item);
+                    if (this.isBatching)
+                    {
+                        this.batchPackets.Add(packet);
+                    }
+                    else
+                    {
+                        await this.webSocketServer.Send(packet);
+                    }
                 }
             }
             catch (Exception ex)
@@ -410,11 +422,11 @@ namespace MixItUp.Base.Services
         public async Task EndBatching()
         {
             this.isBatching = false;
-            if (batchPackets.Count > 0)
+            if (this.batchPackets.Count > 0)
             {
-                await this.webSocketServer.Send(new OverlayV3Packet("Basic", JArray.FromObject(this.batchPackets.ToList())));
+                await this.webSocketServer.Send(this.batchPackets.ToList());
+                this.batchPackets.Clear();
             }
-            this.batchPackets.Clear();
         }
 
         public string GetURLForFile(string filePath, string fileType) { return this.httpListenerServer.GetURLForFile(filePath, fileType); }
@@ -582,6 +594,8 @@ namespace MixItUp.Base.Services
         public event EventHandler<OverlayV3Packet> OnPacketReceived = delegate { };
 
         public OverlayV3WebSocketHttpListenerServer() { }
+
+        public async Task Send(IEnumerable<OverlayV3Packet> packets) { await base.Send(JSONSerializerHelper.SerializeToString(packets)); }
 
         public async Task Send(OverlayV3Packet packet) { await base.Send(JSONSerializerHelper.SerializeToString(packet)); }
 

@@ -49,7 +49,7 @@ namespace MixItUp.Base.Model.Settings
                 {
                     ChannelSession.AppSettings.BackupSettingsFilePath = filePath;
                     ChannelSession.AppSettings.BackupSettingsToReplace = (ChannelSession.Settings != null) ? ChannelSession.Settings.ID : Guid.Empty;
-                    GlobalEvents.RestartRequested();
+                    ChannelSession.RestartRequested();
                 }
                 else
                 {

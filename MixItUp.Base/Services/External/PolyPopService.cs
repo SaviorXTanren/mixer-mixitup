@@ -4,15 +4,21 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.External
 {
-    public class PolyPopTriggerActionPacket : WebSocketPacket
+    public class PolyPopTriggerActionPacket
     {
+        public string type { get; set; }
+
         public string title { get; set; }
+
         public JObject variables { get; set; } = new JObject();
+
+        public string Type { get { return this.type; } set { this.type = value; } }
 
         public PolyPopTriggerActionPacket(string title, Dictionary<string, string> variables)
         {
@@ -88,7 +94,7 @@ namespace MixItUp.Base.Services.External
 
         public async Task TriggerAlert(string alertName, Dictionary<string, string> variables)
         {
-            await this.Send(new PolyPopTriggerActionPacket(alertName, variables));
+            await this.Send(JSONSerializerHelper.SerializeToString(new PolyPopTriggerActionPacket(alertName, variables)));
         }
 
         protected override WebSocketServerBase CreateWebSocketServer(HttpListenerContext listenerContext)

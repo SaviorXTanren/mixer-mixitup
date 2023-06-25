@@ -44,9 +44,13 @@ namespace MixItUp.Base.Services.External
         public string webBrowserUrl;
     }
 
-    public class XSplitPacket : WebSocketPacket
+    public class XSplitPacket
     {
+        public string type { get; set; }
+
         public JObject data;
+
+        public string Type { get { return this.type; } set { this.type = value; } }
 
         public XSplitPacket(string type, JObject data)
         {
@@ -123,7 +127,7 @@ namespace MixItUp.Base.Services.External
 
         public async Task ShowScene(string sceneName)
         {
-            await this.Send(new XSplitPacket("sceneTransition", JObject.FromObject(new XSplitScene() { sceneName = sceneName })));
+            await this.Send(JSONSerializerHelper.SerializeToString(new XSplitPacket("sceneTransition", JObject.FromObject(new XSplitScene() { sceneName = sceneName }))));
         }
 
         public async Task<string> GetCurrentScene()
@@ -133,7 +137,7 @@ namespace MixItUp.Base.Services.External
 
         public async Task SetSourceVisibility(string sceneName, string sourceName, bool visibility)
         {
-            await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitSource() { sceneName = sceneName, sourceName = sourceName, sourceVisible = visibility })));
+            await this.Send(JSONSerializerHelper.SerializeToString(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitSource() { sceneName = sceneName, sourceName = sourceName, sourceVisible = visibility }))));
         }
 
         public Task SetSourceFilterVisibility(string sourceName, string filterName, bool visibility) { return Task.CompletedTask; }
@@ -144,7 +148,7 @@ namespace MixItUp.Base.Services.External
 
         public async Task SetWebBrowserSourceURL(string sceneName, string sourceName, string url)
         {
-            await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitWebBrowserSource() { sceneName = sceneName, sourceName = sourceName, webBrowserUrl = url })));
+            await this.Send(JSONSerializerHelper.SerializeToString(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitWebBrowserSource() { sceneName = sceneName, sourceName = sourceName, webBrowserUrl = url }))));
         }
 
         public Task SetSourceDimensions(string sceneName, string sourceName, StreamingSoftwareSourceDimensionsModel dimensions) { return Task.CompletedTask; }

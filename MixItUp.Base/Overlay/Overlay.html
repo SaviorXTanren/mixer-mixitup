@@ -33,40 +33,45 @@
 
         function packetReceived(packet) {
             try {
-                if (packet != null && typeof packet.Type !== 'undefined') {
-                    if (typeof packet.Data !== 'undefined' && packet.Data.length > 0) {
-                        if (packet.Type === 'Add') {
-                            for (var i = 0; i < packet.Data.length; i++) {
-                                processAdd(packet.Data[i]);
-                            }
-                        }
-                        else if (packet.Type === 'Remove') {
-                            for (var i = 0; i < packet.Data.length; i++) {
-                                processRemove(packet.Data[i]);
-                            }
-                        }
-                        else if (packet.Type === 'Basic') {
-                            for (var i = 0; i < packet.Data.length; i++) {
-                                processBasic(packet.Data[i]);
-                            }
-                        }
-                        else if (packet.Type === 'YouTube') {
-                            processYouTube(packet.Data[0]);
-                        }
-                        else if (packet.Type === 'ResponsiveVoice') {
-                            processResponsiveVoice(packet.Data[0]);
+                if (packet != null) {
+                    if (Array.isArray(packet)) {
+                        for (var i = 0; i < packet.length; i++) {
+                            processPacket(packet[i]);
                         }
                     }
-                    else if (packet.Type == 'Test') {
-                        var connectionTest = document.getElementById("connectionTest");
-                        connectionTest.style.visibility = 'visible';
-                        setTimeout(function () {
-                            connectionTest.style.visibility = 'hidden';
-                        }, 3000);
+                    else {
+                        processPacket(packet);
                     }
                 }
             }
             catch (err) { logException(err); }
+        }
+
+        function processPacket(packet) {
+            if (typeof packet.Type !== 'undefined' && packet.Type != null) {
+                if (packet.Type === 'Add') {
+                    processAdd(packet.Data);
+                }
+                else if (packet.Type === 'Remove') {
+                    processRemove(packet.Data);
+                }
+                else if (packet.Type === 'Basic') {
+                    processBasic(packet.Data);
+                }
+                else if (packet.Type === 'YouTube') {
+                    processYouTube(packet.Data);
+                }
+                else if (packet.Type === 'ResponsiveVoice') {
+                    processResponsiveVoice(packet.Data);
+                }
+                else if (packet.Type == 'Test') {
+                    var connectionTest = document.getElementById("connectionTest");
+                    connectionTest.style.visibility = 'visible';
+                    setTimeout(function () {
+                        connectionTest.style.visibility = 'hidden';
+                    }, 3000);
+                }
+            }
         }
 
         function processAdd(data) {

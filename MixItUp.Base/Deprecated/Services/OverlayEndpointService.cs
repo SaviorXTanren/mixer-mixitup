@@ -31,10 +31,14 @@ namespace MixItUp.Base.Services
         public double Rate { get; set; }
     }
 
-    public class OverlayPacket : WebSocketPacket
+    public class OverlayPacket
     {
+        public string type { get; set; }
+
         public JObject data;
         public JArray array;
+
+        public string Type { get { return this.type; } set { this.type = value; } }
 
         public OverlayPacket() { }
 
@@ -149,7 +153,7 @@ namespace MixItUp.Base.Services
             this.isBatching = false;
             if (batchPackets.Count > 0)
             {
-                await this.webSocketServer.Send(new OverlayPacket("Batch", JArray.FromObject(this.batchPackets.ToList())));
+                //await this.webSocketServer.Send(new OverlayPacket("Batch", JArray.FromObject(this.batchPackets.ToList())));
             }
             this.batchPackets.Clear();
         }
@@ -336,7 +340,7 @@ namespace MixItUp.Base.Services
             }
             else
             {
-                await this.webSocketServer.Send(packet);
+                //await this.webSocketServer.Send(packet);
             }
         }
 

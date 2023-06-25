@@ -515,20 +515,24 @@ namespace MixItUp.Base.Services
                     }
 
                     ActionModelBase action = actions[i];
-                    if (action is OverlayActionModel && ServiceManager.Get<OverlayV3Service>().IsConnected)
+                    if (ServiceManager.Get<OverlayV3Service>().IsConnected)
                     {
-                        ServiceManager.Get<OverlayV3Service>().StartBatching();
-                    }
-
-                    await action.Perform(parameters);
-
-                    if (action is OverlayActionModel && ServiceManager.Get<OverlayV3Service>().IsConnected)
-                    {
-                        if (i == (actions.Count - 1) || !(actions[i + 1] is OverlayActionModel))
+                        if (action is OverlayActionModel || action is TextToSpeechActionModel)
+                        {
+                            ServiceManager.Get<OverlayV3Service>().StartBatching();
+                        }
+                        else
                         {
                             await ServiceManager.Get<OverlayV3Service>().EndBatching();
                         }
                     }
+
+                    await action.Perform(parameters);
+                }
+
+                if (ServiceManager.Get<OverlayV3Service>().IsConnected)
+                {
+                    await ServiceManager.Get<OverlayV3Service>().EndBatching();
                 }
             }
 

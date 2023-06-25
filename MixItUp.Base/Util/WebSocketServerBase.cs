@@ -10,24 +10,6 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Util
 {
-    public class WebSocketPacket
-    {
-        /// <summary>
-        /// The type of packet.
-        /// </summary>
-        public string type { get; set; }
-
-        /// <summary>
-        /// The ID of the packet.
-        /// </summary>
-        public uint id { get; set; }
-
-        /// <summary>
-        /// The type of packet.
-        /// </summary>
-        public string Type { get { return this.type; } set { this.type = value; } }
-    }
-
     public abstract class WebSocketServerBase : WebSocketBase
     {
         public event EventHandler OnConnectedOccurred = delegate { };
@@ -47,7 +29,7 @@ namespace MixItUp.Base.Util
 
                 if (ChannelSession.AppSettings.DiagnosticLogging)
                 {
-                    await this.Send(new WebSocketPacket() { type = "Debug" });
+                    await this.Send(JsonConvert.SerializeObject(new JObject() { { "Type", "Debug" } }));
                 }
 
                 this.OnConnectedOccurred(this, new EventArgs());
@@ -60,13 +42,11 @@ namespace MixItUp.Base.Util
             return false;
         }
 
-        public async Task Send(WebSocketPacket packet) { await this.Send(JsonConvert.SerializeObject(packet)); }
-
         public async Task<bool> TestConnection()
         {
             this.connectionTestSuccessful = false;
 
-            await this.Send(new WebSocketPacket() { type = "Test" });
+            await this.Send(JsonConvert.SerializeObject(new JObject() { { "Type", "Test" } }));
 
             await this.WaitForSuccess(() => this.connectionTestSuccessful);
 
