@@ -562,6 +562,8 @@ namespace MixItUp.Base.Services.Trovo
                         parameters.SpecialIdentifiers["subsgiftedamount"] = totalGifted.ToString();
                         parameters.SpecialIdentifiers["isanonymous"] = false.ToString();
                         await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelMassSubscriptionsGifted, parameters);
+
+                        EventService.MassSubscriptionsGiftedOccurred(user, totalGifted);
                     }
                     await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertMassSubscriptionsGifted, user.DisplayName, totalGifted), ChannelSession.Settings.AlertMassGiftedSubColor));
                 }

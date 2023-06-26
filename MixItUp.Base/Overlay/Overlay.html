@@ -46,6 +46,9 @@
                 if (packet.Type === 'Add') {
                     processAdd(packet.Data);
                 }
+                else if (packet.Type === 'Update') {
+                    processUpdate(packet.Data);
+                }
                 else if (packet.Type === 'Remove') {
                     processRemove(packet.Data);
                 }
@@ -75,8 +78,16 @@
             }
         }
 
+        function processUpdate(data) {
+            if (iframes.has(data.ID)) {
+                var iframeContainer = iframes.get(data.ID);
+
+                callIFrameFunction(iframeContainer, data.FunctionName, data);
+            }
+        }
+
         function processRemove(data) {
-            if (!iframes.has(data.ID)) {
+            if (iframes.has(data.ID)) {
                 mainOverlayDiv.removeChild(iframes.get(data.ID));
 
                 iframes.delete(data.ID);
@@ -114,6 +125,10 @@
             return div;
         }
 
+        function callIFrameFunction(iframeContainer, functionName, obj) {
+            iframeContainer.firstChild.contentWindow[functionName](obj);
+        }
+
         function sendIFrameMessage(iframe, obj) {
             iframe.contentWindow.postMessage(JSON.stringify(obj), '*');
         }
@@ -130,9 +145,9 @@
         openWebsocketConnection("/overlay/ws/");
 
         window.onmessage = function (message) {
-            if (message != null && message.data != null) {
+            if (message != null && message.data != null && message.data.length > 0) {
                 var obj = JSON.parse(message.data);
-                if (obj.Type !== 'undefined' && obj.ID !== 'undefined') {
+                if (typeof obj.Type !== 'undefined' && typeof obj.ID !== 'undefined') {
                     if (obj.Type == 'Remove' && iframes.has(obj.ID)) {
                         mainOverlayDiv.removeChild(iframes.get(obj.ID));
                     }

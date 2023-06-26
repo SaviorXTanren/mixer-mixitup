@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.Util;
+﻿using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Util;
@@ -56,7 +55,7 @@ namespace MixItUp.WPF.Controls.MainControls
             OverlayWidgetViewModel widget = FrameworkElementHelpers.GetDataContext<OverlayWidgetViewModel>(sender);
             if (widget != null)
             {
-                OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(widget.Item);
+                OverlayWidgetV3EditorWindow window = new OverlayWidgetV3EditorWindow(widget.Widget);
                 window.Closed += Window_Closed;
                 window.Show();
             }

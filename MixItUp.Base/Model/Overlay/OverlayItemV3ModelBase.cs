@@ -5,7 +5,6 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
@@ -63,91 +62,28 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int Layer { get; set; }
 
-        [DataMember]
-        public int RefreshTime { get; set; }
-        [DataMember]
-        public bool IsEnabled { get; set; }
-
-        private CancellationTokenSource refreshCancellationTokenSource;
-
         protected OverlayItemV3ModelBase() { }
 
         public OverlayItemV3ModelBase(OverlayItemV3Type type) { this.Type = type; }
 
-        public virtual async Task Enable()
-        {
-            this.IsEnabled = true;
-
-            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
-            if (overlay != null)
-            {
-                //await overlay.SendItem("Enable", this, new CommandParametersModel());
-            }
-
-            if (this.RefreshTime > 0)
-            {
-                if (this.refreshCancellationTokenSource != null)
-                {
-                    this.refreshCancellationTokenSource.Cancel();
-                }
-                this.refreshCancellationTokenSource = new CancellationTokenSource();
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
-                {
-                    do
-                    {
-                        await Task.Delay(1000 * this.RefreshTime);
-
-                        await this.Update("Update", null, new CommandParametersModel());
-
-                    } while (!cancellationToken.IsCancellationRequested);
-
-                }, this.refreshCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            }
-        }
-
-        public virtual async Task Update(string type, Dictionary<string, string> data, CommandParametersModel parameters)
+        public virtual async Task Update(string functionName, Dictionary<string, string> data, CommandParametersModel parameters)
         {
             JObject jobj = new JObject();
+            jobj[nameof(this.ID)] = this.TextID;
+            jobj["FunctionName"] = functionName;
             if (data != null)
             {
                 foreach (var kvp in data)
                 {
-                    jobj[kvp.Key] = kvp.Value;
+                    jobj[kvp.Key] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(kvp.Value, parameters);
                 }
             }
 
             OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
             if (overlay != null)
             {
-                //await overlay.SendJObject(type, this.TextID, jobj, parameters);
+                await overlay.SendUpdate(this, jobj);
             }
-        }
-
-        public virtual async Task Disable()
-        {
-            if (this.refreshCancellationTokenSource != null)
-            {
-                this.refreshCancellationTokenSource.Cancel();
-            }
-            this.refreshCancellationTokenSource = null;
-
-            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
-            if (overlay != null)
-            {
-                //await overlay.SendItem("Disable", this, new CommandParametersModel());
-            }
-
-            this.IsEnabled = false;
-        }
-
-        public virtual async Task Test()
-        {
-            await this.Enable();
-            await this.TestInternal();
-            await this.Disable();
         }
 
         public async Task<OverlayOutputV3Model> GetProcessedItem(CommandParametersModel parameters)
@@ -249,10 +185,11 @@ namespace MixItUp.Base.Model.Overlay
             return result;
         }
 
-        protected virtual async Task TestInternal()
-        {
-            await Task.Delay(5000);
-        }
+        public virtual Task Enable() { return Task.CompletedTask; }
+
+        public virtual Task Disable() { return Task.CompletedTask; }
+
+        public virtual async Task Test() { await Task.Delay(5000); }
 
         protected virtual Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, CommandParametersModel parameters)
         {

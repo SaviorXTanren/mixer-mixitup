@@ -183,48 +183,22 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Disable()
         {
-            if (this.LabelType == OverlayLabelWidgetV3Type.Viewers || this.LabelType == OverlayLabelWidgetV3Type.Chatters)
+            if (this.refreshCancellationTokenSource != null)
             {
-                if (this.refreshCancellationTokenSource != null)
-                {
-                    this.refreshCancellationTokenSource.Cancel();
-                }
-                this.refreshCancellationTokenSource = null;
+                this.refreshCancellationTokenSource.Cancel();
             }
-            else if (this.LabelType == OverlayLabelWidgetV3Type.LastestFollower || this.LabelType == OverlayLabelWidgetV3Type.TotalFollowers)
-            {
-                EventService.OnFollowOccurred -= EventService_OnFollowOccurred;
-            }
-            else if (this.LabelType == OverlayLabelWidgetV3Type.LatestRaid)
-            {
-                EventService.OnRaidOccurred -= EventService_OnRaidOccurred;
-            }
-            else if (this.LabelType == OverlayLabelWidgetV3Type.LatestSubscriber || this.LabelType == OverlayLabelWidgetV3Type.TotalSubscribers)
-            {
-                EventService.OnSubscribeOccurred -= EventService_OnSubscribeOccurred;
-                EventService.OnResubscribeOccurred -= EventService_OnResubscribeOccurred;
-                EventService.OnSubscriptionGiftedOccurred -= EventService_OnSubscriptionGiftedOccurred;
-                if (this.LabelType == OverlayLabelWidgetV3Type.TotalSubscribers)
-                {
-                    EventService.OnMassSubscriptionsGiftedOccurred -= EventService_OnMassSubscriptionsGiftedOccurred;
-                }
-            }
-            else if (this.LabelType == OverlayLabelWidgetV3Type.LatestDonation)
-            {
-                EventService.OnDonationOccurred -= EventService_OnDonationOccurred;
-            }
-            else if (this.LabelType == OverlayLabelWidgetV3Type.LatestTwitchBits)
-            {
-                EventService.OnTwitchBitsCheeredOccurred -= EventService_OnTwitchBitsCheeredOccurred;
-            }
-            else if (this.LabelType == OverlayLabelWidgetV3Type.LatestTrovoElixir)
-            {
-                EventService.OnTrovoSpellCastOccurred -= EventService_OnTrovoSpellCastOccurred;
-            }
-            else if (this.LabelType == OverlayLabelWidgetV3Type.Counter)
-            {
-                CounterModel.OnCounterUpdated -= CounterModel_OnCounterUpdated;
-            }
+            this.refreshCancellationTokenSource = null;
+
+            EventService.OnFollowOccurred -= EventService_OnFollowOccurred;
+            EventService.OnRaidOccurred -= EventService_OnRaidOccurred;
+            EventService.OnSubscribeOccurred -= EventService_OnSubscribeOccurred;
+            EventService.OnResubscribeOccurred -= EventService_OnResubscribeOccurred;
+            EventService.OnSubscriptionGiftedOccurred -= EventService_OnSubscriptionGiftedOccurred;
+            EventService.OnMassSubscriptionsGiftedOccurred -= EventService_OnMassSubscriptionsGiftedOccurred;
+            EventService.OnDonationOccurred -= EventService_OnDonationOccurred;
+            EventService.OnTwitchBitsCheeredOccurred -= EventService_OnTwitchBitsCheeredOccurred;
+            EventService.OnTrovoSpellCastOccurred -= EventService_OnTrovoSpellCastOccurred;
+            CounterModel.OnCounterUpdated -= CounterModel_OnCounterUpdated;
 
             await base.Disable();
         }
@@ -352,8 +326,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private async Task Update()
         {
-            await this.Update(
-                "LabelUpdate",
+            await this.Update("update",
                 new Dictionary<string, string>()
                 {
                     { NameReplacementKey, this.CurrentName },

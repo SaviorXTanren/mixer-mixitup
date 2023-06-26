@@ -13520,32 +13520,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
-        ///
-        ///&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
-        ///&lt;head&gt;
-        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
-        ///    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
-        ///
-        ///    &lt;script src=&quot;jquery-3.6.0.min.js&quot;&gt;&lt;/script&gt;
-        ///
-        ///    &lt;script src=&quot;video.min.js&quot;&gt;&lt;/script&gt;
-        ///
-        ///    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;animate.min.css&quot;&gt;
-        ///
-        ///    &lt;style type=&quot;text/css&quot;&gt;
-        ///        {CSS}
-        ///    &lt;/style&gt;
-        ///&lt;/head&gt;
-        ///&lt;body style=&quot;background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100 [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string OverlayBasicIFrameTemplate {
-            get {
-                return ResourceManager.GetString("OverlayBasicIFrameTemplate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to .list {
         ///    width: {ItemWidth};
         ///    {FullHeight}
@@ -13859,6 +13833,32 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///
+        ///&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+        ///&lt;head&gt;
+        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
+        ///
+        ///    &lt;script src=&quot;jquery-3.6.0.min.js&quot;&gt;&lt;/script&gt;
+        ///
+        ///    &lt;script src=&quot;video.min.js&quot;&gt;&lt;/script&gt;
+        ///
+        ///    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;animate.min.css&quot;&gt;
+        ///
+        ///    &lt;style type=&quot;text/css&quot;&gt;
+        ///        {CSS}
+        ///    &lt;/style&gt;
+        ///&lt;/head&gt;
+        ///&lt;body style=&quot;background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100 [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayIFrameTemplate {
+            get {
+                return ResourceManager.GetString("OverlayIFrameTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .image {
         ///    width: {Width};
         ///    height: {Height};
@@ -13954,16 +13954,16 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to function update(name, amount)
+        ///   Looks up a localized string similar to function update(data)
         ///{
         ///    var nameElement = document.getElementById(&quot;label-name&quot;);
         ///    if (nameElement != null) {
-        ///        nameElement.innerHTML = name;
+        ///        nameElement.innerHTML = data.Name;
         ///    }
         ///    
         ///    var amountElement = document.getElementById(&quot;label-amount&quot;);
         ///    if (amountElement != null) {
-        ///        amountElement.innerHTML = amount; 
+        ///        amountElement.innerHTML = data.Amount;
         ///    }
         ///}.
         /// </summary>
@@ -14002,12 +14002,12 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p class=&quot;text-{ID}&quot;&gt;
-        ///    &lt;span id=&quot;label-username-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
+        ///   Looks up a localized string similar to &lt;p class=&quot;text&quot;&gt;
+        ///    &lt;span id=&quot;label-username&quot; class=&quot;text&quot;&gt;
         ///        {Username}
         ///    &lt;/span&gt;
         ///    -
-        ///    &lt;span id=&quot;label-amount-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
+        ///    &lt;span id=&quot;label-amount&quot; class=&quot;text&quot;&gt;
         ///        {Amount}
         ///    &lt;/span&gt;
         ///&lt;/p&gt;.
@@ -14019,7 +14019,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;label-username-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
+        ///   Looks up a localized string similar to &lt;p id=&quot;label-username&quot; class=&quot;text&quot;&gt;
         ///    {Username}
         ///&lt;/p&gt;.
         /// </summary>

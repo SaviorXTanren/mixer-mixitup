@@ -141,13 +141,26 @@ namespace MixItUp.Base.ViewModel.Overlay
                     break;
             }
 
-            if (!string.IsNullOrWhiteSpace(this.HTML))
-            {
-                this.HTML = OverlayItemV3ModelBase.ReplaceProperty(OverlayItemV3ModelBase.PositionedHTML, OverlayItemV3ModelBase.InnerHTMLProperty, this.HTML);
-                this.CSS = OverlayItemV3ModelBase.PositionedCSS + Environment.NewLine + Environment.NewLine + this.CSS;
-            }
+            this.SetPositionWrappedHTML(this.HTML);
+            this.SetPositionWrappedCSS(this.CSS);
 
             this.Duration = "5";
+        }
+
+        public void SetPositionWrappedHTML(string innerHTML)
+        {
+            if (!string.IsNullOrEmpty(innerHTML))
+            {
+                this.HTML = OverlayItemV3ModelBase.ReplaceProperty(OverlayItemV3ModelBase.PositionedHTML, OverlayItemV3ModelBase.InnerHTMLProperty, innerHTML);
+            }
+        }
+
+        public void SetPositionWrappedCSS(string innerCSS)
+        {
+            if (!string.IsNullOrEmpty(innerCSS))
+            {
+                this.CSS = OverlayItemV3ModelBase.PositionedCSS + Environment.NewLine + Environment.NewLine + innerCSS;
+            }
         }
 
         public OverlayItemV3ViewModelBase(OverlayItemV3ModelBase item)

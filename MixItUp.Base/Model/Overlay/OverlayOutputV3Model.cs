@@ -40,9 +40,21 @@ namespace MixItUp.Base.Model.Overlay
 
         public string TextID { get { return this.ID.ToString(); } }
 
-        public string GenerateFullHTMLOutput()
+        public string GenerateWidgetHTMLOutput()
         {
-            string content = Resources.OverlayBasicIFrameTemplate;
+            string content = Resources.OverlayIFrameTemplate;
+
+            content = OverlayOutputV3Model.ReplaceProperty(content, nameof(this.HTML), this.HTML);
+            content = OverlayOutputV3Model.ReplaceProperty(content, nameof(this.CSS), this.CSS);
+            content = OverlayOutputV3Model.ReplaceProperty(content, nameof(this.Javascript), this.Javascript);
+            content = OverlayOutputV3Model.ReplaceProperty(content, "BasicAnimations", string.Empty);
+
+            return content;
+        }
+
+        public string GenerateBasicHTMLOutput()
+        {
+            string content = Resources.OverlayIFrameTemplate;
 
             content = OverlayOutputV3Model.ReplaceProperty(content, nameof(this.HTML), this.HTML);
             content = OverlayOutputV3Model.ReplaceProperty(content, nameof(this.CSS), this.CSS);
@@ -54,29 +66,9 @@ namespace MixItUp.Base.Model.Overlay
             animations.AppendLine(this.Animations[0].GenerateAnimationJavascript());
             animations.AppendLine(this.Animations[1].GenerateTimedAnimationJavascript(duration / 2));
             animations.AppendLine(this.Animations[2].GenerateRemoveAnimationJavascript(this.TextID, duration));
-            content = OverlayOutputV3Model.ReplaceProperty(content, nameof(this.Animations), animations.ToString());
+            content = OverlayOutputV3Model.ReplaceProperty(content, "BasicAnimations", animations.ToString());
 
             return content;
-        }
-    }
-
-    [DataContract]
-    public class OverlayBasicOutputV3Model
-    {
-        [DataMember]
-        public string ID { get; set; }
-
-        [DataMember]
-        public string URL { get; set; }
-
-        [DataMember]
-        public string Duration { get; set; }
-
-        public OverlayBasicOutputV3Model(OverlayOutputV3Model output)
-        {
-            this.ID = output.TextID;
-            this.URL = "data/" + this.ID;
-            this.Duration = output.Duration;
         }
     }
 }

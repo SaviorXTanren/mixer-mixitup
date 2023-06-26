@@ -9333,32 +9333,32 @@ namespace CustomNamespace
 &lt;/p&gt;</value>
   </data>
   <data name="OverlayLabelUsernameAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p class="text-{ID}"&gt;
-    &lt;span id="label-username-{ID}" class="text-{ID}"&gt;
+    <value>&lt;p class="text"&gt;
+    &lt;span id="label-username" class="text"&gt;
         {Username}
     &lt;/span&gt;
     -
-    &lt;span id="label-amount-{ID}" class="text-{ID}"&gt;
+    &lt;span id="label-amount" class="text"&gt;
         {Amount}
     &lt;/span&gt;
 &lt;/p&gt;</value>
   </data>
   <data name="OverlayLabelUsernameDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="label-username-{ID}" class="text-{ID}"&gt;
+    <value>&lt;p id="label-username" class="text"&gt;
     {Username}
 &lt;/p&gt;</value>
   </data>
   <data name="OverlayLabelDefaultJavascript" xml:space="preserve">
-    <value>function update(name, amount)
+    <value>function update(data)
 {
     var nameElement = document.getElementById("label-name");
     if (nameElement != null) {
-        nameElement.innerHTML = name;
+        nameElement.innerHTML = data.Name;
     }
     
     var amountElement = document.getElementById("label-amount");
     if (amountElement != null) {
-        amountElement.innerHTML = amount; 
+        amountElement.innerHTML = data.Amount;
     }
 }</value>
   </data>
@@ -9840,7 +9840,7 @@ function removeOldest()
     list.removeChild(list.firstElementChild);
 }</value>
   </data>
-  <data name="OverlayBasicIFrameTemplate" xml:space="preserve">
+  <data name="OverlayIFrameTemplate" xml:space="preserve">
     <value>&lt;!DOCTYPE html&gt;
 
 &lt;html lang="en" xmlns="http://www.w3.org/1999/xhtml"&gt;
@@ -9868,12 +9868,6 @@ function removeOldest()
         function sendParentMessage(obj) {
             window.top.postMessage(JSON.stringify(obj), '*');
         }
-
-        window.onmessage = function (message) {
-            if (message != null) {
-                var obj = JSON.parse(message);
-            }
-        };
         
         const animateCSS = (element, animation, prefix = 'animate__') =&gt;
             // We create a Promise and return it
@@ -9897,7 +9891,7 @@ function removeOldest()
                 }
             });
         
-        {Animations}
+        {BasicAnimations}
         
         {Javascript}
     &lt;/script&gt;

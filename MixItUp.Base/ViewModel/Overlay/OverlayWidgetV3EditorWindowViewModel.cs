@@ -2,11 +2,10 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
-using System.Collections.Generic;
-using System;
-using System.Threading.Tasks;
 using StreamingClient.Base.Util;
-using System.Windows.Input;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
@@ -87,7 +86,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private OverlayItemV3ViewModelBase item;
 
-        public OverlayItemV3ModelBase oldItem;
+        public OverlayWidgetV3Model oldWidget;
 
         public OverlayWidgetV3EditorWindowViewModel()
         {
@@ -96,18 +95,18 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetDefaultOverlayEndpoint();
         }
 
-        public OverlayWidgetV3EditorWindowViewModel(OverlayItemV3ModelBase item)
+        public OverlayWidgetV3EditorWindowViewModel(OverlayWidgetV3Model widget)
         {
-            this.oldItem = item;
-
             this.IsTypeSelected = true;
+            this.oldWidget = widget;
 
-            this.ID = item.ID;
-            this.Name = item.Name;
+            this.ID = widget.ID;
+            this.Name = widget.Name;
+            this.RefreshTime = widget.RefreshTime;
+
+            OverlayItemV3ModelBase item = widget.Item;
             this.SelectedType = item.Type;
-            this.RefreshTime = item.RefreshTime;
             this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoint(item.OverlayEndpointID);
-
             switch (this.SelectedType)
             {
                 case OverlayItemV3Type.Text:
@@ -194,11 +193,14 @@ namespace MixItUp.Base.ViewModel.Overlay
             OverlayItemV3ModelBase item = this.GetItem();
             if (item != null)
             {
-                if (this.oldItem != null)
+                if (this.oldWidget != null)
                 {
-                    //await ServiceManager.Get<OverlayV3Service>().RemoveOverlayWidget(this.oldItem);                
+                    await ServiceManager.Get<OverlayV3Service>().RemoveWidget(this.oldWidget);                
                 }
-                //await ServiceManager.Get<OverlayV3Service>().AddOverlayWidget(item);
+
+                OverlayWidgetV3Model widget = new OverlayWidgetV3Model(item);
+                widget.RefreshTime = this.RefreshTime;
+                await ServiceManager.Get<OverlayV3Service>().AddWidget(widget);
             }
         }
 
@@ -209,7 +211,6 @@ namespace MixItUp.Base.ViewModel.Overlay
             item.ID = this.ID;
             item.Name = this.Name;
             item.OverlayEndpointID = this.SelectedOverlayEndpoint.ID;
-            item.RefreshTime = this.RefreshTime;
 
             return item;
         }

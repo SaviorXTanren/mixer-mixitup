@@ -123,33 +123,15 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Disable()
         {
-            if (this.GoalType == OverlayGoalWidgetV3Type.Followers)
-            {
-                EventService.OnFollowOccurred -= EventService_OnFollowOccurred;
-            }
-            else if (this.GoalType == OverlayGoalWidgetV3Type.Subscribers)
-            {
-                EventService.OnSubscribeOccurred -= EventService_OnSubscribeOccurred;
-                EventService.OnResubscribeOccurred -= EventService_OnResubscribeOccurred;
-                EventService.OnSubscriptionGiftedOccurred -= EventService_OnSubscriptionGiftedOccurred;
-                EventService.OnMassSubscriptionsGiftedOccurred -= EventService_OnMassSubscriptionsGiftedOccurred;
-            }
-            else if (this.GoalType == OverlayGoalWidgetV3Type.Donations)
-            {
-                EventService.OnDonationOccurred -= EventService_OnDonationOccurred;
-            }
-            else if (this.GoalType == OverlayGoalWidgetV3Type.TwitchBits)
-            {
-                EventService.OnTwitchBitsCheeredOccurred -= EventService_OnTwitchBitsCheeredOccurred;
-            }
-            else if (this.GoalType == OverlayGoalWidgetV3Type.TrovoElixir)
-            {
-                EventService.OnTrovoSpellCastOccurred -= EventService_OnTrovoSpellCastOccurred;
-            }
-            else if (this.GoalType == OverlayGoalWidgetV3Type.Counter)
-            {
-                CounterModel.OnCounterUpdated -= CounterModel_OnCounterUpdated;
-            }
+            EventService.OnFollowOccurred -= EventService_OnFollowOccurred;
+            EventService.OnSubscribeOccurred -= EventService_OnSubscribeOccurred;
+            EventService.OnResubscribeOccurred -= EventService_OnResubscribeOccurred;
+            EventService.OnSubscriptionGiftedOccurred -= EventService_OnSubscriptionGiftedOccurred;
+            EventService.OnMassSubscriptionsGiftedOccurred -= EventService_OnMassSubscriptionsGiftedOccurred;
+            EventService.OnDonationOccurred -= EventService_OnDonationOccurred;
+            EventService.OnTwitchBitsCheeredOccurred -= EventService_OnTwitchBitsCheeredOccurred;
+            EventService.OnTrovoSpellCastOccurred -= EventService_OnTrovoSpellCastOccurred;
+            CounterModel.OnCounterUpdated -= CounterModel_OnCounterUpdated;
 
             await base.Disable();
         }
@@ -240,6 +222,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (string.Equals(counter.Name, this.CounterName, StringComparison.OrdinalIgnoreCase))
             {
+                this.trackingAmount = counter.Amount;
                 this.CurrentAmount = counter.Amount.ToString();
                 await this.Update();
             }

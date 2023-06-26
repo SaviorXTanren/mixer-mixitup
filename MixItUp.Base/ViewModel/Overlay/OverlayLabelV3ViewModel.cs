@@ -20,6 +20,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.selectedLabelType = value;
                 this.NotifyPropertyChanged();
 
+                string newHTML = string.Empty;
                 switch (this.SelectedLabelType)
                 {
                     case OverlayLabelWidgetV3Type.Viewers:
@@ -27,19 +28,21 @@ namespace MixItUp.Base.ViewModel.Overlay
                     case OverlayLabelWidgetV3Type.Counter:
                     case OverlayLabelWidgetV3Type.TotalFollowers:
                     case OverlayLabelWidgetV3Type.TotalSubscribers:
-                        this.HTML = OverlayLabelV3Model.DefaultAmountHTML;
+                        newHTML = OverlayLabelV3Model.DefaultAmountHTML;
                         break;
                     case OverlayLabelWidgetV3Type.LastestFollower:
-                        this.HTML = OverlayLabelV3Model.DefaultNameHTML;
+                        newHTML = OverlayLabelV3Model.DefaultNameHTML;
                         break;
                     case OverlayLabelWidgetV3Type.LatestRaid:
                     case OverlayLabelWidgetV3Type.LatestSubscriber:
                     case OverlayLabelWidgetV3Type.LatestDonation:
                     case OverlayLabelWidgetV3Type.LatestTwitchBits:
                     case OverlayLabelWidgetV3Type.LatestTrovoElixir:
-                        this.HTML = OverlayLabelV3Model.DefaultNameAmountHTML;
+                        newHTML = OverlayLabelV3Model.DefaultNameAmountHTML;
                         break;
                 }
+
+                this.SetPositionWrappedHTML(newHTML);
 
                 this.NotifyPropertyChanged(nameof(CounterTypeSelected));
             }

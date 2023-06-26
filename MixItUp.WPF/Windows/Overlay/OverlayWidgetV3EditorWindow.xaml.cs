@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Overlay;
 using MixItUp.WPF.Controls.Overlay;
@@ -25,7 +24,7 @@ namespace MixItUp.WPF.Windows.Overlay
             this.Initialize(this.StatusBar);
         }
 
-        public OverlayWidgetV3EditorWindow(OverlayItemV3ModelBase item)
+        public OverlayWidgetV3EditorWindow(OverlayWidgetV3Model item)
         {
             this.viewModel = new OverlayWidgetV3EditorWindowViewModel(item);
 
@@ -119,7 +118,8 @@ namespace MixItUp.WPF.Windows.Overlay
                 return;
             }
 
-            await item.Test();
+            OverlayWidgetV3Model widget = new OverlayWidgetV3Model(item);
+            await widget.Test();
         }
     }
 }

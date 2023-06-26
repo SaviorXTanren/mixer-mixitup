@@ -79,7 +79,7 @@ namespace MixItUp.Base.Model.Overlay
             await base.Disable();
         }
 
-        protected override async Task TestInternal()
+        public override async Task Test()
         {
             for (int i = 0; i < 5; i++)
             {

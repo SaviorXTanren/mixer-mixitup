@@ -133,7 +133,7 @@ namespace MixItUp.Base.Services
 
         public IEnumerable<OverlayItemV3ModelBase> GetOverlayWidgets()
         {
-            return ChannelSession.Settings.OverlayWidgetsV3;
+            return null;//return ChannelSession.Settings.OverlayWidgetsV3;
         }
 
         public OverlayItemV3ModelBase GetOverlayWidget(Guid id)
@@ -143,14 +143,14 @@ namespace MixItUp.Base.Services
 
         public async Task AddOverlayWidget(OverlayItemV3ModelBase widget)
         {
-            ChannelSession.Settings.OverlayWidgetsV3.Add(widget);
-            await widget.Enable();
+            //ChannelSession.Settings.OverlayWidgetsV3.Add(widget);
+            //await widget.EnableAsWidget();
         }
 
         public async Task RemoveOverlayWidget(OverlayItemV3ModelBase widget)
         {
-            await widget.Disable();
-            ChannelSession.Settings.OverlayWidgetsV3.Remove(widget);
+            //await widget.DisableAsWidget();
+            //ChannelSession.Settings.OverlayWidgetsV3.Remove(widget);
         }
 
         public async Task<int> TestConnections()

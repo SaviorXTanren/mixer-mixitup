@@ -132,6 +132,26 @@ namespace MixItUp.Base.Model.Overlay
             await base.Disable();
         }
 
+        public override async Task Test()
+        {
+            this.EventService_OnFollowOccurred(this, ChannelSession.User);
+            await Task.Delay(1000);
+            this.EventService_OnRaidOccurred(this, new Tuple<UserV2ViewModel, int>(ChannelSession.User, 10));
+            await Task.Delay(1000);
+            this.EventService_OnSubscribeOccurred(this, ChannelSession.User);
+            await Task.Delay(1000);
+            this.EventService_OnResubscribeOccurred(this, new Tuple<UserV2ViewModel, int>(ChannelSession.User, 2));
+            await Task.Delay(1000);
+            this.EventService_OnDonationOccurred(this, new UserDonationModel()
+            {
+                User = ChannelSession.User,
+                Type = "Test",
+                Amount = 12.34,
+                Message = "Hello World",
+            });
+            await Task.Delay(1000);
+        }
+
         public async Task AddEvent(string eventType, string details, string subDetails = null, UserV2ViewModel user = null)
         {
             OverlayEventListEventV3Model newEvent = new OverlayEventListEventV3Model()
@@ -155,26 +175,6 @@ namespace MixItUp.Base.Model.Overlay
                 { nameof(newEvent.SubDetails), newEvent.SubDetails }
             },
             new CommandParametersModel(user));
-        }
-
-        protected override async Task TestInternal()
-        {
-            this.EventService_OnFollowOccurred(this, ChannelSession.User);
-            await Task.Delay(1000);
-            this.EventService_OnRaidOccurred(this, new Tuple<UserV2ViewModel, int>(ChannelSession.User, 10));
-            await Task.Delay(1000);
-            this.EventService_OnSubscribeOccurred(this, ChannelSession.User);
-            await Task.Delay(1000);
-            this.EventService_OnResubscribeOccurred(this, new Tuple<UserV2ViewModel, int>(ChannelSession.User, 2));
-            await Task.Delay(1000);
-            this.EventService_OnDonationOccurred(this, new UserDonationModel()
-            {
-                User = ChannelSession.User,
-                Type = "Test",
-                Amount = 12.34,
-                Message = "Hello World",
-            });
-            await Task.Delay(1000);
         }
 
         private async void EventService_OnFollowOccurred(object sender, UserV2ViewModel user)
