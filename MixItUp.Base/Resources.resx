@@ -9197,29 +9197,7 @@ else {
     <value>&lt;iframe frameborder="0" width="{WIDTH}" height="{HEIGHT}" src="{URL}" /&gt;</value>
   </data>
   <data name="OverlayYouTubeDefaultHTML" xml:space="preserve">
-    <value>&lt;div id="youtube-{ID}" /&gt;
-
-&lt;script&gt;
-    var youtubeVideoPlayer = new YT.Player("youtube-{ID}", {
-        height: {HeightNumber},
-        width: {WidthNumber},
-        videoId: '{VideoID}',
-        playerVars: { 'controls': 0, 'modestbranding': 1, 'start': {StartTime} },
-        events: {
-            'onReady': function () {
-                youtubeVideoPlayer.setVolume({Volume});
-                youtubeVideoPlayer.setLoop(false);
-                youtubeVideoPlayer.frameBorder = 0;
-                youtubeVideoPlayer.playVideo();
-            },
-            'onStateChange': function (event) {
-                if (event.data == YT.PlayerState.ENDED) {
-                    event.target.destroy();
-                }
-            }
-        }
-    });
-&lt;/script&gt;</value>
+    <value>&lt;div id="youtube-{ID}" /&gt;</value>
   </data>
   <data name="DisplayFormat" xml:space="preserve">
     <value>Display Format</value>
@@ -9944,7 +9922,7 @@ function removeOldest()
 });</value>
   </data>
   <data name="OverlayIFrameSendParentMessageRemove" xml:space="preserve">
-    <value>maindiv.style.visibility='hidden'
+    <value>maindiv.style.visibility='hidden';
 sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   </data>
   <data name="ExistingProfile" xml:space="preserve">
@@ -9982,5 +9960,33 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   </data>
   <data name="EnableTTSMonster" xml:space="preserve">
     <value>Please enable TTS.Monster on the Services page!</value>
+  </data>
+  <data name="OverlayYouTubeDefaultJavascript" xml:space="preserve">
+    <value>function onYouTubeIframeAPIReady() {
+    var youtubeVideoPlayer = new YT.Player("youtube-{ID}", {
+        height: {HeightNumber},
+        width: {WidthNumber},
+        videoId: '{VideoID}',
+        playerVars: { 'controls': 0, 'modestbranding': 1, 'start': {StartTime} },
+        events: {
+            'onReady': function () {
+                youtubeVideoPlayer.setVolume({Volume});
+                youtubeVideoPlayer.setLoop(false);
+                youtubeVideoPlayer.frameBorder = 0;
+                youtubeVideoPlayer.playVideo();
+            },
+            'onStateChange': function (event) {
+                if (event.data == YT.PlayerState.ENDED) {
+                    event.target.destroy();
+                }
+            }
+        }
+    });
+}
+
+var youtubePlayerScript = document.createElement('script');
+youtubePlayerScript.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(youtubePlayerScript, firstScriptTag);</value>
   </data>
 </root>

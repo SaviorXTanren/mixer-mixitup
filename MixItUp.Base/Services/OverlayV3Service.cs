@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 
@@ -351,38 +350,7 @@ namespace MixItUp.Base.Services
 
                     await this.httpListenerServer.SetHTMLData(output.ID.ToString(), output.GenerateFullHTMLOutput());
 
-                    OverlayV3Packet packet = new OverlayV3Packet("Basic", new OverlayBasicOutputV3Model(output));
-                    if (this.isBatching)
-                    {
-                        this.batchPackets.Add(packet);
-                    }
-                    else
-                    {
-                        await this.webSocketServer.Send(packet);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-        }
-
-        public async Task SendYouTube(OverlayItemV3ModelBase item, CommandParametersModel parameters)
-        {
-            try
-            {
-                if (item != null)
-                {
-                    OverlayV3Packet packet = new OverlayV3Packet("YouTube", await item.GetProcessedItem(parameters));
-                    if (this.isBatching)
-                    {
-                        this.batchPackets.Add(packet);
-                    }
-                    else
-                    {
-                        await this.webSocketServer.Send(packet);
-                    }
+                    await this.Send(new OverlayV3Packet("Basic", new OverlayBasicOutputV3Model(output)));
                 }
             }
             catch (Exception ex)
@@ -397,15 +365,26 @@ namespace MixItUp.Base.Services
             {
                 if (item != null)
                 {
-                    OverlayV3Packet packet = new OverlayV3Packet("ResponsiveVoice", item);
-                    if (this.isBatching)
-                    {
-                        this.batchPackets.Add(packet);
-                    }
-                    else
-                    {
-                        await this.webSocketServer.Send(packet);
-                    }
+                    await this.Send(new OverlayV3Packet("ResponsiveVoice", item));
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
+        public async Task SendAdd(OverlayItemV3ModelBase item, CommandParametersModel parameters)
+        {
+            try
+            {
+                if (item != null)
+                {
+                    OverlayOutputV3Model output = await item.GetProcessedItem(parameters);
+
+                    await this.httpListenerServer.SetHTMLData(output.ID.ToString(), output.GenerateFullHTMLOutput());
+
+                    await this.Send(new OverlayV3Packet("Add", new OverlayBasicOutputV3Model(output)));
                 }
             }
             catch (Exception ex)
@@ -432,6 +411,18 @@ namespace MixItUp.Base.Services
         public string GetURLForFile(string filePath, string fileType) { return this.httpListenerServer.GetURLForFile(filePath, fileType); }
 
         public void SetLocalFile(string id, string filePath) { this.httpListenerServer.SetLocalFile(id, filePath); }
+
+        private async Task Send(OverlayV3Packet packet)
+        {
+            if (this.isBatching)
+            {
+                this.batchPackets.Add(packet);
+            }
+            else
+            {
+                await this.webSocketServer.Send(packet);
+            }
+        }
 
         private void WebSocketServer_OnConnectedOccurred(object sender, EventArgs e)
         {

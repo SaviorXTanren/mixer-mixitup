@@ -13849,7 +13849,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to maindiv.style.visibility=&apos;hidden&apos;
+        ///   Looks up a localized string similar to maindiv.style.visibility=&apos;hidden&apos;;
         ///sendParentMessage({ Type: &quot;Remove&quot;, ID: &quot;{ID}&quot; });.
         /// </summary>
         public static string OverlayIFrameSendParentMessageRemove {
@@ -14477,9 +14477,16 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;youtube-{ID}&quot; /&gt;
-        ///
-        ///&lt;script&gt;
+        ///   Looks up a localized string similar to &lt;div id=&quot;youtube-{ID}&quot; /&gt;.
+        /// </summary>
+        public static string OverlayYouTubeDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayYouTubeDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to function onYouTubeIframeAPIReady() {
         ///    var youtubeVideoPlayer = new YT.Player(&quot;youtube-{ID}&quot;, {
         ///        height: {HeightNumber},
         ///        width: {WidthNumber},
@@ -14490,11 +14497,11 @@ namespace MixItUp.Base {
         ///                youtubeVideoPlayer.setVolume({Volume});
         ///                youtubeVideoPlayer.setLoop(false);
         ///                youtubeVideoPlayer.frameBorder = 0;
-        ///               [rest of string was truncated]&quot;;.
+        ///                [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string OverlayYouTubeDefaultHTML {
+        public static string OverlayYouTubeDefaultJavascript {
             get {
-                return ResourceManager.GetString("OverlayYouTubeDefaultHTML", resourceCulture);
+                return ResourceManager.GetString("OverlayYouTubeDefaultJavascript", resourceCulture);
             }
         }
         

@@ -48,10 +48,12 @@ namespace MixItUp.Base.Model.Overlay
             content = OverlayOutputV3Model.ReplaceProperty(content, nameof(this.CSS), this.CSS);
             content = OverlayOutputV3Model.ReplaceProperty(content, nameof(this.Javascript), this.Javascript);
 
+            double.TryParse(this.Duration, out double duration);
+
             StringBuilder animations = new StringBuilder();
-            animations.AppendLine(this.Animations[0].GenerateEntranceAnimationJavascript());
-            animations.AppendLine(this.Animations[1].GenerateVisibleAnimationJavascript(this.Duration));
-            animations.AppendLine(this.Animations[2].GenerateExitAnimationJavascript(this.TextID, this.Duration));
+            animations.AppendLine(this.Animations[0].GenerateAnimationJavascript());
+            animations.AppendLine(this.Animations[1].GenerateTimedAnimationJavascript(duration / 2));
+            animations.AppendLine(this.Animations[2].GenerateRemoveAnimationJavascript(this.TextID, duration));
             content = OverlayOutputV3Model.ReplaceProperty(content, nameof(this.Animations), animations.ToString());
 
             return content;

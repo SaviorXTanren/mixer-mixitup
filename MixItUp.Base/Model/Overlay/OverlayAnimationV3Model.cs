@@ -167,23 +167,18 @@ namespace MixItUp.Base.Model.Overlay
         [Obsolete]
         public OverlayAnimationV3Model() { }
 
-        public string GenerateEntranceAnimationJavascript()
-        {
-            return this.GenerateAnimationJavascript();
-        }
-
-        public string GenerateVisibleAnimationJavascript(string totalDuration)
+        public string GenerateTimedAnimationJavascript(double seconds)
         {
             string output = this.GenerateAnimationJavascript();
             if (!string.IsNullOrEmpty(output))
             {
                 output = OverlayItemV3ModelBase.ReplaceProperty(Resources.OverlayAnimationTimedWrapperJavascript, "Animation", output);
-                output = OverlayItemV3ModelBase.ReplaceProperty(output, "MillisecondTiming", $"(({totalDuration} * 1000) / 2)");
+                output = OverlayItemV3ModelBase.ReplaceProperty(output, "MillisecondTiming", $"({seconds} * 1000)");
             }
             return output;
         }
 
-        public string GenerateExitAnimationJavascript(string id, string totalDuration)
+        public string GenerateRemoveAnimationJavascript(string id, double seconds)
         {
             string output = this.GenerateAnimationJavascript(includePostProcessingFunction: true);
             if (!string.IsNullOrEmpty(output))
@@ -195,12 +190,12 @@ namespace MixItUp.Base.Model.Overlay
             {
                 output = OverlayItemV3ModelBase.ReplaceProperty(Resources.OverlayAnimationTimedWrapperJavascript, "Animation", Resources.OverlayIFrameSendParentMessageRemove);
             }
-            output = OverlayItemV3ModelBase.ReplaceProperty(output, "MillisecondTiming", $"({totalDuration} * 1000)");
+            output = OverlayItemV3ModelBase.ReplaceProperty(output, "MillisecondTiming", $"({seconds} * 1000)");
             output = OverlayItemV3ModelBase.ReplaceProperty(output, "ID", id);
             return output;
         }
 
-        private string GenerateAnimationJavascript(bool includePostProcessingFunction = false)
+        public string GenerateAnimationJavascript(bool includePostProcessingFunction = false)
         {
             string output = string.Empty;
             if (this.AnimateCSSAnimation != OverlayAnimateCSSAnimationType.None)

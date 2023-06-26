@@ -18,12 +18,6 @@
 
     <p id="connectionTest" style="visibility: hidden; font-size: 100px; color: red; white-space: nowrap; position: absolute; margin: 0px; left: 50%; top: 50%; transform: translate(-50%, -50%);">Connection Test!</p>
 
-    <div id="noTextToSpeechDiv" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); visibility: hidden">
-        <h1 style="font-size: 100px; color: red; text-align: center">This Browser Does</h1>
-        <h1 style="font-size: 100px; color: red; text-align: center">Not Support</h1>
-        <h1 style="font-size: 100px; color: red; text-align: center">Text To Speech!</h1>
-    </div>
-
     <script>
         var mainOverlayDiv = document.getElementById('mainOverlay');
         var noTextToSpeechDiv = document.getElementById('noTextToSpeechDiv');
@@ -58,9 +52,6 @@
                 else if (packet.Type === 'Basic') {
                     processBasic(packet.Data);
                 }
-                else if (packet.Type === 'YouTube') {
-                    processYouTube(packet.Data);
-                }
                 else if (packet.Type === 'ResponsiveVoice') {
                     processResponsiveVoice(packet.Data);
                 }
@@ -93,28 +84,11 @@
         }
 
         function processBasic(data) {
-            var duration = parseFloat(data.Duration);
-            if (duration != NaN) {
+            var iframeContainer = createIFrameContainer(data.URL);
 
-                if (duration <= 0) {
-                    duration = 0;
-                }
+            mainOverlayDiv.appendChild(iframeContainer);
 
-                var iframeContainer = createIFrameContainer(data.URL);
-                iframeContainer.firstChild.onload = function () {
-                    //setTimeout(function () {
-                    //    mainOverlayDiv.removeChild(iframeContainer);
-                    //}, duration * 1000);
-                }
-
-                mainOverlayDiv.appendChild(iframeContainer);
-
-                iframes.set(data.ID, iframeContainer);
-            }
-        }
-
-        function processYouTube(data) {
-
+            iframes.set(data.ID, iframeContainer);
         }
 
         function processResponsiveVoice(data) {
