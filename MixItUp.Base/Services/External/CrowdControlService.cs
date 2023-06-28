@@ -31,7 +31,19 @@ namespace MixItUp.Base.Services.External
         public CrowdControlGamePackMetadata meta { get; set; }
         public Dictionary<string, Dictionary<string, CrowdControlGamePackEffect>> effects { get; set; } = new Dictionary<string, Dictionary<string, CrowdControlGamePackEffect>>();
 
-        public List<CrowdControlGamePackEffect> AllEffects { get; set; } = new List<CrowdControlGamePackEffect>();
+        public string Name { get { return this.meta?.name; } }
+
+        public IEnumerable<CrowdControlGamePackEffect> GameEffects
+        {
+            get
+            {
+                if (this.effects.ContainsKey("game"))
+                {
+                    return this.effects["game"].Values;
+                }
+                return new List<CrowdControlGamePackEffect>();
+            }
+        }
     }
 
     public class CrowdControlGamePackMetadata
@@ -44,12 +56,25 @@ namespace MixItUp.Base.Services.External
     {
         public string id { get; set; }
         public string name { get; set; }
+        public string note { get; set; }
         public string description { get; set; }
         public int price { get; set; }
         public JObject quantity { get; set; } = new JObject();
         public JObject duration { get; set; } = new JObject();
         public List<string> category { get; set; } = new List<string>();
         public int moral { get; set; }
+
+        public string Name
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(this.note))
+                {
+                    return $"{this.name} - {this.note}";
+                }
+                return this.name;
+            }
+        }
     }
 
     public class CrowdControlWebSocketPacket
@@ -68,9 +93,10 @@ namespace MixItUp.Base.Services.External
     public class CrowdControlWebSocketEffectSuccessModel
     {
         public string requestID { get; set; }
+        public int quantity { get; set; }
         public CrowdControlWebSocketEffectDetailsModel effect { get; set; }
         public CrowdControlWebSocketGameModel game { get; set; }
-        public int quantity { get; set; }
+        public CrowdControlWebSocketGamePackModel gamePack { get; set; }
         public CrowdControlWebSocketUserModel target { get; set; }
         public CrowdControlWebSocketUserModel requester { get; set; }
     }
@@ -88,6 +114,13 @@ namespace MixItUp.Base.Services.External
     {
         public string gameID { get; set; }
         public string name { get; set; }
+    }
+
+    public class CrowdControlWebSocketGamePackModel
+    {
+        public string name { get; set; }
+        public string platform { get; set; }
+        public string gamePackID { get; set; }
     }
 
     public class CrowdControlWebSocketUserModel
@@ -170,6 +203,7 @@ namespace MixItUp.Base.Services.External
 
                             CrowdControlEffectCommandModel command = ServiceManager.Get<CommandService>().CrowdControlEffectCommands.FirstOrDefault(c =>
                                 string.Equals(c.GameID, effect.game.gameID, StringComparison.OrdinalIgnoreCase) &&
+                                string.Equals(c.PackID, effect.gamePack.gamePackID, StringComparison.OrdinalIgnoreCase) &&
                                 string.Equals(c.EffectID, effect.effect.effectID, StringComparison.OrdinalIgnoreCase));
 
                             for (int i = 0; i < effect.quantity; i++)
@@ -206,7 +240,7 @@ namespace MixItUp.Base.Services.External
 
         private IEnumerable<CrowdControlGame> gamesCache = new List<CrowdControlGame>();
 
-        private Dictionary<string, IEnumerable<CrowdControlGamePackEffect>> gameEffects = new Dictionary<string, IEnumerable<CrowdControlGamePackEffect>>();
+        private Dictionary<string, IEnumerable<CrowdControlGamePack>> gamePacks = new Dictionary<string, IEnumerable<CrowdControlGamePack>>();
 
         public CrowdControlService()
         {
@@ -290,11 +324,11 @@ namespace MixItUp.Base.Services.External
 
         public IEnumerable<CrowdControlGame> GetGames() { return this.gamesCache; }
 
-        public async Task<IEnumerable<CrowdControlGamePackEffect>> GetGameEffects(CrowdControlGame game)
+        public async Task<IEnumerable<CrowdControlGamePack>> GetGamePacks(CrowdControlGame game)
         {
-            if (this.gameEffects.ContainsKey(game.gameID))
+            if (this.gamePacks.ContainsKey(game.gameID))
             {
-                return this.gameEffects[game.gameID];
+                return this.gamePacks[game.gameID];
             }
 
             try
@@ -304,17 +338,19 @@ namespace MixItUp.Base.Services.External
                     IEnumerable<CrowdControlGamePack> gamePacks = await client.GetAsync<IEnumerable<CrowdControlGamePack>>($"https://openapi.crowdcontrol.live/games/{game.gameID}/packs");
                     if (gamePacks != null)
                     {
-                        Dictionary<string, CrowdControlGamePackEffect> effects = new Dictionary<string, CrowdControlGamePackEffect>();
-                        foreach (CrowdControlGamePack gamePack in gamePacks)
+                        foreach (var gamePack in gamePacks)
                         {
-                            foreach (var kvp in gamePack.effects["game"])
+                            foreach (var effectKVP in gamePack.effects)
                             {
-                                kvp.Value.id = kvp.Key;
-                                effects[kvp.Key] = kvp.Value;
+                                foreach (var effect in effectKVP.Value)
+                                {
+                                    effect.Value.id = effect.Key;
+                                }
                             }
                         }
-                        this.gameEffects[game.gameID] = effects.Values.OrderBy(e => e.name);
-                        return this.gameEffects[game.gameID];
+
+                        this.gamePacks[game.gameID] = gamePacks;
+                        return gamePacks;
                     }
                 }
             }
@@ -322,7 +358,7 @@ namespace MixItUp.Base.Services.External
             {
                 Logger.Log(ex);
             }
-            return new List<CrowdControlGamePackEffect>();
+            return new List<CrowdControlGamePack>();
         }
 
         private async Task<string> GetCrowdControlID(string platform, string platformID)

@@ -24,17 +24,45 @@ namespace MixItUp.Base.ViewModel.Commands
                 {
                     AsyncRunner.RunAsyncBackground(async (token) =>
                     {
-                        this.Effects.ClearAndAddRange(await ServiceManager.Get<CrowdControlService>().GetGameEffects(this.SelectedGame));
-                        if (this.existingEffectID != null)
+                        this.Packs.ClearAndAddRange(await ServiceManager.Get<CrowdControlService>().GetGamePacks(this.SelectedGame));
+                        if (this.existingPackID != null)
                         {
-                            this.SelectedEffect = this.Effects.FirstOrDefault(e => string.Equals(e.id, this.existingEffectID));
-                            this.existingEffectID = null;
+                            this.SelectedPack = this.Packs.FirstOrDefault(p => string.Equals(p.gamePackID, this.existingPackID));
+                            this.existingPackID = null;
+                        }
+
+                        if (this.SelectedPack == null)
+                        {
+                            this.SelectedPack = this.Packs.FirstOrDefault();
                         }
                     }, CancellationToken.None);
                 }
             }
         }
         private CrowdControlGame selectedGame;
+
+        public ThreadSafeObservableCollection<CrowdControlGamePack> Packs { get; private set; } = new ThreadSafeObservableCollection<CrowdControlGamePack>();
+
+        public CrowdControlGamePack SelectedPack
+        {
+            get { return this.selectedPack; }
+            set
+            {
+                this.selectedPack = value;
+                this.NotifyPropertyChanged();
+
+                if (this.SelectedPack != null)
+                {
+                    this.Effects.ClearAndAddRange(this.SelectedPack.GameEffects);
+                    if (this.existingEffectID != null)
+                    {
+                        this.SelectedEffect = this.Effects.FirstOrDefault(e => string.Equals(e.id, this.existingEffectID));
+                        this.existingEffectID = null;
+                    }
+                }
+            }
+        }
+        private CrowdControlGamePack selectedPack;
 
         public ThreadSafeObservableCollection<CrowdControlGamePackEffect> Effects { get; private set; } = new ThreadSafeObservableCollection<CrowdControlGamePackEffect>();
 
@@ -50,12 +78,14 @@ namespace MixItUp.Base.ViewModel.Commands
         private CrowdControlGamePackEffect selectedEffect;
 
         private string existingGameID;
+        private string existingPackID;
         private string existingEffectID;
 
         public CrowdControlEffectCommandEditorWindowViewModel(CrowdControlEffectCommandModel existingCommand)
             : base(existingCommand)
         {
             this.existingGameID = existingCommand.GameID;
+            this.existingPackID = existingCommand.PackID;
             this.existingEffectID = existingCommand.EffectID;
         }
 
@@ -72,7 +102,7 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public override Task<CommandModelBase> CreateNewCommand()
         {
-            return Task.FromResult<CommandModelBase>(new CrowdControlEffectCommandModel(this.SelectedGame, this.SelectedEffect));
+            return Task.FromResult<CommandModelBase>(new CrowdControlEffectCommandModel(this.SelectedGame, this.SelectedPack, this.SelectedEffect));
         }
 
         public override async Task UpdateExistingCommand(CommandModelBase command)
@@ -80,8 +110,10 @@ namespace MixItUp.Base.ViewModel.Commands
             await base.UpdateExistingCommand(command);
             ((CrowdControlEffectCommandModel)command).GameID = this.SelectedGame.gameID;
             ((CrowdControlEffectCommandModel)command).GameName = this.SelectedGame.Name;
+            ((CrowdControlEffectCommandModel)command).PackID = this.SelectedPack.Name;
+            ((CrowdControlEffectCommandModel)command).PackName = this.SelectedPack.gamePackID;
             ((CrowdControlEffectCommandModel)command).EffectID = this.SelectedEffect.id;
-            ((CrowdControlEffectCommandModel)command).EffectName = this.SelectedEffect.name;
+            ((CrowdControlEffectCommandModel)command).EffectName = this.SelectedEffect.Name;
         }
 
         public override Task SaveCommandToSettings(CommandModelBase command)

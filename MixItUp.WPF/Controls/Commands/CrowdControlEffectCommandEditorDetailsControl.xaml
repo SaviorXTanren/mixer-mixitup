@@ -18,6 +18,8 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
@@ -25,19 +27,27 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Grid.Column="0" ItemsSource="{Binding Games}" SelectedItem="{Binding SelectedGame}" DisplayMemberPath="Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameName}" Width="375" />
+
+            <ComboBox Grid.Column="2" ItemsSource="{Binding Packs}" SelectedItem="{Binding SelectedPack}" DisplayMemberPath="Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GamePack}" Width="325" />
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" ItemsSource="{Binding Games}" SelectedItem="{Binding SelectedGame}" DisplayMemberPath="Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameName}" Width="175" />
+            <ComboBox Grid.Column="0" ItemsSource="{Binding Effects}" SelectedItem="{Binding SelectedEffect}" DisplayMemberPath="Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.EffectName}" Width="375" />
 
-            <ComboBox Grid.Column="2" ItemsSource="{Binding Effects}" SelectedItem="{Binding SelectedEffect}" DisplayMemberPath="name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.EffectName}" Width="200" />
+            <ComboBox Grid.Column="2" ItemsSource="{Binding CommandGroups}" Text="{Binding SelectedCommandGroup}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandGroup}" Width="175" />
 
-            <ComboBox Grid.Column="4" ItemsSource="{Binding CommandGroups}" Text="{Binding SelectedCommandGroup}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandGroup}" Width="175" />
-
-            <local:UnlockCommandControl Grid.Column="6" />
+            <local:UnlockCommandControl Grid.Column="4" />
         </Grid>
     </Grid>
 </local:CommandEditorDetailsControlBase>

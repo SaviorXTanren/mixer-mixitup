@@ -26,17 +26,24 @@ namespace MixItUp.Base.Model.Commands
         public string GameName { get; set; }
 
         [DataMember]
+        public string PackID { get; set; }
+        [DataMember]
+        public string PackName { get; set; }
+
+        [DataMember]
         public string EffectID { get; set; }
         [DataMember]
         public string EffectName { get; set; }
 
-        public CrowdControlEffectCommandModel(CrowdControlGame game, CrowdControlGamePackEffect effect)
-            : base(string.Join(" - ", game.name, effect.name), CommandTypeEnum.CrowdControlEffect)
+        public CrowdControlEffectCommandModel(CrowdControlGame game, CrowdControlGamePack pack, CrowdControlGamePackEffect effect)
+            : base(string.Join(" - ", game.name, effect.Name), CommandTypeEnum.CrowdControlEffect)
         {
             this.GameID = game.gameID;
             this.GameName = game.Name;
+            this.PackID = pack.gamePackID;
+            this.PackName = pack.Name;
             this.EffectID = effect.id;
-            this.EffectName = effect.name;
+            this.EffectName = effect.Name;
         }
 
         [Obsolete]
