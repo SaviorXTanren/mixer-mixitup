@@ -34,6 +34,7 @@ namespace MixItUp.Base.Model.Actions
         Discord,
         [Obsolete]
         Translation,
+        [Obsolete]
         Twitter,
         Conditional,
         [Name("StreamingSoftware")]

@@ -55,7 +55,6 @@ namespace MixItUp.WPF
                 ServiceManager.Add<IOvrStreamService>(new WindowsOvrStreamService());
 
                 ServiceManager.Add<IOBSStudioService>(new WindowsOBSService());
-                ServiceManager.Add<ITwitterService>(new WindowsTwitterService());
 
                 ChannelSession.Initialize().Wait();
 

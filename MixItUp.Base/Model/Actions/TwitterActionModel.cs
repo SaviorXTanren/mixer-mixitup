@@ -1,8 +1,4 @@
 ﻿using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Services;
-using MixItUp.Base.Services.External;
-using MixItUp.Base.Util;
-using StreamingClient.Base.Util;
 using System;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -16,6 +12,7 @@ namespace MixItUp.Base.Model.Actions
         UpdateName,
     }
 
+    [Obsolete]
     [DataContract]
     public class TwitterActionModel : ActionModelBase
     {
@@ -56,41 +53,9 @@ namespace MixItUp.Base.Model.Actions
         [Obsolete]
         public TwitterActionModel() { }
 
-        protected override async Task PerformInternal(CommandParametersModel parameters)
+        protected override Task PerformInternal(CommandParametersModel parameters)
         {
-            if (ServiceManager.Get<ITwitterService>().IsConnected)
-            {
-                if (this.ActionType == TwitterActionTypeEnum.SendTweet)
-                {
-                    string tweet = await ReplaceStringWithSpecialModifiers(this.TweetText, parameters);
-                    string imagePath = await ReplaceStringWithSpecialModifiers(this.ImagePath, parameters);
-
-                    if (!string.IsNullOrEmpty(tweet))
-                    {
-                        if (TwitterActionModel.CheckIfTweetContainsTooManyTags(tweet))
-                        {
-                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.TwitterTweetCanNotContainMention, parameters);
-                            return;
-                        }
-
-                        Result result = await ServiceManager.Get<ITwitterService>().SendTweet(tweet, imagePath);
-                        if (!result.Success)
-                        {
-                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorHeader + result.Message, parameters);
-                        }
-                    }
-                }
-                else if (this.ActionType == TwitterActionTypeEnum.UpdateName)
-                {
-                    string nameUpdate = await ReplaceStringWithSpecialModifiers(this.NameUpdate, parameters);
-
-                    Result result = await ServiceManager.Get<ITwitterService>().UpdateName(nameUpdate);
-                    if (!result.Success)
-                    {
-                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorHeader + result.Message, parameters);
-                    }
-                }
-            }
+            return Task.CompletedTask;
         }
     }
 }

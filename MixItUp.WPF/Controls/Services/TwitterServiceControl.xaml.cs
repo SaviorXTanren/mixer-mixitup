@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Services;
+﻿using MixItUp.Base;
+using MixItUp.Base.ViewModel.Services;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Services
@@ -21,5 +22,12 @@ namespace MixItUp.WPF.Controls.Services
         {
             await this.viewModel.OnOpen();
         }
+    }
+
+    public class TwitterServiceControlViewModel : ServiceControlViewModelBase
+    {
+        public override string WikiPageName { get { return "twitter"; } }
+
+        public TwitterServiceControlViewModel() : base(Resources.Twitter) { }
     }
 }

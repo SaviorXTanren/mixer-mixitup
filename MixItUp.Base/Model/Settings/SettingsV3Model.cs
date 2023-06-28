@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -39,6 +38,25 @@ namespace MixItUp.Base.Model.Settings
         public const string SettingsLocalBackupFileExtension = "backup";
 
         public const string SettingsBackupFileExtension = "miubackup";
+
+        public static async Task RestoreSettingsBackup()
+        {
+            string filePath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(string.Format("Mix It Up Settings V2 Backup (*.{0})|*.{0}|All files (*.*)|*.*", SettingsV3Model.SettingsBackupFileExtension));
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                Result<SettingsV3Model> result = await ServiceManager.Get<SettingsService>().RestorePackagedBackup(filePath);
+                if (result.Success)
+                {
+                    ChannelSession.AppSettings.BackupSettingsFilePath = filePath;
+                    ChannelSession.AppSettings.BackupSettingsToReplace = (ChannelSession.Settings != null) ? ChannelSession.Settings.ID : Guid.Empty;
+                    GlobalEvents.RestartRequested();
+                }
+                else
+                {
+                    await DialogHelper.ShowMessage(result.Message);
+                }
+            }
+        }
 
         [DataMember]
         public int Version { get; set; } = SettingsV3Model.LatestVersion;
@@ -67,8 +85,6 @@ namespace MixItUp.Base.Model.Settings
         public OAuthTokenModel StreamlabsOAuthToken { get; set; }
         [DataMember]
         public OAuthTokenModel StreamElementsOAuthToken { get; set; }
-        [DataMember]
-        public OAuthTokenModel TwitterOAuthToken { get; set; }
         [DataMember]
         public OAuthTokenModel DiscordOAuthToken { get; set; }
         [DataMember]
@@ -819,10 +835,6 @@ namespace MixItUp.Base.Model.Settings
             {
                 this.DiscordOAuthToken = ServiceManager.Get<DiscordService>().GetOAuthTokenCopy();
             }
-            if (ServiceManager.Get<ITwitterService>().IsConnected)
-            {
-                this.TwitterOAuthToken = ServiceManager.Get<ITwitterService>().GetOAuthTokenCopy();
-            }
             if (ServiceManager.Get<PixelChatService>().IsConnected)
             {
                 this.PixelChatOAuthToken = ServiceManager.Get<PixelChatService>().GetOAuthTokenCopy();
@@ -973,11 +985,20 @@ namespace MixItUp.Base.Model.Settings
         {
             StreamingPlatforms.ForEachPlatform(p =>
             {
-                if (!this.StreamingPlatformAuthentications.ContainsKey(p))
+                if (StreamingPlatforms.SupportedPlatforms.Contains(p) && !this.StreamingPlatformAuthentications.ContainsKey(p))
                 {
                     this.StreamingPlatformAuthentications[p] = new StreamingPlatformAuthenticationSettingsModel(p);
                 }
             });
+
+            if (this.DefaultStreamingPlatform == StreamingPlatformTypeEnum.None)
+            {
+                var auth = this.StreamingPlatformAuthentications.FirstOrDefault(p => p.Value != null && p.Value.IsEnabled);
+                if (auth.Value != null && StreamingPlatforms.SupportedPlatforms.Contains(auth.Value.Type))
+                {
+                    this.DefaultStreamingPlatform = auth.Value.Type;
+                }
+            }
 
             if (this.DashboardItems.Count < 4)
             {

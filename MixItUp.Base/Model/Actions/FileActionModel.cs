@@ -154,6 +154,10 @@ namespace MixItUp.Base.Model.Actions
                                 lines.RemoveAt(lineIndex);
                             }
                         }
+                        else
+                        {
+                            textToRead = null;
+                        }
                     }
                 }
             }

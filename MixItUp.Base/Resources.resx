@@ -9994,6 +9994,12 @@ function removeOldest()
     <value>maindiv.style.visibility='hidden'
 sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   </data>
+  <data name="ExistingProfile" xml:space="preserve">
+    <value>Existing Profile</value>
+  </data>
+  <data name="NewProfile" xml:space="preserve">
+    <value>New Profile</value>
+  </data>
   <data name="YouTubeMemberLevel" xml:space="preserve">
     <value>YouTube Member Level</value>
   </data>
