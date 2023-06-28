@@ -975,11 +975,20 @@ namespace MixItUp.Base.Model.Settings
         {
             StreamingPlatforms.ForEachPlatform(p =>
             {
-                if (!this.StreamingPlatformAuthentications.ContainsKey(p))
+                if (StreamingPlatforms.SupportedPlatforms.Contains(p) && !this.StreamingPlatformAuthentications.ContainsKey(p))
                 {
                     this.StreamingPlatformAuthentications[p] = new StreamingPlatformAuthenticationSettingsModel(p);
                 }
             });
+
+            if (this.DefaultStreamingPlatform == StreamingPlatformTypeEnum.None)
+            {
+                var auth = this.StreamingPlatformAuthentications.FirstOrDefault(p => p.Value != null && p.Value.IsEnabled);
+                if (auth.Value != null && StreamingPlatforms.SupportedPlatforms.Contains(auth.Value.Type))
+                {
+                    this.DefaultStreamingPlatform = auth.Value.Type;
+                }
+            }
 
             if (this.DashboardItems.Count < 4)
             {
