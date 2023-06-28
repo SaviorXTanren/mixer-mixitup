@@ -23,6 +23,7 @@ namespace MixItUp.Base.Services.Twitch
         public UserModel Bot { get; set; }
         public ChannelInformationModel Channel { get; set; }
         public StreamModel Stream { get; set; }
+        public StreamModel LastStream { get; set; }
 
         public bool IsConnected { get { return this.UserConnection != null; } }
         public bool IsBotConnected { get { return this.BotConnection != null; } }
@@ -321,6 +322,10 @@ namespace MixItUp.Base.Services.Twitch
             {
                 this.Channel = await this.UserConnection.GetChannelInformation(this.User);
 
+                if (this.Stream != null)
+                {
+                    this.LastStream = this.Stream;
+                }
                 this.Stream = await this.UserConnection.GetStream(this.User);
             }
         }
