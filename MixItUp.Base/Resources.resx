@@ -10030,4 +10030,28 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="CrowdControlEffectRedeemed" xml:space="preserve">
     <value>Crowd Control Effect Redeemed</value>
   </data>
+  <data name="SAMMI" xml:space="preserve">
+    <value>SAMMI</value>
+  </data>
+  <data name="SAMMIFailedToConnect" xml:space="preserve">
+    <value>Failed to connect to SAMMI. Please make sureSAMMI is running, the SAMMI Local API is enabled under Settings, and the password matches if you set one for the Local API in SAMMI.</value>
+  </data>
+  <data name="Window" xml:space="preserve">
+    <value>Window</value>
+  </data>
+  <data name="SAMMIInfo1" xml:space="preserve">
+    <value>SAMMI service connectivity allows you to trigger SAMMI buttons directly through the SAMMI action inside commands. To connect to SAMMI, you must have the Local API enabled in SAMMI under the Settings menu.</value>
+  </data>
+  <data name="ReleaseButton" xml:space="preserve">
+    <value>Release Button</value>
+  </data>
+  <data name="TriggerButton" xml:space="preserve">
+    <value>Trigger Button</value>
+  </data>
+  <data name="ButtonID" xml:space="preserve">
+    <value>Button ID</value>
+  </data>
+  <data name="SAMMIActionMissingButtonID" xml:space="preserve">
+    <value>SAMMI Action: Missing Button ID</value>
+  </data>
 </root>

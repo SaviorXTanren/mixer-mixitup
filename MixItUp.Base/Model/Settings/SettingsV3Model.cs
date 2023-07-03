@@ -111,6 +111,8 @@ namespace MixItUp.Base.Model.Settings
         public bool EnableVoicemodStudio { get; set; }
         [DataMember]
         public bool EnableCrowdControl { get; set; }
+        [DataMember]
+        public bool EnableSAMMI { get; set; }
 
         #endregion Authentication
 
@@ -521,6 +523,9 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public int PolyPopPortNumber { get; set; }
+
+        [DataMember]
+        public string SAMMIAPIPassword { get; set; }
 
         #endregion Services
 

@@ -1826,6 +1826,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Button ID.
+        /// </summary>
+        public static string ButtonID {
+            get {
+                return ResourceManager.GetString("ButtonID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Button Name.
         /// </summary>
         public static string ButtonName {
@@ -16320,6 +16329,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Release Button.
+        /// </summary>
+        public static string ReleaseButton {
+            get {
+                return ResourceManager.GetString("ReleaseButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reminder (Mins).
         /// </summary>
         public static string ReminderMins {
@@ -17211,6 +17229,42 @@ namespace MixItUp.Base {
         public static string SameLanguage {
             get {
                 return ResourceManager.GetString("SameLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SAMMI.
+        /// </summary>
+        public static string SAMMI {
+            get {
+                return ResourceManager.GetString("SAMMI", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SAMMI Action: Missing Button ID.
+        /// </summary>
+        public static string SAMMIActionMissingButtonID {
+            get {
+                return ResourceManager.GetString("SAMMIActionMissingButtonID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to connect to SAMMI. Please make sureSAMMI is running, the SAMMI Local API is enabled under Settings, and the password matches if you set one for the Local API in SAMMI..
+        /// </summary>
+        public static string SAMMIFailedToConnect {
+            get {
+                return ResourceManager.GetString("SAMMIFailedToConnect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SAMMI service connectivity allows you to trigger SAMMI buttons directly through the SAMMI action inside commands. To connect to SAMMI, you must have the Local API enabled in SAMMI under the Settings menu..
+        /// </summary>
+        public static string SAMMIInfo1 {
+            get {
+                return ResourceManager.GetString("SAMMIInfo1", resourceCulture);
             }
         }
         
@@ -20820,6 +20874,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Trigger Button.
+        /// </summary>
+        public static string TriggerButton {
+            get {
+                return ResourceManager.GetString("TriggerButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trigger Count Down.
         /// </summary>
         public static string TriggerCountdown {
@@ -23747,6 +23810,15 @@ namespace MixItUp.Base {
         public static string Win {
             get {
                 return ResourceManager.GetString("Win", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Window.
+        /// </summary>
+        public static string Window {
+            get {
+                return ResourceManager.GetString("Window", resourceCulture);
             }
         }
         

@@ -16,6 +16,7 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -77,6 +78,7 @@ namespace MixItUp.Base
             ServiceManager.Add(new PixelChatService());
             ServiceManager.Add(new VTubeStudioService());
             ServiceManager.Add(new CrowdControlService());
+            ServiceManager.Add(new SAMMIService());
 
             try
             {
@@ -325,6 +327,7 @@ namespace MixItUp.Base
                 if (ChannelSession.Settings.VTubeStudioOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<VTubeStudioService>()] = ChannelSession.Settings.VTubeStudioOAuthToken; }
                 if (ChannelSession.Settings.EnableVoicemodStudio) { externalServiceToConnect[ServiceManager.Get<IVoicemodService>()] = null; }
                 if (ChannelSession.Settings.EnableCrowdControl) { externalServiceToConnect[ServiceManager.Get<CrowdControlService>()] = null; }
+                if (ChannelSession.Settings.EnableSAMMI) { externalServiceToConnect[ServiceManager.Get<SAMMIService>()] = null; }
                 if (ServiceManager.Get<IOBSStudioService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<IOBSStudioService>()] = null; }
                 if (ServiceManager.Get<StreamlabsDesktopService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<StreamlabsDesktopService>()] = null; }
                 if (ServiceManager.Get<XSplitService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<XSplitService>()] = null; }

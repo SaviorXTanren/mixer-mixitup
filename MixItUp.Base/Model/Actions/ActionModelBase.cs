@@ -51,7 +51,8 @@ namespace MixItUp.Base.Model.Actions
         Voicemod,
         YouTube,
         Trovo,
-        PolyPop
+        PolyPop,
+        SAMMI,
     }
 
     [DataContract]
