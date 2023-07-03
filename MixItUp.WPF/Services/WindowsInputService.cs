@@ -1,9 +1,13 @@
-﻿using MixItUp.Base.Services;
+﻿using MixItUp.Base;
+using MixItUp.Base.Services;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
@@ -82,8 +86,40 @@ namespace MixItUp.WPF.Services
 
         private const int MAPVK_VK_TO_VSC_EX = 4;
 
+        private delegate bool EnumWindowsProc(IntPtr hWnd, int lParam);
+
+        [DllImport("user32.dll")]
+        private static extern bool EnumWindows(EnumWindowsProc enumFunc, int lParam);
+        [DllImport("user32.dll")]
+        private static extern bool IsWindowVisible(IntPtr hWnd);
+        [DllImport("user32.dll")]
+        private static extern IntPtr FindWindow(string lpClassName, String lpWindowName);
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetShellWindow();
+
+        [DllImport("user32.dll")]
+        private static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+        [DllImport("user32.dll")]
+        private static extern int GetWindowTextLength(IntPtr hWnd);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
+
+        [DllImport("user32.dll")]
+        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+        [DllImport("psapi.dll")]
+        private static extern uint GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpBaseName, [In][MarshalAs(UnmanagedType.U4)] int nSize);
+        [DllImport("kernel32.dll")]
+        private static extern IntPtr OpenProcess(UInt32 dwDesiredAccess, Int32 bInheritHandle, UInt32 dwProcessId);
+        [DllImport("kernel32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool CloseHandle(IntPtr hObject);
+
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern uint SendInput(uint numberOfInputs, InputContainer[] inputs, int sizeOfInputStructure);
+
+        [DllImport("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int wMsg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll")]
         public static extern void keybd_event(byte virtualKey, byte scanCode, uint flags, IntPtr extraInfo);
@@ -96,7 +132,6 @@ namespace MixItUp.WPF.Services
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
-
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
@@ -130,6 +165,88 @@ namespace MixItUp.WPF.Services
             this.windowSource.AddHook(HwndHook);
 
             System.Windows.Forms.Application.AddMessageFilter(this);
+        }
+
+        public IEnumerable<WindowModel> GetWindows()
+        {
+            IntPtr shellWindow = GetShellWindow();
+            Dictionary<string, WindowModel> windows = new Dictionary<string, WindowModel>();
+
+            EnumWindows(delegate (IntPtr hWnd, int lParam)
+            {
+                if (hWnd == shellWindow) return true;
+                if (!IsWindowVisible(hWnd)) return true;
+
+                int length = GetWindowTextLength(hWnd);
+                if (length == 0) return true;
+
+                StringBuilder titleBuilder = new StringBuilder(length);
+                GetWindowText(hWnd, titleBuilder, length + 1);
+                string title = titleBuilder.ToString();
+
+                const int nChars = 1024;
+
+                StringBuilder classBuilder = new StringBuilder(nChars);
+                GetClassName(hWnd, classBuilder, nChars);
+
+                uint processId = 0;
+                StringBuilder filenameBuilder = new StringBuilder(nChars);
+                GetWindowThreadProcessId(hWnd, out processId);
+                IntPtr hProcess = OpenProcess(1040, 0, processId);
+                GetModuleFileNameEx(hProcess, IntPtr.Zero, filenameBuilder, nChars);
+                CloseHandle(hProcess);
+
+                string fileName = filenameBuilder.ToString();
+                if (fileName.Length > 0)
+                {
+                    fileName = Path.GetFileName(fileName);
+                }
+                else 
+                {
+                    fileName = Resources.Unknown;
+                }
+
+                windows[title] = new WindowModel()
+                {
+                    Title = title,
+                    Executable = fileName,
+                    Class = classBuilder.ToString(),
+                    hWnd = hWnd
+                };
+                return true;
+
+            }, 0);
+
+            return windows.Values.OrderBy(w => w.Executable);
+        }
+
+        public IntPtr FindWindow(WindowModel window)
+        {
+            IntPtr hWnd = IntPtr.Zero;
+
+            if (!string.IsNullOrWhiteSpace(window.Class))
+            {
+                hWnd = FindWindow(window.Class, null);
+            }
+
+            if (hWnd == IntPtr.Zero)
+            {
+                foreach (WindowModel w in this.GetWindows())
+                {
+                    if (!string.IsNullOrWhiteSpace(window.Executable) && string.Equals(window.Executable, w.Executable))
+                    {
+                        hWnd = window.hWnd;
+                        break;
+                    }
+                    else if (string.Equals(window.Title, w.Title))
+                    {
+                        hWnd = window.hWnd;
+                        break;
+                    }
+                }
+            }
+
+            return hWnd;
         }
 
         public void KeyDown(VirtualKeyEnum key)

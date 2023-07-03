@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Util;
+using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -400,11 +401,39 @@ namespace MixItUp.Base.Services
         public int CompareTo(HotKeyConfiguration other) { return this.VirtualKey.CompareTo(other.VirtualKey); }
     }
 
+    [DataContract]
+    public class WindowModel
+    {
+        [DataMember]
+        public string Title { get; set; }
+        [DataMember]
+        public string Executable { get; set; }
+        [DataMember]
+        public string Class { get; set; }
+
+        [JsonIgnore]
+        public IntPtr hWnd;
+
+        public override string ToString()
+        {
+            if (!string.IsNullOrWhiteSpace(this.Executable))
+            {
+                return $"[{this.Executable}] {this.Title}";
+            }
+            else
+            {
+                return $"{this.Title}";
+            }
+        }
+    }
+
     public interface IInputService
     {
         event EventHandler<HotKey> HotKeyPressed;
 
         void Initialize(IntPtr windowHandle);
+
+        IEnumerable<WindowModel> GetWindows();
 
         void KeyDown(VirtualKeyEnum key);
         void KeyUp(VirtualKeyEnum key);

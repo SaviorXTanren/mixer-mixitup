@@ -40,13 +40,17 @@ namespace MixItUp.Base.Model.Actions
         public bool Alt { get; set; }
 
         [DataMember]
+        public WindowModel Window { get; set; }
+
+        [DataMember]
         [Obsolete]
         public InputKeyEnum? Key { get; set; }
 
-        public InputActionModel(VirtualKeyEnum key, InputActionTypeEnum actionType, bool shift, bool control, bool alt)
+        public InputActionModel(VirtualKeyEnum key, InputActionTypeEnum actionType, bool shift, bool control, bool alt, WindowModel window)
             : this(actionType, shift, control, alt)
         {
             this.VirtualKey = key;
+            this.Window = window;
         }
 
         public InputActionModel(SimpleInputMouseEnum mouse, InputActionTypeEnum actionType, bool shift, bool control, bool alt)

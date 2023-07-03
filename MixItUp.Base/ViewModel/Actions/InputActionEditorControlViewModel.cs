@@ -3,6 +3,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,6 +17,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
     public class InputActionEditorControlViewModel : ActionEditorControlViewModelBase
     {
+        private static WindowModel noneWindow = new WindowModel() { Title = "None" };
         private static IEnumerable<VirtualKeyEnum> keyboardKeys = EnumHelper.GetEnumList<VirtualKeyEnum>().OrderBy(k => EnumLocalizationHelper.GetLocalizedName(k));
 
         public override ActionTypeEnum Type { get { return ActionTypeEnum.Input; } }
@@ -29,11 +31,27 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.selectedDeviceType = value;
                 this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("ShowKeyboard");
-                this.NotifyPropertyChanged("ShowMouse");
+                this.NotifyPropertyChanged(nameof(this.ShowKeyboard));
+                this.NotifyPropertyChanged(nameof(this.ShowMouse));
+                this.NotifyPropertyChanged(nameof(this.ShowWindows));
             }
         }
         private InputActionDeviceTypeEnum selectedDeviceType;
+
+        public bool ShowWindows { get { return this.SelectedDeviceType == InputActionDeviceTypeEnum.Keyboard; } }
+
+        public ObservableCollection<WindowModel> Windows { get; private set; } = new ObservableCollection<WindowModel>();
+
+        public WindowModel SelectedWindow
+        {
+            get { return this.selectedWindow; }
+            set
+            {
+                this.selectedWindow = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private WindowModel selectedWindow;
 
         public IEnumerable<VirtualKeyEnum> KeyboardKeys { get { return keyboardKeys; } }
 
@@ -111,6 +129,8 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private bool alt;
 
+        private WindowModel oldWindow;
+
         public InputActionEditorControlViewModel(InputActionModel action)
             : base(action)
         {
@@ -128,15 +148,47 @@ namespace MixItUp.Base.ViewModel.Actions
             this.Shift = action.Shift;
             this.Control = action.Control;
             this.Alt = action.Alt;
+
+            this.oldWindow = action.Window;
         }
 
         public InputActionEditorControlViewModel() : base() { }
+
+        protected override async Task OnOpenInternal()
+        {
+            this.Windows.Add(noneWindow);
+            foreach (WindowModel window in ServiceManager.Get<IInputService>().GetWindows())
+            {
+                this.Windows.Add(window);
+            }
+
+            if (this.oldWindow != null)
+            {
+                this.SelectedWindow = this.Windows.FirstOrDefault(w => string.Equals(w.Title, this.oldWindow.Title));
+                if (this.SelectedWindow == null)
+                {
+                    this.SelectedWindow = this.Windows.FirstOrDefault(w => string.Equals(w.Executable, this.oldWindow.Executable));
+                }
+            }
+            
+            if (this.SelectedWindow == null)
+            {
+                this.SelectedWindow = noneWindow;
+            }
+
+            await base.OnOpenInternal();
+        }
 
         protected override Task<ActionModelBase> GetActionInternal()
         {
             if (this.SelectedDeviceType == InputActionDeviceTypeEnum.Keyboard)
             {
-                return Task.FromResult<ActionModelBase>(new InputActionModel(this.SelectedKeyboardKey, this.SelectedActionType, this.Shift, this.Control, this.Alt));
+                WindowModel window = null;
+                if (this.SelectedWindow != noneWindow)
+                {
+                    window = this.SelectedWindow;
+                }
+                return Task.FromResult<ActionModelBase>(new InputActionModel(this.SelectedKeyboardKey, this.SelectedActionType, this.Shift, this.Control, this.Alt, window));
             }
             else if (this.SelectedDeviceType == InputActionDeviceTypeEnum.Mouse)
             {
