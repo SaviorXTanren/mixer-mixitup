@@ -446,7 +446,7 @@ namespace MixItUp.Base
 
                 await ServiceManager.Get<TimerService>().Initialize();
                 await ServiceManager.Get<ModerationService>().Initialize();
-                ServiceManager.Get<StatisticsService>().Initialize();
+                await ServiceManager.Get<StatisticsService>().Initialize();
 
                 ServiceManager.Get<IInputService>().HotKeyPressed += InputService_HotKeyPressed;
 

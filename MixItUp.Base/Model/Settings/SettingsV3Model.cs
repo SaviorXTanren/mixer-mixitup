@@ -976,6 +976,20 @@ namespace MixItUp.Base.Model.Settings
             }
         }
 
+        public async Task CreatStatisticsTable()
+        {
+            bool tableExists = false;
+            await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT name FROM sqlite_master WHERE type='table' AND name='Statistics'", (row) =>
+            {
+                tableExists = true;
+            });
+
+            if (!tableExists)
+            {
+                await ServiceManager.Get<IDatabaseService>().Write(this.DatabaseFilePath, "CREATE TABLE \"Statistics\" (\"ID\" TEXT not null, \"DateTime\" datetime not null, \"Type\" INT not null, \"Data\" TEXT null, primary key (\"ID\"))");
+            }
+        }
+
         public CommandModelBase GetCommand(Guid id) { return this.Commands.ContainsKey(id) ? this.Commands[id] : null; }
 
         public T GetCommand<T>(Guid id) where T : CommandModelBase { return (T)this.GetCommand(id); }
@@ -986,8 +1000,11 @@ namespace MixItUp.Base.Model.Settings
 
         public void RemoveCommand(Guid id) { this.Commands.Remove(id); }
 
-        private void InitializeMissingData()
+        private async void InitializeMissingData()
         {
+            await this.CreateUserImportTable();
+            await this.CreatStatisticsTable();
+
             StreamingPlatforms.ForEachPlatform(p =>
             {
                 if (StreamingPlatforms.SupportedPlatforms.Contains(p) && !this.StreamingPlatformAuthentications.ContainsKey(p))
