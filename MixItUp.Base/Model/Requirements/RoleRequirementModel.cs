@@ -18,13 +18,6 @@ namespace MixItUp.Base.Model.Requirements
     {
         private static DateTimeOffset requirementErrorCooldown = DateTimeOffset.MinValue;
 
-        [Obsolete]
-        [DataMember]
-        public OldUserRoleEnum Role { get; set; }
-        [Obsolete]
-        [DataMember]
-        public HashSet<OldUserRoleEnum> RoleList { get; set; } = new HashSet<OldUserRoleEnum>();
-
         [DataMember]
         public StreamingPlatformTypeEnum StreamingPlatform { get; set; } = StreamingPlatformTypeEnum.All;
 
@@ -179,16 +172,6 @@ namespace MixItUp.Base.Model.Requirements
             }
 
             return Task.FromResult(this.CreateErrorMessage(parameters));
-        }
-
-        [Obsolete]
-        public void UpgradeFromOldRoles()
-        {
-            this.UserRole = UserRoles.ConvertFromOldRole(this.Role);
-            foreach (OldUserRoleEnum oldRole in this.RoleList)
-            {
-                this.UserRoleList.Add(UserRoles.ConvertFromOldRole(oldRole));
-            }
         }
 
         private Result CreateErrorMessage(CommandParametersModel parameters)

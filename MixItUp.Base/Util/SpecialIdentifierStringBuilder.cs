@@ -7,7 +7,6 @@ using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
-using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
@@ -489,15 +488,6 @@ namespace MixItUp.Base.Util
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", ServiceManager.Get<TrovoSessionService>().Channel?.followers.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount", ServiceManager.Get<TrovoSessionService>().Channel?.subscriber_num.ToString());
                 }
-                else if (platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().IsConnected)
-                {
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "islive", ServiceManager.Get<GlimeshSessionService>().IsLive.ToString());
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.countViewers.ToString());
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<GlimeshSessionService>().User?.channel?.title);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gameid", ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.category?.id);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.category?.name);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", ServiceManager.Get<GlimeshSessionService>().User?.countFollowers);
-                }
 
                 this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "chattercount", ServiceManager.Get<UserService>().ActiveUserCount.ToString());
             }
@@ -907,12 +897,6 @@ namespace MixItUp.Base.Util
                     }
                 }
 
-                if (user.HasPlatformData(StreamingPlatformTypeEnum.Glimesh))
-                {
-                    GlimeshUserPlatformV2Model pUser = user.GetPlatformData<GlimeshUserPlatformV2Model>(StreamingPlatformTypeEnum.Glimesh);
-                    this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "glimeshid", pUser?.ID);
-                }
-
                 string userStreamHeader = identifierHeader + UserSpecialIdentifierHeader + "stream";
                 if (this.ContainsSpecialIdentifier(userStreamHeader))
                 {
@@ -959,18 +943,6 @@ namespace MixItUp.Base.Util
                                 this.ReplaceSpecialIdentifier(userStreamHeader + "game", tChannel?.category_name);
                                 this.ReplaceSpecialIdentifier(userStreamHeader + "islive", tChannel?.is_live.ToString());
                             }
-                        }
-                    }
-                    else if (user.Platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().IsConnected)
-                    {
-                        GlimeshUserPlatformV2Model glimeshUser = user.GetPlatformData<GlimeshUserPlatformV2Model>(StreamingPlatformTypeEnum.Glimesh);
-                        if (glimeshUser != null)
-                        {
-                            Glimesh.Base.Models.Channels.ChannelModel gChannel = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetChannelByName(glimeshUser.Username);
-
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "title", gChannel?.title);
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "game", gChannel?.stream?.category?.name);
-                            this.ReplaceSpecialIdentifier(userStreamHeader + "islive", gChannel?.IsLive.ToString());
                         }
                     }
                 }

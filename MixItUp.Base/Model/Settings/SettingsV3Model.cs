@@ -185,9 +185,6 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool UseCustomUsernameColors { get; set; }
         [DataMember]
-        [Obsolete]
-        public Dictionary<OldUserRoleEnum, string> CustomUsernameColors { get; set; } = new Dictionary<OldUserRoleEnum, string>();
-        [DataMember]
         public Dictionary<UserRoleEnum, string> CustomUsernameRoleColors { get; set; } = new Dictionary<UserRoleEnum, string>();
 
         #endregion Chat
@@ -394,9 +391,6 @@ namespace MixItUp.Base.Model.Settings
         public int ModerationFilteredWordsTimeout1MinuteOffenseCount { get; set; }
         [DataMember]
         public int ModerationFilteredWordsTimeout5MinuteOffenseCount { get; set; }
-        [Obsolete]
-        [DataMember]
-        public OldUserRoleEnum ModerationFilteredWordsExcempt { get; set; } = OldUserRoleEnum.Mod;
         [DataMember]
         public UserRoleEnum ModerationFilteredWordsExcemptUserRole { get; set; } = UserRoleEnum.Moderator;
         [DataMember]
@@ -410,9 +404,6 @@ namespace MixItUp.Base.Model.Settings
         public int ModerationPunctuationBlockCount { get; set; }
         [DataMember]
         public bool ModerationPunctuationBlockIsPercentage { get; set; } = true;
-        [Obsolete]
-        [DataMember]
-        public OldUserRoleEnum ModerationChatTextExcempt { get; set; } = OldUserRoleEnum.Mod;
         [DataMember]
         public UserRoleEnum ModerationChatTextExcemptUserRole { get; set; } = UserRoleEnum.Moderator;
         [DataMember]
@@ -420,9 +411,6 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public bool ModerationBlockLinks { get; set; }
-        [Obsolete]
-        [DataMember]
-        public OldUserRoleEnum ModerationBlockLinksExcempt { get; set; } = OldUserRoleEnum.Mod;
         [DataMember]
         public UserRoleEnum ModerationBlockLinksExcemptUserRole { get; set; } = UserRoleEnum.Moderator;
         [DataMember]
@@ -430,9 +418,6 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public ModerationChatInteractiveParticipationEnum ModerationChatInteractiveParticipation { get; set; } = ModerationChatInteractiveParticipationEnum.None;
-        [Obsolete]
-        [DataMember]
-        public OldUserRoleEnum ModerationChatInteractiveParticipationExcempt { get; set; } = OldUserRoleEnum.Mod;
         [DataMember]
         public UserRoleEnum ModerationChatInteractiveParticipationExcemptUserRole { get; set; } = UserRoleEnum.Moderator;
 
@@ -857,8 +842,8 @@ namespace MixItUp.Base.Model.Settings
 
             IEnumerable<UserV2Model> changedUsers = this.Users.GetAddedChangedValues();
             await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath,
-                "REPLACE INTO Users(ID, TwitchID, TwitchUsername, YouTubeID, YouTubeUsername, FacebookID, FacebookUsername, TrovoID, TrovoUsername, GlimeshID, GlimeshUsername, Data) " +
-                "VALUES($ID, $TwitchID, $TwitchUsername, $YouTubeID, $YouTubeUsername, $FacebookID, $FacebookUsername, $TrovoID, $TrovoUsername, $GlimeshID, $GlimeshUsername, $Data)",
+                "REPLACE INTO Users(ID, TwitchID, TwitchUsername, YouTubeID, YouTubeUsername, FacebookID, FacebookUsername, TrovoID, TrovoUsername, Data) " +
+                "VALUES($ID, $TwitchID, $TwitchUsername, $YouTubeID, $YouTubeUsername, $FacebookID, $FacebookUsername, $TrovoID, $TrovoUsername, $Data)",
                 changedUsers.Select(u => new Dictionary<string, object>()
                 {
                     { "$ID", u.ID.ToString() },
@@ -868,7 +853,6 @@ namespace MixItUp.Base.Model.Settings
                     { "$FacebookID", u.GetPlatformID(StreamingPlatformTypeEnum.Facebook) }, { "$FacebookUsername", u.GetPlatformUsername(StreamingPlatformTypeEnum.Facebook) },
 #pragma warning restore CS0612 // Type or member is obsolete
                     { "$TrovoID", u.GetPlatformID(StreamingPlatformTypeEnum.Trovo) }, { "$TrovoUsername", u.GetPlatformUsername(StreamingPlatformTypeEnum.Trovo) },
-                    { "$GlimeshID", u.GetPlatformID(StreamingPlatformTypeEnum.Glimesh) }, { "$GlimeshUsername", u.GetPlatformUsername(StreamingPlatformTypeEnum.Glimesh) },
                     { "$Data", JSONSerializerHelper.SerializeToString(u) }
                 }));
 

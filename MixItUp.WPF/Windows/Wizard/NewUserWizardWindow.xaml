@@ -130,8 +130,6 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="20" />
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
                             <AccountControls:StreamingPlatformAccountControl Grid.Row="0" DataContext="{Binding Twitch}" />
@@ -139,8 +137,6 @@
                             <AccountControls:StreamingPlatformAccountControl Grid.Row="2" DataContext="{Binding YouTube}" />
 
                             <AccountControls:StreamingPlatformAccountControl Grid.Row="4" DataContext="{Binding Trovo}" />
-
-                            <AccountControls:StreamingPlatformAccountControl Grid.Row="6" DataContext="{Binding Glimesh}" />
                         </Grid>
                     </ScrollViewer>
                 </Grid>

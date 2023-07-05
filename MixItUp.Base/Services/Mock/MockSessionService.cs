@@ -157,7 +157,7 @@ namespace MixItUp.Base.Services.Mock
                     if (platformServiceTasks.Any(c => !c.Result.Success))
                     {
                         string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
-                        return new Result(MixItUp.Base.Resources.GlimeshFailedToConnectHeader + Environment.NewLine + Environment.NewLine + errors);
+                        return new Result(MixItUp.Base.Resources.TwitchFailedToConnectHeader + Environment.NewLine + Environment.NewLine + errors);
                     }
                 }
                 catch (Exception ex)

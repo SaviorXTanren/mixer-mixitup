@@ -22,7 +22,6 @@ namespace MixItUp.Base.Model.User
         Rainmaker,
         JustGiving,
         StreamElements,
-        Glimesh,
         Twitch,
     }
 

@@ -48,9 +48,6 @@ namespace MixItUp.Base.Model.Actions
         public string Amount { get; set; }
         [DataMember]
         public bool DeductFromUser { get; set; }
-        [Obsolete]
-        [DataMember]
-        public OldUserRoleEnum UsersToApplyTo { get; set; }
         [DataMember]
         public UserRoleEnum UserRoleToApplyTo { get; set; }
 

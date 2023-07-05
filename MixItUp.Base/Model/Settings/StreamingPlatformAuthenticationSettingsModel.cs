@@ -1,9 +1,4 @@
-﻿using MixItUp.Base.Services;
-using MixItUp.Base.Services.Glimesh;
-using MixItUp.Base.Services.Trovo;
-using MixItUp.Base.Services.Twitch;
-using MixItUp.Base.Services.YouTube;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using StreamingClient.Base.Model.OAuth;
 using System;
 using System.Runtime.Serialization;

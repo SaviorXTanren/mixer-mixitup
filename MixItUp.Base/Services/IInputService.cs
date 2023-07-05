@@ -43,131 +43,8 @@ namespace MixItUp.Base.Services
     }
 
     /// <summary>
-    /// http://download.microsoft.com/download/1/6/1/161ba512-40e2-4cc9-843a-923143f3456c/scancode.doc
+    /// OLD REFERENCE: http://download.microsoft.com/download/1/6/1/161ba512-40e2-4cc9-843a-923143f3456c/scancode.doc
     /// </summary>
-    [Obsolete]
-    public enum InputKeyEnum
-    {
-        Digit0 = 0x0B,
-        Digit1 = 0x02,
-        Digit2 = 0x03,
-        Digit3 = 0x04,
-        Digit4 = 0x05,
-        Digit5 = 0x06,
-        Digit6 = 0x07,
-        Digit7 = 0x08,
-        Digit8 = 0x09,
-        Digit9 = 0x0A,
-
-        A = 0x1E,
-        B = 0x30,
-        C = 0x2E,
-        D = 0x20,
-        E = 0x12,
-        F = 0x21,
-        G = 0x22,
-        H = 0x23,
-        I = 0x17,
-        J = 0x24,
-        K = 0x25,
-        L = 0x26,
-        M = 0x32,
-        N = 0x31,
-        O = 0x18,
-        P = 0x19,
-        Q = 0x10,
-        R = 0x13,
-        S = 0x1F,
-        T = 0x14,
-        U = 0x16,
-        V = 0x2F,
-        W = 0x11,
-        X = 0x2D,
-        Y = 0x15,
-        Z = 0x2C,
-
-        Semicolon = 0x27,
-        Apostrophe = 0x28,
-        Accent = 0x29,
-        Backslash = 0x2B,
-        Comma = 0x33,
-        Period = 0x34,
-        Forwardslash = 0x35,
-        Escape = 0x01,
-        Minus = 0x0C,
-        Equal = 0x0D,
-        Backspace = 0x0E,
-        Tab = 0x0F,
-        Space = 0x39,
-        Capslock = 0x3A,
-        Enter = 0x1C,
-
-        F1 = 0x3B,
-        F2 = 0x3C,
-        F3 = 0x3D,
-        F4 = 0x3E,
-        F5 = 0x3F,
-        F6 = 0x40,
-        F7 = 0x41,
-        F8 = 0x42,
-        F9 = 0x43,
-        F10 = 0x44,
-        F11 = 0x45,
-        F12 = 0x46,
-
-        F13 = 0x64,
-        F14 = 0x65,
-        F15 = 0x66,
-        F16 = 0x67,
-        F17 = 0x68,
-        F18 = 0x69,
-        F19 = 0x6A,
-        F20 = 0x6B,
-        F21 = 0x6C,
-        F22 = 0x6D,
-        F23 = 0x6E,
-        F24 = 0x76,
-
-        Insert = 0xD2, // 0x52
-        Delete = 0xD3, // 0x53
-        Home = 0xC7, // 0x47
-        End = 0xCF, // 0x4F
-        PageUp = 0xC9, // 0x49
-        PageDown = 0xD1, // 0x51
-
-        NumPad0 = 0x52,
-        NumPad1 = 0x4F,
-        NumPad2 = 0x50,
-        NumPad3 = 0x51,
-        NumPad4 = 0x4B,
-        NumPad5 = 0x4C,
-        NumPad6 = 0x4D,
-        NumPad7 = 0x47,
-        NumPad8 = 0x48,
-        NumPad9 = 0x49,
-        NumPadAdd = 0x4E,
-        NumPadSubtract = 0x4A,
-        NumPadMultiply = 0x37,
-        NumPadDivide = 0xB5,
-        NumPadDecimal = 0x53,
-        NumPadEnter = 0x9C,
-
-        LeftBracket = 0x1A,
-        RightBacket = 0x1B,
-        LeftControl = 0x1D,
-        RightControl = 0x9D,
-        LeftShift = 0x2A,
-        RightShift = 0x36,
-        LeftAlt = 0x38,
-        RightAlt = 0xB8,
-        LeftWindows = 0xDB,
-        RightWindows = 0xDC,
-
-        UpArrow = 0xC8, // 0x50
-        DownArrow = 0xD0, // 0x48
-        RightArrow = 0xCD, // 0x4D
-        LeftArrow = 0xCB, // 0x4B
-    }
 
     /// <summary>
     /// https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
@@ -322,10 +199,6 @@ namespace MixItUp.Base.Services
         [DataMember]
         public VirtualKeyEnum VirtualKey { get; set; }
 
-        [DataMember]
-        [Obsolete]
-        public InputKeyEnum Key { get; set; }
-
         public HotKey() { }
 
         public HotKey(HotKeyModifiersEnum modifiers, VirtualKeyEnum key)
@@ -421,9 +294,5 @@ namespace MixItUp.Base.Services
 
         bool RegisterHotKey(HotKeyModifiersEnum modifiers, VirtualKeyEnum key);
         bool UnregisterHotKey(HotKeyModifiersEnum modifiers, VirtualKeyEnum key);
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        VirtualKeyEnum ConvertOldKeyEnum(InputKeyEnum key);
-#pragma warning restore CS0612 // Type or member is obsolete
     }
 }

@@ -105,17 +105,19 @@ namespace MixItUp.Base.Services
         TrovoChannelMagicChat = 471,
 
         // 500 = Glimesh
-
+        [Obsolete]
         GlimeshChannelStreamStart = 500,
+        [Obsolete]
         GlimeshChannelStreamStop = 501,
-
+        [Obsolete]
         GlimeshChannelFollowed = 510,
-
+        [Obsolete]
         GlimeshChannelSubscribed = 520,
         [Obsolete]
         GlimeshChannelResubscribed = 521,
+        [Obsolete]
         GlimeshChannelSubscriptionGifted = 522,
-
+        [Obsolete]
         GlimeshChannelDonation = 550,
 
         // Donation Services = 1000
@@ -151,8 +153,6 @@ namespace MixItUp.Base.Services
             EventTypeEnum.YouTubeChannelStreamStart, EventTypeEnum.YouTubeChannelStreamStop, EventTypeEnum.YouTubeChannelNewMember, EventTypeEnum.YouTubeChannelMemberMilestone,
 
             EventTypeEnum.TrovoChannelStreamStart, EventTypeEnum.TrovoChannelStreamStop, EventTypeEnum.TrovoChannelFollowed, EventTypeEnum.TrovoChannelRaided, EventTypeEnum.TrovoChannelSubscribed, EventTypeEnum.TrovoChannelResubscribed,
-
-            EventTypeEnum.GlimeshChannelStreamStart, EventTypeEnum.GlimeshChannelStreamStop, EventTypeEnum.GlimeshChannelFollowed, EventTypeEnum.GlimeshChannelSubscribed,
         };
 
         private LockedDictionary<EventTypeEnum, HashSet<Guid>> userEventTracking = new LockedDictionary<EventTypeEnum, HashSet<Guid>>();
@@ -270,13 +270,11 @@ namespace MixItUp.Base.Services
                     case EventTypeEnum.TwitchChannelStreamStart:
                     case EventTypeEnum.YouTubeChannelStreamStart:
                     case EventTypeEnum.TrovoChannelStreamStart:
-                    case EventTypeEnum.GlimeshChannelStreamStart:
                         genericCommand = this.GetEventCommand(EventTypeEnum.ChannelStreamStart);
                         break;
                     case EventTypeEnum.TwitchChannelStreamStop:
                     case EventTypeEnum.YouTubeChannelStreamStop:
                     case EventTypeEnum.TrovoChannelStreamStop:
-                    case EventTypeEnum.GlimeshChannelStreamStop:
                         genericCommand = this.GetEventCommand(EventTypeEnum.ChannelStreamStop);
                         break;
                     case EventTypeEnum.TwitchChannelRaided:
@@ -285,13 +283,11 @@ namespace MixItUp.Base.Services
                         break;
                     case EventTypeEnum.TwitchChannelFollowed:
                     case EventTypeEnum.TrovoChannelFollowed:
-                    case EventTypeEnum.GlimeshChannelFollowed:
                         genericCommand = this.GetEventCommand(EventTypeEnum.ChannelFollowed);
                         break;
                     case EventTypeEnum.TwitchChannelSubscribed:
                     case EventTypeEnum.YouTubeChannelNewMember:
                     case EventTypeEnum.TrovoChannelSubscribed:
-                    case EventTypeEnum.GlimeshChannelSubscribed:
                         genericCommand = this.GetEventCommand(EventTypeEnum.ChannelSubscribed);
                         break;
                     case EventTypeEnum.TwitchChannelResubscribed:
@@ -302,7 +298,6 @@ namespace MixItUp.Base.Services
                     case EventTypeEnum.TwitchChannelSubscriptionGifted:
                     case EventTypeEnum.YouTubeChannelMembershipGifted:
                     case EventTypeEnum.TrovoChannelSubscriptionGifted:
-                    case EventTypeEnum.GlimeshChannelSubscriptionGifted:
                         genericCommand = this.GetEventCommand(EventTypeEnum.ChannelSubscriptionGifted);
                         break;
                     case EventTypeEnum.TwitchChannelMassSubscriptionsGifted:

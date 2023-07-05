@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
@@ -164,10 +163,6 @@ namespace MixItUp.Base.ViewModel.MainControls
             if (ServiceManager.Get<TrovoSessionService>().IsConnected && ServiceManager.Get<TrovoSessionService>().IsLive)
             {
                 viewerCount += (int)ServiceManager.Get<TrovoSessionService>().Channel?.current_viewers;
-            }
-            if (ServiceManager.Get<GlimeshSessionService>().IsConnected && ServiceManager.Get<GlimeshSessionService>().IsLive)
-            {
-                viewerCount += ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.countViewers ?? 0;
             }
             this.ViewersCount = viewerCount;
 

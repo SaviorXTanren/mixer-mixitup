@@ -5,7 +5,6 @@ using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
-using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
@@ -16,7 +15,6 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -98,9 +96,6 @@ namespace MixItUp.Base
 
             ServiceManager.Add(new YouTubeSessionService());
             ServiceManager.Add(new YouTubeChatService());
-
-            ServiceManager.Add(new GlimeshSessionService());
-            ServiceManager.Add(new GlimeshChatEventService());
 
             ServiceManager.Add(new TrovoSessionService());
             ServiceManager.Add(new TrovoChatEventService());
@@ -250,10 +245,6 @@ namespace MixItUp.Base
                 {
                     ChannelSession.Settings.Name = ServiceManager.Get<YouTubeSessionService>().Username;
                 }
-                else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
-                {
-                    ChannelSession.Settings.Name = ServiceManager.Get<GlimeshSessionService>().Username;
-                }
                 else if (ServiceManager.Get<TrovoSessionService>().IsConnected)
                 {
                     ChannelSession.Settings.Name = ServiceManager.Get<TrovoSessionService>().Username;
@@ -281,14 +272,6 @@ namespace MixItUp.Base
                     if (ChannelSession.User == null)
                     {
                         ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(ServiceManager.Get<YouTubeSessionService>().User));
-                    }
-                }
-                if (ChannelSession.User == null && ServiceManager.Get<GlimeshSessionService>().IsConnected)
-                {
-                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, ServiceManager.Get<GlimeshSessionService>().UserID);
-                    if (ChannelSession.User == null)
-                    {
-                        ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(ServiceManager.Get<GlimeshSessionService>().User));
                     }
                 }
                 if (ChannelSession.User == null && ServiceManager.Get<TrovoSessionService>().IsConnected)

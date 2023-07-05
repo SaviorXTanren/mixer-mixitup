@@ -255,10 +255,6 @@ namespace MixItUp.Base.Model.Commands
             {
                 specialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = StreamingPlatformTypeEnum.Trovo.ToString();
             }
-            else if (eventNumber >= 500 && eventNumber < 600)
-            {
-                specialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = StreamingPlatformTypeEnum.Glimesh.ToString();
-            }
             else
             {
                 specialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = ChannelSession.Settings.DefaultStreamingPlatform.ToString();

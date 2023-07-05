@@ -14,9 +14,6 @@ namespace MixItUp.Base.Model.Commands.Games
     [DataContract]
     public class BidGameCommandModel : GameCommandModelBase
     {
-        [Obsolete]
-        [DataMember]
-        public OldUserRoleEnum StarterRole { get; set; }
         [DataMember]
         public UserRoleEnum StarterUserRole { get; set; }
         [DataMember]

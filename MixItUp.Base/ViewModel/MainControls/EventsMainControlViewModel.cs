@@ -100,10 +100,6 @@ namespace MixItUp.Base.ViewModel.MainControls
                 {
                     return Resources.Trovo;
                 }
-                else if (eventNumber >= 500 && eventNumber < 600)
-                {
-                    return Resources.Glimesh;
-                }
                 else
                 {
                     return Resources.Generic;
@@ -193,15 +189,6 @@ namespace MixItUp.Base.ViewModel.MainControls
             trovoCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TrovoChannelSpellCast));
             trovoCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TrovoChannelMagicChat));
             commandGroups.Add(trovoCommands);
-
-            EventCommandGroupViewModel glimeshCommands = new EventCommandGroupViewModel(Resources.Glimesh, image: StreamingPlatforms.GlimeshLogoImageAssetFilePath);
-            glimeshCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.GlimeshChannelStreamStart));
-            glimeshCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.GlimeshChannelStreamStop));
-            glimeshCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.GlimeshChannelFollowed));
-            glimeshCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.GlimeshChannelSubscribed));
-            glimeshCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.GlimeshChannelSubscriptionGifted));
-            glimeshCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.GlimeshChannelDonation));
-            commandGroups.Add(glimeshCommands);
 
             EventCommandGroupViewModel chatCommands = new EventCommandGroupViewModel(Resources.Chat, packIconName: "Chat");
             chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserEntranceCommand));

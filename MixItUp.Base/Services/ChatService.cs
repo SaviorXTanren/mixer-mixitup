@@ -3,7 +3,6 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Mock;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
@@ -130,11 +129,6 @@ namespace MixItUp.Base.Services
                         await ServiceManager.Get<YouTubeChatService>().SendMessage(message, sendAsStreamer);
                     }
 
-                    if (platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshChatEventService>().IsUserConnected)
-                    {
-                        await ServiceManager.Get<GlimeshChatEventService>().SendMessage(message, sendAsStreamer);
-                    }
-
                     if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
                     {
                         await ServiceManager.Get<TrovoChatEventService>().SendMessage(message, sendAsStreamer);
@@ -206,10 +200,6 @@ namespace MixItUp.Base.Services
                 else if (message.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
                 {
                     await ServiceManager.Get<TrovoChatEventService>().DeleteMessage(message);
-                }
-                else if (message.Platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshChatEventService>().IsUserConnected)
-                {
-                    await ServiceManager.Get<GlimeshChatEventService>().DeleteMessage(message);
                 }
                 else if (message.Platform == StreamingPlatformTypeEnum.Mock)
                 {
@@ -285,18 +275,6 @@ namespace MixItUp.Base.Services
             {
                 await ServiceManager.Get<TrovoChatEventService>().TimeoutUser(user.Username, (int)durationInSeconds);
             }
-
-            if (user.Platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshChatEventService>().IsUserConnected)
-            {
-                if (durationInSeconds > 300)
-                {
-                    await ServiceManager.Get<GlimeshChatEventService>().LongTimeoutUser(user);
-                }
-                else
-                {
-                    await ServiceManager.Get<GlimeshChatEventService>().ShortTimeoutUser(user);
-                }
-            }
         }
 
         public async Task ModUser(UserV2ViewModel user)
@@ -342,11 +320,6 @@ namespace MixItUp.Base.Services
                 await ServiceManager.Get<YouTubeChatService>().BanUser(user);
             }
 
-            if (user.Platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshChatEventService>().IsUserConnected)
-            {
-                await ServiceManager.Get<GlimeshChatEventService>().BanUser(user);
-            }
-
             if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
             {
                 await ServiceManager.Get<TrovoChatEventService>().BanUser(user.Username);
@@ -358,11 +331,6 @@ namespace MixItUp.Base.Services
             if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchChatService>().IsUserConnected)
             {
                 await ServiceManager.Get<TwitchChatService>().UnbanUser(user);
-            }
-
-            if (user.Platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshChatEventService>().IsUserConnected)
-            {
-                await ServiceManager.Get<GlimeshChatEventService>().UnbanUser(user);
             }
 
             if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)

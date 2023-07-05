@@ -3,7 +3,6 @@ using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
@@ -31,9 +30,6 @@ namespace MixItUp.Base.Model.Commands
         public string Name { get; set; }
         [DataMember]
         public bool IsEnabled { get; set; }
-        [Obsolete]
-        [DataMember]
-        public OldUserRoleEnum Role { get; set; }
         [DataMember]
         public UserRoleEnum UserRole { get; set; }
         [DataMember]
@@ -266,15 +262,6 @@ namespace MixItUp.Base.Model.Commands
                 if (ServiceManager.Get<TrovoSessionService>().IsLive)
                 {
                     return TrovoPlatformService.GetTrovoDateTime(ServiceManager.Get<TrovoSessionService>().Channel?.started_at);
-                }
-            }
-            
-            if (platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().IsConnected)
-            {
-                await ServiceManager.Get<GlimeshSessionService>().RefreshChannel();
-                if (ServiceManager.Get<GlimeshSessionService>().IsLive)
-                {
-                    return GlimeshPlatformService.GetGlimeshDateTime(ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.startedAt);
                 }
             }
 

@@ -11,8 +11,6 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public StreamingPlatformAccountControlViewModel Trovo { get; set; } = new StreamingPlatformAccountControlViewModel(StreamingPlatformTypeEnum.Trovo);
 
-        public StreamingPlatformAccountControlViewModel Glimesh { get; set; } = new StreamingPlatformAccountControlViewModel(StreamingPlatformTypeEnum.Glimesh);
-
         public AccountsMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
@@ -22,8 +20,6 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.YouTube.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
             this.Trovo.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
             this.Trovo.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
-            this.Glimesh.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
-            this.Glimesh.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
         }
     }
 }

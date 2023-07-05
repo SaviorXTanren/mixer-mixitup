@@ -25,7 +25,6 @@ namespace MixItUp.Base.ViewModel.Commands
         public static async Task<CommandModelBase> ImportCommandFromFile(string filePath)
         {
             CommandModelBase command = await ImportCommandFromFile<CommandModelBase>(filePath);
-            SettingsV3Upgrader.MultiPlatformCommandUpgrade(command);
             return command;
         }
 

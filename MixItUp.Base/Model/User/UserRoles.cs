@@ -9,7 +9,7 @@ namespace MixItUp.Base.Model.User
         [Obsolete]
         Banned = 0,
 
-        [GenericUserRole, TwitchUserRole, YouTubeUserRole, TrovoUserRole, GlimeshUserRole]
+        [GenericUserRole, TwitchUserRole, YouTubeUserRole, TrovoUserRole]
         User = 100,
 
         [TwitchUserRole]
@@ -18,18 +18,18 @@ namespace MixItUp.Base.Model.User
         [TwitchUserRole]
         TwitchPartner = 250,
 
-        [GenericUserRole, TwitchUserRole, TrovoUserRole, GlimeshUserRole]
+        [GenericUserRole, TwitchUserRole, TrovoUserRole]
         Follower = 300,
         [YouTubeUserRole]
         YouTubeSubscriber = 301,
 
-        [GenericUserRole, TwitchUserRole, YouTubeUserRole, TrovoUserRole, GlimeshUserRole]
+        [GenericUserRole, TwitchUserRole, YouTubeUserRole, TrovoUserRole]
         Regular = 400,
 
         [TwitchUserRole]
         TwitchVIP = 500,
 
-        [GenericUserRole, TwitchUserRole, TrovoUserRole, GlimeshUserRole]
+        [GenericUserRole, TwitchUserRole, TrovoUserRole]
         Subscriber = 600,
         [YouTubeUserRole]
         YouTubeMember = 601,
@@ -43,10 +43,8 @@ namespace MixItUp.Base.Model.User
         TwitchStaff = 751,
         [TrovoUserRole]
         TrovoAdmin = 752,
-        [GlimeshUserRole]
-        GlimeshAdmin = 753,
 
-        [GenericUserRole, TwitchUserRole, YouTubeUserRole, TrovoUserRole, GlimeshUserRole]
+        [GenericUserRole, TwitchUserRole, YouTubeUserRole, TrovoUserRole]
         Moderator = 800,
 
         [TrovoUserRole]
@@ -57,7 +55,7 @@ namespace MixItUp.Base.Model.User
         [TrovoUserRole]
         TrovoEditor = 851,
 
-        [GenericUserRole, TwitchUserRole, YouTubeUserRole, TrovoUserRole, GlimeshUserRole]
+        [GenericUserRole, TwitchUserRole, YouTubeUserRole, TrovoUserRole]
         Streamer = 900,
     }
 
@@ -78,9 +76,6 @@ namespace MixItUp.Base.Model.User
         public static IEnumerable<UserRoleEnum> Trovo { get { return trovo; } }
         private readonly static IEnumerable<UserRoleEnum> trovo = GetSelectableRoles<TrovoUserRoleAttribute>();
 
-        public static IEnumerable<UserRoleEnum> Glimesh { get { return glimesh; } }
-        private readonly static IEnumerable<UserRoleEnum> glimesh = GetSelectableRoles<GlimeshUserRoleAttribute>();
-
         private static IEnumerable<UserRoleEnum> GetSelectableRoles<T>() where T : UserRoleAttributeBase
         {
             List<UserRoleEnum> roles = new List<UserRoleEnum>();
@@ -94,28 +89,6 @@ namespace MixItUp.Base.Model.User
             }
             return roles;
         }
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        public static UserRoleEnum ConvertFromOldRole(OldUserRoleEnum role)
-        {
-            switch (role)
-            {
-                case OldUserRoleEnum.Affiliate: return UserRoleEnum.TwitchAffiliate;
-                case OldUserRoleEnum.Partner: return UserRoleEnum.TwitchPartner;
-                case OldUserRoleEnum.Follower: return UserRoleEnum.Follower;
-                case OldUserRoleEnum.Regular: return UserRoleEnum.Regular;
-                case OldUserRoleEnum.VIP: return UserRoleEnum.TwitchVIP;
-                case OldUserRoleEnum.Subscriber: return UserRoleEnum.Subscriber;
-                case OldUserRoleEnum.VIPExclusive: return UserRoleEnum.TwitchVIP;
-                case OldUserRoleEnum.GlobalMod: return UserRoleEnum.TwitchGlobalMod;
-                case OldUserRoleEnum.Mod: return UserRoleEnum.Moderator;
-                case OldUserRoleEnum.ChannelEditor: return UserRoleEnum.TwitchChannelEditor;
-                case OldUserRoleEnum.Staff: return UserRoleEnum.TwitchStaff;
-                case OldUserRoleEnum.Streamer: return UserRoleEnum.Streamer;
-                default: return UserRoleEnum.User;
-            }
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
     }
 
     public abstract class UserRoleAttributeBase : Attribute { }
@@ -198,25 +171,5 @@ namespace MixItUp.Base.Model.User
         }
 
         public override bool IsDefaultAttribute() { return this.Equals(TrovoUserRoleAttribute.Default); }
-    }
-
-    [AttributeUsage(AttributeTargets.All)]
-    public class GlimeshUserRoleAttribute : UserRoleAttributeBase
-    {
-        public static readonly GlimeshUserRoleAttribute Default;
-
-        public GlimeshUserRoleAttribute() { }
-
-        public override bool Equals(object obj) { return (obj is GlimeshUserRoleAttribute); }
-
-        public override int GetHashCode()
-        {
-            int hashCode = -86145682;
-            hashCode = hashCode * -1521134295 + base.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<object>.Default.GetHashCode(TypeId);
-            return hashCode;
-        }
-
-        public override bool IsDefaultAttribute() { return this.Equals(GlimeshUserRoleAttribute.Default); }
     }
 }
