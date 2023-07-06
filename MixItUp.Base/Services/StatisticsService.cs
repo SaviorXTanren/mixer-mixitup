@@ -7,7 +7,9 @@ using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -55,6 +57,9 @@ namespace MixItUp.Base.Services
     [DataContract]
     public class StatisticModel
     {
+        public const string AmountProperty = "Amount";
+        public const string DescriptionProperty = "Description";
+
         [DataMember]
         public string ID { get; set; }
 
@@ -76,6 +81,45 @@ namespace MixItUp.Base.Services
         [Obsolete]
         public StatisticModel() { }
 
+        [JsonIgnore]
+        public int AmountInt
+        {
+            get
+            {
+                if (this.Data.TryGetValue(AmountProperty, out JToken value) && value != null)
+                {
+                    return (int)value;
+                }
+                return 0;
+            }
+        }
+
+        [JsonIgnore]
+        public double AmountDouble
+        {
+            get
+            {
+                if (this.Data.TryGetValue(AmountProperty, out JToken value) && value != null)
+                {
+                    return (double)value;
+                }
+                return 0.0;
+            }
+        }
+
+        [JsonIgnore]
+        public string Description
+        {
+            get
+            {
+                if (this.Data.TryGetValue(DescriptionProperty, out JToken value) && value != null)
+                {
+                    return value.ToString();
+                }
+                return string.Empty;
+            }
+        }
+
         public StatisticModel(StatisticItemTypeEnum type, UserV2ViewModel user, StreamingPlatformTypeEnum platform, JObject data)
         {
             this.ID = Guid.NewGuid().ToString();
@@ -89,17 +133,21 @@ namespace MixItUp.Base.Services
 
     public class StatisticsService
     {
-        public const string AmountProperty = "Amount";
-        public const string TypeProperty = "Type";
-
-        public List<StatisticModel> CurrentSessionStatistics { get; private set; } = new List<StatisticModel>();
-
+        private List<StatisticModel> sessionStatistics = new List<StatisticModel>();
         private List<StatisticModel> statisticsToSave = new List<StatisticModel>();
 
         public StatisticsService() { }
 
         public Task Initialize()
         {
+            int lastNumber = RandomHelper.GenerateRandomNumber(100);
+            for (int i = 0; i < 100; i++)
+            {
+                this.LogStatistic(StatisticItemTypeEnum.Viewers, platform: StreamingPlatformTypeEnum.Twitch, amount: lastNumber);
+                this.sessionStatistics[i].DateTime = this.sessionStatistics[i].DateTime.AddMinutes(i);
+                lastNumber += RandomHelper.GenerateRandomNumber(-5, 5);
+            }
+
             return Task.CompletedTask;
         }
 
@@ -191,16 +239,16 @@ namespace MixItUp.Base.Services
                     case EventTypeEnum.StreamElementsDonation:
                     case EventTypeEnum.StreamElementsMerchPurchase:
                         this.LogStatistic(StatisticItemTypeEnum.Donation, parameters.User, amount: this.GetAmountValue(parameters.SpecialIdentifiers, SpecialIdentifierStringBuilder.DonationAmountNumberSpecialIdentifier),
-                            type: parameters.SpecialIdentifiers[SpecialIdentifierStringBuilder.DonationSourceSpecialIdentifier]); break;
+                            description: parameters.SpecialIdentifiers[SpecialIdentifierStringBuilder.DonationSourceSpecialIdentifier]); break;
 
                     case EventTypeEnum.StreamlootsCardRedeemed:
-                        this.LogStatistic(StatisticItemTypeEnum.StreamlootsCardRedeemed, parameters.User, type: parameters.SpecialIdentifiers["streamlootscardname"]); break;
+                        this.LogStatistic(StatisticItemTypeEnum.StreamlootsCardRedeemed, parameters.User, description: parameters.SpecialIdentifiers["streamlootscardname"]); break;
                     case EventTypeEnum.StreamlootsPackPurchased:
                         this.LogStatistic(StatisticItemTypeEnum.StreamlootsPackPurchased, parameters.User, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "streamlootspurchasequantity")); break;
                     case EventTypeEnum.StreamlootsPackGifted:
                         this.LogStatistic(StatisticItemTypeEnum.StreamlootsPackGifted, parameters.User, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "streamlootspurchasequantity")); break;
                     case EventTypeEnum.CrowdControlEffectRedeemed:
-                        this.LogStatistic(StatisticItemTypeEnum.CrowdControlEffect, parameters.User, type: parameters.SpecialIdentifiers["crowdcontroleffectname"]); break;
+                        this.LogStatistic(StatisticItemTypeEnum.CrowdControlEffect, parameters.User, description: parameters.SpecialIdentifiers["crowdcontroleffectname"]); break;
                 }
             }
             catch (Exception ex)
@@ -209,21 +257,38 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public void LogStatistic(StatisticItemTypeEnum statisticType, UserV2ViewModel user = null, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, double amount = 0.0, string type = null)
+        public void LogStatistic(StatisticItemTypeEnum statisticType, UserV2ViewModel user = null, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, double amount = 0.0, string description = null)
         {
             JObject data = new JObject();
             if (amount != 0.0)
             {
-                data[AmountProperty] = amount;
+                data[StatisticModel.AmountProperty] = amount;
             }
-            if (string.IsNullOrEmpty(type))
+            if (string.IsNullOrEmpty(description))
             {
-                data[TypeProperty] = type;
+                data[StatisticModel.DescriptionProperty] = description;
             }
 
             StatisticModel statistic = new StatisticModel(statisticType, user, platform, data);
-            this.CurrentSessionStatistics.Add(statistic);
-            this.statisticsToSave.Add(statistic);
+            this.sessionStatistics.Add(statistic);
+
+            lock (this.statisticsToSave)
+            {
+                this.statisticsToSave.Add(statistic);
+            }
+        }
+
+        public IEnumerable<StatisticModel> GetCurrentSessionStatistics() { return this.sessionStatistics.ToList(); }
+
+        public IEnumerable<StatisticModel> GetStatisticsToSave()
+        {
+            IEnumerable<StatisticModel> results;
+            lock (this.statisticsToSave)
+            {
+                results = this.statisticsToSave.ToList();
+                this.statisticsToSave.Clear();
+            }
+            return results;
         }
 
         private double GetAmountValue(Dictionary<string, string> specialIdentifiers, string key)

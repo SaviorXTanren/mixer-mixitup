@@ -297,7 +297,7 @@ namespace MixItUp.Base.Services.YouTube
                 {
                     if (broadcast?.Snippet?.Title != null && !string.Equals(this.Broadcast?.Snippet?.Title, broadcast?.Snippet?.Title, StringComparison.OrdinalIgnoreCase))
                     {
-                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.YouTube, type: broadcast?.Snippet?.Title);
+                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.YouTube, description: broadcast?.Snippet?.Title);
                     }
                     this.Broadcast = broadcast;
                 }
@@ -331,7 +331,7 @@ namespace MixItUp.Base.Services.YouTube
 
         public Task<bool> SetGame(string gameName) { return Task.FromResult(false); }
 
-        private async Task<Result> SetMembershipLevels()
+        private Task<Result> SetMembershipLevels()
         {
             try
             {
@@ -345,7 +345,7 @@ namespace MixItUp.Base.Services.YouTube
             {
                 Logger.Log(ex);
             }
-            return new Result();
+            return Task.FromResult<Result>(new Result());
         }
     }
 }

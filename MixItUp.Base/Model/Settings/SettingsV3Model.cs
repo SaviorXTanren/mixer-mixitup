@@ -888,7 +888,18 @@ namespace MixItUp.Base.Model.Settings
             {
                 Logger.Log(ex);
                 await CreateUserImportTable();
+            }
 
+            try
+            {
+                await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "REPLACE INTO Statistics(ID, DateTime, TypeID, PlatformID, Data) VALUES($ID, $DateTime, $TypeID, $PlatformID, $Data)",
+                    ServiceManager.Get<StatisticsService>().GetStatisticsToSave().Select(s => new Dictionary<string, object>() { { "$ID", s.ID.ToString() }, { "$DateTime", s.DateTime }, { "$TypeID", (int)s.Type },
+                        { "$PlatformID", (int)s.Platform }, { "$Data", JSONSerializerHelper.SerializeToString(s.Data) } }));
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                await CreateStatisticsTable();
             }
 
             await ServiceManager.Get<IDatabaseService>().CompressDb(this.DatabaseFilePath);
@@ -960,7 +971,7 @@ namespace MixItUp.Base.Model.Settings
             }
         }
 
-        public async Task CreatStatisticsTable()
+        public async Task CreateStatisticsTable()
         {
             bool tableExists = false;
             await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT name FROM sqlite_master WHERE type='table' AND name='Statistics'", (row) =>
@@ -970,7 +981,7 @@ namespace MixItUp.Base.Model.Settings
 
             if (!tableExists)
             {
-                await ServiceManager.Get<IDatabaseService>().Write(this.DatabaseFilePath, "CREATE TABLE \"Statistics\" (\"ID\" TEXT not null, \"DateTime\" datetime not null, \"Type\" INT not null, \"Platform\" INT not null, \"Data\" TEXT null, primary key (\"ID\"))");
+                await ServiceManager.Get<IDatabaseService>().Write(this.DatabaseFilePath, "CREATE TABLE \"Statistics\" (\"ID\" TEXT not null, \"DateTime\" datetime not null, \"TypeID\" INT not null, \"PlatformID\" INT not null, \"Data\" TEXT null, primary key (\"ID\"))");
             }
         }
 
@@ -987,7 +998,7 @@ namespace MixItUp.Base.Model.Settings
         private async void InitializeMissingData()
         {
             await this.CreateUserImportTable();
-            await this.CreatStatisticsTable();
+            await this.CreateStatisticsTable();
 
             StreamingPlatforms.ForEachPlatform(p =>
             {

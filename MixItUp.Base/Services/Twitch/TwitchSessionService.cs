@@ -331,11 +331,11 @@ namespace MixItUp.Base.Services.Twitch
 
                 if (this.Stream?.title != null && !string.Equals(this.LastStream?.title, this.Stream?.title, StringComparison.OrdinalIgnoreCase))
                 {
-                    ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, type: this.Stream?.title);
+                    ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, description: this.Stream?.title);
                 }
                 if (this.Stream?.game_name != null && !string.Equals(this.LastStream?.game_name, this.Stream?.game_name, StringComparison.OrdinalIgnoreCase))
                 {
-                    ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, type: this.Stream?.game_name);
+                    ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, description: this.Stream?.game_name);
                 }
             }
         }

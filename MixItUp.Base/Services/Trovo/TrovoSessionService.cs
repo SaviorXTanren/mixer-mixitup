@@ -306,11 +306,11 @@ namespace MixItUp.Base.Services.Trovo
                 {
                     if (channel?.live_title != null && !string.Equals(this.Channel?.live_title, channel?.live_title, StringComparison.OrdinalIgnoreCase))
                     {
-                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, type: channel?.live_title);
+                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, description: channel?.live_title);
                     }
                     if (channel?.category_name != null && !string.Equals(this.Channel?.category_name, channel?.category_name, StringComparison.OrdinalIgnoreCase))
                     {
-                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, type: channel?.category_name);
+                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, description: channel?.category_name);
                     }
                     this.Channel = channel;
                 }

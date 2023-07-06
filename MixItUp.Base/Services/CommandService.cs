@@ -494,7 +494,7 @@ namespace MixItUp.Base.Services
 
         private async Task RunDirectlyInternal(CommandInstanceModel commandInstance, CommandParametersModel parameters)
         {
-            ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.Command, user: commandInstance.Parameters.User, type: commandInstance.ID.ToString());
+            ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.Command, user: commandInstance.Parameters.User, description: commandInstance.ID.ToString());
 
             CommandModelBase command = commandInstance.Command;
             if (command != null)
@@ -527,7 +527,7 @@ namespace MixItUp.Base.Services
                         ServiceManager.Get<OverlayService>().StartBatching();
                     }
 
-                    ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.Action, user: commandInstance.Parameters.User, type: ((int)action.Type).ToString());
+                    ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.Action, user: commandInstance.Parameters.User, description: ((int)action.Type).ToString());
                     await action.Perform(parameters);
 
                     if (action is OverlayActionModel && ServiceManager.Get<OverlayService>().IsConnected)
