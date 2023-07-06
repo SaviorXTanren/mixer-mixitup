@@ -364,20 +364,18 @@ namespace MixItUp.Base.Services.YouTube
                         }
                         else if (NewMemberEventMessageType.Equals(liveChatMessage.Snippet.Type))
                         {
-                            CommandParametersModel parameters = new CommandParametersModel(user);
-                            if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.YouTubeChannelNewMember, parameters))
-                            {
-                                // TODO
-                                parameters.SpecialIdentifiers["usersubplan"] = liveChatMessage.Snippet.NewSponsorDetails.MemberLevelName;
+                            user.Roles.Add(UserRoleEnum.YouTubeMember);
+                            user.Roles.Add(UserRoleEnum.Subscriber);
+                            user.SubscribeDate = DateTimeOffset.Now;
+                            user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).MemberLevels.Clear();
+                            user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).MemberLevels.Add(liveChatMessage.Snippet.NewSponsorDetails.MemberLevelName);
 
+                            CommandParametersModel parameters = new CommandParametersModel(user);
+                            parameters.SpecialIdentifiers["usersubplan"] = liveChatMessage.Snippet.NewSponsorDetails.MemberLevelName;
+                            if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelNewMember, parameters))
+                            {
                                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
                                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
-
-                                user.Roles.Add(UserRoleEnum.YouTubeMember);
-                                user.Roles.Add(UserRoleEnum.Subscriber);
-                                user.SubscribeDate = DateTimeOffset.Now;
-                                user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).MemberLevels.Clear();
-                                user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).MemberLevels.Add(liveChatMessage.Snippet.NewSponsorDetails.MemberLevelName);
 
                                 foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                                 {
@@ -391,8 +389,6 @@ namespace MixItUp.Base.Services.YouTube
                                         streamPass.AddAmount(user, streamPass.SubscribeBonus);
                                     }
                                 }
-
-                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelNewMember, parameters);
 
                                 GlobalEvents.SubscribeOccurred(user);
                                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertSubscribed, user.DisplayName), ChannelSession.Settings.AlertSubColor));
@@ -400,26 +396,25 @@ namespace MixItUp.Base.Services.YouTube
                         }
                         else if (MemberMilestoneEventMessageType.Equals(liveChatMessage.Snippet.Type))
                         {
-                            CommandParametersModel parameters = new CommandParametersModel(user);
-                            if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.YouTubeChannelMemberMilestone, parameters))
+                            int months = (int)liveChatMessage.Snippet.MemberMilestoneChatDetails.MemberMonth.GetValueOrDefault();
+
+                            user.Roles.Add(UserRoleEnum.YouTubeMember);
+                            // TODO
+                            //user.SubscriberTier = subMessage.Tier;
+                            if (!user.SubscribeDate.HasValue)
                             {
-                                int months = (int)liveChatMessage.Snippet.MemberMilestoneChatDetails.MemberMonth.GetValueOrDefault();
+                                user.SubscribeDate = DateTimeOffset.Now.SubtractMonths(months);
+                            }
 
-                                // TODO
-                                parameters.SpecialIdentifiers["message"] = liveChatMessage.Snippet.MemberMilestoneChatDetails.UserComment;
-                                parameters.SpecialIdentifiers["usersubmonths"] = months.ToString();
-                                parameters.SpecialIdentifiers["usersubplan"] = liveChatMessage.Snippet.MemberMilestoneChatDetails.MemberLevelName;
+                            CommandParametersModel parameters = new CommandParametersModel(user);
+                            parameters.SpecialIdentifiers["message"] = liveChatMessage.Snippet.MemberMilestoneChatDetails.UserComment;
+                            parameters.SpecialIdentifiers["usersubmonths"] = months.ToString();
+                            parameters.SpecialIdentifiers["usersubplan"] = liveChatMessage.Snippet.MemberMilestoneChatDetails.MemberLevelName;
 
+                            if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelMemberMilestone, parameters))
+                            {
                                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
                                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = months;
-
-                                user.Roles.Add(UserRoleEnum.YouTubeMember);
-                                // TODO
-                                //user.SubscriberTier = subMessage.Tier;
-                                if (!user.SubscribeDate.HasValue)
-                                {
-                                    user.SubscribeDate = DateTimeOffset.Now.SubtractMonths(months);
-                                }
 
                                 foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                                 {
@@ -433,8 +428,6 @@ namespace MixItUp.Base.Services.YouTube
                                         streamPass.AddAmount(user, streamPass.SubscribeBonus);
                                     }
                                 }
-
-                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelMemberMilestone, parameters);
 
                                 GlobalEvents.ResubscribeOccurred(new Tuple<UserV2ViewModel, int>(user, months));
                                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertResubscribed, user.DisplayName, months), ChannelSession.Settings.AlertSubColor));

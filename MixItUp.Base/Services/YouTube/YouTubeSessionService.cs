@@ -306,20 +306,12 @@ namespace MixItUp.Base.Services.YouTube
                 {
                     if (this.Broadcast.Snippet.ActualStartTime.HasValue && this.launchDateTime < this.Broadcast.Snippet.ActualStartTime)
                     {
-                        CommandParametersModel parameters = new CommandParametersModel();
-                        if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.YouTubeChannelStreamStart, parameters))
-                        {
-                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStart, parameters);
-                        }
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStart, new CommandParametersModel());
                     }
 
                     if (this.Broadcast.Snippet.ActualEndTime.HasValue && this.launchDateTime < this.Broadcast.Snippet.ActualEndTime)
                     {
-                        CommandParametersModel parameters = new CommandParametersModel();
-                        if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.YouTubeChannelStreamStop, parameters))
-                        {
-                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStop, parameters);
-                        }
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStop, new CommandParametersModel());
                     }
                 }
             }

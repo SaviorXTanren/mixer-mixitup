@@ -223,16 +223,6 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        public bool CanPerformEvent(EventTypeEnum type, CommandParametersModel parameters)
-        {
-            UserV2ViewModel user = (parameters.User != null) ? parameters.User : ChannelSession.User;
-            if (EventService.singleUseTracking.Contains(type) && this.userEventTracking.ContainsKey(type) && user != null)
-            {
-                return !this.userEventTracking[type].Contains(user.ID);
-            }
-            return true;
-        }
-
         public async Task<bool> PerformEvent(EventTypeEnum type, CommandParametersModel parameters)
         {
             if (this.CanPerformEvent(type, parameters))
@@ -316,6 +306,16 @@ namespace MixItUp.Base.Services
                 return true;
             }
             return false;
+        }
+
+        private bool CanPerformEvent(EventTypeEnum type, CommandParametersModel parameters)
+        {
+            UserV2ViewModel user = (parameters.User != null) ? parameters.User : ChannelSession.User;
+            if (EventService.singleUseTracking.Contains(type) && this.userEventTracking.ContainsKey(type) && user != null)
+            {
+                return !this.userEventTracking[type].Contains(user.ID);
+            }
+            return true;
         }
     }
 }

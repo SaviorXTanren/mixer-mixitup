@@ -483,10 +483,9 @@ namespace MixItUp.Base.Services
                 }
 
                 CommandParametersModel parameters = new CommandParametersModel(user);
-                if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.ChatUserJoined, parameters))
+                if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserJoined, parameters))
                 {
                     user.Model.TotalStreamsWatched++;
-                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserJoined, parameters);
 
                     alerts.Add(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.UserJoinedChat, user.FullDisplayName), ChannelSession.Settings.AlertUserJoinLeaveColor));
                 }
@@ -567,10 +566,8 @@ namespace MixItUp.Base.Services
                     }
 
                     CommandParametersModel parameters = new CommandParametersModel(user);
-                    if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.ChatUserLeft, parameters))
+                    if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserLeft, parameters))
                     {
-                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserLeft, parameters);
-
                         alerts.Add(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.UserLeftChat, user.FullDisplayName), ChannelSession.Settings.AlertUserJoinLeaveColor));
                     }
                 }

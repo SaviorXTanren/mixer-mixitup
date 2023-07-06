@@ -578,12 +578,12 @@ namespace MixItUp.Base.Services.Twitch
                     return;
                 }
 
-                CommandParametersModel parameters = new CommandParametersModel(user);
-                if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TwitchChannelFollowed, parameters))
-                {
-                    user.Roles.Add(UserRoleEnum.Follower);
-                    user.FollowDate = DateTimeOffset.Now;
+                user.Roles.Add(UserRoleEnum.Follower);
+                user.FollowDate = DateTimeOffset.Now;
 
+                CommandParametersModel parameters = new CommandParametersModel(user);
+                if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelFollowed, parameters))
+                {
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user.ID;
 
                     foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
@@ -598,8 +598,6 @@ namespace MixItUp.Base.Services.Twitch
                             streamPass.AddAmount(user, streamPass.FollowBonus);
                         }
                     }
-
-                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelFollowed, parameters);
 
                     GlobalEvents.FollowOccurred(user);
 
@@ -815,18 +813,19 @@ namespace MixItUp.Base.Services.Twitch
                 }
             }
 
-            if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TwitchChannelSubscribed, parameters))
-            {
-                parameters.SpecialIdentifiers["message"] = subEvent.Message;
-                parameters.SpecialIdentifiers["usersubplanname"] = subEvent.PlanName;
-                parameters.SpecialIdentifiers["usersubplan"] = subEvent.PlanTier;
+            subEvent.User.Roles.Add(UserRoleEnum.Subscriber);
+            subEvent.User.SubscribeDate = DateTimeOffset.Now;
+            subEvent.User.SubscriberTier = subEvent.PlanTierNumber;
 
+            parameters.SpecialIdentifiers["message"] = subEvent.Message;
+            parameters.SpecialIdentifiers["usersubplanname"] = subEvent.PlanName;
+            parameters.SpecialIdentifiers["usersubplan"] = subEvent.PlanTier;
+
+            if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelSubscribed, parameters))
+            {
                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = subEvent.User.ID;
                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
-                subEvent.User.Roles.Add(UserRoleEnum.Subscriber);
-                subEvent.User.SubscribeDate = DateTimeOffset.Now;
-                subEvent.User.SubscriberTier = subEvent.PlanTierNumber;
                 subEvent.User.TotalMonthsSubbed++;
 
                 foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
@@ -1004,23 +1003,24 @@ namespace MixItUp.Base.Services.Twitch
             {
                 int months = Math.Max(packet.streak_months, packet.cumulative_months);
                 string planTier = TwitchPubSubService.GetSubTierNameFromText(packet.sub_plan);
-
                 string message = (packet.sub_message.ContainsKey("message") && packet.sub_message["message"] != null) ? packet.sub_message["message"].ToString() : string.Empty;
-                CommandParametersModel parameters = new CommandParametersModel(user, new List<string>(message.Split(new char[] { ' ' })));
-                if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TwitchChannelResubscribed, parameters))
-                {
-                    parameters.SpecialIdentifiers["message"] = message;
-                    parameters.SpecialIdentifiers["usersubmonths"] = months.ToString();
-                    parameters.SpecialIdentifiers["usersubplanname"] = !string.IsNullOrEmpty(packet.sub_plan_name) ? packet.sub_plan_name : TwitchPubSubService.GetSubTierNameFromText(packet.sub_plan);
-                    parameters.SpecialIdentifiers["usersubplan"] = planTier;
-                    parameters.SpecialIdentifiers["usersubstreak"] = packet.streak_months.ToString();
 
+                user.Roles.Add(UserRoleEnum.Subscriber);
+                user.SubscribeDate = DateTimeOffset.Now.SubtractMonths(months - 1);
+                user.SubscriberTier = TwitchPubSubService.GetSubTierNumberFromText(packet.sub_plan);
+
+                CommandParametersModel parameters = new CommandParametersModel(user, new List<string>(message.Split(new char[] { ' ' })));
+                parameters.SpecialIdentifiers["message"] = message;
+                parameters.SpecialIdentifiers["usersubmonths"] = months.ToString();
+                parameters.SpecialIdentifiers["usersubplanname"] = !string.IsNullOrEmpty(packet.sub_plan_name) ? packet.sub_plan_name : TwitchPubSubService.GetSubTierNameFromText(packet.sub_plan);
+                parameters.SpecialIdentifiers["usersubplan"] = planTier;
+                parameters.SpecialIdentifiers["usersubstreak"] = packet.streak_months.ToString();
+
+                if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelResubscribed, parameters))
+                {
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = months;
 
-                    user.Roles.Add(UserRoleEnum.Subscriber);
-                    user.SubscribeDate = DateTimeOffset.Now.SubtractMonths(months - 1);
-                    user.SubscriberTier = TwitchPubSubService.GetSubTierNumberFromText(packet.sub_plan);
                     user.TotalMonthsSubbed++;
 
                     foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
