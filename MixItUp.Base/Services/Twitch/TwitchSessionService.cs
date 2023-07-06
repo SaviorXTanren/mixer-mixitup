@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Channels;
 using Twitch.Base.Models.NewAPI.Games;
 using Twitch.Base.Models.NewAPI.Streams;
-using Twitch.Base.Models.NewAPI.Tags;
 using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.Services.Twitch
@@ -67,6 +66,8 @@ namespace MixItUp.Base.Services.Twitch
                 return this.Stream != null;
             }
         }
+
+        public int ViewerCount { get { return (int)this.Stream?.viewer_count; } }
 
         public async Task<Result> ConnectUser()
         {
@@ -327,6 +328,15 @@ namespace MixItUp.Base.Services.Twitch
                     this.LastStream = this.Stream;
                 }
                 this.Stream = await this.UserConnection.GetStream(this.User);
+
+                if (this.Stream?.title != null && !string.Equals(this.LastStream?.title, this.Stream?.title, StringComparison.OrdinalIgnoreCase))
+                {
+                    ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, type: this.Stream?.title);
+                }
+                if (this.Stream?.game_name != null && !string.Equals(this.LastStream?.game_name, this.Stream?.game_name, StringComparison.OrdinalIgnoreCase))
+                {
+                    ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, type: this.Stream?.game_name);
+                }
             }
         }
 

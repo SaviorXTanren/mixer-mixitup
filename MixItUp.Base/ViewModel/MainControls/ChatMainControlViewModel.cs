@@ -152,18 +152,13 @@ namespace MixItUp.Base.ViewModel.MainControls
         private void RefreshNumbers()
         {
             int viewerCount = 0;
-            if (ServiceManager.Get<TwitchSessionService>().IsConnected && ServiceManager.Get<TwitchSessionService>().IsLive)
+            StreamingPlatforms.ForEachPlatform(p =>
             {
-                viewerCount += (int)ServiceManager.Get<TwitchSessionService>().Stream?.viewer_count;
-            }
-            if (ServiceManager.Get<YouTubeSessionService>().IsConnected && ServiceManager.Get<YouTubeSessionService>().IsLive)
-            {
-                viewerCount += (int)ServiceManager.Get<YouTubeSessionService>().Video?.LiveStreamingDetails.ConcurrentViewers.GetValueOrDefault();
-            }
-            if (ServiceManager.Get<TrovoSessionService>().IsConnected && ServiceManager.Get<TrovoSessionService>().IsLive)
-            {
-                viewerCount += (int)ServiceManager.Get<TrovoSessionService>().Channel?.current_viewers;
-            }
+                if (StreamingPlatforms.GetPlatformSessionService(p).IsConnected && StreamingPlatforms.GetPlatformSessionService(p).IsLive)
+                {
+                    viewerCount += StreamingPlatforms.GetPlatformSessionService(p).ViewerCount;
+                }
+            });
             this.ViewersCount = viewerCount;
 
             this.ChattersCount = ServiceManager.Get<UserService>().ActiveUserCount;

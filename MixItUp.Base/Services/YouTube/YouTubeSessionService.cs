@@ -60,6 +60,8 @@ namespace MixItUp.Base.Services.YouTube
 
         public bool IsLive { get { return string.Equals(this.Broadcast?.Status?.LifeCycleStatus, "live", StringComparison.OrdinalIgnoreCase); } }
 
+        public int ViewerCount { get { return (int)this.Video?.LiveStreamingDetails?.ConcurrentViewers.GetValueOrDefault(); } }
+
         public async Task<Result> ConnectUser()
         {
             Result<YouTubePlatformService> result = await YouTubePlatformService.ConnectUser();
@@ -293,6 +295,10 @@ namespace MixItUp.Base.Services.YouTube
                 LiveBroadcast broadcast = await this.UserConnection.GetBroadcastByID(this.Broadcast.Id);
                 if (broadcast != null)
                 {
+                    if (broadcast?.Snippet?.Title != null && !string.Equals(this.Broadcast?.Snippet?.Title, broadcast?.Snippet?.Title, StringComparison.OrdinalIgnoreCase))
+                    {
+                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.YouTube, type: broadcast?.Snippet?.Title);
+                    }
                     this.Broadcast = broadcast;
                 }
 

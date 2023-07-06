@@ -970,7 +970,7 @@ namespace MixItUp.Base.Model.Settings
 
             if (!tableExists)
             {
-                await ServiceManager.Get<IDatabaseService>().Write(this.DatabaseFilePath, "CREATE TABLE \"Statistics\" (\"ID\" TEXT not null, \"DateTime\" datetime not null, \"Type\" INT not null, \"Data\" TEXT null, primary key (\"ID\"))");
+                await ServiceManager.Get<IDatabaseService>().Write(this.DatabaseFilePath, "CREATE TABLE \"Statistics\" (\"ID\" TEXT not null, \"DateTime\" datetime not null, \"Type\" INT not null, \"Platform\" INT not null, \"Data\" TEXT null, primary key (\"ID\"))");
             }
         }
 

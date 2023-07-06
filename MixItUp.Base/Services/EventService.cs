@@ -85,8 +85,6 @@ namespace MixItUp.Base.Services
         YouTubeChannelMassMembershipGifted = 323,
 
         YouTubeChannelSuperChat = 370,
-        [Obsolete]
-        YouTubeChannelSuperSticker = 371,
 
         // 400 = Trovo
 
@@ -302,6 +300,8 @@ namespace MixItUp.Base.Services
                     Logger.Log(LogLevel.Debug, $"Performing generic event trigger: {genericCommand.EventType}");
                     await ServiceManager.Get<CommandService>().Queue(genericCommand, parameters);
                 }
+
+                ServiceManager.Get<StatisticsService>().LogEventStatistic(type, parameters);
 
                 return true;
             }

@@ -82,7 +82,7 @@ namespace MixItUp.Base.Services
             this.currentChatEventLogFilePath = Path.Combine(ChatEventLogDirectoryName, string.Format(ChatEventLogFileNameFormat, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture)));
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            AsyncRunner.RunAsyncBackground(this.ProcessHoursCurrency, this.cancellationTokenSource.Token, 60000);
+            AsyncRunner.RunAsyncBackground(this.MinuteBackgroundThread, this.cancellationTokenSource.Token, 60000);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
@@ -754,13 +754,15 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private Task ProcessHoursCurrency(CancellationToken cancellationToken)
+        private Task MinuteBackgroundThread(CancellationToken cancellationToken)
         {
             Dictionary<StreamingPlatformTypeEnum, bool> liveStreams = new Dictionary<StreamingPlatformTypeEnum, bool>();
+            Dictionary<StreamingPlatformTypeEnum, int> chatterCount = new Dictionary<StreamingPlatformTypeEnum, int>();
 
             StreamingPlatforms.ForEachPlatform(p =>
             {
                 liveStreams[p] = StreamingPlatforms.GetPlatformSessionService(p).IsConnected && StreamingPlatforms.GetPlatformSessionService(p).IsLive;
+                chatterCount[p] = 0;
             });
 
             if (liveStreams.Any(s => s.Value))
@@ -770,6 +772,7 @@ namespace MixItUp.Base.Services
                     if (liveStreams.TryGetValue(user.Platform, out bool active) && active)
                     {
                         user.UpdateViewingMinutes(liveStreams);
+                        chatterCount[user.Platform]++;
                     }
                 }
 
@@ -782,6 +785,15 @@ namespace MixItUp.Base.Services
                 {
                     streamPass.UpdateUserData(liveStreams);
                 }
+
+                StreamingPlatforms.ForEachPlatform(p =>
+                {
+                    if (liveStreams[p])
+                    {
+                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.Viewers, platform: p, amount: StreamingPlatforms.GetPlatformSessionService(p).ViewerCount);
+                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.Chatters, platform: p, amount: chatterCount[p]);
+                    }
+                });
             }
 
             return Task.CompletedTask;

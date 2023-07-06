@@ -54,6 +54,8 @@ namespace MixItUp.Base.Services.Mock
 
         public bool IsLive { get { return true; } }
 
+        public int ViewerCount { get { return 999; } }
+
         public async Task<Result> ConnectUser()
         {
             Result<MockPlatformService> result = await MockPlatformService.ConnectUser();

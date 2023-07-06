@@ -1016,6 +1016,12 @@ namespace MixItUp.Base.Services.Twitch
                 parameters.SpecialIdentifiers["usersubplan"] = planTier;
                 parameters.SpecialIdentifiers["usersubstreak"] = packet.streak_months.ToString();
 
+                string moderation = await ServiceManager.Get<ModerationService>().ShouldTextBeModerated(user, message);
+                if (string.IsNullOrEmpty(moderation))
+                {
+                    parameters.SpecialIdentifiers["message"] = moderation;
+                }
+
                 if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelResubscribed, parameters))
                 {
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
@@ -1034,11 +1040,6 @@ namespace MixItUp.Base.Services.Twitch
                         {
                             streamPass.AddAmount(user, streamPass.SubscribeBonus);
                         }
-                    }
-
-                    if (string.IsNullOrEmpty(await ServiceManager.Get<ModerationService>().ShouldTextBeModerated(user, message)))
-                    {
-                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelResubscribed, parameters);
                     }
                 }
 
