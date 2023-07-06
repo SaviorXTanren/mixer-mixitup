@@ -114,7 +114,7 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <ComboBox Grid.Row="6" ItemsSource="{Binding YouTubeMembershipLevels}" SelectedItem="{Binding YouTubeMembershipLevel}" Visibility="{Binding IsYouTubeConnected, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.YouTubeMemberLevel}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="0,15,0,0" Width="180" />
+        <!-- <ComboBox Grid.Row="6" ItemsSource="{Binding YouTubeMembershipLevels}" SelectedItem="{Binding YouTubeMembershipLevel}" Visibility="{Binding IsYouTubeConnected, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.YouTubeMemberLevel}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="0,15,0,0" Width="180" /> -->
 
         <TextBox Grid.Row="7" Text="{Binding TrovoCustomRole}" Visibility="{Binding IsTrovoConnected, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TrovoCustomRole}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="0,15,0,0" Width="140" />
 

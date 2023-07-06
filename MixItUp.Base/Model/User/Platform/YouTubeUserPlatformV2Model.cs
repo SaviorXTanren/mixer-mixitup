@@ -63,7 +63,7 @@ namespace MixItUp.Base.Model.User.Platform
 
                     if (!this.initialRefreshCompleted)
                     {
-                        await this.RefreshMembershipDetails();
+                        //await this.RefreshMembershipDetails();
                     }
 
                     this.initialRefreshCompleted = true;

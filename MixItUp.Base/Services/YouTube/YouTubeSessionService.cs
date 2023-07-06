@@ -335,11 +335,11 @@ namespace MixItUp.Base.Services.YouTube
         {
             try
             {
-                IEnumerable<MembershipsLevel> membershipLevels = await this.UserConnection.GetMembershipLevels();
-                if (membershipLevels != null && membershipLevels.Count() > 0)
-                {
-                    this.MembershipLevels.AddRange(membershipLevels);
-                }
+                //IEnumerable<MembershipsLevel> membershipLevels = await this.UserConnection.GetMembershipLevels();
+                //if (membershipLevels != null && membershipLevels.Count() > 0)
+                //{
+                //    this.MembershipLevels.AddRange(membershipLevels);
+                //}
             }
             catch (Exception ex)
             {
