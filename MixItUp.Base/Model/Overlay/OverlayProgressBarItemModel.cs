@@ -130,7 +130,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Enable()
         {
-            if (this.ResetAfterDays > 0 && this.LastReset.TotalDaysFromNow() > this.ResetAfterDays)
+            if (this.ResetAfterDays > 0 && this.LastReset.TotalDaysFromNow() >= this.ResetAfterDays)
             {
                 this.CurrentAmount = 0;
                 this.LastReset = DateTimeOffset.Now;
