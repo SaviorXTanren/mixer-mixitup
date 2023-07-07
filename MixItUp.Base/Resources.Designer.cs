@@ -601,6 +601,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Variable.
+        /// </summary>
+        public static string AddVariable {
+            get {
+                return ResourceManager.GetString("AddVariable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Webhook.
         /// </summary>
         public static string AddWebhook {
@@ -17251,6 +17260,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SAMMI Action: Missing Variable.
+        /// </summary>
+        public static string SAMMIActionMissingVariable {
+            get {
+                return ResourceManager.GetString("SAMMIActionMissingVariable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to connect to SAMMI. Please make sureSAMMI is running, the SAMMI Local API is enabled under Settings, and the password matches if you set one for the Local API in SAMMI..
         /// </summary>
         public static string SAMMIFailedToConnect {
@@ -17904,6 +17922,15 @@ namespace MixItUp.Base {
         public static string SetGame {
             get {
                 return ResourceManager.GetString("SetGame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Global Variable.
+        /// </summary>
+        public static string SetGlobalVariable {
+            get {
+                return ResourceManager.GetString("SetGlobalVariable", resourceCulture);
             }
         }
         

@@ -10054,4 +10054,13 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="SAMMIActionMissingButtonID" xml:space="preserve">
     <value>SAMMI Action: Missing Button ID</value>
   </data>
+  <data name="SetGlobalVariable" xml:space="preserve">
+    <value>Set Global Variable</value>
+  </data>
+  <data name="SAMMIActionMissingVariable" xml:space="preserve">
+    <value>SAMMI Action: Missing Variable</value>
+  </data>
+  <data name="AddVariable" xml:space="preserve">
+    <value>Add Variable</value>
+  </data>
 </root>

@@ -90,5 +90,33 @@ namespace MixItUp.Base.Services.External
                 Logger.Log(ex);
             }
         }
+
+        public async Task SetVariable(string name, string value, string buttonID = null)
+        {
+            try
+            {
+                using (var client = new AdvancedHttpClient())
+                {
+                    JObject jobj = new JObject();
+                    jobj["request"] = "setVariable";
+                    jobj["name"] = name;
+                    jobj["value"] = value;
+                    if (!string.IsNullOrEmpty(buttonID))
+                    {
+                        jobj["buttonID"] = buttonID;
+                    }
+
+                    HttpResponseMessage response = await client.PostAsync(ConnectionURL, AdvancedHttpClient.CreateContentFromObject(jobj));
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        Logger.Log("SAMMI Failure: " + await response.Content.ReadAsStringAsync());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
     }
 }

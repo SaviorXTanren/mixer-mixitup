@@ -3,6 +3,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -12,6 +13,7 @@ namespace MixItUp.Base.Model.Actions
     {
         TriggerButton,
         ReleaseButton,
+        SetGlobalVariable,
     }
 
     [DataContract]
@@ -22,12 +24,28 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public string ButtonID { get; set; }
+        [DataMember]
+        public Dictionary<string, string> ButtonVariables { get; set; } = new Dictionary<string, string>();
 
-        public SAMMIActionModel(SAMMIActionTypeEnum actionType, string buttonID)
+        [DataMember]
+        public string GlobalVariableName { get; set; }
+        [DataMember]
+        public string GlobalVariableValue { get; set; }
+
+        public SAMMIActionModel(SAMMIActionTypeEnum actionType, string buttonID, Dictionary<string, string> buttonVariables)
             : base(ActionTypeEnum.SAMMI)
         {
             this.ActionType = actionType;
             this.ButtonID = buttonID;
+            this.ButtonVariables = buttonVariables;
+        }
+
+        public SAMMIActionModel(SAMMIActionTypeEnum actionType, string globalVariableName, string globalVariableValue)
+            : base(ActionTypeEnum.SAMMI)
+        {
+            this.ActionType = actionType;
+            this.GlobalVariableName = globalVariableName;
+            this.GlobalVariableValue = globalVariableValue;
         }
 
         [Obsolete]
@@ -37,14 +55,32 @@ namespace MixItUp.Base.Model.Actions
         {
             if (ServiceManager.Get<SAMMIService>().IsConnected)
             {
-                string buttonID = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.ButtonID, parameters);
-                if (this.ActionType == SAMMIActionTypeEnum.TriggerButton)
+                if (this.ActionType == SAMMIActionTypeEnum.TriggerButton || this.ActionType == SAMMIActionTypeEnum.ReleaseButton)
                 {
-                    await ServiceManager.Get<SAMMIService>().TriggerButton(buttonID);
+                    string buttonID = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.ButtonID, parameters);
+
+                    foreach (var kvp in this.ButtonVariables)
+                    {
+                        string key = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(kvp.Key, parameters);
+                        string value = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(kvp.Value, parameters);
+                        await ServiceManager.Get<SAMMIService>().SetVariable(key, value, buttonID);
+                    }
+
+                    if (this.ActionType == SAMMIActionTypeEnum.TriggerButton)
+                    {
+                        await ServiceManager.Get<SAMMIService>().TriggerButton(buttonID);
+                    }
+                    else if (this.ActionType == SAMMIActionTypeEnum.ReleaseButton)
+                    {
+                        await ServiceManager.Get<SAMMIService>().ReleaseButton(buttonID);
+                    }
                 }
-                else if (this.ActionType == SAMMIActionTypeEnum.ReleaseButton)
+                else if (this.ActionType == SAMMIActionTypeEnum.SetGlobalVariable)
                 {
-                    await ServiceManager.Get<SAMMIService>().ReleaseButton(buttonID);
+                    string globalVariableName = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.GlobalVariableName, parameters);
+                    string globalVariableValue = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.GlobalVariableValue, parameters);
+
+                    await ServiceManager.Get<SAMMIService>().SetVariable(globalVariableName, globalVariableValue);
                 }
             }
         }
