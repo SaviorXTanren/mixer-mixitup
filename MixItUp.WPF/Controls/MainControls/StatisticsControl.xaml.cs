@@ -1,8 +1,6 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.Defaults;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
@@ -48,12 +46,11 @@ namespace MixItUp.WPF.Controls.MainControls
 
         public ObservableCollection<Axis> XAxes { get; private set; } = new ObservableCollection<Axis>();
 
-        public ThreadSafeObservableCollection<IStatisticSeries> Series { get; private set; } = new ThreadSafeObservableCollection<IStatisticSeries>();
+        public ThreadSafeObservableCollection<ISeries> Series { get; private set; } = new ThreadSafeObservableCollection<ISeries>();
 
-        private Dictionary<StatisticItemTypeEnum, IStatisticSeries> statisticSeries = new Dictionary<StatisticItemTypeEnum, IStatisticSeries>();
+        private Dictionary<StatisticItemTypeEnum, StatisticSeriesBase> statisticSeries = new Dictionary<StatisticItemTypeEnum, StatisticSeriesBase>();
 
         private IEnumerable<StatisticModel> statistics;
-        private int lastTotal = 0;
 
         public StatisticsViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
@@ -90,15 +87,15 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void Refresh()
         {
+            int lastTotal = this.statistics?.Count() ?? 0;
             this.statistics = ServiceManager.Get<StatisticsService>().GetCurrentSessionStatistics();
             if (this.statistics.Count() > 0 && this.statisticSeries.Count > 0)
             {
-                for (; this.lastTotal < this.statistics.Count(); this.lastTotal++)
+                foreach (StatisticModel statistic in this.statistics.Skip(lastTotal))
                 {
-                    StatisticModel statistic = this.statistics.ElementAt(this.lastTotal);
                     if (this.statisticSeries.ContainsKey(statistic.Type))
                     {
-                        this.statisticSeries[statistic.Type].ValueCollection.Add(new DateTimePoint(statistic.DateTime.DateTime, statistic.AmountInt));
+                        this.statisticSeries[statistic.Type].AddValue(statistic);
                     }
                 }
             }
@@ -107,13 +104,13 @@ namespace MixItUp.WPF.Controls.MainControls
         private void AddSeries(StatisticItemTypeEnum type)
         {
             IEnumerable<StatisticModel> values = this.statistics.Where(s => s.Type == type);
-            IStatisticSeries series = null;
+            StatisticSeriesBase series = null;
 
             switch (type)
             {
                 case StatisticItemTypeEnum.Viewers:
                 case StatisticItemTypeEnum.Chatters:
-                    series = new StatisticLineSeries(type);
+                    series = new StatisticLineSeries(type, StatisticValueTypeEnum.Integer);
                     break;
 
                 case StatisticItemTypeEnum.Command:
@@ -154,11 +151,11 @@ namespace MixItUp.WPF.Controls.MainControls
             if (series != null)
             {
                 this.statisticSeries[type] = series;
-                this.Series.Add(series);
+                this.Series.Add(series.Series);
 
                 foreach (StatisticModel value in values)
                 {
-                    series.ValueCollection.Add(new DateTimePoint(value.DateTime.DateTime, value.AmountInt));
+                    series.AddValue(value);
                 }
             }
         }
@@ -167,45 +164,80 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (this.statisticSeries.ContainsKey(type))
             {
-                this.Series.Remove(this.statisticSeries[type]);
+                this.Series.Remove(this.statisticSeries[type].Series);
                 this.statisticSeries.Remove(type);
             }
         }
     }
 
-    public interface IStatisticSeries : ISeries<DateTimePoint>
+    public enum StatisticValueTypeEnum
     {
-        StatisticItemTypeEnum Type { get; }
-
-        ThreadSafeObservableCollection<DateTimePoint> ValueCollection { get; }
+        Integer,
+        Decimal,
+        Text
     }
 
-    public class StatisticLineSeries : LineSeries<DateTimePoint>, IStatisticSeries
+    public abstract class StatisticSeriesBase
     {
         public StatisticItemTypeEnum Type { get; private set; }
 
-        public ThreadSafeObservableCollection<DateTimePoint> ValueCollection { get; private set; } = new ThreadSafeObservableCollection<DateTimePoint>();
+        public StatisticValueTypeEnum ValueType { get; private set; }
 
-        public StatisticLineSeries(StatisticItemTypeEnum type)
+        public string Name { get; private set; }
+
+        public ISeries Series { get; protected set; }
+
+        public ThreadSafeObservableCollection<DateTimePoint> Values { get; private set; } = new ThreadSafeObservableCollection<DateTimePoint>();
+
+        public StatisticSeriesBase(StatisticItemTypeEnum type, StatisticValueTypeEnum valueType)
         {
             this.Type = type;
+            this.ValueType = valueType;
             this.Name = EnumLocalizationHelper.GetLocalizedName(this.Type);
-            this.XToolTipLabelFormatter = (chartPoint) => $"{new DateTime((long)chartPoint.SecondaryValue):t}";
-            this.Values = this.ValueCollection;
+        }
+
+        public void AddValue(StatisticModel value)
+        {
+            if (this.ValueType == StatisticValueTypeEnum.Integer)
+            {
+                this.Values.Add(new DateTimePoint(value.DateTime.DateTime, value.AmountInt));
+            }
+            else if (this.ValueType == StatisticValueTypeEnum.Decimal)
+            {
+                this.Values.Add(new DateTimePoint(value.DateTime.DateTime, value.AmountDouble));
+            }
+            else if (this.ValueType == StatisticValueTypeEnum.Text)
+            {
+                //this.Values.Add(new DateTimePoint(value.DateTime.DateTime, value.AmountDouble));
+            }
         }
     }
 
-    public class StatisticPlotSeries<T> : ScatterSeries<DateTimePoint, T>, IStatisticSeries where T : class, ISizedGeometry<SkiaSharpDrawingContext>, new()
+    public class StatisticLineSeries : StatisticSeriesBase
     {
-        public StatisticItemTypeEnum Type { get; private set; }
-
-        public ThreadSafeObservableCollection<DateTimePoint> ValueCollection { get; private set; } = new ThreadSafeObservableCollection<DateTimePoint>();
-
-        public StatisticPlotSeries(StatisticItemTypeEnum type)
+        public StatisticLineSeries(StatisticItemTypeEnum type, StatisticValueTypeEnum valueType)
+            : base(type, valueType)
         {
-            this.Type = type;
-            this.Name = EnumLocalizationHelper.GetLocalizedName(this.Type);
-            this.Values = this.ValueCollection;
+            this.Series = new LineSeries<DateTimePoint>
+            {
+                Name = this.Name,
+                XToolTipLabelFormatter = (chartPoint) => $"{new DateTime((long)chartPoint.SecondaryValue):t}",
+                Values = this.Values
+            };
+        }
+    }
+
+    public class StatisticScatterSeries : StatisticSeriesBase
+    {
+        public StatisticScatterSeries(StatisticItemTypeEnum type, StatisticValueTypeEnum valueType)
+            : base(type, valueType)
+        {
+            this.Series = new ScatterSeries<DateTimePoint>
+            {
+                Name = this.Name,
+                XToolTipLabelFormatter = (chartPoint) => $"{new DateTime((long)chartPoint.SecondaryValue):t}",
+                Values = this.Values
+            };
         }
     }
 

@@ -120,10 +120,10 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public StatisticModel(StatisticItemTypeEnum type, UserV2ViewModel user, StreamingPlatformTypeEnum platform, JObject data)
+        public StatisticModel(StatisticItemTypeEnum type, UserV2ViewModel user, StreamingPlatformTypeEnum platform, JObject data, DateTimeOffset? dateTime = null)
         {
             this.ID = Guid.NewGuid().ToString();
-            this.DateTime = DateTimeOffset.Now;
+            this.DateTime = (dateTime != null) ? dateTime.GetValueOrDefault() : DateTimeOffset.Now;
             this.Type = type;
             this.UserID = (user != null) ? user.ID : Guid.Empty;
             this.Platform = platform;
@@ -140,14 +140,6 @@ namespace MixItUp.Base.Services
 
         public Task Initialize()
         {
-            int lastNumber = RandomHelper.GenerateRandomNumber(100);
-            for (int i = 0; i < 100; i++)
-            {
-                this.LogStatistic(StatisticItemTypeEnum.Viewers, platform: StreamingPlatformTypeEnum.Twitch, amount: lastNumber);
-                this.sessionStatistics[i].DateTime = this.sessionStatistics[i].DateTime.AddMinutes(i);
-                lastNumber += RandomHelper.GenerateRandomNumber(-5, 5);
-            }
-
             return Task.CompletedTask;
         }
 
@@ -257,19 +249,19 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public void LogStatistic(StatisticItemTypeEnum statisticType, UserV2ViewModel user = null, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, double amount = 0.0, string description = null)
+        public void LogStatistic(StatisticItemTypeEnum statisticType, UserV2ViewModel user = null, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, double amount = 0.0, string description = null, DateTimeOffset? dateTime = null)
         {
             JObject data = new JObject();
             if (amount != 0.0)
             {
                 data[StatisticModel.AmountProperty] = amount;
             }
-            if (string.IsNullOrEmpty(description))
+            if (!string.IsNullOrEmpty(description))
             {
                 data[StatisticModel.DescriptionProperty] = description;
             }
 
-            StatisticModel statistic = new StatisticModel(statisticType, user, platform, data);
+            StatisticModel statistic = new StatisticModel(statisticType, user, platform, data, dateTime);
             this.sessionStatistics.Add(statistic);
 
             lock (this.statisticsToSave)

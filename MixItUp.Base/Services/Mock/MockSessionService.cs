@@ -239,5 +239,16 @@ namespace MixItUp.Base.Services.Mock
         }
 
         public Task<bool> SetGame(string gameName) { return Task.FromResult(false); }
+
+        public void AddMockViewerStatistics()
+        {
+            int lastNumber = RandomHelper.GenerateRandomNumber(100);
+            DateTimeOffset dateTime = DateTimeOffset.Now;
+            for (int i = 0; i < 25; i++)
+            {
+                ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.Viewers, platform: StreamingPlatformTypeEnum.Twitch, amount: lastNumber, dateTime: dateTime.AddMinutes(i * 5));
+                lastNumber += Math.Max(RandomHelper.GenerateRandomNumber(-5, 5), 0);
+            }
+        }
     }
 }
