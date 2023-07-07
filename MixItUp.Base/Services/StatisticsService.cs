@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services.Mock;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.User;
@@ -140,6 +141,11 @@ namespace MixItUp.Base.Services
 
         public Task Initialize()
         {
+            if (ChannelSession.IsDebug())
+            {
+                (new MockSessionService()).AddMockViewerStatistics();
+            }
+
             return Task.CompletedTask;
         }
 
