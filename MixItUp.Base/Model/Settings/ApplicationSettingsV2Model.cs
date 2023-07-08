@@ -105,9 +105,9 @@ namespace MixItUp.Base.Model.Settings
         public LanguageOptions LanguageOption { get; set; }
 
         [DataMember]
-        public string BackupSettingsFilePath { get; set; }
+        public string SettingsRestoreFilePath { get; set; }
         [DataMember]
-        public Guid BackupSettingsToReplace { get; set; }
+        public Guid SettingsToReplaceDuringRestore { get; set; }
 
         [DataMember]
         public Guid SettingsToDelete { get; set; }

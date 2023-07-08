@@ -98,13 +98,13 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            if (!string.IsNullOrEmpty(ChannelSession.AppSettings.BackupSettingsFilePath))
+            if (!string.IsNullOrEmpty(ChannelSession.AppSettings.SettingsRestoreFilePath))
             {
                 Logger.Log(LogLevel.Debug, "Restored settings file detected, starting restore process");
 
-                if (ChannelSession.AppSettings.BackupSettingsToReplace != Guid.Empty)
+                if (ChannelSession.AppSettings.SettingsToReplaceDuringRestore != Guid.Empty)
                 {
-                    SettingsV3Model settings = allSettings.FirstOrDefault(s => s.ID.Equals(ChannelSession.AppSettings.BackupSettingsToReplace));
+                    SettingsV3Model settings = allSettings.FirstOrDefault(s => s.ID.Equals(ChannelSession.AppSettings.SettingsToReplaceDuringRestore));
                     if (settings != null)
                     {
                         File.Delete(settings.SettingsFilePath);
@@ -115,10 +115,10 @@ namespace MixItUp.Base.Services
                     }
                 }
 
-                await ServiceManager.Get<IFileService>().UnzipFiles(ChannelSession.AppSettings.BackupSettingsFilePath, SettingsV3Model.SettingsDirectoryName);
+                await ServiceManager.Get<IFileService>().UnzipFiles(ChannelSession.AppSettings.SettingsRestoreFilePath, SettingsV3Model.SettingsDirectoryName);
 
-                ChannelSession.AppSettings.BackupSettingsFilePath = null;
-                ChannelSession.AppSettings.BackupSettingsToReplace = Guid.Empty;
+                ChannelSession.AppSettings.SettingsRestoreFilePath = null;
+                ChannelSession.AppSettings.SettingsToReplaceDuringRestore = Guid.Empty;
 
                 return await this.GetAllSettings();
             }

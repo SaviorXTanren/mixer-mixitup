@@ -47,8 +47,8 @@ namespace MixItUp.Base.Model.Settings
                 Result<SettingsV3Model> result = await ServiceManager.Get<SettingsService>().RestorePackagedBackup(filePath);
                 if (result.Success)
                 {
-                    ChannelSession.AppSettings.BackupSettingsFilePath = filePath;
-                    ChannelSession.AppSettings.BackupSettingsToReplace = (ChannelSession.Settings != null) ? ChannelSession.Settings.ID : Guid.Empty;
+                    ChannelSession.AppSettings.SettingsRestoreFilePath = filePath;
+                    ChannelSession.AppSettings.SettingsToReplaceDuringRestore = (ChannelSession.Settings != null) ? ChannelSession.Settings.ID : Guid.Empty;
                     GlobalEvents.RestartRequested();
                 }
                 else
