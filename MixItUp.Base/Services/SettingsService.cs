@@ -147,6 +147,11 @@ namespace MixItUp.Base.Services
                 await DialogHelper.ShowMessage(Resources.SettingsLoadFailure);
             }
 
+            // Empty out all restore and deleting values to ensure they are clear
+            ChannelSession.AppSettings.SettingsRestoreFilePath = null;
+            ChannelSession.AppSettings.SettingsToReplaceDuringRestore = Guid.Empty;
+            ChannelSession.AppSettings.SettingsToDelete = Guid.Empty;
+
             return allSettings;
         }
 
