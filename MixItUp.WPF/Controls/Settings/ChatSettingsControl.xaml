@@ -13,9 +13,10 @@
     <Grid Margin="20">
         <StackPanel>
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding SaveChatEventLogs}" />
-            <GenericSettingsControls:GenericComboBoxSettingsOptionControl DataContext="{Binding FontSize}" />
+            <GenericSettingsControls:GenericSliderSettingsOptionControl DataContext="{Binding FontSize}" />
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding AddSeparatorsBetweenMessages}" />
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding UseAlternatingBackgroundColors}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding DisableAnimatedEmotes}" />
 
             <Separator Margin="10" />
 

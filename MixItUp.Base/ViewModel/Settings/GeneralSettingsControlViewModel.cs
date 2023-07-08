@@ -15,7 +15,6 @@ namespace MixItUp.Base.ViewModel.Settings
     {
         public GenericToggleSettingsOptionControlViewModel OptOutOfDataTracking { get; set; }
         public GenericToggleSettingsOptionControlViewModel AutoLogIn { get; set; }
-        public GenericToggleSettingsOptionControlViewModel PreviewProgram { get; set; }
 
         public GenericComboBoxSettingsOptionControlViewModel<LanguageOptions> Language { get; set; }
         public GenericComboBoxSettingsOptionControlViewModel<StreamingPlatformTypeEnum> DefaultStreamingPlatform { get; set; }
@@ -31,9 +30,6 @@ namespace MixItUp.Base.ViewModel.Settings
                 (ChannelSession.AppSettings.AutoLogInID == ChannelSession.Settings.ID),
                 (value) => { ChannelSession.AppSettings.AutoLogInID = (value) ? ChannelSession.Settings.ID : Guid.Empty; },
                 MixItUp.Base.Resources.AutoLogInCurrentAccountTooltip);
-
-            this.PreviewProgram = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.UpdatePreviewProgram,
-                ChannelSession.AppSettings.PreviewProgram, (value) => { ChannelSession.AppSettings.PreviewProgram = value; }, MixItUp.Base.Resources.UpdatePreviewProgramTooltip);
 
             var languageOptions = EnumHelper.GetEnumList<LanguageOptions>().ToList();
             if (!ChannelSession.IsDebug())
@@ -51,7 +47,7 @@ namespace MixItUp.Base.ViewModel.Settings
                 StreamingPlatforms.SupportedPlatforms, ChannelSession.Settings.DefaultStreamingPlatform, (value) => { ChannelSession.Settings.DefaultStreamingPlatform = value; });
 
             this.DefaultStreamingSoftware = new GenericComboBoxSettingsOptionControlViewModel<StreamingSoftwareTypeEnum>(MixItUp.Base.Resources.DefaultStreamingSoftware,
-                new List<StreamingSoftwareTypeEnum>() { StreamingSoftwareTypeEnum.OBSStudio, StreamingSoftwareTypeEnum.XSplit, StreamingSoftwareTypeEnum.StreamlabsOBS },
+                new List<StreamingSoftwareTypeEnum>() { StreamingSoftwareTypeEnum.OBSStudio, StreamingSoftwareTypeEnum.XSplit, StreamingSoftwareTypeEnum.StreamlabsDesktop },
                 ChannelSession.Settings.DefaultStreamingSoftware, (value) => { ChannelSession.Settings.DefaultStreamingSoftware = value; });
 
             string defaultAudioOption = ServiceManager.Get<IAudioService>().DefaultAudioDevice;

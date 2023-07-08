@@ -103,7 +103,8 @@ namespace MixItUp.Base.ViewModel.Settings
                     return;
                 }
 
-                ChannelSession.Settings.Counters[this.NewCounterName] = new CounterModel(this.NewCounterName);
+                CounterModel.CreateCounter(this.NewCounterName, false, false);
+
                 this.NewCounterName = string.Empty;
 
                 this.RefreshList();

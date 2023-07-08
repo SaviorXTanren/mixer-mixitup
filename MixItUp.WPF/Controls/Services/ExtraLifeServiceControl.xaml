@@ -5,10 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Services"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <local:ServiceControlBase.Resources>
+        <Util:LocalizationConverter x:Key="LocalizationConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </local:ServiceControlBase.Resources>
 
@@ -40,7 +42,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" Text="{x:Static resx:Resources.ExtraLifeTriggerForTeamDonation}"/>
-                <ToggleButton Grid.Column="2" IsChecked="{Binding ExtraLifeIncludeTeamDonations}" />
+                <ToggleButton Grid.Column="2" IsChecked="{Binding IncludeTeamDonations}" />
 
             </Grid>
         </Grid>
@@ -54,24 +56,44 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="20" />
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
                     <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" HorizontalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="20" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+                <ComboBox Grid.Row="0" ItemsSource="{Binding ParticipantTypes}" SelectedItem="{Binding SelectedParticipantType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" >
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
-                    <TextBox Grid.Column="0" Text="{Binding ExtraLifeTeamID}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TeamID}" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <Grid Grid.Row="2" Visibility="{Binding IsTeam, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                    <Button Grid.Column="2" Command="{Binding GetTeamParticipantsCommand}" HorizontalAlignment="Center" Content="{x:Static resx:Resources.Search}"/>
+                    <Grid Grid.Row="0" HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox Grid.Column="0" Text="{Binding TeamID}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TeamID}" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                        <Button Grid.Column="2" Command="{Binding GetTeamParticipantsCommand}" HorizontalAlignment="Center" Content="{x:Static resx:Resources.Search}"/>
+                    </Grid>
+
+                    <ComboBox Grid.Row="2" IsEnabled="{Binding ParticipantsAvailable}" ItemsSource="{Binding Participants}" SelectedItem="{Binding Participant}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ParticipantName}" Width="200" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="displayName" />
                 </Grid>
 
-                <ComboBox Grid.Row="2" IsEnabled="{Binding ParticipantsAvailable}" ItemsSource="{Binding Participants}" SelectedItem="{Binding ExtraLifeParticipant}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ParticipantName}" Width="200" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="displayName" />
+                <Grid Grid.Row="2" Visibility="{Binding IsIndividual, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <TextBox HorizontalAlignment="Center" Text="{Binding ParticipantID}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ParticipantID}" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                </Grid>
 
                 <Button Grid.Row="4" Command="{Binding LogInCommand}" HorizontalAlignment="Center" MinWidth="90" Content="{x:Static resx:Resources.Login}"/>
             </Grid>

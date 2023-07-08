@@ -3,9 +3,9 @@ using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
@@ -30,9 +30,6 @@ namespace MixItUp.Base.Model.Commands
         public string Name { get; set; }
         [DataMember]
         public bool IsEnabled { get; set; }
-        [Obsolete]
-        [DataMember]
-        public OldUserRoleEnum Role { get; set; }
         [DataMember]
         public UserRoleEnum UserRole { get; set; }
         [DataMember]
@@ -83,7 +80,7 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
-            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandMixItUp, parameters.Platform);
+            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandMixItUp, parameters);
         }
     }
 
@@ -93,24 +90,28 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
+            string groupFilter = (parameters.Arguments != null) ? string.Join(" ", parameters.Arguments) : null;
+
             List<string> commandTriggers = new List<string>();
             foreach (ChatCommandModel command in ServiceManager.Get<CommandService>().AllEnabledChatAccessibleCommands)
             {
-                if (command.IsEnabled)
+                if (command.IsEnabled && !command.Wildcards)
                 {
-                    RoleRequirementModel roleRequirement = command.Requirements.Role;
-                    if (roleRequirement != null)
+                    if (string.IsNullOrEmpty(groupFilter) || string.Equals(groupFilter, command.GroupName, StringComparison.OrdinalIgnoreCase))
                     {
-                        Result result = await roleRequirement.Validate(parameters);
-                        if (result.Success)
+                        RoleRequirementModel roleRequirement = command.Requirements.Role;
+                        if (roleRequirement != null)
                         {
-                            if (command.IncludeExclamation)
+                            Result result = await roleRequirement.Validate(parameters);
+                            if (result.Success)
                             {
-                                commandTriggers.AddRange(command.Triggers.Select(c => $"!{c}"));
-                            }
-                            else
-                            {
-                                commandTriggers.AddRange(command.Triggers);
+                                string firstTrigger = command.Triggers.First();
+                                if (command.IncludeExclamation)
+                                {
+                                    firstTrigger = $"!{firstTrigger}";
+                                }
+
+                                commandTriggers.Add(firstTrigger);
                             }
                         }
                     }
@@ -120,7 +121,7 @@ namespace MixItUp.Base.Model.Commands
             if (commandTriggers.Count > 0)
             {
                 string text = MixItUp.Base.Resources.PreMadeChatCommandCommandsHeader + string.Join(", ", commandTriggers.OrderBy(c => c));
-                await ServiceManager.Get<ChatService>().SendMessage(text, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(text, parameters);
             }
         }
     }
@@ -151,7 +152,7 @@ namespace MixItUp.Base.Model.Commands
             if (commandTriggers.Count > 0)
             {
                 string text = MixItUp.Base.Resources.PreMadeChatCommandGamesHeader + string.Join(", ", commandTriggers.OrderBy(c => c));
-                await ServiceManager.Get<ChatService>().SendMessage(text, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(text, parameters);
             }
         }
     }
@@ -162,13 +163,13 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
-            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandMixItUpCommands, parameters.Platform);
+            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandMixItUpCommands, parameters);
         }
     }
 
     public class GamePreMadeChatCommandModel : PreMadeChatCommandModelBase
     {
-        public GamePreMadeChatCommandModel() : base(MixItUp.Base.Resources.Game, "game", 5, UserRoleEnum.User) { }
+        public GamePreMadeChatCommandModel() : base(MixItUp.Base.Resources.Game, new HashSet<string>() { "game", "category" }, 5, UserRoleEnum.User) { }
 
         public static async Task<string> GetCurrentGameName(StreamingPlatformTypeEnum platform)
         {
@@ -189,16 +190,16 @@ namespace MixItUp.Base.Model.Commands
 
                 if (details != null)
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(details.ToString(), parameters.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(details.ToString(), parameters);
                 }
                 else
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameHeader + gameName, parameters.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.CategoryHeader + gameName, parameters);
                 }
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorHeader + MixItUp.Base.Resources.NoGameFound, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorHeader + MixItUp.Base.Resources.NoCategoryFound, parameters);
             }
         }
     }
@@ -213,24 +214,49 @@ namespace MixItUp.Base.Model.Commands
             string title = await StreamingPlatforms.GetPlatformSessionService(parameters.Platform).GetTitle();
             if (!string.IsNullOrEmpty(title))
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StreamTitleHeader + title, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StreamTitleHeader + title, parameters);
             }
         }
     }
 
     public class UptimePreMadeChatCommandModel : PreMadeChatCommandModelBase
     {
-        public static async Task<DateTimeOffset> GetStartTime()
+        public static async Task<DateTimeOffset> GetStartTime(StreamingPlatformTypeEnum platform)
         {
-            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+            if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
                 await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
                 if (ServiceManager.Get<TwitchSessionService>().IsLive)
                 {
-                    return TwitchPlatformService.GetTwitchDateTime(ServiceManager.Get<TwitchSessionService>().Stream?.started_at);
+                    if (ServiceManager.Get<TwitchSessionService>().Stream != null)
+                    {
+                        return TwitchPlatformService.GetTwitchDateTime(ServiceManager.Get<TwitchSessionService>().Stream?.started_at);
+                    }
+                    else
+                    {
+                        return TwitchPlatformService.GetTwitchDateTime(ServiceManager.Get<TwitchSessionService>().LastStream?.started_at);
+                    }
                 }
             }
-            else if (ServiceManager.Get<TrovoSessionService>().IsConnected)
+
+            if (platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().IsConnected)
+            {
+                await ServiceManager.Get<YouTubeSessionService>().RefreshChannel();
+                if (ServiceManager.Get<YouTubeSessionService>().IsLive)
+                {
+                    if (ServiceManager.Get<YouTubeSessionService>().Broadcast.Snippet.ActualStartTime.HasValue)
+                    {
+                        DateTime dt = ServiceManager.Get<YouTubeSessionService>().Broadcast.Snippet.ActualStartTime.GetValueOrDefault();
+                        if (dt.Kind == DateTimeKind.Unspecified)
+                        {
+                            dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
+                        }
+                        return new DateTimeOffset(dt, (dt.Kind == DateTimeKind.Utc) ? TimeSpan.Zero : DateTimeOffset.Now.Offset);
+                    }
+                }
+            }
+
+            if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
             {
                 await ServiceManager.Get<TrovoSessionService>().RefreshChannel();
                 if (ServiceManager.Get<TrovoSessionService>().IsLive)
@@ -238,14 +264,7 @@ namespace MixItUp.Base.Model.Commands
                     return TrovoPlatformService.GetTrovoDateTime(ServiceManager.Get<TrovoSessionService>().Channel?.started_at);
                 }
             }
-            else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
-            {
-                await ServiceManager.Get<GlimeshSessionService>().RefreshChannel();
-                if (ServiceManager.Get<GlimeshSessionService>().IsLive)
-                {
-                    return GlimeshPlatformService.GetGlimeshDateTime(ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.startedAt);
-                }
-            }
+
             return DateTimeOffset.MinValue;
         }
 
@@ -253,16 +272,16 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
-            DateTimeOffset startTime = await UptimePreMadeChatCommandModel.GetStartTime();
+            DateTimeOffset startTime = await UptimePreMadeChatCommandModel.GetStartTime(parameters.Platform);
             if (startTime > DateTimeOffset.MinValue)
             {
                 TimeSpan duration = DateTimeOffset.Now.Subtract(startTime);
                 await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StartTimeHeader + startTime.ToCorrectLocalTime().ToString("MMMM dd, yyyy - h:mm tt") + ", " +
-                    MixItUp.Base.Resources.StreamLengthHeader + (int)duration.TotalHours + duration.ToString("\\:mm"), parameters.Platform);
+                    MixItUp.Base.Resources.StreamLengthHeader + (int)duration.TotalHours + duration.ToString("\\:mm"), parameters);
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StreamIsCurrentlyOffline, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StreamIsCurrentlyOffline, parameters);
             }
         }
     }
@@ -273,7 +292,7 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
-            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.UserFollowAgeHeader, parameters.User.FullDisplayName) + parameters.User.FollowAgeString);
+            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.UserFollowAgeHeader, parameters.User.FullDisplayName) + parameters.User.FollowAgeString, parameters);
         }
     }
 
@@ -283,7 +302,7 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
-            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.UserSubscribeAgeHeader, parameters.User.FullDisplayName) + parameters.User.SubscribeAgeString);
+            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.UserSubscribeAgeHeader, parameters.User.FullDisplayName) + parameters.User.SubscribeAgeString, parameters);
         }
     }
 
@@ -293,7 +312,7 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
-            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.StreamerAgeHeader, parameters.User.FullDisplayName) + parameters.User.AccountAgeString);
+            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.StreamerAgeHeader, parameters.User.FullDisplayName) + parameters.User.AccountAgeString, parameters);
         }
     }
 
@@ -314,14 +333,14 @@ namespace MixItUp.Base.Model.Commands
                     {
                         if (!int.TryParse(parameters.Arguments.ElementAt(0), out quoteNumber))
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandQuoteUsage, parameters.Platform);
+                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandQuoteUsage, parameters);
                             return;
                         }
 
                         quote = ChannelSession.Settings.Quotes.SingleOrDefault(q => q.ID == quoteNumber);
                         if (quote == null)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(String.Format(MixItUp.Base.Resources.PreMadeChatCommandQuoteUnableToFind, quoteNumber), parameters.Platform);
+                            await ServiceManager.Get<ChatService>().SendMessage(String.Format(MixItUp.Base.Resources.PreMadeChatCommandQuoteUnableToFind, quoteNumber), parameters);
                         }
                     }
                     else if (parameters.Arguments.Count() == 0)
@@ -331,23 +350,23 @@ namespace MixItUp.Base.Model.Commands
                     }
                     else
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandQuoteUsage, parameters.Platform);
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandQuoteUsage, parameters);
                         return;
                     }
 
                     if (quote != null)
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage(quote.ToString(), parameters.Platform);
+                        await ServiceManager.Get<ChatService>().SendMessage(quote.ToString(), parameters);
                     }
                 }
                 else
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandQuotesNotEnabled, parameters.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandQuotesNotEnabled, parameters);
                 }
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandQuotesNotEnabled, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandQuotesNotEnabled, parameters);
             }
         }
     }
@@ -365,15 +384,15 @@ namespace MixItUp.Base.Model.Commands
                     UserQuoteModel quote = ChannelSession.Settings.Quotes.LastOrDefault();
                     if (quote != null)
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage(quote.ToString(), parameters.Platform);
+                        await ServiceManager.Get<ChatService>().SendMessage(quote.ToString(), parameters);
                         return;
                     }
                 }
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandQuotesNotEnabled, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandQuotesNotEnabled, parameters);
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandQuotesNotEnabled, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandQuotesNotEnabled, parameters);
             }
         }
     }
@@ -409,16 +428,16 @@ namespace MixItUp.Base.Model.Commands
 
                     GlobalEvents.QuoteAdded(quote);
 
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.QuoteAddedHeader + quote.ToString(), parameters.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.QuoteAddedHeader + quote.ToString(), parameters);
                 }
                 else
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandAddQuoteUsage, parameters.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandAddQuoteUsage, parameters);
                 }
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandQuotesNotEnabled, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandQuotesNotEnabled, parameters);
             }
         }
     }
@@ -431,27 +450,27 @@ namespace MixItUp.Base.Model.Commands
         {
             if (!ChannelSession.Settings.QuotesEnabled || ChannelSession.Settings.Quotes.Count == 0)
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandQuotesNotEnabled, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandQuotesNotEnabled, parameters);
                 return;
             }
 
             int quoteNumber = 0;
             if (parameters.Arguments.Count() != 1 || !int.TryParse(parameters.Arguments.ElementAt(0), out quoteNumber))
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandDeleteQuoteUsage, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandDeleteQuoteUsage, parameters);
                 return;
             }
 
             UserQuoteModel quote = ChannelSession.Settings.Quotes.SingleOrDefault(q => q.ID == quoteNumber);
             if (quote == null)
             {
-                await ServiceManager.Get<ChatService>().SendMessage(String.Format(MixItUp.Base.Resources.PreMadeChatCommandQuoteUnableToFind, quoteNumber), parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(String.Format(MixItUp.Base.Resources.PreMadeChatCommandQuoteUnableToFind, quoteNumber), parameters);
                 return;
             }
 
             ChannelSession.Settings.Quotes.Remove(quote);
 
-            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.QuoteDeletedHeader + quote.ToString(), parameters.Platform);
+            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.QuoteDeletedHeader + quote.ToString(), parameters);
         }
     }
 
@@ -492,7 +511,7 @@ namespace MixItUp.Base.Model.Commands
         public override async Task CustomRun(CommandParametersModel parameters)
         {
             int index = RandomHelper.GenerateRandomNumber(this.responses.Count);
-            await ServiceManager.Get<ChatService>().SendMessage(string.Format("The Magic 8-Ball says: \"{0}\"", this.responses[index]), parameters.Platform);
+            await ServiceManager.Get<ChatService>().SendMessage(string.Format("The Magic 8-Ball says: \"{0}\"", this.responses[index]), parameters);
         }
     }
 
@@ -568,11 +587,11 @@ namespace MixItUp.Base.Model.Commands
             GameInformation details = await XboxGamePreMadeChatCommandModel.GetXboxGameInfo(gameName);
             if (details != null)
             {
-                await ServiceManager.Get<ChatService>().SendMessage(details.ToString(), parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(details.ToString(), parameters);
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorCouldNotFindGame, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorCouldNotFindGame, parameters);
             }
         }
     }
@@ -665,11 +684,11 @@ namespace MixItUp.Base.Model.Commands
             GameInformation details = await SteamGamePreMadeChatCommandModel.GetSteamGameInfo(gameName);
             if (details != null)
             {
-                await ServiceManager.Get<ChatService>().SendMessage(details.ToString(), parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(details.ToString(), parameters);
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorCouldNotFindGame, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorCouldNotFindGame, parameters);
             }
         }
     }
@@ -691,37 +710,47 @@ namespace MixItUp.Base.Model.Commands
                         await StreamingPlatforms.GetPlatformSessionService(p).RefreshChannel();
                     }
                 });
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.TitleUpdatedHeader + name, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.TitleUpdatedHeader + name, parameters);
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandSetTitleUsage, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandSetTitleUsage, parameters);
             }
         }
     }
 
     public class SetGamePreMadeChatCommandModel : PreMadeChatCommandModelBase
     {
-        public SetGamePreMadeChatCommandModel() : base(MixItUp.Base.Resources.SetGame, "setgame", 5, UserRoleEnum.Moderator) { }
+        public SetGamePreMadeChatCommandModel() : base(MixItUp.Base.Resources.SetGame, new HashSet<string>() { "setgame", "setcategory" }, 5, UserRoleEnum.Moderator) { }
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
             if (parameters.Arguments.Count() > 0)
             {
                 string name = string.Join(" ", parameters.Arguments).ToLower();
+                Dictionary<StreamingPlatformTypeEnum, bool> results = new Dictionary<StreamingPlatformTypeEnum, bool>();
+
                 await StreamingPlatforms.ForEachPlatform(async (p) =>
                 {
                     if (StreamingPlatforms.GetPlatformSessionService(p).IsConnected)
                     {
-                        await StreamingPlatforms.GetPlatformSessionService(p).SetGame(name);
+                        results[p] = await StreamingPlatforms.GetPlatformSessionService(p).SetGame(name);
                         await StreamingPlatforms.GetPlatformSessionService(p).RefreshChannel();
                     }
                 });
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameUpdatedHeader + name, parameters.Platform);
+
+                if (results.Count > 0 && results.All(r => r.Value))
+                {
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.CategroryUpdatedHeader + name, parameters);
+                }
+                else
+                {
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorFailedToUpdateCategory, parameters);
+                }
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandSetGameUsage, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandSetGameUsage, parameters);
             }
         }
     }
@@ -743,12 +772,12 @@ namespace MixItUp.Base.Model.Commands
                 }
                 else
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.UserNotFound, parameters.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.UserNotFound, parameters);
                 }
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandSetUserTitleUsage, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandSetUserTitleUsage, parameters);
             }
         }
     }
@@ -765,7 +794,7 @@ namespace MixItUp.Base.Model.Commands
 
                 if (!ChatCommandModel.IsValidCommandTrigger(commandTrigger))
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorHeader + MixItUp.Base.Resources.ChatCommandInvalidTriggers, parameters.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorHeader + MixItUp.Base.Resources.ChatCommandInvalidTriggers, parameters);
                     return;
                 }
 
@@ -775,7 +804,7 @@ namespace MixItUp.Base.Model.Commands
                     {
                         if (command.Triggers.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase))
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorHeader + string.Format(MixItUp.Base.Resources.ChatCommandTriggerAlreadyExists, commandTrigger), parameters.Platform);
+                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorHeader + string.Format(MixItUp.Base.Resources.ChatCommandTriggerAlreadyExists, commandTrigger), parameters);
                             return;
                         }
                     }
@@ -783,7 +812,7 @@ namespace MixItUp.Base.Model.Commands
 
                 if (!int.TryParse(parameters.Arguments.ElementAt(1), out int cooldown) || cooldown < 0)
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ValidCooldownAmountMustBeSpecified, parameters.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ValidCooldownAmountMustBeSpecified, parameters);
                     return;
                 }
 
@@ -805,13 +834,13 @@ namespace MixItUp.Base.Model.Commands
                 ChannelSession.Settings.SetCommand(newCommand);
                 ServiceManager.Get<CommandService>().ChatCommands.Add(newCommand);
 
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.CommandAddedHeader + commandTrigger, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.CommandAddedHeader + commandTrigger, parameters);
 
                 ServiceManager.Get<ChatService>().RebuildCommandTriggers();
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandSetUserTitleUsage, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandSetUserTitleUsage, parameters);
             }
         }
     }
@@ -829,13 +858,13 @@ namespace MixItUp.Base.Model.Commands
                 CommandModelBase command = ServiceManager.Get<CommandService>().AllEnabledChatAccessibleCommands.FirstOrDefault(c => c.Triggers.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
                 if (command == null)
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorHeader + MixItUp.Base.Resources.CouldNotFindCommand, parameters.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorHeader + MixItUp.Base.Resources.CouldNotFindCommand, parameters);
                     return;
                 }
 
                 if (!int.TryParse(parameters.Arguments.ElementAt(1), out int cooldown) || cooldown < 0)
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ValidCooldownAmountMustBeSpecified, parameters.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ValidCooldownAmountMustBeSpecified, parameters);
                     return;
                 }
 
@@ -859,14 +888,14 @@ namespace MixItUp.Base.Model.Commands
                     command.Actions.Add(new ChatActionModel(commandText));
                 }
 
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.UpdatedCommandHeader + commandTrigger, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.UpdatedCommandHeader + commandTrigger, parameters);
                 ServiceManager.Get<ChatService>().RebuildCommandTriggers();
 
                 ChannelSession.Settings.SetCommand(command);
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandUpdateCommandUsage, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandUpdateCommandUsage, parameters);
             }
         }
     }
@@ -884,19 +913,19 @@ namespace MixItUp.Base.Model.Commands
                 CommandModelBase command = ServiceManager.Get<CommandService>().AllEnabledChatAccessibleCommands.FirstOrDefault(c => c.Triggers.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
                 if (command == null)
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorHeader + MixItUp.Base.Resources.CouldNotFindCommand, parameters.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorHeader + MixItUp.Base.Resources.CouldNotFindCommand, parameters);
                     return;
                 }
 
                 command.IsEnabled = false;
 
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.DisabledCommandHeader + commandTrigger, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.DisabledCommandHeader + commandTrigger, parameters);
 
                 ServiceManager.Get<ChatService>().RebuildCommandTriggers();
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandDisableCommandUsage, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandDisableCommandUsage, parameters);
             }
         }
     }
@@ -912,12 +941,12 @@ namespace MixItUp.Base.Model.Commands
                 string result = await ServiceManager.Get<GiveawayService>().Start(string.Join(" ", parameters.Arguments));
                 if (!string.IsNullOrEmpty(result))
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorHeader + result, parameters.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ErrorHeader + result, parameters);
                 }
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandStartGiveawayUsage, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandStartGiveawayUsage, parameters);
             }
         }
     }
@@ -938,7 +967,7 @@ namespace MixItUp.Base.Model.Commands
                 
                 if (!StreamingPlatforms.SupportedPlatforms.Contains(platform) || platform == parameters.Platform || !StreamingPlatforms.GetPlatformSessionService(platform).IsConnected)
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.LinkAccountCommandErrorUnsupportedPlatform, platformName), parameters.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.LinkAccountCommandErrorUnsupportedPlatform, platformName), parameters);
                     return;
                 }
 
@@ -946,7 +975,7 @@ namespace MixItUp.Base.Model.Commands
                 UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(platform, username, performPlatformSearch: true);
                 if (user == null)
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.LinkAccountCommandErrorUserNotFound, username), parameters.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.LinkAccountCommandErrorUserNotFound, username), parameters);
                     return;
                 }
 
@@ -954,17 +983,17 @@ namespace MixItUp.Base.Model.Commands
                 {
                     LinkedAccounts.Remove(user.ID);
                     await parameters.User.MergeUserData(user);
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.LinkAccountCommandAccountsLinkedSuccessfully, parameters.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.LinkAccountCommandAccountsLinkedSuccessfully, parameters);
                 }
                 else
                 {
                     LinkedAccounts[parameters.User.ID] = user.ID;
-                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.LinkAccountCommandPleaseConfirmLink, parameters.Platform, parameters.User.Username), parameters.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.LinkAccountCommandPleaseConfirmLink, parameters.Platform, parameters.User.Username), parameters);
                 }
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.LinkAccountCommandUsage, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.LinkAccountCommandUsage, parameters);
             }
         }
     }

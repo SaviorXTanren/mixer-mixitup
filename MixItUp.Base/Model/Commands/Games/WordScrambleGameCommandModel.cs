@@ -170,7 +170,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandAlreadyUnderway, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandAlreadyUnderway, parameters);
             }
             await this.Requirements.Refund(parameters);
         }

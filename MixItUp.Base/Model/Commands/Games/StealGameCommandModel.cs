@@ -40,7 +40,7 @@ namespace MixItUp.Base.Model.Commands.Games
         public override async Task CustomRun(CommandParametersModel parameters)
         {
             await this.SetSelectedUser(this.PlayerSelectionType, parameters);
-            if (parameters.TargetUser != null)
+            if (parameters.TargetUser != null && !parameters.IsTargetUserSelf)
             {
                 if (await this.ValidateTargetUserPrimaryBetAmount(parameters))
                 {
@@ -63,7 +63,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandCouldNotFindUser, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandCouldNotFindUser, parameters);
             }
             await this.Requirements.Refund(parameters);
         }

@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -24,9 +23,6 @@ namespace MixItUp.Base.Model.Currency
         public string Name { get; set; }        
         [DataMember]
         public string SpecialIdentifier { get; set; }
-        [Obsolete]
-        [DataMember]
-        public OldUserRoleEnum Permission { get; set; }
         [DataMember]
         public UserRoleEnum UserPermission { get; set; }
         [DataMember]
@@ -145,14 +141,7 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public int GetAmount(UserV2ViewModel user)
-        {
-            if (user.StreamPassAmounts.ContainsKey(this.ID))
-            {
-                return user.StreamPassAmounts[this.ID];
-            }
-            return 0;
-        }
+        public int GetAmount(UserV2ViewModel user) { return this.GetAmount(user.Model); }
 
         public int GetAmount(UserV2Model user)
         {
@@ -170,7 +159,9 @@ namespace MixItUp.Base.Model.Currency
             return (user.IsSpecialtyExcluded || this.GetAmount(user) >= amount);
         }
 
-        public void SetAmount(UserV2ViewModel user, int amount)
+        public void SetAmount(UserV2ViewModel user, int amount) { this.SetAmount(user.Model, amount); }
+
+        public void SetAmount(UserV2Model user, int amount)
         {
             user.StreamPassAmounts[this.ID] = Math.Min(Math.Max(amount, 0), this.MaxPoints);
             if (ChannelSession.Settings != null)
@@ -262,10 +253,9 @@ namespace MixItUp.Base.Model.Currency
 
             foreach (UserV2Model user in ChannelSession.Settings.Users.Values.ToList())
             {
-                if (user.StreamPassAmounts[this.ID] > 0)
+                if (this.GetAmount(user) > 0)
                 {
-                    user.StreamPassAmounts[this.ID] = 0;
-                    ChannelSession.Settings.Users.ManualValueChanged(user.ID);
+                    this.SetAmount(user, 0);
                 }
             }
             await ChannelSession.SaveSettings();

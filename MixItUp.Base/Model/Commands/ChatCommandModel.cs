@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
-using System.Threading;
 
 namespace MixItUp.Base.Model.Commands
 {
@@ -54,6 +53,14 @@ namespace MixItUp.Base.Model.Commands
             return false;
         }
 
+        public static Dictionary<string, string> GetChatTestSpecialIdentifiers()
+        {
+            return new Dictionary<string, string>()
+            {
+                { "message", "Test Message" }
+            };
+        }
+
         [DataMember]
         public bool IncludeExclamation { get; set; }
 
@@ -80,6 +87,8 @@ namespace MixItUp.Base.Model.Commands
         public bool DoesMessageMatchTriggers(ChatMessageViewModel message, out IEnumerable<string> arguments) { return ChatCommandModel.DoesMessageMatchTriggers(message, this.GetFullTriggers(), out arguments); }
 
         public bool DoesMessageMatchWildcardTriggers(ChatMessageViewModel message, out IEnumerable<string> arguments) { return ChatCommandModel.DoesMessageMatchWildcardTriggers(message, this.Triggers, out arguments); }
+
+        public override Dictionary<string, string> GetTestSpecialIdentifiers() { return ChatCommandModel.GetChatTestSpecialIdentifiers(); }
     }
 
     [DataContract]

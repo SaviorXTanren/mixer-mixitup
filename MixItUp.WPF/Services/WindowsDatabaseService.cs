@@ -113,6 +113,23 @@ namespace MixItUp.WPF.Services
             });
         }
 
+        public async Task CompressDb(string databaseFilePath)
+        {
+            await Write(databaseFilePath, "vacuum;");
+        }
+
+        public void ClearAllPools()
+        {
+            try
+            {
+                SqliteConnection.ClearAllPools();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
         private async Task EstablishConnection(string databaseFilePath, Func<SqliteConnection, Task> databaseQuery)
         {
             try

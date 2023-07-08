@@ -46,8 +46,7 @@ namespace MixItUp.Base.Model.Actions
             }
             else
             {
-                string replyMessageID = ChannelSession.Settings.TwitchReplyToCommandChatMessages ? parameters.TriggeringChatMessageID : null;
-                await ServiceManager.Get<ChatService>().SendMessage(message, parameters.Platform, this.SendAsStreamer, replyMessageID: replyMessageID);
+                await ServiceManager.Get<ChatService>().SendMessage(message, parameters, this.SendAsStreamer);
             }
         }
     }

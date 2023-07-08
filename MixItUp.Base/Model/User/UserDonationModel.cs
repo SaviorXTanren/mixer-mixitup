@@ -22,6 +22,7 @@ namespace MixItUp.Base.Model.User
         Rainmaker,
         JustGiving,
         StreamElements,
+        Twitch,
     }
 
     [DataContract]
@@ -34,6 +35,8 @@ namespace MixItUp.Base.Model.User
         public string ID { get; set; }
         [DataMember]
         public StreamingPlatformTypeEnum Platform { get; set; } = StreamingPlatformTypeEnum.None;
+        [DataMember]
+        public bool IsAnonymous { get; set; }
 
         [DataMember]
         public string Type { get; set; }
@@ -52,6 +55,11 @@ namespace MixItUp.Base.Model.User
         {
             get
             {
+                if (this.IsAnonymous)
+                {
+                    return MixItUp.Base.Resources.Anonymous;
+                }
+
                 if (this.User != null)
                 {
                     return this.User.DisplayName;
@@ -70,19 +78,27 @@ namespace MixItUp.Base.Model.User
         private string username { get; set; }
 
         [JsonIgnore]
-        public UserV2ViewModel User { get; private set; }
+        public UserV2ViewModel User { get; set; }
 
         [JsonIgnore]
         public string AmountText { get { return this.Amount.ToCurrencyString(); } }
 
         public async Task AssignUser()
         {
-            if (!string.IsNullOrEmpty(this.username))
+            if (this.User == null)
             {
-                this.User = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(this.Platform, this.username);
-                if (this.User == null)
+                if (this.IsAnonymous)
                 {
-                    this.User = UserV2ViewModel.CreateUnassociated(this.username);
+                    this.User = UserV2ViewModel.CreateUnassociated(MixItUp.Base.Resources.Anonymous);
+                }
+
+                if (!string.IsNullOrEmpty(this.username))
+                {
+                    this.User = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(this.Platform, this.username);
+                    if (this.User == null)
+                    {
+                        this.User = UserV2ViewModel.CreateUnassociated(this.username);
+                    }
                 }
             }
         }

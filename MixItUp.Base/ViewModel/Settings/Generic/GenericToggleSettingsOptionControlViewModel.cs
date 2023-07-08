@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Settings.Generic
 {
@@ -10,12 +11,22 @@ namespace MixItUp.Base.ViewModel.Settings.Generic
             set
             {
                 this.value = value;
-                this.valueSetter(value);
                 this.NotifyPropertyChanged();
+
+                if (this.valueSetterAsync != null)
+                {
+                    this.valueSetterAsync(value);
+                }
+                else
+                {
+                    this.valueSetter(value);
+                }
             }
         }
         private bool value;
+
         private Action<bool> valueSetter;
+        private Func<bool, Task> valueSetterAsync;
 
         public bool Enabled
         {
@@ -33,6 +44,13 @@ namespace MixItUp.Base.ViewModel.Settings.Generic
         {
             this.value = initialValue;
             this.valueSetter = valueSetter;
+        }
+
+        public GenericToggleSettingsOptionControlViewModel(string name, bool initialValue, Func<bool, Task> valueSetterAsync, string tooltip = null)
+            : base(name, tooltip)
+        {
+            this.value = initialValue;
+            this.valueSetterAsync = valueSetterAsync;
         }
     }
 }

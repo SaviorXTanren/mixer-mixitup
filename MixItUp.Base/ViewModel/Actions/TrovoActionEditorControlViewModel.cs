@@ -127,7 +127,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public override async Task<Result> Validate()
         {
-            if (this.ShowUsernameGrid)
+            if (this.selectedActionType == TrovoActionType.Host)
             {
                 if (string.IsNullOrEmpty(this.Username))
                 {
@@ -203,6 +203,14 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.SelectedActionType == TrovoActionType.SetGame)
             {
                 return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateTextAction(TrovoActionType.SetGame, this.Text));
+            }
+            else if (this.SelectedActionType == TrovoActionType.EnableSubscriberMode)
+            {
+                return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateBasicAction(TrovoActionType.EnableSubscriberMode));
+            }
+            else if (this.SelectedActionType == TrovoActionType.DisableSubscriberMode)
+            {
+                return Task.FromResult<ActionModelBase>(TrovoActionModel.CreateBasicAction(TrovoActionType.DisableSubscriberMode));
             }
             return Task.FromResult<ActionModelBase>(null);
         }

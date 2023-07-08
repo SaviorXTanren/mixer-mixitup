@@ -16,7 +16,7 @@ namespace MixItUp.Base.Model.Actions
 
         OBSStudio,
         XSplit,
-        StreamlabsOBS,
+        StreamlabsDesktop,
     }
 
     public enum StreamingSoftwareActionTypeEnum
@@ -37,6 +37,9 @@ namespace MixItUp.Base.Model.Actions
         SourceFilterVisibility,
 
         StartStopRecording,
+
+        ImageSource,
+        MediaSource,
     }
 
     [DataContract]
@@ -86,11 +89,11 @@ namespace MixItUp.Base.Model.Actions
                     dimensions = await ServiceManager.Get<IOBSStudioService>().GetSourceDimensions(sceneName, sourceName);
                 }
             }
-            else if (softwareType == StreamingSoftwareTypeEnum.StreamlabsOBS)
+            else if (softwareType == StreamingSoftwareTypeEnum.StreamlabsDesktop)
             {
-                if (ServiceManager.Get<StreamlabsOBSService>().IsConnected || (await ServiceManager.Get<StreamlabsOBSService>().Connect()).Success)
+                if (ServiceManager.Get<StreamlabsDesktopService>().IsConnected || (await ServiceManager.Get<StreamlabsDesktopService>().Connect()).Success)
                 {
-                    dimensions = await ServiceManager.Get<StreamlabsOBSService>().GetSourceDimensions(sceneName, sourceName);
+                    dimensions = await ServiceManager.Get<StreamlabsDesktopService>().GetSourceDimensions(sceneName, sourceName);
                 }
             }
 
@@ -128,6 +131,22 @@ namespace MixItUp.Base.Model.Actions
             action.ActionType = StreamingSoftwareActionTypeEnum.TextSource;
             action.SourceText = sourceText;
             action.SourceTextFilePath = sourceTextFilePath;
+            return action;
+        }
+
+        public static StreamingSoftwareActionModel CreateImageSourceAction(StreamingSoftwareTypeEnum softwareType, string sceneName, string sourceName, bool sourceVisible, string sourceURL)
+        {
+            StreamingSoftwareActionModel action = StreamingSoftwareActionModel.CreateSourceVisibilityAction(softwareType, sceneName, sourceName, sourceVisible);
+            action.ActionType = StreamingSoftwareActionTypeEnum.ImageSource;
+            action.SourceURL = sourceURL;
+            return action;
+        }
+
+        public static StreamingSoftwareActionModel CreateMediaSourceAction(StreamingSoftwareTypeEnum softwareType, string sceneName, string sourceName, bool sourceVisible, string sourceURL)
+        {
+            StreamingSoftwareActionModel action = StreamingSoftwareActionModel.CreateSourceVisibilityAction(softwareType, sceneName, sourceName, sourceVisible);
+            action.ActionType = StreamingSoftwareActionTypeEnum.MediaSource;
+            action.SourceURL = sourceURL;
             return action;
         }
 
@@ -209,9 +228,9 @@ namespace MixItUp.Base.Model.Actions
             {
                 ssService = ServiceManager.Get<XSplitService>();
             }
-            else if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.StreamlabsOBS)
+            else if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.StreamlabsDesktop)
             {
-                ssService = ServiceManager.Get<StreamlabsOBSService>();
+                ssService = ServiceManager.Get<StreamlabsDesktopService>();
             }
 
             if (ssService != null && ssService.IsEnabled)
@@ -282,6 +301,14 @@ namespace MixItUp.Base.Model.Actions
                         if (this.ActionType == StreamingSoftwareActionTypeEnum.WebBrowserSource && !string.IsNullOrEmpty(this.SourceURL))
                         {
                             await ssService.SetWebBrowserSourceURL(parentName, name, await ReplaceStringWithSpecialModifiers(this.SourceURL, parameters));
+                        }
+                        else if (this.ActionType == StreamingSoftwareActionTypeEnum.ImageSource && !string.IsNullOrEmpty(this.SourceURL))
+                        {
+                            await ssService.SetImageSourceFilePath(parentName, name, await ReplaceStringWithSpecialModifiers(this.SourceURL, parameters));
+                        }
+                        else if (this.ActionType == StreamingSoftwareActionTypeEnum.MediaSource && !string.IsNullOrEmpty(this.SourceURL))
+                        {
+                            await ssService.SetMediaSourceFilePath(parentName, name, await ReplaceStringWithSpecialModifiers(this.SourceURL, parameters));
                         }
                         else if (this.ActionType == StreamingSoftwareActionTypeEnum.TextSource && !string.IsNullOrEmpty(this.SourceText) && !string.IsNullOrEmpty(this.SourceTextFilePath))
                         {

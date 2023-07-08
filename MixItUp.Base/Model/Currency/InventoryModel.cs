@@ -343,7 +343,17 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
-        public void SetAmount(UserV2ViewModel user, InventoryItemModel item, int amount)
+        public void SetAmount(UserV2Model user, Guid itemID, int amount)
+        {
+            if (this.ItemExists(itemID))
+            {
+                this.SetAmount(user, this.GetItem(itemID), amount);
+            }
+        }
+
+        public void SetAmount(UserV2ViewModel user, InventoryItemModel item, int amount) { this.SetAmount(user.Model, item, amount); }
+
+        public void SetAmount(UserV2Model user, InventoryItemModel item, int amount)
         {
             if (!user.InventoryAmounts.ContainsKey(this.ID))
             {
@@ -365,7 +375,23 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
+        public void AddAmount(UserV2Model user, Guid itemID, int amount)
+        {
+            if (this.ItemExists(itemID))
+            {
+                this.AddAmount(user, this.GetItem(itemID), amount);
+            }
+        }
+
         public void AddAmount(UserV2ViewModel user, InventoryItemModel item, int amount)
+        {
+            if (!user.IsSpecialtyExcluded && amount > 0)
+            {
+                this.SetAmount(user, item, this.GetAmount(user, item) + amount);
+            }
+        }
+
+        public void AddAmount(UserV2Model user, InventoryItemModel item, int amount)
         {
             if (!user.IsSpecialtyExcluded && amount > 0)
             {
@@ -421,7 +447,7 @@ namespace MixItUp.Base.Model.Currency
                     if (arguments != null && arguments.Count() > 0)
                     {
                         string arg1 = arguments.ElementAt(0);
-                        if (arguments.Count() == 1 && arg1.Equals(MixItUp.Base.Resources.List, StringComparison.InvariantCultureIgnoreCase))
+                        if (arguments.Count() == 1 && arg1.Equals("list", StringComparison.InvariantCultureIgnoreCase))
                         {
                             if (this.shopListCooldown > DateTimeOffset.Now)
                             {
@@ -443,7 +469,7 @@ namespace MixItUp.Base.Model.Currency
                             return;
                         }
                         else if (arguments.Count() >= 2 &&
-                            (arg1.Equals("buy", StringComparison.InvariantCultureIgnoreCase) || arg1.Equals(MixItUp.Base.Resources.Sell, StringComparison.InvariantCultureIgnoreCase)))
+                            (arg1.Equals("buy", StringComparison.InvariantCultureIgnoreCase) || arg1.Equals("sell", StringComparison.InvariantCultureIgnoreCase)))
                         {
                             int amount = 1;
 
@@ -523,7 +549,7 @@ namespace MixItUp.Base.Model.Currency
                             }
                             else
                             {
-                                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.InventoryMustSpecifyEitherBuyOrSell, user.Platform);
+                                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.InventoryMustSpecifyEitherBuyOrSell, "buy", "sell"), user.Platform);
                             }
 
                             if (command != null)
@@ -574,7 +600,7 @@ namespace MixItUp.Base.Model.Currency
                         }
                     }
 
-                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.InventoryShopUsage, this.ShopCommand), user.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.InventoryShopUsage, this.ShopCommand, "list", "buy", "sell"), user.Platform);
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }

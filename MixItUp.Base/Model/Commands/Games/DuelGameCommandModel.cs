@@ -70,7 +70,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 if (parameters.User == this.runParameters.TargetUser)
                 {
                     this.targetParameters = parameters;
-                    this.targetParameters.Arguments = this.runParameters.Arguments;
+                    this.targetParameters.SetArguments(this.runParameters.Arguments);
 
                     this.gameActive = false;
 
@@ -111,7 +111,7 @@ namespace MixItUp.Base.Model.Commands.Games
             await this.RefundCooldown(parameters);
 
             await this.SetSelectedUser(this.PlayerSelectionType, parameters);
-            if (parameters.TargetUser != null)
+            if (parameters.TargetUser != null && !parameters.IsTargetUserSelf)
             {
                 if (await this.ValidateTargetUserPrimaryBetAmount(parameters))
                 {
@@ -141,7 +141,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandCouldNotFindUser, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandCouldNotFindUser, parameters);
             }
             await this.Requirements.Refund(parameters);
         }

@@ -17,7 +17,7 @@ namespace MixItUp.Base.Model.Store
         [DataMember]
         public string TrovoAccessToken { get; set; }
         [DataMember]
-        public string GlimeshAccessToken { get; set; }
+        public bool BypassTwitchWebhooks { get; set; }
     }
 
     [DataContract]

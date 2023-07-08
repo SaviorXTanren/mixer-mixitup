@@ -29,6 +29,8 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Text="{x:Static resx:Resources.ArgumentsRequirement}" HorizontalAlignment="Center" TextDecorations="Underline" FontWeight="Bold" />
@@ -73,5 +75,16 @@
         </ItemsControl>
 
         <Button Grid.Row="4" Command="{Binding AddItemCommand}" Width="80" Style="{StaticResource MaterialDesignRaisedButton}" Content="{x:Static resx:Resources.Add}" HorizontalAlignment="Center" />
+
+        <Grid Grid.Row="6" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.AssignToSpecialIdentifiers}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <ToggleButton  Grid.Column="2" IsChecked="{Binding AssignToSpecialIdentifiers}" />
+        </Grid>
     </Grid>
 </UserControl>

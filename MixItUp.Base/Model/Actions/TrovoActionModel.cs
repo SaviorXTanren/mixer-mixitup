@@ -17,10 +17,11 @@ namespace MixItUp.Base.Model.Actions
         DisableFollowerMode,
         AddUserRole,
         RemoveUserRole,
-        [Obsolete]
         FastClip90Seconds,
         SetTitle,
         SetGame,
+        EnableSubscriberMode,
+        DisableSubscriberMode,
     }
 
     [DataContract]
@@ -91,7 +92,16 @@ namespace MixItUp.Base.Model.Actions
         {
             if (ServiceManager.Get<TrovoSessionService>().IsConnected && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
             {
-                string username = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                string username = null;
+                if (!string.IsNullOrEmpty(this.Username))
+                {
+                    username = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                }
+                else
+                {
+                    username = parameters.User?.Username;
+                }
+
                 string text = await ReplaceStringWithSpecialModifiers(this.Text, parameters);
                 string roleName = await ReplaceStringWithSpecialModifiers(this.RoleName, parameters);
 
@@ -134,6 +144,14 @@ namespace MixItUp.Base.Model.Actions
                 else if (this.ActionType == TrovoActionType.SetGame)
                 {
                     await ServiceManager.Get<TrovoSessionService>().SetGame(text);
+                }
+                else if (this.ActionType == TrovoActionType.EnableSubscriberMode)
+                {
+                    await ServiceManager.Get<TrovoChatEventService>().SubscriberMode(enable: true);
+                }
+                else if (this.ActionType == TrovoActionType.DisableSubscriberMode)
+                {
+                    await ServiceManager.Get<TrovoChatEventService>().SubscriberMode(enable: false);
                 }
             }
         }

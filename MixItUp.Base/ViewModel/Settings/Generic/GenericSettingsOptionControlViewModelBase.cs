@@ -9,6 +9,8 @@ namespace MixItUp.Base.ViewModel.Settings.Generic
 
         public string Tooltip { get; set; }
 
+        public bool ShowEnabledOption { get; protected set; }
+
         public GenericSettingsOptionControlViewModelBase(string name, string tooltip = null)
         {
             this.Name = name;

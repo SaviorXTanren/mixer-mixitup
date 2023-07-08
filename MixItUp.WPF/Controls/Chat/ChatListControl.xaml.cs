@@ -2,13 +2,12 @@
 using MixItUp.Base;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.Chat.Glimesh;
 using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Base.ViewModel.User;
@@ -17,6 +16,7 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -170,7 +170,7 @@ namespace MixItUp.WPF.Controls.Chat
                         // Short circuit for very short searches that start with letters or digits
                         if (tag.Length > 2)
                         {
-                            List<IChatEmoteViewModel> emotes = new List<IChatEmoteViewModel>();
+                            List<ChatEmoteViewModelBase> emotes = new List<ChatEmoteViewModelBase>();
 
                             string tagText = tag.Substring(1, tag.Length - 1);
                             if (ServiceManager.Get<TwitchChatService>().IsUserConnected)
@@ -183,34 +183,34 @@ namespace MixItUp.WPF.Controls.Chat
                                 emotes.AddRange(this.FindMatchingEmoticons<TrovoChatEmoteViewModel>(tagText, ServiceManager.Get<TrovoChatEventService>().EventEmotes));
                                 emotes.AddRange(this.FindMatchingEmoticons<TrovoChatEmoteViewModel>(tagText, ServiceManager.Get<TrovoChatEventService>().GlobalEmotes));
                             }
-                            if (ServiceManager.Get<GlimeshChatEventService>().IsUserConnected)
-                            {
-                                //emotes.AddRange(this.FindMatchingEmoticons<GlimeshChatEmoteViewModel>(tagText, ServiceManager.Get<GlimeshChatEventService>().Emotes));
-                            }
 
                             this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, emotes);
                         }
                     }
                     else if (ChannelSession.Settings.ShowBetterTTVEmotes || ChannelSession.Settings.ShowFrankerFaceZEmotes)
                     {
-                        if (ServiceManager.Get<TwitchChatService>().IsUserConnected || ServiceManager.Get<YouTubeChatService>().IsUserConnected)
+                        // Short circuit for very short searches that start with letters or digits
+                        if (tag.Length > 2)
                         {
-                            Dictionary<string, object> emotes = new Dictionary<string, object>();
-                            if (ChannelSession.Settings.ShowBetterTTVEmotes)
+                            if (ServiceManager.Get<TwitchChatService>().IsUserConnected || ServiceManager.Get<YouTubeChatService>().IsUserConnected)
                             {
-                                foreach (var kvp in ServiceManager.Get<TwitchChatService>().BetterTTVEmotes)
+                                Dictionary<string, object> emotes = new Dictionary<string, object>();
+                                if (ChannelSession.Settings.ShowBetterTTVEmotes)
                                 {
-                                    emotes[kvp.Key] = kvp.Value;
+                                    foreach (var kvp in ServiceManager.Get<BetterTTVService>().BetterTTVEmotes)
+                                    {
+                                        emotes[kvp.Key] = kvp.Value;
+                                    }
                                 }
-                            }
-                            if (ChannelSession.Settings.ShowFrankerFaceZEmotes)
-                            {
-                                foreach (var kvp in ServiceManager.Get<TwitchChatService>().FrankerFaceZEmotes)
+                                if (ChannelSession.Settings.ShowFrankerFaceZEmotes)
                                 {
-                                    emotes[kvp.Key] = kvp.Value;
+                                    foreach (var kvp in ServiceManager.Get<TwitchChatService>().FrankerFaceZEmotes)
+                                    {
+                                        emotes[kvp.Key] = kvp.Value;
+                                    }
                                 }
+                                this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, this.FindMatchingEmoticons<object>(tag, emotes));
                             }
-                            this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, this.FindMatchingEmoticons<object>(tag, emotes));
                         }
                     }
                 }
@@ -337,16 +337,37 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
-        private void MessageWhisperUserMenuItem_Click(object sender, RoutedEventArgs e)
+        private void ChatList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            MenuItem goToLinkMenuItem = LogicalTreeHelper.FindLogicalNode(this.ChatList.ContextMenu, "GoToLinkMenuItem") as MenuItem;
+
+            ChatMessageViewModel message = (e.AddedItems.Count == 0)
+                ? null
+                : e.AddedItems[0] as ChatMessageViewModel;
+
+            if (message != null && (message.ContainsLink || ModerationService.LinkRegex.IsMatch(message.PlainTextMessage)))
+            {
+                goToLinkMenuItem.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                goToLinkMenuItem.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void GoToLinkMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (this.ChatList.SelectedItem != null && this.ChatList.SelectedItem is ChatMessageViewModel)
             {
                 ChatMessageViewModel message = (ChatMessageViewModel)this.ChatList.SelectedItem;
-                if (message.User != null)
+                if (message.ContainsLink || ModerationService.LinkRegex.IsMatch(message.PlainTextMessage))
                 {
-                    this.viewModel.SendMessageText = $"/w @{message.User.Username} ";
-                    this.ChatMessageTextBox.Focus();
-                    this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
+                    // Get link and go!
+                    Match match = ModerationService.LinkRegex.Match(message.PlainTextMessage);
+                    if (match.Success && !string.IsNullOrWhiteSpace(match.Value))
+                    {
+                        ProcessHelper.LaunchLink(match.Value);
+                    }
                 }
             }
         }
@@ -376,7 +397,9 @@ namespace MixItUp.WPF.Controls.Chat
                         if (menuItem.DataContext != null && menuItem.DataContext is CommandModelBase)
                         {
                             CommandModelBase command = (CommandModelBase)menuItem.DataContext;
-                            await ServiceManager.Get<CommandService>().Queue(command, new CommandParametersModel(platform: message.Platform, arguments: new List<string>() { message.User.Username }) { TargetUser = message.User });
+                            List<string> arguments = new List<string>() { message.User.Username };
+                            arguments.AddRange(message.ToArguments());
+                            await ServiceManager.Get<CommandService>().Queue(command, new CommandParametersModel(platform: message.Platform, arguments: arguments) { TargetUser = message.User });
                         }
                     }
                 }
@@ -411,14 +434,6 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void SelectIntellisenseEmoticon()
         {
-            if (this.EmoticonIntellisenseListBox.SelectedItem is TwitchChatEmoteViewModel)
-            {
-                TwitchChatEmoteViewModel emoticon = this.EmoticonIntellisenseListBox.SelectedItem as TwitchChatEmoteViewModel;
-                if (emoticon != null)
-                {
-                    this.SelectIntellisenseItem(emoticon.Name);
-                }
-            }
             if (this.EmoticonIntellisenseListBox.SelectedItem is TrovoChatEmoteViewModel)
             {
                 TrovoChatEmoteViewModel emoticon = this.EmoticonIntellisenseListBox.SelectedItem as TrovoChatEmoteViewModel;
@@ -427,20 +442,12 @@ namespace MixItUp.WPF.Controls.Chat
                     this.SelectIntellisenseItem(":" + emoticon.Name);
                 }
             }
-            else if (this.EmoticonIntellisenseListBox.SelectedItem is BetterTTVEmoteModel)
+            else if (this.EmoticonIntellisenseListBox.SelectedItem is ChatEmoteViewModelBase)
             {
-                BetterTTVEmoteModel emoticon = this.EmoticonIntellisenseListBox.SelectedItem as BetterTTVEmoteModel;
+                ChatEmoteViewModelBase emoticon = this.EmoticonIntellisenseListBox.SelectedItem as ChatEmoteViewModelBase;
                 if (emoticon != null)
                 {
-                    this.SelectIntellisenseItem(emoticon.code);
-                }
-            }
-            else if (this.EmoticonIntellisenseListBox.SelectedItem is FrankerFaceZEmoteModel)
-            {
-                FrankerFaceZEmoteModel emoticon = this.EmoticonIntellisenseListBox.SelectedItem as FrankerFaceZEmoteModel;
-                if (emoticon != null)
-                {
-                    this.SelectIntellisenseItem(emoticon.name);
+                    this.SelectIntellisenseItem(emoticon.Name);
                 }
             }
             this.HideIntellisense();

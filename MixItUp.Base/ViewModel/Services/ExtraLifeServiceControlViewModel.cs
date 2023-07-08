@@ -1,51 +1,77 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Services
 {
+    public enum ExtraLifeServiceParticipantTypes
+    {
+        Team,
+        Individual
+    }
+
     public class ExtraLifeServiceControlViewModel : ServiceControlViewModelBase
     {
-        public ThreadSafeObservableCollection<ExtraLifeTeamParticipant> Participants { get; set; } = new ThreadSafeObservableCollection<ExtraLifeTeamParticipant>();
+        public IEnumerable<ExtraLifeServiceParticipantTypes> ParticipantTypes { get { return EnumHelper.GetEnumList<ExtraLifeServiceParticipantTypes>(); } }
 
-        public int ExtraLifeTeamID
+        public ExtraLifeServiceParticipantTypes SelectedParticipantType
         {
-            get { return ChannelSession.Settings.ExtraLifeTeamID; }
+            get { return this.selectedParticipantType; }
             set
             {
-                ChannelSession.Settings.ExtraLifeTeamID = value;
+                this.selectedParticipantType = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("IsTeam");
+                this.NotifyPropertyChanged("IsIndividual");
+            }
+        }
+        private ExtraLifeServiceParticipantTypes selectedParticipantType;
+
+        public bool IsTeam { get { return this.SelectedParticipantType == ExtraLifeServiceParticipantTypes.Team; } }
+
+        public bool IsIndividual { get { return this.SelectedParticipantType == ExtraLifeServiceParticipantTypes.Individual; } }
+
+        public int TeamID
+        {
+            get { return this.teamId; }
+            set
+            {
+                this.teamId = value;
                 this.NotifyPropertyChanged();
             }
         }
+        private int teamId;
 
-        public bool ParticipantsAvailable { get { return this.Participants.Count > 0; } }
+        public ThreadSafeObservableCollection<ExtraLifeTeamParticipant> Participants { get; set; } = new ThreadSafeObservableCollection<ExtraLifeTeamParticipant>();
 
-        public ExtraLifeTeamParticipant ExtraLifeParticipant
+        public ExtraLifeTeamParticipant Participant
         {
-            get { return this.extraLifeParticipant; }
+            get { return this.participant; }
             set
             {
-                this.extraLifeParticipant = value;
+                this.participant = value;
                 this.NotifyPropertyChanged();
 
-                if (this.ExtraLifeParticipant != null)
+                if (this.Participant != null)
                 {
-                    ChannelSession.Settings.ExtraLifeParticipantID = (int)value.participantID;
+                    this.ParticipantID = (int)value.participantID;
                 }
                 else
                 {
-                    ChannelSession.Settings.ExtraLifeParticipantID = 0;
+                    this.ParticipantID = 0;
                 }
             }
         }
-        private ExtraLifeTeamParticipant extraLifeParticipant;
+        private ExtraLifeTeamParticipant participant;
 
-        public bool ExtraLifeIncludeTeamDonations
+        public bool ParticipantsAvailable { get { return this.Participants.Count > 0; } }
+
+        public bool IncludeTeamDonations
         {
             get { return ChannelSession.Settings.ExtraLifeIncludeTeamDonations; }
             set
@@ -54,6 +80,17 @@ namespace MixItUp.Base.ViewModel.Services
                 this.NotifyPropertyChanged();
             }
         }
+
+        public int ParticipantID
+        {
+            get { return this.participantID; }
+            set
+            {
+                this.participantID = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int participantID;
 
         public ICommand LogInCommand { get; set; }
         public ICommand LogOutCommand { get; set; }
@@ -66,16 +103,35 @@ namespace MixItUp.Base.ViewModel.Services
         {
             this.LogInCommand = this.CreateCommand(async () =>
             {
-                if (this.ExtraLifeTeamID <= 0)
-                {
-                    await DialogHelper.ShowMessage(Resources.ExtraLifeInvalidTeamId);
-                    return;
-                }
+                ChannelSession.Settings.ExtraLifeTeamID = 0;
+                ChannelSession.Settings.ExtraLifeParticipantID = 0;
 
-                if (this.ExtraLifeParticipant == null)
+                if (this.SelectedParticipantType == ExtraLifeServiceParticipantTypes.Team)
                 {
-                    await DialogHelper.ShowMessage(Resources.ExtraLifeInvalidParticipant);
-                    return;
+                    if (this.TeamID <= 0)
+                    {
+                        await DialogHelper.ShowMessage(Resources.ExtraLifeInvalidTeamId);
+                        return;
+                    }
+
+                    if (this.Participant == null)
+                    {
+                        await DialogHelper.ShowMessage(Resources.ExtraLifeInvalidParticipant);
+                        return;
+                    }
+
+                    ChannelSession.Settings.ExtraLifeTeamID = this.TeamID;
+                    ChannelSession.Settings.ExtraLifeParticipantID = this.ParticipantID;
+                }
+                else if (this.SelectedParticipantType == ExtraLifeServiceParticipantTypes.Individual)
+                {
+                    if (this.ParticipantID <= 0)
+                    {
+                        await DialogHelper.ShowMessage(Resources.ExtraLifeInvalidParticipantId);
+                        return;
+                    }
+
+                    ChannelSession.Settings.ExtraLifeParticipantID = this.ParticipantID;
                 }
 
                 Result result = await ServiceManager.Get<ExtraLifeService>().Connect();
@@ -107,28 +163,19 @@ namespace MixItUp.Base.ViewModel.Services
             this.IsConnected = ServiceManager.Get<ExtraLifeService>().IsConnected;
         }
 
-        protected override async Task OnOpenInternal()
-        {
-            if (this.IsConnected)
-            {
-                await this.GetTeamParticipants();
-                this.ExtraLifeParticipant = this.Participants.FirstOrDefault(p => p.participantID == ChannelSession.Settings.ExtraLifeParticipantID);
-            }
-        }
-
         private async Task GetTeamParticipants()
         {
-            if (this.ExtraLifeTeamID <= 0)
+            if (this.TeamID <= 0)
             {
                 await DialogHelper.ShowMessage(Resources.ExtraLifeInvalidTeamId);
             }
             else
             {
                 List<ExtraLifeTeamParticipant> participants = new List<ExtraLifeTeamParticipant>();
-                ExtraLifeTeam team = await ServiceManager.Get<ExtraLifeService>().GetTeam(this.ExtraLifeTeamID);
+                ExtraLifeTeam team = await ServiceManager.Get<ExtraLifeService>().GetTeam(this.TeamID);
                 if (team != null)
                 {
-                    IEnumerable<ExtraLifeTeamParticipant> ps = await ServiceManager.Get<ExtraLifeService>().GetTeamParticipants(this.ExtraLifeTeamID);
+                    IEnumerable<ExtraLifeTeamParticipant> ps = await ServiceManager.Get<ExtraLifeService>().GetTeamParticipants(this.TeamID);
                     foreach (ExtraLifeTeamParticipant participant in ps.OrderBy(p => p.displayName))
                     {
                         participants.Add(participant);

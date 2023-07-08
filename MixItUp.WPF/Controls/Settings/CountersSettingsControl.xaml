@@ -26,15 +26,15 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="0" BorderThickness="1" Width="525">
+            <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="0" BorderThickness="1">
                 <ItemsControl x:Name="SerialDevicesListView" HorizontalAlignment="Center" ItemsSource="{Binding Counters}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid Margin="20">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="140" />
+                                    <ColumnDefinition Width="130" />
                                     <ColumnDefinition Width="20" />
-                                    <ColumnDefinition Width="50" />
+                                    <ColumnDefinition Width="70" />
                                     <ColumnDefinition Width="15" />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="15" />
@@ -43,7 +43,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Left" />
 
                                 <TextBox Grid.Column="2" Text="{Binding Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 

@@ -8,6 +8,8 @@ namespace MixItUp.Base.Model.User.Platform
     [DataContract]
     public abstract class UserPlatformV2ModelBase : IEquatable<UserPlatformV2ModelBase>, IComparable<UserPlatformV2ModelBase>
     {
+        public static readonly TimeSpan DefaultRefreshTimeSpan = TimeSpan.FromMinutes(5);
+
         [DataMember]
         public StreamingPlatformTypeEnum Platform { get; set; }
         [DataMember]
@@ -38,6 +40,8 @@ namespace MixItUp.Base.Model.User.Platform
         public int SubscriberTier { get; set; } = 1;
 
         protected UserPlatformV2ModelBase() { }
+
+        public virtual TimeSpan RefreshTimeSpan { get { return DefaultRefreshTimeSpan; } }
 
         public abstract Task Refresh();
 

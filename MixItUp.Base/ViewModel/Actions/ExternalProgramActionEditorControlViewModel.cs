@@ -41,6 +41,17 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private bool showWindow;
 
+        public bool ShellExecute
+        {
+            get { return this.shellExecute; }
+            set
+            {
+                this.shellExecute = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool shellExecute;
+
         public bool WaitForFinish
         {
             get { return this.waitForFinish; }
@@ -74,6 +85,7 @@ namespace MixItUp.Base.ViewModel.Actions
             this.FilePath = action.FilePath;
             this.Arguments = action.Arguments;
             this.showWindow = action.ShowWindow;
+            this.ShellExecute = action.ShellExecute;
             this.WaitForFinish = action.WaitForFinish;
             this.SaveOutput = action.SaveOutput;
         }
@@ -89,6 +101,6 @@ namespace MixItUp.Base.ViewModel.Actions
             return Task.FromResult(new Result());
         }
 
-        protected override Task<ActionModelBase> GetActionInternal() { return Task.FromResult<ActionModelBase>(new ExternalProgramActionModel(this.FilePath, this.Arguments, this.ShowWindow, this.WaitForFinish, this.SaveOutput)); }
+        protected override Task<ActionModelBase> GetActionInternal() { return Task.FromResult<ActionModelBase>(new ExternalProgramActionModel(this.FilePath, this.Arguments, this.ShowWindow, this.ShellExecute, this.WaitForFinish, this.SaveOutput)); }
     }
 }

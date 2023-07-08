@@ -1,16 +1,13 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Model;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Services;
 using MixItUp.WPF.Services.DeveloperAPI;
 using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -23,6 +20,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 
 namespace MixItUp.WPF
 {
@@ -61,8 +60,7 @@ namespace MixItUp.WPF
 
                 ChannelSession.Initialize().Wait();
 
-                var culture = new System.Globalization.CultureInfo(Languages.GetLanguageLocale());
-                System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
+                System.Threading.Thread.CurrentThread.CurrentUICulture = Languages.GetLanguageLocaleCultureInfo();
             }
             catch { }
         }
@@ -99,7 +97,7 @@ namespace MixItUp.WPF
 
                 if (containsBaseTheme)
                 {
-                    baseTheme =(string)newMDCResourceDictionary["BaseTheme"];
+                    baseTheme = (string)newMDCResourceDictionary["BaseTheme"];
                 }
             }
             else
@@ -133,6 +131,12 @@ namespace MixItUp.WPF
 
             var newMIUResourceDictionary = new ResourceDictionary() { Source = new Uri($"Themes/MixItUpBackgroundColor.{backgroundColorName}.xaml", UriKind.Relative) };
             Application.Current.Resources.MergedDictionaries.Add(newMIUResourceDictionary);
+
+            LiveCharts.Configure(config =>
+            {
+                config.AddSkiaSharp().AddDefaultMappers();
+                config.AddLightTheme();
+            });
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -153,10 +157,18 @@ namespace MixItUp.WPF
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-            WindowsIdentity id = WindowsIdentity.GetCurrent();
-            ChannelSession.IsElevated = id.Owner != id.User;
+            try
+            {
+                WindowsIdentity id = WindowsIdentity.GetCurrent();
+                ChannelSession.IsElevated = id.Owner != id.User;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
 
             Logger.ForceLog(LogLevel.Information, "Application Version: " + ServiceManager.Get<IFileService>().GetApplicationVersion());
+            Logger.AlwaysLogFullStackTraceWithExceptions = true;
             if (ChannelSession.IsDebug() || ChannelSession.AppSettings.DiagnosticLogging)
             {
                 Logger.SetLogLevel(LogLevel.Debug);

@@ -353,14 +353,14 @@ namespace MixItUp.Installer
             this.IsOperationIndeterminate = true;
             this.OperationProgress = 0;
 
-            string url = "https://mixitupapi.azurewebsites.net/api/updates";
+            string url = "https://api.mixitupapp.com/api/updates";
             if (preview)
             {
-                url = "https://mixitupapi.azurewebsites.net/api/updates/preview";
+                url = "https://api.mixitupapp.com/api/updates/preview";
             }
             else if (test)
             {
-                url = "https://mixitupapi.azurewebsites.net/api/updates/test";
+                url = "https://api.mixitupapp.com/api/updates/test";
             }
 
             using (HttpClient client = new HttpClient())
@@ -438,7 +438,13 @@ namespace MixItUp.Installer
                             double total = archive.Entries.Count;
                             foreach (ZipArchiveEntry entry in archive.Entries)
                             {
-                                string filePath = Path.Combine(this.installDirectory, entry.FullName);
+                                var fullName = entry.FullName;
+                                if (entry.FullName.StartsWith("Mix It Up/"))
+                                {
+                                    fullName = entry.FullName.Substring("Mix It Up/".Length);
+                                }
+
+                                string filePath = Path.Combine(this.installDirectory, fullName);
                                 string directoryPath = Path.GetDirectoryName(filePath);
                                 if (!Directory.Exists(directoryPath))
                                 {

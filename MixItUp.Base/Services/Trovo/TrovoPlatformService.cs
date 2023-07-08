@@ -45,12 +45,12 @@ namespace MixItUp.Base.Services.Trovo
         {
             try
             {
-                if (!string.IsNullOrEmpty(dateTime) && long.TryParse(dateTime, out long milliseconds))
+                if (!string.IsNullOrEmpty(dateTime) && long.TryParse(dateTime, out long seconds))
                 {
-                    DateTimeOffset result = StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeMilliseconds(milliseconds);
+                    DateTimeOffset result = StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeSeconds(seconds);
                     if (result > DateTimeOffset.MinValue)
                     {
-                        return new DateTimeOffset(result.DateTime, TimeSpan.Zero);
+                        return result;
                     }
                 }
             }
@@ -132,7 +132,7 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task<IEnumerable<ChannelSubscriberModel>> GetSubscribers(string channelID, int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.Channels.GetSubscribers(channelID, maxResults)); }
 
-        public async Task<PrivateChannelModel> GetCurrentChannel() { return await AsyncRunner.RunAsync(this.Connection.Channels.GetCurrentChannel()); }
+        //public async Task<PrivateChannelModel> GetCurrentChannel() { return await AsyncRunner.RunAsync(this.Connection.Channels.GetCurrentChannel()); }
 
         public async Task<ChannelModel> GetChannelByID(string channelID) { return await AsyncRunner.RunAsync(this.Connection.Channels.GetChannelByID(channelID)); }
 
@@ -149,5 +149,7 @@ namespace MixItUp.Base.Services.Trovo
         public async Task<ChatEmotePackageModel> GetPlatformAndChannelEmotes(string channelID) { return await AsyncRunner.RunAsync(this.Connection.Chat.GetEmotes(new List<string>() { channelID })); }
 
         public async Task<ChatViewersModel> GetViewers(string channelID) { return await AsyncRunner.RunAsync(this.Connection.Chat.GetViewers(channelID, maxResults: 1000)); }
+
+        public async Task<IEnumerable<TopChannelModel>> GetTopChannels(int maxResults = 1, string category = null) { return await AsyncRunner.RunAsync(this.Connection.Channels.GetTopChannels(maxResults, category)); }
     }
 }

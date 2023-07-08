@@ -1,0 +1,41 @@
+﻿<local:ServiceControlBase x:Class="MixItUp.WPF.Controls.Services.StreamlabsDesktopServiceControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Services"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <local:ServiceControlBase.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </local:ServiceControlBase.Resources>
+
+    <Grid Margin="10" HorizontalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="450" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="200" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Column="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.StreamlabsDesktopInfo1}"/>
+
+        <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid Visibility="{Binding IsConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Button Grid.Row="0" Command="{Binding TestConnectionCommand}" HorizontalAlignment="Center" MinWidth="140" Content="{x:Static resx:Resources.TestConnection}"/>
+
+                <Button Grid.Row="2" Command="{Binding DisconnectCommand}" HorizontalAlignment="Center" MinWidth="110" Content="{x:Static resx:Resources.Disconnect}"/>
+            </Grid>
+
+            <Grid Visibility="{Binding IsNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Button Command="{Binding ConnectCommand}" HorizontalAlignment="Center" MinWidth="110" Content="{x:Static resx:Resources.Connect}"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</local:ServiceControlBase>

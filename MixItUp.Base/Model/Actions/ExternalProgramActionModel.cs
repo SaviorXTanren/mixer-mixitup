@@ -21,16 +21,19 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public bool ShowWindow { get; set; }
         [DataMember]
+        public bool ShellExecute { get; set; }
+        [DataMember]
         public bool WaitForFinish { get; set; }
         [DataMember]
         public bool SaveOutput { get; set; }
 
-        public ExternalProgramActionModel(string filePath, string arguments, bool showWindow, bool waitForFinish, bool saveOutput)
+        public ExternalProgramActionModel(string filePath, string arguments, bool showWindow, bool shellExecute, bool waitForFinish, bool saveOutput)
             : base(ActionTypeEnum.ExternalProgram)
         {
             this.FilePath = filePath;
             this.Arguments = arguments;
             this.ShowWindow = showWindow;
+            this.ShellExecute = shellExecute;
             this.WaitForFinish = waitForFinish;
             this.SaveOutput = saveOutput;
         }
@@ -47,7 +50,7 @@ namespace MixItUp.Base.Model.Actions
             process.StartInfo.Arguments = await ReplaceStringWithSpecialModifiers(this.Arguments, parameters);
             process.StartInfo.CreateNoWindow = !this.ShowWindow;
             process.StartInfo.WindowStyle = (!this.ShowWindow) ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal;
-            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.UseShellExecute = this.ShellExecute;
             if (this.WaitForFinish && this.SaveOutput)
             {
                 process.StartInfo.RedirectStandardOutput = true;

@@ -21,9 +21,9 @@ namespace MixItUp.Base.ViewModel.Services
             {
                 connected.Add(StreamingSoftwareTypeEnum.XSplit);
             }
-            else if (ServiceManager.Get<StreamlabsOBSService>().IsConnected)
+            else if (ServiceManager.Get<StreamlabsDesktopService>().IsConnected)
             {
-                connected.Add(StreamingSoftwareTypeEnum.StreamlabsOBS);
+                connected.Add(StreamingSoftwareTypeEnum.StreamlabsDesktop);
             }
 
             if (connected.Count == 1)

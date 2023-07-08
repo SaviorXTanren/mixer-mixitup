@@ -26,6 +26,8 @@ namespace MixItUp.Base.Model.Commands
         StreamlootsCard = 9,
         Webhook = 10,
         TrovoSpell = 11,
+        TwitchBits = 12,
+        CrowdControlEffect = 13,
 
         // Specialty Command Types
         UserOnlyChat = 1000,
@@ -85,6 +87,9 @@ namespace MixItUp.Base.Model.Commands
 
         [DataMember]
         public string GroupName { get; set; }
+
+        [JsonIgnore]
+        public string GroupDisplayName { get { return (!string.IsNullOrEmpty(this.GroupName)) ? this.GroupName : MixItUp.Base.Resources.Ungrouped; } }
 
         [DataMember]
         public HashSet<string> Triggers { get; set; } = new HashSet<string>();

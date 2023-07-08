@@ -190,7 +190,7 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Image Grid.Column="0" Source="{Binding CommandDetails.ImageURL}" Width="150" Height="150" />
+                            <Image Grid.Column="0" Source="{Binding CommandDetails.ImageURL, TargetNullValue={x:Null}}" Width="150" Height="150" />
 
                             <Grid Grid.Column="2">
                                 <Grid.RowDefinitions>
@@ -222,7 +222,7 @@
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
 
-                                            <Image Grid.Column="0" Source="{Binding CommandDetails.UserAvatarURL}" Width="30" Height="30" VerticalAlignment="Center" />
+                                            <Image Grid.Column="0" Source="{Binding CommandDetails.UserAvatarURL, TargetNullValue={x:Null}}" Width="30" Height="30" VerticalAlignment="Center" />
                                             <TextBlock Grid.Column="2" Text="{Binding CommandDetails.Username}" VerticalAlignment="Center" />
                                         </Grid>
                                     </Button>
@@ -270,7 +270,7 @@
 
                         <TextBox Grid.Row="4" Text="{Binding CommandDetails.Description, Mode=OneWay}" Style="{StaticResource TextBoxReadOnlySelectable}" />
 
-                        <Image Grid.Row="6" Source="{Binding CommandDetails.ScreenshotURL}" HorizontalAlignment="Center" />
+                        <Image Grid.Row="6" Source="{Binding CommandDetails.ScreenshotURL, TargetNullValue={x:Null}}" HorizontalAlignment="Center" />
 
                         <TextBlock Grid.Row="8" Text="{Binding Source={x:Static resx:Resources.RatingsAndReviews}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" TextDecorations="Underline" FontWeight="Bold" HorizontalAlignment="Center" />
 
@@ -295,7 +295,7 @@
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
 
-                                            <Image Grid.Column="0" Source="{Binding UserAvatarURL}" Width="30" Height="30" VerticalAlignment="Center" />
+                                            <Image Grid.Column="0" Source="{Binding UserAvatarURL, TargetNullValue={x:Null}}" Width="30" Height="30" VerticalAlignment="Center" />
                                             <TextBlock Grid.Column="2" Text="{Binding Username}" VerticalAlignment="Center" />
 
                                             <ItemsControl Grid.Column="4" ItemsSource="{Binding RatingItems}">

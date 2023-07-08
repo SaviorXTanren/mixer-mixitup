@@ -143,12 +143,12 @@ namespace MixItUp.Base.Model.Commands.Games
                 }
                 else
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandLockBoxNotNumber, parameters.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandLockBoxNotNumber, parameters);
                 }
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCommandLockBoxIncorrectLength, this.CombinationLength), parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCommandLockBoxIncorrectLength, this.CombinationLength), parameters);
             }
             await this.Requirements.Refund(parameters);
         }

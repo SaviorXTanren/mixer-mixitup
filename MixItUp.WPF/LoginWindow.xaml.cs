@@ -2,7 +2,6 @@
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Wizard;
@@ -12,7 +11,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Navigation;
 
 namespace MixItUp.WPF
@@ -37,8 +35,17 @@ namespace MixItUp.WPF
         protected override async Task OnLoaded()
         {
             GlobalEvents.OnShowMessageBox += GlobalEvents_OnShowMessageBox;
+            GlobalEvents.OnRestartRequested += GlobalEvents_OnRestartRequested;
 
             this.Title += " - v" + Assembly.GetEntryAssembly().GetName().Version.ToString();
+
+            if (ProcessHelper.GetProcessesByName("MixItUp").Count() > 1)
+            {
+                if (!await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.MixItUpIsAlreadyRunning))
+                {
+                    this.Close();
+                }
+            }
 
             this.ExistingStreamerComboBox.ItemsSource = streamerSettings;
 
@@ -163,12 +170,26 @@ namespace MixItUp.WPF
             }
         }
 
+        private async void RestoreBackupButton_Click(object sender, RoutedEventArgs e)
+        {
+            await SettingsV3Model.RestoreSettingsBackup();
+        }
+
         private async void GlobalEvents_OnShowMessageBox(object sender, string message)
         {
             await this.RunAsyncOperation(async () =>
             {
                 await DialogHelper.ShowMessage(message);
             });
+        }
+
+        private async void GlobalEvents_OnRestartRequested(object sender, EventArgs e)
+        {
+            await ChannelSession.AppSettings.Save();
+
+            this.Close();
+
+            ProcessHelper.LaunchProgram(Application.ResourceAssembly.Location);
         }
 
         private Task<bool> ShowLicenseAgreement()

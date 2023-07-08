@@ -10,6 +10,18 @@ namespace MixItUp.Base.Model.Settings
     {
         public const string CounterFolderName = "Counters";
 
+        public static void CreateCounter(string name, bool saveToFile, bool resetOnLoad)
+        {
+            string counterName = name.ToLower();
+            if (!ChannelSession.Settings.Counters.ContainsKey(counterName))
+            {
+                ChannelSession.Settings.Counters[counterName] = new CounterModel(counterName);
+            }
+            CounterModel counter = ChannelSession.Settings.Counters[counterName];
+            counter.SaveToFile = saveToFile;
+            counter.ResetOnLoad = resetOnLoad;
+        }
+
         [DataMember]
         public string Name { get; set; }
         [DataMember]

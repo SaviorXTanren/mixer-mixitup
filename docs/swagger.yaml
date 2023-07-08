@@ -6,9 +6,9 @@ basePath: /api
 info:
   description: |
     # Introduction
-    The Developer API allows our more advanced users to interact with Mix It Up using external or customized programs. To use this feature, ensure the Developer API is enabled on the Services page. All APIs are REST-like endpoints that you can perform calls receiving/using JSON text. All endpoints begin with the base address of http://localhost:8911/api/
-  version: '1.0.0'
-  title: Mix It Up Developer
+    The Developer API allows our more advanced users to interact with Mix It Up using external or customized programs. To use this feature, ensure the Developer API is enabled on the Services page. All APIs are REST-like endpoints that you can perform calls receiving/using JSON text. All endpoints begin with the base address of http://localhost:8911/api/v2/
+  version: '2.0.0'
+  title: Mix It Up Developer API
 produces:
   - application/json
 consumes:
@@ -26,18 +26,48 @@ tags:
     description: Operations related to Mix It Up Inventory data
 
 paths:
-  '/users/{usernameOrID}':
+  '/users/{userId}':
     parameters:
+      - name: userId
+        in: path
+        description: 'The Mix It Up user ID that needs to be fetched'
+        required: true
+        type: string
+        format: uuid
+    get:
+      tags:
+        - User
+      summary: Get user data by Mix It Up user ID
+      operationId: userId
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MixItUpUser'
+        '404':
+          description: User not found
+          schema:
+            $ref: '#/definitions/Error'
+
+  '/users/{platform}/{usernameOrID}':
+    parameters:
+      - name: platform
+        in: path
+        description: 'The name of the streaming platform (EX: Twitch, YouTube, etc.)'
+        required: true
+        type: string
       - name: usernameOrID
         in: path
-        description: 'The name or ID that needs to be fetched'
+        description: 'The platform username or ID that needs to be fetched'
         required: true
         type: string
     get:
       tags:
         - User
-      summary: Get user data by username
-      operationId: getUserByNameOrID
+      summary: Get user data by platform username or ID
+      operationId: getPlatformUserByUsernameOrID
       produces:
         - application/json
       responses:
@@ -49,65 +79,23 @@ paths:
           description: User not found
           schema:
             $ref: '#/definitions/Error'
-    put:
-      summary: This API can be used to set user's ViewingMinutes or Currency Amount.  This API can be used with a PATCH as well.
-      tags:
-        - User
-      parameters:
-        - name: updatedUserData
-          in: body
-          required: true
-          schema:
-           $ref: '#/definitions/UpdateMixItUpUser'
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/MixItUpUser'
-        '400':
-          description: Bad request was sent in
-          schema:
-            $ref: '#/definitions/Error'
-        '404':
-          description: User not found
-          schema:
-            $ref: '#/definitions/Error'
-  '/users/twitch/{usernameOrID}':
-    parameters:
-      - name: usernameOrID
-        in: path
-        description: 'The Twitch name or ID that needs to be fetched'
-        required: true
-        type: string
-    get:
-      tags:
-        - User
-      summary: Get Twitch user data by username or ID
-      operationId: getTwitchUserByNameOrID
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/MixItUpUser'
-        '404':
-          description: User not found
-          schema:
-            $ref: '#/definitions/Error'
+
   '/users':
-    post:
+    parameters:
+      - name: skip
+        in: query
+        description: 'How many users to skip'
+        required: true
+        type: string
+      - name: pageSize
+        in: query
+        description: 'The total number of users to return'
+        required: true
+        type: string
+    get:
       summary: This API can be used to lookup multiple users at once.
       tags:
         - User
-      parameters:
-        - name: usernameOrIDList
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/ListOfMixItUpUsernamesOrIDs'
       produces:
         - application/json
       responses:
@@ -120,107 +108,22 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
-  '/users/{usernameOrID}/currency/{currencyID}/adjust':
+  '/users/active':
     parameters:
-      - name: usernameOrID
-        in: path
-        description: 'The name or ID that needs to be adjusted'
-        required: true
-        type: string
-      - name: currencyID
-        in: path
-        description: 'The currency ID that needs to be adjusted'
-        required: true
-        type: string
-        format: uuid
-    put:
-      summary: This API can be used to add or subtract currency from a user.  This API can be used with a PATCH as well.
-      tags:
-        - User
-        - Currency
-      parameters:
-        - name: adjustUserCurrency
-          in: body
-          required: true
-          schema:
-           $ref: '#/definitions/AdjustUserCurrency'
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/MixItUpUser'
-        '400':
-          description: Bad request was sent in
-          schema:
-            $ref: '#/definitions/Error'
-        '403':
-          description: User does not have enough of the chosen currency to remove
-          schema:
-            $ref: '#/definitions/Error'
-        '404':
-          description: User or currency not found
-          schema:
-            $ref: '#/definitions/Error'
-
-  '/users/{usernameOrID}/inventory/{inventoryID}/adjust':
-    parameters:
-      - name: usernameOrID
-        in: path
-        description: 'The name or ID that needs to be adjusted'
-        required: true
-        type: string
-      - name: inventoryID
-        in: path
-        description: 'The inventory ID that needs to be adjusted'
-        required: true
-        type: string
-        format: uuid
-    put:
-      summary: This API can be used to add or subtract inventory items from a user.  This API can be used with a PATCH as well.
-      tags:
-        - User
-        - Inventory
-      parameters:
-        - name: adjustUserInventory
-          in: body
-          required: true
-          schema:
-           $ref: '#/definitions/AdjustUserInventory'
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/MixItUpUser'
-        '400':
-          description: Bad request was sent in
-          schema:
-            $ref: '#/definitions/Error'
-        '403':
-          description: User does not have enough of the chosen inventory items to remove
-          schema:
-            $ref: '#/definitions/Error'
-        '404':
-          description: User or inventory not found
-          schema:
-            $ref: '#/definitions/Error'
-
-  '/users/top':
-    parameters:
-      - name: count
+      - name: skip
         in: query
-        description: 'The number of users to retrieve. **Default: 10**'
-        required: false
-        type: integer
-        default: 10
+        description: 'How many users to skip'
+        required: true
+        type: string
+      - name: pageSize
+        in: query
+        description: 'The total number of users to return'
+        required: true
+        type: string
     get:
+      summary: This API can be used to lookup multiple active users at once.
       tags:
         - User
-      summary: Gets a list users ordered by viewing time descending.
-      operationId: topUserByViewingTime
       produces:
         - application/json
       responses:
@@ -228,6 +131,10 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/ListOfMixItUpUsers'
+        '400':
+          description: Bad request was sent in
+          schema:
+            $ref: '#/definitions/Error'
 
   '/currency':
     get:
@@ -243,18 +150,24 @@ paths:
           schema:
             $ref: '#/definitions/ListOfMixItUpCurrency'
 
-  '/currency/{currencyID}':
+  '/currency/{currencyId}/{userId}':
     parameters:
-      - name: currencyID
+      - name: currencyId
         in: path
         description: 'The currency ID to query'
+        required: true
+        type: string
+        format: uuid
+      - name: userId
+        in: path
+        description: 'The Mix It Up user ID to query for'
         required: true
         type: string
         format: uuid
     get:
       tags:
         - Currency
-      summary: Gets a specific currency
+      summary: Gets the currency amount for a specific user
       operationId: getCurrencyById
       produces:
         - application/json
@@ -262,94 +175,57 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/MixItUpCurrency'
+            type: integer
         '404':
           description: The currency could not be found.
           schema:
             $ref: '#/definitions/Error'
-
-  '/currency/{currencyID}/top':
-    parameters:
-      - name: count
-        in: query
-        description: 'The number of users to retrieve. **Default: 10**'
-        required: false
-        type: integer
-        default: 10
-      - name: currencyID
-        in: path
-        description: 'The currency ID to query'
-        required: true
-        type: string
-        format: uuid
-    get:
-      tags:
-        - User
-        - Currency
-      summary: Gets a list users ordered by currency quantity descending.  The streamer and anyone marked as currency/rank exempt will not be visible in this list.
-      operationId: topUserOfCurrency
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/ListOfMixItUpUsers'
-        '404':
-          description: The currency could not be found.
-          schema:
-            $ref: '#/definitions/Error'
-
-  '/currency/{currencyID}/give':
-    parameters:
-      - name: currencyID
-        in: path
-        description: 'The currency ID to query'
-        required: true
-        type: string
-        format: uuid
-    post:
+    patch:
       tags:
         - Currency
-      summary: Gives a list of users various amounts of currency
-      operationId: bulkGiveUsersCurrency
+      summary: Updates the currency amount for a specific user
+      operationId: patchCurrencyById
       parameters:
-        - name: listOfUsersWithAmounts
-          description: 'The list of users and the amounts to give.  Amounts MUST be positive only. Negative values will be ignored.'
+        - name: updateAmount
+          description: 'The amount to update the currency by'
           in: body
           required: true
           schema:
-           $ref: '#/definitions/BulkGiveUsersCurrency'
+           $ref: '#/definitions/UpdateCurrencyAmount'
       produces:
         - application/json
       responses:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/ListOfMixItUpUsers'
-        '400':
-          description: Bad request was sent in
-          schema:
-            $ref: '#/definitions/Error'
+            type: integer
         '404':
           description: The currency could not be found.
           schema:
             $ref: '#/definitions/Error'
-
-  '/chat/users':
-    get:
+    put:
       tags:
-        - User
-        - Chat
-      summary: Gets a list of all users currently active in chat.
-      operationId: getAllChatUsers
+        - Currency
+      summary: Set the currency amount for a specific user
+      operationId: putCurrencyById
+      parameters:
+        - name: updateAmount
+          description: 'The amount to set the currency to'
+          in: body
+          required: true
+          schema:
+           $ref: '#/definitions/UpdateCurrencyAmount'
       produces:
         - application/json
       responses:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/ListOfMixItUpUsers'
+            type: integer
+        '404':
+          description: The currency could not be found.
+          schema:
+            $ref: '#/definitions/Error'
 
   '/chat/message':
     post:
@@ -373,28 +249,13 @@ paths:
           description: Bad request was sent in
           schema:
             $ref: '#/definitions/Error'
-    delete:
-      tags:
-        - Chat
-      summary: Clears the chat history
-      operationId: clearChat
-      responses:
-        '200':
-          description: Success
 
-  '/chat/whisper':
+  '/chat/clear':
     post:
       tags:
         - Chat
-      summary: Sends a whisper to a user in chat
-      operationId: sendChatWhisper
-      parameters:
-        - name: chatWhisper
-          description: 'The chat whisper to send'
-          in: body
-          required: true
-          schema:
-           $ref: '#/definitions/MixItUpChatWhisper'
+      summary: Clears the chat for all connected platforms
+      operationId: clearChat
       produces:
         - application/json
       responses:
@@ -402,74 +263,22 @@ paths:
           description: Success
         '400':
           description: Bad request was sent in
-          schema:
-            $ref: '#/definitions/Error'
-
-  '/quotes':
-    get:
-      tags:
-        - Quotes
-      summary: Gets a list of all quotes available.
-      operationId: getAllQuotes
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/ListOfMixItUpQuotes'
-
-    put:
-      tags:
-        - Quotes
-      summary: Used to create a new quote.
-      operationId: addQuote
-      parameters:
-        - name: quoteText
-          description: 'The quote text.'
-          in: body
-          required: true
-          schema:
-           $ref: '#/definitions/MixItUpAddQuote'
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/MixItUpQuote'
-        '400':
-          description: Bad request was sent in
-          schema:
-            $ref: '#/definitions/Error'
-
-  '/quotes/{quoteID}':
-    parameters:
-      - name: quoteID
-        in: path
-        description: 'The quote ID to query'
-        required: true
-        type: number
-        format: int
-    get:
-      tags:
-        - Quotes
-      summary: Gets the requested quote.
-      operationId: getQuote
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/MixItUpQuote'
-        '404':
-          description: The quote could not be found.
           schema:
             $ref: '#/definitions/Error'
 
   '/commands':
     get:
+      parameters:
+      - name: skip
+        in: query
+        description: 'How many commands to skip'
+        required: true
+        type: string
+      - name: pageSize
+        in: query
+        description: 'The total number of commands to return'
+        required: true
+        type: string
       tags:
         - Commands
       summary: Gets a list of all commands available.
@@ -482,9 +291,9 @@ paths:
           schema:
             $ref: '#/definitions/ListOfMixItUpCommands'
             
-  '/commands/{commandID}':
+  '/commands/{commandId}':
     parameters:
-      - name: commandID
+      - name: commandId
         in: path
         description: 'The command ID to query'
         required: true
@@ -512,11 +321,12 @@ paths:
       summary: Used to run the requested command.
       operationId: runCommand
       parameters:
-        - name: arguments
+        - name: parameters
+          description: 'The parameters to run the command'
           in: body
-          required: false
+          required: true
           schema:
-            $ref: '#/definitions/ListOfStrings'
+           $ref: '#/definitions/MixItUpCommandParameters'
       produces:
         - application/json
       responses:
@@ -526,18 +336,25 @@ paths:
           description: The command could not be found.
           schema:
             $ref: '#/definitions/Error'
-    put:
+                   
+  '/commands/{commandId}/state/{state}':
+    parameters:
+      - name: commandId
+        in: path
+        description: 'The command ID to query'
+        required: true
+        type: string
+        format: uuid
+      - name: state
+        in: path
+        description: 'The state to update the command to (0 = Disabled, 1 = Enabled, 2 = Toggle)'
+        required: true
+        type: integer
+    patch:
       tags:
         - Commands
-      summary: Used to enable or disable the requested command.
-      operationId: updateCommand
-      parameters:
-        - name: updatedCommand
-          description: 'The updated command. Note that only IsEnabled can be changed.'
-          in: body
-          required: true
-          schema:
-           $ref: '#/definitions/MixItUpCommand'
+      summary: Updates the command's state'.
+      operationId: updateCommandState
       produces:
         - application/json
       responses:
@@ -545,10 +362,6 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/MixItUpCommand'
-        '400':
-          description: Bad request was sent in
-          schema:
-            $ref: '#/definitions/Error'
         '404':
           description: The command could not be found.
           schema:
@@ -568,18 +381,24 @@ paths:
           schema:
             $ref: '#/definitions/ListOfMixItUpInventory'
 
-  '/inventory/{inventoryID}':
+  '/inventory/{inventoryId}/{userId}':
     parameters:
-      - name: inventoryID
+      - name: inventoryId
         in: path
         description: 'The inventory ID to query'
+        required: true
+        type: string
+        format: uuid
+      - name: userId
+        in: path
+        description: 'The Mix It Up user ID to query'
         required: true
         type: string
         format: uuid
     get:
       tags:
         - Inventory
-      summary: Gets a specific inventory
+      summary: Gets a specific inventory for a specific user
       operationId: getInventoryById
       produces:
         - application/json
@@ -587,153 +406,228 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/MixItUpInventory'
+            $ref: '#/definitions/ListOfMixItUpInventoryItemAmount'
         '404':
           description: The inventory could not be found.
           schema:
             $ref: '#/definitions/Error'
 
-definitions:
-  MixItUpAddQuote:
-    type: object
-    required: [ GameName ]
-    properties:
-      QuoteText:
-        description: The actual quote text.
+  '/inventory/{inventoryId}/{itemId}/{userId}':
+    parameters:
+      - name: inventoryId
+        in: path
+        description: 'The inventory ID to query'
+        required: true
         type: string
-        example: That was amazing! - TyrenDes
+        format: uuid
+      - name: itemId
+        in: path
+        description: 'The inventory item ID to query'
+        required: true
+        type: string
+        format: uuid
+      - name: userId
+        in: path
+        description: 'The Mix It Up user ID to query for'
+        required: true
+        type: string
+        format: uuid
+    get:
+      tags:
+        - Inventory
+      summary: Gets the inventory item amount for a specific user
+      operationId: getInventoryItemById
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: integer
+        '404':
+          description: The inventory item could not be found.
+          schema:
+            $ref: '#/definitions/Error'
+    patch:
+      tags:
+        - Inventory
+      summary: Updates the inventory item amount for a specific user
+      operationId: patchInventoryItemById
+      parameters:
+        - name: updateAmount
+          description: 'The amount to update the inventory item by'
+          in: body
+          required: true
+          schema:
+           $ref: '#/definitions/UpdateInventoryAmount'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: integer
+        '404':
+          description: The inventory item could not be found.
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      tags:
+        - Inventory
+      summary: Set the inventory item amount for a specific user
+      operationId: putInventoryById
+      parameters:
+        - name: updateAmount
+          description: 'The amount to set the inventory item to'
+          in: body
+          required: true
+          schema:
+           $ref: '#/definitions/UpdateInventoryAmount'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: integer
+        '404':
+          description: The inventory item could not be found.
+          schema:
+            $ref: '#/definitions/Error'
+          
+  '/status/version':
+    post:
+      tags:
+        - Status
+      summary: Gets the Mix It Up version number
+      operationId: statusVersion
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: string
+            example: 1.0.0.0
+        '400':
+          description: Bad request was sent in
+          schema:
+            $ref: '#/definitions/Error'
 
-  MixItUpQuote:
+
+definitions:
+  MixItUpUser:
     type: object
-    required: [ ID, DateTime, GameName, QuoteText ]
+    required: [ ID ]
     properties:
       ID:
-        description: The Mix It Up Quote ID.
+        description: The Mix It Up User ID.
+        type: string
+        format: uuid
+        example: 137CD793-F4E7-4330-8282-B06E52644F78
+      PlatformData:
+        type: object
+        additionalProperties:
+            $ref: '#/definitions/MixItUpPlatformUser'
+      LastActivity:
+        description: The last date time of activity.
+        type: string
+      LastUpdated:
+        description: The last date time of updates.
+        type: string
+      OnlineViewingMinutes:
+        description: The total number of online viewing minutes in your stream.
         type: integer
-        example: 321
-      DateTime:
-        description: The date and time the quote was added.
+        example: 1234567890
+      CustomTitle:
+        description: The user's custom title.
         type: string
-        format: date-time
-        example: 2017-07-21T17:32:28Z
-      GameName:
-        description: The name of the game when the quote was created.
+        example: Ultimate
+      IsSpecialtyExcluded:
+        description: Whether the user is a specialty excluded user.
+        type: boolean
+        example: false
+      Notes:
+        description: The notes for the user.
         type: string
-        example: Rocket League
-      QuoteText:
-        description: The actual quote text.
-        type: string
-        example: That was amazing! - TyrenDes
+        example: Is a lovely person
+      CurrencyAmounts:
+        type: object
+        additionalProperties:
+          type: integer
+      InventoryAmounts:
+        type: object
+        additionalProperties:
+          type: object
+          additionalProperties:
+            type: integer
+      StreamPassAmounts:
+        type: object
+        additionalProperties:
+          type: integer
 
-  ListOfMixItUpQuotes:
-    type: array
-    items:
-      $ref: '#/definitions/MixItUpQuote'
-
-  MixItUpUser:
+  MixItUpPlatformUser:
     type: object
     required: [ ID, ViewingMinutes, CurrencyAmounts ]
     properties:
-      ID:
-        description: The Mix It Up User ID.
+      Platform:
+        description: The Platform name.
         type: string
-        format: uuid
-        example: 137CD793-F4E7-4330-8282-B06E52644F78
-      TwitchID:
-        description: The Twitch User ID.
+        example: Twitch
+      ID:
+        description: The Platform user ID.
         type: string
         example: 1234567890
       Username:
-        description: The username.
+        description: The Platform username.
+        type: string
+        example: saviorxtanren
+      DisplayName:
+        description: The Platform display name.
         type: string
         example: SaviorXTanren
-      ViewingMinutes:
-        description: The number of minutes the user has been in the stream.
-        type: integer
-        example: 3244
-      CurrencyAmounts:
-        type: array
-        items:
-          $ref: '#/definitions/MixItUpCurrencyAmount'
-      InventoryAmounts:
-        type: array
-        items:
-          $ref: '#/definitions/MixItUpInventoryAmount'
-
-  UpdateMixItUpUser:
-    type: object
-    required: [ ID, CurrencyAmounts ]
-    properties:
-      ID:
-        description: The Mix It Up User ID.
+      AvatarLink:
+        description: The Platform avatar URL.
         type: string
-        format: uuid
-        example: 137CD793-F4E7-4330-8282-B06E52644F78
-      ViewingMinutes:
-        description: The number of minutes the user has been in the stream.
+      SubscriberBadgeLink:
+        description: The Platform subscriber badge URL.
+        type: string
+      RoleBadgeLink:
+        description: The Platform role badge URL.
+        type: string
+      SpecialtyBadgeLink:
+        description: The Platform specialty badge URL.
+        type: string
+      Roles:
+        type: array
+        description: The list of Platform roles.
+        items:
+          type: string
+      AccountDate:
+        description: The platform account date.
+        type: string
+      FollowDate:
+        description: The platform follow date.
+        type: string
+      SubscribeDate:
+        description: The platform subscriber date.
+        type: string
+      SubscriberTier:
+        description: The platform subscriber tier.
         type: integer
-        example: 3244
-      CurrencyAmounts:
-        type: array
-        items:
-          $ref: '#/definitions/MixItUpCurrencyAmount'
-      InventoryAmounts:
-        type: array
-        items:
-          $ref: '#/definitions/MixItUpInventoryAmount'
-          
-  ListOfMixItUpUsernamesOrIDs:
-    type: array
-    items:
-      type: string
 
   ListOfMixItUpUsers:
     type: array
     items:
       $ref: '#/definitions/MixItUpUser'
-      
-  ListOfStrings:
-    type: array
-    items:
-      type: string
 
-  AdjustUserCurrency:
+  UpdateCurrencyAmount:
     type: object
     required: [ Amount ]
     properties:
       Amount:
         description: The amount to adjust the user's currency.  This amount may be positive or negative.
         type: integer
-    
-  AdjustUserInventory:
-    type: object
-    required: [ Name, Amount ]
-    properties:
-      Name:
-        description: The name of the item to adjust for user's inventory.
-        type: string
-        example: Potions
-      Amount:
-        description: The amount to adjust the user's inventory.  This amount may be positive or negative.
-        type: integer
-
-  MixItUpCurrencyAmount:
-    type: object
-    required: [ ID, Name, Amount ]
-    properties:
-      ID:
-        description: The Mix It Up currency ID.
-        type: string
-        format: uuid
-        example: 1783e5d9-c2ab-423a-ae64-7dc9a086b194
-      Name:
-        description: The Mix It Up currency name.
-        type: string
-        example: Influence
-      Amount:
-        description: The amount of currency the user has.
-        type: integer
-        example: 2751
 
   MixItUpCurrency:
     type: object
@@ -754,10 +648,22 @@ definitions:
     items:
       $ref: '#/definitions/MixItUpCurrency'
 
+  UpdateInventoryAmount:
+    type: object
+    required: [ Amount ]
+    properties:
+      Amount:
+        description: The amount to adjust the user's inventory item.  This amount may be positive or negative.
+        type: integer
+
   MixItUpInventoryItemAmount:
     type: object
-    required: [ Name, Items ]
+    required: [ ID, Name, Items ]
     properties:
+      ID:
+        description: The Mix It Up inventory item ID.
+        type: string
+        format: uuid
       Name:
         description: The Mix It Up inventory item name.
         type: string
@@ -767,44 +673,24 @@ definitions:
         type: integer
         example: 2751
 
-  MixItUpInventoryAmount:
+  ListOfMixItUpInventoryItemAmount:
+    type: array
+    items:
+      $ref: '#/definitions/MixItUpInventoryItemAmount'
+
+  MixItUpInventoryItem:
     type: object
-    required: [ ID, Name, Items ]
+    required: [ ID, Name ]
     properties:
       ID:
-        description: The Mix It Up inventory ID.
+        description: The Mix It Up inventory item ID.
         type: string
         format: uuid
         example: 1783e5d9-c2ab-423a-ae64-7dc9a086b194
       Name:
-        description: The Mix It Up inventory name.
-        type: string
-        example: Equipment
-      Items:
-        type: array
-        items:
-          $ref: '#/definitions/MixItUpInventoryItemAmount'
-
-  MixItUpInventoryItem:
-    type: object
-    required: [ Name, Items ]
-    properties:
-      Name:
         description: The Mix It Up inventory item name.
         type: string
         example: Influence
-      BuyAmount:
-        description: The amount it costs to purchase this item.
-        type: integer
-        example: 2000
-      SellAmount:
-        description: The amount of currency the user gets when they sell this item.
-        type: integer
-        example: 1000
-      MaxAmount:
-        description: The maximum number of this item a user may own.
-        type: integer
-        example: 2751
 
   MixItUpInventory:
     type: object
@@ -823,11 +709,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/MixItUpInventoryItem'
-      ShopCurrencyID:
-        description: The Mix It Up shop currency ID. This will be an empty UUID (all zeros) if the shop is not enabled.
-        type: string
-        format: uuid
-        example: 1783e5d9-c2ab-423a-ae64-7dc9a086b194
 
   ListOfMixItUpInventory:
     type: array
@@ -846,48 +727,34 @@ definitions:
       Name:
         description: The Mix It Up command name.
         type: string
+      Type:
+        description: The Mix It Up command type.
+        type: string
       IsEnabled:
         description: True if enabled, false otherwise
         type: boolean
-      Category:
-        description: The Mix It Up command category.
+      Unlocked:
+        description: Whether the command is unlocked or not.
+        type: boolean
+      GroupName:
+        description: The name of the group the command belongs to, if any.
         type: string
 
   ListOfMixItUpCommands:
     type: array
     items:
       $ref: '#/definitions/MixItUpCommand'
-      
-  UpdateMixItUpCurrency:
-    required: [ ID, Amount ]
+
+  MixItUpCommandParameters:
     type: object
     properties:
-      ID:
-        description: The Mix It Up currency ID.
+      Platform:
+        description: The streaming platform to send the message to.
         type: string
-        format: uuid
-        example: 1783e5d9-c2ab-423a-ae64-7dc9a086b194
-      Amount:
-        description: The amount of currency the user has.
-        type: integer
-        example: 2751
-
-  GiveUserCurrency:
-    required: [ Amount, UsernameOrID ]
-    type: object
-    properties:
-      Amount:
-        description: The amount to adjust the user's currency.  This amount may be positive or negative.
-        type: integer
-        minimum: 1
-      UsernameOrID:
-        description: The username or ID to adjust.
+        example: Twitch
+      Arguments:
+        description: The arguments for the command.
         type: string
-
-  BulkGiveUsersCurrency:
-    type: array
-    items:
-      $ref: '#/definitions/GiveUserCurrency'
 
   MixItUpChatMessage:
     required: [ Message ]
@@ -897,26 +764,12 @@ definitions:
         description: The message to send to chat.
         type: string
         example: This is a test of the emergency broadcast system!
+      Platform:
+        description: The streaming platform to send the message to.
+        type: string
+        example: Twitch
       SendAsStreamer:
         description: True will force the message to send as the streamer. False will try to send as the registered bot, if available.
-        type: boolean
-        example: false
-        default: false
-
-  MixItUpChatWhisper:
-    required: [ UserName, Message ]
-    type: object
-    properties:
-      UserName:
-        description: The user to receive the whisper.
-        type: string
-        example: TyrenDes
-      Message:
-        description: The message to send to chat.
-        type: string
-        example: This is a test of the emergency broadcast system!
-      SendAsStreamer:
-        description: True will force the whisper to send as the streamer. False will try to send as the registered bot, if available.
         type: boolean
         example: false
         default: false

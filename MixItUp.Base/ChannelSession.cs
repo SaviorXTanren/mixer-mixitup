@@ -5,7 +5,6 @@ using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
-using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
@@ -62,10 +61,11 @@ namespace MixItUp.Base
             ServiceManager.Add(new SerialService());
             ServiceManager.Add(new OverlayService());
 
-            ServiceManager.Add(new StreamlabsOBSService());
+            ServiceManager.Add(new StreamlabsDesktopService());
             ServiceManager.Add(new XSplitService());
             ServiceManager.Add(new PolyPopService());
 
+            ServiceManager.Add(new BetterTTVService());
             ServiceManager.Add(new StreamlootsService());
             ServiceManager.Add(new JustGivingService());
             ServiceManager.Add(new TiltifyService());
@@ -73,9 +73,11 @@ namespace MixItUp.Base
             ServiceManager.Add(new IFTTTService());
             ServiceManager.Add(new PatreonService());
             ServiceManager.Add(new DiscordService());
-            ServiceManager.Add(new TwitterService());
             ServiceManager.Add(new PixelChatService());
             ServiceManager.Add(new VTubeStudioService());
+            ServiceManager.Add(new CrowdControlService());
+            ServiceManager.Add(new SAMMIService());
+
             try
             {
                 Type voicemodServiceType = Type.GetType("MixItUp.Base.Services.External.VoicemodService");
@@ -88,14 +90,12 @@ namespace MixItUp.Base
 
             ServiceManager.Add(new TwitchSessionService());
             ServiceManager.Add(new TwitchChatService());
-            ServiceManager.Add(new TwitchEventService());
+            ServiceManager.Add(new TwitchEventSubService());
+            ServiceManager.Add(new TwitchPubSubService());
             ServiceManager.Add(new TwitchStatusService());
 
             ServiceManager.Add(new YouTubeSessionService());
             ServiceManager.Add(new YouTubeChatService());
-
-            ServiceManager.Add(new GlimeshSessionService());
-            ServiceManager.Add(new GlimeshChatEventService());
 
             ServiceManager.Add(new TrovoSessionService());
             ServiceManager.Add(new TrovoChatEventService());
@@ -245,10 +245,6 @@ namespace MixItUp.Base
                 {
                     ChannelSession.Settings.Name = ServiceManager.Get<YouTubeSessionService>().Username;
                 }
-                else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
-                {
-                    ChannelSession.Settings.Name = ServiceManager.Get<GlimeshSessionService>().Username;
-                }
                 else if (ServiceManager.Get<TrovoSessionService>().IsConnected)
                 {
                     ChannelSession.Settings.Name = ServiceManager.Get<TrovoSessionService>().Username;
@@ -276,14 +272,6 @@ namespace MixItUp.Base
                     if (ChannelSession.User == null)
                     {
                         ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(ServiceManager.Get<YouTubeSessionService>().User));
-                    }
-                }
-                if (ChannelSession.User == null && ServiceManager.Get<GlimeshSessionService>().IsConnected)
-                {
-                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, ServiceManager.Get<GlimeshSessionService>().UserID);
-                    if (ChannelSession.User == null)
-                    {
-                        ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(ServiceManager.Get<GlimeshSessionService>().User));
                     }
                 }
                 if (ChannelSession.User == null && ServiceManager.Get<TrovoSessionService>().IsConnected)
@@ -318,12 +306,13 @@ namespace MixItUp.Base
                 if (ChannelSession.Settings.ExtraLifeTeamID > 0) { externalServiceToConnect[ServiceManager.Get<ExtraLifeService>()] = new OAuthTokenModel(); }
                 if (ChannelSession.Settings.PatreonOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<PatreonService>()] = ChannelSession.Settings.PatreonOAuthToken; }
                 if (ChannelSession.Settings.DiscordOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<DiscordService>()] = ChannelSession.Settings.DiscordOAuthToken; }
-                if (ChannelSession.Settings.TwitterOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<TwitterService>()] = ChannelSession.Settings.TwitterOAuthToken; }
                 if (ChannelSession.Settings.PixelChatOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<PixelChatService>()] = ChannelSession.Settings.PixelChatOAuthToken; }
                 if (ChannelSession.Settings.VTubeStudioOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<VTubeStudioService>()] = ChannelSession.Settings.VTubeStudioOAuthToken; }
                 if (ChannelSession.Settings.EnableVoicemodStudio) { externalServiceToConnect[ServiceManager.Get<IVoicemodService>()] = null; }
+                if (ChannelSession.Settings.EnableCrowdControl) { externalServiceToConnect[ServiceManager.Get<CrowdControlService>()] = null; }
+                if (ChannelSession.Settings.EnableSAMMI) { externalServiceToConnect[ServiceManager.Get<SAMMIService>()] = null; }
                 if (ServiceManager.Get<IOBSStudioService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<IOBSStudioService>()] = null; }
-                if (ServiceManager.Get<StreamlabsOBSService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<StreamlabsOBSService>()] = null; }
+                if (ServiceManager.Get<StreamlabsDesktopService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<StreamlabsDesktopService>()] = null; }
                 if (ServiceManager.Get<XSplitService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<XSplitService>()] = null; }
                 if (!string.IsNullOrEmpty(ChannelSession.Settings.OvrStreamServerIP)) { externalServiceToConnect[ServiceManager.Get<IOvrStreamService>()] = null; }
                 if (ChannelSession.Settings.PolyPopPortNumber > 0) { externalServiceToConnect[ServiceManager.Get<PolyPopService>()] = null; }
@@ -440,7 +429,7 @@ namespace MixItUp.Base
 
                 await ServiceManager.Get<TimerService>().Initialize();
                 await ServiceManager.Get<ModerationService>().Initialize();
-                ServiceManager.Get<StatisticsService>().Initialize();
+                await ServiceManager.Get<StatisticsService>().Initialize();
 
                 ServiceManager.Get<IInputService>().HotKeyPressed += InputService_HotKeyPressed;
 
@@ -465,7 +454,7 @@ namespace MixItUp.Base
                 AsyncRunner.RunAsyncBackground(SessionBackgroundTask, sessionBackgroundCancellationTokenSource.Token, 60000);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                ServiceManager.Get<ITelemetryService>().TrackLogin(ChannelSession.Settings.TelemetryUserID, ServiceManager.Get<TwitchSessionService>().User?.broadcaster_type);
+                ServiceManager.Get<ITelemetryService>().TrackLogin(ChannelSession.Settings.TelemetryUserID, StreamingPlatforms.GetConnectedPlatforms());
 
                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ApplicationLaunch, new CommandParametersModel());
 
@@ -510,28 +499,6 @@ namespace MixItUp.Base
                 {
                     await ChannelSession.SaveSettings();
                     sessionBackgroundTimer = 0;
-
-                    if (ServiceManager.Get<TwitchSessionService>().IsConnected && ServiceManager.Get<TwitchSessionService>().IsLive)
-                    {
-                        try
-                        {
-                            string type = null;
-                            if (ServiceManager.Get<TwitchSessionService>().User.IsPartner())
-                            {
-                                type = "Partner";
-                            }
-                            else if (ServiceManager.Get<TwitchSessionService>().User.IsAffiliate())
-                            {
-                                type = "Affiliate";
-                            }
-                            ServiceManager.Get<ITelemetryService>().TrackChannelMetrics(type, ServiceManager.Get<TwitchSessionService>().Stream.viewer_count, ServiceManager.Get<UserService>().ActiveUserCount,
-                                ServiceManager.Get<TwitchSessionService>().Channel.game_name, ServiceManager.Get<TwitchSessionService>().User.view_count);
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Log(ex);
-                        }
-                    }
                 }
             }
         }

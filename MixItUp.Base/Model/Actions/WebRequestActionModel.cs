@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
@@ -68,18 +67,29 @@ namespace MixItUp.Base.Model.Actions
                     httpClient.DefaultRequestHeaders.Add("User-Agent", $"MixItUp/{Assembly.GetEntryAssembly().GetName().Version.ToString()} (Web call from Mix It Up; https://mixitupapp.com; support@mixitupapp.com)");
                     httpClient.DefaultRequestHeaders.Add("Twitch-UserID", ServiceManager.Get<TwitchSessionService>()?.UserID ?? string.Empty);
                     httpClient.DefaultRequestHeaders.Add("Twitch-UserLogin", ServiceManager.Get<TwitchSessionService>().Username ?? string.Empty);
-                    httpClient.DefaultRequestHeaders.Add("Glimesh-UserID", ServiceManager.Get<GlimeshSessionService>()?.UserID ?? string.Empty);
-                    httpClient.DefaultRequestHeaders.Add("Glimesh-UserLogin", ServiceManager.Get<GlimeshSessionService>().Username ?? string.Empty);
                     httpClient.DefaultRequestHeaders.Add("YouTube-UserID", ServiceManager.Get<YouTubeSessionService>()?.UserID ?? string.Empty);
                     httpClient.DefaultRequestHeaders.Add("YouTube-UserLogin", ServiceManager.Get<YouTubeSessionService>().Username ?? string.Empty);
                     httpClient.DefaultRequestHeaders.Add("Trovo-UserID", ServiceManager.Get<TrovoSessionService>()?.UserID ?? string.Empty);
                     httpClient.DefaultRequestHeaders.Add("Trovo-UserLogin", ServiceManager.Get<TrovoSessionService>().Username ?? string.Empty);
 
-                    using (HttpResponseMessage response = await httpClient.GetAsync(await ReplaceStringWithSpecialModifiers(this.Url, parameters, encode: true)))
+                    string targetUrl = await ReplaceStringWithSpecialModifiers(this.Url, parameters, encode: true);
+                    using (HttpResponseMessage response = await httpClient.GetAsync(targetUrl))
                     {
                         if (response.IsSuccessStatusCode)
                         {
                             await this.ProcessContents(parameters, await response.Content.ReadAsStringAsync());
+                        }
+                        else
+                        {
+                            string body = string.Empty;
+                            try
+                            {
+                                body = await response.Content.ReadAsStringAsync();
+                            }
+                            catch { }
+
+                            Logger.Log(LogLevel.Error, $"{nameof(WebRequestActionModel)}: Failed to call '{targetUrl}'. Status code: {response.StatusCode}");
+                            Logger.Log(LogLevel.Error, $"Response Body: {body}");
                         }
                     }
                 }
@@ -114,55 +124,69 @@ namespace MixItUp.Base.Model.Actions
 
         public static async Task ProcessJSONToSpecialIdentifiers(string body, Dictionary<string, string> jsonToSpecialIdentifiers, CommandParametersModel parameters)
         {
-            JToken jToken = JToken.Parse(body);
-
-            foreach (var kvp in jsonToSpecialIdentifiers)
+            try
             {
-                string key = await ReplaceStringWithSpecialModifiers(kvp.Key, parameters);
-                string[] splits = key.Split(new char[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
-                if (splits.Count() > 0)
+                JToken jToken = JToken.Parse(body);
+
+                foreach (var kvp in jsonToSpecialIdentifiers)
                 {
-                    JToken currentToken = jToken;
-                    for (int i = 0; i < splits.Count(); i++)
+                    try
                     {
-                        if (currentToken is JObject)
+                        string key = await ReplaceStringWithSpecialModifiers(kvp.Key, parameters);
+                        string[] splits = key.Split(new char[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
+                        if (splits.Count() > 0)
                         {
-                            JObject jobjToken = (JObject)currentToken;
-                            if (jobjToken.ContainsKey(splits[i]))
+                            JToken currentToken = jToken;
+                            for (int i = 0; i < splits.Count(); i++)
                             {
-                                currentToken = jobjToken[splits[i]];
+                                if (currentToken is JObject)
+                                {
+                                    JObject jobjToken = (JObject)currentToken;
+                                    if (jobjToken.ContainsKey(splits[i]))
+                                    {
+                                        currentToken = jobjToken[splits[i]];
+                                    }
+                                    else
+                                    {
+                                        currentToken = null;
+                                        break;
+                                    }
+                                }
+                                else if (currentToken is JArray)
+                                {
+                                    JArray jarrayToken = (JArray)currentToken;
+                                    if (int.TryParse(splits[i], out int index) && index >= 0 && index < jarrayToken.Count)
+                                    {
+                                        currentToken = jarrayToken[index];
+                                    }
+                                    else
+                                    {
+                                        currentToken = null;
+                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    currentToken = null;
+                                    break;
+                                }
                             }
-                            else
+
+                            if (currentToken != null)
                             {
-                                currentToken = null;
-                                break;
+                                parameters.SpecialIdentifiers[kvp.Value] = await ReplaceStringWithSpecialModifiers(HttpUtility.HtmlDecode(currentToken.ToString()), parameters);
                             }
-                        }
-                        else if (currentToken is JArray)
-                        {
-                            JArray jarrayToken = (JArray)currentToken;
-                            if (int.TryParse(splits[i], out int index) && index >= 0 && index < jarrayToken.Count)
-                            {
-                                currentToken = jarrayToken[index];
-                            }
-                            else
-                            {
-                                currentToken = null;
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            currentToken = null;
-                            break;
                         }
                     }
-
-                    if (currentToken != null)
+                    catch (Exception ex)
                     {
-                        parameters.SpecialIdentifiers[kvp.Value] = await ReplaceStringWithSpecialModifiers(HttpUtility.HtmlDecode(currentToken.ToString()), parameters);
+                        Logger.Log(ex);
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
     }

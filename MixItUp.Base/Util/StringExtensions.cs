@@ -17,22 +17,16 @@ namespace MixItUp.Base.Util
             string filename = source;
 
             int lastSlash = source.LastIndexOf('\\');
-            if (lastSlash > -1 && lastSlash < source.Length)
+            if (lastSlash > 0 && lastSlash < source.Length && source[lastSlash - 1] != ':')
             {
                 directory = source.Substring(0, lastSlash);
                 filename = source.Substring(lastSlash + 1);
             }
 
-            if (filename != null)
+            if (directory != null)
             {
                 char[] invalidChars = Path.GetInvalidFileNameChars();
                 filename = new string(filename.Select(c => invalidChars.Contains(c) ? '_' : c).ToArray());
-            }
-
-            if (directory != null)
-            {
-                char[] invalidChars = Path.GetInvalidPathChars();
-                directory = new string(directory.Select(c => invalidChars.Contains(c) ? '_' : c).ToArray());
                 return Path.Combine(directory, filename);
             }
 
@@ -87,5 +81,7 @@ namespace MixItUp.Base.Util
         public static string ToCurrencyString(this int number) { return ((double)number).ToCurrencyString(); }
 
         public static string ToCurrencyString(this double number) { return string.Format("{0:C}", Math.Round(number, 2)); }
+
+        public static string ToNumberDisplayString(this int number) { return number.ToString("N0"); }
     }
 }

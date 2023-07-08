@@ -19,10 +19,11 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.selectedActionType = value;
                 this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("ShowSaveToFileGrid");
-                this.NotifyPropertyChanged("ShowReadFromFileGrid");
-                this.NotifyPropertyChanged("ShowLineToWrite");
-                this.NotifyPropertyChanged("ShowLineToRead");
+                this.NotifyPropertyChanged(nameof(this.ShowSaveToFileGrid));
+                this.NotifyPropertyChanged(nameof(this.ShowReadFromFileGrid));
+                this.NotifyPropertyChanged(nameof(this.ShowLineToWrite));
+                this.NotifyPropertyChanged(nameof(this.ShowLineToRead));
+                this.NotifyPropertyChanged(nameof(this.ShowTextToRemoveGrid));
             }
         }
         private FileActionTypeEnum selectedActionType;
@@ -36,7 +37,17 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
 
-        public bool ShowReadFromFileGrid { get { return !this.ShowSaveToFileGrid; } }
+        public bool ShowReadFromFileGrid
+        {
+            get
+            {
+                return this.SelectedActionType == FileActionTypeEnum.ReadFromFile || this.SelectedActionType == FileActionTypeEnum.ReadSpecificLineFromFile ||
+                    this.SelectedActionType == FileActionTypeEnum.ReadRandomLineFromFile || this.SelectedActionType == FileActionTypeEnum.RemoveSpecificLineFromFile ||
+                    this.SelectedActionType == FileActionTypeEnum.RemoveRandomLineFromFile;
+            }
+        }
+
+        public bool ShowTextToRemoveGrid { get { return this.SelectedActionType == FileActionTypeEnum.RemoveSpecificTextFromFile; } }
 
         public bool ShowLineToWrite { get { return this.SelectedActionType == FileActionTypeEnum.InsertInFileAtSpecificLine; } }
 
@@ -75,6 +86,17 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string transferText;
 
+        public bool CaseSensitive
+        {
+            get { return this.caseSensitive; }
+            set
+            {
+                this.caseSensitive = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool caseSensitive;
+
         public FileActionEditorControlViewModel(FileActionModel action)
             : base(action)
         {
@@ -95,6 +117,11 @@ namespace MixItUp.Base.ViewModel.Actions
                 {
                     this.LineIndex = action.LineIndex;
                 }
+            }
+            else if (this.ShowTextToRemoveGrid)
+            {
+                this.TransferText = action.TransferText;
+                this.CaseSensitive = action.CaseSensitive;
             }
         }
 
@@ -132,13 +159,20 @@ namespace MixItUp.Base.ViewModel.Actions
                     }
                 }
             }
+            else if (this.ShowTextToRemoveGrid)
+            {
+                if (string.IsNullOrEmpty(this.TransferText))
+                {
+                    return Task.FromResult(new Result(MixItUp.Base.Resources.FileActionInvalidSpecialIdentifier));
+                }
+            }
 
             return Task.FromResult(new Result());
         }
 
         protected override Task<ActionModelBase> GetActionInternal()
         {
-            return Task.FromResult<ActionModelBase>(new FileActionModel(this.SelectedActionType, this.FilePath, this.TransferText, this.LineIndex));
+            return Task.FromResult<ActionModelBase>(new FileActionModel(this.SelectedActionType, this.FilePath, this.TransferText, this.LineIndex, this.CaseSensitive));
         }
     }
 }

@@ -17,7 +17,7 @@ namespace MixItUp.Base.Services.Trovo
         public TrovoPlatformService UserConnection { get; private set; }
         public TrovoPlatformService BotConnection { get; private set; }
         public PrivateUserModel User { get; private set; }
-        public PrivateChannelModel Channel { get; private set; }
+        public ChannelModel Channel { get; private set; }
         public PrivateUserModel Bot { get; private set; }
 
         public bool IsConnected { get { return this.UserConnection != null; } }
@@ -66,6 +66,8 @@ namespace MixItUp.Base.Services.Trovo
             }
         }
 
+        public int ViewerCount { get { return (int)this.Channel?.current_viewers; } }
+
         public async Task<Result> ConnectUser()
         {
             Result<TrovoPlatformService> result = await TrovoPlatformService.ConnectUser();
@@ -78,7 +80,7 @@ namespace MixItUp.Base.Services.Trovo
                     return new Result(MixItUp.Base.Resources.TrovoFailedToGetUserData);
                 }
 
-                this.Channel = await this.UserConnection.GetCurrentChannel();
+                this.Channel = await this.UserConnection.GetChannelByID(this.ChannelID);
                 if (this.Channel == null)
                 {
                     return new Result(MixItUp.Base.Resources.TrovoFailedToGetChannelData);
@@ -189,7 +191,7 @@ namespace MixItUp.Base.Services.Trovo
             {
                 try
                 {
-                    PrivateChannelModel channel = await this.UserConnection.GetCurrentChannel();
+                    ChannelModel channel = await this.UserConnection.GetChannelByID(this.ChannelID);
                     if (channel != null)
                     {
                         this.Channel = channel;
@@ -299,13 +301,18 @@ namespace MixItUp.Base.Services.Trovo
         {
             if (this.UserConnection != null)
             {
-                if (this.Channel != null)
+                ChannelModel channel = await this.UserConnection.GetChannelByID(this.ChannelID);
+                if (channel != null)
                 {
-                    PrivateChannelModel channel = await this.UserConnection.GetCurrentChannel();
-                    if (channel != null)
+                    if (channel?.live_title != null && !string.Equals(this.Channel?.live_title, channel?.live_title, StringComparison.OrdinalIgnoreCase))
                     {
-                        this.Channel = channel;
+                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, description: channel?.live_title);
                     }
+                    if (channel?.category_name != null && !string.Equals(this.Channel?.category_name, channel?.category_name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, description: channel?.category_name);
+                    }
+                    this.Channel = channel;
                 }
             }
         }
@@ -317,7 +324,7 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task<bool> SetTitle(string title)
         {
-            return await this.UserConnection.UpdateChannel(this.Channel.channel_id, title: title);
+            return await this.UserConnection.UpdateChannel(this.ChannelID, title: title);
         }
 
         public Task<string> GetGame()
@@ -333,7 +340,7 @@ namespace MixItUp.Base.Services.Trovo
                 string categoryID = categories.FirstOrDefault()?.id;
                 if (!string.IsNullOrEmpty(categoryID))
                 {
-                    return await this.UserConnection.UpdateChannel(this.Channel.channel_id, categoryID: categoryID);
+                    return await this.UserConnection.UpdateChannel(this.ChannelID, categoryID: categoryID);
                 }
             }
             return false;
@@ -341,7 +348,7 @@ namespace MixItUp.Base.Services.Trovo
 
         private async Task<Result> RefreshSubscriberCache()
         {
-            IEnumerable<ChannelSubscriberModel> subscribers = await this.UserConnection.GetSubscribers(this.Channel.channel_id, int.MaxValue);
+            IEnumerable<ChannelSubscriberModel> subscribers = await this.UserConnection.GetSubscribers(this.ChannelID, int.MaxValue);
             if (subscribers != null)
             {
                 this.Subscribers.Clear();

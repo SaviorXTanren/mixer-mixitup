@@ -7,6 +7,7 @@ using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,6 +39,8 @@ namespace MixItUp.Base.Services
         public List<StreamlootsCardCommandModel> StreamlootsCardCommands { get; set; } = new List<StreamlootsCardCommandModel>();
         public List<WebhookCommandModel> WebhookCommands { get; set; } = new List<WebhookCommandModel>();
         public List<TrovoSpellCommandModel> TrovoSpellCommands { get; set; } = new List<TrovoSpellCommandModel>();
+        public List<TwitchBitsCommandModel> TwitchBitsCommands { get; set; } = new List<TwitchBitsCommandModel>();
+        public List<CrowdControlEffectCommandModel> CrowdControlEffectCommands { get; set; } = new List<CrowdControlEffectCommandModel>();
 
         public IEnumerable<CommandModelBase> AllEnabledChatAccessibleCommands
         {
@@ -66,6 +69,8 @@ namespace MixItUp.Base.Services
                 commands.AddRange(this.StreamlootsCardCommands);
                 commands.AddRange(this.WebhookCommands);
                 commands.AddRange(this.TrovoSpellCommands);
+                commands.AddRange(this.TwitchBitsCommands);
+                commands.AddRange(this.CrowdControlEffectCommands);
                 return commands;
             }
         }
@@ -112,6 +117,8 @@ namespace MixItUp.Base.Services
             this.StreamlootsCardCommands.Clear();
             this.WebhookCommands.Clear();
             this.TrovoSpellCommands.Clear();
+            this.TwitchBitsCommands.Clear();
+            this.CrowdControlEffectCommands.Clear();
 
             foreach (CommandModelBase command in ChannelSession.Settings.Commands.Values.ToList())
             {
@@ -128,6 +135,8 @@ namespace MixItUp.Base.Services
                 else if (command is StreamlootsCardCommandModel) { this.StreamlootsCardCommands.Add((StreamlootsCardCommandModel)command); }
                 else if (command is WebhookCommandModel) { this.WebhookCommands.Add((WebhookCommandModel)command); }
                 else if (command is TrovoSpellCommandModel) { this.TrovoSpellCommands.Add((TrovoSpellCommandModel)command); }
+                else if (command is TwitchBitsCommandModel) { this.TwitchBitsCommands.Add((TwitchBitsCommandModel)command); }
+                else if (command is CrowdControlEffectCommandModel) { this.CrowdControlEffectCommands.Add((CrowdControlEffectCommandModel)command); }
             }
 
             foreach (PreMadeChatCommandSettingsModel commandSetting in ChannelSession.Settings.PreMadeChatCommandSettings)
@@ -176,6 +185,7 @@ namespace MixItUp.Base.Services
             {
                 if (!command.IsEnabled || !command.HasWork)
                 {
+                    Logger.Log(LogLevel.Debug, $"Command is not enabled/has not work: {command.ID} - {command.Name}");
                     return;
                 }
 
@@ -187,6 +197,7 @@ namespace MixItUp.Base.Services
                 this.commandInstances.Insert(0, commandInstance);
             }
             this.OnCommandInstanceAdded(this, commandInstance);
+
 
             if (commandInstance.State == CommandInstanceStateEnum.Pending)
             {
@@ -302,10 +313,13 @@ namespace MixItUp.Base.Services
                 validationResult = await command.CustomValidation(commandInstance.Parameters);
                 if (validationResult.Success)
                 {
-                    validationResult = await command.ValidateRequirements(commandInstance.Parameters);
-                    if (!validationResult.Success && ChannelSession.Settings.RequirementErrorsCooldownType != RequirementErrorCooldownTypeEnum.PerCommand)
+                    if (!commandInstance.Parameters.IgnoreRequirements)
                     {
-                        command.CommandErrorCooldown = RequirementModelBase.UpdateErrorCooldown();
+                        validationResult = await command.ValidateRequirements(commandInstance.Parameters);
+                        if (!validationResult.Success && ChannelSession.Settings.RequirementErrorsCooldownType != RequirementErrorCooldownTypeEnum.PerCommand)
+                        {
+                            command.CommandErrorCooldown = RequirementModelBase.UpdateErrorCooldown();
+                        }
                     }
                 }
                 else
@@ -314,14 +328,14 @@ namespace MixItUp.Base.Services
                     {
                         if (!string.IsNullOrEmpty(validationResult.Message) && validationResult.DisplayMessage)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(validationResult.Message, commandInstance.Parameters.Platform);
+                            await ServiceManager.Get<ChatService>().SendMessage(validationResult.Message, commandInstance.Parameters);
                         }
                     }
                 }
 
                 if (validationResult.Success)
                 {
-                    if (command.Requirements != null)
+                    if (command.Requirements != null && !commandInstance.Parameters.IgnoreRequirements)
                     {
                         await command.PerformRequirements(commandInstance.Parameters);
                         commandInstance.RunnerParameters = new List<CommandParametersModel>(command.GetPerformingUsers(commandInstance.Parameters));
@@ -340,11 +354,16 @@ namespace MixItUp.Base.Services
                     }
                 }
             }
+
+            Logger.Log(LogLevel.Debug, $"Command validation status: {command.ID} - {command.Name} - {validationResult.ToString()}");
+
             return validationResult;
         }
 
         private async Task QueueInternal(CommandInstanceModel commandInstance)
         {
+            Logger.Log(LogLevel.Debug, $"Starting command queuing: {commandInstance.CommandID} - {commandInstance.Name}");
+
             CommandTypeEnum type = commandInstance.QueueCommandType;
             if (commandInstance.DontQueue)
             {
@@ -475,6 +494,8 @@ namespace MixItUp.Base.Services
 
         private async Task RunDirectlyInternal(CommandInstanceModel commandInstance, CommandParametersModel parameters)
         {
+            ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.Command, user: commandInstance.Parameters.User, description: commandInstance.ID.ToString());
+
             CommandModelBase command = commandInstance.Command;
             if (command != null)
             {
@@ -506,6 +527,7 @@ namespace MixItUp.Base.Services
                         ServiceManager.Get<OverlayService>().StartBatching();
                     }
 
+                    ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.Action, user: commandInstance.Parameters.User, description: ((int)action.Type).ToString());
                     await action.Perform(parameters);
 
                     if (action is OverlayActionModel && ServiceManager.Get<OverlayService>().IsConnected)

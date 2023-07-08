@@ -1,9 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Glimesh;
-using MixItUp.Base.Services.Trovo;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -196,6 +193,12 @@ namespace MixItUp.Base.Model.Currency
         public string UserRankNextNameSpecialIdentifier { get { return string.Format("{0}nextrank", this.UserAmountSpecialIdentifier); } }
 
         [JsonIgnore]
+        public string AllTotalAmountSpecialIdentifier { get { return string.Format("{0}alltotal", this.SpecialIdentifier); } }
+
+        [JsonIgnore]
+        public string AllTotalAmountDisplaySpecialIdentifier { get { return string.Format("{0}display", this.AllTotalAmountSpecialIdentifier); } }
+
+        [JsonIgnore]
         public string TopRegexSpecialIdentifier { get { return string.Format("{0}\\d+{1}", SpecialIdentifierStringBuilder.TopSpecialIdentifierHeader, this.SpecialIdentifier); } }
 
         [JsonIgnore]
@@ -290,7 +293,45 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
+        public void SetAmount(UserV2Model user, int amount)
+        {
+            RankModel prevRank = this.GetRank(user);
+
+            user.CurrencyAmounts[this.ID] = Math.Min(Math.Max(amount, 0), this.MaxAmount);
+            if (ChannelSession.Settings != null)
+            {
+                ChannelSession.Settings.Users.ManualValueChanged(user.ID);
+            }
+
+            RankModel newRank = this.GetRank(user);
+
+            if (newRank.Amount > prevRank.Amount && this.RankChangedCommand != null)
+            {
+                AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                {
+                    UserV2ViewModel userVM = await ServiceManager.Get<UserService>().GetUserByID(user.ID);
+                    await ServiceManager.Get<CommandService>().Queue(this.RankChangedCommand, new CommandParametersModel(userVM));
+                }, new CancellationToken());
+            }
+            else if (newRank.Amount < prevRank.Amount && this.RankDownCommand != null)
+            {
+                AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                {
+                    UserV2ViewModel userVM = await ServiceManager.Get<UserService>().GetUserByID(user.ID);
+                    await ServiceManager.Get<CommandService>().Queue(this.RankDownCommand, new CommandParametersModel(userVM));
+                }, new CancellationToken());
+            }
+        }
+
         public void AddAmount(UserV2ViewModel user, int amount)
+        {
+            if (!user.IsSpecialtyExcluded && amount > 0)
+            {
+                this.SetAmount(user, this.GetAmount(user) + amount);
+            }
+        }
+
+        public void AddAmount(UserV2Model user, int amount)
         {
             if (!user.IsSpecialtyExcluded && amount > 0)
             {
@@ -309,6 +350,20 @@ namespace MixItUp.Base.Model.Currency
         public void ResetAmount(UserV2ViewModel user) { this.SetAmount(user, 0); }
 
         public RankModel GetRank(UserV2ViewModel user)
+        {
+            if (this.Ranks.Count > 0)
+            {
+                int amount = this.GetAmount(user);
+                RankModel rank = this.Ranks.Where(r => r.Amount <= amount).Max();
+                if (rank != null)
+                {
+                    return rank;
+                }
+            }
+            return CurrencyModel.NoRank;
+        }
+
+        public RankModel GetRank(UserV2Model user)
         {
             if (this.Ranks.Count > 0)
             {
@@ -385,12 +440,50 @@ namespace MixItUp.Base.Model.Currency
         {
             if (this.ResetInterval != CurrencyResetRateEnum.Never)
             {
+                if (this.LastReset == DateTimeOffset.MinValue)
+                {
+                    return true;
+                }
+
                 DateTimeOffset newResetDate = DateTimeOffset.MinValue;
-                if (this.ResetInterval == CurrencyResetRateEnum.Daily) { newResetDate = this.LastReset.AddDays(1); }
-                else if (this.ResetInterval == CurrencyResetRateEnum.Weekly) { newResetDate = this.LastReset.AddDays(7); }
-                else if (this.ResetInterval == CurrencyResetRateEnum.Monthly) { newResetDate = this.LastReset.AddMonths(1); }
-                else if (this.ResetInterval == CurrencyResetRateEnum.Yearly) { newResetDate = this.LastReset.AddYears(1); }
-                return (newResetDate.Date < DateTimeOffset.Now.Date);
+                if (this.ResetInterval == CurrencyResetRateEnum.Daily)
+                {
+                    newResetDate = this.LastReset.AddDays(1);
+                }
+                else if (this.ResetStartCadence != DateTimeOffset.MinValue)
+                {
+                    if (this.ResetInterval == CurrencyResetRateEnum.Weekly)
+                    {
+                        newResetDate = new DateTime(this.LastReset.Year, this.LastReset.Month, this.LastReset.Day);
+                        do
+                        {
+                            newResetDate = newResetDate.AddDays(1);
+                        } while (newResetDate.DayOfWeek != this.ResetStartCadence.DayOfWeek);
+                    }
+                    else if (this.ResetInterval == CurrencyResetRateEnum.Monthly)
+                    {
+                        int day = Math.Min(this.ResetStartCadence.Day, DateTime.DaysInMonth(this.LastReset.Year, this.LastReset.Month));
+                        newResetDate = new DateTime(this.LastReset.Year, this.LastReset.Month, day);
+                        newResetDate = newResetDate.AddMonths(1);
+                    }
+                    else if (this.ResetInterval == CurrencyResetRateEnum.Yearly)
+                    {
+                        int day = Math.Min(this.ResetStartCadence.Day, DateTime.DaysInMonth(this.LastReset.Year, this.ResetStartCadence.Month));
+                        newResetDate = new DateTime(this.LastReset.Year, this.ResetStartCadence.Month, day);
+                        newResetDate = newResetDate.AddYears(1);
+                    }
+                }
+                else
+                {
+                    if (this.ResetInterval == CurrencyResetRateEnum.Weekly){ newResetDate = this.LastReset.AddDays(7); }
+                    else if (this.ResetInterval == CurrencyResetRateEnum.Monthly) { newResetDate = this.LastReset.AddMonths(1); }
+                    else if (this.ResetInterval == CurrencyResetRateEnum.Yearly) { newResetDate = this.LastReset.AddYears(1); }
+                }
+
+                if (newResetDate != DateTimeOffset.MinValue)
+                {
+                    return (newResetDate.Date <= DateTimeOffset.Now.Date);
+                }
             }
             return false;
         }

@@ -24,12 +24,11 @@ namespace MixItUp.Base.ViewModel.Settings.Generic
         }
         private bool enabled = true;
 
-        public bool ShowEnabledOption { get; private set; } = true;
-
         public GenericToggleColorComboBoxSettingsControlViewModel(string name, string initialValue, Action<string> valueSetter, string tooltip = null)
             : base(name, initialValue, valueSetter, tooltip)
         {
             this.enabled = (this.Value != null);
+            this.ShowEnabledOption = true;
         }
     }
 }

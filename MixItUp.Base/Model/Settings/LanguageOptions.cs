@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 
 namespace MixItUp.Base.Model.Settings
 {
@@ -15,6 +16,7 @@ namespace MixItUp.Base.Model.Settings
         Portuguese = 7,
         Russian = 8,
         Ukrainian = 9,
+        ChineseTraditional = 10,
 
         Pseudo = 99999,
     }
@@ -25,6 +27,7 @@ namespace MixItUp.Base.Model.Settings
         {
             { LanguageOptions.Default, "en-US" },
 
+            { LanguageOptions.ChineseTraditional, "zh-TW" },
             { LanguageOptions.Dutch, "nl-NL" },
             { LanguageOptions.English, "en-US" },
             { LanguageOptions.German, "de-DE" },
@@ -63,6 +66,11 @@ namespace MixItUp.Base.Model.Settings
                 return locale;
             }
             return null;
+        }
+
+        public static CultureInfo GetLanguageLocaleCultureInfo()
+        {
+            return new CultureInfo(Languages.GetLanguageLocale());
         }
     }
 }

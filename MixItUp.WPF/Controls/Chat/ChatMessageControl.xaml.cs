@@ -1,9 +1,6 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.Chat.Glimesh;
-using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.Twitch;
 using StreamingClient.Base.Util;
 using System;
@@ -11,7 +8,6 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -115,29 +111,9 @@ namespace MixItUp.WPF.Controls.Chat
                                 string messagePartString = (string)messagePart;
                                 this.AddStringMessage(messagePartString, isHighlighted: highlighted, isItalicized: italics);
                             }
-                            else if (messagePart is TwitchChatEmoteViewModel)
+                            else if (messagePart is ChatEmoteViewModelBase)
                             {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((TwitchChatEmoteViewModel)messagePart));
-                            }
-                            else if (messagePart is BetterTTVEmoteModel)
-                            {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((BetterTTVEmoteModel)messagePart));
-                            }
-                            else if (messagePart is FrankerFaceZEmoteModel)
-                            {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((FrankerFaceZEmoteModel)messagePart));
-                            }
-                            else if (messagePart is TwitchBitsCheerViewModel)
-                            {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((TwitchBitsCheerViewModel)messagePart));
-                            }
-                            else if (messagePart is GlimeshChatEmoteViewModel)
-                            {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((GlimeshChatEmoteViewModel)messagePart));
-                            }
-                            else if (messagePart is TrovoChatEmoteViewModel)
-                            {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((TrovoChatEmoteViewModel)messagePart));
+                                this.MessageWrapPanel.Children.Add(new ChatImageControl((ChatEmoteViewModelBase)messagePart));
                             }
                         }
                     }

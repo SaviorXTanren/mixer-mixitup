@@ -1,0 +1,88 @@
+﻿<local:ActionEditorControlBase x:Class="MixItUp.WPF.Controls.Actions.SAMMIActionEditorControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <local:ActionEditorControlBase.Resources>
+        <Util:LocalizationConverter x:Key="LocalizationConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </local:ActionEditorControlBase.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ComboBox Grid.Row="0" ItemsSource="{Binding ActionTypes}" SelectedItem="{Binding SelectedActionType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Action}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <Grid Grid.Row="2" Visibility="{Binding ShowButtonGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <TextBox Grid.Column="0" Text="{Binding ButtonID}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ButtonID}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <Button Grid.Column="2" Command="{Binding AddVariableCommand}" Content="{x:Static resx:Resources.AddVariable}" HorizontalAlignment="Center" MinWidth="150" />
+            </Grid>
+            
+            <ItemsControl Grid.Row="2" ItemsSource="{Binding ButtonVariables}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox Grid.Column="0" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                            <TextBox Grid.Column="2" Text="{Binding Value}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Value}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                            <Controls:IconButton Grid.Column="4" Command="{Binding DeleteVariableCommand}" Icon="Delete"  ToolTip="{x:Static resx:Resources.Delete}" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+
+        <Grid Grid.Row="2" Visibility="{Binding ShowGlobalVariableGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBox Grid.Row="0" Text="{Binding GlobalVariableName}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBox Grid.Row="2" Text="{Binding GlobalVariableValue}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Value}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
+    </Grid>
+</local:ActionEditorControlBase>

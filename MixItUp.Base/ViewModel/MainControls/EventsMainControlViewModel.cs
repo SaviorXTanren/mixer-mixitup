@@ -19,7 +19,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public bool ShowImage { get { return !string.IsNullOrEmpty(this.Image); } }
 
-        public bool ShowPackIcon { get { return !string.IsNullOrEmpty(this.PackIconName); } }
+        public bool ShowPackIcon { get { return !this.ShowImage; } }
 
         public EventCommandGroupViewModel(string name, string image = null, string packIconName = null)
         {
@@ -100,10 +100,6 @@ namespace MixItUp.Base.ViewModel.MainControls
                 {
                     return Resources.Trovo;
                 }
-                else if (eventNumber >= 500 && eventNumber < 600)
-                {
-                    return Resources.Glimesh;
-                }
                 else
                 {
                     return Resources.Generic;
@@ -151,13 +147,13 @@ namespace MixItUp.Base.ViewModel.MainControls
             genericCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChannelResubscribed));
             genericCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChannelSubscriptionGifted));
             genericCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChannelMassSubscriptionsGifted));
+            genericCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.GenericDonation));
             commandGroups.Add(genericCommands);
 
             EventCommandGroupViewModel twitchCommands = new EventCommandGroupViewModel(Resources.Twitch, image: StreamingPlatforms.TwitchLogoImageAssetFilePath);
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelStreamStart));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelStreamStop));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelFollowed));
-            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelHosted));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelRaided));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelSubscribed));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelResubscribed));
@@ -165,25 +161,34 @@ namespace MixItUp.Base.ViewModel.MainControls
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelMassSubscriptionsGifted));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelBitsCheered));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelPointsRedeemed));
+            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelCharityDonation));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelHypeTrainBegin));
+            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelHypeTrainLevelUp));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelHypeTrainEnd));
             commandGroups.Add(twitchCommands);
 
+            EventCommandGroupViewModel youtubeCommands = new EventCommandGroupViewModel(Resources.YouTube, image: StreamingPlatforms.YouTubeLogoImageAssetFilePath);
+            youtubeCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.YouTubeChannelStreamStart));
+            youtubeCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.YouTubeChannelStreamStop));
+            youtubeCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.YouTubeChannelNewMember));
+            youtubeCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.YouTubeChannelMemberMilestone));
+            youtubeCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.YouTubeChannelMembershipGifted));
+            youtubeCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.YouTubeChannelMassMembershipGifted));
+            youtubeCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.YouTubeChannelSuperChat));
+            commandGroups.Add(youtubeCommands);
+
             EventCommandGroupViewModel trovoCommands = new EventCommandGroupViewModel(Resources.Trovo, image: StreamingPlatforms.TrovoLogoImageAssetFilePath);
+            trovoCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TrovoChannelStreamStart));
+            trovoCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TrovoChannelStreamStop));
             trovoCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TrovoChannelFollowed));
             trovoCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TrovoChannelRaided));
             trovoCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TrovoChannelSubscribed));
             trovoCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TrovoChannelResubscribed));
             trovoCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TrovoChannelSubscriptionGifted));
             trovoCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TrovoChannelMassSubscriptionsGifted));
-            trovoCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TrovoSpellCast));
+            trovoCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TrovoChannelSpellCast));
+            trovoCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TrovoChannelMagicChat));
             commandGroups.Add(trovoCommands);
-
-            EventCommandGroupViewModel glimeshCommands = new EventCommandGroupViewModel(Resources.Glimesh, image: StreamingPlatforms.GlimeshLogoImageAssetFilePath);
-            glimeshCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.GlimeshChannelStreamStart));
-            glimeshCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.GlimeshChannelStreamStop));
-            glimeshCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.GlimeshChannelFollowed));
-            commandGroups.Add(glimeshCommands);
 
             EventCommandGroupViewModel chatCommands = new EventCommandGroupViewModel(Resources.Chat, packIconName: "Chat");
             chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserEntranceCommand));
@@ -198,7 +203,6 @@ namespace MixItUp.Base.ViewModel.MainControls
             commandGroups.Add(chatCommands);
 
             EventCommandGroupViewModel donationCommands = new EventCommandGroupViewModel(Resources.Donations, packIconName: "Cash");
-            donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.GenericDonation));
             donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.StreamlabsDonation));
             donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.StreamElementsDonation));
             donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.StreamElementsMerchPurchase));
@@ -210,15 +214,19 @@ namespace MixItUp.Base.ViewModel.MainControls
             donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.JustGivingDonation));
             commandGroups.Add(donationCommands);
 
-            EventCommandGroupViewModel patreonCommands = new EventCommandGroupViewModel(Resources.Patreon, packIconName: "Patreon");
-            patreonCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.PatreonSubscribed));
-            commandGroups.Add(patreonCommands);
-
             EventCommandGroupViewModel streamlootsCommands = new EventCommandGroupViewModel(Resources.Streamloots, packIconName: "CardsOutline");
             streamlootsCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.StreamlootsCardRedeemed));
             streamlootsCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.StreamlootsPackPurchased));
             streamlootsCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.StreamlootsPackGifted));
             commandGroups.Add(streamlootsCommands);
+
+            EventCommandGroupViewModel crowdControlCommands = new EventCommandGroupViewModel(Resources.CrowdControl, packIconName: "ControllerClassic");
+            crowdControlCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.CrowdControlEffectRedeemed));
+            commandGroups.Add(crowdControlCommands);
+
+            EventCommandGroupViewModel patreonCommands = new EventCommandGroupViewModel(Resources.Patreon, packIconName: "Patreon");
+            patreonCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.PatreonSubscribed));
+            commandGroups.Add(patreonCommands);
 
             this.EventCommandGroups.AddRange(commandGroups);
 

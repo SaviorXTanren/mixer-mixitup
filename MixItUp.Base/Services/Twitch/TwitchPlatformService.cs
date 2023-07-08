@@ -38,12 +38,16 @@ namespace MixItUp.Base.Services.Twitch
             OAuthClientScopeEnum.channel__edit__commercial,
 
             OAuthClientScopeEnum.channel__manage__broadcast,
+            OAuthClientScopeEnum.channel__manage__moderators,
             OAuthClientScopeEnum.channel__manage__polls,
             OAuthClientScopeEnum.channel__manage__predictions,
+            OAuthClientScopeEnum.channel__manage__raids,
             OAuthClientScopeEnum.channel__manage__redemptions,
+            OAuthClientScopeEnum.channel__manage__vips,
 
             OAuthClientScopeEnum.channel__moderate,
 
+            OAuthClientScopeEnum.channel__read__charity,
             OAuthClientScopeEnum.channel__read__editors,
             OAuthClientScopeEnum.channel__read__goals,
             OAuthClientScopeEnum.channel__read__hype_train,
@@ -59,15 +63,21 @@ namespace MixItUp.Base.Services.Twitch
 
             OAuthClientScopeEnum.moderation__read,
 
-            OAuthClientScopeEnum.moderator__manage__banned_users,
+            OAuthClientScopeEnum.moderator__read__chatters,
             OAuthClientScopeEnum.moderator__read__chat_settings,
+
+            OAuthClientScopeEnum.moderator__manage__announcements,
+            OAuthClientScopeEnum.moderator__manage__banned_users,
+            OAuthClientScopeEnum.moderator__manage__chat_messages,
             OAuthClientScopeEnum.moderator__manage__chat_settings,
+            OAuthClientScopeEnum.moderator__manage__shoutouts,
 
             OAuthClientScopeEnum.user__edit,
 
             OAuthClientScopeEnum.user__manage__blocked_users,
-            OAuthClientScopeEnum.user__read__blocked_users,
+            OAuthClientScopeEnum.user__manage__whispers,
 
+            OAuthClientScopeEnum.user__read__blocked_users,
             OAuthClientScopeEnum.user__read__broadcast,
             OAuthClientScopeEnum.user__read__follows,
             OAuthClientScopeEnum.user__read__subscriptions,
@@ -84,6 +94,8 @@ namespace MixItUp.Base.Services.Twitch
 
             OAuthClientScopeEnum.chat__edit,
             OAuthClientScopeEnum.chat__read,
+
+            OAuthClientScopeEnum.moderator__manage__announcements,
 
             OAuthClientScopeEnum.user__edit,
 
@@ -205,13 +217,33 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<ChannelInformationModel> GetChannelInformation(UserModel channel) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Channels.GetChannelInformation(channel)); }
 
-        public async Task<bool> UpdateChannelInformation(UserModel channel, string title = null, string gameID = null) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Channels.UpdateChannelInformation(channel, title, gameID)); }
+        public async Task<bool> UpdateChannelInformation(UserModel channel, string title = null, string gameID = null, IEnumerable<string> tags = null) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Channels.UpdateChannelInformation(channel, title: title, gameID: gameID, tags: tags)); }
 
-        public async Task<IEnumerable<TagModel>> GetStreamTags() { return await this.RunAsync(this.Connection.NewAPI.Tags.GetStreamTags(int.MaxValue)); }
+        public async Task SendChatAnnouncement(UserModel channel, UserModel sendAsUser, string message, string color) { await AsyncRunner.RunAsync(() => this.Connection.NewAPI.Chat.SendChatAnnouncement(channel.id, sendAsUser.id, new AnnouncementModel { message = message, color = color })); }
 
-        public async Task<IEnumerable<TagModel>> GetStreamTagsForChannel(UserModel channel) { return await this.RunAsync(this.Connection.NewAPI.Tags.GetStreamTagsForBroadcaster(channel)); }
+        public async Task SendShoutout(UserModel channel, UserModel targetChannel) { await AsyncRunner.RunAsync(() => this.Connection.NewAPI.Chat.SendShoutout(channel.id, targetChannel.id)); }
 
-        public async Task<bool> UpdateStreamTagsForChannel(UserModel channel, IEnumerable<TagModel> tags) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Tags.UpdateStreamTags(channel, tags)); }
+        public async Task RaidChannel(UserModel channel, UserModel targetChannel) { await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.RaidChannel(channel.id, targetChannel.id)); }
+
+        public async Task VIPUser(UserModel channel, UserModel user) { await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.VIPUser(channel.id, user.id)); }
+
+        public async Task UnVIPUser(UserModel channel, UserModel user) { await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.UnVIPUser(channel.id, user.id)); }
+
+        public async Task ModUser(UserModel channel, UserModel user) { await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.ModUser(channel.id, user.id)); }
+
+        public async Task UnmodUser(UserModel channel, UserModel user) { await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.UnmodUser(channel.id, user.id)); }
+
+        public async Task BanUser(UserModel channel, UserModel user, string reason) { await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.BanUser(channel.id, user.id, reason)); }
+
+        public async Task UnbanUser(UserModel channel, UserModel user) { await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.UnbanUser(channel.id, user.id)); }
+
+        public async Task TimeoutUser(UserModel channel, UserModel user, int duration, string reason) { await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.TimeoutUser(channel.id, user.id, duration, reason)); }
+
+        public async Task<IEnumerable<ChatterModel>> GetChatters(UserModel channel) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.GetChatters(channel.id, maxResults: int.MaxValue)); }
+
+        public async Task<ChatSettingsModel> GetChatSettings(UserModel channel) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.GetChatSettings(channel.id)); }
+
+        public async Task UpdateChatSettings(UserModel channel, ChatSettingsModel settings) { await AsyncRunner.RunAsync(this.Connection.NewAPI.Chat.UpdateChatSettings(channel.id, settings)); }
 
         public async Task<CreatedStreamMarkerModel> CreateStreamMarker(UserModel channel, string description) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Streams.CreateStreamMarker(channel, description)); }
 
@@ -286,6 +318,8 @@ namespace MixItUp.Base.Services.Twitch
         public async Task<IEnumerable<ChannelEditorUserModel>> GetChannelEditors(UserModel broadcaster) { return await this.RunAsync(this.Connection.NewAPI.Channels.GetChannelEditorUsers(broadcaster)); }
 
         public async Task<long> GetSubscriberCount(UserModel broadcaster) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Subscriptions.GetBroadcasterSubscriptionsCount(broadcaster)); }
+
+        public async Task<long> GetSubscriberPoints(UserModel broadcaster) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Subscriptions.GetBroadcasterSubscriptionPoints(broadcaster)); }
 
         public async Task<long> GetFollowerCount(UserModel broadcaster) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Users.GetFollowerCount(broadcaster)); }
 

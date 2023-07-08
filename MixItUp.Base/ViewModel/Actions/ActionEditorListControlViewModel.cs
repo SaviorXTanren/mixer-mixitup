@@ -62,6 +62,7 @@ namespace MixItUp.Base.ViewModel.Actions
                         case ActionTypeEnum.OvrStream: editorViewModel = new OvrStreamActionEditorControlViewModel(); break;
                         case ActionTypeEnum.PixelChat: editorViewModel = new PixelChatActionEditorControlViewModel(); break;
                         case ActionTypeEnum.PolyPop: editorViewModel = new PolyPopActionEditorControlViewModel(); break;
+                        case ActionTypeEnum.SAMMI: editorViewModel = new SAMMIActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Serial: editorViewModel = new SerialActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Sound: editorViewModel = new SoundActionEditorControlViewModel(); break;
                         case ActionTypeEnum.SpecialIdentifier: editorViewModel = new SpecialIdentifierActionEditorControlViewModel(); break;
@@ -70,11 +71,11 @@ namespace MixItUp.Base.ViewModel.Actions
                         case ActionTypeEnum.TextToSpeech: editorViewModel = new TextToSpeechActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Trovo: editorViewModel = new TrovoActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Twitch: editorViewModel = new TwitchActionEditorControlViewModel(); break;
-                        case ActionTypeEnum.Twitter: editorViewModel = new TwitterActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Voicemod: editorViewModel = new VoicemodActionEditorControlViewModel(); break;
                         case ActionTypeEnum.VTubeStudio: editorViewModel = new VTubeStudioActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Wait: editorViewModel = new WaitActionEditorControlViewModel(); break;
                         case ActionTypeEnum.WebRequest: editorViewModel = new WebRequestActionEditorControlViewModel(); break;
+                        case ActionTypeEnum.YouTube: editorViewModel = new YouTubeActionEditorControlViewModel(); break;
                     }
 
                     if (editorViewModel != null)
@@ -142,6 +143,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 case ActionTypeEnum.OvrStream: editorViewModel = new OvrStreamActionEditorControlViewModel((OvrStreamActionModel)action); break;
                 case ActionTypeEnum.PixelChat: editorViewModel = new PixelChatActionEditorControlViewModel((PixelChatActionModel)action); break;
                 case ActionTypeEnum.PolyPop: editorViewModel = new PolyPopActionEditorControlViewModel((PolyPopActionModel)action); break;
+                case ActionTypeEnum.SAMMI: editorViewModel = new SAMMIActionEditorControlViewModel((SAMMIActionModel)action); break;
                 case ActionTypeEnum.Serial: editorViewModel = new SerialActionEditorControlViewModel((SerialActionModel)action); break;
                 case ActionTypeEnum.Sound: editorViewModel = new SoundActionEditorControlViewModel((SoundActionModel)action); break;
                 case ActionTypeEnum.SpecialIdentifier: editorViewModel = new SpecialIdentifierActionEditorControlViewModel((SpecialIdentifierActionModel)action); break;
@@ -150,11 +152,11 @@ namespace MixItUp.Base.ViewModel.Actions
                 case ActionTypeEnum.TextToSpeech: editorViewModel = new TextToSpeechActionEditorControlViewModel((TextToSpeechActionModel)action); break;
                 case ActionTypeEnum.Trovo: editorViewModel = new TrovoActionEditorControlViewModel((TrovoActionModel)action); break;
                 case ActionTypeEnum.Twitch: editorViewModel = new TwitchActionEditorControlViewModel((TwitchActionModel)action); break;
-                case ActionTypeEnum.Twitter: editorViewModel = new TwitterActionEditorControlViewModel((TwitterActionModel)action); break;
                 case ActionTypeEnum.Voicemod: editorViewModel = new VoicemodActionEditorControlViewModel((VoicemodActionModel)action); break;
                 case ActionTypeEnum.VTubeStudio: editorViewModel = new VTubeStudioActionEditorControlViewModel((VTubeStudioActionModel)action); break;
                 case ActionTypeEnum.Wait: editorViewModel = new WaitActionEditorControlViewModel((WaitActionModel)action); break;
                 case ActionTypeEnum.WebRequest: editorViewModel = new WebRequestActionEditorControlViewModel((WebRequestActionModel)action); break;
+                case ActionTypeEnum.YouTube: editorViewModel = new YouTubeActionEditorControlViewModel((YouTubeActionModel)action); break;
             }
 
             if (editorViewModel != null)

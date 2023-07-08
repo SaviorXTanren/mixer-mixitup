@@ -15,7 +15,6 @@
         <StackPanel>
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding OptOutOfDataTracking}" />
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding AutoLogIn}" />
-            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding PreviewProgram}" />
 
             <Separator Grid.Row="26" Grid.ColumnSpan="2" Margin="10" />
 

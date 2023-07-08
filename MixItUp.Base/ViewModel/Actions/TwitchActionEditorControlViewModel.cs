@@ -1,8 +1,8 @@
 ﻿using MixItUp.Base.Model.Actions;
-using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Twitch;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
@@ -42,6 +42,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged("ShowSubActions");
                 this.NotifyPropertyChanged("ShowFollowersGrid");
                 this.NotifyPropertyChanged("ShowSlowChatGrid");
+                this.NotifyPropertyChanged("ShowSendAnnouncementGrid");
             }
         }
         private TwitchActionType selectedActionType;
@@ -63,8 +64,9 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             get
             {
-                return this.SelectedActionType == TwitchActionType.Host || this.SelectedActionType == TwitchActionType.Raid ||
-                    this.SelectedActionType == TwitchActionType.VIPUser || this.SelectedActionType == TwitchActionType.UnVIPUser;
+                return this.SelectedActionType == TwitchActionType.Raid ||
+                    this.SelectedActionType == TwitchActionType.VIPUser || this.SelectedActionType == TwitchActionType.UnVIPUser ||
+                    this.SelectedActionType == TwitchActionType.SendShoutout;
             }
         }
 
@@ -94,26 +96,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool ShowSetCustomTagsGrid { get { return this.SelectedActionType == TwitchActionType.SetCustomTags; } }
 
-        public ThreadSafeObservableCollection<TwitchTagModel> Tags { get; private set; } = new ThreadSafeObservableCollection<TwitchTagModel>();
-
-        public TwitchTagModel SelectedTag
-        {
-            get { return this.selectedTag; }
-            set
-            {
-                this.selectedTag = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private TwitchTagModel selectedTag;
-
-        public ThreadSafeObservableCollection<TwitchTagViewModel> CustomTags { get; private set; } = new ThreadSafeObservableCollection<TwitchTagViewModel>();
-
-        public bool CanAddMoreTags { get { return this.CustomTags.Count < 5; } }
-
-        public ICommand AddTagCommand { get; private set; }
-
-        private List<string> existingCustomTags = new List<string>();
+        public TwitchTagEditorViewModel TagEditor { get; set; } = new TwitchTagEditorViewModel();
 
         public bool ShowAdGrid { get { return this.SelectedActionType == TwitchActionType.RunAd; } }
 
@@ -171,6 +154,8 @@ namespace MixItUp.Base.ViewModel.Actions
                 if (this.existingChannelPointRewardID == Guid.Empty)
                 {
                     this.ChannelPointRewardState = this.ChannelPointReward.is_enabled;
+                    this.ChannelPointRewardName = this.ChannelPointReward.title;
+                    this.ChannelPointRewardDescription = this.ChannelPointReward.prompt;
                     this.ChannelPointRewardCost = this.ChannelPointReward.cost.ToString();
                     this.ChannelPointRewardMaxPerStream = this.ChannelPointReward.max_per_stream_setting.max_per_stream.ToString();
                     this.ChannelPointRewardMaxPerUser = this.ChannelPointReward.max_per_user_per_stream_setting.max_per_user_per_stream.ToString();
@@ -192,6 +177,28 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private bool channelPointRewardState;
+
+        public string ChannelPointRewardName
+        {
+            get { return this.channelPointRewardName; }
+            set
+            {
+                this.channelPointRewardName = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string channelPointRewardName;
+
+        public string ChannelPointRewardDescription
+        {
+            get { return this.channelPointRewardDescription; }
+            set
+            {
+                this.channelPointRewardDescription = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string channelPointRewardDescription;
 
         public string ChannelPointRewardCost
         {
@@ -410,6 +417,7 @@ namespace MixItUp.Base.ViewModel.Actions
         public bool ShowFollowersGrid { get { return this.SelectedActionType == TwitchActionType.EnableFollowersOnly; } }
 
         public bool ShowSlowChatGrid { get { return this.SelectedActionType == TwitchActionType.EnableSlowChat; } }
+        public bool ShowSendAnnouncementGrid { get { return this.SelectedActionType == TwitchActionType.SendChatAnnouncement; } }
 
         public string TimeLength
         {
@@ -421,6 +429,43 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private string timeLength;
+
+        public string Message
+        {
+            get { return this.message; }
+            set
+            {
+                this.message = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string message;
+
+        public IEnumerable<TwitchAnnouncementColor> AnnouncementColors { get { return EnumHelper.GetEnumList<TwitchAnnouncementColor>(); } }
+
+        public TwitchAnnouncementColor SelectedAnnouncementColor
+        {
+            get { return this.selectedAnnouncementColor; }
+            set
+            {
+                this.selectedAnnouncementColor = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private TwitchAnnouncementColor selectedAnnouncementColor = TwitchAnnouncementColor.Primary;
+
+        public bool SendAnnouncementAsStreamer
+        {
+            get { return this.sendAnnouncementAsStreamer; }
+            set
+            {
+                this.sendAnnouncementAsStreamer = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool sendAnnouncementAsStreamer = true;
+
+        private IEnumerable<string> existingTags = null;
 
         public TwitchActionEditorControlViewModel(TwitchActionModel action)
             : base(action, action.Actions)
@@ -436,7 +481,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowSetCustomTagsGrid)
             {
-                this.existingCustomTags.AddRange(action.CustomTags);
+                this.existingTags = action.CustomTags;
             }
             else if (this.ShowAdGrid)
             {
@@ -471,6 +516,8 @@ namespace MixItUp.Base.ViewModel.Actions
 
                 this.existingChannelPointRewardID = action.ChannelPointRewardID;
                 this.ChannelPointRewardState = action.ChannelPointRewardState;
+                this.ChannelPointRewardName = action.ChannelPointRewardName;
+                this.ChannelPointRewardDescription = action.ChannelPointRewardDescription;
                 this.ChannelPointRewardCost = action.ChannelPointRewardCostString;
                 this.ChannelPointRewardUpdateCooldownsAndLimits = action.ChannelPointRewardUpdateCooldownsAndLimits;
                 this.ChannelPointRewardMaxPerStream = action.ChannelPointRewardMaxPerStreamString;
@@ -510,6 +557,12 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.ShowFollowersGrid || this.ShowSlowChatGrid)
             {
                 this.TimeLength = action.TimeLength;
+            }
+            else if (this.ShowSendAnnouncementGrid)
+            {
+                this.Message = action.Message;
+                this.SelectedAnnouncementColor = action.Color;
+                this.SendAnnouncementAsStreamer = action.SendAnnouncementAsStreamer;
             }
         }
 
@@ -552,6 +605,11 @@ namespace MixItUp.Base.ViewModel.Actions
                     return new Result(MixItUp.Base.Resources.TwitchActionCreatePollMissingTitle);
                 }
 
+                if (this.PollTitle.Length > 60)
+                {
+                    return new Result(MixItUp.Base.Resources.TwitchActionPollTitleTooLong);
+                }
+
                 if (this.PollDurationSeconds <= 0)
                 {
                     return new Result(MixItUp.Base.Resources.TwitchActionCreatePollInvalidDuration);
@@ -560,6 +618,14 @@ namespace MixItUp.Base.ViewModel.Actions
                 if (string.IsNullOrEmpty(this.PollChoice1) || string.IsNullOrEmpty(this.PollChoice2))
                 {
                     return new Result(MixItUp.Base.Resources.TwitchActionCreatePollTwoOrMoreChoices);
+                }
+
+                if ((!string.IsNullOrEmpty(this.PollChoice1) && this.PollChoice1.Length > 25) ||
+                    (!string.IsNullOrEmpty(this.PollChoice2) && this.PollChoice2.Length > 25) ||
+                    (!string.IsNullOrEmpty(this.PollChoice3) && this.PollChoice3.Length > 25) ||
+                    (!string.IsNullOrEmpty(this.PollChoice4) && this.PollChoice4.Length > 25))
+                {
+                    return new Result(MixItUp.Base.Resources.TwitchActionPollChoicesTooLong);
                 }
             }
             else if (this.ShowPredictionGrid)
@@ -583,6 +649,11 @@ namespace MixItUp.Base.ViewModel.Actions
                 {
                     return new Result(MixItUp.Base.Resources.TwitchActionCreatePredictionTwoChoices);
                 }
+
+                if (this.PredictionOutcome1.Length > 25 || this.PredictionOutcome2.Length > 25)
+                {
+                    return new Result(MixItUp.Base.Resources.TwitchActionPredictionOutcomesTooLong);
+                }
             }
             else if (this.ShowFollowersGrid || this.ShowSlowChatGrid)
             {
@@ -591,40 +662,22 @@ namespace MixItUp.Base.ViewModel.Actions
                     return new Result(MixItUp.Base.Resources.TwitchActionTimeLengthMissing);
                 }
             }
+            else if (this.ShowSendAnnouncementGrid)
+            {
+                if (string.IsNullOrEmpty(this.Message))
+                {
+                    return new Result(MixItUp.Base.Resources.TwitchActionMessageMissing);
+                }
+            }
             return await base.Validate();
-        }
-
-        public void RemoveCustomTag(TwitchTagViewModel tag)
-        {
-            this.CustomTags.Remove(tag);
-            this.NotifyPropertyChanged("CanAddMoreTags");
         }
 
         protected override async Task OnOpenInternal()
         {
-            this.AddTagCommand = this.CreateCommand(() =>
-            {
-                this.AddSelectedCustomTag();
-            });
+            await this.TagEditor.OnOpen();
 
             if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
-                this.Tags.ClearAndAddRange(ServiceManager.Get<TwitchSessionService>().StreamTags);
-                this.NotifyPropertyChanged("CanAddMoreTags");
-
-                if (this.ShowSetCustomTagsGrid)
-                {
-                    foreach (string tagID in this.existingCustomTags)
-                    {
-                        TwitchTagModel tag = ServiceManager.Get<TwitchSessionService>().StreamTags.FirstOrDefault(t => string.Equals(t.ID, tagID));
-                        if (tag != null)
-                        {
-                            this.SelectedTag = tag;
-                            this.AddSelectedCustomTag();
-                        }
-                    }
-                }
-
                 foreach (CustomChannelPointRewardModel channelPoint in (await ServiceManager.Get<TwitchSessionService>().UserConnection.GetCustomChannelPointRewards(ServiceManager.Get<TwitchSessionService>().User, managableRewardsOnly: true)).OrderBy(c => c.title))
                 {
                     this.ChannelPointRewards.Add(channelPoint);
@@ -633,6 +686,21 @@ namespace MixItUp.Base.ViewModel.Actions
                 if (this.ShowUpdateChannelPointRewardGrid)
                 {
                     this.ChannelPointReward = this.ChannelPointRewards.FirstOrDefault(c => c.id.Equals(this.existingChannelPointRewardID));
+                }
+
+                if (this.existingTags != null)
+                {
+                    foreach (string tag in this.existingTags)
+                    {
+                        await this.TagEditor.AddCustomTag(tag);
+                    }
+                }
+                else if (ServiceManager.Get<TwitchSessionService>().Channel?.tags != null)
+                {
+                    foreach (string tag in ServiceManager.Get<TwitchSessionService>().Channel.tags)
+                    {
+                        await this.TagEditor.AddCustomTag(tag);
+                    }
                 }
             }
             await base.OnOpenInternal();
@@ -650,7 +718,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowSetCustomTagsGrid)
             {
-                return TwitchActionModel.CreateSetCustomTagsAction(this.CustomTags.Select(t => t.ID));
+                return TwitchActionModel.CreateSetCustomTagsAction(this.TagEditor.CustomTags.Select(t => t.Tag));
             }
             else if (this.ShowAdGrid)
             {
@@ -662,12 +730,12 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowStreamMarkerGrid)
             {
-                return TwitchActionModel.CreateStreamMarkerAction(this.StreamMarkerDescription, this.ShowInfoInChat);
+                return TwitchActionModel.CreateStreamMarkerAction(this.StreamMarkerDescription);
             }
             else if (this.ShowUpdateChannelPointRewardGrid)
             {
-                return TwitchActionModel.CreateUpdateChannelPointReward(this.ChannelPointReward.id, this.ChannelPointRewardState, this.ChannelPointRewardCost,
-                    this.ChannelPointRewardUpdateCooldownsAndLimits, this.ChannelPointRewardMaxPerStream, this.ChannelPointRewardMaxPerUser, this.ChannelPointRewardGlobalCooldown);
+                return TwitchActionModel.CreateUpdateChannelPointReward(this.ChannelPointReward.id, this.ChannelPointRewardName, this.ChannelPointRewardDescription, this.ChannelPointRewardState,
+                    this.ChannelPointRewardCost, this.ChannelPointRewardUpdateCooldownsAndLimits, this.ChannelPointRewardMaxPerStream, this.ChannelPointRewardMaxPerUser, this.ChannelPointRewardGlobalCooldown);
             }
             else if (this.ShowPollGrid)
             {
@@ -690,64 +758,14 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 return TwitchActionModel.CreateTimeAction(TwitchActionType.EnableSlowChat, this.TimeLength);
             }
+            else if (this.ShowSendAnnouncementGrid)
+            {
+                return TwitchActionModel.CreateSendChatAnnouncementAction(this.Message, this.SelectedAnnouncementColor, this.SendAnnouncementAsStreamer);
+            }
             else
             {
                 return TwitchActionModel.CreateAction(this.SelectedActionType);
             }
         }
-
-        private void AddSelectedCustomTag()
-        {
-            if (this.SelectedTag != null)
-            {
-                TwitchTagViewModel tag = new TwitchTagViewModel(this.SelectedTag);
-                if (!this.CustomTags.Contains(tag))
-                {
-                    this.CustomTags.Add(tag);
-                    tag.TagDeleted += (sender, e) =>
-                    {
-                        this.RemoveCustomTag((TwitchTagViewModel)sender);
-                    };
-                    this.SelectedTag = null;
-                }
-            }
-            this.NotifyPropertyChanged("CanAddMoreTags");
-        }
-    }
-
-    public class TwitchTagViewModel : UIViewModelBase, IEquatable<TwitchTagViewModel>
-    {
-        public TwitchTagModel Tag
-        {
-            get { return this.tag; }
-            set
-            {
-                this.tag = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private TwitchTagModel tag;
-
-        public ICommand DeleteTagCommand { get; private set; }
-
-        public event EventHandler TagDeleted = delegate { };
-
-        public TwitchTagViewModel(TwitchTagModel tag)
-        {
-            this.Tag = tag;
-
-            this.DeleteTagCommand = this.CreateCommand(() =>
-            {
-                this.TagDeleted.Invoke(this, new EventArgs());
-            });
-        }
-
-        public string ID { get { return this.Tag.ID; } }
-
-        public string Name { get { return this.Tag.Name; } }
-
-        public bool IsDeletable { get { return this.Tag.IsDeletable; } }
-
-        public bool Equals(TwitchTagViewModel other) { return this.ID.Equals(other.ID); }
     }
 }

@@ -29,6 +29,7 @@ namespace MixItUp.Base.Services
         StreamingPlatformAccountModel BotAccount { get; }
 
         bool IsLive { get; }
+        int ViewerCount { get; }
 
         Task<Result> ConnectUser();
         Task<Result> ConnectBot();

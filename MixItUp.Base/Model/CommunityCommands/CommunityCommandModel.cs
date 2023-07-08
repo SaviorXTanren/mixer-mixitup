@@ -34,7 +34,6 @@ namespace MixItUp.Base.Model.Store
         Translation,
         Twitter,
         Conditional,
-        [Name("StreamingSoftwareOBSSLOBS")]
         StreamingSoftware,
         Streamlabs,
         Command,
@@ -59,6 +58,8 @@ namespace MixItUp.Base.Model.Store
         GameCommand,
         Webhook,
         TrovoSpell,
+        TwitchBits,
+        CrowdControlEffect,
 
         // Extra Tags
         [Obsolete]

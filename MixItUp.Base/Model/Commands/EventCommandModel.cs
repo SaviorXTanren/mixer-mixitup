@@ -98,7 +98,13 @@ namespace MixItUp.Base.Model.Commands
                 case EventTypeEnum.TwitchChannelHypeTrainBegin:
                     specialIdentifiers["hypetraintotalpoints"] = "1";
                     specialIdentifiers["hypetrainlevelpoints"] = "123";
-                    specialIdentifiers["hypetrainlevelgoal"] = "5";
+                    specialIdentifiers["hypetrainlevelgoal"] = "500";
+                    break;
+                case EventTypeEnum.TwitchChannelHypeTrainLevelUp:
+                    specialIdentifiers["hypetraintotalpoints"] = "1";
+                    specialIdentifiers["hypetrainlevelpoints"] = "123";
+                    specialIdentifiers["hypetrainlevelgoal"] = "500";
+                    specialIdentifiers["hypetrainlevel"] = "2";
                     break;
                 case EventTypeEnum.TwitchChannelHypeTrainEnd:
                     specialIdentifiers["hypetraintotallevel"] = "5";
@@ -119,12 +125,33 @@ namespace MixItUp.Base.Model.Commands
                 case EventTypeEnum.TrovoChannelMassSubscriptionsGifted:
                     specialIdentifiers["subsgiftedamount"] = "5";
                     break;
-                case EventTypeEnum.TrovoSpellCast:
+                case EventTypeEnum.TrovoChannelSpellCast:
                     specialIdentifiers[TrovoChatSpellViewModel.SpellNameSpecialIdentifier] = "Spell Name";
                     specialIdentifiers[TrovoChatSpellViewModel.SpellQuantitySpecialIdentifier] = "5";
                     specialIdentifiers[TrovoChatSpellViewModel.SpellTotalValueSpecialIdentifier] = "250";
                     specialIdentifiers[TrovoChatSpellViewModel.SpellValueTypeSpecialIdentifier] = MixItUp.Base.Resources.TrovoElixir;
                     specialIdentifiers[TrovoChatSpellViewModel.SpellValueSpecialIdentifier] = "50";
+                    break;
+
+                // YouTube
+                case EventTypeEnum.YouTubeChannelNewMember:
+                    specialIdentifiers["usersubplan"] = "Plan Name";
+                    break;
+                case EventTypeEnum.YouTubeChannelMemberMilestone:
+                    specialIdentifiers["message"] = "Test Message";
+                    specialIdentifiers["usersubmonths"] = "5";
+                    specialIdentifiers["usersubplan"] = "Plan Name";
+                    break;
+                case EventTypeEnum.YouTubeChannelMembershipGifted:
+                    specialIdentifiers["usersubplan"] = "Plan Name";
+                    break;
+                case EventTypeEnum.YouTubeChannelMassMembershipGifted:
+                    break;
+                case EventTypeEnum.YouTubeChannelSuperChat:
+                    specialIdentifiers["amountnumber"] = "1.23";
+                    specialIdentifiers["amount"] = "$1.23";
+                    specialIdentifiers["tier"] = "1";
+                    specialIdentifiers["message"] = "Test Message";
                     break;
 
                 // Chat
@@ -133,6 +160,7 @@ namespace MixItUp.Base.Model.Commands
                     break;
 
                 // Donation
+                case EventTypeEnum.GenericDonation:
                 case EventTypeEnum.StreamlabsDonation:
                 case EventTypeEnum.TiltifyDonation:
                 case EventTypeEnum.ExtraLifeDonation:
@@ -142,6 +170,7 @@ namespace MixItUp.Base.Model.Commands
                 case EventTypeEnum.JustGivingDonation:
                 case EventTypeEnum.StreamElementsDonation:
                 case EventTypeEnum.StreamElementsMerchPurchase:
+                case EventTypeEnum.TwitchChannelCharityDonation:
                     UserDonationModel donation = new UserDonationModel()
                     {
                         Amount = 12.34,
@@ -160,6 +189,7 @@ namespace MixItUp.Base.Model.Commands
                         case EventTypeEnum.JustGivingDonation: donation.Source = UserDonationSourceEnum.JustGiving; break;
                         case EventTypeEnum.StreamElementsDonation: donation.Source = UserDonationSourceEnum.StreamElements; break;
                         case EventTypeEnum.StreamElementsMerchPurchase: donation.Source = UserDonationSourceEnum.StreamElements; break;
+                        case EventTypeEnum.TwitchChannelCharityDonation: donation.Source = UserDonationSourceEnum.Twitch; break;
                     }
 
                     foreach (var kvp in donation.GetSpecialIdentifiers())
@@ -176,6 +206,12 @@ namespace MixItUp.Base.Model.Commands
                     {
                         specialIdentifiers["allitems"] = "Shirt x2, Mug x3, Hat x4";
                         specialIdentifiers["totalitems"] = "9";
+                    }
+
+                    if (eventType == EventTypeEnum.TwitchChannelCharityDonation)
+                    {
+                        specialIdentifiers["charityname"] = "Charity Name";
+                        specialIdentifiers["charityimage"] = genericImage;
                     }
                     break;
                 case EventTypeEnum.PatreonSubscribed:
@@ -198,6 +234,12 @@ namespace MixItUp.Base.Model.Commands
                 case EventTypeEnum.StreamlootsPackGifted:
                     specialIdentifiers["streamlootspurchasequantity"] = "1";
                     break;
+                case EventTypeEnum.CrowdControlEffectRedeemed:
+                    foreach (var kvp in CrowdControlEffectCommandModel.GetEffectTestSpecialIdentifiers())
+                    {
+                        specialIdentifiers[kvp.Key] = kvp.Value;
+                    }
+                    break;
             }
 
             int eventNumber = (int)eventType;
@@ -212,10 +254,6 @@ namespace MixItUp.Base.Model.Commands
             else if (eventNumber >= 400 && eventNumber < 500)
             {
                 specialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = StreamingPlatformTypeEnum.Trovo.ToString();
-            }
-            else if (eventNumber >= 500 && eventNumber < 600)
-            {
-                specialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = StreamingPlatformTypeEnum.Glimesh.ToString();
             }
             else
             {

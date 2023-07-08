@@ -6,6 +6,7 @@ using StreamingClient.Base.Web;
 using System;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
@@ -42,13 +43,19 @@ namespace MixItUp.WPF
 
             try
             {
-                using (AdvancedHttpClient client = new AdvancedHttpClient())
+                using (HttpClient client = new HttpClient())
                 {
-                    string changelogHTML = await client.GetStringAsync(this.update.ChangelogLink);
-                    this.UpdateChangelogWebBrowser.NavigateToString(changelogHTML);
+                    HttpResponseMessage response = await client.GetAsync(this.update.ChangelogLink);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        this.UpdateChangelogWebBrowser.NavigateToString(await response.Content.ReadAsStringAsync());
+                    }
                 }
             }
-            catch (Exception ex) { Logger.Log(ex); }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
 
             await base.OnLoaded();
         }

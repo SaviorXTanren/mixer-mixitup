@@ -15,7 +15,7 @@ namespace MixItUp.Base.Model.Settings
 
         public static async Task<ApplicationSettingsV2Model> Load()
         {
-            ApplicationSettingsV2Model settings = new ApplicationSettingsV2Model();
+            ApplicationSettingsV2Model settings = null;
             if (ServiceManager.Get<IFileService>().FileExists(ApplicationSettingsFileName))
             {
                 try
@@ -28,11 +28,16 @@ namespace MixItUp.Base.Model.Settings
                 }
             }
 
-            //if (settings.ForceResetPreviewProgram)
-            //{
-            //    settings.ForceResetPreviewProgram = false;
-            //    settings.PreviewProgram = false;
-            //}
+            if (settings == null)
+            {
+                settings = new ApplicationSettingsV2Model();
+            }
+
+            if (settings.ForceResetPreviewProgram)
+            {
+                settings.ForceResetPreviewProgram = false;
+                settings.PreviewProgram = false;
+            }
 
             return settings;
         }
@@ -45,8 +50,8 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public bool PreviewProgram { get; set; } = false;
-        //[DataMember]
-        //public bool ForceResetPreviewProgram { get; set; } = true;
+        [DataMember]
+        public bool ForceResetPreviewProgram { get; set; } = true;
 
         [DataMember]
         public bool TestBuild { get; set; } = false;
@@ -100,9 +105,9 @@ namespace MixItUp.Base.Model.Settings
         public LanguageOptions LanguageOption { get; set; }
 
         [DataMember]
-        public string BackupSettingsFilePath { get; set; }
+        public string SettingsRestoreFilePath { get; set; }
         [DataMember]
-        public Guid BackupSettingsToReplace { get; set; }
+        public Guid SettingsToReplaceDuringRestore { get; set; }
 
         [DataMember]
         public Guid SettingsToDelete { get; set; }

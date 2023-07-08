@@ -34,9 +34,10 @@ namespace MixItUp.Base.Model.Actions
         Discord,
         [Obsolete]
         Translation,
+        [Obsolete]
         Twitter,
         Conditional,
-        [Name("StreamingSoftwareOBSSLOBS")]
+        [Name("StreamingSoftware")]
         StreamingSoftware,
         Streamlabs,
         Command,
@@ -48,10 +49,10 @@ namespace MixItUp.Base.Model.Actions
         PixelChat,
         VTubeStudio,
         Voicemod,
-        [Obsolete]
         YouTube,
         Trovo,
-        PolyPop
+        PolyPop,
+        SAMMI,
     }
 
     [DataContract]

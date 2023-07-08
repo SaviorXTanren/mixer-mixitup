@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -15,6 +16,8 @@ namespace MixItUp.Base.Model.User.Platform
     [DataContract]
     public class TwitchUserPlatformV2Model : UserPlatformV2ModelBase
     {
+        private const int FollowDelayLeniencyMinutes = 10;
+
         [DataMember]
         public string Color { get; set; }
 
@@ -97,8 +100,11 @@ namespace MixItUp.Base.Model.User.Platform
                 }
                 else
                 {
-                    this.Roles.Remove(UserRoleEnum.Follower);
-                    this.FollowDate = null;
+                    if (!this.Roles.Contains(UserRoleEnum.Follower) || (DateTimeOffset.Now - this.FollowDate.GetValueOrDefault()).TotalMinutes > FollowDelayLeniencyMinutes)
+                    {
+                        this.Roles.Remove(UserRoleEnum.Follower);
+                        this.FollowDate = null;
+                    }
                 }
 
                 if (ServiceManager.Get<TwitchSessionService>().User.IsAffiliate() || ServiceManager.Get<TwitchSessionService>().User.IsPartner())
@@ -107,7 +113,7 @@ namespace MixItUp.Base.Model.User.Platform
                     if (subscription != null)
                     {
                         this.Roles.Add(UserRoleEnum.Subscriber);
-                        this.SubscriberTier = TwitchEventService.GetSubTierNumberFromText(subscription.tier);
+                        this.SubscriberTier = TwitchPubSubService.GetSubTierNumberFromText(subscription.tier);
                         // TODO: No subscription data from this API. https://twitch.uservoice.com/forums/310213-developers/suggestions/43806120-add-subscription-date-to-subscription-apis
                         //this.SubscribeDate = TwitchPlatformService.GetTwitchDateTime(subscription.created_at);
                     }
@@ -179,15 +185,21 @@ namespace MixItUp.Base.Model.User.Platform
                     else if (this.HasTwitchBadge("twitchbot")) { this.RoleBadge = this.GetTwitchBadgeURL("twitchbot"); }
                     else if (this.Roles.Contains(UserRoleEnum.Moderator)) { this.RoleBadge = this.GetTwitchBadgeURL("moderator"); }
                     else if (this.Roles.Contains(UserRoleEnum.TwitchVIP)) { this.RoleBadge = this.GetTwitchBadgeURL("vip"); }
+                    else if (this.HasTwitchBadge("artist-badge")) { this.RoleBadge = this.GetTwitchBadgeURL("artist-badge"); }
+                    else if (this.HasTwitchBadge("no_audio")) { this.RoleBadge = this.GetTwitchBadgeURL("no_audio"); }
+                    else if (this.HasTwitchBadge("no_video")) { this.RoleBadge = this.GetTwitchBadgeURL("no_video"); }
+                    else { this.RoleBadge = null; }
 
                     if (this.HasTwitchSubscriberFounderBadge) { this.SubscriberBadge = this.GetTwitchBadgeURL("founder"); }
                     else if (this.HasTwitchSubscriberBadge) { this.SubscriberBadge = this.GetTwitchBadgeURL("subscriber"); }
+                    else { this.SubscriberBadge = null; }
 
                     if (this.HasTwitchBadge("sub-gift-leader")) { this.SpecialtyBadge = this.GetTwitchBadgeURL("sub-gift-leader"); }
                     else if (this.HasTwitchBadge("bits-leader")) { this.SpecialtyBadge = this.GetTwitchBadgeURL("bits-leader"); }
                     else if (this.HasTwitchBadge("sub-gifter")) { this.SpecialtyBadge = this.GetTwitchBadgeURL("sub-gifter"); }
                     else if (this.HasTwitchBadge("bits")) { this.SpecialtyBadge = this.GetTwitchBadgeURL("bits"); }
                     else if (this.HasTwitchBadge("premium")) { this.SpecialtyBadge = this.GetTwitchBadgeURL("premium"); }
+                    else { this.SpecialtyBadge = null; }
                 }
             }
 
@@ -221,7 +233,7 @@ namespace MixItUp.Base.Model.User.Platform
             this.SpecialtyBadgeLink = this.SpecialtyBadge?.image_url_1x;
         }
 
-        private int GetTwitchBadgeVersion(string name)
+        private int GetTwitchBadgeID(string name)
         {
             if (this.Badges != null && this.Badges.TryGetValue(name, out int version))
             {
@@ -230,16 +242,16 @@ namespace MixItUp.Base.Model.User.Platform
             return -1;
         }
 
-        private bool HasTwitchBadge(string name) { return this.GetTwitchBadgeVersion(name) >= 0; }
+        private bool HasTwitchBadge(string name) { return this.GetTwitchBadgeID(name) >= 0; }
 
         private ChatBadgeModel GetTwitchBadgeURL(string name)
         {
             if (ServiceManager.Get<TwitchChatService>().ChatBadges.ContainsKey(name))
             {
-                int versionID = this.GetTwitchBadgeVersion(name);
-                if (ServiceManager.Get<TwitchChatService>().ChatBadges[name].versions.ContainsKey(versionID.ToString()))
+                int id = this.GetTwitchBadgeID(name);
+                if (ServiceManager.Get<TwitchChatService>().ChatBadges[name].ContainsKey(id.ToString()))
                 {
-                    return ServiceManager.Get<TwitchChatService>().ChatBadges[name].versions[versionID.ToString()];
+                    return ServiceManager.Get<TwitchChatService>().ChatBadges[name][id.ToString()];
                 }
             }
             return null;

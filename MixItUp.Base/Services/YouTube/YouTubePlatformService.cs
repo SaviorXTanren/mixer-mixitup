@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using YouTube.Base;
+using YouTube.Base.Model;
 
 namespace MixItUp.Base.Services.YouTube
 {
@@ -96,12 +97,42 @@ namespace MixItUp.Base.Services.YouTube
 
         public async Task<LiveBroadcast> GetMyActiveBroadcast() { return await AsyncRunner.RunAsync(this.Connection.LiveBroadcasts.GetMyActiveBroadcast()); }
 
-        public async Task<LiveBroadcast> UpdateBroadcast(LiveBroadcast broadcast) { return await AsyncRunner.RunAsync(this.Connection.LiveBroadcasts.UpdateBroadcast(broadcast)); }
+        public async Task<LiveBroadcast> GetBroadcastByID(string id) { return await AsyncRunner.RunAsync(this.Connection.LiveBroadcasts.GetBroadcastByID(id)); }
 
         public async Task<LiveCuepoint> StartAdBreak(LiveBroadcast broadcast, long duration) { return await AsyncRunner.RunAsync(this.Connection.LiveBroadcasts.StartAdBreak(broadcast, duration)); }
+
+        public async Task<Video> GetVideoByID(string id) { return await AsyncRunner.RunAsync(this.Connection.Videos.GetVideoByID(id)); }
+
+        public async Task<Video> UpdateVideo(Video video, string title = null, string description = null, string categoryId = null) { return await AsyncRunner.RunAsync(this.Connection.Videos.UpdateVideo(video, title, description, categoryId)); }
 
         public async Task<IEnumerable<Member>> GetChannelMemberships(int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.GetChannelMemberships(maxResults)); }
 
         public async Task<IEnumerable<LiveChatModerator>> GetModerators(LiveBroadcast broadcast, int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.GetModerators(broadcast, maxResults)); }
+
+        public async Task<IEnumerable<Subscription>> GetSubscribers(string channelID, int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.Subscriptions.GetMyRecentSubscribers(maxResults)); }
+
+        public async Task<Subscription> CheckIfSubscribed(string channelID, string userID) { return await AsyncRunner.RunAsync(this.Connection.Subscriptions.CheckIfSubscribed(channelID, userID)); }
+
+        public async Task<IEnumerable<MembershipsLevel>> GetMembershipLevels() { return await AsyncRunner.RunAsync(this.Connection.Membership.GetMyMembershipLevels()); }
+
+        public async Task<IEnumerable<Member>> GetMembers(int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.Membership.GetMembers(maxResults)); }
+
+        public async Task<Member> CheckIfMember(string userID) { return await AsyncRunner.RunAsync(this.Connection.Membership.CheckIfMember(userID)); }
+
+        // Chat
+
+        public async Task<LiveChatMessagesResultModel> GetChatMessages(LiveBroadcast broadcast, string nextResultsToken = null) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.GetMessages(broadcast, nextResultsToken: nextResultsToken)); }
+
+        public async Task<LiveChatMessage> SendChatMessage(LiveBroadcast broadcast, string message) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.SendMessage(broadcast, message)); }
+
+        public async Task DeleteChatMessage(LiveChatMessage message) { await AsyncRunner.RunAsync(this.Connection.LiveChat.DeleteMessage(message)); }
+
+        public async Task<LiveChatModerator> ModChatUser(LiveBroadcast broadcast, Channel user) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.ModUser(broadcast, user)); }
+
+        public async Task UnmodChatUser(LiveChatModerator moderator) { await AsyncRunner.RunAsync(this.Connection.LiveChat.UnmodUser(moderator)); }
+
+        public async Task<LiveChatBan> TimeoutChatUser(LiveBroadcast broadcast, Channel user, ulong duration) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.TimeoutUser(broadcast, user, duration)); }
+
+        public async Task<LiveChatBan> BanChatUser(LiveBroadcast broadcast, Channel user) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.BanUser(broadcast, user)); }
     }
 }

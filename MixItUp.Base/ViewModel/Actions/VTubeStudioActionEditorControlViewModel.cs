@@ -129,20 +129,6 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool ShowRunHotKeyGrid { get { return this.SelectedActionType == VTubeStudioActionTypeEnum.RunHotKey; } }
 
-        public VTubeStudioModel CurrentModel
-        {
-            get { return this.currentModel; }
-            set
-            {
-                this.currentModel = value;
-                this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("CurrentModelDisplayText");
-            }
-        }
-        private VTubeStudioModel currentModel;
-
-        public string CurrentModelDisplayText { get { return MixItUp.Base.Resources.VTubeStudioCurrentModel + ((this.CurrentModel != null) ? this.CurrentModel.modelName : MixItUp.Base.Resources.Unknown); } }
-
         public ThreadSafeObservableCollection<VTubeStudioHotKey> HotKeys { get; set; } = new ThreadSafeObservableCollection<VTubeStudioHotKey>();
 
         public VTubeStudioHotKey SelectedHotKey
@@ -210,7 +196,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 {
                     if (this.VTubeStudioConnected)
                     {
-                        if (this.CurrentModel != null && string.Equals(this.modelID, this.CurrentModel.modelID))
+                        if (this.SelectedModel != null && string.Equals(this.modelID, this.SelectedModel.modelID))
                         {
                             return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.VTubeStudioActionMissingHotKey));
                         }
@@ -236,14 +222,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowRunHotKeyGrid)
             {
-                if (this.SelectedHotKey != null)
-                {
-                    return Task.FromResult<ActionModelBase>(VTubeStudioActionModel.CreateForRunHotKey(this.CurrentModel.modelID, this.SelectedHotKey.hotkeyID));
-                }
-                else
-                {
-                    return Task.FromResult<ActionModelBase>(VTubeStudioActionModel.CreateForRunHotKey(this.modelID, this.hotKeyID));
-                }
+                return Task.FromResult<ActionModelBase>(VTubeStudioActionModel.CreateForRunHotKey(this.SelectedModel?.modelID ?? this.modelID, this.SelectedHotKey?.hotkeyID ?? this.hotKeyID));
             }
             return Task.FromResult<ActionModelBase>(null);
         }
@@ -276,17 +255,16 @@ namespace MixItUp.Base.ViewModel.Actions
 
             if (this.VTubeStudioConnected)
             {
-                this.CurrentModel = await ServiceManager.Get<VTubeStudioService>().GetCurrentModel();
-
                 foreach (VTubeStudioModel model in await ServiceManager.Get<VTubeStudioService>().GetAllModels())
                 {
                     this.Models.Add(model);
                 }
-                this.SelectedModel = this.Models.FirstOrDefault(m => string.Equals(m.modelID, this.modelID));
+                this.SelectedModel = this.selectedModel = this.Models.FirstOrDefault(m => string.Equals(m.modelID, this.modelID));
 
                 await this.LoadHotKeysForCurrentModel();
                 this.SelectedHotKey = this.HotKeys.FirstOrDefault(hk => string.Equals(hk.hotkeyID, this.hotKeyID));
             }
+
             await base.OnOpenInternal();
         }
 

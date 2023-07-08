@@ -13,9 +13,6 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public string Name { get; set; }
 
-        [Obsolete]
-        [DataMember]
-        public OldUserRoleEnum Role { get; set; }
         [DataMember]
         public UserRoleEnum UserRole { get; set; }
 

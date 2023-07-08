@@ -609,7 +609,7 @@ namespace MixItUp.Base.Services.External
         /// </summary>
         public const string ClientBotPermissions = "14081024";
 
-        private const string BaseAddress = "https://discord.com/api/";
+        private const string BaseAddress = "https://discord.com/api/v10";
 
         private const string DefaultClientID = "422657136510631936";
 
@@ -656,11 +656,13 @@ namespace MixItUp.Base.Services.External
 
                     var body = new List<KeyValuePair<string, string>>
                     {
+                        new KeyValuePair<string, string>("client_id", this.ClientID),
+                        new KeyValuePair<string, string>("client_secret", this.ClientSecret),
                         new KeyValuePair<string, string>("grant_type", "authorization_code"),
                         new KeyValuePair<string, string>("redirect_uri", OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL),
                         new KeyValuePair<string, string>("code", authorizationCode),
                     };
-                    this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://discordapp.com/api/oauth2/token", this.ClientID, this.ClientSecret, body);
+                    this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://discord.com/api/v10/oauth2/token", this.ClientID, this.ClientSecret, body);
 
                     if (this.token != null)
                     {
@@ -772,11 +774,13 @@ namespace MixItUp.Base.Services.External
             {
                 var body = new List<KeyValuePair<string, string>>
                 {
+                    new KeyValuePair<string, string>("client_id", this.ClientID),
+                    new KeyValuePair<string, string>("client_secret", this.ClientSecret),
                     new KeyValuePair<string, string>("grant_type", "refresh_token"),
                     new KeyValuePair<string, string>("redirect_uri", OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL),
                     new KeyValuePair<string, string>("refresh_token", this.token.refreshToken),
                 };
-                this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://discordapp.com/api/oauth2/token", this.ClientID, this.ClientSecret, body);
+                this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://discord.com/api/v10/oauth2/token", this.ClientID, this.ClientSecret, body);
             }
         }
 

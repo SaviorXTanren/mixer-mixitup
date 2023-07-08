@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             services.Add(new ServiceContainerControl(this.Window, new OverlayServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new OBSStudioServiceControl()));
-            services.Add(new ServiceContainerControl(this.Window, new StreamlabsOBSServiceControl()));
+            services.Add(new ServiceContainerControl(this.Window, new StreamlabsDesktopServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new XSplitServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new PolyPopServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new StreamlabsServiceControl()));
@@ -35,16 +35,19 @@ namespace MixItUp.WPF.Controls.MainControls
             services.Add(new ServiceContainerControl(this.Window, new TreatStreamServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new RainmakerServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new PixelChatServiceControl()));
+            services.Add(new ServiceContainerControl(this.Window, new CrowdControlServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new VoicemodServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new VTubeStudioServiceControl()));
+            services.Add(new ServiceContainerControl(this.Window, new SAMMIServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new PatreonServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new StreamlootsServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new TiltifyServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new ExtraLifeServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new JustGivingServiceControl()));
-            services.Add(new ServiceContainerControl(this.Window, new TwitterServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new DiscordServiceControl()));
+            services.Add(new ServiceContainerControl(this.Window, new TwitterServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new StreamDeckServiceControl()));
+            services.Add(new ServiceContainerControl(this.Window, new LoupeDeckServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new IFTTTServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new StreamAvatarsServiceControl()));
             services.Add(new ServiceContainerControl(this.Window, new OvrStreamServiceControl()));

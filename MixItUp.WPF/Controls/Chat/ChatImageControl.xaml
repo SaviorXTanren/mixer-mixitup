@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:Gif="http://wpfanimatedgif.codeplex.com"
              xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
              mc:Ignorable="d" VerticalAlignment="Center">
     <Grid Margin="5,0,5,0">
@@ -12,10 +12,10 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <Image x:Name="Image" Grid.Column="0" />
-        <Controls:GifImageControl x:Name="GifImage" Grid.Column="0" Visibility="Collapsed" />
-        <Image x:Name="SVGImage" Grid.Column="0" Visibility="Collapsed" Source="{Binding Path=Url, Converter={svgc:SvgImageConverter}, Mode=OneWay}" />
+        <Image x:Name="Image" Grid.Column="0" Source="{Binding Path=ImageURL, TargetNullValue={x:Null}}" ToolTip="{Binding Name}" Visibility="Collapsed" />
+        <Image x:Name="GifImage" Grid.Column="0" Visibility="Collapsed" Gif:ImageBehavior.AnimatedSource="{Binding Path=ImageURL, TargetNullValue={x:Null}}" ToolTip="{Binding Name}" />
+        <Image x:Name="SVGImage" Grid.Column="0" Visibility="Collapsed" Source="{Binding Path=ImageURL, Converter={svgc:SvgImageConverter}, Mode=OneWay, TargetNullValue={x:Null}}" ToolTip="{Binding Name}" />
         <TextBlock x:Name="Text" Grid.Column="1" Visibility="Collapsed" HorizontalAlignment="Right" VerticalAlignment="Center" />
-        <TextBlock x:Name="AltText" Grid.Column="1" Visibility="Collapsed" Margin="10,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        <TextBlock x:Name="AltText" Grid.Column="1" Visibility="Collapsed" Text="{Binding Name}" Margin="10,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
     </Grid>
 </UserControl>

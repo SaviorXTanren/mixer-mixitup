@@ -16,7 +16,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Trovo.Base.Clients;
-using Trovo.Base.Models.Channels;
 using Trovo.Base.Models.Chat;
 using Trovo.Base.Models.Users;
 
@@ -366,6 +365,18 @@ namespace MixItUp.Base.Services.Trovo
             }
         }
 
+        public async Task<bool> SubscriberMode(bool enable)
+        {
+            if (enable)
+            {
+                return await this.PerformChatCommand("subscribers");
+            }
+            else
+            {
+                return await this.PerformChatCommand("subscribersoff");
+            }
+        }
+
         public async Task<bool> AddRole(string username, string role) { return await this.PerformChatCommand($"addrole {role} {username}"); }
 
         public async Task<bool> RemoveRole(string username, string role) { return await this.PerformChatCommand($"removerole {role} {username}"); }
@@ -437,13 +448,24 @@ namespace MixItUp.Base.Services.Trovo
 
                 user.GetPlatformData<TrovoUserPlatformV2Model>(StreamingPlatformTypeEnum.Trovo).SetUserProperties(message);
 
-                if (message.type == ChatMessageTypeEnum.FollowAlert)
+                if (message.type == ChatMessageTypeEnum.StreamOnOff && !string.IsNullOrEmpty(message.content))
                 {
-                    CommandParametersModel parameters = new CommandParametersModel(user);
-                    if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TrovoChannelFollowed, parameters))
+                    if (message.content.Equals("stream_on", StringComparison.OrdinalIgnoreCase))
                     {
-                        user.FollowDate = DateTimeOffset.Now;
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelStreamStart, new CommandParametersModel());
+                    }
+                    else if (message.content.Equals("stream_off", StringComparison.OrdinalIgnoreCase))
+                    {
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelStreamStop, new CommandParametersModel());
+                    }
+                }
+                else if (message.type == ChatMessageTypeEnum.FollowAlert)
+                {
+                    user.FollowDate = DateTimeOffset.Now;
 
+                    CommandParametersModel parameters = new CommandParametersModel(user);
+                    if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelFollowed, parameters))
+                    {
                         ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user.ID;
 
                         foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
@@ -458,8 +480,6 @@ namespace MixItUp.Base.Services.Trovo
                                 streamPass.AddAmount(user, streamPass.FollowBonus);
                             }
                         }
-
-                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelFollowed, parameters);
 
                         GlobalEvents.FollowOccurred(user);
 
@@ -476,22 +496,22 @@ namespace MixItUp.Base.Services.Trovo
                         subEventType = EventTypeEnum.TrovoChannelResubscribed;
                     }
 
-                    CommandParametersModel parameters = new CommandParametersModel(user);
-                    if (ServiceManager.Get<EventService>().CanPerformEvent(subEventType, parameters))
+                    user.Roles.Add(UserRoleEnum.Subscriber);
+                    user.SubscriberTier = subMessage.Tier;
+                    if (!subMessage.IsResub)
                     {
-                        parameters.SpecialIdentifiers["message"] = message.content;
-                        parameters.SpecialIdentifiers["usersubmonths"] = subMessage.Months.ToString();
-                        parameters.SpecialIdentifiers["usersubplan"] = $"{MixItUp.Base.Resources.Tier} {subMessage.Tier}";
+                        user.SubscribeDate = DateTimeOffset.Now;
+                    }
 
+                    CommandParametersModel parameters = new CommandParametersModel(user);
+                    parameters.SpecialIdentifiers["message"] = message.content;
+                    parameters.SpecialIdentifiers["usersubmonths"] = subMessage.Months.ToString();
+                    parameters.SpecialIdentifiers["usersubplan"] = $"{MixItUp.Base.Resources.Tier} {subMessage.Tier}";
+
+                    if (await ServiceManager.Get<EventService>().PerformEvent(subEventType, parameters))
+                    {
                         ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
                         ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = subMessage.Months;
-
-                        user.Roles.Add(UserRoleEnum.Subscriber);
-                        user.SubscriberTier = subMessage.Tier;
-                        if (!subMessage.IsResub)
-                        {
-                            user.SubscribeDate = DateTimeOffset.Now;
-                        }
 
                         foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                         {
@@ -505,8 +525,6 @@ namespace MixItUp.Base.Services.Trovo
                                 streamPass.AddAmount(user, streamPass.SubscribeBonus);
                             }
                         }
-
-                        await ServiceManager.Get<EventService>().PerformEvent(subEventType, parameters);
 
                         if (subMessage.IsResub)
                         {
@@ -531,6 +549,7 @@ namespace MixItUp.Base.Services.Trovo
                     {
                         CommandParametersModel parameters = new CommandParametersModel(user);
                         parameters.SpecialIdentifiers["subsgiftedamount"] = totalGifted.ToString();
+                        parameters.SpecialIdentifiers["isanonymous"] = false.ToString();
                         await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelMassSubscriptionsGifted, parameters);
                     }
                     await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertMassSubscriptionsGifted, user.DisplayName, totalGifted), ChannelSession.Settings.AlertMassGiftedSubColor));
@@ -601,7 +620,7 @@ namespace MixItUp.Base.Services.Trovo
                         CommandParametersModel parameters = new CommandParametersModel(user);
                         parameters.SpecialIdentifiers["raidviewercount"] = raidCount.ToString();
 
-                        if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TrovoChannelRaided, parameters))
+                        if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelRaided, parameters))
                         {
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidUserData] = user.ID;
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidViewerCountData] = raidCount.ToString();
@@ -621,8 +640,6 @@ namespace MixItUp.Base.Services.Trovo
 
                             GlobalEvents.RaidOccurred(user, raidCount);
 
-                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelRaided, parameters);
-
                             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertRaid, user.DisplayName, raidCount), ChannelSession.Settings.AlertRaidColor));
                         }
                     }
@@ -632,7 +649,7 @@ namespace MixItUp.Base.Services.Trovo
                     TrovoChatSpellViewModel spell = new TrovoChatSpellViewModel(message);
                     CommandParametersModel parameters = new CommandParametersModel(user, spell.GetSpecialIdentifiers());
 
-                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoSpellCast, parameters);
+                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelSpellCast, parameters);
 
                     TrovoSpellCommandModel command = ServiceManager.Get<CommandService>().TrovoSpellCommands.FirstOrDefault(c => string.Equals(c.Name, spell.Name, StringComparison.CurrentCultureIgnoreCase));
                     if (command != null)
@@ -655,7 +672,17 @@ namespace MixItUp.Base.Services.Trovo
 
                 if (TrovoChatMessageViewModel.ApplicableMessageTypes.Contains(message.type) && !string.IsNullOrEmpty(message.content))
                 {
-                    await ServiceManager.Get<ChatService>().AddMessage(new TrovoChatMessageViewModel(message, user));
+                    TrovoChatMessageViewModel chatMessage = new TrovoChatMessageViewModel(message, user);
+
+                    await ServiceManager.Get<ChatService>().AddMessage(chatMessage);
+
+                    if (message.type == ChatMessageTypeEnum.MagicChatBulletScreenChat || message.type == ChatMessageTypeEnum.MagicChatColorfulChat ||
+                        message.type == ChatMessageTypeEnum.MagicChatSuperCapChat || message.type == ChatMessageTypeEnum.MagicChatBulletScreenChat)
+                    {
+                        CommandParametersModel parameters = new CommandParametersModel(chatMessage);
+
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TrovoChannelMagicChat, parameters);
+                    }
                 }
             }
         }

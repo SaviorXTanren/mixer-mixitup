@@ -1,5 +1,6 @@
 ﻿using Microsoft.ApplicationInsights;
 using MixItUp.Base;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
@@ -7,6 +8,7 @@ using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -59,19 +61,9 @@ namespace MixItUp.WPF.Services
             this.TrySendEvent(() => this.telemetryClient.TrackException(ex));
         }
 
-        public void TrackPageView(string pageName)
+        public void TrackLogin(string userID, IEnumerable<StreamingPlatformTypeEnum> platforms)
         {
-            this.TrySendEvent(() => this.telemetryClient.TrackPageView(pageName));
-        }
-
-        public void TrackLogin(string userID, string userType)
-        {
-            if (string.IsNullOrEmpty(userType))
-            {
-                userType = "Streamer";
-            }
-
-            this.TrySendEvent(() => this.telemetryClient.TrackEvent("Login", new Dictionary<string, string> { { "User Type", userType } }));
+            this.TrySendEvent(() => this.telemetryClient.TrackEvent("Login", new Dictionary<string, string> { { "Platforms", string.Join(", ", platforms.Select(p => p.ToString())) } }));
         }
 
         public void TrackCommand(CommandTypeEnum type, string details = null)
@@ -91,32 +83,6 @@ namespace MixItUp.WPF.Services
         public void TrackService(string type)
         {
             this.TrySendEvent(() => this.telemetryClient.TrackEvent("Service", new Dictionary<string, string> { { "Type", type } }));
-        }
-
-        public void TrackChannelMetrics(string type, long viewerCount, long chatterCount, string game, long viewCount)
-        {
-            if (string.IsNullOrEmpty(type))
-            {
-                type = "Normal";
-            }
-            this.TrySendEvent(() => this.telemetryClient.TrackEvent("Channel", new Dictionary<string, string> { { "Type", type }, { "Viewers", viewerCount.ToString() },
-                { "Chatters", chatterCount.ToString() }, { "Game", game }, { "Views", viewCount.ToString() } }));
-        }
-
-        public void TrackRemoteAuthentication(Guid clientID)
-        {
-            this.telemetryClient.TrackEvent("RemoteAuthentication", new Dictionary<string, string> { { "ClientID", clientID.ToString() } });
-        }
-
-        public void TrackRemoteSendProfiles(Guid clientID)
-        {
-            this.telemetryClient.TrackEvent("RemoteSendProfiles", new Dictionary<string, string> { { "ClientID", clientID.ToString() } });
-        }
-
-        public void TrackRemoteSendBoard(Guid clientID, Guid profileID, Guid boardID)
-        {
-            this.telemetryClient.TrackEvent("RemoteSendBoard", new Dictionary<string, string> { { "ClientID", clientID.ToString() }, { "ProfileID", profileID.ToString() },
-                { "BoardID", boardID.ToString() } });
         }
 
         public void SetUserID(string id)
