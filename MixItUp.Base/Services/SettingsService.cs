@@ -127,12 +127,12 @@ namespace MixItUp.Base.Services
                 Logger.Log(LogLevel.Debug, "Settings deletion detected, starting deletion process");
 
                 SettingsV3Model settings = allSettings.FirstOrDefault(s => s.ID.Equals(ChannelSession.AppSettings.SettingsToDelete));
+                ChannelSession.AppSettings.SettingsToDelete = Guid.Empty;
+
                 if (settings != null)
                 {
                     File.Delete(settings.SettingsFilePath);
                     File.Delete(settings.DatabaseFilePath);
-
-                    ChannelSession.AppSettings.SettingsToDelete = Guid.Empty;
 
                     return await this.GetAllSettings();
                 }
