@@ -16612,6 +16612,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This will restore a settings backup and overwrite any matching settings files that are currently in your settings folder. Are you sure you want to do this?.
+        /// </summary>
+        public static string RestoreSettingsConfirmation {
+            get {
+                return ResourceManager.GetString("RestoreSettingsConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Resubs.
         /// </summary>
         public static string Resubs {
