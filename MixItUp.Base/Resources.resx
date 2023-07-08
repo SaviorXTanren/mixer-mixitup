@@ -10066,4 +10066,7 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="AddVariable" xml:space="preserve">
     <value>Add Variable</value>
   </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
 </root>
