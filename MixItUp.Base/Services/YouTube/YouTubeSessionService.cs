@@ -323,7 +323,7 @@ namespace MixItUp.Base.Services.YouTube
             }
         }
 
-        public Task<string> GetTitle() { return Task.FromResult(string.Empty); }
+        public Task<string> GetTitle() { return Task.FromResult<string>(this.Broadcast?.Snippet?.Title); }
 
         public Task<bool> SetTitle(string title) { return Task.FromResult(false); }
 
