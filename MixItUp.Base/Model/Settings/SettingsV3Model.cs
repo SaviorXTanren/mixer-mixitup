@@ -41,19 +41,22 @@ namespace MixItUp.Base.Model.Settings
 
         public static async Task RestoreSettingsBackup()
         {
-            string filePath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(string.Format("Mix It Up Settings V2 Backup (*.{0})|*.{0}|All files (*.*)|*.*", SettingsV3Model.SettingsBackupFileExtension));
-            if (!string.IsNullOrEmpty(filePath))
+            if (await DialogHelper.ShowConfirmation(Resources.RestoreSettingsConfirmation))
             {
-                Result<SettingsV3Model> result = await ServiceManager.Get<SettingsService>().RestorePackagedBackup(filePath);
-                if (result.Success)
+                string filePath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(string.Format("Mix It Up Settings V2 Backup (*.{0})|*.{0}|All files (*.*)|*.*", SettingsV3Model.SettingsBackupFileExtension));
+                if (!string.IsNullOrEmpty(filePath))
                 {
-                    ChannelSession.AppSettings.BackupSettingsFilePath = filePath;
-                    ChannelSession.AppSettings.BackupSettingsToReplace = (ChannelSession.Settings != null) ? ChannelSession.Settings.ID : Guid.Empty;
-                    GlobalEvents.RestartRequested();
-                }
-                else
-                {
-                    await DialogHelper.ShowMessage(result.Message);
+                    Result<SettingsV3Model> result = await ServiceManager.Get<SettingsService>().RestorePackagedBackup(filePath);
+                    if (result.Success)
+                    {
+                        ChannelSession.AppSettings.SettingsRestoreFilePath = filePath;
+                        ChannelSession.AppSettings.SettingsToReplaceDuringRestore = (ChannelSession.Settings != null) ? ChannelSession.Settings.ID : Guid.Empty;
+                        GlobalEvents.RestartRequested();
+                    }
+                    else
+                    {
+                        await DialogHelper.ShowMessage(result.Message);
+                    }
                 }
             }
         }

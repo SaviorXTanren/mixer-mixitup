@@ -10000,6 +10000,9 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="NewProfile" xml:space="preserve">
     <value>New Profile</value>
   </data>
+  <data name="RestoreSettingsConfirmation" xml:space="preserve">
+    <value>This will restore a settings backup and overwrite any matching settings files that are currently in your settings folder. Are you sure you want to do this?</value>
+  </data>
   <data name="YouTubeMemberLevel" xml:space="preserve">
     <value>YouTube Member Level</value>
   </data>
