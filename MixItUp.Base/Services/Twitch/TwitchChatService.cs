@@ -564,7 +564,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             IEnumerable<ChatterModel> chatterModels = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChatters(ServiceManager.Get<TwitchSessionService>().User);
 
-            HashSet<string> chatters = new HashSet<string>(chatterModels.Select(c => c.user_login));
+            HashSet<string> chatters = (chatterModels != null) ? new HashSet<string>(chatterModels.Select(c => c.user_login)) : new HashSet<string>();
 
             HashSet<string> joinsToProcess = new HashSet<string>();
             List<UserV2ViewModel> leavesToProcess = new List<UserV2ViewModel>();
