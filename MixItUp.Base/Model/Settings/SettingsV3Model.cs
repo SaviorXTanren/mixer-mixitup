@@ -974,6 +974,59 @@ namespace MixItUp.Base.Model.Settings
             }
         }
 
+        public async Task<IEnumerable<StatisticModel>> LoadSpecificStatisticType(StatisticItemTypeEnum type)
+        {
+            List<StatisticModel> statistics = new List<StatisticModel>();
+
+            try
+            {
+                await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath,
+                    $"SELECT * FROM Statistics WHERE TypeID = @TypeID",
+                    new Dictionary<string, object>()
+                    {
+                        { "TypeID", (int)type }
+                    },
+                    (Dictionary<string, object> data) =>
+                    {
+                        statistics.Add(new StatisticModel(data));
+                    });
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                await this.CreateStatisticsTable();
+            }
+
+            return statistics;
+        }
+
+        public async Task<IEnumerable<StatisticModel>> LoadStatisticBetweenRange(DateTime start, DateTime end)
+        {
+            List<StatisticModel> statistics = new List<StatisticModel>();
+
+            try
+            {
+                await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath,
+                    $"SELECT * FROM Statistics WHERE DateTime >= @Start AND DateTime <= @End",
+                    new Dictionary<string, object>()
+                    {
+                        { "Start", start },
+                        { "End", end }
+                    },
+                    (Dictionary<string, object> data) =>
+                    {
+                        statistics.Add(new StatisticModel(data));
+                    });
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                await this.CreateStatisticsTable();
+            }
+
+            return statistics;
+        }
+
         public async Task CreateStatisticsTable()
         {
             bool tableExists = false;

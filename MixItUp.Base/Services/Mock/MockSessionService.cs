@@ -240,15 +240,26 @@ namespace MixItUp.Base.Services.Mock
 
         public Task<bool> SetGame(string gameName) { return Task.FromResult(false); }
 
-        public void AddMockViewerStatistics()
+        public async Task AddMockViewerStatistics()
         {
-            int lastNumber = RandomHelper.GenerateRandomNumber(100);
-            DateTimeOffset dateTime = DateTimeOffset.Now;
-            for (int i = 0; i < 25; i++)
+            for (int days = 0; days < 10; days++)
             {
-                ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.Viewers, platform: StreamingPlatformTypeEnum.Twitch, amount: lastNumber, dateTime: dateTime.AddMinutes(i * 5));
-                lastNumber += Math.Max(RandomHelper.GenerateRandomNumber(-5, 5), 0);
+                int lastNumber = RandomHelper.GenerateRandomNumber(100);
+                DateTime dateTime = DateTime.Now.Subtract(TimeSpan.FromDays(days));
+
+                ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamStart, platform: StreamingPlatformTypeEnum.Twitch, amount: lastNumber, dateTime: dateTime);
+
+                int totalViewerEvents = 25;
+                for (int i = 0; i < totalViewerEvents; i++)
+                {
+                    ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.Viewers, platform: StreamingPlatformTypeEnum.Twitch, amount: lastNumber, dateTime: dateTime.AddMinutes(i * 5));
+                    lastNumber += Math.Max(RandomHelper.GenerateRandomNumber(-5, 5), 0);
+                }
+
+                ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamStop, platform: StreamingPlatformTypeEnum.Twitch, amount: lastNumber, dateTime: dateTime.AddMinutes(totalViewerEvents * 5));
             }
+
+            await ChannelSession.SaveSettings();
         }
     }
 }

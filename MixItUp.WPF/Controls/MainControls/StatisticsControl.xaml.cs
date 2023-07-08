@@ -200,15 +200,15 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (this.ValueType == StatisticValueTypeEnum.Integer)
             {
-                this.Values.Add(new DateTimePoint(value.DateTime.DateTime, value.AmountInt));
+                this.Values.Add(new DateTimePoint(value.DateTime, value.AmountInt));
             }
             else if (this.ValueType == StatisticValueTypeEnum.Decimal)
             {
-                this.Values.Add(new DateTimePoint(value.DateTime.DateTime, value.AmountDouble));
+                this.Values.Add(new DateTimePoint(value.DateTime, value.AmountDouble));
             }
             else if (this.ValueType == StatisticValueTypeEnum.Text)
             {
-                //this.Values.Add(new DateTimePoint(value.DateTime.DateTime, value.AmountDouble));
+                //this.Values.Add(new DateTimePoint(value.DateTime, value.AmountDouble));
             }
         }
     }
