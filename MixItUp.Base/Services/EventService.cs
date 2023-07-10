@@ -124,7 +124,9 @@ namespace MixItUp.Base.Services
 
         StreamlabsDonation = 1000,
         TiltifyDonation = 1020,
-        ExtraLifeDonation = 1030,
+        DonorDriveDonation = 1030,
+        DonorDriveDonationIncentive = 1031,
+        DonorDriveDonationMilestone = 1032,
         TipeeeStreamDonation = 1040,
         TreatStreamDonation = 1050,
         PatreonSubscribed = 1060,

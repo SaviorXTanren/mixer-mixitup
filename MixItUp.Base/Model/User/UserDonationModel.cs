@@ -15,14 +15,13 @@ namespace MixItUp.Base.Model.User
         GawkBox,
         Streamlabs,
         Tiltify,
-        [Name("Extra Life")]
-        ExtraLife,
         TipeeeStream,
         TreatStream,
         Rainmaker,
         JustGiving,
         StreamElements,
         Twitch,
+        DonorDrive,
     }
 
     [DataContract]

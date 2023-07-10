@@ -983,8 +983,8 @@
     <Compile Include="Controls\Services\DiscordServiceControl.xaml.cs">
       <DependentUpon>DiscordServiceControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Services\ExtraLifeServiceControl.xaml.cs">
-      <DependentUpon>ExtraLifeServiceControl.xaml</DependentUpon>
+    <Compile Include="Controls\Services\DonorDriveServiceControl.xaml.cs">
+      <DependentUpon>DonorDriveServiceControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Services\OBSStudioServiceControl.xaml.cs">
       <DependentUpon>OBSStudioServiceControl.xaml</DependentUpon>
@@ -1857,7 +1857,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Services\ExtraLifeServiceControl.xaml">
+    <Page Include="Controls\Services\DonorDriveServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -482,11 +482,11 @@ namespace MixItUp.Base.Model.Settings
         public int TiltifyCampaign { get; set; }
 
         [DataMember]
-        public int ExtraLifeTeamID { get; set; }
+        public string DonorDriveCharityURL { get; set; }
         [DataMember]
-        public int ExtraLifeParticipantID { get; set; }
+        public string DonorDriveParticipantID { get; set; }
         [DataMember]
-        public bool ExtraLifeIncludeTeamDonations { get; set; }
+        public bool DonorDriveIncludeTeamDonations { get; set; }
 
         [DataMember]
         public string JustGivingPageShortName { get; set; }

@@ -163,7 +163,8 @@ namespace MixItUp.Base.Model.Commands
                 case EventTypeEnum.GenericDonation:
                 case EventTypeEnum.StreamlabsDonation:
                 case EventTypeEnum.TiltifyDonation:
-                case EventTypeEnum.ExtraLifeDonation:
+                case EventTypeEnum.DonorDriveDonation:
+                case EventTypeEnum.DonorDriveDonationIncentive:
                 case EventTypeEnum.TipeeeStreamDonation:
                 case EventTypeEnum.TreatStreamDonation:
                 case EventTypeEnum.RainmakerDonation:
@@ -182,7 +183,10 @@ namespace MixItUp.Base.Model.Commands
                     {
                         case EventTypeEnum.StreamlabsDonation: donation.Source = UserDonationSourceEnum.Streamlabs; break;
                         case EventTypeEnum.TiltifyDonation: donation.Source = UserDonationSourceEnum.Tiltify; break;
-                        case EventTypeEnum.ExtraLifeDonation: donation.Source = UserDonationSourceEnum.ExtraLife; break;
+                        case EventTypeEnum.DonorDriveDonation:
+                        case EventTypeEnum.DonorDriveDonationIncentive:
+                        case EventTypeEnum.DonorDriveDonationMilestone:
+                            donation.Source = UserDonationSourceEnum.DonorDrive; break;
                         case EventTypeEnum.TipeeeStreamDonation: donation.Source = UserDonationSourceEnum.TipeeeStream; break;
                         case EventTypeEnum.TreatStreamDonation: donation.Source = UserDonationSourceEnum.TreatStream; break;
                         case EventTypeEnum.RainmakerDonation: donation.Source = UserDonationSourceEnum.Rainmaker; break;
@@ -213,6 +217,16 @@ namespace MixItUp.Base.Model.Commands
                         specialIdentifiers["charityname"] = "Charity Name";
                         specialIdentifiers["charityimage"] = genericImage;
                     }
+
+                    if (eventType == EventTypeEnum.DonorDriveDonationIncentive)
+                    {
+                        specialIdentifiers["donordriveincentivedescription"] = "Incentive Description";
+                    }
+                    break;
+                case EventTypeEnum.DonorDriveDonationMilestone:
+                    specialIdentifiers["donordrivemilestonedescription"] = "Milestone Description";
+                    specialIdentifiers["donordrivemilestoneamountnumber"] = "12.34";
+                    specialIdentifiers["donordrivemilestoneamount"] = "$12.34";
                     break;
                 case EventTypeEnum.PatreonSubscribed:
                     specialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierNameSpecialIdentifier] = "Super Tier";

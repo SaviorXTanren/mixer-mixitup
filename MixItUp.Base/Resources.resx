@@ -2653,8 +2653,8 @@
     <value>Chat User Purged</value>
     <comment>Manual</comment>
   </data>
-  <data name="ExtraLifeDonation" xml:space="preserve">
-    <value>Extra Life Donation</value>
+  <data name="DonorDriveDonation" xml:space="preserve">
+    <value>DonorDrive Donation</value>
     <comment>Manual</comment>
   </data>
   <data name="JustGivingDonation" xml:space="preserve">
@@ -5470,27 +5470,11 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="DiscordInvalidSecret" xml:space="preserve">
     <value>Please enter a valid Custom Client Secret.</value>
   </data>
-  <data name="ExtraLife" xml:space="preserve">
-    <value>Extra Life</value>
-    <comment>Manual</comment>
+  <data name="DonorDriveInfo1" xml:space="preserve">
+    <value>DonorDrive service connectivity allows you to trigger events from when you or your team receive a donation through an eligable DonorDrive charity.</value>
   </data>
-  <data name="ExtraLifeInfo1" xml:space="preserve">
-    <value>Extra Life service connectivity allows you to trigger events from when you or your team receive a donation.</value>
-  </data>
-  <data name="ExtraLifeInfo2" xml:space="preserve">
-    <value>First, visit your team's page on the Extra Life website and near the end of the web URL, it will say "teamID=_____". Type that number into the first box, click search, select your name from the list, then click Log In button.</value>
-  </data>
-  <data name="ExtraLifeInvalidParticipant" xml:space="preserve">
-    <value>Please select a valid Extra Life participant.</value>
-  </data>
-  <data name="ExtraLifeInvalidTeamId" xml:space="preserve">
-    <value>Please enter a valid Extra Life team ID.</value>
-  </data>
-  <data name="ExtraLifeTeamNotFound" xml:space="preserve">
-    <value>The Extra Life team ID you entered could not be found.</value>
-  </data>
-  <data name="ExtraLifeTriggerForTeamDonation" xml:space="preserve">
-    <value>Trigger Donation Event for Team Donations:</value>
+  <data name="DonorDriveInfo2" xml:space="preserve">
+    <value>To connect DonorDrive in Mix It Up, visit your charity's website and look for your page/participant link. Then select your charity from the drop-down or select Custom if it's not in the list, copy your page/participant link into the text box, and select Log In.</value>
   </data>
   <data name="OverlayConnectionFailed1" xml:space="preserve">
     <value>Overlay connection test failed, please ensure you have the Mix It Up Overlay page visible and running in your streaming software.</value>
@@ -6320,12 +6304,6 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   </data>
   <data name="DiscordUserDataFailed" xml:space="preserve">
     <value>Could not get User data</value>
-  </data>
-  <data name="ExtraLifeTeamDataFailed" xml:space="preserve">
-    <value>Could not get Team/Participant data</value>
-  </data>
-  <data name="ExtraLifeTeamNotSet" xml:space="preserve">
-    <value>Extra Life team ID / participant ID was not set</value>
   </data>
   <data name="JustGivingUserDataFailed" xml:space="preserve">
     <value>Unable to get User data</value>
@@ -8798,9 +8776,6 @@ via Twitch, it's a "your mileage may vary" situation.</value>
   <data name="ParticipantID" xml:space="preserve">
     <value>Participant ID</value>
   </data>
-  <data name="ExtraLifeInvalidParticipantId" xml:space="preserve">
-    <value>Please enter a valid Extra Life participant ID.</value>
-  </data>
   <data name="BackupGenerationFailed" xml:space="preserve">
     <value>Backup file failed to generate. If this continues, please visit the Mix It Up support Discord for further assistance.</value>
   </data>
@@ -10068,5 +10043,38 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   </data>
   <data name="Profile" xml:space="preserve">
     <value>Profile</value>
+  </data>
+  <data name="Charities" xml:space="preserve">
+    <value>Charities</value>
+  </data>
+  <data name="DonorDrive" xml:space="preserve">
+    <value>DonorDrive</value>
+  </data>
+  <data name="DonorDriveDonationIncentive" xml:space="preserve">
+    <value>DonorDrive Donation Incentive</value>
+  </data>
+  <data name="DonorDriveDonationMilestone" xml:space="preserve">
+    <value>DonorDrive Donation Milestone</value>
+  </data>
+  <data name="DonorDriveFailedToGetData" xml:space="preserve">
+    <value>Failed to get DonorDrive data.</value>
+  </data>
+  <data name="DonorDriveIncludeTeamDonation" xml:space="preserve">
+    <value>Include Team Donations: </value>
+  </data>
+  <data name="DonorDriveMissingCharity" xml:space="preserve">
+    <value>Missing charity organization</value>
+  </data>
+  <data name="DonorDriveMissingInvalidParticipantID" xml:space="preserve">
+    <value>Missing or invalid Donor Drive Participant ID/URL</value>
+  </data>
+  <data name="EventName" xml:space="preserve">
+    <value>Event Name</value>
+  </data>
+  <data name="ParticipantIDURL" xml:space="preserve">
+    <value>Participant ID / URL</value>
+  </data>
+  <data name="TeamName" xml:space="preserve">
+    <value>Team Name</value>
   </data>
 </root>

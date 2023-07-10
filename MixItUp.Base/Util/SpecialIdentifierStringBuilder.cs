@@ -74,7 +74,7 @@ namespace MixItUp.Base.Util
         public const string PatreonTierAmountSpecialIdentifier = "patreontieramount";
         public const string PatreonTierImageSpecialIdentifier = "patreontierimage";
 
-        public const string ExtraLifeSpecialIdentifierHeader = "extralife";
+        public const string DonorDriveSpecialIdentifierHeader = "donordrive";
 
         public const string UnicodeRegexSpecialIdentifier = "unicode";
 
@@ -401,19 +401,32 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (ServiceManager.Get<ExtraLifeService>().IsConnected && this.ContainsSpecialIdentifier(ExtraLifeSpecialIdentifierHeader))
+            if (ServiceManager.Get<DonorDriveService>().IsConnected)
             {
-                ExtraLifeTeam team = await ServiceManager.Get<ExtraLifeService>().GetTeam();
+                if (this.ContainsSpecialIdentifier(DonorDriveSpecialIdentifierHeader + "user") ||
+                    this.ContainsSpecialIdentifier(DonorDriveSpecialIdentifierHeader + "event") ||
+                    this.ContainsSpecialIdentifier(DonorDriveSpecialIdentifierHeader + "team"))
+                {
+                    await ServiceManager.Get<DonorDriveService>().RefreshData();
 
-                this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "teamdonationgoal", team.fundraisingGoal.ToString());
-                this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "teamdonationcount", team.numDonations.ToString());
-                this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "teamdonationamount", team.sumDonations.ToString());
+                    DonorDriveParticipant participant = ServiceManager.Get<DonorDriveService>().Participant;
+                    this.ReplaceSpecialIdentifier(DonorDriveSpecialIdentifierHeader + "userdonationgoal", participant.fundraisingGoal.ToString());
+                    this.ReplaceSpecialIdentifier(DonorDriveSpecialIdentifierHeader + "userdonationcount", participant.numDonations.ToString());
+                    this.ReplaceSpecialIdentifier(DonorDriveSpecialIdentifierHeader + "userdonationamount", participant.sumDonations.ToString());
 
-                ExtraLifeTeamParticipant participant = await ServiceManager.Get<ExtraLifeService>().GetParticipant();
+                    DonorDriveEvent ddEvent = ServiceManager.Get<DonorDriveService>().Event;
+                    this.ReplaceSpecialIdentifier(DonorDriveSpecialIdentifierHeader + "eventdonationgoal", ddEvent.fundraisingGoal.ToString());
+                    this.ReplaceSpecialIdentifier(DonorDriveSpecialIdentifierHeader + "eventdonationcount", ddEvent.numDonations.ToString());
+                    this.ReplaceSpecialIdentifier(DonorDriveSpecialIdentifierHeader + "eventdonationamount", ddEvent.sumDonations.ToString());
 
-                this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "userdonationgoal", participant.fundraisingGoal.ToString());
-                this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "userdonationcount", participant.numDonations.ToString());
-                this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "userdonationamount", participant.sumDonations.ToString());
+                    DonorDriveTeam team = ServiceManager.Get<DonorDriveService>().Team;
+                    if (team != null)
+                    {
+                        this.ReplaceSpecialIdentifier(DonorDriveSpecialIdentifierHeader + "teamdonationgoal", team.fundraisingGoal.ToString());
+                        this.ReplaceSpecialIdentifier(DonorDriveSpecialIdentifierHeader + "teamdonationcount", team.numDonations.ToString());
+                        this.ReplaceSpecialIdentifier(DonorDriveSpecialIdentifierHeader + "teamdonationamount", team.sumDonations.ToString());
+                    }
+                }
             }
 
             if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader))

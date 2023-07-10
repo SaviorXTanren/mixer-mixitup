@@ -56,9 +56,9 @@ namespace MixItUp.Base.ViewModel.MainControls
                 {
                     return Resources.Tiltify;
                 }
-                else if (this.EventType == EventTypeEnum.ExtraLifeDonation)
+                else if (this.EventType == EventTypeEnum.DonorDriveDonation || this.EventType == EventTypeEnum.DonorDriveDonationIncentive || this.EventType == EventTypeEnum.DonorDriveDonationMilestone)
                 {
-                    return Resources.ExtraLife;
+                    return Resources.DonorDrive;
                 }
                 else if (this.EventType == EventTypeEnum.TipeeeStreamDonation)
                 {
@@ -203,6 +203,9 @@ namespace MixItUp.Base.ViewModel.MainControls
             commandGroups.Add(chatCommands);
 
             EventCommandGroupViewModel donationCommands = new EventCommandGroupViewModel(Resources.Donations, packIconName: "Cash");
+            donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.DonorDriveDonation));
+            donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.DonorDriveDonationIncentive));
+            donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.DonorDriveDonationMilestone));
             donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.StreamlabsDonation));
             donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.StreamElementsDonation));
             donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.StreamElementsMerchPurchase));
@@ -210,7 +213,6 @@ namespace MixItUp.Base.ViewModel.MainControls
             donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TreatStreamDonation));
             donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.RainmakerDonation));
             donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TiltifyDonation));
-            donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ExtraLifeDonation));
             donationCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.JustGivingDonation));
             commandGroups.Add(donationCommands);
 
