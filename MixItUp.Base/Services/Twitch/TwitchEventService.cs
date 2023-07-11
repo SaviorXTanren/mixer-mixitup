@@ -210,6 +210,8 @@ namespace MixItUp.Base.Services.Twitch
 
     public class TwitchEventSubService : StreamingPlatformServiceBase
     {
+        private const string ChannelRaidEventSubSubscription = "channel.raid";
+
         public HashSet<string> FollowCache { get; private set; } = new HashSet<string>();
 
         private EventSubClient eventSub;
@@ -304,6 +306,7 @@ namespace MixItUp.Base.Services.Twitch
         private readonly IReadOnlyDictionary<string, string> DesiredSubscriptionsAndVersions = new Dictionary<string, string>(StringComparer.Ordinal)
         {
             { "channel.follow", null },
+            { ChannelRaidEventSubSubscription, null },
 
             { "stream.online", null },
             { "stream.offline", null },
@@ -340,7 +343,17 @@ namespace MixItUp.Base.Services.Twitch
 
                 foreach (string missingSub in missingSubs)
                 {
-                    await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub]);
+                    if (missingSub.Equals(ChannelRaidEventSubSubscription, StringComparison.OrdinalIgnoreCase))
+                    {
+                        await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub],
+                            new Dictionary<string, string> { { "from_broadcaster_user_id", ServiceManager.Get<TwitchSessionService>().UserID } });
+                        await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub],
+                            new Dictionary<string, string> { { "to_broadcaster_user_id", ServiceManager.Get<TwitchSessionService>().UserID } });
+                    }
+                    else
+                    {
+                        await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub]);
+                    }
                 }
 
                 this.eventSubSubscriptionsConnected = true;
@@ -351,14 +364,19 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
-        private async Task RegisterEventSubSubscription(string type, WelcomeMessage message, string version = null)
+        private async Task RegisterEventSubSubscription(string type, WelcomeMessage message, string version = null, Dictionary<string, string> conditions = null)
         {
             try
             {
+                if (conditions == null)
+                {
+                    conditions = new Dictionary<string, string> { { "broadcaster_user_id", ServiceManager.Get<TwitchSessionService>().UserID } };
+                }
+
                 await ServiceManager.Get<TwitchSessionService>().UserConnection.Connection.NewAPI.EventSub.CreateSubscription(
                     type,
                     "websocket",
-                    new Dictionary<string, string> { { "broadcaster_user_id", ServiceManager.Get<TwitchSessionService>().UserID } },
+                    conditions,
                     message.Payload.Session.Id,
                     version: version);
             }
@@ -383,6 +401,9 @@ namespace MixItUp.Base.Services.Twitch
             {
                 case "channel.follow":
                     await HandleFollow(message.Payload.Event);
+                    break;
+                case ChannelRaidEventSubSubscription:
+                    await HandleRaid(message.Payload.Event);
                     break;
                 case "stream.online":
                     await HandleOnline(message.Payload.Event);
@@ -418,6 +439,71 @@ namespace MixItUp.Base.Services.Twitch
             }
 
             await ServiceManager.Get<TwitchEventSubService>().AddFollow(user);
+        }
+
+        private async Task HandleRaid(JObject payload)
+        {
+            string fromId = payload["from_broadcaster_user_id"].Value<string>();
+            string fromUsername = payload["from_broadcaster_user_login"].Value<string>();
+            string fromDisplayName = payload["from_broadcaster_user_name"].Value<string>();
+
+            string toId = payload["to_broadcaster_user_id"].Value<string>();
+            string toUsername = payload["to_broadcaster_user_login"].Value<string>();
+            string toDisplayName = payload["to_broadcaster_user_name"].Value<string>();
+
+            int viewers = payload["viewers"].Value<int>();
+
+            if (string.IsNullOrEmpty(fromId) || string.IsNullOrEmpty(toId))
+            {
+                // Invalid raid event, ignore
+                return;
+            }
+
+            // The streamer was raided by a channel
+            if (string.Equals(toId, ServiceManager.Get<TwitchSessionService>().Channel.broadcaster_id, StringComparison.OrdinalIgnoreCase))
+            {
+                UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, fromId);
+                if (user == null)
+                {
+                    user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(fromId, fromUsername, fromDisplayName));
+                }
+
+                CommandParametersModel parameters = new CommandParametersModel(user);
+                parameters.SpecialIdentifiers["hostviewercount"] = viewers.ToString();
+                parameters.SpecialIdentifiers["raidviewercount"] = viewers.ToString();
+
+                if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelRaided, parameters))
+                {
+                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidUserData] = user.ID;
+                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidViewerCountData] = viewers;
+
+                    foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
+                    {
+                        currency.AddAmount(user, currency.OnHostBonus);
+                    }
+
+                    foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                    {
+                        if (user.MeetsRole(streamPass.UserPermission))
+                        {
+                            streamPass.AddAmount(user, streamPass.HostBonus);
+                        }
+                    }
+
+                    GlobalEvents.RaidOccurred(user, viewers);
+
+                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertRaid, user.FullDisplayName, viewers), ChannelSession.Settings.AlertRaidColor));
+                }
+            }
+            // The streamer is raiding another channel
+            else if (string.Equals(fromId, ServiceManager.Get<TwitchSessionService>().Channel.broadcaster_id, StringComparison.OrdinalIgnoreCase))
+            {
+                CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.Twitch, new List<string>() { toUsername });
+                parameters.SpecialIdentifiers["hostviewercount"] = viewers.ToString();
+                parameters.SpecialIdentifiers["raidviewercount"] = viewers.ToString();
+
+                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelOutgoingRaidCompleted, parameters);
+            }
         }
 
         private async Task HandleOnline(JObject payload)

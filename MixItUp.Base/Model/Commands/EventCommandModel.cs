@@ -56,6 +56,7 @@ namespace MixItUp.Base.Model.Commands
 
                 // Twitch
                 case EventTypeEnum.TwitchChannelRaided:
+                case EventTypeEnum.TwitchChannelOutgoingRaidCompleted:
                     specialIdentifiers["hostviewercount"] = "123";
                     specialIdentifiers["raidviewercount"] = "123";
                     break;

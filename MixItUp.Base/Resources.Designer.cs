@@ -21739,6 +21739,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel Outgoing Raid Completed.
+        /// </summary>
+        public static string TwitchChannelOutgoingRaidCompleted {
+            get {
+                return ResourceManager.GetString("TwitchChannelOutgoingRaidCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A reward already exists with the same name.
         /// </summary>
         public static string TwitchChannelPointRewardCreationErrorRewardAlreadyExists {

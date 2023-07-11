@@ -69,7 +69,6 @@ namespace MixItUp.Base.Services.Twitch
 
         private static List<string> ExcludedDiagnosticPacketLogging = new List<string>() { "PING", ChatMessagePacketModel.CommandID, ChatUserJoinPacketModel.CommandID, ChatUserLeavePacketModel.CommandID };
 
-        private const string RaidUserNoticeMessageTypeID = "raid";
         private const string SubMysteryGiftUserNoticeMessageTypeID = "submysterygift";
         private const string SubGiftPaidUpgradeUserNoticeMessageTypeID = "giftpaidupgrade";
         private const string AnnouncementUserNoticeMessageTypeID = "announcement";
@@ -709,43 +708,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             try
             {
-                if (RaidUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
-                {
-                    UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, userNotice.UserID.ToString());
-                    if (user == null)
-                    {
-                        user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(userNotice));
-                    }
-                    user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).SetUserProperties(userNotice);
-
-                    CommandParametersModel parameters = new CommandParametersModel(user);
-                    parameters.SpecialIdentifiers["hostviewercount"] = userNotice.RaidViewerCount.ToString();
-                    parameters.SpecialIdentifiers["raidviewercount"] = userNotice.RaidViewerCount.ToString();
-
-                    if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelRaided, parameters))
-                    {
-                        ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidUserData] = user.ID;
-                        ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidViewerCountData] = userNotice.RaidViewerCount;
-
-                        foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
-                        {
-                            currency.AddAmount(user, currency.OnHostBonus);
-                        }
-
-                        foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
-                        {
-                            if (user.MeetsRole(streamPass.UserPermission))
-                            {
-                                streamPass.AddAmount(user, streamPass.HostBonus);
-                            }
-                        }
-
-                        GlobalEvents.RaidOccurred(user, userNotice.RaidViewerCount);
-
-                        await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertRaid, user.FullDisplayName, userNotice.RaidViewerCount), ChannelSession.Settings.AlertRaidColor));
-                    }
-                }
-                else if (SubMysteryGiftUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID) && userNotice.SubTotalGifted > 0)
+                if (SubMysteryGiftUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID) && userNotice.SubTotalGifted > 0)
                 {
                     UserV2ViewModel gifter = UserV2ViewModel.CreateUnassociated("An Anonymous Gifter");
                     if (!TwitchMassGiftedSubEventModel.IsAnonymousGifter(userNotice))

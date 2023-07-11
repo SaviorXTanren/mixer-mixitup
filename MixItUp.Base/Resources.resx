@@ -10077,4 +10077,7 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="TeamName" xml:space="preserve">
     <value>Team Name</value>
   </data>
+  <data name="TwitchChannelOutgoingRaidCompleted" xml:space="preserve">
+    <value>Twitch Channel Outgoing Raid Completed</value>
+  </data>
 </root>
