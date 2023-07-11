@@ -464,8 +464,8 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="Trovo.Base, Version=1.0.0.22, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StreamingClientLibrary.Trovo.1.0.0.22\lib\netstandard2.0\Trovo.Base.dll</HintPath>
+    <Reference Include="Trovo.Base, Version=1.0.0.23, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamingClientLibrary.Trovo.1.0.0.23\lib\netstandard2.0\Trovo.Base.dll</HintPath>
     </Reference>
     <Reference Include="Twitch.Base, Version=1.0.0.69, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StreamingClientLibrary.Twitch.1.0.0.69\lib\netstandard2.0\Twitch.Base.dll</HintPath>
