@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
@@ -367,14 +368,13 @@ namespace MixItUp.Base.Services.External
         public DonorDriveParticipant Participant { get; private set; }
         public DonorDriveTeam Team { get; private set; }
         public DonorDriveEvent Event { get; private set; }
-        public IEnumerable<DonorDriveMilestone> Milestones { get; private set; }
         public IEnumerable<DonorDriveIncentive> Incentives { get; private set; }
 
         private CancellationTokenSource cancellationTokenSource;
 
         private DateTime startTime;
         private Dictionary<string, DonorDriveDonation> donationsProcessed = new Dictionary<string, DonorDriveDonation>();
-        private double donationTotal;
+        private Dictionary<string, DonorDriveMilestone> milestonesNotCompleted = new Dictionary<string, DonorDriveMilestone>();
 
         private DateTimeOffset lastRefresh = DateTimeOffset.MinValue;
 
@@ -393,7 +393,6 @@ namespace MixItUp.Base.Services.External
                     {
                         return new Result(Resources.DonorDriveFailedToGetData);
                     }
-                    this.donationTotal = this.Participant.sumDonations;
 
                     await Task.Delay(1000);
 
@@ -418,13 +417,16 @@ namespace MixItUp.Base.Services.External
                     {
                         await Task.Delay(1000);
 
-                        this.Milestones = await this.GetParticipantMilestones(this.Participant.participantID.ToString());
-                        if (this.Milestones == null)
+                        IEnumerable<DonorDriveMilestone> milestones = await this.GetParticipantMilestones(this.Participant.participantID.ToString());
+                        if (milestones == null)
                         {
                             return new Result(Resources.DonorDriveFailedToGetData);
                         }
 
-                        this.Milestones = this.Milestones.Where(m => m.isActive && !m.isComplete);
+                        foreach (DonorDriveMilestone milestone in milestones.Where(m => m.isActive && !m.isComplete))
+                        {
+                            milestonesNotCompleted[milestone.milestoneID] = milestone;
+                        }
                     }
 
                     if (this.Participant.numIncentives > 0)
@@ -468,7 +470,7 @@ namespace MixItUp.Base.Services.External
             this.Team = null;
             this.Event = null;
             this.donationsProcessed.Clear();
-            this.donationTotal = 0.0;
+            this.milestonesNotCompleted.Clear();
 
             this.IsConnected = false;
 
@@ -505,7 +507,7 @@ namespace MixItUp.Base.Services.External
         {
             try
             {
-                if ((DateTimeOffset.Now - this.lastRefresh).TotalMinutes >= 5)
+                if ((DateTimeOffset.Now - this.lastRefresh).TotalMinutes >= 10)
                 {
                     DonorDriveParticipant participant = await this.GetParticipant(this.Participant.participantID.ToString());
                     if (participant != null)
@@ -525,15 +527,6 @@ namespace MixItUp.Base.Services.External
                         if (team != null)
                         {
                             this.Team = team;
-                        }
-                    }
-
-                    if (this.Participant.numMilestones > 0)
-                    {
-                        IEnumerable<DonorDriveMilestone> milestones = await this.GetParticipantMilestones(this.Participant.participantID.ToString());
-                        if (milestones != null)
-                        {
-                            this.Milestones = milestones.Where(m => m.isActive && !m.isComplete);
                         }
                     }
 
@@ -631,22 +624,29 @@ namespace MixItUp.Base.Services.External
 
                                 if (this.Participant.participantID == donation.participantID)
                                 {
-                                    this.donationTotal += donation.amount;
-
-                                    if (this.Milestones != null)
+                                    if (this.Participant.numMilestones > 0)
                                     {
-                                        foreach (DonorDriveMilestone milestone in this.Milestones.ToList())
+                                        IEnumerable<DonorDriveMilestone> milestones = await this.GetParticipantMilestones(this.Participant.participantID.ToString());
+                                        if (milestones != null)
                                         {
-                                            if (milestone.isActive && !milestone.isComplete && milestone.fundraisingGoal <= this.donationTotal && milestone.endDateUTC > DateTime.UtcNow)
+                                            foreach (DonorDriveMilestone milestone in milestones.Where(m => m.isActive && m.endDateUTC > DateTime.UtcNow))
                                             {
-                                                milestone.isComplete = true;
+                                                if (!milestone.isComplete)
+                                                {
+                                                    milestonesNotCompleted[milestone.milestoneID] = milestone;
+                                                }
+                                                else if (milestonesNotCompleted.ContainsKey(milestone.milestoneID))
+                                                {
+                                                    milestonesNotCompleted.Remove(milestone.milestoneID);
 
-                                                CommandParametersModel parameters = new CommandParametersModel(genericDonation.User, genericDonation.Platform, genericDonation.GetSpecialIdentifiers());
-                                                parameters.SpecialIdentifiers["donordrivemilestonedescription"] = milestone.description;
-                                                parameters.SpecialIdentifiers["donordrivemilestoneamountnumber"] = milestone.fundraisingGoal.ToString();
-                                                parameters.SpecialIdentifiers["donordrivemilestoneamount"] = milestone.fundraisingGoal.ToCurrencyString();
+                                                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+                                                    specialIdentifiers["donordrivemilestonedescription"] = milestone.description;
+                                                    specialIdentifiers["donordrivemilestoneamountnumber"] = milestone.fundraisingGoal.ToString();
+                                                    specialIdentifiers["donordrivemilestoneamount"] = milestone.fundraisingGoal.ToCurrencyString();
+                                                    CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.None, specialIdentifiers);
 
-                                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.DonorDriveDonationMilestone, parameters);
+                                                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.DonorDriveDonationMilestone, parameters);
+                                                }
                                             }
                                         }
                                     }
