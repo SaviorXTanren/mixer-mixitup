@@ -406,12 +406,12 @@ namespace MixItUp.Base.Services.YouTube
                                 user.SubscribeDate = DateTimeOffset.Now.SubtractMonths(months);
                             }
 
-                            CommandParametersModel parameters = new CommandParametersModel(user);
+                            CommandParametersModel parameters = new CommandParametersModel(user, StreamingPlatformTypeEnum.YouTube);
                             parameters.SpecialIdentifiers["message"] = liveChatMessage.Snippet.MemberMilestoneChatDetails.UserComment;
                             parameters.SpecialIdentifiers["usersubmonths"] = months.ToString();
                             parameters.SpecialIdentifiers["usersubplan"] = liveChatMessage.Snippet.MemberMilestoneChatDetails.MemberLevelName;
 
-                            if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelMemberMilestone, StreamingPlatformTypeEnum.YouTube, parameters))
+                            if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelMemberMilestone, parameters))
                             {
                                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
                                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = months;

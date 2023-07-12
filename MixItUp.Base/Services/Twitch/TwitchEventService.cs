@@ -899,7 +899,7 @@ namespace MixItUp.Base.Services.Twitch
                 }
             }
 
-            subEvent.User.Roles.Add(UserRoleEnum.Subscriber, StreamingPlatformTypeEnum.Twitch);
+            subEvent.User.Roles.Add(UserRoleEnum.Subscriber);
             subEvent.User.SubscribeDate = DateTimeOffset.Now;
             subEvent.User.SubscriberTier = subEvent.PlanTierNumber;
 
