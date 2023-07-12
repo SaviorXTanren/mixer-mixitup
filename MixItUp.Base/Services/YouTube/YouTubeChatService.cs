@@ -370,7 +370,7 @@ namespace MixItUp.Base.Services.YouTube
                             user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).MemberLevels.Clear();
                             user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).MemberLevels.Add(liveChatMessage.Snippet.NewSponsorDetails.MemberLevelName);
 
-                            CommandParametersModel parameters = new CommandParametersModel(user);
+                            CommandParametersModel parameters = new CommandParametersModel(user, StreamingPlatformTypeEnum.YouTube);
                             parameters.SpecialIdentifiers["usersubplan"] = liveChatMessage.Snippet.NewSponsorDetails.MemberLevelName;
                             if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelNewMember, parameters))
                             {
@@ -411,7 +411,7 @@ namespace MixItUp.Base.Services.YouTube
                             parameters.SpecialIdentifiers["usersubmonths"] = months.ToString();
                             parameters.SpecialIdentifiers["usersubplan"] = liveChatMessage.Snippet.MemberMilestoneChatDetails.MemberLevelName;
 
-                            if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelMemberMilestone, parameters))
+                            if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelMemberMilestone, StreamingPlatformTypeEnum.YouTube, parameters))
                             {
                                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
                                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = months;
@@ -505,7 +505,7 @@ namespace MixItUp.Base.Services.YouTube
                                     }
                                 }
 
-                                CommandParametersModel parameters = new CommandParametersModel(membershipsGifted.User);
+                                CommandParametersModel parameters = new CommandParametersModel(membershipsGifted.User, StreamingPlatformTypeEnum.YouTube);
                                 // TODO
                                 parameters.SpecialIdentifiers["usersubplan"] = liveChatMessage.Snippet.GiftMembershipReceivedDetails.MemberLevelName;
                                 parameters.Arguments.Add(user.Username);
@@ -523,7 +523,7 @@ namespace MixItUp.Base.Services.YouTube
 
                             double amount = Math.Round((double)liveChatMessage.Snippet.SuperChatDetails.AmountMicros.GetValueOrDefault() / 1000000.0, 2);
 
-                            CommandParametersModel parameters = new CommandParametersModel(user);
+                            CommandParametersModel parameters = new CommandParametersModel(user, StreamingPlatformTypeEnum.YouTube);
                             parameters.SpecialIdentifiers["amountnumber"] = amount.ToString();
                             parameters.SpecialIdentifiers["amount"] = liveChatMessage.Snippet.SuperChatDetails.AmountDisplayString;
                             parameters.SpecialIdentifiers["tier"] = liveChatMessage.Snippet.SuperChatDetails.Tier.GetValueOrDefault().ToString();
@@ -548,7 +548,7 @@ namespace MixItUp.Base.Services.YouTube
 
                             double amount = Math.Round((double)liveChatMessage.Snippet.SuperStickerDetails.AmountMicros.GetValueOrDefault() / 1000000.0, 2);
 
-                            CommandParametersModel parameters = new CommandParametersModel(user);
+                            CommandParametersModel parameters = new CommandParametersModel(user, StreamingPlatformTypeEnum.YouTube);
                             parameters.SpecialIdentifiers["amountnumber"] = amount.ToString();
                             parameters.SpecialIdentifiers["amount"] = liveChatMessage.Snippet.SuperStickerDetails.AmountDisplayString;
                             parameters.SpecialIdentifiers["tier"] = liveChatMessage.Snippet.SuperStickerDetails.Tier.GetValueOrDefault().ToString();

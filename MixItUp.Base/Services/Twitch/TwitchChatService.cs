@@ -763,7 +763,7 @@ namespace MixItUp.Base.Services.Twitch
             }
             else if (chatClear.IsTimeout)
             {
-                CommandParametersModel parameters = new CommandParametersModel();
+                CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.Twitch);
                 parameters.Arguments.Add("@" + user.Username);
                 parameters.TargetUser = user;
                 parameters.SpecialIdentifiers["timeoutlength"] = chatClear.BanDuration.ToString();
@@ -777,7 +777,7 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     userBans.Add(user.Username);
 
-                    CommandParametersModel parameters = new CommandParametersModel();
+                    CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.Twitch);
                     parameters.Arguments.Add("@" + user.Username);
                     parameters.TargetUser = user;
                     await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserBan, parameters);
