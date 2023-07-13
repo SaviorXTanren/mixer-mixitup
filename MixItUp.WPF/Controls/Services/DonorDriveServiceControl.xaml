@@ -74,7 +74,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <ComboBox Grid.Row="0" ItemsSource="{Binding Charities}" SelectedItem="{Binding SelectedCharity}" HorizontalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Charities}" Width="300" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="name" />
+                <ComboBox Grid.Row="0" ItemsSource="{Binding Charities}" SelectedItem="{Binding SelectedCharity}" HorizontalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Charities}" Width="300" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="displayName" />
 
                 <TextBox Grid.Row="2" Text="{Binding ParticipantID}" HorizontalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ParticipantIDURL}" Width="300" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 

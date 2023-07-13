@@ -18,9 +18,21 @@ namespace MixItUp.Base.Services.External
     public class DonorDriveCharity
     {
         [DataMember]
-        public string name { get; set; }
+        public string charityName { get; set; }
         [DataMember]
-        public string url { get; set; }
+        public string displayName { get; set; }
+        [DataMember]
+        public bool isDemo { get; set; }
+        [DataMember]
+        public string programID { get; set; }
+        [DataMember]
+        public string programImageURL { get; set; }
+        [DataMember]
+        public string programName { get; set; }
+        [DataMember]
+        public string programURL { get; set; }
+        [DataMember]
+        public bool streamingIsEnabled { get; set; }
     }
 
     [DataContract]
@@ -355,8 +367,8 @@ namespace MixItUp.Base.Services.External
 
         public static readonly DonorDriveCharity CustomCharity = new DonorDriveCharity()
         {
-            name = Resources.Custom,
-            url = string.Empty
+            displayName = Resources.Custom,
+            programURL = string.Empty
         };
 
         public string Name { get { return Resources.DonorDrive; }}
@@ -477,30 +489,27 @@ namespace MixItUp.Base.Services.External
             return Task.CompletedTask;
         }
 
-        public Task<IEnumerable<DonorDriveCharity>> GetCharities()
+        public async Task<IEnumerable<DonorDriveCharity>> GetCharities()
         {
-            IEnumerable<DonorDriveCharity> charities = new List<DonorDriveCharity>()
+            using (AdvancedHttpClient client = new AdvancedHttpClient())
             {
-                new DonorDriveCharity()
+                List<DonorDriveCharity> charities = await client.GetAsync<List<DonorDriveCharity>>("https://api.donordrive.com/programs?orderBy=displayName%20ASC");
+                if (charities != null)
                 {
-                    name = "Integration",
-                    url = "https://integrations.donordrive.com"
-                },
-                new DonorDriveCharity()
-                {
-                    name = "Extra Life",
-                    url = "https://www.extra-life.org"
-                },
-            };
+                    charities.Add(DonorDriveService.CustomCharity);
+                    if (ChannelSession.IsDebug())
+                    {
+                        charities.Add(new DonorDriveCharity()
+                        {
+                            displayName = "Integration",
+                            programURL = "https://integrations.donordrive.com"
+                        });
+                    }
 
-            if (charities != null)
-            {
-                List<DonorDriveCharity> results = new List<DonorDriveCharity>(charities.OrderBy(c => c.name));
-                results.Add(DonorDriveService.CustomCharity);
-
-                return Task.FromResult<IEnumerable<DonorDriveCharity>>(results);
+                    return charities;
+                }
             }
-            return Task.FromResult<IEnumerable<DonorDriveCharity>>(null);
+            return null;
         }
 
         public async Task RefreshData()
@@ -580,7 +589,7 @@ namespace MixItUp.Base.Services.External
         {
             using (AdvancedHttpClient client = new AdvancedHttpClient(this.BaseAddress))
             {
-                return await client.GetAsync<T>($"{BaseAddress}/api/{path}?version={APIVersion}&limit=20");
+                return await client.GetAsync<T>($"{BaseAddress}api/{path}?version={APIVersion}&limit=20");
             }
         }
 
