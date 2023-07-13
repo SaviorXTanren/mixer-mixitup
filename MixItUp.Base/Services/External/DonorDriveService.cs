@@ -497,15 +497,6 @@ namespace MixItUp.Base.Services.External
                 if (charities != null)
                 {
                     charities.Add(DonorDriveService.CustomCharity);
-                    if (ChannelSession.IsDebug())
-                    {
-                        charities.Add(new DonorDriveCharity()
-                        {
-                            displayName = "Integration",
-                            programURL = "https://integrations.donordrive.com"
-                        });
-                    }
-
                     return charities.Where(c => !c.isDemo);
                 }
             }
