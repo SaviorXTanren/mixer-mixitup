@@ -506,7 +506,7 @@ namespace MixItUp.Base.Services.External
                         });
                     }
 
-                    return charities;
+                    return charities.Where(c => !c.isDemo);
                 }
             }
             return null;
