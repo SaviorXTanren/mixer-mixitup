@@ -38,7 +38,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (this.urls != null && this.urls.Count > 0)
                 {
-                    return "https:" + (this.urls.ContainsKey("2") ? this.urls["2"].ToString() : this.urls[this.urls.GetKeys().First()].ToString());
+                    return this.urls.ContainsKey("2") ? this.urls["2"].ToString() : this.urls[this.urls.GetKeys().First()].ToString();
                 }
                 return string.Empty;
             }
