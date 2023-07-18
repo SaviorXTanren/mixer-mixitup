@@ -232,7 +232,7 @@ namespace MixItUp.Base.Services
 
                     case EventTypeEnum.StreamlabsDonation:
                     case EventTypeEnum.TiltifyDonation:
-                    case EventTypeEnum.ExtraLifeDonation:
+                    case EventTypeEnum.DonorDriveDonation:
                     case EventTypeEnum.TipeeeStreamDonation:
                     case EventTypeEnum.TreatStreamDonation:
                     case EventTypeEnum.PatreonSubscribed:

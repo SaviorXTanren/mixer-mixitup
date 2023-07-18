@@ -49,15 +49,9 @@ namespace MixItUp.Base.Model.Commands
 
         public CommandParametersModel(UserV2ViewModel user) : this(user, (user != null) ? user.Platform : StreamingPlatformTypeEnum.None) { }
 
-        public CommandParametersModel(StreamingPlatformTypeEnum platform) : this(platform, null) { }
+        public CommandParametersModel(StreamingPlatformTypeEnum platform) : this(null, platform, null, null) { }
 
-        public CommandParametersModel(ChatMessageViewModel message, IEnumerable<string> arguments = null)
-            : this(message.User, message.Platform, (arguments != null) ? arguments : message.ToArguments())
-        {
-            this.SpecialIdentifiers["message"] = message.PlainTextMessage;
-
-            this.TriggeringChatMessageID = message.ID;
-        }
+        public CommandParametersModel(StreamingPlatformTypeEnum platform, IEnumerable<string> arguments) : this(null, platform, arguments, null) { }
 
         public CommandParametersModel(StreamingPlatformTypeEnum platform, Dictionary<string, string> specialIdentifiers) : this(null, platform, null, specialIdentifiers) { }
 
@@ -72,6 +66,14 @@ namespace MixItUp.Base.Model.Commands
         public CommandParametersModel(UserV2ViewModel user, StreamingPlatformTypeEnum platform, Dictionary<string, string> specialIdentifiers) : this(user, platform, null, specialIdentifiers) { }
 
         public CommandParametersModel(UserV2ViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers) : this(user, (user != null) ? user.Platform : StreamingPlatformTypeEnum.None, arguments, specialIdentifiers) { }
+
+        public CommandParametersModel(ChatMessageViewModel message, IEnumerable<string> arguments = null)
+            : this(message.User, message.Platform, (arguments != null) ? arguments : message.ToArguments())
+        {
+            this.SpecialIdentifiers["message"] = message.PlainTextMessage;
+
+            this.TriggeringChatMessageID = message.ID;
+        }
 
         public CommandParametersModel(UserV2ViewModel user = null, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> specialIdentifiers = null)
         {

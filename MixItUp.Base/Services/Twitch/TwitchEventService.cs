@@ -210,6 +210,8 @@ namespace MixItUp.Base.Services.Twitch
 
     public class TwitchEventSubService : StreamingPlatformServiceBase
     {
+        private const string ChannelRaidEventSubSubscription = "channel.raid";
+
         public HashSet<string> FollowCache { get; private set; } = new HashSet<string>();
 
         private EventSubClient eventSub;
@@ -304,6 +306,7 @@ namespace MixItUp.Base.Services.Twitch
         private readonly IReadOnlyDictionary<string, string> DesiredSubscriptionsAndVersions = new Dictionary<string, string>(StringComparer.Ordinal)
         {
             { "channel.follow", null },
+            { ChannelRaidEventSubSubscription, null },
 
             { "stream.online", null },
             { "stream.offline", null },
@@ -340,7 +343,17 @@ namespace MixItUp.Base.Services.Twitch
 
                 foreach (string missingSub in missingSubs)
                 {
-                    await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub]);
+                    if (missingSub.Equals(ChannelRaidEventSubSubscription, StringComparison.OrdinalIgnoreCase))
+                    {
+                        await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub],
+                            new Dictionary<string, string> { { "from_broadcaster_user_id", ServiceManager.Get<TwitchSessionService>().UserID } });
+                        await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub],
+                            new Dictionary<string, string> { { "to_broadcaster_user_id", ServiceManager.Get<TwitchSessionService>().UserID } });
+                    }
+                    else
+                    {
+                        await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub]);
+                    }
                 }
 
                 this.eventSubSubscriptionsConnected = true;
@@ -351,14 +364,19 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
-        private async Task RegisterEventSubSubscription(string type, WelcomeMessage message, string version = null)
+        private async Task RegisterEventSubSubscription(string type, WelcomeMessage message, string version = null, Dictionary<string, string> conditions = null)
         {
             try
             {
+                if (conditions == null)
+                {
+                    conditions = new Dictionary<string, string> { { "broadcaster_user_id", ServiceManager.Get<TwitchSessionService>().UserID } };
+                }
+
                 await ServiceManager.Get<TwitchSessionService>().UserConnection.Connection.NewAPI.EventSub.CreateSubscription(
                     type,
                     "websocket",
-                    new Dictionary<string, string> { { "broadcaster_user_id", ServiceManager.Get<TwitchSessionService>().UserID } },
+                    conditions,
                     message.Payload.Session.Id,
                     version: version);
             }
@@ -383,6 +401,9 @@ namespace MixItUp.Base.Services.Twitch
             {
                 case "channel.follow":
                     await HandleFollow(message.Payload.Event);
+                    break;
+                case ChannelRaidEventSubSubscription:
+                    await HandleRaid(message.Payload.Event);
                     break;
                 case "stream.online":
                     await HandleOnline(message.Payload.Event);
@@ -420,6 +441,71 @@ namespace MixItUp.Base.Services.Twitch
             await ServiceManager.Get<TwitchEventSubService>().AddFollow(user);
         }
 
+        private async Task HandleRaid(JObject payload)
+        {
+            string fromId = payload["from_broadcaster_user_id"].Value<string>();
+            string fromUsername = payload["from_broadcaster_user_login"].Value<string>();
+            string fromDisplayName = payload["from_broadcaster_user_name"].Value<string>();
+
+            string toId = payload["to_broadcaster_user_id"].Value<string>();
+            string toUsername = payload["to_broadcaster_user_login"].Value<string>();
+            string toDisplayName = payload["to_broadcaster_user_name"].Value<string>();
+
+            int viewers = payload["viewers"].Value<int>();
+
+            if (string.IsNullOrEmpty(fromId) || string.IsNullOrEmpty(toId))
+            {
+                // Invalid raid event, ignore
+                return;
+            }
+
+            // The streamer was raided by a channel
+            if (string.Equals(toId, ServiceManager.Get<TwitchSessionService>().Channel.broadcaster_id, StringComparison.OrdinalIgnoreCase))
+            {
+                UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, fromId);
+                if (user == null)
+                {
+                    user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(fromId, fromUsername, fromDisplayName));
+                }
+
+                CommandParametersModel parameters = new CommandParametersModel(user, StreamingPlatformTypeEnum.Twitch);
+                parameters.SpecialIdentifiers["hostviewercount"] = viewers.ToString();
+                parameters.SpecialIdentifiers["raidviewercount"] = viewers.ToString();
+
+                if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelRaided, parameters))
+                {
+                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidUserData] = user.ID;
+                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidViewerCountData] = viewers;
+
+                    foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
+                    {
+                        currency.AddAmount(user, currency.OnHostBonus);
+                    }
+
+                    foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                    {
+                        if (user.MeetsRole(streamPass.UserPermission))
+                        {
+                            streamPass.AddAmount(user, streamPass.HostBonus);
+                        }
+                    }
+
+                    GlobalEvents.RaidOccurred(user, viewers);
+
+                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertRaid, user.FullDisplayName, viewers), ChannelSession.Settings.AlertRaidColor));
+                }
+            }
+            // The streamer is raiding another channel
+            else if (string.Equals(fromId, ServiceManager.Get<TwitchSessionService>().Channel.broadcaster_id, StringComparison.OrdinalIgnoreCase))
+            {
+                CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.Twitch, new List<string>() { toUsername });
+                parameters.SpecialIdentifiers["hostviewercount"] = viewers.ToString();
+                parameters.SpecialIdentifiers["raidviewercount"] = viewers.ToString();
+
+                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelOutgoingRaidCompleted, parameters);
+            }
+        }
+
         private async Task HandleOnline(JObject payload)
         {
             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStart, new CommandParametersModel(StreamingPlatformTypeEnum.Twitch));
@@ -442,7 +528,7 @@ namespace MixItUp.Base.Services.Twitch
             eventCommandSpecialIdentifiers["hypetraintotalpoints"] = totalPoints.ToString();
             eventCommandSpecialIdentifiers["hypetrainlevelpoints"] = levelPoints.ToString();
             eventCommandSpecialIdentifiers["hypetrainlevelgoal"] = levelGoal.ToString();
-            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeTrainBegin, new CommandParametersModel(ChannelSession.User, eventCommandSpecialIdentifiers));
+            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeTrainBegin, new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.Twitch, eventCommandSpecialIdentifiers));
 
             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, MixItUp.Base.Resources.HypeTrainStarted, ChannelSession.Settings.AlertTwitchHypeTrainColor));
         }
@@ -462,7 +548,7 @@ namespace MixItUp.Base.Services.Twitch
                 eventCommandSpecialIdentifiers["hypetrainlevelpoints"] = levelPoints.ToString();
                 eventCommandSpecialIdentifiers["hypetrainlevelgoal"] = levelGoal.ToString();
                 eventCommandSpecialIdentifiers["hypetrainlevel"] = level.ToString();
-                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeTrainLevelUp, new CommandParametersModel(ChannelSession.User, eventCommandSpecialIdentifiers));
+                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeTrainLevelUp, new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.Twitch, eventCommandSpecialIdentifiers));
 
                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, string.Format(MixItUp.Base.Resources.HypeTrainLevelUp, level.ToString()), ChannelSession.Settings.AlertTwitchHypeTrainColor));
             }
@@ -476,7 +562,7 @@ namespace MixItUp.Base.Services.Twitch
             Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
             eventCommandSpecialIdentifiers["hypetraintotallevel"] = level.ToString();
             eventCommandSpecialIdentifiers["hypetraintotalpoints"] = totalPoints.ToString();
-            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeTrainEnd, new CommandParametersModel(ChannelSession.User, eventCommandSpecialIdentifiers));
+            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeTrainEnd, new CommandParametersModel(ChannelSession.User, StreamingPlatformTypeEnum.Twitch, eventCommandSpecialIdentifiers));
 
             await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, string.Format(MixItUp.Base.Resources.HypeTrainEndedReachedLevel, level.ToString()), ChannelSession.Settings.AlertTwitchHypeTrainColor));
         }
@@ -581,7 +667,7 @@ namespace MixItUp.Base.Services.Twitch
                 user.Roles.Add(UserRoleEnum.Follower);
                 user.FollowDate = DateTimeOffset.Now;
 
-                CommandParametersModel parameters = new CommandParametersModel(user);
+                CommandParametersModel parameters = new CommandParametersModel(user, StreamingPlatformTypeEnum.Twitch);
                 if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelFollowed, parameters))
                 {
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user.ID;
@@ -801,7 +887,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task AddSub(TwitchSubEventModel subEvent)
         {
-            CommandParametersModel parameters = new CommandParametersModel(subEvent.User);
+            CommandParametersModel parameters = new CommandParametersModel(subEvent.User, StreamingPlatformTypeEnum.Twitch);
 
             if (subEvent.IsGiftedUpgrade)
             {
@@ -964,7 +1050,7 @@ namespace MixItUp.Base.Services.Twitch
 
             if (string.IsNullOrEmpty(await ServiceManager.Get<ModerationService>().ShouldTextBeModerated(user, bitsCheered.Message.PlainTextMessage)))
             {
-                CommandParametersModel parameters = new CommandParametersModel(user, bitsCheered.Message.ToArguments());
+                CommandParametersModel parameters = new CommandParametersModel(user, StreamingPlatformTypeEnum.Twitch, bitsCheered.Message.ToArguments());
                 parameters.SpecialIdentifiers["bitsamount"] = bitsCheered.Amount.ToString();
                 parameters.SpecialIdentifiers["bitslifetimeamount"] = packet.total_bits_used.ToString();
                 parameters.SpecialIdentifiers["messagenocheermotes"] = bitsCheered.Message.PlainTextMessageNoCheermotes;
@@ -1163,7 +1249,7 @@ namespace MixItUp.Base.Services.Twitch
 
             if (fireEventCommand)
             {
-                CommandParametersModel parameters = new CommandParametersModel(giftedSubEvent.Gifter);
+                CommandParametersModel parameters = new CommandParametersModel(giftedSubEvent.Gifter, StreamingPlatformTypeEnum.Twitch);
                 parameters.SpecialIdentifiers["usersubplanname"] = giftedSubEvent.PlanName;
                 parameters.SpecialIdentifiers["usersubplan"] = giftedSubEvent.PlanTier;
                 parameters.SpecialIdentifiers["usersubmonthsgifted"] = giftedSubEvent.MonthsGifted.ToString();
@@ -1180,7 +1266,7 @@ namespace MixItUp.Base.Services.Twitch
 
         private async Task ProcessMassGiftedSub(TwitchMassGiftedSubEventModel massGiftedSubEvent)
         {
-            CommandParametersModel parameters = new CommandParametersModel(massGiftedSubEvent.Gifter);
+            CommandParametersModel parameters = new CommandParametersModel(massGiftedSubEvent.Gifter, StreamingPlatformTypeEnum.Twitch);
             parameters.SpecialIdentifiers["subsgiftedamount"] = massGiftedSubEvent.TotalGifted.ToString();
             parameters.SpecialIdentifiers["subsgiftedlifetimeamount"] = massGiftedSubEvent.LifetimeGifted.ToString();
             parameters.SpecialIdentifiers["usersubplan"] = massGiftedSubEvent.PlanTier;
@@ -1218,7 +1304,7 @@ namespace MixItUp.Base.Services.Twitch
 
             if (string.IsNullOrEmpty(await ServiceManager.Get<ModerationService>().ShouldTextBeModerated(user, redemption.user_input)))
             {
-                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelPointsRedeemed, new CommandParametersModel(user, arguments, eventCommandSpecialIdentifiers));
+                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelPointsRedeemed, new CommandParametersModel(user, StreamingPlatformTypeEnum.Twitch, arguments, eventCommandSpecialIdentifiers));
 
                 TwitchChannelPointsCommandModel command = ServiceManager.Get<CommandService>().TwitchChannelPointsCommands.FirstOrDefault(c => string.Equals(c.ChannelPointRewardID.ToString(), redemption.reward.id, StringComparison.CurrentCultureIgnoreCase));
                 if (command == null)

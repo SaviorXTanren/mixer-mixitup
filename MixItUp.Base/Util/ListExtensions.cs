@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace MixItUp.Base.Util
@@ -133,6 +134,14 @@ namespace MixItUp.Base.Util
             foreach (T item in items)
             {
                 list.Remove(item);
+            }
+        }
+
+        public static void AddRange<T>(this ObservableCollection<T> list, IEnumerable<T> items)
+        {
+            foreach (T item in items)
+            {
+                list.Add(item);
             }
         }
     }

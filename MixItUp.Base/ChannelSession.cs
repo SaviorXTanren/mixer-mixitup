@@ -69,7 +69,7 @@ namespace MixItUp.Base
             ServiceManager.Add(new StreamlootsService());
             ServiceManager.Add(new JustGivingService());
             ServiceManager.Add(new TiltifyService());
-            ServiceManager.Add(new ExtraLifeService());
+            ServiceManager.Add(new DonorDriveService());
             ServiceManager.Add(new IFTTTService());
             ServiceManager.Add(new PatreonService());
             ServiceManager.Add(new DiscordService());
@@ -303,7 +303,7 @@ namespace MixItUp.Base
                 if (ChannelSession.Settings.TiltifyOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<TiltifyService>()] = ChannelSession.Settings.TiltifyOAuthToken; }
                 if (ChannelSession.Settings.JustGivingOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<JustGivingService>()] = ChannelSession.Settings.JustGivingOAuthToken; }
                 if (ChannelSession.Settings.IFTTTOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<IFTTTService>()] = ChannelSession.Settings.IFTTTOAuthToken; }
-                if (ChannelSession.Settings.ExtraLifeTeamID > 0) { externalServiceToConnect[ServiceManager.Get<ExtraLifeService>()] = new OAuthTokenModel(); }
+                if (!string.IsNullOrEmpty(ChannelSession.Settings.DonorDriveParticipantID)) { externalServiceToConnect[ServiceManager.Get<DonorDriveService>()] = null; }
                 if (ChannelSession.Settings.PatreonOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<PatreonService>()] = ChannelSession.Settings.PatreonOAuthToken; }
                 if (ChannelSession.Settings.DiscordOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<DiscordService>()] = ChannelSession.Settings.DiscordOAuthToken; }
                 if (ChannelSession.Settings.PixelChatOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<PixelChatService>()] = ChannelSession.Settings.PixelChatOAuthToken; }

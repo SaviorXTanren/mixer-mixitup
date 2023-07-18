@@ -54,6 +54,7 @@ namespace MixItUp.Base.Services
         [Obsolete]
         TwitchChannelHosted = 202,
         TwitchChannelRaided = 203,
+        TwitchChannelOutgoingRaidCompleted = 204,
 
         TwitchChannelFollowed = 210,
         [Obsolete]
@@ -124,7 +125,9 @@ namespace MixItUp.Base.Services
 
         StreamlabsDonation = 1000,
         TiltifyDonation = 1020,
-        ExtraLifeDonation = 1030,
+        DonorDriveDonation = 1030,
+        DonorDriveDonationIncentive = 1031,
+        DonorDriveDonationMilestone = 1032,
         TipeeeStreamDonation = 1040,
         TreatStreamDonation = 1050,
         PatreonSubscribed = 1060,
@@ -146,7 +149,7 @@ namespace MixItUp.Base.Services
 
             EventTypeEnum.ApplicationLaunch, EventTypeEnum.ApplicationExit,
 
-            EventTypeEnum.TwitchChannelStreamStart, EventTypeEnum.TwitchChannelStreamStop, EventTypeEnum.TwitchChannelFollowed, EventTypeEnum.TwitchChannelRaided, EventTypeEnum.TwitchChannelSubscribed, EventTypeEnum.TwitchChannelResubscribed,
+            EventTypeEnum.TwitchChannelStreamStart, EventTypeEnum.TwitchChannelStreamStop, EventTypeEnum.TwitchChannelFollowed, EventTypeEnum.TwitchChannelRaided, EventTypeEnum.TwitchChannelOutgoingRaidCompleted, EventTypeEnum.TwitchChannelSubscribed, EventTypeEnum.TwitchChannelResubscribed,
 
             EventTypeEnum.YouTubeChannelStreamStart, EventTypeEnum.YouTubeChannelStreamStop, EventTypeEnum.YouTubeChannelNewMember, EventTypeEnum.YouTubeChannelMemberMilestone,
 

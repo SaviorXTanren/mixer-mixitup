@@ -2177,6 +2177,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Charities.
+        /// </summary>
+        public static string Charities {
+            get {
+                return ResourceManager.GetString("Charities", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chat.
         /// </summary>
         public static string Chat {
@@ -5073,6 +5082,96 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DonorDrive.
+        /// </summary>
+        public static string DonorDrive {
+            get {
+                return ResourceManager.GetString("DonorDrive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DonorDrive Donation.
+        /// </summary>
+        public static string DonorDriveDonation {
+            get {
+                return ResourceManager.GetString("DonorDriveDonation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DonorDrive Donation Incentive.
+        /// </summary>
+        public static string DonorDriveDonationIncentive {
+            get {
+                return ResourceManager.GetString("DonorDriveDonationIncentive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DonorDrive Donation Milestone.
+        /// </summary>
+        public static string DonorDriveDonationMilestone {
+            get {
+                return ResourceManager.GetString("DonorDriveDonationMilestone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to get DonorDrive data..
+        /// </summary>
+        public static string DonorDriveFailedToGetData {
+            get {
+                return ResourceManager.GetString("DonorDriveFailedToGetData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include Team Donations: .
+        /// </summary>
+        public static string DonorDriveIncludeTeamDonation {
+            get {
+                return ResourceManager.GetString("DonorDriveIncludeTeamDonation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DonorDrive service connectivity allows you to trigger events from when you or your team receive a donation through an eligable DonorDrive charity..
+        /// </summary>
+        public static string DonorDriveInfo1 {
+            get {
+                return ResourceManager.GetString("DonorDriveInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To connect DonorDrive in Mix It Up, visit your charity&apos;s website and look for your page/participant link. Then select your charity from the drop-down or select Custom if it&apos;s not in the list, copy your page/participant link into the text box, and select Log In..
+        /// </summary>
+        public static string DonorDriveInfo2 {
+            get {
+                return ResourceManager.GetString("DonorDriveInfo2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing charity organization.
+        /// </summary>
+        public static string DonorDriveMissingCharity {
+            get {
+                return ResourceManager.GetString("DonorDriveMissingCharity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing or invalid Donor Drive Participant ID/URL.
+        /// </summary>
+        public static string DonorDriveMissingInvalidParticipantID {
+            get {
+                return ResourceManager.GetString("DonorDriveMissingInvalidParticipantID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Don&apos;t Delete Chat Message When Run.
         /// </summary>
         public static string DontDeleteChatMessageWhenRun {
@@ -5658,6 +5757,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Event Name.
+        /// </summary>
+        public static string EventName {
+            get {
+                return ResourceManager.GetString("EventName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Events.
         /// </summary>
         public static string Events {
@@ -5782,105 +5890,6 @@ namespace MixItUp.Base {
         public static string ExternalProgramActionMissingFilePath {
             get {
                 return ResourceManager.GetString("ExternalProgramActionMissingFilePath", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Extra Life.
-        /// </summary>
-        public static string ExtraLife {
-            get {
-                return ResourceManager.GetString("ExtraLife", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Extra Life Donation.
-        /// </summary>
-        public static string ExtraLifeDonation {
-            get {
-                return ResourceManager.GetString("ExtraLifeDonation", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Extra Life service connectivity allows you to trigger events from when you or your team receive a donation..
-        /// </summary>
-        public static string ExtraLifeInfo1 {
-            get {
-                return ResourceManager.GetString("ExtraLifeInfo1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to First, visit your team&apos;s page on the Extra Life website and near the end of the web URL, it will say &quot;teamID=_____&quot;. Type that number into the first box, click search, select your name from the list, then click Log In button..
-        /// </summary>
-        public static string ExtraLifeInfo2 {
-            get {
-                return ResourceManager.GetString("ExtraLifeInfo2", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Please select a valid Extra Life participant..
-        /// </summary>
-        public static string ExtraLifeInvalidParticipant {
-            get {
-                return ResourceManager.GetString("ExtraLifeInvalidParticipant", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Please enter a valid Extra Life participant ID..
-        /// </summary>
-        public static string ExtraLifeInvalidParticipantId {
-            get {
-                return ResourceManager.GetString("ExtraLifeInvalidParticipantId", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Please enter a valid Extra Life team ID..
-        /// </summary>
-        public static string ExtraLifeInvalidTeamId {
-            get {
-                return ResourceManager.GetString("ExtraLifeInvalidTeamId", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Could not get Team/Participant data.
-        /// </summary>
-        public static string ExtraLifeTeamDataFailed {
-            get {
-                return ResourceManager.GetString("ExtraLifeTeamDataFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The Extra Life team ID you entered could not be found..
-        /// </summary>
-        public static string ExtraLifeTeamNotFound {
-            get {
-                return ResourceManager.GetString("ExtraLifeTeamNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Extra Life team ID / participant ID was not set.
-        /// </summary>
-        public static string ExtraLifeTeamNotSet {
-            get {
-                return ResourceManager.GetString("ExtraLifeTeamNotSet", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Trigger Donation Event for Team Donations:.
-        /// </summary>
-        public static string ExtraLifeTriggerForTeamDonation {
-            get {
-                return ResourceManager.GetString("ExtraLifeTriggerForTeamDonation", resourceCulture);
             }
         }
         
@@ -14670,6 +14679,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Participant ID / URL.
+        /// </summary>
+        public static string ParticipantIDURL {
+            get {
+                return ResourceManager.GetString("ParticipantIDURL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Participant Name.
         /// </summary>
         public static string ParticipantName {
@@ -15557,6 +15575,15 @@ namespace MixItUp.Base {
         public static string Products {
             get {
                 return ResourceManager.GetString("Products", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profile.
+        /// </summary>
+        public static string Profile {
+            get {
+                return ResourceManager.GetString("Profile", resourceCulture);
             }
         }
         
@@ -20136,6 +20163,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Team Name.
+        /// </summary>
+        public static string TeamName {
+            get {
+                return ResourceManager.GetString("TeamName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Test Command.
         /// </summary>
         public static string TestCommand {
@@ -21699,6 +21735,15 @@ namespace MixItUp.Base {
         public static string TwitchChannelMassSubscriptionsGifted {
             get {
                 return ResourceManager.GetString("TwitchChannelMassSubscriptionsGifted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel Outgoing Raid Completed.
+        /// </summary>
+        public static string TwitchChannelOutgoingRaidCompleted {
+            get {
+                return ResourceManager.GetString("TwitchChannelOutgoingRaidCompleted", resourceCulture);
             }
         }
         

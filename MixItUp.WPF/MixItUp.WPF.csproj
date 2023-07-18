@@ -464,8 +464,8 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="Trovo.Base, Version=1.0.0.22, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StreamingClientLibrary.Trovo.1.0.0.22\lib\netstandard2.0\Trovo.Base.dll</HintPath>
+    <Reference Include="Trovo.Base, Version=1.0.0.23, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamingClientLibrary.Trovo.1.0.0.23\lib\netstandard2.0\Trovo.Base.dll</HintPath>
     </Reference>
     <Reference Include="Twitch.Base, Version=1.0.0.69, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StreamingClientLibrary.Twitch.1.0.0.69\lib\netstandard2.0\Twitch.Base.dll</HintPath>
@@ -983,8 +983,8 @@
     <Compile Include="Controls\Services\DiscordServiceControl.xaml.cs">
       <DependentUpon>DiscordServiceControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Services\ExtraLifeServiceControl.xaml.cs">
-      <DependentUpon>ExtraLifeServiceControl.xaml</DependentUpon>
+    <Compile Include="Controls\Services\DonorDriveServiceControl.xaml.cs">
+      <DependentUpon>DonorDriveServiceControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Services\OBSStudioServiceControl.xaml.cs">
       <DependentUpon>OBSStudioServiceControl.xaml</DependentUpon>
@@ -1857,7 +1857,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Services\ExtraLifeServiceControl.xaml">
+    <Page Include="Controls\Services\DonorDriveServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
