@@ -3709,6 +3709,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Crowd Control Effect.
+        /// </summary>
+        public static string CrowdControlEffect {
+            get {
+                return ResourceManager.GetString("CrowdControlEffect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Crowd Control Effect Redeemed.
         /// </summary>
         public static string CrowdControlEffectRedeemed {

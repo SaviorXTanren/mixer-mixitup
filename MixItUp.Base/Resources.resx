@@ -10080,4 +10080,7 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="TwitchChannelOutgoingRaidCompleted" xml:space="preserve">
     <value>Twitch Channel Outgoing Raid Completed</value>
   </data>
+  <data name="CrowdControlEffect" xml:space="preserve">
+    <value>Crowd Control Effect</value>
+  </data>
 </root>
