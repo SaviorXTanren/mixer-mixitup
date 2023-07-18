@@ -294,6 +294,9 @@ namespace MixItUp.Base.Services.External
                     if (this.socket.Subscribed)
                     {
                         this.IsConnected = true;
+
+                        ServiceManager.Get<ITelemetryService>().TrackService("CrowdControl");
+
                         return new Result();
                     }
                     else if (this.socket.ConnectionFailures.Count > 0)

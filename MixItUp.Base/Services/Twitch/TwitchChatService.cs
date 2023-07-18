@@ -297,12 +297,14 @@ namespace MixItUp.Base.Services.Twitch
 
             if (ChannelSession.Settings.ShowBetterTTVEmotes)
             {
+                ServiceManager.Get<ITelemetryService>().TrackService("BetterTTV");
                 initializationTasks.Add(ServiceManager.Get<BetterTTVService>().DownloadGlobalBetterTTVEmotes());
                 initializationTasks.Add(ServiceManager.Get<BetterTTVService>().DownloadTwitchBetterTTVEmotes(ServiceManager.Get<TwitchSessionService>().User.id));
             }
 
             if (ChannelSession.Settings.ShowFrankerFaceZEmotes)
             {
+                ServiceManager.Get<ITelemetryService>().TrackService("FrankerFaceZ");
                 initializationTasks.Add(this.DownloadFrankerFaceZEmotes());
                 initializationTasks.Add(this.DownloadFrankerFaceZEmotes(ServiceManager.Get<TwitchSessionService>().Username));
             }

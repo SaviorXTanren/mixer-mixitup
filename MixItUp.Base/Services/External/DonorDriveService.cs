@@ -459,6 +459,8 @@ namespace MixItUp.Base.Services.External
                     AsyncRunner.RunAsyncBackground(this.BackgroundDonationCheck, this.cancellationTokenSource.Token, 60000);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
+                    ServiceManager.Get<ITelemetryService>().TrackService("DonorDrive");
+
                     this.IsConnected = true;
                     return new Result();
                 }
