@@ -10083,4 +10083,36 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="CrowdControlEffect" xml:space="preserve">
     <value>Crowd Control Effect</value>
   </data>
+  <data name="InfiniteAlbumConnectionFailed" xml:space="preserve">
+    <value>Infinite Album connection failed, please ensure Infinite Album is running and you have connected using an App Code.</value>
+  </data>
+  <data name="InfiniteAlbumActionMissingCommand" xml:space="preserve">
+    <value>Infinite Album Action: Missing Command</value>
+  </data>
+  <data name="InfiniteAlbumNotConnected" xml:space="preserve">
+    <value>Infinite Album is not connected, please ensure the software is running and is connected on the Services page.</value>
+  </data>
+  <data name="InfiniteAlbum" xml:space="preserve">
+    <value>Infinite Album</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="InfiniteAlbumInfo" xml:space="preserve">
+    <value>Infinite Album connectivity allows you to control functionality in the Infinite Album software, such as changing the style of music playing. To connect to Infinite Album, please ensure the software is running and the service is connected.</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="AppCode" xml:space="preserve">
+    <value>App Code</value>
+  </data>
+  <data name="Emotions" xml:space="preserve">
+    <value>Emotions</value>
+  </data>
+  <data name="Instruments" xml:space="preserve">
+    <value>Instruments</value>
+  </data>
+  <data name="SoundEffects" xml:space="preserve">
+    <value>Sound Effects</value>
+  </data>
+  <data name="Styles" xml:space="preserve">
+    <value>Styles</value>
+  </data>
 </root>

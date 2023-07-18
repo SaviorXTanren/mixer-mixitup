@@ -109,6 +109,8 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public OAuthTokenModel VTubeStudioOAuthToken { get; set; }
         [DataMember]
+        public OAuthTokenModel InfiniteAlbumOAuthToken { get; set; }
+        [DataMember]
         public bool EnableVoicemodStudio { get; set; }
         [DataMember]
         public bool EnableCrowdControl { get; set; }
@@ -829,6 +831,10 @@ namespace MixItUp.Base.Model.Settings
             if (ServiceManager.Get<VTubeStudioService>().IsConnected)
             {
                 this.VTubeStudioOAuthToken = ServiceManager.Get<VTubeStudioService>().GetOAuthTokenCopy();
+            }
+            if (ServiceManager.Get<InfiniteAlbumService>().IsConnected)
+            {
+                this.InfiniteAlbumOAuthToken = ServiceManager.Get<InfiniteAlbumService>().GetOAuthTokenCopy();
             }
         }
 

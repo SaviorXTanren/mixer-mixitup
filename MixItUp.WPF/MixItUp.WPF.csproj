@@ -585,6 +585,9 @@
     <Compile Include="Controls\Actions\VoicemodActionEditorControl.xaml.cs">
       <DependentUpon>VoicemodActionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\InfiniteAlbumActionEditorControl.xaml.cs">
+      <DependentUpon>InfiniteAlbumActionEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\VTubeStudioActionEditorControl.xaml.cs">
       <DependentUpon>VTubeStudioActionEditorControl.xaml</DependentUpon>
     </Compile>
@@ -1025,6 +1028,9 @@
     <Compile Include="Controls\Services\VoicemodServiceControl.xaml.cs">
       <DependentUpon>VoicemodServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\InfiniteAlbumServiceControl.xaml.cs">
+      <DependentUpon>InfiniteAlbumServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\VTubeStudioServiceControl.xaml.cs">
       <DependentUpon>VTubeStudioServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1332,6 +1338,10 @@
     <Page Include="Controls\Actions\VoicemodActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\InfiniteAlbumActionEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Actions\VTubeStudioActionEditorControl.xaml">
       <SubType>Designer</SubType>
@@ -1912,6 +1922,10 @@
     <Page Include="Controls\Services\VoicemodServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\InfiniteAlbumServiceControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Services\VTubeStudioServiceControl.xaml">
       <SubType>Designer</SubType>

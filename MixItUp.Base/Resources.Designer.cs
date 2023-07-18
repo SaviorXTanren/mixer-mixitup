@@ -1033,6 +1033,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to App Code.
+        /// </summary>
+        public static string AppCode {
+            get {
+                return ResourceManager.GetString("AppCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Append To File.
         /// </summary>
         public static string AppendToFile {
@@ -5330,6 +5339,15 @@ namespace MixItUp.Base {
         public static string Elixir {
             get {
                 return ResourceManager.GetString("Elixir", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Emotions.
+        /// </summary>
+        public static string Emotions {
+            get {
+                return ResourceManager.GetString("Emotions", resourceCulture);
             }
         }
         
@@ -10155,6 +10173,51 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Infinite Album.
+        /// </summary>
+        public static string InfiniteAlbum {
+            get {
+                return ResourceManager.GetString("InfiniteAlbum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Infinite Album Action: Missing Command.
+        /// </summary>
+        public static string InfiniteAlbumActionMissingCommand {
+            get {
+                return ResourceManager.GetString("InfiniteAlbumActionMissingCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Infinite Album connection failed, please ensure Infinite Album is running and you have connected using an App Code..
+        /// </summary>
+        public static string InfiniteAlbumConnectionFailed {
+            get {
+                return ResourceManager.GetString("InfiniteAlbumConnectionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Infinite Album connectivity allows you to control functionality in the Infinite Album software, such as changing the style of music playing. To connect to Infinite Album, please ensure the software is running and the service is connected..
+        /// </summary>
+        public static string InfiniteAlbumInfo {
+            get {
+                return ResourceManager.GetString("InfiniteAlbumInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Infinite Album is not connected, please ensure the software is running and is connected on the Services page..
+        /// </summary>
+        public static string InfiniteAlbumNotConnected {
+            get {
+                return ResourceManager.GetString("InfiniteAlbumNotConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to initialize user information.
         /// </summary>
         public static string InitializeSessionUserInitializationFailed {
@@ -10205,6 +10268,15 @@ namespace MixItUp.Base {
         public static string InstallationFolder {
             get {
                 return ResourceManager.GetString("InstallationFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Instruments.
+        /// </summary>
+        public static string Instruments {
+            get {
+                return ResourceManager.GetString("Instruments", resourceCulture);
             }
         }
         
@@ -18621,6 +18693,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sound Effects.
+        /// </summary>
+        public static string SoundEffects {
+            get {
+                return ResourceManager.GetString("SoundEffects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sound Files|*.mp3;*.wav|All files (*.*)|*.*.
         /// </summary>
         public static string SoundFileFormatFilter {
@@ -19781,6 +19862,15 @@ namespace MixItUp.Base {
         public static string String1 {
             get {
                 return ResourceManager.GetString("String1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Styles.
+        /// </summary>
+        public static string Styles {
+            get {
+                return ResourceManager.GetString("Styles", resourceCulture);
             }
         }
         
