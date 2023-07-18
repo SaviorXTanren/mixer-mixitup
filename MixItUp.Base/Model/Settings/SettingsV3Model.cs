@@ -103,8 +103,6 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public OAuthTokenModel StreamlootsOAuthToken { get; set; }
         [DataMember]
-        public OAuthTokenModel JustGivingOAuthToken { get; set; }
-        [DataMember]
         public OAuthTokenModel RainMakerOAuthToken { get; set; }
         [DataMember]
         public OAuthTokenModel PixelChatOAuthToken { get; set; }
@@ -819,10 +817,6 @@ namespace MixItUp.Base.Model.Settings
             if (ServiceManager.Get<IFTTTService>().IsConnected)
             {
                 this.IFTTTOAuthToken = ServiceManager.Get<IFTTTService>().GetOAuthTokenCopy();
-            }
-            if (ServiceManager.Get<JustGivingService>().IsConnected)
-            {
-                this.JustGivingOAuthToken = ServiceManager.Get<JustGivingService>().GetOAuthTokenCopy();
             }
             if (ServiceManager.Get<DiscordService>().IsConnected)
             {

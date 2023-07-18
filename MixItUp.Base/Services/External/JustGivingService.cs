@@ -5,7 +5,6 @@ using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,25 +17,52 @@ namespace MixItUp.Base.Services.External
         public JArray profileImageUrls { get; set; }
     }
 
-    public class JustGivingFundraiser
+    public class JustGivingFundraiserSummary
     {
         public uint charityId { get; set; }
         public uint pageId { get; set; }
-        public uint eventId { get; set; }
 
-        public string pageTitle { get; set; }
         public string pageShortName { get; set; }
-        public string eventName { get; set; }
 
         public string pageStatus { get; set; }
 
-        public double raisedAmount { get; set; }
-        public double targetAmount { get; set; }
-
-        public string currencyCode { get; set; }
-        public string currencySymbol { get; set; }
-
         public bool IsActive { get { return (!string.IsNullOrEmpty(this.pageStatus) && this.pageStatus.Equals("Active")); } }
+    }
+
+    public class JustGivingCharity
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+        public string description { get; set; }
+        public string logoAbsoluteUrl { get; set; }
+    }
+
+    public class JustGivingFundraiser
+    {
+        public string pageId { get; set; }
+        public string pageShortName { get; set; }
+        public string pageGuid { get; set; }
+
+        public string activityId { get; set; }
+
+        public long eventId { get; set; }
+        public string eventName { get; set; }
+        public string eventCategory { get; set; }
+
+        public string title { get; set; }
+        public string status { get; set; }
+
+        public string fundraisingTarget { get; set; }
+        public string totalRaisedPercentageOfFundraisingTarget { get; set; }
+        public string totalRaisedOffline { get; set; }
+        public string totalRaisedOnline { get; set; }
+        public string totalRaisedSms { get; set; }
+        public string grandTotalRaisedExcludingGiftAid { get; set; }
+        public string totalEstimatedGiftAid { get; set; }
+
+        public JustGivingCharity charity { get; set; }
+
+        public bool IsActive { get { return (!string.IsNullOrEmpty(this.status) && this.status.Equals("Active")); } }
     }
 
     public class JustGivingDonationGroup
@@ -69,8 +95,8 @@ namespace MixItUp.Base.Services.External
             {
                 if (!string.IsNullOrEmpty(this.donationDate))
                 {
-                    string date = this.donationDate.Replace("/Date(", "");
-                    date = date.Substring(0, date.IndexOf("+"));
+                    string date = this.donationDate.Replace("/Date(", string.Empty);
+                    date = date.Replace(")/", string.Empty);
                     if (long.TryParse(date, out long dateLong))
                     {
                         return DateTimeOffset.FromUnixTimeMilliseconds(dateLong);
@@ -97,72 +123,77 @@ namespace MixItUp.Base.Services.External
         }
     }
 
-    public class JustGivingService : OAuthExternalServiceBase, IDisposable
+    public class JustGivingService : IExternalService
     {
         private const string BaseAddress = "https://api.justgiving.com/v1/";
 
         private const string ClientID = "1e30b383";
-        private const string AuthorizationUrl = "https://identity.justgiving.com/connect/authorize?client_id={0}&response_type=code&scope=openid+profile+email+account+fundraise+offline_access&redirect_uri=http%3A%2F%2Flocalhost%3A8919%2F&nonce=ba3c9a58dff94a86aa633e71e6afc4e3";
 
-        private JustGivingUser user;
-        private JustGivingFundraiser fundraiser;
+        public string Name { get { return MixItUp.Base.Resources.JustGiving; } }
+        public bool IsConnected { get; private set; }
+
+        public JustGivingFundraiser Fundraiser { get; private set; }
+
+
         private Dictionary<uint, JustGivingDonation> donationsReceived = new Dictionary<uint, JustGivingDonation>();
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         private DateTimeOffset startTime;
 
-        public JustGivingService() : base(JustGivingService.BaseAddress) { }
+        public JustGivingService() { }
 
-        public override string Name { get { return MixItUp.Base.Resources.JustGiving; } }
-
-        public override async Task<Result> Connect()
+        public async Task<Result> Connect()
         {
             try
             {
-                string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(JustGivingService.AuthorizationUrl, JustGivingService.ClientID));
-                if (!string.IsNullOrEmpty(authorizationCode))
+                if (!string.IsNullOrEmpty(ChannelSession.Settings.JustGivingPageShortName))
                 {
-                    var body = new List<KeyValuePair<string, string>>
-                {
-                    new KeyValuePair<string, string>("grant_type", "authorization_code"),
-                    new KeyValuePair<string, string>("redirect_uri", OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL),
-                    new KeyValuePair<string, string>("code", authorizationCode),
-                };
-                    this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://identity.justgiving.com/connect/token", JustGivingService.ClientID,
-                        ServiceManager.Get<SecretsService>().GetSecret("JustGivingSecret"), body);
-                    if (this.token != null)
+                    this.Fundraiser = await this.GetFundraiser(ChannelSession.Settings.JustGivingPageShortName);
+                    if (this.Fundraiser != null)
                     {
-                        token.authorizationCode = authorizationCode;
-                        return await this.InitializeInternal();
+                        this.cancellationTokenSource = new CancellationTokenSource();
+
+                        this.startTime = DateTimeOffset.Now;
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        AsyncRunner.RunAsyncBackground(this.BackgroundDonationCheck, this.cancellationTokenSource.Token, 60000);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+                        ServiceManager.Get<ITelemetryService>().TrackService("JustGiving");
+                        this.IsConnected = true;
+                        return new Result();
                     }
                 }
+                return new Result(Resources.JustGivingUserDataFailed);
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
                 return new Result(ex);
             }
-            return new Result(false);
         }
 
-        public override Task Disconnect()
+        public Task Disconnect()
         {
-            this.cancellationTokenSource.Cancel();
-            this.token = null;
+            this.Fundraiser = null;
+            if (this.cancellationTokenSource != null)
+            {
+                this.cancellationTokenSource.Cancel();
+                this.cancellationTokenSource = null;
+            }
+            this.IsConnected = false;
             return Task.CompletedTask;
         }
 
-        public void SetFundraiser(JustGivingFundraiser fundraiser)
-        {
-            this.fundraiser = fundraiser;
-        }
-
-        public async Task<JustGivingUser> GetCurrentAccount()
+        public async Task<JustGivingFundraiser> GetFundraiser(string pageShortName)
         {
             try
             {
-                return await this.GetAsync<JustGivingUser>("account");
+                using (AdvancedHttpClient client = this.GetHttpClient())
+                {
+                    return await client.GetAsync<JustGivingFundraiser>($"fundraising/pages/{pageShortName}");
+                }
             }
             catch (Exception ex)
             {
@@ -171,27 +202,17 @@ namespace MixItUp.Base.Services.External
             return null;
         }
 
-        public async Task<IEnumerable<JustGivingFundraiser>> GetCurrentFundraisers()
-        {
-            try
-            {
-                return await this.GetAsync<IEnumerable<JustGivingFundraiser>>("fundraising/pages");
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-            return new List<JustGivingFundraiser>();
-        }
-
         public async Task<IEnumerable<JustGivingDonation>> GetRecentDonations(JustGivingFundraiser fundraiser)
         {
             try
             {
-                JustGivingDonationGroup group = await this.GetAsync<JustGivingDonationGroup>($"fundraising/pages/{fundraiser.pageShortName}/donations");
-                if (group != null && group.donations != null)
+                using (AdvancedHttpClient client = this.GetHttpClient())
                 {
-                    return group.donations;
+                    JustGivingDonationGroup group = await client.GetAsync<JustGivingDonationGroup>($"fundraising/pages/{fundraiser.pageShortName}/donations");
+                    if (group != null && group.donations != null)
+                    {
+                        return group.donations;
+                    }
                 }
             }
             catch (Exception ex)
@@ -201,66 +222,21 @@ namespace MixItUp.Base.Services.External
             return new List<JustGivingDonation>();
         }
 
-        protected override async Task RefreshOAuthToken()
+        private AdvancedHttpClient GetHttpClient()
         {
-            if (this.token != null)
-            {
-                var body = new List<KeyValuePair<string, string>>
-                {
-                    new KeyValuePair<string, string>("grant_type", "refresh_token"),
-                    new KeyValuePair<string, string>("redirect_uri", OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL),
-                    new KeyValuePair<string, string>("refresh_token", this.token.refreshToken),
-                };
-                this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://identity.justgiving.com/connect/token", JustGivingService.ClientID,
-                    ServiceManager.Get<SecretsService>().GetSecret("JustGivingSecret"), body);
-            }
-        }
-
-        protected override async Task<AdvancedHttpClient> GetHttpClient(bool autoRefreshToken = true)
-        {
-            AdvancedHttpClient client = await base.GetHttpClient(autoRefreshToken);
+            AdvancedHttpClient client = new AdvancedHttpClient(JustGivingService.BaseAddress);
             client.DefaultRequestHeaders.Add("x-app-id", JustGivingService.ClientID);
             client.DefaultRequestHeaders.Add("x-application-key", ServiceManager.Get<SecretsService>().GetSecret("JustGivingSecret"));
             return client;
-        }
-
-        protected override async Task<Result> InitializeInternal()
-        {
-            this.cancellationTokenSource = new CancellationTokenSource();
-
-            this.startTime = DateTimeOffset.Now;
-
-            this.user = await this.GetCurrentAccount();
-            if (this.user != null)
-            {
-                if (!string.IsNullOrEmpty(ChannelSession.Settings.JustGivingPageShortName))
-                {
-                    IEnumerable<JustGivingFundraiser> fundraisers = await this.GetCurrentFundraisers();
-                    this.fundraiser = fundraisers.FirstOrDefault(f => f.pageShortName.Equals(ChannelSession.Settings.JustGivingPageShortName));
-                }
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                AsyncRunner.RunAsyncBackground(this.BackgroundDonationCheck, this.cancellationTokenSource.Token, 60000);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-                this.TrackServiceTelemetry("JustGiving");
-                return new Result();
-            }
-            return new Result(Resources.JustGivingUserDataFailed);
-        }
-
-        protected override void DisposeInternal()
-        {
-            this.cancellationTokenSource.Dispose();
         }
 
         private async Task BackgroundDonationCheck(CancellationToken token)
         {
             if (!token.IsCancellationRequested)
             {
-                if (this.fundraiser != null)
+                if (this.Fundraiser != null)
                 {
-                    foreach (JustGivingDonation jgDonation in await this.GetRecentDonations(this.fundraiser))
+                    foreach (JustGivingDonation jgDonation in await this.GetRecentDonations(this.Fundraiser))
                     {
                         if (!donationsReceived.ContainsKey(jgDonation.id))
                         {

@@ -5557,7 +5557,7 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
     <comment>Manual</comment>
   </data>
   <data name="JustGivingInfo1" xml:space="preserve">
-    <value>JustGiving service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to JustGiving and approve Mix It Up to access your information.</value>
+    <value>JustGiving service connectivity allows you to perform actions when a donation is received. To connect a JustGiving fundraiser, simply copy and paste the URL for your fundraising page into the text box and click Log In.</value>
   </data>
   <data name="LayerPosition" xml:space="preserve">
     <value>Layer Position</value>

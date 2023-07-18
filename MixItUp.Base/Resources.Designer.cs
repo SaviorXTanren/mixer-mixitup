@@ -10812,7 +10812,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to JustGiving service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to JustGiving and approve Mix It Up to access your information..
+        ///   Looks up a localized string similar to JustGiving service connectivity allows you to perform actions when a donation is received. To connect a JustGiving fundraiser, simply copy and paste the URL for your fundraising page into the text box and click Log In..
         /// </summary>
         public static string JustGivingInfo1 {
             get {
