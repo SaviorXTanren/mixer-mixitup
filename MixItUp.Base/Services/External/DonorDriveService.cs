@@ -644,7 +644,7 @@ namespace MixItUp.Base.Services.External
                                                     Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
                                                     specialIdentifiers["donordrivemilestonedescription"] = milestone.description;
                                                     specialIdentifiers["donordrivemilestoneamountnumber"] = milestone.fundraisingGoal.ToString();
-                                                    specialIdentifiers["donordrivemilestoneamount"] = milestone.fundraisingGoal.ToCurrencyString();
+                                                    specialIdentifiers["donordrivemilestoneamount"] = CurrencyHelper.ToCurrencyString(milestone.fundraisingGoal);
                                                     CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.None, specialIdentifiers);
 
                                                     await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.DonorDriveDonationMilestone, parameters);

@@ -16,7 +16,6 @@ using Twitch.Base.Models.NewAPI.Clips;
 using Twitch.Base.Models.NewAPI.Polls;
 using Twitch.Base.Models.NewAPI.Predictions;
 using Twitch.Base.Models.NewAPI.Streams;
-using Twitch.Base.Models.NewAPI.Tags;
 using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.Model.Actions

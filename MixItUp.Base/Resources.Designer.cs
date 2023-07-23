@@ -21703,6 +21703,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel Hype Chat.
+        /// </summary>
+        public static string TwitchChannelHypeChat {
+            get {
+                return ResourceManager.GetString("TwitchChannelHypeChat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Twitch Channel Hype Train Started.
         /// </summary>
         public static string TwitchChannelHypeTrainBegin {

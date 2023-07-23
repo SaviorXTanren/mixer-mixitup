@@ -793,12 +793,28 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void UserClient_OnMessageReceived(object sender, ChatMessagePacketModel message)
         {
-            if (message != null && !string.IsNullOrEmpty(message.Message))
+            if (message != null)
             {
+                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, message.UserID, performPlatformSearch: true);
+                TwitchChatMessageViewModel twitchMessage = null;
                 if (string.IsNullOrEmpty(message.UserLogin) || !message.UserLogin.Equals("jtv"))
                 {
-                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, message.UserID, performPlatformSearch: true);
-                    await ServiceManager.Get<ChatService>().AddMessage(new TwitchChatMessageViewModel(message, user));
+                    if (!string.IsNullOrEmpty(message.Message))
+                    {
+                        twitchMessage = new TwitchChatMessageViewModel(message, user);
+                        await ServiceManager.Get<ChatService>().AddMessage(twitchMessage);
+                    }
+                }
+
+                if (int.TryParse(message.PinnedChatPaidAmount, out int amount) && int.TryParse(message.PinnedChatPaidExponent, out int exponent) && amount > 0)
+                {
+                    double decimalNumber = ((double)amount) / ((double)exponent);
+                    CommandParametersModel parameters = (twitchMessage != null) ? new CommandParametersModel(twitchMessage) : new CommandParametersModel(user, StreamingPlatformTypeEnum.Twitch);
+                    parameters.SpecialIdentifiers["hypechatamountnumberdigits"] = amount.ToString();
+                    parameters.SpecialIdentifiers["hypechatamountnumber"] = decimalNumber.ToString();
+                    parameters.SpecialIdentifiers["hypechatamount"] = CurrencyHelper.ToCurrencyString(message.PinnedChatPaidCurrency, decimalNumber);
+                    parameters.SpecialIdentifiers["hypechatlevel"] = message.PinnedChatPaidLevel;
+                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeChat, parameters);
                 }
             }
         }

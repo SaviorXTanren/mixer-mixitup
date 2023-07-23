@@ -20,7 +20,6 @@ using Twitch.Base.Models.NewAPI.Polls;
 using Twitch.Base.Models.NewAPI.Predictions;
 using Twitch.Base.Models.NewAPI.Streams;
 using Twitch.Base.Models.NewAPI.Subscriptions;
-using Twitch.Base.Models.NewAPI.Tags;
 using Twitch.Base.Models.NewAPI.Teams;
 using Twitch.Base.Models.NewAPI.Users;
 using Twitch.Base.Services.NewAPI;

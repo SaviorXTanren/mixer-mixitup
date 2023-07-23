@@ -10083,4 +10083,7 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="CrowdControlEffect" xml:space="preserve">
     <value>Crowd Control Effect</value>
   </data>
+  <data name="TwitchChannelHypeChat" xml:space="preserve">
+    <value>Twitch Channel Hype Chat</value>
+  </data>
 </root>
