@@ -10086,4 +10086,10 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="TwitchChannelHypeChat" xml:space="preserve">
     <value>Twitch Channel Hype Chat</value>
   </data>
+  <data name="Label" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="SetContentClassificationLabels" xml:space="preserve">
+    <value>Set Content Classification Labels</value>
+  </data>
 </root>

@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Ads;
 using Twitch.Base.Models.NewAPI.ChannelPoints;
+using Twitch.Base.Models.NewAPI.Channels;
 using Twitch.Base.Models.NewAPI.Chat;
 using Twitch.Base.Models.NewAPI.Clips;
 using Twitch.Base.Models.NewAPI.Polls;
@@ -46,6 +47,7 @@ namespace MixItUp.Base.Model.Actions
         SetCustomTags,
         SendChatAnnouncement,
         SendShoutout,
+        SetContentClassificationLabels,
     }
 
     public enum TwitchAnnouncementColor
@@ -175,6 +177,13 @@ namespace MixItUp.Base.Model.Actions
             return actionModel;
         }
 
+        public static TwitchActionModel CreateSetContentClassificationLabelsAction(IEnumerable<ChannelContentClassificationLabelModel> ccls)
+        {
+            TwitchActionModel actionModel = new TwitchActionModel(TwitchActionType.SetContentClassificationLabels);
+            actionModel.ContentClassificationLabelIDs = new List<string>(ccls.Select(l => l.id));
+            return actionModel;
+        }
+
         public static TwitchActionModel CreateAction(TwitchActionType type)
         {
             return new TwitchActionModel(type);
@@ -266,6 +275,9 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public bool SendAnnouncementAsStreamer { get; set; } = true;
+
+        [DataMember]
+        public List<string> ContentClassificationLabelIDs = new List<string>();
 
         private TwitchActionModel(TwitchActionType type)
             : base(ActionTypeEnum.Twitch)
@@ -685,6 +697,22 @@ namespace MixItUp.Base.Model.Actions
                             await ServiceManager.Get<TwitchSessionService>().UserConnection.SendShoutout(ServiceManager.Get<TwitchSessionService>().User, targetUser);
                         }
                     }
+                }
+                else if (this.ActionType == TwitchActionType.SetContentClassificationLabels)
+                {
+                    List<string> cclIdsToAdd = null;
+                    if (this.ContentClassificationLabelIDs.Count > 0)
+                    {
+                        cclIdsToAdd = new List<string>(this.ContentClassificationLabelIDs);
+                    }
+
+                    List<string> cclIdsToRemove = null;
+                    if (this.ContentClassificationLabelIDs.Count != ServiceManager.Get<TwitchSessionService>().ContentClassificationLabels.Count)
+                    {
+                        cclIdsToRemove = new List<string>(ServiceManager.Get<TwitchSessionService>().ContentClassificationLabels.Where(l => !this.ContentClassificationLabelIDs.Contains(l.id)).Select(l => l.id));
+                    }
+
+                    await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateChannelInformation(ServiceManager.Get<TwitchSessionService>().User, cclIdsToAdd: cclIdsToAdd, cclIdsToRemove: cclIdsToRemove);
                 }
             }
         }

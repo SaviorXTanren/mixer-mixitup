@@ -10848,6 +10848,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Label.
+        /// </summary>
+        public static string Label {
+            get {
+                return ResourceManager.GetString("Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Language (Requires Restart).
         /// </summary>
         public static string Language {
@@ -17949,6 +17958,15 @@ namespace MixItUp.Base {
         public static string Set {
             get {
                 return ResourceManager.GetString("Set", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Content Classification Labels.
+        /// </summary>
+        public static string SetContentClassificationLabels {
+            get {
+                return ResourceManager.GetString("SetContentClassificationLabels", resourceCulture);
             }
         }
         

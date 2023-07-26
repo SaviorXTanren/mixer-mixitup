@@ -23,6 +23,7 @@ namespace MixItUp.Base.Services.Twitch
         public ChannelInformationModel Channel { get; set; }
         public StreamModel Stream { get; set; }
         public StreamModel LastStream { get; set; }
+        public List<ChannelContentClassificationLabelModel> ContentClassificationLabels = new List<ChannelContentClassificationLabelModel>();
 
         public bool IsConnected { get { return this.UserConnection != null; } }
         public bool IsBotConnected { get { return this.BotConnection != null; } }
@@ -206,6 +207,17 @@ namespace MixItUp.Base.Services.Twitch
                             {
                                 this.ChannelEditors.Add(channelEditor.user_id);
                             }
+                        }
+
+                        IEnumerable<ChannelContentClassificationLabelModel> contentClassificationLabels = await this.UserConnection.GetContentClassificationLabels(Languages.GetLanguageLocale());
+                        if (contentClassificationLabels == null || contentClassificationLabels.Count() == 0)
+                        {
+                            contentClassificationLabels = await this.UserConnection.GetContentClassificationLabels();
+                        }
+
+                        if (contentClassificationLabels != null)
+                        {
+                            this.ContentClassificationLabels.AddRange(contentClassificationLabels.Where(l => !string.Equals(l.id, "MatureGame")));
                         }
 
                         if (settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch))
