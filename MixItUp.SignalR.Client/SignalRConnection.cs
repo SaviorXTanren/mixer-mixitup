@@ -18,7 +18,13 @@ namespace MixItUp.SignalR.Client
         public SignalRConnection(string address)
         {
             this.Address = address;
-            this.connection = new HubConnectionBuilder().AddJsonProtocol().WithUrl(this.Address).Build();
+            this.connection = new HubConnectionBuilder()
+                .AddJsonProtocol()
+                .WithUrl(this.Address, opts =>
+                {
+                    opts.SkipNegotiation = true;
+                    opts.Transports = Microsoft.AspNetCore.Http.Connections.HttpTransportType.WebSockets;
+                }).Build();
         }
 
         public void IncreaseDefaultConnectionLimit() { ServicePointManager.DefaultConnectionLimit = 10; }
