@@ -1024,14 +1024,26 @@ namespace MixItUp.Base.Model.Settings
         public async Task CreateStatisticsTable()
         {
             bool tableExists = false;
-            await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT name FROM sqlite_master WHERE type='table' AND name='Statistics'", (row) =>
+            bool tableValid = false;
+            await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT name, sql FROM sqlite_master WHERE type='table' AND name='Statistics'", (row) =>
             {
                 tableExists = true;
+                if (row.TryGetValue("sql", out object sql) && sql.ToString().Contains("Description"))
+                {
+                    tableValid = true;
+                }
             });
+
+            if (tableExists && !tableValid)
+            {
+                await ServiceManager.Get<IDatabaseService>().Write(this.DatabaseFilePath, "DROP TABLE 'Statistics'");
+                tableExists = false;
+                tableValid = false;
+            }
 
             if (!tableExists)
             {
-                await ServiceManager.Get<IDatabaseService>().Write(this.DatabaseFilePath, "CREATE TABLE \"Statistics\" (\"ID\" TEXT not null, \"DateTime\" datetime not null, \"TypeID\" INT not null, \"PlatformID\" INT not null, \"Data\" TEXT null, primary key (\"ID\"))");
+                await ServiceManager.Get<IDatabaseService>().Write(this.DatabaseFilePath, "CREATE TABLE \"Statistics\" (\"ID\" TEXT not null, \"DateTime\" datetime not null default CURRENT_TIMESTAMP, \"TypeID\" INT not null, \"PlatformID\" INT not null, \"Amount\" DECIMAL not null default 0, \"Description\" text null, \"Data\" text null, primary key (\"ID\"))");
             }
         }
 
