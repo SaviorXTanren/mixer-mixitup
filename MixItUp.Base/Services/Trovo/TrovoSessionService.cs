@@ -108,11 +108,19 @@ namespace MixItUp.Base.Services.Trovo
             {
                 Result userResult = null;
 
-                Result<TrovoPlatformService> trovoResult = await TrovoPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].UserOAuthToken);
-                if (trovoResult.Success)
+                // If scopes don't match, re-auth the token
+                if (string.Equals(string.Join(",", TrovoPlatformService.StreamerScopes), settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].UserOAuthToken.ScopeList, StringComparison.OrdinalIgnoreCase))
                 {
-                    this.UserConnection = trovoResult.Value;
-                    userResult = trovoResult;
+                    Result<TrovoPlatformService> trovoResult = await TrovoPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].UserOAuthToken);
+                    if (trovoResult.Success)
+                    {
+                        this.UserConnection = trovoResult.Value;
+                        userResult = trovoResult;
+                    }
+                    else
+                    {
+                        userResult = await this.ConnectUser();
+                    }
                 }
                 else
                 {
@@ -129,7 +137,7 @@ namespace MixItUp.Base.Services.Trovo
 
                     if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].BotOAuthToken != null)
                     {
-                        trovoResult = await TrovoPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].BotOAuthToken);
+                        Result<TrovoPlatformService> trovoResult = await TrovoPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].BotOAuthToken);
                         if (trovoResult.Success)
                         {
                             this.BotConnection = trovoResult.Value;
@@ -141,7 +149,6 @@ namespace MixItUp.Base.Services.Trovo
                         }
                         else
                         {
-
                             return new Result(success: true, message: MixItUp.Base.Resources.TrovoFailedToConnectBotAccount);
                         }
                     }

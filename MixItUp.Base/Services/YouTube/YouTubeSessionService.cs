@@ -91,11 +91,19 @@ namespace MixItUp.Base.Services.YouTube
             {
                 Result userResult = null;
 
-                Result<YouTubePlatformService> youtubeResult = await YouTubePlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserOAuthToken);
-                if (youtubeResult.Success)
+                // If scopes don't match, re-auth the token
+                if (string.Equals(string.Join(",", YouTubePlatformService.StreamerScopes), settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserOAuthToken.ScopeList, StringComparison.OrdinalIgnoreCase))
                 {
-                    this.UserConnection = youtubeResult.Value;
-                    userResult = youtubeResult;
+                    Result<YouTubePlatformService> youtubeResult = await YouTubePlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].UserOAuthToken);
+                    if (youtubeResult.Success)
+                    {
+                        this.UserConnection = youtubeResult.Value;
+                        userResult = youtubeResult;
+                    }
+                    else
+                    {
+                        userResult = await this.ConnectUser();
+                    }
                 }
                 else
                 {
@@ -112,7 +120,7 @@ namespace MixItUp.Base.Services.YouTube
 
                     if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].BotOAuthToken != null)
                     {
-                        youtubeResult = await YouTubePlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].BotOAuthToken);
+                        Result<YouTubePlatformService> youtubeResult = await YouTubePlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].BotOAuthToken);
                         if (youtubeResult.Success)
                         {
                             this.BotConnection = youtubeResult.Value;
@@ -124,7 +132,6 @@ namespace MixItUp.Base.Services.YouTube
                         }
                         else
                         {
-
                             return new Result(success: true, message: MixItUp.Base.Resources.YouTubeFailedToConnectBotAccount);
                         }
                     }
