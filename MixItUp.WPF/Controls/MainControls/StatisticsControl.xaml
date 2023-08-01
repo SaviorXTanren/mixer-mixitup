@@ -27,6 +27,8 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
+            <ComboBox Grid.Column="0" ItemsSource="{Binding Streams}" SelectedItem="{Binding SelecedStream}" DisplayMemberPath="Display" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Stream}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="400" />
+
             <Controls:IconButton Grid.Column="4" Icon="Refresh" Command="{Binding RefreshCommand}" />
         </Grid>
             

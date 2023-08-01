@@ -242,21 +242,23 @@ namespace MixItUp.Base.Services.Mock
 
         public async Task AddMockViewerStatistics()
         {
-            for (int days = 0; days < 10; days++)
+            for (int days = 1; days < 10; days++)
             {
-                int lastNumber = RandomHelper.GenerateRandomNumber(100);
                 DateTime dateTime = DateTime.Now.Subtract(TimeSpan.FromDays(days));
 
-                ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamStart, platform: StreamingPlatformTypeEnum.Twitch, amount: lastNumber, dateTime: dateTime);
+                ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamStart, platform: StreamingPlatformTypeEnum.Twitch, dateTime: dateTime);
 
                 int totalViewerEvents = 25;
+                int lastNumber = RandomHelper.GenerateRandomNumber(100);
                 for (int i = 0; i < totalViewerEvents; i++)
                 {
                     ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.Viewers, platform: StreamingPlatformTypeEnum.Twitch, amount: lastNumber, dateTime: dateTime.AddMinutes(i * 5));
                     lastNumber += Math.Max(RandomHelper.GenerateRandomNumber(-5, 5), 0);
                 }
 
-                ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamStop, platform: StreamingPlatformTypeEnum.Twitch, amount: lastNumber, dateTime: dateTime.AddMinutes(totalViewerEvents * 5));
+                ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamStop, platform: StreamingPlatformTypeEnum.Twitch, dateTime: dateTime.AddMinutes(totalViewerEvents * 5));
+
+                StatisticsService.SessionID = Guid.NewGuid().ToString();
             }
 
             await ChannelSession.SaveSettings();

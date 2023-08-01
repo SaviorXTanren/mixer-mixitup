@@ -44,13 +44,24 @@ namespace MixItUp.WPF.Controls.MainControls
     {
         public ICommand RefreshCommand { get; private set; }
 
+        public ThreadSafeObservableCollection<StatisticStreamViewModel> Streams { get; private set; } = new ThreadSafeObservableCollection<StatisticStreamViewModel>();
+
+        public StatisticStreamViewModel SelectedStream
+        {
+            get { return this.selectedStream; }
+            set
+            {
+                this.selectedStream = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private StatisticStreamViewModel selectedStream;
+
         public ObservableCollection<Axis> XAxes { get; private set; } = new ObservableCollection<Axis>();
 
         public ThreadSafeObservableCollection<ISeries> Series { get; private set; } = new ThreadSafeObservableCollection<ISeries>();
 
         private Dictionary<StatisticItemTypeEnum, StatisticSeriesBase> statisticSeries = new Dictionary<StatisticItemTypeEnum, StatisticSeriesBase>();
-
-        private IEnumerable<StatisticModel> statistics;
 
         public StatisticsViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
@@ -64,38 +75,41 @@ namespace MixItUp.WPF.Controls.MainControls
                 MinStep = TimeSpan.FromMinutes(10).Ticks
             });
 
-            this.Refresh();
-            this.AddSeries(StatisticItemTypeEnum.Viewers);
-
-            this.RefreshCommand = this.CreateCommand(() =>
+            this.RefreshCommand = this.CreateCommand(async () =>
             {
-                this.Refresh();
+                await this.Refresh();
             });
         }
 
-        protected override Task OnOpenInternal()
+        protected override async Task OnOpenInternal()
         {
-            this.Refresh();
-            return base.OnVisibleInternal();
+            this.Streams.ClearAndAddRange(ServiceManager.Get<StatisticsService>().Streams);
+            this.SelectedStream = this.Streams.FirstOrDefault();
+            this.AddSeries(StatisticItemTypeEnum.Viewers);
+
+            await base.OnOpenInternal();
         }
 
         protected override Task OnVisibleInternal()
         {
-            this.Refresh();
             return base.OnVisibleInternal();
         }
 
-        private void Refresh()
+        private async Task Refresh()
         {
-            int lastTotal = this.statistics?.Count() ?? 0;
-            this.statistics = ServiceManager.Get<StatisticsService>().GetCurrentSessionStatistics();
-            if (this.statistics.Count() > 0 && this.statisticSeries.Count > 0)
+            if (this.SelectedStream != null)
             {
-                foreach (StatisticModel statistic in this.statistics.Skip(lastTotal))
+                await this.SelectedStream.LoadStatistics();
+
+                this.statisticSeries.Clear();
+                if (this.statisticSeries.Count > 0)
                 {
-                    if (this.statisticSeries.ContainsKey(statistic.Type))
+                    foreach (StatisticModel statistic in this.SelectedStream.Statistics)
                     {
-                        this.statisticSeries[statistic.Type].AddValue(statistic);
+                        if (this.statisticSeries.ContainsKey(statistic.Type))
+                        {
+                            this.statisticSeries[statistic.Type].AddValue(statistic);
+                        }
                     }
                 }
             }
@@ -103,7 +117,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void AddSeries(StatisticItemTypeEnum type)
         {
-            IEnumerable<StatisticModel> values = this.statistics.Where(s => s.Type == type);
+            IEnumerable<StatisticModel> values = this.SelectedStream.Statistics.Where(s => s.Type == type);
             StatisticSeriesBase series = null;
 
             switch (type)

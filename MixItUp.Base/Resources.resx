@@ -10092,4 +10092,7 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="SetContentClassificationLabels" xml:space="preserve">
     <value>Set Content Classification Labels</value>
   </data>
+  <data name="Stream" xml:space="preserve">
+    <value>Stream</value>
+  </data>
 </root>

@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model;
+﻿using Google.Apis.YouTubePartner.v1.Data;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services.Mock;
 using MixItUp.Base.Util;
@@ -7,10 +8,12 @@ using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Twitch.Base.Models.Clients.EventSub;
 
 namespace MixItUp.Base.Services
 {
@@ -61,6 +64,9 @@ namespace MixItUp.Base.Services
         public string ID { get; set; }
 
         [DataMember]
+        public string SessionID { get; set; }
+
+        [DataMember]
         public DateTime DateTime { get; set; }
 
         [DataMember]
@@ -84,17 +90,19 @@ namespace MixItUp.Base.Services
         public StatisticModel(Dictionary<string, object> databaseParameters)
         {
             this.ID = databaseParameters["ID"].ToString();
-            this.DateTime = (DateTime)databaseParameters["DateTime"];
-            this.Type = (StatisticItemTypeEnum)databaseParameters["TypeID"];
-            this.Platform = (StreamingPlatformTypeEnum)databaseParameters["PlatformID"];
-            this.Amount = (double)databaseParameters["Amount"];
-            this.Description = (string)databaseParameters["Description"];
+            this.SessionID = databaseParameters["SessionID"].ToString();
+            this.DateTime = DateTime.Parse(databaseParameters["DateTime"].ToString());
+            this.Type = (StatisticItemTypeEnum)Convert.ToInt32(databaseParameters["TypeID"]);
+            this.Platform = (StreamingPlatformTypeEnum)Convert.ToInt32(databaseParameters["PlatformID"]);
+            this.Amount = Convert.ToDouble(databaseParameters["Amount"]);
+            this.Description = databaseParameters["Description"].ToString();
             this.Data = JObject.Parse(databaseParameters["Data"].ToString());
         }
 
         public StatisticModel(StatisticItemTypeEnum type, StreamingPlatformTypeEnum platform, double amount, string description, DateTime? dateTime = null)
         {
             this.ID = Guid.NewGuid().ToString();
+            this.SessionID = StatisticsService.SessionID;
             this.DateTime = (dateTime != null) ? dateTime.GetValueOrDefault() : DateTime.Now;
             this.Type = type;
             this.Platform = platform;
@@ -113,8 +121,55 @@ namespace MixItUp.Base.Services
         }
     }
 
+    public class StatisticStreamViewModel
+    {
+        public string SessionID { get; set; }
+        public StreamingPlatformTypeEnum Platform { get; set; }
+        public string Display { get; set; }
+
+        public ThreadSafeObservableCollection<StatisticModel> Statistics { get; set; } = new ThreadSafeObservableCollection<StatisticModel>();
+
+        public StatisticStreamViewModel()
+        {
+            this.Display = Resources.Current;
+        }
+
+        public StatisticStreamViewModel(StatisticModel streamStart)
+        {
+            this.SessionID = streamStart.SessionID;
+            this.Platform = streamStart.Platform;
+            this.Display = $"{EnumLocalizationHelper.GetLocalizedName(this.Platform)} - {streamStart.DateTime.ToFriendlyDateString()}";
+        }
+
+        public StatisticStreamViewModel(string sessionID, StreamingPlatformTypeEnum platform, DateTime date)
+        {
+            this.SessionID = sessionID;
+            this.Platform = platform;
+            this.Display = $"{EnumLocalizationHelper.GetLocalizedName(this.Platform)} - {date.Date.ToFriendlyDateString()}";
+        }
+
+        public async Task LoadStatistics()
+        {
+            if (this.SessionID != null)
+            {
+                if (this.Statistics.Count == 0)
+                {
+                    this.Statistics.ClearAndAddRange(await ChannelSession.Settings.LoadSessionStatistics(this.SessionID));
+                }
+            }
+            else
+            {
+                this.Statistics.ClearAndAddRange(ServiceManager.Get<StatisticsService>().GetCurrentSessionStatistics());
+            }
+        }
+    }
+
     public class StatisticsService
     {
+        public static string SessionID { get; internal set; } = Guid.NewGuid().ToString();
+
+        public IEnumerable<StatisticStreamViewModel> Streams { get; private set; }
+
         private List<StatisticModel> sessionStatistics = new List<StatisticModel>();
         private List<StatisticModel> statisticsToSave = new List<StatisticModel>();
 
@@ -125,6 +180,30 @@ namespace MixItUp.Base.Services
             if (ChannelSession.IsDebug())
             {
                 await (new MockSessionService()).AddMockViewerStatistics();
+                this.sessionStatistics.Clear();
+                this.statisticsToSave.Clear();
+            }
+
+            List<StatisticModel> startAndEnds = new List<StatisticModel>();
+            startAndEnds.AddRange(await ChannelSession.Settings.LoadSpecificStatisticType(StatisticItemTypeEnum.StreamStart));
+            startAndEnds.AddRange(await ChannelSession.Settings.LoadSpecificStatisticType(StatisticItemTypeEnum.StreamStop));
+
+            List<StatisticStreamViewModel> streams = new List<StatisticStreamViewModel>();
+            this.Streams = streams;
+
+            streams.Add(new StatisticStreamViewModel());
+            foreach (var group in startAndEnds.GroupBy(s => new { s.SessionID, s.Platform }))
+            {
+                StatisticModel start = group.FirstOrDefault(s => s.Type == StatisticItemTypeEnum.StreamStart);
+                StatisticModel end = group.FirstOrDefault(s => s.Type == StatisticItemTypeEnum.StreamStop);
+                if (start != null)
+                {
+                    streams.Add(new StatisticStreamViewModel(start));
+                }
+                else
+                {
+                    streams.Add(new StatisticStreamViewModel(end.SessionID, end.Platform, end.DateTime));
+                }
             }
         }
 

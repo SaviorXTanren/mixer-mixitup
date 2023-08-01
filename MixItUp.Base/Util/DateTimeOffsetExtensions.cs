@@ -6,6 +6,12 @@ namespace MixItUp.Base.Util
 {
     public static class DateTimeOffsetExtensions
     {
+        public static string ToFriendlyDateString(this DateTime dt) { return dt.ToString("d"); }
+
+        public static string ToFriendlyTimeString(this DateTime dt) { return dt.ToString("t"); }
+
+        public static string ToFriendlyDateTimeString(this DateTime dt) { return dt.ToString("g"); }
+
         public static string ToFriendlyDateString(this DateTimeOffset dt) { return dt.ToString("d"); }
 
         public static string ToFriendlyTimeString(this DateTimeOffset dt) { return dt.ToString("t"); }

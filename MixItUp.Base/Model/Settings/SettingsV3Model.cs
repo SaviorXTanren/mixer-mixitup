@@ -889,9 +889,10 @@ namespace MixItUp.Base.Model.Settings
 
             try
             {
-                await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "REPLACE INTO Statistics(ID, DateTime, TypeID, PlatformID, Data) VALUES($ID, $DateTime, $TypeID, $PlatformID, $Data)",
-                    ServiceManager.Get<StatisticsService>().GetStatisticsToSave().Select(s => new Dictionary<string, object>() { { "$ID", s.ID.ToString() }, { "$DateTime", s.DateTime }, { "$TypeID", (int)s.Type },
-                        { "$PlatformID", (int)s.Platform }, { "$Data", JSONSerializerHelper.SerializeToString(s.Data) } }));
+                await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "REPLACE INTO Statistics(ID, SessionID, DateTime, TypeID, PlatformID, Amount, Description, Data) " + 
+                    "VALUES($ID, $SessionID, $DateTime, $TypeID, $PlatformID, $Amount, $Description, $Data)",
+                    ServiceManager.Get<StatisticsService>().GetStatisticsToSave().Select(s => new Dictionary<string, object>() { { "$ID", s.ID }, { "$SessionID", s.SessionID }, { "$DateTime", s.DateTime },
+                        { "$TypeID", (int)s.Type }, { "$PlatformID", (int)s.Platform }, { "$Amount", s.Amount }, { "$Description", s.Description },  { "$Data", JSONSerializerHelper.SerializeToString(s.Data) } }));
             }
             catch (Exception ex)
             {
@@ -975,7 +976,7 @@ namespace MixItUp.Base.Model.Settings
             try
             {
                 await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath,
-                    $"SELECT * FROM Statistics WHERE TypeID = @TypeID",
+                    $"SELECT * FROM Statistics WHERE TypeID = @TypeID ORDER BY DateTime DESC",
                     new Dictionary<string, object>()
                     {
                         { "TypeID", (int)type }
@@ -994,18 +995,17 @@ namespace MixItUp.Base.Model.Settings
             return statistics;
         }
 
-        public async Task<IEnumerable<StatisticModel>> LoadStatisticBetweenRange(DateTime start, DateTime end)
+        public async Task<IEnumerable<StatisticModel>> LoadSessionStatistics(string sessionID)
         {
             List<StatisticModel> statistics = new List<StatisticModel>();
 
             try
             {
                 await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath,
-                    $"SELECT * FROM Statistics WHERE DateTime >= @Start AND DateTime <= @End",
+                    $"SELECT * FROM Statistics WHERE SessionID = @SessionID",
                     new Dictionary<string, object>()
                     {
-                        { "Start", start },
-                        { "End", end }
+                        { "SessionID", sessionID },
                     },
                     (Dictionary<string, object> data) =>
                     {
@@ -1028,7 +1028,7 @@ namespace MixItUp.Base.Model.Settings
             await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT name, sql FROM sqlite_master WHERE type='table' AND name='Statistics'", (row) =>
             {
                 tableExists = true;
-                if (row.TryGetValue("sql", out object sql) && sql.ToString().Contains("Description"))
+                if (row.TryGetValue("sql", out object sql) && sql.ToString().Contains("SessionID"))
                 {
                     tableValid = true;
                 }
@@ -1043,7 +1043,7 @@ namespace MixItUp.Base.Model.Settings
 
             if (!tableExists)
             {
-                await ServiceManager.Get<IDatabaseService>().Write(this.DatabaseFilePath, "CREATE TABLE \"Statistics\" (\"ID\" TEXT not null, \"DateTime\" datetime not null default CURRENT_TIMESTAMP, \"TypeID\" INT not null, \"PlatformID\" INT not null, \"Amount\" DECIMAL not null default 0, \"Description\" text null, \"Data\" text null, primary key (\"ID\"))");
+                await ServiceManager.Get<IDatabaseService>().Write(this.DatabaseFilePath, "CREATE TABLE 'Statistics' ('ID' TEXT not null, 'SessionID' TEXT not null, 'DateTime' datetime not null default CURRENT_TIMESTAMP, 'TypeID' INT not null, 'PlatformID' INT not null, 'Amount' DECIMAL not null default 0, 'Description' text null, 'Data' text null, primary key ('ID'))");
             }
         }
 
