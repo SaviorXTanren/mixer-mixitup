@@ -65,6 +65,7 @@ namespace MixItUp.Base.Services.Twitch
 
             OAuthClientScopeEnum.moderator__read__chatters,
             OAuthClientScopeEnum.moderator__read__chat_settings,
+            OAuthClientScopeEnum.moderator__read__followers,
 
             OAuthClientScopeEnum.moderator__manage__announcements,
             OAuthClientScopeEnum.moderator__manage__banned_users,

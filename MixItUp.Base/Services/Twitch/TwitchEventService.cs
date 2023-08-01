@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model;
+﻿using Google.Apis.YouTubePartner.v1.Data;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
@@ -210,6 +211,8 @@ namespace MixItUp.Base.Services.Twitch
 
     public class TwitchEventSubService : StreamingPlatformServiceBase
     {
+        private const string ChannelFollowEventSubSubscription = "channel.follow";
+
         public HashSet<string> FollowCache { get; private set; } = new HashSet<string>();
 
         private EventSubClient eventSub;
@@ -303,7 +306,7 @@ namespace MixItUp.Base.Services.Twitch
 
         private readonly IReadOnlyDictionary<string, string> DesiredSubscriptionsAndVersions = new Dictionary<string, string>(StringComparer.Ordinal)
         {
-            { "channel.follow", null },
+            { ChannelFollowEventSubSubscription, "2" },
 
             { "stream.online", null },
             { "stream.offline", null },
@@ -340,7 +343,20 @@ namespace MixItUp.Base.Services.Twitch
 
                 foreach (string missingSub in missingSubs)
                 {
-                    await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub]);
+                    if (string.Equals(missingSub, ChannelFollowEventSubSubscription, StringComparison.OrdinalIgnoreCase))
+                    {
+                        Dictionary<string, string> conditions = new Dictionary<string, string>
+                        {
+                            { "broadcaster_user_id", ServiceManager.Get<TwitchSessionService>().UserID },
+                            { "moderator_user_id", ServiceManager.Get<TwitchSessionService>().UserID }
+                        };
+
+                        await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub], conditions);
+                    }
+                    else
+                    {
+                        await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub]);
+                    }
                 }
 
                 this.eventSubSubscriptionsConnected = true;
@@ -351,14 +367,19 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
-        private async Task RegisterEventSubSubscription(string type, WelcomeMessage message, string version = null)
+        private async Task RegisterEventSubSubscription(string type, WelcomeMessage message, string version = null, Dictionary<string, string> conditions = null)
         {
             try
             {
+                if (conditions == null)
+                {
+                    conditions = new Dictionary<string, string> { { "broadcaster_user_id", ServiceManager.Get<TwitchSessionService>().UserID } };
+                }
+
                 await ServiceManager.Get<TwitchSessionService>().UserConnection.Connection.NewAPI.EventSub.CreateSubscription(
                     type,
                     "websocket",
-                    new Dictionary<string, string> { { "broadcaster_user_id", ServiceManager.Get<TwitchSessionService>().UserID } },
+                    conditions,
                     message.Payload.Session.Id,
                     version: version);
             }
