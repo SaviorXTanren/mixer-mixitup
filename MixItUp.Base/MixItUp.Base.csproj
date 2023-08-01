@@ -42,9 +42,9 @@
     <PackageReference Include="Jace" Version="1.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="StreamingClientLibrary.Glimesh" Version="1.0.0.21" />
-    <PackageReference Include="StreamingClientLibrary.Trovo" Version="1.0.0.22" />
-    <PackageReference Include="StreamingClientLibrary.Twitch" Version="1.0.0.69" />
-    <PackageReference Include="StreamingClientLibrary.YouTube" Version="1.0.0.20" />
+    <PackageReference Include="StreamingClientLibrary.Trovo" Version="1.0.0.24" />
+    <PackageReference Include="StreamingClientLibrary.Twitch" Version="1.0.0.73" />
+    <PackageReference Include="StreamingClientLibrary.YouTube" Version="1.0.0.21" />
     <PackageReference Include="System.IO.Ports" Version="6.0.0" />
   </ItemGroup>
 
