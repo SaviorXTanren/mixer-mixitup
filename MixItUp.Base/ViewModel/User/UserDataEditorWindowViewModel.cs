@@ -365,7 +365,7 @@ namespace MixItUp.Base.ViewModel.User
             this.Metrics1.Add(new UserMetricViewModel(MixItUp.Base.Resources.CommandsRun, this.User.TotalCommandsRun.ToString()));
 
             this.Metrics2.Add(new UserMetricViewModel(MixItUp.Base.Resources.TaggedInChat, this.User.TotalTimesTagged.ToString()));
-            this.Metrics2.Add(new UserMetricViewModel(MixItUp.Base.Resources.AmountDonated, this.User.TotalAmountDonated.ToCurrencyString()));
+            this.Metrics2.Add(new UserMetricViewModel(MixItUp.Base.Resources.AmountDonated, CurrencyHelper.ToCurrencyString(this.User.TotalAmountDonated)));
 
             if (this.User.HasPlatformData(StreamingPlatformTypeEnum.Twitch))
             {

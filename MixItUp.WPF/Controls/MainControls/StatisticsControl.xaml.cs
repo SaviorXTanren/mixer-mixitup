@@ -204,7 +204,7 @@ namespace MixItUp.WPF.Controls.MainControls
             }
             else if (this.ValueType == StatisticValueTypeEnum.Decimal)
             {
-                this.Values.Add(new DateTimePoint(value.DateTime, value.AmountDouble));
+                this.Values.Add(new DateTimePoint(value.DateTime, value.Amount));
             }
             else if (this.ValueType == StatisticValueTypeEnum.Text)
             {

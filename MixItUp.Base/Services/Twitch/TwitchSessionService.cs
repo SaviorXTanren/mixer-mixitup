@@ -23,6 +23,7 @@ namespace MixItUp.Base.Services.Twitch
         public ChannelInformationModel Channel { get; set; }
         public StreamModel Stream { get; set; }
         public StreamModel LastStream { get; set; }
+        public List<ChannelContentClassificationLabelModel> ContentClassificationLabels = new List<ChannelContentClassificationLabelModel>();
 
         public bool IsConnected { get { return this.UserConnection != null; } }
         public bool IsBotConnected { get { return this.BotConnection != null; } }
@@ -110,11 +111,19 @@ namespace MixItUp.Base.Services.Twitch
             {
                 Result userResult = null;
 
-                Result<TwitchPlatformService> twitchResult = await TwitchPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken);
-                if (twitchResult.Success)
+                // If scopes don't match, re-auth the token
+                if (string.Equals(string.Join(",", TwitchPlatformService.StreamerScopes), settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.ScopeList, StringComparison.OrdinalIgnoreCase))
                 {
-                    this.UserConnection = twitchResult.Value;
-                    userResult = twitchResult;
+                    Result<TwitchPlatformService> twitchResult = await TwitchPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken);
+                    if (twitchResult.Success)
+                    {
+                        this.UserConnection = twitchResult.Value;
+                        userResult = twitchResult;
+                    }
+                    else
+                    {
+                        userResult = await this.ConnectUser();
+                    }
                 }
                 else
                 {
@@ -131,7 +140,7 @@ namespace MixItUp.Base.Services.Twitch
 
                     if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken != null)
                     {
-                        twitchResult = await TwitchPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken);
+                        Result<TwitchPlatformService> twitchResult = await TwitchPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken);
                         if (twitchResult.Success)
                         {
                             this.BotConnection = twitchResult.Value;
@@ -143,7 +152,6 @@ namespace MixItUp.Base.Services.Twitch
                         }
                         else
                         {
-
                             return new Result(success: true, message: MixItUp.Base.Resources.TwitchFailedToConnectBotAccount);
                         }
                     }
@@ -206,6 +214,17 @@ namespace MixItUp.Base.Services.Twitch
                             {
                                 this.ChannelEditors.Add(channelEditor.user_id);
                             }
+                        }
+
+                        IEnumerable<ChannelContentClassificationLabelModel> contentClassificationLabels = await this.UserConnection.GetContentClassificationLabels(Languages.GetLanguageLocale());
+                        if (contentClassificationLabels == null || contentClassificationLabels.Count() == 0)
+                        {
+                            contentClassificationLabels = await this.UserConnection.GetContentClassificationLabels();
+                        }
+
+                        if (contentClassificationLabels != null)
+                        {
+                            this.ContentClassificationLabels.AddRange(contentClassificationLabels.Where(l => !string.Equals(l.id, "MatureGame")));
                         }
 
                         if (settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch))

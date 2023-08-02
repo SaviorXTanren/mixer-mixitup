@@ -14,9 +14,9 @@
 
     <Grid Margin="10" HorizontalAlignment="Center">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="450" />
+            <ColumnDefinition Width="400" />
             <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="250" />
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Column="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.JustGivingInfo1}"/>
@@ -29,13 +29,21 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <ComboBox Grid.Row="0" ItemsSource="{Binding Fundraisers}" SelectedItem="{Binding SelectedFundraiser}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SelectedFundraiser}" DisplayMemberPath="eventName" Width="200" />
+                <TextBlock Grid.Row="0" DataContext="{Binding Fundraiser}" Text="{Binding eventName}" HorizontalAlignment="Center" />
 
                 <Button Grid.Row="2" Command="{Binding LogOutCommand}" HorizontalAlignment="Center" MinWidth="90" Content="{x:Static resx:Resources.Logout}"/>
             </Grid>
 
             <Grid Visibility="{Binding IsNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Button Command="{Binding LogInCommand}" HorizontalAlignment="Center" MinWidth="90" Content="{x:Static resx:Resources.Login}"/>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBox Grid.Row="0" Text="{Binding WebPageURL}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.WebPageURL}" Width="250" />
+
+                <Button Grid.Row="2" Command="{Binding LogInCommand}" HorizontalAlignment="Center" MinWidth="90" Content="{x:Static resx:Resources.Login}"/>
             </Grid>
         </Grid>
     </Grid>

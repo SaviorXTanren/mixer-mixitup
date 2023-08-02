@@ -3709,6 +3709,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Crowd Control Effect.
+        /// </summary>
+        public static string CrowdControlEffect {
+            get {
+                return ResourceManager.GetString("CrowdControlEffect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Crowd Control Effect Redeemed.
         /// </summary>
         public static string CrowdControlEffectRedeemed {
@@ -10803,7 +10812,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to JustGiving service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to JustGiving and approve Mix It Up to access your information..
+        ///   Looks up a localized string similar to JustGiving service connectivity allows you to perform actions when a donation is received. To connect a JustGiving fundraiser, simply copy and paste the URL for your fundraising page into the text box and click Log In..
         /// </summary>
         public static string JustGivingInfo1 {
             get {
@@ -10835,6 +10844,15 @@ namespace MixItUp.Base {
         public static string KeyboardKey {
             get {
                 return ResourceManager.GetString("KeyboardKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Label.
+        /// </summary>
+        public static string Label {
+            get {
+                return ResourceManager.GetString("Label", resourceCulture);
             }
         }
         
@@ -17944,6 +17962,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set Content Classification Labels.
+        /// </summary>
+        public static string SetContentClassificationLabels {
+            get {
+                return ResourceManager.GetString("SetContentClassificationLabels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set Custom Tags.
         /// </summary>
         public static string SetCustomTags {
@@ -21690,6 +21717,15 @@ namespace MixItUp.Base {
         public static string TwitchChannelHosted {
             get {
                 return ResourceManager.GetString("TwitchChannelHosted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel Hype Chat.
+        /// </summary>
+        public static string TwitchChannelHypeChat {
+            get {
+                return ResourceManager.GetString("TwitchChannelHypeChat", resourceCulture);
             }
         }
         

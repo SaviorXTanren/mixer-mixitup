@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
@@ -17,6 +18,16 @@ namespace MixItUp.Base.Services.External
         public IFTTTService() : base("") { }
 
         public override string Name { get { return MixItUp.Base.Resources.IFTTT; } }
+
+        public override async Task<Result> Connect(OAuthTokenModel token)
+        {
+            Result result = await base.Connect(token);
+            if (result.Success)
+            {
+                ServiceManager.Get<ITelemetryService>().TrackService("IFTTT");
+            }
+            return result;
+        }
 
         public override Task<Result> Connect()
         {

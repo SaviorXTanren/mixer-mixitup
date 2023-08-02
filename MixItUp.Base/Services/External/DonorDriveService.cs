@@ -459,6 +459,8 @@ namespace MixItUp.Base.Services.External
                     AsyncRunner.RunAsyncBackground(this.BackgroundDonationCheck, this.cancellationTokenSource.Token, 60000);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
+                    ServiceManager.Get<ITelemetryService>().TrackService("DonorDrive");
+
                     this.IsConnected = true;
                     return new Result();
                 }
@@ -642,7 +644,7 @@ namespace MixItUp.Base.Services.External
                                                     Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
                                                     specialIdentifiers["donordrivemilestonedescription"] = milestone.description;
                                                     specialIdentifiers["donordrivemilestoneamountnumber"] = milestone.fundraisingGoal.ToString();
-                                                    specialIdentifiers["donordrivemilestoneamount"] = milestone.fundraisingGoal.ToCurrencyString();
+                                                    specialIdentifiers["donordrivemilestoneamount"] = CurrencyHelper.ToCurrencyString(milestone.fundraisingGoal);
                                                     CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.None, specialIdentifiers);
 
                                                     await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.DonorDriveDonationMilestone, parameters);

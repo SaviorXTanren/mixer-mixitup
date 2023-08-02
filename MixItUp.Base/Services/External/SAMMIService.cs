@@ -28,6 +28,7 @@ namespace MixItUp.Base.Services.External
                     if (result != null && result.ContainsKey("data"))
                     {
                         this.IsConnected = true;
+                        ServiceManager.Get<ITelemetryService>().TrackService("SAMMI");
                         return new Result();
                     }
                 }

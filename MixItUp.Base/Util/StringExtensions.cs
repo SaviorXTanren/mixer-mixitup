@@ -68,20 +68,6 @@ namespace MixItUp.Base.Util
             return source?.IndexOf(toCheck, comp) >= 0;
         }
 
-        public static bool ParseCurrency(this string str, out double result)
-        {
-            // First try the current culture and then the invariant culture if that fails.
-            if (!double.TryParse(str, NumberStyles.Currency, NumberFormatInfo.CurrentInfo, out result))
-            {
-                return double.TryParse(str, NumberStyles.Currency, NumberFormatInfo.InvariantInfo, out result);
-            }
-            return true;
-        }
-
-        public static string ToCurrencyString(this int number) { return ((double)number).ToCurrencyString(); }
-
-        public static string ToCurrencyString(this double number) { return string.Format("{0:C}", Math.Round(number, 2)); }
-
         public static string ToNumberDisplayString(this int number) { return number.ToString("N0"); }
     }
 }

@@ -301,7 +301,7 @@ namespace MixItUp.Base
                 if (ChannelSession.Settings.TreatStreamOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<TreatStreamService>()] = ChannelSession.Settings.TreatStreamOAuthToken; }
                 if (ChannelSession.Settings.StreamlootsOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<StreamlootsService>()] = ChannelSession.Settings.StreamlootsOAuthToken; }
                 if (ChannelSession.Settings.TiltifyOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<TiltifyService>()] = ChannelSession.Settings.TiltifyOAuthToken; }
-                if (ChannelSession.Settings.JustGivingOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<JustGivingService>()] = ChannelSession.Settings.JustGivingOAuthToken; }
+                if (ChannelSession.Settings.JustGivingPageShortName != null) { externalServiceToConnect[ServiceManager.Get<JustGivingService>()] = null; }
                 if (ChannelSession.Settings.IFTTTOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<IFTTTService>()] = ChannelSession.Settings.IFTTTOAuthToken; }
                 if (!string.IsNullOrEmpty(ChannelSession.Settings.DonorDriveParticipantID)) { externalServiceToConnect[ServiceManager.Get<DonorDriveService>()] = null; }
                 if (ChannelSession.Settings.PatreonOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<PatreonService>()] = ChannelSession.Settings.PatreonOAuthToken; }
