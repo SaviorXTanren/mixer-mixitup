@@ -1115,7 +1115,7 @@ namespace MixItUp.Base.Services.Twitch
                 parameters.SpecialIdentifiers["usersubstreak"] = packet.streak_months.ToString();
 
                 string moderation = await ServiceManager.Get<ModerationService>().ShouldTextBeModerated(user, message);
-                if (string.IsNullOrEmpty(moderation))
+                if (!string.IsNullOrEmpty(moderation))
                 {
                     parameters.SpecialIdentifiers["message"] = moderation;
                 }
