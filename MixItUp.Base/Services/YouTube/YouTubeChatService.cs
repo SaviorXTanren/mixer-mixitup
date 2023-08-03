@@ -460,7 +460,7 @@ namespace MixItUp.Base.Services.YouTube
                                 parameters.SpecialIdentifiers["subsgiftedamount"] = membershipsGifted.Amount.ToString();
                                 parameters.SpecialIdentifiers["usersubplan"] = membershipsGifted.Tier;
 
-                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelMassSubscriptionsGifted, parameters);
+                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelMassMembershipGifted, parameters);
 
                                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertMassSubscriptionsGiftedTier, user.FullDisplayName, membershipsGifted.Amount, membershipsGifted.Tier), ChannelSession.Settings.AlertMassGiftedSubColor));
                             }
