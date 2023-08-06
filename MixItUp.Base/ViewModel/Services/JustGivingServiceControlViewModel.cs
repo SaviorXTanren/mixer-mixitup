@@ -46,6 +46,7 @@ namespace MixItUp.Base.ViewModel.Services
                 {
                     ChannelSession.Settings.JustGivingPageShortName = this.WebPageURL;
                     ChannelSession.Settings.JustGivingPageShortName = ChannelSession.Settings.JustGivingPageShortName.Replace("https://www.justgiving.com/", string.Empty);
+                    ChannelSession.Settings.JustGivingPageShortName = ChannelSession.Settings.JustGivingPageShortName.Replace("https://www.justgiving.com/fundraising/", string.Empty);
                     int urlParametersIndex = ChannelSession.Settings.JustGivingPageShortName.IndexOf("?");
                     if (urlParametersIndex > 0)
                     {
