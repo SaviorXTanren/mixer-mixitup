@@ -20,7 +20,6 @@ using Twitch.Base.Models.NewAPI.Polls;
 using Twitch.Base.Models.NewAPI.Predictions;
 using Twitch.Base.Models.NewAPI.Streams;
 using Twitch.Base.Models.NewAPI.Subscriptions;
-using Twitch.Base.Models.NewAPI.Tags;
 using Twitch.Base.Models.NewAPI.Teams;
 using Twitch.Base.Models.NewAPI.Users;
 using Twitch.Base.Services.NewAPI;
@@ -65,6 +64,7 @@ namespace MixItUp.Base.Services.Twitch
 
             OAuthClientScopeEnum.moderator__read__chatters,
             OAuthClientScopeEnum.moderator__read__chat_settings,
+            OAuthClientScopeEnum.moderator__read__followers,
 
             OAuthClientScopeEnum.moderator__manage__announcements,
             OAuthClientScopeEnum.moderator__manage__banned_users,
@@ -215,9 +215,11 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<IEnumerable<GameModel>> GetNewAPIGamesByIDs(IEnumerable<string> ids) { return await this.RunAsync(this.Connection.NewAPI.Games.GetGamesByID(ids)); }
 
+        public async Task<IEnumerable<ChannelContentClassificationLabelModel>> GetContentClassificationLabels(string language = null) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Channels.GetContentClassificationLabels(language)); }
+
         public async Task<ChannelInformationModel> GetChannelInformation(UserModel channel) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Channels.GetChannelInformation(channel)); }
 
-        public async Task<bool> UpdateChannelInformation(UserModel channel, string title = null, string gameID = null, IEnumerable<string> tags = null) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Channels.UpdateChannelInformation(channel, title: title, gameID: gameID, tags: tags)); }
+        public async Task<bool> UpdateChannelInformation(UserModel channel, string title = null, string gameID = null, IEnumerable<string> tags = null, IEnumerable<string> cclIdsToAdd = null, IEnumerable<string> cclIdsToRemove = null) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Channels.UpdateChannelInformation(channel, title: title, gameID: gameID, tags: tags, cclIdsToAdd: cclIdsToAdd, cclIdsToRemove: cclIdsToRemove)); }
 
         public async Task SendChatAnnouncement(UserModel channel, UserModel sendAsUser, string message, string color) { await AsyncRunner.RunAsync(() => this.Connection.NewAPI.Chat.SendChatAnnouncement(channel.id, sendAsUser.id, new AnnouncementModel { message = message, color = color })); }
 

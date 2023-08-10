@@ -228,7 +228,8 @@ namespace MixItUp.Base.Services.External
 
     public class CrowdControlService : IExternalService
     {
-        private const string ConnectionURL = "wss://r8073rtqd8.execute-api.us-east-1.amazonaws.com/staging";
+        private const string BaseURL = "https://openapi.crowdcontrol.live";
+        private const string WebsocketURL = "wss://pubsub.crowdcontrol.live";
 
         public string Name { get { return Resources.CrowdControl; } }
 
@@ -271,9 +272,9 @@ namespace MixItUp.Base.Services.External
 
                 if (this.gamesCache.Count() == 0)
                 {
-                    using (AdvancedHttpClient client = new AdvancedHttpClient())
+                    using (AdvancedHttpClient client = new AdvancedHttpClient(BaseURL))
                     {
-                        this.gamesCache = await client.GetAsync<IEnumerable<CrowdControlGame>>("https://openapi.crowdcontrol.live/games");
+                        this.gamesCache = await client.GetAsync<IEnumerable<CrowdControlGame>>("games");
                         this.gamesCache = this.gamesCache.OrderBy(g => g.Name);
                     }
                 }
@@ -284,7 +285,7 @@ namespace MixItUp.Base.Services.External
                     this.socket.OnTextReceivedOccurred += Socket_OnTextReceivedOccurred;
                 }
                 this.socket.OnDisconnectOccurred += Socket_OnDisconnectOccurred;
-                await this.socket.Connect(CrowdControlService.ConnectionURL);
+                await this.socket.Connect(CrowdControlService.WebsocketURL);
 
                 await this.socket.SendPublicConnect(this.id);
 
@@ -336,9 +337,9 @@ namespace MixItUp.Base.Services.External
 
             try
             {
-                using (AdvancedHttpClient client = new AdvancedHttpClient())
+                using (AdvancedHttpClient client = new AdvancedHttpClient(BaseURL))
                 {
-                    IEnumerable<CrowdControlGamePack> gamePacks = await client.GetAsync<IEnumerable<CrowdControlGamePack>>($"https://openapi.crowdcontrol.live/games/{game.gameID}/packs");
+                    IEnumerable<CrowdControlGamePack> gamePacks = await client.GetAsync<IEnumerable<CrowdControlGamePack>>($"games/{game.gameID}/packs");
                     if (gamePacks != null)
                     {
                         foreach (var gamePack in gamePacks)
@@ -366,9 +367,9 @@ namespace MixItUp.Base.Services.External
 
         private async Task<string> GetCrowdControlID(string platform, string platformID)
         {
-            using (AdvancedHttpClient client = new AdvancedHttpClient())
+            using (AdvancedHttpClient client = new AdvancedHttpClient(BaseURL))
             {
-                JObject jobj = await client.GetJObjectAsync($"https://staging-openapi.crowdcontrol.live/user/{platform.ToLower()}/{platformID}/id");
+                JObject jobj = await client.GetJObjectAsync($"user/{platform.ToLower()}/{platformID}/id");
                 if (jobj != null && jobj.TryGetValue("ccUID", out JToken id))
                 {
                     return id.ToString();

@@ -3,14 +3,12 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Twitch;
-using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Twitch.Base.Models.NewAPI.ChannelPoints;
 
 namespace MixItUp.Base.ViewModel.Actions
@@ -43,6 +41,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged("ShowFollowersGrid");
                 this.NotifyPropertyChanged("ShowSlowChatGrid");
                 this.NotifyPropertyChanged("ShowSendAnnouncementGrid");
+                this.NotifyPropertyChanged("ShowSetContentClassificationLabelsGrid");
             }
         }
         private TwitchActionType selectedActionType;
@@ -465,7 +464,12 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private bool sendAnnouncementAsStreamer = true;
 
+        public bool ShowSetContentClassificationLabelsGrid { get { return this.SelectedActionType == TwitchActionType.SetContentClassificationLabels; } }
+
+        public TwitchContentClassificationLabelsEditorViewModel ContentClassificationLabelsEditor { get; set; } = new TwitchContentClassificationLabelsEditorViewModel();
+
         private IEnumerable<string> existingTags = null;
+        private IEnumerable<string> existingContentClassificationLabelIDs = null;
 
         public TwitchActionEditorControlViewModel(TwitchActionModel action)
             : base(action, action.Actions)
@@ -563,6 +567,10 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.Message = action.Message;
                 this.SelectedAnnouncementColor = action.Color;
                 this.SendAnnouncementAsStreamer = action.SendAnnouncementAsStreamer;
+            }
+            else if (this.ShowSetContentClassificationLabelsGrid)
+            {
+                this.existingContentClassificationLabelIDs = action.ContentClassificationLabelIDs;
             }
         }
 
@@ -675,6 +683,7 @@ namespace MixItUp.Base.ViewModel.Actions
         protected override async Task OnOpenInternal()
         {
             await this.TagEditor.OnOpen();
+            await this.ContentClassificationLabelsEditor.OnOpen();
 
             if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
@@ -700,6 +709,14 @@ namespace MixItUp.Base.ViewModel.Actions
                     foreach (string tag in ServiceManager.Get<TwitchSessionService>().Channel.tags)
                     {
                         await this.TagEditor.AddCustomTag(tag);
+                    }
+                }
+
+                if (this.existingContentClassificationLabelIDs != null)
+                {
+                    foreach (string ccl in this.existingContentClassificationLabelIDs)
+                    {
+                        this.ContentClassificationLabelsEditor.AddLabel(ccl);
                     }
                 }
             }
@@ -761,6 +778,10 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.ShowSendAnnouncementGrid)
             {
                 return TwitchActionModel.CreateSendChatAnnouncementAction(this.Message, this.SelectedAnnouncementColor, this.SendAnnouncementAsStreamer);
+            }
+            else if (this.ShowSetContentClassificationLabelsGrid)
+            {
+                return TwitchActionModel.CreateSetContentClassificationLabelsAction(this.ContentClassificationLabelsEditor.Labels.Select(l => l.Label));
             }
             else
             {

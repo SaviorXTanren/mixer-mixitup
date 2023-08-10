@@ -158,7 +158,35 @@ namespace MixItUp.Base.Model.Commands
             {
                 if (command is ActionGroupCommandModel && ((ActionGroupCommandModel)command).RunOneRandomly)
                 {
-                    actions.Add(command.Actions.Where(a => a.Enabled).Random());
+                    List<ActionModelBase> actionsToConsider = new List<ActionModelBase>(command.Actions.Where(a => a.Enabled));
+
+                    List<ActionModelBase> actionsToRemove = new List<ActionModelBase>();
+                    foreach (ActionModelBase action in actionsToConsider)
+                    {
+                        if (action.Type == ActionTypeEnum.Command)
+                        {
+                            CommandActionModel cAction = (CommandActionModel)action;
+                            if (cAction != null)
+                            {
+                                if (cAction.ActionType == CommandActionTypeEnum.RunCommand)
+                                {
+                                    CommandModelBase c = cAction.Command;
+                                    if (c != null && !c.IsEnabled)
+                                    {
+                                        actionsToRemove.Add(action);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+                    foreach (ActionModelBase action in actionsToRemove)
+                    {
+                        actionsToConsider.Remove(action);
+                    }
+
+                    actions.Add(actionsToConsider.Random());
                 }
                 else
                 {

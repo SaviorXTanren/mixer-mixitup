@@ -3,7 +3,6 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services.Mock;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat.Trovo;
-using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using System;
@@ -58,10 +57,6 @@ namespace MixItUp.Base.Services
     [DataContract]
     public class StatisticModel
     {
-        public const string UserIDProperty = "UserID";
-        public const string AmountProperty = "Amount";
-        public const string DescriptionProperty = "Description";
-
         [DataMember]
         public string ID { get; set; }
 
@@ -75,6 +70,12 @@ namespace MixItUp.Base.Services
         public StreamingPlatformTypeEnum Platform { get; set; }
 
         [DataMember]
+        public double Amount { get; set; }
+
+        [DataMember]
+        public string Description { get; set; }
+
+        [DataMember]
         public JObject Data { get; set; }
 
         [Obsolete]
@@ -86,16 +87,20 @@ namespace MixItUp.Base.Services
             this.DateTime = (DateTime)databaseParameters["DateTime"];
             this.Type = (StatisticItemTypeEnum)databaseParameters["TypeID"];
             this.Platform = (StreamingPlatformTypeEnum)databaseParameters["PlatformID"];
+            this.Amount = (double)databaseParameters["Amount"];
+            this.Description = (string)databaseParameters["Description"];
             this.Data = JObject.Parse(databaseParameters["Data"].ToString());
         }
 
-        public StatisticModel(StatisticItemTypeEnum type, StreamingPlatformTypeEnum platform, JObject data, DateTime? dateTime = null)
+        public StatisticModel(StatisticItemTypeEnum type, StreamingPlatformTypeEnum platform, double amount, string description, DateTime? dateTime = null)
         {
             this.ID = Guid.NewGuid().ToString();
             this.DateTime = (dateTime != null) ? dateTime.GetValueOrDefault() : DateTime.Now;
             this.Type = type;
             this.Platform = platform;
-            this.Data = data;
+            this.Amount = amount;
+            this.Description = description;
+            this.Data = new JObject();
         }
 
         [JsonIgnore]
@@ -103,37 +108,7 @@ namespace MixItUp.Base.Services
         {
             get
             {
-                if (this.Data.TryGetValue(AmountProperty, out JToken value) && value != null)
-                {
-                    return (int)value;
-                }
-                return 0;
-            }
-        }
-
-        [JsonIgnore]
-        public double AmountDouble
-        {
-            get
-            {
-                if (this.Data.TryGetValue(AmountProperty, out JToken value) && value != null)
-                {
-                    return (double)value;
-                }
-                return 0.0;
-            }
-        }
-
-        [JsonIgnore]
-        public string Description
-        {
-            get
-            {
-                if (this.Data.TryGetValue(DescriptionProperty, out JToken value) && value != null)
-                {
-                    return value.ToString();
-                }
-                return string.Empty;
+                return (int)this.Amount;
             }
         }
     }
@@ -160,32 +135,32 @@ namespace MixItUp.Base.Services
                 switch (eventType)
                 {
                     case EventTypeEnum.ChatUserJoined:
-                        this.LogStatistic(StatisticItemTypeEnum.UserJoined, parameters.User.Platform, user: parameters.User); break;
+                        this.LogStatistic(StatisticItemTypeEnum.UserJoined, parameters.User.Platform); break;
                     case EventTypeEnum.ChatUserLeft:
-                        this.LogStatistic(StatisticItemTypeEnum.UserLeft, parameters.User.Platform, user: parameters.User); break;
+                        this.LogStatistic(StatisticItemTypeEnum.UserLeft, parameters.User.Platform); break;
                     case EventTypeEnum.ChatMessageReceived:
-                        this.LogStatistic(StatisticItemTypeEnum.ChatMessage, parameters.User.Platform, user: parameters.User); break;
+                        this.LogStatistic(StatisticItemTypeEnum.ChatMessage, parameters.User.Platform); break;
 
                     case EventTypeEnum.TwitchChannelStreamStart:
                         this.LogStatistic(StatisticItemTypeEnum.StreamStart, platform: StreamingPlatformTypeEnum.Twitch); break;
                     case EventTypeEnum.TwitchChannelStreamStop:
                         this.LogStatistic(StatisticItemTypeEnum.StreamStop, platform: StreamingPlatformTypeEnum.Twitch); break;
                     case EventTypeEnum.TwitchChannelRaided:
-                        this.LogStatistic(StatisticItemTypeEnum.Raid, StreamingPlatformTypeEnum.Twitch, user: parameters.User, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "raidviewercount")); break;
+                        this.LogStatistic(StatisticItemTypeEnum.Raid, StreamingPlatformTypeEnum.Twitch, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "raidviewercount")); break;
                     case EventTypeEnum.TwitchChannelFollowed:
                         this.LogStatistic(StatisticItemTypeEnum.Follow, StreamingPlatformTypeEnum.Twitch); break;
                     case EventTypeEnum.TwitchChannelSubscribed:
-                        this.LogStatistic(StatisticItemTypeEnum.Subscription, StreamingPlatformTypeEnum.Twitch, user: parameters.User); break;
+                        this.LogStatistic(StatisticItemTypeEnum.Subscription, StreamingPlatformTypeEnum.Twitch); break;
                     case EventTypeEnum.TwitchChannelResubscribed:
-                        this.LogStatistic(StatisticItemTypeEnum.Resubscription, StreamingPlatformTypeEnum.Twitch, user: parameters.User, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "usersubmonths")); break;
+                        this.LogStatistic(StatisticItemTypeEnum.Resubscription, StreamingPlatformTypeEnum.Twitch, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "usersubmonths")); break;
                     case EventTypeEnum.TwitchChannelSubscriptionGifted:
-                        this.LogStatistic(StatisticItemTypeEnum.SubscriptionGifted, StreamingPlatformTypeEnum.Twitch, user: parameters.User, amount: 1); break;
+                        this.LogStatistic(StatisticItemTypeEnum.SubscriptionGifted, StreamingPlatformTypeEnum.Twitch, amount: 1); break;
                     case EventTypeEnum.TwitchChannelMassSubscriptionsGifted:
-                        this.LogStatistic(StatisticItemTypeEnum.SubscriptionGifted, StreamingPlatformTypeEnum.Twitch, user: parameters.User, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "subsgiftedamount")); break;
+                        this.LogStatistic(StatisticItemTypeEnum.SubscriptionGifted, StreamingPlatformTypeEnum.Twitch, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "subsgiftedamount")); break;
                     case EventTypeEnum.TwitchChannelBitsCheered:
-                        this.LogStatistic(StatisticItemTypeEnum.TwitchBits, StreamingPlatformTypeEnum.Twitch, user: parameters.User, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "bitscheered")); break;
+                        this.LogStatistic(StatisticItemTypeEnum.TwitchBits, StreamingPlatformTypeEnum.Twitch, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "bitscheered")); break;
                     case EventTypeEnum.TwitchChannelPointsRedeemed:
-                        this.LogStatistic(StatisticItemTypeEnum.TwitchChannelPoints, StreamingPlatformTypeEnum.Twitch, user: parameters.User, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "rewardcost"), parameters.SpecialIdentifiers["rewardname"]); break;
+                        this.LogStatistic(StatisticItemTypeEnum.TwitchChannelPoints, StreamingPlatformTypeEnum.Twitch, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "rewardcost"), parameters.SpecialIdentifiers["rewardname"]); break;
                     case EventTypeEnum.TwitchChannelHypeTrainBegin:
                         this.LogStatistic(StatisticItemTypeEnum.TwitchHypeTrainStart, platform: StreamingPlatformTypeEnum.Twitch); break;
                     case EventTypeEnum.TwitchChannelHypeTrainEnd:
@@ -198,37 +173,37 @@ namespace MixItUp.Base.Services
                     case EventTypeEnum.YouTubeChannelStreamStop:
                         this.LogStatistic(StatisticItemTypeEnum.StreamStop, platform: StreamingPlatformTypeEnum.YouTube); break;
                     case EventTypeEnum.YouTubeChannelNewMember:
-                        this.LogStatistic(StatisticItemTypeEnum.Subscription, StreamingPlatformTypeEnum.YouTube, user: parameters.User); break;
+                        this.LogStatistic(StatisticItemTypeEnum.Subscription, StreamingPlatformTypeEnum.YouTube); break;
                     case EventTypeEnum.YouTubeChannelMemberMilestone:
-                        this.LogStatistic(StatisticItemTypeEnum.Resubscription, StreamingPlatformTypeEnum.YouTube, user: parameters.User, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "usersubmonths")); break;
+                        this.LogStatistic(StatisticItemTypeEnum.Resubscription, StreamingPlatformTypeEnum.YouTube, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "usersubmonths")); break;
                     case EventTypeEnum.YouTubeChannelMembershipGifted:
-                        this.LogStatistic(StatisticItemTypeEnum.SubscriptionGifted, StreamingPlatformTypeEnum.YouTube, user: parameters.User, amount: 1); break;
+                        this.LogStatistic(StatisticItemTypeEnum.SubscriptionGifted, StreamingPlatformTypeEnum.YouTube, amount: 1); break;
                     case EventTypeEnum.YouTubeChannelMassMembershipGifted:
-                        this.LogStatistic(StatisticItemTypeEnum.SubscriptionGifted, StreamingPlatformTypeEnum.YouTube, user: parameters.User, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "subsgiftedamount")); break;
+                        this.LogStatistic(StatisticItemTypeEnum.SubscriptionGifted, StreamingPlatformTypeEnum.YouTube, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "subsgiftedamount")); break;
                     case EventTypeEnum.YouTubeChannelSuperChat:
-                        this.LogStatistic(StatisticItemTypeEnum.YouTubeSuperChat, StreamingPlatformTypeEnum.YouTube, user: parameters.User, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "amountnumber")); break;
+                        this.LogStatistic(StatisticItemTypeEnum.YouTubeSuperChat, StreamingPlatformTypeEnum.YouTube, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "amountnumber")); break;
 
                     case EventTypeEnum.TrovoChannelStreamStart:
                         this.LogStatistic(StatisticItemTypeEnum.StreamStart, platform: StreamingPlatformTypeEnum.Trovo); break;
                     case EventTypeEnum.TrovoChannelStreamStop:
                         this.LogStatistic(StatisticItemTypeEnum.StreamStop, platform: StreamingPlatformTypeEnum.Trovo); break;
                     case EventTypeEnum.TrovoChannelRaided:
-                        this.LogStatistic(StatisticItemTypeEnum.Raid, StreamingPlatformTypeEnum.Trovo, user: parameters.User, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "raidviewercount")); break;
+                        this.LogStatistic(StatisticItemTypeEnum.Raid, StreamingPlatformTypeEnum.Trovo, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "raidviewercount")); break;
                     case EventTypeEnum.TrovoChannelFollowed:
-                        this.LogStatistic(StatisticItemTypeEnum.Follow, StreamingPlatformTypeEnum.Trovo, user: parameters.User); break;
+                        this.LogStatistic(StatisticItemTypeEnum.Follow, StreamingPlatformTypeEnum.Trovo); break;
                     case EventTypeEnum.TrovoChannelSubscribed:
-                        this.LogStatistic(StatisticItemTypeEnum.Subscription, StreamingPlatformTypeEnum.Trovo, user: parameters.User); break;
+                        this.LogStatistic(StatisticItemTypeEnum.Subscription, StreamingPlatformTypeEnum.Trovo); break;
                     case EventTypeEnum.TrovoChannelResubscribed:
-                        this.LogStatistic(StatisticItemTypeEnum.Resubscription, StreamingPlatformTypeEnum.Trovo, user: parameters.User, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "usersubmonths")); break;
+                        this.LogStatistic(StatisticItemTypeEnum.Resubscription, StreamingPlatformTypeEnum.Trovo, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "usersubmonths")); break;
                     case EventTypeEnum.TrovoChannelSubscriptionGifted:
-                        this.LogStatistic(StatisticItemTypeEnum.SubscriptionGifted, StreamingPlatformTypeEnum.Trovo, user: parameters.User, amount: 1); break;
+                        this.LogStatistic(StatisticItemTypeEnum.SubscriptionGifted, StreamingPlatformTypeEnum.Trovo, amount: 1); break;
                     case EventTypeEnum.TrovoChannelMassSubscriptionsGifted:
-                        this.LogStatistic(StatisticItemTypeEnum.SubscriptionGifted, StreamingPlatformTypeEnum.Trovo, user: parameters.User, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "subsgiftedamount")); break;
+                        this.LogStatistic(StatisticItemTypeEnum.SubscriptionGifted, StreamingPlatformTypeEnum.Trovo, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "subsgiftedamount")); break;
                     case EventTypeEnum.TrovoChannelSpellCast:
-                        this.LogStatistic(StatisticItemTypeEnum.TrovoSpell, StreamingPlatformTypeEnum.Trovo, user: parameters.User, amount: this.GetAmountValue(parameters.SpecialIdentifiers, TrovoChatSpellViewModel.SpellTotalValueSpecialIdentifier),
+                        this.LogStatistic(StatisticItemTypeEnum.TrovoSpell, StreamingPlatformTypeEnum.Trovo, this.GetAmountValue(parameters.SpecialIdentifiers, TrovoChatSpellViewModel.SpellTotalValueSpecialIdentifier),
                             parameters.SpecialIdentifiers[TrovoChatSpellViewModel.SpellValueTypeSpecialIdentifier]); break;
                     case EventTypeEnum.TrovoChannelMagicChat:
-                        this.LogStatistic(StatisticItemTypeEnum.TrovoSpell, StreamingPlatformTypeEnum.Trovo, user: parameters.User); break;
+                        this.LogStatistic(StatisticItemTypeEnum.TrovoSpell, StreamingPlatformTypeEnum.Trovo); break;
 
                     case EventTypeEnum.StreamlabsDonation:
                     case EventTypeEnum.TiltifyDonation:
@@ -240,17 +215,17 @@ namespace MixItUp.Base.Services
                     case EventTypeEnum.JustGivingDonation:
                     case EventTypeEnum.StreamElementsDonation:
                     case EventTypeEnum.StreamElementsMerchPurchase:
-                        this.LogStatistic(StatisticItemTypeEnum.Donation, user: parameters.User, amount: this.GetAmountValue(parameters.SpecialIdentifiers, SpecialIdentifierStringBuilder.DonationAmountNumberSpecialIdentifier),
+                        this.LogStatistic(StatisticItemTypeEnum.Donation, amount: this.GetAmountValue(parameters.SpecialIdentifiers, SpecialIdentifierStringBuilder.DonationAmountNumberSpecialIdentifier),
                             description: parameters.SpecialIdentifiers[SpecialIdentifierStringBuilder.DonationSourceSpecialIdentifier]); break;
 
                     case EventTypeEnum.StreamlootsCardRedeemed:
-                        this.LogStatistic(StatisticItemTypeEnum.StreamlootsCardRedeemed, user: parameters.User, description: parameters.SpecialIdentifiers["streamlootscardname"]); break;
+                        this.LogStatistic(StatisticItemTypeEnum.StreamlootsCardRedeemed, description: parameters.SpecialIdentifiers["streamlootscardname"]); break;
                     case EventTypeEnum.StreamlootsPackPurchased:
-                        this.LogStatistic(StatisticItemTypeEnum.StreamlootsPackPurchased, user: parameters.User, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "streamlootspurchasequantity")); break;
+                        this.LogStatistic(StatisticItemTypeEnum.StreamlootsPackPurchased, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "streamlootspurchasequantity")); break;
                     case EventTypeEnum.StreamlootsPackGifted:
-                        this.LogStatistic(StatisticItemTypeEnum.StreamlootsPackGifted, user: parameters.User, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "streamlootspurchasequantity")); break;
+                        this.LogStatistic(StatisticItemTypeEnum.StreamlootsPackGifted, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "streamlootspurchasequantity")); break;
                     case EventTypeEnum.CrowdControlEffectRedeemed:
-                        this.LogStatistic(StatisticItemTypeEnum.CrowdControlEffect, user: parameters.User, description: parameters.SpecialIdentifiers["crowdcontroleffectname"]); break;
+                        this.LogStatistic(StatisticItemTypeEnum.CrowdControlEffect, description: parameters.SpecialIdentifiers["crowdcontroleffectname"]); break;
                 }
             }
             catch (Exception ex)
@@ -259,29 +234,15 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public void LogStatistic(StatisticItemTypeEnum statisticType,StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, UserV2ViewModel user = null, double amount = 0.0, string description = null, DateTime? dateTime = null)
+        public void LogStatistic(StatisticItemTypeEnum statisticType,StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, double amount = 0.0, string description = null, DateTime? dateTime = null)
         {
-            //JObject data = new JObject();
-            //if (user != null)
-            //{
-            //    data[StatisticModel.UserIDProperty] = user.ID;
-            //}
-            //if (amount != 0.0)
-            //{
-            //    data[StatisticModel.AmountProperty] = amount;
-            //}
-            //if (!string.IsNullOrEmpty(description))
-            //{
-            //    data[StatisticModel.DescriptionProperty] = description;
-            //}
+            StatisticModel statistic = new StatisticModel(statisticType, platform, amount, description, dateTime);
+            this.sessionStatistics.Add(statistic);
 
-            //StatisticModel statistic = new StatisticModel(statisticType, platform, data, dateTime);
-            //this.sessionStatistics.Add(statistic);
-
-            //lock (this.statisticsToSave)
-            //{
-            //    this.statisticsToSave.Add(statistic);
-            //}
+            lock (this.statisticsToSave)
+            {
+                this.statisticsToSave.Add(statistic);
+            }
         }
 
         public IEnumerable<StatisticModel> GetCurrentSessionStatistics() { return this.sessionStatistics.ToList(); }

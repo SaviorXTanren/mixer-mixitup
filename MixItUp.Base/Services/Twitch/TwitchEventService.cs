@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model;
+﻿using Google.Apis.YouTubePartner.v1.Data;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
@@ -210,6 +211,7 @@ namespace MixItUp.Base.Services.Twitch
 
     public class TwitchEventSubService : StreamingPlatformServiceBase
     {
+        private const string ChannelFollowEventSubSubscription = "channel.follow";
         private const string ChannelRaidEventSubSubscription = "channel.raid";
 
         public HashSet<string> FollowCache { get; private set; } = new HashSet<string>();
@@ -305,7 +307,7 @@ namespace MixItUp.Base.Services.Twitch
 
         private readonly IReadOnlyDictionary<string, string> DesiredSubscriptionsAndVersions = new Dictionary<string, string>(StringComparer.Ordinal)
         {
-            { "channel.follow", null },
+            { ChannelFollowEventSubSubscription, "2" },
             { ChannelRaidEventSubSubscription, null },
 
             { "stream.online", null },
@@ -343,7 +345,17 @@ namespace MixItUp.Base.Services.Twitch
 
                 foreach (string missingSub in missingSubs)
                 {
-                    if (missingSub.Equals(ChannelRaidEventSubSubscription, StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(missingSub, ChannelFollowEventSubSubscription, StringComparison.OrdinalIgnoreCase))
+                    {
+                        Dictionary<string, string> conditions = new Dictionary<string, string>
+                        {
+                            { "broadcaster_user_id", ServiceManager.Get<TwitchSessionService>().UserID },
+                            { "moderator_user_id", ServiceManager.Get<TwitchSessionService>().UserID }
+                        };
+
+                        await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub], conditions);
+                    }
+                    else if (missingSub.Equals(ChannelRaidEventSubSubscription, StringComparison.OrdinalIgnoreCase))
                     {
                         await this.RegisterEventSubSubscription(missingSub, message, DesiredSubscriptionsAndVersions[missingSub],
                             new Dictionary<string, string> { { "from_broadcaster_user_id", ServiceManager.Get<TwitchSessionService>().UserID } });
@@ -1103,7 +1115,7 @@ namespace MixItUp.Base.Services.Twitch
                 parameters.SpecialIdentifiers["usersubstreak"] = packet.streak_months.ToString();
 
                 string moderation = await ServiceManager.Get<ModerationService>().ShouldTextBeModerated(user, message);
-                if (string.IsNullOrEmpty(moderation))
+                if (!string.IsNullOrEmpty(moderation))
                 {
                     parameters.SpecialIdentifiers["message"] = moderation;
                 }
