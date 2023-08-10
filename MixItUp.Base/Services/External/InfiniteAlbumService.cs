@@ -40,8 +40,8 @@ namespace MixItUp.Base.Services.External
 
     public class InfiniteAlbumService : OAuthExternalServiceBase
     {
-        private const string BaseAddress = "https://dev.api.infinitealbum.io/";
-        private const string WebsocketAddress = "wss://socket.dev.api.infinitealbum.io";
+        private const string BaseAddress = "https://api.infinitealbum.io/";
+        private const string WebsocketAddress = "wss://socket.api.infinitealbum.io";
 
         private readonly InfiniteAlbumWebSocket websocket = new InfiniteAlbumWebSocket();
 

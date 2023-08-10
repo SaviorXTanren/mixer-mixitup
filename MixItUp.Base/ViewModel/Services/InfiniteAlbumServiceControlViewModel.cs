@@ -22,7 +22,6 @@ namespace MixItUp.Base.ViewModel.Services
                 ChannelSession.Settings.InfiniteAlbumOAuthToken = new StreamingClient.Base.Model.OAuth.OAuthTokenModel
                 {
                     refreshToken = this.AppCode
-
                 };
 
                 Result result = await ServiceManager.Get<InfiniteAlbumService>().Connect(ChannelSession.Settings.InfiniteAlbumOAuthToken);
