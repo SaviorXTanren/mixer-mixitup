@@ -130,12 +130,6 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayItemV3Type.Label:
                     this.Item = new OverlayLabelV3ViewModel((OverlayLabelV3Model)item);
                     break;
-                case OverlayItemV3Type.EventList:
-                    this.Item = new OverlayEventListV3ViewModel((OverlayEventListV3Model)item);
-                    break;
-                case OverlayItemV3Type.Goal:
-                    this.Item = new OverlayGoalV3ViewModel((OverlayGoalV3Model)item);
-                    break;
             }
         }
 
@@ -163,12 +157,6 @@ namespace MixItUp.Base.ViewModel.Overlay
                     break;
                 case OverlayItemV3Type.Label:
                     this.Item = new OverlayLabelV3ViewModel();
-                    break;
-                case OverlayItemV3Type.EventList:
-                    this.Item = new OverlayEventListV3ViewModel();
-                    break;
-                case OverlayItemV3Type.Goal:
-                    this.Item = new OverlayGoalV3ViewModel();
                     break;
             }
 

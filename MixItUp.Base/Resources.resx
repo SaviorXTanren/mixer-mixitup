@@ -9328,39 +9328,23 @@ namespace CustomNamespace
     <value>Commands containing Script actions are not supported for uploading to the Community Commands feature. Due to the complexity of scripts and the ability for them to have malicious intent for users, we do not support uploading them through Community Commands to ensure users are protected. You can optionally instead export your command to a file and share it out with users through other means.</value>
   </data>
   <data name="OverlayLabelAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="label-amount" class="text"&gt;
-        {Amount}
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelUsernameAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p class="text"&gt;
-    &lt;span id="label-username" class="text"&gt;
-        {Username}
-    &lt;/span&gt;
-    -
-    &lt;span id="label-amount" class="text"&gt;
-        {Amount}
-    &lt;/span&gt;
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelUsernameDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="label-username" class="text"&gt;
-    {Username}
-&lt;/p&gt;</value>
+    <value>&lt;p id="amount" class="text"&gt;&lt;/p&gt;</value>
   </data>
   <data name="OverlayLabelDefaultJavascript" xml:space="preserve">
     <value>function update(data)
 {
-    var nameElement = document.getElementById("label-name");
-    if (nameElement != null) {
-        nameElement.innerHTML = data.Name;
+    var usernameElement = document.getElementById("username");
+    if (usernameElement != null) {
+        usernameElement.innerHTML = data.Username;
     }
     
-    var amountElement = document.getElementById("label-amount");
+    var amountElement = document.getElementById("amount");
     if (amountElement != null) {
         amountElement.innerHTML = data.Amount;
     }
-}</value>
+}
+
+update({Username: '{Username}', Amount: {Amount}})</value>
   </data>
   <data name="OnUpdate" xml:space="preserve">
     <value>On Update</value>
@@ -9603,22 +9587,6 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
   <data name="CooldownRequirementOnCooldownSeconds" xml:space="preserve">
     <value>This command is currently on cooldown, please wait another {0} second(s).</value>
     <comment>Manual</comment>
-  </data>
-  <data name="OverlayLabelNameAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p class="text"&gt;
-    &lt;span id="label-name" class="text"&gt;
-        {Username}
-    &lt;/span&gt;
-    -
-    &lt;span id="label-amount" class="text"&gt;
-        {Amount}
-    &lt;/span&gt;
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelNameDefaultHTML" xml:space="preserve">
-    <value>&lt;p id="label-name" class="text"&gt;
-    {Username}
-&lt;/p&gt;</value>
   </data>
   <data name="Added" xml:space="preserve">
     <value>Added</value>
@@ -9982,5 +9950,19 @@ var youtubePlayerScript = document.createElement('script');
 youtubePlayerScript.src = "https://www.youtube.com/iframe_api";
 var firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(youtubePlayerScript, firstScriptTag);</value>
+  </data>
+  <data name="OverlayLabelUsernameAmountDefaultHTML" xml:space="preserve">
+    <value>&lt;p id="username" class="text"&gt;&lt;/p&gt;
+ - 
+&lt;p id="amount" class="text"&gt;&lt;/p&gt;</value>
+  </data>
+  <data name="OverlayLabelUsernameDefaultHTML" xml:space="preserve">
+    <value>&lt;p id="username" class="text"&gt;&lt;/p&gt;</value>
+  </data>
+  <data name="ChatterCount" xml:space="preserve">
+    <value>Chatter Count</value>
+  </data>
+  <data name="ViewerCount" xml:space="preserve">
+    <value>Viewer Count</value>
   </data>
 </root>

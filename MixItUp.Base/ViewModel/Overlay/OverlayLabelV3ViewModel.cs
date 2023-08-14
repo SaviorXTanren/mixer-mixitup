@@ -12,7 +12,7 @@ namespace MixItUp.Base.ViewModel.Overlay
     {
         public const string UpdatedAnimationName = "Updated";
 
-        public OverlayLabelWidgetV3Type SelectedLabelType
+        public OverlayLabelV3Type SelectedLabelType
         {
             get { return this.selectedLabelType; }
             set
@@ -23,22 +23,22 @@ namespace MixItUp.Base.ViewModel.Overlay
                 string newHTML = string.Empty;
                 switch (this.SelectedLabelType)
                 {
-                    case OverlayLabelWidgetV3Type.Viewers:
-                    case OverlayLabelWidgetV3Type.Chatters:
-                    case OverlayLabelWidgetV3Type.Counter:
-                    case OverlayLabelWidgetV3Type.TotalFollowers:
-                    case OverlayLabelWidgetV3Type.TotalSubscribers:
+                    case OverlayLabelV3Type.ViewerCount:
+                    case OverlayLabelV3Type.ChatterCount:
+                    case OverlayLabelV3Type.Counter:
+                    case OverlayLabelV3Type.TotalFollowers:
+                    case OverlayLabelV3Type.TotalSubscribers:
                         newHTML = OverlayLabelV3Model.DefaultAmountHTML;
                         break;
-                    case OverlayLabelWidgetV3Type.LastestFollower:
-                        newHTML = OverlayLabelV3Model.DefaultNameHTML;
+                    case OverlayLabelV3Type.LastestFollower:
+                        newHTML = OverlayLabelV3Model.DefaultUsernameHTML;
                         break;
-                    case OverlayLabelWidgetV3Type.LatestRaid:
-                    case OverlayLabelWidgetV3Type.LatestSubscriber:
-                    case OverlayLabelWidgetV3Type.LatestDonation:
-                    case OverlayLabelWidgetV3Type.LatestTwitchBits:
-                    case OverlayLabelWidgetV3Type.LatestTrovoElixir:
-                        newHTML = OverlayLabelV3Model.DefaultNameAmountHTML;
+                    case OverlayLabelV3Type.LatestRaid:
+                    case OverlayLabelV3Type.LatestSubscriber:
+                    case OverlayLabelV3Type.LatestDonation:
+                    case OverlayLabelV3Type.LatestTwitchBits:
+                    case OverlayLabelV3Type.LatestTrovoElixir:
+                        newHTML = OverlayLabelV3Model.DefaultUsernameAmountHTML;
                         break;
                 }
 
@@ -47,11 +47,11 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged(nameof(CounterTypeSelected));
             }
         }
-        private OverlayLabelWidgetV3Type selectedLabelType;
+        private OverlayLabelV3Type selectedLabelType;
 
-        public IEnumerable<OverlayLabelWidgetV3Type> LabelTypes { get; private set; } = EnumHelper.GetEnumList<OverlayLabelWidgetV3Type>();
+        public IEnumerable<OverlayLabelV3Type> LabelTypes { get; private set; } = EnumHelper.GetEnumList<OverlayLabelV3Type>();
 
-        public bool CounterTypeSelected { get { return this.SelectedLabelType == OverlayLabelWidgetV3Type.Counter; } }
+        public bool CounterTypeSelected { get { return this.SelectedLabelType == OverlayLabelV3Type.Counter; } }
 
         public CounterModel SelectedCounter
         {
@@ -71,7 +71,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             this.Initialize();
 
-            this.SelectedLabelType = OverlayLabelWidgetV3Type.LastestFollower;
+            this.SelectedLabelType = OverlayLabelV3Type.LastestFollower;
 
             this.AddAnimations(new List<string>() { OverlayLabelV3ViewModel.UpdatedAnimationName });
         }
@@ -82,7 +82,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.Initialize();
 
             this.SelectedLabelType = item.LabelType;
-            if (this.SelectedLabelType == OverlayLabelWidgetV3Type.Counter)
+            if (this.SelectedLabelType == OverlayLabelV3Type.Counter)
             {
                 this.SelectedCounter = this.Counters.FirstOrDefault(c => string.Equals(c.Name, item.CounterName, StringComparison.OrdinalIgnoreCase));
             }
@@ -94,7 +94,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             if (result.Success)
             {
-                if (this.SelectedLabelType == OverlayLabelWidgetV3Type.Counter)
+                if (this.SelectedLabelType == OverlayLabelV3Type.Counter)
                 {
                     if (this.SelectedCounter == null)
                     {
@@ -142,7 +142,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 result.TextAlignment = OverlayVisualTextItemV3AlignmentTypeEnum.Justify;
             }
 
-            if (this.SelectedLabelType == OverlayLabelWidgetV3Type.Counter)
+            if (this.SelectedLabelType == OverlayLabelV3Type.Counter)
             {
                 result.CounterName = this.SelectedCounter.Name;
             }

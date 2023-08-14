@@ -2294,6 +2294,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chatter Count.
+        /// </summary>
+        public static string ChatterCount {
+            get {
+                return ResourceManager.GetString("ChatterCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chatters.
         /// </summary>
         public static string Chatters {
@@ -13934,9 +13943,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;label-amount&quot; class=&quot;text&quot;&gt;
-        ///        {Amount}
-        ///&lt;/p&gt;.
+        ///   Looks up a localized string similar to &lt;p id=&quot;amount&quot; class=&quot;text&quot;&gt;&lt;/p&gt;.
         /// </summary>
         public static string OverlayLabelAmountDefaultHTML {
             get {
@@ -13956,16 +13963,18 @@ namespace MixItUp.Base {
         /// <summary>
         ///   Looks up a localized string similar to function update(data)
         ///{
-        ///    var nameElement = document.getElementById(&quot;label-name&quot;);
-        ///    if (nameElement != null) {
-        ///        nameElement.innerHTML = data.Name;
+        ///    var usernameElement = document.getElementById(&quot;username&quot;);
+        ///    if (usernameElement != null) {
+        ///        usernameElement.innerHTML = data.Username;
         ///    }
         ///    
-        ///    var amountElement = document.getElementById(&quot;label-amount&quot;);
+        ///    var amountElement = document.getElementById(&quot;amount&quot;);
         ///    if (amountElement != null) {
         ///        amountElement.innerHTML = data.Amount;
         ///    }
-        ///}.
+        ///}
+        ///
+        ///update({Username: &apos;{Username}&apos;, Amount: {Amount}}).
         /// </summary>
         public static string OverlayLabelDefaultJavascript {
             get {
@@ -13974,43 +13983,9 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p class=&quot;text&quot;&gt;
-        ///    &lt;span id=&quot;label-name&quot; class=&quot;text&quot;&gt;
-        ///        {Username}
-        ///    &lt;/span&gt;
-        ///    -
-        ///    &lt;span id=&quot;label-amount&quot; class=&quot;text&quot;&gt;
-        ///        {Amount}
-        ///    &lt;/span&gt;
-        ///&lt;/p&gt;.
-        /// </summary>
-        public static string OverlayLabelNameAmountDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayLabelNameAmountDefaultHTML", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;label-name&quot; class=&quot;text&quot;&gt;
-        ///    {Username}
-        ///&lt;/p&gt;.
-        /// </summary>
-        public static string OverlayLabelNameDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayLabelNameDefaultHTML", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;p class=&quot;text&quot;&gt;
-        ///    &lt;span id=&quot;label-username&quot; class=&quot;text&quot;&gt;
-        ///        {Username}
-        ///    &lt;/span&gt;
-        ///    -
-        ///    &lt;span id=&quot;label-amount&quot; class=&quot;text&quot;&gt;
-        ///        {Amount}
-        ///    &lt;/span&gt;
-        ///&lt;/p&gt;.
+        ///   Looks up a localized string similar to &lt;p id=&quot;username&quot; class=&quot;text&quot;&gt;&lt;/p&gt;
+        /// - 
+        ///&lt;p id=&quot;amount&quot; class=&quot;text&quot;&gt;&lt;/p&gt;.
         /// </summary>
         public static string OverlayLabelUsernameAmountDefaultHTML {
             get {
@@ -14019,9 +13994,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;label-username&quot; class=&quot;text&quot;&gt;
-        ///    {Username}
-        ///&lt;/p&gt;.
+        ///   Looks up a localized string similar to &lt;p id=&quot;username&quot; class=&quot;text&quot;&gt;&lt;/p&gt;.
         /// </summary>
         public static string OverlayLabelUsernameDefaultHTML {
             get {
@@ -22940,6 +22913,15 @@ namespace MixItUp.Base {
         public static string VideoFilePath {
             get {
                 return ResourceManager.GetString("VideoFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Viewer Count.
+        /// </summary>
+        public static string ViewerCount {
+            get {
+                return ResourceManager.GetString("ViewerCount", resourceCulture);
             }
         }
         
