@@ -10200,7 +10200,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Infinite Album connectivity allows you to control functionality in the Infinite Album software, such as changing the style of music playing. To connect to Infinite Album, please ensure the software is running and the service is connected..
+        ///   Looks up a localized string similar to Infinite Album connectivity allows you to control functionality in the Infinite Album software, such as changing the style of music playing. To connect to Infinite Album, please open Infinite Album and click on the App Code link in the hamburger menu.  Once Infinite Album alerts you that the app code was copied to the clipboard, paste that in Mix It Up and press Connect..
         /// </summary>
         public static string InfiniteAlbumInfo {
             get {
