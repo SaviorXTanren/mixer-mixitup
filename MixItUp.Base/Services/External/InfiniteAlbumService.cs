@@ -32,8 +32,6 @@ namespace MixItUp.Base.Services.External
     {
         protected override Task ProcessReceivedPacket(string packet)
         {
-            System.Diagnostics.Debug.WriteLine(packet);
-
             return Task.CompletedTask;
         }
     }
