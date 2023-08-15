@@ -9197,7 +9197,7 @@ else {
     <value>&lt;iframe frameborder="0" width="{WIDTH}" height="{HEIGHT}" src="{URL}" /&gt;</value>
   </data>
   <data name="OverlayYouTubeDefaultHTML" xml:space="preserve">
-    <value>&lt;div id="youtube-{ID}" /&gt;</value>
+    <value>&lt;div id="youtube-{ID}" class="youtubeVideo" /&gt;</value>
   </data>
   <data name="DisplayFormat" xml:space="preserve">
     <value>Display Format</value>
@@ -9970,14 +9970,40 @@ firstScriptTag.parentNode.insertBefore(youtubePlayerScript, firstScriptTag);</va
   </data>
   <data name="OverlayTwitchClipDefaultCSS" xml:space="preserve">
     <value>.clip {
-    style: block;
+    border: 0px;
 }</value>
   </data>
   <data name="OverlayTwitchClipDefaultJavascript" xml:space="preserve">
     <value>var clip = document.getElementById("clip");
-clip.setAttribute("src", "https://clips.twitch.tv/embed?parent=" + window.location.hostname + "&amp;autoplay=true&amp;clip={ClipID}");</value>
+clip.setAttribute("src", "https://clips.twitch.tv/embed?parent=" + window.location.hostname + "&amp;autoplay=true&amp;muted=false&amp;clip={ClipID}");</value>
+  </data>
+  <data name="OverlayYouTubeDefaultCSS" xml:space="preserve">
+    <value>.youtubeVideo {
+
+}</value>
   </data>
   <data name="TwitchClip" xml:space="preserve">
     <value>Twitch Clip</value>
+  </data>
+  <data name="LatestClip" xml:space="preserve">
+    <value>Latest Clip</value>
+  </data>
+  <data name="RandomClip" xml:space="preserve">
+    <value>Random Clip</value>
+  </data>
+  <data name="TopClip" xml:space="preserve">
+    <value>Top Clip</value>
+  </data>
+  <data name="ClipID" xml:space="preserve">
+    <value>Clip ID</value>
+  </data>
+  <data name="OverlayTwitchClipErrorUnableToFindValidClip" xml:space="preserve">
+    <value>ERROR: Unable to find a valid clip</value>
+  </data>
+  <data name="OverlayTwitchClipValidIDMustBeSpecified" xml:space="preserve">
+    <value>A valid Clip ID must be specified</value>
+  </data>
+  <data name="SpecificClip" xml:space="preserve">
+    <value>Specific Clip</value>
   </data>
 </root>

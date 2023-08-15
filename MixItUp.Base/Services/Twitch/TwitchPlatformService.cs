@@ -20,7 +20,6 @@ using Twitch.Base.Models.NewAPI.Polls;
 using Twitch.Base.Models.NewAPI.Predictions;
 using Twitch.Base.Models.NewAPI.Streams;
 using Twitch.Base.Models.NewAPI.Subscriptions;
-using Twitch.Base.Models.NewAPI.Tags;
 using Twitch.Base.Models.NewAPI.Teams;
 using Twitch.Base.Models.NewAPI.Users;
 using Twitch.Base.Services.NewAPI;
@@ -271,7 +270,9 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<ClipModel> GetClip(ClipCreationModel clip) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Clips.GetClip(clip)); }
 
-        public async Task<IEnumerable<ClipModel>> GetClips(UserModel broadcaster, int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Clips.GetBroadcasterClips(broadcaster, maxResults: maxResults)); }
+        public async Task<ClipModel> GetClip(string id) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Clips.GetClipByID(id)); }
+
+        public async Task<IEnumerable<ClipModel>> GetClips(UserModel broadcaster, DateTimeOffset? startDate = null, DateTimeOffset? endDate = null, int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Clips.GetBroadcasterClips(broadcaster, startedAt: startDate, endedAt: endDate, maxResults: maxResults)); }
 
         public async Task<BitsLeaderboardModel> GetBitsLeaderboard(BitsLeaderboardPeriodEnum period, int count) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Bits.GetBitsLeaderboard(startedAt: DateTimeOffset.Now, period: period, count: count)); }
 

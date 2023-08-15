@@ -2618,6 +2618,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clip ID.
+        /// </summary>
+        public static string ClipID {
+            get {
+                return ResourceManager.GetString("ClipID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clip Playback.
         /// </summary>
         public static string ClipPlayback {
@@ -10803,6 +10812,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Latest Clip.
+        /// </summary>
+        public static string LatestClip {
+            get {
+                return ResourceManager.GetString("LatestClip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Latest Donation.
         /// </summary>
         public static string LatestDonation {
@@ -14194,7 +14212,7 @@ namespace MixItUp.Base {
         
         /// <summary>
         ///   Looks up a localized string similar to .clip {
-        ///    style: block;
+        ///    border: 0px;
         ///}.
         /// </summary>
         public static string OverlayTwitchClipDefaultCSS {
@@ -14214,11 +14232,29 @@ namespace MixItUp.Base {
         
         /// <summary>
         ///   Looks up a localized string similar to var clip = document.getElementById(&quot;clip&quot;);
-        ///clip.setAttribute(&quot;src&quot;, &quot;https://clips.twitch.tv/embed?parent=&quot; + window.location.hostname + &quot;&amp;autoplay=true&amp;clip={ClipID}&quot;);.
+        ///clip.setAttribute(&quot;src&quot;, &quot;https://clips.twitch.tv/embed?parent=&quot; + window.location.hostname + &quot;&amp;autoplay=true&amp;muted=false&amp;clip={ClipID}&quot;);.
         /// </summary>
         public static string OverlayTwitchClipDefaultJavascript {
             get {
                 return ResourceManager.GetString("OverlayTwitchClipDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ERROR: Unable to find a valid clip.
+        /// </summary>
+        public static string OverlayTwitchClipErrorUnableToFindValidClip {
+            get {
+                return ResourceManager.GetString("OverlayTwitchClipErrorUnableToFindValidClip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid Clip ID must be specified.
+        /// </summary>
+        public static string OverlayTwitchClipValidIDMustBeSpecified {
+            get {
+                return ResourceManager.GetString("OverlayTwitchClipValidIDMustBeSpecified", resourceCulture);
             }
         }
         
@@ -14480,7 +14516,18 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;youtube-{ID}&quot; /&gt;.
+        ///   Looks up a localized string similar to .youtubeVideo {
+        ///
+        ///}.
+        /// </summary>
+        public static string OverlayYouTubeDefaultCSS {
+            get {
+                return ResourceManager.GetString("OverlayYouTubeDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div id=&quot;youtube-{ID}&quot; class=&quot;youtubeVideo&quot; /&gt;.
         /// </summary>
         public static string OverlayYouTubeDefaultHTML {
             get {
@@ -15948,6 +15995,15 @@ namespace MixItUp.Base {
         public static string Random {
             get {
                 return ResourceManager.GetString("Random", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Random Clip.
+        /// </summary>
+        public static string RandomClip {
+            get {
+                return ResourceManager.GetString("RandomClip", resourceCulture);
             }
         }
         
@@ -18625,6 +18681,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Specific Clip.
+        /// </summary>
+        public static string SpecificClip {
+            get {
+                return ResourceManager.GetString("SpecificClip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Speech Message.
         /// </summary>
         public static string SpeechMessage {
@@ -20556,6 +20621,15 @@ namespace MixItUp.Base {
         public static string Top {
             get {
                 return ResourceManager.GetString("Top", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top Clip.
+        /// </summary>
+        public static string TopClip {
+            get {
+                return ResourceManager.GetString("TopClip", resourceCulture);
             }
         }
         

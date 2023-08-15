@@ -664,7 +664,7 @@ namespace MixItUp.Base.Util
 
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TwitchSpecialIdentifierHeader + "cliprandom"))
                 {
-                    IEnumerable<ClipModel> clips = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClips(ServiceManager.Get<TwitchSessionService>().User, maxResults: int.MaxValue);
+                    IEnumerable<ClipModel> clips = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClips(ServiceManager.Get<TwitchSessionService>().User, maxResults: 100);
                     if (clips != null && clips.Count() > 0)
                     {
                         ClipModel randomClip = clips.Random();

@@ -1,24 +1,34 @@
 ﻿using MixItUp.Base.Model.Commands;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
+    public enum OverlayTwitchClipV3ClipType
+    {
+        LatestClip,
+        RandomClip,
+        SpecificClip,
+    }
+
     [DataContract]
     public class OverlayTwitchClipV3Model : OverlayItemV3ModelBase
     {
         public static readonly string DefaultHTML = Resources.OverlayTwitchClipDefaultHTML;
-        public static readonly string DefaultCSS = string.Empty;
+        public static readonly string DefaultCSS = Resources.OverlayTwitchClipDefaultCSS;
         public static readonly string DefaultJavascript = Resources.OverlayTwitchClipDefaultJavascript;
 
         [DataMember]
-        public string VideoID { get; set; }
+        public OverlayTwitchClipV3ClipType ClipType { get; set; }
 
         [DataMember]
-        public int StartTime { get; set; }
+        public string ClipReferenceID { get; set; }
 
-        [DataMember]
-        public int Volume { get; set; }
+        [JsonIgnore]
+        public string TempClipID { get; set; }
+        [JsonIgnore]
+        public float TempClipDuration { get; set; }
 
         public OverlayTwitchClipV3Model() : base(OverlayItemV3Type.TwitchClip) { }
 
@@ -46,9 +56,9 @@ namespace MixItUp.Base.Model.Overlay
             item.CSS = ReplaceProperty(item.CSS, "ClipWidth", clipWidth);
             item.Javascript = ReplaceProperty(item.Javascript, "ClipWidth", clipWidth);
 
-            item.HTML = ReplaceProperty(item.HTML, "ClipID", "EnchantingScaryCarabeefArsonNoSexy");
-            item.CSS = ReplaceProperty(item.CSS, "ClipID", "EnchantingScaryCarabeefArsonNoSexy");
-            item.Javascript = ReplaceProperty(item.Javascript, "ClipID", "EnchantingScaryCarabeefArsonNoSexy");
+            item.HTML = ReplaceProperty(item.HTML, "ClipID", this.TempClipID);
+            item.CSS = ReplaceProperty(item.CSS, "ClipID", this.TempClipID);
+            item.Javascript = ReplaceProperty(item.Javascript, "ClipID", this.TempClipID);
 
             return item;
         }
