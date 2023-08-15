@@ -71,12 +71,6 @@ namespace MixItUp.WPF.Windows.Overlay
                 case OverlayItemV3Type.Label:
                     this.InnerContent.Content = new OverlayLabelV3Control();
                     break;
-                case OverlayItemV3Type.EventList:
-                    this.InnerContent.Content = new OverlayEventListV3Control();
-                    break;
-                case OverlayItemV3Type.Goal:
-                    this.InnerContent.Content = new OverlayGoalV3Control();
-                    break;
             }
         }
 

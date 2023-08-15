@@ -9183,7 +9183,7 @@ else {
 &lt;/p&gt;</value>
   </data>
   <data name="OverlayVideoDefaultCSS" xml:space="preserve">
-    <value>.video-{ID} {
+    <value>.video {
     width: {Width};
     height: {Height};
 }</value>
@@ -9964,5 +9964,20 @@ firstScriptTag.parentNode.insertBefore(youtubePlayerScript, firstScriptTag);</va
   </data>
   <data name="ViewerCount" xml:space="preserve">
     <value>Viewer Count</value>
+  </data>
+  <data name="OverlayTwitchClipDefaultHTML" xml:space="preserve">
+    <value>&lt;iframe id="clip" class="clip" width="{ClipWidth}" height="{ClipHeight}"&gt;&lt;/iframe&gt;</value>
+  </data>
+  <data name="OverlayTwitchClipDefaultCSS" xml:space="preserve">
+    <value>.clip {
+    style: block;
+}</value>
+  </data>
+  <data name="OverlayTwitchClipDefaultJavascript" xml:space="preserve">
+    <value>var clip = document.getElementById("clip");
+clip.setAttribute("src", "https://clips.twitch.tv/embed?parent=" + window.location.hostname + "&amp;autoplay=true&amp;clip={ClipID}");</value>
+  </data>
+  <data name="TwitchClip" xml:space="preserve">
+    <value>Twitch Clip</value>
   </data>
 </root>

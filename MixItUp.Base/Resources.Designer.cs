@@ -14193,7 +14193,37 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .video-{ID} {
+        ///   Looks up a localized string similar to .clip {
+        ///    style: block;
+        ///}.
+        /// </summary>
+        public static string OverlayTwitchClipDefaultCSS {
+            get {
+                return ResourceManager.GetString("OverlayTwitchClipDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;iframe id=&quot;clip&quot; class=&quot;clip&quot; width=&quot;{ClipWidth}&quot; height=&quot;{ClipHeight}&quot;&gt;&lt;/iframe&gt;.
+        /// </summary>
+        public static string OverlayTwitchClipDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayTwitchClipDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to var clip = document.getElementById(&quot;clip&quot;);
+        ///clip.setAttribute(&quot;src&quot;, &quot;https://clips.twitch.tv/embed?parent=&quot; + window.location.hostname + &quot;&amp;autoplay=true&amp;clip={ClipID}&quot;);.
+        /// </summary>
+        public static string OverlayTwitchClipDefaultJavascript {
+            get {
+                return ResourceManager.GetString("OverlayTwitchClipDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .video {
         ///    width: {Width};
         ///    height: {Height};
         ///}.
@@ -21670,6 +21700,15 @@ namespace MixItUp.Base {
         public static string TwitchChat {
             get {
                 return ResourceManager.GetString("TwitchChat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Clip.
+        /// </summary>
+        public static string TwitchClip {
+            get {
+                return ResourceManager.GetString("TwitchClip", resourceCulture);
             }
         }
         

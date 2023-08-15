@@ -96,5 +96,13 @@
                 </OverlayControls:OverlayItemContainerV3Control.ContentControl>
             </OverlayControls:OverlayItemContainerV3Control>
         </Grid>
+
+        <Grid Grid.Row="2" Visibility="{Binding ShowTwitchClipItem, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+            <OverlayControls:OverlayItemContainerV3Control DataContext="{Binding TwitchClipItemViewModel}">
+                <OverlayControls:OverlayItemContainerV3Control.ContentControl>
+                    <OverlayControls:OverlayTwitchClipV3Control />
+                </OverlayControls:OverlayItemContainerV3Control.ContentControl>
+            </OverlayControls:OverlayItemContainerV3Control>
+        </Grid>
     </Grid>
 </local:ActionEditorControlBase>

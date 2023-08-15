@@ -1,5 +1,4 @@
-﻿using Google.Apis.YouTubePartner.v1.Data;
-using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;

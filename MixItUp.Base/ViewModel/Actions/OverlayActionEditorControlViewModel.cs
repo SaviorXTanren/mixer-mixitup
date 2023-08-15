@@ -20,6 +20,7 @@ namespace MixItUp.Base.ViewModel.Actions
         HTML,
         WebPage,
         Timer,
+        TwitchClip,
     }
 
     public class OverlayActionEditorControlViewModel : ActionEditorControlViewModelBase
@@ -43,6 +44,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged(nameof(ShowYouTubeItem));
                 this.NotifyPropertyChanged(nameof(ShowHTMLItem));
                 this.NotifyPropertyChanged(nameof(ShowTimerItem));
+                this.NotifyPropertyChanged(nameof(ShowTwitchClipItem));
             }
         }
         private OverlayActionTypeEnum selectedActionType;
@@ -150,6 +152,19 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private OverlayTimerV3ViewModel timerItemViewModel = new OverlayTimerV3ViewModel();
 
+        public bool ShowTwitchClipItem { get { return this.SelectedActionType == OverlayActionTypeEnum.TwitchClip; } }
+
+        public OverlayTwitchClipV3ViewModel TwitchClipItemViewModel
+        {
+            get { return this.twitchClipItemViewModel; }
+            set
+            {
+                this.twitchClipItemViewModel = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private OverlayTwitchClipV3ViewModel twitchClipItemViewModel = new OverlayTwitchClipV3ViewModel();
+
         public OverlayActionEditorControlViewModel(OverlayActionModel action)
             : base(action)
         {
@@ -191,6 +206,11 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.SelectedActionType = OverlayActionTypeEnum.Timer;
                     this.TimerItemViewModel = new OverlayTimerV3ViewModel((OverlayTimerV3Model)action.OverlayItemV3);
                 }
+                else if (action.OverlayItemV3.Type == OverlayItemV3Type.TwitchClip)
+                {
+                    this.SelectedActionType = OverlayActionTypeEnum.Text;
+                    this.TwitchClipItemViewModel = new OverlayTwitchClipV3ViewModel((OverlayTwitchClipV3Model)action.OverlayItemV3);
+                }
             }
         }
 
@@ -205,6 +225,7 @@ namespace MixItUp.Base.ViewModel.Actions
             this.YouTubeItemViewModel.AddOverlayActionAnimations();
             this.HTMLItemViewModel.AddOverlayActionAnimations();
             this.TimerItemViewModel.AddOverlayActionAnimations();
+            this.TwitchClipItemViewModel.AddOverlayActionAnimations();
         }
 
         public override Task<Result> Validate()
@@ -281,6 +302,10 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.SelectedActionType == OverlayActionTypeEnum.Timer)
             {
                 return this.TimerItemViewModel;
+            }
+            else if (this.SelectedActionType == OverlayActionTypeEnum.TwitchClip)
+            {
+                return this.TwitchClipItemViewModel;
             }
             return null;
         }

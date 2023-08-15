@@ -129,6 +129,11 @@ namespace MixItUp.Base.ViewModel.Overlay
                     this.CSS = OverlayLabelV3Model.DefaultCSS;
                     this.Javascript = OverlayLabelV3Model.DefaultJavascript;
                     break;
+                case OverlayItemV3Type.TwitchClip:
+                    this.HTML = OverlayTwitchClipV3Model.DefaultHTML;
+                    this.CSS = OverlayTwitchClipV3Model.DefaultCSS;
+                    this.Javascript = OverlayTwitchClipV3Model.DefaultJavascript;
+                    break;
             }
 
             this.SetPositionWrappedHTML(this.HTML);

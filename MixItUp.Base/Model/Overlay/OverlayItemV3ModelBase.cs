@@ -18,9 +18,7 @@ namespace MixItUp.Base.Model.Overlay
         HTML,
         Timer,
         Label,
-        EventList,
-        Goal,
-        Chat,
+        TwitchClip,
     }
 
     [DataContract]

@@ -845,6 +845,9 @@
     <Compile Include="Controls\Overlay\OverlayTimerV3Control.xaml.cs">
       <DependentUpon>OverlayTimerV3Control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Overlay\OverlayTwitchClipV3Control.xaml.cs">
+      <DependentUpon>OverlayTwitchClipV3Control.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Overlay\OverlayVideoV3Control.xaml.cs">
       <DependentUpon>OverlayVideoV3Control.xaml</DependentUpon>
     </Compile>
@@ -1697,6 +1700,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayTimerV3Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayTwitchClipV3Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

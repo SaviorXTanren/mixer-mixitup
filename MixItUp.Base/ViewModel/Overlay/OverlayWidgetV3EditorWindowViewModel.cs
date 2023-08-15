@@ -130,6 +130,9 @@ namespace MixItUp.Base.ViewModel.Overlay
                 case OverlayItemV3Type.Label:
                     this.Item = new OverlayLabelV3ViewModel((OverlayLabelV3Model)item);
                     break;
+                case OverlayItemV3Type.TwitchClip:
+                    this.Item = new OverlayTwitchClipV3ViewModel((OverlayTwitchClipV3Model)item);
+                    break;
             }
         }
 
