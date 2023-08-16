@@ -23,6 +23,7 @@
             <GenericSettingsControls:GenericComboBoxSettingsOptionControl DataContext="{Binding RequirementErrorsCooldownType}" />
             <GenericSettingsControls:GenericNumberSettingsOptionControl DataContext="{Binding RequirementErrorsCooldownAmount}" />
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding IncludeUsernameWithRequirementErrors}" />
+            <GenericSettingsControls:GenericTextSettingsOptionControl DataContext="{Binding DelimitedArgumentSeparator}" />
 
             <Separator Margin="10" />
 

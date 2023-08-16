@@ -22,9 +22,10 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.selectedActionType = value;
                 this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("ShowCommandsSection");
-                this.NotifyPropertyChanged("ShowCommandRunSection");
-                this.NotifyPropertyChanged("ShowCommandGroupsSection");
+                this.NotifyPropertyChanged(nameof(this.ShowCommandsSection));
+                this.NotifyPropertyChanged(nameof(this.ShowCommandRunSection));
+                this.NotifyPropertyChanged(nameof(this.ShowCommandGroupsSection));
+                this.NotifyPropertyChanged(nameof(this.ShowCommandCooldownSection));
             }
         }
         private CommandActionTypeEnum selectedActionType;
@@ -34,7 +35,8 @@ namespace MixItUp.Base.ViewModel.Actions
             get
             {
                 return this.SelectedActionType == CommandActionTypeEnum.RunCommand || this.SelectedActionType == CommandActionTypeEnum.EnableCommand ||
-                    this.SelectedActionType == CommandActionTypeEnum.DisableCommand || this.SelectedActionType == CommandActionTypeEnum.ToggleCommand;
+                    this.SelectedActionType == CommandActionTypeEnum.DisableCommand || this.SelectedActionType == CommandActionTypeEnum.ToggleCommand ||
+                    this.SelectedActionType == CommandActionTypeEnum.SetCommandCooldown;
             }
         }
 
@@ -88,6 +90,8 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private CommandModelBase selectedCommand;
 
+        public bool ShowCommandRunSection { get { return this.SelectedActionType == CommandActionTypeEnum.RunCommand; } }
+
         public string CommandArguments
         {
             get { return this.commandArguments; }
@@ -110,7 +114,7 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private bool waitForCommandToFinish = true;
 
-        public bool ShowCommandRunSection { get { return this.SelectedActionType == CommandActionTypeEnum.RunCommand; } }
+        public bool ShowCommandCooldownSection { get { return this.SelectedActionType == CommandActionTypeEnum.SetCommandCooldown; } }
 
         public bool ShowCommandGroupsSection { get { return this.SelectedActionType == CommandActionTypeEnum.EnableCommandGroup || this.SelectedActionType == CommandActionTypeEnum.DisableCommandGroup; } }
 

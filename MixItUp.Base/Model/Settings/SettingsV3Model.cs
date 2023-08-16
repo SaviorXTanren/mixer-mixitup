@@ -109,6 +109,8 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public OAuthTokenModel VTubeStudioOAuthToken { get; set; }
         [DataMember]
+        public OAuthTokenModel InfiniteAlbumOAuthToken { get; set; }
+        [DataMember]
         public bool EnableVoicemodStudio { get; set; }
         [DataMember]
         public bool EnableCrowdControl { get; set; }
@@ -170,6 +172,8 @@ namespace MixItUp.Base.Model.Settings
         public bool HideBotMessages { get; set; }
 
         [DataMember]
+        public bool ShowAlejoPronouns { get; set; }
+        [DataMember]
         public bool ShowBetterTTVEmotes { get; set; }
         [DataMember]
         public bool ShowFrankerFaceZEmotes { get; set; }
@@ -214,6 +218,8 @@ namespace MixItUp.Base.Model.Settings
         public int RequirementErrorsCooldownAmount { get; set; } = 10;
         [DataMember]
         public bool IncludeUsernameWithRequirementErrors { get; set; }
+        [DataMember]
+        public string DelimitedArgumentsSeparator { get; set; } = "|";
 
         [Obsolete]
         [DataMember]
@@ -283,6 +289,10 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public string NotificationsAudioOutput { get; set; }
+        [DataMember]
+        public int NotificationCooldownAmount { get; set; }
+        [JsonIgnore]
+        public DateTimeOffset NotificationLastTrigger { get; set; } = DateTimeOffset.MinValue;
 
         [DataMember]
         public string NotificationChatMessageSoundFilePath { get; set; }
@@ -829,6 +839,10 @@ namespace MixItUp.Base.Model.Settings
             if (ServiceManager.Get<VTubeStudioService>().IsConnected)
             {
                 this.VTubeStudioOAuthToken = ServiceManager.Get<VTubeStudioService>().GetOAuthTokenCopy();
+            }
+            if (ServiceManager.Get<InfiniteAlbumService>().IsConnected)
+            {
+                this.InfiniteAlbumOAuthToken = ServiceManager.Get<InfiniteAlbumService>().GetOAuthTokenCopy();
             }
         }
 

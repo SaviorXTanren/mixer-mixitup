@@ -22,6 +22,7 @@ namespace MixItUp.Base.ViewModel.Settings
         public GenericComboBoxSettingsOptionControlViewModel<RequirementErrorCooldownTypeEnum> RequirementErrorsCooldownType { get; set; }
         public GenericNumberSettingsOptionControlViewModel RequirementErrorsCooldownAmount { get; set; }
         public GenericToggleSettingsOptionControlViewModel IncludeUsernameWithRequirementErrors { get; set; }
+        public GenericTextSettingsOptionControlViewModel DelimitedArgumentSeparator { get; set; }
 
         public GenericToggleSettingsOptionControlViewModel TwitchReplyToCommandChatMessages { get; set; }
 
@@ -48,6 +49,8 @@ namespace MixItUp.Base.ViewModel.Settings
                 ChannelSession.Settings.RequirementErrorsCooldownAmount, (value) => { ChannelSession.Settings.RequirementErrorsCooldownAmount = value; });
             this.IncludeUsernameWithRequirementErrors = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.IncludeUsernameWithRequirementErrors,
                 ChannelSession.Settings.IncludeUsernameWithRequirementErrors, (value) => { ChannelSession.Settings.IncludeUsernameWithRequirementErrors = value; });
+            this.DelimitedArgumentSeparator = new GenericTextSettingsOptionControlViewModel(MixItUp.Base.Resources.DelimitedArgumentsSeparator,
+                ChannelSession.Settings.DelimitedArgumentsSeparator, (value) => { ChannelSession.Settings.DelimitedArgumentsSeparator = value; });
 
             this.TwitchReplyToCommandChatMessages = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.TwitchReplyToCommandChatMessages, ChannelSession.Settings.TwitchReplyToCommandChatMessages,
                 (value) => { ChannelSession.Settings.TwitchReplyToCommandChatMessages = value; });

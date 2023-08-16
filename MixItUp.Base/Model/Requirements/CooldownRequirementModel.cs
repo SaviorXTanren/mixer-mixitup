@@ -110,8 +110,11 @@ namespace MixItUp.Base.Model.Requirements
         public override async Task Perform(CommandParametersModel parameters)
         {
             await base.Perform(parameters);
+            this.Perform(parameters, this.Amount);
+        }
 
-            int amount = this.Amount;
+        public void Perform(CommandParametersModel parameters, int amount)
+        {
             if (amount > 0)
             {
                 this.individualErrorCooldown = DateTimeOffset.Now.AddSeconds(InitialCooldownAmount);

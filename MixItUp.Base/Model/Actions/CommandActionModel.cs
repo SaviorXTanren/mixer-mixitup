@@ -20,6 +20,8 @@ namespace MixItUp.Base.Model.Actions
         PauseAllCommands,
         UnpauseAllCommands,
         ToggleCommand,
+        ExitCurrentCommand,
+        SetCommandCooldown,
     }
 
     [DataContract]
@@ -202,6 +204,32 @@ namespace MixItUp.Base.Model.Actions
             else if (this.ActionType == CommandActionTypeEnum.UnpauseAllCommands)
             {
                 await ServiceManager.Get<CommandService>().Unpause();
+            }
+            else if (this.ActionType == CommandActionTypeEnum.ExitCurrentCommand)
+            {
+                parameters.ExitCommand = true;
+            }
+            else if (this.ActionType == CommandActionTypeEnum.SetCommandCooldown)
+            {
+                if (command != null)
+                {
+                    string cooldownAmountText = await ReplaceStringWithSpecialModifiers(this.Arguments, parameters);
+                    int cooldownAmount = 0;
+
+                    if (!string.IsNullOrEmpty(cooldownAmountText) && !int.TryParse(cooldownAmountText, out cooldownAmount))
+                    {
+                        return;
+                    }
+
+                    if (cooldownAmount <= 0)
+                    {
+                        command.Requirements.Cooldown.Reset();
+                    }
+                    else if (cooldownAmount > 0)
+                    {
+                        command.Requirements.Cooldown.Perform(parameters, cooldownAmount);
+                    }
+                }
             }
         }
     }

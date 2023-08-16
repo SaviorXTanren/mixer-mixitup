@@ -585,6 +585,9 @@
     <Compile Include="Controls\Actions\VoicemodActionEditorControl.xaml.cs">
       <DependentUpon>VoicemodActionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\InfiniteAlbumActionEditorControl.xaml.cs">
+      <DependentUpon>InfiniteAlbumActionEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\VTubeStudioActionEditorControl.xaml.cs">
       <DependentUpon>VTubeStudioActionEditorControl.xaml</DependentUpon>
     </Compile>
@@ -1025,6 +1028,9 @@
     <Compile Include="Controls\Services\VoicemodServiceControl.xaml.cs">
       <DependentUpon>VoicemodServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\InfiniteAlbumServiceControl.xaml.cs">
+      <DependentUpon>InfiniteAlbumServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\VTubeStudioServiceControl.xaml.cs">
       <DependentUpon>VTubeStudioServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1057,6 +1063,9 @@
     </Compile>
     <Compile Include="Controls\Settings\Generic\GenericComboBoxSettingsOptionControl.xaml.cs">
       <DependentUpon>GenericComboBoxSettingsOptionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\Generic\GenericTextSettingsOptionControl.xaml.cs">
+      <DependentUpon>GenericTextSettingsOptionControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Settings\Generic\GenericNumberSettingsOptionControl.xaml.cs">
       <DependentUpon>GenericNumberSettingsOptionControl.xaml</DependentUpon>
@@ -1335,6 +1344,10 @@
     <Page Include="Controls\Actions\VoicemodActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\InfiniteAlbumActionEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Actions\VTubeStudioActionEditorControl.xaml">
       <SubType>Designer</SubType>
@@ -1916,6 +1929,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Services\InfiniteAlbumServiceControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\Services\VTubeStudioServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1959,6 +1976,10 @@
     <Page Include="Controls\Settings\Generic\GenericComboBoxSettingsOptionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\Generic\GenericTextSettingsOptionControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Settings\Generic\GenericNumberSettingsOptionControl.xaml">
       <SubType>Designer</SubType>

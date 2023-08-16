@@ -163,6 +163,8 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        public string AlejoPronoun { get { return ServiceManager.Get<AlejoPronounsService>().GetPronoun(this.Model.AlejoPronounID); } }
+
         public bool IsFollower { get { return this.HasRole(UserRoleEnum.Follower) || this.HasRole(UserRoleEnum.YouTubeSubscriber); } }
         public bool IsRegular { get { return this.HasRole(UserRoleEnum.Regular); } }
         public bool IsSubscriber { get { return this.IsPlatformSubscriber || this.IsExternalSubscriber; } }
@@ -560,6 +562,11 @@ namespace MixItUp.Base.ViewModel.User
                         await Task.Run(async () =>
                         {
                             await this.platformModel.Refresh();
+
+                            if (ChannelSession.Settings.ShowAlejoPronouns && this.Platform == StreamingPlatformTypeEnum.Twitch)
+                            {
+                                this.Model.AlejoPronounID = await ServiceManager.Get<AlejoPronounsService>().GetPronounID(this.Username);
+                            }
 
                             double platformRefreshTime = (DateTimeOffset.Now - refreshStart).TotalMilliseconds;
                             if (platformRefreshTime > 1000)

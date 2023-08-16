@@ -53,6 +53,7 @@ namespace MixItUp.Base.Model.Actions
         Trovo,
         PolyPop,
         SAMMI,
+        InfiniteAlbum,
     }
 
     [DataContract]

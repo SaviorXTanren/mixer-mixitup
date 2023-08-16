@@ -329,18 +329,32 @@ namespace MixItUp.Base.Model.Commands
                     int quoteNumber = 0;
                     UserQuoteModel quote = null;
 
-                    if (parameters.Arguments.Count() == 1)
+                    if (parameters.Arguments.Count() >= 1)
                     {
-                        if (!int.TryParse(parameters.Arguments.ElementAt(0), out quoteNumber))
+                        bool parsedNumber = false;
+                        if (parameters.Arguments.Count() == 1 && int.TryParse(parameters.Arguments.ElementAt(0), out quoteNumber))
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandQuoteUsage, parameters);
-                            return;
+                            parsedNumber = true;
+                            quote = ChannelSession.Settings.Quotes.SingleOrDefault(q => q.ID == quoteNumber);
                         }
 
-                        quote = ChannelSession.Settings.Quotes.SingleOrDefault(q => q.ID == quoteNumber);
                         if (quote == null)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(String.Format(MixItUp.Base.Resources.PreMadeChatCommandQuoteUnableToFind, quoteNumber), parameters);
+                            string searchText = string.Join(" ", parameters.Arguments).ToLower();
+                            quote = ChannelSession.Settings.Quotes.FirstOrDefault(q => q.Quote.ToLower().Contains(searchText));
+                        }
+
+                        if (quote == null)
+                        {
+                            if (parsedNumber)
+                            {
+                                await ServiceManager.Get<ChatService>().SendMessage(String.Format(MixItUp.Base.Resources.PreMadeChatCommandQuoteUnableToFind, quoteNumber), parameters);
+                            }
+                            else
+                            {
+                                await ServiceManager.Get<ChatService>().SendMessage(String.Format(MixItUp.Base.Resources.PreMadeChatCommandQuoteUnableToFindText, string.Join(" ", parameters.Arguments)), parameters);
+                            }
+                            return;
                         }
                     }
                     else if (parameters.Arguments.Count() == 0)

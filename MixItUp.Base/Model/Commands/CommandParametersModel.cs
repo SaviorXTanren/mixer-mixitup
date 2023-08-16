@@ -5,7 +5,6 @@ using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -41,6 +40,9 @@ namespace MixItUp.Base.Model.Commands
 
         [DataMember]
         public string TriggeringChatMessageID { get; set; }
+
+        [DataMember]
+        public bool ExitCommand { get; set; }
 
         [DataMember]
         public Guid InitialCommandID { get; set; } = Guid.Empty;
@@ -195,6 +197,7 @@ namespace MixItUp.Base.Model.Commands
                 {
                     this.TargetUser = this.User;
                 }
+                await this.TargetUser.Refresh();
             }
         }
     }

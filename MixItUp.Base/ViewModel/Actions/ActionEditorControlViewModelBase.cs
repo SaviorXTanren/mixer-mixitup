@@ -122,6 +122,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     case ActionTypeEnum.File: actionPageName = "file-action"; break;
                     case ActionTypeEnum.GameQueue: actionPageName = "game-queue-action"; break;
                     case ActionTypeEnum.IFTTT: actionPageName = "ifttt-action"; break;
+                    case ActionTypeEnum.InfiniteAlbum: actionPageName = "infinite-album"; break;
                     case ActionTypeEnum.Input: actionPageName = "input-action"; break;
                     case ActionTypeEnum.Moderation: actionPageName = "moderation-action"; break;
                     case ActionTypeEnum.Overlay: actionPageName = "overlay-action"; break;

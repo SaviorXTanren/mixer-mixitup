@@ -87,6 +87,22 @@ namespace MixItUp.WPF.Services
             }
         }
 
+        public async Task PlayNotification(string filePath, int volume)
+        {
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                if (ChannelSession.Settings.NotificationCooldownAmount > 0)
+                {
+                    if (ChannelSession.Settings.NotificationLastTrigger.TotalSecondsFromNow() < ChannelSession.Settings.NotificationCooldownAmount)
+                    {
+                        return;
+                    }
+                    ChannelSession.Settings.NotificationLastTrigger = DateTimeOffset.Now;
+                }
+                await this.Play(filePath, volume, ChannelSession.Settings.NotificationsAudioOutput);
+            }
+        }
+
         public IEnumerable<string> GetSelectableAudioDevices()
         {
             List<string> audioOptions = new List<string>();

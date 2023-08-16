@@ -42,6 +42,7 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.File: this.ActionControl = new FileActionEditorControl(); break;
                     case ActionTypeEnum.GameQueue: this.ActionControl = new GameQueueActionEditorControl(); break;
                     case ActionTypeEnum.IFTTT: this.ActionControl = new IFTTTActionEditorControl(); break;
+                    case ActionTypeEnum.InfiniteAlbum: this.ActionControl = new InfiniteAlbumActionEditorControl(); break;
                     case ActionTypeEnum.Input: this.ActionControl = new InputActionEditorControl(); break;
                     case ActionTypeEnum.Moderation: this.ActionControl = new ModerationActionEditorControl(); break;
                     case ActionTypeEnum.Overlay: this.ActionControl = new OverlayActionEditorControl(); break;

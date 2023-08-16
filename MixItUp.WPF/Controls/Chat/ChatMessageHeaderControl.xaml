@@ -20,6 +20,7 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
         <local:ChatUserControl x:Name="UserAvatar" DataContext="{Binding User}" Grid.Column="0" />
@@ -42,8 +43,10 @@
 
         </Grid>
 
-        <TextBlock Grid.Column="2" FontSize="{Binding FontSize}" VerticalAlignment="Center" Margin="3,0,0,0" Visibility="{Binding ShowTimestamp, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{Binding TimestampDisplay}" />
+        <TextBlock Grid.Column="2" FontSize="{Binding FontSize}" VerticalAlignment="Center" Margin="3,0,0,0" Visibility="{Binding ShowPronouns, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{Binding PronounsDisplay}" />
 
-        <TextBlock Grid.Column="3" FontSize="{Binding FontSize}" VerticalAlignment="Center">:</TextBlock>
+        <TextBlock Grid.Column="3" FontSize="{Binding FontSize}" VerticalAlignment="Center" Margin="3,0,0,0" Visibility="{Binding ShowTimestamp, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{Binding TimestampDisplay}" />
+
+        <TextBlock Grid.Column="4" FontSize="{Binding FontSize}" VerticalAlignment="Center">:</TextBlock>
     </Grid>
 </UserControl>

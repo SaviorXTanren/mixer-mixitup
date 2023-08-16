@@ -537,6 +537,11 @@ namespace MixItUp.Base.Services
                             await ServiceManager.Get<OverlayService>().EndBatching();
                         }
                     }
+
+                    if (parameters.ExitCommand)
+                    {
+                        break;
+                    }
                 }
             }
 

@@ -47,6 +47,9 @@ namespace MixItUp.Base.Model.User
         public string PatreonUserID { get; set; }
 
         [DataMember]
+        public string AlejoPronounID { get; set; }
+
+        [DataMember]
         public uint ModerationStrikes { get; set; }
 
         [DataMember]

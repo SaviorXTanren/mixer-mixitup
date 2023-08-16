@@ -1,11 +1,9 @@
-﻿using MixItUp.Base.Model.Actions;
-using MixItUp.Base.Services;
+﻿using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Settings.Generic;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Settings
@@ -117,6 +115,7 @@ namespace MixItUp.Base.ViewModel.Settings
     public class NotificationsSettingsControlViewModel : UIViewModelBase
     {
         public GenericComboBoxSettingsOptionControlViewModel<string> NotificationsAudioOutput { get; set; }
+        public GenericNumberSettingsOptionControlViewModel NotificationsCooldownAmount { get; set; }
 
         public ThreadSafeObservableCollection<IndividualNotificationSettingViewModel> NotificationSounds { get; set; } = new ThreadSafeObservableCollection<IndividualNotificationSettingViewModel>();
 
@@ -141,6 +140,9 @@ namespace MixItUp.Base.ViewModel.Settings
                     }
                 });
             this.NotificationsAudioOutput.Width = 250;
+
+            this.NotificationsCooldownAmount = new GenericNumberSettingsOptionControlViewModel(MixItUp.Base.Resources.NotificationCooldownAmount,
+                ChannelSession.Settings.NotificationCooldownAmount, (value) => { ChannelSession.Settings.NotificationCooldownAmount = value; }, MixItUp.Base.Resources.Seconds);
 
             this.NotificationSounds.Add(new IndividualNotificationSettingViewModel(MixItUp.Base.Resources.AnyChatMessageSound,
                 (value) => { ChannelSession.Settings.NotificationChatMessageSoundFilePath = value; }, () => { return ChannelSession.Settings.NotificationChatMessageSoundFilePath; },

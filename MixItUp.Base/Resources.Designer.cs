@@ -1033,6 +1033,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to App Code.
+        /// </summary>
+        public static string AppCode {
+            get {
+                return ResourceManager.GetString("AppCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Append To File.
         /// </summary>
         public static string AppendToFile {
@@ -2528,6 +2537,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear All User Data.
+        /// </summary>
+        public static string ClearAllUserData {
+            get {
+                return ResourceManager.GetString("ClearAllUserData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clear all User data (Hours, Currency, Rank, etc).
         /// </summary>
         public static string ClearAllUserDataHeader {
@@ -2605,6 +2623,33 @@ namespace MixItUp.Base {
         public static string ClearUserData {
             get {
                 return ResourceManager.GetString("ClearUserData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear User Data Range.
+        /// </summary>
+        public static string ClearUserDataRange {
+            get {
+                return ResourceManager.GetString("ClearUserDataRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear User data from activity age range (Hours, Currency, Rank, etc).
+        /// </summary>
+        public static string ClearUserDataRangeHeader {
+            get {
+                return ResourceManager.GetString("ClearUserDataRangeHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This will clear all data for your Users who have not been active in your channel within the last specified number of days, which includes their Hours, Currency, Rank, &amp; Custom User Commands, then restart Mix It Up. This CAN NOT be un-done! Are you sure you wish to do this?.
+        /// </summary>
+        public static string ClearUserDataRangeWarning {
+            get {
+                return ResourceManager.GetString("ClearUserDataRangeWarning", resourceCulture);
             }
         }
         
@@ -4460,6 +4505,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delimited Arguments Separator.
+        /// </summary>
+        public static string DelimitedArgumentsSeparator {
+            get {
+                return ResourceManager.GetString("DelimitedArgumentsSeparator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delimited Text.
+        /// </summary>
+        public static string DelimitedText {
+            get {
+                return ResourceManager.GetString("DelimitedText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Demote From Mod.
         /// </summary>
         public static string DemoteFromMod {
@@ -5334,6 +5397,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Emotions.
+        /// </summary>
+        public static string Emotions {
+            get {
+                return ResourceManager.GetString("Emotions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Empty the Jar.
         /// </summary>
         public static string EmptyJar {
@@ -5834,6 +5906,15 @@ namespace MixItUp.Base {
         public static string ExitConfirmation {
             get {
                 return ResourceManager.GetString("ExitConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exit Current Command.
+        /// </summary>
+        public static string ExitCurrentCommand {
+            get {
+                return ResourceManager.GetString("ExitCurrentCommand", resourceCulture);
             }
         }
         
@@ -10155,6 +10236,51 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Infinite Album.
+        /// </summary>
+        public static string InfiniteAlbum {
+            get {
+                return ResourceManager.GetString("InfiniteAlbum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Infinite Album Action: Missing Command.
+        /// </summary>
+        public static string InfiniteAlbumActionMissingCommand {
+            get {
+                return ResourceManager.GetString("InfiniteAlbumActionMissingCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Infinite Album connection failed, please ensure Infinite Album is running and you have connected using an App Code..
+        /// </summary>
+        public static string InfiniteAlbumConnectionFailed {
+            get {
+                return ResourceManager.GetString("InfiniteAlbumConnectionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Infinite Album connectivity allows you to control functionality in the Infinite Album software, such as changing the style of music playing. To connect to Infinite Album, please open Infinite Album and click on the App Code link in the hamburger menu.  Once Infinite Album alerts you that the app code was copied to the clipboard, paste that in Mix It Up and press Connect..
+        /// </summary>
+        public static string InfiniteAlbumInfo {
+            get {
+                return ResourceManager.GetString("InfiniteAlbumInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Infinite Album is not connected, please ensure the software is running and is connected on the Services page..
+        /// </summary>
+        public static string InfiniteAlbumNotConnected {
+            get {
+                return ResourceManager.GetString("InfiniteAlbumNotConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to initialize user information.
         /// </summary>
         public static string InitializeSessionUserInitializationFailed {
@@ -10205,6 +10331,15 @@ namespace MixItUp.Base {
         public static string InstallationFolder {
             get {
                 return ResourceManager.GetString("InstallationFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Instruments.
+        /// </summary>
+        public static string Instruments {
+            get {
+                return ResourceManager.GetString("Instruments", resourceCulture);
             }
         }
         
@@ -12893,6 +13028,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Notification Cooldown Amount.
+        /// </summary>
+        public static string NotificationCooldownAmount {
+            get {
+                return ResourceManager.GetString("NotificationCooldownAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Notifications.
         /// </summary>
         public static string Notifications {
@@ -15404,6 +15548,15 @@ namespace MixItUp.Base {
         public static string PreMadeChatCommandQuoteUnableToFind {
             get {
                 return ResourceManager.GetString("PreMadeChatCommandQuoteUnableToFind", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to find quote containing the text {0}..
+        /// </summary>
+        public static string PreMadeChatCommandQuoteUnableToFindText {
+            get {
+                return ResourceManager.GetString("PreMadeChatCommandQuoteUnableToFindText", resourceCulture);
             }
         }
         
@@ -17962,6 +18115,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set Command Cooldown.
+        /// </summary>
+        public static string SetCommandCooldown {
+            get {
+                return ResourceManager.GetString("SetCommandCooldown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set Content Classification Labels.
         /// </summary>
         public static string SetContentClassificationLabels {
@@ -18203,6 +18365,15 @@ namespace MixItUp.Base {
         public static string ShopCurrencyRequired {
             get {
                 return ResourceManager.GetString("ShopCurrencyRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Alejo Pronouns (Requires Restart).
+        /// </summary>
+        public static string ShowAlejoPronouns {
+            get {
+                return ResourceManager.GetString("ShowAlejoPronouns", resourceCulture);
             }
         }
         
@@ -18635,6 +18806,15 @@ namespace MixItUp.Base {
         public static string SoundActionMissingFilePath {
             get {
                 return ResourceManager.GetString("SoundActionMissingFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sound Effects.
+        /// </summary>
+        public static string SoundEffects {
+            get {
+                return ResourceManager.GetString("SoundEffects", resourceCulture);
             }
         }
         
@@ -19799,6 +19979,15 @@ namespace MixItUp.Base {
         public static string String1 {
             get {
                 return ResourceManager.GetString("String1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Styles.
+        /// </summary>
+        public static string Styles {
+            get {
+                return ResourceManager.GetString("Styles", resourceCulture);
             }
         }
         

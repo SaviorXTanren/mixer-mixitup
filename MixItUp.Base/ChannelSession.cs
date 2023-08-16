@@ -65,6 +65,7 @@ namespace MixItUp.Base
             ServiceManager.Add(new XSplitService());
             ServiceManager.Add(new PolyPopService());
 
+            ServiceManager.Add(new AlejoPronounsService());
             ServiceManager.Add(new BetterTTVService());
             ServiceManager.Add(new StreamlootsService());
             ServiceManager.Add(new JustGivingService());
@@ -77,6 +78,7 @@ namespace MixItUp.Base
             ServiceManager.Add(new VTubeStudioService());
             ServiceManager.Add(new CrowdControlService());
             ServiceManager.Add(new SAMMIService());
+            ServiceManager.Add(new InfiniteAlbumService());
 
             try
             {
@@ -308,6 +310,7 @@ namespace MixItUp.Base
                 if (ChannelSession.Settings.DiscordOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<DiscordService>()] = ChannelSession.Settings.DiscordOAuthToken; }
                 if (ChannelSession.Settings.PixelChatOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<PixelChatService>()] = ChannelSession.Settings.PixelChatOAuthToken; }
                 if (ChannelSession.Settings.VTubeStudioOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<VTubeStudioService>()] = ChannelSession.Settings.VTubeStudioOAuthToken; }
+                if (ChannelSession.Settings.InfiniteAlbumOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<InfiniteAlbumService>()] = ChannelSession.Settings.InfiniteAlbumOAuthToken; }
                 if (ChannelSession.Settings.EnableVoicemodStudio) { externalServiceToConnect[ServiceManager.Get<IVoicemodService>()] = null; }
                 if (ChannelSession.Settings.EnableCrowdControl) { externalServiceToConnect[ServiceManager.Get<CrowdControlService>()] = null; }
                 if (ChannelSession.Settings.EnableSAMMI) { externalServiceToConnect[ServiceManager.Get<SAMMIService>()] = null; }

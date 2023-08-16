@@ -21,6 +21,7 @@ namespace MixItUp.Base.Services
 
         private Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>> platformUserIDLookups { get; set; } = new Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>>();
         private Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>> platformUsernameLookups { get; set; } = new Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>>();
+        private Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>> platformDisplayNameLookups { get; set; } = new Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>>();
 
         private Dictionary<Guid, UserV2ViewModel> activeUsers = new Dictionary<Guid, UserV2ViewModel>();
 
@@ -49,6 +50,7 @@ namespace MixItUp.Base.Services
             {
                 this.platformUserIDLookups[p] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
                 this.platformUsernameLookups[p] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
+                this.platformDisplayNameLookups[p] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
             });
         }
 
@@ -148,6 +150,7 @@ namespace MixItUp.Base.Services
             {
                 return user;
             }
+            platformUsername = platformUsername.ToLower();
 
             if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
             {
@@ -161,7 +164,16 @@ namespace MixItUp.Base.Services
                 return user;
             }
 
-            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername.ToLower(), out Guid id))
+            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id))
+            {
+                user = await this.GetUserByID(id);
+                if (user != null)
+                {
+                    return user;
+                }
+            }
+
+            if (this.platformDisplayNameLookups.ContainsKey(platform) && this.platformDisplayNameLookups[platform].TryGetValue(platformUsername, out id))
             {
                 user = await this.GetUserByID(id);
                 if (user != null)
@@ -211,7 +223,6 @@ namespace MixItUp.Base.Services
                     UserV2ViewModel existingUser = await this.GetUserByPlatformID(platformModel.Platform, platformModel.ID, performPlatformSearch: false);
                     if (existingUser != null)
                     {
-                        await existingUser.Refresh();
                         return existingUser;
                     }
                     else
@@ -296,9 +307,9 @@ namespace MixItUp.Base.Services
                 {
                     this.platformUserIDLookups[pUser.Platform].Remove(pUser.ID);
                     this.platformUsernameLookups[pUser.Platform].Remove(pUser.Username.ToLower());
-                    if (pUser.Platform == StreamingPlatformTypeEnum.Trovo)
+                    if (!string.IsNullOrEmpty(pUser.DisplayName))
                     {
-                        this.platformUsernameLookups[pUser.Platform].Remove(pUser.DisplayName.ToLower());
+                        this.platformDisplayNameLookups[pUser.Platform].Remove(pUser.DisplayName.ToLower());
                     }
                 }
                 this.activeUsers.Remove(user.ID);
@@ -307,10 +318,35 @@ namespace MixItUp.Base.Services
             }
         }
 
+        public async Task ClearUserDataRange(int days)
+        {
+            this.platformUserIDLookups.Clear();
+            this.platformUsernameLookups.Clear();
+            this.platformDisplayNameLookups.Clear();
+            this.activeUsers.Clear();
+
+            await this.LoadAllUserData();
+
+            List<Guid> usersToRemove = new List<Guid>();
+            foreach (var kvp in ChannelSession.Settings.Users)
+            {
+                if (kvp.Value.LastActivity.TotalDaysFromNow() > days)
+                {
+                    usersToRemove.Add(kvp.Key);
+                }
+            }
+
+            foreach (Guid userID in usersToRemove)
+            {
+                ChannelSession.Settings.Users.Remove(userID);
+            }
+        }
+
         public async Task ClearAllUserData()
         {
             this.platformUserIDLookups.Clear();
             this.platformUsernameLookups.Clear();
+            this.platformDisplayNameLookups.Clear();
             this.activeUsers.Clear();
 
             ChannelSession.Settings.Users.Clear();
@@ -342,9 +378,9 @@ namespace MixItUp.Base.Services
                         UserPlatformV2ModelBase platformModel = userData.GetPlatformData<UserPlatformV2ModelBase>(platform);
                         this.platformUserIDLookups[platform][platformModel.ID] = userData.ID;
                         this.platformUsernameLookups[platform][platformModel.Username.ToLower()] = userData.ID;
-                        if (platformModel.Platform == StreamingPlatformTypeEnum.Trovo)
+                        if (!string.IsNullOrEmpty(platformModel.DisplayName))
                         {
-                            this.platformUsernameLookups[platform][platformModel.DisplayName.ToLower()] = userData.ID;
+                            this.platformDisplayNameLookups[platform][platformModel.DisplayName.ToLower()] = userData.ID;
                         }
                     }
                 }
@@ -422,6 +458,7 @@ namespace MixItUp.Base.Services
             {
                 return user;
             }
+            platformUsername = platformUsername.ToLower();
 
             if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
             {
@@ -435,7 +472,16 @@ namespace MixItUp.Base.Services
                 return user;
             }
 
-            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername.ToLower(), out Guid id))
+            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id))
+            {
+                user = this.GetActiveUserByID(id);
+                if (user != null)
+                {
+                    return user;
+                }
+            }
+
+            if (this.platformDisplayNameLookups.ContainsKey(platform) && this.platformDisplayNameLookups[platform].TryGetValue(platformUsername, out id))
             {
                 user = this.GetActiveUserByID(id);
                 if (user != null)
@@ -516,7 +562,14 @@ namespace MixItUp.Base.Services
 
         public async Task<UserV2ViewModel> RemoveActiveUser(StreamingPlatformTypeEnum platform, string platformUsername)
         {
-            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername.ToLower(), out Guid id))
+            platformUsername = platformUsername.ToLower();
+
+            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id))
+            {
+                return await this.RemoveActiveUser(id);
+            }
+
+            if (this.platformDisplayNameLookups.ContainsKey(platform) && this.platformDisplayNameLookups[platform].TryGetValue(platformUsername, out id))
             {
                 return await this.RemoveActiveUser(id);
             }

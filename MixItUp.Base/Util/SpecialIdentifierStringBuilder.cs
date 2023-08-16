@@ -538,7 +538,7 @@ namespace MixItUp.Base.Util
                 {
                     if (this.ContainsSpecialIdentifier(ArgDelimitedSpecialIdentifierHeader) || this.ContainsSpecialIdentifier(ArgDelimitedSpecialIdentifierHeader + "count"))
                     {
-                        List<string> delimitedArgs = new List<string>(allArgs.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
+                        List<string> delimitedArgs = new List<string>(allArgs.Split(new string[] { ChannelSession.Settings.DelimitedArgumentsSeparator }, StringSplitOptions.RemoveEmptyEntries));
 
                         for (int i = 0; i < delimitedArgs.Count(); i++)
                         {
