@@ -10124,4 +10124,10 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="Styles" xml:space="preserve">
     <value>Styles</value>
   </data>
+  <data name="DelimitedText" xml:space="preserve">
+    <value>Delimited Text</value>
+  </data>
+  <data name="DelimitedArgumentsSeparator" xml:space="preserve">
+    <value>Delimited Arguments Separator</value>
+  </data>
 </root>

@@ -1064,6 +1064,9 @@
     <Compile Include="Controls\Settings\Generic\GenericComboBoxSettingsOptionControl.xaml.cs">
       <DependentUpon>GenericComboBoxSettingsOptionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Settings\Generic\GenericTextSettingsOptionControl.xaml.cs">
+      <DependentUpon>GenericTextSettingsOptionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Settings\Generic\GenericNumberSettingsOptionControl.xaml.cs">
       <DependentUpon>GenericNumberSettingsOptionControl.xaml</DependentUpon>
     </Compile>
@@ -1973,6 +1976,10 @@
     <Page Include="Controls\Settings\Generic\GenericComboBoxSettingsOptionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\Generic\GenericTextSettingsOptionControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Settings\Generic\GenericNumberSettingsOptionControl.xaml">
       <SubType>Designer</SubType>

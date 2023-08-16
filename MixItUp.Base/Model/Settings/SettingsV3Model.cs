@@ -216,6 +216,8 @@ namespace MixItUp.Base.Model.Settings
         public int RequirementErrorsCooldownAmount { get; set; } = 10;
         [DataMember]
         public bool IncludeUsernameWithRequirementErrors { get; set; }
+        [DataMember]
+        public string DelimitedArgumentsSeparator { get; set; } = "|";
 
         [Obsolete]
         [DataMember]

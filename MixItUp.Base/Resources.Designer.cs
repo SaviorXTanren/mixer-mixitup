@@ -4469,6 +4469,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delimited Arguments Separator.
+        /// </summary>
+        public static string DelimitedArgumentsSeparator {
+            get {
+                return ResourceManager.GetString("DelimitedArgumentsSeparator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delimited Text.
+        /// </summary>
+        public static string DelimitedText {
+            get {
+                return ResourceManager.GetString("DelimitedText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Demote From Mod.
         /// </summary>
         public static string DemoteFromMod {
