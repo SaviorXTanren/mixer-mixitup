@@ -2537,6 +2537,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear All User Data.
+        /// </summary>
+        public static string ClearAllUserData {
+            get {
+                return ResourceManager.GetString("ClearAllUserData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clear all User data (Hours, Currency, Rank, etc).
         /// </summary>
         public static string ClearAllUserDataHeader {
@@ -2614,6 +2623,33 @@ namespace MixItUp.Base {
         public static string ClearUserData {
             get {
                 return ResourceManager.GetString("ClearUserData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear User Data Range.
+        /// </summary>
+        public static string ClearUserDataRange {
+            get {
+                return ResourceManager.GetString("ClearUserDataRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear User data from activity age range (Hours, Currency, Rank, etc).
+        /// </summary>
+        public static string ClearUserDataRangeHeader {
+            get {
+                return ResourceManager.GetString("ClearUserDataRangeHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This will clear all data for your Users who have not been active in your channel within the last specified number of days, which includes their Hours, Currency, Rank, &amp; Custom User Commands, then restart Mix It Up. This CAN NOT be un-done! Are you sure you wish to do this?.
+        /// </summary>
+        public static string ClearUserDataRangeWarning {
+            get {
+                return ResourceManager.GetString("ClearUserDataRangeWarning", resourceCulture);
             }
         }
         

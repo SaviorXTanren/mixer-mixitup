@@ -315,6 +315,30 @@ namespace MixItUp.Base.Services
             }
         }
 
+        public async Task ClearUserDataRange(int days)
+        {
+            this.platformUserIDLookups.Clear();
+            this.platformUsernameLookups.Clear();
+            this.platformDisplayNameLookups.Clear();
+            this.activeUsers.Clear();
+
+            await this.LoadAllUserData();
+
+            List<Guid> usersToRemove = new List<Guid>();
+            foreach (var kvp in ChannelSession.Settings.Users)
+            {
+                if (kvp.Value.LastActivity.TotalDaysFromNow() > days)
+                {
+                    usersToRemove.Add(kvp.Key);
+                }
+            }
+
+            foreach (Guid userID in usersToRemove)
+            {
+                ChannelSession.Settings.Users.Remove(userID);
+            }
+        }
+
         public async Task ClearAllUserData()
         {
             this.platformUserIDLookups.Clear();

@@ -10140,4 +10140,16 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="SetCommandCooldown" xml:space="preserve">
     <value>Set Command Cooldown</value>
   </data>
+  <data name="ClearAllUserData" xml:space="preserve">
+    <value>Clear All User Data</value>
+  </data>
+  <data name="ClearUserDataRange" xml:space="preserve">
+    <value>Clear User Data Range</value>
+  </data>
+  <data name="ClearUserDataRangeHeader" xml:space="preserve">
+    <value>Clear User data from activity age range (Hours, Currency, Rank, etc)</value>
+  </data>
+  <data name="ClearUserDataRangeWarning" xml:space="preserve">
+    <value>This will clear all data for your Users who have not been active in your channel within the last specified number of days, which includes their Hours, Currency, Rank, &amp; Custom User Commands, then restart Mix It Up. This CAN NOT be un-done! Are you sure you wish to do this?</value>
+  </data>
 </root>
