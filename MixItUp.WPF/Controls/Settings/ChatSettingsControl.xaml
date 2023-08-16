@@ -33,6 +33,7 @@
 
             <Separator Margin="10" />
 
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding ShowAlejoPronouns}" />
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding ShowBetterTTVEmotes}" />
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding ShowFrankerFaceZEmotes}" />
 

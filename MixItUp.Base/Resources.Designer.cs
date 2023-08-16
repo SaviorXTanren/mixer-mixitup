@@ -18360,6 +18360,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show Alejo Pronouns (Requires Restart).
+        /// </summary>
+        public static string ShowAlejoPronouns {
+            get {
+                return ResourceManager.GetString("ShowAlejoPronouns", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show BetterTTV Emotes (Requires Restart).
         /// </summary>
         public static string ShowBetterTTVEmotes {

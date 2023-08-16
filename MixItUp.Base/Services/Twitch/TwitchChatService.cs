@@ -295,6 +295,12 @@ namespace MixItUp.Base.Services.Twitch
             Task<IEnumerable<ChatBadgeSetModel>> channelChatBadgesTask = ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelChatBadges(ServiceManager.Get<TwitchSessionService>().User);
             initializationTasks.Add(channelChatBadgesTask);
 
+            if (ChannelSession.Settings.ShowAlejoPronouns)
+            {
+                ServiceManager.Get<ITelemetryService>().TrackService("AlejoPronouns");
+                initializationTasks.Add(ServiceManager.Get<AlejoPronounsService>().Initialize());
+            }
+
             if (ChannelSession.Settings.ShowBetterTTVEmotes)
             {
                 ServiceManager.Get<ITelemetryService>().TrackService("BetterTTV");

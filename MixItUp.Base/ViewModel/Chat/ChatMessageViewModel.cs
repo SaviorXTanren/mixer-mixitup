@@ -81,6 +81,21 @@ namespace MixItUp.Base.ViewModel.Chat
             }
         }
 
+        public bool ShowPronouns { get { return ChannelSession.Settings.ShowAlejoPronouns; } }
+
+        public string PronounsDisplay
+        {
+            get
+            {
+                string pronoun = this.User.AlejoPronoun;
+                if (!string.IsNullOrEmpty(pronoun))
+                {
+                    return $"({this.User.AlejoPronoun})";
+                }
+                return string.Empty;
+            }
+        }
+
         public bool ShowTimestamp { get { return ChannelSession.Settings.ShowChatMessageTimestamps; } }
 
         public string TimestampDisplay { get { return string.Format("({0})", this.Timestamp.ToString("t")); } }

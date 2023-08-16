@@ -10152,4 +10152,7 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="ClearUserDataRangeWarning" xml:space="preserve">
     <value>This will clear all data for your Users who have not been active in your channel within the last specified number of days, which includes their Hours, Currency, Rank, &amp; Custom User Commands, then restart Mix It Up. This CAN NOT be un-done! Are you sure you wish to do this?</value>
   </data>
+  <data name="ShowAlejoPronouns" xml:space="preserve">
+    <value>Show Alejo Pronouns (Requires Restart)</value>
+  </data>
 </root>

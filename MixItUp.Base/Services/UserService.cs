@@ -307,7 +307,10 @@ namespace MixItUp.Base.Services
                 {
                     this.platformUserIDLookups[pUser.Platform].Remove(pUser.ID);
                     this.platformUsernameLookups[pUser.Platform].Remove(pUser.Username.ToLower());
-                    this.platformDisplayNameLookups[pUser.Platform].Remove(pUser.DisplayName.ToLower());
+                    if (!string.IsNullOrEmpty(pUser.DisplayName))
+                    {
+                        this.platformDisplayNameLookups[pUser.Platform].Remove(pUser.DisplayName.ToLower());
+                    }
                 }
                 this.activeUsers.Remove(user.ID);
 
@@ -375,7 +378,10 @@ namespace MixItUp.Base.Services
                         UserPlatformV2ModelBase platformModel = userData.GetPlatformData<UserPlatformV2ModelBase>(platform);
                         this.platformUserIDLookups[platform][platformModel.ID] = userData.ID;
                         this.platformUsernameLookups[platform][platformModel.Username.ToLower()] = userData.ID;
-                        this.platformDisplayNameLookups[platform][platformModel.DisplayName.ToLower()] = userData.ID;
+                        if (!string.IsNullOrEmpty(platformModel.DisplayName))
+                        {
+                            this.platformDisplayNameLookups[platform][platformModel.DisplayName.ToLower()] = userData.ID;
+                        }
                     }
                 }
             }

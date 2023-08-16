@@ -172,6 +172,8 @@ namespace MixItUp.Base.Model.Settings
         public bool HideBotMessages { get; set; }
 
         [DataMember]
+        public bool ShowAlejoPronouns { get; set; }
+        [DataMember]
         public bool ShowBetterTTVEmotes { get; set; }
         [DataMember]
         public bool ShowFrankerFaceZEmotes { get; set; }
