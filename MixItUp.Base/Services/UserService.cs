@@ -223,7 +223,6 @@ namespace MixItUp.Base.Services
                     UserV2ViewModel existingUser = await this.GetUserByPlatformID(platformModel.Platform, platformModel.ID, performPlatformSearch: false);
                     if (existingUser != null)
                     {
-                        await existingUser.Refresh();
                         return existingUser;
                     }
                     else

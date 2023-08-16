@@ -195,6 +195,7 @@ namespace MixItUp.Base.Model.Commands
                 {
                     this.TargetUser = this.User;
                 }
+                await this.TargetUser.Refresh();
             }
         }
     }
