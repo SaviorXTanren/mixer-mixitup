@@ -20,6 +20,7 @@ namespace MixItUp.Base.Model.Actions
         PauseAllCommands,
         UnpauseAllCommands,
         ToggleCommand,
+        ExitCurrentCommand,
     }
 
     [DataContract]
@@ -202,6 +203,10 @@ namespace MixItUp.Base.Model.Actions
             else if (this.ActionType == CommandActionTypeEnum.UnpauseAllCommands)
             {
                 await ServiceManager.Get<CommandService>().Unpause();
+            }
+            else if (this.ActionType == CommandActionTypeEnum.ExitCurrentCommand)
+            {
+                parameters.ExitCommand = true;
             }
         }
     }

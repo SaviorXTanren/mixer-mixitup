@@ -5874,6 +5874,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Exit Current Command.
+        /// </summary>
+        public static string ExitCurrentCommand {
+            get {
+                return ResourceManager.GetString("ExitCurrentCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Explicit User Role Requirements.
         /// </summary>
         public static string ExplicitUserRoleRequirements {

@@ -43,6 +43,9 @@ namespace MixItUp.Base.Model.Commands
         public string TriggeringChatMessageID { get; set; }
 
         [DataMember]
+        public bool ExitCommand { get; set; }
+
+        [DataMember]
         public Guid InitialCommandID { get; set; } = Guid.Empty;
 
         public CommandParametersModel() : this(ChannelSession.User) { }

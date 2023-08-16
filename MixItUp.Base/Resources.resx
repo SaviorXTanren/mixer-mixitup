@@ -10134,4 +10134,7 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
     <value>Unable to find quote containing the text {0}.</value>
     <comment>{0] is the search text</comment>
   </data>
+  <data name="ExitCurrentCommand" xml:space="preserve">
+    <value>Exit Current Command</value>
+  </data>
 </root>
