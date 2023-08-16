@@ -10137,4 +10137,7 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="ExitCurrentCommand" xml:space="preserve">
     <value>Exit Current Command</value>
   </data>
+  <data name="SetCommandCooldown" xml:space="preserve">
+    <value>Set Command Cooldown</value>
+  </data>
 </root>

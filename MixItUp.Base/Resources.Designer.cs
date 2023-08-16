@@ -18070,6 +18070,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set Command Cooldown.
+        /// </summary>
+        public static string SetCommandCooldown {
+            get {
+                return ResourceManager.GetString("SetCommandCooldown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set Content Classification Labels.
         /// </summary>
         public static string SetContentClassificationLabels {
