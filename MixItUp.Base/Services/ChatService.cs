@@ -471,7 +471,7 @@ namespace MixItUp.Base.Services
                         {
                             if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatWhisperSoundFilePath))
                             {
-                                await ServiceManager.Get<IAudioService>().Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, ChannelSession.Settings.NotificationChatWhisperSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
+                                await ServiceManager.Get<IAudioService>().PlayNotification(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, ChannelSession.Settings.NotificationChatWhisperSoundVolume);
                             }
 
                             if (!string.IsNullOrEmpty(message.PlainTextMessage))
@@ -505,11 +505,11 @@ namespace MixItUp.Base.Services
 
                         if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatTaggedSoundFilePath) && message.IsStreamerTagged)
                         {
-                            await ServiceManager.Get<IAudioService>().Play(ChannelSession.Settings.NotificationChatTaggedSoundFilePath, ChannelSession.Settings.NotificationChatTaggedSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
+                            await ServiceManager.Get<IAudioService>().PlayNotification(ChannelSession.Settings.NotificationChatTaggedSoundFilePath, ChannelSession.Settings.NotificationChatTaggedSoundVolume);
                         }
                         else if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatMessageSoundFilePath) && !message.User.IsSpecialtyExcluded)
                         {
-                            await ServiceManager.Get<IAudioService>().Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, ChannelSession.Settings.NotificationChatMessageSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
+                            await ServiceManager.Get<IAudioService>().PlayNotification(ChannelSession.Settings.NotificationChatMessageSoundFilePath, ChannelSession.Settings.NotificationChatMessageSoundVolume);
                         }
 
                         if (message.ProcessingTime > 1000)

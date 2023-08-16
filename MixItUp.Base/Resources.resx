@@ -10155,4 +10155,7 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="ShowAlejoPronouns" xml:space="preserve">
     <value>Show Alejo Pronouns (Requires Restart)</value>
   </data>
+  <data name="NotificationCooldownAmount" xml:space="preserve">
+    <value>Notification Cooldown Amount</value>
+  </data>
 </root>

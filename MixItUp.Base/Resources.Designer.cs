@@ -13028,6 +13028,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Notification Cooldown Amount.
+        /// </summary>
+        public static string NotificationCooldownAmount {
+            get {
+                return ResourceManager.GetString("NotificationCooldownAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Notifications.
         /// </summary>
         public static string Notifications {

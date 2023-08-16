@@ -289,6 +289,10 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public string NotificationsAudioOutput { get; set; }
+        [DataMember]
+        public int NotificationCooldownAmount { get; set; }
+        [JsonIgnore]
+        public DateTimeOffset NotificationLastTrigger { get; set; } = DateTimeOffset.MinValue;
 
         [DataMember]
         public string NotificationChatMessageSoundFilePath { get; set; }
