@@ -10130,4 +10130,8 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="DelimitedArgumentsSeparator" xml:space="preserve">
     <value>Delimited Arguments Separator</value>
   </data>
+  <data name="PreMadeChatCommandQuoteUnableToFindText" xml:space="preserve">
+    <value>Unable to find quote containing the text {0}.</value>
+    <comment>{0] is the search text</comment>
+  </data>
 </root>

@@ -15498,6 +15498,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to find quote containing the text {0}..
+        /// </summary>
+        public static string PreMadeChatCommandQuoteUnableToFindText {
+            get {
+                return ResourceManager.GetString("PreMadeChatCommandQuoteUnableToFindText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to USAGE: !quote [QUOTE NUMBER].
         /// </summary>
         public static string PreMadeChatCommandQuoteUsage {
