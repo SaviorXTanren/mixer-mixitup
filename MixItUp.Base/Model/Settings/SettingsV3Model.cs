@@ -111,6 +111,8 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public OAuthTokenModel InfiniteAlbumOAuthToken { get; set; }
         [DataMember]
+        public OAuthTokenModel TITSOAuthToken { get; set; }
+        [DataMember]
         public bool EnableVoicemodStudio { get; set; }
         [DataMember]
         public bool EnableCrowdControl { get; set; }
@@ -518,6 +520,9 @@ namespace MixItUp.Base.Model.Settings
         public int VTubeStudioPortNumber { get; set; } = VTubeStudioService.DefaultPortNumber;
 
         [DataMember]
+        public int TITSPortNumber { get; set; } = TITSService.DefaultPortNumber;
+
+        [DataMember]
         public int PolyPopPortNumber { get; set; }
 
         [DataMember]
@@ -843,6 +848,10 @@ namespace MixItUp.Base.Model.Settings
             if (ServiceManager.Get<InfiniteAlbumService>().IsConnected)
             {
                 this.InfiniteAlbumOAuthToken = ServiceManager.Get<InfiniteAlbumService>().GetOAuthTokenCopy();
+            }
+            if (ServiceManager.Get<TITSService>().IsConnected)
+            {
+                this.TITSOAuthToken = ServiceManager.Get<TITSService>().GetOAuthTokenCopy();
             }
         }
 

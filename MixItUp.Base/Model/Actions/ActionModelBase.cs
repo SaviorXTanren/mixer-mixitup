@@ -54,6 +54,7 @@ namespace MixItUp.Base.Model.Actions
         PolyPop,
         SAMMI,
         InfiniteAlbum,
+        TITS,
     }
 
     [DataContract]

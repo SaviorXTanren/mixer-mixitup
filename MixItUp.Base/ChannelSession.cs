@@ -79,6 +79,7 @@ namespace MixItUp.Base
             ServiceManager.Add(new CrowdControlService());
             ServiceManager.Add(new SAMMIService());
             ServiceManager.Add(new InfiniteAlbumService());
+            ServiceManager.Add(new TITSService());
 
             try
             {
@@ -311,6 +312,7 @@ namespace MixItUp.Base
                 if (ChannelSession.Settings.PixelChatOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<PixelChatService>()] = ChannelSession.Settings.PixelChatOAuthToken; }
                 if (ChannelSession.Settings.VTubeStudioOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<VTubeStudioService>()] = ChannelSession.Settings.VTubeStudioOAuthToken; }
                 if (ChannelSession.Settings.InfiniteAlbumOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<InfiniteAlbumService>()] = ChannelSession.Settings.InfiniteAlbumOAuthToken; }
+                if (ChannelSession.Settings.TITSOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<TITSService>()] = ChannelSession.Settings.TITSOAuthToken; }
                 if (ChannelSession.Settings.EnableVoicemodStudio) { externalServiceToConnect[ServiceManager.Get<IVoicemodService>()] = null; }
                 if (ChannelSession.Settings.EnableCrowdControl) { externalServiceToConnect[ServiceManager.Get<CrowdControlService>()] = null; }
                 if (ChannelSession.Settings.EnableSAMMI) { externalServiceToConnect[ServiceManager.Get<SAMMIService>()] = null; }

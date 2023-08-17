@@ -10158,4 +10158,43 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="NotificationCooldownAmount" xml:space="preserve">
     <value>Notification Cooldown Amount</value>
   </data>
+  <data name="TwitchIntegratedThrowingSystem" xml:space="preserve">
+    <value>Twitch Integrated Throwing System (T.I.T.S.)</value>
+  </data>
+  <data name="TITSActionMissingItem" xml:space="preserve">
+    <value>T.I.T.S. Action: Missing Item</value>
+  </data>
+  <data name="TITSActionMissingTrigger" xml:space="preserve">
+    <value>T.I.T.S. Action: Missing Trigger</value>
+  </data>
+  <data name="TITSConnectionFailed" xml:space="preserve">
+    <value>Twitch Integrated Throwing System connection failed, please ensure the software is running and the API is enabled on the settings menu.</value>
+  </data>
+  <data name="TITSInfo" xml:space="preserve">
+    <value>Twitch Integration Throwing System (T.I.T.S.) connectivity allows you to control functionality in the software, such as throwing specific items and activating triggers. To connect to T.I.T.S., please ensure the software is running and the API is enabled on the settings menu.</value>
+  </data>
+  <data name="TITSNotConnected" xml:space="preserve">
+    <value>Twitch Integrated Throwing System not connected, please ensure the software is running and is connected on the Services page.</value>
+  </data>
+  <data name="ActivateTrigger" xml:space="preserve">
+    <value>Activate Trigger</value>
+  </data>
+  <data name="ThrowItem" xml:space="preserve">
+    <value>Throw Item</value>
+  </data>
+  <data name="TITS" xml:space="preserve">
+    <value>T.I.T.S.</value>
+  </data>
+  <data name="TITSItem" xml:space="preserve">
+    <value>Item</value>
+  </data>
+  <data name="TITSTrigger" xml:space="preserve">
+    <value>Trigger</value>
+  </data>
+  <data name="TITSThrowAmount" xml:space="preserve">
+    <value>Throw Amount</value>
+  </data>
+  <data name="TITSThrowDelayTime" xml:space="preserve">
+    <value>Throw Delay Time (Seconds)</value>
+  </data>
 </root>
