@@ -20,6 +20,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using Twitch.Base.Models.NewAPI.Bits;
+using Twitch.Base.Models.NewAPI.Games;
 using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.Util
@@ -454,9 +455,28 @@ namespace MixItUp.Base.Util
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "islive", ServiceManager.Get<TwitchSessionService>().IsLive.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<TwitchSessionService>().Stream?.viewer_count.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<TwitchSessionService>().Channel?.title);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gameimage", ServiceManager.Get<TwitchSessionService>().Stream?.thumbnail_url);
+
+                    if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "gameimage"))
+                    {
+                        GameModel game = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIGameByID(ServiceManager.Get<TwitchSessionService>().Channel?.game_id);
+                        if (game != null && !string.IsNullOrEmpty(game.box_art_url))
+                        {
+                            string image = game.box_art_url;
+                            image = image.Replace("{width}", "264");
+                            image = image.Replace("{height}", "352");
+                            this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gameimage", image);
+                        }
+                    }
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "gameid", ServiceManager.Get<TwitchSessionService>().Channel?.game_id);
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceManager.Get<TwitchSessionService>().Channel?.game_name);
+
+                    string thumbnail = ServiceManager.Get<TwitchSessionService>().Stream?.thumbnail_url;
+                    if (!string.IsNullOrEmpty(thumbnail))
+                    {
+                        thumbnail = thumbnail.Replace("{width}", "1920");
+                        thumbnail = thumbnail.Replace("{height}", "1080");
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "thumbnail", thumbnail);
+                    }
 
                     if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount"))
                     {
