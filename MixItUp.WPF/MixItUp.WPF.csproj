@@ -576,6 +576,9 @@
     <Compile Include="Controls\Actions\TextToSpeechActionEditorControl.xaml.cs">
       <DependentUpon>TextToSpeechActionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\TITSActionEditorControl.xaml.cs">
+      <DependentUpon>TITSActionEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\TrovoActionEditorControl.xaml.cs">
       <DependentUpon>TrovoActionEditorControl.xaml</DependentUpon>
     </Compile>
@@ -1031,6 +1034,9 @@
     <Compile Include="Controls\Services\InfiniteAlbumServiceControl.xaml.cs">
       <DependentUpon>InfiniteAlbumServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\TITSServiceControl.xaml.cs">
+      <DependentUpon>TITSServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\VTubeStudioServiceControl.xaml.cs">
       <DependentUpon>VTubeStudioServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1330,6 +1336,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\TextToSpeechActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\TITSActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1930,6 +1940,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\InfiniteAlbumServiceControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Services\TITSServiceControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

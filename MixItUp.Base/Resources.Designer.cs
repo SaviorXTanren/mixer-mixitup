@@ -322,6 +322,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Activate Trigger.
+        /// </summary>
+        public static string ActivateTrigger {
+            get {
+                return ResourceManager.GetString("ActivateTrigger", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add.
         /// </summary>
         public static string Add {
@@ -20604,6 +20613,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Throw Item.
+        /// </summary>
+        public static string ThrowItem {
+            get {
+                return ResourceManager.GetString("ThrowItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ticker Tape.
         /// </summary>
         public static string TickerTape {
@@ -20951,6 +20969,96 @@ namespace MixItUp.Base {
         public static string TitleUpdatedHeader {
             get {
                 return ResourceManager.GetString("TitleUpdatedHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to T.I.T.S..
+        /// </summary>
+        public static string TITS {
+            get {
+                return ResourceManager.GetString("TITS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to T.I.T.S. Action: Missing Item.
+        /// </summary>
+        public static string TITSActionMissingItem {
+            get {
+                return ResourceManager.GetString("TITSActionMissingItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to T.I.T.S. Action: Missing Trigger.
+        /// </summary>
+        public static string TITSActionMissingTrigger {
+            get {
+                return ResourceManager.GetString("TITSActionMissingTrigger", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Integrated Throwing System connection failed, please ensure the software is running and the API is enabled on the settings menu..
+        /// </summary>
+        public static string TITSConnectionFailed {
+            get {
+                return ResourceManager.GetString("TITSConnectionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Integration Throwing System (T.I.T.S.) connectivity allows you to control functionality in the software, such as throwing specific items and activating triggers. To connect to T.I.T.S., please ensure the software is running and the API is enabled on the settings menu..
+        /// </summary>
+        public static string TITSInfo {
+            get {
+                return ResourceManager.GetString("TITSInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Item.
+        /// </summary>
+        public static string TITSItem {
+            get {
+                return ResourceManager.GetString("TITSItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Integrated Throwing System not connected, please ensure the software is running and is connected on the Services page..
+        /// </summary>
+        public static string TITSNotConnected {
+            get {
+                return ResourceManager.GetString("TITSNotConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Throw Amount.
+        /// </summary>
+        public static string TITSThrowAmount {
+            get {
+                return ResourceManager.GetString("TITSThrowAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Throw Delay Time (Seconds).
+        /// </summary>
+        public static string TITSThrowDelayTime {
+            get {
+                return ResourceManager.GetString("TITSThrowDelayTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trigger.
+        /// </summary>
+        public static string TITSTrigger {
+            get {
+                return ResourceManager.GetString("TITSTrigger", resourceCulture);
             }
         }
         
@@ -22248,6 +22356,15 @@ namespace MixItUp.Base {
         public static string TwitchID {
             get {
                 return ResourceManager.GetString("TwitchID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Integrated Throwing System (T.I.T.S.).
+        /// </summary>
+        public static string TwitchIntegratedThrowingSystem {
+            get {
+                return ResourceManager.GetString("TwitchIntegratedThrowingSystem", resourceCulture);
             }
         }
         
