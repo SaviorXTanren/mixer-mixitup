@@ -15,7 +15,7 @@ namespace MixItUp.WPF.Services
 {
     public class WindowsMusicPlayerService : IMusicPlayerService
     {
-        private static readonly ISet<string> AllowedFileExtensions = new HashSet<string>() { ".mp3" };
+        private static readonly ISet<string> AllowedFileExtensions = new HashSet<string>() { ".mp3", ".wav" };
 
         public event EventHandler SongChanged = delegate { };
 
@@ -183,69 +183,72 @@ namespace MixItUp.WPF.Services
                         string extension = Path.GetExtension(file).ToLower();
                         if (AllowedFileExtensions.Contains(extension))
                         {
-                            using (var mp3 = new Mp3(file))
+                            MusicPlayerSong song = null;
+                            try
                             {
-                                MusicPlayerSong song = null;
-
-                                var v2Tags = mp3.GetTag(Id3TagFamily.Version2X);
-                                if (v2Tags != null)
+                                using (var mp3 = new Mp3(file))
                                 {
-                                    song = new MusicPlayerSong()
-                                    {
-                                        FilePath = file,
-                                        Title = v2Tags.Title.Value,
-                                        Length = v2Tags.Length.IsAssigned ? (int)v2Tags.Length.Value.TotalSeconds : 0
-                                    };
-
-                                    if (v2Tags.Artists.IsAssigned && v2Tags.Artists.Value.Count > 0)
-                                    {
-                                        song.Artist = string.Join(", ", v2Tags.Artists.Value);
-                                    }
-                                    else if (v2Tags.Band.IsAssigned)
-                                    {
-                                        song.Artist = v2Tags.Band.Value;
-                                    }
-                                    else if (v2Tags.Composers.IsAssigned && v2Tags.Composers.Value.Count > 0)
-                                    {
-                                        song.Artist = string.Join(", ", v2Tags.Artists.Value);
-                                    }
-                                }
-                                else
-                                {
-                                    var v1Tags = mp3.GetTag(Id3TagFamily.Version1X);
-                                    if (v1Tags != null)
+                                    var v2Tags = mp3.GetTag(Id3TagFamily.Version2X);
+                                    if (v2Tags != null)
                                     {
                                         song = new MusicPlayerSong()
                                         {
                                             FilePath = file,
-                                            Title = v1Tags.Title.Value,
-                                            Length = v1Tags.Length.IsAssigned ? (int)v1Tags.Length.Value.TotalSeconds : 0
+                                            Title = v2Tags.Title.Value,
+                                            Length = v2Tags.Length.IsAssigned ? (int)v2Tags.Length.Value.TotalSeconds : 0
                                         };
 
-                                        if (v1Tags.Artists.IsAssigned && v1Tags.Artists.Value.Count > 0)
+                                        if (v2Tags.Artists.IsAssigned && v2Tags.Artists.Value.Count > 0)
                                         {
-                                            song.Artist = string.Join(", ", v1Tags.Artists.Value);
+                                            song.Artist = string.Join(", ", v2Tags.Artists.Value);
                                         }
-                                        else if (v1Tags.Band.IsAssigned)
+                                        else if (v2Tags.Band.IsAssigned)
                                         {
-                                            song.Artist = v1Tags.Band.Value;
+                                            song.Artist = v2Tags.Band.Value;
                                         }
-                                        else if (v1Tags.Composers.IsAssigned && v1Tags.Composers.Value.Count > 0)
+                                        else if (v2Tags.Composers.IsAssigned && v2Tags.Composers.Value.Count > 0)
                                         {
-                                            song.Artist = string.Join(", ", v1Tags.Artists.Value);
+                                            song.Artist = string.Join(", ", v2Tags.Artists.Value);
                                         }
                                     }
                                     else
                                     {
-                                        song = new MusicPlayerSong() { FilePath = file, Title = Path.GetFileNameWithoutExtension(file) };
+                                        var v1Tags = mp3.GetTag(Id3TagFamily.Version1X);
+                                        if (v1Tags != null)
+                                        {
+                                            song = new MusicPlayerSong()
+                                            {
+                                                FilePath = file,
+                                                Title = v1Tags.Title.Value,
+                                                Length = v1Tags.Length.IsAssigned ? (int)v1Tags.Length.Value.TotalSeconds : 0
+                                            };
+
+                                            if (v1Tags.Artists.IsAssigned && v1Tags.Artists.Value.Count > 0)
+                                            {
+                                                song.Artist = string.Join(", ", v1Tags.Artists.Value);
+                                            }
+                                            else if (v1Tags.Band.IsAssigned)
+                                            {
+                                                song.Artist = v1Tags.Band.Value;
+                                            }
+                                            else if (v1Tags.Composers.IsAssigned && v1Tags.Composers.Value.Count > 0)
+                                            {
+                                                song.Artist = string.Join(", ", v1Tags.Artists.Value);
+                                            }
+                                        }
                                     }
                                 }
-
-                                if (song != null)
-                                {
-                                    tempSongs.Add(song);
-                                }
                             }
+                            catch (Exception ex)
+                            {
+                                Logger.Log(ex);
+                            }
+
+                            if (song == null)
+                            {
+                                song = new MusicPlayerSong() { FilePath = file, Title = Path.GetFileNameWithoutExtension(file) };
+                            }
+                            tempSongs.Add(song);
                         }
                     }
 
