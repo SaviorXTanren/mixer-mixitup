@@ -59,6 +59,7 @@ namespace MixItUp.Base.ViewModel.Actions
                         case ActionTypeEnum.InfiniteAlbum: editorViewModel = new InfiniteAlbumActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Input: editorViewModel = new InputActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Moderation: editorViewModel = new ModerationActionEditorControlViewModel(); break;
+                        case ActionTypeEnum.MusicPlayer: editorViewModel = new MusicPlayerActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Overlay: editorViewModel = new OverlayActionEditorControlViewModel(); break;
                         case ActionTypeEnum.OvrStream: editorViewModel = new OvrStreamActionEditorControlViewModel(); break;
                         case ActionTypeEnum.PixelChat: editorViewModel = new PixelChatActionEditorControlViewModel(); break;
@@ -142,6 +143,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 case ActionTypeEnum.InfiniteAlbum: editorViewModel = new InfiniteAlbumActionEditorControlViewModel((InfiniteAlbumActionModel)action); break;
                 case ActionTypeEnum.Input: editorViewModel = new InputActionEditorControlViewModel((InputActionModel)action); break;
                 case ActionTypeEnum.Moderation: editorViewModel = new ModerationActionEditorControlViewModel((ModerationActionModel)action); break;
+                case ActionTypeEnum.MusicPlayer: editorViewModel = new MusicPlayerActionEditorControlViewModel((MusicPlayerActionModel)action); break;
                 case ActionTypeEnum.Overlay: editorViewModel = new OverlayActionEditorControlViewModel((OverlayActionModel)action); break;
                 case ActionTypeEnum.OvrStream: editorViewModel = new OvrStreamActionEditorControlViewModel((OvrStreamActionModel)action); break;
                 case ActionTypeEnum.PixelChat: editorViewModel = new PixelChatActionEditorControlViewModel((PixelChatActionModel)action); break;

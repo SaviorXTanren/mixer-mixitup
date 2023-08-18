@@ -541,6 +541,17 @@ namespace MixItUp.Base.Model.Settings
 
         #endregion Dashboard
 
+        #region Music Player
+
+        [DataMember]
+        public string MusicPlayerAudioOutput { get; set; }
+        [DataMember]
+        public int MusicPlayerVolume { get; set; } = 100;
+        [DataMember]
+        public List<string> MusicPlayerFolders { get; set; } = new List<string>();
+
+        #endregion
+
         #region Advanced
 
         [DataMember]

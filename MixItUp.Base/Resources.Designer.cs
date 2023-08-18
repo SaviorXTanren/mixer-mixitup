@@ -1159,6 +1159,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Artist.
+        /// </summary>
+        public static string Artist {
+            get {
+                return ResourceManager.GetString("Artist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A special identifier name must be specified..
         /// </summary>
         public static string ASpecialIdentifierNameMustBeSpecified {
@@ -1984,6 +1993,15 @@ namespace MixItUp.Base {
         public static string Changelog {
             get {
                 return ResourceManager.GetString("Changelog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change Volume.
+        /// </summary>
+        public static string ChangeVolume {
+            get {
+                return ResourceManager.GetString("ChangeVolume", resourceCulture);
             }
         }
         
@@ -3979,6 +3997,15 @@ namespace MixItUp.Base {
         public static string Current {
             get {
                 return ResourceManager.GetString("Current", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Currently Playing: .
+        /// </summary>
+        public static string CurrentlyPlayingHeader {
+            get {
+                return ResourceManager.GetString("CurrentlyPlayingHeader", resourceCulture);
             }
         }
         
@@ -11244,6 +11271,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Length.
+        /// </summary>
+        public static string Length {
+            get {
+                return ResourceManager.GetString("Length", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Length (Seconds).
         /// </summary>
         public static string LengthSeconds {
@@ -12691,6 +12727,15 @@ namespace MixItUp.Base {
         public static string Multiple {
             get {
                 return ResourceManager.GetString("Multiple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Music Player.
+        /// </summary>
+        public static string MusicPlayer {
+            get {
+                return ResourceManager.GetString("MusicPlayer", resourceCulture);
             }
         }
         
@@ -14958,6 +15003,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pause.
+        /// </summary>
+        public static string Pause {
+            get {
+                return ResourceManager.GetString("Pause", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pause All Commands.
         /// </summary>
         public static string PauseAllCommands {
@@ -15305,6 +15359,15 @@ namespace MixItUp.Base {
         public static string Play {
             get {
                 return ResourceManager.GetString("Play", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Play/Pause.
+        /// </summary>
+        public static string PlayPause {
+            get {
+                return ResourceManager.GetString("PlayPause", resourceCulture);
             }
         }
         
@@ -19214,6 +19277,15 @@ namespace MixItUp.Base {
         public static string SteamGame {
             get {
                 return ResourceManager.GetString("SteamGame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop.
+        /// </summary>
+        public static string Stop {
+            get {
+                return ResourceManager.GetString("Stop", resourceCulture);
             }
         }
         

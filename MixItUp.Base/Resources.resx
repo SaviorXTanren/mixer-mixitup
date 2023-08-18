@@ -10197,4 +10197,28 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="TITSThrowDelayTime" xml:space="preserve">
     <value>Throw Delay Time (Seconds)</value>
   </data>
+  <data name="ChangeVolume" xml:space="preserve">
+    <value>Change Volume</value>
+  </data>
+  <data name="Pause" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Artist</value>
+  </data>
+  <data name="CurrentlyPlayingHeader" xml:space="preserve">
+    <value>Currently Playing: </value>
+  </data>
+  <data name="PlayPause" xml:space="preserve">
+    <value>Play/Pause</value>
+  </data>
+  <data name="MusicPlayer" xml:space="preserve">
+    <value>Music Player</value>
+  </data>
+  <data name="Length" xml:space="preserve">
+    <value>Length</value>
+  </data>
 </root>

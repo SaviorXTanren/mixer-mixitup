@@ -72,6 +72,15 @@ namespace MixItUp.WPF.Services
             return Task.FromResult<IEnumerable<string>>(new List<string>());
         }
 
+        public Task<IEnumerable<string>> GetFoldersInDirectory(string directoryPath)
+        {
+            if (Directory.Exists(directoryPath))
+            {
+                return Task.FromResult<IEnumerable<string>>(Directory.GetDirectories(directoryPath));
+            }
+            return Task.FromResult<IEnumerable<string>>(new List<string>());
+        }
+
         public bool FileExists(string filePath)
         {
             return File.Exists(filePath);

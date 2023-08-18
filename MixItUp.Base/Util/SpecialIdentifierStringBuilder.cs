@@ -59,6 +59,8 @@ namespace MixItUp.Base.Util
         public const string StreamUptimeSpecialIdentifierHeader = StreamSpecialIdentifierHeader + "uptime";
         public const string StreamStartSpecialIdentifierHeader = StreamSpecialIdentifierHeader + "start";
 
+        public const string MusicPlayerSpecialIdentifierHeader = "musicplayer";
+
         public const string TwitchSpecialIdentifierHeader = "twitch";
 
         public const string QuoteSpecialIdentifierHeader = "quote";
@@ -427,6 +429,17 @@ namespace MixItUp.Base.Util
                         this.ReplaceSpecialIdentifier(DonorDriveSpecialIdentifierHeader + "teamdonationcount", team.numDonations.ToString());
                         this.ReplaceSpecialIdentifier(DonorDriveSpecialIdentifierHeader + "teamdonationamount", team.sumDonations.ToString());
                     }
+                }
+            }
+
+            if (this.ContainsSpecialIdentifier(MusicPlayerSpecialIdentifierHeader))
+            {
+                MusicPlayerSong song = ServiceManager.Get<IMusicPlayerService>().CurrentSong;
+                if (song != null)
+                {
+                    this.ReplaceSpecialIdentifier(MusicPlayerSpecialIdentifierHeader + "title", song.Title);
+                    this.ReplaceSpecialIdentifier(MusicPlayerSpecialIdentifierHeader + "artist", song.Artist);
+                    this.ReplaceSpecialIdentifier(MusicPlayerSpecialIdentifierHeader + "display", song.ToString());
                 }
             }
 

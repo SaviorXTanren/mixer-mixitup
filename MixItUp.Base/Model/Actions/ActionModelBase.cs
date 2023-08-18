@@ -55,6 +55,7 @@ namespace MixItUp.Base.Model.Actions
         SAMMI,
         InfiniteAlbum,
         TITS,
+        MusicPlayer,
     }
 
     [DataContract]
