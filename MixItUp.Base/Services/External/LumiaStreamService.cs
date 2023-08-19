@@ -13,9 +13,10 @@ namespace MixItUp.Base.Services.External
 
         public bool IsConnected { get; private set; }
 
-        public async Task<Result> Connect()
+        public Task<Result> Connect()
         {
             ServiceManager.Get<ITelemetryService>().TrackService("Lumia Stream");
+            return Task.FromResult(new Result());
         }
 
         public Task Disconnect()
