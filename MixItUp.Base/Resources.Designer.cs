@@ -20973,7 +20973,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to T.I.T.S..
+        ///   Looks up a localized string similar to Twitch Integrated Throwing.
         /// </summary>
         public static string TITS {
             get {
@@ -20982,7 +20982,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to T.I.T.S. Action: Missing Item.
+        ///   Looks up a localized string similar to Twitch Integrated Throwing Action: Missing Item.
         /// </summary>
         public static string TITSActionMissingItem {
             get {
@@ -20991,7 +20991,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to T.I.T.S. Action: Missing Trigger.
+        ///   Looks up a localized string similar to Twitch Integrated Throwing Action: Missing Trigger.
         /// </summary>
         public static string TITSActionMissingTrigger {
             get {
