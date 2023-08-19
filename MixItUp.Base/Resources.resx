@@ -10227,4 +10227,11 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="LumiaStream" xml:space="preserve">
     <value>Lumia Stream</value>
   </data>
+  <data name="PlaySpecificSong" xml:space="preserve">
+    <value>Play Specific Song</value>
+  </data>
+  <data name="MusicPlayerUnableToFindSong" xml:space="preserve">
+    <value>ERROR: Unable to find song with the text {0}</value>
+    <comment>{0} is the text specified as part of the search</comment>
+  </data>
 </root>

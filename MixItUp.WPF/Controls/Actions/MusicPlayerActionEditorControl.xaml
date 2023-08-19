@@ -42,5 +42,7 @@
             <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.Volume}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
             <Slider Grid.Column="2" Value="{Binding Volume}" VerticalAlignment="Center" Width="200" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" />
         </Grid>
+
+        <TextBox Grid.Row="2" Visibility="{Binding ShowSearchText, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{Binding SearchText}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SearchText}" />
     </Grid>
 </local:ActionEditorControlBase>

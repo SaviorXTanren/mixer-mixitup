@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace MixItUp.Base.Model.Actions
     {
         PlayPause,
         Play,
+        PlaySpecificSong,
         Pause,
         Stop,
         Next,
@@ -25,6 +27,9 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public int Volume { get; set; }
+
+        [DataMember]
+        public string SearchText { get; set; }
 
         public MusicPlayerActionModel(MusicPlayerActionTypeEnum actionType)
             : base(ActionTypeEnum.MusicPlayer)
@@ -51,6 +56,15 @@ namespace MixItUp.Base.Model.Actions
             else if (this.ActionType == MusicPlayerActionTypeEnum.Play)
             {
                 await ServiceManager.Get<IMusicPlayerService>().Play();
+            }
+            else if (this.ActionType == MusicPlayerActionTypeEnum.PlaySpecificSong)
+            {
+                string search = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.SearchText, parameters);
+                MusicPlayerSong song = await ServiceManager.Get<IMusicPlayerService>().SearchAndPlaySong(search);
+                if (song == null)
+                {
+                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(Resources.MusicPlayerUnableToFindSong, search), parameters.Platform);
+                }
             }
             else if (this.ActionType == MusicPlayerActionTypeEnum.Pause)
             {

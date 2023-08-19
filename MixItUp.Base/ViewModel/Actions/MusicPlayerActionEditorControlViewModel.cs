@@ -20,6 +20,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.selectedActionType = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged(nameof(this.ShowVolume));
+                this.NotifyPropertyChanged(nameof(this.ShowSearchText));
             }
         }
         private MusicPlayerActionTypeEnum selectedActionType;
@@ -37,6 +38,19 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private int volume = 100;
 
+        public bool ShowSearchText { get { return this.SelectedActionType == MusicPlayerActionTypeEnum.PlaySpecificSong; } }
+
+        public string SearchText
+        {
+            get { return this.searchText; }
+            set
+            {
+                this.searchText = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string searchText;
+
         public MusicPlayerActionEditorControlViewModel(MusicPlayerActionModel action)
             : base(action)
         {
@@ -44,6 +58,10 @@ namespace MixItUp.Base.ViewModel.Actions
             if (this.SelectedActionType == MusicPlayerActionTypeEnum.ChangeVolume)
             {
                 this.Volume = action.Volume;
+            }
+            else if (this.SelectedActionType == MusicPlayerActionTypeEnum.PlaySpecificSong)
+            {
+                this.SearchText = action.SearchText;
             }
         }
 
@@ -59,6 +77,10 @@ namespace MixItUp.Base.ViewModel.Actions
             if (this.ShowVolume)
             {
                 return Task.FromResult<ActionModelBase>(new MusicPlayerActionModel(this.SelectedActionType) { Volume = this.Volume });
+            }
+            else if (this.ShowSearchText)
+            {
+                return Task.FromResult<ActionModelBase>(new MusicPlayerActionModel(this.SelectedActionType) { SearchText = this.SearchText });
             }
             else
             {

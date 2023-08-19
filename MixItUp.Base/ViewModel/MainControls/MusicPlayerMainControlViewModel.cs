@@ -109,7 +109,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 string folderPath = ServiceManager.Get<IFileService>().ShowOpenFolderDialog();
                 ChannelSession.Settings.MusicPlayerFolders.Clear();
                 ChannelSession.Settings.MusicPlayerFolders.Add(folderPath);
-                await ServiceManager.Get<IMusicPlayerService>().SetSongs();
+                await ServiceManager.Get<IMusicPlayerService>().LoadSongs();
             });
         }
 

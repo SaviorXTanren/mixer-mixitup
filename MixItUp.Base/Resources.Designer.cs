@@ -12758,6 +12758,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ERROR: Unable to find song with the text {0}.
+        /// </summary>
+        public static string MusicPlayerUnableToFindSong {
+            get {
+                return ResourceManager.GetString("MusicPlayerUnableToFindSong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Must Be Present.
         /// </summary>
         public static string MustBePresent {
@@ -15395,6 +15404,15 @@ namespace MixItUp.Base {
         public static string PlaySound {
             get {
                 return ResourceManager.GetString("PlaySound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Play Specific Song.
+        /// </summary>
+        public static string PlaySpecificSong {
+            get {
+                return ResourceManager.GetString("PlaySpecificSong", resourceCulture);
             }
         }
         

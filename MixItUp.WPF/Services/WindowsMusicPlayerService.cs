@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -54,7 +55,7 @@ namespace MixItUp.WPF.Services
         {
             if (this.songs.Count == 0)
             {
-                await this.SetSongs();
+                await this.LoadSongs();
             }
 
             if (this.songs.Count > 0)
@@ -167,7 +168,7 @@ namespace MixItUp.WPF.Services
             });
         }
 
-        public async Task SetSongs()
+        public async Task LoadSongs()
         {
             await this.sempahore.WaitAndRelease(async () =>
             {
@@ -263,6 +264,26 @@ namespace MixItUp.WPF.Services
                     }
                 }
             });
+        }
+
+        public async Task<MusicPlayerSong> SearchAndPlaySong(string searchText)
+        {
+            MusicPlayerSong song = null;
+
+            var songs = this.songs.Where(s => s.Title.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+            if (songs != null && songs.Count() > 0)
+            {
+                song = songs.OrderBy(s => s.Title.Length).First();
+            }
+
+            if (song != null)
+            {
+                await this.Stop();
+                this.currentSongIndex = this.songs.IndexOf(song);
+                await this.Play();
+            }
+
+            return song;
         }
 
         private void PlayInternal(string filePath)
