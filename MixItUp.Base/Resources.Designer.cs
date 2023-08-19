@@ -11748,6 +11748,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lumia Stream.
+        /// </summary>
+        public static string LumiaStream {
+            get {
+                return ResourceManager.GetString("LumiaStream", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Magic 8 Ball.
         /// </summary>
         public static string MagicEightBall {
