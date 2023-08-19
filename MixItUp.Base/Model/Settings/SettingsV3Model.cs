@@ -549,6 +549,8 @@ namespace MixItUp.Base.Model.Settings
         public int MusicPlayerVolume { get; set; } = 100;
         [DataMember]
         public List<string> MusicPlayerFolders { get; set; } = new List<string>();
+        [DataMember]
+        public Guid MusicPlayerOnSongChangedCommandID { get; set; }
 
         #endregion
 
@@ -1164,6 +1166,11 @@ namespace MixItUp.Base.Model.Settings
             if (this.GetCommand(this.RedemptionStoreDefaultRedemptionCommandID) == null)
             {
                 this.RedemptionStoreDefaultRedemptionCommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.RedemptionStoreDefaultRedemptionCommandName, MixItUp.Base.Resources.RedemptionStoreDefaultRedemptionExample);
+            }
+
+            if (this.GetCommand(this.MusicPlayerOnSongChangedCommandID) == null)
+            {
+                this.MusicPlayerOnSongChangedCommandID = this.CreateBasicCommand(MixItUp.Base.Resources.MusicPlayerOnSongChanged);
             }
         }
 

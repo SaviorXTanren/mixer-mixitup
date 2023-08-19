@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -52,14 +53,26 @@ namespace MixItUp.Base.ViewModel.MainControls
                 this.NotifyPropertyChanged();
             }
         }
-        private string selectedAudioDevice;
 
         public ICommand SetFolderCommand { get; private set; }
+
+        public CommandModelBase OnSongChangedCommand
+        {
+            get { return this.onSongChangedCommand; }
+            set
+            {
+                this.onSongChangedCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CommandModelBase onSongChangedCommand;
 
         public MusicPlayerMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
             ServiceManager.Get<IMusicPlayerService>().SongChanged += MusicPlayerMainControlViewModel_SongChanged;
+
+            this.OnSongChangedCommand = ChannelSession.Settings.GetCommand(ChannelSession.Settings.MusicPlayerOnSongChangedCommandID);
 
             this.AudioDevices.AddRange(ServiceManager.Get<IAudioService>().GetSelectableAudioDevices());
             this.SelectedAudioDevice = (ChannelSession.Settings.MusicPlayerAudioOutput != null) ? ChannelSession.Settings.MusicPlayerAudioOutput : ServiceManager.Get<IAudioService>().DefaultAudioDevice;

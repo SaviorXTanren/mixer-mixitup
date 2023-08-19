@@ -12740,6 +12740,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to On Song Changed.
+        /// </summary>
+        public static string MusicPlayerOnSongChanged {
+            get {
+                return ResourceManager.GetString("MusicPlayerOnSongChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Must Be Present.
         /// </summary>
         public static string MustBePresent {

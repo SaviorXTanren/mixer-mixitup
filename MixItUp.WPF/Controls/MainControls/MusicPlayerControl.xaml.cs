@@ -1,6 +1,10 @@
-﻿using MixItUp.Base.ViewModel;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.MainControls;
+using MixItUp.WPF.Util;
+using MixItUp.WPF.Windows.Commands;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -26,6 +30,13 @@ namespace MixItUp.WPF.Controls.MainControls
         protected override async Task OnVisibilityChanged()
         {
             await this.viewModel.OnVisible();
+        }
+
+        private void OnSongChangedCommand_EditClicked(object sender, RoutedEventArgs e)
+        {
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            window.CommandSaved += (object s, CommandModelBase command) => { this.viewModel.OnSongChangedCommand = command; };
+            window.ForceShow();
         }
     }
 }

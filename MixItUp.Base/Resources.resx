@@ -10221,4 +10221,7 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="Length" xml:space="preserve">
     <value>Length</value>
   </data>
+  <data name="MusicPlayerOnSongChanged" xml:space="preserve">
+    <value>On Song Changed</value>
+  </data>
 </root>

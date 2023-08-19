@@ -1,5 +1,6 @@
 ﻿using Id3;
 using MixItUp.Base;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using NAudio.Wave;
@@ -15,7 +16,7 @@ namespace MixItUp.WPF.Services
 {
     public class WindowsMusicPlayerService : IMusicPlayerService
     {
-        private static readonly ISet<string> AllowedFileExtensions = new HashSet<string>() { ".mp3", ".wav" };
+        private static readonly ISet<string> AllowedFileExtensions = new HashSet<string>() { ".mp3", ".wav", ".flac", ".mp4" };
 
         public event EventHandler SongChanged = delegate { };
 
@@ -78,6 +79,9 @@ namespace MixItUp.WPF.Services
                         this.PlayInternal(this.CurrentSong.FilePath);
                         return Task.CompletedTask;
                     });
+                    this.SongChanged.Invoke(this, new EventArgs());
+
+                    await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.MusicPlayerOnSongChangedCommandID, new CommandParametersModel());
                 }
             }
         }
@@ -272,8 +276,6 @@ namespace MixItUp.WPF.Services
             WindowsAudioService audioService = ServiceManager.Get<IAudioService>() as WindowsAudioService;
             this.currentWaveOutEvent = audioService.PlayWithOutput(filePath, this.Volume, ChannelSession.Settings.MusicPlayerAudioOutput);
             Task backgroundPlayThreadTask = Task.Run(async () => await this.PlayBackground(this.currentWaveOutEvent), this.backgroundPlayThreadTokenSource.Token);
-
-            this.SongChanged.Invoke(this, new EventArgs());
         }
 
         private async Task PlayBackground(WaveOutEvent waveOutEvent)

@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
                           
@@ -24,15 +25,21 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" HorizontalAlignment="Center" Margin="0,20,0,0">
+        <Grid Grid.Row="0" HorizontalAlignment="Stretch" Margin="50,20,20,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" Text="{x:Static resx:Resources.CurrentlyPlayingHeader}" />
-            <TextBlock Grid.Column="2" Text="{Binding CurrentlyPlayingSong}" />
+            <TextBlock Grid.Column="0" Text="{x:Static resx:Resources.CurrentlyPlayingHeader}" VerticalAlignment="Center"  />
+            <TextBlock Grid.Column="2" Text="{Binding CurrentlyPlayingSong}" VerticalAlignment="Center" />
+
+            <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.MusicPlayerOnSongChanged}" HorizontalAlignment="Right">
+                <CommandsControls:CommandListingButtonsControl x:Name="OnSongChangedCommand" DataContext="{Binding OnSongChangedCommand}" HorizontalAlignment="Center" EditClicked="OnSongChangedCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+            </GroupBox>
         </Grid>
 
         <Grid Grid.Row="2" HorizontalAlignment="Center">
