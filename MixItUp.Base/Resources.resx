@@ -10162,10 +10162,10 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
     <value>Twitch Integrated Throwing System (T.I.T.S.)</value>
   </data>
   <data name="TITSActionMissingItem" xml:space="preserve">
-    <value>T.I.T.S. Action: Missing Item</value>
+    <value>Twitch Integrated Throwing Action: Missing Item</value>
   </data>
   <data name="TITSActionMissingTrigger" xml:space="preserve">
-    <value>T.I.T.S. Action: Missing Trigger</value>
+    <value>Twitch Integrated Throwing Action: Missing Trigger</value>
   </data>
   <data name="TITSConnectionFailed" xml:space="preserve">
     <value>Twitch Integrated Throwing System connection failed, please ensure the software is running and the API is enabled on the settings menu.</value>
@@ -10183,7 +10183,7 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
     <value>Throw Item</value>
   </data>
   <data name="TITS" xml:space="preserve">
-    <value>T.I.T.S.</value>
+    <value>Twitch Integrated Throwing</value>
   </data>
   <data name="TITSItem" xml:space="preserve">
     <value>Item</value>
