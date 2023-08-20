@@ -80,6 +80,7 @@ namespace MixItUp.Base
             ServiceManager.Add(new SAMMIService());
             ServiceManager.Add(new InfiniteAlbumService());
             ServiceManager.Add(new TITSService());
+            ServiceManager.Add(new LumiaStreamService());
 
             try
             {
@@ -313,6 +314,7 @@ namespace MixItUp.Base
                 if (ChannelSession.Settings.VTubeStudioOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<VTubeStudioService>()] = ChannelSession.Settings.VTubeStudioOAuthToken; }
                 if (ChannelSession.Settings.InfiniteAlbumOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<InfiniteAlbumService>()] = ChannelSession.Settings.InfiniteAlbumOAuthToken; }
                 if (ChannelSession.Settings.TITSOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<TITSService>()] = ChannelSession.Settings.TITSOAuthToken; }
+                if (ChannelSession.Settings.LumiaStreamOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<LumiaStreamService>()] = ChannelSession.Settings.LumiaStreamOAuthToken; }
                 if (ChannelSession.Settings.EnableVoicemodStudio) { externalServiceToConnect[ServiceManager.Get<IVoicemodService>()] = null; }
                 if (ChannelSession.Settings.EnableCrowdControl) { externalServiceToConnect[ServiceManager.Get<CrowdControlService>()] = null; }
                 if (ChannelSession.Settings.EnableSAMMI) { externalServiceToConnect[ServiceManager.Get<SAMMIService>()] = null; }

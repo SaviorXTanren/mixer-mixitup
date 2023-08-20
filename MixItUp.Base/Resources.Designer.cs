@@ -1033,6 +1033,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to API Token.
+        /// </summary>
+        public static string APIToken {
+            get {
+                return ResourceManager.GetString("APIToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Apostrophe.
         /// </summary>
         public static string Apostrophe {
@@ -1840,6 +1849,15 @@ namespace MixItUp.Base {
         public static string BounceOutUp {
             get {
                 return ResourceManager.GetString("BounceOutUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Brightness.
+        /// </summary>
+        public static string Brightness {
+            get {
+                return ResourceManager.GetString("Brightness", resourceCulture);
             }
         }
         
@@ -2758,6 +2776,15 @@ namespace MixItUp.Base {
         public static string Color {
             get {
                 return ResourceManager.GetString("Color", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Color Hex.
+        /// </summary>
+        public static string ColorHex {
+            get {
+                return ResourceManager.GetString("ColorHex", resourceCulture);
             }
         }
         
@@ -5357,6 +5384,15 @@ namespace MixItUp.Base {
         public static string DurationSec {
             get {
                 return ResourceManager.GetString("DurationSec", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duration (Secs).
+        /// </summary>
+        public static string DurationSeconds {
+            get {
+                return ResourceManager.GetString("DurationSeconds", resourceCulture);
             }
         }
         
@@ -9849,6 +9885,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hold.
+        /// </summary>
+        public static string Hold {
+            get {
+                return ResourceManager.GetString("Hold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Home.
         /// </summary>
         public static string Home {
@@ -11753,6 +11798,51 @@ namespace MixItUp.Base {
         public static string LumiaStream {
             get {
                 return ResourceManager.GetString("LumiaStream", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lumia Stream Action: A valid color hex code must be specified.
+        /// </summary>
+        public static string LumiaStreamActionValidColorHexMustBeSpecified {
+            get {
+                return ResourceManager.GetString("LumiaStreamActionValidColorHexMustBeSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lumia Stream Action: A valid command must be selected.
+        /// </summary>
+        public static string LumiaStreamActionValidCommandMustBeSelected {
+            get {
+                return ResourceManager.GetString("LumiaStreamActionValidCommandMustBeSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lumia Stream Action: A valid light must be selected.
+        /// </summary>
+        public static string LumiaStreamActionValidLightMustBeSelected {
+            get {
+                return ResourceManager.GetString("LumiaStreamActionValidLightMustBeSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lumia Stream connection failed, please ensure the software is running, the Developer API is enabled under Settings -&gt; API, and you have correctly copied over the Developer API token..
+        /// </summary>
+        public static string LumiaStreamConnectionFailed {
+            get {
+                return ResourceManager.GetString("LumiaStreamConnectionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lumia Stream connectivity allows you to control functionality in the software such as changing light settings and triggering commands. To connect to Lumia Stream, please ensure the software is running, the Developer API is enabled under Settings -&gt; API, and you have copied over the API token in to here..
+        /// </summary>
+        public static string LumiaStreamInfo {
+            get {
+                return ResourceManager.GetString("LumiaStreamInfo", resourceCulture);
             }
         }
         
@@ -18268,6 +18358,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set Lights Color.
+        /// </summary>
+        public static string SetLightsColor {
+            get {
+                return ResourceManager.GetString("SetLightsColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set Location.
         /// </summary>
         public static string SetLocation {
@@ -21297,6 +21396,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Transition (Secs).
+        /// </summary>
+        public static string TransitionSeconds {
+            get {
+                return ResourceManager.GetString("TransitionSeconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Translation.
         /// </summary>
         public static string Translation {
@@ -21383,6 +21491,15 @@ namespace MixItUp.Base {
         public static string TriggerButton {
             get {
                 return ResourceManager.GetString("TriggerButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trigger Command.
+        /// </summary>
+        public static string TriggerCommand {
+            get {
+                return ResourceManager.GetString("TriggerCommand", resourceCulture);
             }
         }
         
@@ -22360,6 +22477,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twitch Extension.
+        /// </summary>
+        public static string TwitchExtension {
+            get {
+                return ResourceManager.GetString("TwitchExtension", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to connect to Twitch services:.
         /// </summary>
         public static string TwitchFailed {
@@ -22482,6 +22608,15 @@ namespace MixItUp.Base {
         public static string TwitchPartner {
             get {
                 return ResourceManager.GetString("TwitchPartner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Point.
+        /// </summary>
+        public static string TwitchPoint {
+            get {
+                return ResourceManager.GetString("TwitchPoint", resourceCulture);
             }
         }
         

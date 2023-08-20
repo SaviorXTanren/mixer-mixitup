@@ -113,6 +113,8 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public OAuthTokenModel TITSOAuthToken { get; set; }
         [DataMember]
+        public OAuthTokenModel LumiaStreamOAuthToken { get; set; }
+        [DataMember]
         public bool EnableVoicemodStudio { get; set; }
         [DataMember]
         public bool EnableCrowdControl { get; set; }

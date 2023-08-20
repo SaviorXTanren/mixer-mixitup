@@ -543,6 +543,9 @@
     <Compile Include="Controls\Actions\InputActionEditorControl.xaml.cs">
       <DependentUpon>InputActionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\LumiaStreamActionEditorControl.xaml.cs">
+      <DependentUpon>LumiaStreamActionEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\ModerationActionEditorControl.xaml.cs">
       <DependentUpon>ModerationActionEditorControl.xaml</DependentUpon>
     </Compile>
@@ -973,6 +976,9 @@
     <Compile Include="Controls\Services\LoupeDeckServiceControl.xaml.cs">
       <DependentUpon>LoupeDeckServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\LumiaStreamServiceControl.xaml.cs">
+      <DependentUpon>LumiaStreamServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\OvrStreamServiceControl.xaml.cs">
       <DependentUpon>OvrStreamServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1297,6 +1303,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\InputActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\LumiaStreamActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1865,6 +1875,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\LoupeDeckServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\LumiaStreamServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

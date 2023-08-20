@@ -10234,4 +10234,49 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
     <value>ERROR: Unable to find song with the text {0}</value>
     <comment>{0} is the text specified as part of the search</comment>
   </data>
+  <data name="TriggerCommand" xml:space="preserve">
+    <value>Trigger Command</value>
+  </data>
+  <data name="TwitchExtension" xml:space="preserve">
+    <value>Twitch Extension</value>
+  </data>
+  <data name="TwitchPoint" xml:space="preserve">
+    <value>Twitch Point</value>
+  </data>
+  <data name="Brightness" xml:space="preserve">
+    <value>Brightness</value>
+  </data>
+  <data name="ColorHex" xml:space="preserve">
+    <value>Color Hex</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>Duration (Secs)</value>
+  </data>
+  <data name="LumiaStreamActionValidColorHexMustBeSpecified" xml:space="preserve">
+    <value>Lumia Stream Action: A valid color hex code must be specified</value>
+  </data>
+  <data name="LumiaStreamActionValidCommandMustBeSelected" xml:space="preserve">
+    <value>Lumia Stream Action: A valid command must be selected</value>
+  </data>
+  <data name="LumiaStreamActionValidLightMustBeSelected" xml:space="preserve">
+    <value>Lumia Stream Action: A valid light must be selected</value>
+  </data>
+  <data name="TransitionSeconds" xml:space="preserve">
+    <value>Transition (Secs)</value>
+  </data>
+  <data name="LumiaStreamInfo" xml:space="preserve">
+    <value>Lumia Stream connectivity allows you to control functionality in the software such as changing light settings and triggering commands. To connect to Lumia Stream, please ensure the software is running, the Developer API is enabled under Settings -&gt; API, and you have copied over the API token in to here.</value>
+  </data>
+  <data name="LumiaStreamConnectionFailed" xml:space="preserve">
+    <value>Lumia Stream connection failed, please ensure the software is running, the Developer API is enabled under Settings -&gt; API, and you have correctly copied over the Developer API token.</value>
+  </data>
+  <data name="APIToken" xml:space="preserve">
+    <value>API Token</value>
+  </data>
+  <data name="Hold" xml:space="preserve">
+    <value>Hold</value>
+  </data>
+  <data name="SetLightsColor" xml:space="preserve">
+    <value>Set Lights Color</value>
+  </data>
 </root>
