@@ -17,7 +17,7 @@ namespace MixItUp.WPF.Services
 {
     public class WindowsMusicPlayerService : IMusicPlayerService
     {
-        private static readonly ISet<string> AllowedFileExtensions = new HashSet<string>() { ".mp3", ".wav", ".flac", ".mp4" };
+        private static readonly ISet<string> AllowedFileExtensions = new HashSet<string>() { ".mp3", ".wav", ".flac", ".mp4", ".m4a", ".aac" };
 
         public event EventHandler SongChanged = delegate { };
 
