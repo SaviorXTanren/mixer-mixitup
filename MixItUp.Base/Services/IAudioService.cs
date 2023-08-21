@@ -10,11 +10,13 @@ namespace MixItUp.Base.Services
 
         ISet<string> ApplicableAudioFileExtensions { get; }
 
-        Task Play(string filePath, int volume);
+        Task Play(string filePath, int volume, bool track = true);
 
-        Task Play(string filePath, int volume, string deviceName);
+        Task Play(string filePath, int volume, string deviceName, bool track = true);
 
-        Task PlayNotification(string filePath, int volume);
+        Task PlayNotification(string filePath, int volume, bool track = true);
+
+        Task StopAllSounds();
 
         IEnumerable<string> GetSelectableAudioDevices(bool includeOverlay = false);
 
