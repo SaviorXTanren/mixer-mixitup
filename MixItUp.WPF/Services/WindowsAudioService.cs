@@ -78,7 +78,7 @@ namespace MixItUp.WPF.Services
             }
         }
 
-        public IEnumerable<string> GetSelectableAudioDevices()
+        public IEnumerable<string> GetSelectableAudioDevices(bool includeOverlay = false)
         {
             List<string> audioOptions = new List<string>();
             audioOptions.Add(this.DefaultAudioDevice);

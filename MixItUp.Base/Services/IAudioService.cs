@@ -14,7 +14,7 @@ namespace MixItUp.Base.Services
 
         Task PlayNotification(string filePath, int volume);
 
-        IEnumerable<string> GetSelectableAudioDevices();
+        IEnumerable<string> GetSelectableAudioDevices(bool includeOverlay = false);
 
         IEnumerable<string> GetOutputDevices();
     }

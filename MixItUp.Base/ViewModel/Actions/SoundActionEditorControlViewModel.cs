@@ -83,7 +83,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         private void LoadSoundDevices()
         {
-            this.AudioDevices.AddRange(ServiceManager.Get<IAudioService>().GetSelectableAudioDevices());
+            this.AudioDevices.AddRange(ServiceManager.Get<IAudioService>().GetSelectableAudioDevices(includeOverlay: true));
         }
     }
 }
