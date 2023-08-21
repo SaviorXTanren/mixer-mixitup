@@ -17,6 +17,8 @@ namespace MixItUp.WPF.Services
         public string DefaultAudioDevice { get { return MixItUp.Base.Resources.DefaultOutput; } }
         public string MixItUpOverlay { get { return MixItUp.Base.Resources.MixItUpOverlay; } }
 
+        public ISet<string> ApplicableAudioFileExtensions => new HashSet<string>() { ".mp3", ".wav", ".flac", ".mp4", ".m4a", ".aac" };
+
         public async Task Play(string filePath, int volume)
         {
             await ServiceManager.Get<IAudioService>().Play(filePath, volume, null);

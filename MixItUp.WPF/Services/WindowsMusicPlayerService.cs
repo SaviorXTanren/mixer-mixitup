@@ -17,8 +17,6 @@ namespace MixItUp.WPF.Services
 {
     public class WindowsMusicPlayerService : IMusicPlayerService
     {
-        private static readonly ISet<string> AllowedFileExtensions = new HashSet<string>() { ".mp3", ".wav", ".flac", ".mp4", ".m4a", ".aac" };
-
         public event EventHandler SongChanged = delegate { };
 
         public MusicPlayerState State { get; private set; }
@@ -172,6 +170,8 @@ namespace MixItUp.WPF.Services
         {
             await this.sempahore.WaitAndRelease(async () =>
             {
+                ISet<string> allowedFileExtensions = ServiceManager.Get<IAudioService>().ApplicableAudioFileExtensions;
+
                 WindowsFileService fileService = ServiceManager.Get<IFileService>() as WindowsFileService;
                 foreach (string folder in ChannelSession.Settings.MusicPlayerFolders)
                 {
@@ -186,7 +186,7 @@ namespace MixItUp.WPF.Services
                     foreach (string file in files)
                     {
                         string extension = Path.GetExtension(file).ToLower();
-                        if (AllowedFileExtensions.Contains(extension))
+                        if (allowedFileExtensions.Contains(extension))
                         {
                             MusicPlayerSong song = null;
                             try
