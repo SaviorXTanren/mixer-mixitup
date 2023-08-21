@@ -129,6 +129,7 @@ namespace MixItUp.WPF
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.ActionGroups, new ActionGroupControl(), "https://wiki.mixitupapp.com/commands/action-groups");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.CommunityCommands, new CommunityCommandsControl(), "https://wiki.mixitupapp.com/commands/community-commands");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Users, new UsersControl(), "https://wiki.mixitupapp.com/users");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.MusicPlayer, new MusicPlayerControl(), "https://wiki.mixitupapp.com/music-player");
             //await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Statistics, new StatisticsControl(), "https://wiki.mixitupapp.com/statistics");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.CurrencyRankInventory, new CurrencyRankInventoryControl(), "https://wiki.mixitupapp.com/consumables");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.TwitchChannelPoints, new TwitchChannelPointsControl(), "https://wiki.mixitupapp.com/commands/twitch-channel-point-commands");

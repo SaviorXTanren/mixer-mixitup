@@ -1,0 +1,75 @@
+﻿<local:ActionEditorControlBase x:Class="MixItUp.WPF.Controls.Actions.LumiaStreamActionEditorControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <local:ActionEditorControlBase.Resources>
+        <Util:LocalizationConverter x:Key="LocalizationConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </local:ActionEditorControlBase.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ComboBox Grid.Row="0" ItemsSource="{Binding ActionTypes}" SelectedItem="{Binding SelectedActionType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <Grid Grid.Row="2" Visibility="{Binding ShowCommandsSection, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Grid.Column="0" ItemsSource="{Binding CommandTypes}" SelectedItem="{Binding SelectedCommandType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandType}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <ComboBox Grid.Column="2" ItemsSource="{Binding CommandNames}" Text="{Binding CommandName}" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Command}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+        </Grid>
+
+        <Grid Grid.Row="2" Visibility="{Binding ShowLightSettingsSection, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Column="0" Text="{Binding ColorHex}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ColorHex}" Width="125" />
+            <TextBox Grid.Column="2" Text="{Binding ColorBrightness}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Brightness}" Width="125" />
+            <TextBox Grid.Column="4" Text="{Binding ColorTransition}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TransitionSeconds}" Width="125" />
+
+            <TextBlock Grid.Column="6" Text="{Binding Source={x:Static resx:Resources.Hold}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
+            <ToggleButton Grid.Column="8" IsChecked="{Binding ColorHold}" VerticalAlignment="Center" />
+
+            <TextBox Grid.Column="10" Text="{Binding ColorDuration}" IsEnabled="{Binding ColorNotHold}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DurationSeconds}" Width="125" />
+        </Grid>
+    </Grid>
+</local:ActionEditorControlBase>

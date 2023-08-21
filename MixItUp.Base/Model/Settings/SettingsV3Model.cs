@@ -113,6 +113,8 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public OAuthTokenModel TITSOAuthToken { get; set; }
         [DataMember]
+        public OAuthTokenModel LumiaStreamOAuthToken { get; set; }
+        [DataMember]
         public bool EnableVoicemodStudio { get; set; }
         [DataMember]
         public bool EnableCrowdControl { get; set; }
@@ -540,6 +542,19 @@ namespace MixItUp.Base.Model.Settings
         public List<Guid> DashboardQuickCommands { get; set; } = new List<Guid>();
 
         #endregion Dashboard
+
+        #region Music Player
+
+        [DataMember]
+        public string MusicPlayerAudioOutput { get; set; }
+        [DataMember]
+        public int MusicPlayerVolume { get; set; } = 100;
+        [DataMember]
+        public List<string> MusicPlayerFolders { get; set; } = new List<string>();
+        [DataMember]
+        public Guid MusicPlayerOnSongChangedCommandID { get; set; }
+
+        #endregion
 
         #region Advanced
 
@@ -1153,6 +1168,11 @@ namespace MixItUp.Base.Model.Settings
             if (this.GetCommand(this.RedemptionStoreDefaultRedemptionCommandID) == null)
             {
                 this.RedemptionStoreDefaultRedemptionCommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.RedemptionStoreDefaultRedemptionCommandName, MixItUp.Base.Resources.RedemptionStoreDefaultRedemptionExample);
+            }
+
+            if (this.GetCommand(this.MusicPlayerOnSongChangedCommandID) == null)
+            {
+                this.MusicPlayerOnSongChangedCommandID = this.CreateBasicCommand(MixItUp.Base.Resources.MusicPlayerOnSongChanged);
             }
         }
 

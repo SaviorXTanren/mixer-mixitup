@@ -55,6 +55,9 @@ namespace MixItUp.Base.Model.Actions
         SAMMI,
         InfiniteAlbum,
         TITS,
+        MusicPlayer,
+        [Obsolete]
+        LumiaStream,
     }
 
     [DataContract]
