@@ -11,6 +11,10 @@ namespace MixItUp.Base.ViewModel.MainControls
     {
         public ObservableCollection<MusicPlayerSong> Songs { get { return ServiceManager.Get<IMusicPlayerService>().Songs; } }
 
+        public bool MusicLoaded { get { return this.Songs != null && this.Songs.Count > 0; } }
+
+        public bool MusicNotLoaded { get { return !this.MusicLoaded; } }
+
         public string CurrentlyPlayingSong
         {
             get
@@ -107,15 +111,21 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.SetFolderCommand = this.CreateCommand(async () =>
             {
                 string folderPath = ServiceManager.Get<IFileService>().ShowOpenFolderDialog();
+
                 ChannelSession.Settings.MusicPlayerFolders.Clear();
                 ChannelSession.Settings.MusicPlayerFolders.Add(folderPath);
                 await ServiceManager.Get<IMusicPlayerService>().LoadSongs();
+
+                this.NotifyPropertyChanged(nameof(this.MusicLoaded));
+                this.NotifyPropertyChanged(nameof(this.MusicNotLoaded));
             });
         }
 
         private void MusicPlayerMainControlViewModel_SongChanged(object sender, System.EventArgs e)
         {
             this.NotifyPropertyChanged(nameof(this.CurrentlyPlayingSong));
+            this.NotifyPropertyChanged(nameof(this.MusicLoaded));
+            this.NotifyPropertyChanged(nameof(this.MusicNotLoaded));
         }
 
         protected override async Task OnOpenInternal()

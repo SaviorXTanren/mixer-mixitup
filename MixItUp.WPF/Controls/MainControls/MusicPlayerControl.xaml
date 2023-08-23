@@ -74,7 +74,11 @@
             <Controls:IconButton Grid.Column="14" Icon="Folder" Command="{Binding SetFolderCommand}" />
         </Grid>
 
-        <Grid Grid.Row="4">
+        <Grid Grid.Row="4" Visibility="{Binding MusicNotLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Width="400" TextWrapping="Wrap" Text="{x:Static resx:Resources.MusicPlayerSelectFolderOrPlayMusicToLoadInSongs}" />
+        </Grid>
+
+        <Grid Grid.Row="4" Visibility="{Binding MusicLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="2" BorderThickness="1">
                 <DataGrid x:Name="MainDataGrid" ItemsSource="{Binding Songs}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                     <DataGrid.Columns>
