@@ -12848,6 +12848,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select a new folder to load in music from a folder or hit the Play button to load in music from the last used folder..
+        /// </summary>
+        public static string MusicPlayerSelectFolderOrPlayMusicToLoadInSongs {
+            get {
+                return ResourceManager.GetString("MusicPlayerSelectFolderOrPlayMusicToLoadInSongs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ERROR: Unable to find song with the text {0}.
         /// </summary>
         public static string MusicPlayerUnableToFindSong {
@@ -19026,7 +19035,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sound Files|*.mp3;*.wav|All files (*.*)|*.*.
+        ///   Looks up a localized string similar to Sound Files|*.mp3;*.wav;*.flac;*.mp4;*.m4a;*.aac|All files (*.*)|*.*.
         /// </summary>
         public static string SoundFileFormatFilter {
             get {

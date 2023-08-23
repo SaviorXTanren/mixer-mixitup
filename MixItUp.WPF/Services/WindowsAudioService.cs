@@ -8,6 +8,8 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Services
@@ -17,12 +19,16 @@ namespace MixItUp.WPF.Services
         public string DefaultAudioDevice { get { return MixItUp.Base.Resources.DefaultOutput; } }
         public string MixItUpOverlay { get { return MixItUp.Base.Resources.MixItUpOverlay; } }
 
-        public async Task Play(string filePath, int volume)
+        public ISet<string> ApplicableAudioFileExtensions => new HashSet<string>() { ".mp3", ".wav", ".flac", ".mp4", ".m4a", ".aac" };
+
+        private Dictionary<CancellationToken, CancellationTokenSource> audioTasks = new Dictionary<CancellationToken, CancellationTokenSource>();
+
+        public async Task Play(string filePath, int volume, bool track = true)
         {
-            await ServiceManager.Get<IAudioService>().Play(filePath, volume, null);
+            await ServiceManager.Get<IAudioService>().Play(filePath, volume, null, track);
         }
 
-        public async Task Play(string filePath, int volume, string deviceName)
+        public async Task Play(string filePath, int volume, string deviceName, bool track = true)
         {
             if (!string.IsNullOrEmpty(filePath))
             {
@@ -42,6 +48,8 @@ namespace MixItUp.WPF.Services
                 }
                 else
                 {
+                    CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+                    audioTasks[cancellationTokenSource.Token] = cancellationTokenSource;
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     Task.Run(async () =>
                     {
@@ -49,20 +57,21 @@ namespace MixItUp.WPF.Services
                         {
                             if (waveStream != null)
                             {
-                                while (waveStream.PlaybackState == PlaybackState.Playing)
+                                while (waveStream.PlaybackState == PlaybackState.Playing && !cancellationTokenSource.Token.IsCancellationRequested)
                                 {
                                     await Task.Delay(500);
                                 }
                                 waveStream.Dispose();
+                                cancellationTokenSource.Cancel();
                             }
                         }
-                    });
+                    }, cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
             }
         }
 
-        public async Task PlayNotification(string filePath, int volume)
+        public async Task PlayNotification(string filePath, int volume, bool track = true)
         {
             if (!string.IsNullOrEmpty(filePath))
             {
@@ -74,11 +83,24 @@ namespace MixItUp.WPF.Services
                     }
                     ChannelSession.Settings.NotificationLastTrigger = DateTimeOffset.Now;
                 }
-                await this.Play(filePath, volume, ChannelSession.Settings.NotificationsAudioOutput);
+                await this.Play(filePath, volume, ChannelSession.Settings.NotificationsAudioOutput, track);
             }
         }
 
-        public IEnumerable<string> GetSelectableAudioDevices()
+        public Task StopAllSounds()
+        {
+            foreach (var key in this.audioTasks.Keys.ToList())
+            {
+                if (this.audioTasks.TryGetValue(key, out CancellationTokenSource tokenSource))
+                {
+                    tokenSource.Cancel();
+                }
+                this.audioTasks.Remove(key);
+            }
+            return Task.CompletedTask;
+        }
+
+        public IEnumerable<string> GetSelectableAudioDevices(bool includeOverlay = false)
         {
             List<string> audioOptions = new List<string>();
             audioOptions.Add(this.DefaultAudioDevice);

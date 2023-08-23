@@ -22,30 +22,46 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+        <ComboBox Grid.Row="0" ItemsSource="{Binding ActionTypes}" SelectedItem="{Binding SelectedActionType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Action}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
 
-            <TextBox Grid.Column="0" Text="{Binding FilePath}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SoundFilePath}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-            <Button Grid.Column="2" x:Name="SoundFileBrowseButton" Click="SoundFileBrowseButton_Click" VerticalAlignment="Bottom" Content="{x:Static resx:Resources.Browse}" />
-        </Grid>
+        <Grid Grid.Row="2" Visibility="{Binding ShowPlaySoundGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <Grid Grid.Row="2" HorizontalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="50" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="5" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" ItemsSource="{Binding AudioDevices}" SelectedItem="{Binding SelectedAudioDevice}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AudioOutputDevice}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" />
+                <TextBox Grid.Column="0" Text="{Binding FilePath}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SoundFilePath}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <Button Grid.Column="2" x:Name="SoundFileBrowseButton" Click="SoundFileBrowseButton_Click" VerticalAlignment="Bottom" Content="{x:Static resx:Resources.Browse}" />
+            </Grid>
 
-            <TextBlock Grid.Column="2" Text="{Binding Source={x:Static resx:Resources.Volume}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
-            <Slider Grid.Column="4" Value="{Binding Volume}" VerticalAlignment="Center" Width="200" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" />
+            <Grid Grid.Row="2" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <ComboBox Grid.Column="0" ItemsSource="{Binding AudioDevices}" SelectedItem="{Binding SelectedAudioDevice}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AudioOutputDevice}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" />
+
+                <TextBlock Grid.Column="2" Text="{Binding Source={x:Static resx:Resources.Volume}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
+                <Slider Grid.Column="4" Value="{Binding Volume}" VerticalAlignment="Center" Width="200" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" />
+            </Grid>
         </Grid>
     </Grid>
 </local:ActionEditorControlBase>

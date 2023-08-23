@@ -128,7 +128,7 @@ namespace MixItUp.Base.ViewModel.Settings
             }
 
             this.NotificationsAudioOutput = new GenericComboBoxSettingsOptionControlViewModel<string>(MixItUp.Base.Resources.NotificationsAudioOutput,
-                ServiceManager.Get<IAudioService>().GetSelectableAudioDevices(), defaultAudioOption, (value) =>
+                ServiceManager.Get<IAudioService>().GetSelectableAudioDevices(includeOverlay: true), defaultAudioOption, (value) =>
                 {
                     if (value.Equals(ServiceManager.Get<IAudioService>().DefaultAudioDevice))
                     {

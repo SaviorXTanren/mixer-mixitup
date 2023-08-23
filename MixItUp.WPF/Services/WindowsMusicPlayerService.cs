@@ -17,8 +17,6 @@ namespace MixItUp.WPF.Services
 {
     public class WindowsMusicPlayerService : IMusicPlayerService
     {
-        private static readonly ISet<string> AllowedFileExtensions = new HashSet<string>() { ".mp3", ".wav", ".flac", ".mp4", ".m4a", ".aac" };
-
         public event EventHandler SongChanged = delegate { };
 
         public MusicPlayerState State { get; private set; }
@@ -170,100 +168,93 @@ namespace MixItUp.WPF.Services
 
         public async Task LoadSongs()
         {
-            await this.sempahore.WaitAndRelease(async () =>
+            await Task.Run(() => this.sempahore.WaitAndRelease(async () =>
             {
+                ISet<string> allowedFileExtensions = ServiceManager.Get<IAudioService>().ApplicableAudioFileExtensions;
                 WindowsFileService fileService = ServiceManager.Get<IFileService>() as WindowsFileService;
+                List<string> files = new List<string>();
                 foreach (string folder in ChannelSession.Settings.MusicPlayerFolders)
                 {
-                    List<string> files = new List<string>();
-                    files.AddRange(await fileService.GetFilesInDirectory(folder));
-                    foreach (string subFolder in await fileService.GetFoldersInDirectory(folder))
-                    {
-                        files.AddRange(await fileService.GetFilesInDirectory(subFolder));
-                    }
+                    await this.AddFilesFromDirectory(fileService, allowedFileExtensions, files, folder);
+                }
 
-                    List<MusicPlayerSong> tempSongs = new List<MusicPlayerSong>();
-                    foreach (string file in files)
+                List<MusicPlayerSong> tempSongs = new List<MusicPlayerSong>();
+                foreach (string file in files)
+                {
+                    MusicPlayerSong song = null;
+                    try
                     {
-                        string extension = Path.GetExtension(file).ToLower();
-                        if (AllowedFileExtensions.Contains(extension))
+                        using (var mp3 = new Mp3(file))
                         {
-                            MusicPlayerSong song = null;
-                            try
+                            var v2Tags = mp3.GetTag(Id3TagFamily.Version2X);
+                            if (v2Tags != null)
                             {
-                                using (var mp3 = new Mp3(file))
+                                song = new MusicPlayerSong()
                                 {
-                                    var v2Tags = mp3.GetTag(Id3TagFamily.Version2X);
-                                    if (v2Tags != null)
-                                    {
-                                        song = new MusicPlayerSong()
-                                        {
-                                            FilePath = file,
-                                            Title = v2Tags.Title.Value,
-                                            Length = v2Tags.Length.IsAssigned ? (int)v2Tags.Length.Value.TotalSeconds : 0
-                                        };
+                                    FilePath = file,
+                                    Title = v2Tags.Title.Value,
+                                    Length = v2Tags.Length.IsAssigned ? (int)v2Tags.Length.Value.TotalSeconds : 0
+                                };
 
-                                        if (v2Tags.Artists.IsAssigned && v2Tags.Artists.Value.Count > 0)
-                                        {
-                                            song.Artist = string.Join(", ", v2Tags.Artists.Value);
-                                        }
-                                        else if (v2Tags.Band.IsAssigned)
-                                        {
-                                            song.Artist = v2Tags.Band.Value;
-                                        }
-                                        else if (v2Tags.Composers.IsAssigned && v2Tags.Composers.Value.Count > 0)
-                                        {
-                                            song.Artist = string.Join(", ", v2Tags.Artists.Value);
-                                        }
+                                if (v2Tags.Artists.IsAssigned && v2Tags.Artists.Value.Count > 0)
+                                {
+                                    song.Artist = string.Join(", ", v2Tags.Artists.Value);
+                                }
+                                else if (v2Tags.Band.IsAssigned)
+                                {
+                                    song.Artist = v2Tags.Band.Value;
+                                }
+                                else if (v2Tags.Composers.IsAssigned && v2Tags.Composers.Value.Count > 0)
+                                {
+                                    song.Artist = string.Join(", ", v2Tags.Artists.Value);
+                                }
+                            }
+                            else
+                            {
+                                var v1Tags = mp3.GetTag(Id3TagFamily.Version1X);
+                                if (v1Tags != null)
+                                {
+                                    song = new MusicPlayerSong()
+                                    {
+                                        FilePath = file,
+                                        Title = v1Tags.Title.Value,
+                                        Length = v1Tags.Length.IsAssigned ? (int)v1Tags.Length.Value.TotalSeconds : 0
+                                    };
+
+                                    if (v1Tags.Artists.IsAssigned && v1Tags.Artists.Value.Count > 0)
+                                    {
+                                        song.Artist = string.Join(", ", v1Tags.Artists.Value);
                                     }
-                                    else
+                                    else if (v1Tags.Band.IsAssigned)
                                     {
-                                        var v1Tags = mp3.GetTag(Id3TagFamily.Version1X);
-                                        if (v1Tags != null)
-                                        {
-                                            song = new MusicPlayerSong()
-                                            {
-                                                FilePath = file,
-                                                Title = v1Tags.Title.Value,
-                                                Length = v1Tags.Length.IsAssigned ? (int)v1Tags.Length.Value.TotalSeconds : 0
-                                            };
-
-                                            if (v1Tags.Artists.IsAssigned && v1Tags.Artists.Value.Count > 0)
-                                            {
-                                                song.Artist = string.Join(", ", v1Tags.Artists.Value);
-                                            }
-                                            else if (v1Tags.Band.IsAssigned)
-                                            {
-                                                song.Artist = v1Tags.Band.Value;
-                                            }
-                                            else if (v1Tags.Composers.IsAssigned && v1Tags.Composers.Value.Count > 0)
-                                            {
-                                                song.Artist = string.Join(", ", v1Tags.Artists.Value);
-                                            }
-                                        }
+                                        song.Artist = v1Tags.Band.Value;
+                                    }
+                                    else if (v1Tags.Composers.IsAssigned && v1Tags.Composers.Value.Count > 0)
+                                    {
+                                        song.Artist = string.Join(", ", v1Tags.Artists.Value);
                                     }
                                 }
                             }
-                            catch (Exception ex)
-                            {
-                                Logger.Log(ex);
-                            }
-
-                            if (song == null)
-                            {
-                                song = new MusicPlayerSong() { FilePath = file, Title = Path.GetFileNameWithoutExtension(file) };
-                            }
-                            tempSongs.Add(song);
                         }
                     }
-
-                    this.songs.Clear();
-                    foreach (MusicPlayerSong song in tempSongs.Shuffle())
+                    catch (Exception ex)
                     {
-                        this.songs.Add(song);
+                        Logger.Log(ex);
                     }
+
+                    if (song == null)
+                    {
+                        song = new MusicPlayerSong() { FilePath = file, Title = Path.GetFileNameWithoutExtension(file) };
+                    }
+                    tempSongs.Add(song);
                 }
-            });
+
+                this.songs.Clear();
+                foreach (MusicPlayerSong song in tempSongs.Shuffle())
+                {
+                    this.songs.Add(song);
+                }
+            }));
         }
 
         public async Task<MusicPlayerSong> SearchAndPlaySong(string searchText)
@@ -308,6 +299,23 @@ namespace MixItUp.WPF.Services
                     await Task.Delay(500);
                 }
                 waveOutEvent.Dispose();
+            }
+        }
+
+        private async Task AddFilesFromDirectory(WindowsFileService fileService, ISet<string> allowedFileExtensions, List<string> files, string path)
+        {
+            foreach (string file in await fileService.GetFilesInDirectory(path))
+            {
+                string extension = Path.GetExtension(file).ToLower();
+                if (allowedFileExtensions.Contains(extension))
+                {
+                    files.Add(file);
+                }
+            }
+
+            foreach (string subFolder in await fileService.GetFoldersInDirectory(path))
+            {
+                await this.AddFilesFromDirectory(fileService, allowedFileExtensions, files, subFolder);
             }
         }
     }

@@ -8756,7 +8756,7 @@ via Twitch, it's a "your mileage may vary" situation.</value>
     <value>Mix It Up Command|*.miucommand|All files (*.*)|*.*</value>
   </data>
   <data name="SoundFileFormatFilter" xml:space="preserve">
-    <value>Sound Files|*.mp3;*.wav|All files (*.*)|*.*</value>
+    <value>Sound Files|*.mp3;*.wav;*.flac;*.mp4;*.m4a;*.aac|All files (*.*)|*.*</value>
   </data>
   <data name="TextFileFormatFilter" xml:space="preserve">
     <value>Text Files|*.txt|All files (*.*)|*.*</value>
@@ -10278,5 +10278,8 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   </data>
   <data name="SetLightsColor" xml:space="preserve">
     <value>Set Lights Color</value>
+  </data>
+  <data name="MusicPlayerSelectFolderOrPlayMusicToLoadInSongs" xml:space="preserve">
+    <value>Select a new folder to load in music from a folder or hit the Play button to load in music from the last used folder.</value>
   </data>
 </root>
