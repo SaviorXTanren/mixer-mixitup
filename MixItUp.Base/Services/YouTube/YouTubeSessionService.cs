@@ -338,21 +338,21 @@ namespace MixItUp.Base.Services.YouTube
 
         public Task<bool> SetGame(string gameName) { return Task.FromResult(false); }
 
-        private Task<Result> SetMembershipLevels()
+        private async Task<Result> SetMembershipLevels()
         {
             try
             {
-                //IEnumerable<MembershipsLevel> membershipLevels = await this.UserConnection.GetMembershipLevels();
-                //if (membershipLevels != null && membershipLevels.Count() > 0)
-                //{
-                //    this.MembershipLevels.AddRange(membershipLevels);
-                //}
+                IEnumerable<MembershipsLevel> membershipLevels = await this.UserConnection.GetMembershipLevels();
+                if (membershipLevels != null && membershipLevels.Count() > 0)
+                {
+                    this.MembershipLevels.AddRange(membershipLevels);
+                }
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
             }
-            return Task.FromResult<Result>(new Result());
+            return new Result();
         }
     }
 }
