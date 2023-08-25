@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model;
+﻿using Google.Apis.YouTube.v3.Data;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
@@ -138,9 +139,9 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public bool IsYouTubeConnected { get { return ServiceManager.Get<YouTubeSessionService>().IsConnected; } }
 
-        public IEnumerable<string> YouTubeMembershipLevels { get; private set; }
+        public IEnumerable<MembershipsLevel> YouTubeMembershipLevels { get; private set; }
 
-        public string YouTubeMembershipLevel
+        public MembershipsLevel YouTubeMembershipLevel
         {
             get { return this.youtubeMembershipLevel; }
             set
@@ -149,7 +150,7 @@ namespace MixItUp.Base.ViewModel.Requirements
                 this.NotifyPropertyChanged();
             }
         }
-        private string youtubeMembershipLevel;
+        private MembershipsLevel youtubeMembershipLevel;
 
         public bool IsTrovoConnected { get { return ServiceManager.Get<TrovoSessionService>().IsConnected; } }
 
@@ -226,9 +227,9 @@ namespace MixItUp.Base.ViewModel.Requirements
 
             if (this.IsYouTubeConnected)
             {
-                this.YouTubeMembershipLevels = ServiceManager.Get<YouTubeSessionService>().MembershipLevels.Select(m => m.Snippet.LevelDetails.DisplayName);
+                this.YouTubeMembershipLevels = ServiceManager.Get<YouTubeSessionService>().MembershipLevels;
+                this.YouTubeMembershipLevel = this.YouTubeMembershipLevels.FirstOrDefault(m => string.Equals(m.Id, requirement.YouTubeMembershipLevelID));
             }
-            this.YouTubeMembershipLevel = requirement.YouTubeMembershipLevel;
 
             this.TrovoCustomRole = requirement.TrovoCustomRole;
 
@@ -258,11 +259,11 @@ namespace MixItUp.Base.ViewModel.Requirements
         {
             if (this.IsAdvancedRolesSelected)
             {
-                return new RoleRequirementModel(this.SelectedPlatform, this.SelectedAdvancedRoles.Select(r => r.Role), this.SubscriberTier, this.YouTubeMembershipLevel, this.TrovoCustomRole, this.selectedPatreonBenefit?.ID);
+                return new RoleRequirementModel(this.SelectedPlatform, this.SelectedAdvancedRoles.Select(r => r.Role), this.SubscriberTier, this.YouTubeMembershipLevel?.Id, this.TrovoCustomRole, this.selectedPatreonBenefit?.ID);
             }
             else
             {
-                return new RoleRequirementModel(this.SelectedPlatform, this.SelectedRole, this.SubscriberTier, this.YouTubeMembershipLevel, this.TrovoCustomRole, this.selectedPatreonBenefit?.ID);
+                return new RoleRequirementModel(this.SelectedPlatform, this.SelectedRole, this.SubscriberTier, this.YouTubeMembershipLevel?.Id, this.TrovoCustomRole, this.selectedPatreonBenefit?.ID);
             }
         }
     }

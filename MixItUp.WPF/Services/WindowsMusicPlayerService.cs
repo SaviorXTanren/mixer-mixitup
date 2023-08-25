@@ -287,10 +287,10 @@ namespace MixItUp.WPF.Services
 
             WindowsAudioService audioService = ServiceManager.Get<IAudioService>() as WindowsAudioService;
             this.currentWaveOutEvent = audioService.PlayWithOutput(filePath, this.Volume, ChannelSession.Settings.MusicPlayerAudioOutput);
-            Task backgroundPlayThreadTask = Task.Run(async () => await this.PlayBackground(this.currentWaveOutEvent), this.backgroundPlayThreadTokenSource.Token);
+            Task backgroundPlayThreadTask = Task.Run(async () => await this.PlayBackground(this.currentWaveOutEvent, this.currentSongIndex), this.backgroundPlayThreadTokenSource.Token);
         }
 
-        private async Task PlayBackground(WaveOutEvent waveOutEvent)
+        private async Task PlayBackground(WaveOutEvent waveOutEvent, int songIndex)
         {
             using (waveOutEvent)
             {
@@ -299,6 +299,11 @@ namespace MixItUp.WPF.Services
                     await Task.Delay(500);
                 }
                 waveOutEvent.Dispose();
+
+                if (this.currentSongIndex == songIndex)
+                {
+                    await this.Next();
+                }
             }
         }
 
