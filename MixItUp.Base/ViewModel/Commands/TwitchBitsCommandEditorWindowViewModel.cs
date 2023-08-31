@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Commands
@@ -80,6 +81,8 @@ namespace MixItUp.Base.ViewModel.Commands
 
             return Task.FromResult(new Result());
         }
+
+        public override Dictionary<string, string> GetTestSpecialIdentifiers() { return TwitchBitsCommandModel.GetBitsTestSpecialIdentifiers(); }
 
         public override Task<CommandModelBase> CreateNewCommand()
         {

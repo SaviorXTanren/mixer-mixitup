@@ -2,6 +2,7 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -104,6 +105,8 @@ namespace MixItUp.Base.ViewModel.Commands
         {
             return Task.FromResult<CommandModelBase>(new CrowdControlEffectCommandModel(this.SelectedGame, this.SelectedPack, this.SelectedEffect));
         }
+
+        public override Dictionary<string, string> GetTestSpecialIdentifiers() { return CrowdControlEffectCommandModel.GetEffectTestSpecialIdentifiers(); }
 
         public override async Task UpdateExistingCommand(CommandModelBase command)
         {

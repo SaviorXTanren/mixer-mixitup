@@ -3,6 +3,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.ChannelPoints;
@@ -45,6 +46,8 @@ namespace MixItUp.Base.ViewModel.Commands
 
             return Task.FromResult(new Result());
         }
+
+        public override Dictionary<string, string> GetTestSpecialIdentifiers() { return TwitchChannelPointsCommandModel.GetChannelPointTestSpecialIdentifiers(); }
 
         public override Task<CommandModelBase> CreateNewCommand() { return Task.FromResult<CommandModelBase>(new TwitchChannelPointsCommandModel(this.ChannelPointReward.title, this.ChannelPointReward.id)); }
 
