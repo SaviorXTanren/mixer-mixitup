@@ -99,13 +99,13 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
             return UserFromUserDataViewModel(user);
         }
 
-        [Route("trovo/{usernameOrID}")]
+        [Route("youtube/{usernameOrID}")]
         [HttpGet]
-        public async Task<User> GetTrovo(string usernameOrID)
+        public async Task<User> GetYouTube(string usernameOrID)
         {
             await ServiceManager.Get<UserService>().LoadAllUserData();
 
-            UserV2ViewModel user = await UserV1Controller.GetUserData(StreamingPlatformTypeEnum.Trovo, usernameOrID);
+            UserV2ViewModel user = await UserV1Controller.GetUserData(StreamingPlatformTypeEnum.YouTube, usernameOrID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -119,13 +119,13 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
             return UserFromUserDataViewModel(user);
         }
 
-        [Route("glimesh/{usernameOrID}")]
+        [Route("trovo/{usernameOrID}")]
         [HttpGet]
-        public async Task<User> GetGlimesh(string usernameOrID)
+        public async Task<User> GetTrovo(string usernameOrID)
         {
             await ServiceManager.Get<UserService>().LoadAllUserData();
 
-            UserV2ViewModel user = await UserV1Controller.GetUserData(StreamingPlatformTypeEnum.Glimesh, usernameOrID);
+            UserV2ViewModel user = await UserV1Controller.GetUserData(StreamingPlatformTypeEnum.Trovo, usernameOrID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -264,8 +264,8 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
             {
                 ID = userData.ID,
                 TwitchID = userData.Model.GetPlatformID(StreamingPlatformTypeEnum.Twitch),
+                YouTubeID = userData.Model.GetPlatformID(StreamingPlatformTypeEnum.YouTube),
                 TrovoID = userData.Model.GetPlatformID(StreamingPlatformTypeEnum.Trovo),
-                GlimeshID = userData.Model.GetPlatformID(StreamingPlatformTypeEnum.Glimesh),
                 Username = userData.Model.GetPlatformUsername(ChannelSession.Settings.DefaultStreamingPlatform),
                 ViewingMinutes = userData.OnlineViewingMinutes
             };

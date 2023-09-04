@@ -584,7 +584,7 @@ namespace MixItUp.Base.Model.Overlay
                     UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByID(kvp.Key);
                     if (user != null)
                     {
-                        results[user] = kvp.Value.ToCurrencyString();
+                        results[user] = CurrencyHelper.ToCurrencyString(kvp.Value);
                     }
                 }
                 catch (Exception ex)

@@ -22,7 +22,6 @@ namespace MixItUp.WPF
     {
         private MixItUpUpdateModel currentUpdate;
         private bool updateFound = false;
-        private bool restartApplication = false;
 
         private ObservableCollection<SettingsV3Model> streamerSettings = new ThreadSafeObservableCollection<SettingsV3Model>();
 

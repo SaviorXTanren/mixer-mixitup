@@ -5,7 +5,6 @@ using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
-using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
@@ -66,15 +65,23 @@ namespace MixItUp.Base
             ServiceManager.Add(new XSplitService());
             ServiceManager.Add(new PolyPopService());
 
+            ServiceManager.Add(new AlejoPronounsService());
+            ServiceManager.Add(new BetterTTVService());
             ServiceManager.Add(new StreamlootsService());
             ServiceManager.Add(new JustGivingService());
             ServiceManager.Add(new TiltifyService());
-            ServiceManager.Add(new ExtraLifeService());
+            ServiceManager.Add(new DonorDriveService());
             ServiceManager.Add(new IFTTTService());
             ServiceManager.Add(new PatreonService());
             ServiceManager.Add(new DiscordService());
             ServiceManager.Add(new PixelChatService());
             ServiceManager.Add(new VTubeStudioService());
+            ServiceManager.Add(new CrowdControlService());
+            ServiceManager.Add(new SAMMIService());
+            ServiceManager.Add(new InfiniteAlbumService());
+            ServiceManager.Add(new TITSService());
+            ServiceManager.Add(new LumiaStreamService());
+
             try
             {
                 Type voicemodServiceType = Type.GetType("MixItUp.Base.Services.External.VoicemodService");
@@ -93,9 +100,6 @@ namespace MixItUp.Base
 
             ServiceManager.Add(new YouTubeSessionService());
             ServiceManager.Add(new YouTubeChatService());
-
-            ServiceManager.Add(new GlimeshSessionService());
-            ServiceManager.Add(new GlimeshChatEventService());
 
             ServiceManager.Add(new TrovoSessionService());
             ServiceManager.Add(new TrovoChatEventService());
@@ -245,10 +249,6 @@ namespace MixItUp.Base
                 {
                     ChannelSession.Settings.Name = ServiceManager.Get<YouTubeSessionService>().Username;
                 }
-                else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
-                {
-                    ChannelSession.Settings.Name = ServiceManager.Get<GlimeshSessionService>().Username;
-                }
                 else if (ServiceManager.Get<TrovoSessionService>().IsConnected)
                 {
                     ChannelSession.Settings.Name = ServiceManager.Get<TrovoSessionService>().Username;
@@ -278,14 +278,6 @@ namespace MixItUp.Base
                         ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(ServiceManager.Get<YouTubeSessionService>().User));
                     }
                 }
-                if (ChannelSession.User == null && ServiceManager.Get<GlimeshSessionService>().IsConnected)
-                {
-                    ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, ServiceManager.Get<GlimeshSessionService>().UserID);
-                    if (ChannelSession.User == null)
-                    {
-                        ChannelSession.User = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(ServiceManager.Get<GlimeshSessionService>().User));
-                    }
-                }
                 if (ChannelSession.User == null && ServiceManager.Get<TrovoSessionService>().IsConnected)
                 {
                     ChannelSession.User = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Trovo, ServiceManager.Get<TrovoSessionService>().UserID);
@@ -313,14 +305,19 @@ namespace MixItUp.Base
                 if (ChannelSession.Settings.TreatStreamOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<TreatStreamService>()] = ChannelSession.Settings.TreatStreamOAuthToken; }
                 if (ChannelSession.Settings.StreamlootsOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<StreamlootsService>()] = ChannelSession.Settings.StreamlootsOAuthToken; }
                 if (ChannelSession.Settings.TiltifyOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<TiltifyService>()] = ChannelSession.Settings.TiltifyOAuthToken; }
-                if (ChannelSession.Settings.JustGivingOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<JustGivingService>()] = ChannelSession.Settings.JustGivingOAuthToken; }
+                if (ChannelSession.Settings.JustGivingPageShortName != null) { externalServiceToConnect[ServiceManager.Get<JustGivingService>()] = null; }
                 if (ChannelSession.Settings.IFTTTOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<IFTTTService>()] = ChannelSession.Settings.IFTTTOAuthToken; }
-                if (ChannelSession.Settings.ExtraLifeTeamID > 0) { externalServiceToConnect[ServiceManager.Get<ExtraLifeService>()] = new OAuthTokenModel(); }
+                if (!string.IsNullOrEmpty(ChannelSession.Settings.DonorDriveParticipantID)) { externalServiceToConnect[ServiceManager.Get<DonorDriveService>()] = null; }
                 if (ChannelSession.Settings.PatreonOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<PatreonService>()] = ChannelSession.Settings.PatreonOAuthToken; }
                 if (ChannelSession.Settings.DiscordOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<DiscordService>()] = ChannelSession.Settings.DiscordOAuthToken; }
                 if (ChannelSession.Settings.PixelChatOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<PixelChatService>()] = ChannelSession.Settings.PixelChatOAuthToken; }
                 if (ChannelSession.Settings.VTubeStudioOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<VTubeStudioService>()] = ChannelSession.Settings.VTubeStudioOAuthToken; }
+                if (ChannelSession.Settings.InfiniteAlbumOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<InfiniteAlbumService>()] = ChannelSession.Settings.InfiniteAlbumOAuthToken; }
+                if (ChannelSession.Settings.TITSOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<TITSService>()] = ChannelSession.Settings.TITSOAuthToken; }
+                if (ChannelSession.Settings.LumiaStreamOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<LumiaStreamService>()] = ChannelSession.Settings.LumiaStreamOAuthToken; }
                 if (ChannelSession.Settings.EnableVoicemodStudio) { externalServiceToConnect[ServiceManager.Get<IVoicemodService>()] = null; }
+                if (ChannelSession.Settings.EnableCrowdControl) { externalServiceToConnect[ServiceManager.Get<CrowdControlService>()] = null; }
+                if (ChannelSession.Settings.EnableSAMMI) { externalServiceToConnect[ServiceManager.Get<SAMMIService>()] = null; }
                 if (ServiceManager.Get<IOBSStudioService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<IOBSStudioService>()] = null; }
                 if (ServiceManager.Get<StreamlabsDesktopService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<StreamlabsDesktopService>()] = null; }
                 if (ServiceManager.Get<XSplitService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<XSplitService>()] = null; }
@@ -439,7 +436,7 @@ namespace MixItUp.Base
 
                 await ServiceManager.Get<TimerService>().Initialize();
                 await ServiceManager.Get<ModerationService>().Initialize();
-                ServiceManager.Get<StatisticsService>().Initialize();
+                await ServiceManager.Get<StatisticsService>().Initialize();
 
                 ServiceManager.Get<IInputService>().HotKeyPressed += InputService_HotKeyPressed;
 

@@ -1,8 +1,6 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -10,28 +8,28 @@ namespace MixItUp.Base.ViewModel.Services
 {
     public class JustGivingServiceControlViewModel : ServiceControlViewModelBase
     {
-        public ThreadSafeObservableCollection<JustGivingFundraiser> Fundraisers { get; set; } = new ThreadSafeObservableCollection<JustGivingFundraiser>();
-
-        public JustGivingFundraiser SelectedFundraiser
+        public JustGivingFundraiser Fundraiser
         {
-            get { return this.selectedFundraiser; }
-            set
+            get
             {
-                this.selectedFundraiser = value;
-                this.NotifyPropertyChanged();
-
-                if (this.SelectedFundraiser != null)
+                if (ServiceManager.Get<JustGivingService>().IsConnected)
                 {
-                    ChannelSession.Settings.JustGivingPageShortName = this.SelectedFundraiser.pageShortName;
+                    return ServiceManager.Get<JustGivingService>().Fundraiser;
                 }
-                else
-                {
-                    ChannelSession.Settings.JustGivingPageShortName = null;
-                }
-                ServiceManager.Get<JustGivingService>().SetFundraiser(this.SelectedFundraiser);
+                return null;
             }
         }
-        private JustGivingFundraiser selectedFundraiser;
+
+        public string WebPageURL
+        {
+            get { return this.webPageURL; }
+            set
+            {
+                this.webPageURL = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string webPageURL;
 
         public ICommand LogInCommand { get; set; }
         public ICommand LogOutCommand { get; set; }
@@ -43,15 +41,29 @@ namespace MixItUp.Base.ViewModel.Services
         {
             this.LogInCommand = this.CreateCommand(async () =>
             {
-                Result result = await ServiceManager.Get<JustGivingService>().Connect();
-                if (result.Success)
+                ChannelSession.Settings.JustGivingPageShortName = null;
+                if (!string.IsNullOrEmpty(this.WebPageURL))
                 {
-                    this.IsConnected = true;
-                    await this.RefreshFundraisers();
-                }
-                else
-                {
-                    await this.ShowConnectFailureMessage(result);
+                    ChannelSession.Settings.JustGivingPageShortName = this.WebPageURL;
+                    ChannelSession.Settings.JustGivingPageShortName = ChannelSession.Settings.JustGivingPageShortName.Replace("https://www.justgiving.com/", string.Empty);
+                    ChannelSession.Settings.JustGivingPageShortName = ChannelSession.Settings.JustGivingPageShortName.Replace("https://www.justgiving.com/fundraising/", string.Empty);
+                    int urlParametersIndex = ChannelSession.Settings.JustGivingPageShortName.IndexOf("?");
+                    if (urlParametersIndex > 0)
+                    {
+                        ChannelSession.Settings.JustGivingPageShortName = ChannelSession.Settings.JustGivingPageShortName.Substring(0, urlParametersIndex);
+                    }
+
+                    Result result = await ServiceManager.Get<JustGivingService>().Connect();
+                    if (result.Success)
+                    {
+                        this.IsConnected = true;
+                        this.NotifyPropertyChanged(nameof(this.Fundraiser));
+                    }
+                    else
+                    {
+                        await this.ShowConnectFailureMessage(result);
+                        ChannelSession.Settings.JustGivingPageShortName = null;
+                    }
                 }
             });
 
@@ -59,8 +71,9 @@ namespace MixItUp.Base.ViewModel.Services
             {
                 await ServiceManager.Get<JustGivingService>().Disconnect();
 
-                ChannelSession.Settings.JustGivingOAuthToken = null;
                 ChannelSession.Settings.JustGivingPageShortName = null;
+
+                this.NotifyPropertyChanged(nameof(this.Fundraiser));
 
                 this.IsConnected = false;
             });
@@ -68,23 +81,13 @@ namespace MixItUp.Base.ViewModel.Services
             this.IsConnected = ServiceManager.Get<JustGivingService>().IsConnected;
         }
 
-        protected override async Task OnOpenInternal()
+        protected override Task OnOpenInternal()
         {
             if (this.IsConnected)
             {
-                await this.RefreshFundraisers();
-                this.SelectedFundraiser = this.Fundraisers.FirstOrDefault(f => f.pageShortName.Equals(ChannelSession.Settings.JustGivingPageShortName));
+                this.NotifyPropertyChanged(nameof(this.Fundraiser));
             }
-        }
-
-        public async Task RefreshFundraisers()
-        {
-            IEnumerable<JustGivingFundraiser> fundraisers = await ServiceManager.Get<JustGivingService>().GetCurrentFundraisers();
-            if (fundraisers != null)
-            {
-                fundraisers = fundraisers.Where(f => f.IsActive);
-            }
-            this.Fundraisers.ClearAndAddRange(fundraisers);
+            return Task.CompletedTask;
         }
     }
 }

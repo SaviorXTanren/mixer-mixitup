@@ -20,6 +20,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 
 namespace MixItUp.WPF
 {
@@ -46,6 +48,7 @@ namespace MixItUp.WPF
                 ServiceManager.Add<IAudioService>(new WindowsAudioService());
                 ServiceManager.Add<IDeveloperAPIService>(new WindowsDeveloperAPIService());
                 ServiceManager.Add<ITelemetryService>(new WindowsTelemetryService());
+                ServiceManager.Add<IMusicPlayerService>(new WindowsMusicPlayerService());
 
                 ServiceManager.Add(new StreamlabsService(new WindowsSocketIOConnection()));
                 ServiceManager.Add(new RainmakerService(new WindowsSocketIOConnection()));
@@ -95,7 +98,7 @@ namespace MixItUp.WPF
 
                 if (containsBaseTheme)
                 {
-                    baseTheme =(string)newMDCResourceDictionary["BaseTheme"];
+                    baseTheme = (string)newMDCResourceDictionary["BaseTheme"];
                 }
             }
             else
@@ -129,6 +132,12 @@ namespace MixItUp.WPF
 
             var newMIUResourceDictionary = new ResourceDictionary() { Source = new Uri($"Themes/MixItUpBackgroundColor.{backgroundColorName}.xaml", UriKind.Relative) };
             Application.Current.Resources.MergedDictionaries.Add(newMIUResourceDictionary);
+
+            LiveCharts.Configure(config =>
+            {
+                config.AddSkiaSharp().AddDefaultMappers();
+                config.AddLightTheme();
+            });
         }
 
         protected override void OnStartup(StartupEventArgs e)

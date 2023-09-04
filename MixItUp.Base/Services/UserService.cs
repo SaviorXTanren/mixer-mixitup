@@ -2,7 +2,6 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Platform;
-using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
@@ -22,6 +21,7 @@ namespace MixItUp.Base.Services
 
         private Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>> platformUserIDLookups { get; set; } = new Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>>();
         private Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>> platformUsernameLookups { get; set; } = new Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>>();
+        private Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>> platformDisplayNameLookups { get; set; } = new Dictionary<StreamingPlatformTypeEnum, LockedDictionary<string, Guid>>();
 
         private Dictionary<Guid, UserV2ViewModel> activeUsers = new Dictionary<Guid, UserV2ViewModel>();
 
@@ -50,6 +50,7 @@ namespace MixItUp.Base.Services
             {
                 this.platformUserIDLookups[p] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
                 this.platformUsernameLookups[p] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
+                this.platformDisplayNameLookups[p] = new LockedDictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
             });
         }
 
@@ -126,14 +127,6 @@ namespace MixItUp.Base.Services
                         platformModel = new YouTubeUserPlatformV2Model(youtubeUser);
                     }
                 }
-                else if (platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().UserConnection != null)
-                {
-                    var glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByID(platformID);
-                    if (glimeshUser != null)
-                    {
-                        platformModel = new GlimeshUserPlatformV2Model(glimeshUser);
-                    }
-                }
                 else if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().UserConnection != null)
                 {
                     throw new InvalidOperationException("Trovo does not support user look-up by user ID");
@@ -157,6 +150,7 @@ namespace MixItUp.Base.Services
             {
                 return user;
             }
+            platformUsername = platformUsername.ToLower();
 
             if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
             {
@@ -170,7 +164,16 @@ namespace MixItUp.Base.Services
                 return user;
             }
 
-            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername.ToLower(), out Guid id))
+            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id))
+            {
+                user = await this.GetUserByID(id);
+                if (user != null)
+                {
+                    return user;
+                }
+            }
+
+            if (this.platformDisplayNameLookups.ContainsKey(platform) && this.platformDisplayNameLookups[platform].TryGetValue(platformUsername, out id))
             {
                 user = await this.GetUserByID(id);
                 if (user != null)
@@ -205,14 +208,6 @@ namespace MixItUp.Base.Services
                         platformModel = new YouTubeUserPlatformV2Model(youtubeUser);
                     }
                 }
-                else if (platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().UserConnection != null)
-                {
-                    var glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByName(platformUsername);
-                    if (glimeshUser != null)
-                    {
-                        platformModel = new GlimeshUserPlatformV2Model(glimeshUser);
-                    }
-                }
                 else if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().UserConnection != null)
                 {
                     var trovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(platformUsername);
@@ -228,7 +223,6 @@ namespace MixItUp.Base.Services
                     UserV2ViewModel existingUser = await this.GetUserByPlatformID(platformModel.Platform, platformModel.ID, performPlatformSearch: false);
                     if (existingUser != null)
                     {
-                        await existingUser.Refresh();
                         return existingUser;
                     }
                     else
@@ -260,7 +254,11 @@ namespace MixItUp.Base.Services
             }
             else if (platform == StreamingPlatformTypeEnum.YouTube)
             {
-                // TODO
+                var yUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByUsername(username);
+                if (yUser != null)
+                {
+                    user = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(yUser));
+                }
             }
             else if (platform == StreamingPlatformTypeEnum.Trovo)
             {
@@ -268,14 +266,6 @@ namespace MixItUp.Base.Services
                 if (tUser != null)
                 {
                     user = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(tUser));
-                }
-            }
-            else if (platform == StreamingPlatformTypeEnum.Glimesh)
-            {
-                var gUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByName(username);
-                if (gUser != null)
-                {
-                    user = await ServiceManager.Get<UserService>().CreateUser(new GlimeshUserPlatformV2Model(gUser));
                 }
             }
 
@@ -317,9 +307,9 @@ namespace MixItUp.Base.Services
                 {
                     this.platformUserIDLookups[pUser.Platform].Remove(pUser.ID);
                     this.platformUsernameLookups[pUser.Platform].Remove(pUser.Username.ToLower());
-                    if (pUser.Platform == StreamingPlatformTypeEnum.Trovo)
+                    if (!string.IsNullOrEmpty(pUser.DisplayName))
                     {
-                        this.platformUsernameLookups[pUser.Platform].Remove(pUser.DisplayName.ToLower());
+                        this.platformDisplayNameLookups[pUser.Platform].Remove(pUser.DisplayName.ToLower());
                     }
                 }
                 this.activeUsers.Remove(user.ID);
@@ -328,10 +318,35 @@ namespace MixItUp.Base.Services
             }
         }
 
+        public async Task ClearUserDataRange(int days)
+        {
+            this.platformUserIDLookups.Clear();
+            this.platformUsernameLookups.Clear();
+            this.platformDisplayNameLookups.Clear();
+            this.activeUsers.Clear();
+
+            await this.LoadAllUserData();
+
+            List<Guid> usersToRemove = new List<Guid>();
+            foreach (var kvp in ChannelSession.Settings.Users)
+            {
+                if (kvp.Value.LastActivity.TotalDaysFromNow() > days)
+                {
+                    usersToRemove.Add(kvp.Key);
+                }
+            }
+
+            foreach (Guid userID in usersToRemove)
+            {
+                ChannelSession.Settings.Users.Remove(userID);
+            }
+        }
+
         public async Task ClearAllUserData()
         {
             this.platformUserIDLookups.Clear();
             this.platformUsernameLookups.Clear();
+            this.platformDisplayNameLookups.Clear();
             this.activeUsers.Clear();
 
             ChannelSession.Settings.Users.Clear();
@@ -363,9 +378,9 @@ namespace MixItUp.Base.Services
                         UserPlatformV2ModelBase platformModel = userData.GetPlatformData<UserPlatformV2ModelBase>(platform);
                         this.platformUserIDLookups[platform][platformModel.ID] = userData.ID;
                         this.platformUsernameLookups[platform][platformModel.Username.ToLower()] = userData.ID;
-                        if (platformModel.Platform == StreamingPlatformTypeEnum.Trovo)
+                        if (!string.IsNullOrEmpty(platformModel.DisplayName))
                         {
-                            this.platformUsernameLookups[platform][platformModel.DisplayName.ToLower()] = userData.ID;
+                            this.platformDisplayNameLookups[platform][platformModel.DisplayName.ToLower()] = userData.ID;
                         }
                     }
                 }
@@ -443,6 +458,7 @@ namespace MixItUp.Base.Services
             {
                 return user;
             }
+            platformUsername = platformUsername.ToLower();
 
             if (platform == StreamingPlatformTypeEnum.None || platform == StreamingPlatformTypeEnum.All)
             {
@@ -456,7 +472,16 @@ namespace MixItUp.Base.Services
                 return user;
             }
 
-            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername.ToLower(), out Guid id))
+            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id))
+            {
+                user = this.GetActiveUserByID(id);
+                if (user != null)
+                {
+                    return user;
+                }
+            }
+
+            if (this.platformDisplayNameLookups.ContainsKey(platform) && this.platformDisplayNameLookups[platform].TryGetValue(platformUsername, out id))
             {
                 user = this.GetActiveUserByID(id);
                 if (user != null)
@@ -504,10 +529,9 @@ namespace MixItUp.Base.Services
                 }
 
                 CommandParametersModel parameters = new CommandParametersModel(user);
-                if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.ChatUserJoined, parameters))
+                if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserJoined, parameters))
                 {
                     user.Model.TotalStreamsWatched++;
-                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserJoined, parameters);
 
                     alerts.Add(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.UserJoinedChat, user.FullDisplayName), ChannelSession.Settings.AlertUserJoinLeaveColor));
                 }
@@ -538,7 +562,14 @@ namespace MixItUp.Base.Services
 
         public async Task<UserV2ViewModel> RemoveActiveUser(StreamingPlatformTypeEnum platform, string platformUsername)
         {
-            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername.ToLower(), out Guid id))
+            platformUsername = platformUsername.ToLower();
+
+            if (this.platformUsernameLookups.ContainsKey(platform) && this.platformUsernameLookups[platform].TryGetValue(platformUsername, out Guid id))
+            {
+                return await this.RemoveActiveUser(id);
+            }
+
+            if (this.platformDisplayNameLookups.ContainsKey(platform) && this.platformDisplayNameLookups[platform].TryGetValue(platformUsername, out id))
             {
                 return await this.RemoveActiveUser(id);
             }
@@ -588,10 +619,8 @@ namespace MixItUp.Base.Services
                     }
 
                     CommandParametersModel parameters = new CommandParametersModel(user);
-                    if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.ChatUserLeft, parameters))
+                    if (await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserLeft, parameters))
                     {
-                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserLeft, parameters);
-
                         alerts.Add(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.UserLeftChat, user.FullDisplayName), ChannelSession.Settings.AlertUserJoinLeaveColor));
                     }
                 }

@@ -48,9 +48,6 @@ namespace MixItUp.Base.Model.Actions
         public string Amount { get; set; }
         [DataMember]
         public bool DeductFromUser { get; set; }
-        [Obsolete]
-        [DataMember]
-        public OldUserRoleEnum UsersToApplyTo { get; set; }
         [DataMember]
         public UserRoleEnum UserRoleToApplyTo { get; set; }
 
@@ -196,11 +193,10 @@ namespace MixItUp.Base.Model.Actions
                 }
                 else if (this.ActionType == ConsumablesActionTypeEnum.AddToSpecificUser || this.ActionType == ConsumablesActionTypeEnum.SubtractFromSpecificUser)
                 {
+                    UserV2ViewModel receivingUser = parameters.TargetUser;
                     if (!string.IsNullOrEmpty(this.Username))
                     {
                         string usernameString = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
-
-                        UserV2ViewModel receivingUser = null;
                         if (this.UsersMustBePresent)
                         {
                             receivingUser = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(parameters.Platform, usernameString);
@@ -209,16 +205,16 @@ namespace MixItUp.Base.Model.Actions
                         {
                             receivingUser = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(parameters.Platform, usernameString, performPlatformSearch: true);
                         }
+                    }
 
-                        if (receivingUser != null)
-                        {
-                            receiverUserData.Add(receivingUser);
-                        }
-                        else
-                        {
-                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.UserNotFound, parameters);
-                            return;
-                        }
+                    if (receivingUser != null)
+                    {
+                        receiverUserData.Add(receivingUser);
+                    }
+                    else
+                    {
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.UserNotFound, parameters);
+                        return;
                     }
                 }
                 else if (this.ActionType == ConsumablesActionTypeEnum.AddToAllChatUsers || this.ActionType == ConsumablesActionTypeEnum.SubtractFromAllChatUsers)

@@ -92,6 +92,10 @@ namespace MixItUp.WPF.Windows.Commands
                     this.editorDetailsControl = new TwitchBitsCommandEditorDetailsControl();
                     this.viewModel = new TwitchBitsCommandEditorWindowViewModel((TwitchBitsCommandModel)existingCommand);
                     break;
+                case CommandTypeEnum.CrowdControlEffect:
+                    this.editorDetailsControl = new CrowdControlEffectCommandEditorDetailsControl();
+                    this.viewModel = new CrowdControlEffectCommandEditorWindowViewModel((CrowdControlEffectCommandModel)existingCommand);
+                    break;
             }
 
             this.importedActions = actions;
@@ -134,6 +138,10 @@ namespace MixItUp.WPF.Windows.Commands
                 case CommandTypeEnum.TwitchBits:
                     this.editorDetailsControl = new TwitchBitsCommandEditorDetailsControl();
                     this.viewModel = new TwitchBitsCommandEditorWindowViewModel();
+                    break;
+                case CommandTypeEnum.CrowdControlEffect:
+                    this.editorDetailsControl = new CrowdControlEffectCommandEditorDetailsControl();
+                    this.viewModel = new CrowdControlEffectCommandEditorWindowViewModel();
                     break;
                 case CommandTypeEnum.Custom:
                     this.editorDetailsControl = new CustomCommandEditorDetailsControl();

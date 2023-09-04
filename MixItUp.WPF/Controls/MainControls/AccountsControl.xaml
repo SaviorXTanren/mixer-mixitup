@@ -32,8 +32,6 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" TextWrapping="Wrap" FontWeight="Bold" TextDecorations="Underline" HorizontalAlignment="Center" Text="{x:Static resx:Resources.AccountsChangesRequireRestart}"/>
@@ -42,11 +40,9 @@
 
             <AccountControls:StreamingPlatformAccountControl Grid.Row="4" DataContext="{Binding Twitch}" />
 
-            <!--<AccountControls:StreamingPlatformAccountControl Grid.Row="6" DataContext="{Binding YouTube}" IsEnabled="False" />-->
+            <AccountControls:StreamingPlatformAccountControl Grid.Row="6" DataContext="{Binding YouTube}" />
 
             <AccountControls:StreamingPlatformAccountControl Grid.Row="8" DataContext="{Binding Trovo}" />
-
-            <AccountControls:StreamingPlatformAccountControl Grid.Row="10" DataContext="{Binding Glimesh}" />
         </Grid>
     </ScrollViewer>
 </local:MainControlBase>

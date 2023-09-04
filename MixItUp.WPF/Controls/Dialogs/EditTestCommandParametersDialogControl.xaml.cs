@@ -31,7 +31,7 @@ namespace MixItUp.WPF.Controls.Dialogs
 
         public CommandParametersModel GetCommandParameters()
         {
-            this.parameters.Arguments = CommandParametersModel.GenerateArguments(this.ArgumentsTextBox.Text);
+            this.parameters.SetArguments(CommandParametersModel.GenerateArguments(this.ArgumentsTextBox.Text));
 
             this.parameters.SpecialIdentifiers.Clear();
             foreach (var value in this.values)

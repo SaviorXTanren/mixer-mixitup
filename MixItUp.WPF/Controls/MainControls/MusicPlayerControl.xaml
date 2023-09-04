@@ -1,0 +1,92 @@
+﻿<local:MainControlBase x:Class="MixItUp.WPF.Controls.MainControls.MusicPlayerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+                          
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+                          
+             d:DesignHeight="700" d:DesignWidth="600">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" HorizontalAlignment="Stretch" Margin="50,20,20,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="{x:Static resx:Resources.CurrentlyPlayingHeader}" VerticalAlignment="Center"  />
+            <TextBlock Grid.Column="2" Text="{Binding CurrentlyPlayingSong}" VerticalAlignment="Center" />
+
+            <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.MusicPlayerOnSongChanged}" HorizontalAlignment="Right">
+                <CommandsControls:CommandListingButtonsControl x:Name="OnSongChangedCommand" DataContext="{Binding OnSongChangedCommand}" HorizontalAlignment="Center" EditClicked="OnSongChangedCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+            </GroupBox>
+        </Grid>
+
+        <Grid Grid.Row="2" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Controls:IconButton Grid.Column="0" Icon="SkipPrevious" Command="{Binding PreviousCommand}" />
+            <Controls:IconButton Grid.Column="2" Icon="PlayPause" Command="{Binding PlayPauseCommand}" />
+            <Controls:IconButton Grid.Column="4" Icon="Stop" Command="{Binding StopCommand}" />
+            <Controls:IconButton Grid.Column="6" Icon="SkipNext" Command="{Binding NextCommand}" />
+
+            <TextBlock Grid.Column="8" Text="{Binding Source={x:Static resx:Resources.Volume}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
+            <Slider Grid.Column="10" Value="{Binding Volume}" VerticalAlignment="Center" Width="150" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" />
+
+            <ComboBox Grid.Column="12" ItemsSource="{Binding AudioDevices}" SelectedItem="{Binding SelectedAudioDevice}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AudioOutputDevice}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" />
+            
+            <Controls:IconButton Grid.Column="14" Icon="Folder" Command="{Binding SetFolderCommand}" />
+        </Grid>
+
+        <Grid Grid.Row="4" Visibility="{Binding MusicNotLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Width="400" TextWrapping="Wrap" Text="{x:Static resx:Resources.MusicPlayerSelectFolderOrPlayMusicToLoadInSongs}" />
+        </Grid>
+
+        <Grid Grid.Row="4" Visibility="{Binding MusicLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="2" BorderThickness="1">
+                <DataGrid x:Name="MainDataGrid" ItemsSource="{Binding Songs}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="{x:Static resx:Resources.Title}" Binding="{Binding Title}" IsReadOnly="True" Width="*" />
+                        <DataGridTextColumn Header="{x:Static resx:Resources.Artist}" Binding="{Binding Artist}" IsReadOnly="True" Width="*" />
+                        <!-- <DataGridTextColumn Header="{x:Static resx:Resources.Length}" Binding="{Binding LengthString}" IsReadOnly="True" Width="*" /> -->                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </Grid>
+    </Grid>
+</local:MainControlBase>

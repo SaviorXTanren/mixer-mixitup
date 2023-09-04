@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User.Platform;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
@@ -12,7 +13,6 @@ using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,20 +24,6 @@ using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.Services.Twitch
 {
-    public class BetterTTVEmoteModel : ChatEmoteViewModelBase
-    {
-        public string id { get; set; }
-        public string channel { get; set; }
-        public string code { get; set; }
-        public string imageType { get; set; }
-
-        public override string ID { get { return this.id; } protected set { } }
-        public override string Name { get { return this.code; } protected set { } }
-        public override string ImageURL { get { return string.Format("https://cdn.betterttv.net/emote/{0}/1x", this.ID); } protected set { } }
-
-        public override bool IsGIFImage { get { return string.Equals(this.imageType, "gif", StringComparison.OrdinalIgnoreCase); } }
-    }
-
     public class FrankerFaceZEmoteModel : ChatEmoteViewModelBase
     {
         public string id { get; set; }
@@ -52,7 +38,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (this.urls != null && this.urls.Count > 0)
                 {
-                    return "https:" + (this.urls.ContainsKey("2") ? this.urls["2"].ToString() : this.urls[this.urls.GetKeys().First()].ToString());
+                    return this.urls.ContainsKey("2") ? this.urls["2"].ToString() : this.urls[this.urls.GetKeys().First()].ToString();
                 }
                 return string.Empty;
             }
@@ -83,7 +69,6 @@ namespace MixItUp.Base.Services.Twitch
 
         private static List<string> ExcludedDiagnosticPacketLogging = new List<string>() { "PING", ChatMessagePacketModel.CommandID, ChatUserJoinPacketModel.CommandID, ChatUserLeavePacketModel.CommandID };
 
-        private const string RaidUserNoticeMessageTypeID = "raid";
         private const string SubMysteryGiftUserNoticeMessageTypeID = "submysterygift";
         private const string SubGiftPaidUpgradeUserNoticeMessageTypeID = "giftpaidupgrade";
         private const string AnnouncementUserNoticeMessageTypeID = "announcement";
@@ -92,9 +77,6 @@ namespace MixItUp.Base.Services.Twitch
 
         public IDictionary<string, TwitchChatEmoteViewModel> Emotes { get { return this.emotes; } }
         private Dictionary<string, TwitchChatEmoteViewModel> emotes = new Dictionary<string, TwitchChatEmoteViewModel>();
-
-        public IDictionary<string, BetterTTVEmoteModel> BetterTTVEmotes { get { return this.betterTTVEmotes; } }
-        private Dictionary<string, BetterTTVEmoteModel> betterTTVEmotes = new Dictionary<string, BetterTTVEmoteModel>();
 
         public IDictionary<string, FrankerFaceZEmoteModel> FrankerFaceZEmotes { get { return this.frankerFaceZEmotes; } }
         private Dictionary<string, FrankerFaceZEmoteModel> frankerFaceZEmotes = new Dictionary<string, FrankerFaceZEmoteModel>();
@@ -313,14 +295,22 @@ namespace MixItUp.Base.Services.Twitch
             Task<IEnumerable<ChatBadgeSetModel>> channelChatBadgesTask = ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelChatBadges(ServiceManager.Get<TwitchSessionService>().User);
             initializationTasks.Add(channelChatBadgesTask);
 
+            if (ChannelSession.Settings.ShowAlejoPronouns)
+            {
+                ServiceManager.Get<ITelemetryService>().TrackService("AlejoPronouns");
+                initializationTasks.Add(ServiceManager.Get<AlejoPronounsService>().Initialize());
+            }
+
             if (ChannelSession.Settings.ShowBetterTTVEmotes)
             {
-                initializationTasks.Add(this.DownloadBetterTTVEmotes());
-                initializationTasks.Add(this.DownloadBetterTTVEmotes(ServiceManager.Get<TwitchSessionService>().UserID));
+                ServiceManager.Get<ITelemetryService>().TrackService("BetterTTV");
+                initializationTasks.Add(ServiceManager.Get<BetterTTVService>().DownloadGlobalBetterTTVEmotes());
+                initializationTasks.Add(ServiceManager.Get<BetterTTVService>().DownloadTwitchBetterTTVEmotes(ServiceManager.Get<TwitchSessionService>().User.id));
             }
 
             if (ChannelSession.Settings.ShowFrankerFaceZEmotes)
             {
+                ServiceManager.Get<ITelemetryService>().TrackService("FrankerFaceZ");
                 initializationTasks.Add(this.DownloadFrankerFaceZEmotes());
                 initializationTasks.Add(this.DownloadFrankerFaceZEmotes(ServiceManager.Get<TwitchSessionService>().Username));
             }
@@ -581,7 +571,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             IEnumerable<ChatterModel> chatterModels = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChatters(ServiceManager.Get<TwitchSessionService>().User);
 
-            HashSet<string> chatters = new HashSet<string>(chatterModels.Select(c => c.user_login));
+            HashSet<string> chatters = (chatterModels != null) ? new HashSet<string>(chatterModels.Select(c => c.user_login)) : new HashSet<string>();
 
             HashSet<string> joinsToProcess = new HashSet<string>();
             List<UserV2ViewModel> leavesToProcess = new List<UserV2ViewModel>();
@@ -625,50 +615,6 @@ namespace MixItUp.Base.Services.Twitch
             {
                 await ServiceManager.Get<UserService>().RemoveActiveUsers(leavesToProcess);
             }
-        }
-
-        private async Task DownloadBetterTTVEmotes(string twitchID = null)
-        {
-            try
-            {
-                using (AdvancedHttpClient client = new AdvancedHttpClient())
-                {
-                    List<BetterTTVEmoteModel> emotes = new List<BetterTTVEmoteModel>();
-
-                    HttpResponseMessage response = await client.GetAsync((!string.IsNullOrEmpty(twitchID)) ? "https://api.betterttv.net/3/cached/users/twitch/" + twitchID : "https://api.betterttv.net/3/cached/emotes/global");
-                    if (response.IsSuccessStatusCode)
-                    {
-                        if (!string.IsNullOrEmpty(twitchID))
-                        {
-                            JObject jobj = await response.ProcessJObjectResponse();
-                            if (jobj != null)
-                            {
-                                JToken channelEmotes = jobj.SelectToken("channelEmotes");
-                                if (channelEmotes != null)
-                                {
-                                    emotes.AddRange(((JArray)channelEmotes).ToTypedArray<BetterTTVEmoteModel>());
-                                }
-
-                                JToken sharedEmotes = jobj.SelectToken("sharedEmotes");
-                                if (sharedEmotes != null)
-                                {
-                                    emotes.AddRange(((JArray)sharedEmotes).ToTypedArray<BetterTTVEmoteModel>());
-                                }
-                            }
-                        }
-                        else
-                        {
-                            emotes.AddRange(await response.ProcessResponse<List<BetterTTVEmoteModel>>());
-                        }
-
-                        foreach (BetterTTVEmoteModel emote in emotes)
-                        {
-                            this.betterTTVEmotes[emote.code] = emote;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
         }
 
         private async Task DownloadFrankerFaceZEmotes(string channelName = null)
@@ -770,44 +716,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             try
             {
-                if (RaidUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
-                {
-                    UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, userNotice.UserID.ToString());
-                    if (user == null)
-                    {
-                        user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(userNotice));
-                    }
-                    user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).SetUserProperties(userNotice);
-
-                    CommandParametersModel parameters = new CommandParametersModel(user);
-                    if (ServiceManager.Get<EventService>().CanPerformEvent(EventTypeEnum.TwitchChannelRaided, parameters))
-                    {
-                        ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidUserData] = user.ID;
-                        ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidViewerCountData] = userNotice.RaidViewerCount;
-
-                        foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
-                        {
-                            currency.AddAmount(user, currency.OnHostBonus);
-                        }
-
-                        foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
-                        {
-                            if (user.MeetsRole(streamPass.UserPermission))
-                            {
-                                streamPass.AddAmount(user, streamPass.HostBonus);
-                            }
-                        }
-
-                        GlobalEvents.RaidOccurred(user, userNotice.RaidViewerCount);
-
-                        parameters.SpecialIdentifiers["hostviewercount"] = userNotice.RaidViewerCount.ToString();
-                        parameters.SpecialIdentifiers["raidviewercount"] = userNotice.RaidViewerCount.ToString();
-                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelRaided, parameters);
-
-                        await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertRaid, user.FullDisplayName, userNotice.RaidViewerCount), ChannelSession.Settings.AlertRaidColor));
-                    }
-                }
-                else if (SubMysteryGiftUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID) && userNotice.SubTotalGifted > 0)
+                if (SubMysteryGiftUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID) && userNotice.SubTotalGifted > 0)
                 {
                     UserV2ViewModel gifter = UserV2ViewModel.CreateUnassociated("An Anonymous Gifter");
                     if (!TwitchMassGiftedSubEventModel.IsAnonymousGifter(userNotice))
@@ -862,7 +771,7 @@ namespace MixItUp.Base.Services.Twitch
             }
             else if (chatClear.IsTimeout)
             {
-                CommandParametersModel parameters = new CommandParametersModel();
+                CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.Twitch);
                 parameters.Arguments.Add("@" + user.Username);
                 parameters.TargetUser = user;
                 parameters.SpecialIdentifiers["timeoutlength"] = chatClear.BanDuration.ToString();
@@ -876,7 +785,7 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     userBans.Add(user.Username);
 
-                    CommandParametersModel parameters = new CommandParametersModel();
+                    CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.Twitch);
                     parameters.Arguments.Add("@" + user.Username);
                     parameters.TargetUser = user;
                     await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserBan, parameters);
@@ -890,12 +799,28 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void UserClient_OnMessageReceived(object sender, ChatMessagePacketModel message)
         {
-            if (message != null && !string.IsNullOrEmpty(message.Message))
+            if (message != null)
             {
+                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, message.UserID, performPlatformSearch: true);
+                TwitchChatMessageViewModel twitchMessage = null;
                 if (string.IsNullOrEmpty(message.UserLogin) || !message.UserLogin.Equals("jtv"))
                 {
-                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, message.UserID, performPlatformSearch: true);
-                    await ServiceManager.Get<ChatService>().AddMessage(new TwitchChatMessageViewModel(message, user));
+                    if (!string.IsNullOrEmpty(message.Message))
+                    {
+                        twitchMessage = new TwitchChatMessageViewModel(message, user);
+                        await ServiceManager.Get<ChatService>().AddMessage(twitchMessage);
+                    }
+                }
+
+                if (int.TryParse(message.PinnedChatPaidAmount, out int amount) && int.TryParse(message.PinnedChatPaidExponent, out int exponent) && amount > 0)
+                {
+                    double decimalNumber = ((double)amount) / ((double)exponent);
+                    CommandParametersModel parameters = (twitchMessage != null) ? new CommandParametersModel(twitchMessage) : new CommandParametersModel(user, StreamingPlatformTypeEnum.Twitch);
+                    parameters.SpecialIdentifiers["hypechatamountnumberdigits"] = amount.ToString();
+                    parameters.SpecialIdentifiers["hypechatamountnumber"] = decimalNumber.ToString();
+                    parameters.SpecialIdentifiers["hypechatamount"] = CurrencyHelper.ToCurrencyString(message.PinnedChatPaidCurrency, decimalNumber);
+                    parameters.SpecialIdentifiers["hypechatlevel"] = message.PinnedChatPaidLevel;
+                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelHypeChat, parameters);
                 }
             }
         }

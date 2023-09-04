@@ -3,7 +3,6 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Mock;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
@@ -83,7 +82,7 @@ namespace MixItUp.Base.Services
             this.currentChatEventLogFilePath = Path.Combine(ChatEventLogDirectoryName, string.Format(ChatEventLogFileNameFormat, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture)));
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            AsyncRunner.RunAsyncBackground(this.ProcessHoursCurrency, this.cancellationTokenSource.Token, 60000);
+            AsyncRunner.RunAsyncBackground(this.MinuteBackgroundThread, this.cancellationTokenSource.Token, 60000);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
@@ -130,11 +129,6 @@ namespace MixItUp.Base.Services
                         await ServiceManager.Get<YouTubeChatService>().SendMessage(message, sendAsStreamer);
                     }
 
-                    if (platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshChatEventService>().IsUserConnected)
-                    {
-                        await ServiceManager.Get<GlimeshChatEventService>().SendMessage(message, sendAsStreamer);
-                    }
-
                     if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
                     {
                         await ServiceManager.Get<TrovoChatEventService>().SendMessage(message, sendAsStreamer);
@@ -168,6 +162,19 @@ namespace MixItUp.Base.Services
             }
         }
 
+        public async Task DeleteMessage(string messageID)
+        {
+            if (string.IsNullOrEmpty(messageID))
+            {
+                return;
+            }
+
+            if (this.messagesLookup.TryGetValue(messageID, out ChatMessageViewModel message) && message != null)
+            {
+                await this.DeleteMessage(message, externalDeletion: true);
+            }
+        }
+
         public async Task DeleteMessage(ChatMessageViewModel message, bool externalDeletion = false)
         {
             if (message == null)
@@ -193,10 +200,6 @@ namespace MixItUp.Base.Services
                 else if (message.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
                 {
                     await ServiceManager.Get<TrovoChatEventService>().DeleteMessage(message);
-                }
-                else if (message.Platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshChatEventService>().IsUserConnected)
-                {
-                    await ServiceManager.Get<GlimeshChatEventService>().DeleteMessage(message);
                 }
                 else if (message.Platform == StreamingPlatformTypeEnum.Mock)
                 {
@@ -272,18 +275,6 @@ namespace MixItUp.Base.Services
             {
                 await ServiceManager.Get<TrovoChatEventService>().TimeoutUser(user.Username, (int)durationInSeconds);
             }
-
-            if (user.Platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshChatEventService>().IsUserConnected)
-            {
-                if (durationInSeconds > 300)
-                {
-                    await ServiceManager.Get<GlimeshChatEventService>().LongTimeoutUser(user);
-                }
-                else
-                {
-                    await ServiceManager.Get<GlimeshChatEventService>().ShortTimeoutUser(user);
-                }
-            }
         }
 
         public async Task ModUser(UserV2ViewModel user)
@@ -329,11 +320,6 @@ namespace MixItUp.Base.Services
                 await ServiceManager.Get<YouTubeChatService>().BanUser(user);
             }
 
-            if (user.Platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshChatEventService>().IsUserConnected)
-            {
-                await ServiceManager.Get<GlimeshChatEventService>().BanUser(user);
-            }
-
             if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
             {
                 await ServiceManager.Get<TrovoChatEventService>().BanUser(user.Username);
@@ -345,11 +331,6 @@ namespace MixItUp.Base.Services
             if (user.Platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchChatService>().IsUserConnected)
             {
                 await ServiceManager.Get<TwitchChatService>().UnbanUser(user);
-            }
-
-            if (user.Platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshChatEventService>().IsUserConnected)
-            {
-                await ServiceManager.Get<GlimeshChatEventService>().UnbanUser(user);
             }
 
             if (user.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoChatEventService>().IsUserConnected)
@@ -490,7 +471,7 @@ namespace MixItUp.Base.Services
                         {
                             if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatWhisperSoundFilePath))
                             {
-                                await ServiceManager.Get<IAudioService>().Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, ChannelSession.Settings.NotificationChatWhisperSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
+                                await ServiceManager.Get<IAudioService>().PlayNotification(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, ChannelSession.Settings.NotificationChatWhisperSoundVolume);
                             }
 
                             if (!string.IsNullOrEmpty(message.PlainTextMessage))
@@ -524,11 +505,11 @@ namespace MixItUp.Base.Services
 
                         if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatTaggedSoundFilePath) && message.IsStreamerTagged)
                         {
-                            await ServiceManager.Get<IAudioService>().Play(ChannelSession.Settings.NotificationChatTaggedSoundFilePath, ChannelSession.Settings.NotificationChatTaggedSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
+                            await ServiceManager.Get<IAudioService>().PlayNotification(ChannelSession.Settings.NotificationChatTaggedSoundFilePath, ChannelSession.Settings.NotificationChatTaggedSoundVolume);
                         }
                         else if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatMessageSoundFilePath) && !message.User.IsSpecialtyExcluded)
                         {
-                            await ServiceManager.Get<IAudioService>().Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, ChannelSession.Settings.NotificationChatMessageSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
+                            await ServiceManager.Get<IAudioService>().PlayNotification(ChannelSession.Settings.NotificationChatMessageSoundFilePath, ChannelSession.Settings.NotificationChatMessageSoundVolume);
                         }
 
                         if (message.ProcessingTime > 1000)
@@ -539,14 +520,18 @@ namespace MixItUp.Base.Services
                         if (!this.userEntranceCommands.Contains(message.User.ID))
                         {
                             this.userEntranceCommands.Add(message.User.ID);
-                            CommandModelBase customEntranceCommand = ChannelSession.Settings.GetCommand(message.User.EntranceCommandID);
-                            if (customEntranceCommand != null && customEntranceCommand.IsEnabled)
+
+                            if (!ChannelSession.Settings.UserEntranceCommandsOnlyWhenLive || StreamingPlatforms.GetPlatformSessionService(message.User.Platform).IsLive)
                             {
-                                await ServiceManager.Get<CommandService>().Queue(message.User.EntranceCommandID, new CommandParametersModel(message));
-                            }
-                            else if (!message.User.IsSpecialtyExcluded)
-                            {
-                                await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserEntranceCommand, new CommandParametersModel(message));
+                                CommandModelBase customEntranceCommand = ChannelSession.Settings.GetCommand(message.User.EntranceCommandID);
+                                if (customEntranceCommand != null && customEntranceCommand.IsEnabled)
+                                {
+                                    await ServiceManager.Get<CommandService>().Queue(message.User.EntranceCommandID, new CommandParametersModel(message));
+                                }
+                                else if (!message.User.IsSpecialtyExcluded)
+                                {
+                                    await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserEntranceCommand, new CommandParametersModel(message));
+                                }
                             }
                         }
 
@@ -756,8 +741,7 @@ namespace MixItUp.Base.Services
         {
             Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
 
-            CommandParametersModel parameters = new CommandParametersModel(message);
-            parameters.Arguments = new List<string>(arguments);   // Overwrite arguments to account for variable argument length for commands
+            CommandParametersModel parameters = new CommandParametersModel(message, arguments); // Overwrite arguments to account for variable argument length for commands
             await ServiceManager.Get<CommandService>().Queue(command, parameters);
 
             SettingsRequirementModel settings = command.Requirements.Settings;
@@ -770,13 +754,15 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private Task ProcessHoursCurrency(CancellationToken cancellationToken)
+        private Task MinuteBackgroundThread(CancellationToken cancellationToken)
         {
             Dictionary<StreamingPlatformTypeEnum, bool> liveStreams = new Dictionary<StreamingPlatformTypeEnum, bool>();
+            Dictionary<StreamingPlatformTypeEnum, int> chatterCount = new Dictionary<StreamingPlatformTypeEnum, int>();
 
             StreamingPlatforms.ForEachPlatform(p =>
             {
                 liveStreams[p] = StreamingPlatforms.GetPlatformSessionService(p).IsConnected && StreamingPlatforms.GetPlatformSessionService(p).IsLive;
+                chatterCount[p] = 0;
             });
 
             if (liveStreams.Any(s => s.Value))
@@ -786,6 +772,7 @@ namespace MixItUp.Base.Services
                     if (liveStreams.TryGetValue(user.Platform, out bool active) && active)
                     {
                         user.UpdateViewingMinutes(liveStreams);
+                        chatterCount[user.Platform]++;
                     }
                 }
 
@@ -798,6 +785,15 @@ namespace MixItUp.Base.Services
                 {
                     streamPass.UpdateUserData(liveStreams);
                 }
+
+                StreamingPlatforms.ForEachPlatform(p =>
+                {
+                    if (liveStreams[p])
+                    {
+                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.Viewers, platform: p, amount: StreamingPlatforms.GetPlatformSessionService(p).ViewerCount);
+                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.Chatters, platform: p, amount: chatterCount[p]);
+                    }
+                });
             }
 
             return Task.CompletedTask;

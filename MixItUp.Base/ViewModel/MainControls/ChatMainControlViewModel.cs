@@ -1,8 +1,8 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -152,18 +152,13 @@ namespace MixItUp.Base.ViewModel.MainControls
         private void RefreshNumbers()
         {
             int viewerCount = 0;
-            if (ServiceManager.Get<TwitchSessionService>().IsConnected && ServiceManager.Get<TwitchSessionService>().IsLive)
+            StreamingPlatforms.ForEachPlatform(p =>
             {
-                viewerCount += (int)ServiceManager.Get<TwitchSessionService>().Stream?.viewer_count;
-            }
-            if (ServiceManager.Get<TrovoSessionService>().IsConnected && ServiceManager.Get<TrovoSessionService>().IsLive)
-            {
-                viewerCount += (int)ServiceManager.Get<TrovoSessionService>().Channel?.current_viewers;
-            }
-            if (ServiceManager.Get<GlimeshSessionService>().IsConnected && ServiceManager.Get<GlimeshSessionService>().IsLive)
-            {
-                viewerCount += ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.countViewers ?? 0;
-            }
+                if (StreamingPlatforms.GetPlatformSessionService(p).IsConnected && StreamingPlatforms.GetPlatformSessionService(p).IsLive)
+                {
+                    viewerCount += StreamingPlatforms.GetPlatformSessionService(p).ViewerCount;
+                }
+            });
             this.ViewersCount = viewerCount;
 
             this.ChattersCount = ServiceManager.Get<UserService>().ActiveUserCount;

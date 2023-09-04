@@ -7,24 +7,37 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Actions
 {
+    public enum SoundActionTypeEnum
+    {
+        PlaySound,
+        StopAllSounds,
+    }
+
     [DataContract]
     public class SoundActionModel : ActionModelBase
     {
         [DataMember]
-        public string FilePath { get; set; }
+        public SoundActionTypeEnum ActionType { get; set; } = SoundActionTypeEnum.PlaySound;
 
         [DataMember]
+        public string FilePath { get; set; }
+        [DataMember]
         public int VolumeScale { get; set; }
-
         [DataMember]
         public string OutputDevice { get; set; }
 
         public SoundActionModel(string filePath, int volumeScale, string outputDevice = null)
-            : base(ActionTypeEnum.Sound)
+            : this(SoundActionTypeEnum.PlaySound)
         {
             this.FilePath = filePath;
             this.VolumeScale = volumeScale;
             this.OutputDevice = outputDevice;
+        }
+
+        public SoundActionModel(SoundActionTypeEnum actionType)
+            : base(ActionTypeEnum.Sound)
+        {
+            this.ActionType = actionType;
         }
 
         [Obsolete]
@@ -32,14 +45,21 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            string audioFilePath = await ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
-
-            if (!ServiceManager.Get<IFileService>().IsURLPath(audioFilePath) && !ServiceManager.Get<IFileService>().FileExists(audioFilePath))
+            if (this.ActionType == SoundActionTypeEnum.PlaySound)
             {
-                Logger.Log(LogLevel.Error, $"Command: {parameters.InitialCommandID} - Sound Action - File does not exist: {audioFilePath}");
-            }
+                string audioFilePath = await ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
 
-            await ServiceManager.Get<IAudioService>().Play(audioFilePath, this.VolumeScale, this.OutputDevice);
+                if (!ServiceManager.Get<IFileService>().IsURLPath(audioFilePath) && !ServiceManager.Get<IFileService>().FileExists(audioFilePath))
+                {
+                    Logger.Log(LogLevel.Error, $"Command: {parameters.InitialCommandID} - Sound Action - File does not exist: {audioFilePath}");
+                }
+
+                await ServiceManager.Get<IAudioService>().Play(audioFilePath, this.VolumeScale, this.OutputDevice);
+            }
+            else
+            {
+                await ServiceManager.Get<IAudioService>().StopAllSounds();
+            }
         }
     }
 }

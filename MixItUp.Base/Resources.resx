@@ -2653,8 +2653,8 @@
     <value>Chat User Purged</value>
     <comment>Manual</comment>
   </data>
-  <data name="ExtraLifeDonation" xml:space="preserve">
-    <value>Extra Life Donation</value>
+  <data name="DonorDriveDonation" xml:space="preserve">
+    <value>DonorDrive Donation</value>
     <comment>Manual</comment>
   </data>
   <data name="JustGivingDonation" xml:space="preserve">
@@ -5470,27 +5470,11 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="DiscordInvalidSecret" xml:space="preserve">
     <value>Please enter a valid Custom Client Secret.</value>
   </data>
-  <data name="ExtraLife" xml:space="preserve">
-    <value>Extra Life</value>
-    <comment>Manual</comment>
+  <data name="DonorDriveInfo1" xml:space="preserve">
+    <value>DonorDrive service connectivity allows you to trigger events from when you or your team receive a donation through an eligable DonorDrive charity.</value>
   </data>
-  <data name="ExtraLifeInfo1" xml:space="preserve">
-    <value>Extra Life service connectivity allows you to trigger events from when you or your team receive a donation.</value>
-  </data>
-  <data name="ExtraLifeInfo2" xml:space="preserve">
-    <value>First, visit your team's page on the Extra Life website and near the end of the web URL, it will say "teamID=_____". Type that number into the first box, click search, select your name from the list, then click Log In button.</value>
-  </data>
-  <data name="ExtraLifeInvalidParticipant" xml:space="preserve">
-    <value>Please select a valid Extra Life participant.</value>
-  </data>
-  <data name="ExtraLifeInvalidTeamId" xml:space="preserve">
-    <value>Please enter a valid Extra Life team ID.</value>
-  </data>
-  <data name="ExtraLifeTeamNotFound" xml:space="preserve">
-    <value>The Extra Life team ID you entered could not be found.</value>
-  </data>
-  <data name="ExtraLifeTriggerForTeamDonation" xml:space="preserve">
-    <value>Trigger Donation Event for Team Donations:</value>
+  <data name="DonorDriveInfo2" xml:space="preserve">
+    <value>To connect DonorDrive in Mix It Up, visit your charity's website and look for your page/participant link. Then select your charity from the drop-down or select Custom if it's not in the list, copy your page/participant link into the text box, and select Log In.</value>
   </data>
   <data name="OverlayConnectionFailed1" xml:space="preserve">
     <value>Overlay connection test failed, please ensure you have the Mix It Up Overlay page visible and running in your streaming software.</value>
@@ -5573,7 +5557,7 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
     <comment>Manual</comment>
   </data>
   <data name="JustGivingInfo1" xml:space="preserve">
-    <value>JustGiving service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to JustGiving and approve Mix It Up to access your information.</value>
+    <value>JustGiving service connectivity allows you to perform actions when a donation is received. To connect a JustGiving fundraiser, simply copy and paste the URL for your fundraising page into the text box and click Log In.</value>
   </data>
   <data name="LayerPosition" xml:space="preserve">
     <value>Layer Position</value>
@@ -6320,12 +6304,6 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   </data>
   <data name="DiscordUserDataFailed" xml:space="preserve">
     <value>Could not get User data</value>
-  </data>
-  <data name="ExtraLifeTeamDataFailed" xml:space="preserve">
-    <value>Could not get Team/Participant data</value>
-  </data>
-  <data name="ExtraLifeTeamNotSet" xml:space="preserve">
-    <value>Extra Life team ID / participant ID was not set</value>
   </data>
   <data name="JustGivingUserDataFailed" xml:space="preserve">
     <value>Unable to get User data</value>
@@ -8778,7 +8756,7 @@ via Twitch, it's a "your mileage may vary" situation.</value>
     <value>Mix It Up Command|*.miucommand|All files (*.*)|*.*</value>
   </data>
   <data name="SoundFileFormatFilter" xml:space="preserve">
-    <value>Sound Files|*.mp3;*.wav|All files (*.*)|*.*</value>
+    <value>Sound Files|*.mp3;*.wav;*.flac;*.mp4;*.m4a;*.aac|All files (*.*)|*.*</value>
   </data>
   <data name="TextFileFormatFilter" xml:space="preserve">
     <value>Text Files|*.txt|All files (*.*)|*.*</value>
@@ -8797,9 +8775,6 @@ via Twitch, it's a "your mileage may vary" situation.</value>
   </data>
   <data name="ParticipantID" xml:space="preserve">
     <value>Participant ID</value>
-  </data>
-  <data name="ExtraLifeInvalidParticipantId" xml:space="preserve">
-    <value>Please enter a valid Extra Life participant ID.</value>
   </data>
   <data name="BackupGenerationFailed" xml:space="preserve">
     <value>Backup file failed to generate. If this continues, please visit the Mix It Up support Discord for further assistance.</value>
@@ -8888,6 +8863,53 @@ via Twitch, it's a "your mileage may vary" situation.</value>
   </data>
   <data name="TrovoChannelSpellCast" xml:space="preserve">
     <value>Trovo Channel Spell Cast</value>
+  </data>
+  <data name="SetTitleDescription" xml:space="preserve">
+    <value>Set Title/Description</value>
+  </data>
+  <data name="YouTubeActionMissingAmount" xml:space="preserve">
+    <value>YouTube Action: A valid amount must be specified</value>
+  </data>
+  <data name="YouTubeActionMissingTitleDescription" xml:space="preserve">
+    <value>YouTube Action: A valid title or description must be specified</value>
+  </data>
+  <data name="YouTubeChannelMassMembershipGifted" xml:space="preserve">
+    <value>YouTube Channel Mass Membership Gifted</value>
+  </data>
+  <data name="YouTubeChannelMemberMilestone" xml:space="preserve">
+    <value>YouTube Channel Member Milestone</value>
+  </data>
+  <data name="YouTubeChannelMembershipGifted" xml:space="preserve">
+    <value>YouTube Channel Membership Gifted</value>
+  </data>
+  <data name="YouTubeChannelNewMember" xml:space="preserve">
+    <value>YouTube Channel New Member</value>
+  </data>
+  <data name="YouTubeChannelStreamStart" xml:space="preserve">
+    <value>YouTube Channel Stream Start</value>
+  </data>
+  <data name="YouTubeChannelStreamStop" xml:space="preserve">
+    <value>YouTube Channel Stream Stop</value>
+  </data>
+  <data name="YouTubeChannelSuperChat" xml:space="preserve">
+    <value>YouTube Channel Super Chat</value>
+  </data>
+  <data name="YouTubeChannelSuperSticker" xml:space="preserve">
+    <value>YouTube Channel Super Sticker</value>
+  </data>
+  <data name="AlertYouTubeSuperChat" xml:space="preserve">
+    <value>{0} Super Chat - {1}</value>
+    <comment>{0} is the name of the user
+{1} is the amount of the super chat</comment>
+  </data>
+  <data name="AlertYouTubeSuperSticker" xml:space="preserve">
+    <value>{0} Super Sticker - {1} - {2}</value>
+    <comment>{0} is the name of the user
+{1} is the name of the super sticker
+{2} is the amount of the super chat</comment>
+  </data>
+  <data name="ShowYouTubeSuperChat" xml:space="preserve">
+    <value>Show YouTube Super Chat</value>
   </data>
   <data name="MockConnection" xml:space="preserve">
     <value>Mock Connection</value>
@@ -9955,5 +9977,309 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   </data>
   <data name="RestoreSettingsConfirmation" xml:space="preserve">
     <value>This will restore a settings backup and overwrite any matching settings files that are currently in your settings folder. Are you sure you want to do this?</value>
+  </data>
+  <data name="YouTubeMemberLevel" xml:space="preserve">
+    <value>YouTube Member Level</value>
+  </data>
+  <data name="UserEntranceCommandsOnlyWhenLive" xml:space="preserve">
+    <value>Only run User Entrance Commands while live</value>
+  </data>
+  <data name="CrowdControl" xml:space="preserve">
+    <value>Crowd Control</value>
+  </data>
+  <data name="CrowdControlFailedToConnectToService" xml:space="preserve">
+    <value>Failed to connect to Crowd Control service, please try again. If this persists, please visit the Mix It Up support Discord for further assistance.</value>
+  </data>
+  <data name="CrowdControlTwitchAccountMustBeConnected" xml:space="preserve">
+    <value>A Twitch account must be connected in Mix It Up to use Crowd Control connectivity</value>
+  </data>
+  <data name="CrowdControlInfo1" xml:space="preserve">
+    <value>Crowd Control service connectivity allows you to run Mix It Up commands when specific game effects are triggered via Crowd Control. To connect to Crowd Control, you must be signed in with either a Twitch or YouTube account in Mix It Up.</value>
+  </data>
+  <data name="EffectName" xml:space="preserve">
+    <value>Effect Name</value>
+  </data>
+  <data name="GamePack" xml:space="preserve">
+    <value>Game Pack</value>
+  </data>
+  <data name="CrowdControlCommandValidGameAndEffectMustBeSelected" xml:space="preserve">
+    <value>A valid Crowd Control Game and Effect must be selected</value>
+  </data>
+  <data name="CrowdControlEffectRedeemed" xml:space="preserve">
+    <value>Crowd Control Effect Redeemed</value>
+  </data>
+  <data name="SAMMI" xml:space="preserve">
+    <value>SAMMI</value>
+  </data>
+  <data name="SAMMIFailedToConnect" xml:space="preserve">
+    <value>Failed to connect to SAMMI. Please make sureSAMMI is running, the SAMMI Local API is enabled under Settings, and the password matches if you set one for the Local API in SAMMI.</value>
+  </data>
+  <data name="Window" xml:space="preserve">
+    <value>Window</value>
+  </data>
+  <data name="SAMMIInfo1" xml:space="preserve">
+    <value>SAMMI service connectivity allows you to trigger SAMMI buttons directly through the SAMMI action inside commands. To connect to SAMMI, you must have the Local API enabled in SAMMI under the Settings menu.</value>
+  </data>
+  <data name="ReleaseButton" xml:space="preserve">
+    <value>Release Button</value>
+  </data>
+  <data name="TriggerButton" xml:space="preserve">
+    <value>Trigger Button</value>
+  </data>
+  <data name="ButtonID" xml:space="preserve">
+    <value>Button ID</value>
+  </data>
+  <data name="SAMMIActionMissingButtonID" xml:space="preserve">
+    <value>SAMMI Action: Missing Button ID</value>
+  </data>
+  <data name="SetGlobalVariable" xml:space="preserve">
+    <value>Set Global Variable</value>
+  </data>
+  <data name="SAMMIActionMissingVariable" xml:space="preserve">
+    <value>SAMMI Action: Missing Variable</value>
+  </data>
+  <data name="AddVariable" xml:space="preserve">
+    <value>Add Variable</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Charities" xml:space="preserve">
+    <value>Charities</value>
+  </data>
+  <data name="DonorDrive" xml:space="preserve">
+    <value>DonorDrive</value>
+  </data>
+  <data name="DonorDriveDonationIncentive" xml:space="preserve">
+    <value>DonorDrive Donation Incentive</value>
+  </data>
+  <data name="DonorDriveDonationMilestone" xml:space="preserve">
+    <value>DonorDrive Donation Milestone</value>
+  </data>
+  <data name="DonorDriveFailedToGetData" xml:space="preserve">
+    <value>Failed to get DonorDrive data.</value>
+  </data>
+  <data name="DonorDriveIncludeTeamDonation" xml:space="preserve">
+    <value>Include Team Donations: </value>
+  </data>
+  <data name="DonorDriveMissingCharity" xml:space="preserve">
+    <value>Missing charity organization</value>
+  </data>
+  <data name="DonorDriveMissingInvalidParticipantID" xml:space="preserve">
+    <value>Missing or invalid Donor Drive Participant ID/URL</value>
+  </data>
+  <data name="EventName" xml:space="preserve">
+    <value>Event Name</value>
+  </data>
+  <data name="ParticipantIDURL" xml:space="preserve">
+    <value>Participant ID / URL</value>
+  </data>
+  <data name="TeamName" xml:space="preserve">
+    <value>Team Name</value>
+  </data>
+  <data name="TwitchChannelOutgoingRaidCompleted" xml:space="preserve">
+    <value>Twitch Channel Outgoing Raid Completed</value>
+  </data>
+  <data name="CrowdControlEffect" xml:space="preserve">
+    <value>Crowd Control Effect</value>
+  </data>
+  <data name="TwitchChannelHypeChat" xml:space="preserve">
+    <value>Twitch Channel Hype Chat</value>
+  </data>
+  <data name="Label" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="SetContentClassificationLabels" xml:space="preserve">
+    <value>Set Content Classification Labels</value>
+  </data>
+  <data name="InfiniteAlbumConnectionFailed" xml:space="preserve">
+    <value>Infinite Album connection failed, please ensure Infinite Album is running and you have connected using an App Code.</value>
+  </data>
+  <data name="InfiniteAlbumActionMissingCommand" xml:space="preserve">
+    <value>Infinite Album Action: Missing Command</value>
+  </data>
+  <data name="InfiniteAlbumNotConnected" xml:space="preserve">
+    <value>Infinite Album is not connected, please ensure the software is running and is connected on the Services page.</value>
+  </data>
+  <data name="InfiniteAlbum" xml:space="preserve">
+    <value>Infinite Album</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="InfiniteAlbumInfo" xml:space="preserve">
+    <value>Infinite Album connectivity allows you to control functionality in the Infinite Album software, such as changing the style of music playing. To connect to Infinite Album, please open Infinite Album and click on the App Code link in the hamburger menu.  Once Infinite Album alerts you that the app code was copied to the clipboard, paste that in Mix It Up and press Connect.</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="AppCode" xml:space="preserve">
+    <value>App Code</value>
+  </data>
+  <data name="Emotions" xml:space="preserve">
+    <value>Emotions</value>
+  </data>
+  <data name="Instruments" xml:space="preserve">
+    <value>Instruments</value>
+  </data>
+  <data name="SoundEffects" xml:space="preserve">
+    <value>Sound Effects</value>
+  </data>
+  <data name="Styles" xml:space="preserve">
+    <value>Styles</value>
+  </data>
+  <data name="DelimitedText" xml:space="preserve">
+    <value>Delimited Text</value>
+  </data>
+  <data name="DelimitedArgumentsSeparator" xml:space="preserve">
+    <value>Delimited Arguments Separator</value>
+  </data>
+  <data name="PreMadeChatCommandQuoteUnableToFindText" xml:space="preserve">
+    <value>Unable to find quote containing the text {0}.</value>
+    <comment>{0] is the search text</comment>
+  </data>
+  <data name="ExitCurrentCommand" xml:space="preserve">
+    <value>Exit Current Command</value>
+  </data>
+  <data name="SetCommandCooldown" xml:space="preserve">
+    <value>Set Command Cooldown</value>
+  </data>
+  <data name="ClearAllUserData" xml:space="preserve">
+    <value>Clear All User Data</value>
+  </data>
+  <data name="ClearUserDataRange" xml:space="preserve">
+    <value>Clear User Data Range</value>
+  </data>
+  <data name="ClearUserDataRangeHeader" xml:space="preserve">
+    <value>Clear User data from activity age range (Hours, Currency, Rank, etc)</value>
+  </data>
+  <data name="ClearUserDataRangeWarning" xml:space="preserve">
+    <value>This will clear all data for your Users who have not been active in your channel within the last specified number of days, which includes their Hours, Currency, Rank, &amp; Custom User Commands, then restart Mix It Up. This CAN NOT be un-done! Are you sure you wish to do this?</value>
+  </data>
+  <data name="ShowAlejoPronouns" xml:space="preserve">
+    <value>Show Alejo Pronouns (Requires Restart)</value>
+  </data>
+  <data name="NotificationCooldownAmount" xml:space="preserve">
+    <value>Notification Cooldown Amount</value>
+  </data>
+  <data name="TwitchIntegratedThrowingSystem" xml:space="preserve">
+    <value>Twitch Integrated Throwing System (T.I.T.S.)</value>
+  </data>
+  <data name="TITSActionMissingItem" xml:space="preserve">
+    <value>Twitch Integrated Throwing Action: Missing Item</value>
+  </data>
+  <data name="TITSActionMissingTrigger" xml:space="preserve">
+    <value>Twitch Integrated Throwing Action: Missing Trigger</value>
+  </data>
+  <data name="TITSConnectionFailed" xml:space="preserve">
+    <value>Twitch Integrated Throwing System connection failed, please ensure the software is running and the API is enabled on the settings menu.</value>
+  </data>
+  <data name="TITSInfo" xml:space="preserve">
+    <value>Twitch Integration Throwing System (T.I.T.S.) connectivity allows you to control functionality in the software, such as throwing specific items and activating triggers. To connect to T.I.T.S., please ensure the software is running and the API is enabled on the settings menu.</value>
+  </data>
+  <data name="TITSNotConnected" xml:space="preserve">
+    <value>Twitch Integrated Throwing System not connected, please ensure the software is running and is connected on the Services page.</value>
+  </data>
+  <data name="ActivateTrigger" xml:space="preserve">
+    <value>Activate Trigger</value>
+  </data>
+  <data name="ThrowItem" xml:space="preserve">
+    <value>Throw Item</value>
+  </data>
+  <data name="TITS" xml:space="preserve">
+    <value>Twitch Integrated Throwing</value>
+  </data>
+  <data name="TITSItem" xml:space="preserve">
+    <value>Item</value>
+  </data>
+  <data name="TITSTrigger" xml:space="preserve">
+    <value>Trigger</value>
+  </data>
+  <data name="TITSThrowAmount" xml:space="preserve">
+    <value>Throw Amount</value>
+  </data>
+  <data name="TITSThrowDelayTime" xml:space="preserve">
+    <value>Throw Delay Time (Seconds)</value>
+  </data>
+  <data name="ChangeVolume" xml:space="preserve">
+    <value>Change Volume</value>
+  </data>
+  <data name="Pause" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Artist</value>
+  </data>
+  <data name="CurrentlyPlayingHeader" xml:space="preserve">
+    <value>Currently Playing: </value>
+  </data>
+  <data name="PlayPause" xml:space="preserve">
+    <value>Play/Pause</value>
+  </data>
+  <data name="MusicPlayer" xml:space="preserve">
+    <value>Music Player</value>
+  </data>
+  <data name="Length" xml:space="preserve">
+    <value>Length</value>
+  </data>
+  <data name="MusicPlayerOnSongChanged" xml:space="preserve">
+    <value>On Song Changed</value>
+  </data>
+  <data name="LumiaStream" xml:space="preserve">
+    <value>Lumia Stream</value>
+  </data>
+  <data name="PlaySpecificSong" xml:space="preserve">
+    <value>Play Specific Song</value>
+  </data>
+  <data name="MusicPlayerUnableToFindSong" xml:space="preserve">
+    <value>ERROR: Unable to find song with the text {0}</value>
+    <comment>{0} is the text specified as part of the search</comment>
+  </data>
+  <data name="TriggerCommand" xml:space="preserve">
+    <value>Trigger Command</value>
+  </data>
+  <data name="TwitchExtension" xml:space="preserve">
+    <value>Twitch Extension</value>
+  </data>
+  <data name="TwitchPoint" xml:space="preserve">
+    <value>Twitch Point</value>
+  </data>
+  <data name="Brightness" xml:space="preserve">
+    <value>Brightness</value>
+  </data>
+  <data name="ColorHex" xml:space="preserve">
+    <value>Color Hex</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>Duration (Secs)</value>
+  </data>
+  <data name="LumiaStreamActionValidColorHexMustBeSpecified" xml:space="preserve">
+    <value>Lumia Stream Action: A valid color hex code must be specified</value>
+  </data>
+  <data name="LumiaStreamActionValidCommandMustBeSelected" xml:space="preserve">
+    <value>Lumia Stream Action: A valid command must be selected</value>
+  </data>
+  <data name="LumiaStreamActionValidLightMustBeSelected" xml:space="preserve">
+    <value>Lumia Stream Action: A valid light must be selected</value>
+  </data>
+  <data name="TransitionSeconds" xml:space="preserve">
+    <value>Transition (Secs)</value>
+  </data>
+  <data name="LumiaStreamInfo" xml:space="preserve">
+    <value>Lumia Stream connectivity allows you to control functionality in the software such as changing light settings and triggering commands. To connect to Lumia Stream, please ensure the software is running, the Developer API is enabled under Settings -&gt; API, and you have copied over the API token in to here.</value>
+  </data>
+  <data name="LumiaStreamConnectionFailed" xml:space="preserve">
+    <value>Lumia Stream connection failed, please ensure the software is running, the Developer API is enabled under Settings -&gt; API, and you have correctly copied over the Developer API token.</value>
+  </data>
+  <data name="APIToken" xml:space="preserve">
+    <value>API Token</value>
+  </data>
+  <data name="Hold" xml:space="preserve">
+    <value>Hold</value>
+  </data>
+  <data name="SetLightsColor" xml:space="preserve">
+    <value>Set Lights Color</value>
+  </data>
+  <data name="MusicPlayerSelectFolderOrPlayMusicToLoadInSongs" xml:space="preserve">
+    <value>Select a new folder to load in music from a folder or hit the Play button to load in music from the last used folder.</value>
   </data>
 </root>

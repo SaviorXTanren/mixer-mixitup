@@ -32,6 +32,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Margin="20,0">
@@ -96,7 +98,9 @@
 
         <Border Grid.Row="12" Style="{StaticResource DefaultBorder}" />
 
-        <GenericSettingsControls:GenericButtonSettingsOptionControl Grid.Row="14" DataContext="{Binding ClearUserData}" />
+        <GenericSettingsControls:GenericButtonSettingsOptionControl Grid.Row="14" DataContext="{Binding ClearUserDataRange}" />
+
+        <GenericSettingsControls:GenericButtonSettingsOptionControl Grid.Row="16" DataContext="{Binding ClearAllUserData}" />
 
     </Grid>
 </local:SettingsControlBase>

@@ -3,9 +3,9 @@ using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
@@ -30,9 +30,6 @@ namespace MixItUp.Base.Model.Commands
         public string Name { get; set; }
         [DataMember]
         public bool IsEnabled { get; set; }
-        [Obsolete]
-        [DataMember]
-        public OldUserRoleEnum Role { get; set; }
         [DataMember]
         public UserRoleEnum UserRole { get; set; }
         [DataMember]
@@ -224,9 +221,9 @@ namespace MixItUp.Base.Model.Commands
 
     public class UptimePreMadeChatCommandModel : PreMadeChatCommandModelBase
     {
-        public static async Task<DateTimeOffset> GetStartTime()
+        public static async Task<DateTimeOffset> GetStartTime(StreamingPlatformTypeEnum platform)
         {
-            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+            if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
                 await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
                 if (ServiceManager.Get<TwitchSessionService>().IsLive)
@@ -241,22 +238,30 @@ namespace MixItUp.Base.Model.Commands
                     }
                 }
             }
-            
-            if (ServiceManager.Get<TrovoSessionService>().IsConnected)
+
+            if (platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().IsConnected)
+            {
+                await ServiceManager.Get<YouTubeSessionService>().RefreshChannel();
+                if (ServiceManager.Get<YouTubeSessionService>().IsLive)
+                {
+                    if (ServiceManager.Get<YouTubeSessionService>().Broadcast.Snippet.ActualStartTime.HasValue)
+                    {
+                        DateTime dt = ServiceManager.Get<YouTubeSessionService>().Broadcast.Snippet.ActualStartTime.GetValueOrDefault();
+                        if (dt.Kind == DateTimeKind.Unspecified)
+                        {
+                            dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
+                        }
+                        return new DateTimeOffset(dt, (dt.Kind == DateTimeKind.Utc) ? TimeSpan.Zero : DateTimeOffset.Now.Offset);
+                    }
+                }
+            }
+
+            if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
             {
                 await ServiceManager.Get<TrovoSessionService>().RefreshChannel();
                 if (ServiceManager.Get<TrovoSessionService>().IsLive)
                 {
                     return TrovoPlatformService.GetTrovoDateTime(ServiceManager.Get<TrovoSessionService>().Channel?.started_at);
-                }
-            }
-            
-            if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
-            {
-                await ServiceManager.Get<GlimeshSessionService>().RefreshChannel();
-                if (ServiceManager.Get<GlimeshSessionService>().IsLive)
-                {
-                    return GlimeshPlatformService.GetGlimeshDateTime(ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.startedAt);
                 }
             }
 
@@ -267,7 +272,7 @@ namespace MixItUp.Base.Model.Commands
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
-            DateTimeOffset startTime = await UptimePreMadeChatCommandModel.GetStartTime();
+            DateTimeOffset startTime = await UptimePreMadeChatCommandModel.GetStartTime(parameters.Platform);
             if (startTime > DateTimeOffset.MinValue)
             {
                 TimeSpan duration = DateTimeOffset.Now.Subtract(startTime);
@@ -324,18 +329,32 @@ namespace MixItUp.Base.Model.Commands
                     int quoteNumber = 0;
                     UserQuoteModel quote = null;
 
-                    if (parameters.Arguments.Count() == 1)
+                    if (parameters.Arguments.Count() >= 1)
                     {
-                        if (!int.TryParse(parameters.Arguments.ElementAt(0), out quoteNumber))
+                        bool parsedNumber = false;
+                        if (parameters.Arguments.Count() == 1 && int.TryParse(parameters.Arguments.ElementAt(0), out quoteNumber))
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.PreMadeChatCommandQuoteUsage, parameters);
-                            return;
+                            parsedNumber = true;
+                            quote = ChannelSession.Settings.Quotes.SingleOrDefault(q => q.ID == quoteNumber);
                         }
 
-                        quote = ChannelSession.Settings.Quotes.SingleOrDefault(q => q.ID == quoteNumber);
                         if (quote == null)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(String.Format(MixItUp.Base.Resources.PreMadeChatCommandQuoteUnableToFind, quoteNumber), parameters);
+                            string searchText = string.Join(" ", parameters.Arguments).ToLower();
+                            quote = ChannelSession.Settings.Quotes.FirstOrDefault(q => q.Quote.ToLower().Contains(searchText));
+                        }
+
+                        if (quote == null)
+                        {
+                            if (parsedNumber)
+                            {
+                                await ServiceManager.Get<ChatService>().SendMessage(String.Format(MixItUp.Base.Resources.PreMadeChatCommandQuoteUnableToFind, quoteNumber), parameters);
+                            }
+                            else
+                            {
+                                await ServiceManager.Get<ChatService>().SendMessage(String.Format(MixItUp.Base.Resources.PreMadeChatCommandQuoteUnableToFindText, string.Join(" ", parameters.Arguments)), parameters);
+                            }
+                            return;
                         }
                     }
                     else if (parameters.Arguments.Count() == 0)

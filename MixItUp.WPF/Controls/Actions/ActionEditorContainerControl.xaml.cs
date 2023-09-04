@@ -42,24 +42,30 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.File: this.ActionControl = new FileActionEditorControl(); break;
                     case ActionTypeEnum.GameQueue: this.ActionControl = new GameQueueActionEditorControl(); break;
                     case ActionTypeEnum.IFTTT: this.ActionControl = new IFTTTActionEditorControl(); break;
+                    case ActionTypeEnum.InfiniteAlbum: this.ActionControl = new InfiniteAlbumActionEditorControl(); break;
                     case ActionTypeEnum.Input: this.ActionControl = new InputActionEditorControl(); break;
+                    case ActionTypeEnum.LumiaStream: this.ActionControl = new LumiaStreamActionEditorControl(); break;
                     case ActionTypeEnum.Moderation: this.ActionControl = new ModerationActionEditorControl(); break;
+                    case ActionTypeEnum.MusicPlayer: this.ActionControl = new MusicPlayerActionEditorControl(); break;
                     case ActionTypeEnum.Overlay: this.ActionControl = new OverlayActionEditorControl(); break;
                     case ActionTypeEnum.OvrStream: this.ActionControl = new OvrStreamActionEditorControl(); break;
                     case ActionTypeEnum.PixelChat: this.ActionControl = new PixelChatActionEditorControl(); break;
                     case ActionTypeEnum.PolyPop: this.ActionControl = new PolyPopActionEditorControl(); break;
+                    case ActionTypeEnum.SAMMI: this.ActionControl = new SAMMIActionEditorControl(); break;
                     case ActionTypeEnum.Serial: this.ActionControl = new SerialActionEditorControl(); break;
                     case ActionTypeEnum.Sound: this.ActionControl = new SoundActionEditorControl(); break;
                     case ActionTypeEnum.SpecialIdentifier: this.ActionControl = new SpecialIdentifierActionEditorControl(); break;
                     case ActionTypeEnum.StreamingSoftware: this.ActionControl = new StreamingSoftwareActionEditorControl(); break;
                     case ActionTypeEnum.Streamlabs: this.ActionControl = new StreamlabsActionEditorControl(); break;
                     case ActionTypeEnum.TextToSpeech: this.ActionControl = new TextToSpeechActionEditorControl(); break;
+                    case ActionTypeEnum.TITS: this.ActionControl = new TITSActionEditorControl(); break;
                     case ActionTypeEnum.Trovo: this.ActionControl = new TrovoActionEditorControl(); break;
                     case ActionTypeEnum.Twitch: this.ActionControl = new TwitchActionEditorControl(); break;
                     case ActionTypeEnum.Voicemod: this.ActionControl = new VoicemodActionEditorControl(); break;
                     case ActionTypeEnum.VTubeStudio: this.ActionControl = new VTubeStudioActionEditorControl(); break;
                     case ActionTypeEnum.Wait: this.ActionControl = new WaitActionEditorControl(); break;
                     case ActionTypeEnum.WebRequest: this.ActionControl = new WebRequestActionEditorControl(); break;
+                    case ActionTypeEnum.YouTube: this.ActionControl = new YouTubeActionEditorControl(); break;
                 }
 
                 if (this.ActionControl != null)

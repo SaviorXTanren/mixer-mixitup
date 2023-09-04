@@ -215,9 +215,11 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<IEnumerable<GameModel>> GetNewAPIGamesByIDs(IEnumerable<string> ids) { return await this.RunAsync(this.Connection.NewAPI.Games.GetGamesByID(ids)); }
 
+        public async Task<IEnumerable<ChannelContentClassificationLabelModel>> GetContentClassificationLabels(string language = null) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Channels.GetContentClassificationLabels(language)); }
+
         public async Task<ChannelInformationModel> GetChannelInformation(UserModel channel) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Channels.GetChannelInformation(channel)); }
 
-        public async Task<bool> UpdateChannelInformation(UserModel channel, string title = null, string gameID = null, IEnumerable<string> tags = null) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Channels.UpdateChannelInformation(channel, title: title, gameID: gameID, tags: tags)); }
+        public async Task<bool> UpdateChannelInformation(UserModel channel, string title = null, string gameID = null, IEnumerable<string> tags = null, IEnumerable<string> cclIdsToAdd = null, IEnumerable<string> cclIdsToRemove = null) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Channels.UpdateChannelInformation(channel, title: title, gameID: gameID, tags: tags, cclIdsToAdd: cclIdsToAdd, cclIdsToRemove: cclIdsToRemove)); }
 
         public async Task SendChatAnnouncement(UserModel channel, UserModel sendAsUser, string message, string color) { await AsyncRunner.RunAsync(() => this.Connection.NewAPI.Chat.SendChatAnnouncement(channel.id, sendAsUser.id, new AnnouncementModel { message = message, color = color })); }
 

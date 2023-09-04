@@ -49,10 +49,14 @@ namespace MixItUp.Base.Model.Actions
         PixelChat,
         VTubeStudio,
         Voicemod,
-        [Obsolete]
         YouTube,
         Trovo,
-        PolyPop
+        PolyPop,
+        SAMMI,
+        InfiniteAlbum,
+        TITS,
+        MusicPlayer,
+        LumiaStream,
     }
 
     [DataContract]

@@ -314,10 +314,6 @@ namespace MixItUp.Base.ViewModel.MainControls
                     {
                         await ServiceManager.Get<TrovoChatEventService>().HostUser(this.Name);
                     }
-                    else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
-                    {
-
-                    }
                 });
             }
 
@@ -332,10 +328,6 @@ namespace MixItUp.Base.ViewModel.MainControls
                     else if (this.Platform == StreamingPlatformTypeEnum.Trovo)
                     {
                         return $"https://www.trovo.live/{this.Name}";
-                    }
-                    else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
-                    {
-                        return $"https://glimesh.tv/{this.Name}";
                     }
                     return string.Empty;
                 }

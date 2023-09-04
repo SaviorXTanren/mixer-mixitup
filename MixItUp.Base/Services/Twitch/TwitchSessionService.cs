@@ -23,6 +23,7 @@ namespace MixItUp.Base.Services.Twitch
         public ChannelInformationModel Channel { get; set; }
         public StreamModel Stream { get; set; }
         public StreamModel LastStream { get; set; }
+        public List<ChannelContentClassificationLabelModel> ContentClassificationLabels = new List<ChannelContentClassificationLabelModel>();
 
         public bool IsConnected { get { return this.UserConnection != null; } }
         public bool IsBotConnected { get { return this.BotConnection != null; } }
@@ -66,6 +67,8 @@ namespace MixItUp.Base.Services.Twitch
                 return this.Stream != null;
             }
         }
+
+        public int ViewerCount { get { return (int)this.Stream?.viewer_count; } }
 
         public async Task<Result> ConnectUser()
         {
@@ -213,6 +216,17 @@ namespace MixItUp.Base.Services.Twitch
                             }
                         }
 
+                        IEnumerable<ChannelContentClassificationLabelModel> contentClassificationLabels = await this.UserConnection.GetContentClassificationLabels(Languages.GetLanguageLocale());
+                        if (contentClassificationLabels == null || contentClassificationLabels.Count() == 0)
+                        {
+                            contentClassificationLabels = await this.UserConnection.GetContentClassificationLabels();
+                        }
+
+                        if (contentClassificationLabels != null)
+                        {
+                            this.ContentClassificationLabels.AddRange(contentClassificationLabels.Where(l => !string.Equals(l.id, "MatureGame")));
+                        }
+
                         if (settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch))
                         {
                             if (!string.IsNullOrEmpty(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID) && !string.Equals(this.UserID, settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID))
@@ -333,6 +347,15 @@ namespace MixItUp.Base.Services.Twitch
                     this.LastStream = this.Stream;
                 }
                 this.Stream = await this.UserConnection.GetStream(this.User);
+
+                if (this.Stream?.title != null && !string.Equals(this.LastStream?.title, this.Stream?.title, StringComparison.OrdinalIgnoreCase))
+                {
+                    ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, description: this.Stream?.title);
+                }
+                if (this.Stream?.game_name != null && !string.Equals(this.LastStream?.game_name, this.Stream?.game_name, StringComparison.OrdinalIgnoreCase))
+                {
+                    ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, description: this.Stream?.game_name);
+                }
             }
         }
 

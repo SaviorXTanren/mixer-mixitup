@@ -8,11 +8,17 @@ namespace MixItUp.Base.Services
         string DefaultAudioDevice { get; }
         string MixItUpOverlay { get; }
 
-        Task Play(string filePath, int volume);
+        ISet<string> ApplicableAudioFileExtensions { get; }
 
-        Task Play(string filePath, int volume, string deviceName);
+        Task Play(string filePath, int volume, bool track = true);
 
-        IEnumerable<string> GetSelectableAudioDevices();
+        Task Play(string filePath, int volume, string deviceName, bool track = true);
+
+        Task PlayNotification(string filePath, int volume, bool track = true);
+
+        Task StopAllSounds();
+
+        IEnumerable<string> GetSelectableAudioDevices(bool includeOverlay = false);
 
         IEnumerable<string> GetOutputDevices();
     }

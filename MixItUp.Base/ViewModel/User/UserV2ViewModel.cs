@@ -19,7 +19,6 @@ namespace MixItUp.Base.ViewModel.User
     public class UserV2ViewModel : UIViewModelBase, IEquatable<UserV2ViewModel>, IComparable<UserV2ViewModel>
     {
         public const string UserDefaultColor = "MaterialDesignBody";
-        public static readonly TimeSpan RefreshTimeSpan = TimeSpan.FromMinutes(5);
 
         public static UserV2ViewModel CreateUnassociated(string username = null) { return new UserV2ViewModel(StreamingPlatformTypeEnum.None, UserV2Model.CreateUnassociated(username)); }
 
@@ -164,6 +163,8 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        public string AlejoPronoun { get { return ServiceManager.Get<AlejoPronounsService>().GetPronoun(this.Model.AlejoPronounID); } }
+
         public bool IsFollower { get { return this.HasRole(UserRoleEnum.Follower) || this.HasRole(UserRoleEnum.YouTubeSubscriber); } }
         public bool IsRegular { get { return this.HasRole(UserRoleEnum.Regular); } }
         public bool IsSubscriber { get { return this.IsPlatformSubscriber || this.IsExternalSubscriber; } }
@@ -174,7 +175,6 @@ namespace MixItUp.Base.ViewModel.User
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return $"https://www.twitch.tv/{this.Username}"; }
                 else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return ((YouTubeUserPlatformV2Model)this.PlatformModel).YouTubeURL; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return $"https://www.glimesh.tv/{this.Username}"; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return $"https://trovo.live/{this.Username}"; }
                 return string.Empty;
             }
@@ -190,7 +190,6 @@ namespace MixItUp.Base.ViewModel.User
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return "/Assets/Images/Twitch-Small.png"; }
                 else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return "/Assets/Images/YouTube.png"; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return "/Assets/Images/Glimesh.png"; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return "/Assets/Images/Trovo.png"; }
                 return null;
             }
@@ -550,7 +549,7 @@ namespace MixItUp.Base.ViewModel.User
             if (!this.IsUnassociated)
             {
                 TimeSpan lastUpdatedTimeSpan = DateTimeOffset.Now - this.LastUpdated;
-                if (force || lastUpdatedTimeSpan > RefreshTimeSpan)
+                if (force || lastUpdatedTimeSpan > this.PlatformModel.RefreshTimeSpan)
                 {
                     this.LastUpdated = DateTimeOffset.Now;
 
@@ -563,6 +562,11 @@ namespace MixItUp.Base.ViewModel.User
                         await Task.Run(async () =>
                         {
                             await this.platformModel.Refresh();
+
+                            if (ChannelSession.Settings.ShowAlejoPronouns && this.Platform == StreamingPlatformTypeEnum.Twitch)
+                            {
+                                this.Model.AlejoPronounID = await ServiceManager.Get<AlejoPronounsService>().GetPronounID(this.Username);
+                            }
 
                             double platformRefreshTime = (DateTimeOffset.Now - refreshStart).TotalMilliseconds;
                             if (platformRefreshTime > 1000)

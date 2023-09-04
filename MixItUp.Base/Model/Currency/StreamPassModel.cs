@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -24,9 +23,6 @@ namespace MixItUp.Base.Model.Currency
         public string Name { get; set; }        
         [DataMember]
         public string SpecialIdentifier { get; set; }
-        [Obsolete]
-        [DataMember]
-        public OldUserRoleEnum Permission { get; set; }
         [DataMember]
         public UserRoleEnum UserPermission { get; set; }
         [DataMember]

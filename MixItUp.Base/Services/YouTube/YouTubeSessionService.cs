@@ -1,5 +1,6 @@
 ﻿using Google.Apis.YouTube.v3.Data;
 using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
@@ -17,6 +18,8 @@ namespace MixItUp.Base.Services.YouTube
         public Channel User { get; private set; }
         public Channel Bot { get; private set; }
         public LiveBroadcast Broadcast { get; private set; }
+        public Video Video { get; private set; }
+        public List<MembershipsLevel> MembershipLevels { get; private set; } = new List<MembershipsLevel>();
 
         public bool IsConnected { get { return this.UserConnection != null; } }
         public bool IsBotConnected { get { return this.BotConnection != null; } }
@@ -27,6 +30,8 @@ namespace MixItUp.Base.Services.YouTube
         public string Botname { get { return this.Bot?.Snippet?.Title; } }
         public string ChannelID { get { return this.User?.Id; } }
         public string ChannelLink { get { return this.User?.Snippet?.CustomUrl; } }
+
+        private DateTime launchDateTime = DateTime.Now;
 
         public StreamingPlatformAccountModel UserAccount
         {
@@ -55,6 +60,8 @@ namespace MixItUp.Base.Services.YouTube
 
         public bool IsLive { get { return string.Equals(this.Broadcast?.Status?.LifeCycleStatus, "live", StringComparison.OrdinalIgnoreCase); } }
 
+        public int ViewerCount { get { return (int)this.Video?.LiveStreamingDetails?.ConcurrentViewers.GetValueOrDefault(); } }
+
         public async Task<Result> ConnectUser()
         {
             Result<YouTubePlatformService> result = await YouTubePlatformService.ConnectUser();
@@ -66,6 +73,8 @@ namespace MixItUp.Base.Services.YouTube
                 {
                     return new Result(MixItUp.Base.Resources.YouTubeFailedToGetUserData);
                 }
+
+                await this.RefreshChannel();
             }
             return result;
         }
@@ -117,6 +126,8 @@ namespace MixItUp.Base.Services.YouTube
                     {
                         return new Result(MixItUp.Base.Resources.YouTubeFailedToGetUserData);
                     }
+
+                    await this.RefreshChannel();
 
                     if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.YouTube].BotOAuthToken != null)
                     {
@@ -191,13 +202,12 @@ namespace MixItUp.Base.Services.YouTube
 
                     List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
                     platformServiceTasks.Add(ServiceManager.Get<YouTubeChatService>().ConnectUser());
+                    platformServiceTasks.Add(this.SetMembershipLevels());
 
                     await Task.WhenAll(platformServiceTasks);
 
                     if (platformServiceTasks.Any(c => !c.Result.Success))
                     {
-                        ServiceManager.Remove<YouTubeChatService>();
-
                         string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
                         return new Result(MixItUp.Base.Resources.YouTubeFailedToConnectHeader + Environment.NewLine + Environment.NewLine + errors);
                     }
@@ -280,18 +290,69 @@ namespace MixItUp.Base.Services.YouTube
             }
         }
 
-        public Task RefreshChannel()
+        public async Task RefreshChannel()
         {
-            this.Broadcast = ServiceManager.Get<YouTubeChatService>().Broadcast;
-            return Task.CompletedTask;
+            if (this.Broadcast == null)
+            {
+                this.Broadcast = await this.UserConnection.GetMyActiveBroadcast();
+            }
+
+            if (this.Broadcast != null)
+            {
+                LiveBroadcast broadcast = await this.UserConnection.GetBroadcastByID(this.Broadcast.Id);
+                if (broadcast != null)
+                {
+                    if (broadcast?.Snippet?.Title != null && !string.Equals(this.Broadcast?.Snippet?.Title, broadcast?.Snippet?.Title, StringComparison.OrdinalIgnoreCase))
+                    {
+                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.YouTube, description: broadcast?.Snippet?.Title);
+                    }
+                    this.Broadcast = broadcast;
+                }
+
+                Video video = await this.UserConnection.GetVideoByID(this.Broadcast.Id);
+                if (video != null)
+                {
+                    this.Video = video;
+                }
+
+                if (ChannelSession.User != null)
+                {
+                    if (this.Broadcast.Snippet.ActualStartTime.HasValue && this.launchDateTime < this.Broadcast.Snippet.ActualStartTime)
+                    {
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStart, new CommandParametersModel(StreamingPlatformTypeEnum.YouTube));
+                    }
+
+                    if (this.Broadcast.Snippet.ActualEndTime.HasValue && this.launchDateTime < this.Broadcast.Snippet.ActualEndTime)
+                    {
+                        await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelStreamStop, new CommandParametersModel(StreamingPlatformTypeEnum.YouTube));
+                    }
+                }
+            }
         }
 
-        public Task<string> GetTitle() { return Task.FromResult(string.Empty); }
+        public Task<string> GetTitle() { return Task.FromResult<string>(this.Broadcast?.Snippet?.Title); }
 
         public Task<bool> SetTitle(string title) { return Task.FromResult(false); }
 
         public Task<string> GetGame() { return Task.FromResult(string.Empty); }
 
         public Task<bool> SetGame(string gameName) { return Task.FromResult(false); }
+
+        private async Task<Result> SetMembershipLevels()
+        {
+            try
+            {
+                IEnumerable<MembershipsLevel> membershipLevels = await this.UserConnection.GetMembershipLevels();
+                if (membershipLevels != null && membershipLevels.Count() > 0)
+                {
+                    this.MembershipLevels.AddRange(membershipLevels);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            return new Result();
+        }
     }
 }

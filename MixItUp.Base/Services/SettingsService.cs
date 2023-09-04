@@ -367,6 +367,7 @@ namespace MixItUp.Base.Services
             else if (currentVersion < SettingsV3Model.LatestVersion)
             {
                 await SettingsV3Upgrader.Version6Upgrade(currentVersion, filePath);
+                //await SettingsV3Upgrader.Version7Upgrade(currentVersion, filePath);
             }
             SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
             settings.Version = SettingsV3Model.LatestVersion;
@@ -391,96 +392,19 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public static void MultiPlatformCommandUpgrade(CommandModelBase command)
-        {
-#pragma warning disable CS0612 // Type or member is obsolete
-            if (command is BetGameCommandModel)
-            {
-                BetGameCommandModel gCommand = (BetGameCommandModel)command;
-                gCommand.StarterUserRole = UserRoles.ConvertFromOldRole(gCommand.StarterRole);
+        //public static async Task Version7Upgrade(int version, string filePath)
+        //{
+        //    if (version < 7)
+        //    {
+        //        string fileData = await ServiceManager.Get<IFileService>().ReadFile(filePath);
+        //        SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
+        //        await settings.Initialize();
 
-                foreach (GameOutcomeModel outcome in gCommand.BetOptions)
-                {
-                    outcome.UpgradeProbabilitySettings();
-                }
-            }
-            else if (command is BidGameCommandModel)
-            {
-                BidGameCommandModel gCommand = (BidGameCommandModel)command;
-                gCommand.StarterUserRole = UserRoles.ConvertFromOldRole(gCommand.StarterRole);
-            }
-            else if (command is DuelGameCommandModel)
-            {
-                DuelGameCommandModel gCommand = (DuelGameCommandModel)command;
-                gCommand.SuccessfulOutcome.UpgradeProbabilitySettings();
-            }
-            else if (command is HeistGameCommandModel)
-            {
-                HeistGameCommandModel gCommand = (HeistGameCommandModel)command;
-                gCommand.UserSuccessOutcome.UpgradeProbabilitySettings();
-            }
-            else if (command is RouletteGameCommandModel)
-            {
-                RouletteGameCommandModel gCommand = (RouletteGameCommandModel)command;
-                gCommand.UserSuccessOutcome.UpgradeProbabilitySettings();
-            }
-            else if (command is StealGameCommandModel)
-            {
-                StealGameCommandModel gCommand = (StealGameCommandModel)command;
-                gCommand.SuccessfulOutcome.UpgradeProbabilitySettings();
-            }
-            else if (command is SpinGameCommandModel)
-            {
-                SpinGameCommandModel gCommand = (SpinGameCommandModel)command;
-                foreach (GameOutcomeModel outcome in gCommand.Outcomes)
-                {
-                    outcome.UpgradeProbabilitySettings();
-                }
-            }
-            else if (command is SlotMachineGameCommandModel)
-            {
-                SlotMachineGameCommandModel gCommand = (SlotMachineGameCommandModel)command;
-                foreach (SlotMachineGameOutcomeModel outcome in gCommand.Outcomes)
-                {
-                    outcome.UpgradeProbabilitySettings();
-                }
-            }
 
-            foreach (RequirementModelBase requirement in command.Requirements.Requirements)
-            {
-                if (requirement is RoleRequirementModel)
-                {
-                    RoleRequirementModel rRequirement = (RoleRequirementModel)requirement;
-                    rRequirement.UpgradeFromOldRoles();
-                }
-            }
 
-            foreach (ActionModelBase action in command.Actions)
-            {
-                if (action is ConsumablesActionModel)
-                {
-                    ConsumablesActionModel cAction = (ConsumablesActionModel)action;
-                    cAction.UserRoleToApplyTo = UserRoles.ConvertFromOldRole(cAction.UsersToApplyTo);
-                }
-                else if (action is GameQueueActionModel)
-                {
-                    GameQueueActionModel gqAction = (GameQueueActionModel)action;
-                    if (gqAction.RoleRequirement != null)
-                    {
-                        gqAction.RoleRequirement.UpgradeFromOldRoles();
-                    }
-                }
-                else if (action is InputActionModel)
-                {
-                    InputActionModel iAction = (InputActionModel)action;
-                    if (iAction.Key.HasValue)
-                    {
-                        iAction.VirtualKey = ServiceManager.Get<IInputService>().ConvertOldKeyEnum(iAction.Key.GetValueOrDefault());
-                    }
-                }
-            }
-#pragma warning restore CS0612 // Type or member is obsolete
-        }
+        //        await ServiceManager.Get<SettingsService>().Save(settings);
+        //    }
+        //}
 
         public static async Task<int> GetSettingsVersion(string filePath)
         {

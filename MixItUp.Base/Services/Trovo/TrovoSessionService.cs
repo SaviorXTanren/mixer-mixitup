@@ -66,6 +66,8 @@ namespace MixItUp.Base.Services.Trovo
             }
         }
 
+        public int ViewerCount { get { return (int)this.Channel?.current_viewers; } }
+
         public async Task<Result> ConnectUser()
         {
             Result<TrovoPlatformService> result = await TrovoPlatformService.ConnectUser();
@@ -309,6 +311,14 @@ namespace MixItUp.Base.Services.Trovo
                 ChannelModel channel = await this.UserConnection.GetChannelByID(this.ChannelID);
                 if (channel != null)
                 {
+                    if (channel?.live_title != null && !string.Equals(this.Channel?.live_title, channel?.live_title, StringComparison.OrdinalIgnoreCase))
+                    {
+                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, description: channel?.live_title);
+                    }
+                    if (channel?.category_name != null && !string.Equals(this.Channel?.category_name, channel?.category_name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, description: channel?.category_name);
+                    }
                     this.Channel = channel;
                 }
             }

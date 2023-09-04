@@ -122,8 +122,11 @@ namespace MixItUp.Base.ViewModel.Actions
                     case ActionTypeEnum.File: actionPageName = "file-action"; break;
                     case ActionTypeEnum.GameQueue: actionPageName = "game-queue-action"; break;
                     case ActionTypeEnum.IFTTT: actionPageName = "ifttt-action"; break;
+                    case ActionTypeEnum.InfiniteAlbum: actionPageName = "infinite-album"; break;
                     case ActionTypeEnum.Input: actionPageName = "input-action"; break;
+                    case ActionTypeEnum.LumiaStream: actionPageName = "lumia-stream-action"; break;
                     case ActionTypeEnum.Moderation: actionPageName = "moderation-action"; break;
+                    case ActionTypeEnum.MusicPlayer: actionPageName = "music-player-action"; break;
                     case ActionTypeEnum.Overlay: actionPageName = "overlay-action"; break;
                     case ActionTypeEnum.OvrStream: actionPageName = "ovrstream-action"; break;
                     case ActionTypeEnum.PixelChat: actionPageName = "pixel-chat-action"; break;
@@ -133,12 +136,14 @@ namespace MixItUp.Base.ViewModel.Actions
                     case ActionTypeEnum.SpecialIdentifier: actionPageName = "special-identifier-action"; break;
                     case ActionTypeEnum.Streamlabs: actionPageName = "streamlabs-action"; break;
                     case ActionTypeEnum.TextToSpeech: actionPageName = "text-to-speech-action"; break;
+                    case ActionTypeEnum.TITS: actionPageName = "tits-action"; break;
                     case ActionTypeEnum.Trovo: actionPageName = "trovo-action"; break;
                     case ActionTypeEnum.Twitch: actionPageName = "twitch-action"; break;
                     case ActionTypeEnum.Voicemod: actionPageName = "voicemod-action"; break;
                     case ActionTypeEnum.VTubeStudio: actionPageName = "vtube-studio-action"; break;
                     case ActionTypeEnum.Wait: actionPageName = "wait-action"; break;
                     case ActionTypeEnum.WebRequest: actionPageName = "web-request-action"; break;
+                    case ActionTypeEnum.YouTube: actionPageName = "youtube-action"; break;
                 }
 
                 ProcessHelper.LaunchLink("https://wiki.mixitupapp.com/actions/" + actionPageName);

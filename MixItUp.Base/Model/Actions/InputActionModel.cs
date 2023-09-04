@@ -39,10 +39,6 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public bool Alt { get; set; }
 
-        [DataMember]
-        [Obsolete]
-        public InputKeyEnum? Key { get; set; }
-
         public InputActionModel(VirtualKeyEnum key, InputActionTypeEnum actionType, bool shift, bool control, bool alt)
             : this(actionType, shift, control, alt)
         {

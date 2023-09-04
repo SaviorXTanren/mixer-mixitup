@@ -98,6 +98,14 @@
                 <TextBlock Grid.Column="2" Text="{Binding Source={x:Static resx:Resources.WaitUntilComplete}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" ToolTip="{x:Static resx:Resources.CommandActionWaitUntilCompleteHintText}" VerticalAlignment="Center" />
                 <ToggleButton Grid.Column="4" IsChecked="{Binding WaitForCommandToFinish}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandActionWaitUntilCompleteHintText}" VerticalAlignment="Center" />
             </Grid>
+
+            <Grid Grid.Row="1" Visibility="{Binding ShowCommandCooldownSection, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,20,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" Text="{Binding CommandArguments}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            </Grid>
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowCommandGroupsSection, Converter={StaticResource BooleanToVisibilityConverter}}">

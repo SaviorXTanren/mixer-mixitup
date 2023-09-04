@@ -1,168 +1,270 @@
-﻿using MixItUp.Base.Model.Statistics;
-using MixItUp.Base.Model.User;
-using MixItUp.Base.Services.Glimesh;
-using MixItUp.Base.Services.Twitch;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services.Mock;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.ViewModel.Chat.Trovo;
+using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
+    public enum StatisticItemTypeEnum
+    {
+        [Obsolete]
+        None = 0,
+
+        Command = 1000,
+        Action,
+
+        StreamStart = 2000,
+        StreamStop,
+        StreamUpdated,
+        Viewers,
+        Chatters,
+        UserJoined,
+        UserLeft,
+        ChatMessage,
+        Follow,
+        Raid,
+        Subscription,
+        Resubscription,
+        SubscriptionGifted,
+
+        TwitchBits = 3000,
+        TwitchChannelPoints,
+        TwitchHypeTrainStart,
+        TwitchHypeTrainLevelUp,
+        TwitchHypeTrainEnd,
+
+        YouTubeSuperChat = 4000,
+
+        TrovoSpell = 5000,
+        TrovoMagicChat,
+
+        Donation = 10000,
+        StreamlootsCardRedeemed,
+        StreamlootsPackPurchased,
+        StreamlootsPackGifted,
+        CrowdControlEffect,
+    }
+
+    [DataContract]
+    public class StatisticModel
+    {
+        [DataMember]
+        public string ID { get; set; }
+
+        [DataMember]
+        public DateTime DateTime { get; set; }
+
+        [DataMember]
+        public StatisticItemTypeEnum Type { get; set; }
+
+        [DataMember]
+        public StreamingPlatformTypeEnum Platform { get; set; }
+
+        [DataMember]
+        public double Amount { get; set; }
+
+        [DataMember]
+        public string Description { get; set; }
+
+        [DataMember]
+        public JObject Data { get; set; }
+
+        [Obsolete]
+        public StatisticModel() { }
+
+        public StatisticModel(Dictionary<string, object> databaseParameters)
+        {
+            this.ID = databaseParameters["ID"].ToString();
+            this.DateTime = (DateTime)databaseParameters["DateTime"];
+            this.Type = (StatisticItemTypeEnum)databaseParameters["TypeID"];
+            this.Platform = (StreamingPlatformTypeEnum)databaseParameters["PlatformID"];
+            this.Amount = (double)databaseParameters["Amount"];
+            this.Description = (string)databaseParameters["Description"];
+            this.Data = JObject.Parse(databaseParameters["Data"].ToString());
+        }
+
+        public StatisticModel(StatisticItemTypeEnum type, StreamingPlatformTypeEnum platform, double amount, string description, DateTime? dateTime = null)
+        {
+            this.ID = Guid.NewGuid().ToString();
+            this.DateTime = (dateTime != null) ? dateTime.GetValueOrDefault() : DateTime.Now;
+            this.Type = type;
+            this.Platform = platform;
+            this.Amount = amount;
+            this.Description = description;
+            this.Data = new JObject();
+        }
+
+        [JsonIgnore]
+        public int AmountInt
+        {
+            get
+            {
+                return (int)this.Amount;
+            }
+        }
+    }
+
     public class StatisticsService
     {
-        public List<StatisticDataTrackerModelBase> Statistics { get; private set; }
-
-        public DateTimeOffset StartTime { get; private set; }
-
-        public TrackedNumberStatisticDataTrackerModel ViewerTracker { get; private set; }
-        public TrackedNumberStatisticDataTrackerModel ChatterTracker { get; private set; }
-
-        public EventStatisticDataTrackerModel FollowTracker { get; private set; }
-        public EventStatisticDataTrackerModel UnfollowTracker { get; private set; }
-        public EventStatisticDataTrackerModel HostsTracker { get; private set; }
-        public EventStatisticDataTrackerModel RaidsTracker { get; private set; }
-
-        public EventStatisticDataTrackerModel SubscriberTracker { get; private set; }
-        public EventStatisticDataTrackerModel ResubscriberTracker { get; private set; }
-        public EventStatisticDataTrackerModel GiftedSubscriptionsTracker { get; private set; }
-        public StaticTextStatisticDataTrackerModel AllSubsTracker { get; private set; }
-
-        public EventStatisticDataTrackerModel DonationsTracker { get; private set; }
-        public EventStatisticDataTrackerModel BitsTracker { get; private set; }
+        private List<StatisticModel> sessionStatistics = new List<StatisticModel>();
+        private List<StatisticModel> statisticsToSave = new List<StatisticModel>();
 
         public StatisticsService() { }
 
-        public void Initialize()
+        public async Task Initialize()
         {
-            this.StartTime = DateTimeOffset.Now;
-
-            GlobalEvents.OnFollowOccurred += Constellation_OnFollowOccurred;
-            GlobalEvents.OnHostOccurred += Constellation_OnHostedOccurred;
-            GlobalEvents.OnRaidOccurred += GlobalEvents_OnRaidOccurred;
-            GlobalEvents.OnSubscribeOccurred += Constellation_OnSubscribedOccurred;
-            GlobalEvents.OnResubscribeOccurred += Constellation_OnResubscribedOccurred;
-            GlobalEvents.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
-
-            GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
-            GlobalEvents.OnBitsOccurred += GlobalEvents_OnBitsOccurred;
-
-            this.ViewerTracker = new TrackedNumberStatisticDataTrackerModel(Resources.Viewers, "Eye", (StatisticDataTrackerModelBase stats) =>
+            if (ChannelSession.IsDebug())
             {
-                TrackedNumberStatisticDataTrackerModel numberStats = (TrackedNumberStatisticDataTrackerModel)stats;
+                await (new MockSessionService()).AddMockViewerStatistics();
+            }
+        }
 
-                int viewersCurrent = 0;
-                if (ServiceManager.Get<TwitchSessionService>().IsLive)
+        public void LogEventStatistic(EventTypeEnum eventType, CommandParametersModel parameters)
+        {
+            try
+            {
+                switch (eventType)
                 {
-                    viewersCurrent = (int)ServiceManager.Get<TwitchSessionService>().Stream.viewer_count;
+                    case EventTypeEnum.ChatUserJoined:
+                        this.LogStatistic(StatisticItemTypeEnum.UserJoined, parameters.User.Platform); break;
+                    case EventTypeEnum.ChatUserLeft:
+                        this.LogStatistic(StatisticItemTypeEnum.UserLeft, parameters.User.Platform); break;
+                    case EventTypeEnum.ChatMessageReceived:
+                        this.LogStatistic(StatisticItemTypeEnum.ChatMessage, parameters.User.Platform); break;
+
+                    case EventTypeEnum.TwitchChannelStreamStart:
+                        this.LogStatistic(StatisticItemTypeEnum.StreamStart, platform: StreamingPlatformTypeEnum.Twitch); break;
+                    case EventTypeEnum.TwitchChannelStreamStop:
+                        this.LogStatistic(StatisticItemTypeEnum.StreamStop, platform: StreamingPlatformTypeEnum.Twitch); break;
+                    case EventTypeEnum.TwitchChannelRaided:
+                        this.LogStatistic(StatisticItemTypeEnum.Raid, StreamingPlatformTypeEnum.Twitch, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "raidviewercount")); break;
+                    case EventTypeEnum.TwitchChannelFollowed:
+                        this.LogStatistic(StatisticItemTypeEnum.Follow, StreamingPlatformTypeEnum.Twitch); break;
+                    case EventTypeEnum.TwitchChannelSubscribed:
+                        this.LogStatistic(StatisticItemTypeEnum.Subscription, StreamingPlatformTypeEnum.Twitch); break;
+                    case EventTypeEnum.TwitchChannelResubscribed:
+                        this.LogStatistic(StatisticItemTypeEnum.Resubscription, StreamingPlatformTypeEnum.Twitch, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "usersubmonths")); break;
+                    case EventTypeEnum.TwitchChannelSubscriptionGifted:
+                        this.LogStatistic(StatisticItemTypeEnum.SubscriptionGifted, StreamingPlatformTypeEnum.Twitch, amount: 1); break;
+                    case EventTypeEnum.TwitchChannelMassSubscriptionsGifted:
+                        this.LogStatistic(StatisticItemTypeEnum.SubscriptionGifted, StreamingPlatformTypeEnum.Twitch, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "subsgiftedamount")); break;
+                    case EventTypeEnum.TwitchChannelBitsCheered:
+                        this.LogStatistic(StatisticItemTypeEnum.TwitchBits, StreamingPlatformTypeEnum.Twitch, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "bitscheered")); break;
+                    case EventTypeEnum.TwitchChannelPointsRedeemed:
+                        this.LogStatistic(StatisticItemTypeEnum.TwitchChannelPoints, StreamingPlatformTypeEnum.Twitch, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "rewardcost"), parameters.SpecialIdentifiers["rewardname"]); break;
+                    case EventTypeEnum.TwitchChannelHypeTrainBegin:
+                        this.LogStatistic(StatisticItemTypeEnum.TwitchHypeTrainStart, platform: StreamingPlatformTypeEnum.Twitch); break;
+                    case EventTypeEnum.TwitchChannelHypeTrainEnd:
+                        this.LogStatistic(StatisticItemTypeEnum.TwitchHypeTrainLevelUp, platform: StreamingPlatformTypeEnum.Twitch, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "hypetrainlevel")); break;
+                    case EventTypeEnum.TwitchChannelHypeTrainLevelUp:
+                        this.LogStatistic(StatisticItemTypeEnum.TwitchHypeTrainEnd, platform: StreamingPlatformTypeEnum.Twitch); break;
+
+                    case EventTypeEnum.YouTubeChannelStreamStart:
+                        this.LogStatistic(StatisticItemTypeEnum.StreamStart, platform: StreamingPlatformTypeEnum.YouTube); break;
+                    case EventTypeEnum.YouTubeChannelStreamStop:
+                        this.LogStatistic(StatisticItemTypeEnum.StreamStop, platform: StreamingPlatformTypeEnum.YouTube); break;
+                    case EventTypeEnum.YouTubeChannelNewMember:
+                        this.LogStatistic(StatisticItemTypeEnum.Subscription, StreamingPlatformTypeEnum.YouTube); break;
+                    case EventTypeEnum.YouTubeChannelMemberMilestone:
+                        this.LogStatistic(StatisticItemTypeEnum.Resubscription, StreamingPlatformTypeEnum.YouTube, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "usersubmonths")); break;
+                    case EventTypeEnum.YouTubeChannelMembershipGifted:
+                        this.LogStatistic(StatisticItemTypeEnum.SubscriptionGifted, StreamingPlatformTypeEnum.YouTube, amount: 1); break;
+                    case EventTypeEnum.YouTubeChannelMassMembershipGifted:
+                        this.LogStatistic(StatisticItemTypeEnum.SubscriptionGifted, StreamingPlatformTypeEnum.YouTube, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "subsgiftedamount")); break;
+                    case EventTypeEnum.YouTubeChannelSuperChat:
+                        this.LogStatistic(StatisticItemTypeEnum.YouTubeSuperChat, StreamingPlatformTypeEnum.YouTube, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "amountnumber")); break;
+
+                    case EventTypeEnum.TrovoChannelStreamStart:
+                        this.LogStatistic(StatisticItemTypeEnum.StreamStart, platform: StreamingPlatformTypeEnum.Trovo); break;
+                    case EventTypeEnum.TrovoChannelStreamStop:
+                        this.LogStatistic(StatisticItemTypeEnum.StreamStop, platform: StreamingPlatformTypeEnum.Trovo); break;
+                    case EventTypeEnum.TrovoChannelRaided:
+                        this.LogStatistic(StatisticItemTypeEnum.Raid, StreamingPlatformTypeEnum.Trovo, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "raidviewercount")); break;
+                    case EventTypeEnum.TrovoChannelFollowed:
+                        this.LogStatistic(StatisticItemTypeEnum.Follow, StreamingPlatformTypeEnum.Trovo); break;
+                    case EventTypeEnum.TrovoChannelSubscribed:
+                        this.LogStatistic(StatisticItemTypeEnum.Subscription, StreamingPlatformTypeEnum.Trovo); break;
+                    case EventTypeEnum.TrovoChannelResubscribed:
+                        this.LogStatistic(StatisticItemTypeEnum.Resubscription, StreamingPlatformTypeEnum.Trovo, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "usersubmonths")); break;
+                    case EventTypeEnum.TrovoChannelSubscriptionGifted:
+                        this.LogStatistic(StatisticItemTypeEnum.SubscriptionGifted, StreamingPlatformTypeEnum.Trovo, amount: 1); break;
+                    case EventTypeEnum.TrovoChannelMassSubscriptionsGifted:
+                        this.LogStatistic(StatisticItemTypeEnum.SubscriptionGifted, StreamingPlatformTypeEnum.Trovo, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "subsgiftedamount")); break;
+                    case EventTypeEnum.TrovoChannelSpellCast:
+                        this.LogStatistic(StatisticItemTypeEnum.TrovoSpell, StreamingPlatformTypeEnum.Trovo, this.GetAmountValue(parameters.SpecialIdentifiers, TrovoChatSpellViewModel.SpellTotalValueSpecialIdentifier),
+                            parameters.SpecialIdentifiers[TrovoChatSpellViewModel.SpellValueTypeSpecialIdentifier]); break;
+                    case EventTypeEnum.TrovoChannelMagicChat:
+                        this.LogStatistic(StatisticItemTypeEnum.TrovoSpell, StreamingPlatformTypeEnum.Trovo); break;
+
+                    case EventTypeEnum.StreamlabsDonation:
+                    case EventTypeEnum.TiltifyDonation:
+                    case EventTypeEnum.DonorDriveDonation:
+                    case EventTypeEnum.TipeeeStreamDonation:
+                    case EventTypeEnum.TreatStreamDonation:
+                    case EventTypeEnum.PatreonSubscribed:
+                    case EventTypeEnum.RainmakerDonation:
+                    case EventTypeEnum.JustGivingDonation:
+                    case EventTypeEnum.StreamElementsDonation:
+                    case EventTypeEnum.StreamElementsMerchPurchase:
+                        this.LogStatistic(StatisticItemTypeEnum.Donation, amount: this.GetAmountValue(parameters.SpecialIdentifiers, SpecialIdentifierStringBuilder.DonationAmountNumberSpecialIdentifier),
+                            description: parameters.SpecialIdentifiers[SpecialIdentifierStringBuilder.DonationSourceSpecialIdentifier]); break;
+
+                    case EventTypeEnum.StreamlootsCardRedeemed:
+                        this.LogStatistic(StatisticItemTypeEnum.StreamlootsCardRedeemed, description: parameters.SpecialIdentifiers["streamlootscardname"]); break;
+                    case EventTypeEnum.StreamlootsPackPurchased:
+                        this.LogStatistic(StatisticItemTypeEnum.StreamlootsPackPurchased, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "streamlootspurchasequantity")); break;
+                    case EventTypeEnum.StreamlootsPackGifted:
+                        this.LogStatistic(StatisticItemTypeEnum.StreamlootsPackGifted, amount: this.GetAmountValue(parameters.SpecialIdentifiers, "streamlootspurchasequantity")); break;
+                    case EventTypeEnum.CrowdControlEffectRedeemed:
+                        this.LogStatistic(StatisticItemTypeEnum.CrowdControlEffect, description: parameters.SpecialIdentifiers["crowdcontroleffectname"]); break;
                 }
-                else if (ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream != null)
-                {
-                    viewersCurrent = (int)ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.countViewers;
-                }
-
-                numberStats.AddValue(viewersCurrent);
-                return Task.CompletedTask;
-            });
-
-            this.ChatterTracker = new TrackedNumberStatisticDataTrackerModel(Resources.Chatters, "MessageTextOutline", (StatisticDataTrackerModelBase stats) =>
+            }
+            catch (Exception ex)
             {
-                TrackedNumberStatisticDataTrackerModel numberStats = (TrackedNumberStatisticDataTrackerModel)stats;
-                numberStats.AddValue(ServiceManager.Get<UserService>().GetActiveUserCount());
-                return Task.CompletedTask;
-            });
+                Logger.Log(ex);
+            }
+        }
 
-            this.FollowTracker = new EventStatisticDataTrackerModel(Resources.Follows, "AccountPlus", new List<string>() { "Username", "Date & Time" });
-            this.HostsTracker = new EventStatisticDataTrackerModel(Resources.Hosts, "AccountNetwork", new List<string>() { "Username", "Date & Time" });
+        public void LogStatistic(StatisticItemTypeEnum statisticType,StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, double amount = 0.0, string description = null, DateTime? dateTime = null)
+        {
+            StatisticModel statistic = new StatisticModel(statisticType, platform, amount, description, dateTime);
+            this.sessionStatistics.Add(statistic);
 
-            this.RaidsTracker = new EventStatisticDataTrackerModel(Resources.Raids, "AccountMultipleMinus", new List<string>() { "Username", "Viewers", "Date & Time" }, (EventStatisticDataTrackerModel dataTracker) =>
+            lock (this.statisticsToSave)
             {
-                return $"{MixItUp.Base.Resources.Raids}: {dataTracker.UniqueIdentifiers},    {MixItUp.Base.Resources.TotalViewers}: {dataTracker.TotalValue},    {MixItUp.Base.Resources.AverageViewers}: {dataTracker.AverageValueString}";
-            });
+                this.statisticsToSave.Add(statistic);
+            }
+        }
 
-            this.SubscriberTracker = new EventStatisticDataTrackerModel(Resources.Subscribes, "AccountStar", new List<string>() { "Username", "Date & Time" });
-            this.ResubscriberTracker = new EventStatisticDataTrackerModel(Resources.Resubscribes, "AccountSettings", new List<string>() { "Username", "Date & Time" });
-            this.GiftedSubscriptionsTracker = new EventStatisticDataTrackerModel(Resources.GiftedSubs, "AccountHeart", new List<string>() { "Gifter", "Receiver", });
+        public IEnumerable<StatisticModel> GetCurrentSessionStatistics() { return this.sessionStatistics.ToList(); }
 
-            this.AllSubsTracker = new StaticTextStatisticDataTrackerModel(Resources.Subscribers, "AccountStar", (StatisticDataTrackerModelBase stats) =>
+        public IEnumerable<StatisticModel> GetStatisticsToSave()
+        {
+            IEnumerable<StatisticModel> results;
+            lock (this.statisticsToSave)
             {
-                StaticTextStatisticDataTrackerModel staticStats = (StaticTextStatisticDataTrackerModel)stats;
-                staticStats.ClearValues();
+                results = this.statisticsToSave.ToList();
+                this.statisticsToSave.Clear();
+            }
+            return results;
+        }
 
-                staticStats.AddValue(Resources.Subs, ServiceManager.Get<StatisticsService>()?.SubscriberTracker?.Total.ToString() ?? "0");
-                staticStats.AddValue(Resources.Resubs, ServiceManager.Get<StatisticsService>()?.ResubscriberTracker?.Total.ToString() ?? "0");
-                staticStats.AddValue(Resources.Gifted, ServiceManager.Get<StatisticsService>()?.GiftedSubscriptionsTracker?.Total.ToString() ?? "0");
-
-                return Task.CompletedTask;
-            });
-
-            this.DonationsTracker = new EventStatisticDataTrackerModel(Resources.Donations, "CashMultiple", new List<string>() { "Username", "Amount", "Date & Time" }, (EventStatisticDataTrackerModel dataTracker) =>
+        private double GetAmountValue(Dictionary<string, string> specialIdentifiers, string key)
+        {
+            if (specialIdentifiers.TryGetValue(key, out string value) && double.TryParse(value, out double result))
             {
-                return $"{Resources.Donators}: {dataTracker.UniqueIdentifiers},    {Resources.Total}: {dataTracker.TotalValueDecimal:C},    {Resources.Average}: {dataTracker.AverageValueString:C}";
-            });
-
-            this.BitsTracker = new EventStatisticDataTrackerModel(Resources.Bits, "Decagram", new List<string>() { "Username", "Amount", "Date & Time" }, (EventStatisticDataTrackerModel dataTracker) =>
-            {
-                return $"{Resources.Users}: {dataTracker.UniqueIdentifiers},    {Resources.Total}: {dataTracker.TotalValue},    {Resources.Average}: {dataTracker.AverageValueString}";
-            });
-
-            this.Statistics = new List<StatisticDataTrackerModelBase>();
-            this.Statistics.Add(this.ViewerTracker);
-            this.Statistics.Add(this.ChatterTracker);
-            this.Statistics.Add(this.FollowTracker);
-            this.Statistics.Add(this.HostsTracker);
-            this.Statistics.Add(this.RaidsTracker);
-            this.Statistics.Add(this.SubscriberTracker);
-            this.Statistics.Add(this.ResubscriberTracker);
-            this.Statistics.Add(this.GiftedSubscriptionsTracker);
-            this.Statistics.Add(this.DonationsTracker);
-            this.Statistics.Add(this.BitsTracker);
-        }
-
-        private void Constellation_OnFollowOccurred(object sender, UserV2ViewModel e)
-        {
-            this.FollowTracker.OnStatisticEventOccurred(e.Username);
-        }
-
-        private void Constellation_OnUnfollowOccurred(object sender, UserV2ViewModel e)
-        {
-            this.UnfollowTracker.OnStatisticEventOccurred(e.Username);
-        }
-
-        private void Constellation_OnHostedOccurred(object sender, UserV2ViewModel e)
-        {
-            this.HostsTracker.OnStatisticEventOccurred(e.Username);
-        }
-
-        private void GlobalEvents_OnRaidOccurred(object sender, Tuple<UserV2ViewModel, int> e)
-        {
-            this.RaidsTracker.OnStatisticEventOccurred(e.Item1.Username, e.Item2);
-        }
-
-        private void Constellation_OnSubscribedOccurred(object sender, UserV2ViewModel e)
-        {
-            this.SubscriberTracker.OnStatisticEventOccurred(e.Username);
-        }
-
-        private void Constellation_OnResubscribedOccurred(object sender, Tuple<UserV2ViewModel, int> e)
-        {
-            this.ResubscriberTracker.OnStatisticEventOccurred(e.Item1.Username);
-        }
-
-        private void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserV2ViewModel, UserV2ViewModel> e)
-        {
-            this.GiftedSubscriptionsTracker.OnStatisticEventOccurred(e.Item1.Username, e.Item2.Username);
-        }
-
-        private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel e)
-        {
-            this.DonationsTracker.OnStatisticEventOccurred(e.Username, e.Amount);
-        }
-
-        private void GlobalEvents_OnBitsOccurred(object sender, TwitchUserBitsCheeredModel e)
-        {
-            this.BitsTracker.OnStatisticEventOccurred(e.User.Username, e.Amount);
+                return result;
+            }
+            return 0.0;
         }
     }
 }

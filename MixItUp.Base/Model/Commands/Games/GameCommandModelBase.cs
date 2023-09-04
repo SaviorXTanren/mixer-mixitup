@@ -47,9 +47,6 @@ namespace MixItUp.Base.Model.Commands.Games
     [DataContract]
     public class RoleProbabilityPayoutModel
     {
-        [Obsolete]
-        [DataMember]
-        public OldUserRoleEnum Role { get; set; }
         [DataMember]
         public UserRoleEnum UserRole { get; set; }
 
@@ -78,9 +75,6 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public string Name { get; set; }
 
-        [Obsolete]
-        [DataMember]
-        public Dictionary<OldUserRoleEnum, RoleProbabilityPayoutModel> RoleProbabilityPayouts { get; set; } = new Dictionary<OldUserRoleEnum, RoleProbabilityPayoutModel>();
         [DataMember]
         public Dictionary<UserRoleEnum, RoleProbabilityPayoutModel> UserRoleProbabilityPayouts { get; set; } = new Dictionary<UserRoleEnum, RoleProbabilityPayoutModel>();
 
@@ -115,18 +109,6 @@ namespace MixItUp.Base.Model.Commands.Games
                 return roleProbabilityPayout.Payout;
             }
             return 0;
-        }
-
-        [Obsolete]
-        public void UpgradeProbabilitySettings()
-        {
-            foreach (var kvp in this.RoleProbabilityPayouts)
-            {
-                UserRoleEnum role = UserRoles.ConvertFromOldRole(kvp.Key);
-                kvp.Value.Role = OldUserRoleEnum.Banned;
-                kvp.Value.UserRole = role;
-                this.UserRoleProbabilityPayouts[role] = kvp.Value;
-            }
         }
     }
 
