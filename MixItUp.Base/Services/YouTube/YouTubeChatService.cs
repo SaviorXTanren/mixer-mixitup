@@ -390,7 +390,7 @@ namespace MixItUp.Base.Services.YouTube
                                     }
                                 }
 
-                                GlobalEvents.SubscribeOccurred(user);
+                                EventService.SubscribeOccurred(user);
                                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertSubscribed, user.DisplayName), ChannelSession.Settings.AlertSubColor));
                             }
                         }
@@ -429,7 +429,7 @@ namespace MixItUp.Base.Services.YouTube
                                     }
                                 }
 
-                                GlobalEvents.ResubscribeOccurred(new Tuple<UserV2ViewModel, int>(user, months));
+                                EventService.ResubscribeOccurred(user, months);
                                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertResubscribed, user.DisplayName, months), ChannelSession.Settings.AlertSubColor));
                             }
                         }
@@ -513,7 +513,7 @@ namespace MixItUp.Base.Services.YouTube
                                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelMembershipGifted, parameters);
 
                                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(membershipsGifted.User, string.Format(MixItUp.Base.Resources.AlertSubscriptionGiftedTier, membershipsGifted.User.FullDisplayName, liveChatMessage.Snippet.GiftMembershipReceivedDetails.MemberLevelName, user.FullDisplayName), ChannelSession.Settings.AlertGiftedSubColor));
-                                GlobalEvents.SubscriptionGiftedOccurred(membershipsGifted.User, user);
+                                EventService.SubscriptionGiftedOccurred(membershipsGifted.User, user);
                             }
                         }
                         else if (SuperChatEventMessageType.Equals(liveChatMessage.Snippet.Type))

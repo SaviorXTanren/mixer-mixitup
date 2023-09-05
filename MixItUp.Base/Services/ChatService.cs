@@ -109,9 +109,9 @@ namespace MixItUp.Base.Services
             {
                 viewerCount += (int)ServiceManager.Get<TrovoSessionService>().Channel?.current_viewers;
             }
-            if (ServiceManager.Get<GlimeshSessionService>().IsConnected && ServiceManager.Get<GlimeshSessionService>().IsLive)
+            if (ServiceManager.Get<YouTubeSessionService>().IsConnected && ServiceManager.Get<YouTubeSessionService>().IsLive)
             {
-                viewerCount += ServiceManager.Get<GlimeshSessionService>().User?.channel?.stream?.countViewers ?? 0;
+                viewerCount += ServiceManager.Get<YouTubeSessionService>().ViewerCount;
             }
             return viewerCount;
         }

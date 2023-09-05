@@ -58,7 +58,7 @@ namespace MixItUp.WPF.Services
                 stream.Position = 0;
             }
 
-            await ServiceManager.Get<IAudioService>().PlayPCM(stream, volume, outputDevice, waitForFinish);
+            await ServiceManager.Get<IAudioService>().PlayPCM(stream, volume, outputDevice, waitForFinish: waitForFinish);
         }
     }
 }

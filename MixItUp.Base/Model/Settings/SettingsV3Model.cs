@@ -51,7 +51,7 @@ namespace MixItUp.Base.Model.Settings
                     {
                         ChannelSession.AppSettings.SettingsRestoreFilePath = filePath;
                         ChannelSession.AppSettings.SettingsToReplaceDuringRestore = (ChannelSession.Settings != null) ? ChannelSession.Settings.ID : Guid.Empty;
-                        GlobalEvents.RestartRequested();
+                        ChannelSession.RestartRequested();
                     }
                     else
                     {

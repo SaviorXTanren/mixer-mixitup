@@ -5,18 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Deprecated\**" />
-    <Compile Remove="Model\Import\**" />
-    <Compile Remove="ViewModel\Command %2528OLD%2529\**" />
-    <EmbeddedResource Remove="Deprecated\**" />
-    <EmbeddedResource Remove="Model\Import\**" />
-    <EmbeddedResource Remove="ViewModel\Command %2528OLD%2529\**" />
-    <None Remove="Deprecated\**" />
-    <None Remove="Model\Import\**" />
-    <None Remove="ViewModel\Command %2528OLD%2529\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Overlay\OverlayPageOld.html" />
     <None Remove="Overlay\webSocketWrapper.js" />
     <None Remove="XSplit\Mix It Up.html" />

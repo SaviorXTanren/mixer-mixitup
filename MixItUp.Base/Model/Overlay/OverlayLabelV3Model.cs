@@ -1,19 +1,18 @@
-﻿using MixItUp.Base.Model.Settings;
-using MixItUp.Base.Services.Glimesh;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
-using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat.Trovo;
+using MixItUp.Base.ViewModel.User;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Model.User;
-using MixItUp.Base.ViewModel.Chat.Trovo;
-using MixItUp.Base.ViewModel.User;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -118,10 +117,6 @@ namespace MixItUp.Base.Model.Overlay
                     {
                         this.Amount = (await ServiceManager.Get<TrovoSessionService>().UserConnection.GetFollowers(ServiceManager.Get<TwitchSessionService>().ChannelID, int.MaxValue)).Count();
                     }
-                    else if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().IsConnected)
-                    {
-                        this.Amount = (await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetFollowingUsers(ServiceManager.Get<GlimeshSessionService>().User, int.MaxValue)).Count();
-                    }
                 }
             }
             else if (this.LabelType == OverlayLabelV3Type.LatestRaid)
@@ -144,10 +139,6 @@ namespace MixItUp.Base.Model.Overlay
                     {
                         this.Amount = (await ServiceManager.Get<TrovoSessionService>().UserConnection.GetSubscribers(ServiceManager.Get<TwitchSessionService>().ChannelID, int.MaxValue)).Count();
                     }
-                    else if (ChannelSession.Settings.DefaultStreamingPlatform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().IsConnected)
-                    {
-                        this.Amount = 0;
-                    };
                 }
             }
             else if (this.LabelType == OverlayLabelV3Type.LatestDonation)

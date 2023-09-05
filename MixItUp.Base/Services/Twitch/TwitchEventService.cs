@@ -506,7 +506,7 @@ namespace MixItUp.Base.Services.Twitch
                         }
                     }
 
-                    GlobalEvents.RaidOccurred(user, viewers);
+                    EventService.RaidOccurred(user, viewers);
 
                     await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(user, string.Format(MixItUp.Base.Resources.AlertRaid, user.FullDisplayName, viewers), ChannelSession.Settings.AlertRaidColor));
                 }
