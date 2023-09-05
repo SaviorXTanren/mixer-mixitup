@@ -10282,4 +10282,7 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="MusicPlayerSelectFolderOrPlayMusicToLoadInSongs" xml:space="preserve">
     <value>Select a new folder to load in music from a folder or hit the Play button to load in music from the last used folder.</value>
   </data>
+  <data name="NoDuplicates" xml:space="preserve">
+    <value>No Duplicates</value>
+  </data>
 </root>

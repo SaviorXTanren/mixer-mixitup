@@ -65,6 +65,7 @@ namespace MixItUp.Base.ViewModel.Actions
                         case ActionTypeEnum.OvrStream: editorViewModel = new OvrStreamActionEditorControlViewModel(); break;
                         case ActionTypeEnum.PixelChat: editorViewModel = new PixelChatActionEditorControlViewModel(); break;
                         case ActionTypeEnum.PolyPop: editorViewModel = new PolyPopActionEditorControlViewModel(); break;
+                        case ActionTypeEnum.Random: editorViewModel = new RandomActionEditorControlViewModel(); break;
                         case ActionTypeEnum.SAMMI: editorViewModel = new SAMMIActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Serial: editorViewModel = new SerialActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Sound: editorViewModel = new SoundActionEditorControlViewModel(); break;
@@ -150,6 +151,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 case ActionTypeEnum.OvrStream: editorViewModel = new OvrStreamActionEditorControlViewModel((OvrStreamActionModel)action); break;
                 case ActionTypeEnum.PixelChat: editorViewModel = new PixelChatActionEditorControlViewModel((PixelChatActionModel)action); break;
                 case ActionTypeEnum.PolyPop: editorViewModel = new PolyPopActionEditorControlViewModel((PolyPopActionModel)action); break;
+                case ActionTypeEnum.Random: editorViewModel = new RandomActionEditorControlViewModel((RandomActionModel)action); break;
                 case ActionTypeEnum.SAMMI: editorViewModel = new SAMMIActionEditorControlViewModel((SAMMIActionModel)action); break;
                 case ActionTypeEnum.Serial: editorViewModel = new SerialActionEditorControlViewModel((SerialActionModel)action); break;
                 case ActionTypeEnum.Sound: editorViewModel = new SoundActionEditorControlViewModel((SoundActionModel)action); break;
