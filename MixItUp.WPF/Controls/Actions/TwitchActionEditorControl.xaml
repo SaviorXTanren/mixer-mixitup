@@ -265,6 +265,10 @@
             </Grid>
         </Grid>
 
+        <Grid Grid.Row="2" Visibility="{Binding ShowSetContentClassificationLabelsGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TwitchControls:TwitchContentClassificationLabelsEditorControl DataContext="{Binding ContentClassificationLabelsEditor}" />
+        </Grid>
+
         <ActionControls:SubActionContainerControl Grid.Row="3" Visibility="{Binding ShowSubActions, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,20,0,0" />
     </Grid>
 </local:ActionEditorControlBase>

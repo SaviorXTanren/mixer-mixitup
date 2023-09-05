@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Runtime;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -98,13 +97,13 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            if (!string.IsNullOrEmpty(ChannelSession.AppSettings.BackupSettingsFilePath))
+            if (!string.IsNullOrEmpty(ChannelSession.AppSettings.SettingsRestoreFilePath))
             {
                 Logger.Log(LogLevel.Debug, "Restored settings file detected, starting restore process");
 
-                if (ChannelSession.AppSettings.BackupSettingsToReplace != Guid.Empty)
+                if (ChannelSession.AppSettings.SettingsToReplaceDuringRestore != Guid.Empty)
                 {
-                    SettingsV3Model settings = allSettings.FirstOrDefault(s => s.ID.Equals(ChannelSession.AppSettings.BackupSettingsToReplace));
+                    SettingsV3Model settings = allSettings.FirstOrDefault(s => s.ID.Equals(ChannelSession.AppSettings.SettingsToReplaceDuringRestore));
                     if (settings != null)
                     {
                         File.Delete(settings.SettingsFilePath);
@@ -115,10 +114,10 @@ namespace MixItUp.Base.Services
                     }
                 }
 
-                await ServiceManager.Get<IFileService>().UnzipFiles(ChannelSession.AppSettings.BackupSettingsFilePath, SettingsV3Model.SettingsDirectoryName);
+                await ServiceManager.Get<IFileService>().UnzipFiles(ChannelSession.AppSettings.SettingsRestoreFilePath, SettingsV3Model.SettingsDirectoryName);
 
-                ChannelSession.AppSettings.BackupSettingsFilePath = null;
-                ChannelSession.AppSettings.BackupSettingsToReplace = Guid.Empty;
+                ChannelSession.AppSettings.SettingsRestoreFilePath = null;
+                ChannelSession.AppSettings.SettingsToReplaceDuringRestore = Guid.Empty;
 
                 return await this.GetAllSettings();
             }
@@ -127,12 +126,12 @@ namespace MixItUp.Base.Services
                 Logger.Log(LogLevel.Debug, "Settings deletion detected, starting deletion process");
 
                 SettingsV3Model settings = allSettings.FirstOrDefault(s => s.ID.Equals(ChannelSession.AppSettings.SettingsToDelete));
+                ChannelSession.AppSettings.SettingsToDelete = Guid.Empty;
+
                 if (settings != null)
                 {
                     File.Delete(settings.SettingsFilePath);
                     File.Delete(settings.DatabaseFilePath);
-
-                    ChannelSession.AppSettings.SettingsToDelete = Guid.Empty;
 
                     return await this.GetAllSettings();
                 }
@@ -146,6 +145,11 @@ namespace MixItUp.Base.Services
             {
                 await DialogHelper.ShowMessage(Resources.SettingsLoadFailure);
             }
+
+            // Empty out all restore and deleting values to ensure they are clear
+            ChannelSession.AppSettings.SettingsRestoreFilePath = null;
+            ChannelSession.AppSettings.SettingsToReplaceDuringRestore = Guid.Empty;
+            ChannelSession.AppSettings.SettingsToDelete = Guid.Empty;
 
             return allSettings;
         }
@@ -363,6 +367,7 @@ namespace MixItUp.Base.Services
             else if (currentVersion < SettingsV3Model.LatestVersion)
             {
                 await SettingsV3Upgrader.Version6Upgrade(currentVersion, filePath);
+                //await SettingsV3Upgrader.Version7Upgrade(currentVersion, filePath);
             }
             SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
             settings.Version = SettingsV3Model.LatestVersion;
@@ -387,96 +392,19 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public static void MultiPlatformCommandUpgrade(CommandModelBase command)
-        {
-#pragma warning disable CS0612 // Type or member is obsolete
-            if (command is BetGameCommandModel)
-            {
-                BetGameCommandModel gCommand = (BetGameCommandModel)command;
-                gCommand.StarterUserRole = UserRoles.ConvertFromOldRole(gCommand.StarterRole);
+        //public static async Task Version7Upgrade(int version, string filePath)
+        //{
+        //    if (version < 7)
+        //    {
+        //        string fileData = await ServiceManager.Get<IFileService>().ReadFile(filePath);
+        //        SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
+        //        await settings.Initialize();
 
-                foreach (GameOutcomeModel outcome in gCommand.BetOptions)
-                {
-                    outcome.UpgradeProbabilitySettings();
-                }
-            }
-            else if (command is BidGameCommandModel)
-            {
-                BidGameCommandModel gCommand = (BidGameCommandModel)command;
-                gCommand.StarterUserRole = UserRoles.ConvertFromOldRole(gCommand.StarterRole);
-            }
-            else if (command is DuelGameCommandModel)
-            {
-                DuelGameCommandModel gCommand = (DuelGameCommandModel)command;
-                gCommand.SuccessfulOutcome.UpgradeProbabilitySettings();
-            }
-            else if (command is HeistGameCommandModel)
-            {
-                HeistGameCommandModel gCommand = (HeistGameCommandModel)command;
-                gCommand.UserSuccessOutcome.UpgradeProbabilitySettings();
-            }
-            else if (command is RouletteGameCommandModel)
-            {
-                RouletteGameCommandModel gCommand = (RouletteGameCommandModel)command;
-                gCommand.UserSuccessOutcome.UpgradeProbabilitySettings();
-            }
-            else if (command is StealGameCommandModel)
-            {
-                StealGameCommandModel gCommand = (StealGameCommandModel)command;
-                gCommand.SuccessfulOutcome.UpgradeProbabilitySettings();
-            }
-            else if (command is SpinGameCommandModel)
-            {
-                SpinGameCommandModel gCommand = (SpinGameCommandModel)command;
-                foreach (GameOutcomeModel outcome in gCommand.Outcomes)
-                {
-                    outcome.UpgradeProbabilitySettings();
-                }
-            }
-            else if (command is SlotMachineGameCommandModel)
-            {
-                SlotMachineGameCommandModel gCommand = (SlotMachineGameCommandModel)command;
-                foreach (SlotMachineGameOutcomeModel outcome in gCommand.Outcomes)
-                {
-                    outcome.UpgradeProbabilitySettings();
-                }
-            }
 
-            foreach (RequirementModelBase requirement in command.Requirements.Requirements)
-            {
-                if (requirement is RoleRequirementModel)
-                {
-                    RoleRequirementModel rRequirement = (RoleRequirementModel)requirement;
-                    rRequirement.UpgradeFromOldRoles();
-                }
-            }
 
-            foreach (ActionModelBase action in command.Actions)
-            {
-                if (action is ConsumablesActionModel)
-                {
-                    ConsumablesActionModel cAction = (ConsumablesActionModel)action;
-                    cAction.UserRoleToApplyTo = UserRoles.ConvertFromOldRole(cAction.UsersToApplyTo);
-                }
-                else if (action is GameQueueActionModel)
-                {
-                    GameQueueActionModel gqAction = (GameQueueActionModel)action;
-                    if (gqAction.RoleRequirement != null)
-                    {
-                        gqAction.RoleRequirement.UpgradeFromOldRoles();
-                    }
-                }
-                else if (action is InputActionModel)
-                {
-                    InputActionModel iAction = (InputActionModel)action;
-                    if (iAction.Key.HasValue)
-                    {
-                        iAction.VirtualKey = ServiceManager.Get<IInputService>().ConvertOldKeyEnum(iAction.Key.GetValueOrDefault());
-                    }
-                }
-            }
-#pragma warning restore CS0612 // Type or member is obsolete
-        }
+        //        await ServiceManager.Get<SettingsService>().Save(settings);
+        //    }
+        //}
 
         public static async Task<int> GetSettingsVersion(string filePath)
         {

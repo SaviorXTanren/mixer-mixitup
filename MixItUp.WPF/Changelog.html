@@ -5,6 +5,91 @@
     <body>
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
+        <h2 style="color: #2e6c80;">v1.1.0.0:</h2>
+        <ul>
+            <li>Adding support for YouTube Live streaming connectivity</li>
+            <li>The following functionality has been added for YouTube</li>
+            <ul>
+                <li>Event Commands: YouTube Channel Stream Start, YouTube Channel Stream Stop, YouTube Channel New Member, YouTube Channel Member Milestone, YouTube Channel Membership Gifted, YouTube Channel Mass Membership Gifted, YouTube Channel Super Chat</li>
+                <li>YouTube Action: Updating Title &amp; Description, Running Ad Break</li>
+                <li>Integration with general features and commands where applicable (EX: !uptime, !title, etc)</li>
+                <li>BetterTTV emote support for YouTube if you have connected your YouTube account for BetterTTV and enable the feature within Mix It Up under Settings -> Chat</li>
+                <li>YouTube supports the ability for users to have spaces in their username, which adjusts how User Special Identifiers are processed. When using any User-based Special Identifier, if the user in question has spaces in their username, then you must use an '@' before their name and the user must be presently active in your chat for us to be able to correlate them.</li>
+            </ul>
+            <li>Due to the naming conventions used for YouTube, there may be some confusion when using various features in Mix It Up. We are still working on the best way to help distinquish between these conflicting terms, but in the mean-time, a general rule of thumb is as follows:</li>
+            <ul>
+                <li>On most streaming platforms, a user that is interested notifications for your channel is called a Follower, while a person that is paying money to your stream for special perks is a Subscriber.</li>
+                <li>On YouTube, a user that is interested in notifications for your channel is a Subscriber, while a person that is paying money to your stream for special perks is a Member.</li>
+                <li>You'll notice that there is an overlap in terminology for Subscriber, but they don't mean the same thing. EX: Twitch Follower = YouTube Subscriber, Twitch Subscriber = YouTube Member</li>
+                <li>Within Mix It Up, we have focused on keeping the terminology aligned with what users have been used to on most streaming platforms: Notifications => Follower, Paid User => Subscriber</li>
+                <li>If you see anywhere in the app where it specifically says <b>YouTube</b> Subscriber, you can safely assume it means a user who is getting notifications for your channel.</li>
+                <li>However, if it <b>does not</b> have the word YouTube in front of Subscriber, then it means a person who has paid money for perks in your channel</li>
+            </ul>
+            <li>Adding Twitch Integrated Throwing System service connectivity</li>
+            <ul>
+                <li>Twitch Integrated Throwing System can be connected by visiting the Services page.</li>
+                <li>The Twitch Integrated Throwing action can be added to commands to allow you to throw specific items or activate triggers created in the app.</li>
+                <li>The Twitch Integrated Throwing System service connectivity can be used with or without VTube Studio service connectivity, as the two systems are independent of each other.</li>
+            </ul>
+            <li>Adding Crowd Control service connectivity</li>
+            <ul>
+                <li>Crowd Control can be connected by visiting the Services page</li>
+                <li>A new Crowd Control menu has been added to make dedicated commands that will trigger when a specific game effect has been redeemed</li>
+                <li>Crowd Control Effect Redeemed event command has been added for when any effect is redeemed</li>
+            </ul>
+            <li>Adding Lumia Stream service connectivity</li>
+            <ul>
+                <li>Lumia Stream can be connected by visiting the Services page.</li>
+                <li>The Lumia Stream action can be added to commands to allow you to set lighting settings for all your lights and trigger commands within Lumia Stream</li>
+            </ul>
+            <li>Adding DonorDrive service connectivity, replacing the previous Extra Life service connectivity</li>
+            <ul>
+                <li>DonorDrive can be connected by visiting the Services page</li>
+                <li>DonorDrive Donation, DonorDrive Donation Incentive, &amp; DonorDrive Donation Milestone event commands have been added</li>
+            </ul>
+            <li>Adding SAMMI service connectivity</li>
+            <ul>
+                <li>SAMMI can be connected by visiting the Services page</li>
+                <li>The SAMMI action can be added to commands to allow you to trigger buttons, release buttons, and set global variables within SAMMI</li>
+            </ul>
+            <li>Adding Music Player feature</li>
+            <ul>
+                <li>The Music Player feature can be found on the main Mix It Up menu.</li>
+                <li>Music can be loaded by navigating to the Music Player page and clicking on the Folder icon on the right-side.</li>
+                <li>The following are the list of support music file formats: MP3, WAV, FLAC, MP4, M4A, AAC</li>
+                <li>The Music Player action can be added to commands to allow you to control the currently playing song from the Music Player and other options.</li>
+                <li>Recommended Music Sites: No Copyright Sounds, StreamBeats, Epidemic Sounds</li>
+            </ul>
+            <li>Adding Infinite Album service connectivity</li>
+            <ul>
+                <li>Infinite Album can be connected by visiting the Services page</li>
+                <li>The Infinite Album action can be added to commands to allow you to adjust the audio style, the instruments, and play various sound effects available from the Infinite Album application</li>
+            </ul>
+            <li>Adding Alejo Pronouns display support for Twitch chat. This can be enabled under Settings -> Chat</li>
+            <li>Adding Twitch Channel Hype Chat event command: $hypechatlevel, $hypechatamount, $hypechatamountnumber, $hypechatamountnumberdigits</li>
+            <li>Adding Twitch Channel Outgoing Raid Completed event command for when you the user have completed a raid to another channel.</li>
+            <li>Adding Set Content Classification Labels option to Twitch Action</li>
+            <li>Adding "Set Command Cooldown" &amp; "Exit Current Command" option to Command Action</li>
+            <li>Adding support to "!quote" pre-made chat command for searching for quote based on text input</li>
+            <li>Adding settings option to clear all user data for users that have not been seen in X many days</li>
+            <li>Adding settings option to specify what text should be used to separated delimited arguments</li>
+            <li>Adding settings option for cooldown amount for notifications to reduce back-to-back notification sounds playing</li>
+            <li>Updating Trovo connectivity to handle automatic re-authentication when valid</li>
+            <li>Fixing bug with the display of FrankerFaceZ emotes</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v1.0.0.39:</h2>
+        <ul>
+            <li>Updating Twitch event service version for follow events</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v1.0.0.37-38:</h2>
+        <ul>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
         <h2 style="color: #2e6c80;">v1.0.0.36:</h2>
         <ul>
             <li>Removing Twitter integration due to restrictions imposed by Twitter APIs. Information about the removal and alternative solutions can be found on our wiki: https://wiki.mixitupapp.com/en/services/twitter</li>

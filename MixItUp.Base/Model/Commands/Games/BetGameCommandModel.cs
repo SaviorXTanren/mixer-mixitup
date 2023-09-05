@@ -18,9 +18,6 @@ namespace MixItUp.Base.Model.Commands.Games
         public const string GameBetOptionsSpecialIdentifier = "gamebetoptions";
         public const string GameBetWinningOptionSpecialIdentifier = "gamebetwinningoption";
 
-        [Obsolete]
-        [DataMember]
-        public OldUserRoleEnum StarterRole { get; set; }
         [DataMember]
         public UserRoleEnum StarterUserRole { get; set; }
         [DataMember]

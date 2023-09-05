@@ -28,7 +28,7 @@ namespace MixItUp.Base.Model.Commands
         [DataMember]
         public StreamingPlatformTypeEnum Platform { get; set; } = StreamingPlatformTypeEnum.All;
         [DataMember]
-        public List<string> Arguments { get; set; } = new List<string>();
+        public List<string> Arguments { get; private set; } = new List<string>();
         [DataMember]
         public Dictionary<string, string> SpecialIdentifiers { get; set; } = new Dictionary<string, string>();
 
@@ -42,21 +42,18 @@ namespace MixItUp.Base.Model.Commands
         public string TriggeringChatMessageID { get; set; }
 
         [DataMember]
+        public bool ExitCommand { get; set; }
+
+        [DataMember]
         public Guid InitialCommandID { get; set; } = Guid.Empty;
 
         public CommandParametersModel() : this(ChannelSession.User) { }
 
         public CommandParametersModel(UserV2ViewModel user) : this(user, (user != null) ? user.Platform : StreamingPlatformTypeEnum.None) { }
 
-        public CommandParametersModel(StreamingPlatformTypeEnum platform) : this(platform, null) { }
+        public CommandParametersModel(StreamingPlatformTypeEnum platform) : this(null, platform, null, null) { }
 
-        public CommandParametersModel(ChatMessageViewModel message)
-            : this(message.User, message.Platform, message.ToArguments())
-        {
-            this.SpecialIdentifiers["message"] = message.PlainTextMessage;
-
-            this.TriggeringChatMessageID = message.ID;
-        }
+        public CommandParametersModel(StreamingPlatformTypeEnum platform, IEnumerable<string> arguments) : this(null, platform, arguments, null) { }
 
         public CommandParametersModel(StreamingPlatformTypeEnum platform, Dictionary<string, string> specialIdentifiers) : this(null, platform, null, specialIdentifiers) { }
 
@@ -71,6 +68,14 @@ namespace MixItUp.Base.Model.Commands
         public CommandParametersModel(UserV2ViewModel user, StreamingPlatformTypeEnum platform, Dictionary<string, string> specialIdentifiers) : this(user, platform, null, specialIdentifiers) { }
 
         public CommandParametersModel(UserV2ViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers) : this(user, (user != null) ? user.Platform : StreamingPlatformTypeEnum.None, arguments, specialIdentifiers) { }
+
+        public CommandParametersModel(ChatMessageViewModel message, IEnumerable<string> arguments = null)
+            : this(message.User, message.Platform, (arguments != null) ? arguments : message.ToArguments())
+        {
+            this.SpecialIdentifiers["message"] = message.PlainTextMessage;
+
+            this.TriggeringChatMessageID = message.ID;
+        }
 
         public CommandParametersModel(UserV2ViewModel user = null, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> specialIdentifiers = null)
         {
@@ -104,15 +109,71 @@ namespace MixItUp.Base.Model.Commands
             }    
 
             this.SpecialIdentifiers[SpecialIdentifierStringBuilder.StreamingPlatformSpecialIdentifier] = this.Platform.ToString();
+
+            this.ParseArguments();
         }
 
         public bool IsTargetUserSelf { get { return this.TargetUser == this.User; } }
 
-        public CommandParametersModel Duplicate()
+        public void SetArguments(IEnumerable<string> arguments)
         {
-            CommandParametersModel result = new CommandParametersModel(this.User, this.Platform, this.Arguments, this.SpecialIdentifiers);
+            this.Arguments = new List<string>(arguments);
+            this.ParseArguments();
+        }
+
+        public CommandParametersModel Duplicate(IEnumerable<string> arguments = null)
+        {
+            CommandParametersModel result = new CommandParametersModel(this.User, this.Platform, (arguments != null) ? arguments : this.Arguments, this.SpecialIdentifiers);
             result.TargetUser = this.TargetUser;
             return result;
+        }
+
+        public void ParseArguments()
+        {
+            if (this.Arguments != null && this.Arguments.Count > 0)
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.YouTube)
+                {
+                    List<string> newArguments = new List<string>();
+                    for (int i = 0; i < this.Arguments.Count; i++)
+                    {
+                        if (this.Arguments[i].StartsWith("@"))
+                        {
+                            string usernameTag = this.Arguments[i];
+                            for (int j = i + 1; j < this.Arguments.Count; j++)
+                            {
+                                usernameTag += " " + this.Arguments[j];
+                                UserV2ViewModel userTag = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum.YouTube, usernameTag);
+                                if (userTag != null)
+                                {
+                                    newArguments.Add(usernameTag);
+                                    usernameTag = null;
+                                    i = j;
+                                    break;
+                                }
+                            }
+
+                            if (!string.IsNullOrWhiteSpace(usernameTag))
+                            {
+                                for (; i < this.Arguments.Count; i++)
+                                {
+                                    newArguments.Add(this.Arguments[i]);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            newArguments.Add(this.Arguments[i]);
+                        }
+                    }
+
+                    if (newArguments.Count < this.Arguments.Count)
+                    {
+                        this.Arguments.Clear();
+                        this.Arguments.AddRange(newArguments);
+                    }
+                }
+            }
         }
 
         public async Task SetTargetUser()
@@ -136,6 +197,7 @@ namespace MixItUp.Base.Model.Commands
                 {
                     this.TargetUser = this.User;
                 }
+                await this.TargetUser.Refresh();
             }
         }
     }

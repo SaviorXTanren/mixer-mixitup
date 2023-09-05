@@ -11,16 +11,25 @@ namespace MixItUp.Base.Model.Actions
 {
     public enum YouTubeActionType
     {
+        SetTitleDescription,
         RunAdBreak,
     }
 
     [DataContract]
     public class YouTubeActionModel : ActionModelBase
     {
-        public static YouTubeActionModel CreateAdBreakAction(int adBreakLength)
+        public static YouTubeActionModel CreateAdBreakAction(int amount)
         {
             YouTubeActionModel action = new YouTubeActionModel(YouTubeActionType.RunAdBreak);
-            action.AdBreakLength = adBreakLength;
+            action.Amount = amount;
+            return action;
+        }
+
+        public static YouTubeActionModel CreateSetTitleDescriptionAction(string title, string description)
+        {
+            YouTubeActionModel action = new YouTubeActionModel(YouTubeActionType.SetTitleDescription);
+            action.Title = title;
+            action.Description = description;
             return action;
         }
 
@@ -28,7 +37,12 @@ namespace MixItUp.Base.Model.Actions
         public YouTubeActionType ActionType { get; set; }
 
         [DataMember]
-        public int AdBreakLength { get; set; }
+        public string Title { get; set; }
+        [DataMember]
+        public string Description { get; set; }
+
+        [DataMember]
+        public int Amount { get; set; }
 
         [DataMember]
         public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
@@ -46,12 +60,22 @@ namespace MixItUp.Base.Model.Actions
         {
             if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
             {
-                if (this.ActionType == YouTubeActionType.RunAdBreak)
+                if (this.ActionType == YouTubeActionType.SetTitleDescription)
                 {
-                    LiveCuepoint response = await ServiceManager.Get<YouTubeSessionService>().UserConnection.StartAdBreak(ServiceManager.Get<YouTubeChatService>()?.Broadcast, this.AdBreakLength);
-                    if (response == null)
+                    if (ServiceManager.Get<YouTubeSessionService>().IsLive && ServiceManager.Get<YouTubeSessionService>().Video != null)
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.YouTubeActionUnableToRunAdBreak);
+                        await ServiceManager.Get<YouTubeSessionService>().UserConnection.UpdateVideo(ServiceManager.Get<YouTubeSessionService>().Video, title: this.Title, description: this.Description);
+                    }
+                }
+                else if (this.ActionType == YouTubeActionType.RunAdBreak)
+                {
+                    if (ServiceManager.Get<YouTubeSessionService>().IsLive)
+                    {
+                        LiveCuepoint response = await ServiceManager.Get<YouTubeSessionService>().UserConnection.StartAdBreak(ServiceManager.Get<YouTubeSessionService>().Broadcast, this.Amount);
+                        if (response == null)
+                        {
+                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.YouTubeActionUnableToRunAdBreak);
+                        }
                     }
                 }
             }

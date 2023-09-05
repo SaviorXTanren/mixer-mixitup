@@ -76,7 +76,7 @@ namespace MixItUp.Base.Services
             this.statusFeedLink = statusFeedLink;
         }
 
-        public override async Task<IEnumerable<StreamingPlatformStatusModel>> GetCurrentIncidents()
+        public override Task<IEnumerable<StreamingPlatformStatusModel>> GetCurrentIncidents()
         {
             List<StreamingPlatformStatusModel> incidents = new List<StreamingPlatformStatusModel>();
             //try
@@ -104,7 +104,7 @@ namespace MixItUp.Base.Services
             //    return incidents;
             //}
             //catch (Exception ex) { Logger.Log(ex); }
-            return incidents;
+            return Task.FromResult<IEnumerable<StreamingPlatformStatusModel>>(incidents);
         }
     }
 

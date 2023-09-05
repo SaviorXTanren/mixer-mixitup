@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Dialogs;
 using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Windows.Commands;
@@ -23,7 +22,6 @@ namespace MixItUp.WPF.Controls.Dialogs
             InitializeComponent();
 
             this.command = command;
-            SettingsV3Upgrader.MultiPlatformCommandUpgrade(command);
 
             this.DataContext = this.ViewModel = new CommandImporterDialogControlViewModel();
         }

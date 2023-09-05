@@ -1,5 +1,8 @@
 ﻿using Google.Apis.YouTube.v3.Data;
 using MixItUp.Base.Model;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.ViewModel.User;
 using System;
 
@@ -21,6 +24,22 @@ namespace MixItUp.Base.ViewModel.Chat.YouTube
             foreach (string part in parts)
             {
                 this.AddStringMessagePart(part);
+
+                if (part.StartsWith(":"))
+                {
+                    string emote = part.Substring(1);
+                    if (ServiceManager.Has<YouTubeChatService>())
+                    {
+                        if (ServiceManager.Get<YouTubeChatService>().EmoteDictionary.ContainsKey(emote))
+                        {
+                            this.MessageParts[this.MessageParts.Count - 1] = new YouTubeChatEmoteViewModel(ServiceManager.Get<YouTubeChatService>().EmoteDictionary[emote]);
+                        }
+                    }
+                }
+                else if (ChannelSession.Settings.ShowBetterTTVEmotes && ServiceManager.Get<BetterTTVService>().BetterTTVEmotes.ContainsKey(part))
+                {
+                    this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<BetterTTVService>().BetterTTVEmotes[part];
+                }
             }
         }
     }

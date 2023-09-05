@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
@@ -28,10 +27,6 @@ namespace MixItUp.Base.ViewModel.MainControls
                 else if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
                 {
                     ProcessHelper.LaunchLink($"https://www.streamloots.com/{ServiceManager.Get<YouTubeSessionService>().UserID}/manage/cards");
-                }
-                else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
-                {
-                    ProcessHelper.LaunchLink($"https://www.streamloots.com/{ServiceManager.Get<GlimeshSessionService>().Username}/manage/cards");
                 }
             });
         }

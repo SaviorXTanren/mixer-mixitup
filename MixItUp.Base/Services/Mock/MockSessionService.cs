@@ -54,6 +54,8 @@ namespace MixItUp.Base.Services.Mock
 
         public bool IsLive { get { return true; } }
 
+        public int ViewerCount { get { return 999; } }
+
         public async Task<Result> ConnectUser()
         {
             Result<MockPlatformService> result = await MockPlatformService.ConnectUser();
@@ -157,7 +159,7 @@ namespace MixItUp.Base.Services.Mock
                     if (platformServiceTasks.Any(c => !c.Result.Success))
                     {
                         string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
-                        return new Result(MixItUp.Base.Resources.GlimeshFailedToConnectHeader + Environment.NewLine + Environment.NewLine + errors);
+                        return new Result(MixItUp.Base.Resources.TwitchFailedToConnectHeader + Environment.NewLine + Environment.NewLine + errors);
                     }
                 }
                 catch (Exception ex)
@@ -237,5 +239,27 @@ namespace MixItUp.Base.Services.Mock
         }
 
         public Task<bool> SetGame(string gameName) { return Task.FromResult(false); }
+
+        public async Task AddMockViewerStatistics()
+        {
+            for (int days = 0; days < 10; days++)
+            {
+                int lastNumber = RandomHelper.GenerateRandomNumber(100);
+                DateTime dateTime = DateTime.Now.Subtract(TimeSpan.FromDays(days));
+
+                ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamStart, platform: StreamingPlatformTypeEnum.Twitch, amount: lastNumber, dateTime: dateTime);
+
+                int totalViewerEvents = 25;
+                for (int i = 0; i < totalViewerEvents; i++)
+                {
+                    ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.Viewers, platform: StreamingPlatformTypeEnum.Twitch, amount: lastNumber, dateTime: dateTime.AddMinutes(i * 5));
+                    lastNumber += Math.Max(RandomHelper.GenerateRandomNumber(-5, 5), 0);
+                }
+
+                ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamStop, platform: StreamingPlatformTypeEnum.Twitch, amount: lastNumber, dateTime: dateTime.AddMinutes(totalViewerEvents * 5));
+            }
+
+            await ChannelSession.SaveSettings();
+        }
     }
 }

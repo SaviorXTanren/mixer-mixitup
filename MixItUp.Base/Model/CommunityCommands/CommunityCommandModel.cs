@@ -49,6 +49,7 @@ namespace MixItUp.Base.Model.Store
         Trovo,
         PolyPop,
         Script,
+        InfniteAlbum,
 
         // Command Tags
         ChatCommand = 1000,
@@ -61,6 +62,7 @@ namespace MixItUp.Base.Model.Store
         Webhook,
         TrovoSpell,
         TwitchBits,
+        CrowdControlEffect,
 
         // Extra Tags
         [Obsolete]

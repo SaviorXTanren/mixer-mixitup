@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -104,7 +105,11 @@ namespace MixItUp.Base.Model.Actions
             {
                 if (!string.IsNullOrEmpty(textToRead))
                 {
-                    lines = new List<string>(textToRead.Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries));
+                    lines = new List<string>(textToRead.Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.None));
+                    if (lines.Count > 0 && string.IsNullOrEmpty(lines.Last()))
+                    {
+                        lines.RemoveAt(lines.Count - 1);
+                    }
                 }
 
                 int lineIndex = 0;

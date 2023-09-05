@@ -2,7 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
@@ -183,10 +183,6 @@ namespace MixItUp.WPF.Controls.Chat
                                 emotes.AddRange(this.FindMatchingEmoticons<TrovoChatEmoteViewModel>(tagText, ServiceManager.Get<TrovoChatEventService>().EventEmotes));
                                 emotes.AddRange(this.FindMatchingEmoticons<TrovoChatEmoteViewModel>(tagText, ServiceManager.Get<TrovoChatEventService>().GlobalEmotes));
                             }
-                            if (ServiceManager.Get<GlimeshChatEventService>().IsUserConnected)
-                            {
-                                //emotes.AddRange(this.FindMatchingEmoticons<GlimeshChatEmoteViewModel>(tagText, ServiceManager.Get<GlimeshChatEventService>().Emotes));
-                            }
 
                             this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, emotes);
                         }
@@ -201,7 +197,7 @@ namespace MixItUp.WPF.Controls.Chat
                                 Dictionary<string, object> emotes = new Dictionary<string, object>();
                                 if (ChannelSession.Settings.ShowBetterTTVEmotes)
                                 {
-                                    foreach (var kvp in ServiceManager.Get<TwitchChatService>().BetterTTVEmotes)
+                                    foreach (var kvp in ServiceManager.Get<BetterTTVService>().BetterTTVEmotes)
                                     {
                                         emotes[kvp.Key] = kvp.Value;
                                     }

@@ -106,7 +106,8 @@ namespace MixItUp.Base.ViewModel.Settings
 
         public ICommand AddCommand { get; set; }
 
-        public GenericButtonSettingsOptionControlViewModel ClearUserData { get; set; }
+        public GenericButtonSettingsOptionControlViewModel ClearUserDataRange { get; set; }
+        public GenericButtonSettingsOptionControlViewModel ClearAllUserData { get; set; }
 
         public UsersSettingsControlViewModel()
         {
@@ -120,7 +121,18 @@ namespace MixItUp.Base.ViewModel.Settings
                 },
                 MixItUp.Base.Resources.ExplicitUserRoleRequirementsTooltip);
 
-            this.ClearUserData = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.ClearAllUserDataHeader, MixItUp.Base.Resources.ClearUserData, this.CreateCommand(async () =>
+            this.ClearUserDataRange = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.ClearUserDataRangeHeader, MixItUp.Base.Resources.ClearUserDataRange, this.CreateCommand(async () =>
+            {
+                string output = await DialogHelper.ShowTextEntry(MixItUp.Base.Resources.ClearUserDataRangeWarning, "0", MixItUp.Base.Resources.TimeDays);
+                if (!string.IsNullOrEmpty(output) && int.TryParse(output, out int days) && days > 0)
+                {
+                    await ServiceManager.Get<UserService>().ClearUserDataRange(days);
+                    await ChannelSession.SaveSettings();
+                    GlobalEvents.RestartRequested();
+                }
+            }));
+
+            this.ClearAllUserData = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.ClearAllUserDataHeader, MixItUp.Base.Resources.ClearAllUserData, this.CreateCommand(async () =>
             {
                 if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.ClearAllUserDataWarning))
                 {

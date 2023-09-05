@@ -4,7 +4,6 @@ using MixItUp.Base.Model.API;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Store;
 using MixItUp.Base.Model.Webhooks;
-using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Services.YouTube;
@@ -465,10 +464,6 @@ namespace MixItUp.Base.Services
             if (ServiceManager.Get<TrovoSessionService>().IsConnected)
             {
                 login.TrovoAccessToken = ServiceManager.Get<TrovoSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
-            }
-            if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
-            {
-                login.GlimeshAccessToken = ServiceManager.Get<GlimeshSessionService>()?.UserConnection?.Connection?.GetOAuthTokenCopy()?.accessToken;
             }
 
             return login;

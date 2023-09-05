@@ -32,6 +32,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" HorizontalAlignment="Center">
@@ -113,8 +114,10 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <TextBox Grid.Row="6" Text="{Binding TrovoCustomRole}" Visibility="{Binding IsTrovoConnected, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TrovoCustomRole}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="0,15,0,0" Width="140" />
+        <ComboBox Grid.Row="6" ItemsSource="{Binding YouTubeMembershipLevels}" SelectedItem="{Binding YouTubeMembershipLevel}" DisplayMemberPath="Snippet.LevelDetails.DisplayName" Visibility="{Binding IsYouTubeConnected, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.YouTubeMemberLevel}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="0,15,0,0" Width="180" />
 
-        <ComboBox Grid.Row="7" ItemsSource="{Binding PatreonBenefits}" SelectedItem="{Binding SelectedPatreonBenefit}" DisplayMemberPath="Title" Visibility="{Binding IsPatreonConnected, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PatreonBenefit}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="0,15,0,0" Width="120" />
+        <TextBox Grid.Row="7" Text="{Binding TrovoCustomRole}" Visibility="{Binding IsTrovoConnected, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TrovoCustomRole}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="0,15,0,0" Width="140" />
+
+        <ComboBox Grid.Row="8" ItemsSource="{Binding PatreonBenefits}" SelectedItem="{Binding SelectedPatreonBenefit}" DisplayMemberPath="Title" Visibility="{Binding IsPatreonConnected, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PatreonBenefit}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="0,15,0,0" Width="120" />
     </Grid>
 </UserControl>

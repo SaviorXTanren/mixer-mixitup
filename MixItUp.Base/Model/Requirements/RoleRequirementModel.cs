@@ -4,6 +4,7 @@ using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Trovo;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -17,13 +18,6 @@ namespace MixItUp.Base.Model.Requirements
     {
         private static DateTimeOffset requirementErrorCooldown = DateTimeOffset.MinValue;
 
-        [Obsolete]
-        [DataMember]
-        public OldUserRoleEnum Role { get; set; }
-        [Obsolete]
-        [DataMember]
-        public HashSet<OldUserRoleEnum> RoleList { get; set; } = new HashSet<OldUserRoleEnum>();
-
         [DataMember]
         public StreamingPlatformTypeEnum StreamingPlatform { get; set; } = StreamingPlatformTypeEnum.All;
 
@@ -36,25 +30,30 @@ namespace MixItUp.Base.Model.Requirements
         public int SubscriberTier { get; set; } = 1;
 
         [DataMember]
+        public string YouTubeMembershipLevelID { get; set; }
+
+        [DataMember]
         public string TrovoCustomRole { get; set; }
 
         [DataMember]
         public string PatreonBenefitID { get; set; }
 
-        public RoleRequirementModel(StreamingPlatformTypeEnum streamingPlatform, UserRoleEnum role, int subscriberTier = 1, string trovoCustomRole = null, string patreonBenefitID = null)
+        public RoleRequirementModel(StreamingPlatformTypeEnum streamingPlatform, UserRoleEnum role, int subscriberTier = 1, string youtubeMembershipLevelID = null, string trovoCustomRole = null, string patreonBenefitID = null)
         {
             this.StreamingPlatform = streamingPlatform;
             this.UserRole = role;
             this.SubscriberTier = subscriberTier;
+            this.YouTubeMembershipLevelID = youtubeMembershipLevelID;
             this.TrovoCustomRole = trovoCustomRole;
             this.PatreonBenefitID = patreonBenefitID;
         }
 
-        public RoleRequirementModel(StreamingPlatformTypeEnum streamingPlatform, IEnumerable<UserRoleEnum> roleList, int subscriberTier = 1, string trovoCustomRole = null, string patreonBenefitID = null)
+        public RoleRequirementModel(StreamingPlatformTypeEnum streamingPlatform, IEnumerable<UserRoleEnum> roleList, int subscriberTier = 1, string youtubeMembershipLevelID = null, string trovoCustomRole = null, string patreonBenefitID = null)
         {
             this.StreamingPlatform = streamingPlatform;
             this.UserRoleList = new HashSet<UserRoleEnum>(roleList);
             this.SubscriberTier = subscriberTier;
+            this.YouTubeMembershipLevelID = youtubeMembershipLevelID;
             this.TrovoCustomRole = trovoCustomRole;
             this.PatreonBenefitID = patreonBenefitID;
         }
@@ -140,6 +139,15 @@ namespace MixItUp.Base.Model.Requirements
                     }
                 }
 
+                if (parameters.Platform == StreamingPlatformTypeEnum.YouTube && !string.IsNullOrEmpty(this.YouTubeMembershipLevelID) && ServiceManager.Get<YouTubeSessionService>().IsConnected)
+                {
+                    YouTubeUserPlatformV2Model youtubeUser = parameters.User.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube);
+                    if (youtubeUser != null && youtubeUser.MemberLevels.Contains(this.YouTubeMembershipLevelID))
+                    {
+                        return Task.FromResult(new Result());
+                    }
+                }    
+
                 if (parameters.Platform == StreamingPlatformTypeEnum.Trovo && !string.IsNullOrEmpty(this.TrovoCustomRole) && ServiceManager.Get<TrovoSessionService>().IsConnected)
                 {
                     TrovoUserPlatformV2Model trovoUser = parameters.User.GetPlatformData<TrovoUserPlatformV2Model>(StreamingPlatformTypeEnum.Trovo);
@@ -164,16 +172,6 @@ namespace MixItUp.Base.Model.Requirements
             }
 
             return Task.FromResult(this.CreateErrorMessage(parameters));
-        }
-
-        [Obsolete]
-        public void UpgradeFromOldRoles()
-        {
-            this.UserRole = UserRoles.ConvertFromOldRole(this.Role);
-            foreach (OldUserRoleEnum oldRole in this.RoleList)
-            {
-                this.UserRoleList.Add(UserRoles.ConvertFromOldRole(oldRole));
-            }
         }
 
         private Result CreateErrorMessage(CommandParametersModel parameters)

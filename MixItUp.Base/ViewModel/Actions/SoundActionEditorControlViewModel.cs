@@ -1,6 +1,8 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Actions
@@ -8,6 +10,22 @@ namespace MixItUp.Base.ViewModel.Actions
     public class SoundActionEditorControlViewModel : ActionEditorControlViewModelBase
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.Sound; } }
+
+        public IEnumerable<SoundActionTypeEnum> ActionTypes { get { return EnumHelper.GetEnumList<SoundActionTypeEnum>(); } }
+
+        public SoundActionTypeEnum SelectedActionType
+        {
+            get { return this.selectedActionType; }
+            set
+            {
+                this.selectedActionType = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged(nameof(this.ShowPlaySoundGrid));
+            }
+        }
+        private SoundActionTypeEnum selectedActionType;
+
+        public bool ShowPlaySoundGrid { get { return this.SelectedActionType == SoundActionTypeEnum.PlaySound; } }
 
         public string FilePath
         {
@@ -48,9 +66,14 @@ namespace MixItUp.Base.ViewModel.Actions
             : base(action)
         {
             this.LoadSoundDevices();
-            this.FilePath = action.FilePath;
-            this.SelectedAudioDevice = (action.OutputDevice != null) ? action.OutputDevice : ServiceManager.Get<IAudioService>().DefaultAudioDevice;
-            this.Volume = action.VolumeScale;
+
+            this.SelectedActionType = action.ActionType;
+            if (this.ShowPlaySoundGrid)
+            {
+                this.FilePath = action.FilePath;
+                this.SelectedAudioDevice = (action.OutputDevice != null) ? action.OutputDevice : ServiceManager.Get<IAudioService>().DefaultAudioDevice;
+                this.Volume = action.VolumeScale;
+            }
         }
 
         public SoundActionEditorControlViewModel()
@@ -62,28 +85,38 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public override Task<Result> Validate()
         {
-            if (string.IsNullOrEmpty(this.FilePath))
+            if (this.ShowPlaySoundGrid)
             {
-                return Task.FromResult(new Result(MixItUp.Base.Resources.SoundActionMissingFilePath));
+                if (string.IsNullOrEmpty(this.FilePath))
+                {
+                    return Task.FromResult(new Result(MixItUp.Base.Resources.SoundActionMissingFilePath));
+                }
             }
             return Task.FromResult(new Result());
         }
 
         protected override Task<ActionModelBase> GetActionInternal()
         {
-            if (!string.Equals(this.SelectedAudioDevice, ServiceManager.Get<IAudioService>().DefaultAudioDevice))
+            if (this.ShowPlaySoundGrid)
             {
-                return Task.FromResult<ActionModelBase>(new SoundActionModel(this.FilePath, this.Volume, this.SelectedAudioDevice));
+                if (!string.Equals(this.SelectedAudioDevice, ServiceManager.Get<IAudioService>().DefaultAudioDevice))
+                {
+                    return Task.FromResult<ActionModelBase>(new SoundActionModel(this.FilePath, this.Volume, this.SelectedAudioDevice));
+                }
+                else
+                {
+                    return Task.FromResult<ActionModelBase>(new SoundActionModel(this.FilePath, this.Volume));
+                }
             }
             else
             {
-                return Task.FromResult<ActionModelBase>(new SoundActionModel(this.FilePath, this.Volume));
+                return Task.FromResult<ActionModelBase>(new SoundActionModel(this.SelectedActionType));
             }
         }
 
         private void LoadSoundDevices()
         {
-            this.AudioDevices.AddRange(ServiceManager.Get<IAudioService>().GetSelectableAudioDevices());
+            this.AudioDevices.AddRange(ServiceManager.Get<IAudioService>().GetSelectableAudioDevices(includeOverlay: true));
         }
     }
 }
