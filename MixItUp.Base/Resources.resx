@@ -10335,4 +10335,7 @@ clip.setAttribute("src", "https://clips.twitch.tv/embed?parent=" + window.locati
   <data name="SpecificClip" xml:space="preserve">
     <value>Specific Clip</value>
   </data>
+  <data name="NoDuplicates" xml:space="preserve">
+    <value>No Duplicates</value>
+  </data>
 </root>

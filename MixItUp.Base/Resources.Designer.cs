@@ -13154,6 +13154,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Duplicates.
+        /// </summary>
+        public static string NoDuplicates {
+            get {
+                return ResourceManager.GetString("NoDuplicates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No Game Found.
         /// </summary>
         public static string NoGameFound {

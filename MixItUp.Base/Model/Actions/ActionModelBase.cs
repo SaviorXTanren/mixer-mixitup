@@ -56,7 +56,8 @@ namespace MixItUp.Base.Model.Actions
         TITS,
         MusicPlayer,
         LumiaStream,
-        Script
+        Script,
+        Random,
     }
 
     [DataContract]
