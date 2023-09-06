@@ -173,6 +173,10 @@ namespace MixItUp.Base.Services.External
                     }
                 }
             }
+            else
+            {
+                Logger.Log(LogLevel.Error, "TITS - No Response Packet Received - GetAllItems");
+            }
             return results;
         }
 
@@ -187,6 +191,10 @@ namespace MixItUp.Base.Services.External
             if (response != null && response.data != null && response.data.ContainsKey("numberOfThrownItems"))
             {
                 return true;
+            }
+            else
+            {
+                Logger.Log(LogLevel.Error, $"TITS - No Response Packet Received - ThrowItem - {itemID}");
             }
             return false;
         }
@@ -205,6 +213,10 @@ namespace MixItUp.Base.Services.External
                     }
                 }
             }
+            else
+            {
+                Logger.Log(LogLevel.Error, $"TITS - No Response Packet Received - GetAllTriggers");
+            }
             return results;
         }
 
@@ -217,6 +229,10 @@ namespace MixItUp.Base.Services.External
             if (response != null && response.data != null && response.messageType.Equals("TITSTriggerActivateResponse"))
             {
                 return true;
+            }
+            else
+            {
+                Logger.Log(LogLevel.Error, $"TITS - No Response Packet Received - ActivateTrigger - {triggerID}");
             }
             return false;
         }

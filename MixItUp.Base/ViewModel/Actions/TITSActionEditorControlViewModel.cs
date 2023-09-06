@@ -161,11 +161,21 @@ namespace MixItUp.Base.ViewModel.Actions
                 }
                 this.SelectedItem = this.selectedItem = this.Items.FirstOrDefault(i => string.Equals(i.ID, this.throwItemID));
 
+                if (this.Items.Count == 0)
+                {
+                    Logger.Log(LogLevel.Error, "TITS Action - No items loaded");
+                }
+
                 foreach (TITSTrigger trigger in await ServiceManager.Get<TITSService>().GetAllTriggers())
                 {
                     this.Triggers.Add(trigger);
                 }
                 this.SelectedTrigger = this.selectedTrigger = this.Triggers.FirstOrDefault(i => string.Equals(i.ID, this.triggerID));
+
+                if (this.Triggers.Count == 0)
+                {
+                    Logger.Log(LogLevel.Error, "TITS Action - No triggers loaded");
+                }
             }
 
             await base.OnOpenInternal();
