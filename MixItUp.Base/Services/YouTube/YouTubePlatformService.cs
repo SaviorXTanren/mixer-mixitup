@@ -58,12 +58,7 @@ namespace MixItUp.Base.Services.YouTube
 
         public static async Task<Result<YouTubePlatformService>> ConnectBot()
         {
-            Result<YouTubePlatformService> result = await YouTubePlatformService.Connect(YouTubePlatformService.BotScopes);
-            if (!result.Success)
-            {
-                result.Combine(new Result(Resources.YouTubeBotAccountEnsureChannelCreated));
-            }
-            return result;
+            return await YouTubePlatformService.Connect(YouTubePlatformService.BotScopes);
         }
 
         public static async Task<Result<YouTubePlatformService>> Connect(IEnumerable<OAuthClientScopeEnum> scopes)

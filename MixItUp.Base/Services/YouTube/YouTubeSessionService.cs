@@ -84,12 +84,12 @@ namespace MixItUp.Base.Services.YouTube
             Result<YouTubePlatformService> result = await YouTubePlatformService.ConnectBot();
             if (result.Success)
             {
-                this.BotConnection = result.Value;
-                this.Bot = await this.BotConnection.GetCurrentChannel();
+                this.Bot = await result.Value.GetCurrentChannel();
                 if (this.Bot == null)
                 {
                     return new Result(MixItUp.Base.Resources.YouTubeFailedToGetBotData);
                 }
+                this.BotConnection = result.Value;
             }
             return result;
         }
