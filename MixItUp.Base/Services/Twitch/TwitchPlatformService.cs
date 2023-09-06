@@ -194,19 +194,14 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<UserModel> GetNewAPIUserByLogin(string login) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Users.GetUserByLogin(login)); }
 
-        public async Task<IEnumerable<UserFollowModel>> GetNewAPIFollowers(UserModel channel, int maxResult = 1)
+        public async Task<IEnumerable<ChannelFollowerModel>> GetNewAPIFollowers(UserModel channel, int maxResult = 1)
         {
-            return await this.RunAsync(this.Connection.NewAPI.Users.GetFollows(to: channel, maxResults: maxResult));
+            return await this.RunAsync(this.Connection.NewAPI.Channels.GetFollowers(channel, maxResults: maxResult));
         }
 
-        public async Task<UserFollowModel> CheckIfFollowsNewAPI(UserModel channel, UserModel userToCheck)
+        public async Task<ChannelFollowerModel> CheckIfFollowsNewAPI(UserModel channel, UserModel userToCheck)
         {
-            IEnumerable<UserFollowModel> follows = await this.RunAsync(this.Connection.NewAPI.Users.GetFollows(from: userToCheck, to: channel, maxResults: 1));
-            if (follows != null)
-            {
-                return follows.FirstOrDefault();
-            }
-            return null;
+            return await AsyncRunner.RunAsync(this.Connection.NewAPI.Channels.CheckIfFollowing(channel, userToCheck));
         }
 
         public async Task<GameModel> GetNewAPIGameByID(string id) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Games.GetGameByID(id)); }
@@ -323,7 +318,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<long> GetSubscriberPoints(UserModel broadcaster) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Subscriptions.GetBroadcasterSubscriptionPoints(broadcaster)); }
 
-        public async Task<long> GetFollowerCount(UserModel broadcaster) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Users.GetFollowerCount(broadcaster)); }
+        public async Task<long> GetFollowerCount(UserModel broadcaster) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Channels.GetFollowerCount(broadcaster)); }
 
         public async Task<IEnumerable<StreamModel>> GetStreams(IEnumerable<string> userIDs) { return await this.RunAsync(this.Connection.NewAPI.Streams.GetStreamsByUserIDs(userIDs)); }
 

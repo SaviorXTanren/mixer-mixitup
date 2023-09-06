@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.Clients.PubSub.Messages;
+using Twitch.Base.Models.NewAPI.Channels;
 using Twitch.Base.Models.NewAPI.Chat;
 using Twitch.Base.Models.NewAPI.Subscriptions;
 using Twitch.Base.Models.NewAPI.Users;
@@ -63,7 +64,7 @@ namespace MixItUp.Base.Model.User.Platform
 
         public TwitchUserPlatformV2Model(PubSubSubscriptionsEventModel packet) : this(packet.user_id, packet.user_name, null) { }
 
-        public TwitchUserPlatformV2Model(UserFollowModel follow) : this(follow.from_id, follow.from_name, null) { }
+        public TwitchUserPlatformV2Model(ChannelFollowerModel follow) : this(follow.user_id, follow.user_name, follow.user_login) { }
 
         public TwitchUserPlatformV2Model(string id, string username, string displayName)
         {
@@ -92,7 +93,7 @@ namespace MixItUp.Base.Model.User.Platform
                     this.SetUserProperties(user);
                 }
 
-                UserFollowModel follow = await ServiceManager.Get<TwitchSessionService>().UserConnection.CheckIfFollowsNewAPI(ServiceManager.Get<TwitchSessionService>().User, this.GetTwitchNewAPIUserModel());
+                ChannelFollowerModel follow = await ServiceManager.Get<TwitchSessionService>().UserConnection.CheckIfFollowsNewAPI(ServiceManager.Get<TwitchSessionService>().User, this.GetTwitchNewAPIUserModel());
                 if (follow != null && !string.IsNullOrEmpty(follow.followed_at))
                 {
                     this.Roles.Add(UserRoleEnum.Follower);
