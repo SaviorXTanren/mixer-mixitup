@@ -24903,6 +24903,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to For YouTube bot accounts, ensure that you have created a channel on YouTube for the account you are signing in to. See the following Wiki page for more information: https://wiki.mixitupapp.com/accounts#bot-accounts.
+        /// </summary>
+        public static string YouTubeBotAccountEnsureChannelCreated {
+            get {
+                return ResourceManager.GetString("YouTubeBotAccountEnsureChannelCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to YouTube Channel Mass Membership Gifted.
         /// </summary>
         public static string YouTubeChannelMassMembershipGifted {

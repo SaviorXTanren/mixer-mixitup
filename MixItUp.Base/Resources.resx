@@ -10282,4 +10282,7 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="MusicPlayerSelectFolderOrPlayMusicToLoadInSongs" xml:space="preserve">
     <value>Select a new folder to load in music from a folder or hit the Play button to load in music from the last used folder.</value>
   </data>
+  <data name="YouTubeBotAccountEnsureChannelCreated" xml:space="preserve">
+    <value>For YouTube bot accounts, ensure that you have created a channel on YouTube for the account you are signing in to. See the following Wiki page for more information: https://wiki.mixitupapp.com/accounts#bot-accounts</value>
+  </data>
 </root>
