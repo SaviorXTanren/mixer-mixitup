@@ -493,14 +493,21 @@ namespace MixItUp.Base.Services.External
 
         public async Task<IEnumerable<DonorDriveCharity>> GetCharities()
         {
-            using (AdvancedHttpClient client = new AdvancedHttpClient())
+            try
             {
-                List<DonorDriveCharity> charities = await client.GetAsync<List<DonorDriveCharity>>("https://api.donordrive.com/programs?orderBy=displayName%20ASC");
-                if (charities != null)
+                using (AdvancedHttpClient client = new AdvancedHttpClient())
                 {
-                    charities.Add(DonorDriveService.CustomCharity);
-                    return charities.Where(c => !c.isDemo);
+                    List<DonorDriveCharity> charities = await client.GetAsync<List<DonorDriveCharity>>("https://api.donordrive.com/programs?orderBy=displayName%20ASC");
+                    if (charities != null)
+                    {
+                        charities.Add(DonorDriveService.CustomCharity);
+                        return charities.Where(c => !c.isDemo);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
             return null;
         }
