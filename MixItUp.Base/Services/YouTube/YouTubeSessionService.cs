@@ -67,12 +67,12 @@ namespace MixItUp.Base.Services.YouTube
             Result<YouTubePlatformService> result = await YouTubePlatformService.ConnectUser();
             if (result.Success)
             {
-                this.UserConnection = result.Value;
-                this.User = await this.UserConnection.GetCurrentChannel();
+                this.User = await result.Value.GetCurrentChannel();
                 if (this.User == null)
                 {
                     return new Result(MixItUp.Base.Resources.YouTubeFailedToGetUserData);
                 }
+                this.UserConnection = result.Value;
 
                 await this.RefreshChannel();
             }
