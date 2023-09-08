@@ -16917,6 +16917,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove Line With Specific Text From File.
+        /// </summary>
+        public static string RemoveLineWithSpecificTextFromFile {
+            get {
+                return ResourceManager.GetString("RemoveLineWithSpecificTextFromFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove Moderation Strike.
         /// </summary>
         public static string RemoveModerationStrike {
@@ -16940,15 +16949,6 @@ namespace MixItUp.Base {
         public static string RemoveSpecificLineFromFile {
             get {
                 return ResourceManager.GetString("RemoveSpecificLineFromFile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Remove Specific Text From File.
-        /// </summary>
-        public static string RemoveSpecificTextFromFile {
-            get {
-                return ResourceManager.GetString("RemoveSpecificTextFromFile", resourceCulture);
             }
         }
         
@@ -25221,7 +25221,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to get YouTube bot data.
+        ///   Looks up a localized string similar to Failed to get YouTube bot data. For YouTube bot accounts, ensure that you have created a channel on YouTube for the account you are signing in to. See the following Wiki page for more information: https://wiki.mixitupapp.com/accounts#bot-accounts.
         /// </summary>
         public static string YouTubeFailedToGetBotData {
             get {

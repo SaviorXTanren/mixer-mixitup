@@ -27,7 +27,7 @@ namespace MixItUp.Base.Model.Commands
 
         [DataMember]
         public Guid ID { get; set; } = Guid.NewGuid();
-        
+
         [DataMember]
         public Guid CommandID { get; set; }
 

@@ -8450,7 +8450,7 @@ NOTE: This may require you to opt-in to the Preview build from the General tab i
     <value>Failed to connect to YouTube chat servers</value>
   </data>
   <data name="YouTubeFailedToGetBotData" xml:space="preserve">
-    <value>Failed to get YouTube bot data</value>
+    <value>Failed to get YouTube bot data. For YouTube bot accounts, ensure that you have created a channel on YouTube for the account you are signing in to. See the following Wiki page for more information: https://wiki.mixitupapp.com/accounts#bot-accounts</value>
   </data>
   <data name="YouTubeFailedToGetUserData" xml:space="preserve">
     <value>Failed to get YouTube user data</value>
@@ -9585,8 +9585,8 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
   <data name="ShellExecute" xml:space="preserve">
     <value>Shell Execute</value>
   </data>
-  <data name="RemoveSpecificTextFromFile" xml:space="preserve">
-    <value>Remove Specific Text From File</value>
+  <data name="RemoveLineWithSpecificTextFromFile" xml:space="preserve">
+    <value>Remove Line With Specific Text From File</value>
   </data>
   <data name="TextToRemove" xml:space="preserve">
     <value>Text To Remove</value>

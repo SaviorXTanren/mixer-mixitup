@@ -22,7 +22,6 @@ namespace MixItUp.Base.Services.Twitch
         public UserModel Bot { get; set; }
         public ChannelInformationModel Channel { get; set; }
         public StreamModel Stream { get; set; }
-        public StreamModel LastStream { get; set; }
         public List<ChannelContentClassificationLabelModel> ContentClassificationLabels = new List<ChannelContentClassificationLabelModel>();
 
         public bool IsConnected { get { return this.UserConnection != null; } }
@@ -34,6 +33,8 @@ namespace MixItUp.Base.Services.Twitch
         public string Botname { get { return this.Bot?.login; } }
         public string ChannelID { get { return this.User?.id; } }
         public string ChannelLink { get { return string.Format("twitch.tv/{0}", this.Username?.ToLower()); } }
+
+        private StreamModel streamCache;
 
         public StreamingPlatformAccountModel UserAccount
         {
@@ -342,19 +343,27 @@ namespace MixItUp.Base.Services.Twitch
             {
                 this.Channel = await this.UserConnection.GetChannelInformation(this.User);
 
+                StreamModel newStream = await this.UserConnection.GetStream(this.User);
+                if (newStream != null)
+                {
+                    this.Stream = this.streamCache = newStream;
+                }
+                else
+                {
+                    this.Stream = this.streamCache;
+                    this.streamCache = null;
+                }
+
                 if (this.Stream != null)
                 {
-                    this.LastStream = this.Stream;
-                }
-                this.Stream = await this.UserConnection.GetStream(this.User);
-
-                if (this.Stream?.title != null && !string.Equals(this.LastStream?.title, this.Stream?.title, StringComparison.OrdinalIgnoreCase))
-                {
-                    ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, description: this.Stream?.title);
-                }
-                if (this.Stream?.game_name != null && !string.Equals(this.LastStream?.game_name, this.Stream?.game_name, StringComparison.OrdinalIgnoreCase))
-                {
-                    ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, description: this.Stream?.game_name);
+                    if (this.Stream.title != null && !string.Equals(newStream?.title, this.Stream?.title, StringComparison.OrdinalIgnoreCase))
+                    {
+                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, description: this.Stream?.title);
+                    }
+                    if (this.Stream.game_name != null && !string.Equals(newStream?.game_name, this.Stream?.game_name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.StreamUpdated, platform: StreamingPlatformTypeEnum.Twitch, description: this.Stream?.game_name);
+                    }
                 }
             }
         }

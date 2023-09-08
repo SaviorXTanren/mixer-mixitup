@@ -21,7 +21,7 @@ namespace MixItUp.Base.Model.Actions
         RemoveRandomLineFromFile,
         InsertInFileAtSpecificLine,
         InsertInFileAtRandomLine,
-        RemoveSpecificTextFromFile,
+        RemoveLineWithSpecificTextFromFile,
     }
 
     [DataContract]
@@ -63,7 +63,7 @@ namespace MixItUp.Base.Model.Actions
             if (this.ActionType == FileActionTypeEnum.ReadFromFile ||
                 this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
                 this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile ||
-                this.ActionType == FileActionTypeEnum.RemoveSpecificTextFromFile)
+                this.ActionType == FileActionTypeEnum.RemoveLineWithSpecificTextFromFile)
             {
                 if (!ServiceManager.Get<IFileService>().IsURLPath(filePath) && !ServiceManager.Get<IFileService>().FileExists(filePath))
                 {
@@ -84,7 +84,7 @@ namespace MixItUp.Base.Model.Actions
 
             if (this.ActionType == FileActionTypeEnum.SaveToFile || this.ActionType == FileActionTypeEnum.AppendToFile ||
                 this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine || this.ActionType == FileActionTypeEnum.InsertInFileAtRandomLine ||
-                this.ActionType == FileActionTypeEnum.RemoveSpecificTextFromFile)
+                this.ActionType == FileActionTypeEnum.RemoveLineWithSpecificTextFromFile)
             {
                 textToWrite = await this.GetTextToSave(parameters);
             }
@@ -92,7 +92,7 @@ namespace MixItUp.Base.Model.Actions
             if (this.ActionType == FileActionTypeEnum.ReadFromFile || this.ActionType == FileActionTypeEnum.AppendToFile ||
                 this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
                 this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile ||
-                this.ActionType == FileActionTypeEnum.RemoveSpecificTextFromFile ||
+                this.ActionType == FileActionTypeEnum.RemoveLineWithSpecificTextFromFile ||
                 this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine || this.ActionType == FileActionTypeEnum.InsertInFileAtRandomLine)
             {
                 textToRead = await ServiceManager.Get<IFileService>().ReadFile(filePath);
@@ -100,7 +100,7 @@ namespace MixItUp.Base.Model.Actions
 
             if (this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
                 this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile ||
-                this.ActionType == FileActionTypeEnum.RemoveSpecificTextFromFile ||
+                this.ActionType == FileActionTypeEnum.RemoveLineWithSpecificTextFromFile ||
                 this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine || this.ActionType == FileActionTypeEnum.InsertInFileAtRandomLine)
             {
                 if (!string.IsNullOrEmpty(textToRead))
@@ -128,7 +128,7 @@ namespace MixItUp.Base.Model.Actions
                 {
                     lineIndex = RandomHelper.GenerateRandomNumber(lines.Count);
                 }
-                else if (this.ActionType == FileActionTypeEnum.RemoveSpecificTextFromFile)
+                else if (this.ActionType == FileActionTypeEnum.RemoveLineWithSpecificTextFromFile)
                 {
                     lineIndex = lines.FindIndex(l => l.Equals(textToWrite, this.CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase));
                 }    
@@ -154,7 +154,7 @@ namespace MixItUp.Base.Model.Actions
                             }
 
                             if (this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile || this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile ||
-                                this.ActionType == FileActionTypeEnum.RemoveSpecificTextFromFile)
+                                this.ActionType == FileActionTypeEnum.RemoveLineWithSpecificTextFromFile)
                             {
                                 lines.RemoveAt(lineIndex);
                             }
@@ -178,7 +178,7 @@ namespace MixItUp.Base.Model.Actions
             }
 
             if (this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile ||
-                this.ActionType == FileActionTypeEnum.RemoveSpecificTextFromFile ||
+                this.ActionType == FileActionTypeEnum.RemoveLineWithSpecificTextFromFile ||
                 this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine || this.ActionType == FileActionTypeEnum.InsertInFileAtRandomLine)
             {
                 textToWrite = string.Join(Environment.NewLine, lines);
@@ -186,7 +186,7 @@ namespace MixItUp.Base.Model.Actions
 
             if (this.ActionType == FileActionTypeEnum.SaveToFile ||
                 this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile ||
-                this.ActionType == FileActionTypeEnum.RemoveSpecificTextFromFile ||
+                this.ActionType == FileActionTypeEnum.RemoveLineWithSpecificTextFromFile ||
                 this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine || this.ActionType == FileActionTypeEnum.InsertInFileAtRandomLine)
             {
                 await ServiceManager.Get<IFileService>().SaveFile(filePath, textToWrite);

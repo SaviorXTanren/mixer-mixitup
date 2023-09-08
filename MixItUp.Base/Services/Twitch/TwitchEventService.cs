@@ -1,5 +1,4 @@
-﻿using Google.Apis.YouTubePartner.v1.Data;
-using MixItUp.Base.Model;
+﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
@@ -20,6 +19,7 @@ using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.Clients.EventSub;
 using Twitch.Base.Models.Clients.PubSub;
 using Twitch.Base.Models.Clients.PubSub.Messages;
+using Twitch.Base.Models.NewAPI.Channels;
 using Twitch.Base.Models.NewAPI.EventSub;
 using Twitch.Base.Models.NewAPI.Users;
 using Twitch.Base.Services.NewAPI;
@@ -291,10 +291,10 @@ namespace MixItUp.Base.Services.Twitch
             if (ServiceManager.Get<TwitchSessionService>().UserConnection != null)
             {
                 // Load the follower cache
-                IEnumerable<UserFollowModel> followers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIFollowers(ServiceManager.Get<TwitchSessionService>().User, maxResult: 100);
-                foreach (UserFollowModel follow in followers)
+                IEnumerable<ChannelFollowerModel> followers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIFollowers(ServiceManager.Get<TwitchSessionService>().User, maxResult: 100);
+                foreach (ChannelFollowerModel follow in followers)
                 {
-                    this.FollowCache.Add(follow.from_id);
+                    this.FollowCache.Add(follow.user_id);
                 }
 
                 _ = Task.Run(async () =>
@@ -733,15 +733,10 @@ namespace MixItUp.Base.Services.Twitch
                     }
                 }
 
-                IEnumerable<UserFollowModel> followers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIFollowers(ServiceManager.Get<TwitchSessionService>().User, maxResult: 100);
-                foreach (UserFollowModel follow in followers)
+                IEnumerable<ChannelFollowerModel> followers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIFollowers(ServiceManager.Get<TwitchSessionService>().User, maxResult: 100);
+                foreach (ChannelFollowerModel follow in followers)
                 {
-                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, follow.from_id);
-                    if (user == null)
-                    {
-                        user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(follow));
-                    }
-
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(follow));
                     await this.AddFollow(user);
                 }
             }

@@ -228,14 +228,7 @@ namespace MixItUp.Base.Model.Commands
                 await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
                 if (ServiceManager.Get<TwitchSessionService>().IsLive)
                 {
-                    if (ServiceManager.Get<TwitchSessionService>().Stream != null)
-                    {
-                        return TwitchPlatformService.GetTwitchDateTime(ServiceManager.Get<TwitchSessionService>().Stream?.started_at);
-                    }
-                    else
-                    {
-                        return TwitchPlatformService.GetTwitchDateTime(ServiceManager.Get<TwitchSessionService>().LastStream?.started_at);
-                    }
+                    return TwitchPlatformService.GetTwitchDateTime(ServiceManager.Get<TwitchSessionService>().Stream?.started_at);
                 }
             }
 
