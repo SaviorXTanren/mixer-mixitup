@@ -9623,8 +9623,8 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
   <data name="ShellExecute" xml:space="preserve">
     <value>Shell Execute</value>
   </data>
-  <data name="RemoveSpecificTextFromFile" xml:space="preserve">
-    <value>Remove Specific Text From File</value>
+  <data name="RemoveLineWithSpecificTextFromFile" xml:space="preserve">
+    <value>Remove Line With Specific Text From File</value>
   </data>
   <data name="TextToRemove" xml:space="preserve">
     <value>Text To Remove</value>

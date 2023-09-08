@@ -16824,6 +16824,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove Line With Specific Text From File.
+        /// </summary>
+        public static string RemoveLineWithSpecificTextFromFile {
+            get {
+                return ResourceManager.GetString("RemoveLineWithSpecificTextFromFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove Moderation Strike.
         /// </summary>
         public static string RemoveModerationStrike {
@@ -16847,15 +16856,6 @@ namespace MixItUp.Base {
         public static string RemoveSpecificLineFromFile {
             get {
                 return ResourceManager.GetString("RemoveSpecificLineFromFile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Remove Specific Text From File.
-        /// </summary>
-        public static string RemoveSpecificTextFromFile {
-            get {
-                return ResourceManager.GetString("RemoveSpecificTextFromFile", resourceCulture);
             }
         }
         

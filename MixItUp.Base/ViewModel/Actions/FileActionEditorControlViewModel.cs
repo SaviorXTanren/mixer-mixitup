@@ -47,7 +47,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
 
-        public bool ShowTextToRemoveGrid { get { return this.SelectedActionType == FileActionTypeEnum.RemoveSpecificTextFromFile; } }
+        public bool ShowTextToRemoveGrid { get { return this.SelectedActionType == FileActionTypeEnum.RemoveLineWithSpecificTextFromFile; } }
 
         public bool ShowLineToWrite { get { return this.SelectedActionType == FileActionTypeEnum.InsertInFileAtSpecificLine; } }
 
