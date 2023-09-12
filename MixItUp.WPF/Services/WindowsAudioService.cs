@@ -53,15 +53,17 @@ namespace MixItUp.WPF.Services
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     Task.Run(async () =>
                     {
-                        using (WaveOutEvent waveStream = this.PlayWithOutput(filePath, volume, deviceName))
+                        Tuple<WaveOutEvent, WaveStream> output = this.PlayWithOutput(filePath, volume, deviceName);
+                        WaveOutEvent waveOut = output.Item1;
+                        using (waveOut)
                         {
-                            if (waveStream != null)
+                            if (waveOut != null)
                             {
-                                while (waveStream.PlaybackState == PlaybackState.Playing && !cancellationTokenSource.Token.IsCancellationRequested)
+                                while (waveOut.PlaybackState == PlaybackState.Playing && !cancellationTokenSource.Token.IsCancellationRequested)
                                 {
                                     await Task.Delay(500);
                                 }
-                                waveStream.Dispose();
+                                waveOut.Dispose();
                                 cancellationTokenSource.Cancel();
                             }
                         }
@@ -124,7 +126,7 @@ namespace MixItUp.WPF.Services
             return results;
         }
 
-        public WaveOutEvent PlayWithOutput(string filePath, int volume, string deviceName)
+        public Tuple<WaveOutEvent, WaveStream> PlayWithOutput(string filePath, int volume, string deviceName)
         {
             int deviceNumber = -1;
             if (!string.IsNullOrEmpty(deviceName))
@@ -152,7 +154,7 @@ namespace MixItUp.WPF.Services
             {
                 outputEvent.Init(waveStream);
                 outputEvent.Play();
-                return outputEvent;
+                return new Tuple<WaveOutEvent, WaveStream>(outputEvent, waveStream);
             }
             return null;
         }
