@@ -46,6 +46,7 @@ namespace MixItUp.WPF.Services
 
         private CancellationTokenSource backgroundPlayThreadTokenSource = new CancellationTokenSource();
         private WaveOutEvent currentWaveOutEvent;
+        private WaveStream currentWaveStream;
 
         private SemaphoreSlim sempahore = new SemaphoreSlim(1); 
 
@@ -158,7 +159,11 @@ namespace MixItUp.WPF.Services
             await this.sempahore.WaitAndRelease(() =>
             {
                 this.Volume = amount;
-                if (this.currentWaveOutEvent != null)
+                if (this.currentWaveStream != null && this.currentWaveStream is AudioFileReader)
+                {
+                    ((AudioFileReader)this.currentWaveStream).Volume = (ServiceManager.Get<IAudioService>() as WindowsAudioService).ConvertVolumeAmount(this.Volume);
+                }
+                else if (this.currentWaveOutEvent != null)
                 {
                     this.currentWaveOutEvent.Volume = (ServiceManager.Get<IAudioService>() as WindowsAudioService).ConvertVolumeAmount(this.Volume);
                 }
@@ -286,7 +291,9 @@ namespace MixItUp.WPF.Services
             this.backgroundPlayThreadTokenSource = new CancellationTokenSource();
 
             WindowsAudioService audioService = ServiceManager.Get<IAudioService>() as WindowsAudioService;
-            this.currentWaveOutEvent = audioService.PlayWithOutput(filePath, this.Volume, ChannelSession.Settings.MusicPlayerAudioOutput);
+            Tuple<WaveOutEvent, WaveStream> output = audioService.PlayWithOutput(filePath, this.Volume, ChannelSession.Settings.MusicPlayerAudioOutput);
+            this.currentWaveOutEvent = output.Item1;
+            this.currentWaveStream = output.Item2;
             Task backgroundPlayThreadTask = Task.Run(async () => await this.PlayBackground(this.currentWaveOutEvent, this.currentSongIndex), this.backgroundPlayThreadTokenSource.Token);
         }
 
