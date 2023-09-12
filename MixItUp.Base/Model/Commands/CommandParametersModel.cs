@@ -20,7 +20,7 @@ namespace MixItUp.Base.Model.Commands
 
         public static List<string> GenerateArguments(string arguments)
         {
-            return (!string.IsNullOrEmpty(arguments)) ? arguments.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList() : null;
+            return (!string.IsNullOrEmpty(arguments)) ? arguments.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>();
         }
 
         [DataMember]
