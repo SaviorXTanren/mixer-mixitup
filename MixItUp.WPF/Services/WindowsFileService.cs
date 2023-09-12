@@ -28,7 +28,7 @@ namespace MixItUp.WPF.Services
 
         public async Task CopyFile(string sourcePath, string destinationPath)
         {
-            if (File.Exists(sourcePath))
+            if (!string.IsNullOrEmpty(sourcePath) && !string.IsNullOrEmpty(destinationPath) && File.Exists(sourcePath))
             {
                 string destinationDirectory = Path.GetDirectoryName(destinationPath);
                 await this.CreateDirectory(destinationDirectory);
@@ -38,13 +38,16 @@ namespace MixItUp.WPF.Services
 
         public Task DeleteFile(string filePath)
         {
-            File.Delete(filePath);
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                File.Delete(filePath);
+            }
             return Task.CompletedTask;
         }
 
         public Task CreateDirectory(string path)
         {
-            if (!Directory.Exists(path))
+            if (!string.IsNullOrEmpty(path) && !Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
             }
@@ -53,7 +56,7 @@ namespace MixItUp.WPF.Services
 
         public async Task CopyDirectory(string sourceDirectoryPath, string destinationDirectoryPath)
         {
-            if (Directory.Exists(sourceDirectoryPath))
+            if (!string.IsNullOrEmpty(sourceDirectoryPath) && !string.IsNullOrEmpty(destinationDirectoryPath) && Directory.Exists(sourceDirectoryPath))
             {
                 await this.CreateDirectory(destinationDirectoryPath);
                 foreach (string filepath in Directory.GetFiles(sourceDirectoryPath))
@@ -65,7 +68,7 @@ namespace MixItUp.WPF.Services
 
         public Task<IEnumerable<string>> GetFilesInDirectory(string directoryPath)
         {
-            if (Directory.Exists(directoryPath))
+            if (!string.IsNullOrEmpty(directoryPath) && Directory.Exists(directoryPath))
             {
                 return Task.FromResult<IEnumerable<string>>(Directory.GetFiles(directoryPath));
             }
@@ -74,7 +77,7 @@ namespace MixItUp.WPF.Services
 
         public Task<IEnumerable<string>> GetFoldersInDirectory(string directoryPath)
         {
-            if (Directory.Exists(directoryPath))
+            if (!string.IsNullOrEmpty(directoryPath) && Directory.Exists(directoryPath))
             {
                 return Task.FromResult<IEnumerable<string>>(Directory.GetDirectories(directoryPath));
             }
@@ -83,12 +86,12 @@ namespace MixItUp.WPF.Services
 
         public bool FileExists(string filePath)
         {
-            return File.Exists(filePath);
+            return !string.IsNullOrEmpty(filePath) && File.Exists(filePath);
         }
 
         public bool IsURLPath(string filePath)
         {
-            return Uri.IsWellFormedUriString(filePath, UriKind.RelativeOrAbsolute);
+            return !string.IsNullOrEmpty(filePath) && Uri.IsWellFormedUriString(filePath, UriKind.RelativeOrAbsolute);
         }
 
         public long GetFileSize(string filePath)
@@ -109,110 +112,125 @@ namespace MixItUp.WPF.Services
 
         public async Task<string> ReadFile(string filePath)
         {
-            try
+            if (!string.IsNullOrEmpty(filePath))
             {
-                string safeFilePath = filePath.ToFilePathString();
-                if (File.Exists(filePath))
+                try
                 {
-                    using (StreamReader reader = new StreamReader(File.OpenRead(filePath)))
+                    string safeFilePath = filePath.ToFilePathString();
+                    if (File.Exists(filePath))
                     {
-                        return await reader.ReadToEndAsync();
+                        using (StreamReader reader = new StreamReader(File.OpenRead(filePath)))
+                        {
+                            return await reader.ReadToEndAsync();
+                        }
+                    }
+                    else if (File.Exists(safeFilePath))
+                    {
+                        using (StreamReader reader = new StreamReader(File.OpenRead(safeFilePath)))
+                        {
+                            return await reader.ReadToEndAsync();
+                        }
+                    }
+                    else if (webPathPrefixes.Any(p => filePath.StartsWith(p, StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        using (WebClient client = new WebClient())
+                        {
+                            return await Task.Run(async () => { return await client.DownloadStringTaskAsync(filePath); });
+                        }
                     }
                 }
-                else if (File.Exists(safeFilePath))
-                {
-                    using (StreamReader reader = new StreamReader(File.OpenRead(safeFilePath)))
-                    {
-                        return await reader.ReadToEndAsync();
-                    }
-                }
-                else if (webPathPrefixes.Any(p => filePath.StartsWith(p, StringComparison.InvariantCultureIgnoreCase)))
-                {
-                    using (WebClient client = new WebClient())
-                    {
-                        return await Task.Run(async () => { return await client.DownloadStringTaskAsync(filePath); });
-                    }
-                }
+                catch (Exception ex) { Logger.Log(ex); }
             }
-            catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
         public async Task<byte[]> ReadFileAsBytes(string filePath)
         {
-            try
+            if (!string.IsNullOrEmpty(filePath))
             {
-                string safeFilePath = filePath.ToFilePathString();
-                if (File.Exists(filePath))
+                try
                 {
-                    using (FileStream reader = File.OpenRead(filePath))
+                    string safeFilePath = filePath.ToFilePathString();
+                    if (File.Exists(filePath))
                     {
-                        byte[] data = new byte[reader.Length];
-                        await reader.ReadAsync(data, 0, data.Length);
-                        return data;
+                        using (FileStream reader = File.OpenRead(filePath))
+                        {
+                            byte[] data = new byte[reader.Length];
+                            await reader.ReadAsync(data, 0, data.Length);
+                            return data;
+                        }
+                    }
+                    else if (File.Exists(safeFilePath))
+                    {
+                        using (FileStream reader = File.OpenRead(safeFilePath))
+                        {
+                            byte[] data = new byte[reader.Length];
+                            await reader.ReadAsync(data, 0, data.Length);
+                            return data;
+                        }
+                    }
+                    else if (webPathPrefixes.Any(p => filePath.StartsWith(p, StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        using (WebClient client = new WebClient())
+                        {
+                            return await Task.Run(async () => { return await client.DownloadDataTaskAsync(filePath); });
+                        }
                     }
                 }
-                else if (File.Exists(safeFilePath))
-                {
-                    using (FileStream reader = File.OpenRead(safeFilePath))
-                    {
-                        byte[] data = new byte[reader.Length];
-                        await reader.ReadAsync(data, 0, data.Length);
-                        return data;
-                    }
-                }
-                else if (webPathPrefixes.Any(p => filePath.StartsWith(p, StringComparison.InvariantCultureIgnoreCase)))
-                {
-                    using (WebClient client = new WebClient())
-                    {
-                        return await Task.Run(async () => { return await client.DownloadDataTaskAsync(filePath); });
-                    }
-                }
+                catch (Exception ex) { Logger.Log(ex); }
             }
-            catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
         public async Task SaveFile(string filePath, string data)
         {
-            await WindowsFileService.fileLock.WaitAndRelease(async () =>
+            if (!string.IsNullOrEmpty(filePath))
             {
-                using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Create)))
+                await WindowsFileService.fileLock.WaitAndRelease(async () =>
                 {
-                    if (!string.IsNullOrEmpty(data))
+                    using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Create)))
                     {
-                        await writer.WriteAsync(data);
+                        if (!string.IsNullOrEmpty(data))
+                        {
+                            await writer.WriteAsync(data);
+                        }
+                        await writer.FlushAsync();
                     }
-                    await writer.FlushAsync();
-                }
-            });
+                });
+            }
         }
 
         public async Task SaveFileAsBytes(string filePath, byte[] data)
         {
-            try
+            if (!string.IsNullOrEmpty(filePath))
             {
-                using (FileStream reader = File.OpenWrite(filePath))
+                try
                 {
-                    await reader.WriteAsync(data, 0, data.Length);
+                    using (FileStream reader = File.OpenWrite(filePath))
+                    {
+                        await reader.WriteAsync(data, 0, data.Length);
+                    }
                 }
+                catch (Exception ex) { Logger.Log(ex); }
             }
-            catch (Exception ex) { Logger.Log(ex); }
         }
 
         public async Task AppendFile(string filePath, string data)
         {
-            await WindowsFileService.fileLock.WaitAndRelease(async () =>
+            if (!string.IsNullOrEmpty(filePath))
             {
-                using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Append)))
+                await WindowsFileService.fileLock.WaitAndRelease(async () =>
                 {
-                    if (!string.IsNullOrEmpty(data))
+                    using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Append)))
                     {
-                        await writer.WriteAsync(data);
+                        if (!string.IsNullOrEmpty(data))
+                        {
+                            await writer.WriteAsync(data);
+                        }
+                        await writer.FlushAsync();
                     }
-                    await writer.FlushAsync();
-                }
-            });
+                });
+            }
         }
 
         public string ShowOpenFolderDialog()
@@ -259,19 +277,22 @@ namespace MixItUp.WPF.Services
 
         public async Task ZipFiles(string destinationFilePath, IEnumerable<string> filePathsToBeAdded)
         {
-            string tempDirectory = Path.Combine(this.GetTempFolder(), Path.GetRandomFileName());
-            if (Directory.Exists(tempDirectory))
+            if (!string.IsNullOrEmpty(destinationFilePath) && filePathsToBeAdded != null)
             {
-                Directory.Delete(tempDirectory, recursive: true);
-            }
-            Directory.CreateDirectory(tempDirectory);
+                string tempDirectory = Path.Combine(this.GetTempFolder(), Path.GetRandomFileName());
+                if (Directory.Exists(tempDirectory))
+                {
+                    Directory.Delete(tempDirectory, recursive: true);
+                }
+                Directory.CreateDirectory(tempDirectory);
 
-            foreach (string filePathToBeAdded in filePathsToBeAdded)
-            {
-                await this.CopyFile(filePathToBeAdded, Path.Combine(tempDirectory, Path.GetFileName(filePathToBeAdded)));
-            }
+                foreach (string filePathToBeAdded in filePathsToBeAdded)
+                {
+                    await this.CopyFile(filePathToBeAdded, Path.Combine(tempDirectory, Path.GetFileName(filePathToBeAdded)));
+                }
 
-            ZipFile.CreateFromDirectory(tempDirectory, destinationFilePath);
+                ZipFile.CreateFromDirectory(tempDirectory, destinationFilePath);
+            }
         }
 
         public async Task UnzipFiles(string zipFilePath, string destinationFolderPath)
@@ -280,7 +301,7 @@ namespace MixItUp.WPF.Services
             {
                 try
                 {
-                    if (File.Exists(zipFilePath))
+                    if (!string.IsNullOrEmpty(zipFilePath) && !string.IsNullOrEmpty(destinationFolderPath) && File.Exists(zipFilePath))
                     {
                         using (FileStream stream = File.OpenRead(zipFilePath))
                         {
