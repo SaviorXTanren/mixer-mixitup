@@ -223,43 +223,24 @@ namespace MixItUp.Base.Model.Commands
     {
         public static async Task<DateTimeOffset> GetStartTime(StreamingPlatformTypeEnum platform)
         {
-            if (platform == StreamingPlatformTypeEnum.All)
+            if (StreamingPlatforms.IsValidPlatform(platform))
             {
-                platform = ChannelSession.Settings.DefaultStreamingPlatform;
-            }
-
-            if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
-            {
-                await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
-                if (ServiceManager.Get<TwitchSessionService>().IsLive)
+                foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.GetConnectedPlatforms())
                 {
-                    return TwitchPlatformService.GetTwitchDateTime(ServiceManager.Get<TwitchSessionService>().Stream?.started_at);
-                }
-            }
-
-            if (platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().IsConnected)
-            {
-                await ServiceManager.Get<YouTubeSessionService>().RefreshChannel();
-                if (ServiceManager.Get<YouTubeSessionService>().IsLive)
-                {
-                    if (ServiceManager.Get<YouTubeSessionService>().Broadcast.Snippet.ActualStartTime.HasValue)
+                    DateTimeOffset startTime = await UptimePreMadeChatCommandModel.GetStartTime(p);
+                    if (startTime != DateTimeOffset.MinValue)
                     {
-                        DateTime dt = ServiceManager.Get<YouTubeSessionService>().Broadcast.Snippet.ActualStartTime.GetValueOrDefault();
-                        if (dt.Kind == DateTimeKind.Unspecified)
-                        {
-                            dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
-                        }
-                        return new DateTimeOffset(dt, (dt.Kind == DateTimeKind.Utc) ? TimeSpan.Zero : DateTimeOffset.Now.Offset);
+                        return startTime;
                     }
                 }
             }
-
-            if (platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().IsConnected)
+            else
             {
-                await ServiceManager.Get<TrovoSessionService>().RefreshChannel();
-                if (ServiceManager.Get<TrovoSessionService>().IsLive)
+                IStreamingPlatformSessionService platformService = StreamingPlatforms.GetPlatformSessionService(platform);
+                if (platformService.IsConnected)
                 {
-                    return TrovoPlatformService.GetTrovoDateTime(ServiceManager.Get<TrovoSessionService>().Channel?.started_at);
+                    await platformService.RefreshChannel();
+                    return platformService.StreamStart;
                 }
             }
 

@@ -62,6 +62,26 @@ namespace MixItUp.Base.Services.YouTube
 
         public int ViewerCount { get { return (int)this.Video?.LiveStreamingDetails?.ConcurrentViewers.GetValueOrDefault(); } }
 
+        public DateTimeOffset StreamStart
+        {
+            get
+            {
+                if (this.IsLive)
+                {
+                    if (this.Broadcast.Snippet.ActualStartTime.HasValue)
+                    {
+                        DateTime dt = this.Broadcast.Snippet.ActualStartTime.GetValueOrDefault();
+                        if (dt.Kind == DateTimeKind.Unspecified)
+                        {
+                            dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
+                        }
+                        return new DateTimeOffset(dt, (dt.Kind == DateTimeKind.Utc) ? TimeSpan.Zero : DateTimeOffset.Now.Offset);
+                    }
+                }
+                return DateTimeOffset.MinValue;
+            }
+        }
+
         public async Task<Result> ConnectUser()
         {
             Result<YouTubePlatformService> result = await YouTubePlatformService.ConnectUser();

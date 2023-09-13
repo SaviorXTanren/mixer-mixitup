@@ -71,6 +71,18 @@ namespace MixItUp.Base.Services.Twitch
 
         public int ViewerCount { get { return (int)this.Stream?.viewer_count; } }
 
+        public DateTimeOffset StreamStart
+        {
+            get
+            {
+                if (this.IsLive)
+                {
+                    return TwitchPlatformService.GetTwitchDateTime(this.Stream?.started_at);
+                }
+                return DateTimeOffset.MinValue;
+            }
+        }
+
         public async Task<Result> ConnectUser()
         {
             Result<TwitchPlatformService> result = await TwitchPlatformService.ConnectUser();

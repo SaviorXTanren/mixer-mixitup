@@ -68,6 +68,18 @@ namespace MixItUp.Base.Services.Trovo
 
         public int ViewerCount { get { return (int)this.Channel?.current_viewers; } }
 
+        public DateTimeOffset StreamStart
+        {
+            get
+            {
+                if (this.IsLive)
+                {
+                    return TrovoPlatformService.GetTrovoDateTime(ServiceManager.Get<TrovoSessionService>().Channel?.started_at);
+                }
+                return DateTimeOffset.MinValue;
+            }
+        }
+
         public async Task<Result> ConnectUser()
         {
             Result<TrovoPlatformService> result = await TrovoPlatformService.ConnectUser();

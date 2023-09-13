@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Util;
+using System;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -30,6 +31,7 @@ namespace MixItUp.Base.Services
 
         bool IsLive { get; }
         int ViewerCount { get; }
+        DateTimeOffset StreamStart { get; }
 
         Task<Result> ConnectUser();
         Task<Result> ConnectBot();
