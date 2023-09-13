@@ -131,6 +131,8 @@ namespace MixItUp.Base.ViewModel.Actions
                     case ActionTypeEnum.OvrStream: actionPageName = "ovrstream-action"; break;
                     case ActionTypeEnum.PixelChat: actionPageName = "pixel-chat-action"; break;
                     case ActionTypeEnum.PolyPop: actionPageName = "polypop-action"; break;
+                    case ActionTypeEnum.Random: actionPageName = "random-action"; break;
+                    case ActionTypeEnum.SAMMI: actionPageName = "sammi-action"; break;
                     case ActionTypeEnum.Serial: actionPageName = "serial-action"; break;
                     case ActionTypeEnum.Sound: actionPageName = "sound-action"; break;
                     case ActionTypeEnum.SpecialIdentifier: actionPageName = "special-identifier-action"; break;
@@ -144,6 +146,9 @@ namespace MixItUp.Base.ViewModel.Actions
                     case ActionTypeEnum.Wait: actionPageName = "wait-action"; break;
                     case ActionTypeEnum.WebRequest: actionPageName = "web-request-action"; break;
                     case ActionTypeEnum.YouTube: actionPageName = "youtube-action"; break;
+                    default:
+                        actionPageName = this.Type.ToString().ToLower() + "-action";
+                        break;
                 }
 
                 ProcessHelper.LaunchLink("https://wiki.mixitupapp.com/actions/" + actionPageName);
