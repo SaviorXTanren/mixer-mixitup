@@ -448,6 +448,7 @@ namespace MixItUp.Base.Util
                 if (this.ContainsSpecialIdentifier(StreamUptimeSpecialIdentifierHeader) || this.ContainsSpecialIdentifier(StreamStartSpecialIdentifierHeader))
                 {
                     DateTimeOffset startTime = await UptimePreMadeChatCommandModel.GetStartTime(parameters.Platform);
+                    Logger.ForceLog(LogLevel.Debug, $"Channel stream info: {JSONSerializerHelper.SerializeToString(ServiceManager.Get<TwitchSessionService>().Stream)} - {JSONSerializerHelper.SerializeToString(ServiceManager.Get<YouTubeSessionService>().Broadcast)} - {ServiceManager.Get<TrovoSessionService>().Channel}");
                     if (startTime > DateTimeOffset.MinValue)
                     {
                         TimeSpan duration = DateTimeOffset.Now.Subtract(startTime);
