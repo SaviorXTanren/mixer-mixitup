@@ -223,6 +223,11 @@ namespace MixItUp.Base.Model.Commands
     {
         public static async Task<DateTimeOffset> GetStartTime(StreamingPlatformTypeEnum platform)
         {
+            if (platform == StreamingPlatformTypeEnum.All)
+            {
+                platform = ChannelSession.Settings.DefaultStreamingPlatform;
+            }
+
             if (platform == StreamingPlatformTypeEnum.Twitch && ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
                 await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
