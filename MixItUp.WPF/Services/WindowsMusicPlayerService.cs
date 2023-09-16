@@ -307,7 +307,7 @@ namespace MixItUp.WPF.Services
                 }
                 waveOutEvent.Dispose();
 
-                if (this.currentSongIndex == songIndex)
+                if (this.currentSongIndex == songIndex && this.State == MusicPlayerState.Playing)
                 {
                     await this.Next();
                 }
