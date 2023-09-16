@@ -511,8 +511,10 @@ namespace MixItUp.Base.Services.YouTube
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSuperChatAmountData] = liveChatMessage.Snippet.SuperChatDetails.AmountDisplayString;
 
                             double amount = Math.Round((double)liveChatMessage.Snippet.SuperChatDetails.AmountMicros.GetValueOrDefault() / 1000000.0, 2);
+                            int amountDigits = (int)amount * 100;
 
                             CommandParametersModel parameters = new CommandParametersModel(user, StreamingPlatformTypeEnum.YouTube);
+                            parameters.SpecialIdentifiers["amountnumberdigits"] = amountDigits.ToString();
                             parameters.SpecialIdentifiers["amountnumber"] = amount.ToString();
                             parameters.SpecialIdentifiers["amount"] = liveChatMessage.Snippet.SuperChatDetails.AmountDisplayString;
                             parameters.SpecialIdentifiers["tier"] = liveChatMessage.Snippet.SuperChatDetails.Tier.GetValueOrDefault().ToString();
@@ -536,8 +538,10 @@ namespace MixItUp.Base.Services.YouTube
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSuperChatAmountData] = liveChatMessage.Snippet.SuperStickerDetails.AmountDisplayString;
 
                             double amount = Math.Round((double)liveChatMessage.Snippet.SuperStickerDetails.AmountMicros.GetValueOrDefault() / 1000000.0, 2);
+                            int amountDigits = (int)amount * 100;
 
                             CommandParametersModel parameters = new CommandParametersModel(user, StreamingPlatformTypeEnum.YouTube);
+                            parameters.SpecialIdentifiers["amountnumberdigits"] = amountDigits.ToString();
                             parameters.SpecialIdentifiers["amountnumber"] = amount.ToString();
                             parameters.SpecialIdentifiers["amount"] = liveChatMessage.Snippet.SuperStickerDetails.AmountDisplayString;
                             parameters.SpecialIdentifiers["tier"] = liveChatMessage.Snippet.SuperStickerDetails.Tier.GetValueOrDefault().ToString();
