@@ -20,7 +20,7 @@ namespace MixItUp.WPF.Controls.Actions
             CommandSelectorDialogControl dialogControl = new CommandSelectorDialogControl();
             if (bool.Equals(await DialogHelper.ShowCustom(dialogControl), true) && dialogControl.ViewModel.SelectedCommand != null)
             {
-                await ((ConditionalActionEditorControlViewModel)this.DataContext).ImportActionsFromCommand(dialogControl.ViewModel.SelectedCommand);
+                await ((SubActionContainerControlViewModel)this.DataContext).ImportActionsFromCommand(dialogControl.ViewModel.SelectedCommand);
             }
         }
     }
