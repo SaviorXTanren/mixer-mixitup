@@ -105,8 +105,6 @@ namespace MixItUp.Base.Services.YouTube
 
         public async Task<Video> UpdateVideo(Video video, string title = null, string description = null, string categoryId = null) { return await AsyncRunner.RunAsync(this.Connection.Videos.UpdateVideo(video, title, description, categoryId)); }
 
-        public async Task<IEnumerable<Member>> GetChannelMemberships(int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.GetChannelMemberships(maxResults)); }
-
         public async Task<IEnumerable<LiveChatModerator>> GetModerators(LiveBroadcast broadcast, int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.GetModerators(broadcast, maxResults)); }
 
         public async Task<IEnumerable<Subscription>> GetSubscribers(string channelID, int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.Subscriptions.GetMyRecentSubscribers(maxResults)); }
@@ -114,6 +112,8 @@ namespace MixItUp.Base.Services.YouTube
         public async Task<Subscription> CheckIfSubscribed(string channelID, string userID) { return await AsyncRunner.RunAsync(this.Connection.Subscriptions.CheckIfSubscribed(channelID, userID)); }
 
         public async Task<IEnumerable<MembershipsLevel>> GetMembershipLevels() { return await AsyncRunner.RunAsync(this.Connection.Membership.GetMyMembershipLevels()); }
+
+        public async Task<IEnumerable<Member>> GetChannelMemberships(int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.LiveChat.GetChannelMemberships(maxResults)); }
 
         public async Task<IEnumerable<Member>> GetMembers(int maxResults = 1) { return await AsyncRunner.RunAsync(this.Connection.Membership.GetMembers(maxResults)); }
 

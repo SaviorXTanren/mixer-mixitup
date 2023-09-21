@@ -31,6 +31,8 @@ namespace MixItUp.Base.Services.YouTube
         public string ChannelID { get { return this.User?.Id; } }
         public string ChannelLink { get { return this.User?.Snippet?.CustomUrl; } }
 
+        public bool HasMembershipCapabilities { get { return this.MembershipLevels.Count > 0; } }
+
         private DateTime launchDateTime = DateTime.Now;
 
         public StreamingPlatformAccountModel UserAccount
