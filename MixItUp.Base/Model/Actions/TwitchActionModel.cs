@@ -1,7 +1,9 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -315,29 +317,29 @@ namespace MixItUp.Base.Model.Actions
                 }
                 else if (this.ActionType == TwitchActionType.VIPUser || this.ActionType == TwitchActionType.UnVIPUser)
                 {
-                    string targetUsername = null;
+                    UserV2ViewModel targetUser = null;
                     if (!string.IsNullOrEmpty(this.Username))
                     {
-                        targetUsername = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                        string targetUsername = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                        targetUser = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, targetUsername, performPlatformSearch: true);
                     }
                     else
                     {
-                        targetUsername = parameters.User.Username;
+                        targetUser = parameters.User;
                     }
 
-                    if (!string.IsNullOrEmpty(targetUsername))
+                    if (targetUser != null)
                     {
-                        UserModel targetUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(targetUsername);
-                        if (targetUser != null)
+                        UserModel twitchUser = targetUser.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).GetTwitchNewAPIUserModel();
+                        if (this.ActionType == TwitchActionType.VIPUser)
                         {
-                            if (this.ActionType == TwitchActionType.VIPUser)
-                            {
-                                await ServiceManager.Get<TwitchSessionService>().UserConnection.VIPUser(ServiceManager.Get<TwitchSessionService>().User, targetUser);
-                            }
-                            else if (this.ActionType == TwitchActionType.UnVIPUser)
-                            {
-                                await ServiceManager.Get<TwitchSessionService>().UserConnection.UnVIPUser(ServiceManager.Get<TwitchSessionService>().User, targetUser);
-                            }
+                            targetUser.Roles.Add(User.UserRoleEnum.TwitchVIP);
+                            await ServiceManager.Get<TwitchSessionService>().UserConnection.VIPUser(ServiceManager.Get<TwitchSessionService>().User, twitchUser);
+                        }
+                        else if (this.ActionType == TwitchActionType.UnVIPUser)
+                        {
+                            targetUser.Roles.Remove(User.UserRoleEnum.TwitchVIP);
+                            await ServiceManager.Get<TwitchSessionService>().UserConnection.UnVIPUser(ServiceManager.Get<TwitchSessionService>().User, twitchUser);
                         }
                     }
                 }

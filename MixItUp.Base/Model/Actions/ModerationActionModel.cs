@@ -84,10 +84,12 @@ namespace MixItUp.Base.Model.Actions
                     }
                     else if (this.ActionType == ModerationActionTypeEnum.ModUser)
                     {
+                        targetUser.Roles.Add(User.UserRoleEnum.Moderator);
                         await ServiceManager.Get<ChatService>().ModUser(targetUser);
                     }
                     else if (this.ActionType == ModerationActionTypeEnum.UnmodUser)
                     {
+                        targetUser.Roles.Remove(User.UserRoleEnum.Moderator);
                         await ServiceManager.Get<ChatService>().UnmodUser(targetUser);
                     }
                     else if (this.ActionType == ModerationActionTypeEnum.AddModerationStrike)
