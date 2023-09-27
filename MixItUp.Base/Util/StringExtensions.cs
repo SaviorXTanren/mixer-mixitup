@@ -69,5 +69,7 @@ namespace MixItUp.Base.Util
         }
 
         public static string ToNumberDisplayString(this int number) { return number.ToString("N0"); }
+
+        public static string ToNumberDisplayString(this double number) { return number.ToString("N0"); }
     }
 }
