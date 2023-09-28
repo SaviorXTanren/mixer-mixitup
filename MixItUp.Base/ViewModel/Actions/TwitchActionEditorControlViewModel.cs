@@ -153,8 +153,10 @@ namespace MixItUp.Base.ViewModel.Actions
                 if (this.existingChannelPointRewardID == Guid.Empty)
                 {
                     this.ChannelPointRewardState = this.ChannelPointReward.is_enabled;
+                    this.ChannelPointRewardPaused = this.ChannelPointReward.is_paused;
                     this.ChannelPointRewardName = this.ChannelPointReward.title;
                     this.ChannelPointRewardDescription = this.ChannelPointReward.prompt;
+                    this.ChannelPointRewardBackgroundColor = this.ChannelPointReward.background_color;
                     this.ChannelPointRewardCost = this.ChannelPointReward.cost.ToString();
                     this.ChannelPointRewardMaxPerStream = this.ChannelPointReward.max_per_stream_setting.max_per_stream.ToString();
                     this.ChannelPointRewardMaxPerUser = this.ChannelPointReward.max_per_user_per_stream_setting.max_per_user_per_stream.ToString();
@@ -177,6 +179,17 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private bool channelPointRewardState;
 
+        public bool ChannelPointRewardPaused
+        {
+            get { return this.channelPointRewardPaused; }
+            set
+            {
+                this.channelPointRewardPaused = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool channelPointRewardPaused;
+
         public string ChannelPointRewardName
         {
             get { return this.channelPointRewardName; }
@@ -198,6 +211,17 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private string channelPointRewardDescription;
+
+        public string ChannelPointRewardBackgroundColor
+        {
+            get { return this.channelPointRewardBackgroundColor; }
+            set
+            {
+                this.channelPointRewardBackgroundColor = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string channelPointRewardBackgroundColor;
 
         public string ChannelPointRewardCost
         {
@@ -520,8 +544,10 @@ namespace MixItUp.Base.ViewModel.Actions
 
                 this.existingChannelPointRewardID = action.ChannelPointRewardID;
                 this.ChannelPointRewardState = action.ChannelPointRewardState;
+                this.ChannelPointRewardPaused = action.ChannelPointRewardPaused;
                 this.ChannelPointRewardName = action.ChannelPointRewardName;
                 this.ChannelPointRewardDescription = action.ChannelPointRewardDescription;
+                this.ChannelPointRewardBackgroundColor = action.ChannelPointRewardBackgroundColor;
                 this.ChannelPointRewardCost = action.ChannelPointRewardCostString;
                 this.ChannelPointRewardUpdateCooldownsAndLimits = action.ChannelPointRewardUpdateCooldownsAndLimits;
                 this.ChannelPointRewardMaxPerStream = action.ChannelPointRewardMaxPerStreamString;
@@ -751,8 +777,8 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowUpdateChannelPointRewardGrid)
             {
-                return TwitchActionModel.CreateUpdateChannelPointReward(this.ChannelPointReward.id, this.ChannelPointRewardName, this.ChannelPointRewardDescription, this.ChannelPointRewardState,
-                    this.ChannelPointRewardCost, this.ChannelPointRewardUpdateCooldownsAndLimits, this.ChannelPointRewardMaxPerStream, this.ChannelPointRewardMaxPerUser, this.ChannelPointRewardGlobalCooldown);
+                return TwitchActionModel.CreateUpdateChannelPointReward(this.ChannelPointReward.id, this.ChannelPointRewardName, this.ChannelPointRewardDescription, this.ChannelPointRewardState, this.ChannelPointRewardPaused,
+                    this.ChannelPointRewardBackgroundColor, this.ChannelPointRewardCost, this.ChannelPointRewardUpdateCooldownsAndLimits, this.ChannelPointRewardMaxPerStream, this.ChannelPointRewardMaxPerUser, this.ChannelPointRewardGlobalCooldown);
             }
             else if (this.ShowPollGrid)
             {
