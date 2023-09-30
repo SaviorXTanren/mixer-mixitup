@@ -123,7 +123,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
             this.ClearUserDataRange = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.ClearUserDataRangeHeader, MixItUp.Base.Resources.ClearUserDataRange, this.CreateCommand(async () =>
             {
-                string output = await DialogHelper.ShowTextEntry(MixItUp.Base.Resources.ClearUserDataRangeWarning, "0", MixItUp.Base.Resources.TimeDays);
+                string output = await DialogHelper.ShowTextEntry(MixItUp.Base.Resources.TimeDays, "0", MixItUp.Base.Resources.ClearUserDataRangeWarning);
                 if (!string.IsNullOrEmpty(output) && int.TryParse(output, out int days) && days > 0)
                 {
                     await ServiceManager.Get<UserService>().ClearUserDataRange(days);
