@@ -66,6 +66,8 @@ namespace MixItUp.Base.Services.External
 
         public string Name { get { return MixItUp.Base.Resources.LumiaStream; } }
 
+        public bool IsEnabled { get { return ChannelSession.Settings.LumiaStreamOAuthToken != null; } }
+
         public bool IsConnected { get; private set; }
 
         public async Task<Result> Connect()

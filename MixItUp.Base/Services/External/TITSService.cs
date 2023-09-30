@@ -116,11 +116,12 @@ namespace MixItUp.Base.Services.External
 
         public override string Name { get { return MixItUp.Base.Resources.TwitchIntegratedThrowingSystem; } }
 
+        public bool IsEnabled { get { return ChannelSession.Settings.TITSOAuthToken != null; } }
+
         public override async Task<Result> Connect()
         {
             try
             {
-                this.token = null;
                 if (await this.ConnectWebSocket())
                 {
                     return await this.InitializeInternal();
@@ -135,19 +136,8 @@ namespace MixItUp.Base.Services.External
 
         public override async Task<Result> Connect(OAuthTokenModel token)
         {
-            try
-            {
-                this.token = token;
-                if (await this.ConnectWebSocket())
-                {
-                    return await this.InitializeInternal();
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-            return new Result(MixItUp.Base.Resources.TITSConnectionFailed);
+            this.token = token;
+            return await this.Connect();
         }
 
         public override async Task Disconnect()

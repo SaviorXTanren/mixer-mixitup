@@ -55,13 +55,9 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (ChannelSession.Settings.TITSOAuthToken != null && !ServiceManager.Get<TITSService>().IsConnected)
+            if (ServiceManager.Get<TITSService>().IsEnabled && !ServiceManager.Get<TITSService>().IsConnected)
             {
-                Result result = await ServiceManager.Get<TITSService>().Connect(ChannelSession.Settings.TITSOAuthToken);
-                if (!result.Success)
-                {
-                    return;
-                }
+                await ServiceManager.Get<TITSService>().Connect();
             }
 
             if (ServiceManager.Get<TITSService>().IsConnected)

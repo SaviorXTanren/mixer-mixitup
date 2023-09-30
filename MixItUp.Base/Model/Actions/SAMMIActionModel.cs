@@ -53,6 +53,11 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
+            if (ServiceManager.Get<SAMMIService>().IsEnabled && !ServiceManager.Get<SAMMIService>().IsConnected)
+            {
+                await ServiceManager.Get<SAMMIService>().Connect();
+            }
+
             if (ServiceManager.Get<SAMMIService>().IsConnected)
             {
                 if (this.ActionType == SAMMIActionTypeEnum.TriggerButton || this.ActionType == SAMMIActionTypeEnum.ReleaseButton)

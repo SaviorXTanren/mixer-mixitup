@@ -67,33 +67,41 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (this.ActionType == LumiaStreamActionTypeEnum.TriggerCommand)
+            if (ServiceManager.Get<LumiaStreamService>().IsEnabled && !ServiceManager.Get<LumiaStreamService>().IsConnected)
             {
-                string commandType = null;
-                switch (this.CommandType)
-                {
-                    case LumiaStreamActionCommandTypeEnum.ChatCommand:
-                        commandType = "chat-command";
-                        break;
-                    case LumiaStreamActionCommandTypeEnum.TwitchPoint:
-                        commandType = "twitch-points";
-                        break;
-                    case LumiaStreamActionCommandTypeEnum.TwitchExtension:
-                        commandType = "twitch-extension";
-                        break;
-                    case LumiaStreamActionCommandTypeEnum.TrovoSpell:
-                        commandType = "trovo-spells";
-                        break;
-                }
-
-                if (!string.IsNullOrEmpty(commandType))
-                {
-                    await ServiceManager.Get<LumiaStreamService>().TriggerCommand(commandType, this.CommandName);
-                }
+                await ServiceManager.Get<LumiaStreamService>().Connect();
             }
-            else if (this.ActionType == LumiaStreamActionTypeEnum.SetLightsColor)
+
+            if (ServiceManager.Get<LumiaStreamService>().IsConnected)
             {
-                await ServiceManager.Get<LumiaStreamService>().SetColorAndBrightness(this.ColorHex, this.ColorBrightness, (int)(this.ColorTransition * 1000), (int)(this.ColorDuration * 1000), this.ColorHold);
+                if (this.ActionType == LumiaStreamActionTypeEnum.TriggerCommand)
+                {
+                    string commandType = null;
+                    switch (this.CommandType)
+                    {
+                        case LumiaStreamActionCommandTypeEnum.ChatCommand:
+                            commandType = "chat-command";
+                            break;
+                        case LumiaStreamActionCommandTypeEnum.TwitchPoint:
+                            commandType = "twitch-points";
+                            break;
+                        case LumiaStreamActionCommandTypeEnum.TwitchExtension:
+                            commandType = "twitch-extension";
+                            break;
+                        case LumiaStreamActionCommandTypeEnum.TrovoSpell:
+                            commandType = "trovo-spells";
+                            break;
+                    }
+
+                    if (!string.IsNullOrEmpty(commandType))
+                    {
+                        await ServiceManager.Get<LumiaStreamService>().TriggerCommand(commandType, this.CommandName);
+                    }
+                }
+                else if (this.ActionType == LumiaStreamActionTypeEnum.SetLightsColor)
+                {
+                    await ServiceManager.Get<LumiaStreamService>().SetColorAndBrightness(this.ColorHex, this.ColorBrightness, (int)(this.ColorTransition * 1000), (int)(this.ColorDuration * 1000), this.ColorHold);
+                }
             }
         }
     }
