@@ -225,6 +225,15 @@ namespace MixItUp.Base.Model.Commands
         {
             if (StreamingPlatforms.IsValidPlatform(platform))
             {
+                IStreamingPlatformSessionService platformService = StreamingPlatforms.GetPlatformSessionService(platform);
+                if (platformService.IsConnected)
+                {
+                    await platformService.RefreshChannel();
+                    return platformService.StreamStart;
+                }
+            }
+            else
+            {
                 foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.GetConnectedPlatforms())
                 {
                     DateTimeOffset startTime = await UptimePreMadeChatCommandModel.GetStartTime(p);
@@ -232,15 +241,6 @@ namespace MixItUp.Base.Model.Commands
                     {
                         return startTime;
                     }
-                }
-            }
-            else
-            {
-                IStreamingPlatformSessionService platformService = StreamingPlatforms.GetPlatformSessionService(platform);
-                if (platformService.IsConnected)
-                {
-                    await platformService.RefreshChannel();
-                    return platformService.StreamStart;
                 }
             }
 
