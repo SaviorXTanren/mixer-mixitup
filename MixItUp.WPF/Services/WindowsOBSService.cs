@@ -17,7 +17,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace MixItUp.WPF.Services
 {
@@ -226,8 +225,6 @@ namespace MixItUp.WPF.Services
         {
             Logger.Log(LogLevel.Debug, "Setting image source file path - " + sourceName);
 
-            await this.SetSourceVisibility(sceneName, sourceName, visibility: false);
-
             await this.OBSCommandTimeoutWrapper(async (cancellationToken) =>
             {
                 if (this.OBSWebsocket.IsConnected)
@@ -254,8 +251,6 @@ namespace MixItUp.WPF.Services
         public async Task SetMediaSourceFilePath(string sceneName, string sourceName, string filePath)
         {
             Logger.Log(LogLevel.Debug, "Setting media source file path - " + sourceName);
-
-            await this.SetSourceVisibility(sceneName, sourceName, visibility: false);
 
             await this.OBSCommandTimeoutWrapper(async (cancellationToken) =>
             {
