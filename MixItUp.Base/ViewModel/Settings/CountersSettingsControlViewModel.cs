@@ -132,7 +132,7 @@ namespace MixItUp.Base.ViewModel.Settings
         private void RefreshList()
         {
             this.Counters.Clear();
-            foreach (var kvp in ChannelSession.Settings.Counters.ToList())
+            foreach (var kvp in ChannelSession.Settings.Counters.ToList().OrderBy(c => c.Value.Name))
             {
                 this.Counters.Add(new CounterViewModel(this, kvp.Value));
             }
