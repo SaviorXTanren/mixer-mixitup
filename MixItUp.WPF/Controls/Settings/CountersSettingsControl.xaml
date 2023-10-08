@@ -32,7 +32,7 @@
                         <DataTemplate>
                             <Grid Margin="20">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="130" />
+                                    <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="20" />
                                     <ColumnDefinition Width="70" />
                                     <ColumnDefinition Width="15" />
