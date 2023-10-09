@@ -123,6 +123,7 @@ namespace MixItUp.Base.Model.User.Platform
             this.DisplayName = channel.Snippet.Title;
             this.AvatarLink = channel.Snippet.Thumbnails.Default__.Url;
             this.YouTubeURL = "https://www.youtube.com/channel/" + channel.Id;
+            this.AccountDate = channel.Snippet.PublishedAt.GetValueOrDefault();
         }
     }
 }
