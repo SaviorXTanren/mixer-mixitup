@@ -120,7 +120,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V2
             {
                 ID = command.ID,
                 Name = command.Name,
-                Type = command.Type.ToString(),
+                Type = Resources.ResourceManager.GetString(command.Type.ToString()),
                 IsEnabled = command.IsEnabled,
                 Unlocked = command.Unlocked,
                 GroupName = command.GroupName,
