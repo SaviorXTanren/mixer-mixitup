@@ -3671,6 +3671,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Count Lines In File.
+        /// </summary>
+        public static string CountLinesInFile {
+            get {
+                return ResourceManager.GetString("CountLinesInFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Count Up.
         /// </summary>
         public static string CountUp {

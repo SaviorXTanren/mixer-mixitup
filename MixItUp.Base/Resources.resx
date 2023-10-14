@@ -10285,4 +10285,7 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="NoDuplicates" xml:space="preserve">
     <value>No Duplicates</value>
   </data>
+  <data name="CountLinesInFile" xml:space="preserve">
+    <value>Count Lines In File</value>
+  </data>
 </root>
