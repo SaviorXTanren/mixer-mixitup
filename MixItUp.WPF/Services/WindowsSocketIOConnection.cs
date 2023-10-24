@@ -54,9 +54,9 @@ namespace MixItUp.WPF.Services
 
         public void Listen(string eventString, Action processEvent)
         {
+            this.Remove(eventString);
             try
             {
-                this.socket.Off(eventString);
                 this.socket.On(eventString, () =>
                 {
                     try
@@ -74,9 +74,9 @@ namespace MixItUp.WPF.Services
 
         public void Listen(string eventString, Action<object> processEvent)
         {
+            this.Remove(eventString);
             try
             {
-                this.socket.Off(eventString);
                 this.socket.On(eventString, (eventData) =>
                 {
                     try
@@ -85,6 +85,18 @@ namespace MixItUp.WPF.Services
                     }
                     catch (Exception ex) { Logger.Log(ex); }
                 });
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
+        public void Remove(string eventString)
+        {
+            try
+            {
+                this.socket.Off(eventString);
             }
             catch (Exception ex)
             {
