@@ -154,6 +154,8 @@ namespace MixItUp.Base.Model.Commands
                     specialIdentifiers["usersubplan"] = "Plan Name";
                     break;
                 case EventTypeEnum.YouTubeChannelMassMembershipGifted:
+                    specialIdentifiers["subsgiftedamount"] = "5";
+                    specialIdentifiers["usersubplan"] = "Plan Name";
                     break;
                 case EventTypeEnum.YouTubeChannelSuperChat:
                     specialIdentifiers["amountnumber"] = "1.23";
