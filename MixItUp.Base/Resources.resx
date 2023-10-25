@@ -10288,4 +10288,7 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="CountLinesInFile" xml:space="preserve">
     <value>Count Lines In File</value>
   </data>
+  <data name="ChatUserFirstMessage" xml:space="preserve">
+    <value>Chat User First Message</value>
+  </data>
 </root>

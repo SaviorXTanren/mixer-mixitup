@@ -2465,6 +2465,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chat User First Message.
+        /// </summary>
+        public static string ChatUserFirstMessage {
+            get {
+                return ResourceManager.GetString("ChatUserFirstMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chat User Joined.
         /// </summary>
         public static string ChatUserJoined {

@@ -41,6 +41,7 @@ namespace MixItUp.Base.Services
         ChatUserTimeout = 57,
         ChatWhisperReceived = 58,
         ChatUserEntranceCommand = 59,
+        ChatUserFirstMessage = 60,
 
         // Application = 100
 
