@@ -56,6 +56,7 @@ namespace MixItUp.Base.Services
         TwitchChannelHosted = 202,
         TwitchChannelRaided = 203,
         TwitchChannelOutgoingRaidCompleted = 204,
+        TwitchChannelUpdated = 205,
 
         TwitchChannelFollowed = 210,
         [Obsolete]

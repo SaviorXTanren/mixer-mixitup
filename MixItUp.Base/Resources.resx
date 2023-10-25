@@ -10291,4 +10291,7 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="ChatUserFirstMessage" xml:space="preserve">
     <value>Chat User First Message</value>
   </data>
+  <data name="TwitchChannelUpdated" xml:space="preserve">
+    <value>Twitch Channel Updated</value>
+  </data>
 </root>

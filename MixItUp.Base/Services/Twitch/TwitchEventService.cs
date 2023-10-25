@@ -307,11 +307,13 @@ namespace MixItUp.Base.Services.Twitch
 
         private readonly IReadOnlyDictionary<string, string> DesiredSubscriptionsAndVersions = new Dictionary<string, string>(StringComparer.Ordinal)
         {
-            { ChannelFollowEventSubSubscription, "2" },
-            { ChannelRaidEventSubSubscription, null },
-
             { "stream.online", null },
             { "stream.offline", null },
+
+            { "channel.update", "2" },
+
+            { ChannelFollowEventSubSubscription, "2" },
+            { ChannelRaidEventSubSubscription, null },
 
             { "channel.hype_train.begin", null },
             { "channel.hype_train.progress", null },
@@ -411,17 +413,20 @@ namespace MixItUp.Base.Services.Twitch
         {
             switch (message.Metadata.SubscriptionType)
             {
-                case "channel.follow":
-                    await HandleFollow(message.Payload.Event);
-                    break;
-                case ChannelRaidEventSubSubscription:
-                    await HandleRaid(message.Payload.Event);
-                    break;
                 case "stream.online":
                     await HandleOnline(message.Payload.Event);
                     break;
                 case "stream.offline":
                     await HandleOffline(message.Payload.Event);
+                    break;
+                case "channel.update":
+                    await HandleChannelUpdate(message.Payload.Event);
+                    break;
+                case ChannelFollowEventSubSubscription:
+                    await HandleFollow(message.Payload.Event);
+                    break;
+                case ChannelRaidEventSubSubscription:
+                    await HandleRaid(message.Payload.Event);
                     break;
                 case "channel.hype_train.begin":
                     await HandleHypeTrainBegin(message.Payload.Event);
@@ -533,6 +538,17 @@ namespace MixItUp.Base.Services.Twitch
         private async Task HandleOffline(JObject payload)
         {
             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelStreamStop, new CommandParametersModel(StreamingPlatformTypeEnum.Twitch));
+        }
+
+        private async Task HandleChannelUpdate(JObject payload)
+        {
+            CommandParametersModel parameters = new CommandParametersModel(StreamingPlatformTypeEnum.Twitch);
+
+            parameters.SpecialIdentifiers["streamtitle"] = payload["title"].ToString();
+            parameters.SpecialIdentifiers["streamgameid"] = payload["category_id"].ToString();
+            parameters.SpecialIdentifiers["streamgame"] = payload["category_name"].ToString();
+
+            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.TwitchChannelUpdated, parameters);
         }
 
         private async Task HandleHypeTrainBegin(JObject payload)

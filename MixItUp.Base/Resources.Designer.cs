@@ -22450,6 +22450,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel Updated.
+        /// </summary>
+        public static string TwitchChannelUpdated {
+            get {
+                return ResourceManager.GetString("TwitchChannelUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Twitch Chat.
         /// </summary>
         public static string TwitchChat {
