@@ -10294,4 +10294,13 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="TwitchChannelUpdated" xml:space="preserve">
     <value>Twitch Channel Updated</value>
   </data>
+  <data name="Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="MixItUpOnlineAlphaRegistrationInfo" xml:space="preserve">
+    <value>Mix It Up Online is a new cloud-hosted version of Mix It Up currently in development. Mix It Up Desktop users can pre-register now for the chance at Alpha testing access by clicking the Register button below.</value>
+  </data>
+  <data name="MixItUpOnline" xml:space="preserve">
+    <value>Mix It Up Online</value>
+  </data>
 </root>

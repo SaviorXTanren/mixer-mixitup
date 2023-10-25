@@ -813,6 +813,9 @@
       <DependentUpon>CurrencyRankInventoryControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\GroupedCommandsMainControlBase.cs" />
+    <Compile Include="Controls\MainControls\MixItUpOnlineControl.xaml.cs">
+      <DependentUpon>MixItUpOnlineControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MainControls\MusicPlayerControl.xaml.cs">
       <DependentUpon>MusicPlayerControl.xaml</DependentUpon>
     </Compile>
@@ -1660,6 +1663,10 @@
     <Page Include="Controls\MainControls\CurrencyRankInventoryControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\MainControls\MixItUpOnlineControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\MusicPlayerControl.xaml">
       <SubType>Designer</SubType>

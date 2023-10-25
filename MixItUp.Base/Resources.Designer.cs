@@ -12380,6 +12380,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mix It Up Online.
+        /// </summary>
+        public static string MixItUpOnline {
+            get {
+                return ResourceManager.GetString("MixItUpOnline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mix It Up Online is a new cloud-hosted version of Mix It Up currently in development. Mix It Up Desktop users can pre-register now for the chance at Alpha testing access by clicking the Register button below..
+        /// </summary>
+        public static string MixItUpOnlineAlphaRegistrationInfo {
+            get {
+                return ResourceManager.GetString("MixItUpOnlineAlphaRegistrationInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mix It Up Overlay.
         /// </summary>
         public static string MixItUpOverlay {
@@ -16712,6 +16730,15 @@ namespace MixItUp.Base {
         public static string RegexMatch {
             get {
                 return ResourceManager.GetString("RegexMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Register.
+        /// </summary>
+        public static string Register {
+            get {
+                return ResourceManager.GetString("Register", resourceCulture);
             }
         }
         
