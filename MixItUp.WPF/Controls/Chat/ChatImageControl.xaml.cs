@@ -3,6 +3,7 @@ using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
 using StreamingClient.Base.Util;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -69,45 +70,77 @@ namespace MixItUp.WPF.Controls.Chat
             catch (Exception ex) { Logger.Log(ex); }
         }
 
-        private void Image_Loaded(object sender, RoutedEventArgs e)
-        {
-            Image_DataContextChanged(sender, new DependencyPropertyChangedEventArgs());
-        }
-
-        private void Image_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private async void Image_Loaded(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (emote != null)
                 {
-                    this.ProcessEmote(emote);
+                    await this.ProcessEmote(emote);
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
         }
 
-        private void ProcessEmote(ChatEmoteViewModelBase emote)
+        private async void Image_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            try
+            {
+                if (emote != null)
+                {
+                    await this.ProcessEmote(emote);
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+        }
+
+        private async Task ProcessEmote(ChatEmoteViewModelBase emote)
         {
             if (!loaded)
             {
-                Image image = this.Image;
+                Image image = null;
+                MediaElement mediaElement = null;
                 if (emote.IsGIFImage && !ChannelSession.Settings.DisableAnimatedEmotes)
                 {
-                    image = this.GifImage;
+                    mediaElement = this.GifImage;
                 }
                 else if (emote.IsSVGImage)
                 {
                     image = this.SVGImage;
                 }
+                else
+                {
+                    image = this.Image;
+                }
 
-                if (image.IsLoaded)
+                if (image != null && image.IsLoaded)
                 {
                     loaded = true;
                     this.ResizeImage(image);
                     image.DataContext = emote;
                     image.Visibility = Visibility.Visible;
-                    this.AltText.Text = emote.Name;
+                }
+                else if (mediaElement != null && mediaElement.IsLoaded)
+                {
+                    if (emote.LocalFilePath == null)
+                    {
+                        await emote.SaveToTempFolder();
+                    }
 
+                    if (emote.LocalFilePath != null)
+                    {
+                        loaded = true;
+                        mediaElement.Source = new Uri(emote.LocalFilePath, UriKind.Absolute);
+                        mediaElement.MaxWidth = mediaElement.MaxHeight = mediaElement.Width = mediaElement.Height = ChannelSession.Settings.ChatFontSize * 2;
+                        mediaElement.DataContext = emote;
+                        mediaElement.Visibility = Visibility.Visible;
+                        mediaElement.Play();
+                    }
+                }
+
+                if (loaded)
+                {
+                    this.AltText.Text = emote.Name;
                     if (emote is TwitchBitsCheerViewModel)
                     {
                         TwitchBitsCheerViewModel bitsCheer = (TwitchBitsCheerViewModel)emote;
