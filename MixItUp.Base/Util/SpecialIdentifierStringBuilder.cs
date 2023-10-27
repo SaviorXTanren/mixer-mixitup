@@ -78,6 +78,7 @@ namespace MixItUp.Base.Util
         public const string PatreonTierImageSpecialIdentifier = "patreontierimage";
 
         public const string DonorDriveSpecialIdentifierHeader = "donordrive";
+        public const string TiltifySpecialIdentifierHeader = "tiltify";
 
         public const string UnicodeRegexSpecialIdentifier = "unicode";
 
@@ -429,6 +430,21 @@ namespace MixItUp.Base.Util
                         this.ReplaceSpecialIdentifier(DonorDriveSpecialIdentifierHeader + "teamdonationgoal", team.fundraisingGoal.ToString());
                         this.ReplaceSpecialIdentifier(DonorDriveSpecialIdentifierHeader + "teamdonationcount", team.numDonations.ToString());
                         this.ReplaceSpecialIdentifier(DonorDriveSpecialIdentifierHeader + "teamdonationamount", team.sumDonations.ToString());
+                    }
+                }
+            }
+
+            if (ServiceManager.Get<TiltifyService>().IsConnected && ChannelSession.Settings.TiltifyCampaign > 0)
+            {
+                if (this.ContainsSpecialIdentifier(TiltifySpecialIdentifierHeader))
+                {
+                    TiltifyCampaign campaign = await ServiceManager.Get<TiltifyService>().GetCampaign(ChannelSession.Settings.TiltifyCampaign);
+                    if (campaign != null)
+                    {
+                        this.ReplaceSpecialIdentifier(TiltifySpecialIdentifierHeader + "campaignurl", campaign.CampaignURL);
+                        this.ReplaceSpecialIdentifier(TiltifySpecialIdentifierHeader + "donationurl", campaign.DonateURL);
+                        this.ReplaceSpecialIdentifier(TiltifySpecialIdentifierHeader + "donationgoal", campaign.FundraiserGoalAmount.ToString());
+                        this.ReplaceSpecialIdentifier(TiltifySpecialIdentifierHeader + "donationamount", campaign.AmountRaised.ToString());
                     }
                 }
             }

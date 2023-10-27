@@ -256,6 +256,17 @@ namespace MixItUp.Base.Services.External
             return null;
         }
 
+        public async Task<TiltifyCampaign> GetCampaign(int campaignID)
+        {
+            try
+            {
+                TiltifyResult result = await this.GetAsync<TiltifyResult>("campaigns/" + campaignID.ToString());
+                return result.Data.ToObject<TiltifyCampaign>();
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return null;
+        }
+
         public async Task<IEnumerable<TiltifyCampaign>> GetUserCampaigns(TiltifyUser user)
         {
             List<TiltifyCampaign> results = new List<TiltifyCampaign>();
@@ -347,21 +358,8 @@ namespace MixItUp.Base.Services.External
         {
             if (ChannelSession.Settings.TiltifyCampaign != currentCampaign)
             {
-                currentCampaign = ChannelSession.Settings.TiltifyCampaign;
                 donationsReceived.Clear();
-
-                IEnumerable<TiltifyCampaign> campaigns = await this.GetUserCampaigns(this.user);
-                campaign = campaigns.FirstOrDefault(c => c.ID.Equals(currentCampaign));
-                if (campaign == null)
-                {
-                    List<TiltifyCampaign> teamCampaigns = new List<TiltifyCampaign>();
-                    foreach (TiltifyTeam team in await ServiceManager.Get<TiltifyService>().GetUserTeams(user))
-                    {
-                        teamCampaigns.AddRange(await ServiceManager.Get<TiltifyService>().GetTeamCampaigns(team));
-                    }
-                    campaign = teamCampaigns.FirstOrDefault(c => c.ID.Equals(currentCampaign));
-                }
-
+                campaign = await this.GetCampaign(ChannelSession.Settings.TiltifyCampaign);
                 if (campaign != null)
                 {
                     foreach (TiltifyDonation donation in await this.GetCampaignDonations(campaign))
