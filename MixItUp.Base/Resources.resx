@@ -10303,4 +10303,10 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="MixItUpOnline" xml:space="preserve">
     <value>Mix It Up Online</value>
   </data>
+  <data name="UserOnlyChat" xml:space="preserve">
+    <value>User Only Chat</value>
+  </data>
+  <data name="Webhook" xml:space="preserve">
+    <value>Webhook</value>
+  </data>
 </root>

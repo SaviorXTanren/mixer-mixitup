@@ -23405,6 +23405,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User Only Chat.
+        /// </summary>
+        public static string UserOnlyChat {
+            get {
+                return ResourceManager.GetString("UserOnlyChat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User-Only Chat Commands.
         /// </summary>
         public static string UserOnlyChatCommands {
@@ -24274,6 +24283,15 @@ namespace MixItUp.Base {
         public static string WebBrowserSource {
             get {
                 return ResourceManager.GetString("WebBrowserSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Webhook.
+        /// </summary>
+        public static string Webhook {
+            get {
+                return ResourceManager.GetString("Webhook", resourceCulture);
             }
         }
         
