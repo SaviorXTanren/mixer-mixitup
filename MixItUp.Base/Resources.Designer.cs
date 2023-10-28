@@ -9057,7 +9057,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The game queue is not currently enabled.
+        ///   Looks up a localized string similar to The queue is not currently enabled.
         /// </summary>
         public static string GameQueueNotEnabled {
             get {
@@ -9075,7 +9075,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You are #$queueposition in the queue to play..
+        ///   Looks up a localized string similar to You are #$queueposition in the queue..
         /// </summary>
         public static string GameQueueUserJoinedExample {
             get {
@@ -16182,7 +16182,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to There are currently {0} waiting to play..
+        ///   Looks up a localized string similar to There are currently {0} in the queue..
         /// </summary>
         public static string QueueCurrentCount {
             get {
@@ -16218,7 +16218,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following users are next up to play: .
+        ///   Looks up a localized string similar to The following users are next up: .
         /// </summary>
         public static string QueueUserListHeader {
             get {
@@ -16227,7 +16227,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You are #{0} in the queue to play.
+        ///   Looks up a localized string similar to You are #{0} in the queue.
         /// </summary>
         public static string QueueYouAreInPosition {
             get {
@@ -16236,7 +16236,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You are not currently in the queue to play.
+        ///   Looks up a localized string similar to You are not currently in the queue.
         /// </summary>
         public static string QueueYouAreNotCurrentlyIn {
             get {

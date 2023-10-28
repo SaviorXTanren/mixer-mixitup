@@ -4651,7 +4651,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <value>At least 1 action must be added to the command</value>
   </data>
   <data name="GameQueueUserJoinedExample" xml:space="preserve">
-    <value>You are #$queueposition in the queue to play.</value>
+    <value>You are #$queueposition in the queue.</value>
     <comment>Manual</comment>
   </data>
   <data name="GameQueueUserSelectedExample" xml:space="preserve">
@@ -7843,7 +7843,7 @@ Imported quotes with IDs that match existing quotes will altered to the next max
     <value>Hear Myself On/Off</value>
   </data>
   <data name="GameQueueNotEnabled" xml:space="preserve">
-    <value>The game queue is not currently enabled</value>
+    <value>The queue is not currently enabled</value>
   </data>
   <data name="ManualModerationStrike" xml:space="preserve">
     <value>Manual Moderation Strike</value>
@@ -8341,21 +8341,21 @@ Imported quotes with IDs that match existing quotes will altered to the next max
     <value>No users found</value>
   </data>
   <data name="QueueCurrentCount" xml:space="preserve">
-    <value>There are currently {0} waiting to play.</value>
+    <value>There are currently {0} in the queue.</value>
     <comment>{0} is the number of people</comment>
   </data>
   <data name="QueueNotIn" xml:space="preserve">
     <value>Not In Queue</value>
   </data>
   <data name="QueueUserListHeader" xml:space="preserve">
-    <value>The following users are next up to play: </value>
+    <value>The following users are next up: </value>
   </data>
   <data name="QueueYouAreInPosition" xml:space="preserve">
-    <value>You are #{0} in the queue to play</value>
+    <value>You are #{0} in the queue</value>
     <comment>{0} is the position</comment>
   </data>
   <data name="QueueYouAreNotCurrentlyIn" xml:space="preserve">
-    <value>You are not currently in the queue to play</value>
+    <value>You are not currently in the queue</value>
   </data>
   <data name="SettingsBackupNotValid" xml:space="preserve">
     <value>The backup file selected does not appear to contain Mix It Up settings.</value>
