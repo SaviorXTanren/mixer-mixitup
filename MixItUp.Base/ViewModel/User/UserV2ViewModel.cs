@@ -555,18 +555,12 @@ namespace MixItUp.Base.ViewModel.User
 
                     DateTimeOffset refreshStart = DateTimeOffset.Now;
 
-                    CancellationTokenSource cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(2));
-
-                    try
+                    CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+                    Task refreshTask = Task.Run(async () =>
                     {
-                        await Task.Run(async () =>
+                        try
                         {
                             await this.platformModel.Refresh();
-
-                            if (ChannelSession.Settings.ShowAlejoPronouns && this.Platform == StreamingPlatformTypeEnum.Twitch)
-                            {
-                                this.Model.AlejoPronounID = await ServiceManager.Get<AlejoPronounsService>().GetPronounID(this.Username);
-                            }
 
                             double platformRefreshTime = (DateTimeOffset.Now - refreshStart).TotalMilliseconds;
                             if (platformRefreshTime > 1000)
@@ -574,15 +568,37 @@ namespace MixItUp.Base.ViewModel.User
                                 Logger.Log(LogLevel.Error, string.Format("Long user refresh time detected for the following user (Platform refresh): {0} - {1} - {2} ms", this.ID, this.Username, platformRefreshTime));
                             }
 
+                            if (ChannelSession.Settings.ShowAlejoPronouns && this.Platform == StreamingPlatformTypeEnum.Twitch)
+                            {
+                                this.Model.AlejoPronounID = await ServiceManager.Get<AlejoPronounsService>().GetPronounID(this.Username);
+                            }
+
                             this.RefreshPatreonProperties();
 
+                            double externalRefreshTime = (DateTimeOffset.Now - refreshStart).TotalMilliseconds;
+                            if (externalRefreshTime > 1000)
+                            {
+                                Logger.Log(LogLevel.Error, string.Format("Long user refresh time detected for the following user (External refresh): {0} - {1} - {2} ms", this.ID, this.Username, externalRefreshTime));
+                            }
+
                             this.ClearCachedProperties();
-                        }, cancellationTokenSource.Token);
-                    }
-                    catch (TaskCanceledException)
+                            double cacheRefreshTime = (DateTimeOffset.Now - refreshStart).TotalMilliseconds;
+                            if (cacheRefreshTime > 1000)
+                            {
+                                Logger.Log(LogLevel.Error, string.Format("Long user refresh time detected for the following user (Cache refresh): {0} - {1} - {2} ms", this.ID, this.Username, cacheRefreshTime));
+                            }
+                        }
+                        catch (TaskCanceledException)
+                        {
+                            Logger.Log(LogLevel.Error, "Refresh task cancelled due to taking too long to process, resetting last updated state and trying again later");
+                            this.LastUpdated = DateTimeOffset.MinValue;
+                        }
+                    }, cancellationTokenSource.Token);
+
+                    await Task.WhenAny(new Task[] { refreshTask, Task.Delay(2000) });
+                    if (!refreshTask.IsCompleted)
                     {
-                        Logger.Log(LogLevel.Error, "Refresh task cancelled due to taking too long to process, resetting last updated state and trying again later");
-                        this.LastUpdated = DateTimeOffset.MinValue;
+                        cancellationTokenSource.Cancel();
                     }
 
                     double refreshTime = (DateTimeOffset.Now - refreshStart).TotalMilliseconds;
