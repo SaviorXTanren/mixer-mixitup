@@ -10309,4 +10309,11 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
   <data name="Webhook" xml:space="preserve">
     <value>Webhook</value>
   </data>
+  <data name="ShowUserFirstMessage" xml:space="preserve">
+    <value>Show User First Message</value>
+  </data>
+  <data name="AlertUserFirstMessage" xml:space="preserve">
+    <value>{0} - First Time Chat</value>
+    <comment>{0} = The user display name</comment>
+  </data>
 </root>

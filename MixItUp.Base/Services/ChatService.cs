@@ -520,6 +520,8 @@ namespace MixItUp.Base.Services
                         if (message.User.TotalChatMessageSent == 1)
                         {
                             await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserFirstMessage, new CommandParametersModel(message));
+
+                            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(message.User, string.Format(MixItUp.Base.Resources.AlertUserFirstMessage, message.User.FullDisplayName), ChannelSession.Settings.AlertUserFirstMessageColor));
                         }
 
                         if (!this.userEntranceCommands.Contains(message.User.ID))

@@ -844,6 +844,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} - First Time Chat.
+        /// </summary>
+        public static string AlertUserFirstMessage {
+            get {
+                return ResourceManager.GetString("AlertUserFirstMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} Super Chat - {1}.
         /// </summary>
         public static string AlertYouTubeSuperChat {
@@ -18887,6 +18896,15 @@ namespace MixItUp.Base {
         public static string ShowTwitchHypeTrain {
             get {
                 return ResourceManager.GetString("ShowTwitchHypeTrain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show User First Message.
+        /// </summary>
+        public static string ShowUserFirstMessage {
+            get {
+                return ResourceManager.GetString("ShowUserFirstMessage", resourceCulture);
             }
         }
         

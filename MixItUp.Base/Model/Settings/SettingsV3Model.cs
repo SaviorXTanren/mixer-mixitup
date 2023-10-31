@@ -249,6 +249,8 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public string AlertUserJoinLeaveColor { get; set; }
         [DataMember]
+        public string AlertUserFirstMessageColor { get; set; }
+        [DataMember]
         public string AlertFollowColor { get; set; }
         [DataMember]
         public string AlertHostColor { get; set; }
