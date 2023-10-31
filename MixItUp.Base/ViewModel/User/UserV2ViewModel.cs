@@ -554,6 +554,7 @@ namespace MixItUp.Base.ViewModel.User
                     this.LastUpdated = DateTimeOffset.Now;
 
                     DateTimeOffset refreshStart = DateTimeOffset.Now;
+                    Logger.Log($"User refresh started: {this.ID}");
 
                     CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
                     Task refreshTask = Task.Run(async () =>
@@ -602,7 +603,7 @@ namespace MixItUp.Base.ViewModel.User
                     }
 
                     double refreshTime = (DateTimeOffset.Now - refreshStart).TotalMilliseconds;
-                    Logger.Log($"User refresh time: {refreshTime} ms");
+                    Logger.Log($"User refresh time: {this.ID} - {refreshTime} ms");
                     if (refreshTime > 1000)
                     {
                         Logger.Log(LogLevel.Error, string.Format("Long user refresh time detected for the following user: {0} - {1} - {2} ms", this.ID, this.Username, refreshTime));
