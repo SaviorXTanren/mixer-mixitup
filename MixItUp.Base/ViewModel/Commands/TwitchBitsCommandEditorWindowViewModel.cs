@@ -2,6 +2,7 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Commands
@@ -76,6 +77,18 @@ namespace MixItUp.Base.ViewModel.Commands
                 if (this.EndingAmount < this.StartingAmount)
                 {
                     return Task.FromResult(new Result(Resources.EndingAmountMustBeGreaterThanStartingAmount));
+                }
+            }
+
+            foreach (TwitchBitsCommandModel command in ServiceManager.Get<CommandService>().TwitchBitsCommands)
+            {
+                if ((this.IsRange && command.IsRange && command.StartingAmount == this.StartingAmount && command.EndingAmount == this.EndingAmount) ||
+                    (!this.IsRange && !command.IsRange && command.StartingAmount == this.StartingAmount))
+                {
+                    if (this.existingCommand == null || this.existingCommand.ID != command.ID)
+                    {
+                        return Task.FromResult(new Result(Resources.TwitchBitsCommandsAlreadyExistsDuplicateAmount));
+                    }
                 }
             }
 

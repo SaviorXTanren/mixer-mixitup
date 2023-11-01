@@ -22270,6 +22270,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There already exists another Twitch Bits command with the same amount / range as this command..
+        /// </summary>
+        public static string TwitchBitsCommandsAlreadyExistsDuplicateAmount {
+            get {
+                return ResourceManager.GetString("TwitchBitsCommandsAlreadyExistsDuplicateAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Twitch Bot Chat.
         /// </summary>
         public static string TwitchBotChat {

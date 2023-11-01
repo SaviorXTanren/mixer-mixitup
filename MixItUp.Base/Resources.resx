@@ -10316,4 +10316,7 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
     <value>{0} - First Time Chat</value>
     <comment>{0} = The user display name</comment>
   </data>
+  <data name="TwitchBitsCommandsAlreadyExistsDuplicateAmount" xml:space="preserve">
+    <value>There already exists another Twitch Bits command with the same amount / range as this command.</value>
+  </data>
 </root>
