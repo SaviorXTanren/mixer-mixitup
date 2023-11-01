@@ -43,7 +43,7 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 return this.SelectedActionType == FileActionTypeEnum.ReadFromFile || this.SelectedActionType == FileActionTypeEnum.ReadSpecificLineFromFile ||
                     this.SelectedActionType == FileActionTypeEnum.ReadRandomLineFromFile || this.SelectedActionType == FileActionTypeEnum.RemoveSpecificLineFromFile ||
-                    this.SelectedActionType == FileActionTypeEnum.RemoveRandomLineFromFile;
+                    this.SelectedActionType == FileActionTypeEnum.RemoveRandomLineFromFile || this.SelectedActionType == FileActionTypeEnum.CountLinesInFile;
             }
         }
 

@@ -10,12 +10,13 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Margin="20, 10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="275" />
+            <ColumnDefinition Width="20" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="0" Text="{Binding Name, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" ToolTip="{Binding Tooltip}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+        <TextBlock Grid.Column="0" Text="{Binding Name, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" ToolTip="{Binding Tooltip}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" />
 
-        <Button Grid.Column="1" Content="{Binding ButtonName}" Command="{Binding Command}" IsEnabled="{Binding Enabled}" ToolTip="{Binding Tooltip}" Width="150" />
+        <Button Grid.Column="2" Content="{Binding ButtonName}" Command="{Binding Command}" IsEnabled="{Binding Enabled}" ToolTip="{Binding Tooltip}" Width="175" />
     </Grid>
 </UserControl>

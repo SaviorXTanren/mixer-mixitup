@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Model;
-using MixItUp.Base.Model.Actions;
+﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Requirements;
@@ -7,7 +6,6 @@ using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,6 +23,12 @@ namespace MixItUp.Base.Services
 
     public class CommandService
     {
+        private static readonly HashSet<ActionTypeEnum> VisualAudioActionTypes = new HashSet<ActionTypeEnum>()
+        {
+            ActionTypeEnum.Overlay, ActionTypeEnum.OvrStream, ActionTypeEnum.PolyPop, ActionTypeEnum.Sound, ActionTypeEnum.StreamingSoftware, ActionTypeEnum.TextToSpeech,
+            ActionTypeEnum.MusicPlayer, ActionTypeEnum.TITS, ActionTypeEnum.Voicemod, ActionTypeEnum.VTubeStudio
+        };
+
         public bool IsPaused { get; private set; }
 
         public event EventHandler<CommandInstanceModel> OnCommandInstanceAdded = delegate { };
@@ -394,8 +398,7 @@ namespace MixItUp.Base.Services
                     else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.VisualAudioActions)
                     {
                         HashSet<ActionTypeEnum> actionTypes = commandInstance.GetActionTypes();
-                        if (actionTypes.Contains(ActionTypeEnum.Overlay) || actionTypes.Contains(ActionTypeEnum.OvrStream) || actionTypes.Contains(ActionTypeEnum.PolyPop) ||
-                            actionTypes.Contains(ActionTypeEnum.Sound) || actionTypes.Contains(ActionTypeEnum.StreamingSoftware) || actionTypes.Contains(ActionTypeEnum.TextToSpeech))
+                        if (actionTypes.Any(a => VisualAudioActionTypes.Contains(a)))
                         {
                             singularInstances.Add(commandInstance);
                             if (singularTask == null)

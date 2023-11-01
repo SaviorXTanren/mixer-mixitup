@@ -31,6 +31,8 @@ namespace MixItUp.Base.Services.YouTube
         public string ChannelID { get { return this.User?.Id; } }
         public string ChannelLink { get { return this.User?.Snippet?.CustomUrl; } }
 
+        public bool HasMembershipCapabilities { get { return this.MembershipLevels.Count > 0; } }
+
         private DateTime launchDateTime = DateTime.Now;
 
         public StreamingPlatformAccountModel UserAccount
@@ -61,6 +63,26 @@ namespace MixItUp.Base.Services.YouTube
         public bool IsLive { get { return string.Equals(this.Broadcast?.Status?.LifeCycleStatus, "live", StringComparison.OrdinalIgnoreCase); } }
 
         public int ViewerCount { get { return (int)this.Video?.LiveStreamingDetails?.ConcurrentViewers.GetValueOrDefault(); } }
+
+        public DateTimeOffset StreamStart
+        {
+            get
+            {
+                if (this.IsLive)
+                {
+                    if (this.Broadcast.Snippet.ActualStartTime.HasValue)
+                    {
+                        DateTime dt = this.Broadcast.Snippet.ActualStartTime.GetValueOrDefault();
+                        if (dt.Kind == DateTimeKind.Unspecified)
+                        {
+                            dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
+                        }
+                        return new DateTimeOffset(dt, (dt.Kind == DateTimeKind.Utc) ? TimeSpan.Zero : DateTimeOffset.Now.Offset);
+                    }
+                }
+                return DateTimeOffset.MinValue;
+            }
+        }
 
         public async Task<Result> ConnectUser()
         {

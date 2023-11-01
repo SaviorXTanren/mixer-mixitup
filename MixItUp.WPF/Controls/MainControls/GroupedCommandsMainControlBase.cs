@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.ViewModel.Commands;
 using MixItUp.Base.ViewModel.MainControls;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -19,6 +20,15 @@ namespace MixItUp.WPF.Controls.MainControls
         protected void Window_CommandSaved(object sender, CommandModelBase e)
         {
             this.viewModel.AddCommand(e);
+        }
+
+        protected override async Task OnVisibilityChanged()
+        {
+            this.viewModel.ClearNameFilter();
+
+            await this.viewModel.OnVisible();
+
+            await base.OnVisibilityChanged();
         }
 
         protected void AccordianGroupBoxControl_Minimized(object sender, RoutedEventArgs e)

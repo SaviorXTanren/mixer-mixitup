@@ -95,21 +95,24 @@ namespace MixItUp.Base.Model.User.Platform
 
         public async Task RefreshMembershipDetails()
         {
-            Member membership = await ServiceManager.Get<YouTubeSessionService>().UserConnection.CheckIfMember(this.ID);
-            if (membership != null)
+            if (ServiceManager.Get<YouTubeSessionService>().HasMembershipCapabilities)
             {
-                this.Roles.Add(UserRoleEnum.YouTubeMember);
-                this.Roles.Add(UserRoleEnum.Subscriber);
-                this.SubscribeDate = DateTime.Parse(membership.Snippet.MembershipsDetails.MembershipsDuration.MemberSince);
-                this.MemberLevels.Clear();
-                this.MemberLevels.AddRange(membership.Snippet.MembershipsDetails.AccessibleLevels);
-            }
-            else
-            {
-                this.Roles.Remove(UserRoleEnum.YouTubeMember);
-                this.Roles.Remove(UserRoleEnum.Subscriber);
-                this.SubscribeDate = null;
-                this.MemberLevels.Clear();
+                Member membership = await ServiceManager.Get<YouTubeSessionService>().UserConnection.CheckIfMember(this.ID);
+                if (membership != null)
+                {
+                    this.Roles.Add(UserRoleEnum.YouTubeMember);
+                    this.Roles.Add(UserRoleEnum.Subscriber);
+                    this.SubscribeDate = DateTime.Parse(membership.Snippet.MembershipsDetails.MembershipsDuration.MemberSince);
+                    this.MemberLevels.Clear();
+                    this.MemberLevels.AddRange(membership.Snippet.MembershipsDetails.AccessibleLevels);
+                }
+                else
+                {
+                    this.Roles.Remove(UserRoleEnum.YouTubeMember);
+                    this.Roles.Remove(UserRoleEnum.Subscriber);
+                    this.SubscribeDate = null;
+                    this.MemberLevels.Clear();
+                }
             }
         }
 
@@ -120,6 +123,7 @@ namespace MixItUp.Base.Model.User.Platform
             this.DisplayName = channel.Snippet.Title;
             this.AvatarLink = channel.Snippet.Thumbnails.Default__.Url;
             this.YouTubeURL = "https://www.youtube.com/channel/" + channel.Id;
+            this.AccountDate = channel.Snippet.PublishedAt.GetValueOrDefault();
         }
     }
 }

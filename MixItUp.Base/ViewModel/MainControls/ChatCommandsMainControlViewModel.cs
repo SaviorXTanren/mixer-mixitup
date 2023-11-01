@@ -64,15 +64,6 @@ namespace MixItUp.Base.ViewModel.MainControls
             }
         }
 
-        protected override async Task OnVisibleInternal()
-        {
-            if (ServiceManager.Get<CommandService>().ChatCommands.Count != this.CommandGroups.Sum(cg => cg.Commands.Count))
-            {
-                this.FullRefresh();
-            }
-            await base.OnVisibleInternal();
-        }
-
         protected override IEnumerable<CommandModelBase> GetCommands()
         {
             return ServiceManager.Get<CommandService>().ChatCommands.ToList();

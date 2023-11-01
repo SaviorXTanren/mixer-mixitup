@@ -12,8 +12,6 @@ namespace MixItUp.Base.Services.Mock
 {
     public class MockSessionService : IStreamingPlatformSessionService
     {
-        private const string GamingCategorySlug = "gaming";
-
         public MockPlatformService UserConnection { get; private set; }
         public MockPlatformService BotConnection { get; private set; }
 
@@ -55,6 +53,9 @@ namespace MixItUp.Base.Services.Mock
         public bool IsLive { get { return true; } }
 
         public int ViewerCount { get { return 999; } }
+
+        public DateTimeOffset StreamStart { get { return this.streamStart; } }
+        private DateTimeOffset streamStart = DateTimeOffset.Now;
 
         public async Task<Result> ConnectUser()
         {

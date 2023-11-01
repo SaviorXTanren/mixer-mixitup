@@ -153,6 +153,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             EventCommandGroupViewModel twitchCommands = new EventCommandGroupViewModel(Resources.Twitch, image: StreamingPlatforms.TwitchLogoImageAssetFilePath);
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelStreamStart));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelStreamStop));
+            twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelUpdated));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelFollowed));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelRaided));
             twitchCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.TwitchChannelOutgoingRaidCompleted));
@@ -194,14 +195,15 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             EventCommandGroupViewModel chatCommands = new EventCommandGroupViewModel(Resources.Chat, packIconName: "Chat");
             chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserEntranceCommand));
-            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserFirstJoin));
-            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserJoined));
-            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserLeft));
+            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserFirstMessage));
             chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatMessageReceived));
             chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatWhisperReceived));
             chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatMessageDeleted));
             chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserTimeout));
             chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserBan));
+            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserFirstJoin));
+            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserJoined));
+            chatCommands.Commands.Add(new EventCommandItemViewModel(EventTypeEnum.ChatUserLeft));
             commandGroups.Add(chatCommands);
 
             EventCommandGroupViewModel donationCommands = new EventCommandGroupViewModel(Resources.Donations, packIconName: "Cash");

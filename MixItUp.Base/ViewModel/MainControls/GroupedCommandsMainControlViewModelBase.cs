@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
 using System;
@@ -17,6 +18,8 @@ namespace MixItUp.Base.ViewModel.MainControls
             GroupedCommandsMainControlViewModelBase.OnCommandAddedEdited(null, command);
         }
 
+        public event EventHandler OnNameFilterChanged = delegate { };
+
         public ThreadSafeObservableCollection<CommandModelBase> DefaultGroup { get { return this.CommandGroups.FirstOrDefault()?.Commands; } }
 
         public ThreadSafeObservableCollection<CommandGroupControlViewModel> CommandGroups { get; private set; } = new ThreadSafeObservableCollection<CommandGroupControlViewModel>();
@@ -29,9 +32,15 @@ namespace MixItUp.Base.ViewModel.MainControls
             get { return this.nameFilter; }
             set
             {
+                bool changeOccurred = !string.Equals(this.nameFilter, value);
+
                 this.nameFilter = value;
                 this.NotifyPropertyChanged();
-                this.FilterCommands();
+
+                if (changeOccurred)
+                {
+                    this.FilterCommands();
+                }
             }
         }
         private string nameFilter;
@@ -95,6 +104,12 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.NotifyProperties();
         }
 
+        public void ClearNameFilter()
+        {
+            this.nameFilter = string.Empty;
+            this.NotifyPropertyChanged(this.NameFilter);
+        }
+
         public void FullRefresh()
         {
             List<CommandGroupControlViewModel> groups = new List<CommandGroupControlViewModel>();
@@ -127,6 +142,15 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             this.FullRefresh();
             return base.OnVisibleInternal();
+        }
+
+        protected override async Task OnVisibleInternal()
+        {
+            if (this.GetCommands().Count() != this.CommandGroups.Sum(cg => cg.Commands.Count))
+            {
+                this.FullRefresh();
+            }
+            await base.OnVisibleInternal();
         }
 
         private void NotifyProperties()

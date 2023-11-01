@@ -549,6 +549,13 @@ namespace MixItUp.Base.Services
                             Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message (AFTER MODERATION/NOTIFICATIONS): {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
                         }
 
+                        if (message.User.TotalChatMessageSent == 1)
+                        {
+                            await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatUserFirstMessage, new CommandParametersModel(message));
+
+                            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(message.User, string.Format(MixItUp.Base.Resources.AlertUserFirstMessage, message.User.FullDisplayName), ChannelSession.Settings.AlertUserFirstMessageColor));
+                        }
+
                         if (!this.userEntranceCommands.Contains(message.User.ID))
                         {
                             this.userEntranceCommands.Add(message.User.ID);

@@ -43,6 +43,7 @@ namespace MixItUp.Base.Services
         ChatUserTimeout = 57,
         ChatWhisperReceived = 58,
         ChatUserEntranceCommand = 59,
+        ChatUserFirstMessage = 60,
 
         // Application = 100
 
@@ -57,6 +58,7 @@ namespace MixItUp.Base.Services
         TwitchChannelHosted = 202,
         TwitchChannelRaided = 203,
         TwitchChannelOutgoingRaidCompleted = 204,
+        TwitchChannelUpdated = 205,
 
         TwitchChannelFollowed = 210,
         [Obsolete]

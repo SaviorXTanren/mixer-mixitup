@@ -162,9 +162,12 @@ namespace MixItUp.Base.Model.Commands
                 else if (action.Type == ActionTypeEnum.Overlay)
                 {
                     OverlayActionModel overlayAction = (OverlayActionModel)action;
-                    if (overlayAction.OverlayItem.ItemType == Overlay.OverlayItemModelTypeEnum.Video || overlayAction.OverlayItem.ItemType == Overlay.OverlayItemModelTypeEnum.YouTube)
+                    if (overlayAction.OverlayItem != null)
                     {
-                        actionTypes.Add(ActionTypeEnum.Sound);
+                        if (overlayAction.OverlayItem.ItemType == Overlay.OverlayItemModelTypeEnum.Video || overlayAction.OverlayItem.ItemType == Overlay.OverlayItemModelTypeEnum.YouTube)
+                        {
+                            actionTypes.Add(ActionTypeEnum.Sound);
+                        }
                     }
                 }
                 else if (action.Type == ActionTypeEnum.TextToSpeech)

@@ -1,14 +1,18 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using Twitch.Base.Models.NewAPI;
 using Twitch.Base.Models.NewAPI.Ads;
 using Twitch.Base.Models.NewAPI.ChannelPoints;
 using Twitch.Base.Models.NewAPI.Channels;
@@ -124,13 +128,15 @@ namespace MixItUp.Base.Model.Actions
             return actionModel;
         }
 
-        public static TwitchActionModel CreateUpdateChannelPointReward(Guid id, string name, string description, bool state, string cost, bool updateCooldownsAndLimits, string maxPerStream, string maxPerUser, string globalCooldown)
+        public static TwitchActionModel CreateUpdateChannelPointReward(Guid id, string name, string description, bool state, bool paused, string backgroundColor, string cost, bool updateCooldownsAndLimits, string maxPerStream, string maxPerUser, string globalCooldown)
         {
             TwitchActionModel action = new TwitchActionModel(TwitchActionType.UpdateChannelPointReward);
             action.ChannelPointRewardID = id;
             action.ChannelPointRewardName = name;
             action.ChannelPointRewardDescription = description;
             action.ChannelPointRewardState = state;
+            action.ChannelPointRewardPaused = paused;
+            action.ChannelPointRewardBackgroundColor = backgroundColor;
             action.ChannelPointRewardCostString = cost;
             action.ChannelPointRewardUpdateCooldownsAndLimits = updateCooldownsAndLimits;
             action.ChannelPointRewardMaxPerStreamString = maxPerStream;
@@ -220,6 +226,10 @@ namespace MixItUp.Base.Model.Actions
         public string ChannelPointRewardDescription { get; set; }
         [DataMember]
         public bool ChannelPointRewardState { get; set; }
+        [DataMember]
+        public bool ChannelPointRewardPaused { get; set; }
+        [DataMember]
+        public string ChannelPointRewardBackgroundColor { get; set; }
         [DataMember]
         public string ChannelPointRewardCostString { get; set; }
         [DataMember]
@@ -315,29 +325,29 @@ namespace MixItUp.Base.Model.Actions
                 }
                 else if (this.ActionType == TwitchActionType.VIPUser || this.ActionType == TwitchActionType.UnVIPUser)
                 {
-                    string targetUsername = null;
+                    UserV2ViewModel targetUser = null;
                     if (!string.IsNullOrEmpty(this.Username))
                     {
-                        targetUsername = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                        string targetUsername = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                        targetUser = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, targetUsername, performPlatformSearch: true);
                     }
                     else
                     {
-                        targetUsername = parameters.User.Username;
+                        targetUser = parameters.User;
                     }
 
-                    if (!string.IsNullOrEmpty(targetUsername))
+                    if (targetUser != null)
                     {
-                        UserModel targetUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(targetUsername);
-                        if (targetUser != null)
+                        UserModel twitchUser = targetUser.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).GetTwitchNewAPIUserModel();
+                        if (this.ActionType == TwitchActionType.VIPUser)
                         {
-                            if (this.ActionType == TwitchActionType.VIPUser)
-                            {
-                                await ServiceManager.Get<TwitchSessionService>().UserConnection.VIPUser(ServiceManager.Get<TwitchSessionService>().User, targetUser);
-                            }
-                            else if (this.ActionType == TwitchActionType.UnVIPUser)
-                            {
-                                await ServiceManager.Get<TwitchSessionService>().UserConnection.UnVIPUser(ServiceManager.Get<TwitchSessionService>().User, targetUser);
-                            }
+                            targetUser.Roles.Add(User.UserRoleEnum.TwitchVIP);
+                            await ServiceManager.Get<TwitchSessionService>().UserConnection.VIPUser(ServiceManager.Get<TwitchSessionService>().User, twitchUser);
+                        }
+                        else if (this.ActionType == TwitchActionType.UnVIPUser)
+                        {
+                            targetUser.Roles.Remove(User.UserRoleEnum.TwitchVIP);
+                            await ServiceManager.Get<TwitchSessionService>().UserConnection.UnVIPUser(ServiceManager.Get<TwitchSessionService>().User, twitchUser);
                         }
                     }
                 }
@@ -386,6 +396,7 @@ namespace MixItUp.Base.Model.Actions
                     JObject jobj = new JObject()
                     {
                         { "is_enabled", this.ChannelPointRewardState },
+                        { "is_paused", this.ChannelPointRewardPaused }
                     };
 
 #pragma warning disable CS0612 // Type or member is obsolete
@@ -413,6 +424,11 @@ namespace MixItUp.Base.Model.Actions
                         jobj["prompt"] = await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardDescription, parameters);
                     }
 
+                    if (!string.IsNullOrEmpty(this.ChannelPointRewardBackgroundColor))
+                    {
+                        jobj["background_color"] = await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardBackgroundColor, parameters);
+                    }
+
                     int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardCostString, parameters), out int cost);
                     if (cost > 0) { jobj["cost"] = cost; }
 
@@ -421,52 +437,37 @@ namespace MixItUp.Base.Model.Actions
                         int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardMaxPerStreamString, parameters), out int maxPerStream);
                         if (maxPerStream > 0)
                         {
-                            jobj["max_per_stream_setting"] = new JObject()
-                            {
-                                { "is_enabled", true },
-                                { "max_per_stream", maxPerStream}
-                            };
+                            jobj["is_max_per_stream_enabled"] = true;
+                            jobj["max_per_stream"] = maxPerStream;
                         }
                         else
                         {
-                            jobj["max_per_stream_setting"] = new JObject()
-                            {
-                                { "is_enabled", false },
-                            };
+                            jobj["is_max_per_stream_enabled"] = false;
+                            jobj["max_per_stream"] = 0;
                         }
 
                         int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardMaxPerUserString, parameters), out int maxPerUser);
                         if (maxPerUser > 0)
                         {
-                            jobj["max_per_user_per_stream_setting"] = new JObject()
-                            {
-                                { "is_enabled", true },
-                                { "max_per_user_per_stream", maxPerUser }
-                            };
+                            jobj["is_max_per_user_per_stream_enabled"] = true;
+                            jobj["max_per_user_per_stream"] = maxPerUser;
                         }
                         else
                         {
-                            jobj["max_per_user_per_stream_setting"] = new JObject()
-                            {
-                                { "is_enabled", false },
-                            };
+                            jobj["is_max_per_user_per_stream_enabled"] = false;
+                            jobj["max_per_user_per_stream"] = 0;
                         }
 
                         int.TryParse(await ReplaceStringWithSpecialModifiers(this.ChannelPointRewardGlobalCooldownString, parameters), out int globalCooldown);
                         if (globalCooldown > 0)
                         {
-                            jobj["global_cooldown_setting"] = new JObject()
-                            {
-                                { "is_enabled", true },
-                                { "global_cooldown_seconds", globalCooldown * 60 }
-                            };
+                            jobj["is_global_cooldown_enabled"] = true;
+                            jobj["global_cooldown_seconds"] = globalCooldown * 60;
                         }
                         else
                         {
-                            jobj["global_cooldown_setting"] = new JObject()
-                            {
-                                { "is_enabled", false },
-                            };
+                            jobj["is_global_cooldown_enabled"] = false;
+                            jobj["global_cooldown_seconds"] = 0;
                         }
                     }
 

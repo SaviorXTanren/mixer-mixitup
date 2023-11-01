@@ -79,6 +79,7 @@ namespace MixItUp.Base.Util
         public const string PatreonTierImageSpecialIdentifier = "patreontierimage";
 
         public const string DonorDriveSpecialIdentifierHeader = "donordrive";
+        public const string TiltifySpecialIdentifierHeader = "tiltify";
 
         public const string UnicodeRegexSpecialIdentifier = "unicode";
 
@@ -219,7 +220,6 @@ namespace MixItUp.Base.Util
             {
                 this.ReplaceSpecialIdentifier(counter.Name, counter.Amount.ToString());
                 this.ReplaceSpecialIdentifier(counter.Name + "display", counter.Amount.ToNumberDisplayString());
-                
             }
 
             this.ReplaceSpecialIdentifier("dayoftheweek", DateTimeOffset.Now.DayOfWeek.ToString());
@@ -435,6 +435,21 @@ namespace MixItUp.Base.Util
                 }
             }
 
+            if (ServiceManager.Get<TiltifyService>().IsConnected && ChannelSession.Settings.TiltifyCampaign > 0)
+            {
+                if (this.ContainsSpecialIdentifier(TiltifySpecialIdentifierHeader))
+                {
+                    TiltifyCampaign campaign = await ServiceManager.Get<TiltifyService>().GetCampaign(ChannelSession.Settings.TiltifyCampaign);
+                    if (campaign != null)
+                    {
+                        this.ReplaceSpecialIdentifier(TiltifySpecialIdentifierHeader + "campaignurl", campaign.CampaignURL);
+                        this.ReplaceSpecialIdentifier(TiltifySpecialIdentifierHeader + "donationurl", campaign.DonateURL);
+                        this.ReplaceSpecialIdentifier(TiltifySpecialIdentifierHeader + "donationgoal", campaign.FundraiserGoalAmount.ToString());
+                        this.ReplaceSpecialIdentifier(TiltifySpecialIdentifierHeader + "donationamount", campaign.AmountRaised.ToString());
+                    }
+                }
+            }
+
             if (this.ContainsSpecialIdentifier(MusicPlayerSpecialIdentifierHeader))
             {
                 MusicPlayerSong song = ServiceManager.Get<IMusicPlayerService>().CurrentSong;
@@ -451,6 +466,7 @@ namespace MixItUp.Base.Util
                 if (this.ContainsSpecialIdentifier(StreamUptimeSpecialIdentifierHeader) || this.ContainsSpecialIdentifier(StreamStartSpecialIdentifierHeader))
                 {
                     DateTimeOffset startTime = await UptimePreMadeChatCommandModel.GetStartTime(parameters.Platform);
+                    Logger.ForceLog(LogLevel.Debug, $"Channel stream info: {JSONSerializerHelper.SerializeToString(ServiceManager.Get<TwitchSessionService>().Stream)} - {JSONSerializerHelper.SerializeToString(ServiceManager.Get<YouTubeSessionService>().Broadcast)} - {ServiceManager.Get<TrovoSessionService>().Channel}");
                     if (startTime > DateTimeOffset.MinValue)
                     {
                         TimeSpan duration = DateTimeOffset.Now.Subtract(startTime);

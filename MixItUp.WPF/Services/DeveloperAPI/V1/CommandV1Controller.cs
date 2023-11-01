@@ -29,7 +29,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
         [HttpGet]
         public Command Get(Guid commandID)
         {
-            Command selectedCommand = GetAllCommands().SingleOrDefault(c => c.ID == commandID);
+            CommandModelBase selectedCommand = FindCommand(commandID);
             if (selectedCommand == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -40,14 +40,14 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
                 throw new HttpResponseException(resp);
             }
 
-            return selectedCommand;
+            return CommandFromCommandBase(selectedCommand);
         }
 
         [Route("{commandID:guid}")]
         [HttpPost]
         public Command Run(Guid commandID, [FromBody] IEnumerable<string> arguments)
         {
-            CommandModelBase selectedCommand = FindCommand(commandID, out string category);
+            CommandModelBase selectedCommand = FindCommand(commandID);
             if (selectedCommand == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -66,14 +66,14 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
                     }),
                 new CancellationToken());
 
-            return CommandFromCommandBase(selectedCommand, category);
+            return CommandFromCommandBase(selectedCommand);
         }
 
         [Route("{commandID:guid}")]
         [HttpPut, HttpPatch]
         public Command Update(Guid commandID, [FromBody] Command commandData)
         {
-            CommandModelBase selectedCommand = FindCommand(commandID, out string category);
+            CommandModelBase selectedCommand = FindCommand(commandID);
             if (selectedCommand == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -85,93 +85,38 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V1
             }
 
             selectedCommand.IsEnabled = commandData.IsEnabled;
-            return CommandFromCommandBase(selectedCommand, category);
+            return CommandFromCommandBase(selectedCommand);
         }
 
-        private CommandModelBase FindCommand(Guid commandId, out string category)
+        private CommandModelBase FindCommand(Guid commandId)
         {
-            category = null;
-            CommandModelBase command = ServiceManager.Get<CommandService>().ChatCommands.SingleOrDefault(c => c.ID == commandId);
-            if (command !=null)
+            if (ChannelSession.Settings.Commands.TryGetValue(commandId, out CommandModelBase command))
             {
-                category = "Chat";
                 return command;
             }
-
-            command = ServiceManager.Get<CommandService>().EventCommands.SingleOrDefault(c => c.ID == commandId);
-            if (command != null)
-            {
-                category = "Event";
-                return command;
-            }
-
-            command = ServiceManager.Get<CommandService>().TimerCommands.SingleOrDefault(c => c.ID == commandId);
-            if (command != null)
-            {
-                category = "Timer";
-                return command;
-            }
-
-            command = ServiceManager.Get<CommandService>().TwitchChannelPointsCommands.SingleOrDefault(c => c.ID == commandId);
-            if (command != null)
-            {
-                category = "ChannelPoints";
-                return command;
-            }
-
-            command = ServiceManager.Get<CommandService>().ActionGroupCommands.SingleOrDefault(c => c.ID == commandId);
-            if (command != null)
-            {
-                category = "ActionGroup";
-                return command;
-            }
-
-            command = ServiceManager.Get<CommandService>().GameCommands.SingleOrDefault(c => c.ID == commandId);
-            if (command != null)
-            {
-                category = "Game";
-                return command;
-            }
-
-            command = ServiceManager.Get<CommandService>().PreMadeChatCommands.SingleOrDefault(c => c.ID == commandId);
-            if (command != null)
-            {
-                category = "Pre-Made";
-                return command;
-            }
-
             return null;
         }
 
         private List<Command> GetAllCommands()
         {
             List<Command> allCommands = new List<Command>();
-            allCommands.AddRange(CommandsFromCommandBases(ServiceManager.Get<CommandService>().ChatCommands, "Chat"));
-            allCommands.AddRange(CommandsFromCommandBases(ServiceManager.Get<CommandService>().EventCommands, "Event"));
-            allCommands.AddRange(CommandsFromCommandBases(ServiceManager.Get<CommandService>().TimerCommands, "Timer"));
-            allCommands.AddRange(CommandsFromCommandBases(ServiceManager.Get<CommandService>().TwitchChannelPointsCommands, "ChannelPoints"));
-            allCommands.AddRange(CommandsFromCommandBases(ServiceManager.Get<CommandService>().ActionGroupCommands, "ActionGroup"));
-            allCommands.AddRange(CommandsFromCommandBases(ServiceManager.Get<CommandService>().GameCommands, "Game"));
-            allCommands.AddRange(CommandsFromCommandBases(ServiceManager.Get<CommandService>().PreMadeChatCommands, "Pre-Made"));
+
+            foreach (CommandModelBase command in ServiceManager.Get<CommandService>().AllCommands)
+            {
+                allCommands.Add(CommandFromCommandBase(command));
+            }
+
             return allCommands;
         }
 
-        private IEnumerable<Command> CommandsFromCommandBases(IEnumerable<CommandModelBase> baseCommands, string category)
-        {
-            foreach (CommandModelBase baseCommand in baseCommands)
-            {
-                yield return CommandFromCommandBase(baseCommand, category);
-            }
-        }
-
-        private Command CommandFromCommandBase(CommandModelBase baseCommand, string category)
+        private Command CommandFromCommandBase(CommandModelBase baseCommand)
         {
             return new Command
             {
                 ID = baseCommand.ID,
                 Name = baseCommand.Name,
                 IsEnabled = baseCommand.IsEnabled,
-                Category = category,
+                Category = Resources.ResourceManager.GetString(baseCommand.Type.ToString()),
                 GroupName = baseCommand.GroupName ?? string.Empty,
             };
         }

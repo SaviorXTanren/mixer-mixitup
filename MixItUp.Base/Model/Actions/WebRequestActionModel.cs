@@ -75,6 +75,11 @@ namespace MixItUp.Base.Model.Actions
                     string targetUrl = await ReplaceStringWithSpecialModifiers(this.Url, parameters, encode: true);
                     using (HttpResponseMessage response = await httpClient.GetAsync(targetUrl))
                     {
+                        if (string.Equals(response?.Content?.Headers?.ContentType?.CharSet, "utf8"))
+                        {
+                            response.Content.Headers.ContentType.CharSet = "utf-8";
+                        }
+
                         if (response.IsSuccessStatusCode)
                         {
                             await this.ProcessContents(parameters, await response.Content.ReadAsStringAsync());

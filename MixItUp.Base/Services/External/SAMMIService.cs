@@ -14,6 +14,8 @@ namespace MixItUp.Base.Services.External
 
         public string Name { get { return Resources.SAMMI; } }
 
+        public bool IsEnabled { get { return ChannelSession.Settings.EnableSAMMI; } }
+
         public bool IsConnected { get; private set; }
 
         public async Task<Result> Connect()
