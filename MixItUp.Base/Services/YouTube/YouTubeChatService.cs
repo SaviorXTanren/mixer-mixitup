@@ -502,7 +502,7 @@ namespace MixItUp.Base.Services.YouTube
                                 await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.YouTubeChannelMembershipGifted, parameters);
 
                                 await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(gifter, string.Format(MixItUp.Base.Resources.AlertSubscriptionGiftedTier, gifter.FullDisplayName, liveChatMessage.Snippet.GiftMembershipReceivedDetails.MemberLevelName, receiver.FullDisplayName), ChannelSession.Settings.AlertGiftedSubColor));
-                                EventService.SubscriptionGiftedOccurred(membershipsGifted.User, user);
+                                EventService.SubscriptionGiftedOccurred(gifter, user);
                             }
                         }
                         else if (SuperChatEventMessageType.Equals(liveChatMessage.Snippet.Type))

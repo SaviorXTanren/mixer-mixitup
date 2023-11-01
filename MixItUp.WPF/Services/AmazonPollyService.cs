@@ -2,7 +2,6 @@
 using Amazon.Polly;
 using Amazon.Polly.Model;
 using Amazon.Runtime;
-using IronPython.Runtime;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using System;
