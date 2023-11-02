@@ -42,7 +42,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public string GenerateWidgetHTMLOutput()
         {
-            string content = Resources.OverlayIFrameTemplate;
+            string content = OverlayResources.OverlayIFrameTemplate;
 
             content = OverlayOutputV3Model.ReplaceProperty(content, nameof(this.HTML), this.HTML);
             content = OverlayOutputV3Model.ReplaceProperty(content, nameof(this.CSS), this.CSS);
@@ -54,7 +54,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public string GenerateBasicHTMLOutput()
         {
-            string content = Resources.OverlayIFrameTemplate;
+            string content = OverlayResources.OverlayIFrameTemplate;
 
             content = OverlayOutputV3Model.ReplaceProperty(content, nameof(this.HTML), this.HTML);
             content = OverlayOutputV3Model.ReplaceProperty(content, nameof(this.CSS), this.CSS);

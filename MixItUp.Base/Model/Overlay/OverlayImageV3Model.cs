@@ -9,8 +9,8 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayImageV3Model : OverlayItemV3ModelBase
     {
-        public static readonly string DefaultHTML = Resources.OverlayImageDefaultHTML;
-        public static readonly string DefaultCSS = Resources.OverlayImageDefaultCSS;
+        public static readonly string DefaultHTML = OverlayResources.OverlayImageDefaultHTML;
+        public static readonly string DefaultCSS = OverlayResources.OverlayImageDefaultCSS;
         public static readonly string DefaultJavascript = string.Empty;
 
         [DataMember]

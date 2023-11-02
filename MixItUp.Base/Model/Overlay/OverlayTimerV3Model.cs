@@ -21,9 +21,9 @@ namespace MixItUp.Base.Model.Overlay
         public const string TotalSecondsDisplayFormat = "SS";
         public const string SecondsDisplayFormat = "ss";
 
-        public static readonly string DefaultHTML = Resources.OverlayTimerDefaultHTML;
-        public static readonly string DefaultCSS = Resources.OverlayTextDefaultCSS;
-        public static readonly string DefaultJavascript = Resources.OverlayTimerDefaultJavascript;
+        public static readonly string DefaultHTML = OverlayResources.OverlayTimerDefaultHTML;
+        public static readonly string DefaultCSS = OverlayResources.OverlayTextDefaultCSS;
+        public static readonly string DefaultJavascript = OverlayResources.OverlayTimerDefaultJavascript;
 
         [DataMember]
         public string DisplayFormat { get; set; }

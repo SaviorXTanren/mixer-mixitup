@@ -8,9 +8,9 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayYouTubeV3Model : OverlayItemV3ModelBase
     {
-        public static readonly string DefaultHTML = Resources.OverlayYouTubeDefaultHTML;
-        public static readonly string DefaultCSS = Resources.OverlayYouTubeDefaultCSS;
-        public static readonly string DefaultJavascript = Resources.OverlayYouTubeDefaultJavascript;
+        public static readonly string DefaultHTML = OverlayResources.OverlayYouTubeDefaultHTML;
+        public static readonly string DefaultCSS = OverlayResources.OverlayYouTubeDefaultCSS;
+        public static readonly string DefaultJavascript = OverlayResources.OverlayYouTubeDefaultJavascript;
 
         [DataMember]
         public string VideoID { get; set; }

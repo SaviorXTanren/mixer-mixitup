@@ -35,11 +35,11 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayLabelV3Model : OverlayVisualTextV3ModelBase
     {
-        public static readonly string DefaultAmountHTML = Resources.OverlayLabelAmountDefaultHTML;
-        public static readonly string DefaultUsernameHTML = Resources.OverlayLabelUsernameDefaultHTML;
-        public static readonly string DefaultUsernameAmountHTML = Resources.OverlayLabelUsernameAmountDefaultHTML;
-        public static readonly string DefaultCSS = Resources.OverlayTextDefaultCSS;
-        public static readonly string DefaultJavascript = Resources.OverlayLabelDefaultJavascript;
+        public static readonly string DefaultAmountHTML = OverlayResources.OverlayLabelAmountDefaultHTML;
+        public static readonly string DefaultUsernameHTML = OverlayResources.OverlayLabelUsernameDefaultHTML;
+        public static readonly string DefaultUsernameAmountHTML = OverlayResources.OverlayLabelUsernameAmountDefaultHTML;
+        public static readonly string DefaultCSS = OverlayResources.OverlayTextDefaultCSS;
+        public static readonly string DefaultJavascript = OverlayResources.OverlayLabelDefaultJavascript;
 
         [DataMember]
         public OverlayLabelV3Type LabelType { get; set; }

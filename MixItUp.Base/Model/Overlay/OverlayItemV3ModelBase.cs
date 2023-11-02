@@ -26,8 +26,8 @@ namespace MixItUp.Base.Model.Overlay
     {
         public const string InnerHTMLProperty = "InnerHTML";
 
-        public static readonly string PositionedHTML = Resources.OverlayPositionedItemDefaultHTML;
-        public static readonly string PositionedCSS = Resources.OverlayPositionedItemDefaultCSS;
+        public static readonly string PositionedHTML = OverlayResources.OverlayPositionedItemDefaultHTML;
+        public static readonly string PositionedCSS = OverlayResources.OverlayPositionedItemDefaultCSS;
 
         [DataMember]
         public string Name { get; set; }

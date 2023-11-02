@@ -14038,135 +14038,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to animateCSS(maindiv, &apos;{AnimateCSSAnimationName}&apos;);.
-        /// </summary>
-        public static string OverlayAnimateCSSJavascript {
-            get {
-                return ResourceManager.GetString("OverlayAnimateCSSJavascript", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to animateCSS(maindiv, &apos;{AnimateCSSAnimationName}&apos;).then((message) =&gt; {
-        ///    {PostAnimation}
-        ///});.
-        /// </summary>
-        public static string OverlayAnimateCSSThenJavascript {
-            get {
-                return ResourceManager.GetString("OverlayAnimateCSSThenJavascript", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to setTimeout(function () {
-        ///    {Animation}
-        ///}, {MillisecondTiming});.
-        /// </summary>
-        public static string OverlayAnimationTimedWrapperJavascript {
-            get {
-                return ResourceManager.GetString("OverlayAnimationTimedWrapperJavascript", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .list {
-        ///    width: {ItemWidth};
-        ///    {FullHeight}
-        ///}
-        ///
-        ///.item {
-        ///    position: relative;
-        ///    border-style: solid;
-        ///    border-width: 5px;
-        ///    border-color: {BorderColor};
-        ///    background-color: {BackgroundColor};
-        ///    width: {ItemWidth};
-        ///    {IndividualHeight}
-        ///}
-        ///
-        ///.message {
-        ///    padding: 10px;
-        ///    margin: auto;
-        ///}
-        ///
-        ///.messagebadge {
-        ///    vertical-align: middle;
-        ///    padding-right: 2px;
-        ///    width: auto;
-        ///    height: {FontSize}px;
-        ///}
-        ///
-        ///.messageavatar {
-        ///    vertical-align: middle;
-        ///    padding-right [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string OverlayChatDefaultCSS {
-            get {
-                return ResourceManager.GetString("OverlayChatDefaultCSS", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;
-        ///
-        ///&lt;/div&gt;
-        ///
-        ///&lt;template id=&quot;item&quot;&gt;
-        ///    &lt;div class=&quot;item&quot;&gt;
-        ///        &lt;p class=&quot;message&quot;&gt;&lt;/p&gt;
-        ///    &lt;/div&gt;
-        ///&lt;/template&gt;
-        ///
-        ///&lt;template id=&quot;messagebadge&quot;&gt;
-        ///    &lt;img class=&quot;messagebadge&quot; /&gt;
-        ///&lt;/template&gt;
-        ///
-        ///&lt;template id=&quot;messageavatar&quot;&gt;
-        ///    &lt;img class=&quot;messageavatar&quot; /&gt;
-        ///&lt;/template&gt;
-        ///
-        ///&lt;template id=&quot;messageusername&quot;&gt;
-        ///    &lt;span class=&quot;messageusername&quot;&gt;&lt;/span&gt;
-        ///&lt;/template&gt;
-        ///
-        ///&lt;template id=&quot;messagetext&quot;&gt;
-        ///    &lt;span class=&quot;messagetext&quot;&gt;&lt;/span&gt;
-        ///&lt;/template&gt;
-        ///
-        ///&lt;template id=&quot;messageemote&quot;&gt;
-        /// [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string OverlayChatDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayChatDefaultHTML", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to function add(user, messageParts)
-        ///{
-        ///    var list = document.getElementById(&quot;list&quot;);
-        ///
-        ///    if ({ShowMaxMessagesOnly})
-        ///    {
-        ///        if (list.childElementCount &gt; {MaxToShow})
-        ///        {
-        ///            removeOldest();
-        ///        }
-        ///    }
-        ///
-        ///    var itemTemplate = document.querySelector(&quot;#item&quot;);
-        ///    var messageBadgeTemplate = document.querySelector(&quot;#messagebadge&quot;);
-        ///    var messageAvatarTemplate = document.querySelector(&quot;#messageavatar&quot;);
-        ///    var messageUsernameTemplate = document.querySelector(&quot;#messageuse [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string OverlayChatDefaultJavascript {
-            get {
-                return ResourceManager.GetString("OverlayChatDefaultJavascript", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Overlay connection test failed, please ensure you have the Mix It Up Overlay page visible and running in your streaming software..
         /// </summary>
         public static string OverlayConnectionFailed1 {
@@ -14212,219 +14083,11 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .list {
-        ///    width: {ItemWidth};
-        ///    {FullHeight}
-        ///}
-        ///
-        ///.item {
-        ///    position: relative;
-        ///    border-style: solid;
-        ///    border-width: 5px;
-        ///    border-color: {BorderColor};
-        ///    background-color: {BackgroundColor};
-        ///    width: {ItemWidth};
-        ///    {IndividualHeight}
-        ///}
-        ///
-        ///.message {
-        ///    padding: 10px;
-        ///    margin: auto;
-        ///}
-        ///
-        ///.messagebadge {
-        ///    vertical-align: middle;
-        ///    padding-right: 2px;
-        ///    width: auto;
-        ///    height: {FontSize}px;
-        ///}
-        ///
-        ///.messageavatar {
-        ///    vertical-align: middle;
-        ///    padding-right [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string OverlayEventListDefaultCSS {
-            get {
-                return ResourceManager.GetString("OverlayEventListDefaultCSS", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;
-        ///
-        ///&lt;/div&gt;
-        ///
-        ///&lt;template id=&quot;item&quot;&gt;
-        ///    &lt;div class=&quot;item&quot;&gt;
-        ///        &lt;p class=&quot;eventtype&quot;&gt;{EventType}&lt;/p&gt;
-        ///        &lt;p class=&quot;details&quot;&gt;{Details}&lt;/p&gt;
-        ///        &lt;p class=&quot;subdetails&quot;&gt;{SubDetails}&lt;/p&gt;
-        ///    &lt;/div&gt;
-        ///&lt;/template&gt;.
-        /// </summary>
-        public static string OverlayEventListDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayEventListDefaultHTML", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to function add(eventType, details, subdetails)
-        ///{
-        ///    var list = document.getElementById(&quot;list&quot;);
-        ///
-        ///    if (list.childElementCount &gt; {MaxToShow}) {
-        ///        removeOldest();
-        ///    }
-        ///
-        ///    var itemTemplate = document.querySelector(&quot;#item&quot;);
-        ///    const item = itemTemplate.content.cloneNode(true);
-        ///    
-        ///    var eventTypeElement = item.querySelector(&quot;.eventtype&quot;);
-        ///    eventTypeElement.innerHTML = eventType;
-        ///
-        ///    var detailsElement = item.querySelector(&quot;.details&quot;);
-        ///    detailsElement.innerHTML = details;
-        ///   [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string OverlayEventListDefaultJavascript {
-            get {
-                return ResourceManager.GetString("OverlayEventListDefaultJavascript", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .background
-        ///{
-        ///    position: absolute;
-        ///    background-color: {BackgroundColor};
-        ///    width: {Width}px;
-        ///    height: {Height}px;
-        ///}
-        ///
-        ///.progress
-        ///{
-        ///    position: absolute;
-        ///    background-color: {ProgressColor};
-        ///    height: {Height}px;
-        ///}
-        ///
-        ///.text {
-        ///    position: absolute;
-        ///    font-size: {FontSize}px;
-        ///    color: {FontColor};
-        ///    font-family: &apos;{FontFamily}&apos;;
-        ///    font-weight: {FontWeight};
-        ///    text-decoration: {TextDecoration};
-        ///    font-style: {FontStyle};
-        ///    text-align: {TextAlignment};
-        ///    text [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string OverlayGoalDefaultCSS {
-            get {
-                return ResourceManager.GetString("OverlayGoalDefaultCSS", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;div class=&quot;background&quot;&gt;
-        ///  &lt;div id=&quot;progress&quot; class=&quot;progress&quot; /&gt;
-        ///&lt;/div&gt;
-        ///&lt;p id=&quot;text&quot; class=&quot;text&quot; /&gt;.
-        /// </summary>
-        public static string OverlayGoalDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayGoalDefaultHTML", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to function update(amount, goal, width)
-        ///{
-        ///    var percentage = (amount / goal)
-        ///
-        ///    var textElement = document.getElementById(&quot;text&quot;);
-        ///    if (textElement != null) {
-        ///        textElement.innerHTML = amount + &quot; (&quot; + Math.round(percentage * 100) + &quot;%)&quot;; 
-        ///    }
-        ///    
-        ///    var progressElement = document.getElementById(&quot;progress&quot;);
-        ///    if (progressElement != null) {
-        ///        progressElement.style.width = Math.min(Math.round(percentage * width), width) + &quot;px&quot;;
-        ///    }
-        ///}
-        ///
-        ///update({CurrentAmount}, {GoalAmount} [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string OverlayGoalDefaultJavascript {
-            get {
-                return ResourceManager.GetString("OverlayGoalDefaultJavascript", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Height must be a valid value.
         /// </summary>
         public static string OverlayHeightMustBeValidValue {
             get {
                 return ResourceManager.GetString("OverlayHeightMustBeValidValue", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to maindiv.style.visibility=&apos;hidden&apos;;
-        ///sendParentMessage({ Type: &quot;Remove&quot;, ID: &quot;{ID}&quot; });.
-        /// </summary>
-        public static string OverlayIFrameSendParentMessageRemove {
-            get {
-                return ResourceManager.GetString("OverlayIFrameSendParentMessageRemove", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
-        ///
-        ///&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
-        ///&lt;head&gt;
-        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
-        ///    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
-        ///
-        ///    &lt;script src=&quot;jquery-3.6.0.min.js&quot;&gt;&lt;/script&gt;
-        ///
-        ///    &lt;script src=&quot;video.min.js&quot;&gt;&lt;/script&gt;
-        ///
-        ///    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;animate.min.css&quot;&gt;
-        ///
-        ///    &lt;style type=&quot;text/css&quot;&gt;
-        ///        {CSS}
-        ///    &lt;/style&gt;
-        ///&lt;/head&gt;
-        ///&lt;body style=&quot;background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100 [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string OverlayIFrameTemplate {
-            get {
-                return ResourceManager.GetString("OverlayIFrameTemplate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .image {
-        ///    width: {Width};
-        ///    height: {Height};
-        ///}.
-        /// </summary>
-        public static string OverlayImageDefaultCSS {
-            get {
-                return ResourceManager.GetString("OverlayImageDefaultCSS", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;img id=&quot;image&quot; class=&quot;image&quot; src=&quot;{FilePath}&quot; /&gt;.
-        /// </summary>
-        public static string OverlayImageDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayImageDefaultHTML", resourceCulture);
             }
         }
         
@@ -14483,62 +14146,11 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;amount&quot; class=&quot;text&quot;&gt;&lt;/p&gt;.
-        /// </summary>
-        public static string OverlayLabelAmountDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayLabelAmountDefaultHTML", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to A valid counter must be selected.
         /// </summary>
         public static string OverlayLabelCounterNotSelected {
             get {
                 return ResourceManager.GetString("OverlayLabelCounterNotSelected", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to function update(data)
-        ///{
-        ///    var usernameElement = document.getElementById(&quot;username&quot;);
-        ///    if (usernameElement != null) {
-        ///        usernameElement.innerHTML = data.Username;
-        ///    }
-        ///    
-        ///    var amountElement = document.getElementById(&quot;amount&quot;);
-        ///    if (amountElement != null) {
-        ///        amountElement.innerHTML = data.Amount;
-        ///    }
-        ///}
-        ///
-        ///update({Username: &apos;{Username}&apos;, Amount: {Amount}}).
-        /// </summary>
-        public static string OverlayLabelDefaultJavascript {
-            get {
-                return ResourceManager.GetString("OverlayLabelDefaultJavascript", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;username&quot; class=&quot;text&quot;&gt;&lt;/p&gt;
-        /// - 
-        ///&lt;p id=&quot;amount&quot; class=&quot;text&quot;&gt;&lt;/p&gt;.
-        /// </summary>
-        public static string OverlayLabelUsernameAmountDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayLabelUsernameAmountDefaultHTML", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;username&quot; class=&quot;text&quot;&gt;&lt;/p&gt;.
-        /// </summary>
-        public static string OverlayLabelUsernameDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayLabelUsernameDefaultHTML", resourceCulture);
             }
         }
         
@@ -14575,50 +14187,6 @@ namespace MixItUp.Base {
         public static string OverlayMissingFilePath {
             get {
                 return ResourceManager.GetString("OverlayMissingFilePath", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .maindiv {
-        ///    position: absolute;
-        ///    width: 100%;
-        ///    max-width: 100%;
-        ///    min-width: 100%;
-        ///    height: 100%;
-        ///    max-height: 100%;
-        ///    min-height: 100%;
-        ///    margin: 0px;
-        ///    z-index: {Layer};
-        ///}
-        ///
-        ///.contentdiv {
-        ///    position: absolute;
-        ///    margin: 0px;
-        ///    left: {XPosition}{PositionType};
-        ///    top: {YPosition}{PositionType};
-        ///    transform: translate({XTranslation}%, {YTranslation}%);
-        ///    width: {Width};
-        ///    height: {Height};
-        ///}.
-        /// </summary>
-        public static string OverlayPositionedItemDefaultCSS {
-            get {
-                return ResourceManager.GetString("OverlayPositionedItemDefaultCSS", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;maindiv&quot; class=&quot;maindiv&quot;&gt;
-        ///&lt;div id=&quot;contentdiv&quot; class=&quot;contentdiv&quot;&gt;
-        ///
-        ///{InnerHTML}
-        ///
-        ///&lt;/div&gt;
-        ///&lt;/div&gt;.
-        /// </summary>
-        public static string OverlayPositionedItemDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayPositionedItemDefaultHTML", resourceCulture);
             }
         }
         
@@ -14668,39 +14236,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .text {
-        ///    font-size: {FontSize}px;
-        ///    color: {FontColor};
-        ///    font-family: &apos;{FontFamily}&apos;;
-        ///    font-weight: {FontWeight};
-        ///    text-decoration: {TextDecoration};
-        ///    font-style: {FontStyle};
-        ///    text-align: {TextAlignment};
-        ///    text-shadow: {Shadow};
-        ///    margin-block-start: 0px;
-        ///    margin-block-end: 0px;
-        ///    margin-inline-start: 0px;
-        ///    margin-inline-end: 0px;
-        ///}.
-        /// </summary>
-        public static string OverlayTextDefaultCSS {
-            get {
-                return ResourceManager.GetString("OverlayTextDefaultCSS", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;text&quot; class=&quot;text&quot;&gt;
-        ///    {Text}
-        ///&lt;/p&gt;.
-        /// </summary>
-        public static string OverlayTextDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayTextDefaultHTML", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Missing text.
         /// </summary>
         public static string OverlayTextMissingText {
@@ -14710,77 +14245,11 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p id=&quot;text&quot; class=&quot;text&quot;&gt;
-        ///    {Text}
-        ///&lt;/p&gt;.
-        /// </summary>
-        public static string OverlayTimerDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayTimerDefaultHTML", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to var additionalTime = 0;
-        ///
-        ///function timerLoop(totalSeconds, endingSeconds, displayFormat)
-        ///{
-        ///    totalSeconds += additionalTime;
-        ///    additionalTime = 0;
-        ///
-        ///    var text = displayFormat;
-        ///
-        ///    var seconds = totalSeconds % 60;
-        ///    if (seconds &lt; 10) { seconds = &quot;0&quot; + seconds }
-        ///    text = text.replace(&quot;SS&quot;, totalSeconds);
-        ///    text = text.replace(&quot;ss&quot;, seconds);
-        ///
-        ///    var totalMinutes = Math.floor(totalSeconds / 60);
-        ///    var minutes = totalMinutes % 60;
-        ///    if (minutes &lt; 10) { minutes = &quot;0&quot; + minutes }        /// [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string OverlayTimerDefaultJavascript {
-            get {
-                return ResourceManager.GetString("OverlayTimerDefaultJavascript", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Missing display format.
         /// </summary>
         public static string OverlayTimerMissingDisplayFormat {
             get {
                 return ResourceManager.GetString("OverlayTimerMissingDisplayFormat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .clip {
-        ///    border: 0px;
-        ///}.
-        /// </summary>
-        public static string OverlayTwitchClipDefaultCSS {
-            get {
-                return ResourceManager.GetString("OverlayTwitchClipDefaultCSS", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;iframe id=&quot;clip&quot; class=&quot;clip&quot; width=&quot;{ClipWidth}&quot; height=&quot;{ClipHeight}&quot;&gt;&lt;/iframe&gt;.
-        /// </summary>
-        public static string OverlayTwitchClipDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayTwitchClipDefaultHTML", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to var clip = document.getElementById(&quot;clip&quot;);
-        ///clip.setAttribute(&quot;src&quot;, &quot;https://clips.twitch.tv/embed?parent=&quot; + window.location.hostname + &quot;&amp;autoplay=true&amp;muted=false&amp;clip={ClipID}&quot;);.
-        /// </summary>
-        public static string OverlayTwitchClipDefaultJavascript {
-            get {
-                return ResourceManager.GetString("OverlayTwitchClipDefaultJavascript", resourceCulture);
             }
         }
         
@@ -14799,29 +14268,6 @@ namespace MixItUp.Base {
         public static string OverlayTwitchClipValidIDMustBeSpecified {
             get {
                 return ResourceManager.GetString("OverlayTwitchClipValidIDMustBeSpecified", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .video {
-        ///    width: {Width};
-        ///    height: {Height};
-        ///}.
-        /// </summary>
-        public static string OverlayVideoDefaultCSS {
-            get {
-                return ResourceManager.GetString("OverlayVideoDefaultCSS", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;video id=&quot;video&quot; class=&quot;video&quot; onloadstart=&quot;this.volume={Volume}&quot; allow=&quot;autoplay; encrypted-media&quot; autoplay {Loop}&gt;
-        ///    &lt;source src=&quot;{FilePath}&quot; type=&quot;video/{VideoExtension}&quot; /&gt;
-        ///&lt;/video&gt;.
-        /// </summary>
-        public static string OverlayVideoDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayVideoDefaultHTML", resourceCulture);
             }
         }
         
@@ -14849,15 +14295,6 @@ namespace MixItUp.Base {
         public static string OverlayWarning3 {
             get {
                 return ResourceManager.GetString("OverlayWarning3", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;iframe frameborder=&quot;0&quot; width=&quot;{WIDTH}&quot; height=&quot;{HEIGHT}&quot; src=&quot;{URL}&quot; /&gt;.
-        /// </summary>
-        public static string OverlayWebPageDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayWebPageDefaultHTML", resourceCulture);
             }
         }
         
@@ -15056,46 +14493,6 @@ namespace MixItUp.Base {
         public static string OverlayWidthMustBeValidValue {
             get {
                 return ResourceManager.GetString("OverlayWidthMustBeValidValue", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .youtubeVideo {
-        ///
-        ///}.
-        /// </summary>
-        public static string OverlayYouTubeDefaultCSS {
-            get {
-                return ResourceManager.GetString("OverlayYouTubeDefaultCSS", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;youtube-{ID}&quot; class=&quot;youtubeVideo&quot; /&gt;.
-        /// </summary>
-        public static string OverlayYouTubeDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayYouTubeDefaultHTML", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to function onYouTubeIframeAPIReady() {
-        ///    var youtubeVideoPlayer = new YT.Player(&quot;youtube-{ID}&quot;, {
-        ///        height: {HeightNumber},
-        ///        width: {WidthNumber},
-        ///        videoId: &apos;{VideoID}&apos;,
-        ///        playerVars: { &apos;controls&apos;: 0, &apos;modestbranding&apos;: 1, &apos;start&apos;: {StartTime} },
-        ///        events: {
-        ///            &apos;onReady&apos;: function () {
-        ///                youtubeVideoPlayer.setVolume({Volume});
-        ///                youtubeVideoPlayer.setLoop(false);
-        ///                youtubeVideoPlayer.frameBorder = 0;
-        ///                [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string OverlayYouTubeDefaultJavascript {
-            get {
-                return ResourceManager.GetString("OverlayYouTubeDefaultJavascript", resourceCulture);
             }
         }
         

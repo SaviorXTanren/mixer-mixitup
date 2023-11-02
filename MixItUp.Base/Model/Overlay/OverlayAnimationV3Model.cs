@@ -172,7 +172,7 @@ namespace MixItUp.Base.Model.Overlay
             string output = this.GenerateAnimationJavascript();
             if (!string.IsNullOrEmpty(output))
             {
-                output = OverlayItemV3ModelBase.ReplaceProperty(Resources.OverlayAnimationTimedWrapperJavascript, "Animation", output);
+                output = OverlayItemV3ModelBase.ReplaceProperty(OverlayResources.OverlayAnimationTimedWrapperJavascript, "Animation", output);
                 output = OverlayItemV3ModelBase.ReplaceProperty(output, "MillisecondTiming", $"({seconds} * 1000)");
             }
             return output;
@@ -183,12 +183,12 @@ namespace MixItUp.Base.Model.Overlay
             string output = this.GenerateAnimationJavascript(includePostProcessingFunction: true);
             if (!string.IsNullOrEmpty(output))
             {
-                output = OverlayItemV3ModelBase.ReplaceProperty(Resources.OverlayAnimationTimedWrapperJavascript, "Animation", output);
-                output = OverlayItemV3ModelBase.ReplaceProperty(output, "PostAnimation", Resources.OverlayIFrameSendParentMessageRemove);
+                output = OverlayItemV3ModelBase.ReplaceProperty(OverlayResources.OverlayAnimationTimedWrapperJavascript, "Animation", output);
+                output = OverlayItemV3ModelBase.ReplaceProperty(output, "PostAnimation", OverlayResources.OverlayIFrameSendParentMessageRemove);
             }
             else
             {
-                output = OverlayItemV3ModelBase.ReplaceProperty(Resources.OverlayAnimationTimedWrapperJavascript, "Animation", Resources.OverlayIFrameSendParentMessageRemove);
+                output = OverlayItemV3ModelBase.ReplaceProperty(OverlayResources.OverlayAnimationTimedWrapperJavascript, "Animation", OverlayResources.OverlayIFrameSendParentMessageRemove);
             }
             output = OverlayItemV3ModelBase.ReplaceProperty(output, "MillisecondTiming", $"({seconds} * 1000)");
             output = OverlayItemV3ModelBase.ReplaceProperty(output, "ID", id);
@@ -200,7 +200,7 @@ namespace MixItUp.Base.Model.Overlay
             string output = string.Empty;
             if (this.AnimateCSSAnimation != OverlayAnimateCSSAnimationType.None)
             {
-                output = includePostProcessingFunction ? Resources.OverlayAnimateCSSThenJavascript : Resources.OverlayAnimateCSSJavascript;
+                output = includePostProcessingFunction ? OverlayResources.OverlayAnimateCSSThenJavascript : OverlayResources.OverlayAnimateCSSJavascript;
                 output = OverlayItemV3ModelBase.ReplaceProperty(output, nameof(this.AnimateCSSAnimationName), this.AnimateCSSAnimationName);
             }
             return output;

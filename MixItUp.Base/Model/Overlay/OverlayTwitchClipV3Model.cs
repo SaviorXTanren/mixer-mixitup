@@ -15,9 +15,9 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayTwitchClipV3Model : OverlayItemV3ModelBase
     {
-        public static readonly string DefaultHTML = Resources.OverlayTwitchClipDefaultHTML;
-        public static readonly string DefaultCSS = Resources.OverlayTwitchClipDefaultCSS;
-        public static readonly string DefaultJavascript = Resources.OverlayTwitchClipDefaultJavascript;
+        public static readonly string DefaultHTML = OverlayResources.OverlayTwitchClipDefaultHTML;
+        public static readonly string DefaultCSS = OverlayResources.OverlayTwitchClipDefaultCSS;
+        public static readonly string DefaultJavascript = OverlayResources.OverlayTwitchClipDefaultJavascript;
 
         [DataMember]
         public OverlayTwitchClipV3ClipType ClipType { get; set; }
