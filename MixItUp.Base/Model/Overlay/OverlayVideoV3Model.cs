@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -25,29 +26,12 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayVideoV3Model() : base(OverlayItemV3Type.Video) { }
 
-        protected override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, CommandParametersModel parameters)
+        protected override async Task<Dictionary<string, string>> GetCustomProperties(CommandParametersModel parameters)
         {
-            item = await base.GetProcessedItem(item, parameters);
+            Dictionary<string, string> properties = await base.GetCustomProperties(parameters);
 
             string filepath = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.FilePath, parameters);
             filepath = RandomHelper.PickRandomFileFromDelimitedString(filepath);
-
-            item.HTML = ReplaceProperty(item.HTML, nameof(this.FilePath), ServiceManager.Get<OverlayV3Service>().GetURLForFile(filepath, "video"));
-            item.CSS = ReplaceProperty(item.CSS, nameof(this.FilePath), ServiceManager.Get<OverlayV3Service>().GetURLForFile(filepath, "video"));
-            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.FilePath), ServiceManager.Get<OverlayV3Service>().GetURLForFile(filepath, "video"));
-
-            item.HTML = ReplaceProperty(item.HTML, nameof(this.Volume), this.Volume.ToString());
-            item.CSS = ReplaceProperty(item.CSS, nameof(this.Volume), this.Volume.ToString());
-            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.Volume), this.Volume.ToString());
-
-            if (this.Loop)
-            {
-                item.HTML = ReplaceProperty(item.HTML, nameof(this.Loop), "loop");
-            }
-            else
-            {
-                item.HTML = ReplaceProperty(item.HTML, nameof(this.Loop), string.Empty);
-            }
 
             string extension = Path.GetExtension(filepath);
             if (!string.IsNullOrEmpty(extension))
@@ -58,11 +42,13 @@ namespace MixItUp.Base.Model.Overlay
             {
                 extension = "mp4";
             }
-            item.HTML = ReplaceProperty(item.HTML, "VideoExtension", extension);
-            item.CSS = ReplaceProperty(item.CSS, "VideoExtension", extension);
-            item.Javascript = ReplaceProperty(item.Javascript, "VideoExtension", extension);
 
-            return item;
+            properties[nameof(this.FilePath)] = ServiceManager.Get<OverlayV3Service>().GetURLForFile(filepath, "video");
+            properties[nameof(this.Volume)] = this.Volume.ToString();
+            properties[nameof(this.Loop)] = this.Loop ? "loop" : string.Empty;
+            properties["VideoExtension"] = extension;
+
+            return properties;
         }
     }
 }

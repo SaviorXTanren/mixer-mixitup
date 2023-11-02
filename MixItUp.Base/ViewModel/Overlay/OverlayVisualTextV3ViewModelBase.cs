@@ -186,5 +186,38 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.ShadowColor = item.ShadowColor;
             this.width = item.Width;
         }
+
+        public void AssignProperties(OverlayVisualTextV3ModelBase item)
+        {
+            item.HTML = this.HTML;
+            item.CSS = this.CSS;
+            item.Javascript = this.Javascript;
+            item.Text = this.Text;
+            item.FontSize = this.FontSize;
+            item.FontName = this.FontName;
+            item.FontColor = this.FontColor;
+            item.Bold = this.Bold;
+            item.Italics = this.Italics;
+            item.Underline = this.Underline;
+            item.ShadowColor = this.ShadowColor;
+            item.Width = this.width;
+
+            if (this.LeftAlignment)
+            {
+                item.TextAlignment = OverlayVisualTextItemV3AlignmentTypeEnum.Left;
+            }
+            else if (this.CenterAlignment)
+            {
+                item.TextAlignment = OverlayVisualTextItemV3AlignmentTypeEnum.Center;
+            }
+            else if (this.RightAlignment)
+            {
+                item.TextAlignment = OverlayVisualTextItemV3AlignmentTypeEnum.Right;
+            }
+            else if (this.JustifyAlignment)
+            {
+                item.TextAlignment = OverlayVisualTextItemV3AlignmentTypeEnum.Justify;
+            }
+        }
     }
 }

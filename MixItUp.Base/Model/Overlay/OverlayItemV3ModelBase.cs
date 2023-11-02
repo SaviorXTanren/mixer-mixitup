@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -33,9 +32,6 @@ namespace MixItUp.Base.Model.Overlay
         public string Name { get; set; }
 
         [DataMember]
-        public Guid OverlayEndpointID { get; set; }
-
-        [DataMember]
         public OverlayItemV3Type Type { get; set; }
 
         [DataMember]
@@ -51,114 +47,101 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int Height { get; set; }
 
+        [DataMember]
+        public string Duration { get; set; }
+
+        //[DataMember]
+        //public List<OverlayAnimationV3Model> Animations { get; set; } = new List<OverlayAnimationV3Model>();
+
         protected OverlayItemV3ModelBase() { }
 
         public OverlayItemV3ModelBase(OverlayItemV3Type type) { this.Type = type; }
 
-        public virtual async Task Update(string functionName, Dictionary<string, string> data, CommandParametersModel parameters)
+        public async Task<OverlayOutputV3Model> GenerateOutput(CommandParametersModel parameters)
         {
-            JObject jobj = new JObject();
-            jobj[nameof(this.ID)] = this.TextID;
-            jobj["FunctionName"] = functionName;
-            if (data != null)
+            OverlayOutputV3Model output = new OverlayOutputV3Model();
+
+            output.ID = this.ID;
+            if (output.ID == Guid.Empty)
             {
-                foreach (var kvp in data)
-                {
-                    jobj[kvp.Key] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(kvp.Value, parameters);
-                }
+                output.ID = Guid.NewGuid();
             }
 
-            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
-            if (overlay != null)
-            {
-                await overlay.SendUpdate(this, jobj);
-            }
-        }
+            output.HTML = this.HTML;
+            output.CSS = this.CSS;
+            output.Javascript = this.Javascript;
 
-        public async Task<OverlayOutputV3Model> GetProcessedItem(CommandParametersModel parameters)
-        {
-            OverlayOutputV3Model result = new OverlayOutputV3Model();
+            string id = output.ID.ToString();
+            output.HTML = OverlayV3Service.ReplaceProperty(output.HTML, nameof(this.ID), id);
+            output.CSS = OverlayV3Service.ReplaceProperty(output.CSS, nameof(this.ID), id);
+            output.Javascript = OverlayV3Service.ReplaceProperty(output.Javascript, nameof(this.ID), id);
 
-            result.ID = this.ID;
-            if (result.ID == Guid.Empty)
-            {
-                result.ID = Guid.NewGuid();
-            }
+            this.Position.SetPosition(output);
 
-            result.HTML = this.HTML;
-            result.CSS = this.CSS;
-            result.Javascript = this.Javascript;
+            output.HTML = OverlayV3Service.ReplaceProperty(output.HTML, nameof(this.XTranslation), this.XTranslation.ToString());
+            output.CSS = OverlayV3Service.ReplaceProperty(output.CSS, nameof(this.XTranslation), this.XTranslation.ToString());
+            output.Javascript = OverlayV3Service.ReplaceProperty(output.Javascript, nameof(this.XTranslation), this.XTranslation.ToString());
 
-            string id = result.ID.ToString();
-            result.HTML = ReplaceProperty(result.HTML, nameof(this.ID), id);
-            result.CSS = ReplaceProperty(result.CSS, nameof(this.ID), id);
-            result.Javascript = ReplaceProperty(result.Javascript, nameof(this.ID), id);
-
-            this.Position.SetPosition(result);
-
-            result.HTML = ReplaceProperty(result.HTML, nameof(this.XTranslation), this.XTranslation.ToString());
-            result.CSS = ReplaceProperty(result.CSS, nameof(this.XTranslation), this.XTranslation.ToString());
-            result.Javascript = ReplaceProperty(result.Javascript, nameof(this.XTranslation), this.XTranslation.ToString());
-
-            result.HTML = ReplaceProperty(result.HTML, nameof(this.YTranslation), this.YTranslation.ToString());
-            result.CSS = ReplaceProperty(result.CSS, nameof(this.YTranslation), this.YTranslation.ToString());
-            result.Javascript = ReplaceProperty(result.Javascript, nameof(this.YTranslation), this.YTranslation.ToString());
+            output.HTML = OverlayV3Service.ReplaceProperty(output.HTML, nameof(this.YTranslation), this.YTranslation.ToString());
+            output.CSS = OverlayV3Service.ReplaceProperty(output.CSS, nameof(this.YTranslation), this.YTranslation.ToString());
+            output.Javascript = OverlayV3Service.ReplaceProperty(output.Javascript, nameof(this.YTranslation), this.YTranslation.ToString());
 
             if (this.Width > 0)
             {
-                result.HTML = ReplaceProperty(result.HTML, nameof(this.Width), $"{this.Width}px");
-                result.CSS = ReplaceProperty(result.CSS, nameof(this.Width), $"{this.Width}px");
-                result.Javascript = ReplaceProperty(result.Javascript, nameof(this.Width), $"{this.Width}px");
+                output.HTML = OverlayV3Service.ReplaceProperty(output.HTML, nameof(this.Width), $"{this.Width}px");
+                output.CSS = OverlayV3Service.ReplaceProperty(output.CSS, nameof(this.Width), $"{this.Width}px");
+                output.Javascript = OverlayV3Service.ReplaceProperty(output.Javascript, nameof(this.Width), $"{this.Width}px");
             }
             else
             {
-                result.HTML = ReplaceProperty(result.HTML, nameof(this.Width), "auto");
-                result.CSS = ReplaceProperty(result.CSS, nameof(this.Width), "auto");
-                result.Javascript = ReplaceProperty(result.Javascript, nameof(this.Width), "auto");
+                output.HTML = OverlayV3Service.ReplaceProperty(output.HTML, nameof(this.Width), "auto");
+                output.CSS = OverlayV3Service.ReplaceProperty(output.CSS, nameof(this.Width), "auto");
+                output.Javascript = OverlayV3Service.ReplaceProperty(output.Javascript, nameof(this.Width), "auto");
             }
 
             if (this.Height > 0)
             {
-                result.HTML = ReplaceProperty(result.HTML, nameof(this.Height), $"{this.Height}px");
-                result.CSS = ReplaceProperty(result.CSS, nameof(this.Height), $"{this.Height}px");
-                result.Javascript = ReplaceProperty(result.Javascript, nameof(this.Height), $"{this.Height}px");
+                output.HTML = OverlayV3Service.ReplaceProperty(output.HTML, nameof(this.Height), $"{this.Height}px");
+                output.CSS = OverlayV3Service.ReplaceProperty(output.CSS, nameof(this.Height), $"{this.Height}px");
+                output.Javascript = OverlayV3Service.ReplaceProperty(output.Javascript, nameof(this.Height), $"{this.Height}px");
             }
             else
             {
-                result.HTML = ReplaceProperty(result.HTML, nameof(this.Height), "auto");
-                result.CSS = ReplaceProperty(result.CSS, nameof(this.Height), "auto");
-                result.Javascript = ReplaceProperty(result.Javascript, nameof(this.Height), "auto");
+                output.HTML = OverlayV3Service.ReplaceProperty(output.HTML, nameof(this.Height), "auto");
+                output.CSS = OverlayV3Service.ReplaceProperty(output.CSS, nameof(this.Height), "auto");
+                output.Javascript = OverlayV3Service.ReplaceProperty(output.Javascript, nameof(this.Height), "auto");
             }
 
-            result.Duration = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.Duration, parameters);
+            string duration = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.Duration, parameters);
 
-            result.HTML = ReplaceProperty(result.HTML, nameof(this.Duration), result.Duration);
-            result.CSS = ReplaceProperty(result.CSS, nameof(this.Duration), result.Duration);
-            result.Javascript = ReplaceProperty(result.Javascript, nameof(this.Duration), result.Duration);
+            output.HTML = OverlayV3Service.ReplaceProperty(output.HTML, nameof(this.Duration), duration);
+            output.CSS = OverlayV3Service.ReplaceProperty(output.CSS, nameof(this.Duration), duration);
+            output.Javascript = OverlayV3Service.ReplaceProperty(output.Javascript, nameof(this.Duration), duration);
 
-            foreach (var animation in this.Animations)
+            //string animationJavascript = string.Empty;
+            //foreach (var animation in this.Animations)
+            //{
+            //    result.Animations.Add(animation);
+            //}
+            //result.Javascript = animationJavascript + "\n\n" + result.Javascript;
+
+            foreach (var kvp in await this.GetCustomProperties(parameters))
             {
-                result.Animations.Add(animation);
+                output.HTML = OverlayV3Service.ReplaceProperty(output.HTML, kvp.Key, kvp.Value);
+                output.CSS = OverlayV3Service.ReplaceProperty(output.CSS, kvp.Key, kvp.Value);
+                output.Javascript = OverlayV3Service.ReplaceProperty(output.Javascript, kvp.Key, kvp.Value);
             }
 
-            result = await this.GetProcessedItem(result, parameters);
+            output.HTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(output.HTML, parameters);
+            output.CSS = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(output.CSS, parameters);
+            output.Javascript = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(output.Javascript, parameters);
 
-            result.HTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(result.HTML, parameters);
-            result.CSS = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(result.CSS, parameters);
-            result.Javascript = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(result.Javascript, parameters);
-
-            return result;
+            return output;
         }
 
-        public virtual Task Enable() { return Task.CompletedTask; }
-
-        public virtual Task Disable() { return Task.CompletedTask; }
-
-        public virtual async Task Test() { await Task.Delay(5000); }
-
-        protected virtual Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, CommandParametersModel parameters)
+        protected virtual Task<Dictionary<string, string>> GetCustomProperties(CommandParametersModel parameters)
         {
-            return Task.FromResult(item);
+            return Task.FromResult(new Dictionary<string, string>());
         }
     }
 }

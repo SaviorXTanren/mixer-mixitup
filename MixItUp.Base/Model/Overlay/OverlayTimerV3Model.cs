@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -31,27 +32,16 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public bool CountUp { get; set; }
 
-        [DataMember]
-        public Guid TimerFinishedCommandID { get; set; }
-        [DataMember]
-        public bool AllowRepeatFinishedCommandTriggers { get; set; }
-
         public OverlayTimerV3Model() : base(OverlayItemV3Type.Timer) { }
 
-        protected override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, CommandParametersModel parameters)
+        protected override async Task<Dictionary<string, string>> GetCustomProperties(CommandParametersModel parameters)
         {
-            string countUp = this.CountUp.ToString().ToLower();
-            item.HTML = ReplaceProperty(item.HTML, nameof(this.CountUp), countUp);
-            item.CSS = ReplaceProperty(item.CSS, nameof(this.CountUp), countUp);
-            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.CountUp), countUp);
+            Dictionary<string, string> properties = await base.GetCustomProperties(parameters);
 
-            item.HTML = ReplaceProperty(item.HTML, nameof(this.DisplayFormat), this.DisplayFormat);
-            item.CSS = ReplaceProperty(item.CSS, nameof(this.DisplayFormat), this.DisplayFormat);
-            item.Javascript = ReplaceProperty(item.Javascript, nameof(this.DisplayFormat), this.DisplayFormat);
+            properties[nameof(this.CountUp)] = this.CountUp.ToString().ToLower();
+            properties[nameof(this.DisplayFormat)] = this.DisplayFormat;
 
-            item = await base.GetProcessedItem(item, parameters);
-
-            return item;
+            return properties;
         }
     }
 }

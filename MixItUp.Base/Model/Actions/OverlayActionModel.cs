@@ -18,8 +18,6 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         [Obsolete]
         public string OverlayName { get; set; }
-        [DataMember]
-        public Guid OverlayEndpointID { get; set; }
 
         [DataMember]
         [Obsolete]
@@ -27,6 +25,8 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public OverlayItemV3ModelBase OverlayItemV3 { get; set; }
+        [DataMember]
+        public Guid OverlayEndpointID { get; set; }
 
         [DataMember]
         public Guid WidgetID { get; set; }

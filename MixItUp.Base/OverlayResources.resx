@@ -530,8 +530,6 @@ sendParentMessage({ Type: "Remove", ID: "{ID}" });</value>
                 }
             });
         
-        {BasicAnimations}
-        
         {Javascript}
     &lt;/script&gt;
 &lt;/body&gt;

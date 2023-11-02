@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -32,9 +33,9 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayTwitchClipV3Model() : base(OverlayItemV3Type.TwitchClip) { }
 
-        protected override async Task<OverlayOutputV3Model> GetProcessedItem(OverlayOutputV3Model item, CommandParametersModel parameters)
+        protected override async Task<Dictionary<string, string>> GetCustomProperties(CommandParametersModel parameters)
         {
-            item = await base.GetProcessedItem(item, parameters);
+            Dictionary<string, string> properties = await base.GetCustomProperties(parameters);
 
             string clipHeight = "100%";
             if (this.Width > 0)
@@ -42,25 +43,17 @@ namespace MixItUp.Base.Model.Overlay
                 clipHeight = this.Height.ToString();
             }
 
-            item.HTML = ReplaceProperty(item.HTML, "ClipHeight", clipHeight);
-            item.CSS = ReplaceProperty(item.CSS, "ClipHeight", clipHeight);
-            item.Javascript = ReplaceProperty(item.Javascript, "ClipHeight", clipHeight);
-
             string clipWidth = "100%";
             if (this.Width > 0)
             {
                 clipWidth = this.Width.ToString();
             }
 
-            item.HTML = ReplaceProperty(item.HTML, "ClipWidth", clipWidth);
-            item.CSS = ReplaceProperty(item.CSS, "ClipWidth", clipWidth);
-            item.Javascript = ReplaceProperty(item.Javascript, "ClipWidth", clipWidth);
+            properties["ClipHeight"] = clipHeight;
+            properties["ClipWidth"] = clipWidth;
+            properties["ClipID"] = this.TempClipID;
 
-            item.HTML = ReplaceProperty(item.HTML, "ClipID", this.TempClipID);
-            item.CSS = ReplaceProperty(item.CSS, "ClipID", this.TempClipID);
-            item.Javascript = ReplaceProperty(item.Javascript, "ClipID", this.TempClipID);
-
-            return item;
+            return properties;
         }
     }
 }

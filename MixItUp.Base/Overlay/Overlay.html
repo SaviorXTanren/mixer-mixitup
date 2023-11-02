@@ -46,8 +46,8 @@
                 if (packet.Type === 'Add') {
                     processAdd(packet.Data);
                 }
-                else if (packet.Type === 'Update') {
-                    processUpdate(packet.Data);
+                else if (packet.Type === 'Function') {
+                    processFunction(packet.Data);
                 }
                 else if (packet.Type === 'Remove') {
                     processRemove(packet.Data);
@@ -78,11 +78,11 @@
             }
         }
 
-        function processUpdate(data) {
+        function processFunction(data) {
             if (iframes.has(data.ID)) {
                 var iframeContainer = iframes.get(data.ID);
 
-                callIFrameFunction(iframeContainer, data.FunctionName, data);
+                callIFrameFunction(iframeContainer, data.FunctionName, data.Parameters);
             }
         }
 
@@ -125,8 +125,8 @@
             return div;
         }
 
-        function callIFrameFunction(iframeContainer, functionName, obj) {
-            iframeContainer.firstChild.contentWindow[functionName](obj);
+        function callIFrameFunction(iframeContainer, functionName, parameters) {
+            iframeContainer.firstChild.contentWindow[functionName](parameters);
         }
 
         function sendIFrameMessage(iframe, obj) {

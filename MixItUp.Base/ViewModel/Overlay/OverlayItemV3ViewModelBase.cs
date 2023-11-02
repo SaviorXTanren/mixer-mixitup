@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
@@ -146,7 +147,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             if (!string.IsNullOrEmpty(innerHTML))
             {
-                this.HTML = OverlayItemV3ModelBase.ReplaceProperty(OverlayItemV3ModelBase.PositionedHTML, OverlayItemV3ModelBase.InnerHTMLProperty, innerHTML);
+                this.HTML = OverlayV3Service.ReplaceProperty(OverlayItemV3ModelBase.PositionedHTML, OverlayItemV3ModelBase.InnerHTMLProperty, innerHTML);
             }
         }
 
@@ -167,10 +168,10 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.Position = new OverlayPositionV3ViewModel(item.Position);
             this.Duration = item.Duration;
 
-            foreach (var animation in item.Animations)
-            {
-                this.Animations.Add(new OverlayAnimationV3ViewModel(animation));
-            }
+            //foreach (var animation in item.Animations)
+            //{
+            //    this.Animations.Add(new OverlayAnimationV3ViewModel(animation));
+            //}
             this.NotifyPropertyChanged(nameof(this.HasAnimations));
         }
 
@@ -209,10 +210,10 @@ namespace MixItUp.Base.ViewModel.Overlay
             item.Position = this.Position.GetPosition();
             item.Duration = this.Duration;
 
-            foreach (var animation in this.Animations)
-            {
-                item.Animations.Add(animation.GetAnimation());
-            }
+            //foreach (var animation in this.Animations)
+            //{
+            //    item.Animations.Add(animation.GetAnimation());
+            //}
 
             return item;
         }

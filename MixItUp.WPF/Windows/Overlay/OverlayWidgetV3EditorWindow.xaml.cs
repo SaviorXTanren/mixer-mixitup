@@ -1,7 +1,8 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Overlay;
+using MixItUp.Base.ViewModel.Overlay.Widget;
 using MixItUp.WPF.Controls.Overlay;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace MixItUp.WPF.Windows.Overlay
             this.Initialize(this.StatusBar);
         }
 
-        public OverlayWidgetV3EditorWindow(OverlayWidgetV3Model item)
+        public OverlayWidgetV3EditorWindow(OverlayWidgetV3ModelBase item)
         {
             this.viewModel = new OverlayWidgetV3EditorWindowViewModel(item);
 
@@ -103,8 +104,6 @@ namespace MixItUp.WPF.Windows.Overlay
                 return;
             }
 
-            OverlayItemV3ModelBase item = this.viewModel.GetItem();
-
             CommandParametersModel parameters = CommandParametersModel.GetTestParameters(new Dictionary<string, string>());
             parameters = await DialogHelper.ShowEditTestCommandParametersDialog(parameters);
             if (parameters == null)
@@ -112,8 +111,7 @@ namespace MixItUp.WPF.Windows.Overlay
                 return;
             }
 
-            OverlayWidgetV3Model widget = new OverlayWidgetV3Model(item);
-            await widget.Test();
+            await this.viewModel.Test(parameters);
         }
     }
 }

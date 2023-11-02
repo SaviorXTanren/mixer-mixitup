@@ -2,17 +2,21 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.Model.Overlay
+namespace MixItUp.Base.Model.Overlay.Widgets
 {
     [DataContract]
-    public class OverlayWidgetV3Model
+    public abstract class OverlayWidgetV3ModelBase
     {
         [DataMember]
         public OverlayItemV3ModelBase Item { get; set; }
+
+        [DataMember]
+        public Guid OverlayEndpointID { get; set; }
 
         [DataMember]
         public int RefreshTime { get; set; }
@@ -21,25 +25,28 @@ namespace MixItUp.Base.Model.Overlay
 
         public Guid ID { get { return this.Item.ID; } }
         public string Name { get { return this.Item.Name; } }
+        public OverlayItemV3Type Type { get { return this.Item.Type; } }
+
+        public virtual bool IsTestable { get { return true; } }
 
         private CancellationTokenSource refreshCancellationTokenSource;
 
-        public OverlayWidgetV3Model(OverlayItemV3ModelBase item)
+        public OverlayWidgetV3ModelBase(OverlayItemV3ModelBase item)
         {
             this.Item = item;
             this.IsEnabled = true;
         }
 
         [Obsolete]
-        public OverlayWidgetV3Model() { }
+        public OverlayWidgetV3ModelBase() { }
 
         public async Task Enable()
         {
             this.IsEnabled = true;
 
-            await this.Item.Enable();
+            await this.EnableInternal();
 
-            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.Item.OverlayEndpointID);
+            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
             if (overlay != null)
             {
                 await overlay.SendAdd(this.Item, new CommandParametersModel());
@@ -58,9 +65,9 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     do
                     {
-                        await Task.Delay(1000 * this.RefreshTime);
+                        await Task.Delay(1000 * RefreshTime);
 
-                        await this.Item.Update("Update", null, null);
+                        //await this.CallFunction("Update", null, null);
 
                     } while (!cancellationToken.IsCancellationRequested);
 
@@ -71,7 +78,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public async Task Disable()
         {
-            await this.Item.Disable();
+            await this.DisableInternal();
 
             if (this.refreshCancellationTokenSource != null)
             {
@@ -79,7 +86,7 @@ namespace MixItUp.Base.Model.Overlay
             }
             this.refreshCancellationTokenSource = null;
 
-            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.Item.OverlayEndpointID);
+            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
             if (overlay != null)
             {
                 await overlay.SendRemove(this.Item);
@@ -88,11 +95,35 @@ namespace MixItUp.Base.Model.Overlay
             this.IsEnabled = false;
         }
 
-        public virtual async Task Test()
+        public async Task Test(CommandParametersModel parameters)
         {
             await this.Enable();
-            await this.Item.Test();
+            await this.TestInternal(parameters);
             await this.Disable();
+        }
+
+        protected virtual Task EnableInternal() { return Task.CompletedTask; }
+
+        protected virtual Task DisableInternal() { return Task.CompletedTask; }
+
+        protected virtual Task TestInternal(CommandParametersModel parameters) { return Task.CompletedTask; }
+
+        protected async Task CallFunction(string functionName, Dictionary<string, string> data, CommandParametersModel parameters)
+        {
+            Dictionary<string, string> dataParameters = new Dictionary<string, string>();
+            if (data != null)
+            {
+                foreach (var kvp in data)
+                {
+                    dataParameters[kvp.Key] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(kvp.Value, parameters);
+                }
+            }
+
+            OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
+            if (overlay != null)
+            {
+                await overlay.SendFunction(this.Item, functionName, dataParameters);
+            }
         }
     }
 }

@@ -1,7 +1,10 @@
-﻿using MixItUp.Base.Model.Overlay;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,7 +12,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 {
     public class OverlayWidgetViewModel : UIViewModelBase
     {
-        public OverlayWidgetV3Model Widget { get; set; }
+        public OverlayWidgetV3ModelBase Widget { get; set; }
 
         public OverlayItemV3ModelBase Item { get { return this.Widget.Item; } }
 
@@ -19,7 +22,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             get
             {
-                OverlayEndpointV3Model endpointService = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoint(this.Item.OverlayEndpointID);
+                OverlayEndpointV3Model endpointService = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpoint(this.Widget.OverlayEndpointID);
                 if (endpointService != null)
                 {
                     return endpointService.Name;
@@ -38,7 +41,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             }
         }
 
-        public OverlayWidgetViewModel(OverlayWidgetV3Model widget)
+        public OverlayWidgetViewModel(OverlayWidgetV3ModelBase widget)
         {
             this.Widget = widget;
         }
@@ -61,7 +64,14 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public async Task PlayWidget(OverlayWidgetViewModel widget)
         {
-            await widget.Widget.Test();
+            CommandParametersModel parameters = CommandParametersModel.GetTestParameters(new Dictionary<string, string>());
+            parameters = await DialogHelper.ShowEditTestCommandParametersDialog(parameters);
+            if (parameters == null)
+            {
+                return;
+            }
+
+            await widget.Widget.Test(parameters);
         }
 
         public async Task DeleteWidget(OverlayWidgetViewModel widget)

@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Overlay.Widgets;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
@@ -51,6 +52,22 @@ namespace MixItUp.Base.Services
     }
 
     [DataContract]
+    public class OverlayOutputV3Model
+    {
+        [DataMember]
+        public Guid ID { get; set; }
+
+        [DataMember]
+        public string HTML { get; set; } = string.Empty;
+        [DataMember]
+        public string CSS { get; set; } = string.Empty;
+        [DataMember]
+        public string Javascript { get; set; } = string.Empty;
+
+        public string TextID { get { return this.ID.ToString(); } }
+    }
+
+    [DataContract]
     public class OverlayURLDataV3Model
     {
         [DataMember]
@@ -65,6 +82,24 @@ namespace MixItUp.Base.Services
         }
     }
 
+    [DataContract]
+    public class OverlayFunctionV3Model
+    {
+        [DataMember]
+        public string ID { get; set; }
+        [DataMember]
+        public string FunctionName { get; set; }
+        [DataMember]
+        public Dictionary<string, string> Parameters { get; set; }
+
+        public OverlayFunctionV3Model(OverlayItemV3ModelBase item, string functionName, Dictionary<string, string> parameters)
+        {
+            this.ID = item.TextID;
+            this.FunctionName = functionName;
+            this.Parameters = parameters;
+        }
+    }
+
     public static class OverlayV3WebPage
     {
         public const string OverlayFolderPath = "Overlay\\";
@@ -75,11 +110,11 @@ namespace MixItUp.Base.Services
         {
             string output = template;
 
-            output = await OverlayOutputV3Model.ReplaceScriptTag(output, "jquery-3.6.0.min.js", OverlayFolderPath + "jquery-3.6.0.min.js");
-            output = await OverlayOutputV3Model.ReplaceScriptTag(output, "webSocketWrapper.js", OverlayFolderPath + "webSocketWrapper.js");
-            output = await OverlayOutputV3Model.ReplaceScriptTag(output, "video.min.js", OverlayFolderPath + "video.min.js");
+            output = await OverlayV3Service.ReplaceScriptTag(output, "jquery-3.6.0.min.js", OverlayFolderPath + "jquery-3.6.0.min.js");
+            output = await OverlayV3Service.ReplaceScriptTag(output, "webSocketWrapper.js", OverlayFolderPath + "webSocketWrapper.js");
+            output = await OverlayV3Service.ReplaceScriptTag(output, "video.min.js", OverlayFolderPath + "video.min.js");
 
-            output = await OverlayOutputV3Model.ReplaceCSSStyleSheetTag(output, "animate.min.css", OverlayFolderPath + "animate.min.css");
+            output = await OverlayV3Service.ReplaceCSSStyleSheetTag(output, "animate.min.css", OverlayFolderPath + "animate.min.css");
 
             return output;
         }
@@ -87,6 +122,18 @@ namespace MixItUp.Base.Services
 
     public class OverlayV3Service : IExternalService
     {
+        public static string ReplaceProperty(string text, string name, string value) { return text.Replace($"{{{name}}}", value ?? string.Empty); }
+
+        public static async Task<string> ReplaceScriptTag(string text, string fileName, string filePath)
+        {
+            return text.Replace($"<script src=\"{fileName}\"></script>", $"<script>{await ServiceManager.Get<IFileService>().ReadFile(filePath)}</script>");
+        }
+
+        public static async Task<string> ReplaceCSSStyleSheetTag(string text, string fileName, string filePath)
+        {
+            return text.Replace($"<link rel=\"stylesheet\" type=\"text/css\" href=\"{fileName}\">", $"<style>{await ServiceManager.Get<IFileService>().ReadFile(filePath)}</style>");
+        }
+
         public string Name { get { return Resources.Overlay; } }
 
         public bool IsConnected { get; private set; }
@@ -217,19 +264,19 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        public async Task AddWidget(OverlayWidgetV3Model item)
+        public async Task AddWidget(OverlayWidgetV3ModelBase item)
         {
             ChannelSession.Settings.OverlayWidgetsV3.Add(item);
             await item.Enable();
         }
 
-        public async Task RemoveWidget(OverlayWidgetV3Model item)
+        public async Task RemoveWidget(OverlayWidgetV3ModelBase item)
         {
             await item.Disable();
             ChannelSession.Settings.OverlayWidgetsV3.Remove(item);
         }
 
-        public IEnumerable<OverlayWidgetV3Model> GetWidgets() { return ChannelSession.Settings.OverlayWidgetsV3.ToList(); }
+        public IEnumerable<OverlayWidgetV3ModelBase> GetWidgets() { return ChannelSession.Settings.OverlayWidgetsV3.ToList(); }
 
         public string GetURLForFile(string filePath, string fileType) { return this.GetDefaultOverlayEndpointService().GetURLForFile(filePath, fileType); }
 
@@ -244,9 +291,9 @@ namespace MixItUp.Base.Services
             try
             {
                 overlay.StartBatching();
-                foreach (OverlayWidgetV3Model widget in this.GetWidgets())
+                foreach (OverlayWidgetV3ModelBase widget in this.GetWidgets())
                 {
-                    if (widget.IsEnabled && widget.Item.OverlayEndpointID == overlay.ID)
+                    if (widget.IsEnabled && widget.OverlayEndpointID == overlay.ID)
                     {
                         await overlay.SendAdd(widget.Item, new CommandParametersModel());
                     }
@@ -368,9 +415,9 @@ namespace MixItUp.Base.Services
             {
                 if (item != null)
                 {
-                    OverlayOutputV3Model output = await item.GetProcessedItem(parameters);
+                    OverlayOutputV3Model output = await item.GenerateOutput(parameters);
 
-                    await this.httpListenerServer.SetHTMLData(output.ID.ToString(), output.GenerateBasicHTMLOutput());
+                    await this.httpListenerServer.SetHTMLData(output.ID.ToString(), this.GenerateOutputHTML(output));
 
                     await this.Send(new OverlayV3Packet("Basic", new OverlayURLDataV3Model(output)));
                 }
@@ -402,9 +449,9 @@ namespace MixItUp.Base.Services
             {
                 if (item != null)
                 {
-                    OverlayOutputV3Model output = await item.GetProcessedItem(parameters);
+                    OverlayOutputV3Model output = await item.GenerateOutput(parameters);
 
-                    await this.httpListenerServer.SetHTMLData(output.ID.ToString(), output.GenerateWidgetHTMLOutput());
+                    await this.httpListenerServer.SetHTMLData(output.ID.ToString(), this.GenerateOutputHTML(output));
 
                     await this.Send(new OverlayV3Packet("Add", new OverlayURLDataV3Model(output)));
                 }
@@ -415,14 +462,11 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task SendUpdate(OverlayItemV3ModelBase item, JObject jobj)
+        public async Task SendFunction(OverlayItemV3ModelBase item, string functionName, Dictionary<string, string> parameters)
         {
             try
             {
-                if (item != null)
-                {
-                    await this.Send(new OverlayV3Packet("Update", jobj));
-                }
+                await this.Send(new OverlayV3Packet("Function", new OverlayFunctionV3Model(item, functionName, parameters)));
             }
             catch (Exception ex)
             {
@@ -474,6 +518,15 @@ namespace MixItUp.Base.Services
             {
                 await this.webSocketServer.Send(packet);
             }
+        }
+
+        private string GenerateOutputHTML(OverlayOutputV3Model output)
+        {
+            string content = OverlayResources.OverlayIFrameTemplate;
+            content = OverlayV3Service.ReplaceProperty(content, nameof(output.HTML), output.HTML);
+            content = OverlayV3Service.ReplaceProperty(content, nameof(output.CSS), output.CSS);
+            content = OverlayV3Service.ReplaceProperty(content, nameof(output.Javascript), output.Javascript);
+            return content;
         }
 
         private void WebSocketServer_OnConnectedOccurred(object sender, EventArgs e)

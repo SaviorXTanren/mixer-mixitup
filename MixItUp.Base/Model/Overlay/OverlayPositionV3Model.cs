@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -25,31 +26,31 @@ namespace MixItUp.Base.Model.Overlay
 
         protected void SetPositionInternal(OverlayOutputV3Model result, int x, int y)
         {
-            result.HTML = OverlayOutputV3Model.ReplaceProperty(result.HTML, nameof(this.XPosition), x.ToString());
-            result.CSS = OverlayOutputV3Model.ReplaceProperty(result.CSS, nameof(this.XPosition), x.ToString());
-            result.Javascript = OverlayOutputV3Model.ReplaceProperty(result.Javascript, nameof(this.XPosition), x.ToString());
+            result.HTML = OverlayV3Service.ReplaceProperty(result.HTML, nameof(this.XPosition), x.ToString());
+            result.CSS = OverlayV3Service.ReplaceProperty(result.CSS, nameof(this.XPosition), x.ToString());
+            result.Javascript = OverlayV3Service.ReplaceProperty(result.Javascript, nameof(this.XPosition), x.ToString());
 
-            result.HTML = OverlayOutputV3Model.ReplaceProperty(result.HTML, nameof(this.YPosition), y.ToString());
-            result.CSS = OverlayOutputV3Model.ReplaceProperty(result.CSS, nameof(this.YPosition), y.ToString());
-            result.Javascript = OverlayOutputV3Model.ReplaceProperty(result.Javascript, nameof(this.YPosition), y.ToString());
+            result.HTML = OverlayV3Service.ReplaceProperty(result.HTML, nameof(this.YPosition), y.ToString());
+            result.CSS = OverlayV3Service.ReplaceProperty(result.CSS, nameof(this.YPosition), y.ToString());
+            result.Javascript = OverlayV3Service.ReplaceProperty(result.Javascript, nameof(this.YPosition), y.ToString());
 
             bool positionTypeIsPercentage = this.Type == OverlayPositionV3Type.Simple || this.Type == OverlayPositionV3Type.Percentage;
-            result.HTML = OverlayOutputV3Model.ReplaceProperty(result.HTML, "PositionType", positionTypeIsPercentage ? "%" : "px");
-            result.CSS = OverlayOutputV3Model.ReplaceProperty(result.CSS, "PositionType", positionTypeIsPercentage ? "%" : "px");
-            result.Javascript = OverlayOutputV3Model.ReplaceProperty(result.Javascript, "PositionType", positionTypeIsPercentage ? "%" : "px");
+            result.HTML = OverlayV3Service.ReplaceProperty(result.HTML, "PositionType", positionTypeIsPercentage ? "%" : "px");
+            result.CSS = OverlayV3Service.ReplaceProperty(result.CSS, "PositionType", positionTypeIsPercentage ? "%" : "px");
+            result.Javascript = OverlayV3Service.ReplaceProperty(result.Javascript, "PositionType", positionTypeIsPercentage ? "%" : "px");
 
             if (this.Layer == 0)
             {
                 zIndexCounter++;
-                result.HTML = OverlayOutputV3Model.ReplaceProperty(result.HTML, nameof(this.Layer), zIndexCounter.ToString());
-                result.CSS = OverlayOutputV3Model.ReplaceProperty(result.CSS, nameof(this.Layer), zIndexCounter.ToString());
-                result.Javascript = OverlayOutputV3Model.ReplaceProperty(result.Javascript, nameof(this.Layer), zIndexCounter.ToString());
+                result.HTML = OverlayV3Service.ReplaceProperty(result.HTML, nameof(this.Layer), zIndexCounter.ToString());
+                result.CSS = OverlayV3Service.ReplaceProperty(result.CSS, nameof(this.Layer), zIndexCounter.ToString());
+                result.Javascript = OverlayV3Service.ReplaceProperty(result.Javascript, nameof(this.Layer), zIndexCounter.ToString());
             }
             else
             {
-                result.HTML = OverlayOutputV3Model.ReplaceProperty(result.HTML, nameof(this.Layer), this.Layer.ToString());
-                result.CSS = OverlayOutputV3Model.ReplaceProperty(result.CSS, nameof(this.Layer), this.Layer.ToString());
-                result.Javascript = OverlayOutputV3Model.ReplaceProperty(result.Javascript, nameof(this.Layer), this.Layer.ToString());
+                result.HTML = OverlayV3Service.ReplaceProperty(result.HTML, nameof(this.Layer), this.Layer.ToString());
+                result.CSS = OverlayV3Service.ReplaceProperty(result.CSS, nameof(this.Layer), this.Layer.ToString());
+                result.Javascript = OverlayV3Service.ReplaceProperty(result.Javascript, nameof(this.Layer), this.Layer.ToString());
             }
         }
     }
