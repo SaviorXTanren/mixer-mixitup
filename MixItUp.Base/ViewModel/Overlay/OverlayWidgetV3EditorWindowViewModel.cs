@@ -5,12 +5,15 @@ using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
     public class OverlayWidgetV3EditorWindowViewModel : UIViewModelBase
     {
+        private static readonly HashSet<OverlayItemV3Type> NonWidgetTypes = new HashSet<OverlayItemV3Type>() { OverlayItemV3Type.TwitchClip };
+
         public Guid ID { get; set; }
 
         public string Name
@@ -24,7 +27,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string name;
 
-        public IEnumerable<OverlayItemV3Type> Types { get { return EnumHelper.GetEnumList<OverlayItemV3Type>(); } }
+        public IEnumerable<OverlayItemV3Type> Types { get; } = EnumHelper.GetEnumList<OverlayItemV3Type>().Where(t => !NonWidgetTypes.Contains(t));
 
         public OverlayItemV3Type SelectedType
         {

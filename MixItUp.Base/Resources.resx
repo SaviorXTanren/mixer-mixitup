@@ -10372,4 +10372,7 @@ clip.setAttribute("src", "https://clips.twitch.tv/embed?parent=" + window.locati
   <data name="TwitchBitsCommandsAlreadyExistsDuplicateAmount" xml:space="preserve">
     <value>There already exists another Twitch Bits command with the same amount / range as this command.</value>
   </data>
+  <data name="MaxWidthPixels" xml:space="preserve">
+    <value>Max Width (Pixels)</value>
+  </data>
 </root>

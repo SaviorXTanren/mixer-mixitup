@@ -12110,6 +12110,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Max Width (Pixels).
+        /// </summary>
+        public static string MaxWidthPixels {
+            get {
+                return ResourceManager.GetString("MaxWidthPixels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Media Next.
         /// </summary>
         public static string MediaNext {
