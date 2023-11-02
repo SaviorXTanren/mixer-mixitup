@@ -29,8 +29,6 @@ namespace MixItUp.Base.Model.Overlay
         public static readonly string PositionedHTML = Resources.OverlayPositionedItemDefaultHTML;
         public static readonly string PositionedCSS = Resources.OverlayPositionedItemDefaultCSS;
 
-        public static int zIndexCounter = 0;
-
         [DataMember]
         public string Name { get; set; }
 
@@ -41,11 +39,7 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayItemV3Type Type { get; set; }
 
         [DataMember]
-        public int XPosition { get; set; }
-        [DataMember]
-        public int YPosition { get; set; }
-        [DataMember]
-        public bool IsPercentagePosition { get; set; }
+        public OverlayPositionV3Model Position { get; set; }
 
         [DataMember]
         public int XTranslation { get; set; }
@@ -56,9 +50,6 @@ namespace MixItUp.Base.Model.Overlay
         public int Width { get; set; }
         [DataMember]
         public int Height { get; set; }
-
-        [DataMember]
-        public int Layer { get; set; }
 
         protected OverlayItemV3ModelBase() { }
 
@@ -103,31 +94,7 @@ namespace MixItUp.Base.Model.Overlay
             result.CSS = ReplaceProperty(result.CSS, nameof(this.ID), id);
             result.Javascript = ReplaceProperty(result.Javascript, nameof(this.ID), id);
 
-            if (this.Layer == 0)
-            {
-                zIndexCounter++;
-                result.HTML = ReplaceProperty(result.HTML, nameof(this.Layer), zIndexCounter.ToString());
-                result.CSS = ReplaceProperty(result.CSS, nameof(this.Layer), zIndexCounter.ToString());
-                result.Javascript = ReplaceProperty(result.Javascript, nameof(this.Layer), zIndexCounter.ToString());
-            }
-            else
-            {
-                result.HTML = ReplaceProperty(result.HTML, nameof(this.Layer), this.Layer.ToString());
-                result.CSS = ReplaceProperty(result.CSS, nameof(this.Layer), this.Layer.ToString());
-                result.Javascript = ReplaceProperty(result.Javascript, nameof(this.Layer), this.Layer.ToString());
-            }
-
-            result.HTML = ReplaceProperty(result.HTML, nameof(this.XPosition), this.XPosition.ToString());
-            result.CSS = ReplaceProperty(result.CSS, nameof(this.XPosition), this.XPosition.ToString());
-            result.Javascript = ReplaceProperty(result.Javascript, nameof(this.XPosition), this.XPosition.ToString());
-
-            result.HTML = ReplaceProperty(result.HTML, nameof(this.YPosition), this.YPosition.ToString());
-            result.CSS = ReplaceProperty(result.CSS, nameof(this.YPosition), this.YPosition.ToString());
-            result.Javascript = ReplaceProperty(result.Javascript, nameof(this.YPosition), this.YPosition.ToString());
-
-            result.HTML = ReplaceProperty(result.HTML, "PositionType", this.IsPercentagePosition ? "%" : "px");
-            result.CSS = ReplaceProperty(result.CSS, "PositionType", this.IsPercentagePosition ? "%" : "px");
-            result.Javascript = ReplaceProperty(result.Javascript, "PositionType", this.IsPercentagePosition ? "%" : "px");
+            this.Position.SetPosition(result);
 
             result.HTML = ReplaceProperty(result.HTML, nameof(this.XTranslation), this.XTranslation.ToString());
             result.CSS = ReplaceProperty(result.CSS, nameof(this.XTranslation), this.XTranslation.ToString());

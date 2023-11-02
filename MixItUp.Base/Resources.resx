@@ -9197,6 +9197,10 @@ else {
     font-style: {FontStyle};
     text-align: {TextAlignment};
     text-shadow: {Shadow};
+    margin-block-start: 0px;
+    margin-block-end: 0px;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
 }</value>
   </data>
   <data name="OverlayTextDefaultHTML" xml:space="preserve">
@@ -9427,6 +9431,10 @@ update({Username: '{Username}', Amount: {Amount}})</value>
     text-decoration: {TextDecoration};
     font-style: {FontStyle};
     text-shadow: {Shadow};
+    margin-block-start: 0px;
+    margin-block-end: 0px;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
 }
 
 .messagetext {
@@ -9441,6 +9449,10 @@ update({Username: '{Username}', Amount: {Amount}})</value>
     text-decoration: {TextDecoration};
     font-style: {FontStyle};
     text-shadow: {Shadow};
+    margin-block-start: 0px;
+    margin-block-end: 0px;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
 }
 
 .messageemote {
@@ -9529,6 +9541,10 @@ function removeOldest()
     top: 50%;
     margin: auto;
     transform: translate(-50%, -50%);
+    margin-block-start: 0px;
+    margin-block-end: 0px;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
 }</value>
   </data>
   <data name="OverlayGoalDefaultHTML" xml:space="preserve">
@@ -9756,6 +9772,10 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
     text-decoration: {TextDecoration};
     font-style: {FontStyle};
     text-shadow: {Shadow};
+    margin-block-start: 0px;
+    margin-block-end: 0px;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
 }
 
 .messageemote {
@@ -10374,5 +10394,14 @@ clip.setAttribute("src", "https://clips.twitch.tv/embed?parent=" + window.locati
   </data>
   <data name="MaxWidthPixels" xml:space="preserve">
     <value>Max Width (Pixels)</value>
+  </data>
+  <data name="Pixel" xml:space="preserve">
+    <value>Pixel</value>
+  </data>
+  <data name="OverlayPositionPercentageBetween0And100" xml:space="preserve">
+    <value>Percentage positions must be between 0 and 100</value>
+  </data>
+  <data name="OverlayPositionRandomMinimumsCantBeGreaterThanMaximums" xml:space="preserve">
+    <value>Random position minimums can't be greater than position maximums</value>
   </data>
 </root>

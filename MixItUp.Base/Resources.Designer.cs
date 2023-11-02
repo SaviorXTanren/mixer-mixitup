@@ -14623,6 +14623,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Percentage positions must be between 0 and 100.
+        /// </summary>
+        public static string OverlayPositionPercentageBetween0And100 {
+            get {
+                return ResourceManager.GetString("OverlayPositionPercentageBetween0And100", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Random position minimums can&apos;t be greater than position maximums.
+        /// </summary>
+        public static string OverlayPositionRandomMinimumsCantBeGreaterThanMaximums {
+            get {
+                return ResourceManager.GetString("OverlayPositionRandomMinimumsCantBeGreaterThanMaximums", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An overlay to use must be selected..
         /// </summary>
         public static string OverlayRequired {
@@ -14659,6 +14677,10 @@ namespace MixItUp.Base {
         ///    font-style: {FontStyle};
         ///    text-align: {TextAlignment};
         ///    text-shadow: {Shadow};
+        ///    margin-block-start: 0px;
+        ///    margin-block-end: 0px;
+        ///    margin-inline-start: 0px;
+        ///    margin-inline-end: 0px;
         ///}.
         /// </summary>
         public static string OverlayTextDefaultCSS {
@@ -15443,6 +15465,15 @@ namespace MixItUp.Base {
         public static string Pitch {
             get {
                 return ResourceManager.GetString("Pitch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pixel.
+        /// </summary>
+        public static string Pixel {
+            get {
+                return ResourceManager.GetString("Pixel", resourceCulture);
             }
         }
         
