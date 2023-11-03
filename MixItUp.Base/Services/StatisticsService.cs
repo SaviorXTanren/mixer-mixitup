@@ -236,13 +236,13 @@ namespace MixItUp.Base.Services
 
         public void LogStatistic(StatisticItemTypeEnum statisticType,StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, double amount = 0.0, string description = null, DateTime? dateTime = null)
         {
-            StatisticModel statistic = new StatisticModel(statisticType, platform, amount, description, dateTime);
-            this.sessionStatistics.Add(statistic);
+            //StatisticModel statistic = new StatisticModel(statisticType, platform, amount, description, dateTime);
+            //this.sessionStatistics.Add(statistic);
 
-            lock (this.statisticsToSave)
-            {
-                this.statisticsToSave.Add(statistic);
-            }
+            //lock (this.statisticsToSave)
+            //{
+            //    this.statisticsToSave.Add(statistic);
+            //}
         }
 
         public IEnumerable<StatisticModel> GetCurrentSessionStatistics() { return this.sessionStatistics.ToList(); }
