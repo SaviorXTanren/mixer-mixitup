@@ -72,6 +72,8 @@ namespace MixItUp.Base.ViewModel.Overlay.Widget
         {
             Initialize();
 
+            this.Item = new OverlayLabelV3ViewModel();
+
             this.SelectedLabelType = OverlayLabelV3Type.LastestFollower;
 
             //AddAnimations(new List<string>() { UpdatedAnimationName });
@@ -81,6 +83,8 @@ namespace MixItUp.Base.ViewModel.Overlay.Widget
             : base(widget)
         {
             Initialize();
+
+            this.Item = new OverlayLabelV3ViewModel((OverlayLabelV3Model)widget.Item);
 
             this.SelectedLabelType = widget.LabelType;
             if (this.SelectedLabelType == OverlayLabelV3Type.Counter)
