@@ -237,6 +237,11 @@ namespace MixItUp.Base
                     }
                 }
 
+                if (!StreamingPlatforms.SupportedPlatforms.Contains(ChannelSession.Settings.DefaultStreamingPlatform))
+                {
+                    ChannelSession.Settings.DefaultStreamingPlatform = StreamingPlatforms.GetConnectedPlatforms().FirstOrDefault();
+                }
+
                 if (StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).IsConnected)
                 {
                     ChannelSession.Settings.Name = StreamingPlatforms.GetPlatformSessionService(ChannelSession.Settings.DefaultStreamingPlatform).Username;
