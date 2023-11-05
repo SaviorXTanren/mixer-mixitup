@@ -927,17 +927,17 @@ namespace MixItUp.Base.Model.Settings
                 await CreateUserImportTable();
             }
 
-            try
-            {
-                await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "REPLACE INTO Statistics(ID, DateTime, TypeID, PlatformID, Data) VALUES($ID, $DateTime, $TypeID, $PlatformID, $Data)",
-                    ServiceManager.Get<StatisticsService>().GetStatisticsToSave().Select(s => new Dictionary<string, object>() { { "$ID", s.ID.ToString() }, { "$DateTime", s.DateTime }, { "$TypeID", (int)s.Type },
-                        { "$PlatformID", (int)s.Platform }, { "$Data", JSONSerializerHelper.SerializeToString(s.Data) } }));
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-                await CreateStatisticsTable();
-            }
+            //try
+            //{
+            //    await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "REPLACE INTO Statistics(ID, DateTime, TypeID, PlatformID, Data) VALUES($ID, $DateTime, $TypeID, $PlatformID, $Data)",
+            //        ServiceManager.Get<StatisticsService>().GetStatisticsToSave().Select(s => new Dictionary<string, object>() { { "$ID", s.ID.ToString() }, { "$DateTime", s.DateTime }, { "$TypeID", (int)s.Type },
+            //            { "$PlatformID", (int)s.Platform }, { "$Data", JSONSerializerHelper.SerializeToString(s.Data) } }));
+            //}
+            //catch (Exception ex)
+            //{
+            //    Logger.Log(ex);
+            //    await CreateStatisticsTable();
+            //}
 
             await ServiceManager.Get<IDatabaseService>().CompressDb(this.DatabaseFilePath);
         }
@@ -1100,7 +1100,7 @@ namespace MixItUp.Base.Model.Settings
         private async void InitializeMissingData()
         {
             await this.CreateUserImportTable();
-            await this.CreateStatisticsTable();
+            //await this.CreateStatisticsTable();
 
             StreamingPlatforms.ForEachPlatform(p =>
             {
