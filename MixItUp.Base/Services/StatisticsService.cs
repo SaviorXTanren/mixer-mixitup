@@ -20,6 +20,7 @@ namespace MixItUp.Base.Services
         None = 0,
 
         Command = 1000,
+        [Obsolete]
         Action,
 
         StreamStart = 2000,

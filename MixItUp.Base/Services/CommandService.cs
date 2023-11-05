@@ -530,7 +530,6 @@ namespace MixItUp.Base.Services
                         ServiceManager.Get<OverlayService>().StartBatching();
                     }
 
-                    ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.Action, description: ((int)action.Type).ToString());
                     await action.Perform(parameters);
 
                     if (action is OverlayActionModel && ServiceManager.Get<OverlayService>().IsConnected)
