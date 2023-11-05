@@ -539,6 +539,7 @@ namespace MixItUp.Base.Util
                 else if (platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().IsConnected)
                 {
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<YouTubeSessionService>().Broadcast?.Snippet?.Title);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "description", ServiceManager.Get<YouTubeSessionService>().Broadcast?.Snippet?.Description);
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "islive", ServiceManager.Get<YouTubeSessionService>().IsLive.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", ServiceManager.Get<YouTubeSessionService>().User.Statistics.SubscriberCount.GetValueOrDefault().ToString());
                 }
