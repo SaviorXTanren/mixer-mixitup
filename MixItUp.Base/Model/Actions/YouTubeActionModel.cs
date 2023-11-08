@@ -64,7 +64,9 @@ namespace MixItUp.Base.Model.Actions
                 {
                     if (ServiceManager.Get<YouTubeSessionService>().IsLive && ServiceManager.Get<YouTubeSessionService>().Video != null)
                     {
-                        await ServiceManager.Get<YouTubeSessionService>().UserConnection.UpdateVideo(ServiceManager.Get<YouTubeSessionService>().Video, title: this.Title, description: this.Description);
+                        string title = await ReplaceStringWithSpecialModifiers(this.Title, parameters);
+                        string description = await ReplaceStringWithSpecialModifiers(this.Description, parameters);
+                        await ServiceManager.Get<YouTubeSessionService>().UserConnection.UpdateVideo(ServiceManager.Get<YouTubeSessionService>().Video, title: title, description: description);
                     }
                 }
                 else if (this.ActionType == YouTubeActionType.RunAdBreak)

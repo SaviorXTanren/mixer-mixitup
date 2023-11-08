@@ -114,7 +114,6 @@ namespace MixItUp.WPF.Controls.MainControls
                     break;
 
                 case StatisticItemTypeEnum.Command:
-                case StatisticItemTypeEnum.Action:
 
                 case StatisticItemTypeEnum.StreamStart:
                 case StatisticItemTypeEnum.StreamStop:

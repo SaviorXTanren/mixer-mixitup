@@ -537,7 +537,6 @@ namespace MixItUp.Base.Services
                         }
                     }
 
-                    ServiceManager.Get<StatisticsService>().LogStatistic(StatisticItemTypeEnum.Action, description: ((int)action.Type).ToString());
                     await action.Perform(parameters);
 
                     if (parameters.ExitCommand)
