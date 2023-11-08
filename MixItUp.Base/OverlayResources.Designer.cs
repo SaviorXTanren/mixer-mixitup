@@ -61,6 +61,59 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to @charset &quot;UTF-8&quot;;/*!
+        /// * animate.css - https://animate.style/
+        /// * Version - 4.1.1
+        /// * Licensed under the MIT license - http://opensource.org/licenses/MIT
+        /// *
+        /// * Copyright (c) 2020 Animate.css
+        /// */:root{--animate-duration:1s;--animate-delay:1s;--animate-repeat:1}.animate__animated{-webkit-animation-duration:1s;animation-duration:1s;-webkit-animation-duration:var(--animate-duration);animation-duration:var(--animate-duration);-webkit-animation-fill-mode:both;animation-fill-mode:both}.animate__animated.animate [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string animateCSS {
+            get {
+                return ResourceManager.GetString("animateCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @charset &quot;UTF-8&quot;;/*!
+        /// * Bootstrap v5.2.0-beta1 (https://getbootstrap.com/)
+        /// * Copyright 2011-2022 The Bootstrap Authors
+        /// * Copyright 2011-2022 Twitter, Inc.
+        /// * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+        /// */:root{--bs-blue:#0d6efd;--bs-indigo:#6610f2;--bs-purple:#6f42c1;--bs-pink:#d63384;--bs-red:#dc3545;--bs-orange:#fd7e14;--bs-yellow:#ffc107;--bs-green:#198754;--bs-teal:#20c997;--bs-cyan:#0dcaf0;--bs-black:#000;--bs-white:#fff;--bs-gray:#6c757d;--bs-gray-dark:#343a40;--bs [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string bootstrapCSS {
+            get {
+                return ResourceManager.GetString("bootstrapCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /*!
+        ///  * Bootstrap v5.2.0-beta1 (https://getbootstrap.com/)
+        ///  * Copyright 2011-2022 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
+        ///  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+        ///  */
+        ///!function(t,e){&quot;object&quot;==typeof exports&amp;&amp;&quot;undefined&quot;!=typeof module?module.exports=e(require(&quot;@popperjs/core&quot;)):&quot;function&quot;==typeof define&amp;&amp;define.amd?define([&quot;@popperjs/core&quot;],e):(t=&quot;undefined&quot;!=typeof globalThis?globalThis:t||self).bootstrap=e(t.Popper)}(this,(fu [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string bootstrapJS {
+            get {
+                return ResourceManager.GetString("bootstrapJS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /*! jQuery v3.6.0 | (c) OpenJS Foundation and other contributors | jquery.org/license */
+        ///!function(e,t){&quot;use strict&quot;;&quot;object&quot;==typeof module&amp;&amp;&quot;object&quot;==typeof module.exports?module.exports=e.document?t(e,!0):function(e){if(!e.document)throw new Error(&quot;jQuery requires a window with a document&quot;);return t(e)}:t(e)}(&quot;undefined&quot;!=typeof window?window:this,function(C,e){&quot;use strict&quot;;var t=[],r=Object.getPrototypeOf,s=t.slice,g=t.flat?function(e){return t.flat.call(e)}:function(e){return t.concat.apply([],e)},u=t [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string jqueryJS {
+            get {
+                return ResourceManager.GetString("jqueryJS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to animateCSS(maindiv, &apos;{AnimateCSSAnimationName}&apos;);.
         /// </summary>
         public static string OverlayAnimateCSSJavascript {
@@ -337,6 +390,32 @@ namespace MixItUp.Base {
         public static string OverlayGoalDefaultJavascript {
             get {
                 return ResourceManager.GetString("OverlayGoalDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///
+        ///&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+        ///&lt;head&gt;
+        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
+        ///
+        ///    &lt;script&gt;
+        ///        var connection;
+        ///        var isDebug = false;
+        ///
+        ///        function openWebsocketConnection(path) {
+        ///            openWebsocketConnectionWithAddressPort(window.location.hostname, window.location.port, path);
+        ///        }
+        ///
+        ///        function openWebsocketConnectionWithAddressPort(address, port, path) {
+        ///            try {
+        ///                va [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayHTML {
+            get {
+                return ResourceManager.GetString("OverlayHTML", resourceCulture);
             }
         }
         
@@ -660,6 +739,50 @@ namespace MixItUp.Base {
         public static string OverlayYouTubeDefaultJavascript {
             get {
                 return ResourceManager.GetString("OverlayYouTubeDefaultJavascript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @charset &quot;UTF-8&quot;;
+        ///.vjs-modal-dialog .vjs-modal-dialog-content, .video-js .vjs-modal-dialog, .vjs-button &gt; .vjs-icon-placeholder:before, .video-js .vjs-big-play-button .vjs-icon-placeholder:before {
+        ///  position: absolute;
+        ///  top: 0;
+        ///  left: 0;
+        ///  width: 100%;
+        ///  height: 100%;
+        ///}
+        ///
+        ///.vjs-button &gt; .vjs-icon-placeholder:before, .video-js .vjs-big-play-button .vjs-icon-placeholder:before {
+        ///  text-align: center;
+        ///}
+        ///
+        ///@font-face {
+        ///  font-family: VideoJS;
+        ///  src: url(data:application/font-woff;charset=utf-8;ba [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string videoCSS {
+            get {
+                return ResourceManager.GetString("videoCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /**
+        /// * @license
+        /// * Video.js 7.19.2 &lt;http://videojs.com/&gt;
+        /// * Copyright Brightcove, Inc. &lt;https://www.brightcove.com/&gt;
+        /// * Available under Apache License Version 2.0
+        /// * &lt;https://github.com/videojs/video.js/blob/main/LICENSE&gt;
+        /// *
+        /// * Includes vtt.js &lt;https://github.com/mozilla/vtt.js&gt;
+        /// * Available under Apache License Version 2.0
+        /// * &lt;https://github.com/mozilla/vtt.js/blob/main/LICENSE&gt;
+        /// */
+        ///!function(e,t){&quot;object&quot;==typeof exports&amp;&amp;&quot;undefined&quot;!=typeof module?module.exports=t():&quot;function&quot;==typeof define&amp;&amp; [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string videoJS {
+            get {
+                return ResourceManager.GetString("videoJS", resourceCulture);
             }
         }
     }

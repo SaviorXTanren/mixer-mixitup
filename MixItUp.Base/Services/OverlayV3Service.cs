@@ -102,19 +102,14 @@ namespace MixItUp.Base.Services
 
     public static class OverlayV3WebPage
     {
-        public const string OverlayFolderPath = "Overlay\\";
-
-        public static async Task<string> GetHTMLFromFile(string filePath) { return await GetHTMLFromTemplate(await ServiceManager.Get<IFileService>().ReadFile(filePath)); }
-
         public static async Task<string> GetHTMLFromTemplate(string template)
         {
             string output = template;
 
-            output = await OverlayV3Service.ReplaceScriptTag(output, "jquery-3.6.0.min.js", OverlayFolderPath + "jquery-3.6.0.min.js");
-            output = await OverlayV3Service.ReplaceScriptTag(output, "webSocketWrapper.js", OverlayFolderPath + "webSocketWrapper.js");
-            output = await OverlayV3Service.ReplaceScriptTag(output, "video.min.js", OverlayFolderPath + "video.min.js");
+            output = OverlayV3Service.ReplaceScriptTag(output, "jquery-3.6.0.min.js", OverlayResources.jqueryJS);
+            output = OverlayV3Service.ReplaceScriptTag(output, "video.min.js", OverlayResources.videoJS);
 
-            output = await OverlayV3Service.ReplaceCSSStyleSheetTag(output, "animate.min.css", OverlayFolderPath + "animate.min.css");
+            output = OverlayV3Service.ReplaceCSSStyleSheetTag(output, "animate.min.css", OverlayResources.animateCSS);
 
             return output;
         }
@@ -124,14 +119,14 @@ namespace MixItUp.Base.Services
     {
         public static string ReplaceProperty(string text, string name, string value) { return text.Replace($"{{{name}}}", value ?? string.Empty); }
 
-        public static async Task<string> ReplaceScriptTag(string text, string fileName, string filePath)
+        public static string ReplaceScriptTag(string text, string fileName, string contents)
         {
-            return text.Replace($"<script src=\"{fileName}\"></script>", $"<script>{await ServiceManager.Get<IFileService>().ReadFile(filePath)}</script>");
+            return text.Replace($"<script src=\"{fileName}\"></script>", $"<script>{contents}</script>");
         }
 
-        public static async Task<string> ReplaceCSSStyleSheetTag(string text, string fileName, string filePath)
+        public static string ReplaceCSSStyleSheetTag(string text, string fileName, string contents)
         {
-            return text.Replace($"<link rel=\"stylesheet\" type=\"text/css\" href=\"{fileName}\">", $"<style>{await ServiceManager.Get<IFileService>().ReadFile(filePath)}</style>");
+            return text.Replace($"<link rel=\"stylesheet\" type=\"text/css\" href=\"{fileName}\">", $"<style>{contents}</style>");
         }
 
         public string Name { get { return Resources.Overlay; } }
@@ -547,8 +542,6 @@ namespace MixItUp.Base.Services
 
     public class OverlayV3HttpListenerServer : LocalHttpListenerServer
     {
-        private const string OverlayWebpageFilePath = OverlayV3WebPage.OverlayFolderPath + "Overlay.html";
-
         private const string OverlayDataWebPath = "overlay/data/";
         private const string OverlayFilesWebPath = "overlay/files/";
 
@@ -596,7 +589,7 @@ namespace MixItUp.Base.Services
                 {
                     if (string.IsNullOrEmpty(this.webPageInstance))
                     {
-                        this.webPageInstance = await OverlayV3WebPage.GetHTMLFromFile(OverlayWebpageFilePath);
+                        this.webPageInstance = await OverlayV3WebPage.GetHTMLFromTemplate(OverlayResources.OverlayHTML);
                     }
                     await this.CloseConnection(listenerContext, HttpStatusCode.OK, this.webPageInstance);
                 }
