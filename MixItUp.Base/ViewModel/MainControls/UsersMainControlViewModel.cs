@@ -392,7 +392,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                             {
                                 data = data.Where(u => u.GetAllPlatformData().Any(p => p.Roles.Contains(this.SelectedUserRoleSearchFilter)));
                             }
-                            else if (this.IsWatchTimeSearchFilterType && this.WatchTimeAmountSearchFilter > 0)
+                            else if (this.IsWatchTimeSearchFilterType && this.WatchTimeAmountSearchFilter >= 0)
                             {
                                 if (this.SelectedWatchTimeComparisonSearchFilter.Equals(GreaterThanAmountFilter))
                                 {
@@ -407,7 +407,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                                     data = data.Where(u => u.OnlineViewingMinutes == this.WatchTimeAmountSearchFilter);
                                 }
                             }
-                            else if (this.IsConsumablesSearchFilterType && this.SelectedConsumablesSearchFilter != null && this.ConsumablesAmountSearchFilter > 0)
+                            else if (this.IsConsumablesSearchFilterType && this.SelectedConsumablesSearchFilter != null && this.ConsumablesAmountSearchFilter >= 0)
                             {
                                 if (this.SelectedConsumablesSearchFilter.Currency != null)
                                 {
@@ -459,7 +459,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                             {
                                 data = data.Where(u => u.IsSpecialtyExcluded || u.CustomTitle != null || u.CustomCommandIDs.Count > 0 || u.EntranceCommandID != Guid.Empty || !string.IsNullOrEmpty(u.Notes));
                             }
-                            else if (this.IsLastSeenSearchFilterType && this.LastSeenAmountSearchFilter > 0)
+                            else if (this.IsLastSeenSearchFilterType && this.LastSeenAmountSearchFilter >= 0)
                             {
                                 DateTime lastSeenDate = DateTimeOffset.Now.Date.Subtract(TimeSpan.FromDays(this.LastSeenAmountSearchFilter));
                                 if (this.SelectedLastSeenComparisonSearchFilter.Equals(GreaterThanAmountFilter))
