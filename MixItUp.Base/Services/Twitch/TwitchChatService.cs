@@ -801,6 +801,11 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (message != null)
             {
+                message.PinnedChatPaidAmount = "2000";
+                message.PinnedChatPaidExponent = "2";
+                message.PinnedChatPaidCurrency = "$";
+                message.PinnedChatPaidLevel = "TWO";
+
                 UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, message.UserID, performPlatformSearch: true);
                 TwitchChatMessageViewModel twitchMessage = null;
                 if (string.IsNullOrEmpty(message.UserLogin) || !message.UserLogin.Equals("jtv"))
@@ -814,7 +819,12 @@ namespace MixItUp.Base.Services.Twitch
 
                 if (int.TryParse(message.PinnedChatPaidAmount, out int amount) && int.TryParse(message.PinnedChatPaidExponent, out int exponent) && amount > 0)
                 {
-                    double decimalNumber = ((double)amount) / ((double)exponent);
+                    double decimalNumber = (double)amount;
+                    if (exponent > 0)
+                    {
+                        decimalNumber = decimalNumber / Math.Pow(10.0, exponent);
+                    }
+
                     CommandParametersModel parameters = (twitchMessage != null) ? new CommandParametersModel(twitchMessage) : new CommandParametersModel(user, StreamingPlatformTypeEnum.Twitch);
                     parameters.SpecialIdentifiers["hypechatamountnumberdigits"] = amount.ToString();
                     parameters.SpecialIdentifiers["hypechatamountnumber"] = decimalNumber.ToString();
