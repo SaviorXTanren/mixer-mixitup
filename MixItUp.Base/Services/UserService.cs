@@ -376,11 +376,17 @@ namespace MixItUp.Base.Services
                     foreach (StreamingPlatformTypeEnum platform in userData.GetPlatforms())
                     {
                         UserPlatformV2ModelBase platformModel = userData.GetPlatformData<UserPlatformV2ModelBase>(platform);
-                        this.platformUserIDLookups[platform][platformModel.ID] = userData.ID;
-                        this.platformUsernameLookups[platform][platformModel.Username.ToLower()] = userData.ID;
-                        if (!string.IsNullOrEmpty(platformModel.DisplayName))
+                        if (platformModel != null)
                         {
-                            this.platformDisplayNameLookups[platform][platformModel.DisplayName.ToLower()] = userData.ID;
+                            this.platformUserIDLookups[platform][platformModel.ID] = userData.ID;
+                            if (!string.IsNullOrEmpty(platformModel.Username))
+                            {
+                                this.platformUsernameLookups[platform][platformModel.Username.ToLower()] = userData.ID;
+                            }
+                            if (!string.IsNullOrEmpty(platformModel.DisplayName))
+                            {
+                                this.platformDisplayNameLookups[platform][platformModel.DisplayName.ToLower()] = userData.ID;
+                            }
                         }
                     }
                 }
