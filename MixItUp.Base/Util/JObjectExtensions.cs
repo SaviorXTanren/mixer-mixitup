@@ -10,5 +10,14 @@ namespace MixItUp.Base.Util
         {
             return jobj.Properties().Select(p => p.Name).ToList();
         }
+
+        public static T GetValueOrDefault<T>(this JObject jobj, string key, T defaultValue)
+        {
+            if (jobj.TryGetValue(key, out JToken value) && value != null)
+            {
+                return value.ToObject<T>();
+            }
+            return defaultValue;
+        }
     }
 }

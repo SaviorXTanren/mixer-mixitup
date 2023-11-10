@@ -462,14 +462,14 @@ namespace MixItUp.Base.Services.Twitch
         {
             try
             {
-                string fromId = payload["from_broadcaster_user_id"].Value<string>();
-                string fromUsername = payload["from_broadcaster_user_login"].Value<string>();
-                string fromDisplayName = payload["from_broadcaster_user_name"].Value<string>();
+                string fromId = payload.GetValueOrDefault<string>("from_broadcaster_user_id", string.Empty);
+                string fromUsername = payload.GetValueOrDefault<string>("from_broadcaster_user_login", string.Empty);
+                string fromDisplayName = payload.GetValueOrDefault<string>("from_broadcaster_user_name", string.Empty);
 
-                string toId = payload["to_broadcaster_user_id"].Value<string>();
-                string toUsername = payload["to_broadcaster_user_login"].Value<string>();
+                string toId = payload.GetValueOrDefault<string>("to_broadcaster_user_id", string.Empty);
+                string toUsername = payload.GetValueOrDefault<string>("to_broadcaster_user_login", string.Empty);
 
-                int viewers = payload["viewers"].Value<int>();
+                int viewers = payload.GetValueOrDefault<int>("viewers", 0);
 
                 if (string.IsNullOrEmpty(fromId) || string.IsNullOrEmpty(toId))
                 {
