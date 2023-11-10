@@ -48,19 +48,20 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
         {
             this.ID = emote.id;
             this.Name = emote.name;
-            if (emote.HasAnimated)
-            {
-                this.IsAnimated = true;
-                this.DarkSmallImageUrl = emote.BuildImageURL(ChatEmoteModel.AnimatedFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale1Name);
-                this.DarkMediumImageUrl = emote.BuildImageURL(ChatEmoteModel.AnimatedFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale2Name);
-                this.DarkLargeImageUrl = emote.BuildImageURL(ChatEmoteModel.AnimatedFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale3Name);
-            }
-            else
-            {
-                this.DarkSmallImageUrl = emote.BuildImageURL(ChatEmoteModel.StaticFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale1Name);
+            // TODO: Remove this once animated emotes are figured out
+            //if (emote.HasAnimated)
+            //{
+            //    this.IsAnimated = true;
+            //    this.DarkSmallImageUrl = emote.BuildImageURL(ChatEmoteModel.AnimatedFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale1Name);
+            //    this.DarkMediumImageUrl = emote.BuildImageURL(ChatEmoteModel.AnimatedFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale2Name);
+            //    this.DarkLargeImageUrl = emote.BuildImageURL(ChatEmoteModel.AnimatedFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale3Name);
+            //}
+            //else
+            //{
+            this.DarkSmallImageUrl = emote.BuildImageURL(ChatEmoteModel.StaticFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale1Name);
                 this.DarkMediumImageUrl = emote.BuildImageURL(ChatEmoteModel.StaticFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale2Name);
                 this.DarkLargeImageUrl = emote.BuildImageURL(ChatEmoteModel.StaticFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale3Name);
-            }
+            //}
         }
 
         public TwitchChatEmoteViewModel(string emoteID, string emoteCode)
@@ -90,7 +91,9 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             this.Tier = tier;
 
             this.ID = this.Name = text;
-            this.ImageURL = (ChannelSession.AppSettings.IsDarkBackground) ? this.Tier.DarkImage : this.Tier.LightImage;
+            // TODO: Remove this once animated emotes are figured out
+            //this.ImageURL = (ChannelSession.AppSettings.IsDarkBackground) ? this.Tier.DarkAnimatedImage : this.Tier.LightAnimatedImage;
+            this.ImageURL = (ChannelSession.AppSettings.IsDarkBackground) ? this.Tier.DarkStaticImage : this.Tier.LightStaticImage;
         }
     }
 

@@ -242,30 +242,6 @@
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
-    <Reference Include="SharpVectors.Converters.Wpf, Version=1.7.7.0, Culture=neutral, PublicKeyToken=b532964b8548be77, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpVectors.1.7.7\lib\net46\SharpVectors.Converters.Wpf.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpVectors.Core, Version=1.7.7.0, Culture=neutral, PublicKeyToken=7407205e337c98ef, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpVectors.1.7.7\lib\net46\SharpVectors.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpVectors.Css, Version=1.7.7.0, Culture=neutral, PublicKeyToken=7a46e3f532fdb787, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpVectors.1.7.7\lib\net46\SharpVectors.Css.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpVectors.Dom, Version=1.7.7.0, Culture=neutral, PublicKeyToken=517340b6277b1a7a, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpVectors.1.7.7\lib\net46\SharpVectors.Dom.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpVectors.Model, Version=1.7.7.0, Culture=neutral, PublicKeyToken=2236cfc76b505845, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpVectors.1.7.7\lib\net46\SharpVectors.Model.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpVectors.Rendering.Gdi, Version=1.7.7.0, Culture=neutral, PublicKeyToken=03902092284347e3, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpVectors.1.7.7\lib\net46\SharpVectors.Rendering.Gdi.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpVectors.Rendering.Wpf, Version=1.7.7.0, Culture=neutral, PublicKeyToken=d0902381100df30e, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpVectors.1.7.7\lib\net46\SharpVectors.Rendering.Wpf.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpVectors.Runtime.Wpf, Version=1.7.7.0, Culture=neutral, PublicKeyToken=d16e717f0a981fb9, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpVectors.1.7.7\lib\net46\SharpVectors.Runtime.Wpf.dll</HintPath>
-    </Reference>
     <Reference Include="SixLabors.ImageSharp, Version=2.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
       <HintPath>..\packages\SixLabors.ImageSharp.2.1.0\lib\netstandard2.0\SixLabors.ImageSharp.dll</HintPath>
     </Reference>
@@ -485,8 +461,8 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="WpfAnimatedGif, Version=2.0.0.0, Culture=neutral, PublicKeyToken=9e7cd3b544a090dc, processorArchitecture=MSIL">
-      <HintPath>..\packages\WpfAnimatedGif.2.0.2\lib\net40\WpfAnimatedGif.dll</HintPath>
+    <Reference Include="WriteableBitmapEx.Wpf, Version=1.6.8.0, Culture=neutral, PublicKeyToken=50375ca6144f1c69, processorArchitecture=MSIL">
+      <HintPath>..\packages\WriteableBitmapEx.1.6.8\lib\net40\WriteableBitmapEx.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="YouTube.Base, Version=1.0.0.21, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StreamingClientLibrary.YouTube.1.0.0.21\lib\netstandard2.0\YouTube.Base.dll</HintPath>
@@ -618,15 +594,15 @@
     <Compile Include="Controls\Actions\YouTubeActionEditorControl.xaml.cs">
       <DependentUpon>YouTubeActionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\AdvancedImage.xaml.cs">
+      <DependentUpon>AdvancedImage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Chat\ChatListControl.xaml.cs">
       <DependentUpon>ChatListControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Chat\ChatUserDialogControl.cs" />
     <Compile Include="Controls\Chat\ChatMessageHeaderControl.xaml.cs">
       <DependentUpon>ChatMessageHeaderControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Chat\ChatImageControl.xaml.cs">
-      <DependentUpon>ChatImageControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Commands\ActionGroupCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>ActionGroupCommandEditorDetailsControl.xaml</DependentUpon>
@@ -1147,9 +1123,6 @@
     <Compile Include="Controls\Twitch\TwitchTagEditorControl.xaml.cs">
       <DependentUpon>TwitchTagEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Users\UserProfileAvatarControl.xaml.cs">
-      <DependentUpon>UserProfileAvatarControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
@@ -1190,6 +1163,7 @@
     </Compile>
     <Compile Include="Util\ActionListDropHandler.cs" />
     <Compile Include="Util\AlternationIndexConverter.cs" />
+    <Compile Include="Util\ImageHelper.cs" />
     <Compile Include="Util\RegistryHelpers.cs" />
     <Compile Include="Util\StrikethroughConverter.cs" />
     <Compile Include="Util\FrameworkElementHelpers.cs" />
@@ -1412,6 +1386,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\AdvancedImage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Chat\ChatListControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1419,10 +1397,6 @@
     <Page Include="Controls\Chat\ChatMessageHeaderControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Chat\ChatImageControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Commands\ActionGroupCommandEditorDetailsControl.xaml">
       <SubType>Designer</SubType>
@@ -2105,10 +2079,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Twitch\TwitchTagEditorControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Users\UserProfileAvatarControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

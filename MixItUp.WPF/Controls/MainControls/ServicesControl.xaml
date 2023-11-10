@@ -6,7 +6,6 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:UsersControls="clr-namespace:MixItUp.WPF.Controls.Users"
              mc:Ignorable="d"
                           
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"

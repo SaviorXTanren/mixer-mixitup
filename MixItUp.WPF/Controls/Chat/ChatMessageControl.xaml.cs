@@ -2,6 +2,7 @@
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
+using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -113,7 +114,16 @@ namespace MixItUp.WPF.Controls.Chat
                             }
                             else if (messagePart is ChatEmoteViewModelBase)
                             {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((ChatEmoteViewModelBase)messagePart));
+                                ChatEmoteViewModelBase emote = (ChatEmoteViewModelBase)messagePart;
+                                Image image = new Image();
+                                ImageHelper.SetImageSource(image, emote.ImageURL, ChannelSession.Settings.ChatFontSize * 2, ChannelSession.Settings.ChatFontSize * 2, emote.Name);
+                                this.MessageWrapPanel.Children.Add(image);
+
+                                if (emote is TwitchBitsCheerViewModel)
+                                {
+                                    TwitchBitsCheerViewModel bitsCheer = (TwitchBitsCheerViewModel)emote;
+                                    this.AddStringMessage(bitsCheer.Amount.ToString());
+                                }
                             }
                         }
                     }
