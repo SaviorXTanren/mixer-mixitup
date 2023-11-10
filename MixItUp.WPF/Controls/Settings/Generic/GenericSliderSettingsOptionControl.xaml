@@ -20,6 +20,6 @@
 
         <TextBlock Grid.Column="0" Text="{Binding Name, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" ToolTip="{Binding Tooltip}" HorizontalAlignment="Left" VerticalAlignment="Center" />
 
-        <Slider Grid.Column="1" Value="{Binding Value}" IsEnabled="{Binding Enabled}" ToolTip="{Binding Tooltip}" VerticalAlignment="Center" Width="200" Minimum="{Binding Minimum}" Maximum="{Binding Maximum}" Style="{StaticResource MaterialDesignDiscreteSlider}" />
+        <Slider Grid.Column="1" Value="{Binding Value, Delay=1000}" IsEnabled="{Binding Enabled}" ToolTip="{Binding Tooltip}" VerticalAlignment="Center" Width="200" Minimum="{Binding Minimum}" Maximum="{Binding Maximum}" Style="{StaticResource MaterialDesignDiscreteSlider}" />
     </Grid>
 </UserControl>
