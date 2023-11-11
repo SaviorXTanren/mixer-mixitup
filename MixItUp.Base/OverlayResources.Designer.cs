@@ -642,7 +642,11 @@ namespace MixItUp.Base {
         
         /// <summary>
         ///   Looks up a localized string similar to .clip {
-        ///    border: 0px;
+        ///    width: {ClipWidth};
+        ///    height: {ClipHeight};
+        ///    border: none;
+        ///    margin: 0;
+        ///    padding: 0;
         ///}.
         /// </summary>
         public static string OverlayTwitchClipDefaultCSS {
@@ -652,7 +656,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;iframe id=&quot;clip&quot; class=&quot;clip&quot; width=&quot;{ClipWidth}&quot; height=&quot;{ClipHeight}&quot;&gt;&lt;/iframe&gt;.
+        ///   Looks up a localized string similar to &lt;iframe id=&quot;clip&quot; class=&quot;clip&quot;&gt;&lt;/iframe&gt;.
         /// </summary>
         public static string OverlayTwitchClipDefaultHTML {
             get {
@@ -694,7 +698,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;iframe frameborder=&quot;0&quot; width=&quot;{WIDTH}&quot; height=&quot;{HEIGHT}&quot; src=&quot;{URL}&quot; /&gt;.
+        ///   Looks up a localized string similar to &lt;iframe frameborder=&quot;0&quot; width=&quot;{Width}&quot; height=&quot;{Height}&quot; src=&quot;{URL}&quot; /&gt;.
         /// </summary>
         public static string OverlayWebPageDefaultHTML {
             get {
@@ -714,7 +718,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;div id=&quot;youtube-{ID}&quot; class=&quot;youtubeVideo&quot; /&gt;.
+        ///   Looks up a localized string similar to &lt;div id=&quot;youtube-player&quot; class=&quot;youtubeVideo&quot; /&gt;.
         /// </summary>
         public static string OverlayYouTubeDefaultHTML {
             get {
@@ -724,7 +728,7 @@ namespace MixItUp.Base {
         
         /// <summary>
         ///   Looks up a localized string similar to function onYouTubeIframeAPIReady() {
-        ///    var youtubeVideoPlayer = new YT.Player(&quot;youtube-{ID}&quot;, {
+        ///    var youtubeVideoPlayer = new YT.Player(&quot;youtube-player&quot;, {
         ///        height: {HeightNumber},
         ///        width: {WidthNumber},
         ///        videoId: &apos;{VideoID}&apos;,
@@ -734,7 +738,7 @@ namespace MixItUp.Base {
         ///                youtubeVideoPlayer.setVolume({Volume});
         ///                youtubeVideoPlayer.setLoop(false);
         ///                youtubeVideoPlayer.frameBorder = 0;
-        ///                [rest of string was truncated]&quot;;.
+        ///              [rest of string was truncated]&quot;;.
         /// </summary>
         public static string OverlayYouTubeDefaultJavascript {
             get {

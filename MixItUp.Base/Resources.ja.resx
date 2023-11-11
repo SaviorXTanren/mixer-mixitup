@@ -311,7 +311,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
-    <value>自動インクルード &quot;!</value>
+    <value>自動インクルード "!</value>
     <comment>Manual</comment>
   </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
@@ -1160,7 +1160,7 @@
     <comment>Manual</comment>
   </data>
   <data name="JSONValueName" xml:space="preserve">
-    <value>JSON 値名 (入れ子になったパラメーターには &apos;\&apos; を使用)</value>
+    <value>JSON 値名 (入れ子になったパラメーターには '\' を使用)</value>
     <comment>Manual</comment>
   </data>
   <data name="Keyboard" xml:space="preserve">
@@ -1765,7 +1765,7 @@
     <value>報告</value>
   </data>
   <data name="RequireClaim" xml:space="preserve">
-    <value>要求 &quot;!クレーム&quot;</value>
+    <value>要求 "!クレーム"</value>
     <comment>Manual</comment>
   </data>
   <data name="RequiredHours" xml:space="preserve">
@@ -4270,7 +4270,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameWonExample" xml:space="preserve">
-    <value>@$usernameは、$gamepayout {0}の全体のポットを獲得し、秘密の言葉&quot;$gamehangmananswer&quot;を得た!</value>
+    <value>@$usernameは、$gamepayout {0}の全体のポットを獲得し、秘密の言葉"$gamehangmananswer"を得た!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanMaxFailures" xml:space="preserve">
@@ -5246,7 +5246,7 @@ Fuzzy</comment>
 (コマンドがスタックし、完了できません)。これは、選択したコマンドと同じ種類の他のコマンドも意味します。
 サブコマンドは、現在のコマンドと異なる場合、同時に実行することができます。たとえば、選択した
 サブコマンドはアクショングループですが、この場合は別のアクショングループを同時に実行することができます。
-有効。&quot;Unlock Command&quot; オプションを切り替えるのと似ていますが、この特定の時間にのみ適用されます。</value>
+有効。"Unlock Command" オプションを切り替えるのと似ていますが、この特定の時間にのみ適用されます。</value>
     <comment>Manual</comment>
   </data>
   <data name="Russian" xml:space="preserve">
@@ -6438,7 +6438,7 @@ Fuzzy</comment>
     <value>指定した目標の進行状況バーを表示します。進行状況は、イベントが発生した場合、またはユーザー定義の更新間隔で更新されます。</value>
   </data>
   <data name="OverlayWidgetStreamBossDescription" xml:space="preserve">
-    <value>チャンネルのユーザーを&quot;ボス&quot;として表示します。損傷は発生時に追加されます。ストリームボス特別識別子は、このオーバーレイウィジェットと並行して使用することができます。</value>
+    <value>チャンネルのユーザーを"ボス"として表示します。損傷は発生時に追加されます。ストリームボス特別識別子は、このオーバーレイウィジェットと並行して使用することができます。</value>
   </data>
   <data name="OverlayWidgetTextDescription" xml:space="preserve">
     <value>テキストのブロックを表示します。ユーザー定義の更新間隔に基づいて更新します。</value>
@@ -7462,7 +7462,7 @@ Fuzzy</comment>
     <value>エラー: 次のユーザー名を持つユーザーが見つかりませんでした: {0}</value>
   </data>
   <data name="LinkAccountCommandPleaseConfirmLink" xml:space="preserve">
-    <value>アカウントのリンク処理を開始しました。現在のユーザーの情報を使用して、他のプラットフォームでコマンドを再実行してください: &quot;!linkaccount {0} {1}&quot;</value>
+    <value>アカウントのリンク処理を開始しました。現在のユーザーの情報を使用して、他のプラットフォームでコマンドを再実行してください: "!linkaccount {0} {1}"</value>
   </data>
   <data name="LinkAccountCommandUsage" xml:space="preserve">
     <value>使用法: !リンクアカウント&lt;PLATFORM&gt;&lt;プラットフォームユーザー名&gt;</value>
@@ -8033,8 +8033,8 @@ Mix It Up の実行中にまだチャンネルにアクセスしていないユ�
     <value>指定したアイテムは存在しません</value>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
-    <value>&quot;買い&quot; または &quot;売り&quot; のいずれかを指定する必要があります。</value>
-    <comment>{0} is the English word &apos;buy&apos;, {1} is the English word &apos;sell&apos;</comment>
+    <value>"買い" または "売り" のいずれかを指定する必要があります。</value>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
     <value>使用法: {0}リスト = 購入/販売に利用可能なすべての商品を一覧表示します {0} ** {0} &lt;ITEM NAME&gt; = 購入&lt;ITEM NAME&gt; [AMOUNT] = 購入1または {0}商品の指定金額&lt;商品名&gt; [金額] = 1 または指定金額を販売します</value>
@@ -8718,7 +8718,7 @@ Mix It Up の実行中にまだチャンネルにアクセスしていないユ�
     <value>Add User</value>
   </data>
   <data name="UsersUnableToFindUser" xml:space="preserve">
-    <value>Unable find the user &quot;{0}&quot;</value>
+    <value>Unable find the user "{0}"</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UsersSuccessfullyFoundUser" xml:space="preserve">
@@ -8736,7 +8736,7 @@ Mix It Up の実行中にまだチャンネルにアクセスしていないユ�
 whispers to be used as a form of automated communication. There are severe restrictions placed on the
 amount of whispers that can be sent in a timeline that make it very impractical for use, as well as spam
 preventative measures if the user is not on your friends list on Twitch. So although you can send whispers
-via Twitch, it&apos;s a &quot;your mileage may vary&quot; situation.</value>
+via Twitch, it's a "your mileage may vary" situation.</value>
   </data>
   <data name="AlertName" xml:space="preserve">
     <value>Alert Name</value>
@@ -9102,170 +9102,8 @@ via Twitch, it&apos;s a &quot;your mileage may vary&quot; situation.</value>
   <data name="EnableSubscriberMode" xml:space="preserve">
     <value>Enable Subscriber Mode</value>
   </data>
-  <data name="OverlayTimerDefaultJavascript" xml:space="preserve">
-    <value>var additionalTime = 0;
-
-function timerLoop(totalSeconds, endingSeconds, displayFormat)
-{
-    totalSeconds += additionalTime;
-    additionalTime = 0;
-
-    var text = displayFormat;
-
-    var seconds = totalSeconds % 60;
-    if (seconds &lt; 10) { seconds = &quot;0&quot; + seconds }
-    text = text.replace(&quot;SS&quot;, totalSeconds);
-    text = text.replace(&quot;ss&quot;, seconds);
-
-    var totalMinutes = Math.floor(totalSeconds / 60);
-    var minutes = totalMinutes % 60;
-    if (minutes &lt; 10) { minutes = &quot;0&quot; + minutes }
-    text = text.replace(&quot;MM&quot;, totalMinutes);
-    text = text.replace(&quot;mm&quot;, minutes);
-
-    var totalHours = Math.floor(totalMinutes / 60);
-    var hours = totalHours % 24;
-    if (hours &lt; 10) { hours = &quot;0&quot; + hours }
-    text = text.replace(&quot;HH&quot;, totalHours);
-    text = text.replace(&quot;hh&quot;, hours);
-
-    var days = Math.floor(totalHours / 24);
-    text = text.replace(&quot;DD&quot;, hours);
-
-    document.getElementById(&quot;text&quot;).innerHTML = text;
-
-    setTimeout(function () {
-        if (endingSeconds &gt; 0) {
-            totalSeconds++;
-            if (totalSeconds &lt; endingSeconds) {
-                timerLoop(totalSeconds, endingSeconds, displayFormat);
-            }        
-        }
-        else {
-            totalSeconds--;
-            if (totalSeconds &gt;= 0) {
-                timerLoop(totalSeconds, endingSeconds, displayFormat);
-            }
-        }
-    }, 1000);
-}
-
-function adjustTime(time)
-{
-    additionalTime += time;
-}
-
-if ({CountUp}) {
-    timerLoop(0, {Duration}, &quot;{DisplayFormat}&quot;);  
-}
-else {
-    timerLoop({Duration}, 0, &quot;{DisplayFormat}&quot;);
-}</value>
-  </data>
-  <data name="OverlayImageDefaultCSS" xml:space="preserve">
-    <value>.image {
-    width: {Width};
-    height: {Height};
-}</value>
-  </data>
-  <data name="OverlayImageDefaultHTML" xml:space="preserve">
-    <value>&lt;img id=&quot;image&quot; class=&quot;image&quot; src=&quot;{FilePath}&quot; /&gt;</value>
-  </data>
-  <data name="OverlayTextDefaultCSS" xml:space="preserve">
-    <value>.text {
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: {FontWeight};
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-align: {TextAlignment};
-    text-shadow: {Shadow};
-}</value>
-  </data>
-  <data name="OverlayTextDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;text&quot; class=&quot;text&quot;&gt;
-    {Text}
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayVideoDefaultCSS" xml:space="preserve">
-    <value>.video-{ID} {
-    width: {Width};
-    height: {Height};
-}</value>
-  </data>
-  <data name="OverlayVideoDefaultHTML" xml:space="preserve">
-    <value>&lt;video id=&quot;video&quot; class=&quot;video&quot; onloadstart=&quot;this.volume={Volume}&quot; allow=&quot;autoplay; encrypted-media&quot; autoplay {Loop}&gt;
-    &lt;source src=&quot;{FilePath}&quot; type=&quot;video/{VideoExtension}&quot; /&gt;
-&lt;/video&gt;</value>
-  </data>
-  <data name="OverlayWebPageDefaultHTML" xml:space="preserve">
-    <value>&lt;iframe frameborder=&quot;0&quot; width=&quot;{WIDTH}&quot; height=&quot;{HEIGHT}&quot; src=&quot;{URL}&quot; /&gt;</value>
-  </data>
-  <data name="OverlayYouTubeDefaultHTML" xml:space="preserve">
-    <value>&lt;div id=&quot;youtube-{ID}&quot; /&gt;
-
-&lt;script&gt;
-    var youtubeVideoPlayer = new YT.Player(&quot;youtube-{ID}&quot;, {
-        height: {HeightNumber},
-        width: {WidthNumber},
-        videoId: &apos;{VideoID}&apos;,
-        playerVars: { &apos;controls&apos;: 0, &apos;modestbranding&apos;: 1, &apos;start&apos;: {StartTime} },
-        events: {
-            &apos;onReady&apos;: function () {
-                youtubeVideoPlayer.setVolume({Volume});
-                youtubeVideoPlayer.setLoop(false);
-                youtubeVideoPlayer.frameBorder = 0;
-                youtubeVideoPlayer.playVideo();
-            },
-            &apos;onStateChange&apos;: function (event) {
-                if (event.data == YT.PlayerState.ENDED) {
-                    event.target.destroy();
-                }
-            }
-        }
-    });
-&lt;/script&gt;</value>
-  </data>
   <data name="DisplayFormat" xml:space="preserve">
     <value>Display Format</value>
-  </data>
-  <data name="OverlayTimerDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;text&quot; class=&quot;text&quot;&gt;
-    {Text}
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayPositionedItemDefaultCSS" xml:space="preserve">
-    <value>.maindiv {
-    position: absolute;
-    width: 100%;
-    max-width: 100%;
-    min-width: 100%;
-    height: 100%;
-    max-height: 100%;
-    min-height: 100%;
-    margin: 0px;
-    z-index: {Layer};
-}
-
-.contentdiv {
-    position: absolute;
-    margin: 0px;
-    left: {XPosition}{PositionType};
-    top: {YPosition}{PositionType};
-    transform: translate({XTranslation}%, {YTranslation}%);
-    width: {Width};
-    height: {Height};
-}</value>
-  </data>
-  <data name="OverlayPositionedItemDefaultHTML" xml:space="preserve">
-    <value>&lt;div id=&quot;maindiv&quot; class=&quot;maindiv&quot;&gt;
-&lt;div id=&quot;contentdiv&quot; class=&quot;contentdiv&quot;&gt;
-
-{InnerHTML}
-
-&lt;/div&gt;
-&lt;/div&gt;</value>
   </data>
   <data name="OverlayActionValidationErrorHeader" xml:space="preserve">
     <value>Overlay Action: </value>
@@ -9326,9 +9164,9 @@ namespace CustomNamespace
         public object Run()
         {
             // Your code goes here
-            System.Console.WriteLine(&quot;Hello World!&quot;);
+            System.Console.WriteLine("Hello World!");
 
-            // Return any data here that you&apos;d like to use
+            // Return any data here that you'd like to use
             return 0;
         }
     }
@@ -9338,57 +9176,22 @@ namespace CustomNamespace
     <value>function run()
 {
     // Your code goes here
-    var text = &apos;Hello World!&apos;;
+    var text = 'Hello World!';
 
-    // Return any data here that you&apos;d like to use
+    // Return any data here that you'd like to use
     return 0;
 }</value>
   </data>
   <data name="ScriptActionPythonDefaultScriptTemplate" xml:space="preserve">
     <value>def run():
     # Your code goes here
-    print &apos;Hello World!&apos;
+    print 'Hello World!'
 
-    # Return any data here that you&apos;d like to use
+    # Return any data here that you'd like to use
     return 0</value>
   </data>
   <data name="CommunityCommandsScriptActionsNotSupported" xml:space="preserve">
     <value>Commands containing Script actions are not supported for uploading to the Community Commands feature. Due to the complexity of scripts and the ability for them to have malicious intent for users, we do not support uploading them through Community Commands to ensure users are protected. You can optionally instead export your command to a file and share it out with users through other means.</value>
-  </data>
-  <data name="OverlayLabelAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;label-amount&quot; class=&quot;text&quot;&gt;
-        {Amount}
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelUsernameAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p class=&quot;text-{ID}&quot;&gt;
-    &lt;span id=&quot;label-username-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
-        {Username}
-    &lt;/span&gt;
-    -
-    &lt;span id=&quot;label-amount-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
-        {Amount}
-    &lt;/span&gt;
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelUsernameDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;label-username-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
-    {Username}
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelDefaultJavascript" xml:space="preserve">
-    <value>function update(name, amount)
-{
-    var nameElement = document.getElementById(&quot;label-name&quot;);
-    if (nameElement != null) {
-        nameElement.innerHTML = name;
-    }
-    
-    var amountElement = document.getElementById(&quot;label-amount&quot;);
-    if (amountElement != null) {
-        amountElement.innerHTML = amount; 
-    }
-}</value>
   </data>
   <data name="OnUpdate" xml:space="preserve">
     <value>On Update</value>
@@ -9405,177 +9208,11 @@ namespace CustomNamespace
   <data name="Donation" xml:space="preserve">
     <value>Donation</value>
   </data>
-  <data name="OverlayEventListDefaultCSS" xml:space="preserve">
-    <value>.list {
-    width: {ItemWidth};
-    {FullHeight}
-}
-
-.item {
-    position: relative;
-    border-style: solid;
-    border-width: 5px;
-    border-color: {BorderColor};
-    background-color: {BackgroundColor};
-    width: {ItemWidth};
-    {IndividualHeight}
-}
-
-.message {
-    padding: 10px;
-    margin: auto;
-}
-
-.messagebadge {
-    vertical-align: middle;
-    padding-right: 2px;
-    width: auto;
-    height: {FontSize}px;
-}
-
-.messageavatar {
-    vertical-align: middle;
-    padding-right: 2px;
-    width: auto;
-    height: {FontSize}px;
-}
-
-.messageusername {
-    vertical-align: middle;
-    word-wrap: break-word;
-    font-size: {FontSize}px;
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: bold;
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-shadow: {Shadow};
-}
-
-.messagetext {
-    vertical-align: middle;
-    margin-left: 10px;
-    word-wrap: break-word;
-    font-weight: bold;
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: {FontWeight};
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-shadow: {Shadow};
-}
-
-.messageemote {
-   vertical-align: middle;
-   margin-left: 10px;
-   width: auto;
-   height: {FontSize}px;
-}</value>
-  </data>
-  <data name="OverlayEventListDefaultHTML" xml:space="preserve">
-    <value>&lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;
-
-&lt;/div&gt;
-
-&lt;template id=&quot;item&quot;&gt;
-    &lt;div class=&quot;item&quot;&gt;
-        &lt;p class=&quot;eventtype&quot;&gt;{EventType}&lt;/p&gt;
-        &lt;p class=&quot;details&quot;&gt;{Details}&lt;/p&gt;
-        &lt;p class=&quot;subdetails&quot;&gt;{SubDetails}&lt;/p&gt;
-    &lt;/div&gt;
-&lt;/template&gt;</value>
-  </data>
-  <data name="OverlayEventListDefaultJavascript" xml:space="preserve">
-    <value>function add(eventType, details, subdetails)
-{
-    var list = document.getElementById(&quot;list&quot;);
-
-    if (list.childElementCount &gt; {MaxToShow}) {
-        removeOldest();
-    }
-
-    var itemTemplate = document.querySelector(&quot;#item&quot;);
-    const item = itemTemplate.content.cloneNode(true);
-    
-    var eventTypeElement = item.querySelector(&quot;.eventtype&quot;);
-    eventTypeElement.innerHTML = eventType;
-
-    var detailsElement = item.querySelector(&quot;.details&quot;);
-    detailsElement.innerHTML = details;
-    
-    var subdetailsElement = item.querySelector(&quot;.subdetails&quot;);
-    subdetailsElement.innerHTML = subdetails;
-
-    list.appendChild(item);
-}
-
-function removeOldest()
-{
-    var list = document.getElementById(&quot;list&quot;);
-    list.removeChild(list.firstElementChild);
-}</value>
-  </data>
   <data name="TwitchChannelHypeTrainLevelUp" xml:space="preserve">
     <value>Twitch Channel Hype Train Level Up</value>
   </data>
   <data name="AlertTwitchCharityDonation" xml:space="preserve">
     <value>{0} Donated {1} To The Twitch Charity</value>
-  </data>
-  <data name="OverlayGoalDefaultCSS" xml:space="preserve">
-    <value>.background
-{
-    position: absolute;
-    background-color: {BackgroundColor};
-    width: {Width}px;
-    height: {Height}px;
-}
-
-.progress
-{
-    position: absolute;
-    background-color: {ProgressColor};
-    height: {Height}px;
-}
-
-.text {
-    position: absolute;
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: {FontWeight};
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-align: {TextAlignment};
-    text-shadow: {Shadow};
-    left: 50%;
-    top: 50%;
-    margin: auto;
-    transform: translate(-50%, -50%);
-}</value>
-  </data>
-  <data name="OverlayGoalDefaultHTML" xml:space="preserve">
-    <value>&lt;div class=&quot;background&quot;&gt;
-  &lt;div id=&quot;progress&quot; class=&quot;progress&quot; /&gt;
-&lt;/div&gt;
-&lt;p id=&quot;text&quot; class=&quot;text&quot; /&gt;</value>
-  </data>
-  <data name="OverlayGoalDefaultJavascript" xml:space="preserve">
-    <value>function update(amount, goal, width)
-{
-    var percentage = (amount / goal)
-
-    var textElement = document.getElementById(&quot;text&quot;);
-    if (textElement != null) {
-        textElement.innerHTML = amount + &quot; (&quot; + Math.round(percentage * 100) + &quot;%)&quot;; 
-    }
-    
-    var progressElement = document.getElementById(&quot;progress&quot;);
-    if (progressElement != null) {
-        progressElement.style.width = Math.min(Math.round(percentage * width), width) + &quot;px&quot;;
-    }
-}
-
-update({CurrentAmount}, {GoalAmount}, {Width});</value>
   </data>
   <data name="TwitchChannelCharityDonation" xml:space="preserve">
     <value>Twitch Channel Charity Donation</value>
@@ -9602,7 +9239,7 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
     <value>This LoupeDeck plug-in allows you to run Mix It Up commands directly from your LoupeDeck device, as well as other status information about your stream.</value>
   </data>
   <data name="LoupeDeckInfo2" xml:space="preserve">
-    <value>To get started, ensure the LoupeDeck software is updated to the latest version &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the Marketplace icon at the top right of your LoupeDeck software, then search for &quot;Mix It Up&quot;.</value>
+    <value>To get started, ensure the LoupeDeck software is updated to the latest version &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the Marketplace icon at the top right of your LoupeDeck software, then search for "Mix It Up".</value>
   </data>
   <data name="ShellExecute" xml:space="preserve">
     <value>Shell Execute</value>
@@ -9631,22 +9268,6 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
   <data name="CooldownRequirementOnCooldownSeconds" xml:space="preserve">
     <value>This command is currently on cooldown, please wait another {0} second(s).</value>
     <comment>Manual</comment>
-  </data>
-  <data name="OverlayLabelNameAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p class=&quot;text&quot;&gt;
-    &lt;span id=&quot;label-name&quot; class=&quot;text&quot;&gt;
-        {Username}
-    &lt;/span&gt;
-    -
-    &lt;span id=&quot;label-amount&quot; class=&quot;text&quot;&gt;
-        {Amount}
-    &lt;/span&gt;
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelNameDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;label-name&quot; class=&quot;text&quot;&gt;
-    {Username}
-&lt;/p&gt;</value>
   </data>
   <data name="Added" xml:space="preserve">
     <value>Added</value>
@@ -9705,252 +9326,7 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
   <data name="OverlayWidthMustBeValidValue" xml:space="preserve">
     <value>Width must be a valid value</value>
   </data>
-  <data name="OverlayChatDefaultHTML" xml:space="preserve">
-    <value>&lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;
-
-&lt;/div&gt;
-
-&lt;template id=&quot;item&quot;&gt;
-    &lt;div class=&quot;item&quot;&gt;
-        &lt;p class=&quot;message&quot;&gt;&lt;/p&gt;
-    &lt;/div&gt;
-&lt;/template&gt;
-
-&lt;template id=&quot;messagebadge&quot;&gt;
-    &lt;img class=&quot;messagebadge&quot; /&gt;
-&lt;/template&gt;
-
-&lt;template id=&quot;messageavatar&quot;&gt;
-    &lt;img class=&quot;messageavatar&quot; /&gt;
-&lt;/template&gt;
-
-&lt;template id=&quot;messageusername&quot;&gt;
-    &lt;span class=&quot;messageusername&quot;&gt;&lt;/span&gt;
-&lt;/template&gt;
-
-&lt;template id=&quot;messagetext&quot;&gt;
-    &lt;span class=&quot;messagetext&quot;&gt;&lt;/span&gt;
-&lt;/template&gt;
-
-&lt;template id=&quot;messageemote&quot;&gt;
-    &lt;img class=&quot;messageemote&quot; /&gt;
-&lt;/template&gt;</value>
-  </data>
-  <data name="OverlayChatDefaultCSS" xml:space="preserve">
-    <value>.list {
-    width: {ItemWidth};
-    {FullHeight}
-}
-
-.item {
-    position: relative;
-    border-style: solid;
-    border-width: 5px;
-    border-color: {BorderColor};
-    background-color: {BackgroundColor};
-    width: {ItemWidth};
-    {IndividualHeight}
-}
-
-.message {
-    padding: 10px;
-    margin: auto;
-}
-
-.messagebadge {
-    vertical-align: middle;
-    padding-right: 2px;
-    width: auto;
-    height: {FontSize}px;
-}
-
-.messageavatar {
-    vertical-align: middle;
-    padding-right: 2px;
-    width: auto;
-    height: {FontSize}px;
-}
-
-.messageusername {
-    vertical-align: middle;
-    word-wrap: break-word;
-    font-size: {FontSize}px;
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: bold;
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-shadow: {Shadow};
-}
-
-.messagetext {
-    vertical-align: middle;
-    margin-left: 10px;
-    word-wrap: break-word;
-    font-weight: bold;
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: {FontWeight};
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-shadow: {Shadow};
-}
-
-.messageemote {
-   vertical-align: middle;
-   margin-left: 10px;
-   width: auto;
-   height: {TEXT_SIZE}px;
-}</value>
-  </data>
-  <data name="OverlayChatDefaultJavascript" xml:space="preserve">
-    <value>function add(user, messageParts)
-{
-    var list = document.getElementById(&quot;list&quot;);
-
-    if ({ShowMaxMessagesOnly})
-    {
-        if (list.childElementCount &gt; {MaxToShow})
-        {
-            removeOldest();
-        }
-    }
-
-    var itemTemplate = document.querySelector(&quot;#item&quot;);
-    var messageBadgeTemplate = document.querySelector(&quot;#messagebadge&quot;);
-    var messageAvatarTemplate = document.querySelector(&quot;#messageavatar&quot;);
-    var messageUsernameTemplate = document.querySelector(&quot;#messageusername&quot;);
-    var messageTextTemplate = document.querySelector(&quot;#messagetext&quot;);
-    var messageEmoteTemplate = document.querySelector(&quot;#messageemote&quot;);
-    
-    const item = itemTemplate.content.cloneNode(true);
-    var messageElement = item.querySelector(&quot;.message&quot;);
-    
-    const messageRoleBadge = messageBadgeTemplate.content.cloneNode(true);
-    messageRoleBadge.src = user.PlatformRoleBadgeLink;
-    messageElement.appendChild(messageRoleBadge);
-    
-    const messageSubBadge = messageBadgeTemplate.content.cloneNode(true);
-    messageSubBadge.src = user.PlatformSubscriberBadgeLink;
-    messageElement.appendChild(messageSubBadge);
-    
-    const messageAvatar = messageAvatarTemplate.content.cloneNode(true);
-    messageAvatar.src = user.AvatarLink;
-    messageElement.appendChild(messageAvatar);
-    
-    const messageUsername = messageUsernameTemplate.content.cloneNode(true);
-    messageUsername.style.color = user.Color;
-    messageUsername.innerHTML = user.DisplayName;
-    messageElement.appendChild(messageUsername);
-    
-    messageParts.forEach(messagePart =&gt;
-    {
-        if (messagePart.Type === &apos;text&apos;)
-        {
-            const messageText = messageTextTemplate.content.cloneNode(true);
-            messageUsername.innerHTML = messagePart.Text;
-            messageElement.appendChild(messageText);
-        }
-        else if (messagePart.Type === &apos;image&apos;)
-        {
-            const messageEmote = messageEmoteTemplate.content.cloneNode(true);
-            messageEmote.src = messagePart.URL;
-            messageElement.appendChild(messageEmote);      
-        }
-    });
-
-    list.appendChild(item);
-}
-
-function removeOldest()
-{
-    var list = document.getElementById(&quot;list&quot;);
-    list.removeChild(list.firstElementChild);
-}</value>
-  </data>
-  <data name="OverlayBasicIFrameTemplate" xml:space="preserve">
-    <value>&lt;!DOCTYPE html&gt;
-
-&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
-&lt;head&gt;
-    &lt;meta charset=&quot;utf-8&quot; /&gt;
-    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
-
-    &lt;script src=&quot;jquery-3.6.0.min.js&quot;&gt;&lt;/script&gt;
-
-    &lt;script src=&quot;video.min.js&quot;&gt;&lt;/script&gt;
-
-    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;animate.min.css&quot;&gt;
-
-    &lt;style type=&quot;text/css&quot;&gt;
-        {CSS}
-    &lt;/style&gt;
-&lt;/head&gt;
-&lt;body style=&quot;background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;&quot;&gt;
-
-    {HTML}
-
-    &lt;script&gt;
-        var maindiv = document.getElementById(&quot;maindiv&quot;);
-        
-        function sendParentMessage(obj) {
-            window.top.postMessage(JSON.stringify(obj), &apos;*&apos;);
-        }
-
-        window.onmessage = function (message) {
-            if (message != null) {
-                var obj = JSON.parse(message);
-            }
-        };
-        
-        const animateCSS = (element, animation, prefix = &apos;animate__&apos;) =&gt;
-            // We create a Promise and return it
-            new Promise((resolve, reject) =&gt; {
-                if (animation != null &amp;&amp; animation) {
-                    const animationName = `${prefix}${animation}`;
-
-                    element.classList.add(`${prefix}animated`, animationName);
-
-                    // When the animation ends, we clean the classes and resolve the Promise
-                    function handleAnimationEnd(event) {
-                        event.stopPropagation();
-                        element.classList.remove(`${prefix}animated`, animationName);
-                        resolve(&apos;Animation ended&apos;);
-                    }
-
-                    element.addEventListener(&apos;animationend&apos;, handleAnimationEnd, { once: true });
-                }
-                else {
-                    resolve(&apos;Animation ended&apos;);
-                }
-            });
-        
-        {Animations}
-        
-        {Javascript}
-    &lt;/script&gt;
-&lt;/body&gt;
-&lt;/html&gt;</value>
-    <comment>{HTML} is the HTML replacement, {CSS} is the CSS replacement, {Animations} is the Javascript animation calls, {Javascript} is the Javascript replacement</comment>
-  </data>
-  <data name="OverlayAnimateCSSJavascript" xml:space="preserve">
-    <value>animateCSS(maindiv, &apos;{AnimateCSSAnimationName}&apos;);</value>
-  </data>
   <data name="DeStream" xml:space="preserve">
     <value>DeStream</value>
-  </data>
-  <data name="OverlayAnimationTimedWrapperJavascript" xml:space="preserve">
-    <value>setTimeout(function () {
-    {Animation}
-}, {MillisecondTiming});</value>
-  </data>
-  <data name="OverlayAnimateCSSThenJavascript" xml:space="preserve">
-    <value>animateCSS(maindiv, &apos;{AnimateCSSAnimationName}&apos;).then((message) =&gt; {
-    {PostAnimation}
-});</value>
-  </data>
-  <data name="OverlayIFrameSendParentMessageRemove" xml:space="preserve">
-    <value>maindiv.style.visibility=&apos;hidden&apos;
-sendParentMessage({ Type: &quot;Remove&quot;, ID: &quot;{ID}&quot; });</value>
   </data>
 </root>

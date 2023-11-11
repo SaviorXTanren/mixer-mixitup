@@ -970,11 +970,15 @@ else {
   </data>
   <data name="OverlayTwitchClipDefaultCSS" xml:space="preserve">
     <value>.clip {
-    border: 0px;
+    width: {ClipWidth};
+    height: {ClipHeight};
+    border: none;
+    margin: 0;
+    padding: 0;
 }</value>
   </data>
   <data name="OverlayTwitchClipDefaultHTML" xml:space="preserve">
-    <value>&lt;iframe id="clip" class="clip" width="{ClipWidth}" height="{ClipHeight}"&gt;&lt;/iframe&gt;</value>
+    <value>&lt;iframe id="clip" class="clip"&gt;&lt;/iframe&gt;</value>
   </data>
   <data name="OverlayTwitchClipDefaultJavascript" xml:space="preserve">
     <value>var clip = document.getElementById("clip");
@@ -992,7 +996,7 @@ clip.setAttribute("src", "https://clips.twitch.tv/embed?parent=" + window.locati
 &lt;/video&gt;</value>
   </data>
   <data name="OverlayWebPageDefaultHTML" xml:space="preserve">
-    <value>&lt;iframe frameborder="0" width="{WIDTH}" height="{HEIGHT}" src="{URL}" /&gt;</value>
+    <value>&lt;iframe frameborder="0" width="{Width}" height="{Height}" src="{URL}" /&gt;</value>
   </data>
   <data name="OverlayYouTubeDefaultCSS" xml:space="preserve">
     <value>.youtubeVideo {
@@ -1000,11 +1004,11 @@ clip.setAttribute("src", "https://clips.twitch.tv/embed?parent=" + window.locati
 }</value>
   </data>
   <data name="OverlayYouTubeDefaultHTML" xml:space="preserve">
-    <value>&lt;div id="youtube-{ID}" class="youtubeVideo" /&gt;</value>
+    <value>&lt;div id="youtube-player" class="youtubeVideo" /&gt;</value>
   </data>
   <data name="OverlayYouTubeDefaultJavascript" xml:space="preserve">
     <value>function onYouTubeIframeAPIReady() {
-    var youtubeVideoPlayer = new YT.Player("youtube-{ID}", {
+    var youtubeVideoPlayer = new YT.Player("youtube-player", {
         height: {HeightNumber},
         width: {WidthNumber},
         videoId: '{VideoID}',

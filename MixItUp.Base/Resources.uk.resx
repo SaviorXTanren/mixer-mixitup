@@ -158,7 +158,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AccountsDetails" xml:space="preserve">
-    <value>Облікові записи стрімера - це ваш фактичний обліковий запис, з якого ви здійснюєте потокове мовлення. Облікові записи ботів - це окремі, необов’язкові облікові записи, з яких можна надсилати повідомлення у своєму каналі. Облікові записи ботів повинні бути створені вами вручну, і ви повинні переконатися, що ввійшли в них, перш ніж спробувати під&apos;єднати їх у Mix It Up.</value>
+    <value>Облікові записи стрімера - це ваш фактичний обліковий запис, з якого ви здійснюєте потокове мовлення. Облікові записи ботів - це окремі, необов’язкові облікові записи, з яких можна надсилати повідомлення у своєму каналі. Облікові записи ботів повинні бути створені вами вручну, і ви повинні переконатися, що ввійшли в них, перш ніж спробувати під'єднати їх у Mix It Up.</value>
     <comment>Manual</comment>
   </data>
   <data name="AccountsWizardInstructions" xml:space="preserve">
@@ -311,7 +311,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
-    <value>Автоматично додавати &quot;!&quot;</value>
+    <value>Автоматично додавати "!"</value>
     <comment>Manual</comment>
   </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
@@ -453,7 +453,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ChatTriggersNoExclamationHintAssist" xml:space="preserve">
-    <value>Тригер(и) чату (Без &quot;!&quot;, розділення пробілом, крапка з комою для групи слів)</value>
+    <value>Тригер(и) чату (Без "!", розділення пробілом, крапка з комою для групи слів)</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatWhisperSound" xml:space="preserve">
@@ -509,7 +509,7 @@
     <comment>Manual</comment>
   </data>
   <data name="CommandNoBang" xml:space="preserve">
-    <value>Команда (Не потрібно &apos;!&apos;)</value>
+    <value>Команда (Не потрібно '!')</value>
     <comment>Manual</comment>
   </data>
   <data name="Commands" xml:space="preserve">
@@ -732,7 +732,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Disconnect" xml:space="preserve">
-    <value>Від&apos;єднати</value>
+    <value>Від'єднати</value>
     <comment>Manual</comment>
   </data>
   <data name="Discord" xml:space="preserve">
@@ -794,11 +794,11 @@
     <value>Увімкнути/Вимкнути чергу</value>
   </data>
   <data name="EnableIFTTT" xml:space="preserve">
-    <value>Будь ласка, увімкніть IFTTT зв&apos;язок на сторінці Сервіси!</value>
+    <value>Будь ласка, увімкніть IFTTT зв'язок на сторінці Сервіси!</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableOBS" xml:space="preserve">
-    <value>Будь ласка, увімкніть OBS Studio зв&apos;язок на сторінці Сервіси!</value>
+    <value>Будь ласка, увімкніть OBS Studio зв'язок на сторінці Сервіси!</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableOverlay" xml:space="preserve">
@@ -813,15 +813,15 @@
     <value>Увімкнути Чергу</value>
   </data>
   <data name="EnableStreamlabs" xml:space="preserve">
-    <value>Будь ласка, увімкніть Streamlabs зв&apos;язок на сторінці Сервіси!</value>
+    <value>Будь ласка, увімкніть Streamlabs зв'язок на сторінці Сервіси!</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableStreamlabsOBS" xml:space="preserve">
-    <value>Будь ласка, увімкніть Streamlabs OBS зв&apos;язок на сторінці Сервіси!</value>
+    <value>Будь ласка, увімкніть Streamlabs OBS зв'язок на сторінці Сервіси!</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableXSplit" xml:space="preserve">
-    <value>Будь ласка, увімкніть XSplit зв&apos;язок на сторінці Сервіси!</value>
+    <value>Будь ласка, увімкніть XSplit зв'язок на сторінці Сервіси!</value>
     <comment>Manual</comment>
   </data>
   <data name="EndCredits" xml:space="preserve">
@@ -1160,7 +1160,7 @@
     <comment>Manual</comment>
   </data>
   <data name="JSONValueName" xml:space="preserve">
-    <value>JSON назва змінної (Використовуйте &apos;\&apos; для вкладених параметрів)</value>
+    <value>JSON назва змінної (Використовуйте '\' для вкладених параметрів)</value>
     <comment>Manual</comment>
   </data>
   <data name="Keyboard" xml:space="preserve">
@@ -1375,7 +1375,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ModerationReasonOptional" xml:space="preserve">
-    <value>Причина модерації (необов&apos;язково)</value>
+    <value>Причина модерації (необов'язково)</value>
     <comment>Manual</comment>
   </data>
   <data name="Moderator" xml:space="preserve">
@@ -1417,7 +1417,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Ім&apos;я</value>
+    <value>Ім'я</value>
     <comment>Manual</comment>
   </data>
   <data name="NameOfProfileHeader" xml:space="preserve">
@@ -1437,7 +1437,7 @@
     <comment>Manual</comment>
   </data>
   <data name="NewProfileName" xml:space="preserve">
-    <value>Нове ім&apos;я профілю</value>
+    <value>Нове ім'я профілю</value>
   </data>
   <data name="NewStreamer" xml:space="preserve">
     <value>Новий стрімер</value>
@@ -1522,7 +1522,7 @@
     <value>Оператор</value>
   </data>
   <data name="OptionalCommandArguments" xml:space="preserve">
-    <value>(Необов&apos;язково) Аргументи команди</value>
+    <value>(Необов'язково) Аргументи команди</value>
     <comment>Manual</comment>
   </data>
   <data name="Options" xml:space="preserve">
@@ -1614,7 +1614,7 @@
     <comment>Manual</comment>
   </data>
   <data name="PortName" xml:space="preserve">
-    <value>Ім&apos;я порту</value>
+    <value>Ім'я порту</value>
   </data>
   <data name="Position" xml:space="preserve">
     <value>Позиція</value>
@@ -1700,7 +1700,7 @@
     <comment>Manual</comment>
   </data>
   <data name="RankName" xml:space="preserve">
-    <value>Ім&apos;я рангу</value>
+    <value>Ім'я рангу</value>
   </data>
   <data name="RankRequirement" xml:space="preserve">
     <value>Вимога рангу</value>
@@ -1734,7 +1734,7 @@
     <comment>Manual</comment>
   </data>
   <data name="RegularStatusOnlineViewingTime" xml:space="preserve">
-    <value>&quot;Регулярний&quot; статус онлайн часу перегляду</value>
+    <value>"Регулярний" статус онлайн часу перегляду</value>
     <comment>Manual</comment>
   </data>
   <data name="Release" xml:space="preserve">
@@ -1765,7 +1765,7 @@
     <value>Скарга</value>
   </data>
   <data name="RequireClaim" xml:space="preserve">
-    <value>Потрібно &quot;!claim&quot;</value>
+    <value>Потрібно "!claim"</value>
     <comment>Manual</comment>
   </data>
   <data name="RequiredHours" xml:space="preserve">
@@ -1876,14 +1876,14 @@
     <comment>Manual</comment>
   </data>
   <data name="SceneCollectionName" xml:space="preserve">
-    <value>Ім&apos;я колекції сцен</value>
+    <value>Ім'я колекції сцен</value>
   </data>
   <data name="SceneName" xml:space="preserve">
-    <value>Ім&apos;я сцени (з урахуванням регістру)</value>
+    <value>Ім'я сцени (з урахуванням регістру)</value>
     <comment>Manual</comment>
   </data>
   <data name="SceneNameOptional" xml:space="preserve">
-    <value>Ім&apos;я сцени (з урахуванням регістру) (необов&apos;язково)</value>
+    <value>Ім'я сцени (з урахуванням регістру) (необов'язково)</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>Пошук</value>
@@ -2063,7 +2063,7 @@
     <comment>Manual</comment>
   </data>
   <data name="SpecialIdentifierName" xml:space="preserve">
-    <value>Ім&apos;я спеціального ідентифікатора</value>
+    <value>Ім'я спеціального ідентифікатора</value>
     <comment>Manual</comment>
   </data>
   <data name="SpecialIdentifiers" xml:space="preserve">
@@ -2195,7 +2195,7 @@
     <comment>Manual</comment>
   </data>
   <data name="TargetUserOptional" xml:space="preserve">
-    <value>Цільовий користувач (необов&apos;язково)</value>
+    <value>Цільовий користувач (необов'язково)</value>
     <comment>Manual</comment>
   </data>
   <data name="Teal" xml:space="preserve">
@@ -2277,7 +2277,7 @@
     <comment>Manual</comment>
   </data>
   <data name="TitleName" xml:space="preserve">
-    <value>Ім&apos;я заголовка</value>
+    <value>Ім'я заголовка</value>
     <comment>Manual</comment>
   </data>
   <data name="Total" xml:space="preserve">
@@ -2309,7 +2309,7 @@
     <comment>Manual</comment>
   </data>
   <data name="TweetImageURL" xml:space="preserve">
-    <value>URL-адреса зображення твіту (необов&apos;язково)</value>
+    <value>URL-адреса зображення твіту (необов'язково)</value>
   </data>
   <data name="TweetMessage" xml:space="preserve">
     <value>Повідомлення у Твіттері (не дозволяється @mentions)</value>
@@ -2365,7 +2365,7 @@
     <value>Завантаження</value>
   </data>
   <data name="UploadFilePath" xml:space="preserve">
-    <value>Передати шлях до файлу (необов&apos;язково)</value>
+    <value>Передати шлях до файлу (необов'язково)</value>
     <comment>Manual</comment>
   </data>
   <data name="Uptime" xml:space="preserve">
@@ -2412,7 +2412,7 @@
     <comment>Manual</comment>
   </data>
   <data name="UserNameOptional" xml:space="preserve">
-    <value>Ім&apos;я користувача (необов&apos;язково)</value>
+    <value>Ім'я користувача (необов'язково)</value>
     <comment>Manual</comment>
   </data>
   <data name="UserOnlyChatCommands" xml:space="preserve">
@@ -2461,7 +2461,7 @@
     <value>Значення 2 (опціонально)</value>
   </data>
   <data name="VariableName" xml:space="preserve">
-    <value>Ім&apos;я змінної</value>
+    <value>Ім'я змінної</value>
     <comment>Manual</comment>
   </data>
   <data name="VariableValue" xml:space="preserve">
@@ -2556,7 +2556,7 @@
     <comment>Manual</comment>
   </data>
   <data name="WhisperUserOptional" xml:space="preserve">
-    <value>Користувач приватного чату (необов&apos;язково)</value>
+    <value>Користувач приватного чату (необов'язково)</value>
     <comment>Manual</comment>
   </data>
   <data name="White" xml:space="preserve">
@@ -2646,7 +2646,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ChatUserLeft" xml:space="preserve">
-    <value>Користувач чату від&apos;єднався</value>
+    <value>Користувач чату від'єднався</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatUserPurge" xml:space="preserve">
@@ -3168,7 +3168,7 @@
     <comment>Manual</comment>
   </data>
   <data name="UpdatePreviewProgramTooltip" xml:space="preserve">
-    <value>Програма попереднього перегляду оновлень дозволяє вам отримати доступ до нових функцій та покращень перед широким загалом. Це чудовий спосіб заздалегідь надіслати відгук і надати цінну допомогу. Оновлення програми попереднього перегляду можуть мати пов&apos;язані з ними помилки та проблеми, тому користувачам слід реєструватися для цього, лише якщо вони готові розв&apos;язувати можливі проблеми. Ми закликаємо користувачів увімкнути автоматичне резервне копіювання та зробити ручне резервне копіювання своїх налаштувань, перш ніж увімкнути це.</value>
+    <value>Програма попереднього перегляду оновлень дозволяє вам отримати доступ до нових функцій та покращень перед широким загалом. Це чудовий спосіб заздалегідь надіслати відгук і надати цінну допомогу. Оновлення програми попереднього перегляду можуть мати пов'язані з ними помилки та проблеми, тому користувачам слід реєструватися для цього, лише якщо вони готові розв'язувати можливі проблеми. Ми закликаємо користувачів увімкнути автоматичне резервне копіювання та зробити ручне резервне копіювання своїх налаштувань, перш ніж увімкнути це.</value>
     <comment>Manual</comment>
   </data>
   <data name="NotificationsAudioOutput" xml:space="preserve">
@@ -3235,7 +3235,7 @@
     <comment>Manual</comment>
   </data>
   <data name="DiagnosticLoggingToolip" xml:space="preserve">
-    <value>Діагностичне журналювання допомагає діагностувати конкретні проблеми, виходячи з додаткової інформації про те, що робиться під час роботи Mix It Up. Ці журнали, як правило, мають величезний розмір у порівнянні зі звичайними журналами, тому це слід робити лише за спеціальною порадою розробника Mix It Up і відключати їх одразу після розв&apos;язання проблеми.</value>
+    <value>Діагностичне журналювання допомагає діагностувати конкретні проблеми, виходячи з додаткової інформації про те, що робиться під час роботи Mix It Up. Ці журнали, як правило, мають величезний розмір у порівнянні зі звичайними журналами, тому це слід робити лише за спеціальною порадою розробника Mix It Up і відключати їх одразу після розв'язання проблеми.</value>
     <comment>Manual</comment>
   </data>
   <data name="ShowBetterTTVEmotes" xml:space="preserve">
@@ -3284,9 +3284,9 @@
   <data name="MassGiftedSubsFilterAmountTooltip" xml:space="preserve">
     <value>Цей параметр допомагає гарантувати, що лише регулярні підписки обдаровані або масові підписки Обдаровані команди події працюють залежно від того, що номер. Це допоможе зменшити спам обдарованих команд підписки та забезпечити кращий досвід для вашого потоку. Зверніть увагу, що це призведе до того, що обробка команд обдарованих або масових підписок подарункових подій буде трохи відкладена, як правило, менше 10 секунд.
 
-Цей параметр також стосується лише потокових платформ, які підтримують подарунки кільком підпискам одночасно. Потокові платформи, які підтримують лише дарування окремих підписок, не скористаються цим параметром і використовуватимуть лише звичайну команду &quot;Обдарована подія&quot; підписки.
+Цей параметр також стосується лише потокових платформ, які підтримують подарунки кільком підпискам одночасно. Потокові платформи, які підтримують лише дарування окремих підписок, не скористаються цим параметром і використовуватимуть лише звичайну команду "Обдарована подія" підписки.
 
-Наприклад, якщо цей параметр увімкнуто, а кількість має значення 5, то кожного разу, коли 5 або менше підписок надаються одночасно, він буде запускати лише звичайну команду &quot;Обдарована подія підписки&quot; для кожної передплати. Якщо більше 5 обдаровані, то він буде запускати тільки масові підписки Обдаровані події команда один раз.</value>
+Наприклад, якщо цей параметр увімкнуто, а кількість має значення 5, то кожного разу, коли 5 або менше підписок надаються одночасно, він буде запускати лише звичайну команду "Обдарована подія підписки" для кожної передплати. Якщо більше 5 обдаровані, то він буде запускати тільки масові підписки Обдаровані події команда один раз.</value>
   </data>
   <data name="AddSeparatorsBetweenMessages" xml:space="preserve">
     <value>Додавання роздільників між повідомленнями</value>
@@ -3323,7 +3323,7 @@
     <value>Необхідно виправити такі помилки послідовників:</value>
   </data>
   <data name="ACommandNameMustBeSpecified" xml:space="preserve">
-    <value>Потрібно вказати ім&apos;я команди</value>
+    <value>Потрібно вказати ім'я команди</value>
   </data>
   <data name="ChatActionMissingChatText" xml:space="preserve">
     <value>Дія чату: Відсутній текст чату</value>
@@ -3342,7 +3342,7 @@
     <comment>Manual</comment>
   </data>
   <data name="CounterActionMissingName" xml:space="preserve">
-    <value>Дія лічильника: відсутнє ім&apos;я лічильника</value>
+    <value>Дія лічильника: відсутнє ім'я лічильника</value>
     <comment>Manual</comment>
   </data>
   <data name="CounterActionMissingAmount" xml:space="preserve">
@@ -3436,7 +3436,7 @@
     <comment>Manual</comment>
   </data>
   <data name="OvrStreamActionMissingVariableName" xml:space="preserve">
-    <value>Дія OvrStream: відсутнє ім&apos;я змінної</value>
+    <value>Дія OvrStream: відсутнє ім'я змінної</value>
     <comment>Manual</comment>
   </data>
   <data name="DisableTitle" xml:space="preserve">
@@ -3504,7 +3504,7 @@
     <comment>Manual</comment>
   </data>
   <data name="TwitterActionInvalidTweet" xml:space="preserve">
-    <value>Дія Twitter: Твіт не може містити жодних тегів &quot;@&quot;</value>
+    <value>Дія Twitter: Твіт не може містити жодних тегів "@"</value>
     <comment>Manual</comment>
   </data>
   <data name="TwitterActionMissingNameUpdate" xml:space="preserve">
@@ -3769,7 +3769,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandOutcomeMissingName" xml:space="preserve">
-    <value>На виході відсутнє ім&apos;я</value>
+    <value>На виході відсутнє ім'я</value>
     <comment>Manual</comment>
   </data>
   <data name="AddOutcome" xml:space="preserve">
@@ -3835,7 +3835,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHitmanDescription" xml:space="preserve">
-    <value>Гра Вбивця дозволяє користувачеві почати ставку переможець забирає все серед усіх зареєстрованих користувачів. Після ініціалізації обмеження часу в чаті з&apos;явиться нападник з певним ім&apos;ям. Якщо користувач вводить ім’я нападника у чаті протягом встановленого терміну, він виграє весь банк. Інакше кожен втрачає свої гроші.</value>
+    <value>Гра Вбивця дозволяє користувачеві почати ставку переможець забирає все серед усіх зареєстрованих користувачів. Після ініціалізації обмеження часу в чаті з'явиться нападник з певним ім'ям. Якщо користувач вводить ім’я нападника у чаті протягом встановленого терміну, він виграє весь банк. Інакше кожен втрачає свої гроші.</value>
     <comment>Manual</comment>
   </data>
   <data name="HotPotato" xml:space="preserve">
@@ -3862,7 +3862,7 @@ Fuzzy</comment>
     <value>Рулетка</value>
   </data>
   <data name="GameCommandRouletteDescription" xml:space="preserve">
-    <value>Гра Рулетка дозволяє глядачу розпочати гру серед усіх користувачів, щоб зробити ставку на певний номер або ім&apos;я. Якщо гра заснована на діапазоні чисел, то користувач може вибрати будь-яке число в цьому діапазоні. Якщо гра заснована на ряді імен, користувач може вибрати будь-яке з імен. Усі користувачі, які обирають виграшний тип ставки, отримують виплату за свою ставку, всі інші втрачають свою ставку.</value>
+    <value>Гра Рулетка дозволяє глядачу розпочати гру серед усіх користувачів, щоб зробити ставку на певний номер або ім'я. Якщо гра заснована на діапазоні чисел, то користувач може вибрати будь-яке число в цьому діапазоні. Якщо гра заснована на ряді імен, користувач може вибрати будь-яке з імен. Усі користувачі, які обирають виграшний тип ставки, отримують виплату за свою ставку, всі інші втрачають свою ставку.</value>
     <comment>Manual</comment>
   </data>
   <data name="RussianRoulette" xml:space="preserve">
@@ -4266,11 +4266,11 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameLostExample" xml:space="preserve">
-    <value>Гра програна з занадто великою кількістю невдалих припущень; правильна відповідь &quot;$gamehangmananswer&quot;. Втрачено $gametotalamount {0}!</value>
+    <value>Гра програна з занадто великою кількістю невдалих припущень; правильна відповідь "$gamehangmananswer". Втрачено $gametotalamount {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameWonExample" xml:space="preserve">
-    <value>@$username отримав останню літеру для &quot;$gamehangmananswer&quot;, вигравши весь банк $gamepayout {0}!</value>
+    <value>@$username отримав останню літеру для "$gamehangmananswer", вигравши весь банк $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanMaxFailures" xml:space="preserve">
@@ -4369,7 +4369,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserSuccessExample" xml:space="preserve">
-    <value>@$username правильно вгадав слово &quot;$gamewordscrambleanswer&quot; і втік з винагородою $gamepayout {0}!</value>
+    <value>@$username правильно вгадав слово "$gamewordscrambleanswer" і втік з винагородою $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBegin" xml:space="preserve">
@@ -4377,7 +4377,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBeginExample" xml:space="preserve">
-    <value>Зашифроване слово &quot;$gamewordscrambleword&quot;; розв&apos;яжіть це питання і першим наберіть його в чаті!</value>
+    <value>Зашифроване слово "$gamewordscrambleword"; розв'яжіть це питання і першим наберіть його в чаті!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScramblePrepare" xml:space="preserve">
@@ -4487,7 +4487,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseKingUserExample" xml:space="preserve">
-    <value>Король @$username відкрив скарб, але йому потрібен хтось, хто його захистить! Злодії повинні працювати, щоб переконати короля вибрати їх, всі інші повинні запобігти цьому. Король повинен набрати &quot;!treasure &lt;PLAYER&gt;&quot; у чаті щоб вибрати, хто буде захищати скарб!</value>
+    <value>Король @$username відкрив скарб, але йому потрібен хтось, хто його захистить! Злодії повинні працювати, щоб переконати короля вибрати їх, всі інші повинні запобігти цьому. Король повинен набрати "!treasure &lt;PLAYER&gt;" у чаті щоб вибрати, хто буде захищати скарб!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseKnightSelected" xml:space="preserve">
@@ -4605,7 +4605,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoPayoutExample" xml:space="preserve">
-    <value>Коли @$username скидає свій внесок у вулкан, відбувається гучне виверження, та $gamepayout {0} приземляється поверх них! Вулкан вибухає монетами! Швидко, введіть &quot;!volcano collect&quot; у чаті протягом наступних 30 секунд!</value>
+    <value>Коли @$username скидає свій внесок у вулкан, відбувається гучне виверження, та $gamepayout {0} приземляється поверх них! Вулкан вибухає монетами! Швидко, введіть "!volcano collect" у чаті протягом наступних 30 секунд!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoPayoutPercentageMustBePositive" xml:space="preserve">
@@ -4950,7 +4950,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="IncludeUsernameWithRequirementErrors" xml:space="preserve">
-    <value>Включати ім&apos;я користувача до обов&apos;язкових помилок</value>
+    <value>Включати ім'я користувача до обов'язкових помилок</value>
     <comment>Manual</comment>
   </data>
   <data name="StreamMarker" xml:space="preserve">
@@ -4970,7 +4970,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="DescriptionOptional" xml:space="preserve">
-    <value>Опис (необов&apos;язково)</value>
+    <value>Опис (необов'язково)</value>
   </data>
   <data name="FileActionMissingLineToWrite" xml:space="preserve">
     <value>Дія файлу: відсутній рядок для запису</value>
@@ -5102,7 +5102,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserFailureExample" xml:space="preserve">
-    <value>Ніхто не вгадав слово &quot;$gamewordscrambleanswer&quot;.</value>
+    <value>Ніхто не вгадав слово "$gamewordscrambleanswer".</value>
     <comment>Manual</comment>
   </data>
   <data name="CommandGroupTimerIntervalMustBePositive" xml:space="preserve">
@@ -5235,7 +5235,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="CommandActionWaitUntilCompleteHintText" xml:space="preserve">
-    <value>Щоб команда дії чекала до завершення вибраної підкоманди, підкоманда НЕ БУДЕ використовувати вбудовану систему блокування команд протягом конкретного часу її виконання. Це робиться для того, щоб запобігти виникненню того, що називається тупиковою ситуацією (команда застряє і не може завершитись). Це також означає, що інші команди того ж типу, що і вибрана підкоманда, зможуть виконуватися одночасно, якщо вони відрізняються від поточної команди. Наприклад, якщо вибрана підкоманда є групою дій, то все одно можна буде одночасно запустити іншу групу дій, якщо це ввімкнено. Ви можете вважати це подібним до перемикання опції &quot;Команда розблокування&quot;, але це стосується лише цього конкретного часу.</value>
+    <value>Щоб команда дії чекала до завершення вибраної підкоманди, підкоманда НЕ БУДЕ використовувати вбудовану систему блокування команд протягом конкретного часу її виконання. Це робиться для того, щоб запобігти виникненню того, що називається тупиковою ситуацією (команда застряє і не може завершитись). Це також означає, що інші команди того ж типу, що і вибрана підкоманда, зможуть виконуватися одночасно, якщо вони відрізняються від поточної команди. Наприклад, якщо вибрана підкоманда є групою дій, то все одно можна буде одночасно запустити іншу групу дій, якщо це ввімкнено. Ви можете вважати це подібним до перемикання опції "Команда розблокування", але це стосується лише цього конкретного часу.</value>
     <comment>Manual</comment>
   </data>
   <data name="Russian" xml:space="preserve">
@@ -5339,7 +5339,7 @@ Fuzzy</comment>
     <value>Відправити твіт</value>
   </data>
   <data name="UpdateName" xml:space="preserve">
-    <value>Оновити ім&apos;я</value>
+    <value>Оновити ім'я</value>
   </data>
   <data name="PlainText" xml:space="preserve">
     <value>Звичайний текст</value>
@@ -5470,7 +5470,7 @@ Fuzzy</comment>
     <value>Підключення до служби Extra Life дозволяє запускати події, коли ви або ваша команда отримаєте донат.</value>
   </data>
   <data name="ExtraLifeInfo2" xml:space="preserve">
-    <value>Спочатку відвідайте сторінку вашої команди на веб-сайті Extra Life і закінчення веб URL-адреси буде написано &quot;teamID = _____&quot;. Введіть цей номер у перше поле, натисніть кнопку пошуку, виберіть своє ім&apos;я зі списку, а потім натисніть кнопку Увійти.</value>
+    <value>Спочатку відвідайте сторінку вашої команди на веб-сайті Extra Life і закінчення веб URL-адреси буде написано "teamID = _____". Введіть цей номер у перше поле, натисніть кнопку пошуку, виберіть своє ім'я зі списку, а потім натисніть кнопку Увійти.</value>
   </data>
   <data name="ExtraLifeInvalidParticipant" xml:space="preserve">
     <value>Виберіть дійсного учасника програми Extra Life.</value>
@@ -5485,7 +5485,7 @@ Fuzzy</comment>
     <value>Тригер події донат для команди донатерів:</value>
   </data>
   <data name="OverlayConnectionFailed1" xml:space="preserve">
-    <value>Не вдалося перевірити з&apos;єднання з накладкою. Переконайтесь, що у вашому потоковому програмному забезпеченні є сторінка накладки Mix It Up.</value>
+    <value>Не вдалося перевірити з'єднання з накладкою. Переконайтесь, що у вашому потоковому програмному забезпеченні є сторінка накладки Mix It Up.</value>
   </data>
   <data name="OverlayConnectionFailed2" xml:space="preserve">
     <value>Якщо ви запустили потокове програмне забезпечення перед Mix It Up, спробуйте оновити джерело веб-сторінки у своєму потоковому програмному забезпечені.</value>
@@ -5498,7 +5498,7 @@ Fuzzy</comment>
     <comment>{0} is the number of overlays connected</comment>
   </data>
   <data name="ParticipantName" xml:space="preserve">
-    <value>Ім&apos;я учасника</value>
+    <value>Ім'я учасника</value>
   </data>
   <data name="TeamID" xml:space="preserve">
     <value>ID команди</value>
@@ -5543,7 +5543,7 @@ Fuzzy</comment>
     <value>Шлях до файлу зображення / URL</value>
   </data>
   <data name="IPAddress" xml:space="preserve">
-    <value>IP-адреса (необов&apos;язково)</value>
+    <value>IP-адреса (необов'язково)</value>
   </data>
   <data name="ItemHeight" xml:space="preserve">
     <value>Висота елемента (пікселі)</value>
@@ -5614,7 +5614,7 @@ Fuzzy</comment>
     <value>Для отримання інформації про OvrStream перейдіть за посиланням:</value>
   </data>
   <data name="Password" xml:space="preserve">
-    <value>Пароль (необов&apos;язково)</value>
+    <value>Пароль (необов'язково)</value>
   </data>
   <data name="Patreon" xml:space="preserve">
     <value>Patreon</value>
@@ -5695,7 +5695,7 @@ Fuzzy</comment>
     <value>Плагін Stream Deck дозволяє запускати команди Mix It Up безпосередньо зі свого пристрою Stream Deck, а також показувати іншу інформацію про стан вашої трансляції.</value>
   </data>
   <data name="StreamDeckInfo2" xml:space="preserve">
-    <value>Для початку переконайтеся, що програмне забезпечення Stream Deck оновлено принаймні до версії 4.0 та службу API розробника ввімкнено в Mix It Up. Щоб встановити плагін Mix It Up, натисніть кнопку &quot;Додаткові дії...&quot; у нижньому правому куті, а потім знайдіть у вікні &quot;Mix It Up&quot;.</value>
+    <value>Для початку переконайтеся, що програмне забезпечення Stream Deck оновлено принаймні до версії 4.0 та службу API розробника ввімкнено в Mix It Up. Щоб встановити плагін Mix It Up, натисніть кнопку "Додаткові дії..." у нижньому правому куті, а потім знайдіть у вікні "Mix It Up".</value>
     <comment>Fuzzy</comment>
   </data>
   <data name="StreamElements" xml:space="preserve">
@@ -5706,7 +5706,7 @@ Fuzzy</comment>
     <value>Підключення до служби StreamElements дозволяє виконувати дії під час отримання донатів. Коли ви входите, відкриється веб-сторінка автентифікації з проханням увійти до StreamElements і затвердити Mix It Up для доступу до вашої інформації.</value>
   </data>
   <data name="StreamingSoftwareSourceName" xml:space="preserve">
-    <value>Ім&apos;я джерела потокового ПЗ</value>
+    <value>Ім'я джерела потокового ПЗ</value>
   </data>
   <data name="Rainmaker" xml:space="preserve">
     <value>Дощовик</value>
@@ -5718,7 +5718,7 @@ Fuzzy</comment>
     <value>Підключення до служби Streamlabs дозволяє виконувати дії під час отримання донатів. Коли ви входите, відкриється веб-сторінка автентифікації з проханням увійти в Streamlabs і затвердити Mix It Up для доступу до вашої інформації.</value>
   </data>
   <data name="StreamlabsOBSConnectionFailed" xml:space="preserve">
-    <value>Не вдалося перевірити з&apos;єднання з Streamlabs OBS. Переконайтеся, що Streamlabs OBS запущений.</value>
+    <value>Не вдалося перевірити з'єднання з Streamlabs OBS. Переконайтеся, що Streamlabs OBS запущений.</value>
   </data>
   <data name="StreamlabsOBSConnectionSuccess" xml:space="preserve">
     <value>Тест підключення до Streamlabs OBS успішний!</value>
@@ -5747,7 +5747,7 @@ Fuzzy</comment>
     <value>Рівновартий підписнику</value>
   </data>
   <data name="TestConnection" xml:space="preserve">
-    <value>Тестове з&apos;єднання</value>
+    <value>Тестове з'єднання</value>
   </data>
   <data name="TextFont" xml:space="preserve">
     <value>Шрифт тексту</value>
@@ -5860,7 +5860,7 @@ Fuzzy</comment>
     <value>Ім’я не може містити жодних цифр.</value>
   </data>
   <data name="CurrencyRankNameRequired" xml:space="preserve">
-    <value>Потрібно вказати ім&apos;я {0}</value>
+    <value>Потрібно вказати ім'я {0}</value>
     <comment>{0} is the type (currency or rank)</comment>
   </data>
   <data name="CustomCommandAlreadyExists" xml:space="preserve">
@@ -5879,7 +5879,7 @@ Fuzzy</comment>
     <value>Для кожного стовпця, який потрібно включити, потрібно вказати число 0 або більше.</value>
   </data>
   <data name="DataFileRequiredColumns" xml:space="preserve">
-    <value>Файл даних має містити принаймні стовпці Ідентифікатора користувача або Ім&apos;я користувача.</value>
+    <value>Файл даних має містити принаймні стовпці Ідентифікатора користувача або Ім'я користувача.</value>
   </data>
   <data name="DefaultMaxGreaterThanZero" xml:space="preserve">
     <value>Максимальна сума за замовчуванням має бути більшою за 0.</value>
@@ -6007,7 +6007,7 @@ Fuzzy</comment>
     <comment>{0} is the number of successes</comment>
   </data>
   <data name="ImportWithFailures" xml:space="preserve">
-    <value>{0} користувачів успішно імпортовано, але {1} користувачів не вдалося імпортувати. Це може бути пов&apos;язано з недійсними даними або неможливістю знайти їх інформацію на платформі. Будь ласка, зверніться до служби підтримки для подальшої допомоги з цього питання при необхідності.</value>
+    <value>{0} користувачів успішно імпортовано, але {1} користувачів не вдалося імпортувати. Це може бути пов'язано з недійсними даними або неможливістю знайти їх інформацію на платформі. Будь ласка, зверніться до служби підтримки для подальшої допомоги з цього питання при необхідності.</value>
     <comment>{0} is the number of successes, {1} is the number of failures</comment>
   </data>
   <data name="InvalidDataFile" xml:space="preserve">
@@ -6020,7 +6020,7 @@ Fuzzy</comment>
     <value>Інвентар з такою назвою вже існує.</value>
   </data>
   <data name="InventoryNameRequired" xml:space="preserve">
-    <value>Потрібно вказати припустиме ім&apos;я інвентарю.</value>
+    <value>Потрібно вказати припустиме ім'я інвентарю.</value>
   </data>
   <data name="ItemBuyAmountZeroOrMore" xml:space="preserve">
     <value>Сума покупки товару повинна бути порожньою або мати понад 0.</value>
@@ -6068,7 +6068,7 @@ Fuzzy</comment>
     <value>Бонус модератора повинен бути 0 або більше.</value>
   </data>
   <data name="NameRequired" xml:space="preserve">
-    <value>Потрібно вказати ім&apos;я.</value>
+    <value>Потрібно вказати ім'я.</value>
   </data>
   <data name="NewBossAnimation" xml:space="preserve">
     <value>Анімація нового боса</value>
@@ -6176,7 +6176,7 @@ Fuzzy</comment>
     <comment>{0} is the rank/currency name</comment>
   </data>
   <data name="RetroactivelyGivePointsPrompt2" xml:space="preserve">
-    <value>ПРИКЛАД: Якщо онлайн курс становить &quot;1 за годину&quot;, а користувач має 16 годин перегляду, то для цього користувача {0} балів буде встановлено 16.</value>
+    <value>ПРИКЛАД: Якщо онлайн курс становить "1 за годину", а користувач має 16 годин перегляду, то для цього користувача {0} балів буде встановлено 16.</value>
     <comment>{0} is the rank/currency name</comment>
   </data>
   <data name="RetroactivelyGivePointsPrompt3" xml:space="preserve">
@@ -6219,7 +6219,7 @@ Fuzzy</comment>
     <value>Початкова сума</value>
   </data>
   <data name="StartingHealth" xml:space="preserve">
-    <value>Початкове здоров&apos;я</value>
+    <value>Початкове здоров'я</value>
   </data>
   <data name="StartTime" xml:space="preserve">
     <value>Час початку (сек)</value>
@@ -6234,7 +6234,7 @@ Fuzzy</comment>
     <value>Назва може містити лише літери, цифри або пробіли.</value>
   </data>
   <data name="StreamPassNameRequired" xml:space="preserve">
-    <value>Потрібно вказати припустиме ім&apos;я.</value>
+    <value>Потрібно вказати припустиме ім'я.</value>
   </data>
   <data name="SubMultiplierOneOrMore" xml:space="preserve">
     <value>Мульті підписки має бути більшим або рівним 1.0.</value>
@@ -6268,7 +6268,7 @@ Fuzzy</comment>
     <value>Обліковий запис, у який ви увійшли за допомогою Twitch, не відповідає обліковому запису для цих налаштувань. Будь ласка, увійдіть з правильного облікового запису на Twitch.</value>
   </data>
   <data name="TwitchFailed" xml:space="preserve">
-    <value>Не вдалося під&apos;єднатися до служб Twitch:</value>
+    <value>Не вдалося під'єднатися до служб Twitch:</value>
   </data>
   <data name="UniqueRankNameAndMinimumAmountRequired" xml:space="preserve">
     <value>Кожен ранг повинен мати унікальне ім’я та мінімальну суму.</value>
@@ -6304,7 +6304,7 @@ Fuzzy</comment>
     <value>Не вдалося отримати дані шлюзу застосунків бота</value>
   </data>
   <data name="DiscordBotWebSocketFailed" xml:space="preserve">
-    <value>Не вдалося під&apos;єднати додаток для ботів до веб сокету</value>
+    <value>Не вдалося під'єднати додаток для ботів до веб сокету</value>
   </data>
   <data name="DiscordServerDataFailed" xml:space="preserve">
     <value>Не вдалося отримати дані сервера</value>
@@ -6328,7 +6328,7 @@ Fuzzy</comment>
     <value>Назва теки:</value>
   </data>
   <data name="OBSWebSocketFailed" xml:space="preserve">
-    <value>Не вдалося під&apos;єднатися до веб сокета OBS Studio</value>
+    <value>Не вдалося під'єднатися до веб сокета OBS Studio</value>
     <comment>Fuzzy</comment>
   </data>
   <data name="OverlayAddFailed" xml:space="preserve">
@@ -6363,7 +6363,7 @@ Fuzzy</comment>
     <value>Не вдалося отримати дані користувача</value>
   </data>
   <data name="TipeeeStreamSocketFailed" xml:space="preserve">
-    <value>Не вдалося під&apos;єднатися до сокета</value>
+    <value>Не вдалося під'єднатися до сокета</value>
   </data>
   <data name="TipeeeStreamSocketUrlFailed" xml:space="preserve">
     <value>Не вдалося отримати URL-адресу сокета</value>
@@ -6375,13 +6375,13 @@ Fuzzy</comment>
     <value>Не вдалося отримати ключ Сокет API</value>
   </data>
   <data name="TreatStreamSocketFailed" xml:space="preserve">
-    <value>Не вдалося під&apos;єднатися до сокета</value>
+    <value>Не вдалося під'єднатися до сокета</value>
   </data>
   <data name="TreatStreamSocketTokenFailed" xml:space="preserve">
     <value>Не вдалося отримати маркер сокета</value>
   </data>
   <data name="TwitchConnectionFailed" xml:space="preserve">
-    <value>З&apos;єднання Twitch не встановлено</value>
+    <value>З'єднання Twitch не встановлено</value>
   </data>
   <data name="TwitchFailedBotData" xml:space="preserve">
     <value>Не вдалося отримати дані бота Twitch</value>
@@ -6524,7 +6524,7 @@ Fuzzy</comment>
     <value>Створення винагороди за точку нового каналу</value>
   </data>
   <data name="ChannelPointRewardName" xml:space="preserve">
-    <value>Ім&apos;я винагороди за бали каналу</value>
+    <value>Ім'я винагороди за бали каналу</value>
   </data>
   <data name="CreateChannelPointRewardFailure" xml:space="preserve">
     <value>Не вдалося створити нагороду за бали каналу. Повторіть спробу пізніше. Якщо ця проблема не зникне, зверніться, будь ласка, в Discord Mix It Up за допомогою.</value>
@@ -6579,7 +6579,7 @@ Fuzzy</comment>
     <value>Повтор</value>
   </data>
   <data name="StreamlootsCardNameMissing" xml:space="preserve">
-    <value>Ім&apos;я картки Streamloots відсутнє</value>
+    <value>Ім'я картки Streamloots відсутнє</value>
   </data>
   <data name="StreamlootsCards" xml:space="preserve">
     <value>Карти Streamloots</value>
@@ -6642,7 +6642,7 @@ Fuzzy</comment>
     <value>Лічильники</value>
   </data>
   <data name="StreamElementsSocketFailed" xml:space="preserve">
-    <value>Не вдалося під&apos;єднатися до сокета</value>
+    <value>Не вдалося під'єднатися до сокета</value>
   </data>
   <data name="StreamElementsMerchPurchase" xml:space="preserve">
     <value>StreamElements покупка сувенірів</value>
@@ -6682,13 +6682,13 @@ Fuzzy</comment>
     <value>Кілька</value>
   </data>
   <data name="BitsCostOptional" xml:space="preserve">
-    <value>Бітова вартість (необов&apos;язково)</value>
+    <value>Бітова вартість (необов'язково)</value>
   </data>
   <data name="ChannelPointRewardMissing" xml:space="preserve">
     <value>Відсутня нагорода за бали каналу</value>
   </data>
   <data name="ChannelPointsCostOptional" xml:space="preserve">
-    <value>Вартість точок каналу (необов&apos;язково)</value>
+    <value>Вартість точок каналу (необов'язково)</value>
   </data>
   <data name="Choice1" xml:space="preserve">
     <value>Вибір 1</value>
@@ -6748,7 +6748,7 @@ Fuzzy</comment>
     <value>Вимоги аргументів</value>
   </data>
   <data name="ArgumentsRequirementValidName" xml:space="preserve">
-    <value>Вимоги аргументів: потрібно вказати припустиме ім&apos;я</value>
+    <value>Вимоги аргументів: потрібно вказати припустиме ім'я</value>
   </data>
   <data name="Decimal" xml:space="preserve">
     <value>Десятковий</value>
@@ -6757,7 +6757,7 @@ Fuzzy</comment>
     <value>Число</value>
   </data>
   <data name="Optional" xml:space="preserve">
-    <value>Необов&apos;язково</value>
+    <value>Необов'язково</value>
   </data>
   <data name="SpecialtyExcluded" xml:space="preserve">
     <value>Спеціальність виключена</value>
@@ -6813,7 +6813,7 @@ Fuzzy</comment>
     <value>Додати команду до наявної винагороди</value>
   </data>
   <data name="TwitchChannelPointRewardCreationErrorRewardAlreadyExists" xml:space="preserve">
-    <value>Нагорода вже існує з таким самим ім&apos;ям</value>
+    <value>Нагорода вже існує з таким самим ім'ям</value>
   </data>
   <data name="TwitchChannelPointRewardCreationErrorTooManyRewards" xml:space="preserve">
     <value>Ви досягли максимальної кількості винагород, які можна створити</value>
@@ -6844,7 +6844,7 @@ Fuzzy</comment>
     <value>{0} K+</value>
   </data>
   <data name="CommunityCommandsUploadCommunityCommand" xml:space="preserve">
-    <value>Команда &quot;Завантажити спільноту&quot;</value>
+    <value>Команда "Завантажити спільноту"</value>
   </data>
   <data name="CommandEditor" xml:space="preserve">
     <value>Редактор команд</value>
@@ -6860,7 +6860,7 @@ Fuzzy</comment>
 Якщо виконати одну з наведених нижче дій, це може вплинути на частоту користувачів і перегляд команди. Ви все ще бажаєте завантажити цю команду?</value>
   </data>
   <data name="CommunityCommandsImageFilePath" xml:space="preserve">
-    <value>Шлях до файлу зображення (необов&apos;язково) (змінено до 100x100 пікселів)</value>
+    <value>Шлях до файлу зображення (необов'язково) (змінено до 100x100 пікселів)</value>
   </data>
   <data name="CommunityCommandsUploadInvalidDescription" xml:space="preserve">
     <value>Потрібно вказати припустимий опис</value>
@@ -6869,7 +6869,7 @@ Fuzzy</comment>
     <value>Якщо використовується припустимий файл зображення, слід вибрати</value>
   </data>
   <data name="CommunityCommandsUploadInvalidName" xml:space="preserve">
-    <value>Потрібно вказати припустиме ім&apos;я</value>
+    <value>Потрібно вказати припустиме ім'я</value>
   </data>
   <data name="MissingTextHintWarning" xml:space="preserve">
     <value>Відсутній текст</value>
@@ -6902,7 +6902,7 @@ Fuzzy</comment>
     <value>Підключення до служби Pixel Chat дозволяє керувати різними елементами накладок pixel chat та запускати певні функції.</value>
   </data>
   <data name="PixelChatInfo2" xml:space="preserve">
-    <value>Щоб підключитися до PixelChat, вам потрібно буде створити маркер розробника. Це можна знайти, перейшовши в профіль, натисніть &quot;Переглянути токени&quot; і створіть новий маркер розробника.</value>
+    <value>Щоб підключитися до PixelChat, вам потрібно буде створити маркер розробника. Це можна знайти, перейшовши в профіль, натисніть "Переглянути токени" і створіть новий маркер розробника.</value>
   </data>
   <data name="PixelChatInvalidAPIKey" xml:space="preserve">
     <value>Будь ласка, введіть дійсний ключ API чату Pixel.</value>
@@ -6967,18 +6967,18 @@ Fuzzy</comment>
     <value>Команда гри</value>
   </data>
   <data name="StreamlootsCardCommand" xml:space="preserve">
-    <value>Команда &quot;Потоки карт&quot;</value>
+    <value>Команда "Потоки карт"</value>
   </data>
   <data name="TimerCommand" xml:space="preserve">
     <value>Команда таймера</value>
   </data>
   <data name="TwitchChannelPointsCommand" xml:space="preserve">
-    <value>Команда &quot;Точки каналу Twitch&quot;</value>
+    <value>Команда "Точки каналу Twitch"</value>
   </data>
   <data name="CommunityCommandsOtherCommandReferencedDetected" xml:space="preserve">
     <value>Наведена нижче команда містить дії, які посилаються на інші команди всередині неї (EX: Command A запускає команду B за допомогою командної дії). Коли ця команда завантажена, вона не включатиме ці інші команди, на які посилаються, лише поточну команду. Ми закликаємо творців зробити одну з таких дій:
 
-- Об&apos;єднайте інші команди, на які посилаються, в цю команду, щоб користувачам потрібно лише це, щоб повністю використовувати налаштування.
+- Об'єднайте інші команди, на які посилаються, в цю команду, щоб користувачам потрібно лише це, щоб повністю використовувати налаштування.
 
 - Завантажте інші команди, необхідні для роботи цієї команди, і посилаються на їх імена в описі для кожної команди.
 
@@ -7015,7 +7015,7 @@ Fuzzy</comment>
     <value>Знімок екрана</value>
   </data>
   <data name="CommunityCommandsScreenshotFilePath" xml:space="preserve">
-    <value>Знімок екрана: шлях до файлу (необов&apos;язково) (змінено до 1280x720 пікселів макс))</value>
+    <value>Знімок екрана: шлях до файлу (необов'язково) (змінено до 1280x720 пікселів макс))</value>
   </data>
   <data name="ShowHypeTrain" xml:space="preserve">
     <value>Показати хайп поїзд</value>
@@ -7091,13 +7091,13 @@ Fuzzy</comment>
     <value>Голосовийmod не підключено, переконайтеся, що програмне забезпечення запущено та підключено на сторінці Служби.</value>
   </data>
   <data name="VoicemodConnectionFailed" xml:space="preserve">
-    <value>Не вдалося з&apos;єднання з голосовим комою, переконайтеся, що голосовийmod запущено.</value>
+    <value>Не вдалося з'єднання з голосовим комою, переконайтеся, що голосовийmod запущено.</value>
   </data>
   <data name="Voicemod" xml:space="preserve">
     <value>Голосоваmod</value>
   </data>
   <data name="VoicemodInfo" xml:space="preserve">
-    <value>Голосове з&apos;єднання дає змогу керувати функціональними функціями в програмному забезпеченні Voicemod, наприклад, увімкненням або вимкненням зміни голосу та зміною голосу, який ви використовуєте. Для деяких функцій або функцій у Voicemod потрібна платна підписка. Для отримання додаткової інформації, будь ласка, відвідайте веб-сайт Voicemod:</value>
+    <value>Голосове з'єднання дає змогу керувати функціональними функціями в програмному забезпеченні Voicemod, наприклад, увімкненням або вимкненням зміни голосу та зміною голосу, який ви використовуєте. Для деяких функцій або функцій у Voicemod потрібна платна підписка. Для отримання додаткової інформації, будь ласка, відвідайте веб-сайт Voicemod:</value>
   </data>
   <data name="VoiceChangerOnOff" xml:space="preserve">
     <value>Вмикання/вимкнення зміни голосу</value>
@@ -7124,7 +7124,7 @@ Fuzzy</comment>
     <value>Вибір голосу</value>
   </data>
   <data name="VoicemodActionMissingSound" xml:space="preserve">
-    <value>Дія &quot;Голосовамод&quot;: Відсутній звук</value>
+    <value>Дія "Голосовамод": Відсутній звук</value>
   </data>
   <data name="VoicemodActionMissingVoice" xml:space="preserve">
     <value>Дія голосової програми: Відсутній голос</value>
@@ -7139,7 +7139,7 @@ Fuzzy</comment>
     <value>Розмір (+/- 100,0)</value>
   </data>
   <data name="VTubeStudioActionMoveModelInvalidTime" xml:space="preserve">
-    <value>VTube Studio Дія: не-від&apos;ємне число має бути вказано для руху часу</value>
+    <value>VTube Studio Дія: не-від'ємне число має бути вказано для руху часу</value>
   </data>
   <data name="VTubeStudioActionRotation" xml:space="preserve">
     <value>Обертання (+/- 360.0)</value>
@@ -7184,10 +7184,10 @@ Fuzzy</comment>
     <value>Webhook JSON карти пари</value>
   </data>
   <data name="AJSONParameterNameMustBeSpecified" xml:space="preserve">
-    <value>Потрібно вказати ім&apos;я параметра JSON.</value>
+    <value>Потрібно вказати ім'я параметра JSON.</value>
   </data>
   <data name="ASpecialIdentifierNameMustBeSpecified" xml:space="preserve">
-    <value>Потрібно вказати ім&apos;я спеціального ідентифікатора.</value>
+    <value>Потрібно вказати ім'я спеціального ідентифікатора.</value>
   </data>
   <data name="NoTitle" xml:space="preserve">
     <value>Немає назви</value>
@@ -7199,7 +7199,7 @@ Fuzzy</comment>
     <value>Посмикування ID</value>
   </data>
   <data name="TwitchUsername" xml:space="preserve">
-    <value>Ім&apos;я користувача Twitch</value>
+    <value>Ім'я користувача Twitch</value>
   </data>
   <data name="ViewingHours" xml:space="preserve">
     <value>Години перегляду</value>
@@ -7371,7 +7371,7 @@ Fuzzy</comment>
     <value>Заклинання трово</value>
   </data>
   <data name="TrovoSpellName" xml:space="preserve">
-    <value>Ім&apos;я заклинання</value>
+    <value>Ім'я заклинання</value>
   </data>
   <data name="TrovoSpells" xml:space="preserve">
     <value>Заклинання Трово</value>
@@ -7398,10 +7398,10 @@ Fuzzy</comment>
     <value>Trovo Дія: Необхідно вказати припустиму суму</value>
   </data>
   <data name="TrovoActionRoleNameMissing" xml:space="preserve">
-    <value>Trovo дія: потрібно вказати припустиме ім&apos;я ролі</value>
+    <value>Trovo дія: потрібно вказати припустиме ім'я ролі</value>
   </data>
   <data name="TrovoActionUsernameMissing" xml:space="preserve">
-    <value>Trovo Action: необхідно вказати припустиме ім&apos;я користувача</value>
+    <value>Trovo Action: необхідно вказати припустиме ім'я користувача</value>
   </data>
   <data name="ApplicationExit" xml:space="preserve">
     <value>Вихід із програми</value>
@@ -7434,19 +7434,19 @@ Fuzzy</comment>
     <value>Вихід із YouTube</value>
   </data>
   <data name="LinkAccountCommandAccountsLinkedSuccessfully" xml:space="preserve">
-    <value>Процес зв&apos;язування облікового запису виконано успішно.</value>
+    <value>Процес зв'язування облікового запису виконано успішно.</value>
   </data>
   <data name="LinkAccountCommandErrorUnsupportedPlatform" xml:space="preserve">
     <value>ПОМИЛКА: Указана платформа не підтримується: {0}</value>
   </data>
   <data name="LinkAccountCommandErrorUserNotFound" xml:space="preserve">
-    <value>ПОМИЛКА: Не вдалося знайти користувача з таким ім&apos;ям користувача: {0}</value>
+    <value>ПОМИЛКА: Не вдалося знайти користувача з таким ім'ям користувача: {0}</value>
   </data>
   <data name="LinkAccountCommandPleaseConfirmLink" xml:space="preserve">
-    <value>Розпочато процес зв&apos;язування облікового запису. Будь ласка, повторно запустіть команду на іншій платформі з інформацією поточного користувача: &quot;!linkaccount {0} {1}&quot;</value>
+    <value>Розпочато процес зв'язування облікового запису. Будь ласка, повторно запустіть команду на іншій платформі з інформацією поточного користувача: "!linkaccount {0} {1}"</value>
   </data>
   <data name="LinkAccountCommandUsage" xml:space="preserve">
-    <value>Використання: !linkaccount &lt;PLATFORM&gt; &lt;PLATFORM ІМ&apos;Я КОРИСТУВАЧА&gt;</value>
+    <value>Використання: !linkaccount &lt;PLATFORM&gt; &lt;PLATFORM ІМ'Я КОРИСТУВАЧА&gt;</value>
   </data>
   <data name="DisableEmoteOnly" xml:space="preserve">
     <value>Вимкнути лише Емот</value>
@@ -7476,7 +7476,7 @@ Fuzzy</comment>
     <value>Twitch дія: має бути вказано припустиму довжину часу</value>
   </data>
   <data name="TwitchActionUsernameMissing" xml:space="preserve">
-    <value>Twitch Дія: необхідно вказати дійсне ім&apos;я користувача</value>
+    <value>Twitch Дія: необхідно вказати дійсне ім'я користувача</value>
   </data>
   <data name="AlertResubscribed" xml:space="preserve">
     <value>{0} перепідписаний на {1} місяці</value>
@@ -7499,25 +7499,25 @@ Fuzzy</comment>
     <value>Glimesh ID</value>
   </data>
   <data name="GlimeshUsername" xml:space="preserve">
-    <value>Ім&apos;я користувача Glimesh</value>
+    <value>Ім'я користувача Glimesh</value>
   </data>
   <data name="TrovoID" xml:space="preserve">
     <value>Trovo ID</value>
   </data>
   <data name="TrovoUsername" xml:space="preserve">
-    <value>Ім&apos;я користувача Trovo</value>
+    <value>Ім'я користувача Trovo</value>
   </data>
   <data name="YouTubeID" xml:space="preserve">
     <value>Ідентифікатор YouTube</value>
   </data>
   <data name="YouTubeUsername" xml:space="preserve">
-    <value>Ім&apos;я користувача YouTube</value>
+    <value>Ім'я користувача YouTube</value>
   </data>
   <data name="PlatformID" xml:space="preserve">
     <value>Ідентифікатор платформи</value>
   </data>
   <data name="PlatformUsername" xml:space="preserve">
-    <value>Ім&apos;я користувача платформи</value>
+    <value>Ім'я користувача платформи</value>
   </data>
   <data name="UserImportResults" xml:space="preserve">
     <value>Успішний імпорт: {0}
@@ -7526,7 +7526,7 @@ Fuzzy</comment>
 
 Користувачі, які ще не відвідали ваш канал під час роботи Mix It Up, очікують на імпорт даних і будуть успішно імпортовані під час першого відвідування.
 
-Невдалий імпорт може бути пов&apos;язаний з недійсними даними або ненаданням їх інформації на платформі. Будь ласка, зв&apos;яжіться зі службою підтримки для отримання додаткової допомоги в цьому, якщо це необхідно.</value>
+Невдалий імпорт може бути пов'язаний з недійсними даними або ненаданням їх інформації на платформі. Будь ласка, зв'яжіться зі службою підтримки для отримання додаткової допомоги в цьому, якщо це необхідно.</value>
     <comment>{0} is the number of successes, {1} is the number of pending, {2} is the number of failures</comment>
   </data>
   <data name="TimersRunOnlyWhenLive" xml:space="preserve">
@@ -7845,7 +7845,7 @@ Fuzzy</comment>
     <value>Успішний імпорт: {0}
 Невдалий імпорт: {1}
 
-Імпортовані цінові пропозиції з ідентифікаторами, які відповідають наявним ціновим пропозиціям, буде змінено на наступне максимальне число. Не вдалося виконати імпорт через неприпустимі дані або форматування. Будь ласка, зв&apos;яжіться зі службою підтримки для отримання додаткової допомоги в цьому, якщо це необхідно.</value>
+Імпортовані цінові пропозиції з ідентифікаторами, які відповідають наявним ціновим пропозиціям, буде змінено на наступне максимальне число. Не вдалося виконати імпорт через неприпустимі дані або форматування. Будь ласка, зв'яжіться зі службою підтримки для отримання додаткової допомоги в цьому, якщо це необхідно.</value>
     <comment>{0} is the number of successes, {1} is the number of failures</comment>
   </data>
   <data name="HearMyselfOnOff" xml:space="preserve">
@@ -7944,10 +7944,10 @@ Fuzzy</comment>
     <value>Обдарований суб</value>
   </data>
   <data name="GlimeshChatConnectionCouldNotBeEstablished" xml:space="preserve">
-    <value>З&apos;єднання чату Glimesh не встановлено</value>
+    <value>З'єднання чату Glimesh не встановлено</value>
   </data>
   <data name="GlimeshFailedToConnect" xml:space="preserve">
-    <value>Не вдалося встановити зв&apos;язок з Глімешем</value>
+    <value>Не вдалося встановити зв'язок з Глімешем</value>
   </data>
   <data name="GlimeshFailedToConnectBotAccount" xml:space="preserve">
     <value>Не вдалося підключити обліковий запис бота Glimesh, будь ласка, вручну повторно підключити</value>
@@ -8014,11 +8014,11 @@ Fuzzy</comment>
     <value>Указаний елемент не існує</value>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
-    <value>Ви повинні вказати або &quot;купити&quot; або &quot;продати&quot;</value>
-    <comment>{0} is the English word &apos;buy&apos;, {1} is the English word &apos;sell&apos;</comment>
+    <value>Ви повинні вказати або "купити" або "продати"</value>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
-    <value>ВИКОРИСТАННЯ: {0} список = Перелічує всі товари, доступні для покупки / продажу ** {0} &lt;ITEM ІМ&apos;Я&gt; = Перелічує ціну покупки / продажу товару ** {0} купити &lt;ITEM NAME&gt; [AMOUNT] = Купує 1 або суму, вказану товару ** {0} продати &lt;ITEM ІМ&apos;Я&gt; [AMOUNT] = Продає 1 або суму, вказану товару</value>
+    <value>ВИКОРИСТАННЯ: {0} список = Перелічує всі товари, доступні для покупки / продажу ** {0} &lt;ITEM ІМ'Я&gt; = Перелічує ціну покупки / продажу товару ** {0} купити &lt;ITEM NAME&gt; [AMOUNT] = Купує 1 або суму, вказану товару ** {0} продати &lt;ITEM ІМ'Я&gt; [AMOUNT] = Продає 1 або суму, вказану товару</value>
     <comment>{0} is the shop command</comment>
   </data>
   <data name="InventoryTradeAlreadyUnderway" xml:space="preserve">
@@ -8077,7 +8077,7 @@ Fuzzy</comment>
     <value>Доступні ігри: </value>
   </data>
   <data name="PreMadeChatCommandMixItUp" xml:space="preserve">
-    <value>Цей канал використовує додаток Mix It Up для покращення свого потоку. Від&apos;їзд http://mixitupapp.com для отримання додаткової інформації!</value>
+    <value>Цей канал використовує додаток Mix It Up для покращення свого потоку. Від'їзд http://mixitupapp.com для отримання додаткової інформації!</value>
   </data>
   <data name="PreMadeChatCommandMixItUpCommands" xml:space="preserve">
     <value>Всі попередньо зроблені команди чату Mix It Up можна знайти тут: https://wiki.mixitupapp.com/commands/pre-made-chat-commands. Для команд, специфічних для цього потоку, попросіть свого стримера/модератора.</value>
@@ -8093,10 +8093,10 @@ Fuzzy</comment>
     <value>ВИКОРИСТАННЯ: !quote [НОМЕР ЦИТАТИ]</value>
   </data>
   <data name="PreMadeChatCommandSetGameUsage" xml:space="preserve">
-    <value>Використання: !setgame &lt;ІМ&apos;Я ГРИ&gt;</value>
+    <value>Використання: !setgame &lt;ІМ'Я ГРИ&gt;</value>
   </data>
   <data name="PreMadeChatCommandSetTitleUsage" xml:space="preserve">
-    <value>Використання: !settitle &lt;TITLE ІМ&apos;Я&gt;</value>
+    <value>Використання: !settitle &lt;TITLE ІМ'Я&gt;</value>
   </data>
   <data name="PreMadeChatCommandSetUserTitleUsage" xml:space="preserve">
     <value>Використання: !setusertitle &lt;USERNAME&gt; &lt;TITLE NAME&gt;</value>
@@ -8105,7 +8105,7 @@ Fuzzy</comment>
     <value>Використання: !startgiveaway &lt;Видивний елемент&gt;</value>
   </data>
   <data name="PreMadeChatCommandUpdateCommandUsage" xml:space="preserve">
-    <value>Використання: !updatecommand &lt;КОМАНД ТРИГЕР, НЕМАЄ !&gt; &lt;COOLDOWN&gt; [НЕОБОВ&apos;ЯЗКОВО ПОВНИЙ ТЕКСТ КОМАНДНОГО ПОВІДОМЛЕННЯ]</value>
+    <value>Використання: !updatecommand &lt;КОМАНД ТРИГЕР, НЕМАЄ !&gt; &lt;COOLDOWN&gt; [НЕОБОВ'ЯЗКОВО ПОВНИЙ ТЕКСТ КОМАНДНОГО ПОВІДОМЛЕННЯ]</value>
   </data>
   <data name="QuoteAddedHeader" xml:space="preserve">
     <value>Цитата додана: </value>
@@ -8167,10 +8167,10 @@ Fuzzy</comment>
     <value>Назва оновлена: </value>
   </data>
   <data name="TrovoChatConnectionCouldNotBeEstablished" xml:space="preserve">
-    <value>Зв&apos;язок чату Trovo не встановлено</value>
+    <value>Зв'язок чату Trovo не встановлено</value>
   </data>
   <data name="TrovoFailedToConnect" xml:space="preserve">
-    <value>Не вдалося встановити зв&apos;язок з Trovo</value>
+    <value>Не вдалося встановити зв'язок з Trovo</value>
   </data>
   <data name="TrovoFailedToConnectHeader" xml:space="preserve">
     <value>Не вдалося підключитися до служб Trovo:</value>
@@ -8250,13 +8250,13 @@ Fuzzy</comment>
     <value>Команда піддавки</value>
   </data>
   <data name="GiveawayCommandMustBeSpecified" xml:space="preserve">
-    <value>Потрібно вказати команду &quot;Піддавка&quot;</value>
+    <value>Потрібно вказати команду "Піддавка"</value>
   </data>
   <data name="GiveawayCommandOnlyLettersAndNumbers" xml:space="preserve">
     <value>Команда піддавки може містити лише букви та цифри</value>
   </data>
   <data name="GiveawayItemNotSpecified" xml:space="preserve">
-    <value>Необхідно вказати ім&apos;я елемента піддавки</value>
+    <value>Необхідно вказати ім'я елемента піддавки</value>
   </data>
   <data name="GiveawayLengthMustBeGreaterThanZero" xml:space="preserve">
     <value>Довжина піддавки повинна бути більше 0</value>
@@ -8271,7 +8271,7 @@ Fuzzy</comment>
     <value>Нагадування про піддавки має бути 0 або більше</value>
   </data>
   <data name="GiveawayWonTypeClaim" xml:space="preserve">
-    <value>@{0} ви виграли піддавки; введіть &quot;!претензія&quot; в чаті!</value>
+    <value>@{0} ви виграли піддавки; введіть "!претензія" в чаті!</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="GiveawayYouHaveAlreadyWon" xml:space="preserve">
@@ -8289,7 +8289,7 @@ Fuzzy</comment>
     <value>Глімеш Чат</value>
   </data>
   <data name="GlimeshConnection" xml:space="preserve">
-    <value>Glimesh з&apos;єднання</value>
+    <value>Glimesh з'єднання</value>
   </data>
   <data name="GlimeshUserChat" xml:space="preserve">
     <value>Glimesh чат користувача</value>
@@ -8370,7 +8370,7 @@ Fuzzy</comment>
     <value>Вибраний файл резервної копії не містить параметрів Mix It Up.</value>
   </data>
   <data name="SettingsBackupTooNew" xml:space="preserve">
-    <value>Файл резервної копії дійсний, але подається з новішої версії Mix It Up. Обов&apos;язково оновіть до останньої версії.
+    <value>Файл резервної копії дійсний, але подається з новішої версії Mix It Up. Обов'язково оновіть до останньої версії.
 
 Примітка: Це може вимагати, щоб ви вмикали на попередній перегляд побудувати з вкладки Загальні в налаштуваннях, якщо це було зроблено в попередній перегляд побудувати.</value>
   </data>
@@ -8417,13 +8417,13 @@ Fuzzy</comment>
     <value>Twitch чат</value>
   </data>
   <data name="TwitchConnection" xml:space="preserve">
-    <value>Twitch з&apos;єднання</value>
+    <value>Twitch з'єднання</value>
   </data>
   <data name="TwitchEvents" xml:space="preserve">
     <value>Twitch події</value>
   </data>
   <data name="TwitchFailedToConnect" xml:space="preserve">
-    <value>Не вдалося встановити з&apos;єднання з Twitch</value>
+    <value>Не вдалося встановити з'єднання з Twitch</value>
   </data>
   <data name="TwitchFailedToConnectBotAccount" xml:space="preserve">
     <value>Не вдалося підключити обліковий запис бота Twitch, будь ласка, вручну повторно підключити</value>
@@ -8447,7 +8447,7 @@ Fuzzy</comment>
     <value>Підключення чату YouTube не встановлено</value>
   </data>
   <data name="YouTubeFailedToConnect" xml:space="preserve">
-    <value>Не вдалося встановити з&apos;єднання з YouTube</value>
+    <value>Не вдалося встановити з'єднання з YouTube</value>
   </data>
   <data name="YouTubeFailedToConnectBotAccount" xml:space="preserve">
     <value>Не вдалося підключити обліковий запис бота YouTube, будь ласка, вручну повторно підключіться</value>
@@ -8481,7 +8481,7 @@ Fuzzy</comment>
 
 {0}
 
-Ми спробуємо відновити зв&apos;язок з сервісом, коли це можливо. Якщо це не так, перейдіть на сторінку Служби, щоб повторно підключити їх вручну.</value>
+Ми спробуємо відновити зв'язок з сервісом, коли це можливо. Якщо це не так, перейдіть на сторінку Служби, щоб повторно підключити їх вручну.</value>
     <comment>{0} is the list of failed services</comment>
   </data>
   <data name="ConsumablesCurrencyCommandDefault" xml:space="preserve">
@@ -8624,7 +8624,7 @@ Fuzzy</comment>
     <value>У цьому прикладі наша команда shout out надсилає повідомлення в чат, відтворює звук, чекає 10 секунд, а потім показує зображення. Кожен з них відповідає іншому типу дій (Чат, Звук, Очікування та Накладання).</value>
   </data>
   <data name="WizardFinal1" xml:space="preserve">
-    <value>Mix It Up - це програма лише для настільних комп&apos;ютерів, тому ваші настройки та дані існують лише на вашому комп&apos;ютері. Тому ми запрошуємо користувачів налаштувати автоматичне резервне копіювання для ваших налаштувань, щоб переконатися, що вам завжди є до чого повертатися у разі виникнення будь-яких проблем:</value>
+    <value>Mix It Up - це програма лише для настільних комп'ютерів, тому ваші настройки та дані існують лише на вашому комп'ютері. Тому ми запрошуємо користувачів налаштувати автоматичне резервне копіювання для ваших налаштувань, щоб переконатися, що вам завжди є до чого повертатися у разі виникнення будь-яких проблем:</value>
   </data>
   <data name="WizardFinal2" xml:space="preserve">
     <value>Не знаєте, як працює функція, або хочете отримати більше інформації? Просто натисніть на значок довідки на верхній панелі головного вікна, щоб дізнатися більше!</value>
@@ -8666,7 +8666,7 @@ Fuzzy</comment>
     <value>Поточна версія</value>
   </data>
   <data name="IfUpdateDoesNotCompleteRestartComputer" xml:space="preserve">
-    <value>Якщо оновлення не завершено успішно, і вам буде запропоновано оновити знову, перезавантажте комп&apos;ютер і повторіть спробу.</value>
+    <value>Якщо оновлення не завершено успішно, і вам буде запропоновано оновити знову, перезавантажте комп'ютер і повторіть спробу.</value>
   </data>
   <data name="MixItUpUpdateAvailable" xml:space="preserve">
     <value>Змішати його - Доступне оновлення</value>
@@ -8699,7 +8699,7 @@ Fuzzy</comment>
     <value>Add User</value>
   </data>
   <data name="UsersUnableToFindUser" xml:space="preserve">
-    <value>Unable find the user &quot;{0}&quot;</value>
+    <value>Unable find the user "{0}"</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UsersSuccessfullyFoundUser" xml:space="preserve">
@@ -8717,7 +8717,7 @@ Fuzzy</comment>
 whispers to be used as a form of automated communication. There are severe restrictions placed on the
 amount of whispers that can be sent in a timeline that make it very impractical for use, as well as spam
 preventative measures if the user is not on your friends list on Twitch. So although you can send whispers
-via Twitch, it&apos;s a &quot;your mileage may vary&quot; situation.</value>
+via Twitch, it's a "your mileage may vary" situation.</value>
   </data>
   <data name="AlertName" xml:space="preserve">
     <value>Alert Name</value>
@@ -9083,170 +9083,11 @@ via Twitch, it&apos;s a &quot;your mileage may vary&quot; situation.</value>
   <data name="EnableSubscriberMode" xml:space="preserve">
     <value>Enable Subscriber Mode</value>
   </data>
-  <data name="OverlayTimerDefaultJavascript" xml:space="preserve">
-    <value>var additionalTime = 0;
-
-function timerLoop(totalSeconds, endingSeconds, displayFormat)
-{
-    totalSeconds += additionalTime;
-    additionalTime = 0;
-
-    var text = displayFormat;
-
-    var seconds = totalSeconds % 60;
-    if (seconds &lt; 10) { seconds = &quot;0&quot; + seconds }
-    text = text.replace(&quot;SS&quot;, totalSeconds);
-    text = text.replace(&quot;ss&quot;, seconds);
-
-    var totalMinutes = Math.floor(totalSeconds / 60);
-    var minutes = totalMinutes % 60;
-    if (minutes &lt; 10) { minutes = &quot;0&quot; + minutes }
-    text = text.replace(&quot;MM&quot;, totalMinutes);
-    text = text.replace(&quot;mm&quot;, minutes);
-
-    var totalHours = Math.floor(totalMinutes / 60);
-    var hours = totalHours % 24;
-    if (hours &lt; 10) { hours = &quot;0&quot; + hours }
-    text = text.replace(&quot;HH&quot;, totalHours);
-    text = text.replace(&quot;hh&quot;, hours);
-
-    var days = Math.floor(totalHours / 24);
-    text = text.replace(&quot;DD&quot;, hours);
-
-    document.getElementById(&quot;text&quot;).innerHTML = text;
-
-    setTimeout(function () {
-        if (endingSeconds &gt; 0) {
-            totalSeconds++;
-            if (totalSeconds &lt; endingSeconds) {
-                timerLoop(totalSeconds, endingSeconds, displayFormat);
-            }        
-        }
-        else {
-            totalSeconds--;
-            if (totalSeconds &gt;= 0) {
-                timerLoop(totalSeconds, endingSeconds, displayFormat);
-            }
-        }
-    }, 1000);
-}
-
-function adjustTime(time)
-{
-    additionalTime += time;
-}
-
-if ({CountUp}) {
-    timerLoop(0, {Duration}, &quot;{DisplayFormat}&quot;);  
-}
-else {
-    timerLoop({Duration}, 0, &quot;{DisplayFormat}&quot;);
-}</value>
-  </data>
-  <data name="OverlayImageDefaultCSS" xml:space="preserve">
-    <value>.image {
-    width: {Width};
-    height: {Height};
-}</value>
-  </data>
-  <data name="OverlayImageDefaultHTML" xml:space="preserve">
-    <value>&lt;img id=&quot;image&quot; class=&quot;image&quot; src=&quot;{FilePath}&quot; /&gt;</value>
-  </data>
-  <data name="OverlayTextDefaultCSS" xml:space="preserve">
-    <value>.text {
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: {FontWeight};
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-align: {TextAlignment};
-    text-shadow: {Shadow};
-}</value>
-  </data>
-  <data name="OverlayTextDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;text&quot; class=&quot;text&quot;&gt;
-    {Text}
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayVideoDefaultCSS" xml:space="preserve">
-    <value>.video-{ID} {
-    width: {Width};
-    height: {Height};
-}</value>
-  </data>
-  <data name="OverlayVideoDefaultHTML" xml:space="preserve">
-    <value>&lt;video id=&quot;video&quot; class=&quot;video&quot; onloadstart=&quot;this.volume={Volume}&quot; allow=&quot;autoplay; encrypted-media&quot; autoplay {Loop}&gt;
-    &lt;source src=&quot;{FilePath}&quot; type=&quot;video/{VideoExtension}&quot; /&gt;
-&lt;/video&gt;</value>
-  </data>
   <data name="OverlayWebPageDefaultHTML" xml:space="preserve">
-    <value>&lt;iframe frameborder=&quot;0&quot; width=&quot;{WIDTH}&quot; height=&quot;{HEIGHT}&quot; src=&quot;{URL}&quot; /&gt;</value>
-  </data>
-  <data name="OverlayYouTubeDefaultHTML" xml:space="preserve">
-    <value>&lt;div id=&quot;youtube-{ID}&quot; /&gt;
-
-&lt;script&gt;
-    var youtubeVideoPlayer = new YT.Player(&quot;youtube-{ID}&quot;, {
-        height: {HeightNumber},
-        width: {WidthNumber},
-        videoId: &apos;{VideoID}&apos;,
-        playerVars: { &apos;controls&apos;: 0, &apos;modestbranding&apos;: 1, &apos;start&apos;: {StartTime} },
-        events: {
-            &apos;onReady&apos;: function () {
-                youtubeVideoPlayer.setVolume({Volume});
-                youtubeVideoPlayer.setLoop(false);
-                youtubeVideoPlayer.frameBorder = 0;
-                youtubeVideoPlayer.playVideo();
-            },
-            &apos;onStateChange&apos;: function (event) {
-                if (event.data == YT.PlayerState.ENDED) {
-                    event.target.destroy();
-                }
-            }
-        }
-    });
-&lt;/script&gt;</value>
+    <value>&lt;iframe frameborder="0" width="{WIDTH}" height="{HEIGHT}" src="{URL}" /&gt;</value>
   </data>
   <data name="DisplayFormat" xml:space="preserve">
     <value>Display Format</value>
-  </data>
-  <data name="OverlayTimerDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;text&quot; class=&quot;text&quot;&gt;
-    {Text}
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayPositionedItemDefaultCSS" xml:space="preserve">
-    <value>.maindiv {
-    position: absolute;
-    width: 100%;
-    max-width: 100%;
-    min-width: 100%;
-    height: 100%;
-    max-height: 100%;
-    min-height: 100%;
-    margin: 0px;
-    z-index: {Layer};
-}
-
-.contentdiv {
-    position: absolute;
-    margin: 0px;
-    left: {XPosition}{PositionType};
-    top: {YPosition}{PositionType};
-    transform: translate({XTranslation}%, {YTranslation}%);
-    width: {Width};
-    height: {Height};
-}</value>
-  </data>
-  <data name="OverlayPositionedItemDefaultHTML" xml:space="preserve">
-    <value>&lt;div id=&quot;maindiv&quot; class=&quot;maindiv&quot;&gt;
-&lt;div id=&quot;contentdiv&quot; class=&quot;contentdiv&quot;&gt;
-
-{InnerHTML}
-
-&lt;/div&gt;
-&lt;/div&gt;</value>
   </data>
   <data name="OverlayActionValidationErrorHeader" xml:space="preserve">
     <value>Overlay Action: </value>
@@ -9307,9 +9148,9 @@ namespace CustomNamespace
         public object Run()
         {
             // Your code goes here
-            System.Console.WriteLine(&quot;Hello World!&quot;);
+            System.Console.WriteLine("Hello World!");
 
-            // Return any data here that you&apos;d like to use
+            // Return any data here that you'd like to use
             return 0;
         }
     }
@@ -9319,57 +9160,22 @@ namespace CustomNamespace
     <value>function run()
 {
     // Your code goes here
-    var text = &apos;Hello World!&apos;;
+    var text = 'Hello World!';
 
-    // Return any data here that you&apos;d like to use
+    // Return any data here that you'd like to use
     return 0;
 }</value>
   </data>
   <data name="ScriptActionPythonDefaultScriptTemplate" xml:space="preserve">
     <value>def run():
     # Your code goes here
-    print &apos;Hello World!&apos;
+    print 'Hello World!'
 
-    # Return any data here that you&apos;d like to use
+    # Return any data here that you'd like to use
     return 0</value>
   </data>
   <data name="CommunityCommandsScriptActionsNotSupported" xml:space="preserve">
     <value>Commands containing Script actions are not supported for uploading to the Community Commands feature. Due to the complexity of scripts and the ability for them to have malicious intent for users, we do not support uploading them through Community Commands to ensure users are protected. You can optionally instead export your command to a file and share it out with users through other means.</value>
-  </data>
-  <data name="OverlayLabelAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;label-amount&quot; class=&quot;text&quot;&gt;
-        {Amount}
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelUsernameAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p class=&quot;text-{ID}&quot;&gt;
-    &lt;span id=&quot;label-username-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
-        {Username}
-    &lt;/span&gt;
-    -
-    &lt;span id=&quot;label-amount-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
-        {Amount}
-    &lt;/span&gt;
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelUsernameDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;label-username-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
-    {Username}
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelDefaultJavascript" xml:space="preserve">
-    <value>function update(name, amount)
-{
-    var nameElement = document.getElementById(&quot;label-name&quot;);
-    if (nameElement != null) {
-        nameElement.innerHTML = name;
-    }
-    
-    var amountElement = document.getElementById(&quot;label-amount&quot;);
-    if (amountElement != null) {
-        amountElement.innerHTML = amount; 
-    }
-}</value>
   </data>
   <data name="OnUpdate" xml:space="preserve">
     <value>On Update</value>
@@ -9386,177 +9192,11 @@ namespace CustomNamespace
   <data name="Donation" xml:space="preserve">
     <value>Donation</value>
   </data>
-  <data name="OverlayEventListDefaultCSS" xml:space="preserve">
-    <value>.list {
-    width: {ItemWidth};
-    {FullHeight}
-}
-
-.item {
-    position: relative;
-    border-style: solid;
-    border-width: 5px;
-    border-color: {BorderColor};
-    background-color: {BackgroundColor};
-    width: {ItemWidth};
-    {IndividualHeight}
-}
-
-.message {
-    padding: 10px;
-    margin: auto;
-}
-
-.messagebadge {
-    vertical-align: middle;
-    padding-right: 2px;
-    width: auto;
-    height: {FontSize}px;
-}
-
-.messageavatar {
-    vertical-align: middle;
-    padding-right: 2px;
-    width: auto;
-    height: {FontSize}px;
-}
-
-.messageusername {
-    vertical-align: middle;
-    word-wrap: break-word;
-    font-size: {FontSize}px;
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: bold;
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-shadow: {Shadow};
-}
-
-.messagetext {
-    vertical-align: middle;
-    margin-left: 10px;
-    word-wrap: break-word;
-    font-weight: bold;
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: {FontWeight};
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-shadow: {Shadow};
-}
-
-.messageemote {
-   vertical-align: middle;
-   margin-left: 10px;
-   width: auto;
-   height: {FontSize}px;
-}</value>
-  </data>
-  <data name="OverlayEventListDefaultHTML" xml:space="preserve">
-    <value>&lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;
-
-&lt;/div&gt;
-
-&lt;template id=&quot;item&quot;&gt;
-    &lt;div class=&quot;item&quot;&gt;
-        &lt;p class=&quot;eventtype&quot;&gt;{EventType}&lt;/p&gt;
-        &lt;p class=&quot;details&quot;&gt;{Details}&lt;/p&gt;
-        &lt;p class=&quot;subdetails&quot;&gt;{SubDetails}&lt;/p&gt;
-    &lt;/div&gt;
-&lt;/template&gt;</value>
-  </data>
-  <data name="OverlayEventListDefaultJavascript" xml:space="preserve">
-    <value>function add(eventType, details, subdetails)
-{
-    var list = document.getElementById(&quot;list&quot;);
-
-    if (list.childElementCount &gt; {MaxToShow}) {
-        removeOldest();
-    }
-
-    var itemTemplate = document.querySelector(&quot;#item&quot;);
-    const item = itemTemplate.content.cloneNode(true);
-    
-    var eventTypeElement = item.querySelector(&quot;.eventtype&quot;);
-    eventTypeElement.innerHTML = eventType;
-
-    var detailsElement = item.querySelector(&quot;.details&quot;);
-    detailsElement.innerHTML = details;
-    
-    var subdetailsElement = item.querySelector(&quot;.subdetails&quot;);
-    subdetailsElement.innerHTML = subdetails;
-
-    list.appendChild(item);
-}
-
-function removeOldest()
-{
-    var list = document.getElementById(&quot;list&quot;);
-    list.removeChild(list.firstElementChild);
-}</value>
-  </data>
   <data name="TwitchChannelHypeTrainLevelUp" xml:space="preserve">
     <value>Twitch Channel Hype Train Level Up</value>
   </data>
   <data name="AlertTwitchCharityDonation" xml:space="preserve">
     <value>{0} Donated {1} To The Twitch Charity</value>
-  </data>
-  <data name="OverlayGoalDefaultCSS" xml:space="preserve">
-    <value>.background
-{
-    position: absolute;
-    background-color: {BackgroundColor};
-    width: {Width}px;
-    height: {Height}px;
-}
-
-.progress
-{
-    position: absolute;
-    background-color: {ProgressColor};
-    height: {Height}px;
-}
-
-.text {
-    position: absolute;
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: {FontWeight};
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-align: {TextAlignment};
-    text-shadow: {Shadow};
-    left: 50%;
-    top: 50%;
-    margin: auto;
-    transform: translate(-50%, -50%);
-}</value>
-  </data>
-  <data name="OverlayGoalDefaultHTML" xml:space="preserve">
-    <value>&lt;div class=&quot;background&quot;&gt;
-  &lt;div id=&quot;progress&quot; class=&quot;progress&quot; /&gt;
-&lt;/div&gt;
-&lt;p id=&quot;text&quot; class=&quot;text&quot; /&gt;</value>
-  </data>
-  <data name="OverlayGoalDefaultJavascript" xml:space="preserve">
-    <value>function update(amount, goal, width)
-{
-    var percentage = (amount / goal)
-
-    var textElement = document.getElementById(&quot;text&quot;);
-    if (textElement != null) {
-        textElement.innerHTML = amount + &quot; (&quot; + Math.round(percentage * 100) + &quot;%)&quot;; 
-    }
-    
-    var progressElement = document.getElementById(&quot;progress&quot;);
-    if (progressElement != null) {
-        progressElement.style.width = Math.min(Math.round(percentage * width), width) + &quot;px&quot;;
-    }
-}
-
-update({CurrentAmount}, {GoalAmount}, {Width});</value>
   </data>
   <data name="TwitchChannelCharityDonation" xml:space="preserve">
     <value>Twitch Channel Charity Donation</value>
@@ -9583,7 +9223,7 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
     <value>This LoupeDeck plug-in allows you to run Mix It Up commands directly from your LoupeDeck device, as well as other status information about your stream.</value>
   </data>
   <data name="LoupeDeckInfo2" xml:space="preserve">
-    <value>To get started, ensure the LoupeDeck software is updated to the latest version &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the Marketplace icon at the top right of your LoupeDeck software, then search for &quot;Mix It Up&quot;.</value>
+    <value>To get started, ensure the LoupeDeck software is updated to the latest version &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the Marketplace icon at the top right of your LoupeDeck software, then search for "Mix It Up".</value>
   </data>
   <data name="ShellExecute" xml:space="preserve">
     <value>Shell Execute</value>
@@ -9612,22 +9252,6 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
   <data name="CooldownRequirementOnCooldownSeconds" xml:space="preserve">
     <value>This command is currently on cooldown, please wait another {0} second(s).</value>
     <comment>Manual</comment>
-  </data>
-  <data name="OverlayLabelNameAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p class=&quot;text&quot;&gt;
-    &lt;span id=&quot;label-name&quot; class=&quot;text&quot;&gt;
-        {Username}
-    &lt;/span&gt;
-    -
-    &lt;span id=&quot;label-amount&quot; class=&quot;text&quot;&gt;
-        {Amount}
-    &lt;/span&gt;
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelNameDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;label-name&quot; class=&quot;text&quot;&gt;
-    {Username}
-&lt;/p&gt;</value>
   </data>
   <data name="Added" xml:space="preserve">
     <value>Added</value>
@@ -9686,252 +9310,7 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
   <data name="OverlayWidthMustBeValidValue" xml:space="preserve">
     <value>Width must be a valid value</value>
   </data>
-  <data name="OverlayChatDefaultHTML" xml:space="preserve">
-    <value>&lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;
-
-&lt;/div&gt;
-
-&lt;template id=&quot;item&quot;&gt;
-    &lt;div class=&quot;item&quot;&gt;
-        &lt;p class=&quot;message&quot;&gt;&lt;/p&gt;
-    &lt;/div&gt;
-&lt;/template&gt;
-
-&lt;template id=&quot;messagebadge&quot;&gt;
-    &lt;img class=&quot;messagebadge&quot; /&gt;
-&lt;/template&gt;
-
-&lt;template id=&quot;messageavatar&quot;&gt;
-    &lt;img class=&quot;messageavatar&quot; /&gt;
-&lt;/template&gt;
-
-&lt;template id=&quot;messageusername&quot;&gt;
-    &lt;span class=&quot;messageusername&quot;&gt;&lt;/span&gt;
-&lt;/template&gt;
-
-&lt;template id=&quot;messagetext&quot;&gt;
-    &lt;span class=&quot;messagetext&quot;&gt;&lt;/span&gt;
-&lt;/template&gt;
-
-&lt;template id=&quot;messageemote&quot;&gt;
-    &lt;img class=&quot;messageemote&quot; /&gt;
-&lt;/template&gt;</value>
-  </data>
-  <data name="OverlayChatDefaultCSS" xml:space="preserve">
-    <value>.list {
-    width: {ItemWidth};
-    {FullHeight}
-}
-
-.item {
-    position: relative;
-    border-style: solid;
-    border-width: 5px;
-    border-color: {BorderColor};
-    background-color: {BackgroundColor};
-    width: {ItemWidth};
-    {IndividualHeight}
-}
-
-.message {
-    padding: 10px;
-    margin: auto;
-}
-
-.messagebadge {
-    vertical-align: middle;
-    padding-right: 2px;
-    width: auto;
-    height: {FontSize}px;
-}
-
-.messageavatar {
-    vertical-align: middle;
-    padding-right: 2px;
-    width: auto;
-    height: {FontSize}px;
-}
-
-.messageusername {
-    vertical-align: middle;
-    word-wrap: break-word;
-    font-size: {FontSize}px;
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: bold;
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-shadow: {Shadow};
-}
-
-.messagetext {
-    vertical-align: middle;
-    margin-left: 10px;
-    word-wrap: break-word;
-    font-weight: bold;
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: {FontWeight};
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-shadow: {Shadow};
-}
-
-.messageemote {
-   vertical-align: middle;
-   margin-left: 10px;
-   width: auto;
-   height: {TEXT_SIZE}px;
-}</value>
-  </data>
-  <data name="OverlayChatDefaultJavascript" xml:space="preserve">
-    <value>function add(user, messageParts)
-{
-    var list = document.getElementById(&quot;list&quot;);
-
-    if ({ShowMaxMessagesOnly})
-    {
-        if (list.childElementCount &gt; {MaxToShow})
-        {
-            removeOldest();
-        }
-    }
-
-    var itemTemplate = document.querySelector(&quot;#item&quot;);
-    var messageBadgeTemplate = document.querySelector(&quot;#messagebadge&quot;);
-    var messageAvatarTemplate = document.querySelector(&quot;#messageavatar&quot;);
-    var messageUsernameTemplate = document.querySelector(&quot;#messageusername&quot;);
-    var messageTextTemplate = document.querySelector(&quot;#messagetext&quot;);
-    var messageEmoteTemplate = document.querySelector(&quot;#messageemote&quot;);
-    
-    const item = itemTemplate.content.cloneNode(true);
-    var messageElement = item.querySelector(&quot;.message&quot;);
-    
-    const messageRoleBadge = messageBadgeTemplate.content.cloneNode(true);
-    messageRoleBadge.src = user.PlatformRoleBadgeLink;
-    messageElement.appendChild(messageRoleBadge);
-    
-    const messageSubBadge = messageBadgeTemplate.content.cloneNode(true);
-    messageSubBadge.src = user.PlatformSubscriberBadgeLink;
-    messageElement.appendChild(messageSubBadge);
-    
-    const messageAvatar = messageAvatarTemplate.content.cloneNode(true);
-    messageAvatar.src = user.AvatarLink;
-    messageElement.appendChild(messageAvatar);
-    
-    const messageUsername = messageUsernameTemplate.content.cloneNode(true);
-    messageUsername.style.color = user.Color;
-    messageUsername.innerHTML = user.DisplayName;
-    messageElement.appendChild(messageUsername);
-    
-    messageParts.forEach(messagePart =&gt;
-    {
-        if (messagePart.Type === &apos;text&apos;)
-        {
-            const messageText = messageTextTemplate.content.cloneNode(true);
-            messageUsername.innerHTML = messagePart.Text;
-            messageElement.appendChild(messageText);
-        }
-        else if (messagePart.Type === &apos;image&apos;)
-        {
-            const messageEmote = messageEmoteTemplate.content.cloneNode(true);
-            messageEmote.src = messagePart.URL;
-            messageElement.appendChild(messageEmote);      
-        }
-    });
-
-    list.appendChild(item);
-}
-
-function removeOldest()
-{
-    var list = document.getElementById(&quot;list&quot;);
-    list.removeChild(list.firstElementChild);
-}</value>
-  </data>
-  <data name="OverlayBasicIFrameTemplate" xml:space="preserve">
-    <value>&lt;!DOCTYPE html&gt;
-
-&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
-&lt;head&gt;
-    &lt;meta charset=&quot;utf-8&quot; /&gt;
-    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
-
-    &lt;script src=&quot;jquery-3.6.0.min.js&quot;&gt;&lt;/script&gt;
-
-    &lt;script src=&quot;video.min.js&quot;&gt;&lt;/script&gt;
-
-    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;animate.min.css&quot;&gt;
-
-    &lt;style type=&quot;text/css&quot;&gt;
-        {CSS}
-    &lt;/style&gt;
-&lt;/head&gt;
-&lt;body style=&quot;background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;&quot;&gt;
-
-    {HTML}
-
-    &lt;script&gt;
-        var maindiv = document.getElementById(&quot;maindiv&quot;);
-        
-        function sendParentMessage(obj) {
-            window.top.postMessage(JSON.stringify(obj), &apos;*&apos;);
-        }
-
-        window.onmessage = function (message) {
-            if (message != null) {
-                var obj = JSON.parse(message);
-            }
-        };
-        
-        const animateCSS = (element, animation, prefix = &apos;animate__&apos;) =&gt;
-            // We create a Promise and return it
-            new Promise((resolve, reject) =&gt; {
-                if (animation != null &amp;&amp; animation) {
-                    const animationName = `${prefix}${animation}`;
-
-                    element.classList.add(`${prefix}animated`, animationName);
-
-                    // When the animation ends, we clean the classes and resolve the Promise
-                    function handleAnimationEnd(event) {
-                        event.stopPropagation();
-                        element.classList.remove(`${prefix}animated`, animationName);
-                        resolve(&apos;Animation ended&apos;);
-                    }
-
-                    element.addEventListener(&apos;animationend&apos;, handleAnimationEnd, { once: true });
-                }
-                else {
-                    resolve(&apos;Animation ended&apos;);
-                }
-            });
-        
-        {Animations}
-        
-        {Javascript}
-    &lt;/script&gt;
-&lt;/body&gt;
-&lt;/html&gt;</value>
-    <comment>{HTML} is the HTML replacement, {CSS} is the CSS replacement, {Animations} is the Javascript animation calls, {Javascript} is the Javascript replacement</comment>
-  </data>
-  <data name="OverlayAnimateCSSJavascript" xml:space="preserve">
-    <value>animateCSS(maindiv, &apos;{AnimateCSSAnimationName}&apos;);</value>
-  </data>
   <data name="DeStream" xml:space="preserve">
     <value>DeStream</value>
-  </data>
-  <data name="OverlayAnimationTimedWrapperJavascript" xml:space="preserve">
-    <value>setTimeout(function () {
-    {Animation}
-}, {MillisecondTiming});</value>
-  </data>
-  <data name="OverlayAnimateCSSThenJavascript" xml:space="preserve">
-    <value>animateCSS(maindiv, &apos;{AnimateCSSAnimationName}&apos;).then((message) =&gt; {
-    {PostAnimation}
-});</value>
-  </data>
-  <data name="OverlayIFrameSendParentMessageRemove" xml:space="preserve">
-    <value>maindiv.style.visibility=&apos;hidden&apos;
-sendParentMessage({ Type: &quot;Remove&quot;, ID: &quot;{ID}&quot; });</value>
   </data>
 </root>

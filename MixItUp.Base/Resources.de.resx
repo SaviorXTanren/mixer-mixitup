@@ -311,7 +311,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
-    <value>Automatisches Einschließen von &quot;!&quot;</value>
+    <value>Automatisches Einschließen von "!"</value>
     <comment>Manual</comment>
   </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
@@ -453,7 +453,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ChatTriggersNoExclamationHintAssist" xml:space="preserve">
-    <value>Chat-Auslöser (Kein &quot;!&quot; erforderlich, Leerzeichen getrennt, Semikolon für mehrere Wörter)</value>
+    <value>Chat-Auslöser (Kein "!" erforderlich, Leerzeichen getrennt, Semikolon für mehrere Wörter)</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatWhisperSound" xml:space="preserve">
@@ -509,7 +509,7 @@
     <comment>Manual</comment>
   </data>
   <data name="CommandNoBang" xml:space="preserve">
-    <value>Befehl (kein &apos;!&apos; benötigt)</value>
+    <value>Befehl (kein '!' benötigt)</value>
     <comment>Manual</comment>
   </data>
   <data name="Commands" xml:space="preserve">
@@ -1160,7 +1160,7 @@
     <comment>Manual</comment>
   </data>
   <data name="JSONValueName" xml:space="preserve">
-    <value>JSON-Wertname (Verwenden Sie &apos;\&apos; für verschachtelte Parameter)</value>
+    <value>JSON-Wertname (Verwenden Sie '\' für verschachtelte Parameter)</value>
     <comment>Manual</comment>
   </data>
   <data name="Keyboard" xml:space="preserve">
@@ -1734,7 +1734,7 @@
     <comment>Manual</comment>
   </data>
   <data name="RegularStatusOnlineViewingTime" xml:space="preserve">
-    <value>&quot;Regular&quot; Status Online Anzeigezeit</value>
+    <value>"Regular" Status Online Anzeigezeit</value>
     <comment>Manual</comment>
   </data>
   <data name="Release" xml:space="preserve">
@@ -1765,7 +1765,7 @@
     <value>Bericht</value>
   </data>
   <data name="RequireClaim" xml:space="preserve">
-    <value>Benötige &quot;!claim&quot;</value>
+    <value>Benötige "!claim"</value>
     <comment>Manual</comment>
   </data>
   <data name="RequiredHours" xml:space="preserve">
@@ -2765,7 +2765,7 @@ Fuzzy</comment>
     <value>Datumsbereich</value>
   </data>
   <data name="DefaultLevelUpCommand" xml:space="preserve">
-    <value>Standardbefehl &quot;Level Up&quot;</value>
+    <value>Standardbefehl "Level Up"</value>
     <comment>Manual</comment>
   </data>
   <data name="Details" xml:space="preserve">
@@ -3161,7 +3161,7 @@ Fuzzy</comment>
     <value>Nicht abonniert</value>
   </data>
   <data name="AutoLogInCurrentAccountTooltip" xml:space="preserve">
-    <value>Mit der Einstellung &quot;Automatische Anmeldung&quot; kann sich Mix It Up automatisch beim aktuell angemeldeten Benutzerkonto anmelden. HINWEIS: Wenn es ein Mix It Up-Update gibt oder Sie eines Ihrer Dienstkonten erneut authentifizieren müssen, müssen Sie sich in diesem Fall manuell anmelden.</value>
+    <value>Mit der Einstellung "Automatische Anmeldung" kann sich Mix It Up automatisch beim aktuell angemeldeten Benutzerkonto anmelden. HINWEIS: Wenn es ein Mix It Up-Update gibt oder Sie eines Ihrer Dienstkonten erneut authentifizieren müssen, müssen Sie sich in diesem Fall manuell anmelden.</value>
     <comment>Manual</comment>
   </data>
   <data name="OptOutofDataTrackingTooltip" xml:space="preserve">
@@ -3285,9 +3285,9 @@ Fuzzy</comment>
   <data name="MassGiftedSubsFilterAmountTooltip" xml:space="preserve">
     <value>Mit dieser Option können Sie sicherstellen, dass je nach festgelegter Anzahl nur die regulären Ereignisbefehle Subscription Gifted ODER Mass Subscription Gifted ausgeführt werden. Dies wurde entwickelt, um den Spam von Abonnement-Geschenkbefehlen zu reduzieren und eine bessere Erfahrung für Ihren Stream zu bieten. Beachten Sie, dass dies dazu führt, dass die Verarbeitung der Ereignisbefehle Subscription Gifted &amp; Mass Subscription Gifted leicht verzögert wird, in der Regel weniger als 10 Sekunden.
 
-Diese Einstellung gilt auch nur für Streaming-Plattformen, die das gleichzeitige Verschenken mehrerer Abonnements unterstützen. Streaming-Plattformen, die nur das Verschenken einzelner Abonnements unterstützen, nutzen diese Einstellung nicht und verwenden nur den regulären Ereignisbefehl &quot;Abonnement verschenkt&quot;.
+Diese Einstellung gilt auch nur für Streaming-Plattformen, die das gleichzeitige Verschenken mehrerer Abonnements unterstützen. Streaming-Plattformen, die nur das Verschenken einzelner Abonnements unterstützen, nutzen diese Einstellung nicht und verwenden nur den regulären Ereignisbefehl "Abonnement verschenkt".
 
-Wenn diese Option beispielsweise aktiviert ist und der Betrag auf 5 festgelegt ist, wird jedes Mal, wenn 5 ODER WENIGER Abonnements gleichzeitig verschenkt werden, NUR der reguläre Ereignisbefehl Subscription Gifted für jedes Abonnement ausgeführt. Wenn MEHR ALS 5 verschenkt sind, wird der Ereignisbefehl &quot;Massenabonnements geschenkt&quot; NUR einmal ausgeführt.</value>
+Wenn diese Option beispielsweise aktiviert ist und der Betrag auf 5 festgelegt ist, wird jedes Mal, wenn 5 ODER WENIGER Abonnements gleichzeitig verschenkt werden, NUR der reguläre Ereignisbefehl Subscription Gifted für jedes Abonnement ausgeführt. Wenn MEHR ALS 5 verschenkt sind, wird der Ereignisbefehl "Massenabonnements geschenkt" NUR einmal ausgeführt.</value>
   </data>
   <data name="AddSeparatorsBetweenMessages" xml:space="preserve">
     <value>Hinzufügen von Trennzeichen zwischen Nachrichten</value>
@@ -3317,7 +3317,7 @@ Wenn diese Option beispielsweise aktiviert ist und der Betrag auf 5 festgelegt i
     <value>Chat-Teilnahme</value>
   </data>
   <data name="StopCommand" xml:space="preserve">
-    <value>Befehl &quot;Stopp&quot;</value>
+    <value>Befehl "Stopp"</value>
     <comment>Manual</comment>
   </data>
   <data name="TheFollowingErrorsMustBeFixed" xml:space="preserve">
@@ -3473,7 +3473,7 @@ Wenn diese Option beispielsweise aktiviert ist und der Betrag auf 5 festgelegt i
     <comment>Manual</comment>
   </data>
   <data name="SpecialIdentifierActionInvalidSpecialIdentifierName" xml:space="preserve">
-    <value>Aktion &quot;Spezieller Bezeichner&quot;: Der Name des speziellen Bezeichners darf nur alphanumerische Zeichen enthalten.</value>
+    <value>Aktion "Spezieller Bezeichner": Der Name des speziellen Bezeichners darf nur alphanumerische Zeichen enthalten.</value>
     <comment>Manual</comment>
   </data>
   <data name="SpecialIdentifierActionMissingReplacementText" xml:space="preserve">
@@ -3481,7 +3481,7 @@ Wenn diese Option beispielsweise aktiviert ist und der Betrag auf 5 festgelegt i
     <comment>Manual</comment>
   </data>
   <data name="SpecialIdentifierActionMissingSpecialIdentifierName" xml:space="preserve">
-    <value>Aktion &quot;Spezieller Bezeichner&quot;: Fehlender Name des speziellen Bezeichners</value>
+    <value>Aktion "Spezieller Bezeichner": Fehlender Name des speziellen Bezeichners</value>
     <comment>Manual</comment>
   </data>
   <data name="TextToSpeechActionInvalidPitch" xml:space="preserve">
@@ -3505,7 +3505,7 @@ Wenn diese Option beispielsweise aktiviert ist und der Betrag auf 5 festgelegt i
     <comment>Manual</comment>
   </data>
   <data name="TwitterActionInvalidTweet" xml:space="preserve">
-    <value>Twitter-Aktion: Tweet darf keine &quot;@&quot;-Tags enthalten</value>
+    <value>Twitter-Aktion: Tweet darf keine "@"-Tags enthalten</value>
     <comment>Manual</comment>
   </data>
   <data name="TwitterActionMissingNameUpdate" xml:space="preserve">
@@ -3647,7 +3647,7 @@ Fuzzy</comment>
     <comment>Manual</comment>
   </data>
   <data name="FailedToImportCommand" xml:space="preserve">
-    <value>Befehl &quot;Import fehlgeschlagen&quot;</value>
+    <value>Befehl "Import fehlgeschlagen"</value>
   </data>
   <data name="GiveawayStartedReminderCommandName" xml:space="preserve">
     <value>Giveaway gestartet/Erinnerung</value>
@@ -4263,15 +4263,15 @@ Sobald der Vulkan Stadium 3 erreicht hat, hat jede nachfolgende Lagerstätte die
     <value>Fehlgeschlagene Vermutung</value>
   </data>
   <data name="GameCommandHangmanFailedGuessExample" xml:space="preserve">
-    <value>@$username wirft ihre Münzen in den Topf und errät &quot;$arg 1text&quot;... aber es war falsch! $gamehangmancurrent</value>
+    <value>@$username wirft ihre Münzen in den Topf und errät "$arg 1text"... aber es war falsch! $gamehangmancurrent</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameLostExample" xml:space="preserve">
-    <value>Das Spiel geht mit zu vielen fehlgeschlagenen Vermutungen verloren; die richtige Antwort war &quot;$gamehangmananswer&quot;. Es geht $gametotalamount {0}!</value>
+    <value>Das Spiel geht mit zu vielen fehlgeschlagenen Vermutungen verloren; die richtige Antwort war "$gamehangmananswer". Es geht $gametotalamount {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanGameWonExample" xml:space="preserve">
-    <value>@$username das geheime Wort &quot;$gamehangmananswer&quot; bekommen und den ganzen Topf $gamepayout {0} gewonnen!</value>
+    <value>@$username das geheime Wort "$gamehangmananswer" bekommen und den ganzen Topf $gamepayout {0} gewonnen!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanMaxFailures" xml:space="preserve">
@@ -4370,7 +4370,7 @@ Sobald der Vulkan Stadium 3 erreicht hat, hat jede nachfolgende Lagerstätte die
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserSuccessExample" xml:space="preserve">
-    <value>@$username das Wort &quot;$gamewordscrambleanswer&quot; richtig erraten und mit einer Fülle von $gamepayout {0}!</value>
+    <value>@$username das Wort "$gamewordscrambleanswer" richtig erraten und mit einer Fülle von $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBegin" xml:space="preserve">
@@ -4378,7 +4378,7 @@ Sobald der Vulkan Stadium 3 erreicht hat, hat jede nachfolgende Lagerstätte die
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScrambleBeginExample" xml:space="preserve">
-    <value>Das verschlüsselte Wort ist &quot;$gamewordscrambleword&quot;; Lösen Sie es und seien Sie der Erste, der es im Chat eingibt!</value>
+    <value>Das verschlüsselte Wort ist "$gamewordscrambleword"; Lösen Sie es und seien Sie der Erste, der es im Chat eingibt!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleWordScramblePrepare" xml:space="preserve">
@@ -4488,7 +4488,7 @@ Sobald der Vulkan Stadium 3 erreicht hat, hat jede nachfolgende Lagerstätte die
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseKingUserExample" xml:space="preserve">
-    <value>König @$username hat den Schatz entdeckt, braucht aber jemanden, der ihn verteidigt! Die Diebe müssen daran arbeiten, den König davon zu überzeugen, sie auszuwählen, alle anderen müssen das verhindern. Der König muss im Chat &quot;!treasure&lt;PLAYER&gt;&quot; eingeben, um auszuwählen, wer den Schatz verteidigen wird!</value>
+    <value>König @$username hat den Schatz entdeckt, braucht aber jemanden, der ihn verteidigt! Die Diebe müssen daran arbeiten, den König davon zu überzeugen, sie auszuwählen, alle anderen müssen das verhindern. Der König muss im Chat "!treasure&lt;PLAYER&gt;" eingeben, um auszuwählen, wer den Schatz verteidigen wird!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandTreasureDefenseKnightSelected" xml:space="preserve">
@@ -4606,7 +4606,7 @@ Sobald der Vulkan Stadium 3 erreicht hat, hat jede nachfolgende Lagerstätte die
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoPayoutExample" xml:space="preserve">
-    <value>Als @$username ihre Ablagerung in den Vulkan fallen lässt, kommt es zu einer lauten Eruption und $gamepayout {0} auf ihnen landen! Der Vulkan explodiert Münzen! Schnell, geben Sie in den nächsten 30 Sekunden &quot;!volcano collect&quot; in den Chat ein!</value>
+    <value>Als @$username ihre Ablagerung in den Vulkan fallen lässt, kommt es zu einer lauten Eruption und $gamepayout {0} auf ihnen landen! Der Vulkan explodiert Münzen! Schnell, geben Sie in den nächsten 30 Sekunden "!volcano collect" in den Chat ein!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandVolcanoPayoutPercentageMustBePositive" xml:space="preserve">
@@ -5043,7 +5043,7 @@ dass dies einige unvorhergesehene Probleme verursachen könnte, also verwenden S
     <value>Rangsystem existiert nicht</value>
   </data>
   <data name="GameCommandBidPrimaryCurrencyMustBeMinimumOnly" xml:space="preserve">
-    <value>Primäre Währung muss auf &quot;Nur Minimum&quot; eingestellt sein.</value>
+    <value>Primäre Währung muss auf "Nur Minimum" eingestellt sein.</value>
     <comment>Manual</comment>
   </data>
   <data name="ExplicitUserRoleRequirements" xml:space="preserve">
@@ -5109,7 +5109,7 @@ Mit dieser Einstellung werden alle Rollenanforderungen so geändert, dass sie ex
     <comment>Manual</comment>
   </data>
   <data name="GameCommandWordScrambleUserFailureExample" xml:space="preserve">
-    <value>Niemand hat das Wort &quot;$gamewordscrambleanswer&quot; richtig erraten.</value>
+    <value>Niemand hat das Wort "$gamewordscrambleanswer" richtig erraten.</value>
     <comment>Manual</comment>
   </data>
   <data name="CommandGroupTimerIntervalMustBePositive" xml:space="preserve">
@@ -5247,7 +5247,7 @@ eingebautes Befehlssperrsystem für diese bestimmte Zeit, in der es ausgeführt 
 (Befehl bleibt hängen und kann nicht abgeschlossen werden). Dies bedeutet auch, dass andere Befehle des gleichen Typs wie der ausgewählte
 Der Unterbefehl kann gleichzeitig ausgeführt werden, wenn er sich vom aktuellen Befehl unterscheidet. Zum Beispiel, wenn die ausgewählte
 Unterbefehl ist eine Aktionsgruppe, dann ist es immer noch möglich, dass eine andere Aktionsgruppe gleichzeitig ausgeführt wird, wenn dies
-ermöglichte. Sie können es sich ähnlich wie das Umschalten der Option &quot;Entsperrbefehl&quot; vorstellen, aber es gilt stattdessen nur für diese bestimmte Zeit.</value>
+ermöglichte. Sie können es sich ähnlich wie das Umschalten der Option "Entsperrbefehl" vorstellen, aber es gilt stattdessen nur für diese bestimmte Zeit.</value>
     <comment>Manual</comment>
   </data>
   <data name="Russian" xml:space="preserve">
@@ -5482,7 +5482,7 @@ ermöglichte. Sie können es sich ähnlich wie das Umschalten der Option &quot;E
     <value>Mit der Extra Life Service-Konnektivität können Sie Ereignisse auslösen, wenn Sie oder Ihr Team eine Spende erhalten.</value>
   </data>
   <data name="ExtraLifeInfo2" xml:space="preserve">
-    <value>Besuchen Sie zuerst die Seite Ihres Teams auf der Extra Life-Website und am Ende der Web-URL wird &quot;teamID=_____&quot; angezeigt. Geben Sie diese Nummer in das erste Feld ein, klicken Sie auf Suchen, wählen Sie Ihren Namen aus der Liste aus, und klicken Sie dann auf die Schaltfläche Anmelden.</value>
+    <value>Besuchen Sie zuerst die Seite Ihres Teams auf der Extra Life-Website und am Ende der Web-URL wird "teamID=_____" angezeigt. Geben Sie diese Nummer in das erste Feld ein, klicken Sie auf Suchen, wählen Sie Ihren Namen aus der Liste aus, und klicken Sie dann auf die Schaltfläche Anmelden.</value>
   </data>
   <data name="ExtraLifeInvalidParticipant" xml:space="preserve">
     <value>Bitte wählen Sie einen gültigen Extra Life Teilnehmer aus.</value>
@@ -5707,7 +5707,7 @@ ermöglichte. Sie können es sich ähnlich wie das Umschalten der Option &quot;E
     <value>Mit diesem Stream Deck-Plug-in können Sie Mix It Up-Befehle direkt von Ihrem Stream Deck-Gerät aus ausführen, sowie andere Statusinformationen zu Ihrem Stream.</value>
   </data>
   <data name="StreamDeckInfo2" xml:space="preserve">
-    <value>Um loszulegen, stellen Sie sicher, dass die Stream Deck-Software mindestens auf Version 4.0 aktualisiert ist und der Entwickler-API-Dienst in Mix It Up aktiviert ist. Um das Mix It Up-Plugin zu installieren, klicken Sie auf das Store-Symbol oben rechts in Ihrer Stream Deck-Software und suchen Sie dann im Fenster nach &quot;Mix It Up&quot;.</value>
+    <value>Um loszulegen, stellen Sie sicher, dass die Stream Deck-Software mindestens auf Version 4.0 aktualisiert ist und der Entwickler-API-Dienst in Mix It Up aktiviert ist. Um das Mix It Up-Plugin zu installieren, klicken Sie auf das Store-Symbol oben rechts in Ihrer Stream Deck-Software und suchen Sie dann im Fenster nach "Mix It Up".</value>
     <comment>Retranslated. Original translation was for an older version of stream deck software</comment>
   </data>
   <data name="StreamElements" xml:space="preserve">
@@ -5762,7 +5762,7 @@ ermöglichte. Sie können es sich ähnlich wie das Umschalten der Option &quot;E
     <value>Verbindung testen</value>
   </data>
   <data name="TextFont" xml:space="preserve">
-    <value>Schriftart &quot;Text&quot;</value>
+    <value>Schriftart "Text"</value>
   </data>
   <data name="TextHeight" xml:space="preserve">
     <value>Texthöhe (Pixel)</value>
@@ -5805,7 +5805,7 @@ ermöglichte. Sie können es sich ähnlich wie das Umschalten der Option &quot;E
     <value>HTMLStyle für Benutzer</value>
   </data>
   <data name="WebHooksPage" xml:space="preserve">
-    <value>Seite &quot;Web-Hooks&quot;</value>
+    <value>Seite "Web-Hooks"</value>
   </data>
   <data name="Width" xml:space="preserve">
     <value>Breite (Pixel)</value>
@@ -6192,7 +6192,7 @@ ermöglichte. Sie können es sich ähnlich wie das Umschalten der Option &quot;E
     <comment>{0} is the rank/currency name</comment>
   </data>
   <data name="RetroactivelyGivePointsPrompt2" xml:space="preserve">
-    <value>BEISPIEL: Wenn der Online-Tarif &quot;1 pro Stunde&quot; beträgt und ein Benutzer 16 Anzeigestunden hat, werden die {0} Punkte dieses Benutzers auf 16 festgelegt.</value>
+    <value>BEISPIEL: Wenn der Online-Tarif "1 pro Stunde" beträgt und ein Benutzer 16 Anzeigestunden hat, werden die {0} Punkte dieses Benutzers auf 16 festgelegt.</value>
     <comment>{0} is the rank/currency name</comment>
   </data>
   <data name="RetroactivelyGivePointsPrompt3" xml:space="preserve">
@@ -6439,7 +6439,7 @@ ermöglichte. Sie können es sich ähnlich wie das Umschalten der Option &quot;E
     <value>Zeigt eine Statusanzeige für ein angegebenes Ziel an. Der Fortschritt wird aktualisiert, wenn Ereignisse auftreten oder im benutzerdefinierten Aktualisierungsintervall.</value>
   </data>
   <data name="OverlayWidgetStreamBossDescription" xml:space="preserve">
-    <value>Zeigt einen Nutzer aus deinem Kanal als &quot;Boss&quot; an, der durch das Ausführen von Aktionen in deinem Kanal beschädigt werden kann, bis er besiegt und ein neuer Boss ausgewählt wird. Schäden werden hinzugefügt, wenn sie auftreten. Die Stream Boss Special Identifiers können parallel zu diesem Overlay-Widget verwendet werden.</value>
+    <value>Zeigt einen Nutzer aus deinem Kanal als "Boss" an, der durch das Ausführen von Aktionen in deinem Kanal beschädigt werden kann, bis er besiegt und ein neuer Boss ausgewählt wird. Schäden werden hinzugefügt, wenn sie auftreten. Die Stream Boss Special Identifiers können parallel zu diesem Overlay-Widget verwendet werden.</value>
   </data>
   <data name="OverlayWidgetTextDescription" xml:space="preserve">
     <value>Zeigt einen Textblock an. Aktualisierungen basierend auf dem benutzerdefinierten Aktualisierungsintervall.</value>
@@ -6613,7 +6613,7 @@ Klicken Sie dazu auf der Seite Kanalpunkte in Mix It Up auf Kanalpunktbelohnung 
     <value>Streamloots anzeigen</value>
   </data>
   <data name="AutomaticBackupsFolder" xml:space="preserve">
-    <value>Ordner &quot;Automatische Sicherungen&quot;</value>
+    <value>Ordner "Automatische Sicherungen"</value>
   </data>
   <data name="MixItUpInstallFolder" xml:space="preserve">
     <value>Mix It Up Installationsordner</value>
@@ -6687,7 +6687,7 @@ Stellen Sie sicher, dass diese Option deaktiviert ist, nachdem Sie alle Tests du
     <value>Anonym</value>
   </data>
   <data name="FailedToExportCommand" xml:space="preserve">
-    <value>Befehl &quot;Export fehlgeschlagen&quot;</value>
+    <value>Befehl "Export fehlgeschlagen"</value>
   </data>
   <data name="WebhookServiceAlreadyConnected" xml:space="preserve">
     <value>Webhook-Dienst bereits verbunden</value>
@@ -6898,7 +6898,7 @@ Wenn Sie eine der folgenden Aktionen nicht ausführen, kann dies auswirkungen, w
     <value>Twitch-Antwort auf Chat-Nachricht im Chat-Befehl</value>
   </data>
   <data name="CommunityCommandsFailedToUploadCommand" xml:space="preserve">
-    <value>Befehl &quot;Upload fehlgeschlagen&quot;: </value>
+    <value>Befehl "Upload fehlgeschlagen": </value>
   </data>
   <data name="AddStreamathonTime" xml:space="preserve">
     <value>Streamathon-Zeit hinzufügen</value>
@@ -6913,7 +6913,7 @@ Wenn Sie eine der folgenden Aktionen nicht ausführen, kann dies auswirkungen, w
     <value>Entwickler-Token</value>
   </data>
   <data name="PixelChatDeveloperTokenPage" xml:space="preserve">
-    <value>Seite &quot;Entwicklertoken&quot;</value>
+    <value>Seite "Entwicklertoken"</value>
   </data>
   <data name="PixelChatFailedToGetUserData" xml:space="preserve">
     <value>Benutzerdaten konnten nicht abgerufen werden, bitte versuchen Sie es später erneut.</value>
@@ -6922,7 +6922,7 @@ Wenn Sie eine der folgenden Aktionen nicht ausführen, kann dies auswirkungen, w
     <value>Mit der Pixel Chat-Dienstkonnektivität können Sie verschiedene Elemente Ihrer Pixel Chat-Overlays steuern und bestimmte Funktionen auslösen.</value>
   </data>
   <data name="PixelChatInfo2" xml:space="preserve">
-    <value>Um eine Verbindung zu PixelChat herzustellen, müssen Sie ein Entwickler-Token erstellen. Dies finden Sie, indem Sie zum Profil gehen, auf &quot;Token anzeigen&quot; klicken und ein neues Entwickler-Token erstellen.</value>
+    <value>Um eine Verbindung zu PixelChat herzustellen, müssen Sie ein Entwickler-Token erstellen. Dies finden Sie, indem Sie zum Profil gehen, auf "Token anzeigen" klicken und ein neues Entwickler-Token erstellen.</value>
   </data>
   <data name="PixelChatInvalidAPIKey" xml:space="preserve">
     <value>Geben Sie einen gültigen Pixel Chat-API-Schlüssel ein.</value>
@@ -7337,7 +7337,7 @@ Wenn Sie eine der folgenden Aktionen nicht ausführen, kann dies auswirkungen, w
     <value>Trovo Zauberspruch</value>
   </data>
   <data name="ChatEntranceCommand" xml:space="preserve">
-    <value>Befehl &quot;Chat-Eingang&quot;</value>
+    <value>Befehl "Chat-Eingang"</value>
   </data>
   <data name="TrovoAdmin" xml:space="preserve">
     <value>Trovo-Administrator</value>
@@ -7463,7 +7463,7 @@ Wenn Sie eine der folgenden Aktionen nicht ausführen, kann dies auswirkungen, w
     <value>FEHLER: Benutzer mit dem folgenden Benutzernamen konnte nicht gefunden werden: {0}</value>
   </data>
   <data name="LinkAccountCommandPleaseConfirmLink" xml:space="preserve">
-    <value>Der Kontoverknüpfungsprozess wurde gestartet. Bitte führen Sie den Befehl auf der anderen Plattform mit den Informationen Ihres aktuellen Benutzers erneut aus: &quot;!linkaccount {0} {1}&quot;</value>
+    <value>Der Kontoverknüpfungsprozess wurde gestartet. Bitte führen Sie den Befehl auf der anderen Plattform mit den Informationen Ihres aktuellen Benutzers erneut aus: "!linkaccount {0} {1}"</value>
   </data>
   <data name="LinkAccountCommandUsage" xml:space="preserve">
     <value>Verwendung: !linkaccount &lt;PLATFORM&gt; &lt;PLATFORM USERNAME&gt;</value>
@@ -8034,8 +8034,8 @@ Importierte Anführungszeichen mit IDs, die mit vorhandenen Anführungszeichen �
     <value>Das angegebene Element ist nicht vorhanden</value>
   </data>
   <data name="InventoryMustSpecifyEitherBuyOrSell" xml:space="preserve">
-    <value>Sie müssen entweder &quot;kaufen&quot; oder &quot;verkaufen&quot; angeben.</value>
-    <comment>{0} is the English word &apos;buy&apos;, {1} is the English word &apos;sell&apos;</comment>
+    <value>Sie müssen entweder "kaufen" oder "verkaufen" angeben.</value>
+    <comment>{0} is the English word 'buy', {1} is the English word 'sell'</comment>
   </data>
   <data name="InventoryShopUsage" xml:space="preserve">
     <value>VERWENDUNG: {0} Liste = Listet alle Artikel auf, die zum Kauf/Verkauf verfügbar sind ** {0} &lt;ITEM NAME&gt; = Listet den Kauf-/Verkaufspreis für den Artikel auf ** {0} kauf &lt;ITEM NAME&gt; [AMOUNT] = Kauft 1 oder den angegebenen Betrag des Artikels ** {0} Verkauf &lt;ITEM NAME&gt; [AMOUNT] = Verkauft 1 oder den angegebenen Betrag des Artikels</value>
@@ -8214,7 +8214,7 @@ Importierte Anführungszeichen mit IDs, die mit vorhandenen Anführungszeichen �
     <value>Aktualisierter Befehl: !</value>
   </data>
   <data name="UserFollowAgeHeader" xml:space="preserve">
-    <value>{0}&apos;s Follow Age: </value>
+    <value>{0}'s Follow Age: </value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UserSubscribeAgeHeader" xml:space="preserve">
@@ -8291,7 +8291,7 @@ Importierte Anführungszeichen mit IDs, die mit vorhandenen Anführungszeichen �
     <value>Die Giveaway-Erinnerung muss 0 oder größer sein</value>
   </data>
   <data name="GiveawayWonTypeClaim" xml:space="preserve">
-    <value>@{0} du hast das Giveaway gewonnen; Gebe &quot;!claim&quot; in den Chat ein um den Preis zu bekommen</value>
+    <value>@{0} du hast das Giveaway gewonnen; Gebe "!claim" in den Chat ein um den Preis zu bekommen</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="GiveawayYouHaveAlreadyWon" xml:space="preserve">
@@ -8592,7 +8592,7 @@ Wir werden versuchen, uns nach Möglichkeit wieder mit dem Dienst zu verbinden. 
 {1} is the amount donated</comment>
   </data>
   <data name="ToggleCommand" xml:space="preserve">
-    <value>Befehl &quot;Umschalten&quot;</value>
+    <value>Befehl "Umschalten"</value>
   </data>
   <data name="PortNumber" xml:space="preserve">
     <value>Portnummer</value>
@@ -8638,7 +8638,7 @@ Wir werden versuchen, uns nach Möglichkeit wieder mit dem Dienst zu verbinden. 
     <value>Nehmen wir an, Sie wollten Pasta machen. Sie würden die Schritte im Rezept nacheinander befolgen, bis Sie fertig sind. Sie würden auch jeden Schritt in der angegebenen Reihenfolge ausführen. Zum Beispiel müssen Sie das Wasser erhitzen, bevor Sie die Pasta hinzufügen können.</value>
   </data>
   <data name="WizardCommands3" xml:space="preserve">
-    <value>Befehle sind wie ein Rezept und Aktionen sind die Schritte in diesem Rezept. Nehmen wir an, Sie machen einen Shout-out-Befehl, was sind die Dinge, die er tun sollte? Jedes dieser &quot;Dinge&quot; kann als eine Handlung betrachtet werden.</value>
+    <value>Befehle sind wie ein Rezept und Aktionen sind die Schritte in diesem Rezept. Nehmen wir an, Sie machen einen Shout-out-Befehl, was sind die Dinge, die er tun sollte? Jedes dieser "Dinge" kann als eine Handlung betrachtet werden.</value>
   </data>
   <data name="WizardCommands4" xml:space="preserve">
     <value>In diesem Beispiel sendet unser Shout-out-Befehl eine Nachricht an den Chat, spielt einen Ton ab, wartet 10 Sekunden und zeigt dann ein Bild an. Jede davon entspricht einem anderen Aktionstyp (Chat, Sound, Wait und Overlay).</value>
@@ -8719,7 +8719,7 @@ Wir werden versuchen, uns nach Möglichkeit wieder mit dem Dienst zu verbinden. 
     <value>Benutzer hinzufügen</value>
   </data>
   <data name="UsersUnableToFindUser" xml:space="preserve">
-    <value>Der Benutzer &quot;{0}&quot; wurde nicht gefunden</value>
+    <value>Der Benutzer "{0}" wurde nicht gefunden</value>
     <comment>{0} is the name of the user</comment>
   </data>
   <data name="UsersSuccessfullyFoundUser" xml:space="preserve">
@@ -8737,7 +8737,7 @@ Wir werden versuchen, uns nach Möglichkeit wieder mit dem Dienst zu verbinden. 
 whispers to be used as a form of automated communication. There are severe restrictions placed on the
 amount of whispers that can be sent in a timeline that make it very impractical for use, as well as spam
 preventative measures if the user is not on your friends list on Twitch. So although you can send whispers
-via Twitch, it&apos;s a &quot;your mileage may vary&quot; situation.</value>
+via Twitch, it's a "your mileage may vary" situation.</value>
   </data>
   <data name="AlertName" xml:space="preserve">
     <value>Alarm Name</value>
@@ -9114,26 +9114,26 @@ function timerLoop(totalSeconds, endingSeconds, displayFormat)
     var text = displayFormat;
 
     var seconds = totalSeconds % 60;
-    if (seconds &lt; 10) { seconds = &quot;0&quot; + seconds }
-    text = text.replace(&quot;SS&quot;, totalSeconds);
-    text = text.replace(&quot;ss&quot;, seconds);
+    if (seconds &lt; 10) { seconds = "0" + seconds }
+    text = text.replace("SS", totalSeconds);
+    text = text.replace("ss", seconds);
 
     var totalMinutes = Math.floor(totalSeconds / 60);
     var minutes = totalMinutes % 60;
-    if (minutes &lt; 10) { minutes = &quot;0&quot; + minutes }
-    text = text.replace(&quot;MM&quot;, totalMinutes);
-    text = text.replace(&quot;mm&quot;, minutes);
+    if (minutes &lt; 10) { minutes = "0" + minutes }
+    text = text.replace("MM", totalMinutes);
+    text = text.replace("mm", minutes);
 
     var totalHours = Math.floor(totalMinutes / 60);
     var hours = totalHours % 24;
-    if (hours &lt; 10) { hours = &quot;0&quot; + hours }
-    text = text.replace(&quot;HH&quot;, totalHours);
-    text = text.replace(&quot;hh&quot;, hours);
+    if (hours &lt; 10) { hours = "0" + hours }
+    text = text.replace("HH", totalHours);
+    text = text.replace("hh", hours);
 
     var days = Math.floor(totalHours / 24);
-    text = text.replace(&quot;DD&quot;, hours);
+    text = text.replace("DD", hours);
 
-    document.getElementById(&quot;text&quot;).innerHTML = text;
+    document.getElementById("text").innerHTML = text;
 
     setTimeout(function () {
         if (endingSeconds &gt; 0) {
@@ -9157,116 +9157,14 @@ function adjustTime(time)
 }
 
 if ({CountUp}) {
-    timerLoop(0, {Duration}, &quot;{DisplayFormat}&quot;);  
+    timerLoop(0, {Duration}, "{DisplayFormat}");  
 }
 else {
-    timerLoop({Duration}, 0, &quot;{DisplayFormat}&quot;);
+    timerLoop({Duration}, 0, "{DisplayFormat}");
 }</value>
-  </data>
-  <data name="OverlayImageDefaultCSS" xml:space="preserve">
-    <value>.image {
-    width: {Width};
-    height: {Height};
-}</value>
-  </data>
-  <data name="OverlayImageDefaultHTML" xml:space="preserve">
-    <value>&lt;img id=&quot;image&quot; class=&quot;image&quot; src=&quot;{FilePath}&quot; /&gt;</value>
-  </data>
-  <data name="OverlayTextDefaultCSS" xml:space="preserve">
-    <value>.text {
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: {FontWeight};
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-align: {TextAlignment};
-    text-shadow: {Shadow};
-}</value>
-  </data>
-  <data name="OverlayTextDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;text&quot; class=&quot;text&quot;&gt;
-    {Text}
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayVideoDefaultCSS" xml:space="preserve">
-    <value>.video-{ID} {
-    width: {Width};
-    height: {Height};
-}</value>
-  </data>
-  <data name="OverlayVideoDefaultHTML" xml:space="preserve">
-    <value>&lt;video id=&quot;video&quot; class=&quot;video&quot; onloadstart=&quot;this.volume={Volume}&quot; allow=&quot;autoplay; encrypted-media&quot; autoplay {Loop}&gt;
-    &lt;source src=&quot;{FilePath}&quot; type=&quot;video/{VideoExtension}&quot; /&gt;
-&lt;/video&gt;</value>
-  </data>
-  <data name="OverlayWebPageDefaultHTML" xml:space="preserve">
-    <value>&lt;iframe frameborder=&quot;0&quot; width=&quot;{WIDTH}&quot; height=&quot;{HEIGHT}&quot; src=&quot;{URL}&quot; /&gt;</value>
-  </data>
-  <data name="OverlayYouTubeDefaultHTML" xml:space="preserve">
-    <value>&lt;div id=&quot;youtube-{ID}&quot; /&gt;
-
-&lt;script&gt;
-    var youtubeVideoPlayer = new YT.Player(&quot;youtube-{ID}&quot;, {
-        height: {HeightNumber},
-        width: {WidthNumber},
-        videoId: &apos;{VideoID}&apos;,
-        playerVars: { &apos;controls&apos;: 0, &apos;modestbranding&apos;: 1, &apos;start&apos;: {StartTime} },
-        events: {
-            &apos;onReady&apos;: function () {
-                youtubeVideoPlayer.setVolume({Volume});
-                youtubeVideoPlayer.setLoop(false);
-                youtubeVideoPlayer.frameBorder = 0;
-                youtubeVideoPlayer.playVideo();
-            },
-            &apos;onStateChange&apos;: function (event) {
-                if (event.data == YT.PlayerState.ENDED) {
-                    event.target.destroy();
-                }
-            }
-        }
-    });
-&lt;/script&gt;</value>
   </data>
   <data name="DisplayFormat" xml:space="preserve">
     <value>Display Format</value>
-  </data>
-  <data name="OverlayTimerDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;text&quot; class=&quot;text&quot;&gt;
-    {Text}
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayPositionedItemDefaultCSS" xml:space="preserve">
-    <value>.maindiv {
-    position: absolute;
-    width: 100%;
-    max-width: 100%;
-    min-width: 100%;
-    height: 100%;
-    max-height: 100%;
-    min-height: 100%;
-    margin: 0px;
-    z-index: {Layer};
-}
-
-.contentdiv {
-    position: absolute;
-    margin: 0px;
-    left: {XPosition}{PositionType};
-    top: {YPosition}{PositionType};
-    transform: translate({XTranslation}%, {YTranslation}%);
-    width: {Width};
-    height: {Height};
-}</value>
-  </data>
-  <data name="OverlayPositionedItemDefaultHTML" xml:space="preserve">
-    <value>&lt;div id=&quot;maindiv&quot; class=&quot;maindiv&quot;&gt;
-&lt;div id=&quot;contentdiv&quot; class=&quot;contentdiv&quot;&gt;
-
-{InnerHTML}
-
-&lt;/div&gt;
-&lt;/div&gt;</value>
   </data>
   <data name="OverlayActionValidationErrorHeader" xml:space="preserve">
     <value>Overlay Action: </value>
@@ -9327,9 +9225,9 @@ namespace CustomNamespace
         public object Run()
         {
             // Your code goes here
-            System.Console.WriteLine(&quot;Hello World!&quot;);
+            System.Console.WriteLine("Hello World!");
 
-            // Return any data here that you&apos;d like to use
+            // Return any data here that you'd like to use
             return 0;
         }
     }
@@ -9339,57 +9237,22 @@ namespace CustomNamespace
     <value>function run()
 {
     // Your code goes here
-    var text = &apos;Hello World!&apos;;
+    var text = 'Hello World!';
 
-    // Return any data here that you&apos;d like to use
+    // Return any data here that you'd like to use
     return 0;
 }</value>
   </data>
   <data name="ScriptActionPythonDefaultScriptTemplate" xml:space="preserve">
     <value>def run():
     # Your code goes here
-    print &apos;Hello World!&apos;
+    print 'Hello World!'
 
-    # Return any data here that you&apos;d like to use
+    # Return any data here that you'd like to use
     return 0</value>
   </data>
   <data name="CommunityCommandsScriptActionsNotSupported" xml:space="preserve">
     <value>Commands containing Script actions are not supported for uploading to the Community Commands feature. Due to the complexity of scripts and the ability for them to have malicious intent for users, we do not support uploading them through Community Commands to ensure users are protected. You can optionally instead export your command to a file and share it out with users through other means.</value>
-  </data>
-  <data name="OverlayLabelAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;label-amount&quot; class=&quot;text&quot;&gt;
-        {Amount}
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelUsernameAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p class=&quot;text-{ID}&quot;&gt;
-    &lt;span id=&quot;label-username-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
-        {Username}
-    &lt;/span&gt;
-    -
-    &lt;span id=&quot;label-amount-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
-        {Amount}
-    &lt;/span&gt;
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelUsernameDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;label-username-{ID}&quot; class=&quot;text-{ID}&quot;&gt;
-    {Username}
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelDefaultJavascript" xml:space="preserve">
-    <value>function update(name, amount)
-{
-    var nameElement = document.getElementById(&quot;label-name&quot;);
-    if (nameElement != null) {
-        nameElement.innerHTML = name;
-    }
-    
-    var amountElement = document.getElementById(&quot;label-amount&quot;);
-    if (amountElement != null) {
-        amountElement.innerHTML = amount; 
-    }
-}</value>
   </data>
   <data name="OnUpdate" xml:space="preserve">
     <value>On Update</value>
@@ -9406,177 +9269,11 @@ namespace CustomNamespace
   <data name="Donation" xml:space="preserve">
     <value>Donation</value>
   </data>
-  <data name="OverlayEventListDefaultCSS" xml:space="preserve">
-    <value>.list {
-    width: {ItemWidth};
-    {FullHeight}
-}
-
-.item {
-    position: relative;
-    border-style: solid;
-    border-width: 5px;
-    border-color: {BorderColor};
-    background-color: {BackgroundColor};
-    width: {ItemWidth};
-    {IndividualHeight}
-}
-
-.message {
-    padding: 10px;
-    margin: auto;
-}
-
-.messagebadge {
-    vertical-align: middle;
-    padding-right: 2px;
-    width: auto;
-    height: {FontSize}px;
-}
-
-.messageavatar {
-    vertical-align: middle;
-    padding-right: 2px;
-    width: auto;
-    height: {FontSize}px;
-}
-
-.messageusername {
-    vertical-align: middle;
-    word-wrap: break-word;
-    font-size: {FontSize}px;
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: bold;
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-shadow: {Shadow};
-}
-
-.messagetext {
-    vertical-align: middle;
-    margin-left: 10px;
-    word-wrap: break-word;
-    font-weight: bold;
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: {FontWeight};
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-shadow: {Shadow};
-}
-
-.messageemote {
-   vertical-align: middle;
-   margin-left: 10px;
-   width: auto;
-   height: {FontSize}px;
-}</value>
-  </data>
-  <data name="OverlayEventListDefaultHTML" xml:space="preserve">
-    <value>&lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;
-
-&lt;/div&gt;
-
-&lt;template id=&quot;item&quot;&gt;
-    &lt;div class=&quot;item&quot;&gt;
-        &lt;p class=&quot;eventtype&quot;&gt;{EventType}&lt;/p&gt;
-        &lt;p class=&quot;details&quot;&gt;{Details}&lt;/p&gt;
-        &lt;p class=&quot;subdetails&quot;&gt;{SubDetails}&lt;/p&gt;
-    &lt;/div&gt;
-&lt;/template&gt;</value>
-  </data>
-  <data name="OverlayEventListDefaultJavascript" xml:space="preserve">
-    <value>function add(eventType, details, subdetails)
-{
-    var list = document.getElementById(&quot;list&quot;);
-
-    if (list.childElementCount &gt; {MaxToShow}) {
-        removeOldest();
-    }
-
-    var itemTemplate = document.querySelector(&quot;#item&quot;);
-    const item = itemTemplate.content.cloneNode(true);
-    
-    var eventTypeElement = item.querySelector(&quot;.eventtype&quot;);
-    eventTypeElement.innerHTML = eventType;
-
-    var detailsElement = item.querySelector(&quot;.details&quot;);
-    detailsElement.innerHTML = details;
-    
-    var subdetailsElement = item.querySelector(&quot;.subdetails&quot;);
-    subdetailsElement.innerHTML = subdetails;
-
-    list.appendChild(item);
-}
-
-function removeOldest()
-{
-    var list = document.getElementById(&quot;list&quot;);
-    list.removeChild(list.firstElementChild);
-}</value>
-  </data>
   <data name="TwitchChannelHypeTrainLevelUp" xml:space="preserve">
     <value>Twitch Channel Hype Train Level Up</value>
   </data>
   <data name="AlertTwitchCharityDonation" xml:space="preserve">
     <value>{0} Donated {1} To The Twitch Charity</value>
-  </data>
-  <data name="OverlayGoalDefaultCSS" xml:space="preserve">
-    <value>.background
-{
-    position: absolute;
-    background-color: {BackgroundColor};
-    width: {Width}px;
-    height: {Height}px;
-}
-
-.progress
-{
-    position: absolute;
-    background-color: {ProgressColor};
-    height: {Height}px;
-}
-
-.text {
-    position: absolute;
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: {FontWeight};
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-align: {TextAlignment};
-    text-shadow: {Shadow};
-    left: 50%;
-    top: 50%;
-    margin: auto;
-    transform: translate(-50%, -50%);
-}</value>
-  </data>
-  <data name="OverlayGoalDefaultHTML" xml:space="preserve">
-    <value>&lt;div class=&quot;background&quot;&gt;
-  &lt;div id=&quot;progress&quot; class=&quot;progress&quot; /&gt;
-&lt;/div&gt;
-&lt;p id=&quot;text&quot; class=&quot;text&quot; /&gt;</value>
-  </data>
-  <data name="OverlayGoalDefaultJavascript" xml:space="preserve">
-    <value>function update(amount, goal, width)
-{
-    var percentage = (amount / goal)
-
-    var textElement = document.getElementById(&quot;text&quot;);
-    if (textElement != null) {
-        textElement.innerHTML = amount + &quot; (&quot; + Math.round(percentage * 100) + &quot;%)&quot;; 
-    }
-    
-    var progressElement = document.getElementById(&quot;progress&quot;);
-    if (progressElement != null) {
-        progressElement.style.width = Math.min(Math.round(percentage * width), width) + &quot;px&quot;;
-    }
-}
-
-update({CurrentAmount}, {GoalAmount}, {Width});</value>
   </data>
   <data name="TwitchChannelCharityDonation" xml:space="preserve">
     <value>Twitch Channel Charity Donation</value>
@@ -9603,7 +9300,7 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
     <value>This LoupeDeck plug-in allows you to run Mix It Up commands directly from your LoupeDeck device, as well as other status information about your stream.</value>
   </data>
   <data name="LoupeDeckInfo2" xml:space="preserve">
-    <value>To get started, ensure the LoupeDeck software is updated to the latest version &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the Marketplace icon at the top right of your LoupeDeck software, then search for &quot;Mix It Up&quot;.</value>
+    <value>To get started, ensure the LoupeDeck software is updated to the latest version &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the Marketplace icon at the top right of your LoupeDeck software, then search for "Mix It Up".</value>
   </data>
   <data name="ShellExecute" xml:space="preserve">
     <value>Shell Execute</value>
@@ -9632,22 +9329,6 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
   <data name="CooldownRequirementOnCooldownSeconds" xml:space="preserve">
     <value>This command is currently on cooldown, please wait another {0} second(s).</value>
     <comment>Manual</comment>
-  </data>
-  <data name="OverlayLabelNameAmountDefaultHTML" xml:space="preserve">
-    <value>&lt;p class=&quot;text&quot;&gt;
-    &lt;span id=&quot;label-name&quot; class=&quot;text&quot;&gt;
-        {Username}
-    &lt;/span&gt;
-    -
-    &lt;span id=&quot;label-amount&quot; class=&quot;text&quot;&gt;
-        {Amount}
-    &lt;/span&gt;
-&lt;/p&gt;</value>
-  </data>
-  <data name="OverlayLabelNameDefaultHTML" xml:space="preserve">
-    <value>&lt;p id=&quot;label-name&quot; class=&quot;text&quot;&gt;
-    {Username}
-&lt;/p&gt;</value>
   </data>
   <data name="Added" xml:space="preserve">
     <value>Added</value>
@@ -9706,252 +9387,7 @@ update({CurrentAmount}, {GoalAmount}, {Width});</value>
   <data name="OverlayWidthMustBeValidValue" xml:space="preserve">
     <value>Width must be a valid value</value>
   </data>
-  <data name="OverlayChatDefaultHTML" xml:space="preserve">
-    <value>&lt;div id=&quot;list&quot; class=&quot;list&quot;&gt;
-
-&lt;/div&gt;
-
-&lt;template id=&quot;item&quot;&gt;
-    &lt;div class=&quot;item&quot;&gt;
-        &lt;p class=&quot;message&quot;&gt;&lt;/p&gt;
-    &lt;/div&gt;
-&lt;/template&gt;
-
-&lt;template id=&quot;messagebadge&quot;&gt;
-    &lt;img class=&quot;messagebadge&quot; /&gt;
-&lt;/template&gt;
-
-&lt;template id=&quot;messageavatar&quot;&gt;
-    &lt;img class=&quot;messageavatar&quot; /&gt;
-&lt;/template&gt;
-
-&lt;template id=&quot;messageusername&quot;&gt;
-    &lt;span class=&quot;messageusername&quot;&gt;&lt;/span&gt;
-&lt;/template&gt;
-
-&lt;template id=&quot;messagetext&quot;&gt;
-    &lt;span class=&quot;messagetext&quot;&gt;&lt;/span&gt;
-&lt;/template&gt;
-
-&lt;template id=&quot;messageemote&quot;&gt;
-    &lt;img class=&quot;messageemote&quot; /&gt;
-&lt;/template&gt;</value>
-  </data>
-  <data name="OverlayChatDefaultCSS" xml:space="preserve">
-    <value>.list {
-    width: {ItemWidth};
-    {FullHeight}
-}
-
-.item {
-    position: relative;
-    border-style: solid;
-    border-width: 5px;
-    border-color: {BorderColor};
-    background-color: {BackgroundColor};
-    width: {ItemWidth};
-    {IndividualHeight}
-}
-
-.message {
-    padding: 10px;
-    margin: auto;
-}
-
-.messagebadge {
-    vertical-align: middle;
-    padding-right: 2px;
-    width: auto;
-    height: {FontSize}px;
-}
-
-.messageavatar {
-    vertical-align: middle;
-    padding-right: 2px;
-    width: auto;
-    height: {FontSize}px;
-}
-
-.messageusername {
-    vertical-align: middle;
-    word-wrap: break-word;
-    font-size: {FontSize}px;
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: bold;
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-shadow: {Shadow};
-}
-
-.messagetext {
-    vertical-align: middle;
-    margin-left: 10px;
-    word-wrap: break-word;
-    font-weight: bold;
-    font-size: {FontSize}px;
-    color: {FontColor};
-    font-family: &apos;{FontFamily}&apos;;
-    font-weight: {FontWeight};
-    text-decoration: {TextDecoration};
-    font-style: {FontStyle};
-    text-shadow: {Shadow};
-}
-
-.messageemote {
-   vertical-align: middle;
-   margin-left: 10px;
-   width: auto;
-   height: {TEXT_SIZE}px;
-}</value>
-  </data>
-  <data name="OverlayChatDefaultJavascript" xml:space="preserve">
-    <value>function add(user, messageParts)
-{
-    var list = document.getElementById(&quot;list&quot;);
-
-    if ({ShowMaxMessagesOnly})
-    {
-        if (list.childElementCount &gt; {MaxToShow})
-        {
-            removeOldest();
-        }
-    }
-
-    var itemTemplate = document.querySelector(&quot;#item&quot;);
-    var messageBadgeTemplate = document.querySelector(&quot;#messagebadge&quot;);
-    var messageAvatarTemplate = document.querySelector(&quot;#messageavatar&quot;);
-    var messageUsernameTemplate = document.querySelector(&quot;#messageusername&quot;);
-    var messageTextTemplate = document.querySelector(&quot;#messagetext&quot;);
-    var messageEmoteTemplate = document.querySelector(&quot;#messageemote&quot;);
-    
-    const item = itemTemplate.content.cloneNode(true);
-    var messageElement = item.querySelector(&quot;.message&quot;);
-    
-    const messageRoleBadge = messageBadgeTemplate.content.cloneNode(true);
-    messageRoleBadge.src = user.PlatformRoleBadgeLink;
-    messageElement.appendChild(messageRoleBadge);
-    
-    const messageSubBadge = messageBadgeTemplate.content.cloneNode(true);
-    messageSubBadge.src = user.PlatformSubscriberBadgeLink;
-    messageElement.appendChild(messageSubBadge);
-    
-    const messageAvatar = messageAvatarTemplate.content.cloneNode(true);
-    messageAvatar.src = user.AvatarLink;
-    messageElement.appendChild(messageAvatar);
-    
-    const messageUsername = messageUsernameTemplate.content.cloneNode(true);
-    messageUsername.style.color = user.Color;
-    messageUsername.innerHTML = user.DisplayName;
-    messageElement.appendChild(messageUsername);
-    
-    messageParts.forEach(messagePart =&gt;
-    {
-        if (messagePart.Type === &apos;text&apos;)
-        {
-            const messageText = messageTextTemplate.content.cloneNode(true);
-            messageUsername.innerHTML = messagePart.Text;
-            messageElement.appendChild(messageText);
-        }
-        else if (messagePart.Type === &apos;image&apos;)
-        {
-            const messageEmote = messageEmoteTemplate.content.cloneNode(true);
-            messageEmote.src = messagePart.URL;
-            messageElement.appendChild(messageEmote);      
-        }
-    });
-
-    list.appendChild(item);
-}
-
-function removeOldest()
-{
-    var list = document.getElementById(&quot;list&quot;);
-    list.removeChild(list.firstElementChild);
-}</value>
-  </data>
-  <data name="OverlayBasicIFrameTemplate" xml:space="preserve">
-    <value>&lt;!DOCTYPE html&gt;
-
-&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
-&lt;head&gt;
-    &lt;meta charset=&quot;utf-8&quot; /&gt;
-    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
-
-    &lt;script src=&quot;jquery-3.6.0.min.js&quot;&gt;&lt;/script&gt;
-
-    &lt;script src=&quot;video.min.js&quot;&gt;&lt;/script&gt;
-
-    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;animate.min.css&quot;&gt;
-
-    &lt;style type=&quot;text/css&quot;&gt;
-        {CSS}
-    &lt;/style&gt;
-&lt;/head&gt;
-&lt;body style=&quot;background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;&quot;&gt;
-
-    {HTML}
-
-    &lt;script&gt;
-        var maindiv = document.getElementById(&quot;maindiv&quot;);
-        
-        function sendParentMessage(obj) {
-            window.top.postMessage(JSON.stringify(obj), &apos;*&apos;);
-        }
-
-        window.onmessage = function (message) {
-            if (message != null) {
-                var obj = JSON.parse(message);
-            }
-        };
-        
-        const animateCSS = (element, animation, prefix = &apos;animate__&apos;) =&gt;
-            // We create a Promise and return it
-            new Promise((resolve, reject) =&gt; {
-                if (animation != null &amp;&amp; animation) {
-                    const animationName = `${prefix}${animation}`;
-
-                    element.classList.add(`${prefix}animated`, animationName);
-
-                    // When the animation ends, we clean the classes and resolve the Promise
-                    function handleAnimationEnd(event) {
-                        event.stopPropagation();
-                        element.classList.remove(`${prefix}animated`, animationName);
-                        resolve(&apos;Animation ended&apos;);
-                    }
-
-                    element.addEventListener(&apos;animationend&apos;, handleAnimationEnd, { once: true });
-                }
-                else {
-                    resolve(&apos;Animation ended&apos;);
-                }
-            });
-        
-        {Animations}
-        
-        {Javascript}
-    &lt;/script&gt;
-&lt;/body&gt;
-&lt;/html&gt;</value>
-    <comment>{HTML} is the HTML replacement, {CSS} is the CSS replacement, {Animations} is the Javascript animation calls, {Javascript} is the Javascript replacement</comment>
-  </data>
-  <data name="OverlayAnimateCSSJavascript" xml:space="preserve">
-    <value>animateCSS(maindiv, &apos;{AnimateCSSAnimationName}&apos;);</value>
-  </data>
   <data name="DeStream" xml:space="preserve">
     <value>DeStream</value>
-  </data>
-  <data name="OverlayAnimationTimedWrapperJavascript" xml:space="preserve">
-    <value>setTimeout(function () {
-    {Animation}
-}, {MillisecondTiming});</value>
-  </data>
-  <data name="OverlayAnimateCSSThenJavascript" xml:space="preserve">
-    <value>animateCSS(maindiv, &apos;{AnimateCSSAnimationName}&apos;).then((message) =&gt; {
-    {PostAnimation}
-});</value>
-  </data>
-  <data name="OverlayIFrameSendParentMessageRemove" xml:space="preserve">
-    <value>maindiv.style.visibility=&apos;hidden&apos;
-sendParentMessage({ Type: &quot;Remove&quot;, ID: &quot;{ID}&quot; });</value>
   </data>
 </root>
