@@ -181,7 +181,6 @@ namespace MixItUp.Base.Model.Actions
                     }
 
                     Dictionary<string, string> properties = this.OverlayItemV3.GetGenerationProperties();
-                    await this.OverlayItemV3.ProcessGenerationProperties(properties, parameters);
 
                     string javascript = this.OverlayItemV3.Javascript;
                     double.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.Duration, parameters), out double duration);
@@ -211,10 +210,12 @@ namespace MixItUp.Base.Model.Actions
                     iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.OverlayItemV3.CSS), this.OverlayItemV3.CSS);
                     iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.OverlayItemV3.Javascript), javascript);
 
+                    await this.OverlayItemV3.ProcessGenerationProperties(properties, parameters);
                     foreach (var property in properties)
                     {
                         iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, property.Key, property.Value);
                     }
+
                     iframeHTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(iframeHTML, parameters);
 
                     await overlay.Add(properties[nameof(this.OverlayItemV3.ID)], iframeHTML);

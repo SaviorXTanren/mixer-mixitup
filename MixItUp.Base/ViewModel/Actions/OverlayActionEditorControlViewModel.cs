@@ -270,7 +270,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     OverlayItemV3ModelBase item = itemViewModel.GetItem();
                     if (item != null)
                     {
-                        return Task.FromResult<ActionModelBase>(new OverlayActionModel(this.SelectedOverlayEndpoint.ID, item, itemViewModel.Duration, new OverlayAnimationV3Model() { AnimateCSSAnimation = OverlayAnimateCSSAnimationType.BounceIn }, new OverlayAnimationV3Model() { AnimateCSSAnimation = OverlayAnimateCSSAnimationType.None }));
+                        return Task.FromResult<ActionModelBase>(new OverlayActionModel(this.SelectedOverlayEndpoint.ID, item, itemViewModel.Duration, new OverlayAnimationV3Model() { AnimateCSSAnimation = OverlayAnimateCSSAnimationType.None }, new OverlayAnimationV3Model() { AnimateCSSAnimation = OverlayAnimateCSSAnimationType.None }));
                     }
                 }
             }
