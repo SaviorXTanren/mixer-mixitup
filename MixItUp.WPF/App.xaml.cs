@@ -49,6 +49,7 @@ namespace MixItUp.WPF
                 ServiceManager.Add<IDeveloperAPIService>(new WindowsDeveloperAPIService());
                 ServiceManager.Add<ITelemetryService>(new WindowsTelemetryService());
                 ServiceManager.Add<IMusicPlayerService>(new WindowsMusicPlayerService());
+                ServiceManager.Add<IProcessService>(new WindowsProcessService());
                 ServiceManager.Add<IScriptRunnerService>(new WindowsScriptRunnerService());
 
                 ServiceManager.Add(new StreamlabsService(new WindowsSocketIOConnection()));
@@ -228,7 +229,7 @@ namespace MixItUp.WPF
                 }
                 catch (Exception) { }
 
-                ProcessHelper.LaunchProgram("MixItUp.Reporter.exe", $"{FileLoggerHandler.CurrentLogFilePath} {ChannelSession.Settings?.Name ?? "NONE"}");
+                ServiceManager.Get<IProcessService>().LaunchProgram("MixItUp.Reporter.exe", $"{FileLoggerHandler.CurrentLogFilePath} {ChannelSession.Settings?.Name ?? "NONE"}");
 
                 Task.Delay(3000).Wait();
             }

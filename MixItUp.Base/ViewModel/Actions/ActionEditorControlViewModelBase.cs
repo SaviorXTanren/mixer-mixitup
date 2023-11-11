@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
@@ -152,7 +153,7 @@ namespace MixItUp.Base.ViewModel.Actions
                         break;
                 }
 
-                ProcessHelper.LaunchLink("https://wiki.mixitupapp.com/actions/" + actionPageName);
+                ServiceManager.Get<IProcessService>().LaunchLink("https://wiki.mixitupapp.com/actions/" + actionPageName);
             });
 
             this.DeleteCommand = this.CreateCommand(() =>

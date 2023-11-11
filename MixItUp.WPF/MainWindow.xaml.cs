@@ -206,7 +206,7 @@ namespace MixItUp.WPF
             this.Close();
             if (this.restartApplication)
             {
-                ProcessHelper.LaunchProgram(Application.ResourceAssembly.Location);
+                ServiceManager.Get<IProcessService>().LaunchProgram(Application.ResourceAssembly.Location);
             }
         }
 

@@ -644,7 +644,7 @@ namespace MixItUp.Base.Services.External
                 DiscordOAuthServer oauthServer = new DiscordOAuthServer();
                 oauthServer.Start(OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL);
 
-                ProcessHelper.LaunchLink(string.Format(DiscordService.AuthorizationUrl, this.ClientID, DiscordService.ClientBotPermissions));
+                ServiceManager.Get<IProcessService>().LaunchLink(string.Format(DiscordService.AuthorizationUrl, this.ClientID, DiscordService.ClientBotPermissions));
 
                 string authorizationCode = await oauthServer.WaitForAuthorizationCode(secondsToWait: 90);
                 oauthServer.Stop();

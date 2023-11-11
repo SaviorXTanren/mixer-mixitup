@@ -42,8 +42,10 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
 
         public int Amount { get { return this.Tier.min_bits; } }
 
-        public string LightImage { get { return (this.Tier.LightAnimatedImages.ContainsKey("2")) ? this.Tier.LightAnimatedImages["2"] : this.Tier.LightAnimatedImages.First().Value; } }
+        public string LightStaticImage { get { return (this.Tier.LightStaticImages.ContainsKey("2")) ? this.Tier.LightStaticImages["2"] : this.Tier.LightStaticImages.First().Value; } }
+        public string DarkStaticImage { get { return (this.Tier.DarkStaticImages.ContainsKey("2")) ? this.Tier.DarkStaticImages["2"] : this.Tier.DarkStaticImages.First().Value; } }
 
-        public string DarkImage { get { return (this.Tier.DarkAnimatedImages.ContainsKey("2")) ? this.Tier.DarkAnimatedImages["2"] : this.Tier.DarkAnimatedImages.First().Value; } }
+        public string LightAnimatedImage { get { return (this.Tier.LightAnimatedImages.ContainsKey("2")) ? this.Tier.LightAnimatedImages["2"] : this.Tier.LightAnimatedImages.First().Value; } }
+        public string DarkAnimatedImage { get { return (this.Tier.DarkAnimatedImages.ContainsKey("2")) ? this.Tier.DarkAnimatedImages["2"] : this.Tier.DarkAnimatedImages.First().Value; } }
     }
 }

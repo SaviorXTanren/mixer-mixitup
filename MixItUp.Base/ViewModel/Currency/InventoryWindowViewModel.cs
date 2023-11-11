@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
@@ -308,7 +309,7 @@ namespace MixItUp.Base.ViewModel.Currency
 
             this.HelpCommand = this.CreateCommand(() =>
             {
-                ProcessHelper.LaunchLink("https://wiki.mixitupapp.com/consumables/inventory");
+                ServiceManager.Get<IProcessService>().LaunchLink("https://wiki.mixitupapp.com/consumables/inventory");
             });
         }
 

@@ -42,7 +42,7 @@ namespace MixItUp.WPF.Controls
                     StreamingPlatformStatusModel status = this.incidents.FirstOrDefault();
                     if (status != null && !string.IsNullOrEmpty(status.Link))
                     {
-                        ProcessHelper.LaunchLink(status.Link);
+                        ServiceManager.Get<IProcessService>().LaunchLink(status.Link);
                     }
                 }
                 return Task.CompletedTask;

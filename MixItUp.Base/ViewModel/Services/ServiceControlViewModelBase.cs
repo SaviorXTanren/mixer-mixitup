@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace MixItUp.Base.ViewModel.Services
 
             this.HelpCommand = this.CreateCommand(() =>
             {
-                ProcessHelper.LaunchLink("https://wiki.mixitupapp.com/services/" + this.WikiPageName);
+                ServiceManager.Get<IProcessService>().LaunchLink("https://wiki.mixitupapp.com/services/" + this.WikiPageName);
             });
         }
 

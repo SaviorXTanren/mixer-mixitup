@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -25,25 +26,25 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void IssueReportHyperlink_Click(object sender, RoutedEventArgs e)
         {
-            ProcessHelper.LaunchProgram("MixItUp.Reporter.exe", $"{FileLoggerHandler.CurrentLogFilePath} {ChannelSession.Settings?.Name ?? "NONE"}");
+            ServiceManager.Get<IProcessService>().LaunchProgram("MixItUp.Reporter.exe", $"{FileLoggerHandler.CurrentLogFilePath} {ChannelSession.Settings?.Name ?? "NONE"}");
         }
 
-        private void TwitterButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://twitter.com/MixItUpApp"); }
+        private void TwitterButton_Click(object sender, RoutedEventArgs e) { ServiceManager.Get<IProcessService>().LaunchLink("https://twitter.com/MixItUpApp"); }
 
-        private void DiscordButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://mixitupapp.com/discord"); }
+        private void DiscordButton_Click(object sender, RoutedEventArgs e) { ServiceManager.Get<IProcessService>().LaunchLink("https://mixitupapp.com/discord"); }
 
-        private void YouTubeButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://www.youtube.com/c/MixItUpApp"); }
+        private void YouTubeButton_Click(object sender, RoutedEventArgs e) { ServiceManager.Get<IProcessService>().LaunchLink("https://www.youtube.com/c/MixItUpApp"); }
 
-        private void TwitchButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://twitch.tv/MixItUpApp"); }
+        private void TwitchButton_Click(object sender, RoutedEventArgs e) { ServiceManager.Get<IProcessService>().LaunchLink("https://twitch.tv/MixItUpApp"); }
 
-        private void WikiButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://wiki.mixitupapp.com/"); }
+        private void WikiButton_Click(object sender, RoutedEventArgs e) { ServiceManager.Get<IProcessService>().LaunchLink("https://wiki.mixitupapp.com/"); }
 
-        private void GithubButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup"); }
+        private void GithubButton_Click(object sender, RoutedEventArgs e) { ServiceManager.Get<IProcessService>().LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup"); }
 
-        private void SaviorXTanrenButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://twitch.tv/SaviorXTanren"); }
+        private void SaviorXTanrenButton_Click(object sender, RoutedEventArgs e) { ServiceManager.Get<IProcessService>().LaunchLink("https://twitch.tv/SaviorXTanren"); }
 
-        private void VerbatimTButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://twitch.tv/Verbatim_T"); }
+        private void VerbatimTButton_Click(object sender, RoutedEventArgs e) { ServiceManager.Get<IProcessService>().LaunchLink("https://twitch.tv/Verbatim_T"); }
 
-        private void TyrenDesButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://twitch.tv/TyrenDes"); }
+        private void TyrenDesButton_Click(object sender, RoutedEventArgs e) { ServiceManager.Get<IProcessService>().LaunchLink("https://twitch.tv/TyrenDes"); }
     }
 }

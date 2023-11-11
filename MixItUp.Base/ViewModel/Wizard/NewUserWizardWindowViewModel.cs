@@ -151,10 +151,10 @@ namespace MixItUp.Base.ViewModel.Wizard
 
         public NewUserWizardWindowViewModel()
         {
-            this.DiscordCommand = this.CreateCommand(() => { ProcessHelper.LaunchLink("https://mixitupapp.com/discord"); });
-            this.TwitterCommand = this.CreateCommand(() => { ProcessHelper.LaunchLink("https://twitter.com/MixItUpApp"); });
-            this.YouTubeCommand = this.CreateCommand(() => { ProcessHelper.LaunchLink("https://www.youtube.com/c/MixItUpApp"); });
-            this.WikiCommand = this.CreateCommand(() => { ProcessHelper.LaunchLink("https://wiki.mixitupapp.com/"); });
+            this.DiscordCommand = this.CreateCommand(() => { ServiceManager.Get<IProcessService>().LaunchLink("https://mixitupapp.com/discord"); });
+            this.TwitterCommand = this.CreateCommand(() => { ServiceManager.Get<IProcessService>().LaunchLink("https://twitter.com/MixItUpApp"); });
+            this.YouTubeCommand = this.CreateCommand(() => { ServiceManager.Get<IProcessService>().LaunchLink("https://www.youtube.com/c/MixItUpApp"); });
+            this.WikiCommand = this.CreateCommand(() => { ServiceManager.Get<IProcessService>().LaunchLink("https://wiki.mixitupapp.com/"); });
 
             this.Twitch.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
             this.Twitch.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };

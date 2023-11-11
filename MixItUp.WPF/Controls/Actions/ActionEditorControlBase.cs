@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 
@@ -8,7 +8,7 @@ namespace MixItUp.WPF.Controls.Actions
     {
         protected void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            ProcessHelper.LaunchLink(e.Uri.AbsoluteUri);
+            ServiceManager.Get<IProcessService>().LaunchLink(e.Uri.AbsoluteUri);
             e.Handled = true;
         }
     }
