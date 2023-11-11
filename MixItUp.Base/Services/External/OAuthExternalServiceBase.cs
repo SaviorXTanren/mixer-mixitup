@@ -117,7 +117,7 @@ namespace MixItUp.Base.Services.External
             LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer(OAuthExternalServiceBase.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
             oauthServer.Start(listeningAddress);
 
-            ProcessHelper.LaunchLink(oauthPageURL);
+            ServiceManager.Get<IProcessService>().LaunchLink(oauthPageURL);
 
             string authorizationCode = await oauthServer.WaitForAuthorizationCode(secondsToWait);
             oauthServer.Stop();

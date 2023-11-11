@@ -153,7 +153,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 MainMenuItem menuItem = (MainMenuItem)this.DataContext;
                 if (!string.IsNullOrEmpty(menuItem.HelpLink))
                 {
-                    ProcessHelper.LaunchLink(menuItem.HelpLink);
+                    ServiceManager.Get<IProcessService>().LaunchLink(menuItem.HelpLink);
                 }
             }
         }

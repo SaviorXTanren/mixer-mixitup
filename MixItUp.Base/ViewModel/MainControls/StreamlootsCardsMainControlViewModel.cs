@@ -22,11 +22,11 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 if (ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
-                    ProcessHelper.LaunchLink($"https://www.streamloots.com/{ServiceManager.Get<TwitchSessionService>().Username}/manage/cards");
+                    ServiceManager.Get<IProcessService>().LaunchLink($"https://www.streamloots.com/{ServiceManager.Get<TwitchSessionService>().Username}/manage/cards");
                 }
                 else if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
                 {
-                    ProcessHelper.LaunchLink($"https://www.streamloots.com/{ServiceManager.Get<YouTubeSessionService>().UserID}/manage/cards");
+                    ServiceManager.Get<IProcessService>().LaunchLink($"https://www.streamloots.com/{ServiceManager.Get<YouTubeSessionService>().UserID}/manage/cards");
                 }
             });
         }

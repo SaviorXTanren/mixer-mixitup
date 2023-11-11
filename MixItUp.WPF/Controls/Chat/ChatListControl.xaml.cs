@@ -366,7 +366,7 @@ namespace MixItUp.WPF.Controls.Chat
                     Match match = ModerationService.LinkRegex.Match(message.PlainTextMessage);
                     if (match.Success && !string.IsNullOrWhiteSpace(match.Value))
                     {
-                        ProcessHelper.LaunchLink(match.Value);
+                        ServiceManager.Get<IProcessService>().LaunchLink(match.Value);
                     }
                 }
             }

@@ -608,11 +608,11 @@ namespace MixItUp.Base.ViewModel.Currency
             {
                 if (this.IsRank)
                 {
-                    ProcessHelper.LaunchLink("https://wiki.mixitupapp.com/consumables/rank");
+                    ServiceManager.Get<IProcessService>().LaunchLink("https://wiki.mixitupapp.com/consumables/rank");
                 }
                 else
                 {
-                    ProcessHelper.LaunchLink("https://wiki.mixitupapp.com/consumables/currency");
+                    ServiceManager.Get<IProcessService>().LaunchLink("https://wiki.mixitupapp.com/consumables/currency");
                 }
             });
         }

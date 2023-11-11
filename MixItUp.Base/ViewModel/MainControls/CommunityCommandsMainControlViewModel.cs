@@ -260,7 +260,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.WebsiteLinkCommand = this.CreateCommand(() =>
             {
-                ProcessHelper.LaunchLink(this.CommandDetails?.WebsiteURL);
+                ServiceManager.Get<IProcessService>().LaunchLink(this.CommandDetails?.WebsiteURL);
             });
 
             this.GetUserCommandsCommand = this.CreateCommand(async () =>

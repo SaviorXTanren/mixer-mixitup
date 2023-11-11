@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Services;
 using System.Windows.Navigation;
 
@@ -16,11 +16,11 @@ namespace MixItUp.WPF.Controls.Services
         {
             if (e.Uri.IsAbsoluteUri)
             {
-                ProcessHelper.LaunchLink(e.Uri.AbsoluteUri);
+                ServiceManager.Get<IProcessService>().LaunchLink(e.Uri.AbsoluteUri);
             }
             else
             {
-                ProcessHelper.LaunchFolder(e.Uri.OriginalString);
+                ServiceManager.Get<IProcessService>().LaunchFolder(e.Uri.OriginalString);
             }
         }
     }

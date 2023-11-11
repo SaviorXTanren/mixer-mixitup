@@ -22,7 +22,7 @@ namespace MixItUp.WPF.Controls.Actions
             {
                 await ServiceManager.Get<IFileService>().CreateDirectory(counterFolderPath);
             }
-            ProcessHelper.LaunchFolder(counterFolderPath);
+            ServiceManager.Get<IProcessService>().LaunchFolder(counterFolderPath);
         }
     }
 }

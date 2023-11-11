@@ -65,7 +65,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
             this.InstallationFolder = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.AccessTheFolderWhereMixItUpIsInstalled, MixItUp.Base.Resources.InstallationFolder, this.CreateCommand(() =>
             {
-                ProcessHelper.LaunchFolder(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
+                ServiceManager.Get<IProcessService>().LaunchFolder(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
             }));
 
             this.DiagnosticLogging = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.DiagnosticLogging, ChannelSession.AppSettings.DiagnosticLogging,

@@ -297,7 +297,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 this.OpenChannelCommand = this.CreateCommand(() =>
                 {
-                    ProcessHelper.LaunchLink(this.URL);
+                    ServiceManager.Get<IProcessService>().LaunchLink(this.URL);
                 });
 
                 this.RaidChannelCommand = this.CreateCommand(async () =>

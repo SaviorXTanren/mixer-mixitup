@@ -39,7 +39,7 @@ namespace MixItUp.WPF
 
             this.Title += " - v" + Assembly.GetEntryAssembly().GetName().Version.ToString();
 
-            if (ProcessHelper.GetProcessesByName("MixItUp").Count() > 1)
+            if (ServiceManager.Get<IProcessService>().GetProcessesByName("MixItUp").Count() > 1)
             {
                 if (!await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.MixItUpIsAlreadyRunning))
                 {
@@ -189,7 +189,7 @@ namespace MixItUp.WPF
 
             this.Close();
 
-            ProcessHelper.LaunchProgram(Application.ResourceAssembly.Location);
+            ServiceManager.Get<IProcessService>().LaunchProgram(Application.ResourceAssembly.Location);
         }
 
         private Task<bool> ShowLicenseAgreement()
@@ -205,7 +205,7 @@ namespace MixItUp.WPF
 
         public void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            ProcessHelper.LaunchLink(e.Uri.AbsoluteUri);
+            ServiceManager.Get<IProcessService>().LaunchLink(e.Uri.AbsoluteUri);
             e.Handled = true;
         }
     }

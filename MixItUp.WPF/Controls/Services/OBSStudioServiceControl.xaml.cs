@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Services;
 using System.Threading.Tasks;
 using System.Windows.Navigation;
@@ -31,7 +31,7 @@ namespace MixItUp.WPF.Controls.Services
 
         protected override void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            ProcessHelper.LaunchFolder("Assets\\OBS");
+            ServiceManager.Get<IProcessService>().LaunchFolder("Assets\\OBS");
         }
     }
 }

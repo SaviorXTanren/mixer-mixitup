@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Util;
+using MixItUp.Base.Services;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -30,7 +30,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            ProcessHelper.LaunchLink("https://online.mixitupapp.com/alpha");
+            ServiceManager.Get<IProcessService>().LaunchLink("https://online.mixitupapp.com/alpha");
         }
     }
 }

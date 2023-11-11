@@ -1150,6 +1150,7 @@
     <Compile Include="Services\DeveloperAPI\WindowsDeveloperAPIService.cs" />
     <Compile Include="Services\WindowsMusicPlayerService.cs" />
     <Compile Include="Services\WindowsOvrStreamService.cs" />
+    <Compile Include="Services\WindowsProcessService.cs" />
     <Compile Include="Services\WindowsSocketIOConnection.cs" />
     <Compile Include="Services\WindowsOBSService.cs" />
     <Compile Include="Services\WindowsDatabaseService.cs" />

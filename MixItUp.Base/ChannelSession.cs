@@ -14,6 +14,7 @@ using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -511,6 +512,11 @@ namespace MixItUp.Base
                 {
                     await ChannelSession.SaveSettings();
                     sessionBackgroundTimer = 0;
+
+                    int cpuUsage = await ServiceManager.Get<IProcessService>().GetCPUUsage();
+                    float memoryUsage = ServiceManager.Get<IProcessService>().GetMemoryUsage() / 1024 / 1024;
+                    long gcMemory = GC.GetTotalMemory(true) / 1024 / 1024;
+                    Logger.ForceLog(LogLevel.Debug, $"Application Usage: {cpuUsage}% CPU Usage - {memoryUsage} MBs of Memory - {gcMemory} MBs of Garbage Collector Memory");
                 }
             }
         }

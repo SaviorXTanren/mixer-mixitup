@@ -18,7 +18,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.CustomSpellsEditorCommand = this.CreateCommand(() =>
             {
-                ProcessHelper.LaunchLink($"https://studio.trovo.live/mychannel/customization");
+                ServiceManager.Get<IProcessService>().LaunchLink($"https://studio.trovo.live/mychannel/customization");
             });
         }
 
