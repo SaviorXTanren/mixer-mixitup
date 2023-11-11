@@ -514,9 +514,9 @@ namespace MixItUp.Base
                     sessionBackgroundTimer = 0;
 
                     int cpuUsage = await ServiceManager.Get<IProcessService>().GetCPUUsage();
-                    float memoryUsage = ServiceManager.Get<IProcessService>().GetMemoryUsage() / 1024 / 1024;
-                    long gcMemory = GC.GetTotalMemory(true) / 1024 / 1024;
-                    Logger.ForceLog(LogLevel.Debug, $"Application Usage: {cpuUsage}% CPU Usage - {memoryUsage} MBs of Memory - {gcMemory} MBs of Garbage Collector Memory");
+                    int memoryUsage = (int)Math.Round(ServiceManager.Get<IProcessService>().GetMemoryUsage() / 1024 / 1024);
+                    long gcMemory = GC.GetTotalMemory(true);
+                    Logger.ForceLog(LogLevel.Debug, $"Application Usage: {cpuUsage}% CPU Usage - {memoryUsage} MBs of Memory - {gcMemory} Garbage Collector Memory");
                 }
             }
         }
