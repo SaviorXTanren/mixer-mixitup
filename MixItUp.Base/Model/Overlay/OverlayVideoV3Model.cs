@@ -2,7 +2,6 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System.Collections.Generic;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -26,29 +25,19 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayVideoV3Model() : base(OverlayItemV3Type.Video) { }
 
-        protected override async Task<Dictionary<string, string>> GetCustomProperties(CommandParametersModel parameters)
+        public override Dictionary<string, string> GetGenerationProperties()
         {
-            Dictionary<string, string> properties = await base.GetCustomProperties(parameters);
-
-            string filepath = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.FilePath, parameters);
-            filepath = RandomHelper.PickRandomFileFromDelimitedString(filepath);
-
-            string extension = Path.GetExtension(filepath);
-            if (!string.IsNullOrEmpty(extension))
-            {
-                extension = extension.Substring(1);
-            }
-            else
-            {
-                extension = "mp4";
-            }
-
-            properties[nameof(this.FilePath)] = ServiceManager.Get<OverlayV3Service>().GetURLForFile(filepath, "video");
+            Dictionary<string, string> properties = base.GetGenerationProperties();
+            properties[nameof(this.FilePath)] = RandomHelper.PickRandomFileFromDelimitedString(this.FilePath);
             properties[nameof(this.Volume)] = this.Volume.ToString();
             properties[nameof(this.Loop)] = this.Loop ? "loop" : string.Empty;
-            properties["VideoExtension"] = extension;
-
             return properties;
+        }
+
+        public override async Task ProcessGenerationProperties(Dictionary<string, string> properties, CommandParametersModel parameters)
+        {
+            properties[nameof(this.FilePath)] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(properties[nameof(this.FilePath)], parameters);
+            properties[nameof(this.FilePath)] = ServiceManager.Get<OverlayV3Service>().GetURLForFile(properties[nameof(this.FilePath)], "video");
         }
     }
 }

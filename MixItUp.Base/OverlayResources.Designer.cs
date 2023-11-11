@@ -114,33 +114,13 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to animateCSS(maindiv, &apos;{AnimateCSSAnimationName}&apos;);.
+        ///   Looks up a localized string similar to animateCSS(document.getElementById(&apos;{AnimationElementID}&apos;), &apos;{AnimateCSSAnimationName}&apos;).then((message) =&gt; {
+        ///    {PostAnimation}
+        ///});.
         /// </summary>
         public static string OverlayAnimateCSSJavascript {
             get {
                 return ResourceManager.GetString("OverlayAnimateCSSJavascript", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to animateCSS(maindiv, &apos;{AnimateCSSAnimationName}&apos;).then((message) =&gt; {
-        ///    {PostAnimation}
-        ///});.
-        /// </summary>
-        public static string OverlayAnimateCSSThenJavascript {
-            get {
-                return ResourceManager.GetString("OverlayAnimateCSSThenJavascript", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to setTimeout(function () {
-        ///    {Animation}
-        ///}, {MillisecondTiming});.
-        /// </summary>
-        public static string OverlayAnimationTimedWrapperJavascript {
-            get {
-                return ResourceManager.GetString("OverlayAnimationTimedWrapperJavascript", resourceCulture);
             }
         }
         
@@ -394,28 +374,23 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
-        ///
-        ///&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
-        ///&lt;head&gt;
-        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
-        ///    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
-        ///
-        ///    &lt;script&gt;
-        ///        var connection;
-        ///        var isDebug = false;
-        ///
-        ///        function openWebsocketConnection(path) {
-        ///            openWebsocketConnectionWithAddressPort(window.location.hostname, window.location.port, path);
-        ///        }
-        ///
-        ///        function openWebsocketConnectionWithAddressPort(address, port, path) {
-        ///            try {
-        ///                va [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to .image {
+        ///    width: {Width};
+        ///    height: {Height};
+        ///}.
         /// </summary>
-        public static string OverlayHTML {
+        public static string OverlayImageDefaultCSS {
             get {
-                return ResourceManager.GetString("OverlayHTML", resourceCulture);
+                return ResourceManager.GetString("OverlayImageDefaultCSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;img id=&quot;image&quot; class=&quot;image&quot; src=&quot;{FilePath}&quot; /&gt;.
+        /// </summary>
+        public static string OverlayImageDefaultHTML {
+            get {
+                return ResourceManager.GetString("OverlayImageDefaultHTML", resourceCulture);
             }
         }
         
@@ -423,9 +398,9 @@ namespace MixItUp.Base {
         ///   Looks up a localized string similar to maindiv.style.visibility=&apos;hidden&apos;;
         ///sendParentMessage({ Type: &quot;Remove&quot;, ID: &quot;{ID}&quot; });.
         /// </summary>
-        public static string OverlayIFrameSendParentMessageRemove {
+        public static string OverlayItemHideAndSendParentMessageRemoveJavascript {
             get {
-                return ResourceManager.GetString("OverlayIFrameSendParentMessageRemove", resourceCulture);
+                return ResourceManager.GetString("OverlayItemHideAndSendParentMessageRemoveJavascript", resourceCulture);
             }
         }
         
@@ -449,30 +424,9 @@ namespace MixItUp.Base {
         ///&lt;/head&gt;
         ///&lt;body style=&quot;background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100 [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string OverlayIFrameTemplate {
+        public static string OverlayItemIFrameHTML {
             get {
-                return ResourceManager.GetString("OverlayIFrameTemplate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .image {
-        ///    width: {Width};
-        ///    height: {Height};
-        ///}.
-        /// </summary>
-        public static string OverlayImageDefaultCSS {
-            get {
-                return ResourceManager.GetString("OverlayImageDefaultCSS", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;img id=&quot;image&quot; class=&quot;image&quot; src=&quot;{FilePath}&quot; /&gt;.
-        /// </summary>
-        public static string OverlayImageDefaultHTML {
-            get {
-                return ResourceManager.GetString("OverlayImageDefaultHTML", resourceCulture);
+                return ResourceManager.GetString("OverlayItemIFrameHTML", resourceCulture);
             }
         }
         
@@ -524,6 +478,32 @@ namespace MixItUp.Base {
         public static string OverlayLabelUsernameDefaultHTML {
             get {
                 return ResourceManager.GetString("OverlayLabelUsernameDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///
+        ///&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+        ///&lt;head&gt;
+        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///    &lt;title&gt;Mix It Up - Overlay&lt;/title&gt;
+        ///
+        ///    &lt;script&gt;
+        ///        var connection;
+        ///        var isDebug = false;
+        ///
+        ///        function openWebsocketConnection(path) {
+        ///            openWebsocketConnectionWithAddressPort(window.location.hostname, window.location.port, path);
+        ///        }
+        ///
+        ///        function openWebsocketConnectionWithAddressPort(address, port, path) {
+        ///            try {
+        ///                va [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string OverlayMainHTML {
+            get {
+                return ResourceManager.GetString("OverlayMainHTML", resourceCulture);
             }
         }
         
@@ -601,6 +581,17 @@ namespace MixItUp.Base {
         public static string OverlayTextDefaultHTML {
             get {
                 return ResourceManager.GetString("OverlayTextDefaultHTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to setTimeout(function () {
+        ///    {PostTimeout}
+        ///}, {MillisecondTiming});.
+        /// </summary>
+        public static string OverlayTimeoutWrapperJavascript {
+            get {
+                return ResourceManager.GetString("OverlayTimeoutWrapperJavascript", resourceCulture);
             }
         }
         
@@ -688,7 +679,7 @@ namespace MixItUp.Base {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;video id=&quot;video&quot; class=&quot;video&quot; onloadstart=&quot;this.volume={Volume}&quot; allow=&quot;autoplay; encrypted-media&quot; autoplay {Loop}&gt;
-        ///    &lt;source src=&quot;{FilePath}&quot; type=&quot;video/{VideoExtension}&quot; /&gt;
+        ///    &lt;source src=&quot;{FilePath}&quot; /&gt;
         ///&lt;/video&gt;.
         /// </summary>
         public static string OverlayVideoDefaultHTML {

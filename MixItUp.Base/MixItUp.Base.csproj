@@ -5,8 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Overlay\OverlayPageOld.html" />
-    <None Remove="Overlay\webSocketWrapper.js" />
     <None Remove="XSplit\Mix It Up.html" />
   </ItemGroup>
 
@@ -18,9 +16,6 @@
 
   <ItemGroup>
     <Content Include="Deprecated\OverlayPageOld.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Overlay\webSocketWrapper.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="XSplit\Mix It Up.html">

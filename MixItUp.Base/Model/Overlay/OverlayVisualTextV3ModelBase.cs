@@ -1,10 +1,6 @@
-﻿using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Services;
-using MixItUp.Base.Util;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -38,22 +34,29 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public string ShadowColor { get; set; }
 
+        [JsonIgnore]
+        public string FontFamily { get { return this.FontName; } }
+        [JsonIgnore]
+        public string FontWeight { get { return this.Bold ? "bold" : "normal"; } }
+        [JsonIgnore]
+        public string TextDecoration { get { return this.Underline ? "underline" : "none"; } }
+        [JsonIgnore]
+        public string FontStyle { get { return this.Italics ? "italic" : "normal"; } }
+
         public OverlayVisualTextV3ModelBase(OverlayItemV3Type type) : base(type) { }
 
-        protected override async Task<Dictionary<string, string>> GetCustomProperties(CommandParametersModel parameters)
+        public override Dictionary<string, string> GetGenerationProperties()
         {
-            Dictionary<string, string> properties = await base.GetCustomProperties(parameters);
-
+            Dictionary<string, string> properties = base.GetGenerationProperties();
             properties[nameof(this.Text)] = this.Text;
             properties[nameof(this.FontSize)] = this.FontSize.ToString();
-            properties["FontFamily"] = this.FontName;
+            properties[nameof(this.FontFamily)] = this.FontFamily;
             properties[nameof(this.FontColor)] = this.FontColor;
-            properties["FontWeight"] = this.Bold ? "bold" : "normal";
-            properties["TextDecoration"] = this.Underline ? "underline" : "none";
-            properties["FontStyle"] = this.Italics ? "italic" : "normal";
+            properties[nameof(this.FontWeight)] = this.FontWeight;
+            properties[nameof(this.TextDecoration)] = this.TextDecoration;
+            properties[nameof(this.FontStyle)] = this.FontStyle;
             properties[nameof(this.TextAlignment)] = this.TextAlignment.ToString().ToLower();
             properties[nameof(this.ShadowColor)] = (!string.IsNullOrEmpty(this.ShadowColor)) ? $"2px 2px {this.ShadowColor}" : "none";
-
             return properties;
         }
     }

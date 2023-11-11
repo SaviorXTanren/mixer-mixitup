@@ -166,7 +166,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.Javascript = item.Javascript;
 
             this.Position = new OverlayPositionV3ViewModel(item.Position);
-            this.Duration = item.Duration;
+            //this.Duration = item.Duration;
 
             //foreach (var animation in item.Animations)
             //{
@@ -208,7 +208,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             OverlayItemV3ModelBase item = this.GetItemInternal();
 
             item.Position = this.Position.GetPosition();
-            item.Duration = this.Duration;
+            //item.Duration = this.Duration;
 
             //foreach (var animation in this.Animations)
             //{

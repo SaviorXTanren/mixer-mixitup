@@ -1,8 +1,6 @@
-﻿using MixItUp.Base.Model.Commands;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -27,32 +25,23 @@ namespace MixItUp.Base.Model.Overlay
         public string ClipReferenceID { get; set; }
 
         [JsonIgnore]
-        public string TempClipID { get; set; }
+        public string ClipID { get; set; }
         [JsonIgnore]
-        public float TempClipDuration { get; set; }
+        public float ClipDuration { get; set; }
+
+        [JsonIgnore]
+        public string ClipHeight { get { return (this.Height > 0) ? $"{this.Height}px" : "100%"; } }
+        [JsonIgnore]
+        public string ClipWidth { get { return (this.Width > 0) ? $"{this.Width}px" : "100%"; } }
 
         public OverlayTwitchClipV3Model() : base(OverlayItemV3Type.TwitchClip) { }
 
-        protected override async Task<Dictionary<string, string>> GetCustomProperties(CommandParametersModel parameters)
+        public override Dictionary<string, string> GetGenerationProperties()
         {
-            Dictionary<string, string> properties = await base.GetCustomProperties(parameters);
-
-            string clipHeight = "100%";
-            if (this.Width > 0)
-            {
-                clipHeight = this.Height.ToString();
-            }
-
-            string clipWidth = "100%";
-            if (this.Width > 0)
-            {
-                clipWidth = this.Width.ToString();
-            }
-
-            properties["ClipHeight"] = clipHeight;
-            properties["ClipWidth"] = clipWidth;
-            properties["ClipID"] = this.TempClipID;
-
+            Dictionary<string, string> properties = base.GetGenerationProperties();
+            properties[nameof(this.ClipID)] = this.ClipID;
+            properties[nameof(this.ClipHeight)] = this.ClipHeight;
+            properties[nameof(this.ClipWidth)] = this.ClipWidth;
             return properties;
         }
     }

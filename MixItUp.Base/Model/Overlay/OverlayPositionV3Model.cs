@@ -1,5 +1,6 @@
-﻿using MixItUp.Base.Services;
-using MixItUp.Base.Util;
+﻿using MixItUp.Base.Util;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -22,36 +23,24 @@ namespace MixItUp.Base.Model.Overlay
 
         public int Layer { get; set; }
 
-        public virtual void SetPosition(OverlayOutputV3Model result) { this.SetPositionInternal(result, this.XPosition, this.YPosition); }
+        [JsonIgnore]
+        public bool PositionTypeIsPercentage { get { return this.Type == OverlayPositionV3Type.Simple || this.Type == OverlayPositionV3Type.Percentage; } }
+        [JsonIgnore]
+        public string PositionType { get { return this.PositionTypeIsPercentage ? "%" : "px"; } }
 
-        protected void SetPositionInternal(OverlayOutputV3Model result, int x, int y)
+        public virtual void SetPositionProperties(Dictionary<string, string> properties) { this.SetPositionPropertiesInternal(properties, this.XPosition, this.YPosition); }
+
+        protected void SetPositionPropertiesInternal(Dictionary<string, string> properties, int x, int y)
         {
-            result.HTML = OverlayV3Service.ReplaceProperty(result.HTML, nameof(this.XPosition), x.ToString());
-            result.CSS = OverlayV3Service.ReplaceProperty(result.CSS, nameof(this.XPosition), x.ToString());
-            result.Javascript = OverlayV3Service.ReplaceProperty(result.Javascript, nameof(this.XPosition), x.ToString());
-
-            result.HTML = OverlayV3Service.ReplaceProperty(result.HTML, nameof(this.YPosition), y.ToString());
-            result.CSS = OverlayV3Service.ReplaceProperty(result.CSS, nameof(this.YPosition), y.ToString());
-            result.Javascript = OverlayV3Service.ReplaceProperty(result.Javascript, nameof(this.YPosition), y.ToString());
-
-            bool positionTypeIsPercentage = this.Type == OverlayPositionV3Type.Simple || this.Type == OverlayPositionV3Type.Percentage;
-            result.HTML = OverlayV3Service.ReplaceProperty(result.HTML, "PositionType", positionTypeIsPercentage ? "%" : "px");
-            result.CSS = OverlayV3Service.ReplaceProperty(result.CSS, "PositionType", positionTypeIsPercentage ? "%" : "px");
-            result.Javascript = OverlayV3Service.ReplaceProperty(result.Javascript, "PositionType", positionTypeIsPercentage ? "%" : "px");
-
             if (this.Layer == 0)
             {
                 zIndexCounter++;
-                result.HTML = OverlayV3Service.ReplaceProperty(result.HTML, nameof(this.Layer), zIndexCounter.ToString());
-                result.CSS = OverlayV3Service.ReplaceProperty(result.CSS, nameof(this.Layer), zIndexCounter.ToString());
-                result.Javascript = OverlayV3Service.ReplaceProperty(result.Javascript, nameof(this.Layer), zIndexCounter.ToString());
             }
-            else
-            {
-                result.HTML = OverlayV3Service.ReplaceProperty(result.HTML, nameof(this.Layer), this.Layer.ToString());
-                result.CSS = OverlayV3Service.ReplaceProperty(result.CSS, nameof(this.Layer), this.Layer.ToString());
-                result.Javascript = OverlayV3Service.ReplaceProperty(result.Javascript, nameof(this.Layer), this.Layer.ToString());
-            }
+
+            properties[nameof(this.XPosition)] = x.ToString();
+            properties[nameof(this.YPosition)] = y.ToString();
+            properties[nameof(this.PositionType)] = this.PositionType;
+            properties[nameof(this.Layer)] = (this.Layer == 0) ? zIndexCounter.ToString() : this.Layer.ToString();
         }
     }
 
@@ -72,11 +61,11 @@ namespace MixItUp.Base.Model.Overlay
         public int XMaximum { get; set; }
         public int YMaximum { get; set; }
 
-        public override void SetPosition(OverlayOutputV3Model result)
+        public override void SetPositionProperties(Dictionary<string, string> properties)
         {
             int x = RandomHelper.GenerateRandomNumber(this.XMinimum, this.XMaximum);
             int y = RandomHelper.GenerateRandomNumber(this.YMinimum, this.YMaximum);
-            this.SetPositionInternal(result, x, y);
+            this.SetPositionPropertiesInternal(properties, x, y);
         }
     }
 }

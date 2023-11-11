@@ -1,8 +1,5 @@
-﻿using MixItUp.Base.Model.Commands;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -34,13 +31,11 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayTimerV3Model() : base(OverlayItemV3Type.Timer) { }
 
-        protected override async Task<Dictionary<string, string>> GetCustomProperties(CommandParametersModel parameters)
+        public override Dictionary<string, string> GetGenerationProperties()
         {
-            Dictionary<string, string> properties = await base.GetCustomProperties(parameters);
-
+            Dictionary<string, string> properties = base.GetGenerationProperties();
             properties[nameof(this.CountUp)] = this.CountUp.ToString().ToLower();
             properties[nameof(this.DisplayFormat)] = this.DisplayFormat;
-
             return properties;
         }
     }

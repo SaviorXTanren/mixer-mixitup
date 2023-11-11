@@ -71,14 +71,11 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private OverlayAnimateCSSAnimationType selectedAnimatedCSSAnimation;
 
-        public OverlayAnimationV3ViewModel(string name)
+        public OverlayAnimationV3ViewModel(string name) : this(name, new OverlayAnimationV3Model()) { }
+
+        public OverlayAnimationV3ViewModel(string name, OverlayAnimationV3Model animation)
         {
             this.Name = name;
-        }
-
-        public OverlayAnimationV3ViewModel(OverlayAnimationV3Model animation)
-            : this(animation.Name)
-        {
             if (animation.AnimateCSSAnimation != OverlayAnimateCSSAnimationType.None)
             {
                 this.SelectedAnimationLibrary = OverlayItemAnimationLibraryType.AnimateCSS;
@@ -88,13 +85,11 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public OverlayAnimationV3Model GetAnimation()
         {
-            OverlayAnimationV3Model animation = new OverlayAnimationV3Model(this.Name);
-
+            OverlayAnimationV3Model animation = new OverlayAnimationV3Model();
             if (this.IsAnimateCSSVisible && this.SelectedAnimatedCSSAnimation != OverlayAnimateCSSAnimationType.None)
             {
                 animation.AnimateCSSAnimation = this.SelectedAnimatedCSSAnimation;
             }
-
             return animation;
         }
     }

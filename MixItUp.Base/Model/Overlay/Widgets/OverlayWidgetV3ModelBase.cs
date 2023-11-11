@@ -49,7 +49,7 @@ namespace MixItUp.Base.Model.Overlay.Widgets
             OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
             if (overlay != null)
             {
-                await overlay.SendAdd(this.Item, new CommandParametersModel());
+                //await overlay.Add(this.Item, new CommandParametersModel());
             }
 
             if (this.RefreshTime > 0)
@@ -89,7 +89,7 @@ namespace MixItUp.Base.Model.Overlay.Widgets
             OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
             if (overlay != null)
             {
-                await overlay.SendRemove(this.Item);
+                //await overlay.Remove(this.Item);
             }
 
             this.IsEnabled = false;
@@ -122,7 +122,7 @@ namespace MixItUp.Base.Model.Overlay.Widgets
             OverlayEndpointV3Service overlay = ServiceManager.Get<OverlayV3Service>().GetOverlayEndpointService(this.OverlayEndpointID);
             if (overlay != null)
             {
-                await overlay.SendFunction(this.Item, functionName, dataParameters);
+                //await overlay.Function(this.Item, functionName, dataParameters);
             }
         }
     }

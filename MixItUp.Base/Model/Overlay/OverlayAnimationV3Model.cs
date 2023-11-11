@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -131,12 +132,15 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayAnimationV3Model
     {
-        [DataMember]
-        public string Name { get; set; }
+        private const string AnimationElementID = "AnimationElementID";
+        private const string PostAnimation = "PostAnimation";
+
+        private const string PostTimeout = "PostTimeout";
+        private const string MillisecondTiming = "MillisecondTiming";
 
         [DataMember]
         public OverlayAnimateCSSAnimationType AnimateCSSAnimation { get; set; }
-        [DataMember]
+        [JsonIgnore]
         public string AnimateCSSAnimationName
         {
             get
@@ -160,50 +164,58 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        public OverlayAnimationV3Model(string name)
-        {
-            this.Name = name;
-        }
+        //public string GenerateTimedAnimationJavascript(double seconds)
+        //{
+        //    string output = this.GenerateAnimationJavascript();
+        //    if (!string.IsNullOrEmpty(output))
+        //    {
+        //        output = OverlayV3Service.ReplaceProperty(OverlayResources.OverlayAnimationTimedWrapperJavascript, "Animation", output);
+        //        output = OverlayV3Service.ReplaceProperty(output, "MillisecondTiming", $"({seconds} * 1000)");
+        //    }
+        //    return output;
+        //}
 
-        [Obsolete]
-        public OverlayAnimationV3Model() { }
+        //public string GenerateRemoveAnimationJavascript(string id, double seconds)
+        //{
+        //    string output = this.GenerateAnimationJavascript(includePostProcessingFunction: true);
+        //    if (!string.IsNullOrEmpty(output))
+        //    {
+        //        output = OverlayV3Service.ReplaceProperty(OverlayResources.OverlayAnimationTimedWrapperJavascript, "Animation", output);
+        //        output = OverlayV3Service.ReplaceProperty(output, "PostAnimation", OverlayResources.OverlayItemHideAndSendParentMessageRemoveJavascript);
+        //    }
+        //    else
+        //    {
+        //        output = OverlayV3Service.ReplaceProperty(OverlayResources.OverlayAnimationTimedWrapperJavascript, "Animation", OverlayResources.OverlayItemHideAndSendParentMessageRemoveJavascript);
+        //    }
+        //    output = OverlayV3Service.ReplaceProperty(output, "MillisecondTiming", $"({seconds} * 1000)");
+        //    output = OverlayV3Service.ReplaceProperty(output, "ID", id);
+        //    return output;
+        //}
 
-        public string GenerateTimedAnimationJavascript(double seconds)
-        {
-            string output = this.GenerateAnimationJavascript();
-            if (!string.IsNullOrEmpty(output))
-            {
-                output = OverlayV3Service.ReplaceProperty(OverlayResources.OverlayAnimationTimedWrapperJavascript, "Animation", output);
-                output = OverlayV3Service.ReplaceProperty(output, "MillisecondTiming", $"({seconds} * 1000)");
-            }
-            return output;
-        }
-
-        public string GenerateRemoveAnimationJavascript(string id, double seconds)
-        {
-            string output = this.GenerateAnimationJavascript(includePostProcessingFunction: true);
-            if (!string.IsNullOrEmpty(output))
-            {
-                output = OverlayV3Service.ReplaceProperty(OverlayResources.OverlayAnimationTimedWrapperJavascript, "Animation", output);
-                output = OverlayV3Service.ReplaceProperty(output, "PostAnimation", OverlayResources.OverlayIFrameSendParentMessageRemove);
-            }
-            else
-            {
-                output = OverlayV3Service.ReplaceProperty(OverlayResources.OverlayAnimationTimedWrapperJavascript, "Animation", OverlayResources.OverlayIFrameSendParentMessageRemove);
-            }
-            output = OverlayV3Service.ReplaceProperty(output, "MillisecondTiming", $"({seconds} * 1000)");
-            output = OverlayV3Service.ReplaceProperty(output, "ID", id);
-            return output;
-        }
-
-        public string GenerateAnimationJavascript(bool includePostProcessingFunction = false)
+        public string GenerateAnimationJavascript(string animationElementID, double preTimeout = 0.0, string postAnimation = "")
         {
             string output = string.Empty;
             if (this.AnimateCSSAnimation != OverlayAnimateCSSAnimationType.None)
             {
-                output = includePostProcessingFunction ? OverlayResources.OverlayAnimateCSSThenJavascript : OverlayResources.OverlayAnimateCSSJavascript;
-                output = OverlayV3Service.ReplaceProperty(output, nameof(this.AnimateCSSAnimationName), this.AnimateCSSAnimationName);
+                output = OverlayV3Service.ReplaceProperty(OverlayResources.OverlayAnimateCSSJavascript, nameof(this.AnimateCSSAnimationName), this.AnimateCSSAnimationName);
             }
+
+            if (!string.IsNullOrEmpty(output))
+            {
+                output = OverlayV3Service.ReplaceProperty(output, PostAnimation, postAnimation);
+            }
+            else
+            {
+                output = postAnimation;
+            }
+            output = OverlayV3Service.ReplaceProperty(output, AnimationElementID, animationElementID);
+
+            if (preTimeout > 0.0)
+            {
+                output = OverlayV3Service.ReplaceProperty(OverlayResources.OverlayTimeoutWrapperJavascript, PostTimeout, output);
+                output = OverlayV3Service.ReplaceProperty(output, MillisecondTiming, ((int)Math.Round(preTimeout * 1000)).ToString());
+            }
+
             return output;
         }
     }

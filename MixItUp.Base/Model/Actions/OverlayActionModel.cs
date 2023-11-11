@@ -15,6 +15,8 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class OverlayActionModel : ActionModelBase
     {
+        private const string MainDivElementID = "maindiv";
+
         [DataMember]
         [Obsolete]
         public string OverlayName { get; set; }
@@ -24,9 +26,15 @@ namespace MixItUp.Base.Model.Actions
         public OverlayItemModelBase OverlayItem { get; set; }
 
         [DataMember]
+        public Guid OverlayEndpointID { get; set; }
+        [DataMember]
         public OverlayItemV3ModelBase OverlayItemV3 { get; set; }
         [DataMember]
-        public Guid OverlayEndpointID { get; set; }
+        public string Duration { get; set; }
+        [DataMember]
+        public OverlayAnimationV3Model EntranceAnimation { get; set; }
+        [DataMember]
+        public OverlayAnimationV3Model ExitAnimation { get; set; }
 
         [DataMember]
         public Guid WidgetID { get; set; }
@@ -51,7 +59,7 @@ namespace MixItUp.Base.Model.Actions
             this.OverlayItem = overlayItem;
         }
 
-        public OverlayActionModel(Guid overlayEndpointID, OverlayItemV3ModelBase overlayItem)
+        public OverlayActionModel(Guid overlayEndpointID, OverlayItemV3ModelBase overlayItem, string duration, OverlayAnimationV3Model entranceAnimation, OverlayAnimationV3Model exitAnimation)
             : base(ActionTypeEnum.Overlay)
         {
             //var overlays = ServiceManager.Get<OverlayService>().GetOverlayNames();
@@ -66,6 +74,9 @@ namespace MixItUp.Base.Model.Actions
 
             this.OverlayEndpointID = overlayEndpointID;
             this.OverlayItemV3 = overlayItem;
+            this.Duration = duration;
+            this.EntranceAnimation = entranceAnimation;
+            this.ExitAnimation = exitAnimation;
         }
 
         public OverlayActionModel(Guid widgetID, bool showWidget)
@@ -164,12 +175,49 @@ namespace MixItUp.Base.Model.Actions
                                 return;
                             }
 
-                            overlayTwitchClipItemV3.TempClipID = clip.id;
-                            overlayTwitchClipItemV3.TempClipDuration = clip.duration;
+                            overlayTwitchClipItemV3.ClipID = clip.id;
+                            overlayTwitchClipItemV3.ClipDuration = clip.duration;
                         }
                     }
 
-                    await overlay.SendBasic(this.OverlayItemV3, parameters);
+                    Dictionary<string, string> properties = this.OverlayItemV3.GetGenerationProperties();
+                    await this.OverlayItemV3.ProcessGenerationProperties(properties, parameters);
+
+                    string javascript = this.OverlayItemV3.Javascript;
+                    double.TryParse(await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.Duration, parameters), out double duration);
+                    if (duration > 0.0)
+                    {
+                        string removeJavascript = OverlayV3Service.ReplaceProperty(OverlayResources.OverlayItemHideAndSendParentMessageRemoveJavascript, nameof(this.OverlayItemV3.ID), properties[nameof(this.OverlayItemV3.ID)]);
+                        string exitJavascript = this.ExitAnimation.GenerateAnimationJavascript(MainDivElementID, preTimeout: duration, postAnimation: removeJavascript);
+                        string entranceAndExitJavascript = this.EntranceAnimation.GenerateAnimationJavascript(MainDivElementID, postAnimation: exitJavascript);
+                        javascript = javascript + "\n\n" + entranceAndExitJavascript;
+                    }
+                    else
+                    {
+                        if (this.OverlayItemV3 is OverlayVideoV3Model)
+                        {
+                            // TODO
+                            return;
+                        }
+                        else
+                        {
+                            // Invalid item to have 0 duration on
+                            return;
+                        }
+                    }
+
+                    string iframeHTML = overlay.GetItemIFrameHTML();
+                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.OverlayItemV3.HTML), this.OverlayItemV3.HTML);
+                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.OverlayItemV3.CSS), this.OverlayItemV3.CSS);
+                    iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, nameof(this.OverlayItemV3.Javascript), javascript);
+
+                    foreach (var property in properties)
+                    {
+                        iframeHTML = OverlayV3Service.ReplaceProperty(iframeHTML, property.Key, property.Value);
+                    }
+                    iframeHTML = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(iframeHTML, parameters);
+
+                    await overlay.Add(properties[nameof(this.OverlayItemV3.ID)], iframeHTML);
                 }
             }
         }

@@ -19,16 +19,17 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayImageV3Model() : base(OverlayItemV3Type.Image) { }
 
-        protected override async Task<Dictionary<string, string>> GetCustomProperties(CommandParametersModel parameters)
+        public override Dictionary<string, string> GetGenerationProperties()
         {
-            Dictionary<string, string> properties = await base.GetCustomProperties(parameters);
-
-            string filepath = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.FilePath, parameters);
-            filepath = RandomHelper.PickRandomFileFromDelimitedString(filepath);
-
-            properties[nameof(this.FilePath)] = ServiceManager.Get<OverlayV3Service>().GetURLForFile(filepath, "image");
-
+            Dictionary<string, string> properties = base.GetGenerationProperties();
+            properties[nameof(this.FilePath)] = RandomHelper.PickRandomFileFromDelimitedString(this.FilePath);
             return properties;
+        }
+
+        public override async Task ProcessGenerationProperties(Dictionary<string, string> properties, CommandParametersModel parameters)
+        {
+            properties[nameof(this.FilePath)] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(properties[nameof(this.FilePath)], parameters);
+            properties[nameof(this.FilePath)] = ServiceManager.Get<OverlayV3Service>().GetURLForFile(properties[nameof(this.FilePath)], "image");
         }
     }
 }

@@ -48,8 +48,8 @@ namespace MixItUp.Base.Model.Actions
         {
             if (this.ActionType == SoundActionTypeEnum.PlaySound)
             {
-                string audioFilePath = await ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
-                audioFilePath = RandomHelper.PickRandomFileFromDelimitedString(audioFilePath);
+                string audioFilePath = RandomHelper.PickRandomFileFromDelimitedString(this.FilePath);
+                audioFilePath = await ReplaceStringWithSpecialModifiers(audioFilePath, parameters);
 
                 if (!ServiceManager.Get<IFileService>().IsURLPath(audioFilePath) && !ServiceManager.Get<IFileService>().FileExists(audioFilePath))
                 {

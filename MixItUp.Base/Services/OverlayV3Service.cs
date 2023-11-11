@@ -68,17 +68,17 @@ namespace MixItUp.Base.Services
     }
 
     [DataContract]
-    public class OverlayURLDataV3Model
+    public class OverlayItemDataV3Model
     {
         [DataMember]
         public string ID { get; set; }
         [DataMember]
         public string URL { get; set; }
 
-        public OverlayURLDataV3Model(OverlayOutputV3Model output)
+        public OverlayItemDataV3Model(string id)
         {
-            this.ID = output.TextID;
-            this.URL = "data/" + this.ID;
+            this.ID = id;
+            this.URL = $"{OverlayV3HttpListenerServer.OverlayDataPrefix}/{this.ID}";
         }
     }
 
@@ -92,26 +92,11 @@ namespace MixItUp.Base.Services
         [DataMember]
         public Dictionary<string, string> Parameters { get; set; }
 
-        public OverlayFunctionV3Model(OverlayItemV3ModelBase item, string functionName, Dictionary<string, string> parameters)
+        public OverlayFunctionV3Model(string id, string functionName, Dictionary<string, string> parameters)
         {
-            this.ID = item.TextID;
+            this.ID = id;
             this.FunctionName = functionName;
             this.Parameters = parameters;
-        }
-    }
-
-    public static class OverlayV3WebPage
-    {
-        public static async Task<string> GetHTMLFromTemplate(string template)
-        {
-            string output = template;
-
-            output = OverlayV3Service.ReplaceScriptTag(output, "jquery-3.6.0.min.js", OverlayResources.jqueryJS);
-            output = OverlayV3Service.ReplaceScriptTag(output, "video.min.js", OverlayResources.videoJS);
-
-            output = OverlayV3Service.ReplaceCSSStyleSheetTag(output, "animate.min.css", OverlayResources.animateCSS);
-
-            return output;
         }
     }
 
@@ -127,6 +112,16 @@ namespace MixItUp.Base.Services
         public static string ReplaceCSSStyleSheetTag(string text, string fileName, string contents)
         {
             return text.Replace($"<link rel=\"stylesheet\" type=\"text/css\" href=\"{fileName}\">", $"<style>{contents}</style>");
+        }
+
+        public static string ReplaceRemoteFiles(string html)
+        {
+            html = OverlayV3Service.ReplaceScriptTag(html, "jquery-3.6.0.min.js", OverlayResources.jqueryJS);
+            html = OverlayV3Service.ReplaceScriptTag(html, "video.min.js", OverlayResources.videoJS);
+
+            html = OverlayV3Service.ReplaceCSSStyleSheetTag(html, "animate.min.css", OverlayResources.animateCSS);
+
+            return html;
         }
 
         public string Name { get { return Resources.Overlay; } }
@@ -290,7 +285,7 @@ namespace MixItUp.Base.Services
                 {
                     if (widget.IsEnabled && widget.OverlayEndpointID == overlay.ID)
                     {
-                        await overlay.SendAdd(widget.Item, new CommandParametersModel());
+                        //await overlay.Add(widget.Item, new CommandParametersModel());
                     }
                 }
                 await overlay.EndBatching();
@@ -342,12 +337,16 @@ namespace MixItUp.Base.Services
         private List<OverlayV3Packet> batchPackets = new List<OverlayV3Packet>();
         private bool isBatching = false;
 
+        private string itemIFrameHTML;
+
         public OverlayEndpointV3Service(OverlayEndpointV3Model model)
         {
             this.Model = model;
 
             this.httpListenerServer = new OverlayV3HttpListenerServer();
             this.webSocketServer = new OverlayV3WebSocketHttpListenerServer();
+
+            this.itemIFrameHTML = OverlayResources.OverlayItemIFrameHTML; //OverlayV3Service.ReplaceRemoteFiles(OverlayResources.OverlayItemIFrameHTML);
         }
 
         public async Task<bool> Initialize()
@@ -404,17 +403,16 @@ namespace MixItUp.Base.Services
 
         public async Task<int> TestConnection() { return await this.webSocketServer.TestConnection(); }
 
-        public async Task SendBasic(OverlayItemV3ModelBase item, CommandParametersModel parameters)
+        public string GetItemIFrameHTML() { return this.itemIFrameHTML; }
+
+        public async Task Add(string id, string html)
         {
             try
             {
-                if (item != null)
+                if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(html))
                 {
-                    OverlayOutputV3Model output = await item.GenerateOutput(parameters);
-
-                    await this.httpListenerServer.SetHTMLData(output.ID.ToString(), this.GenerateOutputHTML(output));
-
-                    await this.Send(new OverlayV3Packet("Basic", new OverlayURLDataV3Model(output)));
+                    this.httpListenerServer.SetHTMLData(id, html);
+                    await this.Send(new OverlayV3Packet(nameof(this.Add), new OverlayItemDataV3Model(id)));
                 }
             }
             catch (Exception ex)
@@ -423,13 +421,13 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task SendResponsiveVoice(OverlayResponsiveVoiceTextToSpeechV3Model item)
+        public async Task Remove(string id)
         {
             try
             {
-                if (item != null)
+                if (!string.IsNullOrEmpty(id))
                 {
-                    await this.Send(new OverlayV3Packet("ResponsiveVoice", item));
+                    await this.Send(new OverlayV3Packet(nameof(this.Remove), new OverlayItemDataV3Model(id)));
                 }
             }
             catch (Exception ex)
@@ -438,17 +436,13 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task SendAdd(OverlayItemV3ModelBase item, CommandParametersModel parameters)
+        public async Task Function(string id, string functionName, Dictionary<string, string> parameters)
         {
             try
             {
-                if (item != null)
+                if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(functionName))
                 {
-                    OverlayOutputV3Model output = await item.GenerateOutput(parameters);
-
-                    await this.httpListenerServer.SetHTMLData(output.ID.ToString(), this.GenerateOutputHTML(output));
-
-                    await this.Send(new OverlayV3Packet("Add", new OverlayURLDataV3Model(output)));
+                    await this.Send(new OverlayV3Packet(nameof(this.Function), new OverlayFunctionV3Model(id, functionName, parameters)));
                 }
             }
             catch (Exception ex)
@@ -457,25 +451,13 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task SendFunction(OverlayItemV3ModelBase item, string functionName, Dictionary<string, string> parameters)
-        {
-            try
-            {
-                await this.Send(new OverlayV3Packet("Function", new OverlayFunctionV3Model(item, functionName, parameters)));
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-        }
-
-        public async Task SendRemove(OverlayItemV3ModelBase item)
+        public async Task ResponsiveVoice(OverlayResponsiveVoiceTextToSpeechV3Model item)
         {
             try
             {
                 if (item != null)
                 {
-                    await this.Send(new OverlayV3Packet("Remove", new OverlayURLDataV3Model(item)));
+                    await this.Send(new OverlayV3Packet(nameof(this.ResponsiveVoice), item));
                 }
             }
             catch (Exception ex)
@@ -517,7 +499,7 @@ namespace MixItUp.Base.Services
 
         private string GenerateOutputHTML(OverlayOutputV3Model output)
         {
-            string content = OverlayResources.OverlayIFrameTemplate;
+            string content = OverlayResources.OverlayItemIFrameHTML;
             content = OverlayV3Service.ReplaceProperty(content, nameof(output.HTML), output.HTML);
             content = OverlayV3Service.ReplaceProperty(content, nameof(output.CSS), output.CSS);
             content = OverlayV3Service.ReplaceProperty(content, nameof(output.Javascript), output.Javascript);
@@ -542,8 +524,13 @@ namespace MixItUp.Base.Services
 
     public class OverlayV3HttpListenerServer : LocalHttpListenerServer
     {
-        private const string OverlayDataWebPath = "overlay/data/";
-        private const string OverlayFilesWebPath = "overlay/files/";
+        public const string OverlayPathPrefix = "overlay";
+
+        public const string OverlayDataPrefix = "data";
+        private static readonly string OverlayDataFullPath = $"{OverlayPathPrefix}/{OverlayDataPrefix}/";
+
+        public const string OverlayFilesPrefix = "files";
+        private static readonly string OverlayFilesFullPath = $"{OverlayPathPrefix}/{OverlayFilesPrefix}/";
 
         private string webPageInstance;
 
@@ -562,7 +549,7 @@ namespace MixItUp.Base.Services
             string id = Guid.NewGuid().ToString();
             this.localFiles[id] = filePath;
 
-            return string.Format("/{0}{1}/{2}?nonce={3}", OverlayFilesWebPath, fileType, id, Guid.NewGuid());
+            return string.Format("/{0}{1}/{2}?nonce={3}", OverlayFilesFullPath, fileType, id, Guid.NewGuid());
         }
 
         public void SetLocalFile(string id, string filePath)
@@ -573,9 +560,14 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task SetHTMLData(string id, string data)
+        public void SetHTMLData(string id, string data)
         {
-            this.htmlData[id] = await OverlayV3WebPage.GetHTMLFromTemplate(data);
+            this.htmlData[id] = OverlayV3Service.ReplaceRemoteFiles(data);
+        }
+
+        public void RemoveHTMLData(string id)
+        {
+            this.htmlData.Remove(id);
         }
 
         protected override async Task ProcessConnection(HttpListenerContext listenerContext)
@@ -585,26 +577,26 @@ namespace MixItUp.Base.Services
                 string url = listenerContext.Request.Url.LocalPath;
                 url = url.Trim(new char[] { '/' });
 
-                if (url.Equals("overlay"))
+                if (url.Equals(OverlayPathPrefix))
                 {
                     if (string.IsNullOrEmpty(this.webPageInstance))
                     {
-                        this.webPageInstance = await OverlayV3WebPage.GetHTMLFromTemplate(OverlayResources.OverlayHTML);
+                        this.webPageInstance = OverlayV3Service.ReplaceRemoteFiles(OverlayResources.OverlayMainHTML);
                     }
                     await this.CloseConnection(listenerContext, HttpStatusCode.OK, this.webPageInstance);
                 }
-                else if (url.StartsWith(OverlayDataWebPath))
+                else if (url.StartsWith(OverlayDataFullPath))
                 {
-                    string id = url.Replace(OverlayDataWebPath, string.Empty);
+                    string id = url.Replace(OverlayDataFullPath, string.Empty);
                     if (this.htmlData.TryGetValue(id, out string data))
                     {
-                        this.htmlData.Remove(id);
+                        //this.htmlData.Remove(id);
                         await this.CloseConnection(listenerContext, HttpStatusCode.OK, data);
                     }
                 }
-                else if (url.StartsWith(OverlayFilesWebPath))
+                else if (url.StartsWith(OverlayFilesFullPath))
                 {
-                    string fileID = url.Replace(OverlayFilesWebPath, "");
+                    string fileID = url.Replace(OverlayFilesFullPath, "");
                     string[] splits = fileID.Split(new char[] { '/', '\\' });
                     if (splits.Length == 2)
                     {

@@ -2,6 +2,7 @@
 using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
@@ -22,29 +23,35 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int Volume { get; set; }
 
+        [JsonIgnore]
+        public string HeightNumber { get { return this.Height.ToString(); } }
+        [JsonIgnore]
+        public string WidthNumber { get { return this.Width.ToString(); } }
+
         public OverlayYouTubeV3Model() : base(OverlayItemV3Type.YouTube) { }
 
-        protected override async Task<Dictionary<string, string>> GetCustomProperties(CommandParametersModel parameters)
+        public override Dictionary<string, string> GetGenerationProperties()
         {
-            Dictionary<string, string> properties = await base.GetCustomProperties(parameters);
-
-            string videoID = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(this.VideoID, parameters);
-            videoID = videoID.Replace("https://www.youtube.com/watch?v=", "");
-            videoID = videoID.Replace("www.youtube.com/watch?v=", "");
-            videoID = videoID.Replace("youtube.com/watch?v=", "");
-            videoID = videoID.Replace("https://youtu.be/", "");
-            if (videoID.Contains("&"))
-            {
-                videoID = videoID.Substring(0, videoID.IndexOf("&"));
-            }
-
-            properties[nameof(this.VideoID)] = videoID;
+            Dictionary<string, string> properties = base.GetGenerationProperties();
+            properties[nameof(this.VideoID)] = this.VideoID;
             properties[nameof(this.StartTime)] = this.StartTime.ToString();
             properties[nameof(this.Volume)] = this.Volume.ToString();
-            properties["HeightNumber"] = this.Height.ToString();
-            properties["WidthNumber"] = this.Width.ToString();
-
+            properties[nameof(this.HeightNumber)] = this.HeightNumber;
+            properties[nameof(this.WidthNumber)] = this.WidthNumber;
             return properties;
+        }
+
+        public override async Task ProcessGenerationProperties(Dictionary<string, string> properties, CommandParametersModel parameters)
+        {
+            properties[nameof(this.VideoID)] = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(properties[nameof(this.VideoID)], parameters);
+            properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].Replace("https://www.youtube.com/watch?v=", "");
+            properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].Replace("www.youtube.com/watch?v=", "");
+            properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].Replace("youtube.com/watch?v=", "");
+            properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].Replace("https://youtu.be/", "");
+            if (properties[nameof(this.VideoID)].Contains("&"))
+            {
+                properties[nameof(this.VideoID)] = properties[nameof(this.VideoID)].Substring(0, properties[nameof(this.VideoID)].IndexOf("&"));
+            }
         }
     }
 }

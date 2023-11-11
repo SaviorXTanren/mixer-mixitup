@@ -127,7 +127,7 @@ namespace MixItUp.Base.Services.External
                 }
 
                 OverlayResponsiveVoiceTextToSpeechV3Model ttsRequset = new OverlayResponsiveVoiceTextToSpeechV3Model(text, voice, ((double)volume) / 100.0, ((double)pitch) / 100.0, ((double)rate) / 100.0, waitForFinish);
-                await overlay.SendResponsiveVoice(ttsRequset);
+                await overlay.ResponsiveVoice(ttsRequset);
 
                 if (waitForFinish)
                 {
