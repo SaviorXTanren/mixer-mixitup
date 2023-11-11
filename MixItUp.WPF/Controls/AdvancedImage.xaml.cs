@@ -25,6 +25,13 @@ namespace MixItUp.WPF.Controls
         }
         public static readonly DependencyProperty UseChatFontSizeProperty = DependencyProperty.Register("UseChatFontSize", typeof(bool), typeof(AdvancedImage), new PropertyMetadata(false));
 
+        public int ChatFontSizeScale
+        {
+            get { return (int)GetValue(ChatFontSizeScaleProperty); }
+            set { SetValue(ChatFontSizeScaleProperty, value); }
+        }
+        public static readonly DependencyProperty ChatFontSizeScaleProperty = DependencyProperty.Register("ChatFontSizeScale", typeof(int), typeof(AdvancedImage), new PropertyMetadata(1));
+
         private bool initialized;
 
         public AdvancedImage()
@@ -50,7 +57,7 @@ namespace MixItUp.WPF.Controls
 
                 if (this.UseChatFontSize)
                 {
-                    width = height = ChannelSession.Settings.ChatFontSize;
+                    width = height = ChannelSession.Settings.ChatFontSize * this.ChatFontSizeScale;
                 }
 
                 if (!string.IsNullOrEmpty(this.Path) || this.DataContext is string)

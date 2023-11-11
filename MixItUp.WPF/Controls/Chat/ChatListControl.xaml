@@ -102,7 +102,7 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Controls:AdvancedImage DataContext="{Binding}" UseChatFontSize="True" />
+                                    <Controls:AdvancedImage DataContext="{Binding}" UseChatFontSize="True" ChatFontSizeScale="2" />
                                     <TextBlock Text="{Binding Name}" Margin="10,0,0,0" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </DataTemplate>
