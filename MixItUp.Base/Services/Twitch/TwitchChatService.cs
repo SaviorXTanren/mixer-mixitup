@@ -801,11 +801,6 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (message != null)
             {
-                message.PinnedChatPaidAmount = "2000";
-                message.PinnedChatPaidExponent = "2";
-                message.PinnedChatPaidCurrency = "$";
-                message.PinnedChatPaidLevel = "TWO";
-
                 UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, message.UserID, performPlatformSearch: true);
                 TwitchChatMessageViewModel twitchMessage = null;
                 if (string.IsNullOrEmpty(message.UserLogin) || !message.UserLogin.Equals("jtv"))
