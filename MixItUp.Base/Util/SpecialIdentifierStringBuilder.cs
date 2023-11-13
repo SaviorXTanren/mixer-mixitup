@@ -390,6 +390,7 @@ namespace MixItUp.Base.Util
                 {
                     this.ReplaceSpecialIdentifier(QuoteSpecialIdentifierHeader + "random", ChannelSession.Settings.Quotes.PickRandom().ToString());
                     this.ReplaceSpecialIdentifier(QuoteSpecialIdentifierHeader + "latest", ChannelSession.Settings.Quotes.Last().ToString());
+                    this.ReplaceSpecialIdentifier(QuoteSpecialIdentifierHeader + "total", ChannelSession.Settings.Quotes.Count.ToString());
 
                     if (this.ContainsRegexSpecialIdentifier(QuoteSpecialIdentifierHeader + SpecialIdentifierNumberRegexPattern))
                     {
