@@ -641,71 +641,7 @@ namespace MixItUp.Base.ViewModel.User
         public async Task MergeUserData(UserV2ViewModel other)
         {
             this.model.AddPlatformData(other.platformModel);
-            this.model.OnlineViewingMinutes += other.model.OnlineViewingMinutes;
-            
-            foreach (var kvp in other.model.CurrencyAmounts)
-            {
-                if (!this.model.CurrencyAmounts.ContainsKey(kvp.Key))
-                {
-                    this.model.CurrencyAmounts[kvp.Key] = 0;
-                }
-                this.model.CurrencyAmounts[kvp.Key] += kvp.Value;
-            }
-
-            foreach (var kvp in other.model.InventoryAmounts)
-            {
-                if (!this.model.InventoryAmounts.ContainsKey(kvp.Key))
-                {
-                    this.model.InventoryAmounts[kvp.Key] = new Dictionary<Guid, int>();
-                }
-
-                foreach (var itemKVP in kvp.Value)
-                {
-                    if (!this.model.InventoryAmounts[kvp.Key].ContainsKey(itemKVP.Key))
-                    {
-                        this.model.InventoryAmounts[kvp.Key][itemKVP.Key] = 0;
-                    }
-                    this.model.InventoryAmounts[kvp.Key][itemKVP.Key] += itemKVP.Value;
-                }
-            }
-
-            foreach (var kvp in other.model.StreamPassAmounts)
-            {
-                if (!this.model.StreamPassAmounts.ContainsKey(kvp.Key))
-                {
-                    this.model.StreamPassAmounts[kvp.Key] = 0;
-                }
-                this.model.StreamPassAmounts[kvp.Key] += kvp.Value;
-            }
-
-            if (string.IsNullOrEmpty(this.model.CustomTitle)) { this.model.CustomTitle = other.model.CustomTitle; }
-            if (!this.model.IsSpecialtyExcluded) { this.model.IsSpecialtyExcluded = other.model.IsSpecialtyExcluded; }
-            if (this.model.EntranceCommandID == Guid.Empty) { this.model.EntranceCommandID = other.model.EntranceCommandID; }
-            
-            foreach (Guid id in other.model.CustomCommandIDs)
-            {
-                this.model.CustomCommandIDs.Add(id);
-            }
-
-            if (string.IsNullOrEmpty(this.model.PatreonUserID)) { this.model.PatreonUserID = other.model.PatreonUserID; }
-
-            if (string.IsNullOrEmpty(this.model.Notes))
-            {
-                this.model.Notes = other.model.Notes;
-            }
-            else if (!string.IsNullOrEmpty(other.model.Notes))
-            {
-                this.model.Notes += Environment.NewLine + Environment.NewLine + other.model.Notes;
-            }
-
-            this.model.TotalStreamsWatched += other.Model.TotalStreamsWatched;
-            this.model.TotalAmountDonated += other.Model.TotalAmountDonated;
-            this.model.TotalSubsGifted += other.Model.TotalSubsGifted;
-            this.model.TotalSubsReceived += other.Model.TotalSubsReceived;
-            this.model.TotalChatMessageSent += other.Model.TotalChatMessageSent;
-            this.model.TotalTimesTagged += other.Model.TotalTimesTagged;
-            this.model.TotalCommandsRun += other.Model.TotalCommandsRun;
-            this.model.TotalMonthsSubbed += other.Model.TotalMonthsSubbed;
+            this.model.MergeUserData(other.Model);
 
             await ServiceManager.Get<UserService>().RemoveActiveUser(other.ID);
             await ServiceManager.Get<UserService>().RemoveActiveUser(this.ID);

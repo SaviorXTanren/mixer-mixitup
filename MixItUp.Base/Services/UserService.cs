@@ -8,6 +8,7 @@ using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,8 +72,8 @@ namespace MixItUp.Base.Services
             IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data("SELECT * FROM Users WHERE ID = $ID", new Dictionary<string, object>() { { "$ID", id.ToString() } });
             if (results.Count() > 0)
             {
-                this.SetUserData(results.First());
-                return new UserV2ViewModel(ChannelSession.Settings.DefaultStreamingPlatform, results.First());
+                UserV2Model userData = this.SetUserData(results.First());
+                return new UserV2ViewModel(ChannelSession.Settings.DefaultStreamingPlatform, userData);
             }
 
             return null;
@@ -104,8 +105,15 @@ namespace MixItUp.Base.Services
             IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data($"SELECT * FROM Users WHERE {platform.ToString()}ID = $PlatformID", new Dictionary<string, object>() { { "$PlatformID", platformID } });
             if (results.Count() > 0)
             {
-                this.SetUserData(results.First());
-                return new UserV2ViewModel(platform, results.First());
+                // Check if there is more than 1 user record and if so, merge them together
+                UserV2Model userData = results.First();
+                if (results.Count() > 1)
+                {
+                    userData = this.MergeData(results);
+                }
+
+                userData = this.SetUserData(userData);
+                return new UserV2ViewModel(platform, userData);
             }
 
             if (performPlatformSearch)
@@ -185,8 +193,15 @@ namespace MixItUp.Base.Services
             IEnumerable<UserV2Model> results = await ChannelSession.Settings.LoadUserV2Data($"SELECT * FROM Users WHERE {platform}Username = $PlatformUsername", new Dictionary<string, object>() { { "$PlatformUsername", platformUsername } });
             if (results.Count() > 0)
             {
-                this.SetUserData(results.First());
-                return new UserV2ViewModel(platform, results.First());
+                // Check if there is more than 1 user record and if so, merge them together
+                UserV2Model userData = results.First();
+                if (results.Count() > 1)
+                {
+                    userData = this.MergeData(results);
+                }
+
+                userData = this.SetUserData(userData);
+                return new UserV2ViewModel(platform, userData);
             }
 
             if (performPlatformSearch)
@@ -316,6 +331,7 @@ namespace MixItUp.Base.Services
 
                 ChannelSession.Settings.Users.Remove(user.ID);
             }
+            ChannelSession.Settings.Users.ManualValueDeleted(id);
         }
 
         public async Task ClearUserDataRange(int days)
@@ -356,10 +372,11 @@ namespace MixItUp.Base.Services
             await ServiceManager.Get<IDatabaseService>().Write(ChannelSession.Settings.DatabaseFilePath, "DELETE FROM ImportedUsers");
         }
 
-        public void SetUserData(UserV2Model userData)
+        public UserV2Model SetUserData(UserV2Model userData)
         {
             if (userData != null && userData.ID != Guid.Empty && userData.GetPlatforms().Count() > 0 && !userData.HasPlatformData(StreamingPlatformTypeEnum.None))
             {
+                UserV2Model userDataToDelete = null;
                 lock (ChannelSession.Settings.Users)
                 {
                     if (!ChannelSession.Settings.Users.ContainsKey(userData.ID))
@@ -378,6 +395,23 @@ namespace MixItUp.Base.Services
                         UserPlatformV2ModelBase platformModel = userData.GetPlatformData<UserPlatformV2ModelBase>(platform);
                         if (platformModel != null)
                         {
+                            // Check if there is more than 1 user record and if so, merge them together
+                            try
+                            {
+                                if (this.platformUserIDLookups[platform].TryGetValue(platformModel.ID, out Guid existingUserID) &&
+                                    existingUserID != userData.ID &&
+                                    ChannelSession.Settings.Users.TryGetValue(existingUserID, out UserV2Model existingUserData))
+                                {
+                                    existingUserData.MergeUserData(userData);
+                                    userDataToDelete = userData;
+                                    userData = existingUserData;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Log(ex);
+                            }
+
                             this.platformUserIDLookups[platform][platformModel.ID] = userData.ID;
                             if (!string.IsNullOrEmpty(platformModel.Username))
                             {
@@ -390,7 +424,25 @@ namespace MixItUp.Base.Services
                         }
                     }
                 }
+
+                if (userDataToDelete != null)
+                {
+                    this.DeleteUserData(userDataToDelete.ID);
+                }
             }
+            return userData;
+        }
+
+        private UserV2Model MergeData(IEnumerable<UserV2Model> users)
+        {
+            UserV2Model primaryUserData = users.First();
+            foreach (UserV2Model duplicateUserData in users.Skip(1))
+            {
+                primaryUserData.MergeUserData(duplicateUserData);
+                this.DeleteUserData(duplicateUserData.ID);
+            }
+            ChannelSession.Settings.Users.ManualValueChanged(primaryUserData.ID);
+            return primaryUserData;
         }
 
         private async Task<UserV2ViewModel> CreateUserInternal(UserPlatformV2ModelBase platformModel)
@@ -398,11 +450,11 @@ namespace MixItUp.Base.Services
             if (platformModel != null && !string.IsNullOrEmpty(platformModel.ID))
             {
                 UserV2Model userModel = new UserV2Model(platformModel);
-                UserV2ViewModel user = new UserV2ViewModel(platformModel.Platform, userModel);
-
+                UserV2ViewModel user = null;
                 if (platformModel.Platform != StreamingPlatformTypeEnum.None)
                 {
-                    this.SetUserData(userModel);
+                    userModel = this.SetUserData(userModel);
+                    user = new UserV2ViewModel(platformModel.Platform, userModel);
 
                     UserImportModel import = await ChannelSession.Settings.LoadUserImportData(platformModel.Platform, platformModel.ID, platformModel.Username);
                     if (import != null)
@@ -411,6 +463,11 @@ namespace MixItUp.Base.Services
                         ChannelSession.Settings.ImportedUsers.Remove(import.ID);
                     }
                 }
+                else
+                {
+                    user = new UserV2ViewModel(platformModel.Platform, userModel);
+                }
+
                 return user;
             }
             return null;
