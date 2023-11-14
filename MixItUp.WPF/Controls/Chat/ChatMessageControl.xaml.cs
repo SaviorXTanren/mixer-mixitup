@@ -17,6 +17,8 @@ namespace MixItUp.WPF.Controls.Chat
     /// </summary>
     public partial class ChatMessageControl : UserControl
     {
+        private static StrikethroughConverter strikethroughConverter = new StrikethroughConverter();
+
         public ChatMessageViewModel Message { get; private set; }
 
         private List<TextBlock> textBlocks = new List<TextBlock>();
@@ -27,19 +29,6 @@ namespace MixItUp.WPF.Controls.Chat
 
             this.Loaded += ChatMessageControl_Loaded;
             this.DataContextChanged += ChatMessageControl_DataContextChanged;
-
-            GlobalEvents.OnChatVisualSettingsChanged += GlobalEvents_OnChatVisualSettingsChanged;
-        }
-
-        private void GlobalEvents_OnChatVisualSettingsChanged(object sender, EventArgs e)
-        {
-            if (this.Message != null)
-            {
-                this.Message.OnDeleted -= Message_OnDeleted;
-            }
-            this.Message = null;
-            this.MessageWrapPanel.Children.Clear();
-            this.ChatMessageControl_DataContextChanged(this, new DependencyPropertyChangedEventArgs());
         }
 
         private void ChatMessageControl_Loaded(object sender, RoutedEventArgs e)
@@ -51,8 +40,10 @@ namespace MixItUp.WPF.Controls.Chat
         {
             if (this.IsLoaded && this.DataContext != null && this.DataContext is ChatMessageViewModel && this.Message == null)
             {
+                this.Loaded -= ChatMessageControl_Loaded;
+                this.DataContextChanged -= ChatMessageControl_DataContextChanged;
+
                 this.Message = (ChatMessageViewModel)this.DataContext;
-                this.Message.OnDeleted += Message_OnDeleted;
                 bool italics = false;
                 bool highlighted = false;
 
@@ -131,7 +122,11 @@ namespace MixItUp.WPF.Controls.Chat
 
                 if (this.Message.IsDeleted)
                 {
-                    this.Message_OnDeleted(this, new EventArgs());
+                    foreach (TextBlock textBlock in this.textBlocks)
+                    {
+                        textBlock.TextDecorations = TextDecorations.Strikethrough;
+                    }
+                    this.AddStringMessage(this.Message.DeletedInformation);
                 }
             }
         }
@@ -141,10 +136,12 @@ namespace MixItUp.WPF.Controls.Chat
             foreach (string word in text.Split(new string[] { " " }, StringSplitOptions.None))
             {
                 TextBlock textBlock = new TextBlock();
+                textBlock.DataContext = this.Message;
                 textBlock.Text = word + " ";
                 textBlock.FontSize = ChannelSession.Settings.ChatFontSize;
                 textBlock.VerticalAlignment = VerticalAlignment.Center;
                 textBlock.TextWrapping = TextWrapping.Wrap;
+
                 if (foreground != null)
                 {
                     textBlock.FontWeight = FontWeights.Bold;
@@ -168,37 +165,6 @@ namespace MixItUp.WPF.Controls.Chat
                 this.textBlocks.Add(textBlock);
                 this.MessageWrapPanel.Children.Add(textBlock);
             }
-        }
-
-        private void Message_OnDeleted(object sender, EventArgs e)
-        {
-            this.Dispatcher.Invoke(() =>
-            {
-                foreach (TextBlock tb in this.textBlocks)
-                {
-                    tb.TextDecorations = TextDecorations.Strikethrough;
-                }
-
-                if (!string.IsNullOrEmpty(this.Message.DeletedBy))
-                {
-                    if (!string.IsNullOrEmpty(this.Message.ModerationReason))
-                    {
-                        this.AddStringMessage($" ({this.Message.ModerationReason} {MixItUp.Base.Resources.By}: {this.Message.DeletedBy})");
-                    }
-                    else
-                    {
-                        this.AddStringMessage($" ({MixItUp.Base.Resources.DeletedBy}: {this.Message.DeletedBy})");
-                    }
-                }
-                else if (!string.IsNullOrEmpty(this.Message.ModerationReason))
-                {
-                    this.AddStringMessage($" ({MixItUp.Base.Resources.AutoModerated}: {this.Message.ModerationReason})");
-                }
-                else
-                {
-                    this.AddStringMessage($" ({MixItUp.Base.Resources.ManualDeletion})");
-                }
-            });
         }
     }
 }

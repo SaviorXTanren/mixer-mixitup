@@ -711,6 +711,19 @@ namespace MixItUp.Base.Services
             return Task.CompletedTask;
         }
 
+        public void HandleDeletion(ChatMessageViewModel message)
+        {
+            if (message.IsDeleted)
+            {
+                int index = this.Messages.IndexOf(message);
+                if (index >= 0)
+                {
+                    this.Messages.Remove(message);
+                    this.Messages.Insert(index, message);
+                }
+            }
+        }
+
         public async Task WriteToChatEventLog(ChatMessageViewModel message, string prepend = null)
         {
             if (ChannelSession.Settings.SaveChatEventLogs)

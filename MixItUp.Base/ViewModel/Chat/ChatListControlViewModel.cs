@@ -219,6 +219,7 @@ namespace MixItUp.Base.ViewModel.Chat
         private void GlobalEvents_OnChatVisualSettingsChanged(object sender, EventArgs e)
         {
             this.NotifyPropertyChanged("AlternationCount");
+            this.Messages.Clear();
         }
 
         private void Chat_ChatCommandsReprocessed(object sender, EventArgs e)
