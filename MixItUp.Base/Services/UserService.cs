@@ -336,9 +336,12 @@ namespace MixItUp.Base.Services
 
         public async Task ClearUserDataRange(int days)
         {
-            this.platformUserIDLookups.Clear();
-            this.platformUsernameLookups.Clear();
-            this.platformDisplayNameLookups.Clear();
+            StreamingPlatforms.ForEachPlatform(p =>
+            {
+                this.platformUserIDLookups[p].Clear();
+                this.platformUsernameLookups[p].Clear();
+                this.platformDisplayNameLookups[p].Clear();
+            });
             this.activeUsers.Clear();
 
             await this.LoadAllUserData();
@@ -360,9 +363,12 @@ namespace MixItUp.Base.Services
 
         public async Task ClearAllUserData()
         {
-            this.platformUserIDLookups.Clear();
-            this.platformUsernameLookups.Clear();
-            this.platformDisplayNameLookups.Clear();
+            StreamingPlatforms.ForEachPlatform(p =>
+            {
+                this.platformUserIDLookups[p].Clear();
+                this.platformUsernameLookups[p].Clear();
+                this.platformDisplayNameLookups[p].Clear();
+            });
             this.activeUsers.Clear();
 
             ChannelSession.Settings.Users.Clear();
