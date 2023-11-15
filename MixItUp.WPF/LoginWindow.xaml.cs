@@ -119,6 +119,10 @@ namespace MixItUp.WPF
                             {
                                 newWindow = new MainWindow();
                             }
+
+                            GlobalEvents.OnShowMessageBox -= GlobalEvents_OnShowMessageBox;
+                            GlobalEvents.OnRestartRequested -= GlobalEvents_OnRestartRequested;
+
                             ShowMainWindow(newWindow);
                             this.Hide();
                             this.Close();
@@ -164,6 +168,9 @@ namespace MixItUp.WPF
         {
             if (await this.ShowLicenseAgreement())
             {
+                GlobalEvents.OnShowMessageBox -= GlobalEvents_OnShowMessageBox;
+                GlobalEvents.OnRestartRequested -= GlobalEvents_OnRestartRequested;
+
                 ShowMainWindow(new NewUserWizardWindow());
                 this.Hide();
                 this.Close();
