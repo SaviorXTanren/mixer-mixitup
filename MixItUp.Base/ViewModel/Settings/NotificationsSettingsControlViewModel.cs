@@ -4,6 +4,7 @@ using MixItUp.Base.ViewModel.Settings.Generic;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Settings
@@ -117,7 +118,7 @@ namespace MixItUp.Base.ViewModel.Settings
         public GenericComboBoxSettingsOptionControlViewModel<string> NotificationsAudioOutput { get; set; }
         public GenericNumberSettingsOptionControlViewModel NotificationsCooldownAmount { get; set; }
 
-        public ThreadSafeObservableCollection<IndividualNotificationSettingViewModel> NotificationSounds { get; set; } = new ThreadSafeObservableCollection<IndividualNotificationSettingViewModel>();
+        public ObservableCollection<IndividualNotificationSettingViewModel> NotificationSounds { get; set; } = new ObservableCollection<IndividualNotificationSettingViewModel>();
 
         public NotificationsSettingsControlViewModel()
         {

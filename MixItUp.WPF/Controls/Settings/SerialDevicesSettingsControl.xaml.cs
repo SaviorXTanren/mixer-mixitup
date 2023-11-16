@@ -3,6 +3,7 @@ using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -14,8 +15,8 @@ namespace MixItUp.WPF.Controls.Settings
     /// </summary>
     public partial class SerialDevicesSettingsControl : SettingsControlBase
     {
-        private ThreadSafeObservableCollection<string> portNames = new ThreadSafeObservableCollection<string>();
-        private ThreadSafeObservableCollection<SerialDeviceModel> serialDevices = new ThreadSafeObservableCollection<SerialDeviceModel>();
+        private ObservableCollection<string> portNames = new ObservableCollection<string>();
+        private ObservableCollection<SerialDeviceModel> serialDevices = new ObservableCollection<SerialDeviceModel>();
 
         public SerialDevicesSettingsControl()
         {

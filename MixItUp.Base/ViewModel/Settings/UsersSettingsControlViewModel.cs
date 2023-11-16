@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Settings.Generic;
 using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 
@@ -56,7 +57,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
         public GenericToggleSettingsOptionControlViewModel ExplicitUserRoleRequirements { get; set; }
 
-        public ThreadSafeObservableCollection<UserTitleViewModel> Titles { get; set; } = new ThreadSafeObservableCollection<UserTitleViewModel>();
+        public ObservableCollection<UserTitleViewModel> Titles { get; set; } = new ObservableCollection<UserTitleViewModel>();
 
         public string TitleName
         {

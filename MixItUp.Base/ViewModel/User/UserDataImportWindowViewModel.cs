@@ -8,6 +8,7 @@ using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
@@ -65,7 +66,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public ICommand UserDataFileBrowseCommand { get; private set; }
 
-        public ThreadSafeObservableCollection<UserDataImportColumnViewModel> Columns { get; private set; } = new ThreadSafeObservableCollection<UserDataImportColumnViewModel>();
+        public ObservableCollection<UserDataImportColumnViewModel> Columns { get; private set; } = new ObservableCollection<UserDataImportColumnViewModel>();
 
         private Dictionary<string, UserDataImportColumnViewModel> columnDictionary = new Dictionary<string, UserDataImportColumnViewModel>();
 

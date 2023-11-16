@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -76,7 +77,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
     public class CurrencyRankInventoryMainControlViewModel : WindowControlViewModelBase
     {
-        public ThreadSafeObservableCollection<CurrencyRankInventoryContainerViewModel> Items { get; set; } = new ThreadSafeObservableCollection<CurrencyRankInventoryContainerViewModel>();
+        public ObservableCollection<CurrencyRankInventoryContainerViewModel> Items { get; set; } = new ObservableCollection<CurrencyRankInventoryContainerViewModel>();
 
         public CurrencyRankInventoryMainControlViewModel(MainWindowViewModel windowViewModel) : base(windowViewModel) { }
 

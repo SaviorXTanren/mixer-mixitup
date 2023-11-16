@@ -53,7 +53,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private HashSet<string> serviceDisconnections = new HashSet<string>();
 
-        private ObservableCollection<MainMenuItem> menuItems = new ThreadSafeObservableCollection<MainMenuItem>();
+        private ObservableCollection<MainMenuItem> menuItems = new ObservableCollection<MainMenuItem>();
         private List<MainMenuItem> allMenuItems = new List<MainMenuItem>();
 
         public MainMenuControl()

@@ -5,6 +5,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -34,7 +35,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private string addQuoteText;
 
-        public ThreadSafeObservableCollection<UserQuoteViewModel> Quotes { get; private set; } = new ThreadSafeObservableCollection<UserQuoteViewModel>();
+        public ObservableCollection<UserQuoteViewModel> Quotes { get; private set; } = new ObservableCollection<UserQuoteViewModel>();
 
         public string QuotesFormatText
         {

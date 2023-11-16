@@ -38,7 +38,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
     public class OverlaySettingsControlViewModel : UIViewModelBase
     {
-        public ThreadSafeObservableCollection<OverlayEndpointListingViewModel> Endpoints { get; set; } = new ThreadSafeObservableCollection<OverlayEndpointListingViewModel>();
+        public ObservableCollection<OverlayEndpointListingViewModel> Endpoints { get; set; } = new ObservableCollection<OverlayEndpointListingViewModel>();
 
         public string NewEndpointName
         {

@@ -5,6 +5,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -79,7 +80,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
 
-        public ThreadSafeObservableCollection<PixelChatSceneModel> Scenes { get; set; } = new ThreadSafeObservableCollection<PixelChatSceneModel>();
+        public ObservableCollection<PixelChatSceneModel> Scenes { get; set; } = new ObservableCollection<PixelChatSceneModel>();
 
         public PixelChatSceneModel SelectedScene
         {
@@ -112,7 +113,7 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private PixelChatSceneModel selectedScene;
 
-        public ThreadSafeObservableCollection<PixelChatSceneComponentViewModel> SceneComponents { get; set; } = new ThreadSafeObservableCollection<PixelChatSceneComponentViewModel>();
+        public ObservableCollection<PixelChatSceneComponentViewModel> SceneComponents { get; set; } = new ObservableCollection<PixelChatSceneComponentViewModel>();
 
         public PixelChatSceneComponentViewModel SelectedSceneComponent
         {
@@ -147,7 +148,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
 
-        public ThreadSafeObservableCollection<PixelChatOverlayModel> Overlays { get; set; } = new ThreadSafeObservableCollection<PixelChatOverlayModel>();
+        public ObservableCollection<PixelChatOverlayModel> Overlays { get; set; } = new ObservableCollection<PixelChatOverlayModel>();
 
         public PixelChatOverlayModel SelectedOverlay
         {

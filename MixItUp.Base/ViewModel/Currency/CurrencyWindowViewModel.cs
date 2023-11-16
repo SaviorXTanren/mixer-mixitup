@@ -12,6 +12,7 @@ using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -295,7 +296,7 @@ namespace MixItUp.Base.ViewModel.Currency
         public bool HasRankDownCommand { get { return this.RankDownCommand != null; } }
         public bool DoesNotHaveRankDownCommand { get { return !this.HasRankDownCommand; } }
 
-        public ThreadSafeObservableCollection<RankModel> Ranks { get; set; } = new ThreadSafeObservableCollection<RankModel>();
+        public ObservableCollection<RankModel> Ranks { get; set; } = new ObservableCollection<RankModel>();
 
         public string NewRankName
         {

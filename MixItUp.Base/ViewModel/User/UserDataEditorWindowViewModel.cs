@@ -9,6 +9,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -113,7 +114,7 @@ namespace MixItUp.Base.ViewModel.User
     {
         public string Name { get { return this.inventory.Name; } }
 
-        public ThreadSafeObservableCollection<UserConsumableEditorViewModel> Items { get; set; } = new ThreadSafeObservableCollection<UserConsumableEditorViewModel>();
+        public ObservableCollection<UserConsumableEditorViewModel> Items { get; set; } = new ObservableCollection<UserConsumableEditorViewModel>();
 
         private UserV2ViewModel user;
 
@@ -185,9 +186,9 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public ThreadSafeObservableCollection<UserConsumableEditorViewModel> Consumables { get; set; } = new ThreadSafeObservableCollection<UserConsumableEditorViewModel>();
+        public ObservableCollection<UserConsumableEditorViewModel> Consumables { get; set; } = new ObservableCollection<UserConsumableEditorViewModel>();
 
-        public ThreadSafeObservableCollection<UserInventoryEditorViewModel> Inventories { get; set; } = new ThreadSafeObservableCollection<UserInventoryEditorViewModel>();
+        public ObservableCollection<UserInventoryEditorViewModel> Inventories { get; set; } = new ObservableCollection<UserInventoryEditorViewModel>();
 
         public bool HasInventorySelected
         {
@@ -249,7 +250,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public ThreadSafeObservableCollection<UserOnlyChatCommandModel> UserOnlyChatCommands { get; set; } = new ThreadSafeObservableCollection<UserOnlyChatCommandModel>();
+        public ObservableCollection<UserOnlyChatCommandModel> UserOnlyChatCommands { get; set; } = new ObservableCollection<UserOnlyChatCommandModel>();
         public bool HasUserOnlyChatCommands { get { return this.UserOnlyChatCommands.Count > 0; } }
 
         public CommandModelBase EntranceCommand
@@ -304,8 +305,8 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public ThreadSafeObservableCollection<UserMetricViewModel> Metrics1 { get; private set; } = new ThreadSafeObservableCollection<UserMetricViewModel>();
-        public ThreadSafeObservableCollection<UserMetricViewModel> Metrics2 { get; private set; } = new ThreadSafeObservableCollection<UserMetricViewModel>();
+        public ObservableCollection<UserMetricViewModel> Metrics1 { get; private set; } = new ObservableCollection<UserMetricViewModel>();
+        public ObservableCollection<UserMetricViewModel> Metrics2 { get; private set; } = new ObservableCollection<UserMetricViewModel>();
 
         public string Notes
         {

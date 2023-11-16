@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.MainControls;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -23,7 +24,7 @@ namespace MixItUp.WPF.Controls.Settings
     /// </summary>
     public partial class MainSettingsContainerControl : MainControlBase
     {
-        private ThreadSafeObservableCollection<SettingsOption> settingsGroups = new ThreadSafeObservableCollection<SettingsOption>();
+        private ObservableCollection<SettingsOption> settingsGroups = new ObservableCollection<SettingsOption>();
 
         public MainSettingsContainerControl()
         {

@@ -4,6 +4,7 @@ using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.ChannelPoints;
@@ -12,7 +13,7 @@ namespace MixItUp.Base.ViewModel.Commands
 {
     public class TwitchChannelPointsCommandEditorWindowViewModel : CommandEditorWindowViewModelBase
     {
-        public ThreadSafeObservableCollection<CustomChannelPointRewardModel> ChannelPointRewards { get; set; } = new ThreadSafeObservableCollection<CustomChannelPointRewardModel>();
+        public ObservableCollection<CustomChannelPointRewardModel> ChannelPointRewards { get; set; } = new ObservableCollection<CustomChannelPointRewardModel>();
 
         public CustomChannelPointRewardModel ChannelPointReward
         {

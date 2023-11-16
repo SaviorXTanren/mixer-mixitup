@@ -3,6 +3,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -82,7 +83,7 @@ namespace MixItUp.Base.ViewModel.Requirements
 
     public class ArgumentsRequirementViewModel : RequirementViewModelBase
     {
-        public ThreadSafeObservableCollection<ArgumentsRequirementItemViewModel> Items { get; set; } = new ThreadSafeObservableCollection<ArgumentsRequirementItemViewModel>();
+        public ObservableCollection<ArgumentsRequirementItemViewModel> Items { get; set; } = new ObservableCollection<ArgumentsRequirementItemViewModel>();
 
         public ICommand AddItemCommand { get; private set; }
 

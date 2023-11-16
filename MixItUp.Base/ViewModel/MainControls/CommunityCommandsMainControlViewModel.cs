@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.CommunityCommands;
 using StreamingClient.Base.Util;
 using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -26,7 +27,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private bool showHome = true;
 
-        public ThreadSafeObservableCollection<CommunityCommandCategoryViewModel> Categories { get; set; } = new ThreadSafeObservableCollection<CommunityCommandCategoryViewModel>();
+        public ObservableCollection<CommunityCommandCategoryViewModel> Categories { get; set; } = new ObservableCollection<CommunityCommandCategoryViewModel>();
 
         public ICommand CategorySeeMoreCommand { get; set; }
 
@@ -54,7 +55,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private bool showSearch;
 
-        public ThreadSafeObservableCollection<CommunityCommandViewModel> SearchResults { get; set; } = new ThreadSafeObservableCollection<CommunityCommandViewModel>();
+        public ObservableCollection<CommunityCommandViewModel> SearchResults { get; set; } = new ObservableCollection<CommunityCommandViewModel>();
 
         public ICommand GetCommandDetailsCommand { get; set; }
 
@@ -95,7 +96,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private bool showUserCommands;
 
-        public ThreadSafeObservableCollection<CommunityCommandViewModel> UserCommands { get; set; } = new ThreadSafeObservableCollection<CommunityCommandViewModel>();
+        public ObservableCollection<CommunityCommandViewModel> UserCommands { get; set; } = new ObservableCollection<CommunityCommandViewModel>();
 
         public ICommand GetMyCommandsCommand { get; set; }
 
@@ -110,7 +111,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private bool showMyCommands;
 
-        public ThreadSafeObservableCollection<CommunityCommandViewModel> MyCommands { get; set; } = new ThreadSafeObservableCollection<CommunityCommandViewModel>();
+        public ObservableCollection<CommunityCommandViewModel> MyCommands { get; set; } = new ObservableCollection<CommunityCommandViewModel>();
 
         public ICommand EditMyCommandCommand { get; set; }
 

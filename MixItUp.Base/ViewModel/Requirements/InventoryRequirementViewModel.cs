@@ -11,7 +11,7 @@ namespace MixItUp.Base.ViewModel.Requirements
 {
     public class InventoryListRequirementViewModel : ListRequirementViewModelBase
     {
-        public ThreadSafeObservableCollection<InventoryRequirementViewModel> Items { get; set; } = new ThreadSafeObservableCollection<InventoryRequirementViewModel>();
+        public ObservableCollection<InventoryRequirementViewModel> Items { get; set; } = new ObservableCollection<InventoryRequirementViewModel>();
 
         public ICommand AddItemCommand { get; private set; }
 

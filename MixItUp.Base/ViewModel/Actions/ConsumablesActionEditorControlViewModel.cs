@@ -6,6 +6,7 @@ using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -52,7 +53,7 @@ namespace MixItUp.Base.ViewModel.Actions
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.Consumables; } }
 
-        public ThreadSafeObservableCollection<ConsumableViewModel> Consumables { get; set; } = new ThreadSafeObservableCollection<ConsumableViewModel>();
+        public ObservableCollection<ConsumableViewModel> Consumables { get; set; } = new ObservableCollection<ConsumableViewModel>();
 
         public ConsumableViewModel SelectedConsumable
         {

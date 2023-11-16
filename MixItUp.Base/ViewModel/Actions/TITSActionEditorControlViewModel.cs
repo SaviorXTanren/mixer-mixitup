@@ -4,6 +4,7 @@ using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,7 +34,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool ShowThrowItemGrid { get { return this.SelectedActionType == TITSActionTypeEnum.ThrowItem; } }
 
-        public ThreadSafeObservableCollection<TITSItem> Items { get; set; } = new ThreadSafeObservableCollection<TITSItem>();
+        public ObservableCollection<TITSItem> Items { get; set; } = new ObservableCollection<TITSItem>();
 
         public TITSItem SelectedItem
         {
@@ -70,7 +71,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool ShowActivateTriggerGrid { get { return this.SelectedActionType == TITSActionTypeEnum.ActivateTrigger; } }
 
-        public ThreadSafeObservableCollection<TITSTrigger> Triggers { get; set; } = new ThreadSafeObservableCollection<TITSTrigger>();
+        public ObservableCollection<TITSTrigger> Triggers { get; set; } = new ObservableCollection<TITSTrigger>();
 
         public TITSTrigger SelectedTrigger
         {

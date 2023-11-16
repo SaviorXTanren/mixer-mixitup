@@ -2,6 +2,7 @@
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -10,7 +11,7 @@ namespace MixItUp.Base.ViewModel.Services
 {
     public class PatreonServiceControlViewModel : ServiceControlViewModelBase
     {
-        public ThreadSafeObservableCollection<PatreonTier> Tiers { get; set; } = new ThreadSafeObservableCollection<PatreonTier>();
+        public ObservableCollection<PatreonTier> Tiers { get; set; } = new ObservableCollection<PatreonTier>();
 
         public PatreonTier SelectedTier
         {

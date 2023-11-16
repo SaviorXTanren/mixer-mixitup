@@ -9,6 +9,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -75,7 +76,7 @@ namespace MixItUp.Base.ViewModel.Games
         }
         private string name;
 
-        public ThreadSafeObservableCollection<RoleProbabilityPayoutViewModel> RoleProbabilityPayouts { get; set; } = new ThreadSafeObservableCollection<RoleProbabilityPayoutViewModel>();
+        public ObservableCollection<RoleProbabilityPayoutViewModel> RoleProbabilityPayouts { get; set; } = new ObservableCollection<RoleProbabilityPayoutViewModel>();
 
         public int UserChance
         {
@@ -219,7 +220,7 @@ namespace MixItUp.Base.ViewModel.Games
 
     public abstract class GameCommandEditorWindowViewModelBase : ChatCommandEditorWindowViewModel
     {
-        public ThreadSafeObservableCollection<GameOutcomeViewModel> Outcomes { get; set; } = new ThreadSafeObservableCollection<GameOutcomeViewModel>();
+        public ObservableCollection<GameOutcomeViewModel> Outcomes { get; set; } = new ObservableCollection<GameOutcomeViewModel>();
 
         public ICommand AddOutcomeCommand { get; set; }
         public ICommand DeleteOutcomeCommand { get; set; }

@@ -3,6 +3,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Actions
@@ -38,7 +39,7 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string filePath;
 
-        public ThreadSafeObservableCollection<string> AudioDevices { get; set; } = new ThreadSafeObservableCollection<string>();
+        public ObservableCollection<string> AudioDevices { get; set; } = new ObservableCollection<string>();
 
         public string SelectedAudioDevice
         {

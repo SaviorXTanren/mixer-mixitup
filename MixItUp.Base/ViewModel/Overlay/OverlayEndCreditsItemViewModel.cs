@@ -178,7 +178,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         protected int itemTextSize;
 
-        public ThreadSafeObservableCollection<OverlayEndCreditsSectionItemViewModel> SectionItems { get; set; } = new ThreadSafeObservableCollection<OverlayEndCreditsSectionItemViewModel>();
+        public ObservableCollection<OverlayEndCreditsSectionItemViewModel> SectionItems { get; set; } = new ObservableCollection<OverlayEndCreditsSectionItemViewModel>();
 
         public ICommand AddItemCommand { get; set; }
 

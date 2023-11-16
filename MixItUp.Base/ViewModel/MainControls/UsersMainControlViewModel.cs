@@ -9,6 +9,7 @@ using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -163,7 +164,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public bool IsConsumablesSearchFilterType { get { return this.SelectedSearchFilterType == UserSearchFilterTypeEnum.Consumables; } }
 
-        public ThreadSafeObservableCollection<ConsumableSearchFilterViewModel> ConsumablesSearchFilters { get; set; } = new ThreadSafeObservableCollection<ConsumableSearchFilterViewModel>();
+        public ObservableCollection<ConsumableSearchFilterViewModel> ConsumablesSearchFilters { get; set; } = new ObservableCollection<ConsumableSearchFilterViewModel>();
 
         public ConsumableSearchFilterViewModel SelectedConsumablesSearchFilter
         {
@@ -189,7 +190,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public bool IsConsumablesSearchFilterInventory { get { return this.SelectedConsumablesSearchFilter != null && this.SelectedConsumablesSearchFilter.IsInventory; } }
 
-        public ThreadSafeObservableCollection<InventoryItemModel> ConsumablesItemsSearchFilters { get; set; } = new ThreadSafeObservableCollection<InventoryItemModel>();
+        public ObservableCollection<InventoryItemModel> ConsumablesItemsSearchFilters { get; set; } = new ObservableCollection<InventoryItemModel>();
 
         public InventoryItemModel SelectedConsumablesItemsSearchFilter
         {
