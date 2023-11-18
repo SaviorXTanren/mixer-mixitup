@@ -515,7 +515,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public async Task FindAndAddUser(StreamingPlatformTypeEnum platform, string username)
         {
-            UserV2ViewModel user = await ServiceManager.Get<UserService>().CreateUser(platform, username);
+            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(platform, platformUsername: username);
             if (user != null)
             {
                 await DialogHelper.ShowMessage(string.Format(MixItUp.Base.Resources.UsersSuccessfullyFoundUser, user.DisplayName));

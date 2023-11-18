@@ -30,8 +30,8 @@ namespace MixItUp.Base.Services.Mock
         {
             await this.messageSemaphore.WaitAsync();
 
-            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Mock,
-                (sendAsStreamer) ? ServiceManager.Get<MockSessionService>().Username : ServiceManager.Get<MockSessionService>().Botname);
+            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Mock,
+                platformUsername: sendAsStreamer ? ServiceManager.Get<MockSessionService>().Username : ServiceManager.Get<MockSessionService>().Botname);
 
             ChatMessageViewModel messageViewModel = new ChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.Mock, user);
 

@@ -332,21 +332,16 @@ namespace MixItUp.Base.Services.YouTube
 
                     if (liveChatMessage.AuthorDetails?.ChannelId != null)
                     {
-                        UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.YouTube, liveChatMessage.AuthorDetails.ChannelId);
+                        UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.YouTube, platformID: liveChatMessage.AuthorDetails.ChannelId, liveChatMessage.AuthorDetails.DisplayName, performPlatformSearch: true);
                         if (user == null)
                         {
-                            Channel youtubeUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByID(liveChatMessage.AuthorDetails.ChannelId);
-                            if (youtubeUser != null)
-                            {
-                                user = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(youtubeUser));
-                            }
-                            else
-                            {
-                                user = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(liveChatMessage));
-                            }
-                            await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
+                            user = await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(liveChatMessage));
                         }
-                        user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).SetMessageProperties(liveChatMessage);
+                        else
+                        {
+                            user.GetPlatformData<YouTubeUserPlatformV2Model>(StreamingPlatformTypeEnum.YouTube).SetMessageProperties(liveChatMessage);
+                        }
+                        await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
 
                         // https://developers.google.com/youtube/v3/live/docs/liveChatMessages#resource
                         if (TextMessageEventMessageType.Equals(liveChatMessage.Snippet.Type))
@@ -461,7 +456,11 @@ namespace MixItUp.Base.Services.YouTube
                         }
                         else if (GiftMembershipReceivedEventMessageType.Equals(liveChatMessage.Snippet.Type))
                         {
-                            UserV2ViewModel gifter = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.YouTube, liveChatMessage.Snippet.GiftMembershipReceivedDetails.GifterChannelId, performPlatformSearch: true);
+                            UserV2ViewModel gifter = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.YouTube, platformID: liveChatMessage.Snippet.GiftMembershipReceivedDetails.GifterChannelId, performPlatformSearch: true);
+                            if (gifter == null)
+                            {
+                                await ServiceManager.Get<UserService>().CreateUser(new YouTubeUserPlatformV2Model(liveChatMessage));
+                            }
                             UserV2ViewModel receiver = user;
 
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = receiver.ID;

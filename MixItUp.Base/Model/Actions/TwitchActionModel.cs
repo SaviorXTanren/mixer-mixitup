@@ -329,7 +329,7 @@ namespace MixItUp.Base.Model.Actions
                     if (!string.IsNullOrEmpty(this.Username))
                     {
                         string targetUsername = await ReplaceStringWithSpecialModifiers(this.Username, parameters);
-                        targetUser = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, targetUsername, performPlatformSearch: true);
+                        targetUser = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformUsername: targetUsername, performPlatformSearch: true);
                     }
                     else
                     {

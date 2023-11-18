@@ -449,7 +449,7 @@ namespace MixItUp.Base.Services.Twitch
             string followerUsername = payload["user_login"].Value<string>();
             string followerDisplayName = payload["user_name"].Value<string>();
 
-            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, followerId);
+            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: followerId, platformUsername: followerUsername);
             if (user == null)
             {
                 user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(followerId, followerUsername, followerDisplayName));
@@ -480,7 +480,7 @@ namespace MixItUp.Base.Services.Twitch
                 // The streamer was raided by a channel
                 if (string.Equals(toId, ServiceManager.Get<TwitchSessionService>().Channel.broadcaster_id, StringComparison.OrdinalIgnoreCase))
                 {
-                    UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, fromId);
+                    UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: fromId, platformUsername: fromUsername);
                     if (user == null)
                     {
                         user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(fromId, fromUsername, fromDisplayName));
@@ -753,7 +753,11 @@ namespace MixItUp.Base.Services.Twitch
                 IEnumerable<ChannelFollowerModel> followers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIFollowers(ServiceManager.Get<TwitchSessionService>().User, maxResult: 100);
                 foreach (ChannelFollowerModel follow in followers)
                 {
-                    UserV2ViewModel user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(follow));
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: follow.user_id, platformUsername: follow.user_name);
+                    if (user == null)
+                    {
+                        user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(follow));
+                    }
                     await this.AddFollow(user);
                 }
             }
@@ -1045,7 +1049,7 @@ namespace MixItUp.Base.Services.Twitch
             }
             else
             {
-                user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, packet.user_id);
+                user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: packet.user_id, platformUsername: packet.user_name);
                 if (user == null)
                 {
                     user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(packet));
@@ -1105,7 +1109,7 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void PubSub_OnSubscribedReceived(object sender, PubSubSubscriptionsEventModel packet)
         {
-            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, packet.user_id);
+            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: packet.user_id, platformUsername: packet.user_name);
             if (user == null)
             {
                 user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(packet));
@@ -1166,21 +1170,16 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void PubSub_OnSubscriptionsGiftedReceived(object sender, PubSubSubscriptionsGiftEventModel packet)
         {
-            UserV2ViewModel gifter = packet.IsAnonymousGiftedSubscription ? UserV2ViewModel.CreateUnassociated() : ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, packet.user_id);
+            UserV2ViewModel gifter = packet.IsAnonymousGiftedSubscription ? UserV2ViewModel.CreateUnassociated() : await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: packet.user_id, platformUsername: packet.user_name);
             if (gifter == null)
             {
                 gifter = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(packet));
             }
 
-            UserV2ViewModel receiver = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, packet.recipient_id);
+            UserV2ViewModel receiver = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: packet.recipient_id, platformUsername: packet.recipient_user_name);
             if (receiver == null)
             {
-                receiver = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(new UserModel()
-                {
-                    id = packet.recipient_id,
-                    login = packet.recipient_user_name,
-                    display_name = packet.recipient_display_name
-                }));
+                receiver = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(packet.recipient_id, packet.recipient_user_name, packet.recipient_display_name));
             }
 
             TwitchGiftedSubEventModel giftedSubEvent = new TwitchGiftedSubEventModel(gifter, receiver, packet);
@@ -1316,7 +1315,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             PubSubChannelPointsRedeemedEventModel redemption = packet.redemption;
 
-            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, redemption.user.id);
+            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: redemption.user.id, platformUsername: redemption.user.login);
             if (user == null)
             {
                 user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(redemption.user));
@@ -1355,13 +1354,13 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (!string.IsNullOrEmpty(packet.body))
             {
-                UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, packet.from_id.ToString());
+                UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: packet.from_id.ToString());
                 if (user == null)
                 {
                     user = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(packet));
                 }
 
-                UserV2ViewModel recipient = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Twitch, packet.recipient.id.ToString());
+                UserV2ViewModel recipient = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: packet.recipient.id.ToString());
                 if (recipient == null)
                 {
                     recipient = await ServiceManager.Get<UserService>().CreateUser(new TwitchUserPlatformV2Model(packet.recipient));

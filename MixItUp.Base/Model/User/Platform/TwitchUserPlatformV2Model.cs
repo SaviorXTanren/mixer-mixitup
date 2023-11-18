@@ -44,7 +44,10 @@ namespace MixItUp.Base.Model.User.Platform
             this.SetUserProperties(user);
         }
 
-        public TwitchUserPlatformV2Model(ChatMessagePacketModel message) : this(message.UserID, message.UserLogin, message.UserDisplayName) { }
+        public TwitchUserPlatformV2Model(ChatMessagePacketModel message) : this(message.UserID, message.UserLogin, message.UserDisplayName)
+        {
+            this.SetUserProperties(message);
+        }
 
         public TwitchUserPlatformV2Model(PubSubWhisperEventModel whisper) : this(whisper.from_id.ToString(), whisper.tags.login, whisper.tags.display_name) { }
 
@@ -56,7 +59,9 @@ namespace MixItUp.Base.Model.User.Platform
 
         public TwitchUserPlatformV2Model(ChatUserNoticePacketModel notice)
              : this(notice.UserID.ToString(), !string.IsNullOrEmpty(notice.RaidUserLogin) ? notice.RaidUserLogin : notice.Login, !string.IsNullOrEmpty(notice.RaidUserDisplayName) ? notice.RaidUserDisplayName : notice.DisplayName)
-        { }
+        {
+            this.SetUserProperties(notice);
+        }
 
         public TwitchUserPlatformV2Model(ChatClearChatPacketModel packet) : this(packet.UserID, packet.UserLogin, null) { }
 

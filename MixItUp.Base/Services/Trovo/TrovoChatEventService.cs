@@ -432,20 +432,12 @@ namespace MixItUp.Base.Services.Trovo
                     continue;
                 }
 
-                UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformID(StreamingPlatformTypeEnum.Trovo, message.sender_id.ToString());
+                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformID: message.sender_id.ToString(), platformUsername: message.user_name, performPlatformSearch: true);
                 if (user == null)
                 {
-                    UserModel trovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(message.user_name);
-                    if (trovoUser != null)
-                    {
-                        user = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(trovoUser));
-                    }
-                    else
-                    {
-                        user = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(message));
-                    }
-                    await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
+                    user = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(message));
                 }
+                await ServiceManager.Get<UserService>().AddOrUpdateActiveUser(user);
 
                 user.GetPlatformData<TrovoUserPlatformV2Model>(StreamingPlatformTypeEnum.Trovo).SetUserProperties(message);
 
@@ -561,18 +553,10 @@ namespace MixItUp.Base.Services.Trovo
                     if (splits.Length == 2)
                     {
                         string gifteeUsername = splits[1];
-                        UserV2ViewModel giftee = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum.Trovo, gifteeUsername);
+                        UserV2ViewModel giftee = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformUsername: gifteeUsername, performPlatformSearch: true);
                         if (giftee == null)
                         {
-                            UserModel gifteeTrovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(gifteeUsername);
-                            if (giftee == null)
-                            {
-                                giftee = user;
-                            }
-                            else
-                            {
-                                giftee = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model(gifteeTrovoUser));
-                            }
+                            giftee = await ServiceManager.Get<UserService>().CreateUser(new TrovoUserPlatformV2Model("-1", gifteeUsername, gifteeUsername));
                         }
 
                         ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = giftee.ID;
@@ -702,7 +686,7 @@ namespace MixItUp.Base.Services.Trovo
                     currentViewers.Add(viewer);
                     if (!previousViewers.Contains(viewer))
                     {
-                        UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Trovo, viewer);
+                        UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformUsername: viewer, performPlatformSearch: true);
                         if (user != null)
                         {
                             userJoins.Add(user);
@@ -716,7 +700,7 @@ namespace MixItUp.Base.Services.Trovo
                 {
                     if (!currentViewers.Contains(viewer))
                     {
-                        UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Trovo, viewer);
+                        UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Trovo, platformUsername: viewer, performPlatformSearch: true);
                         if (user != null)
                         {
                             userLeaves.Add(user);

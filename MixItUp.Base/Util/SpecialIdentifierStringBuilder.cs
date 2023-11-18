@@ -572,7 +572,7 @@ namespace MixItUp.Base.Util
                     {
                         if (this.ContainsSpecialIdentifier(currentArgumentSpecialIdentifierHeader + UserSpecialIdentifierHeader))
                         {
-                            UserV2ViewModel argUser = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(platform, parameters.Arguments.ElementAt(i), performPlatformSearch: true);
+                            UserV2ViewModel argUser = await ServiceManager.Get<UserService>().GetUserByPlatform(platform, platformUsername: parameters.Arguments.ElementAt(i), performPlatformSearch: true);
                             if (argUser != null)
                             {
                                 await this.HandleUserSpecialIdentifiers(argUser, currentArgumentSpecialIdentifierHeader);
@@ -1068,7 +1068,7 @@ namespace MixItUp.Base.Util
 
                     this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredSpecialIdentifier + period.ToString().ToLower() + "amount", bitsUser.score.ToString());
 
-                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, bitsUser.user_id);
+                    UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: bitsUser.user_id, platformUsername: bitsUser.user_name);
                     if (user == null)
                     {
                         user = UserV2ViewModel.CreateUnassociated(bitsUser.user_name);

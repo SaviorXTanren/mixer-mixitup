@@ -335,7 +335,7 @@ namespace MixItUp.Base.Services.External
 
         private UserV2ViewModel GetUser(string username)
         {
-            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(StreamingPlatformTypeEnum.All, username);
+            UserV2ViewModel user = ServiceManager.Get<UserService>().GetActiveUserByPlatform(StreamingPlatformTypeEnum.All, platformUsername: username);
             if (user == null)
             {
                 user = UserV2ViewModel.CreateUnassociated(username);

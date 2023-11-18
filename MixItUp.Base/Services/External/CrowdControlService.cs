@@ -180,11 +180,11 @@ namespace MixItUp.Base.Services.External
                             UserV2ViewModel requester = null;
                             if (string.Equals(effect.requester.profile, StreamingPlatformTypeEnum.Twitch.ToString(), StringComparison.OrdinalIgnoreCase))
                             {
-                                requester = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, effect.requester.originID);
+                                requester = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: effect.requester.originID, platformUsername: effect.requester.name);
                             }
                             else if (string.Equals(effect.requester.profile, StreamingPlatformTypeEnum.YouTube.ToString(), StringComparison.OrdinalIgnoreCase))
                             {
-                                requester = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.YouTube, effect.requester.originID);
+                                requester = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.YouTube, platformID: effect.requester.originID, platformUsername: effect.requester.name);
                             }
 
                             if (requester == null)

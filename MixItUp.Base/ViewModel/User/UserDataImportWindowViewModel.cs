@@ -233,13 +233,9 @@ namespace MixItUp.Base.ViewModel.User
                                 UserV2ViewModel user = null;
                                 UserImportModel userImport = null;
 
-                                if (user == null && !string.IsNullOrEmpty(platformID))
+                                if (user == null && (!string.IsNullOrEmpty(platformID) || !string.IsNullOrEmpty(platformUsername)))
                                 {
-                                    user = await ServiceManager.Get<UserService>().GetUserByPlatformID(this.SelectedPlatform, platformID);
-                                }
-                                if (user == null && !string.IsNullOrEmpty(platformUsername))
-                                {
-                                    user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(this.SelectedPlatform, platformUsername);
+                                    user = await ServiceManager.Get<UserService>().GetUserByPlatform(this.SelectedPlatform, platformID: platformID, platformUsername: platformUsername);
                                 }
 
                                 int hours = 0;
