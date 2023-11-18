@@ -138,10 +138,13 @@ namespace MixItUp.Base.ViewModel.Chat
         {
             get
             {
-                string pronoun = this.User.AlejoPronoun;
-                if (!string.IsNullOrEmpty(pronoun))
+                if (this.User != null)
                 {
-                    return $"({this.User.AlejoPronoun})";
+                    string pronoun = this.User.AlejoPronoun;
+                    if (!string.IsNullOrEmpty(pronoun))
+                    {
+                        return $"({this.User.AlejoPronoun})";
+                    }
                 }
                 return string.Empty;
             }
