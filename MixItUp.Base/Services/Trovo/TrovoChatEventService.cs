@@ -297,29 +297,30 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task SendMessage(string message, bool sendAsStreamer = false)
         {
-            await this.messageSemaphore.WaitAndRelease(async () =>
+            await this.messageSemaphore.WaitAsync();
+
+            ChatClient client = this.GetChatClient(sendAsStreamer);
+            if (client != null)
             {
-                ChatClient client = this.GetChatClient(sendAsStreamer);
-                if (client != null)
+                string subMessage = null;
+                do
                 {
-                    string subMessage = null;
-                    do
+                    message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
+                    if (client == this.botClient)
                     {
-                        message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
-                        if (client == this.botClient)
-                        {
-                            await client.SendMessage(ServiceManager.Get<TrovoSessionService>().ChannelID, message);
-                        }
-                        else
-                        {
-                            await client.SendMessage(message);
-                        }
-                        message = subMessage;
-                        await Task.Delay(500);
+                        await client.SendMessage(ServiceManager.Get<TrovoSessionService>().ChannelID, message);
                     }
-                    while (!string.IsNullOrEmpty(message));
+                    else
+                    {
+                        await client.SendMessage(message);
+                    }
+                    message = subMessage;
+                    await Task.Delay(500);
                 }
-            });
+                while (!string.IsNullOrEmpty(message));
+            }
+
+            this.messageSemaphore.Release();
         }
 
         public async Task<bool> DeleteMessage(ChatMessageViewModel message)

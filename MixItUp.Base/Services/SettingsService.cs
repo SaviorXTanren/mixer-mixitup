@@ -165,12 +165,13 @@ namespace MixItUp.Base.Services
             {
                 Logger.ForceLog(LogLevel.Information, "Settings save operation started");
 
-                await semaphore.WaitAndRelease(async () =>
-                {
-                    settings.CopyLatestValues();
-                    await FileSerializerHelper.SerializeToFile(settings.SettingsFilePath, settings);
-                    await settings.SaveDatabaseData();
-                });
+                await semaphore.WaitAsync();
+
+                settings.CopyLatestValues();
+                await FileSerializerHelper.SerializeToFile(settings.SettingsFilePath, settings);
+                await settings.SaveDatabaseData();
+
+                semaphore.Release();
 
                 Logger.ForceLog(LogLevel.Information, "Settings save operation finished");
             }
@@ -188,10 +189,11 @@ namespace MixItUp.Base.Services
                     return;
                 }
 
-                await semaphore.WaitAndRelease(async () =>
-                {
-                    await FileSerializerHelper.SerializeToFile(settings.SettingsLocalBackupFilePath, settings);
-                });
+                await semaphore.WaitAsync();
+
+                await FileSerializerHelper.SerializeToFile(settings.SettingsLocalBackupFilePath, settings);
+
+                semaphore.Release();
 
                 Logger.Log(LogLevel.Debug, "Settings local backup save operation finished");
             }

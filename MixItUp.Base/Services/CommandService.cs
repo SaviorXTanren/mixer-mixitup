@@ -286,20 +286,20 @@ namespace MixItUp.Base.Services
 
         public async Task Pause()
         {
-            await this.commandQueueLock.WaitAndRelease(() =>
-            {
-                this.IsPaused = true;
-                return Task.CompletedTask;
-            });
+            await this.commandQueueLock.WaitAsync();
+
+            this.IsPaused = true;
+
+            this.commandQueueLock.Release();
         }
 
         public async Task Unpause()
         {
-            await this.commandQueueLock.WaitAndRelease(() =>
-            {
-                this.IsPaused = false;
-                return Task.CompletedTask;
-            });
+            await this.commandQueueLock.WaitAsync();
+
+            this.IsPaused = false;
+
+            this.commandQueueLock.Release();
 
             foreach (CommandInstanceModel commandInstance in this.pauseQueue)
             {
@@ -377,43 +377,28 @@ namespace MixItUp.Base.Services
             }
             else
             {
-                await this.commandQueueLock.WaitAndRelease(() =>
+                await this.commandQueueLock.WaitAsync();
+
+                if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.PerCommandType)
                 {
-                    if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.PerCommandType)
+                    perCommandTypeInstances[type].Add(commandInstance);
+                    if (perCommandTypeTasks[type] == null)
                     {
-                        perCommandTypeInstances[type].Add(commandInstance);
-                        if (perCommandTypeTasks[type] == null)
-                        {
-                            perCommandTypeTasks[type] = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
-                        }
+                        perCommandTypeTasks[type] = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
                     }
-                    else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.PerActionType)
+                }
+                else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.PerActionType)
+                {
+                    this.perActionTypeInstances.Add(commandInstance);
+                    if (this.CanCommandBeRunBasedOnActions(commandInstance))
                     {
-                        this.perActionTypeInstances.Add(commandInstance);
-                        if (this.CanCommandBeRunBasedOnActions(commandInstance))
-                        {
-                            this.perActionTypeTasks.Add(AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type)));
-                        }
+                        this.perActionTypeTasks.Add(AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type)));
                     }
-                    else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.VisualAudioActions)
-                    {
-                        HashSet<ActionTypeEnum> actionTypes = commandInstance.GetActionTypes();
-                        if (actionTypes.Any(a => VisualAudioActionTypes.Contains(a)))
-                        {
-                            singularInstances.Add(commandInstance);
-                            if (singularTask == null)
-                            {
-                                singularTask = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
-                            }
-                        }
-                        else
-                        {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                            AsyncRunner.RunAsync(() => this.RunDirectly(commandInstance));
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        }
-                    }
-                    else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.Singular)
+                }
+                else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.VisualAudioActions)
+                {
+                    HashSet<ActionTypeEnum> actionTypes = commandInstance.GetActionTypes();
+                    if (actionTypes.Any(a => VisualAudioActionTypes.Contains(a)))
                     {
                         singularInstances.Add(commandInstance);
                         if (singularTask == null)
@@ -421,8 +406,23 @@ namespace MixItUp.Base.Services
                             singularTask = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
                         }
                     }
-                    return Task.CompletedTask;
-                });
+                    else
+                    {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        AsyncRunner.RunAsync(() => this.RunDirectly(commandInstance));
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    }
+                }
+                else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.Singular)
+                {
+                    singularInstances.Add(commandInstance);
+                    if (singularTask == null)
+                    {
+                        singularTask = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
+                    }
+                }
+
+                this.commandQueueLock.Release();
             }
         }
 
@@ -431,54 +431,55 @@ namespace MixItUp.Base.Services
             CommandInstanceModel instance = null;
             do
             {
-                instance = await this.commandQueueLock.WaitAndRelease(() =>
-                {
-                    CommandInstanceModel commandInstance = null;
-                    if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.PerCommandType)
-                    {
-                        if (perCommandTypeInstances.ContainsKey(type) && perCommandTypeInstances[type].Count > 0)
-                        {
-                            commandInstance = perCommandTypeInstances[type].RemoveFirst();
-                        }
-                        else
-                        {
-                            perCommandTypeTasks[type] = null;
-                        }
-                    }
-                    else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.PerActionType)
-                    {
-                        if (instance != null)
-                        {
-                            foreach (ActionTypeEnum actionType in instance.GetActionTypes())
-                            {
-                                this.perActionTypeInUse.Remove(actionType);
-                            }
-                        }
+                await this.commandQueueLock.WaitAsync();
 
-                        commandInstance = this.perActionTypeInstances.FirstOrDefault(c => this.CanCommandBeRunBasedOnActions(c));
-                        if (commandInstance != null)
-                        {
-                            this.perActionTypeInstances.Remove(commandInstance);
-                            foreach (ActionTypeEnum actionType in commandInstance.GetActionTypes())
-                            {
-                                this.perActionTypeInUse.Add(actionType);
-                            }
-                        }
-                    }
-                    else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.VisualAudioActions ||
-                        ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.Singular)
+                CommandInstanceModel commandInstance = null;
+                if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.PerCommandType)
+                {
+                    if (perCommandTypeInstances.ContainsKey(type) && perCommandTypeInstances[type].Count > 0)
                     {
-                        if (singularInstances.Count > 0)
+                        commandInstance = perCommandTypeInstances[type].RemoveFirst();
+                    }
+                    else
+                    {
+                        perCommandTypeTasks[type] = null;
+                    }
+                }
+                else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.PerActionType)
+                {
+                    if (instance != null)
+                    {
+                        foreach (ActionTypeEnum actionType in instance.GetActionTypes())
                         {
-                            commandInstance = singularInstances.RemoveFirst();
-                        }
-                        else
-                        {
-                            singularTask = null;
+                            this.perActionTypeInUse.Remove(actionType);
                         }
                     }
-                    return Task.FromResult(commandInstance);
-                });
+
+                    commandInstance = this.perActionTypeInstances.FirstOrDefault(c => this.CanCommandBeRunBasedOnActions(c));
+                    if (commandInstance != null)
+                    {
+                        this.perActionTypeInstances.Remove(commandInstance);
+                        foreach (ActionTypeEnum actionType in commandInstance.GetActionTypes())
+                        {
+                            this.perActionTypeInUse.Add(actionType);
+                        }
+                    }
+                }
+                else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.VisualAudioActions ||
+                    ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.Singular)
+                {
+                    if (singularInstances.Count > 0)
+                    {
+                        commandInstance = singularInstances.RemoveFirst();
+                    }
+                    else
+                    {
+                        singularTask = null;
+                    }
+                }
+
+                this.commandQueueLock.Release();
+                instance = commandInstance;
 
                 if (instance != null && instance.State == CommandInstanceStateEnum.Pending)
                 {

@@ -62,33 +62,32 @@ namespace MixItUp.Base.Model.Overlay
 
         private async Task AddGameQueueUsers(IEnumerable<CommandParametersModel> parameters)
         {
-            await this.listSemaphore.WaitAndRelease(() =>
+            await this.listSemaphore.WaitAsync();
+
+            foreach (UserV2ViewModel user in this.lastUsers)
             {
-                foreach (UserV2ViewModel user in this.lastUsers)
+                if (!parameters.Select(p => p.User).Contains(user))
                 {
-                    if (!parameters.Select(p => p.User).Contains(user))
-                    {
-                        this.Items.Add(OverlayListIndividualItemModel.CreateRemoveItem(user.ID.ToString()));
-                    }
+                    this.Items.Add(OverlayListIndividualItemModel.CreateRemoveItem(user.ID.ToString()));
                 }
+            }
 
-                for (int i = 0; i < parameters.Count() && i < this.TotalToShow; i++)
-                {
-                    CommandParametersModel p = parameters.ElementAt(i);
+            for (int i = 0; i < parameters.Count() && i < this.TotalToShow; i++)
+            {
+                CommandParametersModel p = parameters.ElementAt(i);
 
-                    OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(p.User.ID.ToString(), p.User, i + 1, this.HTML);
-                    item.TemplateReplacements.Add("USERNAME", (string)p.User.DisplayName);
-                    item.TemplateReplacements.Add("POSITION", (i + 1).ToString());
+                OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(p.User.ID.ToString(), p.User, i + 1, this.HTML);
+                item.TemplateReplacements.Add("USERNAME", (string)p.User.DisplayName);
+                item.TemplateReplacements.Add("POSITION", (i + 1).ToString());
 
-                    this.Items.Add(item);
-                }
+                this.Items.Add(item);
+            }
 
-                this.lastUsers = new List<UserV2ViewModel>(parameters.Select(p => p.User));
+            this.lastUsers = new List<UserV2ViewModel>(parameters.Select(p => p.User));
 
-                this.SendUpdateRequired();
+            this.SendUpdateRequired();
 
-                return Task.CompletedTask;
-            });
+            this.listSemaphore.Release();
         }
     }
 }

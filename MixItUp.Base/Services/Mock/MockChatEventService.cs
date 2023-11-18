@@ -28,17 +28,18 @@ namespace MixItUp.Base.Services.Mock
 
         public async Task SendMessage(string message, bool sendAsStreamer = false)
         {
-            await this.messageSemaphore.WaitAndRelease(async () =>
-            {
-                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Mock,
-                    (sendAsStreamer) ? ServiceManager.Get<MockSessionService>().Username : ServiceManager.Get<MockSessionService>().Botname);
+            await this.messageSemaphore.WaitAsync();
 
-                ChatMessageViewModel messageViewModel = new ChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.Mock, user);
+            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Mock,
+                (sendAsStreamer) ? ServiceManager.Get<MockSessionService>().Username : ServiceManager.Get<MockSessionService>().Botname);
 
-                this.messages.Add(messageViewModel);
+            ChatMessageViewModel messageViewModel = new ChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.Mock, user);
 
-                await ServiceManager.Get<ChatService>().AddMessage(messageViewModel);
-            });
+            this.messages.Add(messageViewModel);
+
+            await ServiceManager.Get<ChatService>().AddMessage(messageViewModel);
+
+            this.messageSemaphore.Release();
         }
 
         public Task<bool> DeleteMessage(ChatMessageViewModel message)

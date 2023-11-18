@@ -302,15 +302,15 @@ namespace MixItUp.Base.Model.Commands
             if (this.UpdateFollowEventModerationCount())
             {
                 bool allowFollowEvent = false;
-                await EventCommandModel.followEventsInQueueSemaphore.WaitAndRelease(() =>
+                await EventCommandModel.followEventsInQueueSemaphore.WaitAsync();
+
+                if (EventCommandModel.FollowEventsInQueue < ChannelSession.Settings.ModerationFollowEventMaxInQueue)
                 {
-                    if (EventCommandModel.FollowEventsInQueue < ChannelSession.Settings.ModerationFollowEventMaxInQueue)
-                    {
-                        EventCommandModel.FollowEventsInQueue++;
-                        allowFollowEvent = true;
-                    }
-                    return Task.CompletedTask;
-                });
+                    EventCommandModel.FollowEventsInQueue++;
+                    allowFollowEvent = true;
+                }
+
+                EventCommandModel.followEventsInQueueSemaphore.Release();
 
                 if (!allowFollowEvent)
                 {

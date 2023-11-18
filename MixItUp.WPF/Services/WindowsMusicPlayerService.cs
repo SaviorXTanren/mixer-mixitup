@@ -61,24 +61,25 @@ namespace MixItUp.WPF.Services
             {
                 if (this.State == MusicPlayerState.Paused)
                 {
-                    await this.sempahore.WaitAndRelease(() =>
+                    await this.sempahore.WaitAsync();
+
+                    this.State = MusicPlayerState.Playing;
+                    if (this.currentWaveOutEvent != null)
                     {
-                        this.State = MusicPlayerState.Playing;
-                        if (this.currentWaveOutEvent != null)
-                        {
-                            this.currentWaveOutEvent.Play();
-                        }
-                        return Task.CompletedTask;
-                    });
+                        this.currentWaveOutEvent.Play();
+                    }
+
+                    this.sempahore.Release();
                 }
                 else if (this.State == MusicPlayerState.Stopped)
                 {
-                    await this.sempahore.WaitAndRelease(() =>
-                    {
-                        this.State = MusicPlayerState.Playing;
-                        this.PlayInternal(this.CurrentSong.FilePath);
-                        return Task.CompletedTask;
-                    });
+                    await this.sempahore.WaitAsync();
+
+                    this.State = MusicPlayerState.Playing;
+                    this.PlayInternal(this.CurrentSong.FilePath);
+
+                    this.sempahore.Release();
+
                     this.SongChanged.Invoke(this, new EventArgs());
 
                     await ServiceManager.Get<CommandService>().Queue(ChannelSession.Settings.MusicPlayerOnSongChangedCommandID, new CommandParametersModel());
@@ -90,90 +91,93 @@ namespace MixItUp.WPF.Services
         {
             if (this.State == MusicPlayerState.Playing)
             {
-                await this.sempahore.WaitAndRelease(() =>
+                await this.sempahore.WaitAsync();
+
+                this.State = MusicPlayerState.Paused;
+                if (this.currentWaveOutEvent != null)
                 {
-                    this.State = MusicPlayerState.Paused;
-                    if (this.currentWaveOutEvent != null)
-                    {
-                        this.currentWaveOutEvent.Pause();
-                    }
-                    return Task.CompletedTask;
-                });
+                    this.currentWaveOutEvent.Pause();
+                }
+
+                this.sempahore.Release();
             }
         }
 
         public async Task Stop()
         {
-            await this.sempahore.WaitAndRelease(() =>
+            await this.sempahore.WaitAsync();
+
+            this.State = MusicPlayerState.Stopped;
+
+            if (this.currentWaveOutEvent != null)
             {
-                this.State = MusicPlayerState.Stopped;
+                this.currentWaveOutEvent.Stop();
+            }
+            this.currentWaveOutEvent = null;
 
-                if (this.currentWaveOutEvent != null)
-                {
-                    this.currentWaveOutEvent.Stop();
-                }
-                this.currentWaveOutEvent = null;
+            if (this.backgroundPlayThreadTokenSource != null)
+            {
+                this.backgroundPlayThreadTokenSource.Cancel();
+            }
+            this.backgroundPlayThreadTokenSource = null;
 
-                if (this.backgroundPlayThreadTokenSource != null)
-                {
-                    this.backgroundPlayThreadTokenSource.Cancel();
-                }
-                this.backgroundPlayThreadTokenSource = null;
-
-                return Task.CompletedTask;
-            });
+            this.sempahore.Release();
         }
 
         public async Task Next()
         {
             await this.Stop();
-            await this.sempahore.WaitAndRelease(() =>
+
+            await this.sempahore.WaitAsync();
+
+            this.currentSongIndex++;
+            if (this.currentSongIndex >= this.songs.Count)
             {
-                this.currentSongIndex++;
-                if (this.currentSongIndex >= this.songs.Count)
-                {
-                    this.currentSongIndex = 0;
-                }
-                return Task.CompletedTask;
-            });
+                this.currentSongIndex = 0;
+            }
+
+            this.sempahore.Release();
+
             await this.Play();
         }
 
         public async Task Previous()
         {
             await this.Stop();
-            await this.sempahore.WaitAndRelease(() =>
+
+            await this.sempahore.WaitAsync();
+
+            this.currentSongIndex--;
+            if (this.currentSongIndex < 0)
             {
-                this.currentSongIndex--;
-                if (this.currentSongIndex < 0)
-                {
-                    this.currentSongIndex = Math.Max(this.songs.Count - 1, 0);
-                }
-                return Task.CompletedTask;
-            });
+                this.currentSongIndex = Math.Max(this.songs.Count - 1, 0);
+            }
+
+            this.sempahore.Release();
+
             await this.Play();
         }
 
         public async Task ChangeVolume(int amount)
         {
-            await this.sempahore.WaitAndRelease(() =>
+            await this.sempahore.WaitAsync();
+
+            this.Volume = amount;
+            if (this.currentWaveStream != null && this.currentWaveStream is AudioFileReader)
             {
-                this.Volume = amount;
-                if (this.currentWaveStream != null && this.currentWaveStream is AudioFileReader)
-                {
-                    ((AudioFileReader)this.currentWaveStream).Volume = (ServiceManager.Get<IAudioService>() as WindowsAudioService).ConvertVolumeAmount(this.Volume);
-                }
-                else if (this.currentWaveOutEvent != null)
-                {
-                    this.currentWaveOutEvent.Volume = (ServiceManager.Get<IAudioService>() as WindowsAudioService).ConvertVolumeAmount(this.Volume);
-                }
-                return Task.CompletedTask;
-            });
+                ((AudioFileReader)this.currentWaveStream).Volume = (ServiceManager.Get<IAudioService>() as WindowsAudioService).ConvertVolumeAmount(this.Volume);
+            }
+            else if (this.currentWaveOutEvent != null)
+            {
+                this.currentWaveOutEvent.Volume = (ServiceManager.Get<IAudioService>() as WindowsAudioService).ConvertVolumeAmount(this.Volume);
+            }
+
+            this.sempahore.Release();
         }
 
         public async Task LoadSongs()
         {
-            await Task.Run(() => this.sempahore.WaitAndRelease(async () =>
+            await Task.Run(async () =>
             {
                 ISet<string> allowedFileExtensions = ServiceManager.Get<IAudioService>().ApplicableAudioFileExtensions;
                 WindowsFileService fileService = ServiceManager.Get<IFileService>() as WindowsFileService;
@@ -254,12 +258,16 @@ namespace MixItUp.WPF.Services
                     tempSongs.Add(song);
                 }
 
+                await this.sempahore.WaitAsync();
+
                 this.songs.Clear();
                 foreach (MusicPlayerSong song in tempSongs.Shuffle())
                 {
                     this.songs.Add(song);
                 }
-            }));
+
+                this.sempahore.Release();
+            });
         }
 
         public async Task<MusicPlayerSong> SearchAndPlaySong(string searchText)

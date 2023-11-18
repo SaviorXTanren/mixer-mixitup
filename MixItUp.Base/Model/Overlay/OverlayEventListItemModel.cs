@@ -181,12 +181,12 @@ namespace MixItUp.Base.Model.Overlay
             item.TemplateReplacements.Add("TOP_TEXT_HEIGHT", ((int)(0.4 * ((double)this.Height))).ToString());
             item.TemplateReplacements.Add("BOTTOM_TEXT_HEIGHT", ((int)(0.2 * ((double)this.Height))).ToString());
 
-            await this.listSemaphore.WaitAndRelease(() =>
-            {
-                this.Items.Add(item);
-                this.SendUpdateRequired();
-                return Task.CompletedTask;
-            });
+            await this.listSemaphore.WaitAsync();
+
+            this.Items.Add(item);
+            this.SendUpdateRequired();
+
+            this.listSemaphore.Release();
         }
     }
 }

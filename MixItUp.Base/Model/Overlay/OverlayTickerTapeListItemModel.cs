@@ -190,12 +190,12 @@ namespace MixItUp.Base.Model.Overlay
             OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(Guid.NewGuid().ToString(), null, -1, this.HTML);
             item.TemplateReplacements.Add("DETAILS", details);
 
-            await this.listSemaphore.WaitAndRelease(() =>
-            {
-                this.Items.Add(item);
-                this.SendUpdateRequired();
-                return Task.CompletedTask;
-            });
+            await this.listSemaphore.WaitAsync();
+
+            this.Items.Add(item);
+            this.SendUpdateRequired();
+
+            this.listSemaphore.Release();
         }
     }
 }

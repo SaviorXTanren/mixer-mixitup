@@ -44,51 +44,50 @@ namespace MixItUp.Base.Services
 
         public async Task RebuildTimerGroups()
         {
-            await this.timerCommandGroupSemaphore.WaitAndRelease(() =>
+            await this.timerCommandGroupSemaphore.WaitAsync();
+
+            this.timerCommandGroups.Clear();
+            this.timerCommandGroups[string.Empty] = new List<TimerCommandModel>();
+            foreach (var kvp in ChannelSession.Settings.CommandGroups)
             {
-                this.timerCommandGroups.Clear();
-                this.timerCommandGroups[string.Empty] = new List<TimerCommandModel>();
-                foreach (var kvp in ChannelSession.Settings.CommandGroups)
-                {
-                    this.timerCommandGroups[kvp.Key] = new List<TimerCommandModel>();
-                }
+                this.timerCommandGroups[kvp.Key] = new List<TimerCommandModel>();
+            }
 
-                IEnumerable<TimerCommandModel> timerCommands = ServiceManager.Get<CommandService>().TimerCommands.ToList();
-                if (ChannelSession.Settings.RandomizeTimers)
-                {
-                    timerCommands = timerCommands.Shuffle();
-                }
+            IEnumerable<TimerCommandModel> timerCommands = ServiceManager.Get<CommandService>().TimerCommands.ToList();
+            if (ChannelSession.Settings.RandomizeTimers)
+            {
+                timerCommands = timerCommands.Shuffle();
+            }
 
-                foreach (TimerCommandModel command in timerCommands)
+            foreach (TimerCommandModel command in timerCommands)
+            {
+                if (command.IsEnabled)
                 {
-                    if (command.IsEnabled)
+                    if (string.IsNullOrEmpty(command.GroupName))
                     {
-                        if (string.IsNullOrEmpty(command.GroupName))
+                        this.timerCommandGroups[string.Empty].Add(command);
+                    }
+                    else if (ChannelSession.Settings.CommandGroups.ContainsKey(command.GroupName))
+                    {
+                        if (ChannelSession.Settings.CommandGroups[command.GroupName].TimerInterval == 0)
                         {
                             this.timerCommandGroups[string.Empty].Add(command);
                         }
-                        else if (ChannelSession.Settings.CommandGroups.ContainsKey(command.GroupName))
+                        else
                         {
-                            if (ChannelSession.Settings.CommandGroups[command.GroupName].TimerInterval == 0)
-                            {
-                                this.timerCommandGroups[string.Empty].Add(command);
-                            }
-                            else
-                            {
-                                this.timerCommandGroups[command.GroupName].Add(command);
-                            }
+                            this.timerCommandGroups[command.GroupName].Add(command);
                         }
                     }
                 }
+            }
 
-                this.timerCommandIndexes.Clear();
-                foreach (var kvp in this.timerCommandGroups)
-                {
-                    this.timerCommandIndexes[kvp.Key] = 0;
-                }
+            this.timerCommandIndexes.Clear();
+            foreach (var kvp in this.timerCommandGroups)
+            {
+                this.timerCommandIndexes[kvp.Key] = 0;
+            }
 
-                return Task.CompletedTask;
-            });
+            this.timerCommandGroupSemaphore.Release();
         }
 
         private void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
@@ -124,38 +123,38 @@ namespace MixItUp.Base.Services
             }
 
             List<string> timerGroupsToRun = new List<string>();
-            await this.timerCommandGroupSemaphore.WaitAndRelease(() =>
+
+            await this.timerCommandGroupSemaphore.WaitAsync();
+
+            groupTotalTime++;
+            foreach (var kvp in ChannelSession.Settings.CommandGroups)
             {
-                groupTotalTime++;
-                foreach (var kvp in ChannelSession.Settings.CommandGroups)
+                if (kvp.Value.TimerInterval > 0 && groupTotalTime % kvp.Value.TimerInterval == 0)
                 {
-                    if (kvp.Value.TimerInterval > 0 && groupTotalTime % kvp.Value.TimerInterval == 0)
+                    if (!timerCommandIndexes.ContainsKey(kvp.Key))
                     {
-                        if (!timerCommandIndexes.ContainsKey(kvp.Key))
-                        {
-                            timerCommandIndexes[kvp.Key] = 0;
-                        }
+                        timerCommandIndexes[kvp.Key] = 0;
+                    }
 
-                        if (this.timerCommandGroups.ContainsKey(kvp.Key))
-                        {
-                            timerGroupsToRun.Add(kvp.Key);
-                        }
+                    if (this.timerCommandGroups.ContainsKey(kvp.Key))
+                    {
+                        timerGroupsToRun.Add(kvp.Key);
                     }
                 }
+            }
 
-                nonGroupTotalTime++;
-                if (nonGroupTotalTime >= ChannelSession.Settings.TimerCommandsInterval)
+            nonGroupTotalTime++;
+            if (nonGroupTotalTime >= ChannelSession.Settings.TimerCommandsInterval)
+            {
+                if (totalMessages >= ChannelSession.Settings.TimerCommandsMinimumMessages)
                 {
-                    if (totalMessages >= ChannelSession.Settings.TimerCommandsMinimumMessages)
-                    {
-                        timerGroupsToRun.Add(string.Empty);
-                        totalMessages = 0;
-                        nonGroupTotalTime = 0;
-                    }
+                    timerGroupsToRun.Add(string.Empty);
+                    totalMessages = 0;
+                    nonGroupTotalTime = 0;
                 }
+            }
 
-                return Task.CompletedTask;
-            });
+            this.timerCommandGroupSemaphore.Release();
 
             foreach (string timerGroupToRun in timerGroupsToRun)
             {

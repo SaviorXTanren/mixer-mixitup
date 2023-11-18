@@ -438,37 +438,38 @@ namespace MixItUp.Base.Services.External
             Exception exception = null;
             JObject result = new JObject();
 
-            await this.idSempahoreLock.WaitAndRelease(async () =>
+            await this.idSempahoreLock.WaitAsync();
+
+            request.ID = this.currentID;
+            this.currentID++;
+
+            JObject requestJObj = JObject.FromObject(request);
+            using (NamedPipeClientStream namedPipeClient = new NamedPipeClientStream(ConnectionString))
             {
-                request.ID = this.currentID;
-                this.currentID++;
+                string requestString = requestJObj.ToString(Formatting.None);
+                byte[] requestBytes = Encoding.UTF8.GetBytes(requestString);
 
-                JObject requestJObj = JObject.FromObject(request);
-                using (NamedPipeClientStream namedPipeClient = new NamedPipeClientStream(ConnectionString))
+                await Task.WhenAny(Task.Run(async () =>
                 {
-                    string requestString = requestJObj.ToString(Formatting.None);
-                    byte[] requestBytes = Encoding.UTF8.GetBytes(requestString);
-
-                    await Task.WhenAny(Task.Run(async () =>
+                    try
                     {
-                        try
-                        {
-                            namedPipeClient.Connect();
-                            await namedPipeClient.WriteAsync(requestBytes, 0, requestBytes.Length);
+                        namedPipeClient.Connect();
+                        await namedPipeClient.WriteAsync(requestBytes, 0, requestBytes.Length);
 
-                            byte[] responseBytes = new byte[1000000];
-                            int count = await namedPipeClient.ReadAsync(responseBytes, 0, responseBytes.Length);
+                        byte[] responseBytes = new byte[1000000];
+                        int count = await namedPipeClient.ReadAsync(responseBytes, 0, responseBytes.Length);
 
-                            string responseString = Encoding.ASCII.GetString(responseBytes, 0, count);
-                            result = JObject.Parse(responseString);
-                        }
-                        catch (Exception ex)
-                        {
-                            exception = ex;
-                        }
-                    }), Task.Delay(5000));
-                }
-            });
+                        string responseString = Encoding.ASCII.GetString(responseBytes, 0, count);
+                        result = JObject.Parse(responseString);
+                    }
+                    catch (Exception ex)
+                    {
+                        exception = ex;
+                    }
+                }), Task.Delay(5000));
+            }
+
+            this.idSempahoreLock.Release();
 
             if (exception != null)
             {

@@ -327,49 +327,50 @@ namespace MixItUp.Base.Model.Overlay
 
         private async Task ProcessLeaderboardItems(List<OverlayLeaderboardItem> items)
         {
-            await this.listSemaphore.WaitAndRelease((Func<Task>)(async () =>
+            await this.listSemaphore.WaitAsync();
+
+            this.Items.Clear();
+
+            List<OverlayListIndividualItemModel> updatedList = new List<OverlayListIndividualItemModel>();
+
+            for (int i = 0; i < this.lastItems.Count(); i++)
             {
-                this.Items.Clear();
-
-                List<OverlayListIndividualItemModel> updatedList = new List<OverlayListIndividualItemModel>();
-
-                for (int i = 0; i < this.lastItems.Count(); i++)
+                if (!items.Any(x => string.Equals(x.ID, this.lastItems[i].ID)))
                 {
-                    if (!items.Any(x => string.Equals(x.ID, this.lastItems[i].ID)))
+                    this.Items.Add(OverlayListIndividualItemModel.CreateRemoveItem(this.lastItems[i].ID));
+                }
+            }
+
+            for (int i = 0; i < items.Count() && i < this.TotalToShow; i++)
+            {
+                OverlayListIndividualItemModel newItem = OverlayListIndividualItemModel.CreateAddItem(items[i].ID, items[i].User, i + 1, this.HTML);
+                newItem.Hash = items[i].Hash;
+                newItem.TemplateReplacements.Add("USERNAME", newItem.ID);
+                newItem.TemplateReplacements.Add("DETAILS", newItem.Hash);
+                newItem.TemplateReplacements.Add("TOP_TEXT_HEIGHT", ((int)(0.4 * ((double)this.Height))).ToString());
+                newItem.TemplateReplacements.Add("BOTTOM_TEXT_HEIGHT", ((int)(0.2 * ((double)this.Height))).ToString());
+
+                updatedList.Add(newItem);
+                this.Items.Add(newItem);
+            }
+
+            if (this.LeaderChangedCommand != null)
+            {
+                // Detect if we had a list before, and we have a list now, and the top user changed, let's trigger the event
+                if (this.lastItems.Count() > 0 && updatedList.Count() > 0)
+                {
+                    UserV2ViewModel previous = await this.lastItems.First().GetUser();
+                    UserV2ViewModel current = await updatedList.First().GetUser();
+                    if (previous != null && current != null && !previous.ID.Equals(current.ID))
                     {
-                        this.Items.Add(OverlayListIndividualItemModel.CreateRemoveItem(this.lastItems[i].ID));
+                        await ServiceManager.Get<CommandService>().Queue(this.LeaderChangedCommand, new CommandParametersModel(current, new string[] { previous.Username }) { TargetUser = previous });
                     }
                 }
+            }
 
-                for (int i = 0; i < items.Count() && i < this.TotalToShow; i++)
-                {
-                    OverlayListIndividualItemModel newItem = OverlayListIndividualItemModel.CreateAddItem(items[i].ID, items[i].User, i + 1, this.HTML);
-                    newItem.Hash = items[i].Hash;
-                    newItem.TemplateReplacements.Add("USERNAME", newItem.ID);
-                    newItem.TemplateReplacements.Add("DETAILS", newItem.Hash);
-                    newItem.TemplateReplacements.Add("TOP_TEXT_HEIGHT", ((int)(0.4 * ((double)this.Height))).ToString());
-                    newItem.TemplateReplacements.Add("BOTTOM_TEXT_HEIGHT", ((int)(0.2 * ((double)this.Height))).ToString());
+            this.lastItems = new List<OverlayListIndividualItemModel>(updatedList);
 
-                    updatedList.Add(newItem);
-                    this.Items.Add(newItem);
-                }
-
-                if (this.LeaderChangedCommand != null)
-                {
-                    // Detect if we had a list before, and we have a list now, and the top user changed, let's trigger the event
-                    if (this.lastItems.Count() > 0 && updatedList.Count() > 0)
-                    {
-                        UserV2ViewModel previous = await this.lastItems.First().GetUser();
-                        UserV2ViewModel current = await updatedList .First().GetUser();
-                        if (previous != null && current != null && !previous.ID.Equals(current.ID))
-                        {
-                            await ServiceManager.Get<CommandService>().Queue(this.LeaderChangedCommand, new CommandParametersModel(current, new string[] { previous.Username }) { TargetUser = previous });
-                        }
-                    }
-                }
-
-                this.lastItems = new List<OverlayListIndividualItemModel>(updatedList);
-            }));
+            this.listSemaphore.Release();
         }
 
         private bool ShouldIncludeUser(UserV2ViewModel user)

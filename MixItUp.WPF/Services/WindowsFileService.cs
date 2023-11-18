@@ -186,17 +186,18 @@ namespace MixItUp.WPF.Services
         {
             if (!string.IsNullOrEmpty(filePath))
             {
-                await WindowsFileService.fileLock.WaitAndRelease(async () =>
+                await WindowsFileService.fileLock.WaitAsync();
+
+                using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Create)))
                 {
-                    using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Create)))
+                    if (!string.IsNullOrEmpty(data))
                     {
-                        if (!string.IsNullOrEmpty(data))
-                        {
-                            await writer.WriteAsync(data);
-                        }
-                        await writer.FlushAsync();
+                        await writer.WriteAsync(data);
                     }
-                });
+                    await writer.FlushAsync();
+                }
+
+                WindowsFileService.fileLock.Release();
             }
         }
 
@@ -219,17 +220,18 @@ namespace MixItUp.WPF.Services
         {
             if (!string.IsNullOrEmpty(filePath))
             {
-                await WindowsFileService.fileLock.WaitAndRelease(async () =>
+                await WindowsFileService.fileLock.WaitAsync();
+
+                using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Append)))
                 {
-                    using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Append)))
+                    if (!string.IsNullOrEmpty(data))
                     {
-                        if (!string.IsNullOrEmpty(data))
-                        {
-                            await writer.WriteAsync(data);
-                        }
-                        await writer.FlushAsync();
+                        await writer.WriteAsync(data);
                     }
-                });
+                    await writer.FlushAsync();
+                }
+
+                WindowsFileService.fileLock.Release();
             }
         }
 

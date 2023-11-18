@@ -191,22 +191,23 @@ namespace MixItUp.Base.Services.YouTube
         {
             if (ServiceManager.Get<YouTubeSessionService>().IsLive)
             {
-                await this.messageSemaphore.WaitAndRelease(async () =>
+                await this.messageSemaphore.WaitAsync();
+
+                YouTubePlatformService connection = this.GetConnection(sendAsStreamer);
+                if (connection != null)
                 {
-                    YouTubePlatformService connection = this.GetConnection(sendAsStreamer);
-                    if (connection != null)
+                    string subMessage = null;
+                    do
                     {
-                        string subMessage = null;
-                        do
-                        {
-                            message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
-                            await connection.SendChatMessage(ServiceManager.Get<YouTubeSessionService>().Broadcast, message);
-                            message = subMessage;
-                            await Task.Delay(1000);
-                        }
-                        while (!string.IsNullOrEmpty(message));
+                        message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
+                        await connection.SendChatMessage(ServiceManager.Get<YouTubeSessionService>().Broadcast, message);
+                        message = subMessage;
+                        await Task.Delay(1000);
                     }
-                });
+                    while (!string.IsNullOrEmpty(message));
+                }
+
+                this.messageSemaphore.Release();
             }
         }
 

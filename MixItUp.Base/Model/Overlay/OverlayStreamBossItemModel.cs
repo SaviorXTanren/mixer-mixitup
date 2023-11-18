@@ -230,12 +230,12 @@ namespace MixItUp.Base.Model.Overlay
             UserV2ViewModel boss = null;
             int health = 0;
 
-            await this.HealthSemaphore.WaitAndRelease(() =>
-            {
-                boss = this.CurrentBoss;
-                health = this.CurrentHealth;
-                return Task.CompletedTask;
-            });
+            await this.HealthSemaphore.WaitAsync();
+
+            boss = this.CurrentBoss;
+            health = this.CurrentHealth;
+
+            this.HealthSemaphore.Release();
 
             Dictionary<string, string> replacementSets = new Dictionary<string, string>();
 
@@ -265,46 +265,45 @@ namespace MixItUp.Base.Model.Overlay
 
         private async Task ReduceHealth(UserV2ViewModel user, double amount)
         {
-            await this.HealthSemaphore.WaitAndRelease(async () =>
+            await this.HealthSemaphore.WaitAsync();
+
+            this.DamageTaken = false;
+            this.NewBoss = false;
+
+            if (this.CurrentBoss.Equals(user) && this.HealingBonus > 0.0)
             {
-                this.DamageTaken = false;
-                this.NewBoss = false;
+                int healingAmount = (int)(this.HealingBonus * amount);
+                this.CurrentHealth = Math.Min(this.CurrentStartingHealth, this.CurrentHealth + healingAmount);
+            }
+            else
+            {
+                this.CurrentHealth -= (int)amount;
+                this.DamageTaken = true;
+            }
 
-                if (this.CurrentBoss.Equals(user) && this.HealingBonus > 0.0)
+            if (this.CurrentHealth <= 0)
+            {
+                this.NewBoss = true;
+                this.CurrentBoss = user;
+                this.CurrentBossID = user.ID;
+
+                int newHealth = this.StartingHealth;
+                if (this.OverkillBonus > 0.0)
                 {
-                    int healingAmount = (int)(this.HealingBonus * amount);
-                    this.CurrentHealth = Math.Min(this.CurrentStartingHealth, this.CurrentHealth + healingAmount);
+                    int overkillAmount = this.CurrentHealth * -1;
+                    newHealth += (int)(this.OverkillBonus * overkillAmount);
                 }
-                else
+                this.CurrentHealth = this.CurrentStartingHealth = newHealth;
+
+                if (this.StreamBossChangedCommand != null)
                 {
-                    this.CurrentHealth -= (int)amount;
-                    this.DamageTaken = true;
+                    await ServiceManager.Get<CommandService>().Queue(this.StreamBossChangedCommand);
                 }
+            }
 
-                if (this.CurrentHealth <= 0)
-                {
-                    this.NewBoss = true;
-                    this.CurrentBoss = user;
-                    this.CurrentBossID = user.ID;
+            this.SendUpdateRequired();
 
-                    int newHealth = this.StartingHealth;
-                    if (this.OverkillBonus > 0.0)
-                    {
-                        int overkillAmount = this.CurrentHealth * -1;
-                        newHealth += (int)(this.OverkillBonus * overkillAmount);
-                    }
-                    this.CurrentHealth = this.CurrentStartingHealth = newHealth;
-
-                    if (this.StreamBossChangedCommand != null)
-                    {
-                        await ServiceManager.Get<CommandService>().Queue(this.StreamBossChangedCommand);
-                    }
-                }
-
-                this.SendUpdateRequired();
-
-                return Task.CompletedTask;
-            });
+            this.HealthSemaphore.Release();
         }
 
         private async void GlobalEvents_OnFollowOccurred(object sender, UserV2ViewModel user)
