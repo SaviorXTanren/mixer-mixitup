@@ -97,6 +97,14 @@ namespace MixItUp.Base.Util
             }
         }
 
+        public void ManualValueDeleted(K key)
+        {
+            if (key != null)
+            {
+                this.ValueRemoved(key);
+            }
+        }
+
         public void ClearTracking()
         {
             this.addedValues.Clear();

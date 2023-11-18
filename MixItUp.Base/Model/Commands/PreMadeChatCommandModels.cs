@@ -758,7 +758,7 @@ namespace MixItUp.Base.Model.Commands
             {
                 string username = parameters.Arguments.ElementAt(0);
 
-                UserV2ViewModel targetUser = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(parameters.Platform, username);
+                UserV2ViewModel targetUser = ServiceManager.Get<UserService>().GetActiveUserByPlatform(parameters.Platform, platformUsername: username);
                 if (targetUser != null)
                 {
                     targetUser.CustomTitle = string.Join(" ", parameters.Arguments.Skip(1));
@@ -965,7 +965,7 @@ namespace MixItUp.Base.Model.Commands
                 }
 
                 string username = UserService.SanitizeUsername(string.Join(" ", parameters.Arguments.Skip(1)));
-                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(platform, username, performPlatformSearch: true);
+                UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(platform, platformUsername: username, performPlatformSearch: true);
                 if (user == null)
                 {
                     await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.LinkAccountCommandErrorUserNotFound, username), parameters);

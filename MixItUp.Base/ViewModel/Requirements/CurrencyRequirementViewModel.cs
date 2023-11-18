@@ -3,6 +3,7 @@ using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -11,7 +12,7 @@ namespace MixItUp.Base.ViewModel.Requirements
 {
     public class CurrencyListRequirementViewModel : ListRequirementViewModelBase
     {
-        public ThreadSafeObservableCollection<CurrencyRequirementViewModel> Items { get; set; } = new ThreadSafeObservableCollection<CurrencyRequirementViewModel>();
+        public ObservableCollection<CurrencyRequirementViewModel> Items { get; set; } = new ObservableCollection<CurrencyRequirementViewModel>();
 
         public bool RestrictToRequiredAmountOnly { get; set; }
 

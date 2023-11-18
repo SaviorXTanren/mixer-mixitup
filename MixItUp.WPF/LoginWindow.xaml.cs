@@ -23,7 +23,7 @@ namespace MixItUp.WPF
         private MixItUpUpdateModel currentUpdate;
         private bool updateFound = false;
 
-        private ObservableCollection<SettingsV3Model> streamerSettings = new ThreadSafeObservableCollection<SettingsV3Model>();
+        private ObservableCollection<SettingsV3Model> streamerSettings = new ObservableCollection<SettingsV3Model>();
 
         public LoginWindow()
         {
@@ -118,6 +118,10 @@ namespace MixItUp.WPF
                             {
                                 newWindow = new MainWindow();
                             }
+
+                            GlobalEvents.OnShowMessageBox -= GlobalEvents_OnShowMessageBox;
+                            GlobalEvents.OnRestartRequested -= GlobalEvents_OnRestartRequested;
+
                             ShowMainWindow(newWindow);
                             this.Hide();
                             this.Close();
@@ -163,6 +167,9 @@ namespace MixItUp.WPF
         {
             if (await this.ShowLicenseAgreement())
             {
+                GlobalEvents.OnShowMessageBox -= GlobalEvents_OnShowMessageBox;
+                GlobalEvents.OnRestartRequested -= GlobalEvents_OnRestartRequested;
+
                 ShowMainWindow(new NewUserWizardWindow());
                 this.Hide();
                 this.Close();

@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
@@ -33,17 +32,69 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public DateTimeOffset Timestamp { get; protected set; } = DateTimeOffset.Now;
 
-        public bool IsDeleted { get; private set; }
+        public bool IsDeleted
+        {
+            get { return this.isDeleted; }
+            set
+            {
+                this.isDeleted = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged(nameof(this.DeletedInformation));
+            }
+        }
+        private bool isDeleted;
 
-        public string DeletedBy { get; private set; }
+        public string DeletedBy
+        {
+            get { return this.deletedBy; }
+            set
+            {
+                this.deletedBy = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string deletedBy;
 
-        public string ModerationReason { get; private set; }
+        public string ModerationReason
+        {
+            get { return this.moderationReason; }
+            set
+            {
+                this.moderationReason = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string moderationReason;
+
+        public string DeletedInformation
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(this.DeletedBy))
+                {
+                    if (!string.IsNullOrEmpty(this.ModerationReason))
+                    {
+                        return $" ({this.ModerationReason} {MixItUp.Base.Resources.By}: {this.DeletedBy})";
+                    }
+                    else
+                    {
+                        return $" ({MixItUp.Base.Resources.DeletedBy}: {this.DeletedBy})";
+                    }
+                }
+                else if (!string.IsNullOrEmpty(this.ModerationReason))
+                {
+                    return $" ({MixItUp.Base.Resources.AutoModerated}: {this.ModerationReason})";
+                }
+                else
+                {
+                    return $" ({MixItUp.Base.Resources.ManualDeletion})";
+                }
+            }
+        }
 
         public UserV2ViewModel User { get; set; }
 
         public DateTimeOffset ProcessingStartTime { get; set; }
-
-        public event EventHandler OnDeleted = delegate { };
 
         public ChatMessageViewModel(string id, StreamingPlatformTypeEnum platform, UserV2ViewModel user)
         {
@@ -87,10 +138,13 @@ namespace MixItUp.Base.ViewModel.Chat
         {
             get
             {
-                string pronoun = this.User.AlejoPronoun;
-                if (!string.IsNullOrEmpty(pronoun))
+                if (this.User != null)
                 {
-                    return $"({this.User.AlejoPronoun})";
+                    string pronoun = this.User.AlejoPronoun;
+                    if (!string.IsNullOrEmpty(pronoun))
+                    {
+                        return $"({this.User.AlejoPronoun})";
+                    }
                 }
                 return string.Empty;
             }
@@ -154,19 +208,15 @@ namespace MixItUp.Base.ViewModel.Chat
             {
                 if (!this.IsDeleted)
                 {
-                    this.IsDeleted = true;
                     if (moderator != null && !string.IsNullOrEmpty(moderator.Username))
                     {
                         this.DeletedBy = moderator.Username;
                     }
                     this.ModerationReason = (!string.IsNullOrEmpty(reason)) ? reason : MixItUp.Base.Resources.ManualDeletion;
+                    this.IsDeleted = true;
 
-                    this.NotifyPropertyChanged("IsDeleted");
-                    this.NotifyPropertyChanged("DeletedBy");
-                    this.NotifyPropertyChanged("ModerationReason");
+                    ServiceManager.Get<ChatService>().HandleDeletion(this);
 
-                    this.OnDeleted(this, new EventArgs());
-                    
                     if (this.User != null && !string.IsNullOrEmpty(this.PlainTextMessage))
                     {
                         CommandParametersModel parameters = new CommandParametersModel(moderator ?? this.User);
@@ -177,7 +227,7 @@ namespace MixItUp.Base.ViewModel.Chat
                         await ServiceManager.Get<EventService>().PerformEvent(EventTypeEnum.ChatMessageDeleted, parameters);
                     }
 
-                    await ServiceManager.Get<ChatService>().WriteToChatEventLog(this, $"{MixItUp.Base.Resources.ChatMessageDeleted} - {this.ModerationReason} - ");
+                    await ServiceManager.Get<ChatService>().WriteToChatEventLog(this, $"{MixItUp.Base.Resources.ChatMessageDeleted} - {this.ModerationReason} - {this.DeletedBy}");
                 }
             }
             catch (Exception ex)

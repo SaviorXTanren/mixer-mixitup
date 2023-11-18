@@ -6,6 +6,7 @@ using MixItUp.Base.ViewModel.Settings.Generic;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Settings
@@ -26,7 +27,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
         public GenericToggleSettingsOptionControlViewModel TwitchReplyToCommandChatMessages { get; set; }
 
-        public ThreadSafeObservableCollection<GenericToggleSettingsOptionControlViewModel> HideActionsList { get; set; } = new ThreadSafeObservableCollection<GenericToggleSettingsOptionControlViewModel>();
+        public ObservableCollection<GenericToggleSettingsOptionControlViewModel> HideActionsList { get; set; } = new ObservableCollection<GenericToggleSettingsOptionControlViewModel>();
 
         public CommandsSettingsControlViewModel()
         {

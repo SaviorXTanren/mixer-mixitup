@@ -4,6 +4,7 @@ using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -35,7 +36,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool ShowLoadModelGrid { get { return this.SelectedActionType == VTubeStudioActionTypeEnum.LoadModel; } }
 
-        public ThreadSafeObservableCollection<VTubeStudioModel> Models { get; set; } = new ThreadSafeObservableCollection<VTubeStudioModel>();
+        public ObservableCollection<VTubeStudioModel> Models { get; set; } = new ObservableCollection<VTubeStudioModel>();
 
         public VTubeStudioModel SelectedModel
         {
@@ -129,7 +130,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool ShowRunHotKeyGrid { get { return this.SelectedActionType == VTubeStudioActionTypeEnum.RunHotKey; } }
 
-        public ThreadSafeObservableCollection<VTubeStudioHotKey> HotKeys { get; set; } = new ThreadSafeObservableCollection<VTubeStudioHotKey>();
+        public ObservableCollection<VTubeStudioHotKey> HotKeys { get; set; } = new ObservableCollection<VTubeStudioHotKey>();
 
         public VTubeStudioHotKey SelectedHotKey
         {

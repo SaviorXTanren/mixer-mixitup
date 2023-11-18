@@ -1,8 +1,11 @@
 ﻿using MixItUp.Base.Model.User.Platform;
+using MixItUp.Base.Services;
+using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.User
 {
@@ -117,6 +120,75 @@ namespace MixItUp.Base.Model.User
         public IEnumerable<string> GetAllPlatformUsernames() { return (this.PlatformData.Count > 0) ? this.PlatformData.Select(p => p.Value.Username) : new List<string>(); }
 
         public IEnumerable<string> GetAllPlatformDisplayNames() { return (this.PlatformData.Count > 0) ? this.PlatformData.Select(p => p.Value.DisplayName ?? p.Value.Username) : new List<string>(); }
+
+        public void MergeUserData(UserV2Model other)
+        {
+            this.OnlineViewingMinutes += other.OnlineViewingMinutes;
+
+            foreach (var kvp in other.CurrencyAmounts)
+            {
+                if (!this.CurrencyAmounts.ContainsKey(kvp.Key))
+                {
+                    this.CurrencyAmounts[kvp.Key] = 0;
+                }
+                this.CurrencyAmounts[kvp.Key] += kvp.Value;
+            }
+
+            foreach (var kvp in other.InventoryAmounts)
+            {
+                if (!this.InventoryAmounts.ContainsKey(kvp.Key))
+                {
+                    this.InventoryAmounts[kvp.Key] = new Dictionary<Guid, int>();
+                }
+
+                foreach (var itemKVP in kvp.Value)
+                {
+                    if (!this.InventoryAmounts[kvp.Key].ContainsKey(itemKVP.Key))
+                    {
+                        this.InventoryAmounts[kvp.Key][itemKVP.Key] = 0;
+                    }
+                    this.InventoryAmounts[kvp.Key][itemKVP.Key] += itemKVP.Value;
+                }
+            }
+
+            foreach (var kvp in other.StreamPassAmounts)
+            {
+                if (!this.StreamPassAmounts.ContainsKey(kvp.Key))
+                {
+                    this.StreamPassAmounts[kvp.Key] = 0;
+                }
+                this.StreamPassAmounts[kvp.Key] += kvp.Value;
+            }
+
+            if (string.IsNullOrEmpty(this.CustomTitle)) { this.CustomTitle = other.CustomTitle; }
+            if (!this.IsSpecialtyExcluded) { this.IsSpecialtyExcluded = other.IsSpecialtyExcluded; }
+            if (this.EntranceCommandID == Guid.Empty) { this.EntranceCommandID = other.EntranceCommandID; }
+
+            foreach (Guid id in other.CustomCommandIDs)
+            {
+                this.CustomCommandIDs.Add(id);
+            }
+
+            if (string.IsNullOrEmpty(this.PatreonUserID)) { this.PatreonUserID = other.PatreonUserID; }
+
+            if (string.IsNullOrEmpty(this.Notes))
+            {
+                this.Notes = other.Notes;
+            }
+            else if (!string.IsNullOrEmpty(other.Notes))
+            {
+                this.Notes += Environment.NewLine + Environment.NewLine + other.Notes;
+            }
+
+            this.TotalStreamsWatched += other.TotalStreamsWatched;
+            this.TotalAmountDonated += other.TotalAmountDonated;
+            this.TotalSubsGifted += other.TotalSubsGifted;
+            this.TotalSubsReceived += other.TotalSubsReceived;
+            this.TotalChatMessageSent += other.TotalChatMessageSent;
+            this.TotalTimesTagged += other.TotalTimesTagged;
+            this.TotalCommandsRun += other.TotalCommandsRun;
+            this.TotalMonthsSubbed += other.TotalMonthsSubbed;
+        }
 
         public override bool Equals(object obj)
         {

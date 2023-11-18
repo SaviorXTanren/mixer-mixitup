@@ -4,6 +4,7 @@ using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -38,7 +39,7 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private InfiniteAlbumCommand selectedCommand;
 
-        public ThreadSafeObservableCollection<InfiniteAlbumCommand> SelectedCollection
+        public ObservableCollection<InfiniteAlbumCommand> SelectedCollection
         {
             get
             {
@@ -59,10 +60,10 @@ namespace MixItUp.Base.ViewModel.Actions
         public bool InfiniteAlbumConnected { get { return ServiceManager.Get<InfiniteAlbumService>().IsConnected; } }
         public bool InfiniteAlbumNotConnected { get { return !this.InfiniteAlbumConnected; } }
 
-        public ThreadSafeObservableCollection<InfiniteAlbumCommand> Styles { get; set; } = new ThreadSafeObservableCollection<InfiniteAlbumCommand>();
-        public ThreadSafeObservableCollection<InfiniteAlbumCommand> Emotions { get; set; } = new ThreadSafeObservableCollection<InfiniteAlbumCommand>();
-        public ThreadSafeObservableCollection<InfiniteAlbumCommand> Instruments { get; set; } = new ThreadSafeObservableCollection<InfiniteAlbumCommand>();
-        public ThreadSafeObservableCollection<InfiniteAlbumCommand> SoundEffects { get; set; } = new ThreadSafeObservableCollection<InfiniteAlbumCommand>();
+        public ObservableCollection<InfiniteAlbumCommand> Styles { get; set; } = new ObservableCollection<InfiniteAlbumCommand>();
+        public ObservableCollection<InfiniteAlbumCommand> Emotions { get; set; } = new ObservableCollection<InfiniteAlbumCommand>();
+        public ObservableCollection<InfiniteAlbumCommand> Instruments { get; set; } = new ObservableCollection<InfiniteAlbumCommand>();
+        public ObservableCollection<InfiniteAlbumCommand> SoundEffects { get; set; } = new ObservableCollection<InfiniteAlbumCommand>();
 
         public InfiniteAlbumActionEditorControlViewModel(InfiniteAlbumActionModel action)
             : base(action)

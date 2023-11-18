@@ -4,6 +4,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,7 +30,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
     public class WebhooksMainControlViewModel : WindowControlViewModelBase
     {
-        public ThreadSafeObservableCollection<WebhookCommandItemViewModel> WebhookCommands { get; set; } = new ThreadSafeObservableCollection<WebhookCommandItemViewModel>();
+        public ObservableCollection<WebhookCommandItemViewModel> WebhookCommands { get; set; } = new ObservableCollection<WebhookCommandItemViewModel>();
 
         public int MaxNumberOfWebhooks
         {

@@ -7,6 +7,7 @@ using MixItUp.Base.ViewModel.Twitch;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -336,7 +337,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public StreamingPlatformTypeEnum Platform { get; protected set; }
 
-        public ThreadSafeObservableCollection<string> PastTitles { get; private set; } = new ThreadSafeObservableCollection<string>();
+        public ObservableCollection<string> PastTitles { get; private set; } = new ObservableCollection<string>();
 
         public string Title
         {
@@ -349,7 +350,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private string title;
 
-        public ThreadSafeObservableCollection<string> PastCategories { get; private set; } = new ThreadSafeObservableCollection<string>();
+        public ObservableCollection<string> PastCategories { get; private set; } = new ObservableCollection<string>();
 
         public string Category
         {
@@ -366,7 +367,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public ICommand SearchChannelToRaidCommand { get; private set; }
 
-        public ThreadSafeObservableCollection<ChannelToRaidItemViewModel> ChannelsToRaid { get; private set; } = new ThreadSafeObservableCollection<ChannelToRaidItemViewModel>();
+        public ObservableCollection<ChannelToRaidItemViewModel> ChannelsToRaid { get; private set; } = new ObservableCollection<ChannelToRaidItemViewModel>();
 
         public PlatformChannelControlViewModelBase()
         {

@@ -31,7 +31,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public OverlayWidgetModel OverlayWidget { get; private set; }
 
-        public ThreadSafeObservableCollection<OverlayTypeListing> OverlayTypeListings { get; private set; } = new ThreadSafeObservableCollection<OverlayTypeListing>();
+        public ObservableCollection<OverlayTypeListing> OverlayTypeListings { get; private set; } = new ObservableCollection<OverlayTypeListing>();
         public OverlayTypeListing SelectedOverlayType
         {
             get { return this.selectedOverlayType; }
@@ -63,7 +63,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string name;
 
-        public ThreadSafeObservableCollection<string> OverlayEndpoints { get; set; } = new ThreadSafeObservableCollection<string>();
+        public ObservableCollection<string> OverlayEndpoints { get; set; } = new ObservableCollection<string>();
 
         public string SelectedOverlayEndpoint
         {

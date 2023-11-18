@@ -7,6 +7,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -47,7 +48,7 @@ namespace MixItUp.Base.ViewModel.Currency
         }
         private int defaultItemMaxAmount;
 
-        public ThreadSafeObservableCollection<InventoryItemModel> Items { get; private set; } = new ThreadSafeObservableCollection<InventoryItemModel>();
+        public ObservableCollection<InventoryItemModel> Items { get; private set; } = new ObservableCollection<InventoryItemModel>();
 
         public InventoryItemModel SelectedItem
         {

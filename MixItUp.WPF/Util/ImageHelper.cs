@@ -56,7 +56,7 @@ namespace MixItUp.WPF.Util
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Logger.Log(path + " - " + ex);
             }
         }
 
@@ -70,6 +70,7 @@ namespace MixItUp.WPF.Util
                     {
                         BitmapImage bitmapImage = new BitmapImage();
                         bitmapImage.BeginInit();
+                        bitmapImage.DecodePixelWidth = (int)width;
                         bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
                         bitmapImage.CreateOptions = BitmapCreateOptions.None;
                         bitmapImage.StreamSource = stream;

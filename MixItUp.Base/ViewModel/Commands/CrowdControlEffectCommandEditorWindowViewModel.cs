@@ -3,6 +3,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace MixItUp.Base.ViewModel.Commands
 {
     public class CrowdControlEffectCommandEditorWindowViewModel : CommandEditorWindowViewModelBase
     {
-        public ThreadSafeObservableCollection<CrowdControlGame> Games { get; private set; } = new ThreadSafeObservableCollection<CrowdControlGame>();
+        public ObservableCollection<CrowdControlGame> Games { get; private set; } = new ObservableCollection<CrowdControlGame>();
 
         public CrowdControlGame SelectedGame
         {
@@ -42,7 +43,7 @@ namespace MixItUp.Base.ViewModel.Commands
         }
         private CrowdControlGame selectedGame;
 
-        public ThreadSafeObservableCollection<CrowdControlGamePack> Packs { get; private set; } = new ThreadSafeObservableCollection<CrowdControlGamePack>();
+        public ObservableCollection<CrowdControlGamePack> Packs { get; private set; } = new ObservableCollection<CrowdControlGamePack>();
 
         public CrowdControlGamePack SelectedPack
         {
@@ -65,7 +66,7 @@ namespace MixItUp.Base.ViewModel.Commands
         }
         private CrowdControlGamePack selectedPack;
 
-        public ThreadSafeObservableCollection<CrowdControlGamePackEffect> Effects { get; private set; } = new ThreadSafeObservableCollection<CrowdControlGamePackEffect>();
+        public ObservableCollection<CrowdControlGamePackEffect> Effects { get; private set; } = new ObservableCollection<CrowdControlGamePackEffect>();
 
         public CrowdControlGamePackEffect SelectedEffect
         {

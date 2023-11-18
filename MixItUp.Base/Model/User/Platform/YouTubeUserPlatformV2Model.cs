@@ -34,6 +34,14 @@ namespace MixItUp.Base.Model.User.Platform
             this.SetMessageProperties(message);
         }
 
+        public YouTubeUserPlatformV2Model(string id, string username, string displayName)
+        {
+            this.Platform = StreamingPlatformTypeEnum.YouTube;
+            this.ID = id;
+            this.Username = username;
+            this.DisplayName = displayName;
+        }
+
         [Obsolete]
         public YouTubeUserPlatformV2Model() : base() { }
 

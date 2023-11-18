@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -12,7 +13,7 @@ namespace MixItUp.Base.ViewModel.Actions
 {
     public class ActionEditorListControlViewModel : UIViewModelBase
     {
-        public ThreadSafeObservableCollection<ActionTypeEnum> ActionTypes { get; set; } = new ThreadSafeObservableCollection<ActionTypeEnum>();
+        public ObservableCollection<ActionTypeEnum> ActionTypes { get; set; } = new ObservableCollection<ActionTypeEnum>();
         public ActionTypeEnum SelectedActionType
         {
             get { return this.selectedActionType; }
@@ -26,7 +27,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public ICommand AddCommand { get; private set; }
 
-        public ThreadSafeObservableCollection<ActionEditorControlViewModelBase> Actions { get; set; } = new ThreadSafeObservableCollection<ActionEditorControlViewModelBase>();
+        public ObservableCollection<ActionEditorControlViewModelBase> Actions { get; set; } = new ObservableCollection<ActionEditorControlViewModelBase>();
 
         public ActionEditorListControlViewModel()
         {

@@ -228,23 +228,23 @@ namespace MixItUp.Base.Model.Overlay
 
         private async Task AddSeconds(double seconds)
         {
-            await this.timeSemaphore.WaitAndRelease(() =>
+            await this.timeSemaphore.WaitAsync();
+
+            if (this.timeLeft > 0)
             {
-                if (this.timeLeft > 0)
+                this.timeLeft += (int)Math.Round(seconds);
+            }
+            else
+            {
+                this.stackedTime += (int)Math.Round(seconds);
+                if (this.stackedTime >= this.MinimumSecondsToShow)
                 {
-                    this.timeLeft += (int)Math.Round(seconds);
+                    this.timeLeft += this.stackedTime;
+                    this.stackedTime = 0;
                 }
-                else
-                {
-                    this.stackedTime += (int)Math.Round(seconds);
-                    if (this.stackedTime >= this.MinimumSecondsToShow)
-                    {
-                        this.timeLeft += this.stackedTime;
-                        this.stackedTime = 0;
-                    }
-                }
-                return Task.CompletedTask;
-            });
+            }
+
+            this.timeSemaphore.Release();
 
             if (this.timeLeft > 0)
             {

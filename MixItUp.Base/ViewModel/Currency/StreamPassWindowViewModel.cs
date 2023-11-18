@@ -7,6 +7,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -230,7 +231,7 @@ namespace MixItUp.Base.ViewModel.Currency
         }
         private double bitsBonus = 1.5;
 
-        public ThreadSafeObservableCollection<StreamPassCustomLevelUpCommandViewModel> CustomLevelUpCommands { get; set; } = new ThreadSafeObservableCollection<StreamPassCustomLevelUpCommandViewModel>();
+        public ObservableCollection<StreamPassCustomLevelUpCommandViewModel> CustomLevelUpCommands { get; set; } = new ObservableCollection<StreamPassCustomLevelUpCommandViewModel>();
 
         public int CustomLevelUpNumber
         {

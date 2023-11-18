@@ -12,6 +12,7 @@ using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -295,7 +296,7 @@ namespace MixItUp.Base.ViewModel.Currency
         public bool HasRankDownCommand { get { return this.RankDownCommand != null; } }
         public bool DoesNotHaveRankDownCommand { get { return !this.HasRankDownCommand; } }
 
-        public ThreadSafeObservableCollection<RankModel> Ranks { get; set; } = new ThreadSafeObservableCollection<RankModel>();
+        public ObservableCollection<RankModel> Ranks { get; set; } = new ObservableCollection<RankModel>();
 
         public string NewRankName
         {
@@ -551,13 +552,9 @@ namespace MixItUp.Base.ViewModel.Currency
                                     UserV2ViewModel user = null;
                                     if (amount > 0)
                                     {
-                                        if (id > 0)
+                                        if (id > 0 || !string.IsNullOrEmpty(username))
                                         {
-                                            user = await ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, id.ToString(), performPlatformSearch: true);
-                                        }
-                                        else if (!string.IsNullOrEmpty(username))
-                                        {
-                                            user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(StreamingPlatformTypeEnum.Twitch, username, performPlatformSearch: true);
+                                            user = await ServiceManager.Get<UserService>().GetUserByPlatform(StreamingPlatformTypeEnum.Twitch, platformID: id.ToString(), platformUsername: username, performPlatformSearch: true);
                                         }
                                     }
 

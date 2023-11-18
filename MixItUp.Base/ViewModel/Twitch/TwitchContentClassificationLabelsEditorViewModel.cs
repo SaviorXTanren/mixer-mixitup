@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -51,7 +52,7 @@ namespace MixItUp.Base.ViewModel.Twitch
         }
         private ChannelContentClassificationLabelModel selectedLabel;
 
-        public ThreadSafeObservableCollection<TwitchContentClassificationLabelViewModel> Labels { get; private set; } = new ThreadSafeObservableCollection<TwitchContentClassificationLabelViewModel>();
+        public ObservableCollection<TwitchContentClassificationLabelViewModel> Labels { get; private set; } = new ObservableCollection<TwitchContentClassificationLabelViewModel>();
 
         public ICommand AddLabelCommand { get; private set; }
 

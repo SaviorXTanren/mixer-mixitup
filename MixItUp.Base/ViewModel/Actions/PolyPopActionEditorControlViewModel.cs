@@ -4,6 +4,7 @@ using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -74,7 +75,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public ICommand AddVariableCommand { get; private set; }
 
-        public ThreadSafeObservableCollection<PolyPopVariableViewModel> Variables { get; private set; } = new ThreadSafeObservableCollection<PolyPopVariableViewModel>();
+        public ObservableCollection<PolyPopVariableViewModel> Variables { get; private set; } = new ObservableCollection<PolyPopVariableViewModel>();
 
         public PolyPopActionEditorControlViewModel(PolyPopActionModel action)
             : base(action)

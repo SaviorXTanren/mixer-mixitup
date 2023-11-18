@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Settings.Generic;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Settings
@@ -34,7 +35,7 @@ namespace MixItUp.Base.ViewModel.Settings
         public GenericToggleSettingsOptionControlViewModel HideUserSubscriberBadge { get; set; }
         public GenericToggleSettingsOptionControlViewModel HideUserSpecialtyBadge { get; set; }
         public GenericToggleSettingsOptionControlViewModel UseCustomUsernameColors { get; set; }
-        public ThreadSafeObservableCollection<GenericColorComboBoxSettingsOptionControlViewModel> CustomUsernameColorsList { get; set; } = new ThreadSafeObservableCollection<GenericColorComboBoxSettingsOptionControlViewModel>();
+        public ObservableCollection<GenericColorComboBoxSettingsOptionControlViewModel> CustomUsernameColorsList { get; set; } = new ObservableCollection<GenericColorComboBoxSettingsOptionControlViewModel>();
 
         public ChatSettingsControlViewModel()
         {

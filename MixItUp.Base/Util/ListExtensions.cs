@@ -144,5 +144,14 @@ namespace MixItUp.Base.Util
                 list.Add(item);
             }
         }
+
+        public static void ClearAndAddRange<T>(this ObservableCollection<T> list, IEnumerable<T> items)
+        {
+            list.Clear();
+            foreach (T item in items)
+            {
+                list.Add(item);
+            }
+        }
     }
 }

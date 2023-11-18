@@ -6,6 +6,7 @@ using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
@@ -50,7 +51,7 @@ namespace MixItUp.Base.ViewModel.Quotes
 
         public ICommand QuotesDataFileBrowseCommand { get; private set; }
 
-        public ThreadSafeObservableCollection<QuotesDataImportColumnViewModel> Columns { get; private set; } = new ThreadSafeObservableCollection<QuotesDataImportColumnViewModel>();
+        public ObservableCollection<QuotesDataImportColumnViewModel> Columns { get; private set; } = new ObservableCollection<QuotesDataImportColumnViewModel>();
 
         private Dictionary<string, QuotesDataImportColumnViewModel> columnDictionary = new Dictionary<string, QuotesDataImportColumnViewModel>();
 

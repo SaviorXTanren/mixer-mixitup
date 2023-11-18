@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.Services;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -11,7 +12,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class ServicesControl : MainControlBase
     {
-        private ThreadSafeObservableCollection<UserControl> services = new ThreadSafeObservableCollection<UserControl>();
+        private ObservableCollection<UserControl> services = new ObservableCollection<UserControl>();
 
         public ServicesControl()
         {

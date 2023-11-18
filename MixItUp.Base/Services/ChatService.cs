@@ -185,7 +185,7 @@ namespace MixItUp.Base.Services
 
         public async Task Whisper(string username, StreamingPlatformTypeEnum platform, string message, bool sendAsStreamer = false)
         {
-            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(platform, username, performPlatformSearch: true);
+            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(platform, platformUsername: username, performPlatformSearch: true);
             if (user != null)
             {
                 await this.Whisper(user, message, sendAsStreamer);
@@ -425,15 +425,15 @@ namespace MixItUp.Base.Services
                         message.User.UpdateLastActivity();
                         if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot && message.User.WhispererNumber == 0)
                         {
-                            await this.whisperNumberLock.WaitAndRelease(() =>
+                            await this.whisperNumberLock.WaitAsync();
+
+                            if (!whisperMap.ContainsKey(message.User.ID))
                             {
-                                if (!whisperMap.ContainsKey(message.User.ID))
-                                {
-                                    whisperMap[message.User.ID] = whisperMap.Count + 1;
-                                }
-                                message.User.WhispererNumber = whisperMap[message.User.ID];
-                                return Task.CompletedTask;
-                            });
+                                whisperMap[message.User.ID] = whisperMap.Count + 1;
+                            }
+                            message.User.WhispererNumber = whisperMap[message.User.ID];
+
+                            this.whisperNumberLock.Release();
                         }
                     }
                 }
@@ -582,7 +582,7 @@ namespace MixItUp.Base.Services
                         string primaryTaggedUsername = message.PrimaryTaggedUsername;
                         if (!string.IsNullOrEmpty(primaryTaggedUsername))
                         {
-                            UserV2ViewModel primaryTaggedUser = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(message.Platform, primaryTaggedUsername);
+                            UserV2ViewModel primaryTaggedUser = ServiceManager.Get<UserService>().GetActiveUserByPlatform(message.Platform, platformUsername: primaryTaggedUsername);
                             if (primaryTaggedUser != null)
                             {
                                 primaryTaggedUser.TotalTimesTagged++;
@@ -741,6 +741,19 @@ namespace MixItUp.Base.Services
             this.messagesLookup.Remove(message.ID);
             this.Messages.Remove(message);
             return Task.CompletedTask;
+        }
+
+        public void HandleDeletion(ChatMessageViewModel message)
+        {
+            if (message.IsDeleted)
+            {
+                int index = this.Messages.IndexOf(message);
+                if (index >= 0)
+                {
+                    this.Messages.Remove(message);
+                    this.Messages.Insert(index, message);
+                }
+            }
         }
 
         public async Task WriteToChatEventLog(ChatMessageViewModel message, string prepend = null)

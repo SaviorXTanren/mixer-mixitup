@@ -61,7 +61,7 @@ namespace MixItUp.Base.Model.Actions
                 if (!string.IsNullOrEmpty(this.TargetUsername))
                 {
                     string username = await ReplaceStringWithSpecialModifiers(this.TargetUsername, parameters);
-                    targetUser = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(parameters.Platform, username, performPlatformSearch: true);
+                    targetUser = await ServiceManager.Get<UserService>().GetUserByPlatform(parameters.Platform, platformUsername: username, performPlatformSearch: true);
                 }
                 else
                 {

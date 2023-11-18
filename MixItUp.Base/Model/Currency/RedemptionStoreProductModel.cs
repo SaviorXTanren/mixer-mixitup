@@ -190,7 +190,7 @@ namespace MixItUp.Base.Model.Currency
             else
             {
                 name = UserService.SanitizeUsername(name);
-                UserV2ViewModel purchaseUser = ServiceManager.Get<UserService>().GetActiveUserByPlatformUsername(user.Platform, name);
+                UserV2ViewModel purchaseUser = ServiceManager.Get<UserService>().GetActiveUserByPlatform(user.Platform, platformUsername: name);
                 if (purchaseUser != null)
                 {
                     IEnumerable<RedemptionStorePurchaseModel> purchases = ChannelSession.Settings.RedemptionStorePurchases.ToList().Where(p => p.UserID == user.ID);

@@ -46,7 +46,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             }
         }
 
-        public ThreadSafeObservableCollection<string> AudioDevices { get; set; } = new ThreadSafeObservableCollection<string>();
+        public ObservableCollection<string> AudioDevices { get; set; } = new ObservableCollection<string>();
 
         public string SelectedAudioDevice
         {

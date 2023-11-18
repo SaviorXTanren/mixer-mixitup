@@ -5,6 +5,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -38,7 +39,7 @@ namespace MixItUp.Base.ViewModel.Commands
         public override bool IsExistingCommand => false;
 
         public ICommand AddJSONParameterCommand { get; private set; }
-        public ThreadSafeObservableCollection<WebhookJSONParameterViewModel> JSONParameters { get; set; } = new ThreadSafeObservableCollection<WebhookJSONParameterViewModel>();
+        public ObservableCollection<WebhookJSONParameterViewModel> JSONParameters { get; set; } = new ObservableCollection<WebhookJSONParameterViewModel>();
 
         public WebhookCommandEditorWindowViewModel(WebhookCommandModel existingCommand) : base(existingCommand)
         {

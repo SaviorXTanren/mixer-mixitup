@@ -93,7 +93,7 @@ namespace MixItUp.Base.Model.User
 
                 if (!string.IsNullOrEmpty(this.username))
                 {
-                    this.User = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(this.Platform, this.username);
+                    this.User = await ServiceManager.Get<UserService>().GetUserByPlatform(this.Platform, platformUsername: this.username);
                     if (this.User == null)
                     {
                         this.User = UserV2ViewModel.CreateUnassociated(this.username);

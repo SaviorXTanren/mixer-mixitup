@@ -6,6 +6,7 @@ using MixItUp.Base.ViewModel.Accounts;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -100,7 +101,7 @@ namespace MixItUp.Base.ViewModel.Wizard
         private string settingsBackupLocation;
         public bool IsBackupLocationSet { get { return !string.IsNullOrEmpty(this.SettingsBackupLocation); } }
 
-        public ThreadSafeObservableCollection<SettingsBackupRateEnum> SettingsBackupOptions { get; private set; } = new ThreadSafeObservableCollection<SettingsBackupRateEnum>(EnumHelper.GetEnumList<SettingsBackupRateEnum>());
+        public ObservableCollection<SettingsBackupRateEnum> SettingsBackupOptions { get; private set; } = new ObservableCollection<SettingsBackupRateEnum>(EnumHelper.GetEnumList<SettingsBackupRateEnum>());
         public SettingsBackupRateEnum SelectedSettingsBackupOption
         {
             get { return this.selectedSettingsBackupOption; }

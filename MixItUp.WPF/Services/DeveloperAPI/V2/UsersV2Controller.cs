@@ -41,12 +41,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V2
                 return BadRequest($"Unknown platform: {platform}");
             }
 
-            var usermodel = await ServiceManager.Get<UserService>().GetUserByPlatformID(platformEnum, usernameOrID);
-            if (usermodel == null)
-            {
-                usermodel = await ServiceManager.Get<UserService>().GetUserByPlatformUsername(platformEnum, usernameOrID);
-            }
-
+            var usermodel = await ServiceManager.Get<UserService>().GetUserByPlatform(platformEnum, platformID: usernameOrID, platformUsername: usernameOrID, performPlatformSearch: true);
             if (usermodel == null)
             {
                 return NotFound();
@@ -106,15 +101,12 @@ namespace MixItUp.WPF.Services.DeveloperAPI.V2
         [HttpPost]
         public async Task<IHttpActionResult> AddUser(NewUser newUser)
         {
-            await ServiceManager.Get<UserService>().LoadAllUserData();
-
             if (!Enum.TryParse<StreamingPlatformTypeEnum>(newUser.Platform, ignoreCase: true, out var platformEnum))
             {
                 return BadRequest($"Unknown platform: {newUser.Platform}");
             }
 
-            UserV2ViewModel user = await ServiceManager.Get<UserService>().CreateUser(platformEnum, newUser.Username);
-
+            UserV2ViewModel user = await ServiceManager.Get<UserService>().GetUserByPlatform(platformEnum, platformUsername: newUser.Username, performPlatformSearch: true);
             if (user == null)
             {
                 return NotFound();
