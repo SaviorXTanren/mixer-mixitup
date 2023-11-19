@@ -19,10 +19,6 @@ namespace MixItUp.WPF.Util
                                                                                                         .WithSystemRuntimeCacheHandle()
                                                                                                         .WithExpiration(ExpirationMode.Sliding, TimeSpan.FromMinutes(30)));
 
-        private static ICacheManager<byte[]> gifCache = CacheFactory.Build<byte[]>(settings => settings
-                                                                                   .WithSystemRuntimeCacheHandle()
-                                                                                   .WithExpiration(ExpirationMode.Sliding, TimeSpan.FromMinutes(30)));
-
         public static void SetImageSource(Image image, string path, double width, double height, string tooltip = "")
         {
             try
@@ -74,33 +70,7 @@ namespace MixItUp.WPF.Util
             {
                 if (!string.IsNullOrEmpty(path) && path.Length > 0)
                 {
-                    byte[] bytes = ImageHelper.gifCache.Get(path);
-                    if (bytes != null)
-                    {
-                        ImageHelper.SetGifSource(image, width, height, tooltip, bytes);
-                        return;
-                    }
-
-                    if (path.StartsWith("http"))
-                    {
-                        Task.Run(async () =>
-                        {
-                            bytes = null;
-                            using (AdvancedHttpClient client = new AdvancedHttpClient())
-                            {
-                                bytes = await client.GetByteArrayAsync(path);
-                            }
-                            await Application.Current.Dispatcher.InvokeAsync(() => ImageHelper.AddGifToCacheAndSetImageBytes(image, path, width, height, tooltip, bytes));
-                        });
-                    }
-                    else if (ServiceManager.Get<IFileService>().FileExists(path))
-                    {
-                        Task.Run(async () =>
-                        {
-                            bytes = await ServiceManager.Get<IFileService>().ReadFileAsBytes(path);
-                            await Application.Current.Dispatcher.InvokeAsync(() => ImageHelper.AddGifToCacheAndSetImageBytes(image, path, width, height, tooltip, bytes));
-                        });
-                    }
+                    ImageHelper.SetGifSource(image, width, height, tooltip, path);
                 }
             }
             catch (Exception ex)
@@ -160,26 +130,17 @@ namespace MixItUp.WPF.Util
             }
         }
 
-        private static void AddGifToCacheAndSetImageBytes(Image image, string id, double width, double height, string tooltip, byte[] bytes)
+        private static void SetGifSource(Image image, double width, double height, string tooltip, string url)
         {
-            ImageHelper.gifCache.Put(id, bytes);
-            ImageHelper.SetGifSource(image, width, height, tooltip, bytes);
-        }
-
-        private static void SetGifSource(Image image, double width, double height, string tooltip, byte[] bytes)
-        {
-            if (bytes != null)
+            if (!string.IsNullOrEmpty(url))
             {
-                using (MemoryStream stream = new MemoryStream(bytes))
+                image.Width = width;
+                image.Height = height;
+                AnimationBehavior.SetSourceUri(image, new Uri(url));
+                AnimationBehavior.SetRepeatBehavior(image, new RepeatBehavior(20));
+                if (!string.IsNullOrEmpty(tooltip))
                 {
-                    image.Width = width;
-                    image.Height = height;
-                    AnimationBehavior.SetSourceStream(image, stream);
-                    AnimationBehavior.SetRepeatBehavior(image, new RepeatBehavior(20));
-                    if (!string.IsNullOrEmpty(tooltip))
-                    {
-                        image.ToolTip = tooltip;
-                    }
+                    image.ToolTip = tooltip;
                 }
             }
         }
