@@ -107,15 +107,7 @@ namespace MixItUp.WPF.Controls.Chat
                             {
                                 ChatEmoteViewModelBase emote = (ChatEmoteViewModelBase)messagePart;
                                 Image image = new Image();
-
-                                if (emote.IsGIFImage)
-                                {
-                                    ImageHelper.SetGifSource(image, emote.ImageURL, ChannelSession.Settings.ChatFontSize * 2, ChannelSession.Settings.ChatFontSize * 2, emote.Name);
-                                }
-                                else
-                                {
-                                    ImageHelper.SetImageSource(image, emote.ImageURL, ChannelSession.Settings.ChatFontSize * 2, ChannelSession.Settings.ChatFontSize * 2, emote.Name);
-                                }
+                                ImageHelper.SetImageSource(image, emote.ImageURL, ChannelSession.Settings.ChatFontSize * 2, ChannelSession.Settings.ChatFontSize * 2, emote.Name);
                                 this.MessageWrapPanel.Children.Add(image);
 
                                 if (emote is TwitchBitsCheerViewModel)

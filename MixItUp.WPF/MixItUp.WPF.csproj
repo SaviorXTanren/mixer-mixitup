@@ -471,9 +471,6 @@
     <Reference Include="WriteableBitmapEx.Wpf, Version=1.6.8.0, Culture=neutral, PublicKeyToken=50375ca6144f1c69, processorArchitecture=MSIL">
       <HintPath>..\packages\WriteableBitmapEx.1.6.8\lib\net40\WriteableBitmapEx.Wpf.dll</HintPath>
     </Reference>
-    <Reference Include="XamlAnimatedGif, Version=2.0.0.0, Culture=neutral, PublicKeyToken=20a987d8023d9690, processorArchitecture=MSIL">
-      <HintPath>..\packages\XamlAnimatedGif.2.2.0\lib\net45\XamlAnimatedGif.dll</HintPath>
-    </Reference>
     <Reference Include="YouTube.Base, Version=1.0.0.21, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StreamingClientLibrary.YouTube.1.0.0.21\lib\netstandard2.0\YouTube.Base.dll</HintPath>
     </Reference>

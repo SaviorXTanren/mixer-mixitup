@@ -7,5 +7,6 @@
         public abstract string ImageURL { get; protected set; }
 
         public virtual bool IsGIFImage { get { return this.ImageURL.Contains(".gif"); } }
+        public virtual bool IsSVGImage { get { return this.ImageURL.Contains(".svg"); } }
     }
 }

@@ -68,7 +68,6 @@ namespace MixItUp.Base
 
             ServiceManager.Add(new AlejoPronounsService());
             ServiceManager.Add(new BetterTTVService());
-            ServiceManager.Add(new FrankerFaceZService());
             ServiceManager.Add(new StreamlootsService());
             ServiceManager.Add(new JustGivingService());
             ServiceManager.Add(new TiltifyService());

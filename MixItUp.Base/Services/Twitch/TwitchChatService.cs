@@ -1,12 +1,15 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User.Platform;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +24,28 @@ using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.Services.Twitch
 {
+    public class FrankerFaceZEmoteModel : ChatEmoteViewModelBase
+    {
+        public string id { get; set; }
+        public string name { get; set; }
+        public JObject urls { get; set; }
+
+        public override string ID { get { return this.id; } protected set { } }
+        public override string Name { get { return this.name; } protected set { } }
+        public override string ImageURL
+        {
+            get
+            {
+                if (this.urls != null && this.urls.Count > 0)
+                {
+                    return this.urls.ContainsKey("2") ? this.urls["2"].ToString() : this.urls[this.urls.GetKeys().First()].ToString();
+                }
+                return string.Empty;
+            }
+            protected set { }
+        }
+    }
+
     public class TwitchTMIChatModel
     {
         public long chatter_count { get; set; }
@@ -52,6 +77,9 @@ namespace MixItUp.Base.Services.Twitch
 
         public IDictionary<string, TwitchChatEmoteViewModel> Emotes { get { return this.emotes; } }
         private Dictionary<string, TwitchChatEmoteViewModel> emotes = new Dictionary<string, TwitchChatEmoteViewModel>();
+
+        public IDictionary<string, FrankerFaceZEmoteModel> FrankerFaceZEmotes { get { return this.frankerFaceZEmotes; } }
+        private Dictionary<string, FrankerFaceZEmoteModel> frankerFaceZEmotes = new Dictionary<string, FrankerFaceZEmoteModel>();
 
         public IDictionary<string, Dictionary<string, ChatBadgeModel>> ChatBadges { get { return this.chatBadges; } }
         private Dictionary<string, Dictionary<string, ChatBadgeModel>> chatBadges = new Dictionary<string, Dictionary<string, ChatBadgeModel>>();
@@ -283,8 +311,8 @@ namespace MixItUp.Base.Services.Twitch
             if (ChannelSession.Settings.ShowFrankerFaceZEmotes)
             {
                 ServiceManager.Get<ITelemetryService>().TrackService("FrankerFaceZ");
-                initializationTasks.Add(ServiceManager.Get<FrankerFaceZService>().DownloadGlobalFrankerFaceZEmotes());
-                initializationTasks.Add(ServiceManager.Get<FrankerFaceZService>().DownloadChannelFrankerFaceZEmotes(ServiceManager.Get<TwitchSessionService>().Username));
+                initializationTasks.Add(this.DownloadFrankerFaceZEmotes());
+                initializationTasks.Add(this.DownloadFrankerFaceZEmotes(ServiceManager.Get<TwitchSessionService>().Username));
             }
 
             Task<IEnumerable<BitsCheermoteModel>> cheermotesTask = ServiceManager.Get<TwitchSessionService>().UserConnection.GetBitsCheermotes(ServiceManager.Get<TwitchSessionService>().User);
@@ -586,6 +614,34 @@ namespace MixItUp.Base.Services.Twitch
             {
                 await ServiceManager.Get<UserService>().RemoveActiveUsers(leavesToProcess);
             }
+        }
+
+        private async Task DownloadFrankerFaceZEmotes(string channelName = null)
+        {
+            try
+            {
+                using (AdvancedHttpClient client = new AdvancedHttpClient())
+                {
+                    JObject jobj = await client.GetJObjectAsync((!string.IsNullOrEmpty(channelName)) ? "https://api.frankerfacez.com/v1/room/" + channelName : "https://api.frankerfacez.com/v1/set/global");
+                    if (jobj != null && jobj.ContainsKey("sets"))
+                    {
+                        JObject setsJObj = (JObject)jobj["sets"];
+                        foreach (var kvp in setsJObj)
+                        {
+                            JObject setJObj = (JObject)kvp.Value;
+                            if (setJObj != null && setJObj.ContainsKey("emoticons"))
+                            {
+                                JArray emoticonsJArray = (JArray)setJObj["emoticons"];
+                                foreach (FrankerFaceZEmoteModel emote in emoticonsJArray.ToTypedArray<FrankerFaceZEmoteModel>())
+                                {
+                                    this.frankerFaceZEmotes[emote.name] = emote;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         private async void UserClient_OnPingReceived(object sender, EventArgs e)

@@ -204,7 +204,7 @@ namespace MixItUp.WPF.Controls.Chat
                                 }
                                 if (ChannelSession.Settings.ShowFrankerFaceZEmotes)
                                 {
-                                    foreach (var kvp in ServiceManager.Get<FrankerFaceZService>().FrankerFaceZEmotes)
+                                    foreach (var kvp in ServiceManager.Get<TwitchChatService>().FrankerFaceZEmotes)
                                     {
                                         emotes[kvp.Key] = kvp.Value;
                                     }
