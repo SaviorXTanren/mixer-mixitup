@@ -21,12 +21,11 @@ namespace MixItUp.Base.ViewModel.Chat.Trovo
         public TrovoChatEmoteViewModel(GlobalChatEmoteModel emote)
             : this((ChatEmoteModel)emote)
         {
-            // TODO: Remove this once animated emotes are figured out
-            //if (!string.IsNullOrEmpty(emote.gifp))
-            //{
-            //    this.ImageURL = emote.gifp;
-            //    this.IsGif = true;
-            //}
+            if (!string.IsNullOrEmpty(emote.gifp))
+            {
+                this.ImageURL = emote.gifp;
+                this.IsGif = true;
+            }
         }
     }
 }

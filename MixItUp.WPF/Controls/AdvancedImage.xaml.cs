@@ -67,7 +67,14 @@ namespace MixItUp.WPF.Controls
                 else if (this.DataContext is ChatEmoteViewModelBase)
                 {
                     ChatEmoteViewModelBase emote = this.DataContext as ChatEmoteViewModelBase;
-                    ImageHelper.SetImageSource(this, emote.ImageURL, width, height, emote.Name);
+                    if (emote.IsGIFImage)
+                    {
+                        ImageHelper.SetGifSource(this, emote.ImageURL, width, height, emote.Name);
+                    }
+                    else
+                    {
+                        ImageHelper.SetImageSource(this, emote.ImageURL, width, height, emote.Name);
+                    }
                 }
             }
         }

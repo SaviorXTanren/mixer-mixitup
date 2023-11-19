@@ -48,20 +48,19 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
         {
             this.ID = emote.id;
             this.Name = emote.name;
-            // TODO: Remove this once animated emotes are figured out
-            //if (emote.HasAnimated)
-            //{
-            //    this.IsAnimated = true;
-            //    this.DarkSmallImageUrl = emote.BuildImageURL(ChatEmoteModel.AnimatedFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale1Name);
-            //    this.DarkMediumImageUrl = emote.BuildImageURL(ChatEmoteModel.AnimatedFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale2Name);
-            //    this.DarkLargeImageUrl = emote.BuildImageURL(ChatEmoteModel.AnimatedFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale3Name);
-            //}
-            //else
-            //{
-            this.DarkSmallImageUrl = emote.BuildImageURL(ChatEmoteModel.StaticFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale1Name);
+            if (emote.HasAnimated)
+            {
+                this.IsAnimated = true;
+                this.DarkSmallImageUrl = emote.BuildImageURL(ChatEmoteModel.AnimatedFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale1Name);
+                this.DarkMediumImageUrl = emote.BuildImageURL(ChatEmoteModel.AnimatedFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale2Name);
+                this.DarkLargeImageUrl = emote.BuildImageURL(ChatEmoteModel.AnimatedFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale3Name);
+            }
+            else
+            {
+                this.DarkSmallImageUrl = emote.BuildImageURL(ChatEmoteModel.StaticFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale1Name);
                 this.DarkMediumImageUrl = emote.BuildImageURL(ChatEmoteModel.StaticFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale2Name);
                 this.DarkLargeImageUrl = emote.BuildImageURL(ChatEmoteModel.StaticFormatName, ChatEmoteModel.DarkThemeName, ChatEmoteModel.Scale3Name);
-            //}
+            }
         }
 
         public TwitchChatEmoteViewModel(string emoteID, string emoteCode)
@@ -85,15 +84,15 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
         public int Amount { get; set; }
         public TwitchBitsCheermoteTierViewModel Tier { get; set; }
 
+        public override bool IsGIFImage { get { return true; } }
+
         public TwitchBitsCheerViewModel(string text, int amount, TwitchBitsCheermoteTierViewModel tier)
         {
             this.Amount = amount;
             this.Tier = tier;
 
             this.ID = this.Name = text;
-            // TODO: Remove this once animated emotes are figured out
-            //this.ImageURL = (ChannelSession.AppSettings.IsDarkBackground) ? this.Tier.DarkAnimatedImage : this.Tier.LightAnimatedImage;
-            this.ImageURL = (ChannelSession.AppSettings.IsDarkBackground) ? this.Tier.DarkStaticImage : this.Tier.LightStaticImage;
+            this.ImageURL = (ChannelSession.AppSettings.IsDarkBackground) ? this.Tier.DarkAnimatedImage : this.Tier.LightAnimatedImage;
         }
     }
 
@@ -234,9 +233,9 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                     {
                         this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<BetterTTVService>().BetterTTVEmotes[part];
                     }
-                    else if (ChannelSession.Settings.ShowFrankerFaceZEmotes && ServiceManager.Get<TwitchChatService>().FrankerFaceZEmotes.ContainsKey(part))
+                    else if (ChannelSession.Settings.ShowFrankerFaceZEmotes && ServiceManager.Get<FrankerFaceZService>().FrankerFaceZEmotes.ContainsKey(part))
                     {
-                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TwitchChatService>().FrankerFaceZEmotes[part];
+                        this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<FrankerFaceZService>().FrankerFaceZEmotes[part];
                     }
                 }
             }
