@@ -3,7 +3,6 @@ using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -12,7 +11,7 @@ namespace MixItUp.Base.ViewModel.Services
 {
     public class TiltifyServiceControlViewModel : ServiceControlViewModelBase
     {
-        public ObservableCollection<TiltifyCampaign> Campaigns { get; set; } = new ObservableCollection<TiltifyCampaign>();
+        public ThreadSafeObservableCollection<TiltifyCampaign> Campaigns { get; set; } = new ThreadSafeObservableCollection<TiltifyCampaign>();
 
         public TiltifyCampaign SelectedCampaign
         {

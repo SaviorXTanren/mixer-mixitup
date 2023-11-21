@@ -27,7 +27,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public ICommand AddCommand { get; private set; }
 
-        public ObservableCollection<ActionEditorControlViewModelBase> Actions { get; set; } = new ObservableCollection<ActionEditorControlViewModelBase>();
+        public ThreadSafeObservableCollection<ActionEditorControlViewModelBase> Actions { get; set; } = new ThreadSafeObservableCollection<ActionEditorControlViewModelBase>();
 
         public ActionEditorListControlViewModel()
         {

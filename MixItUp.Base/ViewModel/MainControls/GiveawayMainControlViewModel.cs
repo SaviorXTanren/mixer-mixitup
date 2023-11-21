@@ -2,6 +2,7 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirements;
+using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -123,7 +124,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public string WinnerUsername { get { return ServiceManager.Get<GiveawayService>().Winner?.FullDisplayName ?? string.Empty; } }
 
-        public ObservableCollection<GiveawayUser> EnteredUsers { get; private set; } = new ObservableCollection<GiveawayUser>();
+        public ThreadSafeObservableCollection<GiveawayUser> EnteredUsers { get; private set; } = new ThreadSafeObservableCollection<GiveawayUser>();
 
         public CommandModelBase GiveawayStartedReminderCommand
         {

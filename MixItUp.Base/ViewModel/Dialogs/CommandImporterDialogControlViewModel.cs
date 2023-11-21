@@ -3,7 +3,6 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Dialogs
@@ -75,7 +74,7 @@ namespace MixItUp.Base.ViewModel.Dialogs
         }
         private CommandTypeEnum selectedExistingCommandType;
 
-        public ObservableCollection<CommandModelBase> Commands { get; set; } = new ObservableCollection<CommandModelBase>();
+        public ThreadSafeObservableCollection<CommandModelBase> Commands { get; set; } = new ThreadSafeObservableCollection<CommandModelBase>();
 
         public CommandModelBase SelectedExistingCommand
         {

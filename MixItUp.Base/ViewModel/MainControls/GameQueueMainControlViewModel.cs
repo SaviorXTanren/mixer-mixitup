@@ -3,7 +3,6 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.MainControls
@@ -43,7 +42,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             }
         }
 
-        public ObservableCollection<QueueUser> QueueUsers { get; private set; } = new ObservableCollection<QueueUser>();
+        public ThreadSafeObservableCollection<QueueUser> QueueUsers { get; private set; } = new ThreadSafeObservableCollection<QueueUser>();
 
         public CommandModelBase GameQueueUserJoinedCommand
         {

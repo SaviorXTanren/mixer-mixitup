@@ -12,11 +12,11 @@ namespace MixItUp.Base.Util
                 {
                     if (this[i].CompareTo(newItem) >= 0)
                     {
-                        this.Insert(i, newItem);
+                        this.InsertInternal(i, newItem);
                         return;
                     }
                 }
-                this.Add(newItem);
+                this.AddInternal(newItem);
             });
         }
     }

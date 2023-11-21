@@ -3,7 +3,6 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -26,7 +25,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public bool PreMadeCommandSelected { get { return !this.CustomCommandsSelected; } }
 
-        public ObservableCollection<PreMadeChatCommandControlViewModel> PreMadeChatCommands { get; set; } = new ObservableCollection<PreMadeChatCommandControlViewModel>();
+        public ThreadSafeObservableCollection<PreMadeChatCommandControlViewModel> PreMadeChatCommands { get; set; } = new ThreadSafeObservableCollection<PreMadeChatCommandControlViewModel>();
         private List<PreMadeChatCommandControlViewModel> allPreMadeChatCommands = new List<PreMadeChatCommandControlViewModel>();
 
         public ICommand SwitchToPreMadeCommands { get; set; }
@@ -57,7 +56,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 this.allPreMadeChatCommands.Add(new PreMadeChatCommandControlViewModel(command));
             }
 
-            this.PreMadeChatCommands.AddRange(this.allPreMadeChatCommands);
+            this.PreMadeChatCommands.ClearAndAddRange(this.allPreMadeChatCommands);
 
             if (this.CommandGroups.Count == 0)
             {

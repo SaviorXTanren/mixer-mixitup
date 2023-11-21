@@ -27,7 +27,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private bool showHome = true;
 
-        public ObservableCollection<CommunityCommandCategoryViewModel> Categories { get; set; } = new ObservableCollection<CommunityCommandCategoryViewModel>();
+        public ThreadSafeObservableCollection<CommunityCommandCategoryViewModel> Categories { get; set; } = new ThreadSafeObservableCollection<CommunityCommandCategoryViewModel>();
 
         public ICommand CategorySeeMoreCommand { get; set; }
 
@@ -55,7 +55,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private bool showSearch;
 
-        public ObservableCollection<CommunityCommandViewModel> SearchResults { get; set; } = new ObservableCollection<CommunityCommandViewModel>();
+        public ThreadSafeObservableCollection<CommunityCommandViewModel> SearchResults { get; set; } = new ThreadSafeObservableCollection<CommunityCommandViewModel>();
 
         public ICommand GetCommandDetailsCommand { get; set; }
 
@@ -96,7 +96,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private bool showUserCommands;
 
-        public ObservableCollection<CommunityCommandViewModel> UserCommands { get; set; } = new ObservableCollection<CommunityCommandViewModel>();
+        public ThreadSafeObservableCollection<CommunityCommandViewModel> UserCommands { get; set; } = new ThreadSafeObservableCollection<CommunityCommandViewModel>();
 
         public ICommand GetMyCommandsCommand { get; set; }
 
@@ -111,7 +111,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private bool showMyCommands;
 
-        public ObservableCollection<CommunityCommandViewModel> MyCommands { get; set; } = new ObservableCollection<CommunityCommandViewModel>();
+        public ThreadSafeObservableCollection<CommunityCommandViewModel> MyCommands { get; set; } = new ThreadSafeObservableCollection<CommunityCommandViewModel>();
 
         public ICommand EditMyCommandCommand { get; set; }
 

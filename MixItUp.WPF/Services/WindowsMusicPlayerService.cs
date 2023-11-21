@@ -7,7 +7,6 @@ using NAudio.Wave;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -39,7 +38,7 @@ namespace MixItUp.WPF.Services
             }
         }
 
-        public ObservableCollection<MusicPlayerSong> Songs { get { return this.songs; } }
+        public ThreadSafeObservableCollection<MusicPlayerSong> Songs { get { return this.songs; } }
 
         private ThreadSafeObservableCollection<MusicPlayerSong> songs = new ThreadSafeObservableCollection<MusicPlayerSong>();
         private int currentSongIndex = 0;

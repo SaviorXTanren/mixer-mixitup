@@ -16,7 +16,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public string PackIconName { get; set; }
 
-        public ObservableCollection<EventCommandItemViewModel> Commands { get; set; } = new ObservableCollection<EventCommandItemViewModel>();
+        public ThreadSafeObservableCollection<EventCommandItemViewModel> Commands { get; set; } = new ThreadSafeObservableCollection<EventCommandItemViewModel>();
 
         public bool ShowImage { get { return !string.IsNullOrEmpty(this.Image); } }
 
@@ -125,7 +125,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
     public class EventsMainControlViewModel : WindowControlViewModelBase
     {
-        public ObservableCollection<EventCommandGroupViewModel> EventCommandGroups { get; set; } = new ObservableCollection<EventCommandGroupViewModel>();
+        public ThreadSafeObservableCollection<EventCommandGroupViewModel> EventCommandGroups { get; set; } = new ThreadSafeObservableCollection<EventCommandGroupViewModel>();
 
         public Dictionary<EventTypeEnum, EventCommandItemViewModel> EventTypeItems { get; set; } = new Dictionary<EventTypeEnum, EventCommandItemViewModel>();
 
