@@ -2,6 +2,7 @@
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Commands
@@ -45,7 +46,7 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public bool IsEnableSwitchToggable { get { return !string.IsNullOrEmpty(this.GroupName); } }
 
-        public SortableObservableCollection<CommandModelBase> Commands
+        public ObservableCollection<CommandModelBase> Commands
         {
             get { return this.commands; }
             set
@@ -54,7 +55,7 @@ namespace MixItUp.Base.ViewModel.Commands
                 this.NotifyPropertyChanged();
             }
         }
-        private SortableObservableCollection<CommandModelBase> commands = new SortableObservableCollection<CommandModelBase>();
+        private ObservableCollection<CommandModelBase> commands = new ObservableCollection<CommandModelBase>();
 
         private Dictionary<Guid, CommandModelBase> commandLookup = new Dictionary<Guid, CommandModelBase>();
 

@@ -337,7 +337,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public StreamingPlatformTypeEnum Platform { get; protected set; }
 
-        public ThreadSafeObservableCollection<string> PastTitles { get; private set; } = new ThreadSafeObservableCollection<string>();
+        public ObservableCollection<string> PastTitles { get; private set; } = new ObservableCollection<string>();
 
         public string Title
         {
@@ -350,7 +350,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private string title;
 
-        public ThreadSafeObservableCollection<string> PastCategories { get; private set; } = new ThreadSafeObservableCollection<string>();
+        public ObservableCollection<string> PastCategories { get; private set; } = new ObservableCollection<string>();
 
         public string Category
         {
@@ -367,7 +367,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public ICommand SearchChannelToRaidCommand { get; private set; }
 
-        public ThreadSafeObservableCollection<ChannelToRaidItemViewModel> ChannelsToRaid { get; private set; } = new ThreadSafeObservableCollection<ChannelToRaidItemViewModel>();
+        public ObservableCollection<ChannelToRaidItemViewModel> ChannelsToRaid { get; private set; } = new ObservableCollection<ChannelToRaidItemViewModel>();
 
         public PlatformChannelControlViewModelBase()
         {

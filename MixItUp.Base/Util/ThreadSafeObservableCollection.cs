@@ -9,6 +9,18 @@ namespace MixItUp.Base.Util
     {
         public ThreadSafeObservableCollection() { }
 
+        public new T this[int index]
+        {
+            get { return base[index]; }
+            set
+            {
+                DispatcherHelper.Dispatcher.Invoke(() =>
+                {
+                    base[index] = value;
+                });
+            }
+        }
+
         public new void Add(T item)
         {
             DispatcherHelper.Dispatcher.Invoke(() =>
