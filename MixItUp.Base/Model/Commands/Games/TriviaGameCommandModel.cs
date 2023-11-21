@@ -21,6 +21,9 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public List<string> Answers { get; set; } = new List<string>();
 
+        [DataMember]
+        public bool Enabled { get; set; } = true;
+
         [JsonIgnore]
         public int TotalAnswers { get { return this.Answers.Count; } }
 
@@ -168,7 +171,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
             if (this.CustomQuestions.Count > 0 && (useCustomQuestion || this.question == null))
             {
-                this.question = this.CustomQuestions.Random();
+                this.question = this.CustomQuestions.Where(q => q.Enabled).Random();
             }
 
             if (this.question == null)
