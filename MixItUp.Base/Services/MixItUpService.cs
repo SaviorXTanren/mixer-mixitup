@@ -122,8 +122,8 @@ namespace MixItUp.Base.Services
         public const string MixItUpAPIEndpoint = "https://api.mixitupapp.com/api/";
         public const string MixItUpSignalRHubEndpoint = "https://api.mixitupapp.com/webhookhub";
 
-        public const string DevMixItUpAPIEndpoint = "https://localhost:44309/api/";                // Dev Endpoint
-        public const string DevMixItUpSignalRHubEndpoint = "https://localhost:44309/webhookhub";   // Dev Endpoint
+        public const string DevMixItUpAPIEndpoint = "https://localhost:5005/api/";                // Dev Endpoint
+        public const string DevMixItUpSignalRHubEndpoint = "https://localhost:5005/webhookhub";   // Dev Endpoint
 
         private string accessToken = null;
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
@@ -315,6 +315,13 @@ namespace MixItUp.Base.Services
                     {
                         Logger.Log($"Webhook Event - Generic Webhook - {id} - {payload}");
                         var _ = this.TriggerGenericWebhook(id, payload);
+                    });
+
+                    this.signalRConnection.Listen("TriggerExtension", (string payload) =>
+                    {
+                        Logger.Log($"Extension Event - {payload}");
+                        // TODO: Handle this
+                        // var _ = this.TriggerGenericWebhook(id, payload);
                     });
 
                     this.signalRConnection.Listen("AuthenticationCompleteEvent", (bool approved) =>
