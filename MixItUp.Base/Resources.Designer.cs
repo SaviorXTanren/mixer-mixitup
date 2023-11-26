@@ -10164,6 +10164,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ignore Usage Requirements.
+        /// </summary>
+        public static string IgnoreUsageRequirements {
+            get {
+                return ResourceManager.GetString("IgnoreUsageRequirements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ignore Your Bot Account for Commands.
         /// </summary>
         public static string IgnoreYourBotAccountForCommands {

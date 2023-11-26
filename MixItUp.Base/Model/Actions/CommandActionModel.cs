@@ -39,11 +39,13 @@ namespace MixItUp.Base.Model.Actions
         public string Arguments { get; set; }
         [DataMember]
         public bool WaitForCommandToFinish { get; set; }
+        [DataMember]
+        public bool IgnoreUsageRequirements { get; set; }
 
         [DataMember]
         public string CommandGroupName { get; set; }
 
-        public CommandActionModel(CommandActionTypeEnum commandActionType, CommandModelBase command, string commandArguments, bool waitForCommandToFinish)
+        public CommandActionModel(CommandActionTypeEnum commandActionType, CommandModelBase command, string commandArguments, bool waitForCommandToFinish, bool ignoreUsageRequirements)
             : this(commandActionType)
         {
             if (command is PreMadeChatCommandModelBase)
@@ -58,6 +60,7 @@ namespace MixItUp.Base.Model.Actions
             }
             this.Arguments = commandArguments;
             this.WaitForCommandToFinish = waitForCommandToFinish;
+            this.IgnoreUsageRequirements = ignoreUsageRequirements;
         }
 
         public CommandActionModel(CommandActionTypeEnum commandActionType, string groupName)
@@ -122,6 +125,7 @@ namespace MixItUp.Base.Model.Actions
                     }
 
                     CommandParametersModel copyParameters = parameters.Duplicate(newArguments);
+                    copyParameters.IgnoreRequirements = this.IgnoreUsageRequirements;
 
                     CommandInstanceModel commandInstance = new CommandInstanceModel(command, copyParameters);
                     if (this.WaitForCommandToFinish)
