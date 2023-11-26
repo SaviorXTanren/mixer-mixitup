@@ -51,7 +51,7 @@ namespace MixItUp.WPF.Util
             EditTestCommandParametersDialogControl dialogControl = new EditTestCommandParametersDialogControl(parameters);
             if (bool.Equals(await DialogHelper.ShowCustom(dialogControl), true))
             {
-                return dialogControl.GetCommandParameters();
+                return await dialogControl.GetCommandParameters();
             }
             return null;
         }
