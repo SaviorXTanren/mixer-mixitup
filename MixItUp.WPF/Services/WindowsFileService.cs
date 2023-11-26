@@ -186,18 +186,27 @@ namespace MixItUp.WPF.Services
         {
             if (!string.IsNullOrEmpty(filePath))
             {
-                await WindowsFileService.fileLock.WaitAsync();
-
-                using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Create)))
+                try
                 {
-                    if (!string.IsNullOrEmpty(data))
-                    {
-                        await writer.WriteAsync(data);
-                    }
-                    await writer.FlushAsync();
-                }
+                    await WindowsFileService.fileLock.WaitAsync();
 
-                WindowsFileService.fileLock.Release();
+                    using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Create)))
+                    {
+                        if (!string.IsNullOrEmpty(data))
+                        {
+                            await writer.WriteAsync(data);
+                        }
+                        await writer.FlushAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+                finally
+                {
+                    WindowsFileService.fileLock.Release();
+                }
             }
         }
 
@@ -220,18 +229,27 @@ namespace MixItUp.WPF.Services
         {
             if (!string.IsNullOrEmpty(filePath))
             {
-                await WindowsFileService.fileLock.WaitAsync();
-
-                using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Append)))
+                try
                 {
-                    if (!string.IsNullOrEmpty(data))
-                    {
-                        await writer.WriteAsync(data);
-                    }
-                    await writer.FlushAsync();
-                }
+                    await WindowsFileService.fileLock.WaitAsync();
 
-                WindowsFileService.fileLock.Release();
+                    using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Append)))
+                    {
+                        if (!string.IsNullOrEmpty(data))
+                        {
+                            await writer.WriteAsync(data);
+                        }
+                        await writer.FlushAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+                finally
+                {
+                    WindowsFileService.fileLock.Release();
+                }
             }
         }
 

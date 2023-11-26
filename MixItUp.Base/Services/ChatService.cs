@@ -393,15 +393,24 @@ namespace MixItUp.Base.Services
                         message.User.UpdateLastActivity();
                         if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot && message.User.WhispererNumber == 0)
                         {
-                            await this.whisperNumberLock.WaitAsync();
-
-                            if (!whisperMap.ContainsKey(message.User.ID))
+                            try
                             {
-                                whisperMap[message.User.ID] = whisperMap.Count + 1;
-                            }
-                            message.User.WhispererNumber = whisperMap[message.User.ID];
+                                await this.whisperNumberLock.WaitAsync();
 
-                            this.whisperNumberLock.Release();
+                                if (!whisperMap.ContainsKey(message.User.ID))
+                                {
+                                    whisperMap[message.User.ID] = whisperMap.Count + 1;
+                                }
+                                message.User.WhispererNumber = whisperMap[message.User.ID];
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Log(ex);
+                            }
+                            finally
+                            {
+                                this.whisperNumberLock.Release();
+                            }
                         }
                     }
                 }

@@ -60,24 +60,42 @@ namespace MixItUp.WPF.Services
             {
                 if (this.State == MusicPlayerState.Paused)
                 {
-                    await this.sempahore.WaitAsync();
-
-                    this.State = MusicPlayerState.Playing;
-                    if (this.currentWaveOutEvent != null)
+                    try
                     {
-                        this.currentWaveOutEvent.Play();
-                    }
+                        await this.sempahore.WaitAsync();
 
-                    this.sempahore.Release();
+                        this.State = MusicPlayerState.Playing;
+                        if (this.currentWaveOutEvent != null)
+                        {
+                            this.currentWaveOutEvent.Play();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                    }
+                    finally
+                    {
+                        this.sempahore.Release();
+                    }
                 }
                 else if (this.State == MusicPlayerState.Stopped)
                 {
-                    await this.sempahore.WaitAsync();
+                    try
+                    {
+                        await this.sempahore.WaitAsync();
 
-                    this.State = MusicPlayerState.Playing;
-                    this.PlayInternal(this.CurrentSong.FilePath);
-
-                    this.sempahore.Release();
+                        this.State = MusicPlayerState.Playing;
+                        this.PlayInternal(this.CurrentSong.FilePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                    }
+                    finally
+                    {
+                        this.sempahore.Release();
+                    }
 
                     this.SongChanged.Invoke(this, new EventArgs());
 
@@ -90,52 +108,79 @@ namespace MixItUp.WPF.Services
         {
             if (this.State == MusicPlayerState.Playing)
             {
-                await this.sempahore.WaitAsync();
-
-                this.State = MusicPlayerState.Paused;
-                if (this.currentWaveOutEvent != null)
+                try
                 {
-                    this.currentWaveOutEvent.Pause();
-                }
+                    await this.sempahore.WaitAsync();
 
-                this.sempahore.Release();
+                    this.State = MusicPlayerState.Paused;
+                    if (this.currentWaveOutEvent != null)
+                    {
+                        this.currentWaveOutEvent.Pause();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+                finally
+                {
+                    this.sempahore.Release();
+                }
             }
         }
 
         public async Task Stop()
         {
-            await this.sempahore.WaitAsync();
-
-            this.State = MusicPlayerState.Stopped;
-
-            if (this.currentWaveOutEvent != null)
+            try
             {
-                this.currentWaveOutEvent.Stop();
-            }
-            this.currentWaveOutEvent = null;
+                await this.sempahore.WaitAsync();
 
-            if (this.backgroundPlayThreadTokenSource != null)
+                this.State = MusicPlayerState.Stopped;
+
+                if (this.currentWaveOutEvent != null)
+                {
+                    this.currentWaveOutEvent.Stop();
+                }
+                this.currentWaveOutEvent = null;
+
+                if (this.backgroundPlayThreadTokenSource != null)
+                {
+                    this.backgroundPlayThreadTokenSource.Cancel();
+                }
+                this.backgroundPlayThreadTokenSource = null;
+            }
+            catch (Exception ex)
             {
-                this.backgroundPlayThreadTokenSource.Cancel();
+                Logger.Log(ex);
             }
-            this.backgroundPlayThreadTokenSource = null;
-
-            this.sempahore.Release();
+            finally
+            {
+                this.sempahore.Release();
+            }
         }
 
         public async Task Next()
         {
             await this.Stop();
 
-            await this.sempahore.WaitAsync();
-
-            this.currentSongIndex++;
-            if (this.currentSongIndex >= this.songs.Count)
+            try
             {
-                this.currentSongIndex = 0;
-            }
+                await this.sempahore.WaitAsync();
 
-            this.sempahore.Release();
+                this.currentSongIndex++;
+                if (this.currentSongIndex >= this.songs.Count)
+                {
+                    this.currentSongIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.sempahore.Release();
+            }
 
             await this.Play();
         }
@@ -144,34 +189,52 @@ namespace MixItUp.WPF.Services
         {
             await this.Stop();
 
-            await this.sempahore.WaitAsync();
-
-            this.currentSongIndex--;
-            if (this.currentSongIndex < 0)
+            try
             {
-                this.currentSongIndex = Math.Max(this.songs.Count - 1, 0);
-            }
+                await this.sempahore.WaitAsync();
 
-            this.sempahore.Release();
+                this.currentSongIndex--;
+                if (this.currentSongIndex < 0)
+                {
+                    this.currentSongIndex = Math.Max(this.songs.Count - 1, 0);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.sempahore.Release();
+            }
 
             await this.Play();
         }
 
         public async Task ChangeVolume(int amount)
         {
-            await this.sempahore.WaitAsync();
-
-            this.Volume = amount;
-            if (this.currentWaveStream != null && this.currentWaveStream is AudioFileReader)
+            try
             {
-                ((AudioFileReader)this.currentWaveStream).Volume = (ServiceManager.Get<IAudioService>() as WindowsAudioService).ConvertVolumeAmount(this.Volume);
-            }
-            else if (this.currentWaveOutEvent != null)
-            {
-                this.currentWaveOutEvent.Volume = (ServiceManager.Get<IAudioService>() as WindowsAudioService).ConvertVolumeAmount(this.Volume);
-            }
+                await this.sempahore.WaitAsync();
 
-            this.sempahore.Release();
+                this.Volume = amount;
+                if (this.currentWaveStream != null && this.currentWaveStream is AudioFileReader)
+                {
+                    ((AudioFileReader)this.currentWaveStream).Volume = (ServiceManager.Get<IAudioService>() as WindowsAudioService).ConvertVolumeAmount(this.Volume);
+                }
+                else if (this.currentWaveOutEvent != null)
+                {
+                    this.currentWaveOutEvent.Volume = (ServiceManager.Get<IAudioService>() as WindowsAudioService).ConvertVolumeAmount(this.Volume);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.sempahore.Release();
+            }
         }
 
         public async Task LoadSongs()
@@ -257,15 +320,24 @@ namespace MixItUp.WPF.Services
                     tempSongs.Add(song);
                 }
 
-                await this.sempahore.WaitAsync();
-
-                this.songs.Clear();
-                foreach (MusicPlayerSong song in tempSongs.Shuffle())
+                try
                 {
-                    this.songs.Add(song);
-                }
+                    await this.sempahore.WaitAsync();
 
-                this.sempahore.Release();
+                    this.songs.Clear();
+                    foreach (MusicPlayerSong song in tempSongs.Shuffle())
+                    {
+                        this.songs.Add(song);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+                finally
+                {
+                    this.sempahore.Release();
+                }
             });
         }
 

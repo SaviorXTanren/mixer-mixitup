@@ -358,66 +358,93 @@ namespace MixItUp.Base.Services.Twitch
                 }
             }
 
-            await this.userJoinLeaveEventsSemaphore.WaitAsync();
-
-            foreach (string user in this.initialUserLogins)
+            try
             {
-                this.userJoinEvents.Add(user);
-            }
-            this.initialUserLogins.Clear();
+                await this.userJoinLeaveEventsSemaphore.WaitAsync();
 
-            this.userJoinLeaveEventsSemaphore.Release();
+                foreach (string user in this.initialUserLogins)
+                {
+                    this.userJoinEvents.Add(user);
+                }
+                this.initialUserLogins.Clear();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.userJoinLeaveEventsSemaphore.Release();
+            }
         }
 
         public async Task SendMessage(string message, bool sendAsStreamer = false, string replyMessageID = null)
         {
-            await this.messageSemaphore.WaitAsync();
-
-            ChatClient client = this.GetChatClient(sendAsStreamer);
-            if (client != null)
+            try
             {
-                string subMessage = null;
-                do
-                {
-                    message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
-                    if (!string.IsNullOrEmpty(replyMessageID))
-                    {
-                        await client.SendReplyMessage(ServiceManager.Get<TwitchSessionService>().User, message, replyMessageID);
-                    }
-                    else
-                    {
-                        await client.SendMessage(ServiceManager.Get<TwitchSessionService>().User, message);
-                    }
-                    message = subMessage;
-                    await Task.Delay(500);
-                }
-                while (!string.IsNullOrEmpty(message));
-            }
+                await this.messageSemaphore.WaitAsync();
 
-            this.messageSemaphore.Release();
+                ChatClient client = this.GetChatClient(sendAsStreamer);
+                if (client != null)
+                {
+                    string subMessage = null;
+                    do
+                    {
+                        message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
+                        if (!string.IsNullOrEmpty(replyMessageID))
+                        {
+                            await client.SendReplyMessage(ServiceManager.Get<TwitchSessionService>().User, message, replyMessageID);
+                        }
+                        else
+                        {
+                            await client.SendMessage(ServiceManager.Get<TwitchSessionService>().User, message);
+                        }
+                        message = subMessage;
+                        await Task.Delay(500);
+                    }
+                    while (!string.IsNullOrEmpty(message));
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.messageSemaphore.Release();
+            }
         }
 
         public async Task SendWhisperMessage(UserV2ViewModel user, string message, bool sendAsStreamer = false)
         {
-            await this.messageSemaphore.WaitAsync();
-
-            ChatClient client = this.GetChatClient(sendAsStreamer);
-            UserModel sender = (!sendAsStreamer && ServiceManager.Get<TwitchSessionService>().IsBotConnected) ? ServiceManager.Get<TwitchSessionService>().Bot : ServiceManager.Get<TwitchSessionService>().User;
-            UserModel receiver = user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).GetTwitchNewAPIUserModel();
-            if (client != null)
+            try
             {
-                string subMessage = null;
-                do
-                {
-                    message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
-                    await client.SendWhisperMessage(sender, receiver, message);
-                    message = subMessage;
-                    await Task.Delay(500);
-                }
-                while (!string.IsNullOrEmpty(message));
-            }
+                await this.messageSemaphore.WaitAsync();
 
-            this.messageSemaphore.Release();
+                ChatClient client = this.GetChatClient(sendAsStreamer);
+                UserModel sender = (!sendAsStreamer && ServiceManager.Get<TwitchSessionService>().IsBotConnected) ? ServiceManager.Get<TwitchSessionService>().Bot : ServiceManager.Get<TwitchSessionService>().User;
+                UserModel receiver = user.GetPlatformData<TwitchUserPlatformV2Model>(StreamingPlatformTypeEnum.Twitch).GetTwitchNewAPIUserModel();
+                if (client != null)
+                {
+                    string subMessage = null;
+                    do
+                    {
+                        message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
+                        await client.SendWhisperMessage(sender, receiver, message);
+                        message = subMessage;
+                        await Task.Delay(500);
+                    }
+                    while (!string.IsNullOrEmpty(message));
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.messageSemaphore.Release();
+            }
         }
 
         public async Task DeleteMessage(ChatMessageViewModel message)
@@ -515,23 +542,32 @@ namespace MixItUp.Base.Services.Twitch
             List<string> joinsToProcess = new List<string>();
             List<string> leavesToProcess = new List<string>();
 
-            await this.userJoinLeaveEventsSemaphore.WaitAsync();
-
-            for (int i = 0; i < userJoinLeaveEventsTotalToProcess && i < this.userJoinEvents.Count(); i++)
+            try
             {
-                string username = this.userJoinEvents.First();
-                joinsToProcess.Add(username);
-                this.userJoinEvents.Remove(username);
-            }
+                await this.userJoinLeaveEventsSemaphore.WaitAsync();
 
-            for (int i = 0; i < userJoinLeaveEventsTotalToProcess && i < this.userLeaveEvents.Count(); i++)
+                for (int i = 0; i < userJoinLeaveEventsTotalToProcess && i < this.userJoinEvents.Count(); i++)
+                {
+                    string username = this.userJoinEvents.First();
+                    joinsToProcess.Add(username);
+                    this.userJoinEvents.Remove(username);
+                }
+
+                for (int i = 0; i < userJoinLeaveEventsTotalToProcess && i < this.userLeaveEvents.Count(); i++)
+                {
+                    string username = this.userLeaveEvents.First();
+                    leavesToProcess.Add(username);
+                    this.userLeaveEvents.Remove(username);
+                }
+            }
+            catch (Exception ex)
             {
-                string username = this.userLeaveEvents.First();
-                leavesToProcess.Add(username);
-                this.userLeaveEvents.Remove(username);
+                Logger.Log(ex);
             }
-
-            this.userJoinLeaveEventsSemaphore.Release();
+            finally
+            {
+                this.userJoinLeaveEventsSemaphore.Release();
+            }
 
             if (joinsToProcess.Count > 0)
             {
@@ -672,26 +708,44 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void UserClient_OnUserJoinReceived(object sender, ChatUserJoinPacketModel userJoin)
         {
-            await this.userJoinLeaveEventsSemaphore.WaitAsync();
-
-            if (!string.IsNullOrEmpty(userJoin.UserLogin))
+            try
             {
-                this.userJoinEvents.Add(userJoin.UserLogin);
-            }
+                await this.userJoinLeaveEventsSemaphore.WaitAsync();
 
-            this.userJoinLeaveEventsSemaphore.Release();
+                if (!string.IsNullOrEmpty(userJoin.UserLogin))
+                {
+                    this.userJoinEvents.Add(userJoin.UserLogin);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.userJoinLeaveEventsSemaphore.Release();
+            }
         }
 
         private async void UserClient_OnUserLeaveReceived(object sender, ChatUserLeavePacketModel userLeave)
         {
-            await this.userJoinLeaveEventsSemaphore.WaitAsync();
-
-            if (!string.IsNullOrEmpty(userLeave.UserLogin))
+            try
             {
-                this.userLeaveEvents.Add(userLeave.UserLogin);
-            }
+                await this.userJoinLeaveEventsSemaphore.WaitAsync();
 
-            this.userJoinLeaveEventsSemaphore.Release();
+                if (!string.IsNullOrEmpty(userLeave.UserLogin))
+                {
+                    this.userLeaveEvents.Add(userLeave.UserLogin);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.userJoinLeaveEventsSemaphore.Release();
+            }
         }
 
         private void UserClient_OnUserStateReceived(object sender, ChatUserStatePacketModel userState)
