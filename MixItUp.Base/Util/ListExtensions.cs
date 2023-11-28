@@ -137,7 +137,7 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static void AddRange<T>(this ObservableCollection<T> list, IEnumerable<T> items)
+        public static void AddRange<T>(this Collection<T> list, IEnumerable<T> items)
         {
             foreach (T item in items)
             {
@@ -145,13 +145,29 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static void ClearAndAddRange<T>(this ObservableCollection<T> list, IEnumerable<T> items)
+        public static void ClearAndAddRange<T>(this Collection<T> list, IEnumerable<T> items)
         {
             list.Clear();
             foreach (T item in items)
             {
                 list.Add(item);
             }
+        }
+
+        public static void SortedInsert<T>(this Collection<T> list, T newItem) where T : IComparable<T>
+        {
+            DispatcherHelper.Dispatcher.Invoke(() =>
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (list[i].CompareTo(newItem) >= 0)
+                    {
+                        list.Insert(i, newItem);
+                        return;
+                    }
+                }
+                list.Add(newItem);
+            });
         }
     }
 }

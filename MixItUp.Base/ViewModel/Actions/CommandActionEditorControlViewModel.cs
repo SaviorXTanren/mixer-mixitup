@@ -114,6 +114,17 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private bool waitForCommandToFinish = true;
 
+        public bool IgnoreUsageRequirements
+        {
+            get { return this.ignoreUsageRequirements; }
+            set
+            {
+                this.ignoreUsageRequirements = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool ignoreUsageRequirements = true;
+
         public bool ShowCommandCooldownSection { get { return this.SelectedActionType == CommandActionTypeEnum.SetCommandCooldown; } }
 
         public bool ShowCommandGroupsSection { get { return this.SelectedActionType == CommandActionTypeEnum.EnableCommandGroup || this.SelectedActionType == CommandActionTypeEnum.DisableCommandGroup; } }
@@ -144,6 +155,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 }
                 this.CommandArguments = action.Arguments;
                 this.WaitForCommandToFinish = action.WaitForCommandToFinish;
+                this.IgnoreUsageRequirements = action.IgnoreUsageRequirements;
             }
             else if (this.ShowCommandGroupsSection)
             {
@@ -176,7 +188,7 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             if (this.ShowCommandsSection)
             {
-                return Task.FromResult<ActionModelBase>(new CommandActionModel(this.SelectedActionType, this.SelectedCommand, this.CommandArguments, this.WaitForCommandToFinish));
+                return Task.FromResult<ActionModelBase>(new CommandActionModel(this.SelectedActionType, this.SelectedCommand, this.CommandArguments, this.WaitForCommandToFinish, this.IgnoreUsageRequirements));
             }
             else if (this.ShowCommandGroupsSection)
             {

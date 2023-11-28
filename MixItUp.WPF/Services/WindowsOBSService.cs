@@ -904,11 +904,20 @@ namespace MixItUp.WPF.Services
 
         private async Task Send(OBSMessage message)
         {
-            await this.sendSemaphore.WaitAsync();
+            try
+            {
+                await this.sendSemaphore.WaitAsync();
 
-            await base.Send(JsonConvert.SerializeObject(message));
-
-            this.sendSemaphore.Release();
+                await base.Send(JsonConvert.SerializeObject(message));
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.sendSemaphore.Release();
+            }
         }
 
         private async Task<string> SendAndWait<T>(OBSMessageRequest<T> request)

@@ -1,8 +1,8 @@
-﻿using MixItUp.Base.Services;
+﻿using CacheManager.Core;
+using MixItUp.Base.Services;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,7 +13,9 @@ namespace MixItUp.WPF.Util
 {
     public static class ImageHelper
     {
-        private static Dictionary<string, WriteableBitmap> bitmapCache = new Dictionary<string, WriteableBitmap>();
+        private static ICacheManager<WriteableBitmap> bitmapCache = CacheFactory.Build<WriteableBitmap>(settings => settings
+                                                                                                        .WithSystemRuntimeCacheHandle()
+                                                                                                        .WithExpiration(ExpirationMode.Sliding, TimeSpan.FromMinutes(30)));
 
         public static void SetImageSource(Image image, string path, double width, double height, string tooltip = "")
         {
@@ -21,36 +23,36 @@ namespace MixItUp.WPF.Util
             {
                 if (!string.IsNullOrEmpty(path) && path.Length > 0)
                 {
-                    if (ImageHelper.bitmapCache.TryGetValue(path, out WriteableBitmap writeableBitmap))
+                    WriteableBitmap writeableBitmap = ImageHelper.bitmapCache.Get(path);
+                    if (writeableBitmap != null)
                     {
                         ImageHelper.SetImageSource(image, width, height, tooltip, writeableBitmap);
+                        return;
+                    }
+
+                    if (path.StartsWith("http"))
+                    {
+                        Task.Run(async () =>
+                        {
+                            byte[] bytes = null;
+                            using (AdvancedHttpClient client = new AdvancedHttpClient())
+                            {
+                                bytes = await client.GetByteArrayAsync(path);
+                            }
+                            await Application.Current.Dispatcher.InvokeAsync(() => ImageHelper.AddImageToCacheAndSetImageSourceFromBytes(image, path, width, height, tooltip, bytes));
+                        });
+                    }
+                    else if (ServiceManager.Get<IFileService>().FileExists(path))
+                    {
+                        Task.Run(async () =>
+                        {
+                            byte[] bytes = await ServiceManager.Get<IFileService>().ReadFileAsBytes(path);
+                            await Application.Current.Dispatcher.InvokeAsync(() => ImageHelper.AddImageToCacheAndSetImageSourceFromBytes(image, path, width, height, tooltip, bytes));
+                        });
                     }
                     else
                     {
-                        if (path.StartsWith("http"))
-                        {
-                            Task.Run(async () =>
-                            {
-                                byte[] bytes = null;
-                                using (AdvancedHttpClient client = new AdvancedHttpClient())
-                                {
-                                    bytes = await client.GetByteArrayAsync(path);
-                                }
-                                await Application.Current.Dispatcher.InvokeAsync(() => ImageHelper.SetImageSourceFromBytes(image, path, width, height, tooltip, bytes));
-                            });
-                        }
-                        else if (ServiceManager.Get<IFileService>().FileExists(path))
-                        {
-                            Task.Run(async () =>
-                            {
-                                byte[] bytes = await ServiceManager.Get<IFileService>().ReadFileAsBytes(path);
-                                await Application.Current.Dispatcher.InvokeAsync(() => ImageHelper.SetImageSourceFromBytes(image, path, width, height, tooltip, bytes));
-                            });
-                        }
-                        else
-                        {
-                            ImageHelper.AddImageToCacheAndSetImageSource(image, path, width, height, tooltip, BitmapFactory.FromResource(path));
-                        }
+                        ImageHelper.AddImageToCacheAndSetImageSource(image, path, width, height, tooltip, BitmapFactory.FromResource(path));
                     }
                 }
             }
@@ -60,7 +62,7 @@ namespace MixItUp.WPF.Util
             }
         }
 
-        private static void SetImageSourceFromBytes(Image image, string id, double width, double height, string tooltip, byte[] bytes)
+        private static void AddImageToCacheAndSetImageSourceFromBytes(Image image, string id, double width, double height, string tooltip, byte[] bytes)
         {
             try
             {
@@ -93,7 +95,7 @@ namespace MixItUp.WPF.Util
 
         private static void AddImageToCacheAndSetImageSource(Image image, string id, double width, double height, string tooltip, WriteableBitmap writeableBitmap)
         {
-            ImageHelper.bitmapCache[id] = writeableBitmap;
+            ImageHelper.bitmapCache.Put(id, writeableBitmap);
             ImageHelper.SetImageSource(image, width, height, tooltip, writeableBitmap);
         }
 

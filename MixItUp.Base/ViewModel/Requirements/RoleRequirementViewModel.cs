@@ -10,6 +10,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -108,7 +109,7 @@ namespace MixItUp.Base.ViewModel.Requirements
         }
         private UserRoleEnum selectedAdvancedRole = UserRoleEnum.User;
 
-        public SortableObservableCollection<UserRoleViewModel> SelectedAdvancedRoles { get; set; } = new SortableObservableCollection<UserRoleViewModel>();
+        public ObservableCollection<UserRoleViewModel> SelectedAdvancedRoles { get; set; } = new ObservableCollection<UserRoleViewModel>();
 
         public bool IsSubscriberRole
         {

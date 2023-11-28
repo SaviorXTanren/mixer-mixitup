@@ -57,7 +57,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 this.allPreMadeChatCommands.Add(new PreMadeChatCommandControlViewModel(command));
             }
 
-            this.PreMadeChatCommands.AddRange(this.allPreMadeChatCommands);
+            this.PreMadeChatCommands.ClearAndAddRange(this.allPreMadeChatCommands);
 
             if (this.CommandGroups.Count == 0)
             {

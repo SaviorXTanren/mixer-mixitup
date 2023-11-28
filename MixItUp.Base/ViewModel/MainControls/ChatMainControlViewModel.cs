@@ -5,6 +5,7 @@ using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -74,6 +75,8 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         public ICommand PauseUnpauseCommandsCommand { get; private set; }
 
+        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
         public ChatMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
@@ -116,6 +119,10 @@ namespace MixItUp.Base.ViewModel.MainControls
                 this.NotifyPropertyChanged("PauseUnpauseCommandsButtonText");
             });
 
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            AsyncRunner.RunAsyncBackground(this.MinuteBackgroundThread, this.cancellationTokenSource.Token, 60000);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
             ChatService.OnChatVisualSettingsChanged += ChatService_OnChatVisualSettingsChanged;
         }
 
@@ -125,10 +132,6 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             ServiceManager.Get<UserService>().DisplayUsersUpdated += ChatService_DisplayUsersUpdated;
             this.DisplayUsers = ServiceManager.Get<UserService>().DisplayUsers;
-
-            this.Messages.CollectionChanged += Messages_CollectionChanged;
-
-            this.RefreshNumbers();
         }
 
         protected override async Task OnVisibleInternal()
@@ -141,17 +144,6 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.NotifyPropertyChanged("PauseUnpauseCommandsButtonText");
         }
 
-        private void Messages_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            this.RefreshNumbers();
-        }
-
-        private void RefreshNumbers()
-        {
-            this.ViewersCount = ServiceManager.Get<ChatService>().GetViewerCount();
-            this.ChattersCount = ServiceManager.Get<UserService>().ActiveUserCount;
-        }
-
         private void ChatService_DisplayUsersUpdated(object sender, EventArgs e)
         {
             this.DisplayUsers = ServiceManager.Get<UserService>().DisplayUsers;
@@ -161,6 +153,14 @@ namespace MixItUp.Base.ViewModel.MainControls
         private void ChatService_OnChatVisualSettingsChanged(object sender, EventArgs e)
         {
             ChatService_DisplayUsersUpdated(sender, e);
+        }
+
+        private Task MinuteBackgroundThread(CancellationToken cancellationToken)
+        {
+            this.ViewersCount = ServiceManager.Get<ChatService>().GetViewerCount();
+            this.ChattersCount = ServiceManager.Get<UserService>().ActiveUserCount;
+
+            return Task.CompletedTask;
         }
     }
 }

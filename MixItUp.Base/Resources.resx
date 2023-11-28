@@ -9755,6 +9755,9 @@ namespace CustomNamespace
   <data name="TwitchBitsCommandsAlreadyExistsDuplicateAmount" xml:space="preserve">
     <value>There already exists another Twitch Bits command with the same amount / range as this command.</value>
   </data>
+  <data name="IgnoreUsageRequirements" xml:space="preserve">
+    <value>Ignore Usage Requirements</value>
+  </data>
   <data name="MaxWidthPixels" xml:space="preserve">
     <value>Max Width (Pixels)</value>
   </data>

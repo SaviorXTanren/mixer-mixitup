@@ -6,7 +6,6 @@ using MixItUp.Base.Util;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Wizard;
 using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -23,7 +22,7 @@ namespace MixItUp.WPF
         private MixItUpUpdateModel currentUpdate;
         private bool updateFound = false;
 
-        private ObservableCollection<SettingsV3Model> streamerSettings = new ObservableCollection<SettingsV3Model>();
+        private ThreadSafeObservableCollection<SettingsV3Model> streamerSettings = new ThreadSafeObservableCollection<SettingsV3Model>();
 
         public LoginWindow()
         {
@@ -119,8 +118,7 @@ namespace MixItUp.WPF
                                 newWindow = new MainWindow();
                             }
 
-                            GlobalEvents.OnShowMessageBox -= GlobalEvents_OnShowMessageBox;
-                            GlobalEvents.OnRestartRequested -= GlobalEvents_OnRestartRequested;
+                            ChannelSession.OnRestartRequested -= ChannelSession_OnRestartRequested;
 
                             ShowMainWindow(newWindow);
                             this.Hide();
@@ -167,8 +165,7 @@ namespace MixItUp.WPF
         {
             if (await this.ShowLicenseAgreement())
             {
-                GlobalEvents.OnShowMessageBox -= GlobalEvents_OnShowMessageBox;
-                GlobalEvents.OnRestartRequested -= GlobalEvents_OnRestartRequested;
+                ChannelSession.OnRestartRequested -= ChannelSession_OnRestartRequested;
 
                 ShowMainWindow(new NewUserWizardWindow());
                 this.Hide();

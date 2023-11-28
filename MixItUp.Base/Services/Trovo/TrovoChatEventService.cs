@@ -297,30 +297,39 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task SendMessage(string message, bool sendAsStreamer = false)
         {
-            await this.messageSemaphore.WaitAsync();
-
-            ChatClient client = this.GetChatClient(sendAsStreamer);
-            if (client != null)
+            try
             {
-                string subMessage = null;
-                do
-                {
-                    message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
-                    if (client == this.botClient)
-                    {
-                        await client.SendMessage(ServiceManager.Get<TrovoSessionService>().ChannelID, message);
-                    }
-                    else
-                    {
-                        await client.SendMessage(message);
-                    }
-                    message = subMessage;
-                    await Task.Delay(500);
-                }
-                while (!string.IsNullOrEmpty(message));
-            }
+                await this.messageSemaphore.WaitAsync();
 
-            this.messageSemaphore.Release();
+                ChatClient client = this.GetChatClient(sendAsStreamer);
+                if (client != null)
+                {
+                    string subMessage = null;
+                    do
+                    {
+                        message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
+                        if (client == this.botClient)
+                        {
+                            await client.SendMessage(ServiceManager.Get<TrovoSessionService>().ChannelID, message);
+                        }
+                        else
+                        {
+                            await client.SendMessage(message);
+                        }
+                        message = subMessage;
+                        await Task.Delay(500);
+                    }
+                    while (!string.IsNullOrEmpty(message));
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                this.messageSemaphore.Release();
+            }
         }
 
         public async Task<bool> DeleteMessage(ChatMessageViewModel message)
