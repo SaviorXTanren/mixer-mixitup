@@ -15,13 +15,13 @@ displayName: Mix It Up
 pluginFileName: MixItUp.LoupedeckPlugin.dll
 
 # Plugin version.
-version: 0.2
+version: 0.3
 
 # Author of the plugin. The author can be a company or an individual developer.
 author: Blazing Cacti LLC
 
 # Copyright information.
-copyright: Copyright © 2022 Blazing Cacti LLC. All rights reserved.
+copyright: Copyright © 2023 Blazing Cacti LLC. All rights reserved.
 
 
 # ==================================================================================================
@@ -52,6 +52,8 @@ pluginCapabilities:
     # Uncomment the following line if the plugin sends keyboard shortcuts to the target application.
     #- ActivatesApplication
 
+# Minimum Loupedeck version supported by the plugin.
+minimumLoupedeckVersion: 5.7
 
 # ==================================================================================================
 # LOUPEDECK MARKETPLACE SETTINGS
